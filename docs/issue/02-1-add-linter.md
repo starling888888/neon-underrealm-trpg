@@ -78,6 +78,10 @@
 
 想定する追加packageは以下とする。
 
+- `@astrojs/check`
+  - 追加理由: `astro check` でAstro / TypeScriptの診断を実行するため
+  - 代替案: `astro check` を使わずBiomeのみで確認する
+  - 初期スコープに必要な理由: `.astro` ファイルの診断はAstro公式チェックに任せるため
 - `typescript`
   - 追加理由: Astro / TypeScriptの静的チェックを明示的に実行するため
   - 代替案: Astroの推移的依存に任せる
