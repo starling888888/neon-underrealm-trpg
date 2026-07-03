@@ -1,0 +1,24 @@
+---
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<aside class="mdx-example" aria-label="MDX Component example">
+  <p>{label}</p>
+</aside>
+
+<style>
+  .mdx-example {
+    border: 1px solid #2dd4bf;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #f8fafc;
+  }
+
+  .mdx-example p {
+    margin: 0;
+  }
+</style>
