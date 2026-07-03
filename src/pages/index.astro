@@ -1,5 +1,8 @@
 ---
+import { withBase } from "../lib/utils/paths";
+
 const title = "ネオン・アンダーレルムTRPG";
+const mdxTestPath = withBase("/mdx-test/");
 ---
 
 <!doctype html>
@@ -13,6 +16,7 @@ const title = "ネオン・アンダーレルムTRPG";
     <main>
       <h1>{title}</h1>
       <p>ルールサイト初期化中です。</p>
+      <p><a href={mdxTestPath}>MDX表示確認</a></p>
     </main>
   </body>
 </html>
