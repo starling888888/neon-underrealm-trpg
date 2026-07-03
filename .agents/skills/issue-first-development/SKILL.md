@@ -1,8 +1,7 @@
 ---
-
 name: issue-first-development
 description: Use this skill when the user asks to start a task from docs/plan.md, create a task branch, or prepare docs/issue/*.md before implementation. This skill must stop before code implementation and wait for human review.
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
 
 # Issue-first Development Skill
 
