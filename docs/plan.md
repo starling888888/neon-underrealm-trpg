@@ -40,10 +40,10 @@
 
 ## Phase 1: Astro基盤
 
-- [ ] `05-config-mdx` — MDX対応を追加する
-  - [ ] Astro MDX integration を追加
-  - [ ] `.mdx` ページの表示を確認
-  - [ ] MDX内Component埋め込み方針を確認
+- [x] `05-config-mdx` — MDX対応を追加する
+  - [x] Astro MDX integration を追加
+  - [x] `.mdx` ページの表示を確認
+  - [x] MDX内Component埋め込み方針を確認
 
 - [ ] `06-config-base-path` — GitHub Pagesサブパス対応を追加する
   - [ ] `astro.config.mjs` に `site` / `base` 設定を追加
