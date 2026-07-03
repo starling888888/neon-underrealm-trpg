@@ -24,11 +24,11 @@
   - [x] `tsconfig.json` 作成
   - [x] `npm run build` が通る状態にする
 
-- [ ] `03-gitignore-raw-policy` — `.raw/` と生成データ管理方針を追加する
-  - [ ] `.raw/` を `.gitignore` に追加
-  - [ ] `*.xlsx`, `*.xlsm`, `~$*.xlsx` を `.gitignore` に追加
-  - [ ] `data/generated/` を作成
-  - [ ] `data/generated/README.md` に手編集禁止方針を書く
+- [x] `03-gitignore-raw-policy` — `.raw/` と生成データ管理方針を追加する
+  - [x] `.raw/` を `.gitignore` に追加
+  - [x] `*.xlsx`, `*.xlsm`, `~$*.xlsx` を `.gitignore` に追加
+  - [x] `data/generated/` を作成
+  - [x] `data/generated/README.md` に手編集禁止方針を書く
 
 - [ ] `04-basic-project-docs` — READMEと開発手順の初期版を作成する
   - [ ] `README.md` 作成
