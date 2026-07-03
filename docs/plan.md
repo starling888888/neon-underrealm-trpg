@@ -30,11 +30,11 @@
   - [x] `data/generated/` を作成
   - [x] `data/generated/README.md` に手編集禁止方針を書く
 
-- [ ] `04-basic-project-docs` — READMEと開発手順の初期版を作成する
-  - [ ] `README.md` 作成
-  - [ ] `docs/deployment.md` 作成
-  - [ ] `docs/content-writing-guide.md` 作成
-  - [ ] 初期開発・ビルド手順を記載
+- [x] `04-basic-project-docs` — READMEと開発手順の初期版を作成する
+  - [x] `README.md` 作成
+  - [x] `docs/deployment.md` 作成
+  - [x] `docs/content-writing-guide.md` 作成
+  - [x] 初期開発・ビルド手順を記載
 
 ---
 
