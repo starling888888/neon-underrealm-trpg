@@ -18,11 +18,11 @@
   - [x] `docs/out-of-scope.md` を配置
   - [x] 初期スコープ外項目を明示
 
-- [ ] `02-init-astro-project` — Astro + TypeScript プロジェクトを初期化する
-  - [ ] Astroプロジェクト作成
-  - [ ] `package.json` 作成
-  - [ ] `tsconfig.json` 作成
-  - [ ] `npm run build` が通る状態にする
+- [x] `02-init-astro-project` — Astro + TypeScript プロジェクトを初期化する
+  - [x] Astroプロジェクト作成
+  - [x] `package.json` 作成
+  - [x] `tsconfig.json` 作成
+  - [x] `npm run build` が通る状態にする
 
 - [ ] `03-gitignore-raw-policy` — `.raw/` と生成データ管理方針を追加する
   - [ ] `.raw/` を `.gitignore` に追加
