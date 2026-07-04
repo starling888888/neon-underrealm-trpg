@@ -45,10 +45,10 @@
   - [x] `.mdx` ページの表示を確認
   - [x] MDX内Component埋め込み方針を確認
 
-- [ ] `06-config-base-path` — GitHub Pagesサブパス対応を追加する
-  - [ ] `astro.config.mjs` に `site` / `base` 設定を追加
-  - [ ] base path helper を用意
-  - [ ] 内部リンク・画像パスがサブパスで壊れない方針を作る
+- [x] `06-config-base-path` — GitHub Pagesサブパス対応を追加する
+  - [x] `astro.config.mjs` に `site` / `base` 設定を追加
+  - [x] base path helper を用意
+  - [x] 内部リンク・画像パスがサブパスで壊れない方針を作る
 
 - [ ] `07-global-styles` — CSS基盤を追加する
   - [ ] `src/styles/tokens.css` 作成
