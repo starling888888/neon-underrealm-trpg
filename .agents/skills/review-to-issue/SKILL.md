@@ -31,9 +31,11 @@ The intake workflow is:
 1. Inspect current branch and working tree
 2. Find the relevant `.tmp/*.md` review file
 3. Read the review file
-4. Identify the current task issue file
-5. Add one numbered review section to that issue file
-6. Stop and wait for user confirmation
+4. Validate the review feedback against the current issue, project rules, and implementation context
+5. Report the validity assessment to the user and confirm any doubtful or design-sensitive feedback before issue intake
+6. Identify the current task issue file
+7. Add one numbered review section to that issue file
+8. Stop and wait for user confirmation
 
 Implementation may begin only after the user explicitly approves the review response.
 
@@ -51,10 +53,13 @@ git branch --show-current
 If there are uncommitted changes:
 
 * Inspect them before editing.
+* If the changes are completed fixes for a previous review section, stop and ask whether to commit them before starting the next review intake.
 * If changes are unrelated to the review intake, stop and ask the user how to proceed.
 * If changes are the intended issue update from a previous review intake, work with them.
 
 Review files must stay under `.tmp/` and must not be committed.
+
+Review responses should normally be committed separately per review section, but commit only when the user explicitly asks. Do not commit automatically.
 
 ---
 
@@ -78,6 +83,14 @@ rg -n "review|レビュー|TASK_SLUG|TASK_NUMBER" docs/issue
 ```
 
 Prefer `docs/issue/CURRENT_BRANCH.md` when it exists.
+
+Before appending a review section, assess the feedback:
+
+* Compare it with the current issue scope, `AGENTS.md`, `docs/out-of-scope.md`, design references, and implementation state when relevant.
+* Do not simply accept review feedback because it came from the user.
+* Treat clearly valid feedback as an adoption candidate and say so to the user.
+* For doubtful feedback, possible out-of-scope changes, or design decisions that need judgment, discuss whether it should be addressed before writing it into the issue.
+* If the user explicitly asked only for a validity check, report the assessment and do not update the issue.
 
 Append a numbered section to the issue file. If previous review sections exist, use the next number.
 
