@@ -31,9 +31,10 @@ The workflow is:
 2. Determine the branch name
 3. Check the current git state
 4. Create a dedicated branch
-5. Create `docs/issue/X-hogehoge.md`
-6. Write the task goal, scope, completion criteria, checkpoints, and review points
-7. Stop and wait for user review
+5. For UI, CSS, layout, page, or component tasks, check whether a relevant design target exists under `docs/design/`
+6. Create `docs/issue/X-hogehoge.md`
+7. Write the task goal, scope, completion criteria, checkpoints, design references when relevant, and review points
+8. Stop and wait for user review
 
 Implementation may begin only after the user explicitly approves the issue file.
 
@@ -117,6 +118,30 @@ Create `docs/issue/` if it does not exist.
 
 ---
 
+## Design reference check
+
+For UI, CSS, layout, page, or component tasks, check `docs/design/` before writing the issue.
+
+If a relevant design target exists, record it in the issue file.
+
+Examples:
+
+```txt
+docs/design/global-styles/
+docs/design/site-layout/
+docs/design/home/
+docs/design/rule-page/
+docs/design/components/
+```
+
+Record the design target and key reference files in `背景`, `対象範囲`, `完了条件`, `レビュー観点`, or `備考`, whichever is clearest for the task.
+
+If no relevant design target exists, note that no design target was found when reporting the prepared issue.
+
+Do not create new design images during issue-first preparation unless the user explicitly asks for that. Design image creation belongs to a separate approved task or a later implementation/review step.
+
+---
+
 ## Issue file template
 
 Use this template.
@@ -137,6 +162,7 @@ Use this template.
 - `docs/requirements.md`
 - `docs/out-of-scope.md`
 - `docs/plan.md`
+- UI、CSS、layout、page、Componentタスクで該当する場合は `docs/design/<design-target>/`
 
 ## 対象範囲
 
@@ -186,6 +212,8 @@ Use this template.
 ## レビュー観点
 
 人間レビュー時に確認してほしい観点を書く。
+
+UI、CSS、layout、page、Componentタスクでは、該当する `docs/design/<design-target>/` に対して確認してほしい観点を書く。
 
 ## 備考
 
