@@ -60,6 +60,24 @@ import MdxExample from "../components/MdxExample.astro";
 
 本格的なデータ表示Componentは後続タスクで追加します。MDX導入タスクでは、Componentを埋め込める基盤確認までを対象とします。
 
+## MDX本文内リンクの方針
+
+通常の内部リンクはMarkdownリンク記法を優先します。
+
+```mdx
+[戦闘ルール](/rules/battle/)
+```
+
+base path補正や将来の外部リンク判定など、実装側の処理が必要なリンクは、MDX本文に `withBase()` を直接書かず、内部リンクComponentへ寄せます。
+
+```mdx
+import InternalLink from "../components/InternalLink.astro";
+
+<InternalLink href="/rules/battle/">戦闘ルール</InternalLink>
+```
+
+生の `<a href={...}>` や `withBase()` の直接利用は、Layout、Component、404ページなど実装寄りの場所に限定します。
+
 ## データ表示の扱い
 
 スキルやアイテムの一覧は、Markdown表で手管理しない方針です。

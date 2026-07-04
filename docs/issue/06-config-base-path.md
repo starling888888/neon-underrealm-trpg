@@ -73,6 +73,34 @@ GitHub Pagesなどのサブパス公開に対応できるように、Astroの `s
 - 06以降のSEO/OGP、レイアウト、ナビゲーション実装範囲を先取りしていないか
 - ドキュメントの方針が、今後の内部リンク・画像参照に使える粒度になっているか
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- MDXでJS式をリンク属性に使う場合、Markdownリンク記法ではなく `<a href={withBase("/")}>...</a>` のようなJSX属性式にする必要がある。この点で現在のMDX記述は構文として妥当である。
+- ただし、本文編集性を重視するなら、MDX本文に `withBase()` や生の `<a>` が散らばる設計は避けたい。
+- 通常本文ではMarkdownリンク記法を優先し、base path補正が必要な特殊リンクは `InternalLink` のようなComponentへ寄せる方針が望ましい。
+- `withBase()` は本文ではなく、Layout / Component / 404など実装寄りの場所、または内部リンクComponent側に閉じ込める。
+
+### 対応方針
+
+- `src/pages/mdx-test.mdx` から生の `<a href={withBase("/")}>` と `withBase()` importを取り除く。
+- 内部リンク用の最小Componentを追加し、MDX本文では `<InternalLink href="/">トップページへ戻る</InternalLink>` の形で利用する。
+- 通常のルール本文ではMarkdownリンク記法を優先し、base path補正や将来の外部リンク判定が必要な場合だけ内部リンクComponentを使う方針を `docs/deployment.md` と `docs/content-writing-guide.md` に反映する。
+- `withBase()` はComponentや実装寄りのAstroファイルから使う方針とし、本文に直接露出させない。
+- 新しい依存関係は追加しない。
+
+### 対応完了チェックリスト
+
+- [x] `src/pages/mdx-test.mdx` から `withBase()` の直接利用を取り除く
+- [x] MDX本文から使える内部リンクComponentを追加する
+- [x] 確認用MDXページで内部リンクComponentを使う
+- [x] `docs/deployment.md` にMarkdownリンク優先、内部リンクComponent利用、`withBase()` の利用境界を追記する
+- [x] `docs/content-writing-guide.md` にMDX本文でのリンク記法方針と内部リンクComponent利用方針を追記する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] 生成HTMLでサブパス付きリンクになっていることを確認する
+
 ## 備考
 
 GitHub Pages実デプロイ、GitHub Actions workflow、OGP画像URLの最終調整は後続タスクで扱う。このタスクでは、静的ビルド時にサブパス前提のURLを組み立てるための最小基盤を対象とする。

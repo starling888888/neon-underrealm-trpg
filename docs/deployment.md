@@ -59,7 +59,7 @@ https://username.github.io/repository-name/
 - `site`: `https://starling888888.github.io`
 - `base`: `/neon-underrealm-trpg`
 
-内部リンクや `public/` 配下の静的アセットを参照するときは、ルート `/` 固定の文字列を直接埋め込まず、`src/lib/utils/paths.ts` の `withBase()` を使います。
+Astro ComponentやLayoutで内部リンクや `public/` 配下の静的アセットを参照するときは、ルート `/` 固定の文字列を直接埋め込まず、`src/lib/utils/paths.ts` の `withBase()` を使います。
 
 ```astro
 ---
@@ -68,6 +68,18 @@ import { withBase } from "../lib/utils/paths";
 
 <a href={withBase("/rules/")}>ルール</a>
 <img src={withBase("/assets/images/example.png")} alt="" />
+```
+
+Markdown / MDX本文では、通常の内部リンクはMarkdownリンク記法を優先します。
+
+```mdx
+[戦闘ルール](/rules/battle/)
+```
+
+base path補正や将来の外部リンク判定など、実装側の処理が必要なリンクは、MDX本文に `withBase()` を直接書かず、内部リンクComponentへ寄せます。
+
+```mdx
+<InternalLink href="/rules/battle/">戦闘ルール</InternalLink>
 ```
 
 Markdown / MDX本文からAstro Componentを呼ぶ場合も、Component側で `withBase()` を使ってリンクや画像パスを組み立てます。
