@@ -33,7 +33,7 @@
   width: 5.75rem;
   height: 0.25rem;
   margin-top: var(--space-5);
-  background: var(--color-accent);
+  background: var(--color-prose-accent);
   content: "";
 }
 
@@ -41,14 +41,14 @@
   margin-block: var(--space-12) var(--space-5);
   padding-block-end: var(--space-2);
   border-bottom: var(--border-width) solid var(--color-border);
-  border-left: 0.25rem solid var(--color-accent);
+  border-left: 0.25rem solid var(--color-prose-accent);
   padding-inline-start: var(--space-4);
   font-size: var(--text-2xl);
 }
 
 .prose h3 {
   margin-block: var(--space-10) var(--space-4);
-  border-left: 0.25rem solid var(--color-accent);
+  border-left: 0.25rem solid var(--color-prose-accent);
   padding-inline-start: var(--space-4);
   font-size: var(--text-xl);
 }
@@ -82,7 +82,7 @@
 }
 
 .prose ul > li::marker {
-  color: color-mix(in srgb, var(--color-accent) 45%, var(--color-text-muted));
+  color: var(--color-list-marker);
 }
 
 .prose ol > li::marker {
@@ -110,7 +110,7 @@
 
 .prose blockquote {
   margin-inline: 0;
-  border-left: 0.25rem solid var(--color-accent);
+  border-left: 0.25rem solid var(--color-prose-accent);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
@@ -185,10 +185,10 @@
 .prose .callout-danger {
   margin-block: var(--space-6);
   border: var(--border-width) solid
-    color-mix(in srgb, var(--color-accent) 38%, var(--color-border));
-  border-left: 0.25rem solid var(--color-accent);
+    color-mix(in srgb, var(--color-prose-accent) 30%, var(--color-border));
+  border-left: 0.25rem solid var(--color-prose-accent);
   border-radius: var(--radius-md);
-  background: var(--color-accent-soft);
+  background: var(--color-prose-accent-soft);
   padding: var(--space-5);
 }
 
