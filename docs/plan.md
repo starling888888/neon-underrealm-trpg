@@ -57,11 +57,11 @@
   - [x] `.tmp/*.md` と `review-to-issue` との責務分離を明記
   - [x] 既存ドキュメントに必要であれば対応方針を追記
 
-- [ ] `07-global-styles` — CSS基盤を追加する
-  - [ ] `src/styles/tokens.css` 作成
-  - [ ] `src/styles/global.css` 作成
-  - [ ] `src/styles/prose.css` 作成
-  - [ ] 基本文字組み・本文幅・背景・色トークンを定義
+- [x] `07-global-styles` — CSS基盤を追加する
+  - [x] `src/styles/tokens.css` 作成
+  - [x] `src/styles/global.css` 作成
+  - [x] `src/styles/prose.css` 作成
+  - [x] 基本文字組み・本文幅・背景・色トークンを定義
 
 - [ ] `08-seo-component` — SEO/OGP Componentを作成する
   - [ ] `src/components/seo/Seo.astro` 作成
