@@ -1,6 +1,6 @@
 ---
 name: review-to-issue
-description: Use this skill when local review notes in .tmp/*.md should be validated against local SSoT, summarized into the current docs/issue/*.md as a numbered review section, then paused for user confirmation before implementing fixes and updating the review checklist.
+description: Use this skill when local review notes in .tmp/*.md should be validated against local SSoT, summarized into the current docs/issue/*.md as a numbered review section, or routed to docs/TODO.md / docs/plan.md when they should not be handled by the current issue. Stop for user confirmation before implementing fixes.
 ---
 
 # Review-to-Issue Skill
@@ -14,12 +14,14 @@ Use this skill when the user asks to:
 - validate review feedback against local SSoT
 - add review comments to a task issue file
 - create a numbered review section in `docs/issue/*.md`
+- route review items that do not belong to the current issue into `docs/TODO.md`
+- add a missing future task to `docs/plan.md` when a TODO item has no appropriate plan entry
 - pause for user confirmation before addressing review feedback
 - implement approved review fixes and update the corresponding checklist
 
 This skill has two phases.
 
-1. Review intake: read `.tmp/*.md`, validate it, update only the issue file, then stop.
+1. Review intake: read `.tmp/*.md`, validate it, update only the appropriate tracking documents, then stop.
 2. Review response: after explicit approval, implement fixes and update the checklist.
 
 ---
@@ -37,6 +39,7 @@ A review note becomes actionable only after it is checked against:
 - relevant skills
 - `docs/requirements.md`
 - `docs/out-of-scope.md`
+- `docs/plan.md`
 - relevant design references
 - current local implementation state
 
@@ -85,16 +88,18 @@ Do not perform version-control write operations unless the user explicitly asks.
 4. Identify the review source: human, browser draft, PR draft, local agent, or unknown.
 5. If the review includes a `Source Snapshot`, compare that snapshot against local SSoT.
 6. Identify the current task issue file.
-7. Validate each review item against current issue scope, project rules, and implementation state.
+7. Validate each review item against current issue scope, project rules, plan, and implementation state.
 8. Classify each review item.
-9. Report the validity assessment to the user.
-10. For clearly valid items, append one numbered review section to the issue file.
-11. For doubtful, design-sensitive, stale, or out-of-scope items, ask before intake.
-12. Stop and wait for user confirmation.
+9. Route each review item:
+   - current-issue items go to `docs/issue/*.md`
+   - valid but not-current-issue items go to `docs/TODO.md`
+   - if a not-current-issue item has no suitable plan entry, add a plan entry to `docs/plan.md`
+10. Report the validity and routing assessment to the user.
+11. Stop and wait for user confirmation.
 
 Prefer `docs/issue/CURRENT_BRANCH.md` when it exists.
 
-If no matching issue can be inferred, stop and ask which issue should receive the review section.
+If no matching issue can be inferred, stop and ask which issue should receive current-issue review items.
 
 ---
 
@@ -104,16 +109,57 @@ Classify each item before intake.
 
 Use these labels:
 
-- `valid`: clearly within scope and supported by local SSoT
-- `doubtful`: plausible, but needs human judgment
-- `out-of-scope`: would exceed the current issue scope
+- `valid`: clearly belongs to the current issue and is supported by local SSoT
+- `doubtful`: plausible, but needs human judgment before routing
+- `out-of-scope`: exceeds the current issue scope
 - `stale`: based on an old snapshot or already-fixed state
 - `invalid`: contradicts local SSoT or implementation state
 - `follow-up`: useful, but belongs in a later task
 
-Only `valid` items should be appended automatically during intake.
+Only `valid` items should be appended to the current issue automatically during intake.
 
-Do not silently intake `doubtful`, `out-of-scope`, `stale`, `invalid`, or `follow-up` items.
+Do not silently intake `doubtful`, `stale`, or `invalid` items.
+
+`out-of-scope` and `follow-up` items may be tracked in `docs/TODO.md` when they are useful and consistent with project SSoT.
+
+---
+
+## TODO and plan routing
+
+If a review item is useful but should not be handled by the current issue, route it to future-work tracking instead of dropping it.
+
+This includes:
+
+- `follow-up` items
+- `out-of-scope` items that are valid future work
+- valid findings that belong to a different planned task
+- design, layout, validation, or documentation improvements that should not expand the current issue
+
+For each routed item:
+
+1. Check whether a suitable task already exists in `docs/plan.md`.
+2. If a suitable plan item exists, add the TODO under `docs/TODO.md` and reference that plan item.
+3. If no suitable plan item exists, insert an appropriate unchecked task into `docs/plan.md` in the most relevant section.
+4. Add the TODO under `docs/TODO.md` and reference the newly inserted plan item.
+5. Include a short proposed handling plan for the future task.
+
+`docs/TODO.md` items must use checkboxes.
+
+Use this shape:
+
+```md
+- [ ] TODO title
+  - source: `.tmp/...md` / `レビュー指摘 N` / PR number when available
+  - classification: follow-up / out-of-scope
+  - plan: `docs/plan.md` の該当項目
+  - handling plan: 将来どのタスクでどう扱うか
+```
+
+Do not use `docs/TODO.md` as a replacement for `docs/issue/*.md`.
+
+Do not route current-issue fixes to `docs/TODO.md` just to avoid doing them.
+
+Do not add features that violate `docs/out-of-scope.md` as TODOs unless they are explicitly marked as future / post-initial-scope candidates.
 
 ---
 
@@ -170,25 +216,32 @@ Do not paste long review notes verbatim unless the wording matters.
 
 ## Intake rules
 
+During review intake, allowed write targets are limited to:
+
+- the relevant `docs/issue/*.md` file for current-issue valid items
+- `docs/TODO.md` for useful items that should not be handled by the current issue
+- `docs/plan.md` only when a routed TODO has no suitable existing plan entry
+
 During review intake:
 
-- update only the relevant `docs/issue/*.md` file
 - do not modify source code
-- do not modify docs other than the issue file
+- do not modify unrelated docs
 - do not run broad formatting
 - preserve the review file in `.tmp/`
 - summarize rather than copy long review drafts verbatim
-- do not update `docs/plan.md`
+- do not mark `docs/plan.md` tasks complete
 - do not perform version-control write operations unless explicitly asked
 
-After updating the issue file, report:
+After updating tracking documents, report:
 
 ```md
 ## レビュー取り込み完了
 
 - review: `.tmp/...md`
-- issue: `docs/issue/...md`
-- added section: `レビュー指摘 N`
+- issue: `docs/issue/...md` if updated
+- todo: `docs/TODO.md` if updated
+- plan: `docs/plan.md` if updated
+- added section: `レビュー指摘 N` if applicable
 
 ## 追加した内容
 
@@ -196,6 +249,8 @@ After updating the issue file, report:
 - 判定
 - 対応方針
 - 対応完了チェックリスト
+- TODO化した項目
+- 追加したplan項目
 
 ユーザー確認後に指摘対応を開始します。
 ```
@@ -215,7 +270,7 @@ Do not implement review fixes until the user says something like:
 OK、修正して
 ```
 
-Without explicit approval, stop after the issue update.
+Without explicit approval, stop after the tracking document updates.
 
 ---
 
@@ -243,7 +298,7 @@ If validation fails, stop and report the failure. Do not mark failed checklist i
 
 Do not update unrelated review sections.
 
-Do not update `docs/plan.md` checkboxes.
+Do not mark `docs/plan.md` tasks complete.
 
 Do not perform version-control write operations unless the user explicitly asks.
 
