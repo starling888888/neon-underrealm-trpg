@@ -5,3 +5,5 @@ dist/
 *.xlsx
 *.xlsm
 ~$*.xlsx
+
+.tmp/
