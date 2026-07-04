@@ -35,6 +35,14 @@ Playwrightの標準出力先を使います。
 
 これらはGit管理しません。
 
+Playwrightで取得したスクリーンショットは、実装結果を確認するための actual artifact です。取得したスクリーンショットは、そのままデザイン正本ではありません。
+
 ## デザイン正本
 
 比較対象となるデザイン正本は `docs/design/<design-target>/` に置きます。issue単位の `docs/design/<issue-slug>/` は前提にしません。
+
+デザイン正本は、`design-image-generation` skill または同等の承認済みプロセスで作成・更新します。
+
+実装スクリーンショットを新しいデザイン正本として採用する場合は、`design-image-generation` skill の design fix mode で、既存デザインとの差分と正本化理由を記録し、明示承認後に `docs/design/<design-target>/` へ反映します。
+
+Visual Reviewの失敗を隠す目的で、Playwrightのactual screenshotを直接 `docs/design/` にコピーしてはいけません。
