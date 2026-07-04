@@ -30,6 +30,8 @@ The output from this skill must be treated as input for human review or for the 
 
 Do not claim that local files, local working tree, local command results, or generated artifacts were verified unless a local agent actually verified them.
 
+Do not update `docs/issue/*.md`, `docs/TODO.md`, or `docs/plan.md` from this skill. Routing happens later in `review-to-issue`.
+
 ---
 
 ## Required source checks
@@ -62,6 +64,7 @@ Before writing the review draft, fetch or inspect the following when available:
    - `docs/requirements.md`
    - `docs/out-of-scope.md`
    - `docs/plan.md`
+   - `docs/TODO.md`
 7. Design references when relevant
    - `docs/design/<design-target>/`
 8. Existing code when relevant
@@ -99,6 +102,7 @@ Flag:
 - code that violates `docs/out-of-scope.md`
 - task completion that is not supported by `docs/issue/*.md`
 - `docs/plan.md` checkbox updates outside the post-merge workflow
+- TODO-worthy work that is neither handled in the current issue nor tracked in `docs/TODO.md`
 - design reference changes not explained in the issue or PR body
 - docs and implementation drifting apart
 
@@ -136,9 +140,25 @@ Flag:
 
 - issue file missing or stale
 - review feedback not reflected in the issue
-- TODOs that are not linked to a later task
+- follow-up items not routed to `docs/TODO.md`
+- TODO items not linked to a later task or plan entry
 - decisions made in code but not documented
-- comments that imply future work without assigning it to a future issue
+- comments that imply future work without assigning it to a future issue or TODO
+
+---
+
+## Review item routing hint
+
+For each issue found, make a routing recommendation for the later `review-to-issue` step.
+
+Use one of these hints:
+
+- `current-issue`: should be handled by the current issue / PR follow-up
+- `todo`: should be added to `docs/TODO.md`
+- `plan`: should require or reference a `docs/plan.md` item
+- `ignore`: not actionable after review
+
+This is only a hint. The local `review-to-issue` workflow makes the final routing decision after local validation.
 
 ---
 
@@ -189,7 +209,7 @@ Use this structure:
 
 This review draft was generated from a remote PR snapshot.
 
-Before turning any item into an issue or fix, validate it against the local repository state.
+Before turning any item into an issue, TODO, plan item, or fix, validate it against the local repository state.
 
 ## 総評
 
@@ -209,9 +229,13 @@ Describe the issue.
 
 Explain why it matters.
 
+#### routing hint
+
+- current-issue / todo / plan / ignore
+
 #### 対応案
 
-Suggest a concrete fix or follow-up.
+Suggest a concrete fix, TODO entry, plan entry, or follow-up.
 
 ## 良かった点
 
@@ -223,7 +247,11 @@ Suggest a concrete fix or follow-up.
 
 - ...
 
-### 後続タスクで回収
+### TODO化候補
+
+- ...
+
+### plan追加・更新候補
 
 - ...
 
@@ -240,12 +268,14 @@ If the PR is already merged:
 
 - do not write as if the PR can still be blocked
 - write follow-up items instead
-- point to a target issue or later task when possible
+- point to a target issue, TODO, or later task when possible
 - produce a `.tmp`-ready review draft that can be fed into `review-to-issue`
 
 For merged PRs, prefer language like:
 
 - `要修正候補`
+- `TODO化候補`
+- `plan追加・更新候補`
 - `後続タスクで回収`
 - `次回以降の運用改善`
 - `review-to-issue に取り込む候補`
@@ -259,9 +289,10 @@ The intended next step is:
 1. Human copies this review draft to `.tmp/pr-N-review.md`
 2. Local agent runs `review-to-issue`
 3. Local agent validates the review against local SSoT
-4. Local agent reports valid / doubtful / out-of-scope items
-5. Human approves which items to intake
-6. Local agent appends the approved review section to `docs/issue/*.md`
+4. Local agent classifies items as valid / doubtful / out-of-scope / stale / invalid / follow-up
+5. Local agent routes validated items to the current issue, `docs/TODO.md`, or `docs/plan.md` as appropriate
+6. Human reviews and approves the proposed intake / routing
+7. Local agent applies approved tracking updates and later implements only approved fixes
 
 Do not skip local validation.
 
@@ -275,9 +306,10 @@ This skill does not:
 - replace local validation
 - fix code
 - update issues
+- update `docs/TODO.md`
+- update `docs/plan.md`
 - post GitHub review comments
 - approve PRs
 - request changes on PRs
 - merge PRs
-- update `docs/plan.md`
 - perform repository write operations
