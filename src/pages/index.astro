@@ -1,4 +1,6 @@
 ---
+import "../styles/global.css";
+import "../styles/prose.css";
 import { withBase } from "../lib/utils/paths";
 
 const title = "ネオン・アンダーレルムTRPG";
@@ -13,7 +15,7 @@ const mdxTestPath = withBase("/mdx-test/");
     <title>{title}</title>
   </head>
   <body>
-    <main>
+    <main class="prose">
       <h1>{title}</h1>
       <p>ルールサイト初期化中です。</p>
       <p><a href={mdxTestPath}>MDX表示確認</a></p>

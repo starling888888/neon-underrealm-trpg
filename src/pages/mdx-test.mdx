@@ -1,10 +1,55 @@
+import "../styles/global.css";
+import "../styles/prose.css";
 import InternalLink from "../components/InternalLink.astro";
 import MdxExample from "../components/MdxExample.astro";
+
+<main className="prose">
 
 # MDX表示確認
 
 Markdown本文として見出しや段落を書けることを確認するための最小ページです。
 
+## 見出しとリスト
+
+- 箇条書きの余白を確認します。
+- 長めの文章でも行間が詰まりすぎないことを確認します。
+- アクセント色のmarkerが本文を邪魔しないことを確認します。
+
+> 引用や補足文の表示確認です。本文と区別しつつ、強すぎない見た目にします。
+
+## コードと表
+
+インラインコードは `skill_check` のように表示します。
+
+```ts
+const target = 16;
+const total = roll + ability + skill;
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>項目</th>
+      <th>説明</th>
+      <th>備考</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>判定</td>
+      <td>行動の成否を決める処理です。</td>
+      <td>横幅確認用</td>
+    </tr>
+    <tr>
+      <td>補足</td>
+      <td>長文の読みやすさを確認します。</td>
+      <td>密度確認用</td>
+    </tr>
+  </tbody>
+</table>
+
 <MdxExample label="Astro ComponentをMDX内から表示しています。" />
 
 <InternalLink href="/">トップページへ戻る</InternalLink>
+
+</main>
