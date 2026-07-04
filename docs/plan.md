@@ -74,11 +74,13 @@
 ## Phase 2: レイアウト・ナビゲーション
 
 - [ ] `09-base-layout` — 共通Layoutを作成する
+  - [ ] designを生成する
   - [ ] `src/layouts/BaseLayout.astro` 作成
   - [ ] `src/layouts/ContentLayout.astro` 作成
   - [ ] ヘッダー・本文・フッターの基本構造を作成
 
 - [ ] `10-header-footer` — Header / Footerを実装する
+  - [ ] designを生成する
   - [ ] `Header.astro` 作成
   - [ ] `Footer.astro` 作成
   - [ ] コピーライトを表示
@@ -86,29 +88,34 @@
   - [ ] アイコンリンクに `aria-label` を設定
 
 - [ ] `11-site-menu` — PC左サイトメニューを実装する
+  - [ ] designを生成する
   - [ ] `src/lib/site/menu.ts` 作成
   - [ ] `SiteMenu.astro` 作成
   - [ ] PC版で左サイドに常設表示
 
 - [ ] `12-mobile-menu` — スマホ用開閉メニューを実装する
+  - [ ] designを生成する
   - [ ] `MobileMenu.astro` 作成
   - [ ] ヘッダーのボタンで開閉
   - [ ] メニュー項目選択後に閉じる
   - [ ] Escキーで閉じられることが望ましい
 
 - [ ] `13-page-toc` — PC右ページ内目次を実装する
+  - [ ] designを生成する
   - [ ] `PageToc.astro` 作成
   - [ ] ページ見出しから目次を生成
   - [ ] PC版では右サイドに固定表示
   - [ ] 見出しリンクでページ内ジャンプ可能にする
 
 - [ ] `14-mobile-page-toc` — スマホ用ページ内目次を実装する
+  - [ ] designを生成する
   - [ ] `MobilePageToc.astro` 作成
   - [ ] 「このページの目次」をワンタッチで開ける
   - [ ] 項目選択で該当見出しへジャンプ
   - [ ] サイトメニューとは導線を分離
 
 - [ ] `15-current-menu-highlight` — 現在ページハイライトを実装する
+  - [ ] designを生成する
   - [ ] 現在ページをサイトメニューで視覚的に識別
   - [ ] 親カテゴリを展開または強調
   - [ ] `aria-current="page"` を設定できるようにする
@@ -118,6 +125,7 @@
 ## Phase 3: コンテンツページ骨組み
 
 - [ ] `16-page-home-skeleton` — トップページ骨組みを作成する
+  - [ ] designを生成する
   - [ ] `/` を作成
   - [ ] キャッチコピー枠を作成
   - [ ] タイトルロゴ枠を作成
@@ -162,6 +170,7 @@
   - [ ] アイテム種別説明の見出しを配置
 
 - [ ] `26-page-404` — 404ページを追加する
+  - [ ] designを生成する
   - [ ] `/404.astro` 作成
   - [ ] トップページへのリンクを表示
   - [ ] サイトメニューまたは検索への導線を表示
@@ -211,48 +220,57 @@
 ## Phase 5: データ表示UI
 
 - [ ] `33-callout-component` — コールアウトComponentを追加する
+  - [ ] designを生成する
   - [ ] `Callout.astro` 作成
   - [ ] `note`, `tip`, `warning`, `danger`, `example`, `version` を扱えるようにする
 
 - [ ] `34-image-block-component` — 画像Componentを追加する
+  - [ ] designを生成する
   - [ ] `ImageBlock.astro` 作成
   - [ ] `src`, `alt`, `caption` を指定可能にする
   - [ ] base path対応
   - [ ] `loading="lazy"` 対応
 
 - [ ] `35-skill-card` — SkillCardを実装する
+  - [ ] designを生成する
   - [ ] `SkillCard.astro` 作成
   - [ ] 名称、最大レベル、タイミング、コスト、技能、制限、効果を表示
   - [ ] 個別アンカーIDを付与
 
 - [ ] `36-skill-list-legend` — SkillList / SkillLegendを実装する
+  - [ ] designを生成する
   - [ ] `SkillList.astro` 作成
   - [ ] `SkillLegend.astro` 作成
   - [ ] ownerやcategoryでスキルを抽出表示
 
 - [ ] `37-item-card` — ItemCardを実装する
+  - [ ] designを生成する
   - [ ] `ItemCard.astro` 作成
   - [ ] アイテム種別ごとに必要項目を表示
   - [ ] 個別アンカーIDを付与
 
 - [ ] `38-item-list-legend` — ItemList / ItemLegendを実装する
+  - [ ] designを生成する
   - [ ] `ItemList.astro` 作成
   - [ ] `ItemLegend.astro` 作成
   - [ ] typeでアイテムを抽出表示
 
 - [ ] `39-ryugi-pages` — 流儀一覧・詳細テンプレートを実装する
+  - [ ] designを生成する
   - [ ] `/data/ryugi/index.astro` 作成
   - [ ] `/data/ryugi/[ryugiId].astro` 作成
   - [ ] 共通テンプレートから流儀ページを静的生成
   - [ ] 流儀スキル一覧を表示
 
 - [ ] `40-ikizama-pages` — 生き様一覧・詳細テンプレートを実装する
+  - [ ] designを生成する
   - [ ] `/data/ikizama/index.astro` 作成
   - [ ] `/data/ikizama/[ikizamaId].astro` 作成
   - [ ] 共通テンプレートから生き様ページを静的生成
   - [ ] 生き様スキル一覧・関連アイテムリンクを表示
 
 - [ ] `41-item-category-pages` — アイテムカテゴリページを実装する
+  - [ ] designを生成する
   - [ ] `/data/items/weapons.astro` 作成
   - [ ] `/data/items/armors.astro` 作成
   - [ ] `/data/items/omamori.astro` 作成
@@ -275,6 +293,7 @@
   - [ ] `npm run index:search` 追加
 
 - [ ] `44-search-modal-ui` — 検索モーダルUIを作成する
+  - [ ] designを生成する
   - [ ] `SearchButton.astro` 作成
   - [ ] `SearchModal.astro` 作成
   - [ ] 検索結果を同一画面内に表示する枠を作成
@@ -289,6 +308,7 @@
   - [ ] ページタイトル、セクション、種別ラベルを検索結果に表示
 
 - [ ] `47-search-mobile-behavior` — スマホ検索挙動を調整する
+  - [ ] designを生成する
   - [ ] ヘッダー右側に検索アイコンを表示
   - [ ] 検索アイコンからポップアップ表示
   - [ ] 検索中に背景本文が不用意にスクロールしないよう調整
@@ -318,6 +338,7 @@
   - [ ] `/release-notes` へのリンクを表示
 
 - [ ] `52-home-content-finalize` — トップ構成を整備する
+  - [ ] designを生成する
   - [ ] ゲームキャッチコピーを表示
   - [ ] タイトルロゴを表示
   - [ ] ゲームの簡単な説明を表示

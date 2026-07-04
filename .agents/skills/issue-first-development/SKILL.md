@@ -136,9 +136,9 @@ docs/design/components/
 
 Record the design target and key reference files in `背景`, `対象範囲`, `完了条件`, `レビュー観点`, or `備考`, whichever is clearest for the task.
 
-If no relevant design target exists, note that no design target was found when reporting the prepared issue.
+For UI implementation tasks, design images must exist before implementation begins. If no relevant design target exists, record `designを生成する` as a required pre-implementation item in the issue and note that implementation must not begin until the design image is generated and reviewed.
 
-Do not create new design images during issue-first preparation unless the user explicitly asks for that. Design image creation belongs to a separate approved task or a later implementation/review step.
+Do not create new design images during issue-first preparation unless the user explicitly asks for that. Design image creation belongs to a separate approved task or a later approved pre-implementation step.
 
 ---
 
