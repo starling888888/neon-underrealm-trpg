@@ -50,12 +50,12 @@
   - [x] base path helper を用意
   - [x] 内部リンク・画像パスがサブパスで壊れない方針を作る
 
-- [ ] `07-0-prepare-design-review` — Visual Review基盤を準備する
-  - [ ] Visual Review用skillを追加
-  - [ ] design正本とVisual Review成果物の配置方針を定義
-  - [ ] package.jsonにVisual Review用scriptと必要最小限の依存関係を追加
-  - [ ] `.tmp/*.md` と `review-to-issue` との責務分離を明記
-  - [ ] 既存ドキュメントに必要であれば対応方針を追記
+- [x] `07-0-prepare-design-review` — Visual Review基盤を準備する
+  - [x] Visual Review用skillを追加
+  - [x] design正本とVisual Review成果物の配置方針を定義
+  - [x] package.jsonにVisual Review用scriptと必要最小限の依存関係を追加
+  - [x] `.tmp/*.md` と `review-to-issue` との責務分離を明記
+  - [x] 既存ドキュメントに必要であれば対応方針を追記
 
 - [ ] `07-global-styles` — CSS基盤を追加する
   - [ ] `src/styles/tokens.css` 作成
