@@ -3,6 +3,7 @@ import "../styles/prose.css";
 import InternalLink from "../components/InternalLink.astro";
 import MdxExample from "../components/MdxExample.astro";
 
+{/* TODO: Move this wrapper into ContentLayout when the layout task is implemented. */}
 <main className="prose">
 
 # MDX表示確認
@@ -26,27 +27,10 @@ const target = 16;
 const total = roll + ability + skill;
 ```
 
-<table>
-  <thead>
-    <tr>
-      <th>項目</th>
-      <th>説明</th>
-      <th>備考</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>判定</td>
-      <td>行動の成否を決める処理です。</td>
-      <td>横幅確認用</td>
-    </tr>
-    <tr>
-      <td>補足</td>
-      <td>長文の読みやすさを確認します。</td>
-      <td>密度確認用</td>
-    </tr>
-  </tbody>
-</table>
+| 項目 | 説明 | 備考 |
+|---|---|---|
+| 判定 | 行動の成否を決める処理です。 | 横幅確認用 |
+| 補足 | 長文の読みやすさを確認します。 | 密度確認用 |
 
 <MdxExample label="Astro ComponentをMDX内から表示しています。" />
 

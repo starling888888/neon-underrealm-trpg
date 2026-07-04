@@ -82,7 +82,7 @@
 }
 
 .prose ul > li::marker {
-  color: var(--color-accent);
+  color: color-mix(in srgb, var(--color-accent) 45%, var(--color-text-muted));
 }
 
 .prose ol > li::marker {
@@ -155,9 +155,11 @@
 
 .prose table {
   display: block;
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   overflow-x: auto;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
