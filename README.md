@@ -27,18 +27,23 @@ npm run dev
 npm run check
 npm run build
 npm run preview
+npm run visual:capture
+npm run visual:install
 ```
 
 - `npm run dev`: ローカル開発サーバーを起動する
 - `npm run check`: Astro / TypeScript / Biome の確認を実行する
 - `npm run build`: 静的サイトをビルドする
 - `npm run preview`: ビルド済みサイトをローカルで確認する
+- `npm run visual:capture`: PlaywrightでVisual Review用スクリーンショットを取得する
+- `npm run visual:install`: Visual Review用のChromiumをインストールする
 
 ## ディレクトリ概要
 
 - `src/`: Astroサイトのソースコード
 - `public/`: 静的アセット
 - `docs/`: 要件、計画、運用ドキュメント
+- `docs/design/`: Visual Reviewで参照するデザイン正本
 - `docs/issue/`: タスクごとの作業定義
 - `data/generated/`: Excelから変換した公開用JSONの配置先
 - `.raw/`: ローカル作業用のExcel配置先。Git管理しない
@@ -64,6 +69,14 @@ Git管理するのは、Excelから変換された `data/generated/` 配下のJS
 一時レビュー用の出力、比較用メモ、作業中のスクラッチファイルなど、Git管理しない一時ファイルは `.tmp/` 配下に置きます。
 
 `.tmp/` の内容は共有成果物として扱わず、必要な情報だけを正式なドキュメントや作業報告へ反映します。
+
+## Visual Review
+
+Visual Reviewは、承認済みUI実装後にデザイン正本と実装スクリーンショットを比較するための確認フローです。
+
+デザイン正本は `docs/design/<design-target>/` に置きます。Visual Reviewで取得したスクリーンショットやレポートはPlaywrightの `test-results/` / `playwright-report/` に出力し、Git管理しません。
+
+`.tmp/*.md` は人間または外部レビューを `docs/issue/*.md` に取り込むための入力専用であり、Visual Review成果物の保存先には使いません。
 
 ## 初期スコープ外
 

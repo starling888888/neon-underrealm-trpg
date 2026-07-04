@@ -46,30 +46,30 @@
 
 ## 完了条件
 
-- [ ] `visual-implementation-review` skillが既存skill配置方式に合わせて追加されている
-- [ ] Visual Review skillが、承認済みUI実装後のスクリーンショット取得、比較、局所修正、issue記録だけを担うように定義されている
-- [ ] design正本は `docs/design/<design-target>/` として方針化されている
-- [ ] Visual Review成果物はPlaywrightの出力ディレクトリ規約に従い、Git管理外として方針化されている
-- [ ] `.gitignore` にVisual Review成果物の出力先が追加されている
-- [ ] `.tmp/*.md` は `review-to-issue` 入力専用であり、Visual Review用途に使わないことが明記されている
-- [ ] `## ビジュアルレビュー N` と `## レビュー指摘 N` の使い分けが明記されている
-- [ ] `package.json` にVisual Review用scriptが必要最小限で追加されている
-- [ ] 必要最小限のdevDependenciesが追加され、追加理由・代替案・初期スコープに必要な理由を作業報告に記載できる
-- [ ] 既存ドキュメントに必要であれば対応方針が追記されている
-- [ ] `npm run build` が通る
-- [ ] `npm run check` が通る
+- [x] `visual-implementation-review` skillが既存skill配置方式に合わせて追加されている
+- [x] Visual Review skillが、承認済みUI実装後のスクリーンショット取得、比較、局所修正、issue記録だけを担うように定義されている
+- [x] design正本は `docs/design/<design-target>/` として方針化されている
+- [x] Visual Review成果物はPlaywrightの出力ディレクトリ規約に従い、Git管理外として方針化されている
+- [x] `.gitignore` にVisual Review成果物の出力先が追加されている
+- [x] `.tmp/*.md` は `review-to-issue` 入力専用であり、Visual Review用途に使わないことが明記されている
+- [x] `## ビジュアルレビュー N` と `## レビュー指摘 N` の使い分けが明記されている
+- [x] `package.json` にVisual Review用scriptが必要最小限で追加されている
+- [x] 必要最小限のdevDependenciesが追加され、追加理由・代替案・初期スコープに必要な理由を作業報告に記載できる
+- [x] 既存ドキュメントに必要であれば対応方針が追記されている
+- [x] `npm run build` が通る
+- [x] `npm run check` が通る
 
 ## チェックポイント
 
-- [ ] 既存の `issue-first-development` の責務を変更していない
-- [ ] 既存の `review-to-issue` の責務を変更していない
-- [ ] Visual Review skillがbranch作成、issue新規作成、plan更新、commit、pushを行わない設計になっている
-- [ ] design正本をissue単位の `docs/design/<issue-slug>/` にしない方針になっている
-- [ ] Visual Review成果物を `.tmp/` やGit管理下の固定成果物ディレクトリに保存しない方針になっている
-- [ ] 既存npm scriptsを削除・破壊していない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] 既存の `issue-first-development` の責務を変更していない
+- [x] 既存の `review-to-issue` の責務を変更していない
+- [x] Visual Review skillがbranch作成、issue新規作成、plan更新、commit、pushを行わない設計になっている
+- [x] design正本をissue単位の `docs/design/<issue-slug>/` にしない方針になっている
+- [x] Visual Review成果物を `.tmp/` やGit管理下の固定成果物ディレクトリに保存しない方針になっている
+- [x] 既存npm scriptsを削除・破壊していない
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 

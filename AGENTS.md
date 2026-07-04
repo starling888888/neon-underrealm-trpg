@@ -227,6 +227,10 @@ Excel変換仕様が未確定の段階で、変換処理を過剰に作り込ん
 
 `.tmp/` の内容は共有成果物として扱わず、必要な情報だけを正式なドキュメントや作業報告へ反映する。
 
+Visual Reviewで参照するデザイン正本は `docs/design/<design-target>/` に置く。
+
+Visual Reviewで取得するスクリーンショットやレポートはPlaywrightの `test-results/` / `playwright-report/` に出力し、Git管理しない。
+
 ---
 
 ### 5. `.raw/` と `.tmp/` をGit管理しない
@@ -238,6 +242,8 @@ Excel変換仕様が未確定の段階で、変換処理を過剰に作り込ん
 ```gitignore
 .raw/
 .tmp/
+test-results/
+playwright-report/
 *.xlsx
 *.xlsm
 ~$*.xlsx
@@ -246,6 +252,8 @@ Excel変換仕様が未確定の段階で、変換処理を過剰に作り込ん
 `.raw/` 配下のファイルをGit管理してはならない。
 
 `.tmp/` 配下のファイルをGit管理してはならない。
+
+Visual Review成果物として生成される `test-results/` と `playwright-report/` をGit管理してはならない。
 
 ---
 
