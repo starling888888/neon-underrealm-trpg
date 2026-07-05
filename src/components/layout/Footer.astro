@@ -1,0 +1,157 @@
+---
+import { siDiscord, siGithub, siX } from "simple-icons";
+import { siteLinks } from "../../lib/site/links";
+import { siteMeta } from "../../lib/site/siteMeta";
+
+const footerLinks = [
+  {
+    href: siteLinks.github,
+    icon: siGithub,
+    label: "GitHubリポジトリを開く",
+  },
+  {
+    href: siteLinks.x,
+    icon: siX,
+    label: "Xアカウントを開く",
+  },
+  {
+    href: siteLinks.discord,
+    icon: siDiscord,
+    label: "Discordサーバーに参加する",
+  },
+] as const;
+---
+
+<footer class="site-footer">
+  <p class="copyright">&copy; 2026 椋鳥</p>
+
+  <div class="footer-links">
+    <p class="footer-site-name">{siteMeta.title}</p>
+    <ul class="social-links" aria-label="外部リンク">
+      {
+        footerLinks.map((link) => (
+          <li>
+            <a
+              class="social-link"
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={link.label}
+            >
+              <svg
+                class="social-icon"
+                viewBox="0 0 24 24"
+                role="img"
+                aria-hidden="true"
+              >
+                <path d={link.icon.path} />
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    min-height: 5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space-8);
+    background: var(--color-header);
+    color: var(--color-text-inverse);
+    padding-inline: var(--space-8);
+  }
+
+  .copyright,
+  .footer-site-name {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--line-height-tight);
+  }
+
+  .copyright {
+    color: color-mix(in srgb, var(--color-text-inverse) 92%, transparent);
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-8);
+  }
+
+  .footer-site-name {
+    font-weight: 700;
+  }
+
+  .social-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .social-link {
+    min-width: 3.25rem;
+    min-height: 2.5rem;
+    display: inline-grid;
+    place-items: center;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-inverse);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      border-color 120ms ease,
+      color 120ms ease,
+      background-color 120ms ease;
+  }
+
+  .social-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: currentColor;
+  }
+
+  .social-link:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 72%, white);
+    background: rgb(248 250 249 / 0.08);
+    color: color-mix(in srgb, var(--color-accent) 78%, white);
+  }
+
+  @media (max-width: 48rem) {
+    .site-footer {
+      inline-size: 100vw;
+      min-height: 7.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      text-align: center;
+    }
+
+    .footer-links {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .social-links {
+      justify-content: center;
+      gap: var(--space-4);
+    }
+
+    .social-link {
+      min-width: 3.75rem;
+      min-height: 2.25rem;
+    }
+  }
+</style>

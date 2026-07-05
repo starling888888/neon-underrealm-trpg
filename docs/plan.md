@@ -84,7 +84,7 @@
   - [ ] `Header.astro` 作成
   - [ ] `Footer.astro` 作成
   - [ ] コピーライトを表示
-  - [ ] クレジット、GitHub、X、Discordリンク枠をアイコンで表示
+  - [ ] GitHub、X、Discordリンク枠をアイコンで表示
   - [ ] アイコンリンクに `aria-label` を設定
 
 - [ ] `11-site-menu` — PC左サイトメニューを実装する
