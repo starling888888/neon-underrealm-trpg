@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import "../styles/prose.css";
+import Footer from "../components/layout/Footer.astro";
 import Header from "../components/layout/Header.astro";
 import Seo from "../components/seo/Seo.astro";
 import type { SeoProps } from "../lib/site/seo";
@@ -89,10 +90,7 @@ const {
         </aside>
       </div>
 
-      <footer class="site-footer">
-        <p>&copy; Neon Underrealm TRPG</p>
-        <p class="footer-note">共通フッター領域プレースホルダー</p>
-      </footer>
+      <Footer />
     </div>
   </body>
 </html>
@@ -178,26 +176,6 @@ const {
     width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
     margin-inline: auto;
     padding-block: var(--space-12);
-  }
-
-  .site-footer {
-    min-height: 4.5rem;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: var(--space-8);
-    background: var(--color-header);
-    color: var(--color-text-inverse);
-    padding-inline: var(--space-8);
-  }
-
-  .site-footer p {
-    margin: 0;
-    font-size: var(--text-sm);
-  }
-
-  .footer-note {
-    color: color-mix(in srgb, var(--color-text-inverse) 52%, transparent);
   }
 
   @media (max-width: 48rem) {

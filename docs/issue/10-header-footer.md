@@ -206,6 +206,13 @@ target="_blank"
 rel="noopener noreferrer"
 ```
 
+### 依存追加メモ
+
+* 追加package: `simple-icons`
+* 追加理由: FooterのGitHub / X / Discordリンクを文字ラベルではなく、ブランドアイコンとして表示するため。3種のブランドアイコンが同一packageで揃い、SVG pathをAstro Component内で静的に描画できる。
+* 代替案: 手書きSVGをComponent内に直接埋め込む、または `GH` / `X` / `DC` の文字ラベルを継続する。
+* 初期スコープに必要な理由: このissueの完了条件に「GitHub、X、Discordリンク枠をアイコンで表示」「アイコンリンクにアクセシビリティ属性を設定」が含まれており、Footerリンクを公開サイトの共通部品として成立させるため。
+
 ## レビュー観点
 
 * Header / Footer が単なるプレースホルダーではなく、公開サイトの共通部品として成立しているか
@@ -288,6 +295,61 @@ rel="noopener noreferrer"
 
 - Footerと本文Layoutは今回の「ヘッダー確認」対象外。actual screenshotには未実装Footerと既存本文プレースホルダーが含まれる。
 - Mobile full-page screenshot自体は既存本文Layoutの横幅を含むため `1360x900` で出力される。Header表示は390px viewport内に収まるが、本文Layoutのmobile最適化は別issue範囲として扱う。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### デザイン参照
+
+- design target: `docs/design/header-footer/`
+- reference desktop: `docs/design/header-footer/design-desktop.png`
+- reference mobile: `docs/design/header-footer/design-mobile.png`
+- notes: `docs/design/header-footer/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual/actual-desktop.png`
+- actual mobile: `test-results/visual/actual-mobile.png`
+- report: Playwright output
+
+### レビュー結果
+
+| 領域 | 判定 | 差分 | 対応 |
+|---|---|---|---|
+| レイアウト | OK | Desktopはコピーライト左、サイト名とブランドアイコンリンク右配置。Mobileはコピーライト、サイト名、リンク群の縦積みで参照画像と一致。 | 対応不要 |
+| 余白 | OK | Mobile Footerの初回actualは内容量により正本の120pxより高かった。 | mobile時のpaddingとgapを調整 |
+| タイポグラフィ | OK | コピーライト、サイト名、リンク種別ラベルは参照画像と同等のサイズ感。 | 対応不要 |
+| 色 | OK | Headerと同じ暗めニュートラルグレー基調で、リンク枠も低彩度。 | 対応不要 |
+| 配置・整列 | OK | Desktop / Mobileとも要素の整列とリンクボタン間隔は参照画像と大きな差分なし。 | 対応不要 |
+| レスポンシブ | OK | 390px幅でFooter本体がviewport内に収まり、リンク群が詰まりすぎていない。 | 対応不要 |
+| overflow / scroll | OK | Footer本体は390px viewport内に収まる。既存本文Layoutの横スクロール幅はFooter実装範囲外。 | 対応不要 |
+| 既存デザインとの整合 | OK | `base-layout` / `global-styles` の暗色共通領域と整合。 | 対応不要 |
+| 既存Componentとの整合 | OK | `BaseLayout.astro` からFooter Componentを利用し、詳細実装を分離。リンク値は `siteLinks` に分離し、ブランドアイコンは `simple-icons` から参照。 | 対応不要 |
+| accessibility basics | OK | アイコン相当のリンクに `aria-label` があり、外部リンクに `target="_blank"` / `rel="noopener noreferrer"` がある。 | 対応不要 |
+
+### 自己修正した項目
+
+- [x] Mobile Footerが正本の `120px` より高く出ていたため、`Footer.astro` のmobile paddingとgapを調整した。
+- [x] Footerリンクが文字ラベル表示に留まっていたため、`simple-icons` を追加し、GitHub / X / Discord のブランドSVGアイコン表示へ変更した。
+
+### 人間判断が必要な差分
+
+- Mobile full-page screenshot自体は既存本文Layoutの横幅を含むため `1360x940` で出力される。Footer表示は390px viewport内に収まるが、本文Layoutのmobile最適化は別issue範囲として扱う。
+- 今回のcaptureはAstro dev toolbarの重なりを避けるため、`npm run build` 後の `npm run preview` で取得した。
+- `docs/design/header-footer/design-*.png` ではリンク種別を `GH` / `X` / `DC` として表現しているが、実装ではユーザー指示に従いブランドアイコンを使用する。
 
 ### design-image-generation への引き継ぎ候補
 
