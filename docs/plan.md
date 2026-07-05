@@ -73,11 +73,11 @@
 
 ## Phase 2: レイアウト・ナビゲーション
 
-- [ ] `09-base-layout` — 共通Layoutを作成する
-  - [ ] designを生成する
-  - [ ] `src/layouts/BaseLayout.astro` 作成
-  - [ ] `src/layouts/ContentLayout.astro` 作成
-  - [ ] ヘッダー・本文・フッターの基本構造を作成
+- [x] `09-base-layout` — 共通Layoutを作成する
+  - [x] designを生成する
+  - [x] `src/layouts/BaseLayout.astro` 作成
+  - [x] `src/layouts/ContentLayout.astro` 作成
+  - [x] ヘッダー・本文・フッターの基本構造を作成
 
 - [ ] `10-header-footer` — Header / Footerを実装する
   - [ ] designを生成する
