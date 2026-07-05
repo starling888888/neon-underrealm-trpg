@@ -1,0 +1,59 @@
+---
+import type { SiteMenuItem } from "../../lib/site/menu";
+import { withBase } from "../../lib/utils/paths";
+
+type Props = {
+  item: SiteMenuItem;
+  indexPath: string;
+  level: number;
+};
+
+const { item, indexPath, level } = Astro.props;
+const hasChildren = Boolean(item.children?.length);
+
+function menuGroupId(indexPath: string): string {
+  return `site-menu-group-${indexPath.replaceAll(".", "-")}`;
+}
+---
+
+<li class={`site-menu-item level-${level}`}>
+  <div class="site-menu-row">
+    {
+      hasChildren ? (
+        <button
+          class="site-menu-toggle"
+          type="button"
+          data-disclosure-toggle
+          aria-label={`${item.label} の子項目を開閉する`}
+          aria-expanded={item.defaultExpanded ? "true" : "false"}
+          aria-controls={menuGroupId(indexPath)}
+        >
+          <span class="site-menu-caret" aria-hidden="true" />
+        </button>
+      ) : (
+        <span class="site-menu-spacer" aria-hidden="true" />
+      )
+    }
+    <a class="site-menu-link" href={withBase(item.href)}>
+      {item.label}
+    </a>
+  </div>
+
+  {
+    hasChildren ? (
+      <ul
+        id={menuGroupId(indexPath)}
+        class="site-menu-list"
+        hidden={!item.defaultExpanded}
+      >
+        {item.children?.map((child, childIndex) => (
+          <Astro.self
+            item={child}
+            indexPath={`${indexPath}.${childIndex + 1}`}
+            level={level + 1}
+          />
+        ))}
+      </ul>
+    ) : null
+  }
+</li>

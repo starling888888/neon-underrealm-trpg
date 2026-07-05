@@ -13,17 +13,14 @@ export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "はじめに",
     href: "/introduction",
-    defaultExpanded: true,
   },
   {
     label: "ワールドガイド",
     href: "/world",
-    defaultExpanded: true,
   },
   {
     label: "キャラクターメイキング",
     href: "/character-making",
-    defaultExpanded: true,
   },
   {
     label: "データ",
