@@ -1,10 +1,11 @@
-import "../styles/global.css";
-import "../styles/prose.css";
+---
+layout: ../layouts/ContentLayout.astro
+title: MDX表示確認
+description: Markdown本文として見出しや段落を書けることを確認するための最小ページです。
+---
+
 import InternalLink from "../components/InternalLink.astro";
 import MdxExample from "../components/MdxExample.astro";
-
-{/* TODO: Move this wrapper into ContentLayout when the layout task is implemented. */}
-<main className="prose">
 
 # MDX表示確認
 
@@ -35,5 +36,3 @@ const total = roll + ability + skill;
 <MdxExample label="Astro ComponentをMDX内から表示しています。" />
 
 <InternalLink href="/">トップページへ戻る</InternalLink>
-
-</main>
