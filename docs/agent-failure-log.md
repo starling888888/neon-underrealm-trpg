@@ -80,3 +80,11 @@
 - 発生箇所: `09-base-layout` のdesign画像生成
 - 観測した失敗: design画像が未レビューのドラフトであるにもかかわらず、SiteMenu風の文言やスコープ外導線の混入にこだわって複数回画像生成を行い、最終的にSVGを手作りしてPNGへ変換するという、当初の画像生成手順から逸脱した生成へ進んだ。
 - 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/09-base-layout.md` から画像生成済み扱いを取り除いた。
+
+### Out-of-scope UI leakage in design artifacts
+
+#### 2026-07-05
+
+- 発生箇所: `09-base-layout` の `design-desktop.png`
+- 観測した失敗: パンくずリストをdesign画像に含めない方針を `notes.md` に記録した後も、`Chapter 1 / Foundation` というスラッシュ付きラベルが残り、パンくずリストのように見える状態になっていた。
+- 一次対応: `design-desktop.png` の該当ラベルを `Rule text sample` に変更し、パンくず風のスラッシュ表現を削除した。
