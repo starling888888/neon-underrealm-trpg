@@ -1,25 +1,15 @@
 ---
-import "../styles/global.css";
-import "../styles/prose.css";
-import Seo from "../components/seo/Seo.astro";
+import ContentLayout from "../layouts/ContentLayout.astro";
 import { withBase } from "../lib/utils/paths";
 
 const title = "ネオン・アンダーレルムTRPG";
+const description =
+  "ネオン・アンダーレルムTRPGのルール、データ、更新情報を公開するサイトです。";
 const mdxTestPath = withBase("/mdx-test/");
 ---
 
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <Seo title={title} />
-  </head>
-  <body>
-    <main class="prose">
-      <h1>{title}</h1>
-      <p>ルールサイト初期化中です。</p>
-      <p><a href={mdxTestPath}>MDX表示確認</a></p>
-    </main>
-  </body>
-</html>
+<ContentLayout title={title} description={description}>
+  <h1>{title}</h1>
+  <p>ルールサイト初期化中です。</p>
+  <p><a href={mdxTestPath}>MDX表示確認</a></p>
+</ContentLayout>

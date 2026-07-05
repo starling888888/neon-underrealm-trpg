@@ -26,19 +26,6 @@ body {
   letter-spacing: 0;
 }
 
-body::before {
-  display: block;
-  height: 0.25rem;
-  background: var(--color-header);
-  content: "";
-}
-
-main {
-  width: min(100% - (var(--page-gutter) * 2), var(--content-width));
-  margin-inline: auto;
-  padding-block: var(--space-12);
-}
-
 a {
   color: var(--color-link);
   font-weight: 600;
@@ -81,10 +68,4 @@ textarea {
 ::selection {
   background: color-mix(in srgb, var(--color-accent) 28%, white);
   color: var(--color-text);
-}
-
-@media (max-width: 640px) {
-  main {
-    padding-block: var(--space-8);
-  }
 }

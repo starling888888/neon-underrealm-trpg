@@ -179,9 +179,9 @@ GitHub Pagesのサブパス公開に対して、内部リンク、画像、OGP U
 
 このタスクはUI / layoutタスクであるため、実装前に `docs/design/base-layout/` のデスクトップdesign画像を用意する必要がある。
 
-ローカル検証では、`docs/design/global-styles/` は存在するが、`docs/design/base-layout/` または `docs/design/site-layout/` は未作成である。
+ローカル検証では、`docs/design/global-styles/` は存在するが、`docs/design/site-layout/` は未作成である。
 
-そのため、実装前に `.agents/skills/design-image-generation/SKILL.md` の initial draft mode に従い、以下を作成する想定とする。
+実装前に `.agents/skills/design-image-generation/SKILL.md` の initial draft mode に従い、以下を作成した。
 
 * `docs/design/base-layout/notes.md`
 * `docs/design/base-layout/design-desktop.png`
@@ -207,23 +207,77 @@ design画像では、以下を描き込みすぎないこと。
 
 * current branch: `09-base-layout`
 * `09-base-layout` branch: 新規作成済み
-* working tree: `docs/issue/09-base-layout.md` の未追跡変更のみ
+* working tree: 実装変更あり
 * `docs/issue/09-base-layout.md`: ローカルに存在
 * `docs/plan.md`: `09-base-layout` が未完了タスクとして存在
 * `docs/TODO.md`: `Seo.astro` を共通Layoutへ組み込むTODOが `09-base-layout` に紐づいている
 * `docs/design/global-styles/`: `notes.md`、`style-tile.png`、`style-tile-mobile.png` が存在
-* `docs/design/base-layout/`: 未作成
+* `docs/design/base-layout/`: `notes.md`、`design-desktop.png` が存在
 * `docs/design/site-layout/`: 未作成
 * `src/pages/index.astro`: ページ内にHTML骨格、`Seo.astro`、共通CSS importが存在
 * `src/components/seo/Seo.astro`: 存在
 * `src/pages/mdx-test.mdx`: 存在
 * `package.json`: `npm run build` と `npm run check` が定義されている
 
-未実行:
+実装後に実行:
 
-* `npm run build`
-* `npm run check`
+* `npm run check`: 成功
+* `npm run build`: 成功
+* `design-image-generation` initial draft mode: デスクトップdesign画像作成まで実行済み
 
-* `design-image-generation` initial draft mode
+モバイルdesign画像は今回のデスクトップ限定スコープ外とする。
 
-実装開始前に、`docs/design/base-layout/` のデスクトップdesign画像を作成する。モバイルdesign画像は今回のデスクトップ限定スコープ外とする。
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+* design target: `docs/design/base-layout/`
+* reference desktop: `docs/design/base-layout/design-desktop.png`
+* reference mobile: なし。今回のissueはデスクトップ限定スコープのため `design-mobile.png` は作成しない。
+* notes: `docs/design/base-layout/notes.md`
+
+### 成果物
+
+* actual desktop: `test-results/visual/actual-desktop.png`
+* actual mobile: `test-results/visual/actual-mobile.png`
+* report: `playwright-report/` は生成されていない
+
+### レビュー結果
+
+| 領域 | 判定 | 差分 | 対応 |
+|---|---|---|---|
+| レイアウト | OK | desktopでheader、左rail、本文、右rail、footerの基本構造が表示されている | 修正なし |
+| 余白 | OK | designと完全一致ではないが、本文幅とrail余白は概ね意図どおり | 修正なし |
+| タイポグラフィ | OK | 実装は日本語本文の実データ表示、designは英字サンプル中心 | ページ内容差分として許容 |
+| 色 | OK | 右補助エリアは白寄り背景で、色面として強く分離していない | 修正なし |
+| 配置・整列 | OK | header placeholder、rail placeholder、本文カラムが安定している | 修正なし |
+| レスポンシブ | 要人間判断 | mobile screenshotは取得したが、今回のissueはデスクトップ限定でSiteMenu mobile hide等はスコープ外 | 後続タスクで判断 |
+| overflow / scroll | OK | desktop layoutとして破綻なし。mobileは横幅より広いデスクトップシェルとして表示される | mobileはスコープ外 |
+| 既存デザインとの整合 | OK | `docs/design/global-styles/` の白寄り背景、暗めヘッダー、青緑アクセントと矛盾しない | 修正なし |
+| 既存Componentとの整合 | OK | `Seo.astro`、`InternalLink.astro`、MDX Componentが利用可能 | 修正なし |
+| accessibility basics | OK | site titleはリンク、装飾placeholderは `aria-hidden`、railには `aria-label` を設定 | 修正なし |
+
+### 自己修正した項目
+
+* [x] `npm run check` が `.tmp/` の一時SVGをBiome対象に含めて失敗したため、`biome.json` で `.tmp/`、`test-results/`、`playwright-report/` を対象外にした。
+* [x] MDXページは管理しやすいように、本文内でLayout Componentを包む形ではなくfrontmatterの `layout` 指定へ変更した。
+* [x] frontmatter layout変更後に `/mdx-test/` のVisual captureを再実行し、MDXページにもheader、left rail、main、right rail、footerが表示されることを確認した。
+
+### 人間判断が必要な差分
+
+* mobile screenshotは取得したが、今回のissueはデスクトップ限定である。mobile layout、SiteMenuのmobile hide、mobile menuは後続タスクで扱う。
+* `/` は本文量が少ないため、design referenceの本文サンプルとは見た目密度が異なる。MDX本文ページ `/mdx-test/` では長文・表・codeを含む本文表示を確認済み。
+
+### design-image-generation への引き継ぎ候補
+
+* [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+* [x] desktop screenshot を取得した
+* [x] mobile screenshot を取得した
+* [x] reference と actual を比較した
+* [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+* [x] design正本の更新が必要な場合は、人間判断項目として記録した
+* [x] `npm run check` が通る
+* [x] `npm run build` が通る

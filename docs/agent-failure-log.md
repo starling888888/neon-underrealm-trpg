@@ -96,3 +96,11 @@
 - 発生箇所: `.mcp.json`、`AGENTS.md`、`README.md` のContext7関連作業
 - 観測した失敗: VS Code HistoryやCodexセッション履歴にはContext7関連の `.mcp.json` 作成、`AGENTS.md` 追記、`README.md` 追記の作業記録が残っていたが、該当変更がcommitされておらず、現在の作業ツリーから消えていた。
 - 一次対応: 履歴に残っていた内容を参照し、`.mcp.json`、`AGENTS.md` のMCP / Context7利用方針、`README.md` の任意開発支援設定を再作成した。
+
+### Visual verification gap after UI-affecting change
+
+#### 2026-07-05
+
+- 発生箇所: `09-base-layout` の `src/pages/mdx-test.mdx` frontmatter layout変更
+- 観測した失敗: MDXページのLayout適用方法を本文内Componentからfrontmatter `layout` 指定へ変更した後、`npm run check` と `npm run build` は実行したが、MDXページで実際にLayoutが表示されているかVisual確認を再実行しないまま報告した。
+- 一次対応: `/mdx-test/` を対象にVisual captureを再実行し、MDXページで共通Layoutが表示されていることを確認する。
