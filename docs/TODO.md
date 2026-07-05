@@ -15,12 +15,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
-- [ ] `Seo.astro` を共通Layoutへ組み込む
-  - source: `08-seo-component` 実装後の確認
-  - classification: follow-up
-  - plan: `09-base-layout`
-  - handling plan: `BaseLayout.astro` 作成時に `Seo.astro` を `<head>` 内へ組み込み、ページごとの `title` / `description` / `og:*` 上書きをLayout props経由で渡せるようにする
-
 - [ ] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
   - source: `design-image-generation` skill 追加時の整合確認
   - classification: follow-up
@@ -40,5 +34,11 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 ---
 
 ## 完了済み
+
+- [x] `Seo.astro` を共通Layoutへ組み込む
+  - completed: 2026-07-05
+  - PR: #11
+  - source: `08-seo-component` 実装後の確認 / `レビュー指摘 1`
+  - handling: `BaseLayout.astro` の `<head>` 内で `Seo.astro` を利用し、Layout props経由で `title` / `description` / `og:*` を渡せるようにした
 
 <!-- 完了したTODOは、完了日と対応PRまたはcommitを添えてここへ移動する。 -->

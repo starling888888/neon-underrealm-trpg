@@ -101,6 +101,9 @@
 
 ## 完了条件
 
+以下の完了条件・チェックポイントは、人間レビュー完了後に最終チェックするため、実装時点では未チェックのままとする。
+ローカル検証済みの項目は、後段の「ローカル検証結果」および「ビジュアルレビュー」に記録する。
+
 * [ ] `docs/design/base-layout/notes.md` が作成されている、または design-image-generation initial draft mode の実行が前提条件として明記されている
 * [ ] `docs/design/base-layout/design-desktop.png` が作成されている、または未作成理由と実装前に必要な扱いが記録されている
 * [ ] `docs/design/base-layout/design-mobile.png` は今回のデスクトップ限定スコープ外として未作成理由が記録されている
@@ -281,3 +284,30 @@ design画像では、以下を描き込みすぎないこと。
 * [x] design正本の更新が必要な場合は、人間判断項目として記録した
 * [x] `npm run check` が通る
 * [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/TODO.md` の `Seo.astro` 共通Layout組み込みTODOが、実装後も未対応のまま残っている。
+- `docs/issue/09-base-layout.md` の完了条件・チェックポイントが未チェックのまま残っている一方、後段では `npm run check` / `npm run build` / Visual Review 等が検証済みとして記録されており、状態が読み取りづらい。
+- MCP / Context7 / agent failure log 関連変更が同一PRに含まれている点は通常なら分離推奨だが、今回はユーザー意向により速度優先で同一PRへ含めたものとして扱い、このPRでは対応不要とする。
+
+### 判定
+
+- source: browser-draft
+- classification: valid
+- local validation: `.tmp/09-review.md` はPR #11 review draft。ローカルでは `BaseLayout.astro` が `<head>` 内で `Seo.astro` を利用し、Layout props経由でSEO項目を渡せる構造になっている。一方で `docs/TODO.md` では `Seo.astro` 共通Layout組み込みTODOが未対応に残っている。また、このissueの完了条件・チェックポイントは未チェックのままだが、同一ファイル後段のローカル検証結果とビジュアルレビューでは複数項目が検証済みとして記録されている。
+
+### 対応方針
+
+- `docs/TODO.md` の `Seo.astro` 共通Layout組み込みTODOを `完了済み` へ移動し、PR #11 での対応内容を記録する。
+- `docs/issue/09-base-layout.md` の完了条件・チェックポイントは、人間レビュー前に全項目を完了扱いにしない運用を明示する注記を追加する。ローカル検証済みの内容は後段の「ローカル検証結果」および「ビジュアルレビュー」を正として参照する。
+- MCP / Context7 / agent failure log 関連変更の同一PR混入は、今回のreview responseでは追加対応しない。
+
+### 対応完了チェックリスト
+
+- [x] `docs/TODO.md` の `Seo.astro` TODOを完了済みに移動する
+- [x] `docs/issue/09-base-layout.md` に完了条件・チェックポイントの未チェック運用に関する注記を追加する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
