@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import "../styles/prose.css";
+import Seo from "../components/seo/Seo.astro";
 import { withBase } from "../lib/utils/paths";
 
 const title = "ネオン・アンダーレルムTRPG";
@@ -12,7 +13,7 @@ const mdxTestPath = withBase("/mdx-test/");
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
+    <Seo title={title} />
   </head>
   <body>
     <main class="prose">

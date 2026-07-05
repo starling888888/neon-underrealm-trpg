@@ -22,3 +22,13 @@ export function withBase(path: string): string {
 
   return `${normalizeBase(baseUrl)}${trimLeadingSlash(path)}`;
 }
+
+export function toAbsoluteUrl(path: string, site: URL): string {
+  if (path === "" || path.startsWith("#")) {
+    return path;
+  }
+
+  const pathWithBase = withBase(path);
+
+  return new URL(pathWithBase, site).toString();
+}
