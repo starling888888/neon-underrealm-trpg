@@ -9,7 +9,7 @@
 * Headerにサイトタイトルまたはユーザー提供のタイトル画像を表示する
 * Headerからトップページへ遷移できるようにする
 * Footerにコピーライトを表示する
-* Footerにクレジット、GitHubリポジトリ、X、Discordへのリンクを表示する
+* FooterにGitHubリポジトリ、X、Discordへのリンクを表示する
 * アイコンリンクにアクセシビリティ属性を設定する
 
 ## 背景
@@ -20,7 +20,7 @@
 * `Header.astro` 作成
 * `Footer.astro` 作成
 * コピーライトを表示
-* クレジット、GitHub、X、Discordリンク枠をアイコンで表示
+* GitHub、X、Discordリンク枠をアイコンで表示
 * アイコンリンクに `aria-label` を設定
 
 現在の `BaseLayout.astro` にはHeader / Footerのプレースホルダーが直接記述されている。
@@ -78,7 +78,6 @@
 * Mobile Header内のサイトメニューボタン表示枠
 * Mobile Header内の検索ダイアログ表示アイコン枠
 * Footer内のコピーライト表示
-* Footer内のクレジットリンク
 * Footer内のGitHubリポジトリリンク
 * Footer内のXアカウントリンク
 * Footer内のDiscordサーバー招待リンク
@@ -100,6 +99,7 @@
 * 検索UIの本実装
 * Desktop Headerの検索入力欄mockに入力、submit、検索結果表示、focus時dialog表示などの挙動を実装すること
 * 検索ダイアログ本体、検索結果表示、検索index生成、検索ロジック
+* Footer内のクレジットリンク
 * クレジット専用ページ `/credits` の作成
 * SNSシェア機能
 * OGP画像の個別生成
@@ -125,7 +125,6 @@
 * [ ] Mobile Headerのサイトメニューボタン表示枠はdrawer開閉挙動を実装していない
 * [ ] Mobile Headerの検索ダイアログ表示アイコン枠は検索dialog本体や検索処理を実装していない
 * [ ] Footerに `© 2026 椋鳥` が表示されている
-* [ ] Footerにクレジットリンクがある
 * [ ] FooterにGitHubリポジトリリンク `https://github.com/starling888888/neon-underrealm-trpg` がある
 * [ ] FooterにXアカウントリンク `https://x.com/neon_underrealm` がある
 * [ ] FooterにDiscordサーバー招待リンク `https://discord.gg/drQ8ERFrHK` がある
@@ -194,7 +193,6 @@ export const siteLinks = {
 
 ### `aria-label` 案
 
-* クレジット: `クレジットを見る`
 * GitHub: `GitHubリポジトリを開く`
 * X: `Xアカウントを開く`
 * Discord: `Discordサーバーに参加する`
@@ -207,8 +205,6 @@ GitHub、X、Discordは外部リンクとして扱い、以下を設定する。
 target="_blank"
 rel="noopener noreferrer"
 ```
-
-クレジットリンクは、初期実装ではトップページ内のクレジットセクション `/#credits` への内部リンクとして扱う。
 
 ## レビュー観点
 
