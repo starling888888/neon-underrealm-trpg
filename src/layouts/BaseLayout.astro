@@ -3,6 +3,7 @@ import "../styles/global.css";
 import "../styles/prose.css";
 import Footer from "../components/layout/Footer.astro";
 import Header from "../components/layout/Header.astro";
+import SiteMenu from "../components/layout/SiteMenu.astro";
 import Seo from "../components/seo/Seo.astro";
 import type { SeoProps } from "../lib/site/seo";
 import { defaultSeo } from "../lib/site/seo";
@@ -48,26 +49,8 @@ const {
       <Header />
 
       <div class="desktop-layout">
-        <aside class="layout-rail layout-rail-left" aria-label="構造プレースホルダー">
-          <p class="rail-heading">構造プレースホルダー</p>
-          <div class="rail-group" aria-hidden="true">
-            <span class="rail-line rail-line-strong"></span>
-            <span class="rail-line"></span>
-            <span class="rail-line rail-line-short"></span>
-            <span class="rail-line rail-line-medium"></span>
-          </div>
-          <div class="rail-group" aria-hidden="true">
-            <span class="rail-line rail-line-strong rail-line-medium"></span>
-            <span class="rail-line"></span>
-            <span class="rail-line rail-line-medium"></span>
-            <span class="rail-line rail-line-short"></span>
-          </div>
-          <div class="rail-group" aria-hidden="true">
-            <span class="rail-line rail-line-strong"></span>
-            <span class="rail-line rail-line-medium"></span>
-            <span class="rail-line rail-line-short"></span>
-            <span class="rail-line"></span>
-          </div>
+        <aside class="layout-rail layout-rail-left">
+          <SiteMenu />
         </aside>
 
         <main class="site-main">
@@ -102,12 +85,6 @@ const {
     display: grid;
     grid-template-rows: auto 1fr auto;
     background: var(--color-surface);
-  }
-
-  .rail-line {
-    display: block;
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-border-strong) 66%, white);
   }
 
   .desktop-layout {
@@ -150,6 +127,12 @@ const {
   }
 
   .rail-line {
+    display: block;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-border-strong) 66%, white);
+  }
+
+  .rail-line {
     width: 9rem;
     height: 0.5rem;
     opacity: 0.64;
@@ -181,6 +164,15 @@ const {
   @media (max-width: 48rem) {
     .site-shell {
       min-width: 0;
+    }
+
+    .desktop-layout {
+      display: block;
+      min-height: 0;
+    }
+
+    .layout-rail {
+      display: none;
     }
   }
 </style>

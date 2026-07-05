@@ -235,3 +235,57 @@ export type SiteMenuItem = {
 * `npm run check` / `npm run build` は未実行
 
 `docs/design/site-menu/` はinitial draftであり、実装開始前に人間レビューを受ける必要がある。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/site-menu/`
+- reference desktop: `docs/design/site-menu/design-desktop.png`
+- reference mobile: なし。`12-mobile-menu` で扱う。
+- notes: `docs/design/site-menu/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual/actual-desktop.png`
+- actual mobile: `test-results/visual/actual-mobile.png`
+- report: Playwright output
+
+### レビュー結果
+
+| 領域 | 判定 | 差分 | 対応 |
+|---|---|---|---|
+| レイアウト | OK | PC左レールがSiteMenuへ置き換わり、中央本文と右プレースホルダーを維持している | 対応不要 |
+| 余白 | OK | design draftより実装の本文上端余白は既存Layout寄りだが、既存BaseLayoutの余白体系内 | 対応不要 |
+| タイポグラフィ | OK | 日本語実テキストで表示。階層ごとのweight差は控えめ | 対応不要 |
+| 色 | OK | 既存tokensの白寄り背景、暗めHeader / Footer、青緑accent方針に沿っている | 対応不要 |
+| 配置・整列 | OK | caret、親リンク、子リンクが左レール内で整列している | 対応不要 |
+| レスポンシブ | OK | mobileではPC左サイトメニュー常設表示を出さず、本文1カラムにした | 対応不要 |
+| overflow / scroll | OK | mobile captureで横方向の広がりが出ない状態を確認した | 対応不要 |
+| 既存デザインとの整合 | OK | `base-layout` / `header-footer` の構成を維持している | 対応不要 |
+| 既存Componentとの整合 | OK | Header / Footerには変更を入れず、左レールのみ差し替えた | 対応不要 |
+| accessibility basics | OK | `nav aria-label`、親リンクとは別の開閉button、`aria-expanded` / `aria-controls` を持つ | 対応不要 |
+
+### 自己修正した項目
+
+- [x] mobile captureで左右レールが残り横幅が広がっていたため、`48rem` 未満では左右レールを非表示にし、本文1カラムに修正した
+- [x] dev server captureではAstro toolbarが写り込むため、production previewでcaptureを取り直した
+
+### 人間判断が必要な差分
+
+- 未作成ページへのリンクを予定導線として表示している。リンク先本文やページ骨組みはこのIssueでは作成していない。
+- 実装スクリーンショットは日本語実ラベルを表示しており、design draftのASCII代表ラベルとは異なる。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

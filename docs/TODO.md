@@ -15,6 +15,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [ ] 生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する
+  - source: `11-site-menu` 実装中のユーザー判断
+  - classification: follow-up
+  - plan: `docs/plan.md` の `28-sample-generated-data` / `29-data-access-layer` 後に、必要なら `39-ryugi-pages` / `40-ikizama-pages` または別のナビゲーション補完タスクで扱う
+  - handling plan: 現時点では生成JSONが存在しないため `11-site-menu` では実装しない。`data/generated/ryugi.json` / `data/generated/ikizama.json` と `src/lib/data/ryugi.ts` / `src/lib/data/ikizama.ts` が整った後、手書き固定ではなく生成JSONまたはデータ取得層から流儀・生き様の項目を取得し、サイドメニューへ表示する。
+
 - [ ] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
   - source: `design-image-generation` skill 追加時の整合確認
   - classification: follow-up
