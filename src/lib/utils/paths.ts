@@ -28,6 +28,8 @@ export function toAbsoluteUrl(path: string, site: URL): string {
     return path;
   }
 
+  // Pass unbased local paths such as "/rules/" or complete absolute URLs.
+  // Do not pass values that have already been processed by withBase().
   const pathWithBase = withBase(path);
 
   return new URL(pathWithBase, site).toString();
