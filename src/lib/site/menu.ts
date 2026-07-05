@@ -39,6 +39,10 @@ export const siteMenuItems: SiteMenuItem[] = [
         href: "/data/ikizama",
       },
       {
+        label: "共通スキル",
+        href: "/data/common-skills",
+      },
+      {
         label: "アイテム",
         href: "/data/items",
         defaultExpanded: true,

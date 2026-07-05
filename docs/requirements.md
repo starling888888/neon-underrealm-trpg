@@ -331,6 +331,7 @@ PCレイアウトでは、左にサイトメニュー、中央に本文、右に
 /data/ryugi/[ryugiId]
 /data/ikizama
 /data/ikizama/[ikizamaId]
+/data/common-skills
 /data/items
 /data/items/weapons
 /data/items/armors
@@ -389,6 +390,10 @@ PCレイアウトでは、左にサイトメニュー、中央に本文、右に
 #### `/data/ikizama/[ikizamaId]`
 
 各生き様の説明、専用ルール、生き様スキル一覧、関連アイテムへのリンクを表示する。
+
+#### `/data/common-skills`
+
+共通スキル一覧。
 
 #### `/data/items`
 

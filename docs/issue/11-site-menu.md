@@ -206,6 +206,7 @@ export type SiteMenuItem = {
 * `12-mobile-menu` のdrawer実装まで踏み込んでいないか
 * `15-current-menu-highlight` の現在地ハイライトまで踏み込んでいないか
 * menu dataが後続タスクから再利用しやすいか
+* データ配下で `生き様` の次に `共通スキル` (`/data/common-skills`) が表示されているか
 * 最大3階層の親子関係が読めるか
 * 親カテゴリがリンクとして扱われているか
 * 階層リンクの折りたたみ affordance が分かり、現在地表示と混同しないか
