@@ -310,6 +310,34 @@ rel="noopener noreferrer"
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/plan.md` の `10-header-footer` に「クレジット、GitHub、X、Discordリンク枠をアイコンで表示」と残っており、現在のFooter実装方針と一致していない。
+- 今回のFooterではクレジットリンクを実装せず、GitHub / X / Discord の外部リンクとコピーライトに絞る判断は妥当。
+- したがって、`docs/plan.md` の `10-header-footer` は対象リンクを GitHub / X / Discord に揃える必要がある。
+
+### 判定
+
+- source: browser-draft
+- classification: valid
+- local validation: `.tmp/10-review.md` はPR #13のレビュー草案として、Footerのクレジットリンク非実装自体ではなく `docs/plan.md` との契約ズレを指摘している。ローカル確認では、`docs/plan.md` の `10-header-footer` に「クレジット、GitHub、X、Discordリンク枠をアイコンで表示」が残っている。一方、`docs/issue/10-header-footer.md`、`docs/design/header-footer/notes.md`、`src/components/layout/Footer.astro` は、FooterリンクをGitHub / X / Discordに絞り、クレジットリンクを今回スコープ外としているため、指摘はcurrent issue内の計画整合修正として有効。
+- local validation: `docs/requirements.md` にはクレジット導線の記述が残っているが、レビュー草案では今回PRの必須修正を `docs/plan.md` の `10-header-footer` からクレジットを外すことに限定している。requirements全体のクレジット導線整理は、このレビュー指摘では扱わない。
+
+### 対応方針
+
+- `docs/plan.md` の `10-header-footer` 配下から「クレジット、」を外し、「GitHub、X、Discordリンク枠をアイコンで表示」に修正する。
+- source codeは変更しない。
+- `docs/plan.md` の完了チェック状態は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] `docs/plan.md` の `10-header-footer` から「クレジット、」を削除する
+- [x] source codeに不要な変更がないことを確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## ビジュアルレビュー 2
 
 ### デザイン参照
