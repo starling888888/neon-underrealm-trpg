@@ -112,3 +112,11 @@
 - 発生箇所: `10-header-footer` の Footerリンク実装
 - 観測した失敗: issueとdesign notesで「アイコンリンク」として扱うべきGitHub / X / Discordリンクを、`GH` / `X` / `DC` の文字ラベルで実装し、ユーザーからアイコンライブラリを使った実装へ修正するよう指摘された。
 - 一次対応: `simple-icons` を追加し、FooterリンクをGitHub / X / DiscordのブランドSVGアイコン表示へ変更した。
+
+### Error page exposed as normal navigation
+
+#### 2026-07-06
+
+- 発生箇所: `11-site-menu` の `src/lib/site/menu.ts`
+- 観測した失敗: 404ページを通常のサイドメニュー導線に含め、ユーザーから不要であると指摘された。
+- 一次対応: `src/lib/site/menu.ts` から404リンクを削除した。

@@ -243,6 +243,12 @@
   - [ ] `SkillLegend.astro` 作成
   - [ ] ownerやcategoryでスキルを抽出表示
 
+- [ ] `36-1-common-skills-page` — 共通スキル一覧ページを追加する
+  - [ ] designを生成する
+  - [ ] `/data/common-skills` ページを作成
+  - [ ] 共通スキル一覧データを表示
+  - [ ] `36-skill-list-legend` の表示Componentまたは同等の一覧表示方針と整合させる
+
 - [ ] `37-item-card` — ItemCardを実装する
   - [ ] designを生成する
   - [ ] `ItemCard.astro` 作成
