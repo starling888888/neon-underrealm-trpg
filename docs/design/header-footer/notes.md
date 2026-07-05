@@ -9,7 +9,7 @@
 - page / component: `Header.astro` / `Footer.astro`
 - route: 共通Layout Component。最初の適用先は `BaseLayout.astro`
 - viewport: desktop `1440x1200`, mobile `390x900`
-- states: Header標準状態、Desktop Headerの検索入力欄mock配置、タイトルロゴ未使用時のテキストfallback、mobile Headerの左右アイコン枠配置、外部リンクのfocus / hover。Footerは同じdesign target内で扱う。
+- states: Header標準状態、Desktop Headerの検索入力欄mock配置、タイトルロゴ未使用時のテキストfallback、mobile Headerの左右アイコン枠配置、Footer標準状態、Footer外部リンクfocus / hover。
 
 ## 参照したSSoT
 
@@ -31,6 +31,10 @@
 - layout direction: Desktop Headerは左側にトップページへ戻るロゴリンク、右側に検索入力欄mockを配置する。Mobile Headerは左にmenu系アイコン枠、中央にフルロゴ、右にsearch系アイコン枠を配置する。
 - typography direction: 画像ロゴを主要なタイトル表現とする。画像を使えない場合のfallback textは既存のsystem font、太めのweight、letter-spacing 0を使う。
 - color / accent usage: Header背景は暗めニュートラルグレーを維持する。accent colorはfocus ring、控えめなhover、リンクの小さな状態表現に限定する。magenta、強い発光、大きなneon演出は使わない。
+- footer visual direction: FooterもHeaderと同じ暗めニュートラルグレーを基調にし、ページ全体の下端を静かに締める。装飾的なhero footerや大きなCTA領域にはしない。
+- footer layout direction: Desktop Footerはコピーライトを左側、クレジット / GitHub / X / Discordのアイコンリンク群を右側に置く。Mobile Footerは縦方向に積み、コピーライトとリンク群が狭い幅で折り返しても読めるようにする。
+- footer typography direction: コピーライトは小さめだが読めるサイズにし、リンクの可視ラベルは必要最小限にする。アイコンのみのリンクは実装側で `aria-label` またはスクリーンリーダー用テキストを持つ。
+- footer color / accent usage: Footerの通常状態は低彩度に抑え、hover / focusだけ青緑accentを使う。アイコンリンクは白寄りまたは薄いグレーで、本文面より目立ちすぎない。
 
 ## 既存デザイン制約
 
@@ -48,7 +52,11 @@
 - 生成画像では、Desktop Header高さを `88px`、Desktopロゴ表示高さを `48px` とする。
 - 生成画像では、Mobile Header高さを `64px`、Mobileロゴ表示高さを `30px` とする。
 - Mobile Headerではフルロゴを維持する。狭い幅でも、初期draftではテキストfallbackへ切り替えない。
-- FooterはHeaderと同じ `docs/design/header-footer/` targetで扱う。現在の画像では下部の共通Footer領域として示し、Footerリンクやアイコンの詳細配置は同target内の次回design更新で詳細化する。
+- FooterはHeaderと同じ `docs/design/header-footer/` targetで扱う。desktop / mobileの両方でFooter画像を作成する前提とする。
+- Footerには `© 2026 椋鳥`、クレジット、GitHub、X、Discordのリンク枠を含める。
+- FooterのGitHub / X / Discordは外部リンクとして扱う。design画像ではリンク先文字列を長く描かず、アイコンまたは短い代表表示で示す。
+- クレジットリンクは内部リンクとして扱う。design画像では他の外部リンクと混同しない控えめなテキストリンクまたはアイコン+短いラベルで示す。
+- Mobile Footer画像では、リンク群を1行に詰め込みすぎず、必要なら2段に分ける。タップ対象は窮屈にしない。
 
 ## スコープ外
 
@@ -59,6 +67,9 @@
 - Breadcrumbs
 - Previous / next navigation
 - Current-position TOC highlighting
+- FooterからのSNS share機能
+- Footerからの投稿、コメント、問い合わせフォーム、外部サービス連携
+- Footerの大きなCTA、newsletter登録、analytics表示
 - Login、CMS、comments、character sheet tools、dice roller、battle simulator、DB、SSR、API-backed behavior
 - 新しいlogo生成、title image加工、追加の縮小logo derivative
 - Global color systemの置き換えや、新しいvisual themeの導入
@@ -76,7 +87,11 @@
 - Mobile Headerでフルロゴが中央に収まり、左右のbuttonと重ならない。
 - focus / hover状態が見えるが、青緑accent方針に沿って控えめである。
 - 黒文字比較ロゴは `docs/design/header-footer/` に留まり、本番assetとして参照されていない。
-- Footerは同じdesign targetに含める。現時点の画像ではFooter領域のみを示し、リンクやアイコンの詳細配置は次回design更新で同target内に追記する。
+- Footerに `© 2026 椋鳥` が表示される。
+- Footerにクレジット / GitHub / X / Discordのリンク枠がある。
+- FooterのGitHub / X / Discordは外部リンクとして見えるが、投稿・share・ログインなどの追加機能に見えない。
+- Desktop Footerではコピーライトとリンク群が水平配置で整理され、本文領域や右左レールと視覚的に競合しない。
+- Mobile Footerではコピーライトとリンク群が縦方向に読みやすく、タップ対象が詰まりすぎない。
 
 ## 生成元
 
@@ -85,7 +100,8 @@
 - route when applicable: `/` を含む共通Layout route
 - viewport: desktop `1440x1200`, mobile `390x900`
 - header / logo sizes: desktop Header `88px`, desktop logo `48px`; mobile Header `64px`, mobile logo `30px`
-- prompt summary or capture notes: Header / Footer design targetの初期draft画像を生成した。Headerのロゴ利用、WebP優先とPNG fallback、CSSによる表示サイズ制御、Desktop Headerの検索入力欄mock配置、mobile Headerの左右アイコン枠配置を視覚条件として定義した。検索入力欄mockとアイコン枠の実装責務は `docs/issue/10-header-footer.md` に置く。
+- footer sizes: desktop Footer `80px`; mobile Footer `120px`
+- prompt summary or capture notes: Header / Footer design targetの初期draft画像を生成した。Headerのロゴ利用、WebP優先とPNG fallback、CSSによる表示サイズ制御、Desktop Headerの検索入力欄mock配置、mobile Headerの左右アイコン枠配置を視覚条件として定義した。検索入力欄mockとアイコン枠の実装責務は `docs/issue/10-header-footer.md` に置く。Footerについてはdesktop / mobile両方の画像に、コピーライトとリンク群の配置を反映した。
 
 ## 決定事項
 
@@ -94,4 +110,10 @@
 - Mobile Headerの高さは `64px` とし、Mobileロゴ表示高さは `30px` とする。
 - Mobile Headerではフルロゴを維持する。
 - Mobile Headerの左側にはmenu系アイコン枠、右側にはsearch系アイコン枠を置く。具体的な実装責務は `docs/issue/10-header-footer.md` に従う。
-- Header / Footerは同じ `docs/design/header-footer/` targetで扱う。Footer詳細は別targetへ分けず、同target内の次回design更新で具体化する。
+- Header / Footerは同じ `docs/design/header-footer/` targetで扱う。
+- Footer画像はdesktop / mobileの両方を作成する。
+- Footerは暗めニュートラルグレー基調とし、コピーライトとクレジット / GitHub / X / Discordリンク枠を含める。
+- Desktop Footer高さは `80px` とする。
+- Mobile Footer高さは `120px` とする。
+- Desktop Footerはコピーライト左、リンク群右を基本とする。
+- Mobile Footerはコピーライトとリンク群を縦積みにし、リンク群は必要に応じて2段に分ける。
