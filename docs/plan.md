@@ -63,11 +63,11 @@
   - [x] `src/styles/prose.css` 作成
   - [x] 基本文字組み・本文幅・背景・色トークンを定義
 
-- [ ] `08-seo-component` — SEO/OGP Componentを作成する
-  - [ ] `src/components/seo/Seo.astro` 作成
-  - [ ] 共通OGP設定を実装
-  - [ ] `title`, `description`, `og:*` を設定可能にする
-  - [ ] 共通OGP画像の参照パスをbase path対応にする
+- [x] `08-seo-component` — SEO/OGP Componentを作成する
+  - [x] `src/components/seo/Seo.astro` 作成
+  - [x] 共通OGP設定を実装
+  - [x] `title`, `description`, `og:*` を設定可能にする
+  - [x] 共通OGP画像の参照パスをbase path対応にする
 
 ---
 
