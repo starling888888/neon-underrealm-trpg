@@ -1,0 +1,220 @@
+---
+import { siteMeta } from "../../lib/site/siteMeta";
+import { withBase } from "../../lib/utils/paths";
+
+const homePath = withBase("/");
+const logoWebpPath = withBase(siteMeta.titleLogo.webp);
+const logoPngPath = withBase(siteMeta.titleLogo.png);
+---
+
+<header class="site-header">
+  <div class="mobile-header-control">
+    <button class="icon-button" type="button" aria-label="サイトメニューを開く" disabled>
+      <span class="menu-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <a class="site-logo-link" href={homePath} aria-label={`${siteMeta.title} トップページへ`}>
+    <picture>
+      <source srcset={logoWebpPath} type="image/webp" />
+      <img
+        class="site-logo"
+        src={logoPngPath}
+        width={siteMeta.titleLogo.width}
+        height={siteMeta.titleLogo.height}
+        alt={siteMeta.title}
+        decoding="async"
+      />
+    </picture>
+    <span class="site-title-fallback">{siteMeta.title}</span>
+  </a>
+
+  <div class="header-actions">
+    <div
+      class="search-mock"
+      role="search"
+      aria-label="検索入力欄の表示枠。検索機能は未実装です。"
+    >
+      <span class="search-icon" aria-hidden="true"></span>
+      <span class="search-placeholder" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="mobile-header-control">
+    <button class="icon-button" type="button" aria-label="検索ダイアログを開く" disabled>
+      <span class="search-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    min-height: 5.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--space-8);
+    background: var(--color-header);
+    color: var(--color-text-inverse);
+    padding-inline: var(--space-8);
+  }
+
+  .site-logo-link {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-inverse);
+    text-decoration: none;
+  }
+
+  .site-logo-link:hover {
+    color: var(--color-text-inverse);
+  }
+
+  .site-logo {
+    width: auto;
+    height: 3rem;
+  }
+
+  .site-title-fallback {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .header-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .search-mock {
+    width: min(23rem, 36vw);
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: rgb(248 250 249 / 0.08);
+    padding-inline: var(--space-4);
+  }
+
+  .search-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  .search-icon::before,
+  .search-icon::after {
+    content: "";
+    position: absolute;
+    display: block;
+  }
+
+  .search-icon::before {
+    width: 0.72rem;
+    height: 0.72rem;
+    top: 0.1rem;
+    left: 0.1rem;
+    border: 0.15rem solid color-mix(in srgb, var(--color-text-inverse) 82%, transparent);
+    border-radius: 50%;
+  }
+
+  .search-icon::after {
+    width: 0.5rem;
+    height: 0.15rem;
+    top: 0.85rem;
+    left: 0.78rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-text-inverse) 82%, transparent);
+    transform: rotate(45deg);
+    transform-origin: left center;
+  }
+
+  .search-placeholder {
+    width: min(13rem, 100%);
+    height: 0.65rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-border-strong) 68%, white);
+  }
+
+  .mobile-header-control {
+    display: none;
+  }
+
+  .icon-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: inline-grid;
+    place-items: center;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    color: var(--color-text-inverse);
+    opacity: 1;
+  }
+
+  .icon-button:disabled {
+    cursor: default;
+  }
+
+  .menu-icon,
+  .menu-icon::before,
+  .menu-icon::after {
+    width: 1.125rem;
+    height: 0.125rem;
+    display: block;
+    border-radius: var(--radius-sm);
+    background: var(--color-text-inverse);
+  }
+
+  .menu-icon {
+    position: relative;
+  }
+
+  .menu-icon::before,
+  .menu-icon::after {
+    content: "";
+    position: absolute;
+    left: 0;
+  }
+
+  .menu-icon::before {
+    top: -0.44rem;
+  }
+
+  .menu-icon::after {
+    top: 0.44rem;
+  }
+
+  @media (max-width: 48rem) {
+    .site-header {
+      inline-size: 100vw;
+      min-height: 4rem;
+      grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
+      gap: var(--space-3);
+      padding-inline: var(--space-3);
+    }
+
+    .mobile-header-control {
+      display: block;
+    }
+
+    .site-logo-link {
+      justify-self: center;
+    }
+
+    .site-logo {
+      height: 1.875rem;
+    }
+
+    .header-actions {
+      display: none;
+    }
+  }
+</style>

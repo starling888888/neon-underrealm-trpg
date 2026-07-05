@@ -249,3 +249,56 @@ rel="noopener noreferrer"
 * validation commands: `npm run build` / `npm run check` は未実行
 
 このissueはローカル検証済みだが、実装開始には人間レビューと明示承認が必要。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/header-footer/`
+- reference desktop: `docs/design/header-footer/design-desktop.png`
+- reference mobile: `docs/design/header-footer/design-mobile.png`
+- notes: `docs/design/header-footer/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual/actual-desktop.png`
+- actual mobile: `test-results/visual/actual-mobile.png`
+- report: Playwright output
+
+### レビュー結果
+
+| 領域 | 判定 | 差分 | 対応 |
+|---|---|---|---|
+| レイアウト | OK | Desktopは左ロゴ・右検索mock、Mobileは左メニュー・中央フルロゴ・右検索アイコンの構成で参照画像と一致。 | 対応不要 |
+| 余白 | OK | Desktopの左右余白は実装済みLayoutのtokenに寄せており、参照画像と大きな破綻なし。 | 対応不要 |
+| タイポグラフィ | OK | Header内はタイトルロゴ画像を使用し、テキストfallbackは視覚非表示。 | 対応不要 |
+| 色 | OK | Header背景、ロゴ白文字、アイコン、検索mockの色味は参照画像と同系統。 | 対応不要 |
+| 配置・整列 | OK | Mobileで操作アイコンとロゴがviewport内に収まるよう修正済み。 | `Header.astro` のMobile幅指定を修正 |
+| レスポンシブ | OK | 390px幅でHeaderの3要素が横並びで表示される。 | 対応不要 |
+| overflow / scroll | OK | 既存本文Layoutの横スクロール幅にHeader配置が引っ張られる問題を修正。本文Layoutの横幅はHeader範囲外。 | `BaseLayout.astro` と `Header.astro` を局所修正 |
+| 既存デザインとの整合 | OK | `base-layout` / `global-styles` のHeader色・全体骨格と整合。 | 対応不要 |
+| 既存Componentとの整合 | OK | `BaseLayout.astro` からHeader Componentを利用し、詳細実装を分離。 | 対応不要 |
+| accessibility basics | OK | ロゴリンクにトップ導線の `aria-label`、mobile buttonに用途の `aria-label` がある。未実装操作は `disabled`。 | 対応不要 |
+
+### 自己修正した項目
+
+- [x] Mobile actualでHeaderが既存本文Layoutの横スクロール幅に引っ張られ、検索アイコンが390px viewport外に出ていたため、`BaseLayout.astro` のmobile `site-shell` と `Header.astro` のmobile幅指定を修正した。
+
+### 人間判断が必要な差分
+
+- Footerと本文Layoutは今回の「ヘッダー確認」対象外。actual screenshotには未実装Footerと既存本文プレースホルダーが含まれる。
+- Mobile full-page screenshot自体は既存本文Layoutの横幅を含むため `1360x900` で出力される。Header表示は390px viewport内に収まるが、本文Layoutのmobile最適化は別issue範囲として扱う。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

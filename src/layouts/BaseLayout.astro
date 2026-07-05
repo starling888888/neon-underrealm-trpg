@@ -1,10 +1,10 @@
 ---
 import "../styles/global.css";
 import "../styles/prose.css";
+import Header from "../components/layout/Header.astro";
 import Seo from "../components/seo/Seo.astro";
 import type { SeoProps } from "../lib/site/seo";
 import { defaultSeo } from "../lib/site/seo";
-import { withBase } from "../lib/utils/paths";
 
 export interface Props extends SeoProps {
   title?: string;
@@ -23,7 +23,6 @@ const {
   noindex,
 } = Astro.props;
 
-const homePath = withBase("/");
 ---
 
 <!doctype html>
@@ -45,15 +44,7 @@ const homePath = withBase("/");
   </head>
   <body>
     <div class="site-shell">
-      <header class="site-header">
-        <a class="site-title" href={homePath}>ネオン・アンダーレルムTRPG</a>
-        <div class="header-placeholders" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </header>
+      <Header />
 
       <div class="desktop-layout">
         <aside class="layout-rail layout-rail-left" aria-label="構造プレースホルダー">
@@ -115,54 +106,10 @@ const homePath = withBase("/");
     background: var(--color-surface);
   }
 
-  .site-header {
-    min-height: 4.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-8);
-    background: var(--color-header);
-    color: var(--color-text-inverse);
-    padding-inline: var(--space-8);
-  }
-
-  .site-title {
-    color: var(--color-text-inverse);
-    font-size: var(--text-xl);
-    font-weight: 700;
-    letter-spacing: 0;
-    text-decoration: none;
-  }
-
-  .site-title:hover {
-    color: var(--color-text-inverse);
-  }
-
-  .header-placeholders {
-    display: flex;
-    align-items: center;
-    gap: var(--space-8);
-  }
-
-  .header-placeholders span,
   .rail-line {
     display: block;
     border-radius: var(--radius-sm);
     background: color-mix(in srgb, var(--color-border-strong) 66%, white);
-  }
-
-  .header-placeholders span {
-    width: 6rem;
-    height: 0.5rem;
-    opacity: 0.92;
-  }
-
-  .header-placeholders span:nth-child(2) {
-    width: 5rem;
-  }
-
-  .header-placeholders span:nth-child(3) {
-    width: 7.25rem;
   }
 
   .desktop-layout {
@@ -251,5 +198,11 @@ const homePath = withBase("/");
 
   .footer-note {
     color: color-mix(in srgb, var(--color-text-inverse) 52%, transparent);
+  }
+
+  @media (max-width: 48rem) {
+    .site-shell {
+      min-width: 0;
+    }
   }
 </style>
