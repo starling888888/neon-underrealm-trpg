@@ -38,6 +38,18 @@ npm run visual:install
 - `npm run visual:capture`: PlaywrightでVisual Review用スクリーンショットを取得する
 - `npm run visual:install`: Visual Review用のChromiumをインストールする
 
+## 任意の開発支援設定
+
+`.mcp.json` では、必要に応じて Context7 MCP サーバーを利用できるようにしています。
+
+Context7 を使う場合は、direnv や `.env` ではなく、シェルの環境変数として `CONTEXT7_API_KEY` を設定してから開発ツールを起動します。
+
+```sh
+export CONTEXT7_API_KEY="your-api-key"
+```
+
+Context7 を使わない場合、この環境変数の設定は不要です。
+
 ## ディレクトリ概要
 
 - `src/`: Astroサイトのソースコード
