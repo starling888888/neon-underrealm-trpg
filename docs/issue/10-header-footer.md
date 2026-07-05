@@ -1,0 +1,235 @@
+# 10-header-footer
+
+## 目的
+
+共通Layout内に仮実装されているHeader / Footerを、再利用可能なComponentとして分離・実装する。
+
+このタスクでは、サイト共通のHeader / Footerを実装し、以下を達成する。
+
+* Headerにサイトタイトルまたはユーザー提供のタイトル画像を表示する
+* Headerからトップページへ遷移できるようにする
+* Footerにコピーライトを表示する
+* Footerにクレジット、GitHubリポジトリ、X、Discordへのリンクを表示する
+* アイコンリンクにアクセシビリティ属性を設定する
+
+## 背景
+
+`docs/plan.md` の Phase 2 では、`10-header-footer` として以下が未完了である。
+
+* designを生成する
+* `Header.astro` 作成
+* `Footer.astro` 作成
+* コピーライトを表示
+* クレジット、GitHub、X、Discordリンク枠をアイコンで表示
+* アイコンリンクに `aria-label` を設定
+
+現在の `BaseLayout.astro` にはHeader / Footerのプレースホルダーが直接記述されている。
+後続の `11-site-menu`、`12-mobile-menu`、`13-page-toc` と接続しやすくするため、このタスクでHeader / FooterをComponent化する。
+
+## ユーザー提供情報
+
+### タイトル画像
+
+* タイトル画像はユーザーが提供する。
+* 現時点では比較用の黒文字版とWebP版を含むタイトル画像が `public/` 配下に配置済みである。
+  * `public/title_logo.png`
+  * `public/title_logo.webp`
+  * `public/title_logo_black.png`
+  * `public/title_logo_black.webp`
+* 本番Headerでは白文字版の `public/title_logo.webp` を第一候補として使用する。
+* PNGはWebP非対応環境向けのfallbackとして `public/title_logo.png` を扱う。
+* 実装時は `<picture>` または同等の方法でWebP優先・PNG fallbackを成立させる。
+* 画像は元寸法 `1091x198` のまま利用し、Header内ではCSSで表示サイズを制御する。現時点では縮小版画像を追加生成しない。
+* 実装者がタイトル画像を生成・検索・推測して追加しない。
+* ユーザー提供画像が未配置の場合は、ダミー画像を置かず、テキストタイトル表示を維持する。
+* タイトル画像を使用する場合、GitHub Pagesのサブパス公開で壊れないようにパスを扱う。
+* 黒文字版 `public/title_logo_black.png` / `public/title_logo_black.webp` は比較用であり、本番Headerでは使用しない。公開アセットに残すか、design参照または `.tmp/` へ移すかはレビューで判断する。
+
+### Footerリンク
+
+以下のリンクはユーザー提供値として使用する。
+
+* Discordサーバー招待リンク: `https://discord.gg/drQ8ERFrHK`
+* Xアカウント: `https://x.com/neon_underrealm`
+* GitHubリポジトリ: `https://github.com/starling888888/neon-underrealm-trpg`
+
+実装者は、上記以外のDiscord / X / GitHubリポジトリURLを推測・生成しない。
+
+## コピーライト
+
+コピーライトの権利者表記は `椋鳥` とする。
+
+表示文言は以下とする。
+
+```text
+© 2026 椋鳥
+```
+
+## 対象範囲
+
+* `Header.astro` の作成
+* `Footer.astro` の作成
+* `BaseLayout.astro` からHeader / Footer Componentを利用するよう変更
+* Header内のトップページ導線
+* Header内のタイトル画像表示枠
+* タイトル画像未提供時のテキストタイトル表示
+* Footer内のコピーライト表示
+* Footer内のクレジットリンク
+* Footer内のGitHubリポジトリリンク
+* Footer内のXアカウントリンク
+* Footer内のDiscordサーバー招待リンク
+* アイコンリンクの `aria-label` またはスクリーンリーダー用テキスト
+* 外部リンクの `target="_blank"` / `rel="noopener noreferrer"`
+* GitHub Pagesサブパス公開への配慮
+* 必要に応じたサイトリンク定義ファイルの追加
+* 必要に応じたサイトメタ定義ファイルの追加
+
+## 初期スコープ外
+
+* タイトル画像そのものの作成、生成、加工
+* Discord / X / GitHubリポジトリURLの追加推測
+* 未提供URLへのダミーリンク設置
+* 完成版SiteMenuの実装
+* MobileMenuの開閉実装
+* PageTocの実装
+* 検索UIの本実装
+* クレジット専用ページ `/credits` の作成
+* SNSシェア機能
+* OGP画像の個別生成
+* 高度なアニメーション
+* 外部UIライブラリ追加
+* DB、認証、SSR、CMS、APIサーバーの追加
+
+## 完了条件
+
+* [ ] `Header.astro` が作成されている
+* [ ] `Footer.astro` が作成されている
+* [ ] `BaseLayout.astro` がHeader / Footer Componentを利用している
+* [ ] Headerにトップページへのリンクがある
+* [ ] Headerはユーザー提供タイトル画像を扱える
+* [ ] Headerは `public/title_logo.webp` を本番表示の第一候補として扱っている
+* [ ] `public/title_logo.png` がWebP非対応環境向けfallbackとして扱われている
+* [ ] タイトル画像はCSSで表示サイズを制御し、不要な縮小版画像を追加生成していない
+* [ ] タイトル画像未提供時は、ダミー画像を使わずテキストタイトル表示になる
+* [ ] Footerに `© 2026 椋鳥` が表示されている
+* [ ] Footerにクレジットリンクがある
+* [ ] FooterにGitHubリポジトリリンク `https://github.com/starling888888/neon-underrealm-trpg` がある
+* [ ] FooterにXアカウントリンク `https://x.com/neon_underrealm` がある
+* [ ] FooterにDiscordサーバー招待リンク `https://discord.gg/drQ8ERFrHK` がある
+* [ ] Discord / X / GitHubリポジトリURLはユーザー提供値として扱われ、推測値に置き換えられていない
+* [ ] アイコンのみのリンクには `aria-label` またはスクリーンリーダー用テキストがある
+* [ ] 外部リンクには `target="_blank"` と `rel="noopener noreferrer"` が設定されている
+* [ ] GitHub Pagesのサブパス公開で内部リンク・画像パスが壊れない
+* [ ] 不要な依存関係を追加していない
+* [ ] `npm run build` が通る
+* [ ] 必要に応じて `npm run check` が通る
+
+## チェックポイント
+
+* [ ] 既存ルート `/` が壊れていない
+* [ ] `Seo.astro` のhead出力と競合していない
+* [ ] Header / Footer が後続の `11-site-menu` / `12-mobile-menu` / `13-page-toc` と接続しやすい構造になっている
+* [ ] Layout内にHeader / Footerの詳細実装が過剰に残っていない
+* [ ] CSSがComponent責務の範囲に収まっている
+* [ ] 外部リンクのURLがユーザー提供値どおりである
+* [ ] ユーザー提供アセット・URLを前提にしつつ、未提供時に壊れない
+* [ ] 黒文字版タイトルロゴを本番Headerで使用していない
+* [ ] 初期スコープ外の機能を実装していない
+* [ ] 関連する `docs/TODO.md` 項目と矛盾していない
+* [ ] 関連する `docs/design/` と矛盾していない
+
+## 想定変更ファイル
+
+* `src/layouts/BaseLayout.astro`
+* `src/components/layout/Header.astro`
+* `src/components/layout/Footer.astro`
+* `src/lib/site/links.ts` または同等のサイトリンク定義ファイル
+* `src/lib/site/siteMeta.ts` または同等のサイトメタ定義ファイル
+* 必要に応じて `docs/design/header-footer/notes.md`
+* 必要に応じて `docs/design/header-footer/design-desktop.png`
+* 必要に応じて `docs/design/header-footer/design-mobile.png`
+
+## design参照
+
+* 既存の全体方向性は `docs/design/base-layout/` と `docs/design/global-styles/` を参照する。
+* Header / Footer 専用のdesign target `docs/design/header-footer/` は、ローカル検証時点では未作成。
+* UI実装前に `design-image-generation` initial draft mode を実行し、Header / Footer用のdesign画像を作成・確認する。
+* 想定される成果物は以下。
+  * `docs/design/header-footer/notes.md`
+  * `docs/design/header-footer/design-desktop.png`
+  * `docs/design/header-footer/design-mobile.png`
+
+## 実装メモ
+
+### リンク定義
+
+Footerリンクは、Component内に直接ベタ書きするより、後続更新しやすい定義ファイルに分離することが望ましい。
+
+例:
+
+```ts
+export const siteLinks = {
+  discord: "https://discord.gg/drQ8ERFrHK",
+  x: "https://x.com/neon_underrealm",
+  github: "https://github.com/starling888888/neon-underrealm-trpg",
+} as const;
+```
+
+### `aria-label` 案
+
+* クレジット: `クレジットを見る`
+* GitHub: `GitHubリポジトリを開く`
+* X: `Xアカウントを開く`
+* Discord: `Discordサーバーに参加する`
+
+### 外部リンク属性
+
+GitHub、X、Discordは外部リンクとして扱い、以下を設定する。
+
+```html
+target="_blank"
+rel="noopener noreferrer"
+```
+
+クレジットリンクは、初期実装ではトップページ内のクレジットセクション `/#credits` への内部リンクとして扱う。
+
+## レビュー観点
+
+* Header / Footer が単なるプレースホルダーではなく、公開サイトの共通部品として成立しているか
+* 後続タスクのSiteMenu / MobileMenu / PageToc / 検索UIまで先取りしていないか
+* タイトル画像をユーザー提供情報として扱い、生成・推測・ダミー配置していないか
+* 本番Headerで白文字WebP版を優先し、PNG fallbackが成立しているか
+* 元画像をCSSで適切な表示サイズに抑え、不要な縮小版画像を追加していないか
+* 黒文字比較版を本番Headerに使っていないか
+* 黒文字比較版を `public/` に残すべきか、design参照または `.tmp/` へ移すべきか
+* Discord / X / GitHubリポジトリURLがユーザー提供値どおりに扱われているか
+* `© 2026 椋鳥` の表記が正しく表示されているか
+* アイコンリンクがキーボード操作・スクリーンリーダーで破綻していないか
+* GitHub Pagesサブパス公開時のリンク・画像パスが安全か
+* 既存のBaseLayoutの視覚方向性を崩していないか
+
+## User Provided Values
+
+* Discordサーバー招待リンク: `https://discord.gg/drQ8ERFrHK`
+* Xアカウント: `https://x.com/neon_underrealm`
+* GitHubリポジトリ: `https://github.com/starling888888/neon-underrealm-trpg`
+* コピーライト権利者: `椋鳥`
+* タイトル画像: `public/title_logo.png`, `public/title_logo.webp`, `public/title_logo_black.png`, `public/title_logo_black.webp`
+* 本番Header用タイトル画像: `public/title_logo.webp`
+* fallback用タイトル画像: `public/title_logo.png`
+* 比較用タイトル画像: `public/title_logo_black.png`, `public/title_logo_black.webp`
+
+## Local Validation Summary
+
+* mode: local repository mode
+* branch: `10-header-footer`
+* issue: `docs/issue/10-header-footer.md`
+* `docs/plan.md`: `10-header-footer` は未完了タスクとして存在する
+* `docs/TODO.md`: 直接このissueで回収すべき関連TODOはなし
+* `docs/design/base-layout/`: 既存Layout方向性として参照可能
+* `docs/design/global-styles/`: 既存style方向性として参照可能
+* `docs/design/header-footer/`: 未作成。実装前に `design-image-generation` initial draft mode が必要
+* title logo assets: `public/` 配下に配置済み
+* validation commands: `npm run build` / `npm run check` は未実行
+
+このissueはローカル検証済みだが、実装開始には人間レビューと明示承認が必要。
