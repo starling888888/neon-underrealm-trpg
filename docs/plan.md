@@ -87,11 +87,11 @@
   - [x] GitHub、X、Discordリンク枠をアイコンで表示
   - [x] アイコンリンクに `aria-label` を設定
 
-- [ ] `11-site-menu` — PC左サイトメニューを実装する
-  - [ ] designを生成する
-  - [ ] `src/lib/site/menu.ts` 作成
-  - [ ] `SiteMenu.astro` 作成
-  - [ ] PC版で左サイドに常設表示
+- [x] `11-site-menu` — PC左サイトメニューを実装する
+  - [x] designを生成する
+  - [x] `src/lib/site/menu.ts` 作成
+  - [x] `SiteMenu.astro` 作成
+  - [x] PC版で左サイドに常設表示
 
 - [ ] `12-mobile-menu` — スマホ用開閉メニューを実装する
   - [ ] designを生成する
