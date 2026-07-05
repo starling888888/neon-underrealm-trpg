@@ -76,7 +76,7 @@ npm run visual:install
 - `pr-review-draft`: GitHub PR snapshotから、ローカル検証前のPRレビュー草案を作る
 - `design-image-generation`: `docs/design/<design-target>/` のdesign画像・notesを作成または正本化する
 - `visual-implementation-review`: 実装スクリーンショットをdesign正本と比較し、issue内にVisual Review結果を記録する
-- `post-merge-plan-update`: merge後に `docs/plan.md` の完了チェックを更新する
+- `post-merge-plan-update`: merge後に `docs/plan.md` の完了チェックを更新し、対応済みTODOがある場合は `docs/TODO.md` の完了済みへ移動する
 
 remote snapshot draftやPRレビュー草案は、ローカルrepoで検証されるまで正式な作業記録ではありません。
 
@@ -101,6 +101,8 @@ Git管理するのは、Excelから変換された `data/generated/` 配下のJS
 current issueで対応すべき修正をTODOへ逃がしてはいけません。
 
 TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づけます。適切な計画がない場合は、`review-to-issue` workflowで `docs/plan.md` の適切な箇所に未完了タスクを追加したうえでTODOへ紐づけます。
+
+merge済みPRでTODO項目まで対応した場合は、`post-merge-plan-update` workflowでそのTODOを完了済みに移動します。
 
 ## Design Images
 
