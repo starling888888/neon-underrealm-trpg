@@ -401,6 +401,25 @@ Do not omit these sections in remote snapshot draft mode.
 
 ---
 
+## Local validation completion
+
+If an issue was originally created from a remote snapshot draft and local validation later completes, update the remote draft sections so they no longer contradict the validated local state.
+
+Do this before treating the issue as approved for implementation.
+
+Update the issue as follows:
+
+- replace stale `Source Snapshot` / `Unchecked / Not verified` / `Local Validation Required` content with a concise local validation summary, or clearly mark the remote snapshot content as historical only
+- remove items from `Unchecked / Not verified` when they have been locally verified
+- record the local branch, matching issue file, relevant local files, required assets, and related TODO/design checks that were actually verified
+- if validation commands were run, record the command names and results
+- if validation commands were not run yet, keep them unchecked or explicitly state that they remain unverified
+- do not mark completion criteria or checkpoints as done until they have actually been checked locally
+
+The issue should not simultaneously claim that local validation is required and that the same items are already locally completed.
+
+---
+
 ## Required stopping point
 
 After creating, drafting, or validating the issue, stop.
