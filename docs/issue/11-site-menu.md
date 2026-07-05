@@ -233,7 +233,10 @@ export type SiteMenuItem = {
 * `docs/design/base-layout/notes.md` / `docs/design/base-layout/design-desktop.png` が存在することを確認済み
 * `docs/design/header-footer/notes.md` / desktop / mobile design画像が存在することを確認済み
 * `docs/design/site-menu/notes.md` と `docs/design/site-menu/design-desktop.png` はinitial draftとして作成済み
-* `npm run check` / `npm run build` は未実行
+* `npm run check` 実行済み
+* `npm run build` 実行済み
+* `VISUAL_TARGET_URL=http://127.0.0.1:4326/neon-underrealm-trpg/ npm run visual:capture` 実行済み
+* 手動Playwright確認で階層開閉の `hidden` / `display` / `aria-expanded` が切り替わることを確認済み
 
 `docs/design/site-menu/` はinitial draftであり、実装開始前に人間レビューを受ける必要がある。
 
@@ -290,3 +293,40 @@ export type SiteMenuItem = {
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/issue/11-site-menu.md` のローカル検証結果で `npm run check` / `npm run build` が未実行と記録されている一方、後続のビジュアルレビューでは両方が通った記録になっており、作業記録として矛盾している。
+- `SiteMenu.astro` は `SiteMenuItem.children` を持つ再帰的なmenu dataに対して、top / child / grandchildを階層ごとに手書き展開している。最大3階層表示という仕様は維持しつつ、描画処理は再帰構造に合わせたほうが後続保守しやすい。
+- SiteMenuの開閉JSがComponent内scriptに閉じており、後続の `12-mobile-menu` / `PageToc` / `SearchPopup` で同種の `aria-expanded` / `hidden` 操作が重複しやすい。
+- `src/lib/site/menu.ts` で子項目を持たない `はじめに`、`ワールドガイド`、`キャラクターメイキング` に `defaultExpanded: true` が付いており、menu data上の意味が曖昧になっている。
+
+### 判定
+
+- source: pr-review-draft
+- classification: valid
+- local validation: `.tmp/11-review.md` はremote PR snapshot由来のレビュー草案であり、`Source Snapshot` / `Unchecked / Not verified` / `Local Validation Required` を含むため、ローカルSSoTとして扱わず現ローカル状態で検証した。
+- local validation: `docs/issue/11-site-menu.md` 内で、前半のローカル検証結果は `npm run check` / `npm run build` 未実行、後半のビジュアルレビューは両方通過として記録されていることを確認した。
+- local validation: `src/components/layout/SiteMenu.astro` は3階層を個別にmapしており、`src/lib/site/menu.ts` の再帰的な `children` 構造と描画責務がずれていることを確認した。
+- local validation: `src/components/layout/SiteMenu.astro` は `.site-menu-toggle` をComponent内scriptで直接取得して開閉処理を登録していることを確認した。
+- local validation: `src/lib/site/menu.ts` でleaf itemに `defaultExpanded: true` が付いていることを確認した。
+
+### 対応方針
+
+- issue fileの検証記録は、最終的に実行済みの `npm run check` / `npm run build` / visual capture / 手動開閉確認が分かる内容へ整理する。
+- `SiteMenu.astro` は、表示保証を最大3階層に留めつつ、`SiteMenuItem.children` を再帰的に描画する構造へ寄せる。必要なら `level` と `indexPath` を渡し、`aria-controls` 用IDと階層classを安定生成する。
+- 開閉処理はReact islandを導入せず、小さなvanilla TypeScript controllerへ切り出す。Astro側はclass依存ではなく `data-*` 属性とARIA属性でcontrollerに接続する。
+- leaf itemの `defaultExpanded` は削除し、子項目を持つ項目だけが展開状態を持つmenu dataにする。
+
+### 対応完了チェックリスト
+
+- [x] issue fileの検証記録の矛盾を解消する
+- [x] SiteMenuのmenu item描画を再帰構造へ寄せる
+- [x] SiteMenuの開閉処理を共有可能なvanilla TypeScript controllerへ切り出す
+- [x] leaf itemの `defaultExpanded` を削除する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] preview上で階層開閉の `hidden` / `display` / `aria-expanded` が切り替わることを確認する
+- [x] visual captureでdesktop / mobile screenshotを再取得する
