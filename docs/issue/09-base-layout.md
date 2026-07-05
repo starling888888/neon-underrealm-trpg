@@ -1,0 +1,229 @@
+# 09-base-layout
+
+## 目的
+
+サイト全体で共通利用するデスクトップ向けLayout基盤を作成し、各ページが個別にHTML骨格、SEO、共通CSS読み込み、本文幅、基本構造を重複実装しなくてよい状態にする。
+
+具体的には、以下を作成する。
+
+* `src/layouts/BaseLayout.astro`
+* `src/layouts/ContentLayout.astro`
+
+`BaseLayout.astro` は、HTML全体の基本骨格、`Seo.astro` の組み込み、共通CSS読み込み、ヘッダー・メイン・フッター領域の基本構造を担当する。今回はHeader / Footer / SiteMenu Componentを分離せず、後続タスクで差し替えやすい最小限の表示をlayout内へベタ書きする。
+
+`ContentLayout.astro` は、ルール本文やMDXページ向けに、本文表示領域と `prose` スタイルを扱いやすくするためのレイアウトとする。
+
+## 背景
+
+`docs/plan.md` の Phase 2 では、レイアウト・ナビゲーションの最初のタスクとして `09-base-layout` が定義されている。
+
+対象タスクは以下。
+
+* designを生成する
+* `src/layouts/BaseLayout.astro` 作成
+* `src/layouts/ContentLayout.astro` 作成
+* ヘッダー・本文・フッターの基本構造を作成
+
+現状、`src/pages/index.astro` はページ内で直接 `<!doctype html>`、`<html>`、`<head>`、`<body>`、`Seo.astro`、共通CSS import を持っている。後続で複数ページを作ると、この構造が各ページへ重複しやすい。
+
+また、`docs/TODO.md` には `Seo.astro` を共通Layoutへ組み込むTODOがあり、このタスクで回収する。
+
+関連する要件は以下を参照する。
+
+* `docs/requirements.md`
+* `docs/out-of-scope.md`
+* `docs/plan.md`
+* `docs/TODO.md`
+* `docs/design/global-styles/`
+* `.agents/skills/design-image-generation/SKILL.md`
+
+特に `docs/requirements.md` では、サイトはヘッダー、フッター、サイトメニュー、メインコンテンツ、ページ内目次で構成されること、PC・タブレット・スマホで閲覧できるレスポンシブデザインであること、GitHub Pages等のサブパス公開で壊れないことが求められている。
+
+ただし、このissueでは Header / Footer Component分離、正式なサイトメニュー、モバイルメニュー、ページ内目次そのものは実装しない。これらは後続タスクで扱う。
+
+ユーザーレビューにより、今回の作成範囲はデスクトップレイアウトのみとする。SiteMenuのモバイルでのハイド、モバイル専用レイアウト、モバイルメニューは扱わない。
+
+## 対象範囲
+
+* `src/layouts/BaseLayout.astro`
+
+  * HTML全体の基本骨格
+  * `<html lang="ja">`
+  * `<head>` 内の基本meta
+  * `Seo.astro` の組み込み
+  * 共通CSS import
+  * `title` / `description` / `og:*` などをLayout props経由で渡せる構造
+  * デスクトップ向けの header / main / footer の基本領域
+  * layout内にベタ書きする最小限のサイト名、仮のナビゲーション領域、フッター領域
+  * 後続の Header / Footer / SiteMenu / PageToc を差し込める構造
+* `src/layouts/ContentLayout.astro`
+
+  * MDX本文・ルール本文向けの本文ラッパー
+  * `BaseLayout.astro` を内部利用
+  * `prose` 適用領域
+  * ページタイトル、説明文、本文slotの扱い
+* `src/pages/index.astro`
+
+  * 既存トップページの最小限のLayout適用
+  * ページ固有のHTML骨格重複を削除
+* 必要に応じて `src/pages/mdx-test.mdx`
+
+  * MDXページで `ContentLayout.astro` を使えることの確認
+* 必要に応じた最小限のCSS調整
+
+  * 既存 `global.css` の `main` 直指定がLayout構造と衝突する場合のみ調整
+  * 後続タスクで扱うナビゲーションや本格的なレスポンシブUIは実装しない
+  * SiteMenuのモバイル非表示やモバイル専用CSSは実装しない
+* `docs/TODO.md` の以下項目の扱いをissueまたは作業報告に記録
+
+  * `Seo.astro` を共通Layoutへ組み込む
+
+## 初期スコープ外
+
+* `Header.astro` を作成しない
+* `Footer.astro` を作成しない
+* PC左サイトメニューを実装しない
+* SiteMenuのモバイルでのハイドを実装しない
+* モバイル専用レイアウトを実装しない
+* スマホ用開閉メニューを実装しない
+* ページ内目次を実装しない
+* 現在ページハイライトを実装しない
+* 検索UIまたはPagefind連携を実装しない
+* トップページの本格デザインを作り込まない
+* 404ページを作成しない
+* パンくずリストを実装しない
+* ページ末尾の前後ナビゲーションを実装しない
+* キャラクターシート、ダイスローラー、戦闘シミュレーター等のツール機能を実装しない
+* DB、認証、SSR、CMS、APIサーバーを追加しない
+* 大規模UIライブラリを追加しない
+* 個別OGP画像生成、アクセス解析、sitemap、RSS、robots.txt生成を追加しない
+* 初期スコープ外の項目は `docs/out-of-scope.md` に従う
+
+## 完了条件
+
+* [ ] `docs/design/base-layout/notes.md` が作成されている、または design-image-generation initial draft mode の実行が前提条件として明記されている
+* [ ] `docs/design/base-layout/design-desktop.png` が作成されている、または未作成理由と実装前に必要な扱いが記録されている
+* [ ] `docs/design/base-layout/design-mobile.png` は今回のデスクトップ限定スコープ外として未作成理由が記録されている
+* [ ] `src/layouts/BaseLayout.astro` が作成されている
+* [ ] `src/layouts/ContentLayout.astro` が作成されている
+* [ ] `BaseLayout.astro` が `Seo.astro` を `<head>` 内で利用している
+* [ ] Layout props経由で `title` を指定できる
+* [ ] Layout props経由で `description` を指定できる
+* [ ] 必要に応じて `og:title` / `og:description` / `og:type` / `og:image` / `og:url` を渡せる
+* [ ] `Seo.astro` の既存デフォルト値・base path対応を壊していない
+* [ ] 共通CSSの読み込みがLayout側へ集約され、ページ側で重複しない
+* [ ] `index.astro` が `BaseLayout.astro` または `ContentLayout.astro` を利用している
+* [ ] デスクトップ向けのヘッダー・本文・フッターの基本領域が存在する
+* [ ] layout内ベタ書きの仮表示が、後続の Header / Footer / SiteMenu Componentへ差し替えやすい範囲に留まっている
+* [ ] 後続の `10-header-footer`、`11-site-menu`、`13-page-toc` が差し込みやすい構造になっている
+* [ ] Header / Footer Component、サイトメニュー、ページ内目次そのものを実装していない
+* [ ] `docs/TODO.md` の `Seo.astro` 共通Layout組み込みTODOについて、対応結果または未対応理由が記録されている
+* [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
+* [ ] UI系タスクとして、参照するdesign targetとdesign画像の扱いが記録されている
+* [ ] design画像作成が必要な場合は、`design-image-generation` の実行を前提条件として記録している
+* [ ] `npm run build` が通る
+* [ ] 必要に応じて `npm run check` が通る
+
+## チェックポイント
+
+* [ ] 既存ルートが壊れていない
+* [ ] GitHub Pagesのサブパス公開に影響しない
+* [ ] `Seo.astro` のURL生成契約と矛盾していない
+* [ ] `index.astro` からHTML骨格重複が減っている
+* [ ] MDX本文ページで利用できる構造になっている
+* [ ] `global.css` / `prose.css` / `tokens.css` の責務を過剰に崩していない
+* [ ] `docs/design/global-styles/` の白寄り背景、暗めグレーヘッダー、青緑系アクセント、長文可読性の方向性と矛盾していない
+* [ ] デスクトップレイアウトに限定されている
+* [ ] 後続の Header / Footer / SiteMenu / PageToc 実装を先取りしすぎていない
+* [ ] 不要な依存関係を追加していない
+* [ ] 初期スコープ外の機能を実装していない
+* [ ] 関連する `docs/TODO.md` 項目と矛盾していない
+* [ ] 関連する `docs/design/` と矛盾していない
+* [ ] ユーザーの未コミット変更を破壊していない
+
+## 想定変更ファイル
+
+* `docs/issue/09-base-layout.md`
+* `docs/design/base-layout/notes.md`
+* `docs/design/base-layout/design-desktop.png`
+* `src/layouts/BaseLayout.astro`
+* `src/layouts/ContentLayout.astro`
+* `src/pages/index.astro`
+* `src/pages/mdx-test.mdx`
+* `src/styles/global.css`
+* `src/styles/prose.css`
+
+上記のうち、`docs/design/base-layout/notes.md` と `docs/design/base-layout/design-desktop.png` は design-image-generation initial draft mode で作成する想定とする。`design-mobile.png` は今回のデスクトップ限定スコープ外とする。
+
+`src/pages/mdx-test.mdx`、`src/styles/global.css`、`src/styles/prose.css` は必要な場合のみ変更する。
+
+## レビュー観点
+
+`BaseLayout.astro` の責務が、HTML骨格、SEO、共通CSS、ページ全体の基本領域に限定されているか確認する。
+
+`ContentLayout.astro` の責務が、本文ページ向けのラッパーに限定されているか確認する。
+
+`Seo.astro` の組み込み方が、後続ページごとの `title` / `description` / `og:*` 上書きに耐える形になっているか確認する。
+
+GitHub Pagesのサブパス公開に対して、内部リンク、画像、OGP URL、CSS / JS 参照が壊れない構造になっているか確認する。
+
+後続の `10-header-footer`、`11-site-menu`、`12-mobile-menu`、`13-page-toc`、`14-mobile-page-toc` の実装を妨げない構造になっているか確認する。
+
+このissueで Header / Footer Component、サイトメニュー、ページ内目次、検索UIなどを作り込みすぎていないか確認する。
+
+`docs/TODO.md` の `Seo.astro` 共通Layout組み込みTODOを、このissueで回収してよいか確認する。
+
+デスクトップ限定のdesign画像で、今回の実装判断に十分か確認する。
+
+## 備考
+
+このタスクはUI / layoutタスクであるため、実装前に `docs/design/base-layout/` のデスクトップdesign画像を用意する必要がある。
+
+ローカル検証では、`docs/design/global-styles/` は存在するが、`docs/design/base-layout/` または `docs/design/site-layout/` は未作成である。
+
+そのため、実装前に `.agents/skills/design-image-generation/SKILL.md` の initial draft mode に従い、以下を作成する想定とする。
+
+* `docs/design/base-layout/notes.md`
+* `docs/design/base-layout/design-desktop.png`
+* `docs/design/base-layout/design-mobile.png` は今回作成しない。モバイルレイアウト、SiteMenuのモバイル非表示、モバイルメニューは後続タスクで扱う。
+
+design画像では、以下を描き込みすぎないこと。
+
+* 完成版のサイトメニュー
+* 完成版のモバイルメニュー
+* 完成版のページ内目次
+* 検索UI
+* パンくずリスト
+* 前後ナビゲーション
+* ダイスローラー、キャラクターシート等のツール機能
+
+このissueで扱うのは、あくまで共通Layoutの土台である。
+
+## ローカル検証結果
+
+このissueはremote snapshot draftとして生成された後、ローカルリポジトリで検証した。
+
+検証済み:
+
+* current branch: `09-base-layout`
+* `09-base-layout` branch: 新規作成済み
+* working tree: `docs/issue/09-base-layout.md` の未追跡変更のみ
+* `docs/issue/09-base-layout.md`: ローカルに存在
+* `docs/plan.md`: `09-base-layout` が未完了タスクとして存在
+* `docs/TODO.md`: `Seo.astro` を共通Layoutへ組み込むTODOが `09-base-layout` に紐づいている
+* `docs/design/global-styles/`: `notes.md`、`style-tile.png`、`style-tile-mobile.png` が存在
+* `docs/design/base-layout/`: 未作成
+* `docs/design/site-layout/`: 未作成
+* `src/pages/index.astro`: ページ内にHTML骨格、`Seo.astro`、共通CSS importが存在
+* `src/components/seo/Seo.astro`: 存在
+* `src/pages/mdx-test.mdx`: 存在
+* `package.json`: `npm run build` と `npm run check` が定義されている
+
+未実行:
+
+* `npm run build`
+* `npm run check`
+
+* `design-image-generation` initial draft mode
+
+実装開始前に、`docs/design/base-layout/` のデスクトップdesign画像を作成する。モバイルdesign画像は今回のデスクトップ限定スコープ外とする。
