@@ -22,3 +22,15 @@ export function withBase(path: string): string {
 
   return `${normalizeBase(baseUrl)}${trimLeadingSlash(path)}`;
 }
+
+export function toAbsoluteUrl(path: string, site: URL): string {
+  if (path === "" || path.startsWith("#")) {
+    return path;
+  }
+
+  // Pass unbased local paths such as "/rules/" or complete absolute URLs.
+  // Do not pass values that have already been processed by withBase().
+  const pathWithBase = withBase(path);
+
+  return new URL(pathWithBase, site).toString();
+}

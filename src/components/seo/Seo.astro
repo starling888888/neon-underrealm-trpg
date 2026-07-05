@@ -1,0 +1,41 @@
+---
+import { defaultSeo, type SeoProps } from "../../lib/site/seo";
+import { toAbsoluteUrl } from "../../lib/utils/paths";
+
+export interface Props extends SeoProps {}
+
+const {
+  title = defaultSeo.title,
+  description = defaultSeo.description,
+  ogTitle = title,
+  ogDescription = description,
+  ogType = defaultSeo.ogType,
+  ogImage = defaultSeo.image,
+  ogUrl,
+  twitterCard = defaultSeo.twitterCard,
+  noindex = false,
+} = Astro.props;
+
+const pageUrl = ogUrl ?? Astro.url.toString();
+const site = Astro.site ?? new URL(pageUrl);
+const absolutePageUrl = toAbsoluteUrl(pageUrl, site);
+const absoluteImageUrl = toAbsoluteUrl(ogImage, site);
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex" />}
+
+<meta property="og:site_name" content={defaultSeo.siteName} />
+<meta property="og:title" content={ogTitle} />
+<meta property="og:description" content={ogDescription} />
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={absolutePageUrl} />
+<meta property="og:image" content={absoluteImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content={twitterCard} />
+<meta name="twitter:title" content={ogTitle} />
+<meta name="twitter:description" content={ogDescription} />
+<meta name="twitter:image" content={absoluteImageUrl} />
