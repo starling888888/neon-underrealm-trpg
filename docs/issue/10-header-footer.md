@@ -74,6 +74,9 @@
 * Header内のトップページ導線
 * Header内のタイトル画像表示枠
 * タイトル画像未提供時のテキストタイトル表示
+* Desktop Header内の検索入力欄mock表示枠
+* Mobile Header内のサイトメニューボタン表示枠
+* Mobile Header内の検索ダイアログ表示アイコン枠
 * Footer内のコピーライト表示
 * Footer内のクレジットリンク
 * Footer内のGitHubリポジトリリンク
@@ -92,8 +95,11 @@
 * 未提供URLへのダミーリンク設置
 * 完成版SiteMenuの実装
 * MobileMenuの開閉実装
+* サイトメニューdrawer本体の実装
 * PageTocの実装
 * 検索UIの本実装
+* Desktop Headerの検索入力欄mockに入力、submit、検索結果表示、focus時dialog表示などの挙動を実装すること
+* 検索ダイアログ本体、検索結果表示、検索index生成、検索ロジック
 * クレジット専用ページ `/credits` の作成
 * SNSシェア機能
 * OGP画像の個別生成
@@ -112,6 +118,12 @@
 * [ ] `public/title_logo.png` がWebP非対応環境向けfallbackとして扱われている
 * [ ] タイトル画像はCSSで表示サイズを制御し、不要な縮小版画像を追加生成していない
 * [ ] タイトル画像未提供時は、ダミー画像を使わずテキストタイトル表示になる
+* [ ] Desktop Headerに検索入力欄mock表示枠がある
+* [ ] Desktop Headerの検索入力欄mock表示枠は入力、submit、検索結果表示、検索dialog表示などの挙動を実装していない
+* [ ] Mobile Headerにサイトメニューボタン表示枠がある
+* [ ] Mobile Headerに検索ダイアログ表示アイコン枠がある
+* [ ] Mobile Headerのサイトメニューボタン表示枠はdrawer開閉挙動を実装していない
+* [ ] Mobile Headerの検索ダイアログ表示アイコン枠は検索dialog本体や検索処理を実装していない
 * [ ] Footerに `© 2026 椋鳥` が表示されている
 * [ ] Footerにクレジットリンクがある
 * [ ] FooterにGitHubリポジトリリンク `https://github.com/starling888888/neon-underrealm-trpg` がある
@@ -130,6 +142,9 @@
 * [ ] 既存ルート `/` が壊れていない
 * [ ] `Seo.astro` のhead出力と競合していない
 * [ ] Header / Footer が後続の `11-site-menu` / `12-mobile-menu` / `13-page-toc` と接続しやすい構造になっている
+* [ ] Desktop Headerの検索入力欄mock表示枠が後続の検索UI実装と接続しやすい構造になっている
+* [ ] Mobile Headerのサイトメニューボタン表示枠が後続の `12-mobile-menu` と接続しやすい構造になっている
+* [ ] Mobile Headerの検索ダイアログ表示アイコン枠が後続の検索UI実装と接続しやすい構造になっている
 * [ ] Layout内にHeader / Footerの詳細実装が過剰に残っていない
 * [ ] CSSがComponent責務の範囲に収まっている
 * [ ] 外部リンクのURLがユーザー提供値どおりである
@@ -198,7 +213,9 @@ rel="noopener noreferrer"
 ## レビュー観点
 
 * Header / Footer が単なるプレースホルダーではなく、公開サイトの共通部品として成立しているか
-* 後続タスクのSiteMenu / MobileMenu / PageToc / 検索UIまで先取りしていないか
+* 後続タスクのSiteMenu / MobileMenu / PageToc / 検索UI本体まで先取りしていないか
+* Desktop Headerの検索入力欄mock表示枠が、表示枠に留まり、入力挙動・submit・検索結果表示・検索dialog表示を実装していないか
+* Mobile Headerのサイトメニューボタン表示枠と検索ダイアログ表示アイコン枠が、表示枠に留まり、開閉挙動や検索UI本体を実装していないか
 * タイトル画像をユーザー提供情報として扱い、生成・推測・ダミー配置していないか
 * 本番Headerで白文字WebP版を優先し、PNG fallbackが成立しているか
 * 元画像をCSSで適切な表示サイズに抑え、不要な縮小版画像を追加していないか
