@@ -31,11 +31,12 @@
 ### タイトル画像
 
 * タイトル画像はユーザーが提供する。
-* 現時点では比較用の黒文字版とWebP版を含むタイトル画像が `public/` 配下に配置済みである。
+* 現時点では本番用の白文字版タイトル画像が `public/` 配下に配置済みである。
   * `public/title_logo.png`
   * `public/title_logo.webp`
-  * `public/title_logo_black.png`
-  * `public/title_logo_black.webp`
+* 比較用の黒文字版タイトル画像は `docs/design/header-footer/` 配下に配置済みである。
+  * `docs/design/header-footer/title_logo_black.png`
+  * `docs/design/header-footer/title_logo_black.webp`
 * 本番Headerでは白文字版の `public/title_logo.webp` を第一候補として使用する。
 * PNGはWebP非対応環境向けのfallbackとして `public/title_logo.png` を扱う。
 * 実装時は `<picture>` または同等の方法でWebP優先・PNG fallbackを成立させる。
@@ -43,7 +44,7 @@
 * 実装者がタイトル画像を生成・検索・推測して追加しない。
 * ユーザー提供画像が未配置の場合は、ダミー画像を置かず、テキストタイトル表示を維持する。
 * タイトル画像を使用する場合、GitHub Pagesのサブパス公開で壊れないようにパスを扱う。
-* 黒文字版 `public/title_logo_black.png` / `public/title_logo_black.webp` は比較用であり、本番Headerでは使用しない。公開アセットに残すか、design参照または `.tmp/` へ移すかはレビューで判断する。
+* 黒文字版 `docs/design/header-footer/title_logo_black.png` / `docs/design/header-footer/title_logo_black.webp` は比較用であり、本番Headerでは使用しない。
 
 ### Footerリンク
 
@@ -152,7 +153,8 @@
 ## design参照
 
 * 既存の全体方向性は `docs/design/base-layout/` と `docs/design/global-styles/` を参照する。
-* Header / Footer 専用のdesign target `docs/design/header-footer/` は、ローカル検証時点では未作成。
+* Header / Footer 専用のdesign target `docs/design/header-footer/` は、比較用タイトル画像の配置先として作成済み。
+* Header / Footer 専用のdesign画像は、ローカル検証時点では未作成。
 * UI実装前に `design-image-generation` initial draft mode を実行し、Header / Footer用のdesign画像を作成・確認する。
 * 想定される成果物は以下。
   * `docs/design/header-footer/notes.md`
@@ -201,7 +203,7 @@ rel="noopener noreferrer"
 * 本番Headerで白文字WebP版を優先し、PNG fallbackが成立しているか
 * 元画像をCSSで適切な表示サイズに抑え、不要な縮小版画像を追加していないか
 * 黒文字比較版を本番Headerに使っていないか
-* 黒文字比較版を `public/` に残すべきか、design参照または `.tmp/` へ移すべきか
+* 黒文字比較版が `docs/design/header-footer/` の比較用資料に留まり、本番配信アセットとして扱われていないか
 * Discord / X / GitHubリポジトリURLがユーザー提供値どおりに扱われているか
 * `© 2026 椋鳥` の表記が正しく表示されているか
 * アイコンリンクがキーボード操作・スクリーンリーダーで破綻していないか
@@ -214,10 +216,10 @@ rel="noopener noreferrer"
 * Xアカウント: `https://x.com/neon_underrealm`
 * GitHubリポジトリ: `https://github.com/starling888888/neon-underrealm-trpg`
 * コピーライト権利者: `椋鳥`
-* タイトル画像: `public/title_logo.png`, `public/title_logo.webp`, `public/title_logo_black.png`, `public/title_logo_black.webp`
+* タイトル画像: `public/title_logo.png`, `public/title_logo.webp`
 * 本番Header用タイトル画像: `public/title_logo.webp`
 * fallback用タイトル画像: `public/title_logo.png`
-* 比較用タイトル画像: `public/title_logo_black.png`, `public/title_logo_black.webp`
+* 比較用タイトル画像: `docs/design/header-footer/title_logo_black.png`, `docs/design/header-footer/title_logo_black.webp`
 
 ## Local Validation Summary
 
@@ -228,8 +230,9 @@ rel="noopener noreferrer"
 * `docs/TODO.md`: 直接このissueで回収すべき関連TODOはなし
 * `docs/design/base-layout/`: 既存Layout方向性として参照可能
 * `docs/design/global-styles/`: 既存style方向性として参照可能
-* `docs/design/header-footer/`: 未作成。実装前に `design-image-generation` initial draft mode が必要
-* title logo assets: `public/` 配下に配置済み
+* `docs/design/header-footer/`: 作成済み。比較用黒文字版タイトル画像を配置済み
+* Header / Footer design images: 未作成。実装前に `design-image-generation` initial draft mode が必要
+* title logo assets: 本番用白文字版は `public/` 配下、比較用黒文字版は `docs/design/header-footer/` 配下に配置済み
 * validation commands: `npm run build` / `npm run check` は未実行
 
 このissueはローカル検証済みだが、実装開始には人間レビューと明示承認が必要。
