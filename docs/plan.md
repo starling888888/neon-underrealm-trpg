@@ -79,13 +79,13 @@
   - [x] `src/layouts/ContentLayout.astro` 作成
   - [x] ヘッダー・本文・フッターの基本構造を作成
 
-- [ ] `10-header-footer` — Header / Footerを実装する
-  - [ ] designを生成する
-  - [ ] `Header.astro` 作成
-  - [ ] `Footer.astro` 作成
-  - [ ] コピーライトを表示
-  - [ ] GitHub、X、Discordリンク枠をアイコンで表示
-  - [ ] アイコンリンクに `aria-label` を設定
+- [x] `10-header-footer` — Header / Footerを実装する
+  - [x] designを生成する
+  - [x] `Header.astro` 作成
+  - [x] `Footer.astro` 作成
+  - [x] コピーライトを表示
+  - [x] GitHub、X、Discordリンク枠をアイコンで表示
+  - [x] アイコンリンクに `aria-label` を設定
 
 - [ ] `11-site-menu` — PC左サイトメニューを実装する
   - [ ] designを生成する
