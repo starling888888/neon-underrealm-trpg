@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  getSiteMenuItemInitialExpanded,
   getSiteMenuItemState,
   type SiteMenuItem,
 } from "../../src/lib/site/menu";
@@ -71,5 +72,43 @@ describe("site menu current state", () => {
 
   it("does not match sibling paths by prefix alone", () => {
     assert.equal(getSiteMenuItemState(menu, "/database"), "none");
+  });
+});
+
+describe("site menu initial expansion", () => {
+  it("does not expand the current parent item itself", () => {
+    assert.equal(getSiteMenuItemInitialExpanded(menu, "/data"), false);
+  });
+
+  it("expands parent items of the current child item", () => {
+    assert.equal(getSiteMenuItemInitialExpanded(menu, "/data/items"), true);
+  });
+
+  it("expands all parent items leading to the current descendant item", () => {
+    assert.equal(
+      getSiteMenuItemInitialExpanded(menu, "/data/items/weapons"),
+      true,
+    );
+    assert.equal(
+      getSiteMenuItemInitialExpanded(
+        menu.children?.[0] ?? menu,
+        "/data/items/weapons",
+      ),
+      true,
+    );
+  });
+
+  it("expands the nearest menu item for detail pages without direct links", () => {
+    assert.equal(
+      getSiteMenuItemInitialExpanded(
+        menu.children?.[0]?.children?.[0] ?? menu,
+        "/data/items/weapons/sample-id",
+      ),
+      true,
+    );
+  });
+
+  it("does not expand unrelated parent items", () => {
+    assert.equal(getSiteMenuItemInitialExpanded(menu, "/rules/battle"), false);
   });
 });

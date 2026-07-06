@@ -84,36 +84,36 @@
 
 ## 完了条件
 
-* [ ] `siteMenuItems` から `defaultExpanded` 依存がなくなっている
-* [ ] 初期表示時、現在ページと無関係な親カテゴリは展開されない
-* [ ] 現在ページが子項目の場合、その親カテゴリが初期展開される
-* [ ] 現在ページが孫項目以下の場合、現在ページに至るすべての親カテゴリが初期展開される
-* [ ] 現在ページが親カテゴリ自身の場合、その親カテゴリの子項目は初期展開されない
-* [ ] PC左サイトメニューで期待通りの初期展開状態になる
-* [ ] スマホdrawer内サイトメニューで期待通りの初期展開状態になる
-* [ ] ユーザーによる手動開閉操作が維持されている
-* [ ] `aria-expanded` と `hidden` の初期値が展開状態と一致している
-* [ ] `aria-current="page"` の付与条件は `15-current-menu-highlight` から退行していない
-* [ ] current / ancestor の視覚表示は `15-current-menu-highlight` から退行していない
-* [ ] GitHub Pagesサブパス公開時の現在パス判定が壊れていない
-* [ ] 末尾スラッシュ、query、hashの扱いが退行していない
-* [ ] `npm test` が通る
-* [ ] `npm run check` が通る
-* [ ] `npm run build` が通る
+* [x] `siteMenuItems` から `defaultExpanded` 依存がなくなっている
+* [x] 初期表示時、現在ページと無関係な親カテゴリは展開されない
+* [x] 現在ページが子項目の場合、その親カテゴリが初期展開される
+* [x] 現在ページが孫項目以下の場合、現在ページに至るすべての親カテゴリが初期展開される
+* [x] 現在ページが親カテゴリ自身の場合、その親カテゴリの子項目は初期展開されない
+* [x] PC左サイトメニューで期待通りの初期展開状態になる
+* [x] スマホdrawer内サイトメニューで期待通りの初期展開状態になる
+* [x] ユーザーによる手動開閉操作が維持されている
+* [x] `aria-expanded` と `hidden` の初期値が展開状態と一致している
+* [x] `aria-current="page"` の付与条件は `15-current-menu-highlight` から退行していない
+* [x] current / ancestor の視覚表示は `15-current-menu-highlight` から退行していない
+* [x] GitHub Pagesサブパス公開時の現在パス判定が壊れていない
+* [x] 末尾スラッシュ、query、hashの扱いが退行していない
+* [x] `npm test` が通る
+* [x] `npm run check` が通る
+* [x] `npm run build` が通る
 
 ## チェックポイント
 
-* [ ] `defaultExpanded` を単に false にするだけでなく、不要な型・データ定義も整理している
-* [ ] `isCurrent` の親カテゴリ自身を展開条件に含めていない
-* [ ] `isAncestor` の意味が「現在ページを含む親カテゴリ」として維持されている
-* [ ] 詳細ページなど、メニューに直接リンクがないページでも最も近い親カテゴリだけが展開される
-* [ ] 現在ページと無関係な複数カテゴリが初期展開されない
-* [ ] PC左サイトメニューとスマホdrawer内サイトメニューで分岐実装を増やしていない
-* [ ] disclosure制御のクライアントスクリプトと初期HTML状態が矛盾していない
-* [ ] メニュー項目追加時に、初期表示が縦に肥大化しにくい構造になっている
-* [ ] 開閉状態の永続化をこのissueで追加していない
-* [ ] レイアウト全体の調整をこのissueに混ぜていない
-* [ ] design refreshをこのissueに混ぜていない
+* [x] `defaultExpanded` を単に false にするだけでなく、不要な型・データ定義も整理している
+* [x] `isCurrent` の親カテゴリ自身を展開条件に含めていない
+* [x] `isAncestor` の意味が「現在ページを含む親カテゴリ」として維持されている
+* [x] 詳細ページなど、メニューに直接リンクがないページでも最も近い親カテゴリだけが展開される
+* [x] 現在ページと無関係な複数カテゴリが初期展開されない
+* [x] PC左サイトメニューとスマホdrawer内サイトメニューで分岐実装を増やしていない
+* [x] disclosure制御のクライアントスクリプトと初期HTML状態が矛盾していない
+* [x] メニュー項目追加時に、初期表示が縦に肥大化しにくい構造になっている
+* [x] 開閉状態の永続化をこのissueで追加していない
+* [x] レイアウト全体の調整をこのissueに混ぜていない
+* [x] design refreshをこのissueに混ぜていない
 
 ## 想定変更ファイル
 
@@ -208,14 +208,50 @@ mode: local repository mode
 * `rg -n "15-1|15|defaultExpanded|isAncestor|isCurrent|siteMenuItems|SiteMenuItem" docs src tests -S`
 * `sed -n` / `nl -ba` による関連ファイル確認
 
-未実行:
+実装前準備時点で未実行だった検証:
 
 * `npm test`
 * `npm run check`
 * `npm run build`
 
-これらは実装後の検証で実行する。
+これらは実装後に実行済み。結果は後段の「実装結果」に記録する。
+
+## 実装結果
+
+2026-07-07 に実装した。
+
+変更内容:
+
+* `src/lib/site/menu.ts`
+  * `SiteMenuItem` 型から `defaultExpanded` を削除した
+  * `siteMenuItems` から `defaultExpanded: true` を削除した
+  * 初期展開判定用の `getSiteMenuItemInitialExpanded()` を追加し、`ancestor` のみを初期展開対象にした
+* `src/components/layout/SiteMenuItem.astro`
+  * 初期展開状態を `item.defaultExpanded || isCurrent || isAncestor` から `getSiteMenuItemInitialExpanded()` に変更した
+* `tests/node/site-menu-current.test.ts`
+  * 親カテゴリ自身がcurrentの場合は展開しないこと
+  * 子項目・孫項目・詳細ページではancestorが展開されること
+  * 無関係な親カテゴリが展開されないこと
+
+検証結果:
+
+* `npm test`: 成功
+* `npm run check`: 成功
+* `npm run build`: 成功
+* 生成HTML確認:
+  * `/data/`: `データ` はcurrentだが子項目は初期展開されない
+  * `/data/items/`: `データ` は初期展開され、currentの `アイテム` 配下は初期展開されない
+  * `/data/items/weapons/`: `データ` と `アイテム` が初期展開され、無関係な `ルール` は閉じる
+* Playwright確認:
+  * desktop `/data/items/weapons/`: `データ` と `アイテム` は `aria-expanded="true"` かつ対象listは表示、`ルール` は `aria-expanded="false"` かつ `hidden`
+  * desktop手動開閉: `データ` toggle clickで `aria-expanded="false"` かつ対象listが `hidden` になる
+  * mobile drawer `/data/items/weapons/`: `データ` と `アイテム` は展開、`ルール` は閉じる
+
+検証中の補足:
+
+* 最初のPlaywright確認コマンドはシェル引用誤りで失敗したため、`.tmp/check-menu-expansion.mjs` に検証スクリプトを置いて再実行した
+* PlaywrightのChromium起動は通常sandbox内で失敗したため、同じ検証スクリプトを権限付きで再実行した
 
 ## 備考
 
-このissueは実装前準備としてローカル検証済みだが、実装開始には人間レビューと明示承認が必要。
+このissueは実装前準備としてローカル検証した後、ユーザー承認により2026-07-07に実装を開始した。
