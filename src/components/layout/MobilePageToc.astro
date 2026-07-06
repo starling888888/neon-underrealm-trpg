@@ -1,0 +1,201 @@
+---
+export interface Props {
+  title: string;
+  enabled?: boolean;
+}
+
+const { title, enabled = true } = Astro.props;
+const panelId = "mobile-page-toc-panel";
+---
+
+<section
+  class="mobile-page-toc"
+  aria-label="このページの目次"
+  data-mobile-page-toc
+  data-page-toc-slot
+  data-page-toc-enabled={enabled ? "true" : "false"}
+>
+  <div class="mobile-page-toc-bar">
+    <p class="mobile-page-toc-title">{title}</p>
+    <button
+      class="mobile-page-toc-trigger"
+      type="button"
+      data-mobile-page-toc-trigger
+      aria-controls={panelId}
+      aria-expanded="false"
+      aria-label="このページの目次を開く"
+    >
+      <span class="mobile-page-toc-trigger-label" aria-hidden="true">目次</span>
+      <span class="mobile-page-toc-chevron" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div
+    id={panelId}
+    class="mobile-page-toc-overlay"
+    data-mobile-page-toc-panel
+    hidden
+  >
+    <nav class="mobile-page-toc-nav" aria-label="このページの目次">
+      <div class="mobile-page-toc-content" data-page-toc-content></div>
+    </nav>
+  </div>
+</section>
+
+<script>
+  import { setupMobilePageToc } from "../../scripts/mobile-page-toc";
+
+  setupMobilePageToc();
+</script>
+
+<style>
+  .mobile-page-toc {
+    display: none;
+  }
+
+  .mobile-page-toc[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 63.999rem) {
+    .mobile-page-toc {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      width: 100%;
+      min-width: 0;
+      display: block;
+      border-block: var(--border-width) solid var(--color-border);
+      background: var(--color-surface);
+    }
+
+    .mobile-page-toc-bar {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      min-height: 3.25rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-3);
+      width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
+      margin-inline: auto;
+    }
+
+    .mobile-page-toc-title {
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      color: var(--color-text);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      line-height: var(--line-height-tight);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mobile-page-toc-trigger {
+      min-width: 3.5rem;
+      min-height: 2.75rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-2);
+      border: 0;
+      background: transparent;
+      color: var(--color-link);
+      font: inherit;
+      font-size: var(--text-xs);
+      font-weight: 800;
+      line-height: var(--line-height-tight);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .mobile-page-toc-trigger:hover,
+    .mobile-page-toc-trigger:focus-visible {
+      color: var(--color-link-hover);
+    }
+
+    .mobile-page-toc-trigger:focus-visible {
+      outline: 0.125rem solid var(--color-focus);
+      outline-offset: 0.25rem;
+    }
+
+    .mobile-page-toc-chevron {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-right: 0.125rem solid currentColor;
+      border-bottom: 0.125rem solid currentColor;
+      transform: translateY(-0.12rem) rotate(45deg);
+      transition: transform 160ms ease;
+    }
+
+    .mobile-page-toc.is-open .mobile-page-toc-chevron {
+      transform: translateY(0.1rem) rotate(225deg);
+    }
+
+    .mobile-page-toc-overlay {
+      position: absolute;
+      z-index: 1;
+      inset-block-start: calc(100% + var(--border-width));
+      inset-inline: 0;
+      border-bottom: var(--border-width) solid var(--color-border);
+      background: var(--color-surface);
+      box-shadow: 0 1rem 1.7rem rgb(17 24 32 / 0.16);
+    }
+
+    .mobile-page-toc-overlay[hidden] {
+      display: none;
+    }
+
+    .mobile-page-toc-nav {
+      width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
+      max-height: min(54vh, 26rem);
+      margin-inline: auto;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-block: var(--space-4) var(--space-5);
+    }
+
+    .mobile-page-toc-content :global(.page-toc-list) {
+      display: grid;
+      gap: var(--space-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mobile-page-toc-content :global(.page-toc-item) {
+      border-left: 0.1875rem solid var(--color-border);
+      padding-inline-start: var(--space-3);
+    }
+
+    .mobile-page-toc-content :global(.page-toc-item-depth-3) {
+      margin-inline-start: var(--space-4);
+    }
+
+    .mobile-page-toc-content :global(.page-toc-link) {
+      display: block;
+      color: var(--color-text);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      line-height: var(--line-height-tight);
+      text-decoration: none;
+      padding-block: var(--space-2);
+    }
+
+    .mobile-page-toc-content :global(.page-toc-item-depth-3 .page-toc-link) {
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      font-weight: 600;
+    }
+
+    .mobile-page-toc-content :global(.page-toc-link:hover),
+    .mobile-page-toc-content :global(.page-toc-link:focus-visible) {
+      color: var(--color-link-hover);
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+  }
+</style>

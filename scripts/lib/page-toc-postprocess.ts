@@ -26,11 +26,14 @@ const HEADING_TAGS = new Set(["h2", "h3"]);
 
 export function processPageTocHtml(html: string): PageTocProcessResult {
   const document = parse(html);
-  const enabledElement = findElement(document, (element) =>
-    hasAttrValue(element, "data-page-toc-enabled", "true"),
+  const slots = findElements(
+    document,
+    (element) =>
+      hasAttr(element, "data-page-toc-slot") &&
+      hasAttrValue(element, "data-page-toc-enabled", "true"),
   );
 
-  if (!enabledElement) {
+  if (slots.length === 0) {
     return {
       html,
       processed: false,
@@ -42,12 +45,9 @@ export function processPageTocHtml(html: string): PageTocProcessResult {
   const content = findElement(document, (element) =>
     hasAttr(element, "data-page-content"),
   );
-  const slot = findElement(document, (element) =>
-    hasAttr(element, "data-page-toc-slot"),
-  );
   const warnings: string[] = [];
 
-  if (!content || !slot) {
+  if (!content) {
     return {
       html,
       processed: false,
@@ -64,9 +64,12 @@ export function processPageTocHtml(html: string): PageTocProcessResult {
   const tocItems = collectTocItems(headings, warnings);
 
   if (tocItems.length <= 1) {
-    setAttr(slot, "hidden", "");
-    setAttr(slot, "data-page-toc-empty", "true");
-    replaceChildren(findTocContentElement(slot) ?? slot, []);
+    for (const slot of slots) {
+      setAttr(slot, "hidden", "");
+      setAttr(slot, "data-page-toc-empty", "true");
+      replaceChildren(findTocContentElement(slot) ?? slot, []);
+    }
+
     return {
       html: serialize(document),
       processed: true,
@@ -75,12 +78,14 @@ export function processPageTocHtml(html: string): PageTocProcessResult {
     };
   }
 
-  removeAttr(slot, "hidden");
-  removeAttr(slot, "data-page-toc-empty");
-  replaceChildren(
-    findTocContentElement(slot) ?? slot,
-    renderTocNodes(tocItems),
-  );
+  for (const slot of slots) {
+    removeAttr(slot, "hidden");
+    removeAttr(slot, "data-page-toc-empty");
+    replaceChildren(
+      findTocContentElement(slot) ?? slot,
+      renderTocNodes(tocItems),
+    );
+  }
 
   return {
     html: serialize(document),

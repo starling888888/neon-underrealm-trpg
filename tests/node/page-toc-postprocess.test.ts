@@ -38,6 +38,24 @@ describe("page toc postprocess", () => {
     assert.doesNotMatch(result.html, /対象外<\/a>/);
   });
 
+  it("generates the same toc items for multiple enabled slots", () => {
+    const result = processPageTocHtml(
+      pageWithHeadings(
+        html`
+          <h2>見出し A</h2>
+          <h3>小見出し</h3>
+          <h2>見出し B</h2>
+        `,
+        { mobileSlot: true },
+      ),
+    );
+
+    assert.equal(result.processed, true);
+    assert.equal(result.tocItems.length, 3);
+    assert.equal(countMatches(result.html, /<ol class="page-toc-list">/g), 2);
+    assert.equal(countMatches(result.html, /href="#h-[a-f0-9]{8}"/g), 6);
+  });
+
   it("generates stable ascii hash ids", () => {
     const id = createHeadingId(2, " コンボ  中の リアクション ");
 
@@ -108,9 +126,28 @@ describe("page toc postprocess", () => {
     assert.match(result.html, /<nav[^>]*hidden=""/);
     assert.doesNotMatch(result.html, /page-toc-list/);
   });
+
+  it("hides every enabled toc shell when there are too few toc items", () => {
+    const result = processPageTocHtml(
+      pageWithHeadings(
+        html`
+          <h2>単独見出し</h2>
+        `,
+        { mobileSlot: true },
+      ),
+    );
+
+    assert.equal(result.tocItems.length, 1);
+    assert.equal(countMatches(result.html, /data-page-toc-empty="true"/g), 2);
+    assert.equal(countMatches(result.html, /hidden=""/g), 2);
+    assert.doesNotMatch(result.html, /page-toc-list/);
+  });
 });
 
-function pageWithHeadings(content: string): string {
+function pageWithHeadings(
+  content: string,
+  options: { mobileSlot?: boolean } = {},
+): string {
   return html`<!doctype html>
     <html lang="ja">
       <body>
@@ -119,6 +156,18 @@ function pageWithHeadings(content: string): string {
           <p>目次</p>
           <div data-page-toc-content></div>
         </nav>
+        ${
+          options.mobileSlot
+            ? html`<section data-page-toc-slot data-page-toc-enabled="true">
+              <button type="button" aria-expanded="false">目次</button>
+              <div data-page-toc-content></div>
+            </section>`
+            : ""
+        }
       </body>
     </html>`;
+}
+
+function countMatches(source: string, pattern: RegExp): number {
+  return [...source.matchAll(pattern)].length;
 }

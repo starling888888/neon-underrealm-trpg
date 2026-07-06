@@ -3,6 +3,7 @@ import "../styles/global.css";
 import "../styles/prose.css";
 import Footer from "../components/layout/Footer.astro";
 import Header from "../components/layout/Header.astro";
+import MobilePageToc from "../components/layout/MobilePageToc.astro";
 import PageToc from "../components/layout/PageToc.astro";
 import SiteMenu from "../components/layout/SiteMenu.astro";
 import Seo from "../components/seo/Seo.astro";
@@ -84,6 +85,8 @@ const {
         ></button>
       </aside>
 
+      {showPageToc && <MobilePageToc title={title} />}
+
       <div class:list={["desktop-layout", !showPageToc && "desktop-layout-no-toc"]}>
         <aside class="layout-rail layout-rail-left">
           <SiteMenu />
@@ -115,6 +118,7 @@ const {
 
 <style>
   .site-shell {
+    width: 100%;
     min-width: 1120px;
     min-height: 100vh;
     display: grid;
@@ -123,6 +127,7 @@ const {
   }
 
   .desktop-layout {
+    min-width: 0;
     display: grid;
     grid-template-columns: 19.5rem minmax(46rem, 1fr) 19.5rem;
     min-height: calc(100vh - 9rem);
@@ -147,6 +152,7 @@ const {
   }
 
   .site-main {
+    min-width: 0;
     width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
     margin-inline: auto;
     padding-block: var(--space-12);
@@ -158,6 +164,24 @@ const {
 
   .mobile-menu-drawer[hidden] {
     display: none;
+  }
+
+  @media (max-width: 64rem) {
+    .site-shell {
+      min-width: 0;
+    }
+
+    .desktop-layout {
+      grid-template-columns: 17rem minmax(0, 1fr);
+    }
+
+    .desktop-layout-no-toc {
+      grid-template-columns: 17rem minmax(0, 1fr);
+    }
+
+    .layout-rail-right {
+      display: none;
+    }
   }
 
   @media (max-width: 48rem) {
