@@ -1,15 +1,27 @@
 ---
 import SiteMenuItem from "./SiteMenuItem.astro";
 import { siteMenuItems } from "../../lib/site/menu";
+
+type Props = {
+  idPrefix?: string;
+  variant?: "desktop" | "drawer";
+};
+
+const { idPrefix = "site-menu", variant = "desktop" } = Astro.props;
 ---
 
-<nav class="site-menu" aria-label="サイトメニュー">
+<nav class={`site-menu site-menu-${variant}`} aria-label="サイトメニュー">
   <p class="site-menu-kicker">SITE MENU</p>
   <p class="site-menu-title">サイトメニュー</p>
   <ul class="site-menu-list site-menu-list-root">
     {
       siteMenuItems.map((item, index) => (
-        <SiteMenuItem item={item} indexPath={String(index + 1)} level={1} />
+        <SiteMenuItem
+          item={item}
+          indexPath={String(index + 1)}
+          level={1}
+          idPrefix={idPrefix}
+        />
       ))
     }
   </ul>
@@ -18,17 +30,21 @@ import { siteMenuItems } from "../../lib/site/menu";
 <script>
   import { setupDisclosure } from "../../scripts/disclosure";
 
-  const siteMenu = document.querySelector(".site-menu");
+  const siteMenus = document.querySelectorAll(".site-menu");
 
-  if (siteMenu) {
+  siteMenus.forEach((siteMenu) => {
     setupDisclosure(siteMenu);
-  }
+  });
 </script>
 
 <style>
   .site-menu {
     position: sticky;
     top: var(--space-6);
+  }
+
+  .site-menu-drawer {
+    position: static;
   }
 
   .site-menu-kicker,
@@ -170,7 +186,7 @@ import { siteMenuItems } from "../../lib/site/menu";
   }
 
   @media (max-width: 48rem) {
-    .site-menu {
+    .site-menu-desktop {
       display: none;
     }
   }

@@ -152,71 +152,71 @@
 
 ## 完了条件
 
-* [ ] `docs/design/mobile-menu/notes.md` が作成されている
-* [ ] `docs/design/mobile-menu/design-mobile-closed.png` または同等のclosed state design画像が作成されている
-* [ ] `docs/design/mobile-menu/design-mobile-open.png` または同等のopen state design画像が作成されている
-* [ ] design targetが `mobile-menu` として記録されている
-* [ ] design draftが人間レビュー可能な状態になっている
-* [ ] designに検索dialog、ページ内目次、現在ページハイライト、パンくず、前後ナビゲーションなど後続タスク・初期スコープ外の機能を描き込んでいない
-* [ ] `MobileMenu.astro` を新規作成していない
-* [ ] 既存 `SiteMenu.astro` をPC左サイド常設表示とスマホdrawer表示の両方で利用している
-* [ ] 既存 `SiteMenuItem.astro` をスマホdrawer内でも再利用している
-* [ ] `src/lib/site/menu.ts` の `siteMenuItems` をPC / mobile双方で再利用している
-* [ ] スマホ用メニュー項目を別定義で二重管理していない
-* [ ] `Header.astro` のスマホ左メニューボタンがdisabledではなく、drawer開閉トリガーとして機能する
-* [ ] スマホ幅でdrawerを開ける
-* [ ] スマホ幅でdrawerを閉じられる
-* [ ] drawer内に明示的な閉じる操作がある
-* [ ] Header左メニューボタンでdrawerの開閉状態を切り替えられる
-* [ ] メニュー項目を選択した後、drawerが閉じる
-* [ ] Escキーでdrawerを閉じられる
-* [ ] drawer表示中、背景本文がスクロールされない
-* [ ] drawer自体はメニュー項目が長い場合に縦スクロールできる
-* [ ] drawerを閉じた後、Header左メニューボタンへフォーカスが戻る
-* [ ] drawer表示中、Tab / Shift+Tab のフォーカス移動がdrawer内に収まる
-* [ ] drawerを開いたとき、フォーカスがdrawer内の閉じるボタンまたは最初の操作可能要素へ移る
-* [ ] 開閉ボタンに `aria-expanded` が設定され、開閉状態と同期する
-* [ ] 開閉ボタンに `aria-controls` が設定され、対象drawer領域と対応している
-* [ ] スマホ用drawer内のサイトメニューは `nav` 要素または同等のランドマークを持つ
-* [ ] スマホ用drawer内のサイトメニューに適切な `aria-label` が設定されている
-* [ ] drawer内のリンクはGitHub Pagesのサブパス公開で壊れない
-* [ ] `768px` 未満ではPC左サイドの常設表示が出ない
-* [ ] `768px` 以上ではスマホdrawerがPC左サイトメニューと競合しない
-* [ ] `768px` 以上でdrawerが開いた状態のまま残らない、または表示上競合しない
-* [ ] タップ対象が小さすぎない
-* [ ] focus表示が色だけに依存しすぎていない
-* [ ] 既存PC版 `SiteMenu.astro` の階層開閉が壊れていない
-* [ ] 既存PC版 `SiteMenuItem.astro` の表示が壊れていない
-* [ ] 検索button / 検索dialogを実装していない
-* [ ] 現在ページハイライトを実装していない
-* [ ] `aria-current="page"` を本実装していない
-* [ ] PageTocを実装していない
-* [ ] パンくずリスト、前後ナビゲーションを実装していない
-* [ ] 生成JSONやデータ取得層から流儀・生き様のメニュー項目を追加していない
-* [ ] 不要な依存関係を追加していない
-* [ ] `npm run build` が通る
-* [ ] 必要に応じて `npm run check` が通る
+* [x] `docs/design/mobile-menu/notes.md` が作成されている
+* [x] `docs/design/mobile-menu/design-mobile-closed.png` または同等のclosed state design画像が作成されている
+* [x] `docs/design/mobile-menu/design-mobile-open.png` または同等のopen state design画像が作成されている
+* [x] design targetが `mobile-menu` として記録されている
+* [x] design draftが人間レビュー可能な状態になっている
+* [x] designに検索dialog、ページ内目次、現在ページハイライト、パンくず、前後ナビゲーションなど後続タスク・初期スコープ外の機能を描き込んでいない
+* [x] `MobileMenu.astro` を新規作成していない
+* [x] 既存 `SiteMenu.astro` をPC左サイド常設表示とスマホdrawer表示の両方で利用している
+* [x] 既存 `SiteMenuItem.astro` をスマホdrawer内でも再利用している
+* [x] `src/lib/site/menu.ts` の `siteMenuItems` をPC / mobile双方で再利用している
+* [x] スマホ用メニュー項目を別定義で二重管理していない
+* [x] `Header.astro` のスマホ左メニューボタンがdisabledではなく、drawer開閉トリガーとして機能する
+* [x] スマホ幅でdrawerを開ける
+* [x] スマホ幅でdrawerを閉じられる
+* [x] drawer内に明示的な閉じる操作がある
+* [x] Header左メニューボタンでdrawerの開閉状態を切り替えられる
+* [x] メニュー項目を選択した後、drawerが閉じる
+* [x] Escキーでdrawerを閉じられる
+* [x] drawer表示中、背景本文がスクロールされない
+* [x] drawer自体はメニュー項目が長い場合に縦スクロールできる
+* [x] drawerを閉じた後、Header左メニューボタンへフォーカスが戻る
+* [x] drawer表示中、Tab / Shift+Tab のフォーカス移動がdrawer内に収まる
+* [x] drawerを開いたとき、フォーカスがdrawer内の閉じるボタンまたは最初の操作可能要素へ移る
+* [x] 開閉ボタンに `aria-expanded` が設定され、開閉状態と同期する
+* [x] 開閉ボタンに `aria-controls` が設定され、対象drawer領域と対応している
+* [x] スマホ用drawer内のサイトメニューは `nav` 要素または同等のランドマークを持つ
+* [x] スマホ用drawer内のサイトメニューに適切な `aria-label` が設定されている
+* [x] drawer内のリンクはGitHub Pagesのサブパス公開で壊れない
+* [x] `768px` 未満ではPC左サイドの常設表示が出ない
+* [x] `768px` 以上ではスマホdrawerがPC左サイトメニューと競合しない
+* [x] `768px` 以上でdrawerが開いた状態のまま残らない、または表示上競合しない
+* [x] タップ対象が小さすぎない
+* [x] focus表示が色だけに依存しすぎていない
+* [x] 既存PC版 `SiteMenu.astro` の階層開閉が壊れていない
+* [x] 既存PC版 `SiteMenuItem.astro` の表示が壊れていない
+* [x] 検索button / 検索dialogを実装していない
+* [x] 現在ページハイライトを実装していない
+* [x] `aria-current="page"` を本実装していない
+* [x] PageTocを実装していない
+* [x] パンくずリスト、前後ナビゲーションを実装していない
+* [x] 生成JSONやデータ取得層から流儀・生き様のメニュー項目を追加していない
+* [x] 不要な依存関係を追加していない
+* [x] `npm run build` が通る
+* [x] 必要に応じて `npm run check` が通る
 
 ## チェックポイント
 
-* [ ] 既存ルート `/` が壊れていない
-* [ ] 既存 `Header.astro` と視覚的に競合していない
-* [ ] 既存 `Footer.astro` と視覚的に競合していない
-* [ ] 既存PC版 `SiteMenu.astro` の表示が壊れていない
-* [ ] 既存PC版 `SiteMenu.astro` の階層開閉が壊れていない
-* [ ] 既存 `SiteMenuItem.astro` のPC表示が壊れていない
-* [ ] `src/lib/site/menu.ts` のmenu dataをPC / mobile双方で再利用できている
-* [ ] GitHub Pagesのサブパス公開に影響しない
-* [ ] `withBase()` または既存の内部リンク方針に従っている
-* [ ] drawer開閉処理が検索dialogやPageTocの将来実装と過剰に結合していない
-* [ ] Headerの右側検索ボタンには検索dialog本体を実装していない
-* [ ] 現在ページハイライトは後続 `15-current-menu-highlight` に残っている
-* [ ] `docs/TODO.md` の未対応項目と矛盾していない
-* [ ] `docs/design/header-footer/` のmobile Header方針と矛盾していない
-* [ ] `docs/design/site-menu/` のmenu data再利用方針と矛盾していない
-* [ ] `docs/design/mobile-menu/` のdesign draftと矛盾していない
-* [ ] 初期スコープ外の機能を実装していない
-* [ ] ユーザーの未コミット変更を破壊していない
+* [x] 既存ルート `/` が壊れていない
+* [x] 既存 `Header.astro` と視覚的に競合していない
+* [x] 既存 `Footer.astro` と視覚的に競合していない
+* [x] 既存PC版 `SiteMenu.astro` の表示が壊れていない
+* [x] 既存PC版 `SiteMenu.astro` の階層開閉が壊れていない
+* [x] 既存 `SiteMenuItem.astro` のPC表示が壊れていない
+* [x] `src/lib/site/menu.ts` のmenu dataをPC / mobile双方で再利用できている
+* [x] GitHub Pagesのサブパス公開に影響しない
+* [x] `withBase()` または既存の内部リンク方針に従っている
+* [x] drawer開閉処理が検索dialogやPageTocの将来実装と過剰に結合していない
+* [x] Headerの右側検索ボタンには検索dialog本体を実装していない
+* [x] 現在ページハイライトは後続 `15-current-menu-highlight` に残っている
+* [x] `docs/TODO.md` の未対応項目と矛盾していない
+* [x] `docs/design/header-footer/` のmobile Header方針と矛盾していない
+* [x] `docs/design/site-menu/` のmenu data再利用方針と矛盾していない
+* [x] `docs/design/mobile-menu/` のdesign draftと矛盾していない
+* [x] 初期スコープ外の機能を実装していない
+* [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 

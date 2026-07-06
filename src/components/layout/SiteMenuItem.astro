@@ -6,13 +6,14 @@ type Props = {
   item: SiteMenuItem;
   indexPath: string;
   level: number;
+  idPrefix: string;
 };
 
-const { item, indexPath, level } = Astro.props;
+const { item, indexPath, level, idPrefix } = Astro.props;
 const hasChildren = Boolean(item.children?.length);
 
-function menuGroupId(indexPath: string): string {
-  return `site-menu-group-${indexPath.replaceAll(".", "-")}`;
+function menuGroupId(idPrefix: string, indexPath: string): string {
+  return `${idPrefix}-group-${indexPath.replaceAll(".", "-")}`;
 }
 ---
 
@@ -26,7 +27,7 @@ function menuGroupId(indexPath: string): string {
           data-disclosure-toggle
           aria-label={`${item.label} の子項目を開閉する`}
           aria-expanded={item.defaultExpanded ? "true" : "false"}
-          aria-controls={menuGroupId(indexPath)}
+          aria-controls={menuGroupId(idPrefix, indexPath)}
         >
           <span class="site-menu-caret" aria-hidden="true" />
         </button>
@@ -42,7 +43,7 @@ function menuGroupId(indexPath: string): string {
   {
     hasChildren ? (
       <ul
-        id={menuGroupId(indexPath)}
+        id={menuGroupId(idPrefix, indexPath)}
         class="site-menu-list"
         hidden={!item.defaultExpanded}
       >
@@ -51,6 +52,7 @@ function menuGroupId(indexPath: string): string {
             item={child}
             indexPath={`${indexPath}.${childIndex + 1}`}
             level={level + 1}
+            idPrefix={idPrefix}
           />
         ))}
       </ul>

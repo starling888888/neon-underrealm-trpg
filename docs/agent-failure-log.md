@@ -120,3 +120,11 @@
 - 発生箇所: `11-site-menu` の `src/lib/site/menu.ts`
 - 観測した失敗: 404ページを通常のサイドメニュー導線に含め、ユーザーから不要であると指摘された。
 - 一次対応: `src/lib/site/menu.ts` から404リンクを削除した。
+
+### Repeated formatter feedback during implementation
+
+#### 2026-07-06
+
+- 発生箇所: `12-mobile-menu` の `src/scripts/mobile-menu.ts`
+- 観測した失敗: `npm run check` でBiome formatter指摘を受けた後、同じファイルで別のformatter指摘を再度発生させた。
+- 一次対応: Biomeの指摘どおりに改行・インデントを修正し、`npm run check` を通した。
