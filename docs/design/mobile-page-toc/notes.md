@@ -11,8 +11,8 @@
 - viewport:
   - mobile: `390x900`
 - states:
-  - `design-mobile-closed.png`: スマホ固定ページタイトルバーの右側に、ボタン感を弱めた目次triggerを表示する状態
-  - `design-mobile-open.png`: 固定ページタイトルバー直下に、軽いoverlayとしてページ内見出しリンク一覧を表示する状態
+  - `design-mobile-closed.png`: 本文内H1要素の右側に、ボタン感を弱めた目次triggerを表示する状態
+  - `design-mobile-open.png`: H1直下に、軽いoverlayとしてページ内見出しリンク一覧を表示する状態
 
 ## Referenced SSoT
 
@@ -34,8 +34,8 @@
 
 ## Design direction
 
-- visual direction: `page-toc` の控えめなページ内リンク群を、スマホ幅の固定ページタイトルバーから開ける軽いoverlayとして表現する。白寄り本文面、暗めHeader、青緑accent、薄い境界線の方向性を維持し、サイトメニューdrawerや検索dialogに見えないようにする。
-- layout direction: スマホ幅ではページタイトルを本文領域とは別の薄い固定タイトルバーとして表示し、その右側にボタン感を弱めた目次triggerを置く。triggerは大きな枠付きボタンではなく、短いラベル、控えめなchevron、必要最小限のaccentで表現する。開いた状態では固定タイトルバー直下に軽いoverlay panelを表示する。mobile-menu drawerほど強い画面占有にしない。
+- visual direction: `page-toc` の控えめなページ内リンク群を、スマホ幅の本文内H1横から開ける軽いoverlayとして表現する。白寄り本文面、暗めHeader、青緑accent、薄い境界線の方向性を維持し、サイトメニューdrawerや検索dialogに見えないようにする。
+- layout direction: スマホ幅では本文内H1要素の右側に、ボタン感を弱めた目次triggerを置く。triggerは大きな枠付きボタンではなく、短いラベル、控えめなchevron、必要最小限のaccentで表現する。開いた状態ではH1直下に軽いoverlay panelを表示する。mobile-menu drawerほど強い画面占有にしない。
 - typography direction: 可視文言は `このページの目次` を基本にする。目次項目は本文より少し小さく、H2 / H3 の階層差が分かる程度のweight、余白、インデントで示す。長い日本語見出しは自然に折り返せるようにする。
 - color / accent usage: 通常状態は濃いグレー文字、白寄りsurface、薄いborderを基本にする。青緑accentは開閉buttonの小さな状態表示、focus、リンクhover相当に限定する。現在位置ハイライトに見える強い左線、背景色、active markerは描かない。
 
@@ -45,8 +45,8 @@
 - `docs/design/page-toc/` のH2 / H3ベースのページ内リンク階層を維持する。`h1` 相当のページタイトルはMobilePageTocに含めない。
 - `docs/design/mobile-menu/` のサイトメニューdrawerとは役割、位置、文言、開き方を分離する。MobilePageTocはサイト全体のページ移動ではなく、現在ページ内の見出し移動である。
 - Header左のサイトメニューボタン、Header右の検索アイコン枠とは別導線にする。Header内へ新しいTOCボタンを詰め込む前提にしない。
-- スマホ固定ページタイトルバーは、サイトHeaderではなく現在ページの文脈表示として扱う。サイトHeader内のmenu / search導線とは別の行に置く。
-- 目次triggerは44px相当のタップ領域を確保しつつ、枠付きボタンとして強く見せない。周囲のタイトルバー余白と小さな下線 / chevron / accentで操作可能性を示す。
+- 目次triggerは本文内H1要素横に置き、サイトHeader内のmenu / search導線とは別の導線として扱う。Header内へ新しいTOCボタンを詰め込まない。
+- 目次triggerは44px相当のタップ領域を確保しつつ、枠付きボタンとして強く見せない。周囲のH1余白と小さなchevron / accentで操作可能性を示す。
 - PC右サイド常設PageTocは `1024px` 未満で表示しない。MobilePageTocとPC用PageTocが同時に目立つ状態を描かない。
 - トップページ `/`、更新履歴ページ `/release-notes`、404ページ `/404`、TOC項目が0件または1件のページでは、空のTOC枠、`目次はありません`、薄いplaceholderを表示しない。
 - 開閉中にサイトメニューdrawerと重なって見えないようにする。必要であれば、片方が開いたら片方を閉じる実装を想定できる構造にする。
@@ -77,8 +77,8 @@
 ## Comparison points for implementation
 
 - `1024px` 未満でPC右サイドPageTocが常設表示されず、MobilePageTocだけが表示対象になる。
-- closed stateでは、スマホ固定ページタイトルバーにページタイトルと控えめな目次triggerがあり、サイトメニューや検索と混同しない。
-- open stateでは、固定ページタイトルバー直下に現在ページ内のH2 / H3リンク一覧が表示され、階層差が分かる。
+- closed stateでは、本文内H1要素横に控えめな目次triggerがあり、サイトメニューや検索と混同しない。
+- open stateでは、H1直下に現在ページ内のH2 / H3リンク一覧が表示され、階層差が分かる。
 - `h1` 相当のページタイトルはMobilePageToc項目に含まれない。
 - TOC項目が0件または1件のページで、空のTOC button / panelが表示されない。
 - `/`、`/release-notes`、`/404` でMobilePageTocが表示されない。
@@ -89,7 +89,7 @@
 - focus outlineを消さず、タップ領域が小さすぎない。
 - MobileMenuを開いた状態でMobilePageTocが残留して表示崩れしない方針と矛盾しない。
 - PC幅のPageToc design、mobile-menu design、global stylesと視覚的に一貫している。
-- fixed titlebar overlay案を正式採用する。
+- H1横trigger + H1直下overlay案を正式採用する。
 - 差分として許容できるもの: buttonの細かな高さ、border濃度、iconの向き、H3インデント量、項目数、本文上部内での縦位置の微調整。
 - レビューが必要な差分: Header内へのTOC導線追加、常時floating / sticky化、drawer化してmobile-menuに似すぎる表現、現在位置ハイライトに見える強調、検索UIやパンくずの追加、空TOC表示、本文幅やHeader挙動を大きく変える変更。
 
@@ -99,11 +99,11 @@
 - source branch / commit when applicable: branch `14-mobile-page-toc`, issue commit `1d2adae`
 - route when applicable: first draft should use a representative long-form content page with page TOC enabled; non-display checks should include `/`, `/release-notes`, and `/404`
 - viewport: mobile `390x900`
-- prompt summary or capture notes: Updated initial design draft for the mobile page table-of-contents design target. The adopted direction fixes a mobile page title bar below the site Header, places a subtle TOC trigger beside the page title, and opens a lightweight overlay directly below that title bar. Search, breadcrumbs, current-position highlighting, previous / next navigation, and tool-like app features are not drawn.
+- prompt summary or capture notes: Updated initial design draft for the mobile page table-of-contents design target. The adopted direction places a subtle TOC trigger beside the page H1 and opens a lightweight overlay directly below that H1 area. Search, breadcrumbs, current-position highlighting, previous / next navigation, and tool-like app features are not drawn.
 
 ## Open questions
 
-- スマホ固定ページタイトルバーの高さ、タイトル省略、目次triggerの可視ラベルをどこまで控えめにするか。
+- H1横triggerの縦位置、H1が長い場合の折り返し、目次triggerの可視ラベルをどこまで控えめにするか。
 - overlayを開いたときに背景本文をどの程度dimするか。mobile-menu drawerほど強くしない方針は維持する。
 - 目次項目が長い場合、行数制限を設けるか自然な折り返しにするか。
 - サイトメニューとMobilePageTocが同時に開く操作が発生した場合、どちらを優先して閉じるか。
