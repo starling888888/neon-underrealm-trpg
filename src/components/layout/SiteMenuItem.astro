@@ -19,6 +19,9 @@ function menuGroupId(idPrefix: string, indexPath: string): string {
 
 <li class={`site-menu-item level-${level}`}>
   <div class="site-menu-row">
+    <a class="site-menu-link" href={withBase(item.href)}>
+      {item.label}
+    </a>
     {
       hasChildren ? (
         <button
@@ -31,13 +34,8 @@ function menuGroupId(idPrefix: string, indexPath: string): string {
         >
           <span class="site-menu-caret" aria-hidden="true" />
         </button>
-      ) : (
-        <span class="site-menu-spacer" aria-hidden="true" />
-      )
+      ) : null
     }
-    <a class="site-menu-link" href={withBase(item.href)}>
-      {item.label}
-    </a>
   </div>
 
   {

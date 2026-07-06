@@ -11,8 +11,6 @@ const { idPrefix = "site-menu", variant = "desktop" } = Astro.props;
 ---
 
 <nav class={`site-menu site-menu-${variant}`} aria-label="サイトメニュー">
-  <p class="site-menu-kicker">SITE MENU</p>
-  <p class="site-menu-title">サイトメニュー</p>
   <ul class="site-menu-list site-menu-list-root">
     {
       siteMenuItems.map((item, index) => (
@@ -47,28 +45,6 @@ const { idPrefix = "site-menu", variant = "desktop" } = Astro.props;
     position: static;
   }
 
-  .site-menu-kicker,
-  .site-menu-title {
-    margin: 0;
-  }
-
-  .site-menu-kicker {
-    color: var(--color-text-muted);
-    font-size: var(--text-xs);
-    font-weight: 700;
-    line-height: var(--line-height-tight);
-  }
-
-  .site-menu-title {
-    margin-block-start: var(--space-3);
-    padding-block-end: var(--space-5);
-    border-bottom: var(--border-width) solid var(--color-border);
-    color: var(--color-text);
-    font-size: var(--text-base);
-    font-weight: 700;
-    line-height: var(--line-height-tight);
-  }
-
   .site-menu :global(.site-menu-list) {
     display: grid;
     gap: var(--space-1);
@@ -82,7 +58,7 @@ const { idPrefix = "site-menu", variant = "desktop" } = Astro.props;
   }
 
   .site-menu :global(.site-menu-list-root) {
-    margin-block-start: var(--space-5);
+    margin-block-start: 0;
   }
 
   .site-menu :global(.site-menu-item) {
@@ -95,28 +71,25 @@ const { idPrefix = "site-menu", variant = "desktop" } = Astro.props;
 
   .site-menu :global(.site-menu-row) {
     display: grid;
-    grid-template-columns: 1rem minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 1.5rem;
     align-items: center;
     column-gap: var(--space-2);
     min-height: 2rem;
   }
 
-  .site-menu :global(.level-2) {
-    padding-inline-start: var(--space-4);
+  .site-menu :global(.level-2 > .site-menu-row .site-menu-link) {
+    margin-inline-start: var(--space-4);
   }
 
-  .site-menu :global(.level-3) {
-    padding-inline-start: var(--space-8);
-  }
-
-  .site-menu :global(.site-menu-toggle),
-  .site-menu :global(.site-menu-spacer) {
-    width: 1rem;
-    height: 1rem;
+  .site-menu :global(.level-3 > .site-menu-row .site-menu-link) {
+    margin-inline-start: var(--space-8);
   }
 
   .site-menu :global(.site-menu-toggle) {
+    width: 1.5rem;
+    height: 1.5rem;
     display: inline-grid;
+    justify-self: end;
     place-items: center;
     border: 0;
     border-radius: var(--radius-sm);
@@ -153,6 +126,7 @@ const { idPrefix = "site-menu", variant = "desktop" } = Astro.props;
 
   .site-menu :global(.site-menu-link) {
     min-width: 0;
+    display: block;
     border-radius: var(--radius-sm);
     color: var(--color-text);
     font-size: var(--text-sm);
