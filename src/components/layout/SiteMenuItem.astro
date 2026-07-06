@@ -1,5 +1,8 @@
 ---
-import type { SiteMenuItem } from "../../lib/site/menu";
+import {
+  getSiteMenuItemState,
+  type SiteMenuItem,
+} from "../../lib/site/menu";
 import { withBase } from "../../lib/utils/paths";
 
 type Props = {
@@ -7,19 +10,37 @@ type Props = {
   indexPath: string;
   level: number;
   idPrefix: string;
+  currentPath: string;
+  basePath: string;
 };
 
-const { item, indexPath, level, idPrefix } = Astro.props;
+const { item, indexPath, level, idPrefix, currentPath, basePath } = Astro.props;
 const hasChildren = Boolean(item.children?.length);
+const state = getSiteMenuItemState(item, currentPath, basePath);
+const isCurrent = state === "current";
+const isAncestor = state === "ancestor";
+const isExpanded = Boolean(item.defaultExpanded || isCurrent || isAncestor);
+const itemClasses = [
+  "site-menu-item",
+  `level-${level}`,
+  isCurrent ? "is-current" : null,
+  isAncestor ? "is-ancestor" : null,
+]
+  .filter(Boolean)
+  .join(" ");
 
 function menuGroupId(idPrefix: string, indexPath: string): string {
   return `${idPrefix}-group-${indexPath.replaceAll(".", "-")}`;
 }
 ---
 
-<li class={`site-menu-item level-${level}`}>
+<li class={itemClasses}>
   <div class="site-menu-row">
-    <a class="site-menu-link" href={withBase(item.href)}>
+    <a
+      class="site-menu-link"
+      href={withBase(item.href)}
+      aria-current={isCurrent ? "page" : undefined}
+    >
       {item.label}
     </a>
     {
@@ -29,7 +50,7 @@ function menuGroupId(idPrefix: string, indexPath: string): string {
           type="button"
           data-disclosure-toggle
           aria-label={`${item.label} の子項目を開閉する`}
-          aria-expanded={item.defaultExpanded ? "true" : "false"}
+          aria-expanded={isExpanded ? "true" : "false"}
           aria-controls={menuGroupId(idPrefix, indexPath)}
         >
           <span class="site-menu-caret" aria-hidden="true" />
@@ -43,7 +64,7 @@ function menuGroupId(idPrefix: string, indexPath: string): string {
       <ul
         id={menuGroupId(idPrefix, indexPath)}
         class="site-menu-list"
-        hidden={!item.defaultExpanded}
+        hidden={!isExpanded}
       >
         {item.children?.map((child, childIndex) => (
           <Astro.self
@@ -51,6 +72,8 @@ function menuGroupId(idPrefix: string, indexPath: string): string {
             indexPath={`${indexPath}.${childIndex + 1}`}
             level={level + 1}
             idPrefix={idPrefix}
+            currentPath={currentPath}
+            basePath={basePath}
           />
         ))}
       </ul>

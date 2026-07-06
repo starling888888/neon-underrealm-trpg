@@ -5,6 +5,8 @@ export type SiteMenuItem = {
   children?: SiteMenuItem[];
 };
 
+export type SiteMenuItemState = "current" | "ancestor" | "none";
+
 export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "トップ",
@@ -96,3 +98,64 @@ export const siteMenuItems: SiteMenuItem[] = [
     href: "/release-notes",
   },
 ];
+
+export function getSiteMenuItemState(
+  item: SiteMenuItem,
+  currentPath: string,
+  basePath = "/",
+): SiteMenuItemState {
+  const normalizedCurrentPath = normalizeCurrentPath(currentPath, basePath);
+  const itemPath = normalizeSitePath(item.href);
+
+  if (normalizedCurrentPath === itemPath) {
+    return "current";
+  }
+
+  if (
+    item.children?.some(
+      (child) => getSiteMenuItemState(child, normalizedCurrentPath) !== "none",
+    )
+  ) {
+    return "ancestor";
+  }
+
+  if (isDescendantPath(normalizedCurrentPath, itemPath)) {
+    return "ancestor";
+  }
+
+  return "none";
+}
+
+function normalizeCurrentPath(currentPath: string, basePath: string): string {
+  const normalizedPath = normalizeSitePath(currentPath);
+  const normalizedBase = normalizeSitePath(basePath);
+
+  if (normalizedBase === "/") {
+    return normalizedPath;
+  }
+
+  if (normalizedPath === normalizedBase) {
+    return "/";
+  }
+
+  if (normalizedPath.startsWith(`${normalizedBase}/`)) {
+    return normalizeSitePath(normalizedPath.slice(normalizedBase.length));
+  }
+
+  return normalizedPath;
+}
+
+function normalizeSitePath(path: string): string {
+  const pathWithoutHashOrQuery = path.split(/[?#]/, 1)[0] ?? "/";
+  const pathWithLeadingSlash = pathWithoutHashOrQuery.startsWith("/")
+    ? pathWithoutHashOrQuery
+    : `/${pathWithoutHashOrQuery}`;
+  const normalizedSlashes = pathWithLeadingSlash.replace(/\/{2,}/g, "/");
+  const pathWithoutTrailingSlash = normalizedSlashes.replace(/\/+$/, "");
+
+  return pathWithoutTrailingSlash === "" ? "/" : pathWithoutTrailingSlash;
+}
+
+function isDescendantPath(currentPath: string, parentPath: string): boolean {
+  return parentPath !== "/" && currentPath.startsWith(`${parentPath}/`);
+}

@@ -33,6 +33,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` のdesign / Visual Review / UI実装関連タスクに紐づける。適切な既存planがない場合は、design運用整理タスクを追加する
   - handling plan: 既存design targetごとに、mode / target / referenced SSoT / existing design constraints / out of scope / comparison points / generation source / open questions を必要範囲で追記する。既存design画像そのものは、このTODOだけでは変更しない
 
+- [ ] 現在地ハイライト目視確認用のダミーMDXページを、本実装時に削除または置き換える
+  - source: `15-current-menu-highlight` 実装中の目視確認用追加
+  - classification: follow-up
+  - plan: `docs/plan.md` の該当するデータページ実装タスクで扱う
+  - handling plan: `src/pages/data/index.mdx`、`src/pages/data/items/index.mdx`、`src/pages/data/items/weapons.mdx` は現在地ハイライトの目視確認用ダミーである。`/data`、`/data/items`、`/data/items/weapons` の本実装時に削除するか、正式なページ実装へ置き換える。
+
 <!--
 例:
 

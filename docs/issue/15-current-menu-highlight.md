@@ -186,9 +186,62 @@
 * `docs/design/current-menu-highlight/` は未作成のため、実装開始前に `design-image-generation` initial draft mode でdesign画像を作成する前提が必要である。
 * `SiteMenu.astro` / `SiteMenuItem.astro` / `siteMenuItems` / `withBase()` の現状は、issueの背景・対象範囲と矛盾していない。
 
-### 未検証
+### 実装前未検証
 
 * `npm run check`
 * `npm run build`
 * actual UI screenshots
 * 実装後のPC左サイトメニュー / スマホdrawerでの現在ページ表示
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/current-menu-highlight/`
+- reference desktop: `docs/design/current-menu-highlight/design-desktop.png`
+- reference mobile: `docs/design/current-menu-highlight/design-mobile.png`
+- notes: `docs/design/current-menu-highlight/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual/actual-desktop.png`
+- actual mobile: `test-results/visual/actual-mobile.png`
+- actual mobile drawer open: `test-results/visual/actual-mobile-menu-open.png`
+- report: Playwright output
+
+### レビュー結果
+
+| 領域 | 判定 | 差分 | 対応 |
+|---|---|---|---|
+| レイアウト | OK | 既存レイアウト内でサイトメニューの構造は維持されている | 修正なし |
+| 余白 | OK | active背景による高さや横幅の崩れは見られない | 修正なし |
+| タイポグラフィ | OK | current linkは文字色とweightで通常リンクより識別できる | 修正なし |
+| 色 | OK | 外枠・左線なしで、薄い青緑背景と文字色に留まっている | 修正なし |
+| 配置・整列 | OK | disclosure indicatorの右端配置とリンクのインデントは維持されている | 修正なし |
+| レスポンシブ | OK | PC左サイトメニューとスマホdrawer内サイトメニューの両方で `/data/items/weapons/` のcurrent / ancestor表示を確認した | 修正なし |
+| overflow / scroll | OK | current表示追加による横スクロールや文字溢れは見られない | 修正なし |
+| 既存デザインとの整合 | OK | `site-menu` / `mobile-menu` の既存構造と矛盾していない | 修正なし |
+| 既存Componentとの整合 | OK | `SiteMenu.astro` / `SiteMenuItem.astro` の共用構造を維持している | 修正なし |
+| accessibility basics | OK | exact matchするcurrent linkに `aria-current="page"` が付く | 修正なし |
+
+### 自己修正した項目
+
+- [x] なし
+
+### 人間判断が必要な差分
+
+- なし。目視確認用ダミーMDXとして `/data`、`/data/items`、`/data/items/weapons` を追加し、design参照の代表ルート `/data/items/weapons/` で `データ > アイテム > 武器` のancestor / current組み合わせを確認した。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
