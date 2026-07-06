@@ -1,7 +1,6 @@
 export type SiteMenuItem = {
   label: string;
   href: string;
-  defaultExpanded?: boolean;
   children?: SiteMenuItem[];
 };
 
@@ -27,7 +26,6 @@ export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "データ",
     href: "/data",
-    defaultExpanded: true,
     children: [
       {
         label: "流儀",
@@ -44,7 +42,6 @@ export const siteMenuItems: SiteMenuItem[] = [
       {
         label: "アイテム",
         href: "/data/items",
-        defaultExpanded: true,
         children: [
           {
             label: "武器",
@@ -77,7 +74,6 @@ export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "ルール",
     href: "/rules",
-    defaultExpanded: true,
     children: [
       {
         label: "シナリオ進行",
@@ -124,6 +120,14 @@ export function getSiteMenuItemState(
   }
 
   return "none";
+}
+
+export function getSiteMenuItemInitialExpanded(
+  item: SiteMenuItem,
+  currentPath: string,
+  basePath = "/",
+): boolean {
+  return getSiteMenuItemState(item, currentPath, basePath) === "ancestor";
 }
 
 function normalizeCurrentPath(currentPath: string, basePath: string): string {

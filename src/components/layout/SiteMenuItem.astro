@@ -1,5 +1,6 @@
 ---
 import {
+  getSiteMenuItemInitialExpanded,
   getSiteMenuItemState,
   type SiteMenuItem,
 } from "../../lib/site/menu";
@@ -19,7 +20,7 @@ const hasChildren = Boolean(item.children?.length);
 const state = getSiteMenuItemState(item, currentPath, basePath);
 const isCurrent = state === "current";
 const isAncestor = state === "ancestor";
-const isExpanded = Boolean(item.defaultExpanded || isCurrent || isAncestor);
+const isExpanded = getSiteMenuItemInitialExpanded(item, currentPath, basePath);
 const itemClasses = [
   "site-menu-item",
   `level-${level}`,
