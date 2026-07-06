@@ -129,6 +129,12 @@
 - 観測した失敗: `npm run check` でBiome formatter指摘を受けた後、同じファイルで別のformatter指摘を再度発生させた。
 - 一次対応: Biomeの指摘どおりに改行・インデントを修正し、`npm run check` を通した。
 
+#### 2026-07-06
+
+- 発生箇所: `13-page-toc` の `scripts/lib/page-toc-postprocess.ts` と `tests/page-toc-postprocess.test.ts`
+- 観測した失敗: `npm run check` でBiome formatter / organize imports指摘を受けた後、同じStep 2作業中に追加のBiome指摘を再度発生させた。
+- 一次対応: 対象ファイルに限定して `npx biome check --write` を実行し、`npm run check` を通した。
+
 ### Repeated design image conversion failure
 
 #### 2026-07-06
