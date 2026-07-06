@@ -1,0 +1,77 @@
+---
+export interface Props {
+  enabled?: boolean;
+}
+
+const { enabled = true } = Astro.props;
+---
+
+<nav
+  class="page-toc"
+  aria-label="目次"
+  data-page-toc-slot
+  data-page-toc-enabled={enabled ? "true" : "false"}
+>
+  <p class="page-toc-heading">目次</p>
+  <div class="page-toc-content" data-page-toc-content></div>
+</nav>
+
+<style>
+  .page-toc {
+    position: sticky;
+    top: var(--space-8);
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .page-toc-heading {
+    margin: 0;
+    border-bottom: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+    padding-block-end: var(--space-4);
+  }
+
+  .page-toc-content {
+    min-height: 0;
+  }
+
+  .page-toc-content :global(.page-toc-list) {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .page-toc-content :global(.page-toc-item) {
+    border-left: 0.1875rem solid var(--color-border);
+    padding-inline-start: var(--space-3);
+  }
+
+  .page-toc-content :global(.page-toc-item-depth-3) {
+    margin-inline-start: var(--space-4);
+  }
+
+  .page-toc-content :global(.page-toc-link) {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+    text-decoration: none;
+  }
+
+  .page-toc-content :global(.page-toc-item-depth-3 .page-toc-link) {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: 500;
+  }
+
+  .page-toc-content :global(.page-toc-link:hover) {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+</style>
