@@ -9,7 +9,14 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
 
 <header class="site-header">
   <div class="mobile-header-control">
-    <button class="icon-button" type="button" aria-label="サイトメニューを開く" disabled>
+    <button
+      class="icon-button"
+      type="button"
+      data-mobile-menu-open
+      aria-label="サイトメニューを開く"
+      aria-expanded="false"
+      aria-controls="mobile-site-menu-drawer"
+    >
       <span class="menu-icon" aria-hidden="true"></span>
     </button>
   </div>
@@ -161,6 +168,14 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
 
   .icon-button:disabled {
     cursor: default;
+  }
+
+  .icon-button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  .icon-button:not(:disabled):hover {
+    background: rgb(248 250 249 / 0.1);
   }
 
   .menu-icon,
