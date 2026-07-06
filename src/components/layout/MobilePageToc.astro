@@ -1,10 +1,9 @@
 ---
 export interface Props {
-  title: string;
   enabled?: boolean;
 }
 
-const { title, enabled = true } = Astro.props;
+const { enabled = true } = Astro.props;
 const panelId = "mobile-page-toc-panel";
 ---
 
@@ -15,20 +14,17 @@ const panelId = "mobile-page-toc-panel";
   data-page-toc-slot
   data-page-toc-enabled={enabled ? "true" : "false"}
 >
-  <div class="mobile-page-toc-bar">
-    <p class="mobile-page-toc-title">{title}</p>
-    <button
-      class="mobile-page-toc-trigger"
-      type="button"
-      data-mobile-page-toc-trigger
-      aria-controls={panelId}
-      aria-expanded="false"
-      aria-label="このページの目次を開く"
-    >
-      <span class="mobile-page-toc-trigger-label" aria-hidden="true">目次</span>
-      <span class="mobile-page-toc-chevron" aria-hidden="true"></span>
-    </button>
-  </div>
+  <button
+    class="mobile-page-toc-trigger"
+    type="button"
+    data-mobile-page-toc-trigger
+    aria-controls={panelId}
+    aria-expanded="false"
+    aria-label="このページの目次を開く"
+  >
+    <span class="mobile-page-toc-trigger-label" aria-hidden="true">目次</span>
+    <span class="mobile-page-toc-chevron" aria-hidden="true"></span>
+  </button>
 
   <div
     id={panelId}
@@ -58,40 +54,26 @@ const panelId = "mobile-page-toc-panel";
   }
 
   @media (max-width: 63.999rem) {
-    .mobile-page-toc {
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      width: 100%;
-      min-width: 0;
-      display: block;
-      border-block: var(--border-width) solid var(--color-border);
-      background: var(--color-surface);
-    }
-
-    .mobile-page-toc-bar {
+    :global(.mobile-page-heading) {
       position: relative;
-      z-index: 2;
-      min-width: 0;
-      min-height: 3.25rem;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
+      align-items: start;
       gap: var(--space-3);
-      width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
-      margin-inline: auto;
+      margin-block-end: var(--space-8);
     }
 
-    .mobile-page-toc-title {
+    :global(.prose .mobile-page-heading > h1) {
       min-width: 0;
-      margin: 0;
-      overflow: hidden;
-      color: var(--color-text);
-      font-size: var(--text-sm);
-      font-weight: 800;
-      line-height: var(--line-height-tight);
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      margin-block-end: 0;
+    }
+
+    .mobile-page-toc {
+      position: static;
+      z-index: 5;
+      min-width: 0;
+      display: block;
+      margin-block-start: 0.15rem;
     }
 
     .mobile-page-toc-trigger {
@@ -138,9 +120,9 @@ const panelId = "mobile-page-toc-panel";
     .mobile-page-toc-overlay {
       position: absolute;
       z-index: 1;
-      inset-block-start: calc(100% + var(--border-width));
+      inset-block-start: calc(100% + var(--space-3));
       inset-inline: 0;
-      border-bottom: var(--border-width) solid var(--color-border);
+      border-block: var(--border-width) solid var(--color-border);
       background: var(--color-surface);
       box-shadow: 0 1rem 1.7rem rgb(17 24 32 / 0.16);
     }
@@ -150,12 +132,10 @@ const panelId = "mobile-page-toc-panel";
     }
 
     .mobile-page-toc-nav {
-      width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
       max-height: min(54vh, 26rem);
-      margin-inline: auto;
       overflow-y: auto;
       overscroll-behavior: contain;
-      padding-block: var(--space-4) var(--space-5);
+      padding: var(--space-4) 0 var(--space-5);
     }
 
     .mobile-page-toc-content :global(.page-toc-list) {

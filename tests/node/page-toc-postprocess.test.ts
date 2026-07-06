@@ -42,6 +42,7 @@ describe("page toc postprocess", () => {
     const result = processPageTocHtml(
       pageWithHeadings(
         html`
+          <h1>ページタイトル</h1>
           <h2>見出し A</h2>
           <h3>小見出し</h3>
           <h2>見出し B</h2>
@@ -54,6 +55,10 @@ describe("page toc postprocess", () => {
     assert.equal(result.tocItems.length, 3);
     assert.equal(countMatches(result.html, /<ol class="page-toc-list">/g), 2);
     assert.equal(countMatches(result.html, /href="#h-[a-f0-9]{8}"/g), 6);
+    assert.match(
+      result.html,
+      /<div class="mobile-page-heading" data-mobile-page-heading=""><h1>ページタイトル<\/h1><section data-page-toc-slot="" data-page-toc-enabled="true" data-mobile-page-toc="">/,
+    );
   });
 
   it("generates stable ascii hash ids", () => {
@@ -158,7 +163,7 @@ function pageWithHeadings(
         </nav>
         ${
           options.mobileSlot
-            ? html`<section data-page-toc-slot data-page-toc-enabled="true">
+            ? html`<section data-page-toc-slot data-page-toc-enabled="true" data-mobile-page-toc>
               <button type="button" aria-expanded="false">目次</button>
               <div data-page-toc-content></div>
             </section>`

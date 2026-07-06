@@ -87,6 +87,8 @@ export function processPageTocHtml(html: string): PageTocProcessResult {
     );
   }
 
+  placeMobileTocWithPageHeading(content, slots, warnings);
+
   return {
     html: serialize(document),
     processed: true,
@@ -207,6 +209,55 @@ function findTocContentElement(slot: Element): Element | undefined {
   );
 }
 
+function placeMobileTocWithPageHeading(
+  content: Element,
+  slots: Element[],
+  warnings: string[],
+): void {
+  const mobileToc = slots.find((slot) => hasAttr(slot, "data-mobile-page-toc"));
+
+  if (!mobileToc) {
+    return;
+  }
+
+  const firstHeading = findElement(
+    content,
+    (element) => element.tagName === "h1",
+  );
+
+  if (!firstHeading) {
+    warnings.push("MobilePageToc could not find a page h1.");
+    return;
+  }
+
+  const headingParent = firstHeading.parentNode;
+  const mobileTocParent = mobileToc.parentNode;
+
+  if (!headingParent || !mobileTocParent) {
+    warnings.push("MobilePageToc could not be placed next to the page h1.");
+    return;
+  }
+
+  removeChild(mobileTocParent, mobileToc);
+
+  const wrapper = createElementFromHtml(
+    '<div class="mobile-page-heading" data-mobile-page-heading></div>',
+  );
+  replaceChild(headingParent, firstHeading, wrapper);
+  replaceChildren(wrapper, [firstHeading, mobileToc]);
+}
+
+function createElementFromHtml(html: string): Element {
+  const fragment = parseFragment(html);
+  const element = fragment.childNodes.find(isElement);
+
+  if (!element) {
+    throw new Error("Expected HTML fragment to contain an element.");
+  }
+
+  return element;
+}
+
 function findElement(
   node: ParentNode | ChildNode,
   predicate: (element: Element) => boolean,
@@ -257,6 +308,25 @@ function replaceChildren(parent: Element, children: ChildNode[]): void {
   for (const child of children) {
     child.parentNode = parent;
   }
+}
+
+function replaceChild(
+  parent: ParentNode,
+  currentChild: ChildNode,
+  nextChild: ChildNode,
+): void {
+  const index = parent.childNodes.indexOf(currentChild);
+
+  if (index === -1) {
+    return;
+  }
+
+  parent.childNodes[index] = nextChild;
+  nextChild.parentNode = parent;
+}
+
+function removeChild(parent: ParentNode, child: ChildNode): void {
+  parent.childNodes = parent.childNodes.filter((item) => item !== child);
 }
 
 function getVisibleText(element: Element): string {
