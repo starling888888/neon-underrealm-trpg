@@ -128,3 +128,11 @@
 - 発生箇所: `12-mobile-menu` の `src/scripts/mobile-menu.ts`
 - 観測した失敗: `npm run check` でBiome formatter指摘を受けた後、同じファイルで別のformatter指摘を再度発生させた。
 - 一次対応: Biomeの指摘どおりに改行・インデントを修正し、`npm run check` を通した。
+
+### Repeated design image conversion failure
+
+#### 2026-07-06
+
+- 発生箇所: `12-1-site-menu-layout-copy` の `docs/design/mobile-menu/design-mobile-open.png` 更新
+- 観測した失敗: ImageMagick `convert` で `.tmp/mobile-menu-design-open.svg` をPNG化する際、同じ `non-conforming drawing primitive definition ','` エラーを複数回発生させた。
+- 一次対応: SVG内のfont-family指定からImageMagickが解釈しづらいcomma指定を外し、SVGをPNG化した後に `メニュー` ラベルをImageMagick annotateで合成した。

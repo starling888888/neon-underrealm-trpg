@@ -20,6 +20,7 @@
 - `docs/plan.md`
 - `docs/TODO.md`
 - `docs/issue/11-site-menu.md`
+- `docs/issue/12-1-site-menu-layout-copy.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/notes.md`
@@ -27,8 +28,8 @@
 ## Design direction
 
 - visual direction: `base-layout` の左レールプレースホルダーを、ルールサイト全体の構造を静かに示すPC用サイトメニューへ置き換える。白寄り本文面、暗めHeader / Footer、控えめな青緑accentの方向性を維持し、左サイドだけが強く目立つ見た目にしない。
-- layout direction: Header下の左サイドバー領域に、セクション見出しとリンク群を縦方向に配置する。本文カラムを圧迫しすぎない幅とし、右レールのPageToc予定領域とは機能的にも見た目にも混同しない。階層を持つ親リンクには、開閉できることが分かる disclosure indicator を付ける。
-- typography direction: system fontを使い、メニュー見出し、親カテゴリ、子項目の階層が読み取れるサイズ差とweight差に留める。2階層目の親リンクはリンクとして認識できる程度に強調してよいが、太字だけを階層表現の主手段にしない。letter-spacingは0とし、長い日本語ラベルが詰まって見えない余白を確保する。
+- layout direction: Header下の左サイドバー領域に、リンク群を縦方向に配置する。サイドバー本体には `SITE MENU` / `サイトメニュー` 相当の可視見出しを置かず、メニュー項目そのものを上に詰める。本文カラムを圧迫しすぎない幅とし、右レールのPageToc予定領域とは機能的にも見た目にも混同しない。階層を持つ項目には、階層レベルに関係なく同じ右端ラインに開閉できることが分かる disclosure indicator を付ける。
+- typography direction: system fontを使い、親カテゴリ、子項目、3階層目の階層が読み取れるサイズ差とweight差に留める。サイドバー本体の可視見出しには依存しない。2階層目の親リンクはリンクとして認識できる程度に強調してよいが、太字だけを階層表現の主手段にしない。letter-spacingは0とし、長い日本語ラベルが詰まって見えない余白を確保する。
 - color / accent usage: 通常状態は低彩度の濃いグレー文字と薄い境界線を基本にする。hover / focusは青緑accentを小さく使い、背景、左線、focus ringなど色以外の手がかりも併用できる方向にする。
 
 ## Existing design constraints
@@ -40,7 +41,9 @@
 - メニュー項目は後続の `12-mobile-menu` で再利用できる構造を想定するが、このdesign targetではmobile drawerの画面を描かない。
 - 親カテゴリは対応する親ページのパスが存在する前提で、グループ見出しではなくリンクとして扱う。親リンクと子リンクの階層差が視覚的に分かるようにする。
 - 階層構造は最大3階層を想定する。サイドメニュー幅は先に固定せず、3階層の親子関係が詰まりすぎず読めることをdesign画像で確認して判断する。
-- 階層を持つ親リンクは、リンク本体とは別に開閉 affordance が分かる見た目にする。想定表現は小さな chevron / caret / disclosure marker とし、開いている状態と閉じている状態の違いが分かることを優先する。
+- 階層を持つ項目は、リンク本体とは別に開閉 affordance が分かる見た目にする。想定表現は小さな chevron / caret / disclosure marker とし、開いている状態と閉じている状態の違いが分かることを優先する。
+- `12-1-site-menu-layout-copy` では、子項目開閉トグルを項目左側ではなく右端へ移動する。親階層と子階層でトグル位置を段階的にずらさず、すべて同じ右端ラインに揃える。階層差はリンク本文の左インデントだけで表現する。子項目を持たない項目の左側には、トグル用の不要なspacerを置かない。
+- `12-1-site-menu-layout-copy` では、サイドバー本体から `SITE MENU` / `サイトメニュー` の可視見出しを削除する。ただし実装時の `nav aria-label="サイトメニュー"` は維持する。
 - 3階層目リンクの左に縦線だけを置く表現は、現在地表示やタイムラインに見える可能性があるため避ける。必要な場合でも、縦線は補助的なガイドに留め、disclosure indicator とインデントで階層を示す。
 - design画像上の項目名やリンク数は正確な最終メニュー定義を固定するためのものではない。親子階層、リンクとしての見え方、密度、余白を確認できることを優先する。
 - 後続の `15-current-menu-highlight` で現在地表示を追加できる余地は残すが、このdesign targetでは現在ページハイライトを完成状態として描かない。
@@ -71,8 +74,10 @@
 
 - 左レールプレースホルダーが、PC用サイトメニューとして認識できる構造に置き換わっている。
 - メニューは `nav` landmarkとして成立し、実装時に `aria-label` を設定できる見た目・構造になっている。
+- サイドバー本体に `SITE MENU` / `サイトメニュー` の可視見出しが表示されていない。
 - 親カテゴリもリンクとして見え、最大3階層の子項目との階層差が分かるが、情報量が過密になりすぎていない。
-- 階層を持つ親リンクには disclosure indicator があり、折りたたみ可能であることが分かる。
+- 階層を持つ項目には、階層レベルに関係なく同じ右端ラインに disclosure indicator があり、折りたたみ可能であることが分かる。
+- 子項目を持たない項目の左側に、トグル用の空白が残っていない。
 - 2階層目の親リンクが太字だけで階層を示していない。強調は控えめで、インデント、余白、disclosure indicator と併用されている。
 - 3階層目リンク左の縦線が、現在地表示や選択状態に見えない。縦線を使う場合も主役にせず、必要なら削除する。
 - 標準画像では現在ページハイライトやhover / focus状態に見える強調を入れない。
@@ -81,16 +86,16 @@
 - Header / Footerの存在感と競合せず、ページ全体が同じデザイン体系に見える。
 - 右レールのPageToc予定領域や検索UIをSiteMenu design内で実装済みのように見せていない。
 - 未作成ページへのリンクは、正確な項目表示よりも親子階層が分かることを優先して表現されている。
-- 差分として許容できるもの: メニュー項目名の最終文言、リンク数、セクション分割、余白の微調整、項目表示の正確性。
-- レビューが必要な差分: 未作成ページを目立つ無効状態にする、現在地ハイライトに見える強調を入れる、mobile drawerやPageTocを描き込む、左レール幅を大きく変える、折りたたみ可能性が分からない階層表現にする。
+- 差分として許容できるもの: メニュー項目名の最終文言、リンク数、セクション分割、右端トグルの共通ラインを保った範囲での微調整、インデント量の微調整、項目表示の正確性。
+- レビューが必要な差分: `SITE MENU` / `サイトメニュー` の可視見出しを戻す、未作成ページを目立つ無効状態にする、現在地ハイライトに見える強調を入れる、mobile drawerやPageTocを描き込む、左レール幅を大きく変える、折りたたみ可能性が分からない階層表現にする。
 
 ## Generation source
 
 - generator or capture source: SVGモックをImageMagick `convert` でPNGへ変換した。元SVGは `.tmp/site-menu-design-desktop.svg` に置く。hover / focusの見た目が異なる場合のみ、`design-desktop-hover.png` / `design-desktop-focus.png` のようなstate-specific imageを別途作成する。
-- source branch / commit when applicable: `11-site-menu`
+- source branch / commit when applicable: initial version `11-site-menu`; updated for `12-1-site-menu-layout-copy`
 - route when applicable: `/`
 - viewport: desktop `1440x1200`
-- prompt summary or capture notes: PC左サイド常設サイトメニューのinitial draft画像を生成した。`base-layout` の左レールをSiteMenuへ置き換える前提で、global stylesとHeader / Footerの方向性を維持する。親カテゴリもリンクとして扱い、最大3階層の親子階層が分かることを優先する。階層を持つ親リンクには、折りたたみ可能であることが分かる disclosure indicator を表示する。項目表示の正確性はdesign画像では固定しないため、画像内ラベルはASCIIの短い代表ラベルにしている。サイドメニュー幅は3階層表示の読みやすさを見て判断する。mobile drawer、現在地ハイライト、PageToc、検索、パンくず、前後ナビゲーションなど後続タスクや初期スコープ外の機能は描き込まない。
+- prompt summary or capture notes: PC左サイド常設サイトメニューのinitial draft画像を `12-1-site-menu-layout-copy` 向けに更新した。`base-layout` の左レールをSiteMenuへ置き換える前提で、global stylesとHeader / Footerの方向性を維持する。サイドバー本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、メニュー項目を上に詰めた。親カテゴリもリンクとして扱い、最大3階層の親子階層が分かることを優先する。階層を持つ項目には、折りたたみ可能であることが分かる disclosure indicator を階層レベルに関係なく同じ右端ラインへ表示する。項目表示の正確性はdesign画像では固定しないため、画像内ラベルはASCIIの短い代表ラベルにしている。サイドメニュー幅は3階層表示の読みやすさを見て判断する。mobile drawer、現在地ハイライト、PageToc、検索、パンくず、前後ナビゲーションなど後続タスクや初期スコープ外の機能は描き込まない。
 
 ## Open questions
 
