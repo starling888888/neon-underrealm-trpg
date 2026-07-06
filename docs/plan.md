@@ -164,13 +164,13 @@
   * [x] 親カテゴリを展開または強調
   * [x] `aria-current="page"` を設定できるようにする
 
-* [ ] `15-1-menu-expand-current-ancestors-only` — 現在ページに至る親カテゴリだけを初期展開する
+* [x] `15-1-menu-expand-current-ancestors-only` — 現在ページに至る親カテゴリだけを初期展開する
 
-  * [ ] `defaultExpanded` 前提の初期展開をやめる
-  * [ ] 現在ページが子孫ページの場合のみancestor親カテゴリを初期展開する
-  * [ ] 親カテゴリ自身がcurrentの場合は子項目を初期展開しない
-  * [ ] PC左サイトメニューとスマホdrawer内サイトメニューで同じ初期展開ルールを使う
-  * [ ] `aria-expanded` と `hidden` の初期状態を展開状態と一致させる
+  * [x] `defaultExpanded` 前提の初期展開をやめる
+  * [x] 現在ページが子孫ページの場合のみancestor親カテゴリを初期展開する
+  * [x] 親カテゴリ自身がcurrentの場合は子項目を初期展開しない
+  * [x] PC左サイトメニューとスマホdrawer内サイトメニューで同じ初期展開ルールを使う
+  * [x] `aria-expanded` と `hidden` の初期状態を展開状態と一致させる
 
 * [ ] `16-layout-screenshot-design-refresh` — レイアウト一式を画面キャプチャベースのdesignに更新する
 
