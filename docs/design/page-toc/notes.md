@@ -90,19 +90,19 @@
 
 ## Generation source
 
-- generator or capture source: initial draft imageを作成予定。必要に応じてSVGモックを `.tmp/` に作り、PNGへ変換する。
-- source branch / commit when applicable: `13-page-toc`
+- generator or capture source: SVGモックを `.tmp/page-toc-designs/` に生成し、ImageMagick `convert` でPNGへ変換した。元SVGと生成スクリプトはdesign正本ではない。
+- source branch / commit when applicable: `13-page-toc` / `03f3dd0`
 - route when applicable:
   - `design-desktop-visible.png`: 本文ページまたは検証用本文ページ
   - `design-desktop-hidden-home.png`: `/`
   - `design-desktop-hidden-release-notes.png`: `/release-notes`
   - `design-desktop-hidden-404.png`: `/404`
 - viewport: desktop `1440x1200`
-- prompt summary or capture notes: PC右サイドページ内目次のinitial draft。`base-layout` の右補助レールをPageTocへ置き換え、SiteMenuとの役割差を保つ。表示状態ではH2 / H3のページ内リンク階層が分かることを優先する。非表示状態ではトップページ、更新履歴ページ、404ページにPageToc枠や空状態メッセージを出さない。スマホ用TOC、現在位置ハイライト、検索、パンくず、前後ナビゲーションは描き込まない。
+- prompt summary or capture notes: PC右サイドページ内目次のinitial draft。`base-layout` の右補助レールをPageTocへ置き換え、SiteMenuとの役割差を保つ。表示状態ではH2 / H3のページ内リンク階層が分かることを優先した。非表示状態ではトップページ、更新履歴ページ、404ページにPageToc枠や空状態メッセージを出していない。スマホ用TOC、現在位置ハイライト、検索、パンくず、前後ナビゲーションは描き込んでいない。
 
 ## Open questions
 
-- 非表示状態の画像は `/`、`/release-notes`、`/404` の3枚で足りるか、見出し1件だけの本文ページも `design-desktop-hidden-short-content.png` として追加するか。
+- 非表示状態の画像は `/`、`/release-notes`、`/404` の3枚を作成済み。見出し1件だけの本文ページも `design-desktop-hidden-short-content.png` として追加する必要があるか。
 - PageTocの可視見出しを `このページの目次` にするか、より短い `目次` にするか。
 - 右レール内でPageTocをstickyに見せる位置と、Header下の開始位置をどの程度揃えるか。
 - TOC項目が長い場合の折り返しを、2行まで許容するか、行数制限を設けず自然に折り返すか。
