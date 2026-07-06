@@ -1,5 +1,6 @@
 type MobileMenuElements = {
   drawer: HTMLElement;
+  panel: HTMLElement;
   openButton: HTMLButtonElement;
   closeButtons: NodeListOf<HTMLButtonElement>;
   focusableElements: () => HTMLElement[];
@@ -16,26 +17,28 @@ const focusableSelector = [
 
 function getElements(): MobileMenuElements | null {
   const drawer = document.getElementById("mobile-site-menu-drawer");
+  const panel = drawer?.querySelector<HTMLElement>(".mobile-menu-panel");
   const openButton = document.querySelector<HTMLButtonElement>(
     "[data-mobile-menu-open]",
   );
 
-  if (!drawer || !openButton) {
+  if (!drawer || !panel || !openButton) {
     return null;
   }
 
   return {
     drawer,
+    panel,
     openButton,
     closeButtons: drawer.querySelectorAll<HTMLButtonElement>(
       "[data-mobile-menu-close]",
     ),
     focusableElements: () =>
-      Array.from(
-        drawer.querySelectorAll<HTMLElement>(focusableSelector),
-      ).filter(
+      Array.from(panel.querySelectorAll<HTMLElement>(focusableSelector)).filter(
         (element) =>
-          !element.hasAttribute("disabled") && element.offsetParent !== null,
+          !element.hasAttribute("disabled") &&
+          element.getAttribute("tabindex") !== "-1" &&
+          element.offsetParent !== null,
       ),
   };
 }
