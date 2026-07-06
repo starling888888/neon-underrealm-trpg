@@ -517,59 +517,59 @@ for each dist/**/*.html:
 
 ### Step 1完了条件
 
-* [ ] `PageToc` または同等のTOC描画構造が実装されている
-* [ ] PC版で右サイドにページ内目次を表示できる
-* [ ] `data-page-content` などで本文領域が明示されている
-* [ ] `data-page-toc-slot` などでTOC差し込み位置が明示されている
-* [ ] `data-page-toc-enabled` などでpostprocess対象ページが明示されている
-* [ ] Layout propsでページ内目次の表示/非表示を制御できる
-* [ ] MDX frontmatterでページ内目次の表示/非表示を制御できる
-* [ ] トップページ `/` ではページ内目次が表示されない
-* [ ] 更新履歴ページ `/release-notes` ではページ内目次が表示されない
-* [ ] 404ページ `/404` ではページ内目次が表示されない
-* [ ] Step 1ではbuild後HTML postprocessを実装していない
-* [ ] Step 1完了報告を行い、ユーザーの一次レビューを待っている
+* [x] `PageToc` または同等のTOC描画構造が実装されている
+* [x] PC版で右サイドにページ内目次を表示できる
+* [x] `data-page-content` などで本文領域が明示されている
+* [x] `data-page-toc-slot` などでTOC差し込み位置が明示されている
+* [x] `data-page-toc-enabled` などでpostprocess対象ページが明示されている
+* [x] Layout propsでページ内目次の表示/非表示を制御できる
+* [x] MDX frontmatterでページ内目次の表示/非表示を制御できる
+* [x] トップページ `/` ではページ内目次が表示されない
+* [x] 更新履歴ページ `/release-notes` ではページ内目次が表示されない
+* [x] 404ページ `/404` ではページ内目次が表示されない
+* [x] Step 1ではbuild後HTML postprocessを実装していない
+* [x] Step 1完了報告を行い、ユーザーの一次レビューを待っている
 
 ### Step 2完了条件
 
-* [ ] `.mdx` で生成されたページの見出しからTOCを生成できる
-* [ ] `.astro` で生成されたページの見出しからTOCを生成できる
-* [ ] データページの見出しからTOCを生成できる
-* [ ] 見出しIDを各ページ本文に手作業で書く運用を前提にしていない
-* [ ] `id` がないTOC対象見出しに、build後postprocessでIDを自動付与できる
-* [ ] 自動生成IDに日本語見出し本文をそのまま使っていない
-* [ ] 自動生成IDがASCII-onlyである
-* [ ] 自動生成IDは `h-<short-hash>` 形式である
-* [ ] 自動生成IDにページ内出現順の連番を含めていない
-* [ ] 同じ入力から同じIDが生成される
-* [ ] 同一ページ内で自動生成IDが重複した場合、build時に検出される
-* [ ] 重複検出時に黙って `-2`, `-3` suffixで解決しない
-* [ ] 重複時は原則build errorになる
-* [ ] 初期実装でwarningに留める場合、その理由と後続error化方針が記録されている
-* [ ] `data-anchor-id` による例外的な明示ID指定ができる
-* [ ] `data-anchor-id` の値はASCII-only制約で検証される
-* [ ] 既存のASCII lower kebab-case `id` がある見出しは尊重される
-* [ ] 既存の `id` がTOC対象として不適切な場合は検出される
-* [ ] 既存の非ASCII `id` はASCII-onlyの自動生成IDへ置換され、warningが出る
-* [ ] `data-toc-exclude` によってTOC対象から除外できる
-* [ ] TOC項目がない、または少なすぎるページでは空のTOC枠を表示しない
-* [ ] TOCリンクでページ内ジャンプできる
-* [ ] GitHub Pages subpath配下でもアンカーリンクが壊れない
-* [ ] postprocessロジックのテストコードが実装されている
-* [ ] postprocess対象 / 対象外、ID生成、重複検出、`data-anchor-id`、`data-toc-exclude`、空TOC非表示のテストがある
-* [ ] Step 2完了報告を行い、ユーザーの一次レビューを待っている
+* [x] `.mdx` で生成されたページの見出しからTOCを生成できる
+* [x] `.astro` で生成されたページの見出しからTOCを生成できる
+* [x] データページの見出しからTOCを生成できる
+* [x] 見出しIDを各ページ本文に手作業で書く運用を前提にしていない
+* [x] `id` がないTOC対象見出しに、build後postprocessでIDを自動付与できる
+* [x] 自動生成IDに日本語見出し本文をそのまま使っていない
+* [x] 自動生成IDがASCII-onlyである
+* [x] 自動生成IDは `h-<short-hash>` 形式である
+* [x] 自動生成IDにページ内出現順の連番を含めていない
+* [x] 同じ入力から同じIDが生成される
+* [x] 同一ページ内で自動生成IDが重複した場合、build時に検出される
+* [x] 重複検出時に黙って `-2`, `-3` suffixで解決しない
+* [x] 重複時は原則build errorになる
+* [x] 初期実装でwarningに留める場合、その理由と後続error化方針が記録されている
+* [x] `data-anchor-id` による例外的な明示ID指定ができる
+* [x] `data-anchor-id` の値はASCII-only制約で検証される
+* [x] 既存のASCII lower kebab-case `id` がある見出しは尊重される
+* [x] 既存の `id` がTOC対象として不適切な場合は検出される
+* [x] 既存の非ASCII `id` はASCII-onlyの自動生成IDへ置換され、warningが出る
+* [x] `data-toc-exclude` によってTOC対象から除外できる
+* [x] TOC項目がない、または少なすぎるページでは空のTOC枠を表示しない
+* [x] TOCリンクでページ内ジャンプできる
+* [x] GitHub Pages subpath配下でもアンカーリンクが壊れない
+* [x] postprocessロジックのテストコードが実装されている
+* [x] postprocess対象 / 対象外、ID生成、重複検出、`data-anchor-id`、`data-toc-exclude`、空TOC非表示のテストがある
+* [x] Step 2完了報告を行い、ユーザーの一次レビューを待っている
 
 ### Issue全体の完了条件
 
-* [ ] `nav` / `aria-label` などのアクセシビリティ属性が付与されている
-* [ ] スマホ用ページ内目次はこのIssueでは実装していない
-* [ ] 現在位置ハイライトはこのIssueでは実装していない
-* [ ] 不要なクライアントJSを追加していない
-* [ ] 不要な大規模UIライブラリを追加していない
-* [ ] `docs/requirements.md` にユーザー承認済み追加仕様が反映されている
-* [ ] `docs/plan.md` にユーザー承認済み追加仕様が反映されている
-* [ ] `npm run build` が成功する
-* [ ] 必要に応じて `npm run check` が成功する
+* [x] `nav` / `aria-label` などのアクセシビリティ属性が付与されている
+* [x] スマホ用ページ内目次はこのIssueでは実装していない
+* [x] 現在位置ハイライトはこのIssueでは実装していない
+* [x] 不要なクライアントJSを追加していない
+* [x] 不要な大規模UIライブラリを追加していない
+* [x] `docs/requirements.md` にユーザー承認済み追加仕様が反映されている
+* [x] `docs/plan.md` にユーザー承認済み追加仕様が反映されている
+* [x] `npm run build` が成功する
+* [x] 必要に応じて `npm run check` が成功する
 
 ## チェックポイント
 
