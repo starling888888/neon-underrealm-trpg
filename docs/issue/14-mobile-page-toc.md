@@ -1,0 +1,423 @@
+# 14-mobile-page-toc
+
+## 目的
+
+スマホ / タブレット幅で利用できる、開閉式のページ内目次を実装する。
+
+このタスクでは、PC版右サイドに常設表示する `PageToc` とは別に、`1024px` 未満の画面で「このページの目次」をワンタッチで開き、目次項目を選択すると該当見出しへジャンプできるUIを追加する。
+
+具体的には以下を満たす。
+
+* `1024px` 未満ではPC右サイド常設目次を表示しない
+* スマホ / タブレット幅では「このページの目次」を開閉できる
+* 目次項目は、既存のページ内目次生成結果を利用する
+* 目次項目を選択すると該当見出しへジャンプする
+* 項目選択後、開閉UIは閉じる
+* サイトメニューとは導線、文言、UI上の役割を分離する
+* トップページ `/`、更新履歴ページ `/release-notes`、404ページ `/404`、見出し数が少ないページでは不要な目次UIを表示しない
+* 不要な大規模UIライブラリを追加しない
+* 現在位置ハイライトはこのIssueでは完成させない
+
+## 背景
+
+`docs/plan.md` の `14-mobile-page-toc` は、Phase 2 の「スマホ用ページ内目次を実装する」タスクである。
+
+先行タスク `13-page-toc` では、PC右サイドのページ内目次、TOC対象見出しの抽出、アンカーID自動付与、build後postprocessによるTOC生成が実装済みである。
+
+一方、`13-page-toc` では以下を明示的にスコープ外として残している。
+
+* スマホ用ページ内目次
+* `MobilePageToc.astro`
+* スマホ用の開閉式「このページの目次」
+* スマホ用TOC drawer
+* Escキーで閉じる制御
+* 現在位置ハイライト
+* IntersectionObserverによるactive heading追跡
+* スクロール連動表示
+
+このIssueでは、そのうちスマホ / タブレット幅での開閉式ページ内目次に集中する。
+
+ただし、現在位置ハイライト、スクロール追跡、IntersectionObserverによるactive heading追跡は、後続タスクまたは別Issueで扱う。
+
+## ローカル検証結果
+
+このIssue draftはremote snapshot由来だったため、local repository modeで検証した。
+
+検証済み:
+
+* local branch: `14-mobile-page-toc`
+* local issue file: `docs/issue/14-mobile-page-toc.md`
+* `docs/plan.md` に `14-mobile-page-toc` が存在する
+* `docs/requirements.md` のスマホ版ページ内目次要件と整合する
+* `docs/out-of-scope.md` のページ内目次現在位置ハイライト方針と整合する
+* `docs/TODO.md` に `14-mobile-page-toc` へ直接取り込むべき未対応TODOはない
+* `docs/design/page-toc/` と `docs/design/mobile-menu/` は存在する
+* `docs/design/mobile-page-toc/` は未作成
+* `src/components/layout/PageToc.astro`、`scripts/postprocess-page-toc.ts`、`scripts/lib/page-toc-postprocess.ts`、`tests/node/page-toc-postprocess.test.ts` は存在する
+
+未検証:
+
+* `npm run check`
+* `npm run build`
+* mobile / tablet viewportでのVisual Review結果
+
+実装前提:
+
+* `docs/design/mobile-page-toc/` が未作成のため、実装前に `design-image-generation initial draft mode` を実行して、必要なdesign notesとdesign画像を用意する
+* design draftは人間レビュー後に参照designとして扱う
+
+## 対象範囲
+
+このタスクで扱う。
+
+* スマホ / タブレット幅向けのページ内目次UI
+* `MobilePageToc.astro` または同等のComponent
+* 「このページの目次」開閉ボタン
+* 開閉式panel / drawer / disclosure UI
+* 既存のTOC生成結果の再利用
+* TOC項目リンクによるページ内ジャンプ
+* 項目選択後にMobilePageTocを閉じる制御
+* Escキーで閉じる制御
+* 開閉ボタンの `aria-expanded`
+* 開閉対象の `aria-controls`
+* 目次領域の `nav` / `aria-label`
+* focusが大きく破綻しないこと
+* サイトメニューとページ内目次の導線分離
+* Header / MobileMenu / SiteMenu / PageToc とのレイアウト競合回避
+* `1024px` 未満でPC右サイド常設TOCを表示しない制御との整合
+* `768px` 未満のスマホレイアウト
+* `768px` 以上 `1024px` 未満のタブレット / 狭幅PCレイアウト
+* `/`、`/release-notes`、`/404` では表示しない制御
+* TOC項目が0件または1件のページでは表示しない制御
+* GitHub Pages subpath配下でもアンカーリンクが機能すること
+* 不要なクライアントJSを増やしすぎない実装
+* 既存CSS tokens / layout設計との整合
+* `docs/design/mobile-page-toc/` のdesign参照
+* 実装後のmobile viewport確認
+
+## 初期スコープ外
+
+このタスクでは扱わない。
+
+* PC右サイド常設PageTocの再実装
+* build後HTML postprocessの再設計
+* 見出しID自動生成ルールの変更
+* hash ID生成ルールの変更
+* `data-anchor-id` / `data-toc-exclude` の仕様変更
+* TOC対象見出しを `h2` / `h3` 以外へ拡張すること
+* 現在位置ハイライト
+* IntersectionObserverによるactive heading追跡
+* スクロール連動表示
+* スクロール位置に応じた目次自動展開
+* パンくずリスト
+* ページ末尾の前後ナビゲーション
+* 検索UI
+* Pagefind導入
+* サイトメニュー現在ページハイライト
+* `aria-current="page"` のサイトメニュー実装
+* ルール本文の本格移植
+* 新規本文ページの大量作成
+* トップページ本体の完成
+* 404ページ本体の完成
+* Excel / Spreadsheet連携
+* JSON変換パイプライン
+* キャラクターシート
+* ダイスローラー
+* 戦闘シミュレーター
+* DB
+* 認証
+* SSR
+* CMS
+* 外部UIライブラリの大規模導入
+* 高度なアニメーション
+* 過剰なneon glow表現
+
+## 技術方針
+
+### 基本方針
+
+MobilePageTocは、既存 `13-page-toc` のTOC生成結果を再利用する。
+
+このIssueでは、見出し抽出・アンカーID生成・TOC HTML生成のロジックを重複実装しない。
+
+想定方針:
+
+* postprocessで生成されたTOC項目をmobile用表示領域にも差し込む
+* または、既存 `PageToc` / TOC描画Componentをmobile表示モードで再利用する
+* 同じページにPC用とmobile用のTOC差し込み先を置く場合、postprocessが両方へ同じTOCを差し込めるようにする
+* PC用・mobile用でTOC項目の内容が分岐しないようにする
+
+### Layout側の目印
+
+既存 `13-page-toc` のHTML marker方針を尊重する。
+
+既存想定:
+
+```astro
+<main data-page-content>
+  <slot />
+</main>
+
+<aside
+  data-page-toc-slot
+  data-page-toc-enabled={showPageToc ? "true" : "false"}
+  aria-label="このページの目次"
+>
+</aside>
+```
+
+MobilePageTocで追加が必要な場合は、PC用slotと区別できるmarkerを検討する。
+
+想定例:
+
+```astro
+<MobilePageToc
+  showPageToc={showPageToc}
+  client:load
+/>
+
+<div
+  data-mobile-page-toc-slot
+  data-page-toc-enabled={showPageToc ? "true" : "false"}
+></div>
+```
+
+または、既存slotを内部で再利用できる場合は、新規markerを増やさない。
+
+実装時に決めるべきこと:
+
+* `data-page-toc-slot` をPC / mobile両方へ使えるか
+* `data-mobile-page-toc-slot` を新設するか
+* postprocess側を拡張する必要があるか
+* dev時とbuild後preview時で表示差が許容範囲に収まるか
+
+### UI方針
+
+スマホ用ページ内目次は、サイトメニューではない。
+
+文言・位置・見た目で以下を区別する。
+
+* サイトメニュー: サイト全体のページ移動
+* ページ内目次: 現在ページ内の見出し移動
+
+可視文言の候補:
+
+```txt
+このページの目次
+```
+
+開閉ボタンは、mobile Headerのサイトメニューbuttonとは別の導線にする。
+
+配置候補:
+
+* 本文上部、ページタイトル直下
+* Header下の本文先頭に固定しない軽いbutton
+* 本文領域内のcompact disclosure
+* 必要に応じてstickyだが、Header / MobileMenuと競合しない範囲に限定する
+
+このIssueでは、強い常時floating buttonや過剰なsticky UIは避ける。
+
+### 開閉挙動
+
+MobilePageTocは、以下の挙動を持つ。
+
+* 初期状態では閉じている
+* 「このページの目次」buttonで開く
+* 同じbutton、または閉じるbuttonで閉じる
+* Escキーで閉じる
+* 目次項目を選択すると該当見出しへジャンプし、MobilePageTocを閉じる
+* 開いている間、サイトメニューと同時に開いた状態にならないことが望ましい
+* サイトメニューが開いた場合、MobilePageTocは閉じることが望ましい
+
+focus trapは必須にはしないが、focus移動が破綻しないようにする。
+
+### JavaScript方針
+
+開閉制御に必要な最小限のクライアントJSは許容する。
+
+ただし、以下は避ける。
+
+* React / Vue / Svelte等の追加導入
+* 大規模UIライブラリ
+* IntersectionObserverによる現在位置追跡
+* スクロール監視によるactive heading更新
+* 複雑な状態管理ライブラリ
+* サイトメニューと共通化しすぎて責務が混ざる実装
+
+Astro component内の小さなinline script、または既存のclient script方針に合わせた最小scriptで実装する。
+
+### アクセシビリティ方針
+
+最低限、以下を満たす。
+
+* 開閉buttonに `aria-expanded` を設定する
+* 開閉buttonに `aria-controls` を設定する
+* 目次領域は `nav` または同等のlandmarkとして扱う
+* 目次領域に `aria-label="このページの目次"` または同等のラベルを付与する
+* Escキーで閉じられる
+* 目次項目は通常のアンカーリンクとして機能する
+* focus outlineを消さない
+* タップ領域を十分に確保する
+* 色だけに依存して開閉状態を表現しない
+
+## design参照
+
+このIssueはUI実装タスクであるため、実装前にdesign targetを確認する。
+
+期待するdesign target:
+
+```txt
+docs/design/mobile-page-toc/
+```
+
+期待するartifacts:
+
+```txt
+docs/design/mobile-page-toc/notes.md
+docs/design/mobile-page-toc/design-mobile-closed.png
+docs/design/mobile-page-toc/design-mobile-open.png
+```
+
+必要に応じて以下も追加する。
+
+```txt
+docs/design/mobile-page-toc/design-tablet-closed.png
+docs/design/mobile-page-toc/design-tablet-open.png
+```
+
+`docs/design/mobile-page-toc/` が存在しない場合、このIssueの実装前に `design-image-generation initial draft mode` を実行する。
+
+design notesでは、少なくとも以下を記録する。
+
+* target component
+* target viewport
+* closed / open state
+* 参照SSoT
+* 既存mobile menuとの差分
+* site menuとの導線分離
+* out-of-scope
+* comparison points
+* open questions
+
+## 完了条件
+
+* [ ] `MobilePageToc.astro` または同等のスマホ用ページ内目次UIが実装されている
+* [ ] `1024px` 未満ではPC右サイド常設PageTocが表示されない
+* [ ] `1024px` 未満で「このページの目次」を開閉できる
+* [ ] `768px` 未満のスマホ幅で表示が破綻しない
+* [ ] `768px` 以上 `1024px` 未満のタブレット / 狭幅PC幅で表示が破綻しない
+* [ ] 目次項目は既存のTOC生成結果を利用している
+* [ ] TOC項目の内容がPC用とmobile用で不自然に分岐していない
+* [ ] 目次項目を選択すると該当見出しへジャンプする
+* [ ] 目次項目選択後、MobilePageTocが閉じる
+* [ ] EscキーでMobilePageTocを閉じられる
+* [ ] 開閉buttonに `aria-expanded` が設定されている
+* [ ] 開閉buttonに `aria-controls` が設定されている
+* [ ] 目次領域に `nav` / `aria-label` などのアクセシビリティ属性が付与されている
+* [ ] focus outlineを消していない
+* [ ] タップ領域が小さすぎない
+* [ ] サイトメニューの開閉buttonとページ内目次の開閉buttonがUI上混同されない
+* [ ] サイトメニューdrawerとMobilePageTocが同時に開いて表示崩れしない
+* [ ] `/` ではMobilePageTocが表示されない
+* [ ] `/release-notes` ではMobilePageTocが表示されない
+* [ ] `/404` ではMobilePageTocが表示されない
+* [ ] TOC項目が0件または1件のページではMobilePageTocが表示されない
+* [ ] GitHub Pages subpath配下でもアンカーリンクが壊れない
+* [ ] 現在位置ハイライトはこのIssueでは実装していない
+* [ ] IntersectionObserverによるactive heading追跡はこのIssueでは実装していない
+* [ ] 不要な大規模UIライブラリを追加していない
+* [ ] 不要なクライアントJSを増やしすぎていない
+* [ ] `docs/design/mobile-page-toc/` がない場合、実装前に `design-image-generation initial draft mode` を実行している
+* [ ] 参照するdesign targetとdesign画像の扱いが記録されている
+* [ ] `npm run build` が成功する
+* [ ] 必要に応じて `npm run check` が成功する
+
+## チェックポイント
+
+* `/` が壊れていない
+* `/` にMobilePageTocが表示されない
+* `/release-notes` にMobilePageTocが表示されない
+* `/404` にMobilePageTocが表示されない
+* 本文ページではMobilePageTocを開ける
+* データページではMobilePageTocを開ける
+* 見出し0件のページで空の目次buttonが出ない
+* 見出し1件だけのページで不自然な目次buttonが出ない
+* `h2` / `h3` の階層がMobilePageTocに反映される
+* `h1` はページタイトル相当としてMobilePageTocに含まれない
+* 目次項目の日本語見出しが読める
+* 目次リンクのhrefは既存postprocessのアンカーIDと一致している
+* URL fragmentに日本語見出し本文をそのまま使っていない
+* PageToc postprocessの既存テストが壊れていない
+* Header / MobileMenu / SiteMenu と競合しない
+* Headerのmenu buttonとMobilePageTocのbuttonが別機能だと分かる
+* MobileMenuを開いた状態でMobilePageTocが残留して表示崩れしない
+* MobilePageTocを開いた状態でMobileMenuを開いた場合の挙動が破綻しない
+* 目次項目選択後にpanel / drawer / disclosureが閉じる
+* Escで閉じられる
+* キーボード操作で開閉できる
+* focusが画面外や非表示領域へ飛ばない
+* tap targetが小さすぎない
+* PC幅で右サイドPageTocの表示が壊れていない
+* `1024px` 付近のbreakpointでPC用 / mobile用TOCが二重表示されない
+* `768px` 付近のbreakpointでHeader / MobileMenuと衝突しない
+* design notesと実装が矛盾していない
+* ユーザー未コミット変更を破壊していない
+
+## 想定変更ファイル
+
+* `docs/issue/14-mobile-page-toc.md`
+* `docs/design/mobile-page-toc/notes.md`
+* `docs/design/mobile-page-toc/design-mobile-closed.png`
+* `docs/design/mobile-page-toc/design-mobile-open.png`
+* 必要に応じて `docs/design/mobile-page-toc/design-tablet-closed.png`
+* 必要に応じて `docs/design/mobile-page-toc/design-tablet-open.png`
+* `src/layouts/BaseLayout.astro`
+* `src/layouts/ContentLayout.astro`
+* `src/components/layout/PageToc.astro`
+* `src/components/layout/MobilePageToc.astro`
+* `src/lib/site/page-toc.ts`
+* `scripts/lib/page-toc-postprocess.ts`
+* `scripts/postprocess-page-toc.ts`
+* `tests/node/page-toc-postprocess.test.ts`
+* 必要に応じて `src/components/layout/Header.astro`
+* 必要に応じて `src/components/layout/MobileMenu.astro`
+* 必要に応じて `src/styles/global.css`
+* 必要に応じて `src/styles/prose.css`
+* 必要に応じて検証用の既存MDXページ
+* 必要に応じて検証用の既存Astroページ
+
+実際の変更ファイルは実装時に確定する。
+
+## レビュー観点
+
+* `1024px` 未満で開閉式UIに切り替える方針でよいか
+* `768px` 未満だけでなく、`768px` 以上 `1024px` 未満もMobilePageToc対象にしてよいか
+* 可視文言は `このページの目次` でよいか
+* 配置は本文上部 / ページタイトル直下のcompact disclosure系でよいか
+* Header内にMobilePageToc buttonを置かない方針でよいか
+* サイトメニューdrawerとは別導線にする方針でよいか
+* MobilePageTocはdrawerにするか、本文内accordion / disclosureにするか
+* 既存TOC生成結果をPC / mobileで再利用する方針でよいか
+* postprocess側に `data-mobile-page-toc-slot` を追加するか、既存slot / Componentを再利用するか
+* TOC項目が0件または1件ならbutton自体を表示しない方針でよいか
+* 項目選択後にMobilePageTocを閉じる方針でよいか
+* Escキーで閉じる制御をこのIssueに含める方針でよいか
+* focus trapまでは必須にしない方針でよいか
+* サイトメニューとMobilePageTocが同時に開いた場合、片方を閉じる方針でよいか
+* 現在位置ハイライトはこのIssueでは扱わない方針でよいか
+* IntersectionObserverによるactive heading追跡を後続へ残す方針でよいか
+* design target `docs/design/mobile-page-toc/` を新設する方針でよいか
+
+## 備考
+
+このIssueは、スマホ / タブレット幅のページ内目次実装に集中する。
+
+`13-page-toc` で実装済みのPC右サイドTOC、postprocess、アンカーID生成方針を変更しない。
+
+MobilePageTocは、サイトメニューではなく、現在ページ内の見出しへ移動するための補助UIである。
+
+現在位置ハイライトは初期リリース必須要件外として扱い、このIssueでは実装しない。
+
+このIssueはremote snapshot由来のdraftをlocal repository modeで検証したものである。
+
+`docs/design/mobile-page-toc/` は未作成のため、実装開始前に `design-image-generation initial draft mode` でdesign draftを作成し、人間レビューを受ける。
