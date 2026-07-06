@@ -74,7 +74,7 @@
 ## Comparison points for implementation
 
 - 表示状態では、右レールがPageTocとして認識できる構造になっている。
-- PageTocは `nav` landmarkとして成立し、実装時に `aria-label="このページの目次"` などを設定できる見た目になっている。
+- PageTocは `nav` landmarkとして成立し、実装時に `aria-label="目次"` などを設定できる見た目になっている。
 - PageToc項目は現在ページ内の `h2` / `h3` に対応するリンクとして見え、H2 / H3 の階層差が分かる。
 - `h1` 相当のページタイトルはPageToc項目に含めない。
 - TOC項目が0件または1件の画面で、空のTOC枠が表示されない方針と矛盾しない。
@@ -103,6 +103,6 @@
 ## Open questions
 
 - 非表示状態の画像は `/`、`/release-notes`、`/404` の3枚を作成済み。見出し1件だけの本文ページも `design-desktop-hidden-short-content.png` として追加する必要があるか。
-- PageTocの可視見出しを `このページの目次` にするか、より短い `目次` にするか。
+- PageTocの可視見出しは `目次` とする。
 - 右レール内でPageTocをstickyに見せる位置と、Header下の開始位置をどの程度揃えるか。
 - TOC項目が長い場合の折り返しを、2行まで許容するか、行数制限を設けず自然に折り返すか。

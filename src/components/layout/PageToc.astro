@@ -1,0 +1,40 @@
+---
+export interface Props {
+  enabled?: boolean;
+}
+
+const { enabled = true } = Astro.props;
+---
+
+<nav
+  class="page-toc"
+  aria-label="目次"
+  data-page-toc-slot
+  data-page-toc-enabled={enabled ? "true" : "false"}
+>
+  <p class="page-toc-heading">目次</p>
+  <div class="page-toc-content" data-page-toc-content></div>
+</nav>
+
+<style>
+  .page-toc {
+    position: sticky;
+    top: var(--space-8);
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .page-toc-heading {
+    margin: 0;
+    border-bottom: var(--border-width) solid var(--color-border);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+    padding-block-end: var(--space-4);
+  }
+
+  .page-toc-content {
+    min-height: 0;
+  }
+</style>

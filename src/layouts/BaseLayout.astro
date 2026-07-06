@@ -3,6 +3,7 @@ import "../styles/global.css";
 import "../styles/prose.css";
 import Footer from "../components/layout/Footer.astro";
 import Header from "../components/layout/Header.astro";
+import PageToc from "../components/layout/PageToc.astro";
 import SiteMenu from "../components/layout/SiteMenu.astro";
 import Seo from "../components/seo/Seo.astro";
 import type { SeoProps } from "../lib/site/seo";
@@ -11,6 +12,7 @@ import { defaultSeo } from "../lib/site/seo";
 export interface Props extends SeoProps {
   title?: string;
   description?: string;
+  showPageToc?: boolean;
 }
 
 const {
@@ -23,6 +25,7 @@ const {
   ogUrl,
   twitterCard,
   noindex,
+  showPageToc = false,
 } = Astro.props;
 
 ---
@@ -81,29 +84,22 @@ const {
         ></button>
       </aside>
 
-      <div class="desktop-layout">
+      <div class:list={["desktop-layout", !showPageToc && "desktop-layout-no-toc"]}>
         <aside class="layout-rail layout-rail-left">
           <SiteMenu />
         </aside>
 
-        <main class="site-main">
+        <main class="site-main" data-page-content>
           <slot />
         </main>
 
-        <aside class="layout-rail layout-rail-right" aria-label="補助領域プレースホルダー">
-          <p class="rail-heading">補助領域プレースホルダー</p>
-          <div class="rail-group" aria-hidden="true">
-            <span class="rail-line rail-line-strong"></span>
-            <span class="rail-line rail-line-medium"></span>
-            <span class="rail-line"></span>
-            <span class="rail-line rail-line-short"></span>
-          </div>
-          <div class="rail-group" aria-hidden="true">
-            <span class="rail-line rail-line-strong rail-line-medium"></span>
-            <span class="rail-line"></span>
-            <span class="rail-line rail-line-short"></span>
-          </div>
-        </aside>
+        {
+          showPageToc && (
+            <aside class="layout-rail layout-rail-right">
+              <PageToc />
+            </aside>
+          )
+        }
       </div>
 
       <Footer />
@@ -132,6 +128,10 @@ const {
     min-height: calc(100vh - 9rem);
   }
 
+  .desktop-layout-no-toc {
+    grid-template-columns: 19.5rem minmax(46rem, 1fr);
+  }
+
   .layout-rail {
     padding: var(--space-8) var(--space-6);
   }
@@ -144,54 +144,6 @@ const {
   .layout-rail-right {
     border-left: var(--border-width) solid var(--color-border);
     background: var(--color-surface);
-  }
-
-  .rail-heading {
-    margin: 0 0 var(--space-8);
-    color: var(--color-text-muted);
-    font-size: var(--text-sm);
-    font-weight: 700;
-  }
-
-  .rail-group {
-    display: grid;
-    gap: var(--space-4);
-    padding-block: var(--space-6);
-    border-top: var(--border-width) solid var(--color-border);
-  }
-
-  .rail-group:first-of-type {
-    border-top: 0;
-    padding-block-start: 0;
-  }
-
-  .rail-line {
-    display: block;
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-border-strong) 66%, white);
-  }
-
-  .rail-line {
-    width: 9rem;
-    height: 0.5rem;
-    opacity: 0.64;
-  }
-
-  .rail-line-strong {
-    width: 8rem;
-    opacity: 0.9;
-  }
-
-  .rail-line-medium {
-    width: 7rem;
-  }
-
-  .rail-line-short {
-    width: 5.5rem;
-  }
-
-  .rail-group .rail-line:not(.rail-line-strong) {
-    margin-left: var(--space-6);
   }
 
   .site-main {

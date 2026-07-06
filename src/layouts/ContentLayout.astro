@@ -5,6 +5,7 @@ import type { SeoProps } from "../lib/site/seo";
 export interface Props extends SeoProps {
   title?: string;
   description?: string;
+  showPageToc?: boolean;
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   ogUrl,
   twitterCard,
   noindex,
+  showPageToc = true,
 } = Astro.props;
 ---
 
@@ -30,6 +32,7 @@ const {
   ogUrl={ogUrl}
   twitterCard={twitterCard}
   noindex={noindex}
+  showPageToc={showPageToc}
 >
   <article class="content-layout prose">
     <slot />
