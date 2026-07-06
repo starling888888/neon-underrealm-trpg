@@ -15,12 +15,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
-- [ ] サイトメニューの表示文言と階層レイアウトを調整する
-  - source: `12-mobile-menu` 実装後のユーザー指摘
-  - classification: follow-up
-  - plan: `docs/plan.md` の `12-1-site-menu-layout-copy`
-  - handling plan: `サイトメニュー` という表示文言を削除または別文言へ変更し、子項目開閉トグルを項目右端へ移動する。トグル用の左スペースでリンク群が右に寄りすぎないよう、PC左サイトメニューとスマホdrawer内メニューの両方で全体を左寄せに調整する。
-
 - [ ] 生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する
   - source: `11-site-menu` 実装中のユーザー判断
   - classification: follow-up
@@ -52,6 +46,13 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 ---
 
 ## 完了済み
+
+- [x] サイトメニューの表示文言と階層レイアウトを調整する
+  - completed: 2026-07-06 via PR #16 / `12-1-site-menu-layout-copy`
+  - source: `12-mobile-menu` 実装後のユーザー指摘
+  - classification: follow-up
+  - plan: `docs/plan.md` の `12-1-site-menu-layout-copy`
+  - handling plan: `サイトメニュー` という表示文言を削除または別文言へ変更し、子項目開閉トグルを項目右端へ移動する。トグル用の左スペースでリンク群が右に寄りすぎないよう、PC左サイトメニューとスマホdrawer内メニューの両方で全体を左寄せに調整する。
 
 - [x] `Seo.astro` を共通Layoutへ組み込む
   - completed: 2026-07-05
