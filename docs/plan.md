@@ -157,12 +157,12 @@
   * [x] 項目選択で該当見出しへジャンプ
   * [x] サイトメニューとは導線を分離
 
-* [ ] `15-current-menu-highlight` — 現在ページハイライトを実装する
+* [x] `15-current-menu-highlight` — 現在ページハイライトを実装する
 
-  * [ ] designを生成する
-  * [ ] 現在ページをサイトメニューで視覚的に識別
-  * [ ] 親カテゴリを展開または強調
-  * [ ] `aria-current="page"` を設定できるようにする
+  * [x] designを生成する
+  * [x] 現在ページをサイトメニューで視覚的に識別
+  * [x] 親カテゴリを展開または強調
+  * [x] `aria-current="page"` を設定できるようにする
 
 * [ ] `16-layout-screenshot-design-refresh` — レイアウト一式を画面キャプチャベースのdesignに更新する
 
