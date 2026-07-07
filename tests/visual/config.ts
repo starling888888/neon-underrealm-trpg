@@ -1,0 +1,37 @@
+declare const process: {
+  env: {
+    VISUAL_BASE_HOST?: string;
+    VISUAL_BASE_PATH?: string;
+    VISUAL_BASE_PORT?: string;
+  };
+};
+
+const visualBaseHost = process.env.VISUAL_BASE_HOST ?? "http://127.0.0.1";
+const visualBasePort = process.env.VISUAL_BASE_PORT ?? "4321";
+const visualBasePath = process.env.VISUAL_BASE_PATH ?? "/neon-underrealm-trpg";
+const normalizedVisualBasePath = visualBasePath.replace(/\/?$/, "/");
+
+export const visualBaseUrl = `${visualBaseHost}:${visualBasePort}${normalizedVisualBasePath}`;
+
+export const visualRoutes = {
+  home: "./",
+  mdxTest: "mdx-test/",
+  dataItemsWeapons: "data/items/weapons/",
+} as const;
+
+export const visualViewports = {
+  desktop: {
+    width: 1440,
+    height: 1200,
+  },
+  tablet: {
+    width: 820,
+    height: 1180,
+  },
+  mobile: {
+    width: 390,
+    height: 900,
+  },
+} as const;
+
+export const visualOutputDir = "test-results/visual";
