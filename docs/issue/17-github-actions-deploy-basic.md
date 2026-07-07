@@ -332,8 +332,9 @@ main以外の通常CIはdeploy workflowへ混ぜず、後続Issueでdeployなし
 
 ## 完了条件
 
+### workflow設定
+
 * [x] `.github/workflows/deploy.yml` が作成されている
-* [x] workflowが `main` pushで実行される
 * [x] 初回deploy確認後、workflowのpush対象branchが `main` のみに整理されている
 * [x] workflowが `workflow_dispatch` を持つ
 * [x] `actions/checkout` を使用している
@@ -353,9 +354,13 @@ main以外の通常CIはdeploy workflowへ混ぜず、後続Issueでdeployなし
 * [x] `AGENTS.md` 更新のみではdeployが走らない条件が設定されている
 * [x] Excel本体なしでCI/CDビルドが成功する設計になっている
 * [x] `.raw/` 配下のファイルを参照していない
+
+### ローカル検証
+
 * [x] ユーザー提供の `favicon.ico` が使用されている
 * [x] `favicon.ico` が静的配信対象に配置されている
 * [x] `favicon.ico` がbuild artifactに含まれる
+* [x] built HTMLが `/neon-underrealm-trpg/favicon.ico` を参照する
 * [x] `favicon.ico` を生成していない
 * [x] `favicon.ico` を変換していない
 * [x] `favicon.ico` を再デザインしていない
@@ -370,14 +375,24 @@ main以外の通常CIはdeploy workflowへ混ぜず、後続Issueでdeployなし
 * [x] `npm run build` が通る
 * [x] `npm run check` が通る
 
+### 初回branch deploy確認
+
+* [x] `17-github-actions-deploy-basic` branchで一時的にbranch triggerを許可してdeployを実行した
+* [x] 初回branch deploy後、ユーザーが公開結果を確認した
+* [x] 初回deploy確認後、恒久運用としてworkflowのpush対象branchを `main` のみに戻した
+
+### merge後確認
+
+* [ ] merge後、`main` pushでdeploy workflowが実行される
+* [ ] merge後、GitHub Pages公開URLでfaviconが取得できる
+
 ## チェックポイント
 
 * [x] 既存ルートが壊れていない
 * [x] GitHub Pagesのサブパス公開に影響しない
 * [x] `astro.config.mjs` の `base: "/neon-underrealm-trpg"` 前提と矛盾していない
 * [x] `dist/` 以外をPages artifactとしてuploadしていない
-* [x] faviconが公開URL上で取得できる
-* [x] favicon参照pathがGitHub Pagesのsubpath配下でも壊れていない
+* [x] favicon参照pathがローカルbuild結果でGitHub Pagesのsubpath配下でも壊れていない
 * [x] favicon対応のために不要な画像処理依存を追加していない
 * [x] 不要な依存関係を追加していない
 * [x] 不要なGitHub Actionsを追加していない
@@ -395,6 +410,7 @@ main以外の通常CIはdeploy workflowへ混ぜず、後続Issueでdeployなし
 * [x] main以外の通常CI整備は後続タスクへ分離されている
 * [x] 関連する `docs/TODO.md` 項目と矛盾していない
 * [x] ユーザーの未コミット変更を破壊していない
+* [ ] merge後、faviconが公開URL上で取得できる
 
 ## 想定変更ファイル
 
@@ -525,7 +541,18 @@ issue-first workflowとして、実装前に以下を確認した。
 * `package.json` は存在する
 * `public/favicon.ico` は存在する
 
-実装後に `npm run check`、`npm run build`、GitHub Actions実行結果、GitHub Pages公開URL、ユーザーによる公開確認を実施した。
+実装後に以下を確認した。
+
+* `npm run check` が通る
+* `npm run build` が通る
+* `dist/favicon.ico` が生成される
+* built HTMLが `/neon-underrealm-trpg/favicon.ico` を参照する
+
+初回deploy確認は、`17-github-actions-deploy-basic` branchで一時的にbranch triggerを許可して実施した。
+
+ユーザーが公開結果を確認した後、恒久運用としてworkflowのpush対象branchを `main` のみに戻した。
+
+merge後の `main` pushによるdeploy実行と、GitHub Pages公開URL上でのfavicon取得は、merge後確認として残す。
 
 ## 備考
 
@@ -536,3 +563,31 @@ issue-first workflowとして、実装前に以下を確認した。
 main以外のbranch / PRで通常CIを回す恒久整備は、このIssueでは実装しない。`docs/TODO.md` と `docs/plan.md` に後続タスクとして追跡する。
 
 faviconはユーザーが提供する `favicon.ico` を使用する。実装者はfaviconを生成・変換・再作成しない。
+
+初回deploy確認では、確認のために一時的に `17-github-actions-deploy-basic` branchへのpushでもdeployできる状態にした。確認後は一時branch条件を削除し、現在のworkflowは `main` pushと `workflow_dispatch` のみをdeploy triggerにしている。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/issue/17-github-actions-deploy-basic.md` の完了条件とチェックポイントで、ローカル検証済み項目、初回deploy確認済み項目、merge後にしか確認できない項目が同じ `[x]` として混在している。
+- 「初回deploy確認後」「GitHub Pages deployは実環境で確認済み」という記述について、確認対象branch、確認結果、恒久運用として `main` のみに戻した経緯が読み取りづらい。
+
+### 判定
+
+- source: pr-review-draft
+- classification: valid
+- local validation: `.tmp/17-review.md` はPR #22のremote snapshot review draftであり、head SHA `dfbe956509b10723810171fb67a39196aa5df5f4` はローカルHEADと一致している。ローカルの `.github/workflows/deploy.yml` は現在 `main` pushと `workflow_dispatch` のみをdeploy triggerにしている。一方で、このissue fileには、ローカル検証、初回branch deploy確認、merge後の `main` deploy確認の区別が曖昧な完了チェックと説明が残っている。
+
+### 対応方針
+
+- 完了条件とチェックポイントを、ローカル検証済み、初回branch deployで確認済み、merge後に確認する項目に分けて記録する。
+- 初回deploy確認は `17-github-actions-deploy-basic` branchで一時的にbranch triggerを許可して実施し、確認後に恒久運用としてpush対象branchを `main` のみに戻したことを、issue fileの検証記録または備考へ追記する。
+- workflow本体は現在の `main` push + `workflow_dispatch` のまま維持し、実装コードは変更しない。
+
+### 対応完了チェックリスト
+
+- [x] `docs/issue/17-github-actions-deploy-basic.md` の完了条件を、検証種別ごとに誤解なく読める形へ整理する
+- [x] 初回branch deploy確認から `main` deploy運用へ戻した経緯を記録する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
