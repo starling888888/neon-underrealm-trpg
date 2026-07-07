@@ -25,6 +25,7 @@
 
 ## 最重要ルール
 
+- commit指示前に、ユーザーの明示指示なしに `git add` しない。commit指示が出た場合は、対象差分を確認したうえで必要な `git add` と `git commit` を実行してよい。
 - ユーザーの明示指示なしに `git commit`、`git push`、`git tag`、PR作成、remote branch作成、GitHub Release作成をしない。
 - 開発タスクは、実装前に `.agents/skills/issue-first-development/SKILL.md` を使い、branch作成と `docs/issue/*.md` 作成または検証で停止する。
 - 実装を開始してよいのは、ユーザーがissue内容を明示承認した後だけである。

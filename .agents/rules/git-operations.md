@@ -55,10 +55,16 @@ If the target branch already exists, stop and ask the user.
 
 Commit only when the user explicitly asks.
 
+Do not run `git add` before a commit instruction unless the user explicitly asks to stage files or explicitly authorizes staging a specific set of paths.
+
+Treat the staging area as user-controlled review state before commit. The user may stage files to inspect the next command's diff or to decide exactly what will be committed.
+
+When the user asks to commit, inspect the working tree and staged diff. Then stage only the intended paths for that commit and commit them. Do not stage unrelated files.
+
 Before committing:
 
 - inspect `git status --short`
-- inspect the staged diff
+- inspect the staged diff after staging intended paths
 - include only intended files
 - do not include `.raw/`, `.tmp/`, `test-results/`, or `playwright-report/`
 

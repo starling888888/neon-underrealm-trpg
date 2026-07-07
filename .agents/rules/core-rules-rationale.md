@@ -2,11 +2,15 @@
 
 `AGENTS.md` keeps the mandatory top-level rules. This file records why those rules exist so the reasons can be referenced without making `AGENTS.md` longer.
 
-## No Unrequested Commit Or Push
+## No Unrequested Pre-Commit Staging, Commit, Or Push
 
-Commits, pushes, tags, releases, remote branches, and PRs publish or preserve a state that may not have been reviewed by the user.
+Staging, commits, pushes, tags, releases, remote branches, and PRs publish, preserve, or select a state that may not have been reviewed by the user.
 
 Agents must leave ordinary implementation changes in the working tree unless the user explicitly asks for version-control write operations.
+
+Before a commit instruction, the staging area is user-controlled review state. The user may use `git add` to select paths and inspect the next diff or future commit. Agents must not rewrite that selection by running `git add` without an explicit staging instruction.
+
+After the user asks to commit, staging the intended files is part of making the requested commit. The agent must still inspect the diff and stage only the files that belong to that commit.
 
 ## Issue-First Before Implementation
 
@@ -55,4 +59,3 @@ Canonical design updates require the design-image-generation workflow and explic
 `docs/agent-failure-log.md` captures agent procedure failures, repeated validation failures, and user-identified judgment errors.
 
 The log is not a general TODO list. Use it to preserve failure evidence and to identify categories that need later permanent rule or workflow updates.
-
