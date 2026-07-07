@@ -124,7 +124,7 @@
 * `src/lib/site/menu.ts`
 * `src/lib/utils/paths.ts`
 * `src/styles/tokens.css`
-* `docs/issue/15-current-menu-highlight.md`
+* `docs/issue/done/phase-2/15-current-menu-highlight.md`
 * `docs/design/current-menu-highlight/notes.md`
 * `docs/design/current-menu-highlight/design-desktop.png`
 * `docs/design/current-menu-highlight/design-mobile.png`
@@ -162,7 +162,7 @@
 
 * mode: local repository mode
 * branch: `15-current-menu-highlight`
-* issue: `docs/issue/15-current-menu-highlight.md`
+* issue: `docs/issue/done/phase-2/15-current-menu-highlight.md`
 * local validation date: 2026-07-07
 * checked files:
 
@@ -236,7 +236,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
 
 ### 対応完了チェックリスト
 

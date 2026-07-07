@@ -109,49 +109,49 @@
 
 ## 完了条件
 
-* [ ] `Header.astro` が作成されている
-* [ ] `Footer.astro` が作成されている
-* [ ] `BaseLayout.astro` がHeader / Footer Componentを利用している
-* [ ] Headerにトップページへのリンクがある
-* [ ] Headerはユーザー提供タイトル画像を扱える
-* [ ] Headerは `public/title_logo.webp` を本番表示の第一候補として扱っている
-* [ ] `public/title_logo.png` がWebP非対応環境向けfallbackとして扱われている
-* [ ] タイトル画像はCSSで表示サイズを制御し、不要な縮小版画像を追加生成していない
-* [ ] タイトル画像未提供時は、ダミー画像を使わずテキストタイトル表示になる
-* [ ] Desktop Headerに検索入力欄mock表示枠がある
-* [ ] Desktop Headerの検索入力欄mock表示枠は入力、submit、検索結果表示、検索dialog表示などの挙動を実装していない
-* [ ] Mobile Headerにサイトメニューボタン表示枠がある
-* [ ] Mobile Headerに検索ダイアログ表示アイコン枠がある
-* [ ] Mobile Headerのサイトメニューボタン表示枠はdrawer開閉挙動を実装していない
-* [ ] Mobile Headerの検索ダイアログ表示アイコン枠は検索dialog本体や検索処理を実装していない
-* [ ] Footerに `© 2026 椋鳥` が表示されている
-* [ ] FooterにGitHubリポジトリリンク `https://github.com/starling888888/neon-underrealm-trpg` がある
-* [ ] FooterにXアカウントリンク `https://x.com/neon_underrealm` がある
-* [ ] FooterにDiscordサーバー招待リンク `https://discord.gg/drQ8ERFrHK` がある
-* [ ] Discord / X / GitHubリポジトリURLはユーザー提供値として扱われ、推測値に置き換えられていない
-* [ ] アイコンのみのリンクには `aria-label` またはスクリーンリーダー用テキストがある
-* [ ] 外部リンクには `target="_blank"` と `rel="noopener noreferrer"` が設定されている
-* [ ] GitHub Pagesのサブパス公開で内部リンク・画像パスが壊れない
-* [ ] 不要な依存関係を追加していない
-* [ ] `npm run build` が通る
-* [ ] 必要に応じて `npm run check` が通る
+* [x] `Header.astro` が作成されている
+* [x] `Footer.astro` が作成されている
+* [x] `BaseLayout.astro` がHeader / Footer Componentを利用している
+* [x] Headerにトップページへのリンクがある
+* [x] Headerはユーザー提供タイトル画像を扱える
+* [x] Headerは `public/title_logo.webp` を本番表示の第一候補として扱っている
+* [x] `public/title_logo.png` がWebP非対応環境向けfallbackとして扱われている
+* [x] タイトル画像はCSSで表示サイズを制御し、不要な縮小版画像を追加生成していない
+* [x] タイトル画像未提供時は、ダミー画像を使わずテキストタイトル表示になる
+* [x] Desktop Headerに検索入力欄mock表示枠がある
+* [x] Desktop Headerの検索入力欄mock表示枠は入力、submit、検索結果表示、検索dialog表示などの挙動を実装していない
+* [x] Mobile Headerにサイトメニューボタン表示枠がある
+* [x] Mobile Headerに検索ダイアログ表示アイコン枠がある
+* [x] Mobile Headerのサイトメニューボタン表示枠はdrawer開閉挙動を実装していない
+* [x] Mobile Headerの検索ダイアログ表示アイコン枠は検索dialog本体や検索処理を実装していない
+* [x] Footerに `© 2026 椋鳥` が表示されている
+* [x] FooterにGitHubリポジトリリンク `https://github.com/starling888888/neon-underrealm-trpg` がある
+* [x] FooterにXアカウントリンク `https://x.com/neon_underrealm` がある
+* [x] FooterにDiscordサーバー招待リンク `https://discord.gg/drQ8ERFrHK` がある
+* [x] Discord / X / GitHubリポジトリURLはユーザー提供値として扱われ、推測値に置き換えられていない
+* [x] アイコンのみのリンクには `aria-label` またはスクリーンリーダー用テキストがある
+* [x] 外部リンクには `target="_blank"` と `rel="noopener noreferrer"` が設定されている
+* [x] GitHub Pagesのサブパス公開で内部リンク・画像パスが壊れない
+* [x] 不要な依存関係を追加していない
+* [x] `npm run build` が通る
+* [x] 必要に応じて `npm run check` が通る
 
 ## チェックポイント
 
-* [ ] 既存ルート `/` が壊れていない
-* [ ] `Seo.astro` のhead出力と競合していない
-* [ ] Header / Footer が後続の `11-site-menu` / `12-mobile-menu` / `13-page-toc` と接続しやすい構造になっている
-* [ ] Desktop Headerの検索入力欄mock表示枠が後続の検索UI実装と接続しやすい構造になっている
-* [ ] Mobile Headerのサイトメニューボタン表示枠が後続の `12-mobile-menu` と接続しやすい構造になっている
-* [ ] Mobile Headerの検索ダイアログ表示アイコン枠が後続の検索UI実装と接続しやすい構造になっている
-* [ ] Layout内にHeader / Footerの詳細実装が過剰に残っていない
-* [ ] CSSがComponent責務の範囲に収まっている
-* [ ] 外部リンクのURLがユーザー提供値どおりである
-* [ ] ユーザー提供アセット・URLを前提にしつつ、未提供時に壊れない
-* [ ] 黒文字版タイトルロゴを本番Headerで使用していない
-* [ ] 初期スコープ外の機能を実装していない
-* [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-* [ ] 関連する `docs/design/` と矛盾していない
+* [x] 既存ルート `/` が壊れていない
+* [x] `Seo.astro` のhead出力と競合していない
+* [x] Header / Footer が後続の `11-site-menu` / `12-mobile-menu` / `13-page-toc` と接続しやすい構造になっている
+* [x] Desktop Headerの検索入力欄mock表示枠が後続の検索UI実装と接続しやすい構造になっている
+* [x] Mobile Headerのサイトメニューボタン表示枠が後続の `12-mobile-menu` と接続しやすい構造になっている
+* [x] Mobile Headerの検索ダイアログ表示アイコン枠が後続の検索UI実装と接続しやすい構造になっている
+* [x] Layout内にHeader / Footerの詳細実装が過剰に残っていない
+* [x] CSSがComponent責務の範囲に収まっている
+* [x] 外部リンクのURLがユーザー提供値どおりである
+* [x] ユーザー提供アセット・URLを前提にしつつ、未提供時に壊れない
+* [x] 黒文字版タイトルロゴを本番Headerで使用していない
+* [x] 初期スコープ外の機能を実装していない
+* [x] 関連する `docs/TODO.md` 項目と矛盾していない
+* [x] 関連する `docs/design/` と矛盾していない
 
 ## 想定変更ファイル
 
@@ -245,7 +245,7 @@ rel="noopener noreferrer"
 
 * mode: local repository mode
 * branch: `10-header-footer`
-* issue: `docs/issue/10-header-footer.md`
+* issue: `docs/issue/done/phase-2/10-header-footer.md`
 * `docs/plan.md`: `10-header-footer` は未完了タスクとして存在する
 * `docs/TODO.md`: 直接このissueで回収すべき関連TODOはなし
 * `docs/design/base-layout/`: 既存Layout方向性として参照可能
@@ -298,7 +298,7 @@ rel="noopener noreferrer"
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
 
 ### 対応完了チェックリスト
 
@@ -322,7 +322,7 @@ rel="noopener noreferrer"
 
 - source: browser-draft
 - classification: valid
-- local validation: `.tmp/10-review.md` はPR #13のレビュー草案として、Footerのクレジットリンク非実装自体ではなく `docs/plan.md` との契約ズレを指摘している。ローカル確認では、`docs/plan.md` の `10-header-footer` に「クレジット、GitHub、X、Discordリンク枠をアイコンで表示」が残っている。一方、`docs/issue/10-header-footer.md`、`docs/design/header-footer/notes.md`、`src/components/layout/Footer.astro` は、FooterリンクをGitHub / X / Discordに絞り、クレジットリンクを今回スコープ外としているため、指摘はcurrent issue内の計画整合修正として有効。
+- local validation: `.tmp/10-review.md` はPR #13のレビュー草案として、Footerのクレジットリンク非実装自体ではなく `docs/plan.md` との契約ズレを指摘している。ローカル確認では、`docs/plan.md` の `10-header-footer` に「クレジット、GitHub、X、Discordリンク枠をアイコンで表示」が残っている。一方、`docs/issue/done/phase-2/10-header-footer.md`、`docs/design/header-footer/notes.md`、`src/components/layout/Footer.astro` は、FooterリンクをGitHub / X / Discordに絞り、クレジットリンクを今回スコープ外としているため、指摘はcurrent issue内の計画整合修正として有効。
 - local validation: `docs/requirements.md` にはクレジット導線の記述が残っているが、レビュー草案では今回PRの必須修正を `docs/plan.md` の `10-header-footer` からクレジットを外すことに限定している。requirements全体のクレジット導線整理は、このレビュー指摘では扱わない。
 
 ### 対応方針
@@ -381,7 +381,7 @@ rel="noopener noreferrer"
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
 
 ### 対応完了チェックリスト
 

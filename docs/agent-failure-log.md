@@ -92,13 +92,13 @@ source種別は以下を使う。
 
 - 発生箇所: `09-base-layout` のissue-first / design準備
 - 観測した失敗: ユーザーが「まずはlayoutにベタ書き」「今回の作成範囲はデスクトップレイアウトのみ」と指示した後、実装前のdesign準備として `docs/design/base-layout/` のdesign artifact作成まで進めた。
-- 一次対応: `docs/issue/09-base-layout.md` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
+- 一次対応: `docs/issue/done/phase-2/09-base-layout.md` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
 
 #### 2026-07-05
 
 - 発生箇所: `09-base-layout` のdesign画像生成準備
 - 観測した失敗: `docs/design/base-layout/notes.md` のユーザーレビューを挟まずに、`design-desktop.png` の画像生成へ進んだ。
-- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/09-base-layout.md` から画像生成済み扱いを取り除いた。
+- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
 
 ### Design draft overproduction and method drift
 
@@ -106,7 +106,7 @@ source種別は以下を使う。
 
 - 発生箇所: `09-base-layout` のdesign画像生成
 - 観測した失敗: design画像が未レビューのドラフトであるにもかかわらず、SiteMenu風の文言やスコープ外導線の混入にこだわって複数回画像生成を行い、最終的にSVGを手作りしてPNGへ変換するという、当初の画像生成手順から逸脱した生成へ進んだ。
-- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/09-base-layout.md` から画像生成済み扱いを取り除いた。
+- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
 
 ### Out-of-scope UI leakage in design artifacts
 
@@ -152,7 +152,7 @@ source種別は以下を使う。
 
 #### 2026-07-06
 
-- 発生箇所: `13-page-toc` の `docs/issue/13-page-toc.md` 完了条件チェック反映後のGit操作
+- 発生箇所: `13-page-toc` の `docs/issue/done/phase-2/13-page-toc.md` 完了条件チェック反映後のGit操作
 - 観測した失敗: ユーザーの指示は「issueの完了条件チェック入ってない」であり、commit / pushの明示許可ではなかったにもかかわらず、`docs: check page toc issue completion` をcommitし、既存PR branchへpushした。
 - 一次対応: ユーザー指示に従い差し戻しは行わず、本ログへ手順逸脱として記録した。以後、直前にcommit / push許可がない修正指示では、作業ツリー上の変更に留めて報告する。
 

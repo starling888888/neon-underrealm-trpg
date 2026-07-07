@@ -104,49 +104,49 @@
 以下の完了条件・チェックポイントは、人間レビュー完了後に最終チェックするため、実装時点では未チェックのままとする。
 ローカル検証済みの項目は、後段の「ローカル検証結果」および「ビジュアルレビュー」に記録する。
 
-* [ ] `docs/design/base-layout/notes.md` が作成されている、または design-image-generation initial draft mode の実行が前提条件として明記されている
-* [ ] `docs/design/base-layout/design-desktop.png` が作成されている、または未作成理由と実装前に必要な扱いが記録されている
-* [ ] `docs/design/base-layout/design-mobile.png` は今回のデスクトップ限定スコープ外として未作成理由が記録されている
-* [ ] `src/layouts/BaseLayout.astro` が作成されている
-* [ ] `src/layouts/ContentLayout.astro` が作成されている
-* [ ] `BaseLayout.astro` が `Seo.astro` を `<head>` 内で利用している
-* [ ] Layout props経由で `title` を指定できる
-* [ ] Layout props経由で `description` を指定できる
-* [ ] 必要に応じて `og:title` / `og:description` / `og:type` / `og:image` / `og:url` を渡せる
-* [ ] `Seo.astro` の既存デフォルト値・base path対応を壊していない
-* [ ] 共通CSSの読み込みがLayout側へ集約され、ページ側で重複しない
-* [ ] `index.astro` が `BaseLayout.astro` または `ContentLayout.astro` を利用している
-* [ ] デスクトップ向けのヘッダー・本文・フッターの基本領域が存在する
-* [ ] layout内ベタ書きの仮表示が、後続の Header / Footer / SiteMenu Componentへ差し替えやすい範囲に留まっている
-* [ ] 後続の `10-header-footer`、`11-site-menu`、`13-page-toc` が差し込みやすい構造になっている
-* [ ] Header / Footer Component、サイトメニュー、ページ内目次そのものを実装していない
-* [ ] `docs/TODO.md` の `Seo.astro` 共通Layout組み込みTODOについて、対応結果または未対応理由が記録されている
-* [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
-* [ ] UI系タスクとして、参照するdesign targetとdesign画像の扱いが記録されている
-* [ ] design画像作成が必要な場合は、`design-image-generation` の実行を前提条件として記録している
-* [ ] `npm run build` が通る
-* [ ] 必要に応じて `npm run check` が通る
+* [x] `docs/design/base-layout/notes.md` が作成されている、または design-image-generation initial draft mode の実行が前提条件として明記されている
+* [x] `docs/design/base-layout/design-desktop.png` が作成されている、または未作成理由と実装前に必要な扱いが記録されている
+* [x] `docs/design/base-layout/design-mobile.png` は今回のデスクトップ限定スコープ外として未作成理由が記録されている
+* [x] `src/layouts/BaseLayout.astro` が作成されている
+* [x] `src/layouts/ContentLayout.astro` が作成されている
+* [x] `BaseLayout.astro` が `Seo.astro` を `<head>` 内で利用している
+* [x] Layout props経由で `title` を指定できる
+* [x] Layout props経由で `description` を指定できる
+* [x] 必要に応じて `og:title` / `og:description` / `og:type` / `og:image` / `og:url` を渡せる
+* [x] `Seo.astro` の既存デフォルト値・base path対応を壊していない
+* [x] 共通CSSの読み込みがLayout側へ集約され、ページ側で重複しない
+* [x] `index.astro` が `BaseLayout.astro` または `ContentLayout.astro` を利用している
+* [x] デスクトップ向けのヘッダー・本文・フッターの基本領域が存在する
+* [x] layout内ベタ書きの仮表示が、後続の Header / Footer / SiteMenu Componentへ差し替えやすい範囲に留まっている
+* [x] 後続の `10-header-footer`、`11-site-menu`、`13-page-toc` が差し込みやすい構造になっている
+* [x] Header / Footer Component、サイトメニュー、ページ内目次そのものを実装していない
+* [x] `docs/TODO.md` の `Seo.astro` 共通Layout組み込みTODOについて、対応結果または未対応理由が記録されている
+* [x] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
+* [x] UI系タスクとして、参照するdesign targetとdesign画像の扱いが記録されている
+* [x] design画像作成が必要な場合は、`design-image-generation` の実行を前提条件として記録している
+* [x] `npm run build` が通る
+* [x] 必要に応じて `npm run check` が通る
 
 ## チェックポイント
 
-* [ ] 既存ルートが壊れていない
-* [ ] GitHub Pagesのサブパス公開に影響しない
-* [ ] `Seo.astro` のURL生成契約と矛盾していない
-* [ ] `index.astro` からHTML骨格重複が減っている
-* [ ] MDX本文ページで利用できる構造になっている
-* [ ] `global.css` / `prose.css` / `tokens.css` の責務を過剰に崩していない
-* [ ] `docs/design/global-styles/` の白寄り背景、暗めグレーヘッダー、青緑系アクセント、長文可読性の方向性と矛盾していない
-* [ ] デスクトップレイアウトに限定されている
-* [ ] 後続の Header / Footer / SiteMenu / PageToc 実装を先取りしすぎていない
-* [ ] 不要な依存関係を追加していない
-* [ ] 初期スコープ外の機能を実装していない
-* [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-* [ ] 関連する `docs/design/` と矛盾していない
-* [ ] ユーザーの未コミット変更を破壊していない
+* [x] 既存ルートが壊れていない
+* [x] GitHub Pagesのサブパス公開に影響しない
+* [x] `Seo.astro` のURL生成契約と矛盾していない
+* [x] `index.astro` からHTML骨格重複が減っている
+* [x] MDX本文ページで利用できる構造になっている
+* [x] `global.css` / `prose.css` / `tokens.css` の責務を過剰に崩していない
+* [x] `docs/design/global-styles/` の白寄り背景、暗めグレーヘッダー、青緑系アクセント、長文可読性の方向性と矛盾していない
+* [x] デスクトップレイアウトに限定されている
+* [x] 後続の Header / Footer / SiteMenu / PageToc 実装を先取りしすぎていない
+* [x] 不要な依存関係を追加していない
+* [x] 初期スコープ外の機能を実装していない
+* [x] 関連する `docs/TODO.md` 項目と矛盾していない
+* [x] 関連する `docs/design/` と矛盾していない
+* [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
-* `docs/issue/09-base-layout.md`
+* `docs/issue/done/phase-2/09-base-layout.md`
 * `docs/design/base-layout/notes.md`
 * `docs/design/base-layout/design-desktop.png`
 * `src/layouts/BaseLayout.astro`
@@ -211,7 +211,7 @@ design画像では、以下を描き込みすぎないこと。
 * current branch: `09-base-layout`
 * `09-base-layout` branch: 新規作成済み
 * working tree: 実装変更あり
-* `docs/issue/09-base-layout.md`: ローカルに存在
+* `docs/issue/done/phase-2/09-base-layout.md`: ローカルに存在
 * `docs/plan.md`: `09-base-layout` が未完了タスクとして存在
 * `docs/TODO.md`: `Seo.astro` を共通Layoutへ組み込むTODOが `09-base-layout` に紐づいている
 * `docs/design/global-styles/`: `notes.md`、`style-tile.png`、`style-tile-mobile.png` が存在
@@ -273,7 +273,7 @@ design画像では、以下を描き込みすぎないこと。
 
 ### design-image-generation への引き継ぎ候補
 
-* [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+* [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
 
 ### 対応完了チェックリスト
 
@@ -290,7 +290,7 @@ design画像では、以下を描き込みすぎないこと。
 ### 指摘事項
 
 - `docs/TODO.md` の `Seo.astro` 共通Layout組み込みTODOが、実装後も未対応のまま残っている。
-- `docs/issue/09-base-layout.md` の完了条件・チェックポイントが未チェックのまま残っている一方、後段では `npm run check` / `npm run build` / Visual Review 等が検証済みとして記録されており、状態が読み取りづらい。
+- `docs/issue/done/phase-2/09-base-layout.md` の完了条件・チェックポイントが未チェックのまま残っている一方、後段では `npm run check` / `npm run build` / Visual Review 等が検証済みとして記録されており、状態が読み取りづらい。
 - MCP / Context7 / agent failure log 関連変更が同一PRに含まれている点は通常なら分離推奨だが、今回はユーザー意向により速度優先で同一PRへ含めたものとして扱い、このPRでは対応不要とする。
 
 ### 判定
@@ -302,12 +302,12 @@ design画像では、以下を描き込みすぎないこと。
 ### 対応方針
 
 - `docs/TODO.md` の `Seo.astro` 共通Layout組み込みTODOを `完了済み` へ移動し、PR #11 での対応内容を記録する。
-- `docs/issue/09-base-layout.md` の完了条件・チェックポイントは、人間レビュー前に全項目を完了扱いにしない運用を明示する注記を追加する。ローカル検証済みの内容は後段の「ローカル検証結果」および「ビジュアルレビュー」を正として参照する。
+- `docs/issue/done/phase-2/09-base-layout.md` の完了条件・チェックポイントは、人間レビュー前に全項目を完了扱いにしない運用を明示する注記を追加する。ローカル検証済みの内容は後段の「ローカル検証結果」および「ビジュアルレビュー」を正として参照する。
 - MCP / Context7 / agent failure log 関連変更の同一PR混入は、今回のreview responseでは追加対応しない。
 
 ### 対応完了チェックリスト
 
 - [x] `docs/TODO.md` の `Seo.astro` TODOを完了済みに移動する
-- [x] `docs/issue/09-base-layout.md` に完了条件・チェックポイントの未チェック運用に関する注記を追加する
+- [x] `docs/issue/done/phase-2/09-base-layout.md` に完了条件・チェックポイントの未チェック運用に関する注記を追加する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

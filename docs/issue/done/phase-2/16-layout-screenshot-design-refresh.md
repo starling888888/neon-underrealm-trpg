@@ -51,7 +51,7 @@
   * `docs/TODO.md`
   * `docs/requirements.md`
   * `docs/out-of-scope.md`
-  * `docs/issue/15-current-menu-highlight.md`
+  * `docs/issue/done/phase-2/15-current-menu-highlight.md`
   * `docs/design/`
   * `tests/visual/README.md`
   * `tests/visual/capture.spec.ts`
@@ -62,7 +62,7 @@
 
 * `docs/plan.md` の `16-layout-screenshot-design-refresh` とbranch / issue名は一致している。
 * `docs/plan.md` 上で `15-current-menu-highlight` は完了済みである。
-* `docs/issue/15-current-menu-highlight.md` には、現在ページハイライト、`aria-current="page"`、親カテゴリ展開 / 強調、PC / mobile menu両方での確認結果が記録されている。
+* `docs/issue/done/phase-2/15-current-menu-highlight.md` には、現在ページハイライト、`aria-current="page"`、親カテゴリ展開 / 強調、PC / mobile menu両方での確認結果が記録されている。
 * `docs/design/current-menu-highlight/` は存在する。
 * `docs/design/site-layout/` は未作成であり、このIssueで横断design targetとして作成する。
 * 現在の `src/pages/` には `/`、`/mdx-test`、`/data`、`/data/items`、`/data/items/weapons` が存在する。

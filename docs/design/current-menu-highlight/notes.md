@@ -19,7 +19,7 @@
 - `docs/out-of-scope.md`
 - `docs/plan.md`
 - `docs/TODO.md`
-- `docs/issue/15-current-menu-highlight.md`
+- `docs/issue/done/phase-2/15-current-menu-highlight.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/site-menu/notes.md`

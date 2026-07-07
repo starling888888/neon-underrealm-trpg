@@ -46,7 +46,7 @@
 検証済み:
 
 * local branch: `14-mobile-page-toc`
-* local issue file: `docs/issue/14-mobile-page-toc.md`
+* local issue file: `docs/issue/done/phase-2/14-mobile-page-toc.md`
 * `docs/plan.md` に `14-mobile-page-toc` が存在する
 * `docs/requirements.md` のスマホ版ページ内目次要件と整合する
 * `docs/out-of-scope.md` のページ内目次現在位置ハイライト方針と整合する
@@ -319,15 +319,15 @@ design notesでは、少なくとも以下を記録する。
 * [x] サイトメニューの開閉buttonとページ内目次の開閉buttonがUI上混同されない
 * [x] サイトメニューdrawerとMobilePageTocが同時に開いて表示崩れしない
 * [x] `/` ではMobilePageTocが表示されない
-* [ ] `/release-notes` ではMobilePageTocが表示されない
-* [ ] `/404` ではMobilePageTocが表示されない
+* [x] `/release-notes` ではMobilePageTocが表示されない
+* [x] `/404` ではMobilePageTocが表示されない
 * [x] TOC項目が0件または1件のページではMobilePageTocが表示されない
 * [x] GitHub Pages subpath配下でもアンカーリンクが壊れない
 * [x] 現在位置ハイライトはこのIssueでは実装していない
 * [x] IntersectionObserverによるactive heading追跡はこのIssueでは実装していない
 * [x] 不要な大規模UIライブラリを追加していない
 * [x] 不要なクライアントJSを増やしすぎていない
-* [ ] `docs/design/mobile-page-toc/notes.md`、`design-mobile-closed.png`、`design-mobile-open.png` を参照している
+* [x] `docs/design/mobile-page-toc/notes.md`、`design-mobile-closed.png`、`design-mobile-open.png` を参照している
 * [x] 参照するdesign targetとdesign画像の扱いが実装報告に記録されている
 * [x] `npm run build` が成功する
 * [x] 必要に応じて `npm run check` が成功する
@@ -336,10 +336,10 @@ design notesでは、少なくとも以下を記録する。
 
 * [x] `/` が壊れていない
 * [x] `/` にMobilePageTocが表示されない
-* [ ] `/release-notes` にMobilePageTocが表示されない
-* [ ] `/404` にMobilePageTocが表示されない
+* [x] `/release-notes` にMobilePageTocが表示されない
+* [x] `/404` にMobilePageTocが表示されない
 * [x] 本文ページではMobilePageTocを開ける
-* [ ] データページではMobilePageTocを開ける
+* [x] データページではMobilePageTocを開ける
 * [x] 見出し0件のページで空の目次buttonが出ない
 * [x] 見出し1件だけのページで不自然な目次buttonが出ない
 * [x] `h2` / `h3` の階層がMobilePageTocに反映される
@@ -365,7 +365,7 @@ design notesでは、少なくとも以下を記録する。
 
 ## 想定変更ファイル
 
-* `docs/issue/14-mobile-page-toc.md`
+* `docs/issue/done/phase-2/14-mobile-page-toc.md`
 * `docs/design/mobile-page-toc/notes.md`
 * `docs/design/mobile-page-toc/design-mobile-closed.png`
 * `docs/design/mobile-page-toc/design-mobile-open.png`
@@ -442,7 +442,7 @@ tablet専用design画像は作成しない。タブレット / 狭幅PC幅は、
   - そのため、通常のroot font-size 16px前提では `1024px` ちょうどで両方が非表示になる境界不整合が残っている。
   - `docs/design/mobile-page-toc/notes.md` には「スマホ固定ページタイトルバー」「本文領域とは別」「fixed titlebar overlay案を正式採用する」などの記述が残っている。
   - 現行実装は `scripts/lib/page-toc-postprocess.ts` で最初のH1とMobilePageTocを `.mobile-page-heading` にラップし、H1横triggerとH1直下overlayとして表示する方針である。
-  - `docs/issue/14-mobile-page-toc.md` は本文内H1横trigger案へ更新済みのため、design notes側を現行実装方針へ追従させるのが最小対応である。
+  - `docs/issue/done/phase-2/14-mobile-page-toc.md` は本文内H1横trigger案へ更新済みのため、design notes側を現行実装方針へ追従させるのが最小対応である。
 
 ### 対応方針
 

@@ -137,7 +137,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - `docs/requirements/*`
 - `docs/plan.md`
 - `docs/issue/done/phase-2/12-mobile-menu.md`
-- `docs/issue/17-github-actions-deploy-basic.md`
+- `docs/issue/done/phase-2/17-github-actions-deploy-basic.md`
 
 ### 実ファイル構造
 
@@ -183,7 +183,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 
 ## 完了条件
 
-- [ ] このissueが、目的、背景、対象範囲、初期スコープ外、完了条件、チェックポイント、Group単位の作業順を含む形で確定している
+- [x] このissueが、目的、背景、対象範囲、初期スコープ外、完了条件、チェックポイント、Group単位の作業順を含む形で確定している
 - [x] `.github/pull_request_template.md` が作成されている
 - [x] PRタイトルフォーマットがissue単位branch運用と矛盾していない
 - [x] PRタイトルはissue slugのみを原則としている
@@ -271,23 +271,23 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] `docs/requirements.md` および分割後の `docs/requirements/*` の技術スタック記述が、採用済み / 後続予定の区別を持っている
 - [ ] `docs/requirements/*` と `docs/plan.md` から、Footerおよび `18-2-home-page` の必須クレジット枠扱いが外れている
 - [ ] `docs/issue/done/phase-2/12-mobile-menu.md` の旧plan ID参照に、過去記録であること、現在は旧IDであることが注記されている
-- [ ] `docs/issue/17-github-actions-deploy-basic.md` のdeploy確認記録が、merge後確認済みとして読み取れる
+- [x] `docs/issue/done/phase-2/17-github-actions-deploy-basic.md` のdeploy確認記録が、merge後確認済みとして読み取れる
 - [ ] 関連TODOを扱った結果または未対応理由が記録されている
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
-- [ ] このタスクがUI実装タスクではないことが維持されている
-- [ ] 新規design画像を要求していない
-- [ ] Visual Review screenshotを取得していない
-- [ ] GitHub Actions workflowを変更していない
-- [ ] 既存ルートが壊れていない
-- [ ] GitHub Pagesのサブパス公開方針と矛盾していない
-- [ ] 不要な依存関係を追加していない
+- [x] このタスクがUI実装タスクではないことが維持されている
+- [x] 新規design画像を要求していない
+- [x] Visual Review screenshotを取得していない
+- [x] GitHub Actions workflowを変更していない
+- [x] 既存ルートが壊れていない
+- [x] GitHub Pagesのサブパス公開方針と矛盾していない
+- [x] 不要な依存関係を追加していない
 - [x] 初期スコープ外の機能を実装済みまたは実装予定として誤記していない
 - [ ] `docs/TODO.md` の項目が現行 `docs/plan.md` と矛盾していない
-- [ ] `docs/design/` の正本と矛盾する記述を増やしていない
+- [x] `docs/design/` の正本と矛盾する記述を増やしていない
 - [x] `docs/plan.md` の完了チェック状態を変更していない
 - [x] `issue-first-development` SKILL使用時に、ユーザーの明示指示なしでGitHub Issueを発行する運用になっていない
 - [x] PR作成とPRレビューのSKILL責務が混ざっていない
@@ -338,8 +338,8 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] user-facing docs、requirements、TRPG game rule text、game terminologyを英語化していない
 - [x] issue移動は完了済みissueに限定されている
 - [x] 完了済みissue移動とissue本文の大幅編集を同一変更に混ぜていない
-- [ ] ユーザーの未コミット変更を破壊していない
-- [ ] `docs/agent-failure-log.md` で同種失敗が3回以上積み重なっていないか確認している
+- [x] ユーザーの未コミット変更を破壊していない
+- [x] `docs/agent-failure-log.md` で同種失敗が3回以上積み重なっていないか確認している
 
 ## 想定変更ファイル
 
@@ -394,7 +394,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - `docs/deployment.md`
 - `docs/content-writing-guide.md`
 - `docs/issue/done/phase-2/12-mobile-menu.md`
-- `docs/issue/17-github-actions-deploy-basic.md`
+- `docs/issue/done/phase-2/17-github-actions-deploy-basic.md`
 
 - `scripts/`
 - `src/components/`
@@ -510,7 +510,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - `docs/TODO.md` の旧plan ID置換先が妥当か
 - Footerクレジット導線を初期実装から外し、将来TODOへ送る扱いでよいか
 - トップページ `18-2-home-page` からクレジット枠を外す判断でよいか
-- `docs/issue/17-github-actions-deploy-basic.md` のmerge後確認済み表現が事実関係として問題ないか
+- `docs/issue/done/phase-2/17-github-actions-deploy-basic.md` のmerge後確認済み表現が事実関係として問題ないか
 - `docs/plan.md` の完了チェックを変更しない方針でよいか
 - 完了済みissueの判定を「すべての完了条件・チェックポイントがチェック済み」とする方針でよいか
 - `docs/issue/done/phase-N/` へ移動する対象issueのphase範囲を、Phase 0からPhase 1完了分まで含めるか、Phase 2開始前に必要な範囲へ限定するか
@@ -1269,7 +1269,7 @@ Phase 1完了状態およびPhase 2開始前の前提と、正式ドキュメン
 - `docs/requirements/*`
 - `docs/plan.md`
 - `docs/issue/done/phase-2/12-mobile-menu.md`
-- `docs/issue/17-github-actions-deploy-basic.md`
+- `docs/issue/done/phase-2/17-github-actions-deploy-basic.md`
 
 #### 含める内容
 

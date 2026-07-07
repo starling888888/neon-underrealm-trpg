@@ -17,7 +17,7 @@
 - `docs/requirements.md`
 - `docs/out-of-scope.md`
 - `docs/plan.md`
-- `docs/issue/02-init-astro-project.md`
+- `docs/issue/done/phase-0/02-init-astro-project.md`
 
 ## 対象範囲
 
@@ -27,7 +27,7 @@
 - `package-lock.json`
 - Biome / check に必要な最小設定ファイル
 - 必要な場合のみ、既存のAstro最小ページに対するlint通過のための軽微な修正
-- `docs/issue/02-1-add-linter.md`
+- `docs/issue/done/phase-0/02-1-add-linter.md`
 
 ## 初期スコープ外
 
@@ -50,22 +50,22 @@
 
 ## 完了条件
 
-- [ ] `npm run check` が定義されている
-- [ ] `npm run check` でAstro / TypeScriptの静的チェックが実行される
-- [ ] `npm run check` でBiomeによるlint / formatチェックが実行される
-- [ ] Biomeの対象範囲と設定が最小限に留まっている
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
-- [ ] `npm audit --audit-level=low` が通る、または未解決警告の理由を報告する
+- [x] `npm run check` が定義されている
+- [x] `npm run check` でAstro / TypeScriptの静的チェックが実行される
+- [x] `npm run check` でBiomeによるlint / formatチェックが実行される
+- [x] Biomeの対象範囲と設定が最小限に留まっている
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] `npm audit --audit-level=low` が通る、または未解決警告の理由を報告する
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない
-- [ ] GitHub Pagesのサブパス公開に影響しない
-- [ ] 不要な依存関係を追加していない
-- [ ] 大規模UIライブラリや過剰な開発ツールを導入していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] 既存ルートが壊れていない
+- [x] GitHub Pagesのサブパス公開に影響しない
+- [x] 不要な依存関係を追加していない
+- [x] 大規模UIライブラリや過剰な開発ツールを導入していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 

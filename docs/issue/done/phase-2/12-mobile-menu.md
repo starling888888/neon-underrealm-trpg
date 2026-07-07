@@ -59,7 +59,7 @@
 * `docs/requirements.md`
 * `docs/out-of-scope.md`
 * `docs/TODO.md`
-* `docs/issue/11-site-menu.md`
+* `docs/issue/done/phase-2/11-site-menu.md`
 * `docs/design/header-footer/`
 * `docs/design/site-menu/`
 * `docs/design/mobile-menu/`

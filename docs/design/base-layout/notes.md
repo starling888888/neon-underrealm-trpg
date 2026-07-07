@@ -17,7 +17,7 @@
 - `docs/out-of-scope.md`
 - `docs/plan.md`
 - `docs/TODO.md`
-- `docs/issue/09-base-layout.md`
+- `docs/issue/done/phase-2/09-base-layout.md`
 - `docs/design/global-styles/notes.md`
 
 ## デザイン方針
