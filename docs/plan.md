@@ -181,17 +181,17 @@
   * [x] design正本と実装の差分、未解決事項、後続で調整すべきUI課題を記録する
   * [x] このタスクでは、design更新を主目的とし、追加の機能実装は行わない
 
-* [ ] `17-github-actions-deploy-basic` — GitHub Actionsによる基本デプロイを追加する
+* [x] `17-github-actions-deploy-basic` — GitHub Actionsによる基本デプロイを追加する
 
-  * [ ] `.github/workflows/deploy.yml` 作成
-  * [ ] `npm ci` を実行する
-  * [ ] `npm run check` を実行する
-  * [ ] `npm run build` を実行する
-  * [ ] GitHub Pagesへdeployする
-  * [ ] この段階では検索index生成をCIに含めない
-  * [ ] この段階では `npm run index:search` を実行しない
-  * [ ] この段階では `npm run build:search` を実行しない
-  * [ ] Excel本体なしでCI/CDビルドが成功することを確認する
+  * [x] `.github/workflows/deploy.yml` 作成
+  * [x] `npm ci` を実行する
+  * [x] `npm run check` を実行する
+  * [x] `npm run build` を実行する
+  * [x] GitHub Pagesへdeployする
+  * [x] この段階では検索index生成をCIに含めない
+  * [x] この段階では `npm run index:search` を実行しない
+  * [x] この段階では `npm run build:search` を実行しない
+  * [x] Excel本体なしでCI/CDビルドが成功することを確認する
 
 ---
 
