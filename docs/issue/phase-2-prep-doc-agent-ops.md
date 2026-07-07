@@ -184,36 +184,36 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 ## 完了条件
 
 - [ ] このissueが、目的、背景、対象範囲、初期スコープ外、完了条件、チェックポイント、Group単位の作業順を含む形で確定している
-- [ ] `.github/pull_request_template.md` が作成されている
-- [ ] PRタイトルフォーマットがissue単位branch運用と矛盾していない
-- [ ] PRタイトルはissue slugのみを原則としている
-- [ ] PRタイトルにcommit type、Group番号、issue slugの言い換え説明を必須としていない
-- [ ] PR本文がissue本文の再掲ではなく、関連issueへの導線中心になっている
-- [ ] PR本文にRelated issue、Summary、Review focus、Review handlingのみを置く方針になっている
-- [ ] PR本文にChanged areas、Group completion、Checks、Unchecked / Not verified、Scope guardを置かない方針になっている
-- [ ] review-to-issueとfailure-log運用への接続がPRテンプレートに記載されている
-- [ ] `.github/ISSUE_TEMPLATE/issue-first-development.md` が作成されている
-- [ ] 既存のissue作成テンプレート本文が `issue-first-development` SKILLから外部化されている
-- [ ] `issue-first-development` SKILLが `.github/ISSUE_TEMPLATE/issue-first-development.md` を参照する運用に変更されている
-- [ ] ChatGPT / remote snapshot draft modeでは、完成版issue本文をチャットに出力する方針が明記されている
-- [ ] local repository modeでは、`docs/issue/<issue-slug>.md` をローカルファイルとして作成する方針が明記されている
-- [ ] `issue-first-development` SKILL使用時に、ユーザーの明示指示なしでGitHub Issueを発行してはならないことが明記されている
-- [ ] ChatGPT / remote snapshot draft modeでは、GitHub Issueもrepository fileも作成済みと主張しない方針が明記されている
-- [ ] local repository modeでも、GitHub Issue作成は明示指示がある場合に限ることが明記されている
-- [ ] テンプレート参照失敗時に、推測でテンプレートを再構成しない方針が明記されている
-- [ ] `.agents/skills/create-pr/SKILL.md` が作成されている
-- [ ] `.agents/skills/README.md` にPR作成SKILLの使用条件が追加されている
-- [ ] PR作成指示で `create-pr` SKILLが発火することが明記されている
-- [ ] PR作成はGitHubへの書き込み操作であり、ユーザーの明示的なPR作成指示がある場合にのみ実行することが明記されている
-- [ ] PRレビュー指示とは発火条件が分離されている
-- [ ] `create-pr` SKILLが `.github/pull_request_template.md` を使用してPR本文を作ることが明記されている
-- [ ] `create-pr` SKILLで、PR titleはissue slugのみを原則とすることが明記されている
-- [ ] `create-pr` SKILLで、PR本文にChanged areas、Group completion、Checks、Unchecked / Not verified、Scope guardを追加しないことが明記されている
-- [ ] `create-pr` SKILLで、対応するissueファイルの完了条件・チェックポイントを確認することが明記されている
-- [ ] 未チェック項目が残っている場合、PR作成前にユーザー承認を得ることが明記されている
-- [ ] ユーザー承認なしに、未チェック項目ありのPRを作らないことが明記されている
-- [ ] PR作成後の報告項目が明記されている
-- [ ] `create-pr` SKILLがmerge、tag、release、review-to-issue処理を行わないことが明記されている
+- [x] `.github/pull_request_template.md` が作成されている
+- [x] PRタイトルフォーマットがissue単位branch運用と矛盾していない
+- [x] PRタイトルはissue slugのみを原則としている
+- [x] PRタイトルにcommit type、Group番号、issue slugの言い換え説明を必須としていない
+- [x] PR本文がissue本文の再掲ではなく、関連issueへの導線中心になっている
+- [x] PR本文にRelated issue、Summary、Review focus、Review handlingのみを置く方針になっている
+- [x] PR本文にChanged areas、Group completion、Checks、Unchecked / Not verified、Scope guardを置かない方針になっている
+- [x] review-to-issueとfailure-log運用への接続がPRテンプレートに記載されている
+- [x] `.github/ISSUE_TEMPLATE/issue-first-development.md` が作成されている
+- [x] 既存のissue作成テンプレート本文が `issue-first-development` SKILLから外部化されている
+- [x] `issue-first-development` SKILLが `.github/ISSUE_TEMPLATE/issue-first-development.md` を参照する運用に変更されている
+- [x] ChatGPT / remote snapshot draft modeでは、完成版issue本文をチャットに出力する方針が明記されている
+- [x] local repository modeでは、`docs/issue/<issue-slug>.md` をローカルファイルとして作成する方針が明記されている
+- [x] `issue-first-development` SKILL使用時に、ユーザーの明示指示なしでGitHub Issueを発行してはならないことが明記されている
+- [x] ChatGPT / remote snapshot draft modeでは、GitHub Issueもrepository fileも作成済みと主張しない方針が明記されている
+- [x] local repository modeでも、GitHub Issue作成は明示指示がある場合に限ることが明記されている
+- [x] テンプレート参照失敗時に、推測でテンプレートを再構成しない方針が明記されている
+- [x] `.agents/skills/create-pr/SKILL.md` が作成されている
+- [x] `.agents/skills/README.md` にPR作成SKILLの使用条件が追加されている
+- [x] PR作成指示で `create-pr` SKILLが発火することが明記されている
+- [x] PR作成はGitHubへの書き込み操作であり、ユーザーの明示的なPR作成指示がある場合にのみ実行することが明記されている
+- [x] PRレビュー指示とは発火条件が分離されている
+- [x] `create-pr` SKILLが `.github/pull_request_template.md` を使用してPR本文を作ることが明記されている
+- [x] `create-pr` SKILLで、PR titleはissue slugのみを原則とすることが明記されている
+- [x] `create-pr` SKILLで、PR本文にChanged areas、Group completion、Checks、Unchecked / Not verified、Scope guardを追加しないことが明記されている
+- [x] `create-pr` SKILLで、対応するissueファイルの完了条件・チェックポイントを確認することが明記されている
+- [x] 未チェック項目が残っている場合、PR作成前にユーザー承認を得ることが明記されている
+- [x] ユーザー承認なしに、未チェック項目ありのPRを作らないことが明記されている
+- [x] PR作成後の報告項目が明記されている
+- [x] `create-pr` SKILLがmerge、tag、release、review-to-issue処理を行わないことが明記されている
 - [ ] `AGENTS.md` が最上位規約と参照ルーターとして短縮されている
 - [ ] `AGENTS.md` の最重要ルールが理由なし箇条書きになっている
 - [ ] 最重要ルールの理由が `.agents/rules/core-rules-rationale.md` へ分離されている
@@ -289,14 +289,14 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] `docs/TODO.md` の項目が現行 `docs/plan.md` と矛盾していない
 - [ ] `docs/design/` の正本と矛盾する記述を増やしていない
 - [ ] `docs/plan.md` の完了チェック状態を変更していない
-- [ ] `issue-first-development` SKILL使用時に、ユーザーの明示指示なしでGitHub Issueを発行する運用になっていない
-- [ ] PR作成とPRレビューのSKILL責務が混ざっていない
+- [x] `issue-first-development` SKILL使用時に、ユーザーの明示指示なしでGitHub Issueを発行する運用になっていない
+- [x] PR作成とPRレビューのSKILL責務が混ざっていない
 - [ ] ユーザーの明示指示なしにPRを作成する運用になっていない
-- [ ] 未チェック項目が残ったissueで、ユーザー承認なしにPRを作成する運用になっていない
-- [ ] `.github/pull_request_template.md` と `.github/ISSUE_TEMPLATE/issue-first-development.md` の役割が混ざっていない
-- [ ] PRテンプレートが最小導線になっている
-- [ ] PRテンプレートにChanged areas、Group completion、Checks、Unchecked / Not verified、Scope guardを含めていない
-- [ ] `issue-first-development` SKILLが、テンプレート本文を直接抱え込む構造に戻っていない
+- [x] 未チェック項目が残ったissueで、ユーザー承認なしにPRを作成する運用になっていない
+- [x] `.github/pull_request_template.md` と `.github/ISSUE_TEMPLATE/issue-first-development.md` の役割が混ざっていない
+- [x] PRテンプレートが最小導線になっている
+- [x] PRテンプレートにChanged areas、Group completion、Checks、Unchecked / Not verified、Scope guardを含めていない
+- [x] `issue-first-development` SKILLが、テンプレート本文を直接抱え込む構造に戻っていない
 - [ ] `AGENTS.md` の最重要停止条件を外部ファイルに追い出していない
 - [ ] `AGENTS.md` が単なるリンク集になっていない
 - [ ] `AGENTS.md` が作業ごとに更新される可変リンク集になっていない
@@ -1509,10 +1509,7 @@ chore: validate phase 2 preparation docs
 
 ### Locally absent during issue-first preparation and expected to be created or defined by this issue
 
-- `.github/ISSUE_TEMPLATE/` does not exist yet.
-- `.github/pull_request_template.md` does not exist yet.
 - `.github/PULL_REQUEST_TEMPLATE.md` does not exist yet.
-- `.agents/skills/create-pr/SKILL.md` does not exist yet.
 - `.agents/skills/failure-log-audit/SKILL.md` does not exist yet.
 - `docs/requirements/` does not exist yet.
 - `docs/plan-done.md`, `docs/TODO-done.md`, and `docs/agent-failure-log-done.md` do not exist yet.

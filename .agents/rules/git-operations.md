@@ -68,6 +68,8 @@ Push only when the user explicitly permits it.
 
 Create PRs only when the user explicitly asks for PR creation.
 
+Use `.agents/skills/create-pr/SKILL.md` when the user asks to create a PR.
+
 Before PR creation, confirm:
 
 - base branch
@@ -77,9 +79,28 @@ Before PR creation, confirm:
 - PR body
 - draft or ready-for-review state
 
+Use `.github/pull_request_template.md` for the PR body.
+
+The default PR title is the issue slug only:
+
+```text
+<issue-slug>
+```
+
+If the matching issue file has unchecked completion criteria or checkpoints, report them and ask for explicit approval before creating the PR.
+
+Do not add these sections to the PR body:
+
+- Changed areas
+- Group completion
+- Checks
+- Unchecked / Not verified
+- Scope guard
+
+Keep detailed status in the issue file.
+
 ## Destructive Actions
 
 Ask before deleting files, deleting directories, resetting, cleaning, rebasing, merging, moving many files, changing public URLs, or running a formatter that will create a large diff.
 
 Never use destructive commands to resolve uncertainty.
-

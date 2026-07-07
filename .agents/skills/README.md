@@ -36,6 +36,12 @@ Use when producing a markdown review draft from a GitHub PR snapshot.
 
 This skill produces draft review notes only. Local validation and tracking updates happen later through `review-to-issue`.
 
+### `create-pr`
+
+Use only when the user explicitly asks to create a GitHub pull request.
+
+This skill uses `.github/pull_request_template.md`, checks the matching issue file, asks before creating a PR with unchecked issue items, and never merges, tags, releases, or handles review feedback.
+
 ### `post-merge-plan-update`
 
 Use after a PR has been merged and the user asks to return to `main`, pull merged changes, delete the merged branch, update tracking files, commit, and push.
@@ -48,4 +54,3 @@ This skill may update `docs/plan.md` checkboxes only because the user explicitly
 - `.agents/rules/`: stable standing rules and rationale that are not a complete workflow by themselves.
 
 If a user request matches a skill, read that skill before acting.
-
