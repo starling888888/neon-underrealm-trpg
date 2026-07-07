@@ -178,6 +178,8 @@ npm run check
 npm run build
 ```
 
+ただし、変更ファイルが `.md` のみの場合は、実行コスト削減のため `npm run check` と `npm run build` を実行しない。`.mdx`、Astro、TypeScript、CSS、設定、package、生成データ、画像、workflow等を変更した場合は通常どおり必要な検証を行う。
+
 報告形式は `.agents/rules/work-report.md` を参照する。issueにGroup単位の報告形式がある場合は、それに従う。
 
 作業後は `docs/agent-failure-log.md` を確認し、同じ失敗カテゴリに3回以上の発生詳細が積み重なっていないか報告する。

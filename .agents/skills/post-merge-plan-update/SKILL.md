@@ -203,6 +203,10 @@ Run available checks after editing tracking files:
 - project check command
 - project build command
 
+Skip `npm run check` and `npm run build` when every changed file is a `.md` file. Markdown-only tracking updates do not justify the execution cost.
+
+Do not skip validation for `.mdx` changes. Treat `.mdx` as site content that can affect the build.
+
 If either script is missing, report it and continue.
 
 If a command fails, stop and report the failure. Do not commit a failing tracking update unless the user explicitly asks.
