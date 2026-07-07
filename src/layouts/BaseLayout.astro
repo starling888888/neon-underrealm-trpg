@@ -9,6 +9,7 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
 import Seo from "../components/seo/Seo.astro";
 import type { SeoProps } from "../lib/site/seo";
 import { defaultSeo } from "../lib/site/seo";
+import { withBase } from "../lib/utils/paths";
 
 export interface Props extends SeoProps {
   title?: string;
@@ -36,6 +37,7 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
     <Seo
       title={title}
       description={description}

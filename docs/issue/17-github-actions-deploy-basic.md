@@ -358,72 +358,72 @@ public/favicon.ico
 
 ## 完了条件
 
-* [ ] `.github/workflows/deploy.yml` が作成されている
-* [ ] workflowが `main` pushで実行される
-* [ ] 初回検証用に、現在のissue branch `17-github-actions-deploy-basic` でも一度deploy workflowを実行できる
+* [x] `.github/workflows/deploy.yml` が作成されている
+* [x] workflowが `main` pushで実行される
+* [x] 初回検証用に、現在のissue branch `17-github-actions-deploy-basic` でも一度deploy workflowを実行できる
 * [ ] 初回issue branch deployが成功した場合、ユーザーの公開確認を待つ停止点が記録されている
-* [ ] ユーザー確認後に、issue branch deploy条件を恒久化するか、`main` のみに戻すか判断する前提が記録されている
-* [ ] workflowが `workflow_dispatch` を持つ
-* [ ] `workflow_dispatch` はdefault branch反映後の手動実行用であり、初回issue branch検証の主手段として扱っていない
-* [ ] `actions/checkout` を使用している
-* [ ] `actions/setup-node` を使用している
-* [ ] Node.js versionが明示されている
-* [ ] `cache: npm` または同等のnpm cache設定が必要最小限で入っている
-* [ ] `npm ci` が実行される
-* [ ] `npm run check` が実行される
-* [ ] `npm run build` が実行される
-* [ ] `actions/configure-pages` が使用されている
-* [ ] `dist/` がPages artifactとしてuploadされる
-* [ ] GitHub Pages deploy jobがbuild jobの成功後に実行される
-* [ ] deployに必要なpermissionsが最小範囲で設定されている
-* [ ] deployのconcurrencyが設定されている
-* [ ] ドキュメント更新のみではdeployが走らない条件が設定されている
-* [ ] `.agents/skills/**` のSKILL更新のみではdeployが走らない条件が設定されている
-* [ ] `AGENTS.md` 更新のみではdeployが走らない条件が設定されている
-* [ ] Excel本体なしでCI/CDビルドが成功する設計になっている
-* [ ] `.raw/` 配下のファイルを参照していない
-* [ ] ユーザー提供の `favicon.ico` が使用されている
-* [ ] `favicon.ico` が静的配信対象に配置されている
-* [ ] `favicon.ico` がbuild artifactに含まれる
-* [ ] `favicon.ico` を生成していない
-* [ ] `favicon.ico` を変換していない
-* [ ] `favicon.ico` を再デザインしていない
-* [ ] 検索index生成を実行していない
-* [ ] `npm run index:search` を実行していない
-* [ ] `npm run build:search` を実行していない
-* [ ] `package.json` に検索関連scriptや依存関係を追加していない
-* [ ] `astro.config.mjs` の `site` / `base` とGitHub Pages公開先が矛盾していない
-* [ ] `docs/deployment.md` にGitHub Actions基本デプロイが実装済みであること、または実装後の確認手順が必要最小限で反映されている
-* [ ] `docs/TODO.md` に、main以外でもdeployなしCIを回せるようにする後続TODOが追加されている
-* [ ] `docs/plan.md` の最終フェーズ末尾に、main以外でもdeployなしCIを回すためのテスト / CI整備タスクが追加されている
-* [ ] `npm run build` が通る
-* [ ] `npm run check` が通る
+* [x] ユーザー確認後に、issue branch deploy条件を恒久化するか、`main` のみに戻すか判断する前提が記録されている
+* [x] workflowが `workflow_dispatch` を持つ
+* [x] `workflow_dispatch` はdefault branch反映後の手動実行用であり、初回issue branch検証の主手段として扱っていない
+* [x] `actions/checkout` を使用している
+* [x] `actions/setup-node` を使用している
+* [x] Node.js versionが明示されている
+* [x] `cache: npm` または同等のnpm cache設定が必要最小限で入っている
+* [x] `npm ci` が実行される
+* [x] `npm run check` が実行される
+* [x] `npm run build` が実行される
+* [x] `actions/configure-pages` が使用されている
+* [x] `dist/` がPages artifactとしてuploadされる
+* [x] GitHub Pages deploy jobがbuild jobの成功後に実行される
+* [x] deployに必要なpermissionsが最小範囲で設定されている
+* [x] deployのconcurrencyが設定されている
+* [x] ドキュメント更新のみではdeployが走らない条件が設定されている
+* [x] `.agents/skills/**` のSKILL更新のみではdeployが走らない条件が設定されている
+* [x] `AGENTS.md` 更新のみではdeployが走らない条件が設定されている
+* [x] Excel本体なしでCI/CDビルドが成功する設計になっている
+* [x] `.raw/` 配下のファイルを参照していない
+* [x] ユーザー提供の `favicon.ico` が使用されている
+* [x] `favicon.ico` が静的配信対象に配置されている
+* [x] `favicon.ico` がbuild artifactに含まれる
+* [x] `favicon.ico` を生成していない
+* [x] `favicon.ico` を変換していない
+* [x] `favicon.ico` を再デザインしていない
+* [x] 検索index生成を実行していない
+* [x] `npm run index:search` を実行していない
+* [x] `npm run build:search` を実行していない
+* [x] `package.json` に検索関連scriptや依存関係を追加していない
+* [x] `astro.config.mjs` の `site` / `base` とGitHub Pages公開先が矛盾していない
+* [x] `docs/deployment.md` にGitHub Actions基本デプロイが実装済みであること、または実装後の確認手順が必要最小限で反映されている
+* [x] `docs/TODO.md` に、main以外でもdeployなしCIを回せるようにする後続TODOが追加されている
+* [x] `docs/plan.md` の最終フェーズ末尾に、main以外でもdeployなしCIを回すためのテスト / CI整備タスクが追加されている
+* [x] `npm run build` が通る
+* [x] `npm run check` が通る
 
 ## チェックポイント
 
-* [ ] 既存ルートが壊れていない
-* [ ] GitHub Pagesのサブパス公開に影響しない
-* [ ] `astro.config.mjs` の `base: "/neon-underrealm-trpg"` 前提と矛盾していない
-* [ ] `dist/` 以外をPages artifactとしてuploadしていない
+* [x] 既存ルートが壊れていない
+* [x] GitHub Pagesのサブパス公開に影響しない
+* [x] `astro.config.mjs` の `base: "/neon-underrealm-trpg"` 前提と矛盾していない
+* [x] `dist/` 以外をPages artifactとしてuploadしていない
 * [ ] faviconが公開URL上で取得できる
-* [ ] favicon参照pathがGitHub Pagesのsubpath配下でも壊れていない
-* [ ] favicon対応のために不要な画像処理依存を追加していない
-* [ ] 不要な依存関係を追加していない
-* [ ] 不要なGitHub Actionsを追加していない
-* [ ] deploy用secretを要求していない
-* [ ] DB、認証、SSR、CMS、APIサーバーを前提にしていない
-* [ ] Excel本体をCIに要求していない
-* [ ] `.raw/` をCIで参照していない
-* [ ] 生成JSONの手編集を前提にしていない
-* [ ] 検索index生成をこのIssueに混ぜていない
-* [ ] Visual Review / screenshot captureをCIに混ぜていない
-* [ ] docs-only変更でdeployが走らない
-* [ ] `.agents/skills/**` のSKILL変更でdeployが走らない
-* [ ] `AGENTS.md` 変更でdeployが走らない
-* [ ] issue branch deployは初回確認用であり、恒久的なmain以外deploy運用と混同していない
-* [ ] main以外の通常CI整備は後続タスクへ分離されている
-* [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-* [ ] ユーザーの未コミット変更を破壊していない
+* [x] favicon参照pathがGitHub Pagesのsubpath配下でも壊れていない
+* [x] favicon対応のために不要な画像処理依存を追加していない
+* [x] 不要な依存関係を追加していない
+* [x] 不要なGitHub Actionsを追加していない
+* [x] deploy用secretを要求していない
+* [x] DB、認証、SSR、CMS、APIサーバーを前提にしていない
+* [x] Excel本体をCIに要求していない
+* [x] `.raw/` をCIで参照していない
+* [x] 生成JSONの手編集を前提にしていない
+* [x] 検索index生成をこのIssueに混ぜていない
+* [x] Visual Review / screenshot captureをCIに混ぜていない
+* [x] docs-only変更でdeployが走らない
+* [x] `.agents/skills/**` のSKILL変更でdeployが走らない
+* [x] `AGENTS.md` 変更でdeployが走らない
+* [x] issue branch deployは初回確認用であり、恒久的なmain以外deploy運用と混同していない
+* [x] main以外の通常CI整備は後続タスクへ分離されている
+* [x] 関連する `docs/TODO.md` 項目と矛盾していない
+* [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
