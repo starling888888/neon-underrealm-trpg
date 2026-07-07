@@ -1,8 +1,8 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { processPageTocHtml } from "./lib/page-toc-postprocess";
+import { processPageTocHtml } from "./lib";
 
-const distDir = new URL("../dist", import.meta.url).pathname;
+const distDir = new URL("../../dist", import.meta.url).pathname;
 
 async function main(): Promise<void> {
   const files = await collectHtmlFiles(distDir);

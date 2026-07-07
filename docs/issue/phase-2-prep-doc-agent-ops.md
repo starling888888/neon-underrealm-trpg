@@ -237,7 +237,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] `lib.ts` 長大化時に対象プログラム配下の `lib/` ディレクトリへ分割する方針が明記されている
 - [x] 複数プログラムから参照するモジュールを `scripts/_common/` に置く方針が明記されている
 - [x] `src/components`、`src/lib`、`src/scripts` も目的ごとにディレクトリを切る方針が明記されている
-- [ ] `scripts/`、`src/components/`、`src/lib/`、`src/scripts/` が開発構造方針に沿って整理されている
+- [x] `scripts/`、`src/components/`、`src/lib/`、`src/scripts/` が開発構造方針に沿って整理されている
 - [ ] `docs/plan.md`、`docs/TODO.md`、`docs/agent-failure-log.md` を未実行・未対応中心にする方針が定義されている
 - [ ] plan / TODO / failure-log の完了済み退避先が定義されている
 - [ ] `post-merge-plan-update` に、merge後のplan / TODO / issue完了移動ルールが追加されている
@@ -319,9 +319,9 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] `docs/development-structure.md` を正本として参照できる
 - [x] `.agents/rules/file-structure.md` が重複しすぎず、参照方針として機能している
 - [x] scripts分割方針が今後の実装者にとって明確である
-- [ ] 実ファイル移動と挙動変更が混ざっていない
-- [ ] `_common/` に安易に集約しすぎていない
-- [ ] import path修正が妥当である
+- [x] 実ファイル移動と挙動変更が混ざっていない
+- [x] `_common/` に安易に集約しすぎていない
+- [x] import path修正が妥当である
 - [ ] active側に何を残すかが明確である
 - [ ] done側に何を送るかが明確である
 - [ ] 完了済み履歴を消さない構造になっている

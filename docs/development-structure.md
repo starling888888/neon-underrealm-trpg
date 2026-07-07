@@ -98,11 +98,13 @@ scripts/_common/
 src/components/layout/
 src/components/seo/
 src/components/data/
-src/components/common/
+src/components/_common/
 src/components/search/
 ```
 
 新しいComponent分類は、安定した責務がある場合だけ作る。
+
+`src/components/_common/` は、特定の機能領域へ属さず複数領域から参照される小さな共通Componentだけを置く。
 
 ページ固有本文を汎用Componentに混ぜない。
 

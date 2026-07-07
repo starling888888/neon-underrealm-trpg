@@ -53,7 +53,7 @@ Componentに渡す値は、本文から読み取れる短いpropsに留めます
 最小確認用の例は以下です。
 
 ```mdx
-import MdxExample from "../components/MdxExample.astro";
+import MdxExample from "../components/_common/MdxExample.astro";
 
 <MdxExample label="Astro ComponentをMDX内から表示しています。" />
 ```
@@ -71,7 +71,7 @@ import MdxExample from "../components/MdxExample.astro";
 base path補正や将来の外部リンク判定など、実装側の処理が必要なリンクは、MDX本文に `withBase()` を直接書かず、内部リンクComponentへ寄せます。
 
 ```mdx
-import InternalLink from "../components/InternalLink.astro";
+import InternalLink from "../components/_common/InternalLink.astro";
 
 <InternalLink href="/rules/battle/">戦闘ルール</InternalLink>
 ```

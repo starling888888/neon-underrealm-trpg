@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import {
   createHeadingId,
   processPageTocHtml,
-} from "../../scripts/lib/page-toc-postprocess";
+} from "../../scripts/postprocess-page-toc/lib";
 
 const html = String.raw;
 
