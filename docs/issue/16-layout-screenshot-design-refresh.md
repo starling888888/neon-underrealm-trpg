@@ -456,6 +456,7 @@ docs/design/site-layout/
 * [ ] `1024px` 未満でPC右PageTocが常設表示されない
 * [ ] mobile幅でPC左SiteMenuが常設表示されない
 * [ ] mobile幅でMobileMenuとMobilePageTocが視覚的に混同されない
+* [ ] mobile / tablet幅でH1とMobilePageToc triggerが上部にsticky表示され、スクロール後も目次が画面外へ消えない
 * [ ] ページ全体に意図しない横スクロールが発生していない
 * [ ] tap target / focus outlineが破綻していない
 * [ ] `docs/design/site-layout/notes.md` を作成または更新した

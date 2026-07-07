@@ -45,7 +45,7 @@
 ## Design direction
 
 - visual direction: 白寄り本文面、暗めHeader / Footer、青緑accentを維持し、Phase 2で実装したレイアウト / ナビゲーションを横断的な完成状態として扱う。
-- layout direction: desktopではHeader、Footer、PC左SiteMenu、中央本文、PC右PageTocを組み合わせる。tablet / mobileではPC右PageTocを常設表示せず、MobilePageTocを本文H1横から開ける構造にする。mobileではPC左SiteMenuを常設表示せず、Header左のMobileMenu drawerから開く。
+- layout direction: desktopではHeader、Footer、PC左SiteMenu、中央本文、PC右PageTocを組み合わせる。tablet / mobileではPC右PageTocを常設表示せず、MobilePageTocを本文H1横から開ける構造にする。本文H1とMobilePageToc triggerを含むheading rowは上部にsticky表示し、スクロール後も目次へ戻れるようにする。mobileではPC左SiteMenuを常設表示せず、Header左のMobileMenu drawerから開く。
 - typography direction: system font、letter-spacing 0、本文可読性を維持する。SiteMenuとPageTocは本文より小さく、役割差が分かる密度にする。
 - color / accent usage: 青緑accentはリンク、focus、現在ページハイライトなど操作対象と状態表示に限定する。過剰な発光、マゼンタ主体、hero的な大面積装飾は使わない。
 
@@ -83,6 +83,7 @@
 - tablet / mobileではPC右PageTocが常設表示されず、MobilePageTocが本文H1横に表示される。
 - mobileではPC左SiteMenuが常設表示されず、MobileMenu drawerから開ける。
 - MobileMenu open stateとMobilePageToc open stateが視覚的に混同されない。
+- スクロール後も本文H1とMobilePageToc triggerが上部に残り、目次triggerが画面外へ消えない。
 - 現在ページハイライトはSiteMenu上で識別でき、hover / focus / disclosure open stateと混同されない。
 - `/` では不要なPageToc / MobilePageTocや空のTOC枠が表示されない。
 - 未実装の `/release-notes` / `/404` をこのdesign targetで作成または描き足していない。
@@ -105,6 +106,7 @@
 - `base-layout` の左右レールplaceholderではなく、実装済みのSiteMenu / PageTocを含む。
 - `site-menu` / `mobile-menu` の初期draftでは扱わなかった現在ページハイライトとancestor表示を、`current-menu-highlight` 実装後の完成状態として含む。
 - `mobile-page-toc` のtrigger可視ラベルは現行実装の `目次` に寄せる。
+- `mobile-page-toc` のH1横triggerは、スクロール時にH1とともに上部sticky表示される現行実装に寄せる。
 - `page-toc` の `/release-notes` / `/404` 非表示状態は、未実装routeのためこのdesign targetでは新規画像化しない。
 - 正本画像はviewport cropではなくfullPage screenshotを含む。コンテンツ全体像と縦方向の破綻確認を優先するためである。
 

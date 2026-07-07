@@ -25,6 +25,7 @@ test("site layout mobile @site-layout-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.mdxTest);
   await expect(page.locator("body")).toBeVisible();
+  await expect(page.locator("[data-mobile-page-heading]")).toBeVisible();
   await page.screenshot({
     fullPage: true,
     path: `${visualOutputDir}/site-layout-mobile.png`,
@@ -49,11 +50,33 @@ test("site layout mobile page toc open @site-layout-mobile-page-toc-open", async
 }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.mdxTest);
+  await expect(page.locator("[data-mobile-page-heading]")).toBeVisible();
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toBeVisible();
   await page.screenshot({
     fullPage: true,
     path: `${visualOutputDir}/site-layout-mobile-page-toc-open.png`,
+  });
+});
+
+test("site layout mobile page toc sticky @site-layout-mobile-page-toc-sticky", async ({
+  page,
+}) => {
+  await page.setViewportSize(visualViewports.mobile);
+  await page.goto(visualRoutes.mdxTest);
+  const heading = page.locator("[data-mobile-page-heading]");
+
+  await expect(heading).toBeVisible();
+  await page.evaluate(() => window.scrollTo(0, 520));
+  await expect
+    .poll(async () => {
+      const box = await heading.boundingBox();
+      return Math.round(box?.y ?? Number.NaN);
+    })
+    .toBe(0);
+  await page.screenshot({
+    fullPage: false,
+    path: `${visualOutputDir}/site-layout-mobile-page-toc-sticky.png`,
   });
 });
 
