@@ -62,7 +62,10 @@ const panelId = "mobile-page-toc-panel";
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: start;
       gap: var(--space-3);
+      background: var(--color-surface);
+      margin-block-start: calc(var(--space-3) * -1);
       margin-block-end: var(--space-8);
+      padding-block-start: var(--space-3);
     }
 
     :global(.prose .mobile-page-heading > h1) {
@@ -75,7 +78,7 @@ const panelId = "mobile-page-toc-panel";
       z-index: 5;
       min-width: 0;
       display: block;
-      margin-block-start: 0.15rem;
+      margin-block-start: -0.25rem;
     }
 
     .mobile-page-toc-trigger {
