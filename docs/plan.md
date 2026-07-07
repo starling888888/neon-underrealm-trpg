@@ -4,6 +4,8 @@
 
 完了済み計画を退避する場合は、削除せず `docs/plan-done.md` へ移す。退避は、merge後のtracking更新またはユーザーの明示指示で行う。生成AIエージェントは、ユーザー指示なしに完了チェックやdone退避を行わない。
 
+PR merge後の計画更新は `.agents/skills/post-merge-plan-update/SKILL.md` に従う。
+
 ## 前提
 
 * 初期開発対象は静的ルールサイト本体とする。

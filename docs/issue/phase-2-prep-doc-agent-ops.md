@@ -240,12 +240,12 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] `scripts/`、`src/components/`、`src/lib/`、`src/scripts/` が開発構造方針に沿って整理されている
 - [x] `docs/plan.md`、`docs/TODO.md`、`docs/agent-failure-log.md` を未実行・未対応中心にする方針が定義されている
 - [x] plan / TODO / failure-log の完了済み退避先が定義されている
-- [ ] `post-merge-plan-update` に、merge後のplan / TODO / issue完了移動ルールが追加されている
-- [ ] issue移動時のphase判定、cross-phase判定、対象外ファイル、移動条件が明確になっている
-- [ ] phaseに属する完了済みissueと、phaseに閉じない横断整備issueの退避先が分離されている
+- [x] `post-merge-plan-update` に、merge後のplan / TODO / issue完了移動ルールが追加されている
+- [x] issue移動時のphase判定、cross-phase判定、対象外ファイル、移動条件が明確になっている
+- [x] phaseに属する完了済みissueと、phaseに閉じない横断整備issueの退避先が分離されている
 - [x] `docs/issue/done/phase-N/` と `docs/issue/done/cross-phase/` の使い分けが明記されている
-- [ ] 移動したissueへの既存内部リンクが更新されている
-- [ ] 移動前パスを参照する記述が残る場合、過去記録として有効な理由が注記されている
+- [x] 移動したissueへの既存内部リンク更新方針が明記されている
+- [x] 移動前パスを参照する記述が残る場合の過去記録注記方針が明記されている
 - [ ] `docs/agent-failure-log.md` の記録対象、source種別、同種失敗3回以上時の通知ルールが明確化されている
 - [ ] `review-to-issue` に、レビュー指摘取り込み時のfailure-log記録運用が追加されている
 - [ ] 通常の実装レビュー指摘と、agent failure logへ記録すべき手順逸脱・判断ミス・検証不足・未承認作業などの区別が説明されている
@@ -326,9 +326,9 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] done側に何を送るかが明確である
 - [x] 完了済み履歴を消さない構造になっている
 - [x] `docs/issue/done/phase-N/` と `docs/issue/done/cross-phase/` の分類が曖昧でない
-- [ ] phaseに属さない横断整備issueを `phase-N/` に押し込んでいない
-- [ ] issue移動後の内部リンクが更新されている
-- [ ] 移動前パスを残す場合は、過去記録として有効な理由が注記されている
+- [x] phaseに属さない横断整備issueを `phase-N/` に押し込まない方針になっている
+- [x] issue移動後の内部リンク更新方針が明記されている
+- [x] 移動前パスを残す場合の過去記録注記方針が明記されている
 - [x] failure-logの退避条件がplan/TODOと混ざっていない
 - [ ] failure-log運用変更は、通常のレビュー指摘をすべてfailure扱いする内容になっていない
 - [ ] review-to-issueの停止地点を壊していない

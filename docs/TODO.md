@@ -6,6 +6,8 @@
 
 TODOの退避は、対応内容がmerge済み、またはユーザーが完了扱いを承認した場合に限る。current issueで対応すべき修正をTODOへ逃がしてはならない。
 
+PR merge後のTODO更新は `.agents/skills/post-merge-plan-update/SKILL.md` に従う。
+
 `docs/TODO.md` は、`review-to-issue` workflowで以下のような項目を受ける。
 
 - 現在のissue範囲を超える指摘
