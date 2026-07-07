@@ -163,6 +163,16 @@ Move an issue file only when all of these are true:
 - the issue is not the current in-progress tracking issue
 - the destination classification is clear
 
+Before deciding whether an issue is complete, inspect its `完了条件` and `チェックポイント`.
+
+If the latest merged issue still has unchecked items, update those checkboxes during post-merge only when the item can be confirmed from the merged `main` state, validation results, merged PR record, or explicit user confirmation.
+
+If older active issue files have unchecked items because the check update was missed earlier, you may update those checkboxes during post-merge when the current repository state or explicit user confirmation proves the item is complete.
+
+Do not invent completion evidence. Do not mark an item complete merely because the related plan item is checked.
+
+If an unchecked item cannot be confirmed during post-merge, leave it unchecked, report it, and do not move that issue file to `docs/issue/done/`.
+
 Destination rules:
 
 - Use `docs/issue/done/phase-0/` for Phase 0 issue tasks.
@@ -175,7 +185,7 @@ Do not move:
 - unfinished issues
 - the current issue still being worked on
 - issue drafts that were not validated locally
-- issue files with unchecked completion criteria or checkpoints unless the user explicitly confirms they are complete
+- issue files with unchecked completion criteria or checkpoints unless the items were confirmed and checked during this post-merge update, or the user explicitly confirms they are complete
 
 When moving an issue file:
 

@@ -31,6 +31,7 @@
 - 実装を開始してよいのは、ユーザーがissue内容を明示承認した後だけである。
 - 開発タスクは専用branchで行う。branch名は原則 `NN-slug` または `NN-M-slug` とする。承認済みissueが別名を明示する場合はそれに従う。
 - 実装範囲は現在の `docs/issue/*.md` に従う。範囲外作業は勝手に混ぜない。
+- 実装中は、完了条件・チェックポイントを実際にローカル確認した時点で現在のissueへチェックを入れる。未確認項目や人間確認が必要な項目は未チェックのまま残す。
 - `docs/plan.md` のチェックボックスは、人間レビュー後のユーザー指示なしに完了扱いしない。
 - UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign参照を確認する。必要なdesign画像がない場合は `design-image-generation` に切り出す。
 - Visual Review screenshotは実装結果であり、design正本ではない。actual screenshotを直接 `docs/design/` にコピーしない。
@@ -145,7 +146,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - レビュー指摘取り込み: `review-to-issue` を使い、`.tmp/*.md` をローカルSSoTと照合する。`.tmp/` は共有成果物ではないため、必要な情報だけ正式docsまたは報告へ反映する。
 - PRレビュー草案作成: `pr-review-draft` を使う。草案はローカル検証済みレビューではない。
 - PR作成: `create-pr` を使う。未チェック項目が残る場合はユーザー承認なしにPRを作らない。
-- merge後tracking更新: `post-merge-plan-update` を使う。
+- merge後tracking更新: `post-merge-plan-update` を使う。merge後に最新issueまたは過去issueの未チェック項目を確認できた場合は、チェックを入れてからdone移動可否を判定する。
 - ファイル移動や構造整理: `docs/development-structure.md` と `.agents/rules/file-structure.md` を参照する。
 - MCP / Context7利用: `.agents/rules/mcp-context7.md` を参照する。
 

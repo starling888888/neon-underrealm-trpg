@@ -62,6 +62,18 @@ Read the matching issue file before PR creation.
 
 Check all `完了条件` and `チェックポイント` checkboxes relevant to the implemented task or group.
 
+Normal implementation work should update these checkboxes during the work, when each item is actually verified.
+
+At PR creation time, do not perform new implementation work just to satisfy unchecked items.
+
+At PR creation time, you may only mark an unchecked item complete when all of these are true:
+
+- the required work is already present in the current branch
+- the verification evidence is already available in local files, command output, or an explicit user confirmation
+- marking the item does not require new code, design, workflow, or documentation changes beyond the checkbox update itself
+
+Leave items unchecked when they still need human visual confirmation, external service confirmation, post-merge confirmation, or work outside the current branch.
+
 If unchecked items remain:
 
 1. Report the unchecked items.
@@ -140,4 +152,3 @@ Do not:
 - resolve or reply to review comments
 - run `review-to-issue`
 - edit unrelated tracking files
-
