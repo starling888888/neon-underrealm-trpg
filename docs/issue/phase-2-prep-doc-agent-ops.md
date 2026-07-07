@@ -225,12 +225,12 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] `.agents/rules/*` はagent-facing fileとしてcontrolled English化の対象に含めてよいことが明確になっている
 - [x] `AGENTS.md` にしかなかった内容が削除されず、適切な `.agents/rules/`、`.agents/skills/`、またはdocsへ転記されている
 - [x] `AGENTS.md` から詳細へ辿れるが、詳細を常時読む要求になっていない
-- [ ] `docs/requirements.md` が要件索引として短縮されている
-- [ ] 詳細要件が `docs/requirements/` 配下へ作業時の参照単位で分割されている
-- [ ] requirements分割が章番号ベースではなく、作業種別ごとの参照単位になっている
-- [ ] `docs/requirements.md` に要件ファイル一覧と参照場面が記載されている
-- [ ] `docs/requirements.md` に作業種別ごとの参照先が記載されている
-- [ ] 推奨ディレクトリ構成、`.gitignore`、package scripts案が要件本文から分離されている
+- [x] `docs/requirements.md` が要件索引として短縮されている
+- [x] 詳細要件が `docs/requirements/` 配下へ作業時の参照単位で分割されている
+- [x] requirements分割が章番号ベースではなく、作業種別ごとの参照単位になっている
+- [x] `docs/requirements.md` に要件ファイル一覧と参照場面が記載されている
+- [x] `docs/requirements.md` に作業種別ごとの参照先が記載されている
+- [x] 推奨ディレクトリ構成、`.gitignore`、package scripts案が要件本文から分離されている
 - [x] 開発構造方針が `docs/development-structure.md` に整理されている
 - [x] `scripts/` のプログラム単位分割方針が明記されている
 - [x] `scripts/<program>/main.ts` と `scripts/<program>/lib.ts` の責務分離が明記されている
@@ -308,12 +308,12 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] AGENTSから削った制約の参照先が明記されている
 - [x] AGENTSにしかなかった安全制約を削除していない
 - [x] 分離後に全ファイルを常時読む運用になっていない
-- [ ] `docs/requirements.md` が単なるリンク集にならず、文書の位置づけと参照ルールを保持している
-- [ ] requirements分割により同一要件が複数ファイルへ重複していない
-- [ ] `docs/out-of-scope.md` との役割分担が明確である
-- [ ] `docs/conversion/*` との役割分担が明確である
-- [ ] 推奨ディレクトリ構成やpackage scripts案を要件本文に残していない
-- [ ] ページごとの過剰な細分化をしていない
+- [x] `docs/requirements.md` が単なるリンク集にならず、文書の位置づけと参照ルールを保持している
+- [x] requirements分割により同一要件が複数ファイルへ重複していない
+- [x] `docs/out-of-scope.md` との役割分担が明確である
+- [x] `docs/conversion/*` との役割分担が明確である
+- [x] 推奨ディレクトリ構成やpackage scripts案を要件本文に残していない
+- [x] ページごとの過剰な細分化をしていない
 - [x] 作業種別ごとに読むべきファイルが判断できる
 - [x] agentのtoken消費削減という目的に反して、全ファイル常時参照を要求していない
 - [x] `docs/development-structure.md` を正本として参照できる
