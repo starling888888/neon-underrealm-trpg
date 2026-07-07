@@ -2,6 +2,10 @@
 
 このファイルは、現在のissueでは対応しないが、将来対応すべきレビュー指摘・改善候補を一時的に追跡するための一覧である。
 
+このファイルは未対応TODOを中心に管理するactive TODOである。完了済みTODOを退避する場合は、削除せず `docs/TODO-done.md` へ移す。
+
+TODOの退避は、対応内容がmerge済み、またはユーザーが完了扱いを承認した場合に限る。current issueで対応すべき修正をTODOへ逃がしてはならない。
+
 `docs/TODO.md` は、`review-to-issue` workflowで以下のような項目を受ける。
 
 - 現在のissue範囲を超える指摘

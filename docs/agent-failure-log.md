@@ -4,6 +4,10 @@
 
 現時点では、このファイルに対応する専用SKILL定義は作成しない。
 
+このファイルは未反映・未確認failureを中心に管理するactive failure logである。対応済みfailureを退避する場合は、削除せず `docs/agent-failure-log-done.md` へ移す。
+
+failureのdone退避は、恒久対応が完了し、反映先が記録され、ユーザー確認を受けた場合に限る。plan / TODOの完了退避とは条件を混ぜない。
+
 ---
 
 ## 目的
@@ -40,6 +44,7 @@
 - 反映済みになった項目は、削除せず「恒久対応」欄へ反映先を追記する。
 - current issueで扱うべき修正を、このファイルへ逃がさない。
 - 通常の後続開発TODOは `docs/TODO.md` で管理する。
+- 対応済みfailureは、ユーザー確認後に `docs/agent-failure-log-done.md` へ退避できる。
 
 ---
 
