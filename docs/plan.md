@@ -745,6 +745,17 @@
   * [ ] 初期公開前の最終build確認
   * [ ] 初期スコープ外機能が混入していないことを確認
 
+* [ ] `54-ci-non-main-branches` — main以外でdeployなしCIを回すためのテスト / CIを整備する
+
+  * [ ] branch / pull_request向けのCI workflowをdeploy workflowと分離して作成する
+  * [ ] `npm ci` を実行する
+  * [ ] `npm run check` を実行する
+  * [ ] `npm run build` を実行する
+  * [ ] 必要なtestを実行する
+  * [ ] GitHub Pages deployは行わない
+  * [ ] main以外のbranch / PRで、deployなしに品質確認できることを確認する
+  * [ ] docs-only更新、AGENTS / SKILL更新のみの場合にCIを走らせるかどうかの方針を明記する
+
 ---
 
 ## 初期スコープ外として維持するもの

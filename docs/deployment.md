@@ -1,8 +1,8 @@
 # 公開手順
 
-このドキュメントは、ネオン・アンダーレルムTRPG ルールサイトの公開方針と、将来のGitHub Pages公開手順を整理するための初期版です。
+このドキュメントは、ネオン・アンダーレルムTRPG ルールサイトの公開方針と、GitHub Pages公開手順を整理するための初期版です。
 
-現時点では、GitHub Actionsによる自動デプロイ設定はまだ実装していません。
+GitHub Actionsによる基本デプロイは `.github/workflows/deploy.yml` で管理します。
 
 ## 公開方針
 
@@ -33,18 +33,30 @@ npm run build
 npm run preview
 ```
 
-## 将来のGitHub Pages公開手順
+## GitHub Pages公開手順
 
-GitHub Pages公開は後続タスクで設定します。
+GitHub Pages公開はGitHub Actionsで実行します。
 
-想定する流れは以下です。
+workflowの基本処理は以下です。
 
-1. GitHub Actions workflowを追加する。
-2. `npm ci` を実行する。
-3. `npm run check` を実行する。
-4. `npm run build` を実行する。
-5. 必要になった段階で検索インデックス生成を追加する。
-6. `dist/` をGitHub Pagesへデプロイする。
+1. `npm ci` を実行する。
+2. `npm run check` を実行する。
+3. `npm run build` を実行する。
+4. `dist/` をGitHub Pages artifactとしてアップロードする。
+5. GitHub Pagesへデプロイする。
+
+この段階では検索インデックス生成を含めません。
+
+workflowは `main` へのpushで実行します。
+
+手動実行用に `workflow_dispatch` も設定しています。
+
+ドキュメント更新、AGENTS / SKILL更新、README更新のみではデプロイが走らないよう、以下を `paths-ignore` に含めます。
+
+- `docs/**`
+- `.agents/**`
+- `AGENTS.md`
+- `README.md`
 
 ## サブパス公開
 
@@ -92,9 +104,16 @@ Excel本体は `.raw/` 配下でローカル管理し、Git管理しません。
 
 CI/CDではExcel変換を必須工程にしません。ビルドでは、Git管理済みの `data/generated/` 配下のJSONを参照する方針です。
 
+## favicon
+
+公開サイトのfaviconは、ユーザー提供の `public/favicon.ico` を使用します。
+
+実装側ではfaviconの生成、変換、再デザインを行いません。
+
+Layoutでは `withBase("/favicon.ico")` を使って参照し、GitHub Pagesのサブパス配下でも解決できるようにします。
+
 ## まだ実装していないもの
 
-- GitHub Actions workflow
 - Pagefind検索インデックス生成
 - OGP画像の公開URL調整
 - 本番公開環境でのリンク確認

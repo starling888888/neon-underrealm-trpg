@@ -15,6 +15,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
+  - source: `17-github-actions-deploy-basic` issue review
+  - classification: follow-up
+  - plan: `docs/plan.md` の `54-ci-non-main-branches`
+  - handling plan: GitHub Pages deploy workflowとは分離し、main以外のbranch / pull requestで `npm ci`、`npm run check`、`npm run build`、必要なtestを実行するCIを整備する。deployは行わず、GitHub Pages環境を更新しない。docs-only更新、AGENTS / SKILL更新のみの場合の扱いもCI方針として明確化する。
+
 - [ ] 生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する
   - source: `11-site-menu` 実装中のユーザー判断
   - classification: follow-up
