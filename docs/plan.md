@@ -172,14 +172,14 @@
   * [x] PC左サイトメニューとスマホdrawer内サイトメニューで同じ初期展開ルールを使う
   * [x] `aria-expanded` と `hidden` の初期状態を展開状態と一致させる
 
-* [ ] `16-layout-screenshot-design-refresh` — レイアウト一式を画面キャプチャベースのdesignに更新する
+* [x] `16-layout-screenshot-design-refresh` — レイアウト一式を画面キャプチャベースのdesignに更新する
 
-  * [ ] 実装済みレイアウト一式の画面キャプチャを取得する
-  * [ ] PC、タブレット、スマホ幅の代表スクリーンショットを取得する
-  * [ ] Header / Footer / SiteMenu / MobileMenu / PageToc / MobilePageToc / 現在ページハイライトの状態を確認する
-  * [ ] 画面キャプチャをもとにdesign正本を更新する
-  * [ ] design正本と実装の差分、未解決事項、後続で調整すべきUI課題を記録する
-  * [ ] このタスクでは、design更新を主目的とし、追加の機能実装は行わない
+  * [x] 実装済みレイアウト一式の画面キャプチャを取得する
+  * [x] PC、タブレット、スマホ幅の代表スクリーンショットを取得する
+  * [x] Header / Footer / SiteMenu / MobileMenu / PageToc / MobilePageToc / 現在ページハイライトの状態を確認する
+  * [x] 画面キャプチャをもとにdesign正本を更新する
+  * [x] design正本と実装の差分、未解決事項、後続で調整すべきUI課題を記録する
+  * [x] このタスクでは、design更新を主目的とし、追加の機能実装は行わない
 
 * [ ] `17-github-actions-deploy-basic` — GitHub Actionsによる基本デプロイを追加する
 
