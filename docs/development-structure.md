@@ -2,7 +2,7 @@
 
 このドキュメントは、実装作業で参照するリポジトリ構造の方針を定義する。
 
-要件そのものは `docs/requirements.md` および将来分割される `docs/requirements/*` に置く。このファイルでは、実装ファイル、スクリプト、Component、補助ドキュメントの配置方針を扱う。
+要件そのものは `docs/requirements.md` および `docs/requirements/*` に置く。このファイルでは、実装ファイル、スクリプト、Component、補助ドキュメントの配置方針を扱う。
 
 ## 目的
 
@@ -31,6 +31,29 @@ src/pages/               Astro / MDX route
 src/scripts/             ブラウザ側TypeScript controller
 src/styles/              global CSS、tokens、prose styles
 ```
+
+## Git管理しないファイル
+
+Git管理しないファイルは `.gitignore` を正本とする。
+
+初期実装では、少なくとも以下をGit管理しない。
+
+```text
+node_modules/
+dist/
+.astro/
+.raw/
+.tmp/
+test-results/
+playwright-report/
+*.xlsx
+*.xlsm
+~$*.xlsx
+```
+
+`data/generated/` 配下のJSONは、Excelから変換された静的サイト用データとしてGit管理する。
+
+`.raw/`、`.tmp/`、Visual Review出力、Excel本体をGit管理しない理由や運用詳細は `AGENTS.md` を参照する。
 
 ## Docs
 
@@ -109,6 +132,25 @@ src/lib/utils/
 menu disclosure、mobile menu、page TOCなど、挙動単位で分ける。
 
 小さな静的サイト向けinteractionのために、framework規模のclient state managementを追加しない。
+
+## Package Scripts
+
+実行可能なnpm scriptは `package.json` を正本とする。
+
+script名は、作業者が目的を判断しやすい名前にする。
+
+初期実装で想定する基本操作は以下。
+
+- `npm run dev`: ローカル開発サーバーを起動する
+- `npm run build`: 静的サイトをビルドする
+- `npm run preview`: ビルド済みサイトを確認する
+- `npm run check`: Astro型検査とlint / format確認を実行する
+- `npm run test`: Node.jsテストを実行する
+- `npm run visual:capture`: Visual Review用のPlaywright captureを実行する
+
+Excel変換、検索index生成、データ検証などのscriptは、該当機能が実装されるtaskで追加する。
+
+package scriptを追加または変更する場合は、対象issueの範囲内で理由を記録する。
 
 ## ファイル移動
 

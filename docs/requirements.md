@@ -60,4 +60,4 @@
 
 詳細要件は章番号ではなく、作業時に必要になる参照単位で分ける。同じ要件を複数ファイルへ複製しない。別ファイルの要件が必要な場合は、索引で参照先を示す。
 
-旧 `docs/requirements.md` に含まれていた推奨ディレクトリ構成、`.gitignore` 方針、package scripts案は、要件本文ではなく開発構造・運用方針として扱う。作業時は `docs/development-structure.md`、`AGENTS.md`、および該当するpackage scriptsを確認する。
+推奨ディレクトリ構成、`.gitignore` 方針、package scripts案は、要件本文ではなく開発構造・運用方針として扱う。作業時は `docs/development-structure.md`、`AGENTS.md`、および `package.json` を確認する。

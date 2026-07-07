@@ -10,6 +10,10 @@ Do not move files or change import paths unless the current issue allows it.
 
 Do not mix behavior changes with file moves.
 
+Use `.gitignore` as the source for untracked local inputs, generated reports, and temporary files.
+
+Use `package.json` as the source for available npm scripts.
+
 ## Documentation
 
 Long documents should become indexes when they start mixing unrelated reference areas.
@@ -69,4 +73,3 @@ Data pages should access generated JSON through `src/lib/data/` instead of scatt
 Client-side scripts belong under `src/scripts/`.
 
 Split scripts by behavior area. Keep DOM controllers small and dependency-light.
-
