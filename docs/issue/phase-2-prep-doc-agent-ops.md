@@ -219,10 +219,10 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] 最重要ルールの理由が `.agents/rules/core-rules-rationale.md` へ分離されている
 - [ ] `AGENTS.md` に可変的な個別issue、plan、TODO、作業依存関係を置かない方針が明記されている
 - [ ] `AGENTS.md` を更新してよい場合と、更新すべきでない場合が明記されている
-- [ ] SKILL一覧と使用条件が `.agents/skills/README.md` に分離されている
-- [ ] rules一覧と参照場面が `.agents/rules/README.md` に分離されている
-- [ ] `.agents/rules/` と `.agents/skills/` の役割分担が明確になっている
-- [ ] `.agents/rules/*` はagent-facing fileとしてcontrolled English化の対象に含めてよいことが明確になっている
+- [x] SKILL一覧と使用条件が `.agents/skills/README.md` に分離されている
+- [x] rules一覧と参照場面が `.agents/rules/README.md` に分離されている
+- [x] `.agents/rules/` と `.agents/skills/` の役割分担が明確になっている
+- [x] `.agents/rules/*` はagent-facing fileとしてcontrolled English化の対象に含めてよいことが明確になっている
 - [ ] `AGENTS.md` にしかなかった内容が削除されず、適切な `.agents/rules/`、`.agents/skills/`、またはdocsへ転記されている
 - [ ] `AGENTS.md` から詳細へ辿れるが、詳細を常時読む要求になっていない
 - [ ] `docs/requirements.md` が要件索引として短縮されている
@@ -231,12 +231,12 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] `docs/requirements.md` に要件ファイル一覧と参照場面が記載されている
 - [ ] `docs/requirements.md` に作業種別ごとの参照先が記載されている
 - [ ] 推奨ディレクトリ構成、`.gitignore`、package scripts案が要件本文から分離されている
-- [ ] 開発構造方針が `docs/development-structure.md` に整理されている
-- [ ] `scripts/` のプログラム単位分割方針が明記されている
-- [ ] `scripts/<program>/main.ts` と `scripts/<program>/lib.ts` の責務分離が明記されている
-- [ ] `lib.ts` 長大化時に対象プログラム配下の `lib/` ディレクトリへ分割する方針が明記されている
-- [ ] 複数プログラムから参照するモジュールを `scripts/_common/` に置く方針が明記されている
-- [ ] `src/components`、`src/lib`、`src/scripts` も目的ごとにディレクトリを切る方針が明記されている
+- [x] 開発構造方針が `docs/development-structure.md` に整理されている
+- [x] `scripts/` のプログラム単位分割方針が明記されている
+- [x] `scripts/<program>/main.ts` と `scripts/<program>/lib.ts` の責務分離が明記されている
+- [x] `lib.ts` 長大化時に対象プログラム配下の `lib/` ディレクトリへ分割する方針が明記されている
+- [x] 複数プログラムから参照するモジュールを `scripts/_common/` に置く方針が明記されている
+- [x] `src/components`、`src/lib`、`src/scripts` も目的ごとにディレクトリを切る方針が明記されている
 - [ ] `scripts/`、`src/components/`、`src/lib/`、`src/scripts/` が開発構造方針に沿って整理されている
 - [ ] `docs/plan.md`、`docs/TODO.md`、`docs/agent-failure-log.md` を未実行・未対応中心にする方針が定義されている
 - [ ] plan / TODO / failure-log の完了済み退避先が定義されている
@@ -300,8 +300,8 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] `AGENTS.md` の最重要停止条件を外部ファイルに追い出していない
 - [ ] `AGENTS.md` が単なるリンク集になっていない
 - [ ] `AGENTS.md` が作業ごとに更新される可変リンク集になっていない
-- [ ] `.agents/skills/README.md` にSKILL一覧と使用条件がある
-- [ ] `.agents/rules/README.md` にrules一覧と参照場面がある
+- [x] `.agents/skills/README.md` にSKILL一覧と使用条件がある
+- [x] `.agents/rules/README.md` にrules一覧と参照場面がある
 - [ ] `.agents/skills/` と `.agents/rules/` の役割が混ざっていない
 - [ ] `.agents/rules/*` をcontrolled English化対象から誤って除外していない
 - [ ] TRPG本文・用語・利用者向け説明をcontrolled English化対象に含めていない
@@ -316,8 +316,8 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] ページごとの過剰な細分化をしていない
 - [ ] 作業種別ごとに読むべきファイルが判断できる
 - [ ] agentのtoken消費削減という目的に反して、全ファイル常時参照を要求していない
-- [ ] `docs/development-structure.md` を正本として参照できる
-- [ ] `.agents/rules/file-structure.md` が重複しすぎず、参照方針として機能している
+- [x] `docs/development-structure.md` を正本として参照できる
+- [x] `.agents/rules/file-structure.md` が重複しすぎず、参照方針として機能している
 - [ ] scripts分割方針が今後の実装者にとって明確である
 - [ ] 実ファイル移動と挙動変更が混ざっていない
 - [ ] `_common/` に安易に集約しすぎていない
@@ -1507,16 +1507,14 @@ chore: validate phase 2 preparation docs
 - Current local `scripts/`, `src/components/`, `src/lib/`, and `src/scripts/` files exist and match the broad structure this issue proposes to reorganize.
 - This task is not a UI, CSS, layout, page, or Component implementation task, so no new design target or design image is required during issue-first preparation.
 
-### Locally absent and expected to be created or defined by this issue
+### Locally absent during issue-first preparation and expected to be created or defined by this issue
 
 - `.github/ISSUE_TEMPLATE/` does not exist yet.
 - `.github/pull_request_template.md` does not exist yet.
 - `.github/PULL_REQUEST_TEMPLATE.md` does not exist yet.
-- `.agents/rules/` does not exist yet.
 - `.agents/skills/create-pr/SKILL.md` does not exist yet.
 - `.agents/skills/failure-log-audit/SKILL.md` does not exist yet.
 - `docs/requirements/` does not exist yet.
-- `docs/development-structure.md` does not exist yet.
 - `docs/plan-done.md`, `docs/TODO-done.md`, and `docs/agent-failure-log-done.md` do not exist yet.
 - `docs/issue/done/` does not exist yet.
 
