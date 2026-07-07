@@ -422,84 +422,84 @@ docs/design/site-layout/
 
 ## 完了条件
 
-* [ ] local branchが `16-layout-screenshot-design-refresh` である
-* [ ] `docs/issue/16-layout-screenshot-design-refresh.md` が作成または検証されている
-* [ ] `15-current-menu-highlight` が完了済みであることをローカルで確認した
-* [ ] `docs/TODO.md` にこのIssueへ直接取り込むべき未対応項目がないことを確認した
-* [ ] 既存design targetを確認した
-* [ ] `docs/design/current-menu-highlight/` が存在する場合は参照した
-* [ ] 代表routeを決定した
-* [ ] `/release-notes` と `/404` は未実装routeとして、このIssueでは確認対象外であることを記録した
-* [ ] `docs/TODO.md` の現在地ハイライト目視確認用ダミーMDXページTODOとの関係を記録した
-* [ ] 必要な画面 / 状態ごとに個別実行できるPlaywright screenshot testを追加した
-* [ ] host / base pathは設定ファイルに集約し、test case側は個別pathだけを明記している
-* [ ] Playwright標準の `use.baseURL`、`--grep`、test file指定、必要に応じた `--project` を優先している
-* [ ] `process.argv` の独自parseで対象pathやviewportを切り替える仕組みにしていない
-* [ ] desktop `1440x1200` のスクリーンショットを取得した
-* [ ] tablet `820x1180` のスクリーンショットを取得した
-* [ ] mobile `390x900` のスクリーンショットを取得した
-* [ ] mobile menu open stateのスクリーンショットを取得した
-* [ ] mobile page toc open stateのスクリーンショットを取得した
-* [ ] design正本画像はfullPage screenshotとして作成され、コンテンツ全体像を確認できる
-* [ ] Headerが既存design方針と矛盾していない
-* [ ] Footerが既存design方針と矛盾していない
-* [ ] PC SiteMenuが既存design方針と矛盾していない
-* [ ] MobileMenuが既存design方針と矛盾していない
-* [ ] PC PageTocが既存design方針と矛盾していない
-* [ ] MobilePageTocが既存design方針と矛盾していない
-* [ ] 現在ページハイライトがSiteMenu上で視覚的に識別できる
-* [ ] 現在ページハイライトがhover / focus / disclosure open stateと混同されない
-* [ ] 現在ページに `aria-current="page"` または同等の属性がある
-* [ ] 現在ページに対応する親カテゴリが展開または強調されている
-* [ ] `/` で不要なPageToc / MobilePageTocが表示されない
-* [ ] `/release-notes` と `/404` のPageToc / MobilePageToc非表示確認は、該当ページ実装後の後続確認として記録した
-* [ ] `1024px` 未満でPC右PageTocが常設表示されない
-* [ ] mobile幅でPC左SiteMenuが常設表示されない
-* [ ] mobile幅でMobileMenuとMobilePageTocが視覚的に混同されない
-* [ ] mobile / tablet幅でH1とMobilePageToc triggerが上部にsticky表示され、スクロール後も目次が画面外へ消えない
-* [ ] ページ全体に意図しない横スクロールが発生していない
-* [ ] tap target / focus outlineが破綻していない
-* [ ] `docs/design/site-layout/notes.md` を作成または更新した
-* [ ] `docs/design/site-layout/design-desktop.png` を作成または更新した
-* [ ] `docs/design/site-layout/design-tablet.png` を作成または更新した
-* [ ] `docs/design/site-layout/design-mobile.png` を作成または更新した
-* [ ] `docs/design/site-layout/design-mobile-menu-open.png` を作成または更新した
-* [ ] `docs/design/site-layout/design-mobile-page-toc-open.png` を作成または更新した
-* [ ] 既存designとの差分を `notes.md` に記録した
-* [ ] 正本化理由を `notes.md` に記録した
-* [ ] 未解決事項を `notes.md` に記録した
-* [ ] 後続で調整すべきUI課題を `notes.md` またはIssue備考へ記録した
-* [ ] ユーザーの明示的な指示により、既存個別design notesへ `site-layout` 正本化後の扱いを記録した
-* [ ] 追加の機能実装を行っていない
-* [ ] Visual Review失敗を隠す目的でdesign正本を更新していない
-* [ ] `npm run check` が成功する
-* [ ] `npm run build` が成功する
+* [x] local branchが `16-layout-screenshot-design-refresh` である
+* [x] `docs/issue/16-layout-screenshot-design-refresh.md` が作成または検証されている
+* [x] `15-current-menu-highlight` が完了済みであることをローカルで確認した
+* [x] `docs/TODO.md` にこのIssueへ直接取り込むべき未対応項目がないことを確認した
+* [x] 既存design targetを確認した
+* [x] `docs/design/current-menu-highlight/` が存在する場合は参照した
+* [x] 代表routeを決定した
+* [x] `/release-notes` と `/404` は未実装routeとして、このIssueでは確認対象外であることを記録した
+* [x] `docs/TODO.md` の現在地ハイライト目視確認用ダミーMDXページTODOとの関係を記録した
+* [x] 必要な画面 / 状態ごとに個別実行できるPlaywright screenshot testを追加した
+* [x] host / base pathは設定ファイルに集約し、test case側は個別pathだけを明記している
+* [x] Playwright標準の `use.baseURL`、`--grep`、test file指定、必要に応じた `--project` を優先している
+* [x] `process.argv` の独自parseで対象pathやviewportを切り替える仕組みにしていない
+* [x] desktop `1440x1200` のスクリーンショットを取得した
+* [x] tablet `820x1180` のスクリーンショットを取得した
+* [x] mobile `390x900` のスクリーンショットを取得した
+* [x] mobile menu open stateのスクリーンショットを取得した
+* [x] mobile page toc open stateのスクリーンショットを取得した
+* [x] design正本画像はfullPage screenshotとして作成され、コンテンツ全体像を確認できる
+* [x] Headerが既存design方針と矛盾していない
+* [x] Footerが既存design方針と矛盾していない
+* [x] PC SiteMenuが既存design方針と矛盾していない
+* [x] MobileMenuが既存design方針と矛盾していない
+* [x] PC PageTocが既存design方針と矛盾していない
+* [x] MobilePageTocが既存design方針と矛盾していない
+* [x] 現在ページハイライトがSiteMenu上で視覚的に識別できる
+* [x] 現在ページハイライトがhover / focus / disclosure open stateと混同されない
+* [x] 現在ページに `aria-current="page"` または同等の属性がある
+* [x] 現在ページに対応する親カテゴリが展開または強調されている
+* [x] `/` で不要なPageToc / MobilePageTocが表示されない
+* [x] `/release-notes` と `/404` のPageToc / MobilePageToc非表示確認は、該当ページ実装後の後続確認として記録した
+* [x] `1024px` 未満でPC右PageTocが常設表示されない
+* [x] mobile幅でPC左SiteMenuが常設表示されない
+* [x] mobile幅でMobileMenuとMobilePageTocが視覚的に混同されない
+* [x] mobile / tablet幅でH1とMobilePageToc triggerが上部にsticky表示され、スクロール後も目次が画面外へ消えない
+* [x] ページ全体に意図しない横スクロールが発生していない
+* [x] tap target / focus outlineが破綻していない
+* [x] `docs/design/site-layout/notes.md` を作成または更新した
+* [x] `docs/design/site-layout/design-desktop.png` を作成または更新した
+* [x] `docs/design/site-layout/design-tablet.png` を作成または更新した
+* [x] `docs/design/site-layout/design-mobile.png` を作成または更新した
+* [x] `docs/design/site-layout/design-mobile-menu-open.png` を作成または更新した
+* [x] `docs/design/site-layout/design-mobile-page-toc-open.png` を作成または更新した
+* [x] 既存designとの差分を `notes.md` に記録した
+* [x] 正本化理由を `notes.md` に記録した
+* [x] 未解決事項を `notes.md` に記録した
+* [x] 後続で調整すべきUI課題を `notes.md` またはIssue備考へ記録した
+* [x] ユーザーの明示的な指示により、既存個別design notesへ `site-layout` 正本化後の扱いを記録した
+* [x] 追加の機能実装を行っていない
+* [x] Visual Review失敗を隠す目的でdesign正本を更新していない
+* [x] `npm run check` が成功する
+* [x] `npm run build` が成功する
 
 ## チェックポイント
 
-* [ ] `git status --short --branch` を確認した
-* [ ] `git branch --show-current` を確認した
-* [ ] `docs/plan.md` の `16-layout-screenshot-design-refresh` と整合している
-* [ ] `docs/out-of-scope.md` と矛盾するUIをdesignへ描き込んでいない
-* [ ] `docs/design/global-styles/` の白寄り背景、暗めHeader、青緑accent、過剰neon禁止方針を維持している
-* [ ] Header / Footer / SiteMenu / MobileMenu / PageToc / MobilePageToc / 現在ページハイライトが1つのサイトとして一貫して見える
-* [ ] SiteMenuとPageTocの役割差が維持されている
-* [ ] MobileMenuとMobilePageTocの役割差が維持されている
-* [ ] 現在ページハイライトが強すぎて本文閲覧を邪魔していない
-* [ ] 現在ページハイライトが弱すぎて現在位置が分からない状態になっていない
-* [ ] 親カテゴリの展開 / 強調が過剰ではない
-* [ ] PC / tablet / mobileでHeader高さ、本文余白、サイド領域が破綻していない
-* [ ] mobile menu open中に本文側UIが操作対象に見えすぎない
-* [ ] mobile page toc open中にsite menu drawerのように見えない
-* [ ] 実装済みの `/` で空のTOC枠や「目次なし」表示が出ていない
-* [ ] 未実装の `/release-notes` / `/404` を、このIssueで新規作成していない
-* [ ] 必要なスクリーンショットだけを個別に取得できるtest case構成になっている
-* [ ] 一つのtest caseですべてのroute / viewport / stateをまとめて実行する構成にしていない
-* [ ] URL全体を都度指定する運用を前提にしていない
-* [ ] `test-results/`、`playwright-report/`、`.tmp/` のactual artifactをGit管理対象にしていない
-* [ ] design正本として保存する画像だけが `docs/design/site-layout/` に置かれている
-* [ ] local onlyの一時スクリーンショットを誤ってcommit対象にしていない
-* [ ] design正本化に人間判断が必要な差分を隠していない
+* [x] `git status --short --branch` を確認した
+* [x] `git branch --show-current` を確認した
+* [x] `docs/plan.md` の `16-layout-screenshot-design-refresh` と整合している
+* [x] `docs/out-of-scope.md` と矛盾するUIをdesignへ描き込んでいない
+* [x] `docs/design/global-styles/` の白寄り背景、暗めHeader、青緑accent、過剰neon禁止方針を維持している
+* [x] Header / Footer / SiteMenu / MobileMenu / PageToc / MobilePageToc / 現在ページハイライトが1つのサイトとして一貫して見える
+* [x] SiteMenuとPageTocの役割差が維持されている
+* [x] MobileMenuとMobilePageTocの役割差が維持されている
+* [x] 現在ページハイライトが強すぎて本文閲覧を邪魔していない
+* [x] 現在ページハイライトが弱すぎて現在位置が分からない状態になっていない
+* [x] 親カテゴリの展開 / 強調が過剰ではない
+* [x] PC / tablet / mobileでHeader高さ、本文余白、サイド領域が破綻していない
+* [x] mobile menu open中に本文側UIが操作対象に見えすぎない
+* [x] mobile page toc open中にsite menu drawerのように見えない
+* [x] 実装済みの `/` で空のTOC枠や「目次なし」表示が出ていない
+* [x] 未実装の `/release-notes` / `/404` を、このIssueで新規作成していない
+* [x] 必要なスクリーンショットだけを個別に取得できるtest case構成になっている
+* [x] 一つのtest caseですべてのroute / viewport / stateをまとめて実行する構成にしていない
+* [x] URL全体を都度指定する運用を前提にしていない
+* [x] `test-results/`、`playwright-report/`、`.tmp/` のactual artifactをGit管理対象にしていない
+* [x] design正本として保存する画像だけが `docs/design/site-layout/` に置かれている
+* [x] local onlyの一時スクリーンショットを誤ってcommit対象にしていない
+* [x] design正本化に人間判断が必要な差分を隠していない
 
 ## 想定変更ファイル
 
@@ -584,7 +584,7 @@ docs/design/site-layout/
 
 ### 対応完了チェックリスト
 
-- [ ] Issue完了条件とチェックポイントへ、実施済み項目を反映する
-- [ ] `MobilePageToc.astro` のsticky heading補正意図をCSSコメントで記録する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] Issue完了条件とチェックポイントへ、実施済み項目を反映する
+- [x] `MobilePageToc.astro` のsticky heading補正意図をCSSコメントで記録する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
