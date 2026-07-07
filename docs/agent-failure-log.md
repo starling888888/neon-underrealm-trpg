@@ -2,7 +2,7 @@
 
 このファイルは、生成AIエージェントの暴走、手順逸脱、実装中に観測した失敗を蓄積し、将来の恒久対応へ取り込むための記録である。
 
-現時点では、このファイルに対応する専用SKILL定義は作成しない。
+同種失敗の監査と恒久対応案の整理は `.agents/skills/failure-log-audit/SKILL.md` に従う。
 
 このファイルは未反映・未確認failureを中心に管理するactive failure logである。対応済みfailureを退避する場合は、削除せず `docs/agent-failure-log-done.md` へ移す。
 

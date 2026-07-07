@@ -250,9 +250,9 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] `review-to-issue` に、レビュー指摘取り込み時のfailure-log記録運用が追加されている
 - [x] 通常の実装レビュー指摘と、agent failure logへ記録すべき手順逸脱・判断ミス・検証不足・未承認作業などの区別が説明されている
 - [x] failure-logへ記録する際、sourceを `user` / `self` / `review` などで残す方針が明記されている
-- [ ] ユーザーが手動で呼び出せる `failure-log-audit` SKILLが追加されている
-- [ ] `failure-log-audit` SKILLに、3回以上発生した失敗カテゴリの特定、課題整理、対応挿入先と対応案の報告、ユーザー承認後に対応する停止点が定義されている
-- [ ] `failure-log-audit` SKILL追加後も、恒久対応そのものはユーザー承認前に実行しない運用になっている
+- [x] ユーザーが手動で呼び出せる `failure-log-audit` SKILLが追加されている
+- [x] `failure-log-audit` SKILLに、3回以上発生した失敗カテゴリの特定、課題整理、対応挿入先と対応案の報告、ユーザー承認後に対応する停止点が定義されている
+- [x] `failure-log-audit` SKILL追加後も、恒久対応そのものはユーザー承認前に実行しない運用になっている
 - [x] failure-logのdone退避が、対応完了、ユーザー確認、コミット指示直前に行われる運用として定義されている
 - [ ] agent専用ファイルについて、controlled Englishで短縮可能な既存SKILL / rulesが確認されている
 - [ ] controlled English化した場合でも、停止条件、承認条件、禁止事項、workflow発火条件が弱体化していない
@@ -332,7 +332,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] failure-logの退避条件がplan/TODOと混ざっていない
 - [x] failure-log運用変更は、通常のレビュー指摘をすべてfailure扱いする内容になっていない
 - [x] review-to-issueの停止地点を壊していない
-- [ ] 新規failure-log監査SKILLは、報告と方針合意で停止し、承認なしに恒久対応を実装しない
+- [x] 新規failure-log監査SKILLは、報告と方針合意で停止し、承認なしに恒久対応を実装しない
 - [ ] controlled English化により、指示遵守性が落ちていない
 - [ ] controlled English化で日本語固有概念の意味がズレていない
 - [ ] user-facing docs、requirements、TRPG game rule text、game terminologyを英語化していない
@@ -1509,11 +1509,13 @@ chore: validate phase 2 preparation docs
 
 ### Locally absent during issue-first preparation and expected to be created or defined by this issue
 
-- `.github/PULL_REQUEST_TEMPLATE.md` does not exist yet.
-- `.agents/skills/failure-log-audit/SKILL.md` does not exist yet.
-- `docs/requirements/` does not exist yet.
-- `docs/plan-done.md`, `docs/TODO-done.md`, and `docs/agent-failure-log-done.md` do not exist yet.
-- `docs/issue/done/` does not exist yet.
+The following were absent during issue-first preparation and have since been created by this issue:
+
+- `.github/pull_request_template.md`
+- `.agents/skills/failure-log-audit/SKILL.md`
+- `docs/requirements/`
+- `docs/plan-done.md`, `docs/TODO-done.md`, and `docs/agent-failure-log-done.md`
+- `docs/issue/done/`
 
 ### Not verified during issue-first preparation
 

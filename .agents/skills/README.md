@@ -48,6 +48,12 @@ Use after a PR has been merged and the user asks to return to `main`, pull merge
 
 This skill may update `docs/plan.md` checkboxes only because the user explicitly requested post-merge tracking work.
 
+### `failure-log-audit`
+
+Use when auditing `docs/agent-failure-log.md` for repeated failure categories, especially categories with three or more occurrences.
+
+This skill reports repeated failures and proposes permanent countermeasures. It stops for user approval before editing rules, skills, or done archives.
+
 ## Directory Role
 
 - `.agents/skills/`: task workflows with start conditions, allowed actions, stopping points, and output rules.

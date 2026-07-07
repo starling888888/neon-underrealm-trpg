@@ -4,6 +4,8 @@
 
 `docs/agent-failure-log.md` は未反映・未確認failureを中心に保つ。failureを退避する場合は、削除ではなくこのファイルへ移す。
 
+退避判断と恒久対応案の監査は `.agents/skills/failure-log-audit/SKILL.md` に従う。
+
 ## 退避条件
 
 - 対象failureへの恒久対応が完了している
