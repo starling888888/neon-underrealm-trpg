@@ -563,3 +563,28 @@ docs/design/site-layout/
 4. 現Issueでは扱わないout-of-scope項目
 
 このIssueでやるべきことは、実装を増やすことではなく、現在の完成状態を正しく記録し、以後の比較基準を整えることである。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- PR本文では `npm run check`、`npm run build`、site-layout系のvisual captureが完了済みとして記録されているが、Issue本文の完了条件とチェックポイントが未チェックのまま残っている。
+- `MobilePageToc.astro` のsticky heading補正は局所的で許容範囲だが、負marginとpaddingでsticky背景領域を調整している意図が後から読み取りにくい。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `.tmp/16-review.md` を確認した。ローカルの `docs/issue/16-layout-screenshot-design-refresh.md` では完了条件とチェックポイントのチェックボックスが未反映であることを確認した。`src/components/layout/MobilePageToc.astro` ではsticky headingに `background: var(--color-surface)`、上padding、同量の負margin、TOC triggerの微調整が入っており、レビュー指摘の対象箇所が現行実装に存在することを確認した。
+
+### 対応方針
+
+- 実施済みの検証と正本化作業に対応するIssue完了条件・チェックポイントだけをチェック済みに更新する。`docs/plan.md` の `16-layout-screenshot-design-refresh` は人間レビュー後の完了更新対象なので、このレビュー対応ではチェック済みにしない。
+- `MobilePageToc.astro` のsticky heading補正箇所へ、上端まで白背景で覆いつつ通常表示時のH1位置を崩しにくくする意図を短いCSSコメントで記録する。現時点ではcustom property化などの追加抽象化は行わない。
+
+### 対応完了チェックリスト
+
+- [ ] Issue完了条件とチェックポイントへ、実施済み項目を反映する
+- [ ] `MobilePageToc.astro` のsticky heading補正意図をCSSコメントで記録する
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
