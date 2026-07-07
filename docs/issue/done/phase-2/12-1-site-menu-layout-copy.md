@@ -110,7 +110,7 @@ PC左サイドバーおよびスマホdrawer内で使用している共通サイ
 * `src/components/layout/SiteMenuItem.astro`
 * `src/layouts/BaseLayout.astro`
 * 必要に応じて `src/scripts/disclosure.ts`
-* 必要に応じて `docs/issue/12-1-site-menu-layout-copy.md`
+* 必要に応じて `docs/issue/done/phase-2/12-1-site-menu-layout-copy.md`
 * 必要に応じて `docs/design/site-menu/notes.md`
 * 必要に応じて `docs/design/mobile-menu/notes.md`
 
@@ -189,7 +189,7 @@ PC左サイドバーおよびスマホdrawer内で使用している共通サイ
 * `src/components/layout/SiteMenuItem.astro`
 * `src/layouts/BaseLayout.astro`
 * 必要に応じて `src/scripts/disclosure.ts`
-* 必要に応じて `docs/issue/12-1-site-menu-layout-copy.md`
+* 必要に応じて `docs/issue/done/phase-2/12-1-site-menu-layout-copy.md`
 
 ## レビュー観点
 

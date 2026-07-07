@@ -120,7 +120,7 @@
 * `src/lib/site/menu.ts`
 * `src/components/layout/SiteMenuItem.astro`
 * `tests/node/site-menu-current.test.ts`
-* 必要に応じて `docs/issue/15-1-menu-expand-current-ancestors-only.md`
+* 必要に応じて `docs/issue/done/phase-2/15-1-menu-expand-current-ancestors-only.md`
 
 ## 実装メモ
 
@@ -183,7 +183,7 @@ mode: local repository mode
 2026-07-07 にローカルリポジトリで確認した。
 
 * branch: `15-1-menu-expand-current-ancestors-only`
-* issue file: `docs/issue/15-1-menu-expand-current-ancestors-only.md`
+* issue file: `docs/issue/done/phase-2/15-1-menu-expand-current-ancestors-only.md`
 * plan task: `docs/plan.md` に `15-1-menu-expand-current-ancestors-only` を未完了タスクとして追加する
 * `docs/TODO.md`: 直接このissueで回収するTODOはなし
 * design target: `docs/design/site-menu/`, `docs/design/mobile-menu/`, `docs/design/current-menu-highlight/` が存在する

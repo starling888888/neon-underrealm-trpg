@@ -19,9 +19,9 @@
 - `docs/out-of-scope.md`
 - `docs/plan.md`
 - `docs/TODO.md`
-- `docs/issue/12-mobile-menu.md`
+- `docs/issue/done/phase-2/12-mobile-menu.md`
 - `docs/issue/11-site-menu.md`
-- `docs/issue/12-1-site-menu-layout-copy.md`
+- `docs/issue/done/phase-2/12-1-site-menu-layout-copy.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/notes.md`

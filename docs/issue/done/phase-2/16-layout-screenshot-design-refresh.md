@@ -40,7 +40,7 @@
 
 * mode: local repository mode
 * branch: `16-layout-screenshot-design-refresh`
-* issue: `docs/issue/16-layout-screenshot-design-refresh.md`
+* issue: `docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md`
 * local validation date: 2026-07-07
 * checked files:
 
@@ -370,7 +370,7 @@ docs/design/site-layout/
 - `docs/out-of-scope.md`
 - `docs/plan.md`
 - `docs/TODO.md`
-- `docs/issue/16-layout-screenshot-design-refresh.md`
+- `docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md`
 - `docs/design/global-styles/`
 - `docs/design/base-layout/`
 - `docs/design/header-footer/`
@@ -423,7 +423,7 @@ docs/design/site-layout/
 ## 完了条件
 
 * [x] local branchが `16-layout-screenshot-design-refresh` である
-* [x] `docs/issue/16-layout-screenshot-design-refresh.md` が作成または検証されている
+* [x] `docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md` が作成または検証されている
 * [x] `15-current-menu-highlight` が完了済みであることをローカルで確認した
 * [x] `docs/TODO.md` にこのIssueへ直接取り込むべき未対応項目がないことを確認した
 * [x] 既存design targetを確認した
@@ -503,7 +503,7 @@ docs/design/site-layout/
 
 ## 想定変更ファイル
 
-* `docs/issue/16-layout-screenshot-design-refresh.md`
+* `docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md`
 * `docs/design/site-layout/notes.md`
 * `docs/design/site-layout/design-desktop.png`
 * `docs/design/site-layout/design-tablet.png`
@@ -575,7 +575,7 @@ docs/design/site-layout/
 
 - source: human
 - classification: valid
-- local validation: `.tmp/16-review.md` を確認した。ローカルの `docs/issue/16-layout-screenshot-design-refresh.md` では完了条件とチェックポイントのチェックボックスが未反映であることを確認した。`src/components/layout/MobilePageToc.astro` ではsticky headingに `background: var(--color-surface)`、上padding、同量の負margin、TOC triggerの微調整が入っており、レビュー指摘の対象箇所が現行実装に存在することを確認した。
+- local validation: `.tmp/16-review.md` を確認した。ローカルの `docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md` では完了条件とチェックポイントのチェックボックスが未反映であることを確認した。`src/components/layout/MobilePageToc.astro` ではsticky headingに `background: var(--color-surface)`、上padding、同量の負margin、TOC triggerの微調整が入っており、レビュー指摘の対象箇所が現行実装に存在することを確認した。
 
 ### 対応方針
 

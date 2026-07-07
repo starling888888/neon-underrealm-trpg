@@ -32,7 +32,7 @@
 - `docs/out-of-scope.md`
 - `docs/plan.md`
 - `docs/TODO.md`
-- `docs/issue/16-layout-screenshot-design-refresh.md`
+- `docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/notes.md`

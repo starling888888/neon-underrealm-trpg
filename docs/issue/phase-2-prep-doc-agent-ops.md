@@ -136,7 +136,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - `docs/requirements.md`
 - `docs/requirements/*`
 - `docs/plan.md`
-- `docs/issue/12-mobile-menu.md`
+- `docs/issue/done/phase-2/12-mobile-menu.md`
 - `docs/issue/17-github-actions-deploy-basic.md`
 
 ### 実ファイル構造
@@ -257,9 +257,9 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] agent専用ファイルについて、controlled Englishで短縮可能な既存SKILL / rulesが確認されている
 - [ ] controlled English化した場合でも、停止条件、承認条件、禁止事項、workflow発火条件が弱体化していない
 - [ ] PRレビューが来た場合、controlled English化によって指示遵守性が落ちていないことを確認する観点がissueに明記されている
-- [ ] 現在すべての完了条件・チェックポイントがチェック済みの完了済みissueが、定義されたルールに従って `docs/issue/done/phase-X/` または `docs/issue/done/cross-phase/` へ移動されている
-- [ ] `phase-2-prep-doc-agent-ops` は、完了後に `docs/issue/done/cross-phase/` へ移動する対象として扱われている
-- [ ] 未完了issue、現在作業中issue、移動条件を満たさないissueがdone側へ移動されていない
+- [x] 現在すべての完了条件・チェックポイントがチェック済みの完了済みissueが、定義されたルールに従って `docs/issue/done/phase-X/` または `docs/issue/done/cross-phase/` へ移動されている
+- [x] `phase-2-prep-doc-agent-ops` は、完了後に `docs/issue/done/cross-phase/` へ移動する対象として扱われている
+- [x] 未完了issue、現在作業中issue、移動条件を満たさないissueがdone側へ移動されていない
 - [ ] Phase 1完了状態およびPhase 2開始前の前提と正式ドキュメントの齟齬が整理されている
 - [ ] `README.md` の実装済み / 後続予定の記述がPhase 1完了状態およびPhase 2開始前の前提と一致している
 - [ ] `README.md` に `npm test` の説明が追加され、Visual Review用Playwright captureとは別責務であることが分かる
@@ -270,7 +270,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] `docs/content-writing-guide.md` のページ配置・ルーティング表現が、現行 `docs/plan.md` Phase 3を参照する形になっている
 - [ ] `docs/requirements.md` および分割後の `docs/requirements/*` の技術スタック記述が、採用済み / 後続予定の区別を持っている
 - [ ] `docs/requirements/*` と `docs/plan.md` から、Footerおよび `18-2-home-page` の必須クレジット枠扱いが外れている
-- [ ] `docs/issue/12-mobile-menu.md` の旧plan ID参照に、過去記録であること、現在は旧IDであることが注記されている
+- [ ] `docs/issue/done/phase-2/12-mobile-menu.md` の旧plan ID参照に、過去記録であること、現在は旧IDであることが注記されている
 - [ ] `docs/issue/17-github-actions-deploy-basic.md` のdeploy確認記録が、merge後確認済みとして読み取れる
 - [ ] 関連TODOを扱った結果または未対応理由が記録されている
 - [ ] `npm run check` が通る
@@ -336,8 +336,8 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] controlled English化により、指示遵守性が落ちていない
 - [ ] controlled English化で日本語固有概念の意味がズレていない
 - [ ] user-facing docs、requirements、TRPG game rule text、game terminologyを英語化していない
-- [ ] issue移動は完了済みissueに限定されている
-- [ ] 完了済みissue移動とissue本文の大幅編集を同一変更に混ぜていない
+- [x] issue移動は完了済みissueに限定されている
+- [x] 完了済みissue移動とissue本文の大幅編集を同一変更に混ぜていない
 - [ ] ユーザーの未コミット変更を破壊していない
 - [ ] `docs/agent-failure-log.md` で同種失敗が3回以上積み重なっていないか確認している
 
@@ -393,7 +393,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - `README.md`
 - `docs/deployment.md`
 - `docs/content-writing-guide.md`
-- `docs/issue/12-mobile-menu.md`
+- `docs/issue/done/phase-2/12-mobile-menu.md`
 - `docs/issue/17-github-actions-deploy-basic.md`
 
 - `scripts/`
@@ -532,7 +532,7 @@ docs/issue/phase-2-prep-doc-agent-ops.md
 
 ただし、`scripts/`、`src/components/`、`src/lib`、`src/scripts` については、Group 6でファイル分割方針に沿って整理する。挙動変更を伴わない範囲のファイル移動・import path修正に限定する。
 
-`.tmp/phase1-doc-consistency-report.md` のうち、`docs/issue/16-layout-screenshot-design-refresh.md` への追加整理は、ユーザー追記で「対応しない」とされたため、このタスクでは扱わない。
+`.tmp/phase1-doc-consistency-report.md` のうち、`docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md` への追加整理は、ユーザー追記で「対応しない」とされたため、このタスクでは扱わない。
 
 AGENTS.md短縮は安全制約を削除する作業ではない。最重要ルールはAGENTS.md本体に残し、理由、背景、詳細手順、補足だけを `.agents/rules/` または `.agents/skills/` へ移す。
 
@@ -1268,7 +1268,7 @@ Phase 1完了状態およびPhase 2開始前の前提と、正式ドキュメン
 - `docs/requirements.md`
 - `docs/requirements/*`
 - `docs/plan.md`
-- `docs/issue/12-mobile-menu.md`
+- `docs/issue/done/phase-2/12-mobile-menu.md`
 - `docs/issue/17-github-actions-deploy-basic.md`
 
 #### 含める内容
