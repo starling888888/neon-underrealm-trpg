@@ -255,6 +255,7 @@ mobile: 390x900
 * 後続VRTで再利用しやすい命名と出力pathにする
 * `test-results/` と `playwright-report/` はactual artifactとして扱い、Git管理しない
 * `docs/design/site-layout/` へ保存する画像は、design正本として採用するものだけに限る
+* design正本画像は、コンテンツの全体像と縦方向の破綻有無を確認するため、原則としてPlaywrightのfullPage screenshotを採用する
 
 基本コマンド例。
 
@@ -305,6 +306,8 @@ layout一式の横断design targetが存在しない場合。
 #### C. 個別targetへ最小追記する
 
 必要な場合に限り、以下の既存targetのnotesへ参照関係を追記する。
+
+`site-layout` 正本化後のnotes更新は、ユーザーの明示的な指示により、このIssueの対象範囲として扱う。
 
 * `docs/design/base-layout/`
 * `docs/design/header-footer/`
@@ -437,6 +440,7 @@ docs/design/site-layout/
 * [ ] mobile `390x900` のスクリーンショットを取得した
 * [ ] mobile menu open stateのスクリーンショットを取得した
 * [ ] mobile page toc open stateのスクリーンショットを取得した
+* [ ] design正本画像はfullPage screenshotとして作成され、コンテンツ全体像を確認できる
 * [ ] Headerが既存design方針と矛盾していない
 * [ ] Footerが既存design方針と矛盾していない
 * [ ] PC SiteMenuが既存design方針と矛盾していない
@@ -464,6 +468,7 @@ docs/design/site-layout/
 * [ ] 正本化理由を `notes.md` に記録した
 * [ ] 未解決事項を `notes.md` に記録した
 * [ ] 後続で調整すべきUI課題を `notes.md` またはIssue備考へ記録した
+* [ ] ユーザーの明示的な指示により、既存個別design notesへ `site-layout` 正本化後の扱いを記録した
 * [ ] 追加の機能実装を行っていない
 * [ ] Visual Review失敗を隠す目的でdesign正本を更新していない
 * [ ] `npm run check` が成功する

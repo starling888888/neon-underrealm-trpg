@@ -36,7 +36,7 @@
 
 - visual direction: `page-toc` の控えめなページ内リンク群を、スマホ幅の本文内H1横から開ける軽いoverlayとして表現する。白寄り本文面、暗めHeader、青緑accent、薄い境界線の方向性を維持し、サイトメニューdrawerや検索dialogに見えないようにする。
 - layout direction: スマホ幅では本文内H1要素の右側に、ボタン感を弱めた目次triggerを置く。triggerは大きな枠付きボタンではなく、短いラベル、控えめなchevron、必要最小限のaccentで表現する。開いた状態ではH1直下に軽いoverlay panelを表示する。mobile-menu drawerほど強い画面占有にしない。
-- typography direction: 可視文言は `このページの目次` を基本にする。目次項目は本文より少し小さく、H2 / H3 の階層差が分かる程度のweight、余白、インデントで示す。長い日本語見出しは自然に折り返せるようにする。
+- typography direction: 可視文言は現行実装の `目次` を基本にする。目次項目は本文より少し小さく、H2 / H3 の階層差が分かる程度のweight、余白、インデントで示す。長い日本語見出しは自然に折り返せるようにする。
 - color / accent usage: 通常状態は濃いグレー文字、白寄りsurface、薄いborderを基本にする。青緑accentは開閉buttonの小さな状態表示、focus、リンクhover相当に限定する。現在位置ハイライトに見える強い左線、背景色、active markerは描かない。
 
 ## Existing design constraints
@@ -107,3 +107,10 @@
 - overlayを開いたときに背景本文をどの程度dimするか。mobile-menu drawerほど強くしない方針は維持する。
 - 目次項目が長い場合、行数制限を設けるか自然な折り返しにするか。
 - サイトメニューとMobilePageTocが同時に開く操作が発生した場合、どちらを優先して閉じるか。
+
+## site-layout正本化後の扱い
+
+- `mobile-page-toc` はスマホ / タブレット幅向けページ内目次UI単体のdesign targetとして維持する。
+- 可視triggerラベルは、現行実装および `docs/design/site-layout/` に合わせて `目次` とする。
+- `docs/design/site-layout/design-mobile-page-toc-open.png` は、`/mdx-test/` を代表routeとしてMobilePageToc open stateを確認する横断正本である。
+- `docs/design/site-layout/design-tablet.png` と `docs/design/site-layout/design-mobile.png` は、PC右PageTocが常設表示されず、MobilePageToc triggerが本文H1横に出る状態を確認する正本である。

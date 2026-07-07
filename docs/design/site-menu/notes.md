@@ -101,3 +101,10 @@
 
 - PC左サイドメニューの幅は、最大3階層が読めるdesign画像を見てから判断する。
 - hover / focusの見た目が異なる場合はstate画像を分ける。見た目が同じ場合は標準画像とnotesの記述で扱う。
+
+## site-layout正本化後の扱い
+
+- `site-menu` はPC左サイトメニュー単体の初期draftとして維持する。
+- 現在ページハイライトを含む完成状態は、`docs/design/current-menu-highlight/` と `docs/design/site-layout/` を参照する。
+- `docs/design/site-layout/design-desktop.png` は、Header / Footer / SiteMenu / PageTocを含む横断layout内でのPC左サイトメニューを確認する正本である。
+- `docs/design/site-layout/design-mobile-menu-open.png` は、スマホdrawer内SiteMenuで現在ページとancestor表示を含む状態を確認する正本である。
