@@ -689,6 +689,14 @@
   * [ ] スマホヘッダーの下スクロール非表示・上スクロール表示を確認
   * [ ] サイトメニュー、ページ内目次、検索UIがスマホで混同されないことを確認
 
+* [ ] `48-1-vrt-css-regression-guards` — VRT導入時にレイアウトCSS回帰検知を追加する
+
+  * [ ] VRTの実行方針、対象viewport、対象routeを定義する
+  * [ ] mobile layoutで意図しない横スクロールが発生していないことを検知する
+  * [ ] MobilePageToc sticky headingの背景透過を検知する
+  * [ ] TOC非表示対象ページでPageToc / MobilePageTocが表示されないことを検知する
+  * [ ] 現在のdesign正本化用スクリーンショット取得testと、将来のVRT検知責務を混同しない
+
 * [ ] `49-performance-pass` — 軽量性を確認する
 
   * [ ] 不要なクライアントJSを削減

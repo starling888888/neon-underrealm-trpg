@@ -410,6 +410,23 @@ git merge
 
 ---
 
+## ローカルサーバーの扱い
+
+`npm run dev` または `npm run preview` で起動したAstroのdev server / preview serverは、作業終了時に停止する。
+
+作業中にdev server / preview serverを起動する場合、原則として既定の `4321` portを使う。
+
+`4321` が使用中などの理由でAstroが `4322`、`4323`、`4324` など別portで起動した場合、生成AIエージェントは作業を停止し、ユーザーに以下を確認する。
+
+* どのportでdev server / preview serverが起動したか
+* そのportを掴んでいるprocessを特定してkillしてよいか
+
+ユーザーの許可なく、別portで起動したdev server / preview serverを放置したまま作業を続けてはならない。
+
+portを掴んでいるprocessをkillする場合は、対象portとPIDを確認し、対象processに限定して停止する。
+
+---
+
 ## 作業後の報告
 
 実装作業が終わったら、commitせずに停止する。

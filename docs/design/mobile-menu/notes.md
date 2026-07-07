@@ -97,3 +97,10 @@
 - open stateの背景抑止は、暗いscrimにするか、本文面を淡く固定するかを画像確認後に決める。
 - drawer上部の閉じる操作は、Header左ボタンの状態変化で表すか、drawer内に独立した閉じるbuttonを置くかを画像確認後に判断する。
 - focus state画像を別途作るかは、closed/open draft確認後に必要性を判断する。
+
+## site-layout正本化後の扱い
+
+- `mobile-menu` はスマホ版サイトメニューdrawer単体の初期draftとして維持する。
+- 現在ページハイライト、ancestor表示、親カテゴリ自動展開を含む現行実装状態は、`docs/design/current-menu-highlight/` と `docs/design/site-layout/` を参照する。
+- `docs/design/site-layout/design-mobile-menu-open.png` は、`/data/items/weapons/` を代表routeとして、現在ページハイライトを含むMobileMenu open stateを確認する正本である。
+- `mobile-menu` のout of scopeにある現在ページハイライトは、`12-mobile-menu` 時点の初期draft範囲を示すものであり、後続 `15-current-menu-highlight` と `16-layout-screenshot-design-refresh` の正本化を否定しない。

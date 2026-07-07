@@ -71,3 +71,10 @@
 
 - 左レールをすべてのデスクトップ幅で表示し続けるか、後続のbreakpointで折りたたむかは、後続のナビゲーションタスクで扱う。
 - 右レールをPageTocにするか、別の補助領域にするかは、後続のPageTocタスクで扱う。
+
+## site-layout正本化後の扱い
+
+- `base-layout` は初期draftとして、Header / Footer / left rail / main content / right railの構造を確認するためのdesign targetとして維持する。
+- `16-layout-screenshot-design-refresh` 以降の完成状態の横断正本は `docs/design/site-layout/` を参照する。
+- `docs/design/site-layout/` では、left railはSiteMenu、right railはPageTocとして実装済み状態を扱う。
+- mobile / tabletを含む現在のlayout全体、MobileMenu、MobilePageToc、現在ページハイライトを確認する場合も `docs/design/site-layout/` を参照する。

@@ -54,9 +54,9 @@
 - Mobile Headerではフルロゴを維持する。狭い幅でも、初期draftではテキストfallbackへ切り替えない。
 - FooterはHeaderと同じ `docs/design/header-footer/` targetで扱う。desktop / mobileの両方でFooter画像を作成する前提とする。
 - Footerには `© 2026 椋鳥`、サイト名、GitHub、X、Discordのリンク枠を含める。
-- FooterのGitHub / X / Discordは外部リンクとして扱う。design画像ではリンク先文字列を長く描かず、`GH` / `X` / `DC` のようにリンク種別が分かるアイコン表現で示す。
+- FooterのGitHub / X / Discordは外部リンクとして扱う。現行実装ではブランドSVGアイコンでリンク種別を示し、リンク先文字列を長く描かない。
 - クレジットリンクはこのdesign targetでは表示しない。将来クレジット表示先が確定したタスクで追加する。
-- Mobile Footer画像では、リンク群をプレースホルダー線ではなく、`GH` / `X` / `DC` のアイコン種別が見える形で表示する。タップ対象は窮屈にしない。
+- Mobile Footer画像では、リンク群をプレースホルダー線ではなく、GitHub / X / Discordのアイコン種別が見える形で表示する。タップ対象は窮屈にしない。
 
 ## スコープ外
 
@@ -102,7 +102,7 @@
 - viewport: desktop `1440x1200`, mobile `390x900`
 - header / logo sizes: desktop Header `88px`, desktop logo `48px`; mobile Header `64px`, mobile logo `30px`
 - footer sizes: desktop Footer `80px`; mobile Footer `120px`
-- prompt summary or capture notes: Header / Footer design targetの初期draft画像を生成した。Headerのロゴ利用、WebP優先とPNG fallback、CSSによる表示サイズ制御、Desktop Headerの検索入力欄mock配置、mobile Headerの左右アイコン枠配置を視覚条件として定義した。検索入力欄mockとアイコン枠の実装責務は `docs/issue/10-header-footer.md` に置く。Footerについてはdesktop / mobile両方の画像に、`© 2026 椋鳥`、サイト名、`GH` / `X` / `DC` のリンク種別表示を反映した。
+- prompt summary or capture notes: Header / Footer design targetの初期draft画像を生成した。Headerのロゴ利用、WebP優先とPNG fallback、CSSによる表示サイズ制御、Desktop Headerの検索入力欄mock配置、mobile Headerの左右アイコン枠配置を視覚条件として定義した。検索入力欄mockとアイコン枠の実装責務は `docs/issue/10-header-footer.md` に置く。Footerについてはdesktop / mobile両方の画像に、`© 2026 椋鳥`、サイト名、GitHub / X / Discordのリンク種別表示を反映した。現行実装では、これらの外部リンクをブランドSVGアイコンで表示する。
 
 ## 決定事項
 
@@ -118,3 +118,9 @@
 - Mobile Footer高さは `120px` とする。
 - Desktop Footerはコピーライト左、リンク群右を基本とする。
 - Mobile Footerはコピーライトとリンク群を縦積みにし、リンク群は必要に応じて2段に分ける。
+
+## site-layout正本化後の扱い
+
+- `header-footer` はHeader / Footer単体のdesign targetとして維持する。
+- `docs/design/site-layout/` は、Header / FooterがSiteMenu / PageToc / MobileMenu / MobilePageTocと組み合わさった完成状態を確認する横断正本である。
+- Footer外部リンクは現行実装に合わせ、GitHub / X / DiscordのブランドSVGアイコン表示を正とする。
