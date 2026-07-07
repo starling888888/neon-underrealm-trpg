@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - 17-github-actions-deploy-basic # Initial deploy verification only.
     paths-ignore:
       - "docs/**"
       - ".agents/**"

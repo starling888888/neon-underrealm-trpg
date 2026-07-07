@@ -49,9 +49,7 @@ workflowの基本処理は以下です。
 
 workflowは `main` へのpushで実行します。
 
-初回検証のため、`17-github-actions-deploy-basic` branchへのpushでも一度実行できるようにしています。このbranch条件は初回デプロイ確認用です。初回デプロイ成功後は、公開結果を確認してから、branch条件を残すか `main` のみに戻すかを判断します。
-
-手動実行用に `workflow_dispatch` も設定しています。ただし、`workflow_dispatch` はdefault branch上のworkflow fileを前提とするため、初回issue branch検証の主手段にはしません。
+手動実行用に `workflow_dispatch` も設定しています。
 
 ドキュメント更新、AGENTS / SKILL更新、README更新のみではデプロイが走らないよう、以下を `paths-ignore` に含めます。
 
