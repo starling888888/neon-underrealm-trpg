@@ -246,6 +246,12 @@ mobile: 390x900
 * 一つのtest caseですべてのroute / viewport / stateをまとめて実行しない
 * desktop layout、tablet layout、mobile layout、mobile menu open、mobile page toc openなど、必要なスクリーンショットごとに独立したtest caseを用意する
 * 必要なtest caseだけを `playwright test` のgrepやファイル指定で実行できるようにする
+* host / base pathは設定ファイルに集約し、各test caseには個別pathだけを明記する
+* Playwright標準の `use.baseURL` を使える場合は採用し、`page.goto("/data/items/weapons/")` のように相対pathで遷移する
+* 共通設定は `playwright.config.ts` または `tests/visual/config.ts` に置く。既存構成との相性を見て、設定責務が分散しすぎないほうを選ぶ
+* 実行対象の切り替えは、Playwright標準の `--grep`、test file指定、必要に応じて `--project` を使う
+* `process.argv` を独自にparseして対象pathやviewportを切り替える仕組みは作らない
+* 環境変数を使う場合も、都度URL全体を指定する運用ではなく、設定ファイルの既定値を上書きする最小用途に留める
 * 後続VRTで再利用しやすい命名と出力pathにする
 * `test-results/` と `playwright-report/` はactual artifactとして扱い、Git管理しない
 * `docs/design/site-layout/` へ保存する画像は、design正本として採用するものだけに限る
@@ -254,7 +260,7 @@ mobile: 390x900
 
 ```sh
 npm run dev
-VISUAL_TARGET_URL=http://localhost:4321/neon-underrealm-trpg/data/items/weapons/ npm run visual:capture -- --grep "site layout desktop"
+npm run visual:capture -- --grep "site layout desktop"
 ```
 
 または、build後の状態を確認する場合。
@@ -262,7 +268,7 @@ VISUAL_TARGET_URL=http://localhost:4321/neon-underrealm-trpg/data/items/weapons/
 ```sh
 npm run build
 npm run preview
-VISUAL_TARGET_URL=http://localhost:4321/neon-underrealm-trpg/data/items/weapons/ npm run visual:capture -- --grep "site layout desktop"
+npm run visual:capture -- --grep "site layout desktop"
 ```
 
 実装済みのVisual Review captureが単一URL前提で不足する場合は、このIssue内で必要なスクリーンショットだけを個別に撮れるtest file / test caseを追加する。
@@ -423,6 +429,9 @@ docs/design/site-layout/
 * [ ] `/release-notes` と `/404` は未実装routeとして、このIssueでは確認対象外であることを記録した
 * [ ] `docs/TODO.md` の現在地ハイライト目視確認用ダミーMDXページTODOとの関係を記録した
 * [ ] 必要な画面 / 状態ごとに個別実行できるPlaywright screenshot testを追加した
+* [ ] host / base pathは設定ファイルに集約し、test case側は個別pathだけを明記している
+* [ ] Playwright標準の `use.baseURL`、`--grep`、test file指定、必要に応じた `--project` を優先している
+* [ ] `process.argv` の独自parseで対象pathやviewportを切り替える仕組みにしていない
 * [ ] desktop `1440x1200` のスクリーンショットを取得した
 * [ ] tablet `820x1180` のスクリーンショットを取得した
 * [ ] mobile `390x900` のスクリーンショットを取得した
@@ -480,6 +489,7 @@ docs/design/site-layout/
 * [ ] 未実装の `/release-notes` / `/404` を、このIssueで新規作成していない
 * [ ] 必要なスクリーンショットだけを個別に取得できるtest case構成になっている
 * [ ] 一つのtest caseですべてのroute / viewport / stateをまとめて実行する構成にしていない
+* [ ] URL全体を都度指定する運用を前提にしていない
 * [ ] `test-results/`、`playwright-report/`、`.tmp/` のactual artifactをGit管理対象にしていない
 * [ ] design正本として保存する画像だけが `docs/design/site-layout/` に置かれている
 * [ ] local onlyの一時スクリーンショットを誤ってcommit対象にしていない
@@ -510,6 +520,7 @@ docs/design/site-layout/
 * `tests/visual/README.md`
 * `tests/visual/**/*.ts`
 * `package.json`
+* `playwright.config.ts`
 
 ただし、既存captureの大規模改造、全route一括VRT、画像差分判定、CI組み込みはこのIssueでは扱わない。
 
@@ -531,6 +542,8 @@ docs/design/site-layout/
 * 既存初期draftとの差分を後続課題として残すべきか、今回正本化してよいか
 * 追加のUI実装を行わないスコープで十分か
 * 必要なスクリーンショットごとに個別実行できるtest file / test caseを追加する方針でよいか
+* host / base pathを設定ファイルへ集約し、test caseには個別pathだけを書く方針でよいか
+* Playwright標準の `use.baseURL`、`--grep`、test file指定を使い、`process.argv` 独自parseを避ける方針でよいか
 
 ## 備考
 
