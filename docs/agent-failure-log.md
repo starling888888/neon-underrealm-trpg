@@ -35,6 +35,25 @@ failureのdone退避は、恒久対応が完了し、反映先が記録され、
 - 同じ修正方針で複数回失敗し、別の調査や恒久対応が必要になった
 - 恒久対応としてルール、skill、チェック手順に反映した方がよい失敗
 
+通常の実装品質レビュー、設計改善提案、単発の軽微な修正依頼は、このファイルの記録対象ではない。
+
+review-to-issueでレビュー指摘を扱う場合も、以下のいずれかに該当する指摘だけをfailure-log候補とする。
+
+- ユーザー承認なしに進めた作業
+- workflow上の停止地点を越えた作業
+- current issueの範囲を誤って拡大した作業
+- 検証していない内容を検証済みとして扱った作業
+- remote snapshot、review draft、actual screenshot、design正本などの位置づけを混同した作業
+- 同じcheck、build、formatter、test、型エラーを同一作業中に2回以上繰り返した作業
+- 恒久的なrules / SKILL / checklist更新が必要になりうる判断ミス
+
+source種別は以下を使う。
+
+- `user`: ユーザーが直接指摘した失敗
+- `self`: エージェント自身が作業中に観測した失敗
+- `review`: review-to-issueで扱ったレビュー指摘から、agent failureとして妥当だと判断した失敗
+- `unknown`: sourceを特定できないが記録が必要な失敗
+
 ---
 
 ## 運用方針
@@ -45,6 +64,8 @@ failureのdone退避は、恒久対応が完了し、反映先が記録され、
 - current issueで扱うべき修正を、このファイルへ逃がさない。
 - 通常の後続開発TODOは `docs/TODO.md` で管理する。
 - 対応済みfailureは、ユーザー確認後に `docs/agent-failure-log-done.md` へ退避できる。
+- review-to-issueでfailure-log候補を記録しても、review-to-issueの停止地点は変えない。記録後はユーザー確認を待つ。
+- 同じ失敗カテゴリに3回以上の発生詳細が積み重なっている場合は、作業報告でユーザーに通知し、恒久対応候補として明示する。
 
 ---
 
@@ -55,6 +76,7 @@ failureのdone退避は、恒久対応が完了し、反映先が記録され、
 
 #### YYYY-MM-DD
 
+- source: user / self / review / unknown
 - 発生箇所:
 - 観測した失敗:
 - 一次対応:

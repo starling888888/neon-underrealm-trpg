@@ -58,4 +58,8 @@ Canonical design updates require the design-image-generation workflow and explic
 
 `docs/agent-failure-log.md` captures agent procedure failures, repeated validation failures, and user-identified judgment errors.
 
-The log is not a general TODO list. Use it to preserve failure evidence and to identify categories that need later permanent rule or workflow updates.
+The log is not a general TODO list, and it is not a place for ordinary implementation review feedback.
+
+Use it to preserve evidence of workflow overrun, unapproved action, scope drift, validation misreporting, source-of-truth confusion, repeated tool/check failures, or judgment errors that may need later permanent rule or workflow updates.
+
+When review feedback exposes an agent failure, record the failure source as `review`. Keep normal review findings in the current issue or `docs/TODO.md`.

@@ -16,6 +16,7 @@ Use this skill when the user asks to:
 - create a numbered review section in `docs/issue/*.md`
 - route review items that do not belong to the current issue into `docs/TODO.md`
 - add a missing future task to `docs/plan.md` when a TODO item has no appropriate plan entry
+- record review-identified agent failures in `docs/agent-failure-log.md`
 - pause for user confirmation before addressing review feedback
 - implement approved review fixes and update the corresponding checklist
 
@@ -90,12 +91,14 @@ Do not perform version-control write operations unless the user explicitly asks.
 6. Identify the current task issue file.
 7. Validate each review item against current issue scope, project rules, plan, and implementation state.
 8. Classify each review item.
-9. Route each review item:
+9. Check whether any review item is also an agent failure candidate.
+10. Route each review item:
    - current-issue items go to `docs/issue/*.md`
    - valid but not-current-issue items go to `docs/TODO.md`
    - if a not-current-issue item has no suitable plan entry, add a plan entry to `docs/plan.md`
-10. Report the validity and routing assessment to the user.
-11. Stop and wait for user confirmation.
+   - agent failure candidates go to `docs/agent-failure-log.md`
+11. Report the validity and routing assessment to the user.
+12. Stop and wait for user confirmation.
 
 Prefer `docs/issue/CURRENT_BRANCH.md` when it exists.
 
@@ -121,6 +124,48 @@ Only `valid` items should be appended to the current issue automatically during 
 Do not silently intake `doubtful`, `stale`, or `invalid` items.
 
 `out-of-scope` and `follow-up` items may be tracked in `docs/TODO.md` when they are useful and consistent with project SSoT.
+
+---
+
+## Failure-log routing
+
+During review intake, check whether a review item identifies an agent failure.
+
+Do not treat every review finding as an agent failure.
+
+Agent failure candidates are limited to review items about:
+
+- unapproved implementation, staging, commit, push, PR creation, or remote write
+- issue-first, design workflow, visual review, review-to-issue, or other stopping point overrun
+- scope expansion beyond the current issue contract
+- marking unverified work as verified
+- confusing remote snapshot drafts, review drafts, actual screenshots, design canon, or implementation results
+- mishandling user changes, staged state, or untracked files
+- repeating the same check, build, formatter, type, or test failure during one work session
+- judgment errors likely to need permanent rules, SKILL updates, or checklist updates
+
+Ordinary implementation review findings are not failure-log items.
+
+Examples that usually stay out of failure-log:
+
+- a normal bug found in implementation
+- a missing edge case
+- a style or copy improvement
+- a design mismatch that does not involve process failure or misrepresentation
+- a valid follow-up that belongs in `docs/TODO.md`
+
+If a review item is both a current-issue fix and an agent failure, route the fix to the issue and record the process failure in `docs/agent-failure-log.md`.
+
+Use `source: review` for failure-log entries created from review-to-issue.
+
+Use the failure-log's normal entry shape and include:
+
+- source: `review`
+- 発生箇所
+- 観測した失敗
+- 一次対応
+
+Do not add root-cause analysis or permanent fixes during review intake unless the user explicitly asked for that work.
 
 ---
 
@@ -221,6 +266,7 @@ During review intake, allowed write targets are limited to:
 - the relevant `docs/issue/*.md` file for current-issue valid items
 - `docs/TODO.md` for useful items that should not be handled by the current issue
 - `docs/plan.md` only when a routed TODO has no suitable existing plan entry
+- `docs/agent-failure-log.md` only when a review item meets the failure-log routing criteria
 
 During review intake:
 
@@ -230,6 +276,8 @@ During review intake:
 - preserve the review file in `.tmp/`
 - summarize rather than copy long review drafts verbatim
 - do not mark `docs/plan.md` tasks complete
+- do not treat ordinary review findings as agent failures
+- do not implement permanent failure-log countermeasures
 - do not perform version-control write operations unless explicitly asked
 
 After updating tracking documents, report:
@@ -251,6 +299,7 @@ After updating tracking documents, report:
 - 対応完了チェックリスト
 - TODO化した項目
 - 追加したplan項目
+- failure-logへ記録した項目
 
 ユーザー確認後に指摘対応を開始します。
 ```

@@ -246,10 +246,10 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] `docs/issue/done/phase-N/` と `docs/issue/done/cross-phase/` の使い分けが明記されている
 - [x] 移動したissueへの既存内部リンク更新方針が明記されている
 - [x] 移動前パスを参照する記述が残る場合の過去記録注記方針が明記されている
-- [ ] `docs/agent-failure-log.md` の記録対象、source種別、同種失敗3回以上時の通知ルールが明確化されている
-- [ ] `review-to-issue` に、レビュー指摘取り込み時のfailure-log記録運用が追加されている
-- [ ] 通常の実装レビュー指摘と、agent failure logへ記録すべき手順逸脱・判断ミス・検証不足・未承認作業などの区別が説明されている
-- [ ] failure-logへ記録する際、sourceを `user` / `self` / `review` などで残す方針が明記されている
+- [x] `docs/agent-failure-log.md` の記録対象、source種別、同種失敗3回以上時の通知ルールが明確化されている
+- [x] `review-to-issue` に、レビュー指摘取り込み時のfailure-log記録運用が追加されている
+- [x] 通常の実装レビュー指摘と、agent failure logへ記録すべき手順逸脱・判断ミス・検証不足・未承認作業などの区別が説明されている
+- [x] failure-logへ記録する際、sourceを `user` / `self` / `review` などで残す方針が明記されている
 - [ ] ユーザーが手動で呼び出せる `failure-log-audit` SKILLが追加されている
 - [ ] `failure-log-audit` SKILLに、3回以上発生した失敗カテゴリの特定、課題整理、対応挿入先と対応案の報告、ユーザー承認後に対応する停止点が定義されている
 - [ ] `failure-log-audit` SKILL追加後も、恒久対応そのものはユーザー承認前に実行しない運用になっている
@@ -330,8 +330,8 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] issue移動後の内部リンク更新方針が明記されている
 - [x] 移動前パスを残す場合の過去記録注記方針が明記されている
 - [x] failure-logの退避条件がplan/TODOと混ざっていない
-- [ ] failure-log運用変更は、通常のレビュー指摘をすべてfailure扱いする内容になっていない
-- [ ] review-to-issueの停止地点を壊していない
+- [x] failure-log運用変更は、通常のレビュー指摘をすべてfailure扱いする内容になっていない
+- [x] review-to-issueの停止地点を壊していない
 - [ ] 新規failure-log監査SKILLは、報告と方針合意で停止し、承認なしに恒久対応を実装しない
 - [ ] controlled English化により、指示遵守性が落ちていない
 - [ ] controlled English化で日本語固有概念の意味がズレていない
