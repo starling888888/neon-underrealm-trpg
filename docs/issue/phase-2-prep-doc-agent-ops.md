@@ -214,17 +214,17 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] ユーザー承認なしに、未チェック項目ありのPRを作らないことが明記されている
 - [x] PR作成後の報告項目が明記されている
 - [x] `create-pr` SKILLがmerge、tag、release、review-to-issue処理を行わないことが明記されている
-- [ ] `AGENTS.md` が最上位規約と参照ルーターとして短縮されている
-- [ ] `AGENTS.md` の最重要ルールが理由なし箇条書きになっている
-- [ ] 最重要ルールの理由が `.agents/rules/core-rules-rationale.md` へ分離されている
-- [ ] `AGENTS.md` に可変的な個別issue、plan、TODO、作業依存関係を置かない方針が明記されている
-- [ ] `AGENTS.md` を更新してよい場合と、更新すべきでない場合が明記されている
+- [x] `AGENTS.md` が最上位規約と参照ルーターとして短縮されている
+- [x] `AGENTS.md` の最重要ルールが理由なし箇条書きになっている
+- [x] 最重要ルールの理由が `.agents/rules/core-rules-rationale.md` へ分離されている
+- [x] `AGENTS.md` に可変的な個別issue、plan、TODO、作業依存関係を置かない方針が明記されている
+- [x] `AGENTS.md` を更新してよい場合と、更新すべきでない場合が明記されている
 - [x] SKILL一覧と使用条件が `.agents/skills/README.md` に分離されている
 - [x] rules一覧と参照場面が `.agents/rules/README.md` に分離されている
 - [x] `.agents/rules/` と `.agents/skills/` の役割分担が明確になっている
 - [x] `.agents/rules/*` はagent-facing fileとしてcontrolled English化の対象に含めてよいことが明確になっている
-- [ ] `AGENTS.md` にしかなかった内容が削除されず、適切な `.agents/rules/`、`.agents/skills/`、またはdocsへ転記されている
-- [ ] `AGENTS.md` から詳細へ辿れるが、詳細を常時読む要求になっていない
+- [x] `AGENTS.md` にしかなかった内容が削除されず、適切な `.agents/rules/`、`.agents/skills/`、またはdocsへ転記されている
+- [x] `AGENTS.md` から詳細へ辿れるが、詳細を常時読む要求になっていない
 - [ ] `docs/requirements.md` が要件索引として短縮されている
 - [ ] 詳細要件が `docs/requirements/` 配下へ作業時の参照単位で分割されている
 - [ ] requirements分割が章番号ベースではなく、作業種別ごとの参照単位になっている
@@ -285,40 +285,40 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [ ] 既存ルートが壊れていない
 - [ ] GitHub Pagesのサブパス公開方針と矛盾していない
 - [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装済みまたは実装予定として誤記していない
+- [x] 初期スコープ外の機能を実装済みまたは実装予定として誤記していない
 - [ ] `docs/TODO.md` の項目が現行 `docs/plan.md` と矛盾していない
 - [ ] `docs/design/` の正本と矛盾する記述を増やしていない
-- [ ] `docs/plan.md` の完了チェック状態を変更していない
+- [x] `docs/plan.md` の完了チェック状態を変更していない
 - [x] `issue-first-development` SKILL使用時に、ユーザーの明示指示なしでGitHub Issueを発行する運用になっていない
 - [x] PR作成とPRレビューのSKILL責務が混ざっていない
-- [ ] ユーザーの明示指示なしにPRを作成する運用になっていない
+- [x] ユーザーの明示指示なしにPRを作成する運用になっていない
 - [x] 未チェック項目が残ったissueで、ユーザー承認なしにPRを作成する運用になっていない
 - [x] `.github/pull_request_template.md` と `.github/ISSUE_TEMPLATE/issue-first-development.md` の役割が混ざっていない
 - [x] PRテンプレートが最小導線になっている
 - [x] PRテンプレートにChanged areas、Group completion、Checks、Unchecked / Not verified、Scope guardを含めていない
 - [x] `issue-first-development` SKILLが、テンプレート本文を直接抱え込む構造に戻っていない
-- [ ] `AGENTS.md` の最重要停止条件を外部ファイルに追い出していない
-- [ ] `AGENTS.md` が単なるリンク集になっていない
-- [ ] `AGENTS.md` が作業ごとに更新される可変リンク集になっていない
+- [x] `AGENTS.md` の最重要停止条件を外部ファイルに追い出していない
+- [x] `AGENTS.md` が単なるリンク集になっていない
+- [x] `AGENTS.md` が作業ごとに更新される可変リンク集になっていない
 - [x] `.agents/skills/README.md` にSKILL一覧と使用条件がある
 - [x] `.agents/rules/README.md` にrules一覧と参照場面がある
-- [ ] `.agents/skills/` と `.agents/rules/` の役割が混ざっていない
-- [ ] `.agents/rules/*` をcontrolled English化対象から誤って除外していない
-- [ ] TRPG本文・用語・利用者向け説明をcontrolled English化対象に含めていない
-- [ ] AGENTSから削った制約の参照先が明記されている
-- [ ] AGENTSにしかなかった安全制約を削除していない
-- [ ] 分離後に全ファイルを常時読む運用になっていない
+- [x] `.agents/skills/` と `.agents/rules/` の役割が混ざっていない
+- [x] `.agents/rules/*` をcontrolled English化対象から誤って除外していない
+- [x] TRPG本文・用語・利用者向け説明をcontrolled English化対象に含めていない
+- [x] AGENTSから削った制約の参照先が明記されている
+- [x] AGENTSにしかなかった安全制約を削除していない
+- [x] 分離後に全ファイルを常時読む運用になっていない
 - [ ] `docs/requirements.md` が単なるリンク集にならず、文書の位置づけと参照ルールを保持している
 - [ ] requirements分割により同一要件が複数ファイルへ重複していない
 - [ ] `docs/out-of-scope.md` との役割分担が明確である
 - [ ] `docs/conversion/*` との役割分担が明確である
 - [ ] 推奨ディレクトリ構成やpackage scripts案を要件本文に残していない
 - [ ] ページごとの過剰な細分化をしていない
-- [ ] 作業種別ごとに読むべきファイルが判断できる
-- [ ] agentのtoken消費削減という目的に反して、全ファイル常時参照を要求していない
+- [x] 作業種別ごとに読むべきファイルが判断できる
+- [x] agentのtoken消費削減という目的に反して、全ファイル常時参照を要求していない
 - [x] `docs/development-structure.md` を正本として参照できる
 - [x] `.agents/rules/file-structure.md` が重複しすぎず、参照方針として機能している
-- [ ] scripts分割方針が今後の実装者にとって明確である
+- [x] scripts分割方針が今後の実装者にとって明確である
 - [ ] 実ファイル移動と挙動変更が混ざっていない
 - [ ] `_common/` に安易に集約しすぎていない
 - [ ] import path修正が妥当である
