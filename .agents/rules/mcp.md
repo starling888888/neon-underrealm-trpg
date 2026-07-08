@@ -6,9 +6,13 @@ They must not become runtime dependencies, build-time requirements, publishing r
 
 ## General MCP Rules
 
-Do not send secrets, API keys, tokens, private rule text, unpublished game text, personal information, or credentials to MCP servers.
+Do not send secrets, API keys, tokens, credentials, personal information, unpublished game text, or private rule text to untrusted or unrelated MCP servers.
 
 Use only information safe to share externally.
+
+Exception: Google Drive Connector / Google Drive MCP may access the approved Drive sync root only for the Drive-to-raw workflow, because Google Drive is the user-edited source for local `.raw/` inputs.
+
+In that workflow, follow `.agents/skills/drive-to-raw-sync/SKILL.md`, use read, download, and export operations only, and do not relay Drive content to other MCP servers.
 
 Validate MCP output against:
 
@@ -21,6 +25,28 @@ Validate MCP output against:
 - existing code
 
 If MCP output conflicts with this repository's rules, follow the repository rules.
+
+## Google Drive
+
+Use Google Drive MCP only as a development support tool for copying user-edited sources into local working inputs.
+
+When syncing Google Drive sources, follow `.agents/skills/drive-to-raw-sync/SKILL.md`.
+
+The sync target is only:
+
+```text
+<repo-root>/.raw/
+```
+
+Do not use Google Drive MCP as a runtime dependency, build-time requirement, publishing requirement, or CI/CD requirement.
+
+Do not use Google Drive MCP to write, create, delete, move, copy, or share Drive files in the Drive-to-raw workflow.
+
+Do not store Google credentials, tokens, API keys, or Drive content secrets in the repository.
+
+The local `raw-google-drive.url` file may contain the sync folder URL. It must remain Git-ignored.
+
+If Google Drive MCP is unavailable, unauthenticated, or cannot export Google Docs as Markdown or Google Sheets as `.xlsx`, stop. Do not implement a replacement Google Drive API script or require `rclone` in the same task.
 
 ## Context7
 

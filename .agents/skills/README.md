@@ -30,6 +30,12 @@ Use when local `.tmp/*.md` review notes must be validated against local SSoT and
 
 Review intake stops before implementation. Fixes require explicit user approval.
 
+### `drive-to-raw-sync`
+
+Use when syncing Google Drive user-edited sources into the local `<repo-root>/.raw/` working input directory.
+
+This skill reads the Drive folder URL from `<repo-root>/raw-google-drive.url` or an explicit user-provided Drive URL, verifies ignore policy and path safety, downloads or exports files through Google Drive MCP, and never writes back to Google Drive.
+
 ### `pr-review-draft`
 
 Use when producing a markdown review draft from a GitHub PR snapshot.

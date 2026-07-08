@@ -17,7 +17,8 @@
 ```text
 .github/                 GitHub ActionsとGitHubテンプレート
 .agents/                 agent専用SKILLと常設ルール
-.raw/                    Git管理しないローカル入力
+raw-google-drive.url     Git管理しないGoogle Drive同期対象フォルダURL
+.raw/                    Git管理しないGoogle Drive由来ローカル入力
 .tmp/                    Git管理しない一時作業ファイル
 data/generated/          Git管理する生成JSON
 docs/                    プロジェクト文書とtask tracking
@@ -43,6 +44,7 @@ node_modules/
 dist/
 .astro/
 .raw/
+raw-google-drive.url
 .tmp/
 test-results/
 playwright-report/
@@ -53,7 +55,20 @@ playwright-report/
 
 `data/generated/` 配下のJSONは、Excelから変換された静的サイト用データとしてGit管理する。
 
-`.raw/`、`.tmp/`、Visual Review出力、Excel本体をGit管理しない理由や運用詳細は `AGENTS.md` を参照する。
+`.raw/`、`raw-google-drive.url`、`.tmp/`、Visual Review出力、Excel本体をGit管理しない理由や運用詳細は `AGENTS.md` を参照する。
+
+Google Drive由来のローカル入力は以下の構造に固定する。
+
+```text
+.raw/
+├── release-notes.xlsx
+├── data/
+│   └── *.xlsx
+└── contents/
+    └── *.md
+```
+
+`.raw/sheets/`、`raw/`、`contents/`、`data/` をGoogle Drive同期先として追加しない。
 
 ## Docs
 
