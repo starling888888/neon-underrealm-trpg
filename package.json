@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node --import tsx scripts/postprocess-page-toc.ts",
+    "build": "astro build && node --import tsx scripts/postprocess-page-toc/main.ts",
     "preview": "astro preview",
     "test": "mkdir -p test-results && node --import tsx --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=tap --test-reporter-destination=test-results/node-tests.tap tests/node/**/*.test.ts",
     "check": "astro check && biome check .",

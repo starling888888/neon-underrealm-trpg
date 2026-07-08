@@ -5,20 +5,31 @@ description: Use this skill after a GitHub PR has been merged to return to main,
 
 # Post-merge Plan Update Skill
 
-This skill performs repository cleanup and tracking updates after a PR has been merged.
+Perform repository cleanup and tracking updates after a PR has been merged.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - return to `main` after a merged PR
 - pull merged changes and confirm the result
 - delete the merged work branch
 - mark the corresponding `docs/plan.md` task complete
-- mark handled `docs/TODO.md` items complete and move them to `完了済み`
+- move completed `docs/plan.md` entries to `docs/plan-done.md` when the user asks for active/done cleanup
+- mark handled `docs/TODO.md` items complete and move them to `docs/TODO-done.md`
+- move completed issue files to `docs/issue/done/phase-N/` or `docs/issue/done/cross-phase/`
 - commit and push tracking updates to `main`
 
-This skill may update `docs/plan.md` checkboxes only because the user is explicitly requesting a post-merge plan update.
+Do not use for:
 
-This skill may update `docs/TODO.md` only when the merged work actually handled the TODO item.
+- implementation work
+- PR creation
+- PR review intake
+- failure-log done cleanup unless the user directly asks for that file
+
+Update `docs/plan.md` checkboxes only because the user is explicitly requesting a post-merge plan update.
+
+Update `docs/TODO.md` only when the merged work actually handled the TODO item.
+
+Do not move `docs/agent-failure-log.md` entries from this skill. Failure-log done cleanup belongs to failure-log audit or a direct user instruction for that file.
 
 ---
 
@@ -34,11 +45,13 @@ Do the cleanup in this order:
 6. Confirm the work branch is merged into `main`.
 7. Delete the local work branch only when it is safely merged.
 8. Update only the relevant `docs/plan.md` checkbox block.
-9. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `完了済み`.
-10. Run available validation commands.
-11. Commit only tracking files that were intentionally updated.
-12. Push `main`.
-
+9. If active/done cleanup is requested, move completed plan entries from `docs/plan.md` to `docs/plan-done.md`.
+10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
+11. If the issue is complete, move the issue file to the correct `docs/issue/done/` archive.
+12. Keep active documents from depending on completed issue files.
+13. Run available validation commands.
+14. Commit only tracking files that were intentionally updated.
+15. Push `main`.
 Do not modify source code.
 
 Do not edit unrelated plan items.
@@ -55,7 +68,7 @@ Before changing branches or tracking files, inspect the current branch and worki
 
 If the working tree has unrelated changes, stop and ask the user.
 
-If changes are only the intended `docs/plan.md` or `docs/TODO.md` tracking update, inspect them and continue.
+If changes are only the intended tracking update files, inspect them and continue.
 
 Record the current branch as `WORK_BRANCH` before switching to `main`.
 
@@ -101,6 +114,17 @@ Rules:
 - Do not update the `初期スコープ外として維持するもの` checklist unless the user specifically asks.
 - If no matching `docs/plan.md` item exists, do not create a new plan item. Report that there was no plan checkbox to update.
 
+If the user requested active/done cleanup, move completed plan entries that no longer need to stay in active context to `docs/plan-done.md`.
+
+Rules:
+
+- Move only completed entries.
+- Preserve the original task ID, task title, and relevant subtask context.
+- Add completion context when available: merged PR number, completion date, related commit, or task name.
+- Do not move incomplete tasks.
+- Do not move future or in-progress phase headings if they still provide active planning context.
+- If moving an item would make the active plan hard to understand, keep a concise phase placeholder or summary in `docs/plan.md`.
+
 ---
 
 ## Updating docs/TODO.md
@@ -113,7 +137,7 @@ Rules:
 
 - Update TODOs only when the merged work actually handled them.
 - Change the completed TODO checkbox from `[ ]` to `[x]`.
-- Move completed TODO items from `## 未対応` to `## 完了済み`.
+- Move completed TODO items from `docs/TODO.md` to `docs/TODO-done.md`.
 - Preserve the original TODO metadata when moving it.
 - Add completion context when available: merged PR number or branch, completion date, related commit, or task name.
 - Do not mark TODOs complete merely because the related plan item was completed.
@@ -131,6 +155,52 @@ Example completed item shape:
   - handling plan: ...
 ```
 
+If `docs/TODO.md` still contains a historical `## 完了済み` section, treat it as legacy active-file content. Do not add new completed TODOs there; move newly completed TODOs to `docs/TODO-done.md`.
+
+---
+
+## Moving completed issue files
+
+Move an issue file only when all of these are true:
+
+- the issue corresponds to the merged work
+- every relevant completion criterion and checkpoint has been checked locally or confirmed by the user
+- the merged PR or commit is present on `main`
+- the issue is not the current in-progress tracking issue
+- the destination classification is clear
+
+Before deciding whether an issue is complete, inspect its `完了条件` and `チェックポイント`.
+
+If the latest merged issue still has unchecked items, update those checkboxes during post-merge only when the item can be confirmed from the merged `main` state, validation results, merged PR record, or explicit user confirmation.
+
+If older active issue files have unchecked items because the check update was missed earlier, you may update those checkboxes during post-merge when the current repository state or explicit user confirmation proves the item is complete.
+
+Do not invent completion evidence. Do not mark an item complete merely because the related plan item is checked.
+
+If an unchecked item cannot be confirmed during post-merge, leave it unchecked, report it, and do not move that issue file to `docs/issue/done/`.
+
+Destination rules:
+
+- Use `docs/issue/done/phase-0/` for Phase 0 issue tasks.
+- Use `docs/issue/done/phase-1/` for Phase 1 issue tasks.
+- Use `docs/issue/done/phase-2/` for Phase 2 issue tasks.
+- Use `docs/issue/done/cross-phase/` for tasks that are not tied to a single numbered plan phase, or for repository/process cleanup spanning multiple phases.
+
+Do not move:
+
+- unfinished issues
+- the current issue still being worked on
+- issue drafts that were not validated locally
+- issue files with unchecked completion criteria or checkpoints unless the items were confirmed and checked during this post-merge update, or the user explicitly confirms they are complete
+
+When moving an issue file:
+
+- Keep the filename unchanged.
+- Do not make active documents depend on completed issue files.
+- If active docs still need information from a completed issue, promote that information to the appropriate active SSoT: requirements, design notes, TODO, plan, `AGENTS.md`, or a skill.
+- Historical or provenance references may remain only when clearly marked as historical and not used as implementation responsibility.
+- Report every moved issue path in the final report.
+
 ---
 
 ## Validation
@@ -139,6 +209,10 @@ Run available checks after editing tracking files:
 
 - project check command
 - project build command
+
+Skip `npm run check` and `npm run build` when every changed file is a `.md` file. Markdown-only tracking updates do not justify the execution cost.
+
+Do not skip validation for `.mdx` changes. Treat `.mdx` as site content that can affect the build.
 
 If either script is missing, report it and continue.
 
@@ -153,7 +227,12 @@ Stage only tracking files that were intentionally updated.
 Allowed staged files:
 
 - `docs/plan.md`
-- `docs/TODO.md` only when TODO items were completed
+- `docs/plan-done.md` only when plan entries were moved
+- `docs/TODO.md` only when TODO items were completed or removed from active TODO
+- `docs/TODO-done.md` only when completed TODO items were moved
+- `docs/issue/*.md` only when moving the completed issue out of active issue storage
+- `docs/issue/done/**/*.md` only when receiving moved completed issue files
+- documentation files whose only change is an internal link update caused by moved issue files
 
 Confirm the staged diff contains only intended tracking files.
 

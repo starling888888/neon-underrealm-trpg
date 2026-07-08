@@ -5,20 +5,24 @@ description: Use this skill when the user asks to review a GitHub pull request d
 
 # PR Review Draft Skill
 
-This skill creates a markdown review draft from a pull request snapshot.
+Create a markdown review draft from a pull request snapshot.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - review a GitHub pull request from the browser UI
 - inspect a PR diff without using local Codex execution time
 - produce a `.tmp/*.md` review draft for later `review-to-issue` intake
 - review an already-merged PR and extract follow-up items
 
-This skill does not fix code.
+Do not use for:
 
-This skill does not post GitHub review comments.
+- code fixes
+- GitHub review comments
+- local tracking updates
+- `review-to-issue` intake
+- commit or push
 
-This skill creates a review draft only, then stops for human review.
+Create a review draft only, then stop for human review.
 
 ---
 

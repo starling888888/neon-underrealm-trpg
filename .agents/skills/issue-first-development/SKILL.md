@@ -5,9 +5,9 @@ description: Use this skill when the user asks to start a task from docs/plan.md
 
 # Issue-first Development Skill
 
-This skill prepares a development task safely before implementation.
+Prepare a development task before implementation.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - start a task from `docs/plan.md`
 - create a branch for a planned task
@@ -18,9 +18,15 @@ Use this skill when the user asks to:
 - create `docs/issue/X-hogehoge.md`
 - split a planned task into a child task
 
-This skill does **not** implement code.
+Do not use for:
 
-This skill only creates, drafts, or validates the branch / issue contract, then stops for human review.
+- implementation
+- Visual Review
+- PR creation
+- post-merge cleanup
+- review note intake
+
+Create, draft, or validate the branch / issue contract, then stop for human review.
 
 ---
 
@@ -122,6 +128,27 @@ Do not overwrite, delete, format, or move existing user changes unless the user 
 If the working tree is unsafe or ambiguous, stop and ask the user.
 
 In remote snapshot draft mode, do not infer local repository state. If a required file cannot be fetched, mark it under `Unchecked / Not verified`.
+
+## Context hygiene
+
+Before starting issue-first work, check whether the current conversation still carries context from a previous issue.
+
+Previous-issue context includes old issue goals, old branch assumptions, old review notes, old implementation details, old TODO routing decisions, and temporary task assumptions.
+
+Do not carry previous-issue context into a new issue-first task.
+
+Clear only task-derived context. Do not clear or ignore:
+
+- `AGENTS.md`
+- `.agents/skills/*`
+- `.agents/rules/*`
+- repository configuration
+- MCP server connection information
+- current user instructions
+
+If the agent cannot clear previous-issue context by itself, stop before preparing the new issue and tell the user to start a fresh Codex session or otherwise clear the previous issue's conversation context.
+
+If automatic context compaction happened during the same issue, do not treat that as a completed clear. Re-check the current issue, branch, working tree, and latest user instruction before continuing.
 
 ---
 
@@ -277,92 +304,32 @@ In remote snapshot draft mode, record whether the design target was found in the
 
 ## Issue file template
 
-Use this template.
+Use `.github/ISSUE_TEMPLATE/issue-first-development.md` as the issue body template.
 
-```md
-# NN-slug
+In local repository mode:
 
-## 目的
+- read `.github/ISSUE_TEMPLATE/issue-first-development.md`
+- create `docs/issue/<issue-slug>.md` as a local repository file
+- fill the template with the current task's goal, scope, completion criteria, checkpoints, TODO references, design references, and review points
 
-このタスクで達成する目的を書く。
+In ChatGPT / remote snapshot draft mode:
 
-## 背景
+- fetch or read `.github/ISSUE_TEMPLATE/issue-first-development.md` when available
+- output the complete issue markdown draft in chat so it can be copied into the repository later
+- do not claim that a GitHub Issue or repository file was created
 
-このタスクが必要になった理由を書く。
+If the template cannot be read, do not reconstruct it from memory. Stop in local repository mode, or record the template as not verified in remote snapshot draft mode.
 
-関連する要件がある場合は、以下を参照する。
+This skill creates or validates local `docs/issue/*.md` files. It does not create GitHub Issues unless the user explicitly asks for a GitHub Issue.
 
-- `docs/requirements.md`
-- `docs/out-of-scope.md`
-- `docs/plan.md`
-- `docs/TODO.md` に関連項目がある場合は該当TODO
-- UI、CSS、layout、page、Componentタスクで該当する場合は `docs/design/<design-target>/`
-- design画像作成が必要な場合は `.agents/skills/design-image-generation/SKILL.md`
+GitHub Issue creation requires a clear instruction such as:
 
-## 対象範囲
+- `GitHub Issueを作って`
+- `GitHub上にissueを発行して`
+- `gh issue createして`
+- `この内容でGitHub Issueを作成して`
 
-このタスクで変更してよい範囲を書く。
-
-例：
-
-- `astro.config.mjs`
-- `src/lib/utils/paths.ts`
-- `docs/deployment.md`
-
-## 初期スコープ外
-
-このタスクで実装してはいけないことを書く。
-
-例：
-
-- 検索機能を実装しない
-- UIデザインを作り込まない
-- Excel変換処理を作らない
-- キャラクターシート機能を作らない
-- アクセス解析を追加しない
-- DB、認証、SSR、CMSを追加しない
-- 初期スコープ外の項目は `docs/out-of-scope.md` に従う
-
-## 完了条件
-
-- [ ] 条件1
-- [ ] 条件2
-- [ ] 条件3
-- [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
-- [ ] UI系タスクの場合は、参照するdesign targetとdesign画像の扱いが記録されている
-- [ ] design画像作成が必要な場合は、`design-image-generation` の実行を前提条件として記録している
-- [ ] `npm run build` が通る
-- [ ] 必要に応じて `npm run check` が通る
-
-## チェックポイント
-
-- [ ] 既存ルートが壊れていない
-- [ ] GitHub Pagesのサブパス公開に影響しない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-- [ ] 関連する `docs/design/` と矛盾していない
-- [ ] ユーザーの未コミット変更を破壊していない
-
-## 想定変更ファイル
-
-- `path/to/file`
-- `path/to/file`
-
-## レビュー観点
-
-人間レビュー時に確認してほしい観点を書く。
-
-UI、CSS、layout、page、Componentタスクでは、該当する `docs/design/<design-target>/` に対して確認してほしい観点を書く。
-
-関連TODOを扱う場合は、TODOをこのissueで回収してよいか確認してほしい観点を書く。
-
-デザイン画像作成が必要な場合は、`design-image-generation` に切り出す前提条件が正しいか確認してほしい観点を書く。
-
-## 備考
-
-必要な補足を書く。
-```
+The phrase `issueを作って` by itself means the local issue-first workflow unless the user explicitly says GitHub Issue.
 
 ---
 

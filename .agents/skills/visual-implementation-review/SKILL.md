@@ -5,13 +5,21 @@ description: Use this skill after an approved UI implementation task when the ag
 
 # Visual Implementation Review Skill
 
-This skill runs after an approved UI implementation task.
+Run after an approved UI implementation task.
 
-Use it when the user asks to visually review a completed UI, page, layout, component, or style change against shared design references.
+Use when the user asks to visually review a completed UI, page, layout, component, or style change against shared design references.
 
-Do not use it for branch setup, issue creation, plan updates, human review note intake, commit, or push.
+Do not use for:
 
-This skill compares implementation screenshots against canonical design references. It does not turn screenshots into canonical design images.
+- branch setup
+- issue creation
+- plan updates
+- human review note intake
+- commit
+- push
+- canonical design image updates
+
+Compare implementation screenshots against canonical design references. Do not turn screenshots into canonical design images.
 
 ---
 

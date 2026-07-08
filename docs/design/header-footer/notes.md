@@ -17,13 +17,16 @@
 - `docs/out-of-scope.md`
 - `docs/plan.md`
 - `docs/TODO.md`
-- `docs/issue/10-header-footer.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/title_logo_black.png`
 - `docs/design/header-footer/title_logo_black.webp`
 - `public/title_logo.png`
 - `public/title_logo.webp`
+
+## Historical source issues
+
+- `docs/issue/done/phase-2/10-header-footer.md`
 
 ## デザイン方針
 
@@ -47,8 +50,8 @@
 - 本番ロゴは暗めHeader上で読める必要がある。ただしHeaderをhero風の大きな帯にしない。
 - `docs/design/header-footer/` 配下の黒文字ロゴは比較用であり、本番Header用assetではない。
 - Headerのトップページリンクは、支援技術とキーボード操作で意味が伝わる必要がある。見た目は画像ロゴでもよいが、`alt` または同等のaccessible textでサイト名を保持する。
-- Desktop Header画像では、右側に検索入力欄mockがある状態を示す。この実装責務は `docs/issue/10-header-footer.md` に従う。
-- Mobile Header画像では、左右に後続導線用のアイコン枠がある状態を示す。これらの実装責務は `docs/issue/10-header-footer.md` に従う。
+- Desktop Header画像では、右側に検索入力欄mockがある状態を示す。現在の実装責務は `docs/requirements/layout-navigation.md`、このdesign note、承認済みcurrent issueに従う。
+- Mobile Header画像では、左右に後続導線用のアイコン枠がある状態を示す。現在の実装責務は `docs/requirements/layout-navigation.md`、このdesign note、承認済みcurrent issueに従う。
 - 生成画像では、Desktop Header高さを `88px`、Desktopロゴ表示高さを `48px` とする。
 - 生成画像では、Mobile Header高さを `64px`、Mobileロゴ表示高さを `30px` とする。
 - Mobile Headerではフルロゴを維持する。狭い幅でも、初期draftではテキストfallbackへ切り替えない。
@@ -102,15 +105,15 @@
 - viewport: desktop `1440x1200`, mobile `390x900`
 - header / logo sizes: desktop Header `88px`, desktop logo `48px`; mobile Header `64px`, mobile logo `30px`
 - footer sizes: desktop Footer `80px`; mobile Footer `120px`
-- prompt summary or capture notes: Header / Footer design targetの初期draft画像を生成した。Headerのロゴ利用、WebP優先とPNG fallback、CSSによる表示サイズ制御、Desktop Headerの検索入力欄mock配置、mobile Headerの左右アイコン枠配置を視覚条件として定義した。検索入力欄mockとアイコン枠の実装責務は `docs/issue/10-header-footer.md` に置く。Footerについてはdesktop / mobile両方の画像に、`© 2026 椋鳥`、サイト名、GitHub / X / Discordのリンク種別表示を反映した。現行実装では、これらの外部リンクをブランドSVGアイコンで表示する。
+- prompt summary or capture notes: Header / Footer design targetの初期draft画像を生成した。Headerのロゴ利用、WebP優先とPNG fallback、CSSによる表示サイズ制御、Desktop Headerの検索入力欄mock配置、mobile Headerの左右アイコン枠配置を視覚条件として定義した。検索入力欄mockとアイコン枠の現在の実装責務は `docs/requirements/layout-navigation.md`、このdesign note、承認済みcurrent issueに置く。Footerについてはdesktop / mobile両方の画像に、`© 2026 椋鳥`、サイト名、GitHub / X / Discordのリンク種別表示を反映した。現行実装では、これらの外部リンクをブランドSVGアイコンで表示する。
 
 ## 決定事項
 
 - Desktop Headerの高さは `88px` とし、Desktopロゴ表示高さは `48px` とする。
-- Desktop Headerの右側には検索入力欄mockを置く。具体的な実装責務は `docs/issue/10-header-footer.md` に従う。
+- Desktop Headerの右側には検索入力欄mockを置く。現在の実装責務は `docs/requirements/layout-navigation.md`、このdesign note、承認済みcurrent issueに従う。
 - Mobile Headerの高さは `64px` とし、Mobileロゴ表示高さは `30px` とする。
 - Mobile Headerではフルロゴを維持する。
-- Mobile Headerの左側にはmenu系アイコン枠、右側にはsearch系アイコン枠を置く。具体的な実装責務は `docs/issue/10-header-footer.md` に従う。
+- Mobile Headerの左側にはmenu系アイコン枠、右側にはsearch系アイコン枠を置く。現在の実装責務は `docs/requirements/layout-navigation.md`、このdesign note、承認済みcurrent issueに従う。
 - Header / Footerは同じ `docs/design/header-footer/` targetで扱う。
 - Footer画像はdesktop / mobileの両方を作成する。
 - Footerは暗めニュートラルグレー基調とし、`© 2026 椋鳥`、サイト名、GitHub / X / Discordのリンク種別が分かるアイコン枠を含める。

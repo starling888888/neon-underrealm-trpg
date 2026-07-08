@@ -5,9 +5,9 @@ description: Use this skill when the user asks to create, update, or canonicaliz
 
 # Design Image Generation Skill
 
-This skill creates or canonicalizes design images used as Visual Review references.
+Create or canonicalize design images used as Visual Review references.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - create an initial design image for a UI, CSS, layout, page, or component task
 - prepare design references under `docs/design/<design-target>/`
@@ -15,11 +15,15 @@ Use this skill when the user asks to:
 - update design images after a reviewed implementation should become the new canonical design
 - create or update `docs/design/<design-target>/notes.md`
 
-This skill does **not** implement code.
+Do not use for:
 
-This skill does **not** perform Visual Review by itself.
+- code implementation
+- Visual Review execution
+- screenshot comparison after implementation
+- PR creation
+- post-merge cleanup
 
-This skill prepares design artifacts and stops for human review or approval.
+Prepare design artifacts, then stop for human review or approval.
 
 ---
 
