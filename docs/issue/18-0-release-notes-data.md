@@ -255,55 +255,55 @@ Excel上の更新日は、上から下へ向かって古い順、または同日
 
 ## 完了条件
 
-- [ ] `docs/conversion/release-notes.md` にリリースノートデータ変換仕様が作成されている
-- [ ] 変換仕様に、対象Excelファイル `.raw/release-notes.xlsx` が記載されている
-- [ ] 変換仕様に、対象シート `release-notes` が記載されている
-- [ ] 変換仕様に、列定義、必須列、任意列、空欄時の扱い、改行の扱い、ID生成ルール、表示順ルール、JSON出力先、JSON出力形式、バリデーションルール、テスト観点が記載されている
-- [ ] `ReleaseNote` / `ReleaseNotesJson` の型または検証スキーマが定義されている
-- [ ] `data/generated/release-notes.json` が生成済みJSONとして配置されている
-- [ ] `data/generated/release-notes.json` は `dataName`、`updatedAt`、`data` を持つオブジェクト形式になっている
-- [ ] `dataName` は `release-notes` である
-- [ ] `data` はトップページ最新5件表示と更新履歴ページ全件表示の両方で利用可能な形になっている
-- [ ] `.raw/release-notes.xlsx` から `data/generated/release-notes.json` を生成する変換スクリプトが作成されている
-- [ ] 変換スクリプトは `scripts` 配下の専用ディレクトリに配置されている
-- [ ] 変換スクリプトは `.raw/release-notes.xlsx` をローカル実行時に読み込む前提になっている
-- [ ] CI/CDビルドはExcel本体なしで成功する前提を壊していない
-- [ ] 既存JSONが存在しない初回実行時にエラーにならない
-- [ ] 既存JSONと今回生成dataが同一の場合、`updatedAt` を維持する
-- [ ] 既存JSONと今回生成dataが異なる場合のみ、`updatedAt` を更新する
-- [ ] トップページ用に最新5件を取得できるデータ取得処理がある
-- [ ] 更新履歴ページ用に全件を取得できるデータ取得処理がある
-- [ ] `body` が空欄の場合に `summary` へfallbackできる処理またはデータ取得関数がある
-- [ ] 更新日降順が検証されている
-- [ ] 必須項目の欠落が検証されている
-- [ ] ID重複が検証されている
-- [ ] 改行保持が検証されている
-- [ ] `body` 空欄時fallbackが検証されている
-- [ ] 出力JSONのトップレベル形状が検証されている
-- [ ] 変換スクリプトと検証スキーマのテストが追加されている
-- [ ] `npm run test` が通る
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
-- [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
+- [x] `docs/conversion/release-notes.md` にリリースノートデータ変換仕様が作成されている
+- [x] 変換仕様に、対象Excelファイル `.raw/release-notes.xlsx` が記載されている
+- [x] 変換仕様に、対象シート `release-notes` が記載されている
+- [x] 変換仕様に、列定義、必須列、任意列、空欄時の扱い、改行の扱い、ID生成ルール、表示順ルール、JSON出力先、JSON出力形式、バリデーションルール、テスト観点が記載されている
+- [x] `ReleaseNote` / `ReleaseNotesJson` の型または検証スキーマが定義されている
+- [x] `data/generated/release-notes.json` が生成済みJSONとして配置されている
+- [x] `data/generated/release-notes.json` は `dataName`、`updatedAt`、`data` を持つオブジェクト形式になっている
+- [x] `dataName` は `release-notes` である
+- [x] `data` はトップページ最新5件表示と更新履歴ページ全件表示の両方で利用可能な形になっている
+- [x] `.raw/release-notes.xlsx` から `data/generated/release-notes.json` を生成する変換スクリプトが作成されている
+- [x] 変換スクリプトは `scripts` 配下の専用ディレクトリに配置されている
+- [x] 変換スクリプトは `.raw/release-notes.xlsx` をローカル実行時に読み込む前提になっている
+- [x] CI/CDビルドはExcel本体なしで成功する前提を壊していない
+- [x] 既存JSONが存在しない初回実行時にエラーにならない
+- [x] 既存JSONと今回生成dataが同一の場合、`updatedAt` を維持する
+- [x] 既存JSONと今回生成dataが異なる場合のみ、`updatedAt` を更新する
+- [x] トップページ用に最新5件を取得できるデータ取得処理がある
+- [x] 更新履歴ページ用に全件を取得できるデータ取得処理がある
+- [x] `body` が空欄の場合に `summary` へfallbackできる処理またはデータ取得関数がある
+- [x] 更新日降順が検証されている
+- [x] 必須項目の欠落が検証されている
+- [x] ID重複が検証されている
+- [x] 改行保持が検証されている
+- [x] `body` 空欄時fallbackが検証されている
+- [x] 出力JSONのトップレベル形状が検証されている
+- [x] 変換スクリプトと検証スキーマのテストが追加されている
+- [x] `npm run test` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
 
 ## チェックポイント
 
-- [ ] `data/generated/` 配下のJSONを手編集前提にしていない
-- [ ] `.raw/`、Excel本体、`.raw/contents/`、`raw-google-drive.url` をGit管理対象にしていない
-- [ ] `.raw/release-notes.xlsx` をリポジトリ内の実装ファイルとして参照していない
-- [ ] Excel変換はローカル明示実行のメンテナンス作業として分離されている
-- [ ] CI/CDや通常buildがExcel本体に依存していない
-- [ ] トップページ・更新履歴ページのUI実装へ踏み込んでいない
-- [ ] 更新履歴ページのページ内目次非表示実装へ踏み込んでいない
-- [ ] 検索index生成、Pagefind、GitHub Actions deploy設定へ踏み込んでいない
-- [ ] CMS、管理画面、投稿フォーム、認証、DB、APIサーバーを追加していない
-- [ ] 不要な依存関係を追加していない
-- [ ] 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由がissueまたは作業報告に記録されている
-- [ ] GitHub Pagesのサブパス公開に影響しない
-- [ ] 既存ルートが壊れていない
-- [ ] `docs/TODO.md` の既存未対応項目と矛盾していない
-- [ ] `docs/development-structure.md` のscript配置方針と矛盾していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] `data/generated/` 配下のJSONを手編集前提にしていない
+- [x] `.raw/`、Excel本体、`.raw/contents/`、`raw-google-drive.url` をGit管理対象にしていない
+- [x] `.raw/release-notes.xlsx` をリポジトリ内の実装ファイルとして参照していない
+- [x] Excel変換はローカル明示実行のメンテナンス作業として分離されている
+- [x] CI/CDや通常buildがExcel本体に依存していない
+- [x] トップページ・更新履歴ページのUI実装へ踏み込んでいない
+- [x] 更新履歴ページのページ内目次非表示実装へ踏み込んでいない
+- [x] 検索index生成、Pagefind、GitHub Actions deploy設定へ踏み込んでいない
+- [x] CMS、管理画面、投稿フォーム、認証、DB、APIサーバーを追加していない
+- [x] 不要な依存関係を追加していない
+- [x] 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由がissueまたは作業報告に記録されている
+- [x] GitHub Pagesのサブパス公開に影響しない
+- [x] 既存ルートが壊れていない
+- [x] `docs/TODO.md` の既存未対応項目と矛盾していない
+- [x] `docs/development-structure.md` のscript配置方針と矛盾していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -367,6 +367,17 @@ Excel上の更新日は、上から下へ向かって古い順、または同日
 このタスクでは、`.raw/contents/*.md` は扱わない。`.raw/contents/*.md` はページ作成タスク用のローカル作業入力であり、リリースノートデータ変換仕様の正本ではない。
 
 `docs/TODO.md` の現時点の未対応項目に、リリースノートデータへ直接紐づくものは見当たらないため、このissueでは新規TODO回収を前提にしない。
+
+実装時に `read-excel-file` と `fflate` をdevDependencyとして追加した。`read-excel-file` は `.raw/release-notes.xlsx` の実ExcelファイルをTypeScript変換スクリプトから直接読み、シート名・セル値・改行を安定して扱うために使う。`fflate` はテスト内で実Excel本体に依存しない最小xlsx fixtureを生成するために使う。代替案として独自にxlsx zip/XMLをすべて解析する方法もあるが、仕様外の実装量と保守リスクが大きいため採用しない。`exceljs` も検討したが、`npm audit` で推移依存 `uuid` のmoderate vulnerabilityが残ったため採用しない。サイト本体とCI/CD通常buildは生成済みJSONを読むだけで、Excel本体や変換script実行を要求しない。
+
+実装確認:
+
+- `npm run convert:release-notes`: pass
+- `npm run test`: pass
+- `npm run check`: pass
+- `npm run build`: pass
+- `npm audit --omit=optional`: pass
+- `docs/TODO.md`: リリースノートデータへ直接紐づく未対応項目なし
 
 ## ローカル検証メモ
 

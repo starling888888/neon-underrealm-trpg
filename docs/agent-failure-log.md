@@ -174,6 +174,13 @@ source種別は以下を使う。
 
 ### Repeated formatter feedback during implementation
 
+#### 2026-07-09
+
+- source: self
+- 発生箇所: `18-0-release-notes-data` の `src/lib/schemas/release-notes.ts`、`scripts/convert-release-notes/lib.ts`、`tests/node/release-notes.test.ts`
+- 観測した失敗: `npm run check` でTypeScriptの `unknown` 絞り込み不足を修正した後、Biome format / organize imports指摘を同じ作業中に複数回発生させた。さらにExcel読取依存を差し替えた後も、返り値型の `null` 考慮漏れとimport名順で `npm run check` を再度失敗させた。`npm run format` だけではorganize importsが解決しないことを見落とし、同じ `npm run check` 失敗を繰り返した。
+- 一次対応: 対象ファイルのimport順と型を手修正し、`npx biome check` で局所確認してから `npm run check` を再実行して通した。`exceljs` は `npm audit` で推移依存のmoderate vulnerabilityが残ったため、`read-excel-file` と `fflate` へ差し替えた。
+
 #### 2026-07-08
 
 - source: self
