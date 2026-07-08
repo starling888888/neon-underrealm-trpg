@@ -10,6 +10,7 @@ This file defines the repository-specific Markdown style rules for `.md` files.
   - `###`
 - Use `-` for unordered list markers.
 - Use 2 spaces for nested unordered list indentation.
+- Use formatter output for child lists under ordered list items.
 
 ## Formatter
 
@@ -33,4 +34,4 @@ The Markdown formatter targets Git-managed `.md` files only. `.mdx` files are no
 
 This file does not define rules for prose style, terminology, sentence structure, line length, punctuation, emphasis syntax, or link syntax.
 
-When style judgment is unclear, keep the decision within the three required rules above instead of expanding this rule set.
+When style judgment is unclear, keep the decision within the required rules above instead of expanding this rule set.

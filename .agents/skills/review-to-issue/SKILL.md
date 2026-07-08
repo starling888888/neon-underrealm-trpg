@@ -102,12 +102,10 @@ Do not perform version-control write operations unless the user explicitly asks.
 8. Classify each review item.
 9. Check whether any review item is also an agent failure candidate.
 10. Route each review item:
-
-- current-issue items go to `docs/issue/*.md`
-- valid but not-current-issue items go to `docs/TODO.md`
-- if a not-current-issue item has no suitable plan entry, add a plan entry to `docs/plan.md`
-- agent failure candidates go to `docs/agent-failure-log.md`
-
+    - current-issue items go to `docs/issue/*.md`
+    - valid but not-current-issue items go to `docs/TODO.md`
+    - if a not-current-issue item has no suitable plan entry, add a plan entry to `docs/plan.md`
+    - agent failure candidates go to `docs/agent-failure-log.md`
 11. Report the validity and routing assessment to the user.
 12. Stop and wait for user confirmation.
 

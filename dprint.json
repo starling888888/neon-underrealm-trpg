@@ -13,5 +13,9 @@
     "playwright-report"
   ],
   "lineWidth": 120,
-  "markdown": {}
+  "markdown": {
+    "headingKind": "atx",
+    "unorderedListKind": "dashes",
+    "listIndentKind": "commonMark"
+  }
 }
