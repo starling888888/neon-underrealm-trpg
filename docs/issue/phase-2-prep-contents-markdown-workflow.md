@@ -281,4 +281,34 @@ Google Docsから `.raw/contents/*.md` へ同期する場合は、`text/plain` e
 - skipped commands:
   - `npm run check`: skipped because changes are Markdown-only and do not touch `.mdx`, Astro, TypeScript, CSS, config, package, generated data, images, or workflows
   - `npm run build`: skipped because changes are Markdown-only and do not touch `.mdx`, Astro, TypeScript, CSS, config, package, generated data, images, or workflows
-- remaining unverified before final report: final failure-log category check
+- failure-log category check: completed during review intake; a stale unverified-note process failure was recorded in `docs/agent-failure-log.md` under `Completed checklist with stale unverified note`
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- READMEのGoogle Docs運用説明は、Markdownソースをプレーンテキストとして保持する方針を説明しているが、ユーザー操作として「プレーンテキストとして貼り付ける」ことの明示が弱い。
+- `docs/issue/phase-2-prep-contents-markdown-workflow.md` の `Local Validation Summary` に、完了条件とチェックポイントがすべて完了済みであるにもかかわらず `remaining unverified before final report: final failure-log category check` が残っている。
+- `.agents/rules/contents-markdown.md` と `.agents/skills/contents-markdown-authoring/SKILL.md` は `trailing spaces` をGoogle Docs由来ノイズとして扱うが、Markdownの行末2スペースによるhard line breakに依存しない方針を明示していない。
+
+### 判定
+
+- source: pr-review-draft
+- classification: valid
+- local validation: `.tmp/review.md` はPR #26のremote PR review draftであり、`Source Snapshot` と `Local Validation Required` を含むためローカルSSoTで検証した。現行branch `phase-2-prep-contents-markdown-workflow` の `README.md` では「そのまま貼り付けます」となっており、「プレーンテキストとして貼り付ける」操作は明示されていない。現行issueの `Local Validation Summary` には `remaining unverified before final report` が残っている。contents markdown rule / skillには `trailing spaces` のノイズ扱いはあるが、hard line break非依存の明記はない。
+- failure-log: 2件目は、検証済みチェックリストと未検証メモが同時に残る状態であり、未検証項目の扱いを曖昧にしたprocess failure候補として `docs/agent-failure-log.md` に記録した。
+
+### 対応方針
+
+- `README.md` のcontents markdown用Google Doc説明を、Markdownソースを「プレーンテキストとして貼り付ける」操作が明確になるように修正する。
+- issueの `Local Validation Summary` から未解決風の `remaining unverified before final report` を解消し、failure-log確認結果を記録する。
+- `.agents/rules/contents-markdown.md` または `.agents/skills/contents-markdown-authoring/SKILL.md` に、contents markdownではtrailing-space hard line breakへ依存しない方針を追記する。
+
+### 対応完了チェックリスト
+
+- [x] `README.md` にMarkdownソースをプレーンテキストとして貼り付ける操作が明記されている
+- [x] `docs/issue/phase-2-prep-contents-markdown-workflow.md` の `Local Validation Summary` に未解決風の未検証項目が残っていない
+- [x] contents markdown ruleまたはskillに、trailing-space hard line breakへ依存しない方針が明記されている
+- [x] `npm run format:md` が通る
+- [x] `git diff --check` が通る
+- [x] `npm run check:md` が通る

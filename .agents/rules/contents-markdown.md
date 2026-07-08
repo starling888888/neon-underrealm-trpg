@@ -63,6 +63,8 @@ Treat these as Google Docs-derived noise unless the current approved task says o
 - extra blank lines
 - trailing spaces
 
+Do not rely on trailing-space hard line breaks in contents markdown. Use paragraph breaks, explicit HTML, or an HTML comment instruction when a hard line break is required.
+
 Do not add formatter processing for `.raw/contents/*.md` unless an approved issue changes that policy.
 
 ## Source Of Truth

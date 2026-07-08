@@ -93,7 +93,9 @@ Codexから同期するには、ChatGPT / Codexの作業環境でGoogle Drive Co
 
 Google DocsはMarkdownソースをプレーンテキストとして保持し、`text/plain` exportでMarkdown `.md` として `.raw/contents/` へ取得します。Google SheetsはExcel `.xlsx` として `.raw/release-notes.xlsx` または `.raw/data/` へ取得します。
 
-contents markdown用Google Docには、frontmatter、Markdown本文、HTMLコメントによるagent向け指示をそのまま貼り付けます。Google Docsの見出し、箇条書き、表、リンクなどのリッチテキスト書式でレイアウト済みドキュメントを作らないでください。
+contents markdown用Google Docには、frontmatter、Markdown本文、HTMLコメントによるagent向け指示を、Markdownソースとしてプレーンテキストで貼り付けます。通常貼り付けでGoogle Docsのリッチテキスト変換が発生する環境では、「プレーンテキストとして貼り付け」を使ってください。
+
+Google Docsの見出し、箇条書き、表、リンクなどのリッチテキスト書式でレイアウト済みドキュメントを作らないでください。
 
 contents markdown用Google Docは、agentが解釈する作業入力です。requirements、plan、issue、designの正本ではなく、公開ページ本文そのものでもありません。
 

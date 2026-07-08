@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Completed checklist with stale unverified note
+
+#### 2026-07-09
+
+- source: review
+- 発生箇所: `phase-2-prep-contents-markdown-workflow` の `docs/issue/phase-2-prep-contents-markdown-workflow.md`
+- 観測した失敗: 完了条件とチェックポイントをすべて確認済みにした後も、`Local Validation Summary` に `remaining unverified before final report: final failure-log category check` が残り、未検証項目が残っているのか確認済みなのかが曖昧な状態でPR化した。
+- 一次対応: review-to-issueで `レビュー指摘 1` に取り込み、issue修正時にfailure-log確認結果を明確化する対応方針へ入れた。
+
 ### Workflow stopping point overrun
 
 #### 2026-07-05
