@@ -36,6 +36,12 @@ Use when syncing Google Drive user-edited sources into the local `<repo-root>/.r
 
 This skill reads the Drive folder URL from `<repo-root>/raw-google-drive.url` or an explicit user-provided Drive URL, verifies ignore policy and path safety, downloads or exports files through Google Drive MCP, and never writes back to Google Drive.
 
+### `contents-markdown-authoring`
+
+Use when drafting or reviewing contents markdown for `.raw/contents/*.md`.
+
+This skill treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, uses HTML comments for agent-facing instructions, and does not implement pages.
+
 ### `pr-review-draft`
 
 Use when producing a markdown review draft from a GitHub PR snapshot.

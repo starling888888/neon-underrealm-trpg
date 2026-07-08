@@ -13,7 +13,7 @@ Use when the user asks to:
 - sync Drive sources to `.raw`
 - update `.raw/contents`
 - sync Drive input before page creation
-- reflect Google Docs content into local input
+- reflect Google Docs Markdown source into local input
 - download a Spreadsheet to `.raw`
 - fetch working input through Drive MCP
 
@@ -63,7 +63,7 @@ Stop if the Drive folder, local path, ignore policy, MCP availability, export fo
 6. Stop if `.raw/` or `raw-google-drive.url` is not Git-ignored.
 7. Confirm Google Drive MCP is available and authenticated.
 8. Confirm the MCP can search files, read metadata, and download or export file content.
-9. Confirm Google Docs can be exported as Markdown.
+9. Confirm Google Docs can be exported as plain text.
 10. Confirm Google Sheets can be exported as `.xlsx`.
 
 ## Drive Folder Resolution
@@ -116,10 +116,10 @@ Do not create or use:
 
 ## Export Rules
 
-Export Google Docs as Markdown:
+Export Google Docs contents markdown as plain text:
 
 ```text
-text/markdown
+text/plain
 ```
 
 Save Google Docs under:
@@ -127,6 +127,12 @@ Save Google Docs under:
 ```text
 <repo-root>/.raw/contents/*.md
 ```
+
+Store the exported plain text as a Markdown `.md` file.
+
+The Google Doc must contain Markdown source as plain text. Do not use Google Docs rich-text headings, lists, tables, or links as the source format for `.raw/contents/*.md`.
+
+Do not use Google Docs `text/markdown` export for `.raw/contents/*.md`.
 
 Export Google Sheets as Excel:
 
@@ -178,7 +184,7 @@ Stop when:
 - the Drive folder is missing, ambiguous, or inaccessible
 - Google Drive MCP is unavailable or unauthenticated
 - required MCP tools are unavailable
-- Google Docs Markdown export is unavailable
+- Google Docs plain-text export is unavailable
 - Google Sheets `.xlsx` export is unavailable
 - a Drive path cannot be mapped to the allowed `.raw/` structure
 - an output path would be outside `<repo-root>/.raw/`
@@ -193,7 +199,7 @@ Report:
 - Drive source folder or file
 - local repo root
 - synced file count
-- Google Docs exported to Markdown
+- Google Docs exported through `text/plain` and saved as Markdown `.md`
 - Google Sheets exported to `.xlsx`
 - regular files downloaded
 - skipped files
