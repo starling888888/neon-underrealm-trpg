@@ -78,7 +78,7 @@ Git / GitHub CLI / PR作成 / 破壊的操作の詳細は `.agents/rules/git-ope
 
 `issueを作って` は、GitHub Issueではなくローカルの `docs/issue/*.md` 作成を意味する。GitHub Issueを作成してよいのは、ユーザーが明示的に「GitHub Issueを作って」「GitHub上にissueを発行して」「gh issue createして」などと指示した場合だけである。
 
-PRを作成してよいのは、ユーザーが明示的にPR作成を指示した場合だけである。PR作成時は `.agents/skills/create-pr/SKILL.md` と `.github/pull_request_template.md` を使う。
+PRを作成してよいのは、ユーザーが明示的にPR作成を指示した場合だけである。PR作成時は `.agents/skills/create-pr/SKILL.md` と `.github/pull_request_template.md` を使い、GitHub connector経由でPRを作成する。
 
 Google Drive上のユーザー編集正本をローカル作業入力へ同期する場合は、`.agents/skills/drive-to-raw-sync/SKILL.md` を使う。
 

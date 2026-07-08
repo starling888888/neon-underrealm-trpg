@@ -12,7 +12,7 @@ Use when the user asks to:
 - create a PR
 - open a pull request
 - make a draft PR
-- run `gh pr create`
+- ask to run `gh pr create`
 - publish the current branch as a PR
 
 Do not use for:
@@ -32,6 +32,12 @@ Do not create a PR unless the user explicitly asked for PR creation in the curre
 
 Do not push unless the user explicitly permits `git push`.
 
+Create and update PRs through the GitHub connector.
+
+Do not use `gh pr create`, `gh pr edit`, or `gh api` to create PRs or edit PR metadata by default.
+
+If the GitHub connector is unavailable or cannot perform the required PR operation, stop and ask the user. Do not fall back to `gh` automatically.
+
 Never merge, tag, release, resolve review comments, or run `review-to-issue`.
 
 ## Preconditions
@@ -47,6 +53,7 @@ Identify:
 
 - current branch
 - intended base branch
+- repository full name from local `git remote -v`
 - matching issue file: `docs/issue/<issue-slug>.md`
 - PR template: `.github/pull_request_template.md`
 
@@ -118,6 +125,10 @@ Do not add:
 
 Keep detailed check status in the issue file, not in the PR body.
 
+Pass the PR body directly to the GitHub connector as structured tool input.
+
+Do not embed the PR body in a shell command string.
+
 ## Creation Flow
 
 1. Confirm branch, base branch, issue file, and template.
@@ -126,7 +137,8 @@ Keep detailed check status in the issue file, not in the PR body.
 4. Prepare PR title from the issue slug.
 5. Prepare PR body from `.github/pull_request_template.md`.
 6. If unchecked issue items remain, stop and ask for explicit approval before PR creation.
-7. Create the PR only after all required permissions are satisfied.
+7. Create the PR with the GitHub connector only after all required permissions are satisfied.
+8. If PR metadata must be corrected after creation, use the GitHub connector update operation.
 
 ## Required Report
 
@@ -136,6 +148,7 @@ After PR creation, report:
 - base branch
 - head branch
 - related issue
+- GitHub connector operation used
 - whether unchecked issue items remained
 - checks or validations reviewed
 - items not verified
@@ -152,3 +165,4 @@ Do not:
 - resolve or reply to review comments
 - run `review-to-issue`
 - edit unrelated tracking files
+- run `gh pr create`, `gh pr edit`, or `gh api` for PR creation or PR metadata updates unless the user explicitly approves that fallback after the GitHub connector is unavailable
