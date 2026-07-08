@@ -1,4 +1,4 @@
-# MCP And Context7 Rules
+# MCP Rules
 
 MCP servers are development support tools only.
 
@@ -45,3 +45,30 @@ Context7 configuration belongs in `.mcp.json`.
 
 When used, `CONTEXT7_API_KEY` must be set as a shell environment variable, not committed to the repository.
 
+## Fetch
+
+Fetch may be used to retrieve public external documentation when a stable source URL is known and the content is safe to send to an external MCP server.
+
+Use Fetch for:
+
+- public documentation files hosted on GitHub
+- public style guides
+- public specification pages
+
+Do not use Fetch for:
+
+- local files
+- internal network URLs
+- unpublished game text
+- private repository content
+- secrets, API keys, tokens, credentials, or personal information
+
+Fetch configuration belongs in `.mcp.json`.
+
+For Markdown file style decisions, follow the Google Markdown Style Guide:
+
+```text
+https://raw.githubusercontent.com/google/styleguide/gh-pages/docguide/style.md
+```
+
+When Markdown style judgment is unclear, use Fetch to read the Google Markdown Style Guide from that URL, then validate the result against this repository's current issue and rules.

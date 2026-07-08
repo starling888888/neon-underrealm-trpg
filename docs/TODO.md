@@ -21,6 +21,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [ ] 既存MarkdownドキュメントのstyleをGoogle Markdown Style Guideに沿って統一する
+  - source: `.tmp/追加要望.md` 01
+  - classification: follow-up
+  - plan: 関連planなし。既存ドキュメント全体のstyle統一は、対象範囲と差分量を別途確認してから独立タスクとして扱う
+  - handling plan: 今回のissueでは不要な変更差分を増やさないため、既存Markdownファイルの一括style統一は行わない。将来対応する場合はGoogle Markdown Style Guideを基準に、対象ファイル、除外ファイル、機械整形の有無、レビュー方法を決めてから実施する。
+
 - [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
   - source: `17-github-actions-deploy-basic` issue review
   - classification: follow-up

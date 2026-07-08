@@ -87,7 +87,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - `.agents/rules/core-rules-rationale.md`
 - `.agents/rules/git-operations.md`
 - `.agents/rules/data-management.md`
-- `.agents/rules/mcp-context7.md`
+- `.agents/rules/mcp.md`
 - `.agents/rules/work-report.md`
 - `.agents/rules/file-structure.md`
 - `.agents/skills/issue-first-development/SKILL.md`
@@ -354,7 +354,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - `.agents/rules/core-rules-rationale.md`
 - `.agents/rules/git-operations.md`
 - `.agents/rules/data-management.md`
-- `.agents/rules/mcp-context7.md`
+- `.agents/rules/mcp.md`
 - `.agents/rules/work-report.md`
 - `.agents/rules/file-structure.md`
 
@@ -642,7 +642,7 @@ docs: define phase 2 preparation issue
 - `.agents/rules/core-rules-rationale.md`
 - `.agents/rules/git-operations.md`
 - `.agents/rules/data-management.md`
-- `.agents/rules/mcp-context7.md`
+- `.agents/rules/mcp.md`
 - `.agents/rules/work-report.md`
 - `.agents/rules/file-structure.md`
 - `docs/development-structure.md`
@@ -655,7 +655,7 @@ docs: define phase 2 preparation issue
 - 最重要ルールの理由
 - Git / gh / 破壊的操作方針
 - `.raw` / `.tmp` / generated dataの扱い
-- MCP / Context7利用方針
+- MCP利用方針
 - 作業後報告形式
 - ファイル分割方針
 - scripts / src/components / src/lib / src/scripts の分割方針
@@ -1523,3 +1523,37 @@ The following were absent during issue-first preparation and have since been cre
 - `npm run build` was not run.
 - Completion status of every historical issue file was not exhaustively classified.
 - No GitHub Issue, PR, remote branch, tag, release, commit, or push was created.
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/TODO.md` に、既存Markdownのstyleが統一されていないためGoogle Markdown Style Guideに従って統一する、というfollow-upを関連planなしで追加する。
+- Google Markdown Style GuideをGitHubから取得できるようにFetch MCPを導入し、MCP経由で取得できることを確認する。
+- `.md` ファイルの記法とstyleはGoogle Markdown Style Guideに従い、判断に迷う場合はMCPで参照することを明記する。
+- 今回のissueでは不要な変更差分を増やさないため、既存ドキュメントのstyle統一は行わない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: このissueはagent運用、MCP利用方針、tracking file、docs運用を対象範囲に含む。`.mcp.json`、`.agents/rules/*`、`docs/TODO.md` は対象範囲内であり、既存Markdownの一括style統一を避ける方針はこのissueの差分抑制と整合する。
+
+### 対応方針
+
+- `.mcp.json` にFetch MCP serverを追加する。
+- `.agents/rules/mcp.md` にFetch利用方針とGoogle Markdown Style Guide参照先を追加する。
+- `.agents/rules/file-structure.md` にMarkdown style方針と、迷う場合のFetch参照方針を追加する。
+- `AGENTS.md` と `.agents/rules/README.md` の参照名をFetch込みに更新する。
+- `docs/TODO.md` に、関連planなしのMarkdown style統一follow-upを追加する。
+- 既存Markdownファイルの一括style統一は行わない。
+
+### 対応完了チェックリスト
+
+- [x] `docs/TODO.md` にMarkdown style統一follow-upを関連planなしで追加した
+- [x] `.mcp.json` にFetch MCP serverを追加した
+- [x] Fetch MCPでGoogle Markdown Style Guideを取得できることを確認した
+- [x] Markdown style方針と迷う場合のFetch参照方針をagent rulesへ明記した
+- [x] 既存Markdownファイルの一括style統一を行っていない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

@@ -106,7 +106,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - 最重要ルールの理由: `.agents/rules/core-rules-rationale.md`
 - Git / gh / PR / 破壊的操作: `.agents/rules/git-operations.md`
 - `.raw/`、`.tmp/`、生成JSON、design artifact: `.agents/rules/data-management.md`
-- MCP / Context7: `.agents/rules/mcp-context7.md`
+- MCP: `.agents/rules/mcp.md`
 - 作業後報告: `.agents/rules/work-report.md`
 - ファイル構造・分割方針: `.agents/rules/file-structure.md`
 
@@ -148,7 +148,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - PR作成: `create-pr` を使う。未チェック項目が残る場合はユーザー承認なしにPRを作らない。
 - merge後tracking更新: `post-merge-plan-update` を使う。merge後に最新issueまたは過去issueの未チェック項目を確認できた場合は、チェックを入れてからdone移動可否を判定する。
 - ファイル移動や構造整理: `docs/development-structure.md` と `.agents/rules/file-structure.md` を参照する。
-- MCP / Context7利用: `.agents/rules/mcp-context7.md` を参照する。
+- MCP利用: `.agents/rules/mcp.md` を参照する。
 
 ---
 
