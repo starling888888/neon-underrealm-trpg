@@ -6,9 +6,13 @@ They must not become runtime dependencies, build-time requirements, publishing r
 
 ## General MCP Rules
 
-Do not send secrets, API keys, tokens, private rule text, unpublished game text, personal information, or credentials to MCP servers.
+Do not send secrets, API keys, tokens, credentials, personal information, unpublished game text, or private rule text to untrusted or unrelated MCP servers.
 
 Use only information safe to share externally.
+
+Exception: Google Drive Connector / Google Drive MCP may access the approved Drive sync root only for the Drive-to-raw workflow, because Google Drive is the user-edited source for local `.raw/` inputs.
+
+In that workflow, follow `.agents/skills/drive-to-raw-sync/SKILL.md`, use read, download, and export operations only, and do not relay Drive content to other MCP servers.
 
 Validate MCP output against:
 

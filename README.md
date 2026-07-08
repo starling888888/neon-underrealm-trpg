@@ -68,10 +68,9 @@ Context7 を使わない場合、この環境変数の設定は不要です。
 https://drive.google.com/drive/folders/...
 ```
 
-Codexから同期するには、以下のいずれかを満たす必要があります。
+Codexから同期するには、ChatGPT / Codexの作業環境でGoogle Drive Connectorを利用でき、接続済みGoogleアカウントが同期対象フォルダを閲覧できる必要があります。
 
-- ChatGPTでGoogle Driveを接続し、Codexからもその接続済みサービスを利用できる
-- `raw-google-drive.url` に、リンクを知っている全員が閲覧者としてアクセスできるGoogle DriveフォルダURLを設定する
+フォルダを「リンクを知っている全員が閲覧者」にする必要はありません。共有設定を変更する場合は、未公開コンテンツを含む可能性を考慮し、ユーザーが明示的に判断します。
 
 `raw-google-drive.url` と `.raw/` はローカル環境ごとの作業入力です。Git管理しません。
 

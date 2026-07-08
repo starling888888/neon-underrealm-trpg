@@ -43,20 +43,21 @@ Stop if the Drive folder, local path, ignore policy, MCP availability, export fo
 2. Resolve the repository root:
 
    ```sh
-   git rev-parse --show-toplevel
+   REPO_ROOT="$(git rev-parse --show-toplevel)"
    ```
 
 3. Treat `.raw/` as `<repo-root>/.raw/`.
 4. Confirm `.raw/` is Git-ignored:
 
    ```sh
-   git check-ignore <repo-root>/.raw
+   cd "$REPO_ROOT"
+   git check-ignore .raw
    ```
 
 5. Confirm `<repo-root>/raw-google-drive.url` is Git-ignored:
 
    ```sh
-   git check-ignore <repo-root>/raw-google-drive.url
+   git check-ignore raw-google-drive.url
    ```
 
 6. Stop if `.raw/` or `raw-google-drive.url` is not Git-ignored.
