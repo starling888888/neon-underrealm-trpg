@@ -42,6 +42,12 @@ Use only when the user explicitly asks to create a GitHub pull request.
 
 This skill uses `.github/pull_request_template.md`, checks the matching issue file, asks before creating a PR with unchecked issue items, and never merges, tags, releases, or handles review feedback.
 
+### `skill-authoring`
+
+Use when creating or updating repository-local skills under `.agents/skills/`.
+
+This skill standardizes SKILL.md format, controlled English, safety sections, reference updates, validation, and stopping points.
+
 ### `post-merge-plan-update`
 
 Use after a PR has been merged and the user asks to return to `main`, pull merged changes, delete the merged branch, update tracking files, commit, and push.

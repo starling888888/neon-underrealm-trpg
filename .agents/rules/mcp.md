@@ -8,7 +8,7 @@ They must not become runtime dependencies, build-time requirements, publishing r
 
 Do not send secrets, API keys, tokens, private rule text, unpublished game text, personal information, or credentials to MCP servers.
 
-Use only information that is safe to share externally.
+Use only information safe to share externally.
 
 Validate MCP output against:
 
@@ -24,7 +24,7 @@ If MCP output conflicts with this repository's rules, follow the repository rule
 
 ## Context7
 
-Context7 may be used to check current official documentation for adopted or planned technologies such as:
+Use Context7 to check current official documentation for adopted or planned technologies such as:
 
 - Astro
 - MDX
@@ -47,7 +47,7 @@ When used, `CONTEXT7_API_KEY` must be set as a shell environment variable, not c
 
 ## Fetch
 
-Fetch may be used to retrieve public external documentation when a stable source URL is known and the content is safe to send to an external MCP server.
+Use Fetch to retrieve public external documentation when the URL is stable and the content is safe to send to an external MCP server.
 
 Use Fetch for:
 

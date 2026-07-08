@@ -5,9 +5,9 @@ description: Use this skill when local review notes in .tmp/*.md should be valid
 
 # Review-to-Issue Skill
 
-This skill handles review feedback captured in `.tmp/*.md`.
+Handle review feedback captured in `.tmp/*.md`.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - read local review notes from `.tmp/`
 - intake a browser-generated PR review draft
@@ -20,7 +20,16 @@ Use this skill when the user asks to:
 - pause for user confirmation before addressing review feedback
 - implement approved review fixes and update the corresponding checklist
 
-This skill has two phases.
+Do not use for:
+
+- initial issue creation
+- PR review draft creation
+- post-merge cleanup
+- Visual Review
+- unapproved implementation
+- direct GitHub review comments
+
+This skill has two phases:
 
 1. Review intake: read `.tmp/*.md`, validate it, update only the appropriate tracking documents, then stop.
 2. Review response: after explicit approval, implement fixes and update the checklist.

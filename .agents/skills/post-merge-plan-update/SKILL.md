@@ -5,9 +5,9 @@ description: Use this skill after a GitHub PR has been merged to return to main,
 
 # Post-merge Plan Update Skill
 
-This skill performs repository cleanup and tracking updates after a PR has been merged.
+Perform repository cleanup and tracking updates after a PR has been merged.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - return to `main` after a merged PR
 - pull merged changes and confirm the result
@@ -18,11 +18,18 @@ Use this skill when the user asks to:
 - move completed issue files to `docs/issue/done/phase-N/` or `docs/issue/done/cross-phase/`
 - commit and push tracking updates to `main`
 
-This skill may update `docs/plan.md` checkboxes only because the user is explicitly requesting a post-merge plan update.
+Do not use for:
 
-This skill may update `docs/TODO.md` only when the merged work actually handled the TODO item.
+- implementation work
+- PR creation
+- PR review intake
+- failure-log done cleanup unless the user directly asks for that file
 
-This skill does not move `docs/agent-failure-log.md` entries. Failure-log done cleanup belongs to failure-log audit or a direct user instruction for that file.
+Update `docs/plan.md` checkboxes only because the user is explicitly requesting a post-merge plan update.
+
+Update `docs/TODO.md` only when the merged work actually handled the TODO item.
+
+Do not move `docs/agent-failure-log.md` entries from this skill. Failure-log done cleanup belongs to failure-log audit or a direct user instruction for that file.
 
 ---
 

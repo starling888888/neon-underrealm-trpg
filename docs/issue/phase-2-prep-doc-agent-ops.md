@@ -95,6 +95,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - `.agents/skills/review-to-issue/SKILL.md`
 - `.agents/skills/post-merge-plan-update/SKILL.md`
 - `.agents/skills/failure-log-audit/SKILL.md`
+- `.agents/skills/skill-authoring/SKILL.md`
 - その他、`.agents/skills/*/SKILL.md` のうちcontrolled English化の対象となるagent専用ファイル
 
 ### requirements / docs構造
@@ -254,9 +255,11 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] `failure-log-audit` SKILLに、3回以上発生した失敗カテゴリの特定、課題整理、対応挿入先と対応案の報告、ユーザー承認後に対応する停止点が定義されている
 - [x] `failure-log-audit` SKILL追加後も、恒久対応そのものはユーザー承認前に実行しない運用になっている
 - [x] failure-logのdone退避が、対応完了、ユーザー確認、コミット指示直前に行われる運用として定義されている
-- [ ] agent専用ファイルについて、controlled Englishで短縮可能な既存SKILL / rulesが確認されている
-- [ ] controlled English化した場合でも、停止条件、承認条件、禁止事項、workflow発火条件が弱体化していない
-- [ ] PRレビューが来た場合、controlled English化によって指示遵守性が落ちていないことを確認する観点がissueに明記されている
+- [x] `skill-authoring` SKILLが追加され、今後のSKILL作成 / 更新でcontrolled Englishと共通フォーマットを参照できる
+- [x] `skill-authoring` SKILLが、参照更新、検証、停止点、commit禁止を含む作成手順を定義している
+- [x] agent専用ファイルについて、controlled Englishで短縮可能な既存SKILL / rulesが確認されている
+- [x] controlled English化した場合でも、停止条件、承認条件、禁止事項、workflow発火条件が弱体化していない
+- [x] PRレビューが来た場合、controlled English化によって指示遵守性が落ちていないことを確認する観点がissueに明記されている
 - [x] 現在すべての完了条件・チェックポイントがチェック済みの完了済みissueが、定義されたルールに従って `docs/issue/done/phase-X/` または `docs/issue/done/cross-phase/` へ移動されている
 - [x] `phase-2-prep-doc-agent-ops` は、完了後に `docs/issue/done/cross-phase/` へ移動する対象として扱われている
 - [x] 未完了issue、現在作業中issue、移動条件を満たさないissueがdone側へ移動されていない
@@ -333,9 +336,9 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] failure-log運用変更は、通常のレビュー指摘をすべてfailure扱いする内容になっていない
 - [x] review-to-issueの停止地点を壊していない
 - [x] 新規failure-log監査SKILLは、報告と方針合意で停止し、承認なしに恒久対応を実装しない
-- [ ] controlled English化により、指示遵守性が落ちていない
-- [ ] controlled English化で日本語固有概念の意味がズレていない
-- [ ] user-facing docs、requirements、TRPG game rule text、game terminologyを英語化していない
+- [x] controlled English化により、指示遵守性が落ちていない
+- [x] controlled English化で日本語固有概念の意味がズレていない
+- [x] user-facing docs、requirements、TRPG game rule text、game terminologyを英語化していない
 - [x] issue移動は完了済みissueに限定されている
 - [x] 完了済みissue移動とissue本文の大幅編集を同一変更に混ぜていない
 - [x] ユーザーの未コミット変更を破壊していない

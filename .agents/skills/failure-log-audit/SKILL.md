@@ -5,9 +5,9 @@ description: Use this skill when the user asks to audit docs/agent-failure-log.m
 
 # Failure Log Audit Skill
 
-This skill audits `docs/agent-failure-log.md` and proposes permanent countermeasures.
+Audit `docs/agent-failure-log.md` and propose permanent countermeasures.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - audit the agent failure log
 - check whether the same failure category has happened three or more times
@@ -15,7 +15,7 @@ Use this skill when the user asks to:
 - propose permanent rule, SKILL, checklist, or docs updates for repeated failures
 - move handled failure entries to `docs/agent-failure-log-done.md` after approved countermeasures are complete
 
-Do not use this skill for:
+Do not use for:
 
 - ordinary TODO cleanup
 - post-merge plan updates
@@ -56,7 +56,7 @@ If no category has three or more active occurrences, say so clearly and stop.
 
 ## Countermeasure Planning
 
-Countermeasure locations may include:
+Possible countermeasure locations:
 
 - `AGENTS.md`
 - `.agents/rules/*.md`
@@ -88,7 +88,7 @@ Without approval, stop after the audit report or planning discussion.
 
 ## Done Movement
 
-Move entries from `docs/agent-failure-log.md` to `docs/agent-failure-log-done.md` only after approved countermeasures are implemented and the user confirms the failure entries are handled.
+Move entries from `docs/agent-failure-log.md` to `docs/agent-failure-log-done.md` only after approved countermeasures are implemented and the user confirms the entries are handled.
 
 When moving an entry:
 

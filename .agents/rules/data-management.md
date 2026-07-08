@@ -2,9 +2,9 @@
 
 ## Local-Only Inputs
 
-Excel source files and other raw local inputs belong under `.raw/`.
+Put Excel source files and other raw local inputs under `.raw/`.
 
-`.raw/` is not Git-managed.
+Do not Git-manage `.raw/`.
 
 Do not commit:
 
@@ -15,29 +15,29 @@ Do not commit:
 
 ## Generated Data
 
-Git-managed generated data belongs under `data/generated/`.
+Put Git-managed generated data under `data/generated/`.
 
-Generated JSON is normally produced from Excel input. Do not hand-edit generated JSON unless the current issue explicitly allows it.
+Generated JSON normally comes from Excel input. Do not hand-edit it unless the current issue explicitly allows it.
 
 Do not overbuild conversion scripts before the conversion specification is settled.
 
 ## Temporary Files
 
-Scratch files, copied review notes, comparison notes, and temporary artifacts belong under `.tmp/`.
+Put scratch files, copied review notes, comparison notes, and temporary artifacts under `.tmp/`.
 
-`.tmp/` is not a shared deliverable. Move only the necessary information into formal docs or reports.
+`.tmp/` is not a shared deliverable. Move only necessary information into formal docs or reports.
 
 Do not commit `.tmp/`.
 
 ## Design Artifacts
 
-Canonical design references belong under:
+Put canonical design references under:
 
 ```text
 docs/design/<design-target>/
 ```
 
-Actual Visual Review screenshots belong in Playwright output directories such as:
+Put actual Visual Review screenshots in Playwright output directories such as:
 
 ```text
 test-results/
@@ -50,7 +50,7 @@ Do not replace canonical design images with actual screenshots unless the design
 
 ## Required Ignore Policy
 
-The repository ignore policy must include:
+Keep these ignore rules:
 
 ```gitignore
 .raw/
@@ -61,4 +61,3 @@ playwright-report/
 *.xlsm
 ~$*.xlsx
 ```
-

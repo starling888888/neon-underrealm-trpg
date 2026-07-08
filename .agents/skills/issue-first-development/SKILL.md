@@ -5,9 +5,9 @@ description: Use this skill when the user asks to start a task from docs/plan.md
 
 # Issue-first Development Skill
 
-This skill prepares a development task safely before implementation.
+Prepare a development task before implementation.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - start a task from `docs/plan.md`
 - create a branch for a planned task
@@ -18,9 +18,15 @@ Use this skill when the user asks to:
 - create `docs/issue/X-hogehoge.md`
 - split a planned task into a child task
 
-This skill does **not** implement code.
+Do not use for:
 
-This skill only creates, drafts, or validates the branch / issue contract, then stops for human review.
+- implementation
+- Visual Review
+- PR creation
+- post-merge cleanup
+- review note intake
+
+Create, draft, or validate the branch / issue contract, then stop for human review.
 
 ---
 

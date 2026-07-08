@@ -95,6 +95,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - `.tmp/*.md` のレビュー指摘取り込み: `.agents/skills/review-to-issue/SKILL.md`
 - GitHub PR snapshotからのレビュー草案作成: `.agents/skills/pr-review-draft/SKILL.md`
 - PR作成: `.agents/skills/create-pr/SKILL.md`
+- SKILL作成または更新: `.agents/skills/skill-authoring/SKILL.md`
 - merge後のplan / TODO更新: `.agents/skills/post-merge-plan-update/SKILL.md`
 
 ### Rules

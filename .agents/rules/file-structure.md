@@ -1,10 +1,10 @@
 # File Structure Rules
 
-Use this file for agent-facing structure decisions. Use `docs/development-structure.md` as the project-facing source for development structure.
+Use this file for agent-facing structure decisions. Use `docs/development-structure.md` as the project-facing source.
 
 ## General Rule
 
-Keep files split by stable responsibility, not by temporary task convenience.
+Split files by stable responsibility, not temporary task convenience.
 
 Do not move files or change import paths unless the current issue allows it.
 
@@ -16,19 +16,19 @@ Use `package.json` as the source for available npm scripts.
 
 ## Documentation
 
-Long documents should become indexes when they start mixing unrelated reference areas.
+Turn long mixed-reference documents into indexes.
 
 Split by work-time reference unit, not by arbitrary chapter number.
 
 Do not turn an index into a link dump. Keep a short explanation of each linked file and when to read it.
 
-For `.md` file syntax and style, follow the Google Markdown Style Guide unless a repository-specific rule or current issue says otherwise.
+For `.md` syntax and style, follow the Google Markdown Style Guide unless a repository-specific rule or current issue says otherwise.
 
 When style judgment is unclear, read `.agents/rules/mcp.md` and use Fetch to consult the Google Markdown Style Guide. Do not reformat unrelated existing Markdown files only for style consistency.
 
 ## Scripts
 
-Each script program should have its own directory when it grows beyond a small single file.
+Give each script program its own directory when it grows beyond a small single file.
 
 Use:
 

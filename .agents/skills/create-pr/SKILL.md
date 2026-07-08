@@ -5,9 +5,9 @@ description: Use this skill when the user explicitly asks to create a GitHub pul
 
 # Create PR Skill
 
-This skill creates a GitHub pull request only when the user explicitly asks for PR creation.
+Create a GitHub PR only after an explicit PR creation request.
 
-Use this skill when the user asks to:
+Use when the user asks to:
 
 - create a PR
 - open a pull request
@@ -15,7 +15,7 @@ Use this skill when the user asks to:
 - run `gh pr create`
 - publish the current branch as a PR
 
-Do not use this skill for:
+Do not use for:
 
 - PR review
 - review comment intake
@@ -32,11 +32,11 @@ Do not create a PR unless the user explicitly asked for PR creation in the curre
 
 Do not push unless the user explicitly permits `git push`.
 
-Do not merge, tag, release, resolve review comments, or run `review-to-issue`.
+Never merge, tag, release, resolve review comments, or run `review-to-issue`.
 
 ## Preconditions
 
-Inspect:
+Run:
 
 ```sh
 git status --short
@@ -60,13 +60,13 @@ If the working tree has unrelated changes, stop and ask the user.
 
 Read the matching issue file before PR creation.
 
-Check all `完了条件` and `チェックポイント` checkboxes relevant to the implemented task or group.
+Check all relevant `完了条件` and `チェックポイント` items.
 
-Normal implementation work should update these checkboxes during the work, when each item is actually verified.
+During implementation, update checkboxes when each item is actually verified.
 
-At PR creation time, do not perform new implementation work just to satisfy unchecked items.
+At PR creation time, do not do new implementation work just to satisfy unchecked items.
 
-At PR creation time, you may only mark an unchecked item complete when all of these are true:
+At PR creation time, mark an unchecked item complete only when all are true:
 
 - the required work is already present in the current branch
 - the verification evidence is already available in local files, command output, or an explicit user confirmation
@@ -85,7 +85,7 @@ Do not mark unchecked items complete just to create a PR.
 
 ## PR Title
 
-Use the issue slug only by default:
+Default title:
 
 ```text
 <issue-slug>
@@ -101,7 +101,7 @@ Do not require:
 
 Use `.github/pull_request_template.md`.
 
-The PR body should contain only:
+Use only:
 
 - Related issue
 - Summary
@@ -126,7 +126,7 @@ Keep detailed check status in the issue file, not in the PR body.
 4. Prepare PR title from the issue slug.
 5. Prepare PR body from `.github/pull_request_template.md`.
 6. If unchecked issue items remain, stop and ask for explicit approval before PR creation.
-7. Create the PR only after all required permissions and confirmations are satisfied.
+7. Create the PR only after all required permissions are satisfied.
 
 ## Required Report
 
