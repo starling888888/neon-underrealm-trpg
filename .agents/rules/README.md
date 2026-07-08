@@ -9,6 +9,7 @@ Use this file as an index only. Do not read every rule file by default. Read the
 - `core-rules-rationale.md`: reasons behind the top-level safety rules in `AGENTS.md`.
 - `git-operations.md`: Git, GitHub CLI, destructive command, branch, commit, push, PR, and release rules.
 - `data-management.md`: `.raw/`, `.tmp/`, generated JSON, design artifacts, screenshots, and ignored files.
+- `contents-markdown.md`: interpretation rules for `.raw/contents/*.md` Markdown source from Google Docs.
 - `mcp.md`: MCP server and external documentation usage policy.
 - `work-report.md`: required post-work report format and validation expectations.
 - `file-structure.md`: repository file structure and splitting policy for docs, scripts, and source files.

@@ -300,7 +300,7 @@ CI/CDではExcel変換を必須工程にしない。
 
 ## 29. `.raw/contents` のGit管理
 
-`.raw/contents/SLUG.md` は、ユーザーがローカルで画面作成用の記載内容とコメント形式の画面デザイン指示書を置くための作業入力であり、Git管理しない。
+`.raw/contents/SLUG.md` は、ユーザーがローカルで画面作成用のcontents markdownを置くための作業入力であり、Git管理しない。
 
 `.raw/contents` の内容を公開サイトから直接参照する仕組みは初期スコープ外とする。
 
