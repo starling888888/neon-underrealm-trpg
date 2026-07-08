@@ -123,6 +123,27 @@ If the working tree is unsafe or ambiguous, stop and ask the user.
 
 In remote snapshot draft mode, do not infer local repository state. If a required file cannot be fetched, mark it under `Unchecked / Not verified`.
 
+## Context hygiene
+
+Before starting issue-first work, check whether the current conversation still carries context from a previous issue.
+
+Previous-issue context includes old issue goals, old branch assumptions, old review notes, old implementation details, old TODO routing decisions, and temporary task assumptions.
+
+Do not carry previous-issue context into a new issue-first task.
+
+Clear only task-derived context. Do not clear or ignore:
+
+- `AGENTS.md`
+- `.agents/skills/*`
+- `.agents/rules/*`
+- repository configuration
+- MCP server connection information
+- current user instructions
+
+If the agent cannot clear previous-issue context by itself, stop before preparing the new issue and tell the user to start a fresh Codex session or otherwise clear the previous issue's conversation context.
+
+If automatic context compaction happened during the same issue, do not treat that as a completed clear. Re-check the current issue, branch, working tree, and latest user instruction before continuing.
+
 ---
 
 ## Branch naming

@@ -100,6 +100,23 @@ Context7 を使わない場合、この環境変数の設定は不要です。
 
 remote snapshot draftやPRレビュー草案は、ローカルrepoで検証されるまで正式な作業記録ではありません。
 
+### コンテキスト運用
+
+issue対応中は、原則としてCodexの作業コンテキストを圧縮せず、Codexセッションも終了しません。
+
+issue対応中にコンテキストが途切れると、承認済み範囲、未commit差分、未確認項目、レビュー停止点を取り違えるリスクがあります。自動圧縮などでコンテキストが変わった場合は、最新のissue、branch、作業ツリー、直近のユーザー指示を確認してから続行します。
+
+issueのPRがmergeされ、`post-merge-plan-update` workflowまで完了した後であれば、必要な情報は正式ドキュメントとGit履歴に残っているため、Codexの作業コンテキストを完全にクリアして問題ありません。
+
+コンテキストを完全にクリアする手順は以下です。
+
+1. 対象issueのPR mergeと `post-merge-plan-update` 完了を確認する。
+2. 現在のCodexセッションを終了する。
+3. 次のissueを開始するときは、新しいCodexセッションで開始する。
+4. 新しいセッションでは、旧issueの会話要約を引き継がず、`AGENTS.md`、該当SKILL、`docs/plan.md`、`docs/TODO.md`、対象issueを改めて参照する。
+
+クリアしてよいのは、旧issue由来の会話文脈、判断、作業仮定だけです。`AGENTS.md`、`.agents/skills/*`、`.agents/rules/*`、MCPサーバー接続情報、repository設定はクリア対象ではありません。
+
 ## データ管理方針
 
 Excel本体は `.raw/` 配下でローカル管理し、Git管理しません。

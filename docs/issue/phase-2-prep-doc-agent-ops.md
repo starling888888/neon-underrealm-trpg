@@ -1557,3 +1557,34 @@ The following were absent during issue-first preparation and have since been cre
 - [x] 既存Markdownファイルの一括style統一を行っていない
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `README.md` に、issue対応中は原則としてcontextを圧縮せず、Codexを終了しないことを明記する。
+- issue終了時にcontextを完全にクリアすること、クリア手順、issue完了後はドキュメントが残っているためcontextをクリアしてよいことを明記する。
+- `issue-first-development` 開始時に以前のissue由来のcontextが残っている場合はクリアする運用を明記する。
+- agentが自力でcontextをクリアできない場合は、ユーザーに対応を案内する。
+- クリアしてよいcontextは作業由来のものだけであり、`AGENTS.md` やMCPサーバー接続情報などはクリア対象外とする。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: このissueはagent運用、SKILL、README、tracking fileの整理を対象範囲に含む。READMEの「生成AIエージェント運用」と `issue-first-development` の開始前条件は、context保持方針の明記先として妥当である。
+
+### 対応方針
+
+- `README.md` の生成AIエージェント運用に「コンテキスト運用」を追加する。
+- `.agents/skills/issue-first-development/SKILL.md` のpreconditions直後にcontext hygiene手順を追加する。
+- 旧issue由来の会話文脈だけをクリア対象とし、AGENTS、SKILL、rules、repository設定、MCP接続情報はクリア対象外と明記する。
+- 既存コードや既存ドキュメントの無関係な整理は行わない。
+
+### 対応完了チェックリスト
+
+- [x] `README.md` にissue対応中のcontext保持方針を追記した
+- [x] `README.md` にissue完了後のcontext clear方針と手順を追記した
+- [x] `issue-first-development` に、前issue由来contextが残る場合の開始前対応を追記した
+- [x] クリア対象外として `AGENTS.md`、SKILL、rules、repository設定、MCP接続情報を明記した
+- [x] 変更はMarkdownのみのため、実行コスト削減ルールに従い `npm run check` / `npm run build` を実行していない
