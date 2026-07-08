@@ -23,4 +23,14 @@
 
 ## 完了済み
 
-現時点では未退避。
+- [x] サイトメニューの表示文言と階層レイアウトを調整する
+  - completed: 2026-07-06 via PR #16 / `12-1-site-menu-layout-copy`
+  - source: `12-mobile-menu` 実装後のユーザー指摘
+  - classification: follow-up
+  - plan: `docs/plan.md` の `12-1-site-menu-layout-copy`
+  - handling: `サイトメニュー` という表示文言を削除または別文言へ変更し、子項目開閉トグルを項目右端へ移動した。トグル用の左スペースでリンク群が右に寄りすぎないよう、PC左サイトメニューとスマホdrawer内メニューの両方で全体を左寄せに調整した。
+
+- [x] `Seo.astro` を共通Layoutへ組み込む
+  - completed: 2026-07-05 via PR #11 / `09-base-layout`
+  - source: `08-seo-component` 実装後の確認 / `レビュー指摘 1`
+  - handling: `BaseLayout.astro` の `<head>` 内で `Seo.astro` を利用し、Layout props経由で `title` / `description` / `og:*` を渡せるようにした。

@@ -30,14 +30,20 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] 生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する
   - source: `11-site-menu` 実装中のユーザー判断
   - classification: follow-up
-  - plan: `docs/plan.md` の `28-sample-generated-data` / `29-data-access-layer` 後に、必要なら `39-ryugi-pages` / `40-ikizama-pages` または別のナビゲーション補完タスクで扱う
+  - plan: `docs/plan.md` の `29-0-ryugi-index-data` / `31-0-ikizama-index-data` 後に、必要なら `29-2-ryugi-index-page` / `31-2-ikizama-index-page` または別のナビゲーション補完タスクで扱う
   - handling plan: 現時点では生成JSONが存在しないため `11-site-menu` では実装しない。`data/generated/ryugi.json` / `data/generated/ikizama.json` と `src/lib/data/ryugi.ts` / `src/lib/data/ikizama.ts` が整った後、手書き固定ではなく生成JSONまたはデータ取得層から流儀・生き様の項目を取得し、サイドメニューへ表示する。
 
 - [ ] `/data/common-skills` のページ作成を計画項目として追跡する
   - source: `.tmp/11-review.md` / PR #14 review draft
   - classification: follow-up
-  - plan: `docs/plan.md` の `36-1-common-skills-page`
+  - plan: `docs/plan.md` の `28-2-common-skills-page`
   - handling plan: `requirements.md` とサイドメニューに `/data/common-skills` が追加済みのため、データ表示UIフェーズで共通スキル一覧ページを作成し、スキル一覧Componentまたは同等の表示方針に接続する。
+
+- [ ] Footerからクレジット導線を出すか将来検討する
+  - source: `phase-2-prep-doc-agent-ops` Group 12
+  - classification: low-priority follow-up
+  - plan: 初期実装の必須タスクには紐づけない。クレジット情報が増え、Footerからの常設導線が必要になった時点で独立タスクとして計画する
+  - handling plan: 初期実装ではFooterをコピーライト、GitHub、X、Discordに絞る。クレジット本文はトップページや将来の専用ページで扱い、Footer導線は必要性が明確になってから追加する。
 
 - [ ] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
   - source: `design-image-generation` skill 追加時の整合確認
@@ -66,22 +72,3 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の該当項目
   - handling plan: 将来どのタスクでどう扱うか
 -->
-
----
-
-## 完了済み
-
-- [x] サイトメニューの表示文言と階層レイアウトを調整する
-  - completed: 2026-07-06 via PR #16 / `12-1-site-menu-layout-copy`
-  - source: `12-mobile-menu` 実装後のユーザー指摘
-  - classification: follow-up
-  - plan: `docs/plan.md` の `12-1-site-menu-layout-copy`
-  - handling plan: `サイトメニュー` という表示文言を削除または別文言へ変更し、子項目開閉トグルを項目右端へ移動する。トグル用の左スペースでリンク群が右に寄りすぎないよう、PC左サイトメニューとスマホdrawer内メニューの両方で全体を左寄せに調整する。
-
-- [x] `Seo.astro` を共通Layoutへ組み込む
-  - completed: 2026-07-05
-  - PR: #11
-  - source: `08-seo-component` 実装後の確認 / `レビュー指摘 1`
-  - handling: `BaseLayout.astro` の `<head>` 内で `Seo.astro` を利用し、Layout props経由で `title` / `description` / `og:*` を渡せるようにした
-
-<!-- 完了したTODOは、完了日と対応PRまたはcommitを添えてここへ移動する。 -->

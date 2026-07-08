@@ -260,19 +260,19 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] 現在すべての完了条件・チェックポイントがチェック済みの完了済みissueが、定義されたルールに従って `docs/issue/done/phase-X/` または `docs/issue/done/cross-phase/` へ移動されている
 - [x] `phase-2-prep-doc-agent-ops` は、完了後に `docs/issue/done/cross-phase/` へ移動する対象として扱われている
 - [x] 未完了issue、現在作業中issue、移動条件を満たさないissueがdone側へ移動されていない
-- [ ] Phase 1完了状態およびPhase 2開始前の前提と正式ドキュメントの齟齬が整理されている
-- [ ] `README.md` の実装済み / 後続予定の記述がPhase 1完了状態およびPhase 2開始前の前提と一致している
-- [ ] `README.md` に `npm test` の説明が追加され、Visual Review用Playwright captureとは別責務であることが分かる
-- [ ] `docs/deployment.md` のOGP関連記述が、共通OGP画像対応済み / 個別OGP画像生成は初期スコープ外、という現状と一致している
-- [ ] `docs/TODO.md` の旧plan ID参照が、現行 `docs/plan.md` のタスクIDへ修正されている
-- [ ] `docs/TODO.md` にFooterクレジット導線の将来検討TODOが低優先度として追加されている
-- [ ] `docs/content-writing-guide.md` の凡例Component例が、凡例専用Componentを作らない方針と一致している
-- [ ] `docs/content-writing-guide.md` のページ配置・ルーティング表現が、現行 `docs/plan.md` Phase 3を参照する形になっている
-- [ ] `docs/requirements.md` および分割後の `docs/requirements/*` の技術スタック記述が、採用済み / 後続予定の区別を持っている
-- [ ] `docs/requirements/*` と `docs/plan.md` から、Footerおよび `18-2-home-page` の必須クレジット枠扱いが外れている
-- [ ] `docs/issue/done/phase-2/12-mobile-menu.md` の旧plan ID参照に、過去記録であること、現在は旧IDであることが注記されている
+- [x] Phase 1完了状態およびPhase 2開始前の前提と正式ドキュメントの齟齬が整理されている
+- [x] `README.md` の実装済み / 後続予定の記述がPhase 1完了状態およびPhase 2開始前の前提と一致している
+- [x] `README.md` に `npm test` の説明が追加され、Visual Review用Playwright captureとは別責務であることが分かる
+- [x] `docs/deployment.md` のOGP関連記述が、共通OGP画像対応済み / 個別OGP画像生成は初期スコープ外、という現状と一致している
+- [x] `docs/TODO.md` の旧plan ID参照が、現行 `docs/plan.md` のタスクIDへ修正されている
+- [x] `docs/TODO.md` にFooterクレジット導線の将来検討TODOが低優先度として追加されている
+- [x] `docs/content-writing-guide.md` の凡例Component例が、凡例専用Componentを作らない方針と一致している
+- [x] `docs/content-writing-guide.md` のページ配置・ルーティング表現が、現行 `docs/plan.md` Phase 3を参照する形になっている
+- [x] `docs/requirements.md` および分割後の `docs/requirements/*` の技術スタック記述が、採用済み / 後続予定の区別を持っている
+- [x] `docs/requirements/*` と `docs/plan.md` から、Footerおよび `18-2-home-page` の必須クレジット枠扱いが外れている
+- [x] `docs/issue/done/phase-2/12-mobile-menu.md` の旧plan ID参照に、過去記録であること、現在は旧IDであることが注記されている
 - [x] `docs/issue/done/phase-2/17-github-actions-deploy-basic.md` のdeploy確認記録が、merge後確認済みとして読み取れる
-- [ ] 関連TODOを扱った結果または未対応理由が記録されている
+- [x] 関連TODOを扱った結果または未対応理由が記録されている
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -286,7 +286,7 @@ Phase 1完了後、Phase 2へ進む前の段階で、以下のような実装・
 - [x] GitHub Pagesのサブパス公開方針と矛盾していない
 - [x] 不要な依存関係を追加していない
 - [x] 初期スコープ外の機能を実装済みまたは実装予定として誤記していない
-- [ ] `docs/TODO.md` の項目が現行 `docs/plan.md` と矛盾していない
+- [x] `docs/TODO.md` の項目が現行 `docs/plan.md` と矛盾していない
 - [x] `docs/design/` の正本と矛盾する記述を増やしていない
 - [x] `docs/plan.md` の完了チェック状態を変更していない
 - [x] `issue-first-development` SKILL使用時に、ユーザーの明示指示なしでGitHub Issueを発行する運用になっていない
