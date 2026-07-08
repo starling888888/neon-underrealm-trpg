@@ -133,6 +133,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - MCP: `.agents/rules/mcp.md`
 - 作業後報告: `.agents/rules/work-report.md`
 - ファイル構造・分割方針: `.agents/rules/file-structure.md`
+- Markdown style / formatter: `.agents/rules/markdown-style.md`
 
 ### Templates
 
@@ -172,6 +173,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - PR作成: `create-pr` を使う。未チェック項目が残る場合はユーザー承認なしにPRを作らない。
 - merge後tracking更新: `post-merge-plan-update` を使う。merge後に最新issueまたは過去issueの未チェック項目を確認できた場合は、チェックを入れてからdone移動可否を判定する。
 - ファイル移動や構造整理: `docs/development-structure.md` と `.agents/rules/file-structure.md` を参照する。
+- Markdown作成・編集: `.agents/rules/markdown-style.md` を参照し、作業終了前にMarkdown formatterを実行する。
 - MCP利用: `.agents/rules/mcp.md` を参照する。
 
 ---

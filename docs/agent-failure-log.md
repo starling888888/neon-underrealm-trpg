@@ -165,6 +165,13 @@ source種別は以下を使う。
 
 ### Repeated formatter feedback during implementation
 
+#### 2026-07-08
+
+- source: self
+- 発生箇所: `phase-2-prep-markdown-formatting` の `npm run format:md`
+- 観測した失敗: Markdown formatter導入中、1回目はsandbox上read-only扱いの `.agents/skills/*.md` への書き込みで失敗し、2回目は `markdownlint-cli2` のglob除外設定が不十分で `node_modules/**/*.md` までlint対象に含めて失敗した。
+- 一次対応: 既存Markdown一括formatの承認範囲に従って権限付きでformatterを再実行し、`markdownlint-cli2` の対象globをGit管理対象のMarkdown配置先へ限定した。
+
 #### 2026-07-06
 
 - 発生箇所: `12-mobile-menu` の `src/scripts/mobile-menu.ts`

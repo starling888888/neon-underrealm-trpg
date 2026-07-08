@@ -8,10 +8,12 @@
     "build": "astro build && node --import tsx scripts/postprocess-page-toc/main.ts",
     "preview": "astro preview",
     "test": "mkdir -p test-results && node --import tsx --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=tap --test-reporter-destination=test-results/node-tests.tap tests/node/**/*.test.ts",
-    "check": "astro check && biome check .",
+    "check": "astro check && biome check . && npm run check:md",
     "check:astro": "astro check",
+    "check:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint check && markdownlint-cli2",
     "lint": "biome lint .",
-    "format": "biome format --write .",
+    "format": "biome format --write . && npm run format:md",
+    "format:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint fmt && markdownlint-cli2 --fix",
     "visual:capture": "playwright test tests/visual",
     "visual:install": "playwright install chromium"
   },
@@ -24,8 +26,11 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@biomejs/biome": "^2.5.2",
+    "@dprint/markdown": "^0.22.1",
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.0",
+    "dprint": "^0.55.1",
+    "markdownlint-cli2": "^0.23.0",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3"
   }

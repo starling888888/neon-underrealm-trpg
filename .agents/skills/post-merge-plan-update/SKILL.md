@@ -52,7 +52,7 @@ Do the cleanup in this order:
 13. Run available validation commands.
 14. Commit only tracking files that were intentionally updated.
 15. Push `main`.
-Do not modify source code.
+    Do not modify source code.
 
 Do not edit unrelated plan items.
 

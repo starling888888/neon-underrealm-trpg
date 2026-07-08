@@ -31,6 +31,9 @@ npm run dev
 npm run check
 npm run build
 npm test
+npm run format
+npm run format:md
+npm run check:md
 npm run preview
 npm run visual:capture
 npm run visual:install
@@ -40,6 +43,9 @@ npm run visual:install
 - `npm run check`: Astro / TypeScript / Biome の確認を実行する
 - `npm run build`: 静的サイトをビルドする
 - `npm test`: Node.js test runnerでユニットテストを実行し、結果を `test-results/` に出力する
+- `npm run format`: BiomeとMarkdown formatterを実行する
+- `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
+- `npm run check:md`: Markdown `.md` のformat / 最小style ruleを確認する
 - `npm run preview`: ビルド済みサイトをローカルで確認する
 - `npm run visual:capture`: PlaywrightでVisual Review用スクリーンショットを取得する
 - `npm run visual:install`: Visual Review用のChromiumをインストールする

@@ -78,7 +78,6 @@ Use Fetch to retrieve public external documentation when the URL is stable and t
 Use Fetch for:
 
 - public documentation files hosted on GitHub
-- public style guides
 - public specification pages
 
 Do not use Fetch for:
@@ -91,10 +90,8 @@ Do not use Fetch for:
 
 Fetch configuration belongs in `.mcp.json`.
 
-For Markdown file style decisions, follow the Google Markdown Style Guide:
+Do not use Fetch for Markdown style decisions.
 
-```text
-https://raw.githubusercontent.com/google/styleguide/gh-pages/docguide/style.md
-```
+For Markdown style decisions, follow `.agents/rules/markdown-style.md` and the formatter / checker configuration in this repository.
 
-When Markdown style judgment is unclear, use Fetch to read the Google Markdown Style Guide from that URL, then validate the result against this repository's current issue and rules.
+If Markdown style judgment is unclear, keep the decision within the minimal rules defined by `.agents/rules/markdown-style.md`. Do not expand the scope by fetching an external style guide.
