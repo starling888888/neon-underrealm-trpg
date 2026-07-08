@@ -87,9 +87,9 @@ import InternalLink from "../components/_common/InternalLink.astro";
 将来的には、MDX内で以下のようなComponentを使って表示します。
 
 ```mdx
-<SkillCard mode="legend" />
+<SkillCard variant="legend" />
 <SkillList owner="teppoudama" />
-<WeaponCard mode="legend" />
+<WeaponCard variant="legend" />
 <ItemList type="weapon" />
 ```
 

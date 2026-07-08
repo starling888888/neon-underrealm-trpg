@@ -56,7 +56,7 @@ Group `src/components/` by purpose:
 - `layout/`
 - `seo/`
 - `data/`
-- `common/`
+- `_common/`
 - `search/` when search is implemented
 
 Do not introduce a large UI library for a small component.

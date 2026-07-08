@@ -32,7 +32,6 @@
 - `docs/out-of-scope.md`
 - `docs/plan.md`
 - `docs/TODO.md`
-- `docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/notes.md`
@@ -41,6 +40,10 @@
 - `docs/design/page-toc/notes.md`
 - `docs/design/mobile-page-toc/notes.md`
 - `docs/design/current-menu-highlight/notes.md`
+
+## Historical source issues
+
+- `docs/issue/done/phase-2/16-layout-screenshot-design-refresh.md`
 
 ## Design direction
 

@@ -1601,3 +1601,37 @@ The following were absent during issue-first preparation and have since been cre
 - old reference scan: no actionable stale references found
 - related TODO handling: `docs/TODO.md` keeps follow-up items that remain outside this issue, including Markdown style unification and existing future-work TODOs
 - scope check: no UI, CSS, layout, Component, requirements, TRPG text, or user-facing rule content changes were added during final validation
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- active docsが、done issueを現在の実装責務・SSoTとして参照している。完了済みissueは履歴として扱い、現在の責務はrequirements、design notes、TODO、plan、AGENTS、またはSKILLへ昇格させるべき。
+- `.agents/rules/file-structure.md` が `src/components/common/` を案内しているが、`docs/development-structure.md` と実コードは `src/components/_common/` に統一されている。
+- `docs/requirements/overview.md` に、分割前の「本ドキュメントは `docs/requirements.md` として管理する想定である」という自己参照が残っている。
+- 凡例Componentの例が、`docs/requirements/data-display.md` では `variant="legend"`、`docs/content-writing-guide.md` では `mode="legend"` で割れている。
+
+### 判定
+
+- source: pr-review-draft
+- classification: valid
+- local validation: `.tmp/phase-2-prep-doc-agent-ops-review.md` はremote PR snapshot由来であるため、ローカルで `post-merge-plan-update`、design notes、`.agents/rules/file-structure.md`、`docs/development-structure.md`、`docs/requirements/overview.md`、`docs/requirements/data-display.md`、`docs/content-writing-guide.md` を確認した。4件とも現在branchのローカル状態に存在し、Phase 2準備docs / agent ops整合の範囲内で修正すべき内容である。
+- failure-log routing: 通常のPRレビュー指摘として扱う。未承認作業、検証済み誤認、remote draft混同、commit/push逸脱、同一検証失敗の反復ではないため、`docs/agent-failure-log.md` には記録しない。
+
+### 対応方針
+
+- `post-merge-plan-update` に、active docsを完了済みissueへ依存させない方針を追加する。完了済みissueから必要な情報がある場合は、active SSoTへ昇格させる。
+- design notesでは、done issueを現在の実装責務として参照する表現を削除し、必要な場合はhistorical sourceとして明記する。
+- `.agents/rules/file-structure.md` のComponent分類を `src/components/_common/` に統一する。
+- `docs/requirements/overview.md` の分割前自己参照を、`docs/requirements.md` を索引、詳細を `docs/requirements/*` とする表現へ更新する。
+- 凡例Component例のprops名を統一する。現時点では `docs/requirements/data-display.md` の `variant="legend"` に寄せる方針で修正する。
+
+### 対応完了チェックリスト
+
+- [x] active docsをdone issueへ依存させない方針を `post-merge-plan-update` に追記した
+- [x] design notesのdone issue参照をhistorical source扱いへ修正した
+- [x] `.agents/rules/file-structure.md` を `src/components/_common/` に統一した
+- [x] `docs/requirements/overview.md` の分割前自己参照を修正した
+- [x] 凡例Component例のprops名を統一した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

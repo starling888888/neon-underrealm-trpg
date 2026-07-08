@@ -48,11 +48,10 @@ Do the cleanup in this order:
 9. If active/done cleanup is requested, move completed plan entries from `docs/plan.md` to `docs/plan-done.md`.
 10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
 11. If the issue is complete, move the issue file to the correct `docs/issue/done/` archive.
-12. Update internal links that must follow moved issue files, or add an explicit historical-path note when a link should remain unchanged.
+12. Keep active documents from depending on completed issue files.
 13. Run available validation commands.
 14. Commit only tracking files that were intentionally updated.
 15. Push `main`.
-
 Do not modify source code.
 
 Do not edit unrelated plan items.
@@ -197,8 +196,9 @@ Do not move:
 When moving an issue file:
 
 - Keep the filename unchanged.
-- Update internal links that are meant to point to the active issue file.
-- If a link is part of a historical note and should keep the old path, add a short note that the path is historical.
+- Do not make active documents depend on completed issue files.
+- If active docs still need information from a completed issue, promote that information to the appropriate active SSoT: requirements, design notes, TODO, plan, `AGENTS.md`, or a skill.
+- Historical or provenance references may remain only when clearly marked as historical and not used as implementation responsibility.
 - Report every moved issue path in the final report.
 
 ---

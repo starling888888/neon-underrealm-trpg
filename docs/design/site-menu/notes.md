@@ -19,11 +19,14 @@
 - `docs/out-of-scope.md`
 - `docs/plan.md`
 - `docs/TODO.md`
-- `docs/issue/done/phase-2/11-site-menu.md`
-- `docs/issue/done/phase-2/12-1-site-menu-layout-copy.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/notes.md`
+
+## Historical source issues
+
+- `docs/issue/done/phase-2/11-site-menu.md`
+- `docs/issue/done/phase-2/12-1-site-menu-layout-copy.md`
 
 ## Design direction
 
