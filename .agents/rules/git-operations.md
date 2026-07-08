@@ -76,6 +76,12 @@ Create PRs only when the user explicitly asks for PR creation.
 
 Use `.agents/skills/create-pr/SKILL.md` when the user asks to create a PR.
 
+Create and update PRs through the GitHub connector.
+
+Do not use `gh pr create`, `gh pr edit`, or `gh api` as the default path for PR creation or PR metadata updates.
+
+If the GitHub connector is unavailable, stop and ask before using any `gh` fallback for PR writes.
+
 Before PR creation, confirm:
 
 - base branch

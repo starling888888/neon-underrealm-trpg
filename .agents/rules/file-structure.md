@@ -39,9 +39,9 @@ Split by work-time reference unit, not by arbitrary chapter number.
 
 Do not turn an index into a link dump. Keep a short explanation of each linked file and when to read it.
 
-For `.md` syntax and style, follow the Google Markdown Style Guide unless a repository-specific rule or current issue says otherwise.
+For `.md` syntax and style, follow `.agents/rules/markdown-style.md`.
 
-When style judgment is unclear, read `.agents/rules/mcp.md` and use Fetch to consult the Google Markdown Style Guide. Do not reformat unrelated existing Markdown files only for style consistency.
+Do not reformat unrelated existing Markdown files only for style consistency unless the current issue explicitly allows a Markdown format pass.
 
 ## Scripts
 

@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .astro/
+.dprint-cache/
 .raw/
 raw-google-drive.url
 *.xlsx

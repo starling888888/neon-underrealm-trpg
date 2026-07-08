@@ -12,6 +12,7 @@ Use this file as an index only. Do not read every rule file by default. Read the
 - `mcp.md`: MCP server and external documentation usage policy.
 - `work-report.md`: required post-work report format and validation expectations.
 - `file-structure.md`: repository file structure and splitting policy for docs, scripts, and source files.
+- `markdown-style.md`: minimal Markdown syntax style and formatter policy for `.md` files.
 
 ## Relationship With Skills
 

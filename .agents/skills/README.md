@@ -48,6 +48,8 @@ Use only when the user explicitly asks to create a GitHub pull request.
 
 This skill uses `.github/pull_request_template.md`, checks the matching issue file, asks before creating a PR with unchecked issue items, and never merges, tags, releases, or handles review feedback.
 
+PR creation and PR metadata updates use the GitHub connector. The skill does not use `gh pr create`, `gh pr edit`, or `gh api` as the default PR write path.
+
 ### `skill-authoring`
 
 Use when creating or updating repository-local skills under `.agents/skills/`.

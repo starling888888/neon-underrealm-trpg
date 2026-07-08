@@ -1,0 +1,22 @@
+{
+  "globs": [
+    "*.md",
+    ".agents/**/*.md",
+    ".github/**/*.md",
+    "data/**/*.md",
+    "docs/**/*.md",
+    "tests/**/*.md"
+  ],
+  "config": {
+    "default": false,
+    "MD003": {
+      "style": "atx"
+    },
+    "MD004": {
+      "style": "dash"
+    },
+    "MD007": {
+      "indent": 2
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://dprint.dev/schemas/v0.json",
+  "plugins": ["./node_modules/@dprint/markdown/plugin.wasm"],
+  "includes": ["**/*.md"],
+  "excludes": [
+    "node_modules",
+    "dist",
+    ".astro",
+    ".dprint-cache",
+    ".raw",
+    ".tmp",
+    "test-results",
+    "playwright-report"
+  ],
+  "lineWidth": 120,
+  "markdown": {
+    "headingKind": "atx",
+    "unorderedListKind": "dashes",
+    "listIndentKind": "commonMark"
+  }
+}

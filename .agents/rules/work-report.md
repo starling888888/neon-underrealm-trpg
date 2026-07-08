@@ -34,4 +34,6 @@ If a command is not run, say why.
 
 If a command fails, report the failing command and the relevant failure summary.
 
+If `.md` files were created or edited, run the Markdown formatter before reporting, unless the current issue explicitly says not to. If Markdown-only changes were made, `npm run build` may be skipped when no `.mdx`, Astro, TypeScript, CSS, config, package, generated data, image, or workflow files changed.
+
 After work, inspect `docs/agent-failure-log.md` for categories with 3 or more active entries and report whether such categories exist.

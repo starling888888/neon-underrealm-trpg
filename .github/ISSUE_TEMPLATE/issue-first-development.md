@@ -80,4 +80,3 @@ UI、CSS、layout、page、Componentタスクでは、該当する `docs/design/
 ## 備考
 
 必要な補足を書く。
-
