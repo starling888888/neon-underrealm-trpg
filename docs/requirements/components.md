@@ -10,12 +10,12 @@ Markdown / MDX本文内で、注意書き、補足、例、警告、変更点な
 
 想定するコールアウト種別は以下。
 
-* `note`: 補足
-* `tip`: 運用のコツ
-* `warning`: 注意
-* `danger`: 重大注意
-* `example`: 例
-* `version`: 変更点・V1.5注記
+- `note`: 補足
+- `tip`: 運用のコツ
+- `warning`: 注意
+- `danger`: 重大注意
+- `example`: 例
+- `version`: 変更点・V1.5注記
 
 本文側では、簡潔な記法で利用できること。
 

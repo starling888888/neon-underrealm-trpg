@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] 既存MarkdownドキュメントのstyleをGoogle Markdown Style Guideに沿って統一する
+  - completed: 2026-07-08 via `todo-md-style-unification` / main direct commit
+  - source: `.tmp/追加要望.md` 01
+  - classification: follow-up
+  - plan: 関連planなし。ユーザーの明示指示により、plan作成なしの独立タスクとして扱った。
+  - handling: Google Markdown Style Guideを基準に、既存Markdownドキュメントのunordered list markerを `-` に統一した。本文内容、要件、planチェック状態、Markdown以外のファイルは変更していない。
+
 - [x] サイトメニューの表示文言と階層レイアウトを調整する
   - completed: 2026-07-06 via PR #16 / `12-1-site-menu-layout-copy`
   - source: `12-mobile-menu` 実装後のユーザー指摘

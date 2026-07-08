@@ -326,18 +326,18 @@ CI/CDではExcel変換を必須工程にしない。
 
 各アイテム種別は表示項目が異なるため、初期実装では以下のように個別Componentを用意する。
 
-* `WeaponCard`
-* `WeaponList`
-* `ArmorCard`
-* `ArmorList`
-* `OmamoriCard`
-* `OmamoriList`
-* `CyberneticCard`
-* `CyberneticList`
-* `NanomachineCard`
-* `NanomachineList`
-* `DrugCard`
-* `DrugList`
+- `WeaponCard`
+- `WeaponList`
+- `ArmorCard`
+- `ArmorList`
+- `OmamoriCard`
+- `OmamoriList`
+- `CyberneticCard`
+- `CyberneticList`
+- `NanomachineCard`
+- `NanomachineList`
+- `DrugCard`
+- `DrugList`
 
 共通ロジックや共通CSSの再利用は許容するが、カードComponent自体はアイテム種別ごとに分ける。
 
@@ -347,30 +347,30 @@ CI/CDではExcel変換を必須工程にしない。
 
 以下は初期スコープ外ではない。
 
-* Astro + MDX + TypeScript による静的サイト構築
-* GitHub Actionsによる基本デプロイ
-* Pagefindによる静的検索
-* Pagefind検索index生成込みのデプロイ
-* PC左サイトメニュー
-* スマホ用サイトメニュー
-* PC右ページ内目次
-* スマホ用ページ内目次
-* サイトメニューの現在ページハイライト
-* Markdown / MDX / AstroページへのJS Component埋め込み
-* `ImageBlock` による画像表示
-* `Callout` による補足・注意・例示表示
-* `SkillCard` / `SkillList`
-* 各Item系Card / List
-* 流儀・生き様の共通テンプレート生成
-* ExcelからJSONへのローカル変換
-* 変換済みJSONのGit管理
-* JSON検証スキーマ
-* 変換スクリプトと検証スキーマのテスト
-* `docs/conversion/*.md` による変換仕様管理
-* データカード個別アンカー
-* GitHub Pages等のサブパス公開対応
-* 共通OGPメタ情報
-* 共通OGP画像
-* 404ページ
+- Astro + MDX + TypeScript による静的サイト構築
+- GitHub Actionsによる基本デプロイ
+- Pagefindによる静的検索
+- Pagefind検索index生成込みのデプロイ
+- PC左サイトメニュー
+- スマホ用サイトメニュー
+- PC右ページ内目次
+- スマホ用ページ内目次
+- サイトメニューの現在ページハイライト
+- Markdown / MDX / AstroページへのJS Component埋め込み
+- `ImageBlock` による画像表示
+- `Callout` による補足・注意・例示表示
+- `SkillCard` / `SkillList`
+- 各Item系Card / List
+- 流儀・生き様の共通テンプレート生成
+- ExcelからJSONへのローカル変換
+- 変換済みJSONのGit管理
+- JSON検証スキーマ
+- 変換スクリプトと検証スキーマのテスト
+- `docs/conversion/*.md` による変換仕様管理
+- データカード個別アンカー
+- GitHub Pages等のサブパス公開対応
+- 共通OGPメタ情報
+- 共通OGP画像
+- 404ページ
 
 これらは `docs/plan.md` および `docs/requirements.md` に従って初期実装対象として扱う。
