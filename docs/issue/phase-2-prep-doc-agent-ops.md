@@ -1591,3 +1591,13 @@ The following were absent during issue-first preparation and have since been cre
 - [x] `issue-first-development` に、前issue由来contextが残る場合の開始前対応を追記した
 - [x] クリア対象外として `AGENTS.md`、SKILL、rules、repository設定、MCP接続情報を明記した
 - [x] 変更はMarkdownのみのため、実行コスト削減ルールに従い `npm run check` / `npm run build` を実行していない
+
+## Group 14 最終検証
+
+- validation date: 2026-07-08
+- `npm run check`: pass
+- `npm run build`: pass
+- current issue unchecked items: none
+- old reference scan: no actionable stale references found
+- related TODO handling: `docs/TODO.md` keeps follow-up items that remain outside this issue, including Markdown style unification and existing future-work TODOs
+- scope check: no UI, CSS, layout, Component, requirements, TRPG text, or user-facing rule content changes were added during final validation
