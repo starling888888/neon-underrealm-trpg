@@ -37,6 +37,7 @@
 - Visual Review screenshotは実装結果であり、design正本ではない。actual screenshotを直接 `docs/design/` にコピーしない。
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
+- Google Drive上のユーザー編集正本をローカル作業入力として使う場合は、`raw-google-drive.url` と `<repo-root>/.raw/` の扱いを `.agents/skills/drive-to-raw-sync/SKILL.md` と `.agents/rules/data-management.md` で確認する。
 - 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由をissueまたは作業報告に書く。
 - ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、または同種のcheck/build/test/formatter失敗を1回の作業中に2回以上繰り返した場合は `docs/agent-failure-log.md` に記録する。
 
@@ -79,6 +80,27 @@ Git / GitHub CLI / PR作成 / 破壊的操作の詳細は `.agents/rules/git-ope
 
 PRを作成してよいのは、ユーザーが明示的にPR作成を指示した場合だけである。PR作成時は `.agents/skills/create-pr/SKILL.md` と `.github/pull_request_template.md` を使う。
 
+Google Drive上のユーザー編集正本をローカル作業入力へ同期する場合は、`.agents/skills/drive-to-raw-sync/SKILL.md` を使う。
+
+Google Drive同期対象フォルダのURLは、リポジトリルート直下の `raw-google-drive.url` で管理する。`raw-google-drive.url` はGit管理しない。
+
+同期先の `.raw/` は常にリポジトリルート直下の `<repo-root>/.raw/` を指す。OSルート直下の `/.raw/`、カレントディレクトリ基準の `./.raw/`、repo外の `.raw/`、Git管理対象の `raw/` と解釈してはならない。
+
+`<repo-root>/.raw/` 配下の構造は以下に固定する。
+
+```text
+<repo-root>/.raw/
+├── release-notes.xlsx
+├── data/
+│   └── *.xlsx
+└── contents/
+    └── *.md
+```
+
+Google Drive側も同期対象フォルダ直下で同じ構造にする。Google DocsはMarkdown `.md` として同期し、Google SheetsはExcel `.xlsx` として同期する。
+
+Drive上の正本を書き換えてはならない。Drive同期はCI/CDでは実行しない。
+
 ---
 
 ## 参照入口
@@ -93,6 +115,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - design画像作成または正本化: `.agents/skills/design-image-generation/SKILL.md`
 - UI実装後のVisual Review: `.agents/skills/visual-implementation-review/SKILL.md`
 - `.tmp/*.md` のレビュー指摘取り込み: `.agents/skills/review-to-issue/SKILL.md`
+- Google Drive正本から `<repo-root>/.raw/` への同期: `.agents/skills/drive-to-raw-sync/SKILL.md`
 - GitHub PR snapshotからのレビュー草案作成: `.agents/skills/pr-review-draft/SKILL.md`
 - PR作成: `.agents/skills/create-pr/SKILL.md`
 - SKILL作成または更新: `.agents/skills/skill-authoring/SKILL.md`

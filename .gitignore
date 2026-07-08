@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 .raw/
+raw-google-drive.url
 *.xlsx
 *.xlsm
 ~$*.xlsx

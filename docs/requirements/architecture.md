@@ -78,21 +78,30 @@ Excel本体はGit管理しない。
 
 ### AC-07. 生Excel・作業入力管理ディレクトリ
 
-Excel本体は、リポジトリ直下の `.raw/` ディレクトリ配下で管理できること。
+Excel本体やページ作成前のMarkdown入力は、リポジトリ直下の `.raw/` ディレクトリ配下で管理できること。
 
 `.raw/` はローカル作業用ディレクトリであり、Git管理しない。
+
+Google Drive上のユーザー編集正本をローカル作業入力として使う場合、Google Drive同期対象フォルダのURLはリポジトリ直下の `raw-google-drive.url` で管理できること。
+
+`raw-google-drive.url` はローカル開発環境ごとの設定ファイルであり、Git管理しない。
 
 想定するローカル作業領域は以下。
 
 ```text
 .raw/
-├─ excel/
+├─ release-notes.xlsx
+├─ data/
+│  └─ *.xlsx
 └─ contents/
+   └─ *.md
 ```
 
-`.raw/excel/` はExcel本体を置くローカル領域とする。
+`.raw/release-notes.xlsx` はリリースノートExcel本体を置くローカル領域とする。
 
-`.raw/contents/` は、ユーザーが画面作成前に記載内容とコメント形式の画面デザイン指示書を置くローカル領域とする。
+`.raw/data/*.xlsx` は、スキル、アイテム、流儀、生き様などのデータExcel本体を置くローカル領域とする。
+
+`.raw/contents/*.md` は、ユーザーが画面作成前に記載内容とコメント形式の画面デザイン指示書を置くローカル領域とする。
 
 `.raw/contents/SLUG.md` はコミットしない作業入力であり、最終的な画面本文・UI構造のSSoTは `src/pages` 配下の `.mdx` または `.astro` とする。
 

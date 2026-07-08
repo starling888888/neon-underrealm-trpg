@@ -2,16 +2,61 @@
 
 ## Local-Only Inputs
 
-Put Excel source files and other raw local inputs under `.raw/`.
+Put Google Drive-derived local inputs under `<repo-root>/.raw/`.
+
+In agent instructions, `.raw/` means the repository root directory `<repo-root>/.raw/`.
+
+Do not interpret `.raw/` as:
+
+- `/.raw/` at the OS root
+- `./.raw/` relative to the current shell directory
+- a `.raw/` directory outside the repository
+- a Git-managed `raw/` directory
+
+Resolve the repository root with:
+
+```sh
+git rev-parse --show-toplevel
+```
+
+Use this fixed local input structure:
+
+```text
+<repo-root>/.raw/
+├── release-notes.xlsx
+├── data/
+│   └── *.xlsx
+└── contents/
+    └── *.md
+```
+
+The Google Drive sync root must use the same relative structure.
+
+Use `<repo-root>/raw-google-drive.url` to store the Google Drive sync folder URL for local development.
+
+`raw-google-drive.url` is local configuration. Do not Git-manage it.
 
 Do not Git-manage `.raw/`.
 
 Do not commit:
 
 - `.raw/`
+- `raw-google-drive.url`
 - `*.xlsx`
 - `*.xlsm`
 - `~$*.xlsx`
+
+Google Drive is the user-edited source for these local inputs. The local `.raw/` directory is a working copy for agents.
+
+Google Docs sync to `.raw/contents/*.md`.
+
+Google Sheets sync to `.raw/release-notes.xlsx` or `.raw/data/*.xlsx`.
+
+Do not write Google Drive-derived files outside `<repo-root>/.raw/`.
+
+Do not create or use `<repo-root>/.raw/sheets/`.
+
+Do not write local `.raw/` changes back to Google Drive unless a future approved issue explicitly changes that policy.
 
 ## Generated Data
 
@@ -54,6 +99,7 @@ Keep these ignore rules:
 
 ```gitignore
 .raw/
+raw-google-drive.url
 .tmp/
 test-results/
 playwright-report/

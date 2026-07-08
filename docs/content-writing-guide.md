@@ -99,7 +99,24 @@ import InternalLink from "../components/_common/InternalLink.astro";
 
 ## 生成データとの関係
 
-Excel本体は `.raw/` 配下でローカル管理します。
+Excel本体やページ作成前のMarkdown入力は、リポジトリルート直下の `.raw/` 配下でローカル管理します。
+
+ユーザー編集用の正本はGoogle Drive上で管理し、ローカル作業時に必要なファイルだけ `.raw/` 配下へ同期します。
+
+Google Drive同期対象フォルダのURLは、リポジトリルート直下の `raw-google-drive.url` に置きます。`raw-google-drive.url` と `.raw/` はGit管理しません。
+
+同期後の `.raw/` 配下は以下の構造にします。
+
+```text
+.raw/
+├── release-notes.xlsx
+├── data/
+│   └── *.xlsx
+└── contents/
+    └── *.md
+```
+
+Google Docsは `.raw/contents/*.md` として、Google Sheetsは `.raw/release-notes.xlsx` または `.raw/data/*.xlsx` として取得します。
 
 Git管理するのは、Excelから変換された `data/generated/` 配下のJSONです。生成済みJSONは原則として手編集しません。
 

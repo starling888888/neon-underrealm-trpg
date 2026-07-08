@@ -22,6 +22,28 @@ Validate MCP output against:
 
 If MCP output conflicts with this repository's rules, follow the repository rules.
 
+## Google Drive
+
+Use Google Drive MCP only as a development support tool for copying user-edited sources into local working inputs.
+
+When syncing Google Drive sources, follow `.agents/skills/drive-to-raw-sync/SKILL.md`.
+
+The sync target is only:
+
+```text
+<repo-root>/.raw/
+```
+
+Do not use Google Drive MCP as a runtime dependency, build-time requirement, publishing requirement, or CI/CD requirement.
+
+Do not use Google Drive MCP to write, create, delete, move, copy, or share Drive files in the Drive-to-raw workflow.
+
+Do not store Google credentials, tokens, API keys, or Drive content secrets in the repository.
+
+The local `raw-google-drive.url` file may contain the sync folder URL. It must remain Git-ignored.
+
+If Google Drive MCP is unavailable, unauthenticated, or cannot export Google Docs as Markdown or Google Sheets as `.xlsx`, stop. Do not implement a replacement Google Drive API script or require `rclone` in the same task.
+
 ## Context7
 
 Use Context7 to check current official documentation for adopted or planned technologies such as:
