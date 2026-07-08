@@ -33,6 +33,4 @@ The Markdown formatter targets Git-managed `.md` files only. `.mdx` files are no
 
 This file does not define rules for prose style, terminology, sentence structure, line length, punctuation, emphasis syntax, or link syntax.
 
-Do not use the Google Markdown Style Guide or another external style guide for Markdown style decisions in this repository.
-
 When style judgment is unclear, keep the decision within the three required rules above instead of expanding this rule set.

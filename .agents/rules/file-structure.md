@@ -41,7 +41,7 @@ Do not turn an index into a link dump. Keep a short explanation of each linked f
 
 For `.md` syntax and style, follow `.agents/rules/markdown-style.md`.
 
-Do not use Fetch or external style guides for Markdown style decisions. Do not reformat unrelated existing Markdown files only for style consistency unless the current issue explicitly allows a Markdown format pass.
+Do not reformat unrelated existing Markdown files only for style consistency unless the current issue explicitly allows a Markdown format pass.
 
 ## Scripts
 

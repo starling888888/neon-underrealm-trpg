@@ -89,9 +89,3 @@ Do not use Fetch for:
 - secrets, API keys, tokens, credentials, or personal information
 
 Fetch configuration belongs in `.mcp.json`.
-
-Do not use Fetch for Markdown style decisions.
-
-For Markdown style decisions, follow `.agents/rules/markdown-style.md` and the formatter / checker configuration in this repository.
-
-If Markdown style judgment is unclear, keep the decision within the minimal rules defined by `.agents/rules/markdown-style.md`. Do not expand the scope by fetching an external style guide.
