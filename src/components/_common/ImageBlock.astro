@@ -1,0 +1,39 @@
+---
+import { withBase } from "../../lib/utils/paths";
+
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  loading?: "eager" | "lazy";
+}
+
+const { src, alt, caption, loading = "lazy" } = Astro.props;
+const hasCaption = typeof caption === "string" && caption.length > 0;
+---
+
+<figure class="image-block">
+  <img src={withBase(src)} alt={alt} loading={loading} decoding="async" />
+  {hasCaption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .image-block {
+    margin-block: var(--space-6);
+    margin-inline: 0;
+  }
+
+  .image-block img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .image-block figcaption {
+    margin-block-start: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: var(--line-height-base);
+  }
+</style>
