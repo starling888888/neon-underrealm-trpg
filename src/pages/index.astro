@@ -15,15 +15,15 @@ const topLogoPath = withBase("/top_logo.webp");
 
     <section class="home-lead" aria-label="ゲームキャッチコピー">
       <p>
-        <em>近未来。</em>
+        <em>＿近未来</em>
         ネオン華やぐオオサカ副都で、お前は力を選び、生き様を定義する。
       </p>
       <p>
-        <em>裏社会。</em>
+        <em>＿裏社会</em>
         光の裏には闇がある。仕事人として、縁をその身に、光の届かない道を駆け抜けろ。
       </p>
       <p>
-        <em>抗争。</em>
+        <em>＿抗争</em>
         生き様をその身に、流儀をその手に。気合いを糧に、怒涛のコンボを叩き込め。
       </p>
     </section>
@@ -133,8 +133,11 @@ const topLogoPath = withBase("/top_logo.webp");
   .home-lead {
     max-width: 48rem;
     margin-inline: auto;
-    color: var(--color-text);
+    color: color-mix(in srgb, var(--color-text) 86%, var(--color-text-muted));
+    font-family: "Noto Serif CJK JP", "Yu Mincho", "YuMincho", "Hiragino Mincho ProN",
+      serif;
     font-size: var(--text-xl);
+    font-weight: 600;
     line-height: var(--line-height-relaxed);
   }
 
@@ -143,9 +146,11 @@ const topLogoPath = withBase("/top_logo.webp");
   }
 
   .home-lead em {
-    color: var(--color-text);
+    display: inline-block;
+    margin-inline-end: 0.55em;
+    color: color-mix(in srgb, var(--color-text) 94%, var(--color-text-muted));
     font-style: italic;
-    font-weight: 800;
+    font-weight: 900;
   }
 
   .home-logo {
@@ -277,6 +282,32 @@ const topLogoPath = withBase("/top_logo.webp");
   .credits h3 {
     margin-block-start: var(--space-8);
     font-size: var(--text-lg);
+  }
+
+  @media (min-width: 48.001rem) {
+    /* Home page only: tighten BaseLayout's desktop main padding for the first viewport composition. */
+    :global(.site-main) {
+      padding-block: var(--space-6) !important;
+    }
+
+    .home-page {
+      max-width: min(100%, 62rem);
+      padding: var(--space-5) var(--space-6);
+    }
+
+    .home-lead {
+      max-width: 54rem;
+    }
+
+    .home-logo {
+      max-width: min(100%, 36rem);
+      margin: var(--space-5) auto var(--space-6);
+    }
+
+    .home-section {
+      margin-block-start: var(--space-8);
+      padding-block-start: var(--space-6);
+    }
   }
 
   @media (max-width: 48rem) {

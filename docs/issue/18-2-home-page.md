@@ -446,3 +446,53 @@ mobile: 390x900
 - [x] failure-logへ記録する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- トップページのキャッチコピーがdefault fontのままだと少し弱く見える。
+- キャッチコピーは `.tmp/home-copy-fine-direction/` の案を採用候補にする。
+- 採用候補では、02b相当の明朝寄りフォントと少し薄い文字色を使う。
+- 太字キーワードは `＿近未来`、`＿裏社会`、`＿抗争` とし、キーワード後の `。` は付けない。
+- キーワードと後続文章の間隔を少し広げる。
+- mobileの見た目はよいが、desktopでは上下左右の余白が広く見える。
+- desktop余白は `.tmp/home-desktop-spacing-options/` の `03-balanced-compact` を採用候補にする。
+- 実装反映はまだ行わず、まずissueへ変更方針として記録する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `docs/design/home/notes.md` は、トップページを落ち着いたルールサイトとして扱い、first viewportでサイトID、タイトルロゴ、更新確認の役割が分かることを求めている。
+  - `docs/design/home/notes.md` は、キャッチコピーをH1 / H2ではなく本文より少し大きいリードコピーとして扱い、キーワードを斜体で強調する方針を示している。
+  - `src/pages/index.astro` の `.home-lead` は現在 `var(--color-text)`、`var(--text-xl)`、`var(--line-height-relaxed)` を使っており、page scoped styleで調整可能である。
+  - `src/pages/index.astro` の `.home-page`、`.home-lead`、`.home-logo`、`.home-section` はpage scoped styleであり、このissueのトップページ見た目調整範囲に収まる。
+  - `BaseLayout.astro` の `.site-main` 余白や幅は共通layoutであるため、実装時はhome page側のscoped styleで必要最小限に調整する方針が安全である。
+  - `.tmp/home-copy-fine-direction/02b-fine-direction-desktop.png` と `.tmp/home-copy-fine-direction/02b-fine-direction-mobile.png` は、指示されたコピー装飾案の比較用画像である。
+  - `.tmp/home-desktop-spacing-options/03-balanced-compact-desktop.png` は、desktop余白を詰める採用候補画像である。
+  - mobileは現状案でよいという人間判断があるため、desktop向け余白調整はmobile media queryを壊さない範囲で行う。
+  - `/release-notes` ページ本体、`/introduction` ページ本体、検索UI、Footer導線、`/credits` は引き続き作らない。
+
+### 対応方針
+
+- `src/pages/index.astro` のキャッチコピー文言を、`＿近未来`、`＿裏社会`、`＿抗争` に変更する。
+- キャッチコピーのキーワード後の `。` を削除し、キーワードと後続文章の間隔を少し広げる。
+- キャッチコピーのdesktop / mobile共通の見た目として、02b相当の明朝寄りフォント、少し薄い文字色、キーワードの太字斜体を反映する。
+- desktopでは `.tmp/home-desktop-spacing-options/03-balanced-compact-desktop.png` 相当の余白へ近づける。
+- desktop余白調整は、共通layout全体ではなくhome page scoped styleを中心に行う。
+- mobileの良い見た目を維持するため、既存mobile media queryを壊さない。
+- 実装後はdesktop / mobileの標準範囲とfull-page screenshotを再取得し、`npm run check` と `npm run build` を通す。
+
+### 対応完了チェックリスト
+
+- [x] キャッチコピーに `home-copy-fine-direction` の文言方針を反映する
+- [x] キャッチコピーに02b相当のフォントと文字色を反映する
+- [x] キーワードと後続文章の間隔を調整する
+- [x] desktop余白を `03-balanced-compact` 相当に調整する
+- [x] mobileの見た目を維持する
+- [x] desktop screenshot を取得して確認する
+- [x] mobile screenshot を取得して確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
