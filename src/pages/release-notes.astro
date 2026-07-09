@@ -1,5 +1,5 @@
 ---
-import NoTocPageLayout from "../layouts/NoTocPageLayout.astro";
+import AppContainer from "../layouts/AppContainer.astro";
 import { getReleaseNoteBody, getReleaseNotes } from "../lib/data/release-notes";
 
 const title = "更新履歴";
@@ -7,28 +7,35 @@ const description = "更新履歴ページです。";
 const releaseNotes = getReleaseNotes();
 ---
 
-<NoTocPageLayout title={title} description={description} contentClass="release-notes-page">
-  <h1>{title}</h1>
+<AppContainer title={title} description={description}>
+  <article class="release-notes-page prose">
+    <h1>{title}</h1>
 
-  {
-    releaseNotes.length > 0 ? (
-      <ol class="release-notes-list">
-        {releaseNotes.map((note) => (
-          <li class="release-notes-item">
-            <time class="release-notes-date" datetime={note.date}>
-              {note.date}
-            </time>
-            <p class="release-notes-body">{getReleaseNoteBody(note)}</p>
-          </li>
-        ))}
-      </ol>
-    ) : (
-      <p class="release-notes-empty">更新履歴はまだありません。</p>
-    )
-  }
-</NoTocPageLayout>
+    {
+      releaseNotes.length > 0 ? (
+        <ol class="release-notes-list">
+          {releaseNotes.map((note) => (
+            <li class="release-notes-item">
+              <time class="release-notes-date" datetime={note.date}>
+                {note.date}
+              </time>
+              <p class="release-notes-body">{getReleaseNoteBody(note)}</p>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="release-notes-empty">更新履歴はまだありません。</p>
+      )
+    }
+  </article>
+</AppContainer>
 
 <style>
+  .release-notes-page {
+    max-width: min(100%, 54rem);
+    margin-inline: auto;
+  }
+
   .release-notes-list {
     display: grid;
     margin-block: var(--space-8) 0;
@@ -56,7 +63,7 @@ const releaseNotes = getReleaseNotes();
     line-height: var(--line-height-base);
   }
 
-  :global(.release-notes-page h1::after) {
+  .release-notes-page h1::after {
     background: var(--color-accent);
   }
 

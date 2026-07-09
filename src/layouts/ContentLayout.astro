@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "./BaseLayout.astro";
+import AppContainer from "./AppContainer.astro";
 import type { SeoProps } from "../lib/site/seo";
 
 export interface Props extends SeoProps {
@@ -37,7 +37,7 @@ const noindex = propNoindex ?? frontmatter?.noindex;
 const showPageToc = propShowPageToc ?? frontmatter?.showPageToc ?? true;
 ---
 
-<BaseLayout
+<AppContainer
   title={title}
   description={description}
   ogTitle={ogTitle}
@@ -52,7 +52,7 @@ const showPageToc = propShowPageToc ?? frontmatter?.showPageToc ?? true;
   <article class="content-layout prose">
     <slot />
   </article>
-</BaseLayout>
+</AppContainer>
 
 <style>
   .content-layout {

@@ -1,67 +1,74 @@
 ---
-import BaseLayout from "./BaseLayout.astro";
-import type { SeoProps } from "../lib/site/seo";
-
-export interface Props extends SeoProps {
-  contentClass?: string;
-}
-
-const {
-  contentClass,
-  title,
-  description,
-  ogTitle,
-  ogDescription,
-  ogType,
-  ogImage,
-  ogUrl,
-  twitterCard,
-  noindex,
-} = Astro.props;
+import SiteMenu from "../components/layout/SiteMenu.astro";
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  ogTitle={ogTitle}
-  ogDescription={ogDescription}
-  ogType={ogType}
-  ogImage={ogImage}
-  ogUrl={ogUrl}
-  twitterCard={twitterCard}
-  noindex={noindex}
-  showPageToc={false}
->
-  <article class:list={["no-toc-page", "prose", contentClass]}>
-    <slot />
-  </article>
-</BaseLayout>
+<div class="desktop-layout-no-toc">
+  <aside class="layout-rail layout-rail-left">
+    <SiteMenu />
+  </aside>
+
+  <main class="site-main" data-page-content>
+    <div class="no-toc-page">
+      <slot />
+    </div>
+  </main>
+</div>
 
 <style>
+  .desktop-layout-no-toc {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 19.5rem minmax(46rem, 1fr);
+    min-height: calc(100vh - 9rem);
+  }
+
+  .layout-rail {
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .layout-rail-left {
+    border-right: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-muted);
+  }
+
+  .site-main {
+    min-width: 0;
+    width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
+    margin-inline: auto;
+    padding-block: var(--space-6);
+  }
+
   .no-toc-page {
     max-width: min(100%, 56rem);
     margin-inline: auto;
     padding: var(--space-10) var(--space-12);
   }
 
-  .no-toc-page.release-notes-page {
-    max-width: min(100%, 54rem);
-  }
-
-  @media (min-width: 48.001rem) {
-    :global(.desktop-layout-no-toc .site-main) {
-      padding-block: var(--space-6);
-    }
-
-    .no-toc-page {
-      max-width: min(100%, 62rem);
-      padding: var(--space-5) var(--space-6);
+  @media (max-width: 63.999rem) {
+    .desktop-layout-no-toc {
+      grid-template-columns: 17rem minmax(0, 1fr);
     }
   }
 
   @media (max-width: 48rem) {
+    .desktop-layout-no-toc {
+      display: block;
+      min-height: 0;
+    }
+
     .no-toc-page {
       padding: var(--space-6) var(--space-5);
+    }
+
+    .layout-rail {
+      display: none;
+    }
+  }
+
+  @media (min-width: 48.001rem) {
+    .no-toc-page {
+      max-width: min(100%, 62rem);
+      padding: var(--space-5) var(--space-6);
     }
   }
 </style>

@@ -1,142 +1,31 @@
 ---
-import "../styles/global.css";
-import "../styles/prose.css";
-import Footer from "../components/layout/Footer.astro";
-import Header from "../components/layout/Header.astro";
 import MobilePageToc from "../components/layout/MobilePageToc.astro";
 import PageToc from "../components/layout/PageToc.astro";
 import SiteMenu from "../components/layout/SiteMenu.astro";
-import Seo from "../components/seo/Seo.astro";
-import type { SeoProps } from "../lib/site/seo";
-import { defaultSeo } from "../lib/site/seo";
-import { withBase } from "../lib/utils/paths";
-
-export interface Props extends SeoProps {
-  title?: string;
-  description?: string;
-  showPageToc?: boolean;
-}
-
-const {
-  title,
-  description = defaultSeo.description,
-  ogTitle,
-  ogDescription,
-  ogType,
-  ogImage,
-  ogUrl,
-  twitterCard,
-  noindex,
-  showPageToc = false,
-} = Astro.props;
-
 ---
 
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
-    <Seo
-      title={title}
-      description={description}
-      ogTitle={ogTitle}
-      ogDescription={ogDescription}
-      ogType={ogType}
-      ogImage={ogImage}
-      ogUrl={ogUrl}
-      twitterCard={twitterCard}
-      noindex={noindex}
-    />
-  </head>
-  <body>
-    <div class="site-shell">
-      <Header />
+<MobilePageToc />
 
-      <aside
-        id="mobile-site-menu-drawer"
-        class="mobile-menu-drawer"
-        role="dialog"
-        aria-modal="true"
-        aria-label="スマホ版サイトメニュー"
-        hidden
-      >
-        <div class="mobile-menu-panel">
-          <div class="mobile-menu-header">
-            <button
-              class="mobile-menu-close"
-              type="button"
-              data-mobile-menu-close
-              aria-label="サイトメニューを閉じる"
-            >
-              <span class="mobile-menu-close-icon" aria-hidden="true"></span>
-            </button>
-            <p class="mobile-menu-heading">メニュー</p>
-          </div>
-          <div class="mobile-menu-scroll">
-            <SiteMenu idPrefix="mobile-site-menu" variant="drawer" />
-          </div>
-        </div>
-        <button
-          class="mobile-menu-scrim"
-          type="button"
-          data-mobile-menu-close
-          tabindex="-1"
-          aria-label="サイトメニューを閉じる"
-        ></button>
-      </aside>
+<div class="desktop-layout">
+  <aside class="layout-rail layout-rail-left">
+    <SiteMenu />
+  </aside>
 
-      {showPageToc && <MobilePageToc />}
+  <main class="site-main" data-page-content>
+    <slot />
+  </main>
 
-      <div class:list={["desktop-layout", !showPageToc && "desktop-layout-no-toc"]}>
-        <aside class="layout-rail layout-rail-left">
-          <SiteMenu />
-        </aside>
-
-        <main class="site-main" data-page-content>
-          <slot />
-        </main>
-
-        {
-          showPageToc && (
-            <aside class="layout-rail layout-rail-right">
-              <PageToc />
-            </aside>
-          )
-        }
-      </div>
-
-      <Footer />
-    </div>
-  </body>
-</html>
-
-<script>
-  import { setupMobileMenu } from "../scripts/mobile-menu";
-
-  setupMobileMenu();
-</script>
+  <aside class="layout-rail layout-rail-right">
+    <PageToc />
+  </aside>
+</div>
 
 <style>
-  .site-shell {
-    width: 100%;
-    min-width: 1120px;
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    background: var(--color-surface);
-  }
-
   .desktop-layout {
     min-width: 0;
     display: grid;
     grid-template-columns: 19.5rem minmax(46rem, 1fr) 19.5rem;
     min-height: calc(100vh - 9rem);
-  }
-
-  .desktop-layout-no-toc {
-    grid-template-columns: 19.5rem minmax(46rem, 1fr);
   }
 
   .layout-rail {
@@ -160,24 +49,8 @@ const {
     padding-block: var(--space-12);
   }
 
-  .mobile-menu-drawer {
-    display: none;
-  }
-
-  .mobile-menu-drawer[hidden] {
-    display: none;
-  }
-
   @media (max-width: 63.999rem) {
-    .site-shell {
-      min-width: 0;
-    }
-
     .desktop-layout {
-      grid-template-columns: 17rem minmax(0, 1fr);
-    }
-
-    .desktop-layout-no-toc {
       grid-template-columns: 17rem minmax(0, 1fr);
     }
 
@@ -187,10 +60,6 @@ const {
   }
 
   @media (max-width: 48rem) {
-    .site-shell {
-      min-width: 0;
-    }
-
     .desktop-layout {
       display: block;
       min-height: 0;
@@ -198,99 +67,6 @@ const {
 
     .layout-rail {
       display: none;
-    }
-
-    :global(body.mobile-menu-open) {
-      overflow: hidden;
-    }
-
-    .mobile-menu-drawer {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: grid;
-      grid-template-columns: minmax(0, min(83vw, 20.5rem)) 1fr;
-      min-height: 100dvh;
-    }
-
-    .mobile-menu-panel {
-      min-width: 0;
-      max-height: 100dvh;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      background: var(--color-surface-muted);
-      box-shadow: 0.8rem 0 1.8rem rgb(17 24 32 / 0.24);
-    }
-
-    .mobile-menu-header {
-      min-height: 4rem;
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-      background: var(--color-surface-inverse);
-      color: var(--color-text-inverse);
-      padding-inline: var(--space-3) var(--space-5);
-    }
-
-    .mobile-menu-close {
-      width: 2.5rem;
-      height: 2.5rem;
-      display: inline-grid;
-      flex: 0 0 auto;
-      place-items: center;
-      border: var(--border-width) solid var(--color-border-strong);
-      border-radius: var(--radius-lg);
-      background: transparent;
-      color: var(--color-text-inverse);
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .mobile-menu-close:hover {
-      background: rgb(248 250 249 / 0.1);
-    }
-
-    .mobile-menu-close-icon,
-    .mobile-menu-close-icon::after {
-      width: 1.25rem;
-      height: 0.125rem;
-      display: block;
-      border-radius: var(--radius-sm);
-      background: currentColor;
-    }
-
-    .mobile-menu-close-icon {
-      position: relative;
-      transform: rotate(45deg);
-    }
-
-    .mobile-menu-close-icon::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      transform: rotate(90deg);
-    }
-
-    .mobile-menu-heading {
-      margin: 0;
-      color: var(--color-text-inverse);
-      font-size: var(--text-sm);
-      font-weight: 800;
-      line-height: var(--line-height-tight);
-    }
-
-    .mobile-menu-scroll {
-      min-height: 0;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      padding: var(--space-6);
-    }
-
-    .mobile-menu-scrim {
-      border: 0;
-      background: rgb(17 24 32 / 0.62);
-      cursor: pointer;
-      padding: 0;
     }
   }
 </style>

@@ -36,14 +36,14 @@
 - `src/pages/release-notes.astro`
   - `/release-notes` ルートを作成する
   - ToCなしページ用ラッパーComponent / Layoutを使用する
-  - ラッパー経由で `BaseLayout` を使用し、`showPageToc={false}` を明示または固定する
+  - `AppContainer` 経由でToCなし本文用Layoutを使用し、`showPageToc={false}` 相当の構造にする
   - `.raw/contents/release-notes.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとにページ本文・構造を作成する
   - `getReleaseNotes()` を使って全リリースノートを表示する
   - `getReleaseNoteBody(note)` を使って本文fallbackを扱う
 - `src/layouts/NoTocPageLayout.astro` または同等のToCなしページ用ラッパー
-  - `BaseLayout` の `showPageToc={false}` を内包する
-  - ToCなしページで共通化したい本文幅、余白、基本article構造を提供する
-  - トップページや更新履歴ページなど、ページ内目次を持たないページが個別に同じ余白指定を重複実装しないようにする
+  - `AppContainer` からToCなし本文用Layoutとして選択される
+  - ToCなしページで共通化したい外側grid、左サイトメニュー、本文 `main` の基本構造を提供する
+  - ページ固有の本文 `article`、`prose`、余白、幅指定は各ページ側に閉じる
 - `src/pages/index.astro`
   - 既存トップページがToCなしページであるため、表示を大きく変えない範囲でToCなしページ用ラッパーを適用する
   - SEO要件に従い、トップページ `/` では `defaultSeo.title` をそのまま使うため、Layoutへ `title` を渡さない
@@ -91,8 +91,8 @@
 - [x] `/release-notes` で更新履歴ページが表示される
 - [x] `src/pages/release-notes.astro` が作成されている
 - [x] ToCなしページ用ラッパーComponent / Layoutが作成されている
-- [x] ToCなしページ用ラッパーが `BaseLayout` を使用している
-- [x] ToCなしページ用ラッパーで `showPageToc={false}` が固定または明示されている
+- [x] `AppContainer` が `showPageToc` に応じてToCあり/なし本文用Layoutを選択している
+- [x] ToCなし本文用LayoutでPageToc / MobilePageTocが表示されない
 - [x] `/release-notes` がToCなしページ用ラッパーを使用している
 - [x] 既存のToCなしページであるトップページが、表示を大きく変えない範囲でToCなしページ用ラッパーを使用している
 - [x] トップページ `/` はLayoutへ `title` を渡さず、`defaultSeo.title` をブラウザタイトルとして使っている
@@ -313,23 +313,25 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 - ToCありLayoutは `SiteMenu`、本文 `main`、`PageToc`、`MobilePageToc` を持つ。
 - ToCなしLayoutは `SiteMenu` と本文 `main` を持ち、ToCなし用のgrid、余白、`site-main` 相当の制御を自分の中に閉じる。
 - `NoTocPageLayout` は `BaseLayout` の再利用ではなく、ToCなし用Layoutとして独立させる。必要に応じて既存の `BaseLayout` はToCありLayout相当へ整理または改名する。
-- 各ページは自分の `article` / `div` を自分で持つ。`no-toc-page`、`prose`、`release-notes-page` など本文側classはページまたはページ用Layoutの直下へ置き、ページ固有styleは通常のscoped CSSで扱う。
+- `NoTocPageLayout` は `no-toc-page` 共通ラッパーを持ち、ToCなしページ共通の本文幅と余白をそこで扱う。
+- 各ページは自分の `article` / `div` を自分で持つ。`prose`、`home-page`、`release-notes-page` など本文側classはページ側へ置き、ページ固有styleは通常のscoped CSSで扱う。
 - `contentClass` は廃止し、Layout内部CSSのページ別切り替えAPIとして使わない。
 - `レビュー指摘 1` の最小対応差分は、この構成変更へ吸収する。
 
 ### 対応完了チェックリスト
 
-- [ ] `AppContainer.astro` を作成し、アプリ共通ロジック層を分離した
-- [ ] ToCあり本文用LayoutとToCなし本文用Layoutを別Componentとして分離した
-- [ ] `BaseLayout` / `NoTocPageLayout` の責務と名前を、分離後の構造に合わせて整理した
-- [ ] `contentClass` を廃止した
-- [ ] 各ページが自分の `article` / `div` と本文側classを持つ構造にした
-- [ ] 更新履歴ページ固有styleが `src/pages/release-notes.astro` のscoped CSSで完結している
-- [ ] トップページがToCなしLayoutで表示され、既存表示を大きく崩していない
-- [ ] MDX / データページがToCありLayoutで表示され、PageToc / MobilePageTocが壊れていない
-- [ ] 既存のdesign target対象ページでもスクリーンショットを取得し、表示が壊れていないことを確認した
+- [x] `AppContainer.astro` を作成し、アプリ共通ロジック層を分離した
+- [x] ToCあり本文用LayoutとToCなし本文用Layoutを別Componentとして分離した
+- [x] `BaseLayout` / `NoTocPageLayout` の責務と名前を、分離後の構造に合わせて整理した
+- [x] `contentClass` を廃止した
+- [x] `NoTocPageLayout` が `no-toc-page` 共通ラッパーを持つ構造にした
+- [x] 各ページが自分の `article` / `div` とページ固有本文classを持つ構造にした
+- [x] 更新履歴ページ固有styleが `src/pages/release-notes.astro` のscoped CSSで完結している
+- [x] トップページがToCなしLayoutで表示され、既存表示を大きく崩していない
+- [x] MDX / データページがToCありLayoutで表示され、PageToc / MobilePageTocが壊れていない
+- [x] 既存のdesign target対象ページでもスクリーンショットを取得し、表示が壊れていないことを確認した
 - [ ] 修正後のスクリーンショットについてユーザー確認を得た
 - [ ] 必要に応じてdesign正本を更新した
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
-- [ ] `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@release-notes"` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@release-notes"` が通る

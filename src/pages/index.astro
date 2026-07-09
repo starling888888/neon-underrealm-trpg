@@ -1,6 +1,6 @@
 ---
 import InternalLink from "../components/_common/InternalLink.astro";
-import NoTocPageLayout from "../layouts/NoTocPageLayout.astro";
+import AppContainer from "../layouts/AppContainer.astro";
 import { getLatestReleaseNotes } from "../lib/data/release-notes";
 import { defaultSeo } from "../lib/site/seo";
 import { withBase } from "../lib/utils/paths";
@@ -10,7 +10,8 @@ const latestReleaseNotes = getLatestReleaseNotes(5);
 const topLogoPath = withBase("/top_logo.webp");
 ---
 
-<NoTocPageLayout contentClass="home-page">
+<AppContainer>
+  <article class="home-page prose">
     <h1 class="visually-hidden">{title}</h1>
 
     <section class="home-lead" aria-label="ゲームキャッチコピー">
@@ -109,7 +110,8 @@ const topLogoPath = withBase("/top_logo.webp");
       </p>
       <p>本サイトおよび制作者の明記がない引用・紹介・転載はお控えください。</p>
     </section>
-</NoTocPageLayout>
+  </article>
+</AppContainer>
 
 <style>
   .visually-hidden {
