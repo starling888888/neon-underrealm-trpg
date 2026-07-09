@@ -285,8 +285,8 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 
 - [x] `NoTocPageLayout.astro` から `release-notes-page` 固有styleを削除した
 - [x] 必要な幅調整がある場合は `src/pages/release-notes.astro` 側へ移した
-- [ ] 修正後のスクリーンショットについてユーザー確認を得た
-- [ ] 必要に応じてdesign正本を更新した
+- [x] 修正後のスクリーンショットについてユーザー確認を得た
+- [x] 必要に応じてdesign正本を更新した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 - [x] `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@release-notes"` が通る
@@ -330,8 +330,8 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 - [x] トップページがToCなしLayoutで表示され、既存表示を大きく崩していない
 - [x] MDX / データページがToCありLayoutで表示され、PageToc / MobilePageTocが壊れていない
 - [x] 既存のdesign target対象ページでもスクリーンショットを取得し、表示が壊れていないことを確認した
-- [ ] 修正後のスクリーンショットについてユーザー確認を得た
-- [ ] 必要に応じてdesign正本を更新した
+- [x] 修正後のスクリーンショットについてユーザー確認を得た
+- [x] 必要に応じてdesign正本を更新した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 - [x] `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@release-notes"` が通る
