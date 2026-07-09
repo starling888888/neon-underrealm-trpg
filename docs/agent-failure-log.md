@@ -116,6 +116,11 @@ source種別は以下を使う。
 - 観測した失敗: `docs/design/base-layout/notes.md` のユーザーレビューを挟まずに、`design-desktop.png` の画像生成へ進んだ。
 - 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
 
+恒久対応:
+
+- `AGENTS.md` の最重要ルールへ、検討、確認、妥当性確認、レビュー依頼は実装承認ではなく、判断と推奨方針を返して停止することを追記した。
+- `.agents/skills/design-image-generation/SKILL.md` へ、design方針の確認や `notes.md` レビューcheckpointでは画像生成へ進まず、明示承認後に生成することを追記した。
+
 ### Design draft overproduction and method drift
 
 #### 2026-07-05
