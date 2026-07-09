@@ -152,7 +152,7 @@ UI / layout / pageタスクであり、ローカルリポジトリでは `docs/d
 - [x] 現行サイトの白〜薄灰背景、濃色テキスト、控えめな青緑系アクセントの方向性を維持している
 - [x] 派手なランディングページ風heroや過剰なネオン表現になっていない
 - [x] 完成画面のスクリーンショットを取得している
-- [ ] ユーザー承認後、完成画面スクリーンショットをもとに `docs/design/home/` のdesign正本を更新している
+- [x] ユーザー承認後、完成画面スクリーンショットをもとに `docs/design/home/` のdesign正本を更新している
 - [x] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
 - [x] UI系タスクとして、参照するdesign targetとdesign画像の扱いが記録されている
 - [x] `npm run build` が通る
@@ -339,7 +339,7 @@ mobile: 390x900
   - `npm run preview`: `http://localhost:4321/neon-underrealm-trpg`
   - `node .tmp/capture-home-actual.mjs`: success
 - remaining:
-  - 完成画面スクリーンショットをdesign正本へ置換する作業は、ユーザー承認後に別途行う。
+  - 完成画面スクリーンショットは、ユーザー承認後に `docs/design/home/` のdesign正本として正本化済み。
 
 ## ビジュアルレビュー 1
 
@@ -388,9 +388,29 @@ mobile: 390x900
 - actual screenshotでは、既存Headerの検索UIが表示される。これはこのissueで追加したUIではなく既存Header由来のため、今回の修正対象外とした。
 - actual screenshotでは、リリースノートが現行 `data/generated/release-notes.json` の1件のみ表示される。最大5件表示の実装としては正しいが、design draftの5件サンプルとは件数が異なる。
 
-### design-image-generation への引き継ぎ候補
+### design-image-generation への引き継ぎ
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+
+### design fix正本化メモ
+
+- mode: design fix
+- source test: `tests/visual/home.spec.ts`
+- source actual artifacts:
+  - `test-results/visual/home-desktop.png`
+  - `test-results/visual/home-desktop-full.png`
+  - `test-results/visual/home-mobile.png`
+  - `test-results/visual/home-mobile-full.png`
+- source route: `http://localhost:4321/neon-underrealm-trpg/`
+- source commit: `f521a11`
+- updated design artifacts:
+  - `docs/design/home/notes.md`
+  - `docs/design/home/design-desktop.png`
+  - `docs/design/home/design-desktop-full.png`
+  - `docs/design/home/design-mobile.png`
+  - `docs/design/home/design-mobile-full.png`
+- notes:
+  - `tests/visual/home.spec.ts` で `test-results/visual/home-*.png` を出力し、ユーザー承認後のactual artifactをdesign正本へ反映した。
 
 ### 対応完了チェックリスト
 

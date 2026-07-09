@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Design canonicalization bypassed visual output convention
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-2-home-page` の `docs/design/home/` 正本化
+- 観測した失敗: design正本化時、既存運用では `tests/visual/*` 等のtestコードで実装スクリーンショットを `test-results/` に出力し、そのactual artifactを材料としてdesign正本へ反映する前提があるにもかかわらず、専用 `.tmp/capture-home-design-canonical.mjs` から直接 `docs/design/home/design-*.png` へ書き出した。さらに `notes.md` とissueに「`test-results/` を直接コピーせず再キャプチャした」と記録し、既存の正本化運用との関係を曖昧にした。
+- 一次対応: ユーザー確認に対し、既存運用は `test-results/` 由来のactual artifactを材料にする理解が妥当であり、今回の直接書き出しは運用ズレとして扱う方針に修正する。
+
 ### Page description changed without confirmation
 
 #### 2026-07-09

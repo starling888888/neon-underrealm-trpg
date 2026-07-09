@@ -2,9 +2,9 @@
 
 ## Mode
 
-- initial draft
-- このnotesは、画像生成前のレビュー用checkpointである。
-- initial draft画像は、人間レビューで承認されるまで最終design正本として扱わない。
+- design fix
+- `18-2-home-page` の実装結果を、ユーザー承認に基づきトップページdesign正本として正本化した。
+- 初期draftとの差分を隠す目的ではなく、人間レビュー後の現行実装を今後のVisual Review基準にする。
 
 ## Target
 
@@ -18,7 +18,7 @@
   - desktop上から下までのfull-page
   - mobile標準画面に写り切る範囲
   - mobile上から下までのfull-page
-- 作成予定のdraft画像:
+- canonical images:
   - `docs/design/home/design-desktop.png`
     - desktop `1440x1200`
     - 標準画面に写り切る範囲。full-pageではない。
@@ -37,56 +37,59 @@
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
 - `docs/issue/18-2-home-page.md`
-- `docs/requirements.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/release-notes.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
-- `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`
 - `.raw/contents/home.md`
+
+## Historical source issue
+
+- `docs/issue/18-2-home-page.md`
 
 ## Design Direction
 
 - visual direction:
   - 現行サイトの白から薄灰の背景、暗めのHeader / Footer、濃色本文、控えめな青緑accentを維持する。
-  - 近未来・地下都市の気配は出してよいが、派手なランディングページではなく、ルール参照サイトとして落ち着いた見た目にする。
+  - 近未来・裏社会の気配はキャッチコピーとロゴで出す。
+  - 派手なランディングページではなく、ルール参照サイトとして落ち着いた見た目にする。
   - 大きな装飾hero画像、強いneon glow、紫主体のgradient、magenta accent、黒背景主体のcyberpunk UI、ぼかし装飾は使わない。
 - layout direction:
   - 表示順は以下を維持する。
     1. ゲームキャッチコピー
     2. タイトルロゴ
-    3. 最新リリースノート5件
-    4. ゲームのかんたんな説明
-    5. `.raw/contents/home.md` に含まれる短いクレジットと利用案内
+    3. 最新リリースノート
+    4. `/release-notes` と `/introduction` への導線
+    5. ゲームのかんたんな説明
+    6. `.raw/contents/home.md` に含まれる短いクレジットと利用案内
   - トップページではPageToc / MobilePageTocを表示しない。
   - Header、本文領域、Footerは `docs/design/site-layout/` と一貫したリズムにする。
-  - first viewportでは、サイトID、タイトルロゴ、更新確認の役割が分かるようにする。ただし過大なhero sectionにはしない。
-  - タイトルロゴは目立たせるが、最新リリースノートが遠くなりすぎるほど大きくしない。
-  - mobileでは、左右余白を確保したうえでタイトルロゴを横幅いっぱいに近いサイズで表示する。
+  - desktopでは `03-balanced-compact` 方針に寄せ、first viewportでロゴ、最新リリースノート、はじめに導線までのつながりを強める。
+  - mobileでは、人間レビューで良いと判断された余白とロゴサイズを維持する。
 - typography direction:
-  - system fontを使い、`letter-spacing` は `0` とする。
   - `.raw/contents/home.md` のページタイトルは、通常の可視H1として表示しない。
   - HTML構造上H1が必要な場合は、視覚的に非表示にする。
   - キャッチコピーはH1 / H2ではなく、本文より少し大きいリードコピーとして扱う。
-  - `近未来。`、`裏社会。`、`抗争。` は斜体で強調する。
+  - キャッチコピーは02b相当の明朝寄りフォント、少し薄い文字色、太字斜体キーワードを使う。
+  - キーワードは `＿近未来`、`＿裏社会`、`＿抗争` とし、キーワード後の `。` は付けない。
+  - キーワードと後続文章の間隔を少し広げる。
+  - `letter-spacing` は `0` とする。
   - 「最新リリースノート」「ゲームのかんたんな説明」「クレジット」「利用について」などの見出しは、hero的な大見出しではなく落ち着いた本文見出しにする。
 - color / accent usage:
   - 青緑accentはリンクや小さな状態表現に限定する。
-  - リリースノート項目は、細い罫線や薄いsurfaceで整理してよい。ただしcard-heavyなmarketing blockにしない。
+  - `はじめに` 導線はheaderと同系統の濃色背景、白抜き文字で、主要導線として中央に置く。
+  - リリースノート項目は、細い罫線や薄いsurfaceで整理する。ただしcard-heavyなmarketing blockにしない。
   - クレジットと利用案内は、主要導線より控えめに見える扱いにする。
 
 ## Content Instructions
 
-- 暫定版のdraft画像でも、`.raw/contents/home.md` のコンテンツ指示を遵守する。
 - `.raw/contents/home.md` 内のHTMLコメントはagent向け指示であり、画面上に表示しない。
 - `<!-- release-notes-list:auto latest=5 -->` は可視テキストではなく、最新リリースノート枠として表現する。
 - 最新リリースノート枠は、実装では生成済みリリースノートデータ由来の最大5件を表示する。
-- 生成画像内の正確な日本語テキストには依存しない。draft画像では短い代表文や省略表現を使ってよい。
-- 正確な文言と構造要件は、画像だけに持たせず、このnotesと実装側で管理する。
-- タイトルロゴは既存候補の `public/top_logo.webp` を使い、altは `光都暗域〈ネオン・アンダーレルム〉TRPG` とする。
-- draftには以下のリンクを含める。
+- canonical image上では、現行 `data/generated/release-notes.json` 由来の件数と文言をそのまま表示する。
+- タイトルロゴは `public/top_logo.webp` を使い、altは `光都暗域〈ネオン・アンダーレルム〉TRPG` とする。
+- 以下のリンクを含める。
   - `/release-notes`
   - `/introduction`
 - `.raw/contents/home.md` に含まれる短いクレジットと利用案内をページ下部に含める。
@@ -100,7 +103,6 @@
   - 高コントラストの濃色テキスト
   - 控えめな青緑accent
   - 日本語本文が読める本文リズム
-  - Web font不要
   - 過剰なglow、blur、gradient、高彩度neonを使わない
 - `site-layout` の方向性を維持する。
   - desktopでは既存Header / Footerと左SiteMenuのlayout挙動を前提にする。
@@ -108,8 +110,7 @@
   - `/` では不要なPageToc / MobilePageTocや空のTOC枠を表示しない。
   - 新しいnavigation modelを要求するdesignにしない。
 - Component慣例を維持する。
-  - 画像表示は `ImageBlock` または同等のbase path対応済み実装と相性のよい見た目にする。
-  - linkは通常のsite linkまたは控えめなtext linkとして扱い、promotional CTA buttonにしない。
+  - linkは内部リンクComponentの見た目と整合させる。
   - リリースノートの繰り返し項目は、compactなlist rowまたは薄い罫線つきsurfaceに留め、cardの入れ子にしない。
 
 ## Out Of Scope
@@ -149,10 +150,6 @@
 - 最新リリースノートは生成データ由来の枠として見え、手書き固定本文に見えないこと。
 - `/release-notes` と `/introduction` のリンクはあるが、このtaskでページ本体を実装したようには見せないこと。
 - トップページが `site-layout` と同じサイトに見え、別サイトのlanding pageに見えないこと。
-- 実装後に許容できる差分:
-  - 正確な改行や日本語表示の細部がdraft画像と異なる。
-  - release-note項目の文言がgenerated JSON由来でdraft画像と異なる。
-  - required orderと可読性を守ったうえで、余白が軽微に変わる。
 - reviewが必要な差分:
   - 落ち着いたルールサイトではなく派手なheroに変わっている。
   - credit / usageが欠落している。
@@ -162,23 +159,41 @@
 
 ## Generation Source
 
-- generator or capture source: `.tmp/home-design.html` をPlaywrightでPNG化したinitial draft画像。
-- source branch / commit when applicable: `18-2-home-page`
-- route when applicable: `/` のdesign draft。実装routeのactual screenshotではない。
-- viewport:
-  - desktop標準画面: `1440x1200`
-  - desktop full-page: `1440x1200` viewportから上から下まで
-  - mobile標準画面: `390x900`
-  - mobile full-page: `390x900` viewportから上から下まで
+- generator or capture source: `tests/visual/home.spec.ts` のPlaywright actual screenshotをdesign fixとして正本化した。
+- source actual artifacts:
+  - `test-results/visual/home-desktop.png`
+  - `test-results/visual/home-desktop-full.png`
+  - `test-results/visual/home-mobile.png`
+  - `test-results/visual/home-mobile-full.png`
+- source branch / commit when applicable: `18-2-home-page` / `f521a11`
+- route when applicable: `/`
+- route URL during capture: `http://localhost:4321/neon-underrealm-trpg/`
+- viewport / output:
+  - `/`, desktop `1440x1200`, viewport screenshot: `design-desktop.png`
+  - `/`, desktop `1440x1200`, fullPage screenshot: `design-desktop-full.png`
+  - `/`, mobile `390x900`, viewport screenshot: `design-mobile.png`
+  - `/`, mobile `390x900`, fullPage screenshot: `design-mobile-full.png`
 - prompt summary or capture notes:
-  - `.raw/contents/home.md` のコンテンツ指示、current issue scope、global style、site layout制約を守ったトップページinitial draft designとして作成した。
+  - `18-2-home-page` の実装結果を、人間レビュー後のdesign正本として採用した。
   - desktop / mobileそれぞれで、標準画面に写り切る範囲の画像と、上から下までのfull-page画像を作成した。
-  - draft画像は実装結果ではなく、Visual Review用の初期design参照である。
   - 初期スコープ外UIや新しいアプリ機能は描いていない。
+  - `test-results/visual/home-*.png` のactual artifactをユーザー承認後にdesign正本へ反映した。
+
+## Differences From Initial Draft
+
+- 実装済みHeader / SiteMenu / Footerを含む現行site-layoutとして正本化した。
+- キャッチコピーは `＿近未来`、`＿裏社会`、`＿抗争` に変更し、02b相当の明朝寄りフォントと薄めの文字色を反映した。
+- desktopは `03-balanced-compact` 方針に寄せ、初期draftより上部とロゴ周辺の余白を詰めた。
+- `はじめに` 導線は更新履歴リンク横ではなく、濃色背景の中央配置リンクとして扱う。
+- リリースノートは現行生成データ由来の1件表示になっている。実装仕様は最大5件表示であり、データ追加時に増える。
+- Headerの検索UIは既存layout由来として写っている。このissueで新規追加したものではない。
+
+## Canonicalization Rationale
+
+- `18-2-home-page` の実装とレビュー指摘 1 / 2 の対応が完了し、ユーザーからdesign正本化の明示指示があった。
+- 初期draftより現行実装のほうが、実際のHeader / SiteMenu / Footer、生成リリースノート、トップページ導線の状態を正確に示す。
+- 今後のVisual Reviewでは、この正本画像を基準にトップページの見た目差分を評価する。
 
 ## Open Questions
 
-- `design-desktop.png` / `design-mobile.png` を標準画面crop、`*-full.png` を上から下までの確認用として扱う方針でよいか。
-- リリースノート枠はcompactな罫線listにするか、ごく薄いsurface groupにするか。
-- credit / usageは通常prose sectionにするか、やや控えめなsmall text sectionにするか。
-- `public/top_logo.webp` をhome designで使う最終TOPlogo画像として確定してよいか。
+- なし。
