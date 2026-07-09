@@ -162,19 +162,19 @@
 
 ## Generation Source
 
-- generator or capture source: このnotesのレビュー後にinitial draft画像生成を行う想定。
+- generator or capture source: `.tmp/home-design.html` をPlaywrightでPNG化したinitial draft画像。
 - source branch / commit when applicable: `18-2-home-page`
-- route when applicable: `/`
+- route when applicable: `/` のdesign draft。実装routeのactual screenshotではない。
 - viewport:
   - desktop標準画面: `1440x1200`
   - desktop full-page: `1440x1200` viewportから上から下まで
   - mobile標準画面: `390x900`
   - mobile full-page: `390x900` viewportから上から下まで
 - prompt summary or capture notes:
-  - `.raw/contents/home.md` のコンテンツ指示、current issue scope、global style、site layout制約を守ったトップページinitial draft designを作成する。
-  - desktop / mobileそれぞれで、標準画面に写り切る範囲の画像と、上から下までのfull-page画像を作成する。
-  - 生成画像の文字精度に依存しないため、必要に応じて短い代表文を使う。
-  - 初期スコープ外UIや新しいアプリ機能は描かない。
+  - `.raw/contents/home.md` のコンテンツ指示、current issue scope、global style、site layout制約を守ったトップページinitial draft designとして作成した。
+  - desktop / mobileそれぞれで、標準画面に写り切る範囲の画像と、上から下までのfull-page画像を作成した。
+  - draft画像は実装結果ではなく、Visual Review用の初期design参照である。
+  - 初期スコープ外UIや新しいアプリ機能は描いていない。
 
 ## Open Questions
 
