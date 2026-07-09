@@ -261,3 +261,75 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `src/layouts/NoTocPageLayout.astro` に `.no-toc-page.release-notes-page` の幅指定があり、ToCなし共通Layoutが更新履歴ページ固有のclassに依存している。
+- issueでは、ページ固有styleは原則として `src/pages/release-notes.astro` 内に閉じる方針になっているため、責務境界としてはページ側へ寄せる方が明確。
+
+### 判定
+
+- source: pr-review-draft
+- classification: valid
+- local validation: `.tmp/review.md` はremote PR snapshot由来で、local validation requiredと明記されていた。ローカルではbranch `19-2-release-notes-page` が `origin/19-2-release-notes-page` と同期済みで、working treeはclean。`src/layouts/NoTocPageLayout.astro` に `.no-toc-page.release-notes-page { max-width: min(100%, 54rem); }` が存在し、`src/pages/release-notes.astro` が `contentClass="release-notes-page"` を渡していることを確認した。`docs/issue/19-2-release-notes-page.md` の対象範囲にも、ページ固有styleは原則として `src/pages/release-notes.astro` 内に閉じる方針が記録されている。
+
+### 対応方針
+
+- `NoTocPageLayout.astro` から `release-notes-page` 固有の幅指定を削除する。
+- 更新履歴ページだけ本文幅を狭める必要がある場合は、同等の指定を `src/pages/release-notes.astro` 側へ移し、ページ固有styleとして閉じる。
+- 共通Layout側の `contentClass` は、ページ側のclass付与用途に留め、Layout内部CSSのページ別切り替えAPIとして扱わない。
+
+### 対応完了チェックリスト
+
+- [x] `NoTocPageLayout.astro` から `release-notes-page` 固有styleを削除した
+- [x] 必要な幅調整がある場合は `src/pages/release-notes.astro` 側へ移した
+- [ ] 修正後のスクリーンショットについてユーザー確認を得た
+- [ ] 必要に応じてdesign正本を更新した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@release-notes"` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `NoTocPageLayout` の `article` に `contentClass` を差し込み、子ページ側から `:global(.release-notes-page)` で制御する作りは責務境界が曖昧である。
+- `BaseLayout` がアプリ全体の共通ロジック、共通UI、ToCあり/なしの分岐、各ページ本文の包み方をまとめて持っており、ToCなしページ固有の構造をきれいに分離しにくい。
+- コード重複を許容してでも、アプリ共通ロジック層と表示用Layoutを分け、ToCありLayoutとToCなしLayoutを完全に別Componentとして扱う方が明確。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `BaseLayout.astro` は `Seo`、`Header`、mobile menu、`SiteMenu`、`PageToc` / `MobilePageToc`、`Footer`、`showPageToc` によるgrid分岐をまとめて持っている。`NoTocPageLayout.astro` は `BaseLayout` に `showPageToc={false}` を渡しつつ、`article.no-toc-page.prose` と `contentClass` を内包している。`src/pages/release-notes.astro` は `contentClass="release-notes-page"` を渡しており、ページ固有styleをLayout内のclassへ依存させる構造になっている。
+
+### 対応方針
+
+- アプリ共通ロジック層を `AppContainer.astro` として分離する。
+- `AppContainer.astro` は `html` / `head` / `body`、global CSS import、`Seo`、`Header`、mobile menu、`Footer`、mobile menu script、`showPageToc` に応じたLayout選択を担当する。
+- ToCあり本文用LayoutとToCなし本文用Layoutを、`AppContainer` から選ばれる別Componentとして分ける。
+- ToCありLayoutは `SiteMenu`、本文 `main`、`PageToc`、`MobilePageToc` を持つ。
+- ToCなしLayoutは `SiteMenu` と本文 `main` を持ち、ToCなし用のgrid、余白、`site-main` 相当の制御を自分の中に閉じる。
+- `NoTocPageLayout` は `BaseLayout` の再利用ではなく、ToCなし用Layoutとして独立させる。必要に応じて既存の `BaseLayout` はToCありLayout相当へ整理または改名する。
+- 各ページは自分の `article` / `div` を自分で持つ。`no-toc-page`、`prose`、`release-notes-page` など本文側classはページまたはページ用Layoutの直下へ置き、ページ固有styleは通常のscoped CSSで扱う。
+- `contentClass` は廃止し、Layout内部CSSのページ別切り替えAPIとして使わない。
+- `レビュー指摘 1` の最小対応差分は、この構成変更へ吸収する。
+
+### 対応完了チェックリスト
+
+- [ ] `AppContainer.astro` を作成し、アプリ共通ロジック層を分離した
+- [ ] ToCあり本文用LayoutとToCなし本文用Layoutを別Componentとして分離した
+- [ ] `BaseLayout` / `NoTocPageLayout` の責務と名前を、分離後の構造に合わせて整理した
+- [ ] `contentClass` を廃止した
+- [ ] 各ページが自分の `article` / `div` と本文側classを持つ構造にした
+- [ ] 更新履歴ページ固有styleが `src/pages/release-notes.astro` のscoped CSSで完結している
+- [ ] トップページがToCなしLayoutで表示され、既存表示を大きく崩していない
+- [ ] MDX / データページがToCありLayoutで表示され、PageToc / MobilePageTocが壊れていない
+- [ ] 既存のdesign target対象ページでもスクリーンショットを取得し、表示が壊れていないことを確認した
+- [ ] 修正後のスクリーンショットについてユーザー確認を得た
+- [ ] 必要に応じてdesign正本を更新した
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
+- [ ] `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@release-notes"` が通る
