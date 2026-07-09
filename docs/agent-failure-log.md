@@ -86,6 +86,33 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Design canonicalization bypassed visual output convention
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-2-home-page` の `docs/design/home/` 正本化
+- 観測した失敗: design正本化時、既存運用では `tests/visual/*` 等のtestコードで実装スクリーンショットを `test-results/` に出力し、そのactual artifactを材料としてdesign正本へ反映する前提があるにもかかわらず、専用 `.tmp/capture-home-design-canonical.mjs` から直接 `docs/design/home/design-*.png` へ書き出した。さらに `notes.md` とissueに「`test-results/` を直接コピーせず再キャプチャした」と記録し、既存の正本化運用との関係を曖昧にした。
+- 一次対応: ユーザー確認に対し、既存運用は `test-results/` 由来のactual artifactを材料にする理解が妥当であり、今回の直接書き出しは運用ズレとして扱う方針に修正する。
+
+### Page description changed without confirmation
+
+#### 2026-07-09
+
+- source: review
+- 発生箇所: `18-2-home-page` の `src/pages/index.astro`
+- 観測した失敗: トップページ実装中、`.raw/contents/home.md` のfrontmatterに `description` がない状態で、ユーザー確認なしにページ固有の新しい `description` 文言を作成した。人間一次レビューでは文言自体は問題ないが、独自判断で変更した点が逸脱として指摘された。
+- 一次対応: review-to-issueで `レビュー指摘 1` に取り込み、指摘対応時に今回の文言をdefault descriptionへ反映する方針を記録した。
+
+### Repository documentation written in wrong language
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-2-home-page` の `docs/design/home/notes.md`
+- 観測した失敗: リポジトリ内の設計文書として作成する `docs/design/home/notes.md` を、既存docsの日本語運用に合わせず英語で作成した。ユーザーから「docだから日本語で書け」と指摘された。
+- 一次対応: `docs/design/home/notes.md` を日本語へ全面修正し、本ログへ記録した。以後、リポジトリ内docs / issue / design notes / rule / skill本文は、既存文書の言語に合わせ、原則日本語で作成する。
+
 ### Completed checklist with stale unverified note
 
 #### 2026-07-09
