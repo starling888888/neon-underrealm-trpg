@@ -1,6 +1,6 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
 import InternalLink from "../components/_common/InternalLink.astro";
+import NoTocPageLayout from "../layouts/NoTocPageLayout.astro";
 import { getLatestReleaseNotes } from "../lib/data/release-notes";
 import { defaultSeo } from "../lib/site/seo";
 import { withBase } from "../lib/utils/paths";
@@ -10,8 +10,7 @@ const latestReleaseNotes = getLatestReleaseNotes(5);
 const topLogoPath = withBase("/top_logo.webp");
 ---
 
-<BaseLayout showPageToc={false}>
-  <article class="home-page prose">
+<NoTocPageLayout contentClass="home-page">
     <h1 class="visually-hidden">{title}</h1>
 
     <section class="home-lead" aria-label="ゲームキャッチコピー">
@@ -110,17 +109,9 @@ const topLogoPath = withBase("/top_logo.webp");
       </p>
       <p>本サイトおよび制作者の明記がない引用・紹介・転載はお控えください。</p>
     </section>
-  </article>
-</BaseLayout>
+</NoTocPageLayout>
 
 <style>
-  .home-page {
-    max-width: min(100%, 56rem);
-    margin-inline: auto;
-    background: transparent;
-    padding: var(--space-10) var(--space-12);
-  }
-
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -286,16 +277,6 @@ const topLogoPath = withBase("/top_logo.webp");
   }
 
   @media (min-width: 48.001rem) {
-    /* Home page only: tighten BaseLayout's desktop main padding for the first viewport composition. */
-    :global(.site-main) {
-      padding-block: var(--space-6) !important;
-    }
-
-    .home-page {
-      max-width: min(100%, 62rem);
-      padding: var(--space-5) var(--space-6);
-    }
-
     .home-lead {
       max-width: 54rem;
     }
@@ -312,10 +293,6 @@ const topLogoPath = withBase("/top_logo.webp");
   }
 
   @media (max-width: 48rem) {
-    .home-page {
-      padding: var(--space-6) var(--space-5);
-    }
-
     .home-lead {
       font-size: var(--text-lg);
     }

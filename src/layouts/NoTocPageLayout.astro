@@ -1,0 +1,67 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import type { SeoProps } from "../lib/site/seo";
+
+export interface Props extends SeoProps {
+  contentClass?: string;
+}
+
+const {
+  contentClass,
+  title,
+  description,
+  ogTitle,
+  ogDescription,
+  ogType,
+  ogImage,
+  ogUrl,
+  twitterCard,
+  noindex,
+} = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogTitle={ogTitle}
+  ogDescription={ogDescription}
+  ogType={ogType}
+  ogImage={ogImage}
+  ogUrl={ogUrl}
+  twitterCard={twitterCard}
+  noindex={noindex}
+  showPageToc={false}
+>
+  <article class:list={["no-toc-page", "prose", contentClass]}>
+    <slot />
+  </article>
+</BaseLayout>
+
+<style>
+  .no-toc-page {
+    max-width: min(100%, 56rem);
+    margin-inline: auto;
+    padding: var(--space-10) var(--space-12);
+  }
+
+  .no-toc-page.release-notes-page {
+    max-width: min(100%, 54rem);
+  }
+
+  @media (min-width: 48.001rem) {
+    :global(.desktop-layout-no-toc .site-main) {
+      padding-block: var(--space-6);
+    }
+
+    .no-toc-page {
+      max-width: min(100%, 62rem);
+      padding: var(--space-5) var(--space-6);
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .no-toc-page {
+      padding: var(--space-6) var(--space-5);
+    }
+  }
+</style>

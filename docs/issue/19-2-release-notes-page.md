@@ -86,55 +86,55 @@
 
 ## 完了条件
 
-- [ ] `docs/design/release-notes/` のdesign targetが作成・参照されている
+- [x] `docs/design/release-notes/` のdesign targetが作成・参照されている
 - [ ] design画像がない場合、実装前に `design-image-generation` initial draft mode を実行する前提が記録されている
-- [ ] `/release-notes` で更新履歴ページが表示される
-- [ ] `src/pages/release-notes.astro` が作成されている
-- [ ] ToCなしページ用ラッパーComponent / Layoutが作成されている
-- [ ] ToCなしページ用ラッパーが `BaseLayout` を使用している
-- [ ] ToCなしページ用ラッパーで `showPageToc={false}` が固定または明示されている
-- [ ] `/release-notes` がToCなしページ用ラッパーを使用している
-- [ ] 既存のToCなしページであるトップページが、表示を大きく変えない範囲でToCなしページ用ラッパーを使用している
+- [x] `/release-notes` で更新履歴ページが表示される
+- [x] `src/pages/release-notes.astro` が作成されている
+- [x] ToCなしページ用ラッパーComponent / Layoutが作成されている
+- [x] ToCなしページ用ラッパーが `BaseLayout` を使用している
+- [x] ToCなしページ用ラッパーで `showPageToc={false}` が固定または明示されている
+- [x] `/release-notes` がToCなしページ用ラッパーを使用している
+- [x] 既存のToCなしページであるトップページが、表示を大きく変えない範囲でToCなしページ用ラッパーを使用している
 - [x] トップページ `/` はLayoutへ `title` を渡さず、`defaultSeo.title` をブラウザタイトルとして使っている
 - [x] ページ固有 `title` が渡されたページでは、ブラウザタイトルが `defaultSeo.title | <page title>` 形式になる
 - [x] ページ固有 `title` が渡されないページでは、ブラウザタイトルが `defaultSeo.title` になる
 - [x] `og:site_name` が `defaultSeo.siteName` を使っている
-- [ ] ページ内目次が表示されない
-- [ ] `.raw/contents/release-notes.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面が作成されている
-- [ ] `getReleaseNotes()` から取得した全リリースノートが表示される
-- [ ] 各リリースノートに更新日が表示される
-- [ ] 更新日は可能な範囲で `<time datetime="YYYY-MM-DD">` としてマークアップされている
-- [ ] 各リリースノートに本文が表示される
-- [ ] `body` が `null` または空文字相当の場合、`summary` が本文として表示される
-- [ ] 本文内の改行が表示に反映される
-- [ ] リリースノートが0件でもページが壊れず、簡潔な空状態が表示される
-- [ ] トップページの「更新履歴を見る」導線から遷移できる
-- [ ] サイトメニューの「更新履歴」項目とルートが整合している
-- [ ] GitHub Pagesのサブパス公開でリンク・ルートが壊れない
-- [ ] 完成画面のスクリーンショットを取得し、design正本更新の扱いが記録されている
-- [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
+- [x] ページ内目次が表示されない
+- [x] `.raw/contents/release-notes.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面が作成されている
+- [x] `getReleaseNotes()` から取得した全リリースノートが表示される
+- [x] 各リリースノートに更新日が表示される
+- [x] 更新日は可能な範囲で `<time datetime="YYYY-MM-DD">` としてマークアップされている
+- [x] 各リリースノートに本文が表示される
+- [x] `body` が `null` または空文字相当の場合、`summary` が本文として表示される
+- [x] 本文内の改行が表示に反映される
+- [x] リリースノートが0件でもページが壊れず、簡潔な空状態が表示される
+- [x] トップページの「更新履歴を見る」導線から遷移できる
+- [x] サイトメニューの「更新履歴」項目とルートが整合している
+- [x] GitHub Pagesのサブパス公開でリンク・ルートが壊れない
+- [x] 完成画面のスクリーンショットを取得し、design正本更新の扱いが記録されている
+- [x] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない
-- [ ] `/` から `/release-notes` への内部リンクが壊れていない
-- [ ] `src/lib/site/menu.ts` の既存メニュー項目と `/release-notes` ルートが整合している
-- [ ] `data/generated/release-notes.json` を直接ページ側で複雑に加工していない
-- [ ] ページ側では既存の `src/lib/data/release-notes.ts` を優先して利用している
-- [ ] Excel本体がない状態でも静的サイトビルドが成立する
-- [ ] 本文fallbackは `getReleaseNoteBody(note)` の責務と重複実装していない
-- [ ] 改行反映は `white-space: pre-line` など、最小限の表示制御で実現している
-- [ ] ToCなしページ用ラッパーの共通余白が、トップページと更新履歴ページで不自然な差を生んでいない
-- [ ] ToCなしページ用ラッパーが、ToCありページの `ContentLayout` や既存MDXページへ不要に影響していない
+- [x] 既存ルートが壊れていない
+- [x] `/` から `/release-notes` への内部リンクが壊れていない
+- [x] `src/lib/site/menu.ts` の既存メニュー項目と `/release-notes` ルートが整合している
+- [x] `data/generated/release-notes.json` を直接ページ側で複雑に加工していない
+- [x] ページ側では既存の `src/lib/data/release-notes.ts` を優先して利用している
+- [x] Excel本体がない状態でも静的サイトビルドが成立する
+- [x] 本文fallbackは `getReleaseNoteBody(note)` の責務と重複実装していない
+- [x] 改行反映は `white-space: pre-line` など、最小限の表示制御で実現している
+- [x] ToCなしページ用ラッパーの共通余白が、トップページと更新履歴ページで不自然な差を生んでいない
+- [x] ToCなしページ用ラッパーが、ToCありページの `ContentLayout` や既存MDXページへ不要に影響していない
 - [x] SEO title生成変更が `description`、`og:description`、`og:image`、`og:url` の既存挙動を壊していない
-- [ ] ページ固有CSSが他ページへ不要に波及していない
-- [ ] 不要なnpm packageを追加していない
-- [ ] 検索、絞り込み、ページネーションなど初期スコープ外機能を混ぜていない
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-- [ ] 関連する `docs/design/` と矛盾していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] ページ固有CSSが他ページへ不要に波及していない
+- [x] 不要なnpm packageを追加していない
+- [x] 検索、絞り込み、ページネーションなど初期スコープ外機能を混ぜていない
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] 関連する `docs/design/` と矛盾していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -205,3 +205,62 @@
 本issue-first検証では `npm run check`、`npm run build`、`npm run visual:capture` は未実行。
 
 SEO title生成変更の実装後検証では `npm run check` と `npm run build` を実行済み。`npm run visual:capture` は未実行。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/release-notes/`
+- reference desktop: `docs/design/release-notes/design-desktop.png`
+- reference mobile: `docs/design/release-notes/design-mobile.png`
+- notes: `docs/design/release-notes/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual-implementation/release-notes-desktop.png`
+- actual mobile: `test-results/visual-implementation/release-notes-mobile.png`
+- additional spacing check:
+  - `test-results/visual-implementation/home-notoc-spacing-desktop.png`
+  - `test-results/visual-implementation/home-notoc-spacing-mobile.png`
+  - `test-results/visual-implementation/release-notes-notoc-spacing-desktop.png`
+  - `test-results/visual-implementation/release-notes-notoc-spacing-mobile.png`
+- report: Playwright screenshot command output
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                 | 対応                                         |
+| --------------------- | ---- | -------------------------------------------------------------------- | -------------------------------------------- |
+| レイアウト            | OK   | design画像は複数件、実装は現行データ1件のため縦量が少ない            | 現行データに従う差分として許容               |
+| 余白                  | OK   | designと同じくH1下に一覧を直接配置し、ToC枠はなし                    | `NoTocPageLayout` 側でdesktop余白を共通化    |
+| タイポグラフィ        | OK   | 初回確認で本文weightが強かった                                       | 本文weightを通常に修正                       |
+| 色                    | OK   | 初回確認でH1下線が既存prose accentの灰色だった                       | 更新履歴ページ内だけ `--color-accent` に修正 |
+| 配置・整列            | OK   | 日付が上、本文が下の単純な縦積み                                     | 修正不要                                     |
+| レスポンシブ          | OK   | desktop / mobileで横overflowなし                                     | 修正不要                                     |
+| overflow / scroll     | OK   | `scrollWidth` と `clientWidth` が一致                                | 修正不要                                     |
+| 既存デザインとの整合  | OK   | Header / SiteMenu / Footerは既存Layoutを使用                         | 修正不要                                     |
+| 既存Componentとの整合 | OK   | `NoTocPageLayout` が `BaseLayout` と `Seo` の既存propsを透過している | 修正不要                                     |
+| accessibility basics  | OK   | H1、`time datetime`、現在ページ `aria-current` を確認                | 修正不要                                     |
+
+### 自己修正した項目
+
+- [x] 更新履歴本文の `font-weight` を通常にした
+- [x] 更新履歴ページのH1下線をdesign notesのaccent方向に合わせた
+- [x] ToCなしページ共通のdesktop余白を `NoTocPageLayout` に寄せ、トップページ固有の余白上書きを削除した
+
+### 人間判断が必要な差分
+
+- design画像は複数件の代表リリースノートを描いているが、現行 `data/generated/release-notes.json` は1件のみ。実装は現行データを正として1件表示にしている。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
