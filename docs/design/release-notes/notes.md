@@ -2,9 +2,9 @@
 
 ## Mode
 
-- initial draft
-- 19-2-release-notes-page の実装前design targetとして作成する。
-- desktop / mobileの標準画面ドラフト画像を生成済み。
+- design fix
+- 19-2-release-notes-page の実装後Visual Review結果を正本化する。
+- `tests/visual/release-notes.spec.ts` が出力したactual screenshotを、desktop / mobileのcanonical design imageとして反映済み。
 
 ## Target
 
@@ -14,16 +14,16 @@
   - desktop: `1440x1200`
   - mobile: `390x900`
 - states:
-  - desktop標準画面に写り切る範囲
-  - mobile標準画面に写り切る範囲
-  - 複数件の更新履歴が並ぶ標準状態
+  - desktop full-page screenshot
+  - mobile full-page screenshot
+  - 現行 `data/generated/release-notes.json` の1件を表示する標準状態
 - planned design images:
   - `docs/design/release-notes/design-desktop.png`
-    - desktop `1440x1200`
-    - 標準画面に写り切る範囲。複数件の更新履歴を表示する。
+    - desktop `1440x1224`
+    - `tests/visual/release-notes.spec.ts` のdesktop full-page screenshot。
   - `docs/design/release-notes/design-mobile.png`
     - mobile `390x900`
-    - 標準画面に写り切る範囲。複数件の更新履歴を表示する。
+    - `tests/visual/release-notes.spec.ts` のmobile full-page screenshot。
 
 ## Referenced SSoT
 
@@ -61,7 +61,7 @@
   - 日付は実装時に `<time datetime="YYYY-MM-DD">` として扱える見た目にする。
   - 本文内改行が見えるよう、本文ブロックは `white-space: pre-line` 相当の余白と行間を想定する。
   - 概要は独立した見出しやラベルとして表示しない。本文が空欄の場合のfallbackに限ってsummaryを本文位置へ表示する。
-  - 画像内の日本語本文は代表文でよい。正確な文言は `.raw/contents/release-notes.md` と `data/generated/release-notes.json` を実装時に参照する。
+  - canonical design imageのリリースノート本文は、現行 `data/generated/release-notes.json` の実データを表示する。
 - color / accent usage:
   - 青緑accentはリンク、focus、控えめなsection markerに限定する。
   - 日付や補足は `text muted` 相当で弱める。
@@ -69,7 +69,7 @@
 
 ## Content Instructions
 
-- `.raw/contents/release-notes.md` は現時点で未配置である。
+- `.raw/contents/release-notes.md` は配置済みで、frontmatterとH1を主なページ入力として扱う。
 - 画像生成時は、H1直下に説明文を表示しない。タイトルの下にそのまま更新履歴一覧を置く。
 - `data/generated/release-notes.json` 由来のリリースノート全件表示を前提にする。
 - 現在の生成JSONには以下の1件がある。
@@ -77,7 +77,7 @@
   - summary: `仮公開しました。`
   - body: `仮公開しました。\n現在作成中です。`
 - bodyが `null` または空文字相当の場合は、summaryを本文位置にfallback表示する。ただし、通常状態でsummaryを本文とは別に表示しない。
-- design画像では、一覧画面の密度確認のため複数件の代表更新履歴を描く。画像内の件数と文言は現行生成JSONの正確な件数を固定するものではない。
+- canonical design imageでは、現行生成JSONの正確な件数である1件を表示する。
 - 実装では0件でも壊れない簡潔な空状態を持つが、通常運用では1件以上ある想定のため、空状態のdesign画像は作成しない。
 - リリースノート件数が増えても縦に自然に伸びる構造にする。
 
@@ -127,7 +127,7 @@
 ## Comparison Points For Implementation
 
 - planned images:
-  - `design-desktop.png` と `design-mobile.png` では、first viewportの余白、ページタイトル、複数件のリリースノート項目、ToC非表示状態を確認する。
+  - `design-desktop.png` と `design-mobile.png` では、full-pageの余白、ページタイトル、現行リリースノート項目、ToC非表示状態を確認する。
 - `/release-notes` がToCなしページ用ラッパーを使っている前提に見えること。
 - H1直下に説明文が表示されていないこと。
 - PageToc / MobilePageToc、空TOC枠、`目次はありません` のような表示が出ていないこと。
@@ -150,17 +150,18 @@
 
 ## Generation Source
 
-- generator or capture source: `.tmp/release-notes-designs/capture.mjs` のPlaywright HTMLモックからPNGを生成した。`.tmp/` 配下の生成元はdesign正本ではない。
-- source branch / commit when applicable: `19-2-release-notes-page` / `45bf09c`
+- generator or capture source: `tests/visual/release-notes.spec.ts` のPlaywright screenshot。
+- source branch / commit when applicable: `19-2-release-notes-page` / `a9997b0`
 - route when applicable: `/release-notes`
 - viewport / planned output:
-  - `/release-notes`, desktop `1440x1200`, viewport screenshot相当: `design-desktop.png`
-  - `/release-notes`, mobile `390x900`, viewport screenshot相当: `design-mobile.png`
+  - `/release-notes`, desktop `1440x1200` viewportのfull-page screenshot `1440x1224`: `design-desktop.png`
+  - `/release-notes`, mobile `390x900` full-page screenshot: `design-mobile.png`
 - prompt summary or capture notes:
-  - `19-2-release-notes-page` のinitial draftとして、ToCなしページ用ラッパー、複数件のリリースノート一覧、更新日、本文fallback、改行反映、ToC非表示を示すdesktop / mobile画像を生成した。
-  - ユーザー指示により、カード風の囲みをやめ、上に日付、下に本文を置くシンプルな罫線区切りへ変更した。summaryは独立表示しない。
-  - ユーザー指示により、H1直下の説明文を削除し、複数件の更新履歴が並ぶ画面に変更した。
-  - 画像内の長い日本語本文は正確性を要求せず、構造、余白、密度、可読性、ToC非表示を確認できる代表表現に留める。
+  - `19-2-release-notes-page` の実装後Visual Review結果を、ユーザー指示によりdesign fix modeで正本化した。
+  - 旧design draftは複数件の代表更新履歴を描いていたが、現行実装と生成JSONは1件であるため、canonical imageは現行データ1件の表示を正とする。
+  - カード風の囲みを使わず、上に日付、下に本文を置くシンプルな罫線区切りを維持する。
+  - summaryは独立表示しない。bodyが空欄の場合のみ本文位置へfallback表示する。
+  - H1直下に説明文を表示しない。
   - 初期スコープ外UIや新しいアプリ機能は描かない。
 
 ## Open Questions

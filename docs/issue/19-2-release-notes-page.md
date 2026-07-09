@@ -87,7 +87,7 @@
 ## 完了条件
 
 - [x] `docs/design/release-notes/` のdesign targetが作成・参照されている
-- [ ] design画像がない場合、実装前に `design-image-generation` initial draft mode を実行する前提が記録されている
+- [x] design画像がない場合、実装前に `design-image-generation` initial draft mode を実行する前提が記録されている
 - [x] `/release-notes` で更新履歴ページが表示される
 - [x] `src/pages/release-notes.astro` が作成されている
 - [x] ToCなしページ用ラッパーComponent / Layoutが作成されている
@@ -250,7 +250,7 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
 
 ### 対応完了チェックリスト
 
