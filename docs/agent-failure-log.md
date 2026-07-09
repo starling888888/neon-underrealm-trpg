@@ -91,11 +91,25 @@ source種別は以下を使う。
 #### 2026-07-09
 
 - source: review
+- 発生箇所: `18-0-release-notes-data` の `docs/issue/18-0-release-notes-data.md`
+- 観測した失敗: 完了条件と備考の実装確認では `npm run test`、`npm run check`、`npm run build` が検証済みになっていたが、末尾の `ローカル検証メモ` に同じコマンドが `not yet verified` として残り、検証済みなのか未検証なのかが矛盾する状態でPR化した。
+- 一次対応: review-to-issueで `レビュー指摘 1` に取り込み、レビュー対応時にローカル検証メモを実際の検証済み状態へ整理する方針へ入れた。
+
+#### 2026-07-09
+
+- source: review
 - 発生箇所: `phase-2-prep-contents-markdown-workflow` の `docs/issue/phase-2-prep-contents-markdown-workflow.md`
 - 観測した失敗: 完了条件とチェックポイントをすべて確認済みにした後も、`Local Validation Summary` に `remaining unverified before final report: final failure-log category check` が残り、未検証項目が残っているのか確認済みなのかが曖昧な状態でPR化した。
 - 一次対応: review-to-issueで `レビュー指摘 1` に取り込み、issue修正時にfailure-log確認結果を明確化する対応方針へ入れた。
 
 ### Workflow stopping point overrun
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-0-release-notes-data` のZod schema責務分離検討
+- 観測した失敗: ユーザーは「`getReleaseNoteBody` がschemaにあるのが適切か」と「`data/generated` 以下をZod schemaに使ってテストする必要がないか」を検討するよう求めたが、実装前に検討結果と方針を返さず、先に `src/lib/data/release-notes.ts`、`src/lib/schemas/release-notes.ts`、`tests/node/release-notes.test.ts` を変更した。
+- 一次対応: ユーザー指示に従い差し戻しは行わず、本ログへ手順逸脱として記録した。以後、「検討して」と明示された場合は、実装に入る前に判断、選択肢、推奨方針を返し、ユーザーの実装開始指示を待つ。
 
 #### 2026-07-05
 
@@ -108,6 +122,11 @@ source種別は以下を使う。
 - 発生箇所: `09-base-layout` のdesign画像生成準備
 - 観測した失敗: `docs/design/base-layout/notes.md` のユーザーレビューを挟まずに、`design-desktop.png` の画像生成へ進んだ。
 - 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
+
+#### 恒久対応
+
+- `AGENTS.md` の最重要ルールへ、検討、確認、妥当性確認、レビュー依頼は実装承認ではなく、判断と推奨方針を返して停止することを追記した。
+- `.agents/skills/design-image-generation/SKILL.md` へ、design方針の確認や `notes.md` レビューcheckpointでは画像生成へ進まず、明示承認後に生成することを追記した。
 
 ### Design draft overproduction and method drift
 
@@ -174,6 +193,13 @@ source種別は以下を使う。
 
 ### Repeated formatter feedback during implementation
 
+#### 2026-07-09
+
+- source: self
+- 発生箇所: `18-0-release-notes-data` の `src/lib/schemas/release-notes.ts`、`scripts/convert-release-notes/lib.ts`、`tests/node/release-notes.test.ts`
+- 観測した失敗: `npm run check` でTypeScriptの `unknown` 絞り込み不足を修正した後、Biome format / organize imports指摘を同じ作業中に複数回発生させた。さらにExcel読取依存を差し替えた後も、返り値型の `null` 考慮漏れとimport名順で `npm run check` を再度失敗させた。`npm run format` だけではorganize importsが解決しないことを見落とし、同じ `npm run check` 失敗を繰り返した。
+- 一次対応: 対象ファイルのimport順と型を手修正し、`npx biome check` で局所確認してから `npm run check` を再実行して通した。`exceljs` は `npm audit` で推移依存のmoderate vulnerabilityが残ったため、`read-excel-file` と `fflate` へ差し替えた。
+
 #### 2026-07-08
 
 - source: self
@@ -192,6 +218,10 @@ source種別は以下を使う。
 - 発生箇所: `13-page-toc` の `scripts/lib/page-toc-postprocess.ts` と `tests/page-toc-postprocess.test.ts`
 - 観測した失敗: `npm run check` でBiome formatter / organize imports指摘を受けた後、同じStep 2作業中に追加のBiome指摘を再度発生させた。
 - 一次対応: 対象ファイルに限定して `npx biome check --write` を実行し、`npm run check` を通した。
+
+#### 恒久対応
+
+- `.agents/rules/work-report.md` へ、TypeScript、JavaScript、Astro、test file変更時にBiomeのformat / organize-imports指摘が関係する場合は、`npm run check` を繰り返す前に対象ファイルへ `npx biome check --write <changed-code-files>` を実行する手順を追記した。
 
 ### Repeated design image conversion failure
 

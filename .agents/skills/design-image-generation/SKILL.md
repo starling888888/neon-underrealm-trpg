@@ -25,6 +25,8 @@ Do not use for:
 
 Prepare design artifacts, then stop for human review or approval.
 
+If the user asks to review, inspect, validate, or discuss a design direction, prepare only the requested analysis or draft notes and stop. Do not generate or update design images until the user explicitly asks to create, update, generate, or canonicalize the images.
+
 ---
 
 ## Core rule
@@ -303,6 +305,8 @@ Rules:
 9. Stop for human review.
 
 Do not proceed to implementation from this skill.
+
+If `notes.md` is being created or updated as a review checkpoint before image generation, stop after `notes.md` and report the unresolved design questions. Generate image drafts only after explicit user approval of that next step.
 
 ---
 
