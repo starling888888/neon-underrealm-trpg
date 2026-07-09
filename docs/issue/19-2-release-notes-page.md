@@ -217,14 +217,10 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 
 ### 成果物
 
-- actual desktop: `test-results/visual-implementation/release-notes-desktop.png`
-- actual mobile: `test-results/visual-implementation/release-notes-mobile.png`
-- additional spacing check:
-  - `test-results/visual-implementation/home-notoc-spacing-desktop.png`
-  - `test-results/visual-implementation/home-notoc-spacing-mobile.png`
-  - `test-results/visual-implementation/release-notes-notoc-spacing-desktop.png`
-  - `test-results/visual-implementation/release-notes-notoc-spacing-mobile.png`
-- report: Playwright screenshot command output
+- visual test: `tests/visual/release-notes.spec.ts`
+- actual desktop: `test-results/visual/release-notes-desktop.png`
+- actual mobile: `test-results/visual/release-notes-mobile.png`
+- report: `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@release-notes"` output
 
 ### レビュー結果
 
@@ -246,6 +242,7 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 - [x] 更新履歴本文の `font-weight` を通常にした
 - [x] 更新履歴ページのH1下線をdesign notesのaccent方向に合わせた
 - [x] ToCなしページ共通のdesktop余白を `NoTocPageLayout` に寄せ、トップページ固有の余白上書きを削除した
+- [x] `node -e` の独自Playwright実行ではなく、`tests/visual/release-notes.spec.ts` 経由でスクリーンショットを取得する形に修正した
 
 ### 人間判断が必要な差分
 
