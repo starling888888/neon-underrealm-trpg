@@ -1,0 +1,168 @@
+# release-notes
+
+## Mode
+
+- initial draft
+- 19-2-release-notes-page の実装前design targetとして作成する。
+- desktop / mobileの標準画面ドラフト画像を生成済み。
+
+## Target
+
+- page / component: 更新履歴ページ `/release-notes`
+- route: `/release-notes`
+- viewport:
+  - desktop: `1440x1200`
+  - mobile: `390x900`
+- states:
+  - desktop標準画面に写り切る範囲
+  - mobile標準画面に写り切る範囲
+  - 複数件の更新履歴が並ぶ標準状態
+- planned design images:
+  - `docs/design/release-notes/design-desktop.png`
+    - desktop `1440x1200`
+    - 標準画面に写り切る範囲。複数件の更新履歴を表示する。
+  - `docs/design/release-notes/design-mobile.png`
+    - mobile `390x900`
+    - 標準画面に写り切る範囲。複数件の更新履歴を表示する。
+
+## Referenced SSoT
+
+- `AGENTS.md`
+- `.agents/skills/design-image-generation/SKILL.md`
+- `docs/issue/19-2-release-notes-page.md`
+- `docs/requirements.md`
+- `docs/requirements/release-notes.md`
+- `docs/requirements/layout-navigation.md`
+- `docs/out-of-scope.md`
+- `docs/plan.md`
+- `docs/TODO.md`
+- `docs/design/global-styles/notes.md`
+- `docs/design/site-layout/notes.md`
+- `docs/design/home/notes.md`
+- `docs/design/page-toc/notes.md`
+- `data/generated/release-notes.json`
+
+## Design Direction
+
+- visual direction:
+  - 現行サイトの白から薄灰の本文面、暗めのHeader / Footer、濃色本文、控えめな青緑accentを維持する。
+  - 更新履歴は派手なheroやmarketing cardではなく、公式ルールサイトの更新確認用一覧として落ち着いた密度で見せる。
+  - 近未来・裏社会の気配は既存Header、SiteMenu、色token、控えめなaccentに任せ、ページ本体では可読性と履歴の追いやすさを優先する。
+- layout direction:
+  - `NoTocPageLayout.astro` または同等のToCなしページ用ラッパーを前提にする。
+  - `/release-notes` ではPageToc / MobilePageTocを表示しない。
+  - desktopでは既存site-layoutと同じHeader、左SiteMenu、中央本文、Footerの構成を維持し、右PageToc領域や空TOC枠を表示しない。
+  - mobileでは既存HeaderとMobileMenuの挙動を前提にし、MobilePageToc triggerを表示しない。
+  - トップページと同じToCなしページ用ラッパーの余白・本文幅を使い、ページごとの余白指定重複を避ける。
+- typography direction:
+  - H1は通常のページタイトルとして表示する。
+  - H1直下に「公開サイトの更新内容を...」のような説明文は置かない。
+  - リリースノート一覧の各項目では、上に日付、下に本文を置く。
+  - 日付は実装時に `<time datetime="YYYY-MM-DD">` として扱える見た目にする。
+  - 本文内改行が見えるよう、本文ブロックは `white-space: pre-line` 相当の余白と行間を想定する。
+  - 概要は独立した見出しやラベルとして表示しない。本文が空欄の場合のfallbackに限ってsummaryを本文位置へ表示する。
+  - 画像内の日本語本文は代表文でよい。正確な文言は `.raw/contents/release-notes.md` と `data/generated/release-notes.json` を実装時に参照する。
+- color / accent usage:
+  - 青緑accentはリンク、focus、控えめなsection markerに限定する。
+  - 日付や補足は `text muted` 相当で弱める。
+  - 更新履歴の各項目は細い罫線で区切る。card風の囲み、角丸枠、強い背景面、cardの入れ子は避ける。
+
+## Content Instructions
+
+- `.raw/contents/release-notes.md` は現時点で未配置である。
+- 画像生成時は、H1直下に説明文を表示しない。タイトルの下にそのまま更新履歴一覧を置く。
+- `data/generated/release-notes.json` 由来のリリースノート全件表示を前提にする。
+- 現在の生成JSONには以下の1件がある。
+  - date: `2026-07-07`
+  - summary: `仮公開しました。`
+  - body: `仮公開しました。\n現在作成中です。`
+- bodyが `null` または空文字相当の場合は、summaryを本文位置にfallback表示する。ただし、通常状態でsummaryを本文とは別に表示しない。
+- design画像では、一覧画面の密度確認のため複数件の代表更新履歴を描く。画像内の件数と文言は現行生成JSONの正確な件数を固定するものではない。
+- 実装では0件でも壊れない簡潔な空状態を持つが、通常運用では1件以上ある想定のため、空状態のdesign画像は作成しない。
+- リリースノート件数が増えても縦に自然に伸びる構造にする。
+
+## Existing Design Constraints
+
+- `global-styles` の方向性を維持する。
+  - 白から薄灰の本文面
+  - 暗めのHeader / Footer
+  - 高コントラストの濃色テキスト
+  - 控えめな青緑accent
+  - 日本語本文が読める本文リズム
+  - 過剰なglow、blur、gradient、高彩度neonを使わない
+- `site-layout` の方向性を維持する。
+  - desktopでは既存Header / Footerと左SiteMenuのlayout挙動を前提にする。
+  - mobileでは既存HeaderとMobileMenuの挙動を前提にする。
+  - `/release-notes` では不要なPageToc / MobilePageTocや空のTOC枠を表示しない。
+- `page-toc` の非表示方針を維持する。
+  - 更新履歴ページでは右サイドにPageToc枠や「目次なし」表示を出さない。
+  - 更新履歴ページは全リリースノートの一覧であり、ページ内見出し移動のUIを主導線にしない。
+- `home` の既存トップページと整合させる。
+  - トップページの「更新履歴を見る」導線から遷移した先として自然に見える。
+  - トップページより装飾を強くしすぎず、同じ公式サイト内の一覧ページとして見える。
+- ToCなしページ用ラッパーの導入を前提にする。
+  - トップページと更新履歴ページの基本余白・本文幅が大きく乖離しない。
+  - ただし、トップページ固有のロゴやキャッチコピー表現を更新履歴ページへ持ち込まない。
+
+## Out Of Scope
+
+- search UI
+- advanced filters
+- category tabs
+- tag filters
+- pagination
+- individual release-note detail pages
+- breadcrumbs
+- previous / next navigation
+- PageToc / MobilePageToc
+- current-position table of contents highlighting
+- CMS、編集UI、投稿フォーム、login、authentication、API server、DB、SSR、PWA
+- release-note Excel変換処理の変更
+- `data/generated/release-notes.json` の手編集
+- トップページの最新リリースノート表示仕様変更
+- Footerからのcredit導線
+- site menu redesign
+- 大きなhero背景画像、装飾cyberpunk art、過剰なneon glow
+
+## Comparison Points For Implementation
+
+- planned images:
+  - `design-desktop.png` と `design-mobile.png` では、first viewportの余白、ページタイトル、複数件のリリースノート項目、ToC非表示状態を確認する。
+- `/release-notes` がToCなしページ用ラッパーを使っている前提に見えること。
+- H1直下に説明文が表示されていないこと。
+- PageToc / MobilePageToc、空TOC枠、`目次はありません` のような表示が出ていないこと。
+- Header、左SiteMenu、Footerが既存site-layoutと一貫していること。
+- SiteMenuの「更新履歴」が現在ページとして識別できる余地があること。
+- 各リリースノートは上に日付、下に本文というシンプルな構造で、summaryが独立表示されていないこと。
+- 本文fallback時にも、summaryが本文位置に違和感なく表示できる構造であること。
+- 本文内改行が詰まって見えず、段落として読めること。
+- リリースノートが1件でもページが貧弱に見えすぎず、複数件に増えたときもlistとして自然に伸びること。
+- トップページと同じサイト、同じToCなしページ群に見えること。
+- reviewが必要な差分:
+  - 更新履歴ページにPageToc / MobilePageTocが出ている。
+  - H1直下に説明文が表示されている。
+  - 検索、絞り込み、タグ、ページネーションなどが描かれている。
+  - 個別リリースノート詳細へのカード導線が主導線になっている。
+  - card-heavyなmarketing pageになっている。
+  - summaryが本文とは別の概要見出しとして表示されている。
+  - トップページと別サイトのような色、余白、見出し処理になっている。
+  - 標準画面内で横overflowが出ている。
+
+## Generation Source
+
+- generator or capture source: `.tmp/release-notes-designs/capture.mjs` のPlaywright HTMLモックからPNGを生成した。`.tmp/` 配下の生成元はdesign正本ではない。
+- source branch / commit when applicable: `19-2-release-notes-page` / `45bf09c`
+- route when applicable: `/release-notes`
+- viewport / planned output:
+  - `/release-notes`, desktop `1440x1200`, viewport screenshot相当: `design-desktop.png`
+  - `/release-notes`, mobile `390x900`, viewport screenshot相当: `design-mobile.png`
+- prompt summary or capture notes:
+  - `19-2-release-notes-page` のinitial draftとして、ToCなしページ用ラッパー、複数件のリリースノート一覧、更新日、本文fallback、改行反映、ToC非表示を示すdesktop / mobile画像を生成した。
+  - ユーザー指示により、カード風の囲みをやめ、上に日付、下に本文を置くシンプルな罫線区切りへ変更した。summaryは独立表示しない。
+  - ユーザー指示により、H1直下の説明文を削除し、複数件の更新履歴が並ぶ画面に変更した。
+  - 画像内の長い日本語本文は正確性を要求せず、構造、余白、密度、可読性、ToC非表示を確認できる代表表現に留める。
+  - 初期スコープ外UIや新しいアプリ機能は描かない。
+
+## Open Questions
+
+- なし。
