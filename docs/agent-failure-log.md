@@ -223,6 +223,15 @@ source種別は以下を使う。
 
 - `.agents/rules/work-report.md` へ、TypeScript、JavaScript、Astro、test file変更時にBiomeのformat / organize-imports指摘が関係する場合は、`npm run check` を繰り返す前に対象ファイルへ `npx biome check --write <changed-code-files>` を実行する手順を追記した。
 
+### Local dev server port left running
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-1-common-image-block-component` の表示確認
+- 観測した失敗: Astro dev server / preview serverのport管理で、`4322` と `4325` に既存serverが残っていた。`4321` で起動できない原因確認中に、ユーザーから「4322以降4329までは動いてたら全部止めて」と指示されるまで、使われたportを確実に停止しきれていなかった。
+- 一次対応: ホスト側の `lsof -nP -iTCP:4321-4329 -sTCP:LISTEN` で `4322`、`4325` のAstro processを特定し、ユーザー許可範囲に従って停止した。作業終了時にも `4321-4329` にLISTENが残っていないことを確認した。
+
 ### Repeated design image conversion failure
 
 #### 2026-07-06
