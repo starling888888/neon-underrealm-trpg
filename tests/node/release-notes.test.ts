@@ -162,6 +162,22 @@ describe("release notes conversion", () => {
     );
   });
 
+  it("converts Excel serial date cells to YYYY-MM-DD", async () => {
+    await using fixture = await createFixture();
+    await writeWorkbook(fixture.inputPath, [
+      ["更新日", "概要", "本文"],
+      [excelSerialDate("2026-07-07"), "日付セル", ""],
+    ]);
+
+    const result = await convertReleaseNotes({
+      inputPath: fixture.inputPath,
+      outputPath: fixture.outputPath,
+      now: new Date("2026-07-08T03:04:05Z"),
+    });
+
+    assert.equal(result.data[0]?.date, "2026-07-07");
+  });
+
   it("returns summary when body is null or blank", () => {
     assert.equal(
       getReleaseNoteBody({
@@ -232,7 +248,7 @@ describe("release notes conversion", () => {
 
 async function writeWorkbook(
   filePath: string,
-  rows: Array<Array<string | Date>>,
+  rows: Array<Array<string | number>>,
 ): Promise<void> {
   const files = {
     "[Content_Types].xml": xml(`<?xml version="1.0" encoding="UTF-8"?>
@@ -286,7 +302,7 @@ interface AsyncDisposableFixture {
   [Symbol.asyncDispose](): Promise<void>;
 }
 
-function createSheetXml(rows: Array<Array<string | Date>>): Uint8Array {
+function createSheetXml(rows: Array<Array<string | number>>): Uint8Array {
   const lastColumn = rows.reduce((max, row) => Math.max(max, row.length), 1);
   const dimension = `A1:${columnName(lastColumn)}${rows.length}`;
   const rowXml = rows
@@ -299,9 +315,12 @@ function createSheetXml(rows: Array<Array<string | Date>>): Uint8Array {
           }
 
           const cellReference = `${columnName(columnIndex + 1)}${rowNumber}`;
-          const cellValue = value instanceof Date ? value.toISOString() : value;
+          if (typeof value === "number") {
+            return `<c r="${cellReference}"><v>${value}</v></c>`;
+          }
+
           return `<c r="${cellReference}" t="inlineStr"><is><t xml:space="preserve">${escapeXml(
-            cellValue,
+            value,
           )}</t></is></c>`;
         })
         .join("");
@@ -339,4 +358,9 @@ function escapeXml(value: string): string {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function excelSerialDate(value: `${number}-${number}-${number}`): number {
+  const [year, month, day] = value.split("-").map(Number);
+  return Date.UTC(year, month - 1, day) / (24 * 60 * 60 * 1000) + 25569;
 }
