@@ -6,20 +6,35 @@ export interface Props extends SeoProps {
   title?: string;
   description?: string;
   showPageToc?: boolean;
+  frontmatter?: SeoProps & {
+    showPageToc?: boolean;
+  };
 }
 
 const {
-  title,
-  description,
-  ogTitle,
-  ogDescription,
-  ogType,
-  ogImage,
-  ogUrl,
-  twitterCard,
-  noindex,
-  showPageToc = true,
+  frontmatter,
+  title: propTitle,
+  description: propDescription,
+  ogTitle: propOgTitle,
+  ogDescription: propOgDescription,
+  ogType: propOgType,
+  ogImage: propOgImage,
+  ogUrl: propOgUrl,
+  twitterCard: propTwitterCard,
+  noindex: propNoindex,
+  showPageToc: propShowPageToc,
 } = Astro.props;
+
+const title = propTitle ?? frontmatter?.title;
+const description = propDescription ?? frontmatter?.description;
+const ogTitle = propOgTitle ?? frontmatter?.ogTitle;
+const ogDescription = propOgDescription ?? frontmatter?.ogDescription;
+const ogType = propOgType ?? frontmatter?.ogType;
+const ogImage = propOgImage ?? frontmatter?.ogImage;
+const ogUrl = propOgUrl ?? frontmatter?.ogUrl;
+const twitterCard = propTwitterCard ?? frontmatter?.twitterCard;
+const noindex = propNoindex ?? frontmatter?.noindex;
+const showPageToc = propShowPageToc ?? frontmatter?.showPageToc ?? true;
 ---
 
 <BaseLayout

@@ -46,7 +46,12 @@
   - トップページや更新履歴ページなど、ページ内目次を持たないページが個別に同じ余白指定を重複実装しないようにする
 - `src/pages/index.astro`
   - 既存トップページがToCなしページであるため、表示を大きく変えない範囲でToCなしページ用ラッパーを適用する
+  - SEO要件に従い、トップページ `/` では `defaultSeo.title` をそのまま使うため、Layoutへ `title` を渡さない
   - トップページ固有のfirst viewport調整やロゴ・キャッチコピー表現は、このissueの主目的を超えて作り替えない
+- `src/components/seo/Seo.astro` またはSEO title生成を担当する既存層
+  - ページ固有 `title` が渡された場合、ブラウザタブや `<title>` に表示する文言を `defaultSeo.title | <page title>` 形式にする
+  - ページ固有 `title` が渡されない場合は `defaultSeo.title` をそのまま使う
+  - `og:site_name` は `defaultSeo.siteName` を使い、`defaultSeo.siteName` は原則として `defaultSeo.title` と同じサイト名を使う
 - `src/lib/data/release-notes.ts`
   - 原則として既存関数を利用する
   - ページ実装に必要な不足がある場合のみ、issue範囲内で最小限の調整を行ってよい
@@ -90,6 +95,10 @@
 - [ ] ToCなしページ用ラッパーで `showPageToc={false}` が固定または明示されている
 - [ ] `/release-notes` がToCなしページ用ラッパーを使用している
 - [ ] 既存のToCなしページであるトップページが、表示を大きく変えない範囲でToCなしページ用ラッパーを使用している
+- [x] トップページ `/` はLayoutへ `title` を渡さず、`defaultSeo.title` をブラウザタイトルとして使っている
+- [x] ページ固有 `title` が渡されたページでは、ブラウザタイトルが `defaultSeo.title | <page title>` 形式になる
+- [x] ページ固有 `title` が渡されないページでは、ブラウザタイトルが `defaultSeo.title` になる
+- [x] `og:site_name` が `defaultSeo.siteName` を使っている
 - [ ] ページ内目次が表示されない
 - [ ] `.raw/contents/release-notes.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面が作成されている
 - [ ] `getReleaseNotes()` から取得した全リリースノートが表示される
@@ -104,8 +113,8 @@
 - [ ] GitHub Pagesのサブパス公開でリンク・ルートが壊れない
 - [ ] 完成画面のスクリーンショットを取得し、design正本更新の扱いが記録されている
 - [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
@@ -119,6 +128,7 @@
 - [ ] 改行反映は `white-space: pre-line` など、最小限の表示制御で実現している
 - [ ] ToCなしページ用ラッパーの共通余白が、トップページと更新履歴ページで不自然な差を生んでいない
 - [ ] ToCなしページ用ラッパーが、ToCありページの `ContentLayout` や既存MDXページへ不要に影響していない
+- [x] SEO title生成変更が `description`、`og:description`、`og:image`、`og:url` の既存挙動を壊していない
 - [ ] ページ固有CSSが他ページへ不要に波及していない
 - [ ] 不要なnpm packageを追加していない
 - [ ] 検索、絞り込み、ページネーションなど初期スコープ外機能を混ぜていない
@@ -135,10 +145,12 @@
 - `src/layouts/NoTocPageLayout.astro` または同等のToCなしページ用ラッパー
 - `src/pages/release-notes.astro`
 - `src/pages/index.astro`
+- `src/components/seo/Seo.astro`
 
 必要になった場合のみ変更するファイル。
 
 - `src/lib/data/release-notes.ts`
+- `src/lib/site/seo.ts`
 - `src/styles/global.css`
 - `src/styles/prose.css`
 - `tests/visual/*`
@@ -155,6 +167,9 @@
 - `/release-notes` が、トップページの最新リリースノート表示と同じデータソースを参照しているか
 - 全件表示、更新日表示、本文表示、本文fallback、改行反映が要件通りか
 - ページ内目次が表示されていないか
+- `/` のブラウザタイトルが `defaultSeo.title` のみになっているか
+- `/release-notes` などページ固有titleを持つページのブラウザタイトルが `defaultSeo.title | <page title>` 形式になっているか
+- `og:site_name` が `defaultSeo.siteName` を使い、サイト名として妥当か
 - ToCなしページ用ラッパーにより、トップページと更新履歴ページの基本余白・本文幅が共通化されているか
 - ToCなしページ用ラッパーの導入でトップページの見た目が不必要に変わっていないか
 - スマホ表示で日付と本文が読みやすいか
@@ -178,11 +193,15 @@
 - `src/pages/release-notes.astro` と `src/pages/release-notes.mdx` はまだ存在しない
 - 現段階でToCなしページとして実装済みなのは `src/pages/index.astro`
 - `.raw/release-notes.xlsx` は存在する
-- `docs/design/release-notes/` はまだ存在しない
+- `docs/design/release-notes/` は作成済みで、`notes.md`、`design-desktop.png`、`design-mobile.png` が存在する
 
 実装前に必要な未準備項目は以下。
 
 - `.raw/contents/release-notes.md` がまだ存在しないため、ユーザー編集済みcontents markdownを配置してから画面本文・構造へ反映する
-- `docs/design/release-notes/` がまだ存在しないため、実装前に `.agents/skills/design-image-generation/SKILL.md` の initial draft mode でdesign targetを作成する
+- `docs/design/release-notes/` は作成済み。実装前に `docs/design/release-notes/notes.md`、`design-desktop.png`、`design-mobile.png` を参照する
+
+追加SEO要件として、`defaultSeo.title` はトップページ `/` のtitle、共通site name、未指定時fallbackとして扱う。ページ固有 `title` が渡された場合は、ブラウザタイトルを `defaultSeo.title | <page title>` 形式にする。トップページ `src/pages/index.astro` ではLayoutへ `title` を渡さない。
 
 本issue-first検証では `npm run check`、`npm run build`、`npm run visual:capture` は未実行。
+
+SEO title生成変更の実装後検証では `npm run check` と `npm run build` を実行済み。`npm run visual:capture` は未実行。

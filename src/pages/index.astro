@@ -2,14 +2,15 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import InternalLink from "../components/_common/InternalLink.astro";
 import { getLatestReleaseNotes } from "../lib/data/release-notes";
+import { defaultSeo } from "../lib/site/seo";
 import { withBase } from "../lib/utils/paths";
 
-const title = "光都暗域〈ネオン・アンダーレルム〉TRPG";
+const title = defaultSeo.title;
 const latestReleaseNotes = getLatestReleaseNotes(5);
 const topLogoPath = withBase("/top_logo.webp");
 ---
 
-<BaseLayout title={title} showPageToc={false}>
+<BaseLayout showPageToc={false}>
   <article class="home-page prose">
     <h1 class="visually-hidden">{title}</h1>
 
