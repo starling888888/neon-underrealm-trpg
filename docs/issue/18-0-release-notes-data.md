@@ -368,6 +368,10 @@ Excel上の更新日は、上から下へ向かって古い順、または同日
 
 `docs/TODO.md` の現時点の未対応項目に、リリースノートデータへ直接紐づくものは見当たらないため、このissueでは新規TODO回収を前提にしない。
 
+実装時に `zod` をdependencyとして追加した。理由は、今後の計画でExcel由来JSONが多数増えることが確定しており、生成済みJSONの型、必須項目、列挙値、ID形式、重複、表示順、関連整合性などのデータ契約をデータ種別ごとに一貫して定義するためである。リリースノートでは `ReleaseNotesJsonSchema` / `ReleaseNoteSchema` をZod Schemaとして定義し、TypeScript型はSchemaから推論する。
+
+Zod Schemaは、主に変換スクリプト実行時、データ変換テスト、必要に応じたCI検証で使う。Git管理された `data/generated/` 配下のJSONは、手編集しない生成物として扱うため、サイト表示時に毎回Zod検証することは必須にしない。Excel入力のヘッダー、途中空行、日付入力順など、Excelを修正するための検証は変換スクリプト側の責務とする。
+
 実装時に `read-excel-file` と `fflate` をdevDependencyとして追加した。`read-excel-file` は `.raw/release-notes.xlsx` の実ExcelファイルをTypeScript変換スクリプトから直接読み、シート名・セル値・改行を安定して扱うために使う。`fflate` はテスト内で実Excel本体に依存しない最小xlsx fixtureを生成するために使う。代替案として独自にxlsx zip/XMLをすべて解析する方法もあるが、仕様外の実装量と保守リスクが大きいため採用しない。`exceljs` も検討したが、`npm audit` で推移依存 `uuid` のmoderate vulnerabilityが残ったため採用しない。サイト本体とCI/CD通常buildは生成済みJSONを読むだけで、Excel本体や変換script実行を要求しない。
 
 実装確認:

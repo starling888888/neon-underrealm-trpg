@@ -312,6 +312,12 @@ export type ReleaseNotesJson = {
 
 ## 検証スキーマ
 
+検証スキーマは、生成済みJSONのデータ契約を定義する。
+
+Excel入力の検証、正規化、行番号付きエラーは変換スクリプトの責務とする。検証スキーマは、変換後に組み立てた `ReleaseNotesJson` が公開用JSONとして妥当かを確認するために使う。
+
+サイト表示時のデータ取得処理では、Git管理された `data/generated/release-notes.json` を通常は信頼する。ページ表示のたびにZodで再検証することは必須にしない。
+
 `ReleaseNotesJson` の検証では以下を確認する。
 
 - `dataName` が `release-notes` である。
@@ -332,6 +338,8 @@ export type ReleaseNotesJson = {
 - `id` が重複していない。
 - `data` 配列が `date` 降順、同日付では `sourceOrder` 降順に並んでいる。
 
+`date` と `updatedAt` の形式検証は、Zodの組み込みISO helperを優先する。`id` の `YYYY-MM-DD-NNN` 形式はプロジェクト固有ルールとして正規表現またはカスタム検証で扱う。
+
 ## データ取得処理
 
 ページ側はJSONを直接加工せず、データ取得関数を通して利用する。
@@ -348,13 +356,14 @@ export function getReleaseNoteBody(note: ReleaseNote): string;
 ### getReleaseNotesJson
 
 - `data/generated/release-notes.json` を読み込む。
-- `ReleaseNotesJson` として検証した結果を返す。
+- 生成時・テスト時に検証済みのGit管理JSONを `ReleaseNotesJson` として返す。
+- サイト表示時に毎回Zod検証を行うことは必須にしない。
 - `updatedAt` を表示またはデバッグ用途で参照する場合に使用する。
 
 ### getReleaseNotes
 
 - `getReleaseNotesJson().data` を返す。
-- 検証済みの全件を返す。
+- 生成時・テスト時に検証済みの全件を返す。
 - 戻り値は `date` 降順、同日付では `sourceOrder` 降順とする。
 
 ### getLatestReleaseNotes
@@ -414,7 +423,7 @@ export function getReleaseNoteBody(note: ReleaseNote): string;
 17. `data` が同一なら既存JSONの `updatedAt` を維持する。
 18. `data` が異なる、または初回生成なら `updatedAt` を今回の生成時刻にする。
 19. `dataName`、`updatedAt`、`data` を持つ `ReleaseNotesJson` を組み立てる。
-20. `ReleaseNotesJson` スキーマで検証する。
+20. 生成済みJSONの契約として `ReleaseNotesJson` スキーマで検証する。
 21. `data/generated/release-notes.json` に整形済みJSONを書き出す。
 
 ### 初回実行時の扱い
