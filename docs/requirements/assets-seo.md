@@ -58,16 +58,18 @@ Markdown標準の画像記法、または画像表示用Componentから画像を
 
 `defaultSeo.title` は、トップページ `/` のブラウザタイトル、共通のサイト名、未指定時のtitle fallbackとして扱う。
 
+`defaultSeo.title` と `defaultSeo.siteName` は、サイト共通のゲームタイトル定数 `gameTitle` を参照する。
+
 SEO ComponentまたはLayoutへページ固有の `title` が渡された場合、ブラウザタブや `<title>` に表示する文字列は以下の形式にする。
 
 ```txt
-<defaultSeo.title> | <page title>
+<page title> | <defaultSeo.title>
 ```
 
 例:
 
 ```txt
-ネオン・アンダーレルムTRPG | 更新履歴
+更新履歴 | 光都暗域〈ネオン・アンダーレルム〉TRPG
 ```
 
 ページ固有の `title` が渡されなかった場合は、`defaultSeo.title` をそのまま使う。

@@ -49,7 +49,7 @@
   - SEO要件に従い、トップページ `/` では `defaultSeo.title` をそのまま使うため、Layoutへ `title` を渡さない
   - トップページ固有のfirst viewport調整やロゴ・キャッチコピー表現は、このissueの主目的を超えて作り替えない
 - `src/components/seo/Seo.astro` またはSEO title生成を担当する既存層
-  - ページ固有 `title` が渡された場合、ブラウザタブや `<title>` に表示する文言を `defaultSeo.title | <page title>` 形式にする
+  - ページ固有 `title` が渡された場合、ブラウザタブや `<title>` に表示する文言を `<page title> | defaultSeo.title` 形式にする
   - ページ固有 `title` が渡されない場合は `defaultSeo.title` をそのまま使う
   - `og:site_name` は `defaultSeo.siteName` を使い、`defaultSeo.siteName` は原則として `defaultSeo.title` と同じサイト名を使う
 - `src/lib/data/release-notes.ts`
@@ -96,7 +96,7 @@
 - [x] `/release-notes` がToCなしページ用ラッパーを使用している
 - [x] 既存のToCなしページであるトップページが、表示を大きく変えない範囲でToCなしページ用ラッパーを使用している
 - [x] トップページ `/` はLayoutへ `title` を渡さず、`defaultSeo.title` をブラウザタイトルとして使っている
-- [x] ページ固有 `title` が渡されたページでは、ブラウザタイトルが `defaultSeo.title | <page title>` 形式になる
+- [x] ページ固有 `title` が渡されたページでは、ブラウザタイトルが `<page title> | defaultSeo.title` 形式になる
 - [x] ページ固有 `title` が渡されないページでは、ブラウザタイトルが `defaultSeo.title` になる
 - [x] `og:site_name` が `defaultSeo.siteName` を使っている
 - [x] ページ内目次が表示されない
@@ -168,7 +168,7 @@
 - 全件表示、更新日表示、本文表示、本文fallback、改行反映が要件通りか
 - ページ内目次が表示されていないか
 - `/` のブラウザタイトルが `defaultSeo.title` のみになっているか
-- `/release-notes` などページ固有titleを持つページのブラウザタイトルが `defaultSeo.title | <page title>` 形式になっているか
+- `/release-notes` などページ固有titleを持つページのブラウザタイトルが `<page title> | defaultSeo.title` 形式になっているか
 - `og:site_name` が `defaultSeo.siteName` を使い、サイト名として妥当か
 - ToCなしページ用ラッパーにより、トップページと更新履歴ページの基本余白・本文幅が共通化されているか
 - ToCなしページ用ラッパーの導入でトップページの見た目が不必要に変わっていないか
@@ -200,7 +200,7 @@
 - `.raw/contents/release-notes.md` がまだ存在しないため、ユーザー編集済みcontents markdownを配置してから画面本文・構造へ反映する
 - `docs/design/release-notes/` は作成済み。実装前に `docs/design/release-notes/notes.md`、`design-desktop.png`、`design-mobile.png` を参照する
 
-追加SEO要件として、`defaultSeo.title` はトップページ `/` のtitle、共通site name、未指定時fallbackとして扱う。ページ固有 `title` が渡された場合は、ブラウザタイトルを `defaultSeo.title | <page title>` 形式にする。トップページ `src/pages/index.astro` ではLayoutへ `title` を渡さない。
+追加SEO要件として、`defaultSeo.title` はトップページ `/` のtitle、共通site name、未指定時fallbackとして扱い、元々トップページ `/` に設定されていた `光都暗域〈ネオン・アンダーレルム〉TRPG` を使う。この文字列はサイト共通のゲームタイトル定数 `gameTitle` として保持し、`defaultSeo.title`、`defaultSeo.siteName`、title系の共通表示はこの定数を参照する。ページ固有 `title` が渡された場合は、ブラウザタイトルを `<page title> | defaultSeo.title` 形式にする。トップページ `src/pages/index.astro` ではLayoutへ `title` を渡さない。
 
 本issue-first検証では `npm run check`、`npm run build`、`npm run visual:capture` は未実行。
 

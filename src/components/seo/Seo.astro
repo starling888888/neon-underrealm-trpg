@@ -19,7 +19,7 @@ const {
 const title =
   pageTitle === undefined || pageTitle.trim() === ""
     ? defaultSeo.title
-    : `${defaultSeo.title} | ${pageTitle}`;
+    : `${pageTitle} | ${defaultSeo.title}`;
 const resolvedOgTitle = ogTitle ?? title;
 const pageUrl = ogUrl ?? Astro.url.toString();
 const site = Astro.site ?? new URL(pageUrl);

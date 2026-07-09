@@ -104,7 +104,7 @@ Markdown / MDX本文からAstro Componentを呼ぶ場合も、Component側で `w
 
 個別ページごとのOGP情報は上書き可能ですが、個別OGP画像生成は初期スコープ外です。個別OGP画像がないページは共通OGP画像を使用します。
 
-ブラウザタブや `<title>` に表示される文言は、ページ固有 `title` がある場合は `defaultSeo.title | ページ固有title` とします。トップページ `/` は `defaultSeo.title` をそのまま使うため、`src/pages/index.astro` からLayoutへ `title` を渡しません。
+ブラウザタブや `<title>` に表示される文言は、ページ固有 `title` がある場合は `ページ固有title | defaultSeo.title` とします。`defaultSeo.title` と `defaultSeo.siteName` はサイト共通のゲームタイトル定数 `gameTitle` を参照します。トップページ `/` は `defaultSeo.title` をそのまま使うため、`src/pages/index.astro` からLayoutへ `title` を渡しません。
 
 ## Excelデータの扱い
 
