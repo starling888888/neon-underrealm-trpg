@@ -36,7 +36,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/18-2-home-page.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/release-notes.md`
 - `docs/out-of-scope.md`
@@ -46,7 +45,7 @@
 
 ## Historical source issue
 
-- `docs/issue/18-2-home-page.md`
+- `docs/issue/done/phase-3/18-2-home-page.md`
 
 ## Design Direction
 
