@@ -1,17 +1,302 @@
 ---
-import ContentLayout from "../layouts/ContentLayout.astro";
-import ImageBlock from "../components/_common/ImageBlock.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InternalLink from "../components/_common/InternalLink.astro";
+import { getLatestReleaseNotes } from "../lib/data/release-notes";
 import { withBase } from "../lib/utils/paths";
 
-const title = "ネオン・アンダーレルムTRPG";
-const description =
-  "ネオン・アンダーレルムTRPGのルール、データ、更新情報を公開するサイトです。";
-const mdxTestPath = withBase("/mdx-test/");
+const title = "光都暗域〈ネオン・アンダーレルム〉TRPG";
+const latestReleaseNotes = getLatestReleaseNotes(5);
+const topLogoPath = withBase("/top_logo.webp");
 ---
 
-<ContentLayout title={title} description={description} showPageToc={false}>
-  <h1>{title}</h1>
-  <ImageBlock src="/top_logo.webp" alt="ネオン・アンダーレルムTRPG タイトルロゴ" />
-  <p>ルールサイト初期化中です。</p>
-  <p><a href={mdxTestPath}>MDX表示確認</a></p>
-</ContentLayout>
+<BaseLayout title={title} showPageToc={false}>
+  <article class="home-page prose">
+    <h1 class="visually-hidden">{title}</h1>
+
+    <section class="home-lead" aria-label="ゲームキャッチコピー">
+      <p>
+        <em>近未来。</em>
+        ネオン華やぐオオサカ副都で、お前は力を選び、生き様を定義する。
+      </p>
+      <p>
+        <em>裏社会。</em>
+        光の裏には闇がある。仕事人として、縁をその身に、光の届かない道を駆け抜けろ。
+      </p>
+      <p>
+        <em>抗争。</em>
+        生き様をその身に、流儀をその手に。気合いを糧に、怒涛のコンボを叩き込め。
+      </p>
+    </section>
+
+    <div class="home-logo">
+      <img
+        src={topLogoPath}
+        alt="光都暗域〈ネオン・アンダーレルム〉TRPG"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+
+    <section class="home-section" aria-labelledby="release-notes-title">
+      <h2 id="release-notes-title">最新リリースノート</h2>
+      {
+        latestReleaseNotes.length > 0 ? (
+          <ol class="release-note-list">
+            {latestReleaseNotes.map((note) => (
+              <li class="release-note-item">
+                <time datetime={note.date}>{note.date}</time>
+                <p>{note.summary}</p>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="release-note-empty">リリースノートはまだありません。</p>
+        )
+      }
+      <nav class="home-links" aria-label="トップページ主要導線">
+        <InternalLink href="/release-notes">更新履歴を見る</InternalLink>
+      </nav>
+      <div class="home-primary-link">
+        <InternalLink href="/introduction">はじめに</InternalLink>
+      </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="description-title">
+      <h2 id="description-title">ゲームのかんたんな説明</h2>
+      <p>
+        光都暗域〈ネオン・アンダーレルム〉TRPGへようこそ。
+        このゲームは、近未来の都市オオサカ副都を舞台に、裏社会の仕事人となって抗争を生き抜く、戦闘重視の重量級TRPGです。
+      </p>
+      <p>
+        キャラクターは、裏社会での戦い方を表す「流儀」と、サイバネ・ナノマシン・ドラッグ、あるいは身一つで生きる「生き様」を組み合わせて作成します。多数のスキルとアイテムから、自分だけのビルドを組み上げてください。
+      </p>
+      <p>
+        シナリオはシーン制で軽快に進行します。PC同士やNPCとのつながり――縁を結び、ときにそれを覚悟へ変えることで、戦闘不能からの復活やここぞの判定を支えます。
+      </p>
+      <p>
+        戦闘では、大量の10面ダイスを振り、攻撃が当たるほど次の攻撃が強くなるコンボを叩き込みます。重い選択と派手な出目で、正解のない抗争を駆け抜けてください。
+      </p>
+
+      <div class="recommendation">
+        <h3>こんな人におすすめ</h3>
+        <ul>
+          <li>ハードな世界観のサイバーパンク／裏社会ものが好き</li>
+          <li>大量のデータから強い組み合わせを探したい</li>
+          <li>たくさんダイスを振って大ダメージを出したい</li>
+          <li>シナリオ中や戦闘中の判断に悩むのが楽しい</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="home-section credits" aria-labelledby="credits-title">
+      <h2 id="credits-title">クレジット</h2>
+      <p>作品名：光都暗域〈ネオン・アンダーレルム〉TRPG（無料頒布版）</p>
+      <p>バージョン：1.10</p>
+      <p>制作：椋鳥</p>
+      <p>
+        本作品はフィクションです。実在の人物・団体・組織・作品・出来事とは関係ありません。実在の地名・文化・社会構造を想起させる要素が含まれる場合も、作中の設定・描写は物語的・ゲーム的表現として構築されたものです。
+      </p>
+      <p>
+        本作品に含まれる文章・ルール・設定は、制作者である椋鳥が設計・執筆したものです。一部の画像素材には、生成AIを用いて出力されたものを使用しています。
+      </p>
+
+      <h3>利用について</h3>
+      <p>
+        本作の引用、感想、ゲームプレイを用いたSNS等への投稿、および二次創作物の制作を歓迎します。
+      </p>
+      <p>
+        公開時は、作品名「光都暗域〈ネオン・アンダーレルム〉TRPG」、制作者名「椋鳥」、本サイトへのリンクまたはURLの明記をお願いします。
+      </p>
+      <p>本サイトおよび制作者の明記がない引用・紹介・転載はお控えください。</p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .home-page {
+    max-width: min(100%, 56rem);
+    margin-inline: auto;
+    background: transparent;
+    padding: var(--space-10) var(--space-12);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .home-lead {
+    max-width: 48rem;
+    margin-inline: auto;
+    color: var(--color-text);
+    font-size: var(--text-xl);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .home-lead p {
+    margin-block: 0 var(--space-3);
+  }
+
+  .home-lead em {
+    color: var(--color-text);
+    font-style: italic;
+    font-weight: 800;
+  }
+
+  .home-logo {
+    max-width: min(100%, 40rem);
+    margin: var(--space-8) auto var(--space-10);
+  }
+
+  .home-logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .home-section {
+    margin-block-start: var(--space-10);
+    padding-block-start: var(--space-8);
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .home-section h2 {
+    margin-block: 0 var(--space-5);
+  }
+
+  .release-note-list {
+    display: grid;
+    margin-block: 0;
+    padding: 0;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    list-style: none;
+    overflow: hidden;
+  }
+
+  .release-note-item {
+    display: grid;
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+    gap: var(--space-5);
+    margin: 0;
+    border-block-end: var(--border-width) solid var(--color-border);
+    padding: var(--space-3) var(--space-5);
+  }
+
+  .release-note-item:last-child {
+    border-block-end: 0;
+  }
+
+  .release-note-item time {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--line-height-base);
+  }
+
+  .release-note-item p {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--line-height-base);
+  }
+
+  .release-note-empty {
+    margin-block: 0;
+    color: var(--color-text-muted);
+  }
+
+  .home-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    margin-block-start: var(--space-5);
+    font-size: var(--text-sm);
+  }
+
+  .home-primary-link {
+    display: flex;
+    justify-content: center;
+    margin-block-start: var(--space-8);
+  }
+
+  .home-primary-link :global(a) {
+    min-width: min(100%, 16rem);
+    border: var(--border-width) solid var(--color-surface-inverse);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-inverse);
+    color: var(--color-text-inverse);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+    padding: var(--space-4) var(--space-6);
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .home-primary-link :global(a:hover) {
+    border-color: var(--color-surface-inverse);
+    background: color-mix(in srgb, var(--color-surface-inverse) 88%, white);
+    color: var(--color-text-inverse);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .recommendation {
+    margin-block-start: var(--space-6);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-muted);
+    padding: var(--space-5);
+  }
+
+  .recommendation h3 {
+    margin-block: 0 var(--space-3);
+    border-left: 0;
+    padding-inline-start: 0;
+    font-size: var(--text-lg);
+  }
+
+  .recommendation ul {
+    margin-block: 0;
+  }
+
+  .credits {
+    color: color-mix(in srgb, var(--color-text) 84%, var(--color-text-muted));
+    font-size: var(--text-sm);
+  }
+
+  .credits h2 {
+    font-size: var(--text-xl);
+  }
+
+  .credits h3 {
+    margin-block-start: var(--space-8);
+    font-size: var(--text-lg);
+  }
+
+  @media (max-width: 48rem) {
+    .home-page {
+      padding: var(--space-6) var(--space-5);
+    }
+
+    .home-lead {
+      font-size: var(--text-lg);
+    }
+
+    .home-logo {
+      max-width: 100%;
+      margin-block: var(--space-6) var(--space-8);
+    }
+
+    .release-note-item {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+      padding: var(--space-3) var(--space-4);
+    }
+  }
+</style>

@@ -27,7 +27,7 @@ export const defaultSeo: SeoDefaults = {
   siteName: "ネオン・アンダーレルムTRPG",
   title: "ネオン・アンダーレルムTRPG",
   description:
-    "ネオン・アンダーレルムTRPGのルール、データ、更新情報を公開するサイトです。",
+    "近未来の都市オオサカ副都を舞台に、裏社会の仕事人となって抗争を生き抜く重量級TRPGの公式ルールサイトです。",
   image: "/neon-underrealm-ogp.png",
   ogType: "website",
   twitterCard: "summary_large_image",

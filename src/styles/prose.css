@@ -139,7 +139,7 @@
 .prose pre {
   overflow-x: auto;
   border-radius: var(--radius-lg);
-  background: var(--color-header);
+  background: var(--color-surface-inverse);
   color: var(--color-text-inverse);
   line-height: 1.65;
   padding: var(--space-5);

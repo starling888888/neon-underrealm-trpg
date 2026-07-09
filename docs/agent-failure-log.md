@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Page description changed without confirmation
+
+#### 2026-07-09
+
+- source: review
+- 発生箇所: `18-2-home-page` の `src/pages/index.astro`
+- 観測した失敗: トップページ実装中、`.raw/contents/home.md` のfrontmatterに `description` がない状態で、ユーザー確認なしにページ固有の新しい `description` 文言を作成した。人間一次レビューでは文言自体は問題ないが、独自判断で変更した点が逸脱として指摘された。
+- 一次対応: review-to-issueで `レビュー指摘 1` に取り込み、指摘対応時に今回の文言をdefault descriptionへ反映する方針を記録した。
+
 ### Repository documentation written in wrong language
 
 #### 2026-07-09
