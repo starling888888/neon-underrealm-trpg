@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repository documentation written in wrong language
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-2-home-page` の `docs/design/home/notes.md`
+- 観測した失敗: リポジトリ内の設計文書として作成する `docs/design/home/notes.md` を、既存docsの日本語運用に合わせず英語で作成した。ユーザーから「docだから日本語で書け」と指摘された。
+- 一次対応: `docs/design/home/notes.md` を日本語へ全面修正し、本ログへ記録した。以後、リポジトリ内docs / issue / design notes / rule / skill本文は、既存文書の言語に合わせ、原則日本語で作成する。
+
 ### Completed checklist with stale unverified note
 
 #### 2026-07-09
