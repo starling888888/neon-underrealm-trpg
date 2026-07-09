@@ -1,13 +1,10 @@
 import releaseNotesJson from "../../../data/generated/release-notes.json";
-import {
-  getReleaseNoteBody,
-  parseReleaseNotesJson,
-  type ReleaseNote,
-  type ReleaseNotesJson,
-} from "../schemas/release-notes";
+import type { ReleaseNote, ReleaseNotesJson } from "../schemas/release-notes";
+
+const generatedReleaseNotesJson = releaseNotesJson as ReleaseNotesJson;
 
 export function getReleaseNotesJson(): ReleaseNotesJson {
-  return parseReleaseNotesJson(releaseNotesJson);
+  return generatedReleaseNotesJson;
 }
 
 export function getReleaseNotes(): ReleaseNote[] {
@@ -18,4 +15,10 @@ export function getLatestReleaseNotes(limit = 5): ReleaseNote[] {
   return getReleaseNotes().slice(0, limit);
 }
 
-export { getReleaseNoteBody };
+export function getReleaseNoteBody(note: ReleaseNote): string {
+  if (note.body === null || note.body.trim() === "") {
+    return note.summary;
+  }
+
+  return note.body;
+}

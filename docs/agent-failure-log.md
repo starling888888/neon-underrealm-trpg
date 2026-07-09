@@ -97,6 +97,13 @@ source種別は以下を使う。
 
 ### Workflow stopping point overrun
 
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-0-release-notes-data` のZod schema責務分離検討
+- 観測した失敗: ユーザーは「`getReleaseNoteBody` がschemaにあるのが適切か」と「`data/generated` 以下をZod schemaに使ってテストする必要がないか」を検討するよう求めたが、実装前に検討結果と方針を返さず、先に `src/lib/data/release-notes.ts`、`src/lib/schemas/release-notes.ts`、`tests/node/release-notes.test.ts` を変更した。
+- 一次対応: ユーザー指示に従い差し戻しは行わず、本ログへ手順逸脱として記録した。以後、「検討して」と明示された場合は、実装に入る前に判断、選択肢、推奨方針を返し、ユーザーの実装開始指示を待つ。
+
 #### 2026-07-05
 
 - 発生箇所: `09-base-layout` のissue-first / design準備

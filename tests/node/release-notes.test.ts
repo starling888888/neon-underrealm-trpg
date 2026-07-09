@@ -4,17 +4,19 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { strToU8, zipSync } from "fflate";
+import releaseNotesJson from "../../data/generated/release-notes.json";
 import {
   convertReleaseNotes,
   formatDateTimeJst,
 } from "../../scripts/convert-release-notes/lib";
 import {
   getLatestReleaseNotes,
+  getReleaseNoteBody,
   getReleaseNotes,
   getReleaseNotesJson,
 } from "../../src/lib/data/release-notes";
 import {
-  getReleaseNoteBody,
+  assertReleaseNotesJson,
   parseReleaseNotesJson,
   type ReleaseNotesJson,
 } from "../../src/lib/schemas/release-notes";
@@ -187,6 +189,10 @@ describe("release notes conversion", () => {
     assert.equal(getReleaseNotesJson().dataName, "release-notes");
     assert.equal(getReleaseNotes().length, 1);
     assert.deepEqual(getLatestReleaseNotes(1), getReleaseNotes().slice(0, 1));
+  });
+
+  it("validates the committed generated release notes JSON contract", () => {
+    assert.doesNotThrow(() => assertReleaseNotesJson(releaseNotesJson));
   });
 
   it("rejects duplicate ids in generated JSON", () => {
