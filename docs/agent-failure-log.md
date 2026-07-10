@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Non-interactive custom subagent smoke test failed
+
+#### 2026-07-11
+
+- source: self
+- 発生箇所: `review-subagents` の`codex exec --ephemeral`による`issue_reviewer` smoke test
+- 観測した失敗: non-interactive Codex app-serverでcustom subagentを起動しようとしたところ、`collab spawn failed: no thread with id` が2回発生した。親agentはread-only fallbackでissue本文を確認したが、custom agent自体の起動は確認できなかった。
+- 一次対応: non-interactive `codex exec`はcustom subagentの起動確認に使わない。interactive Codex clientでの実運用時にsubagentを起動する前提とし、今回の設定検証はTOML schema、model catalog、strict-config読み込みに限定する。
+
 ### Design canonicalization bypassed visual output convention
 
 #### 2026-07-09

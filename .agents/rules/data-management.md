@@ -74,6 +74,28 @@ Put scratch files, copied review notes, comparison notes, and temporary artifact
 
 Do not commit `.tmp/`.
 
+### Review Artifacts
+
+Use this branch-scoped structure for reviewer output:
+
+```text
+.tmp/review/<branch-name>/
+├── issue-review-1.md
+├── issue-review-2.md
+├── user-directed-requirement-changes.md
+├── pr-review-N.md
+├── document-review-N.md
+└── technical-review-N.md
+```
+
+`issue-review-N.md` is an ephemeral self-review record. Do not copy resolved findings into an issue.
+
+`pr-review-N.md` records the reviewed commit range, reviewed head commit, remote PR information, and associated reviewer outputs. The next PR review starts after its reviewed head commit.
+
+When a user explicitly changes an existing requirement or initial scope boundary, record the source SSoT, before/after values, user instruction, and issue reference in `user-directed-requirement-changes.md`. Update the source SSoT and current issue in the same task.
+
+After merge, `post-merge-plan-update` removes only `.tmp/review/<merged-branch>/` after confirming that required information was formalized. Do not remove other `.tmp/` files.
+
 ## Design Artifacts
 
 Put canonical design references under:

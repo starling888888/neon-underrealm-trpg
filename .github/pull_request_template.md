@@ -6,6 +6,10 @@
 
 -
 
+## User-Directed Requirement Changes
+
+- None.
+
 ## Review focus
 
 -

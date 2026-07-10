@@ -1,319 +1,128 @@
 ---
 name: pr-review-draft
-description: Use this skill when the user asks to review a GitHub pull request diff from a remote snapshot and produce a markdown review draft. This skill creates review drafts only and does not modify repository files.
+description: Use this skill when reviewing a remote GitHub pull request with local document and technical reviewer subagents, then handing validated findings to review-to-issue.
 ---
 
 # PR Review Draft Skill
 
-Create a markdown review draft from a pull request snapshot.
+Review a remote PR and stop after review intake.
 
 Use when the user asks to:
 
-- review a GitHub pull request from the browser UI
-- inspect a PR diff without using local Codex execution time
-- produce a `.tmp/*.md` review draft for later `review-to-issue` intake
+- review a GitHub pull request
+- review changes pushed by Codex to an existing PR branch
+- inspect a PR diff and create local review records
 - review an already-merged PR and extract follow-up items
 
 Do not use for:
 
 - code fixes
 - GitHub review comments
-- local tracking updates
-- `review-to-issue` intake
+- PR creation
 - commit or push
+- post-merge cleanup
 
-Create a review draft only, then stop for human review.
+## Core Rule
 
----
+The remote PR is the review source for metadata, diff, and discussion.
 
-## Core rule
+Use the local `.codex/agents/*.toml` and local skill definitions when spawning reviewers. They may be unmerged or part of the reviewed PR. Do not stop for that reason.
 
-A remote PR review draft is not a locally validated review.
+This skill may write only under `.tmp/review/<branch-name>/` until it invokes `review-to-issue`. Do not update source code, `docs/issue/*.md`, `docs/TODO.md`, `docs/plan.md`, or `docs/agent-failure-log.md` directly.
 
-The output from this skill must be treated as input for human review or for the local `review-to-issue` workflow.
+Do not review the `User-Directed Requirement Changes` section of the PR description.
 
-Do not claim that local files, local working tree, local command results, or generated artifacts were verified unless a local agent actually verified them.
+## Preconditions
 
-Do not update `docs/issue/*.md`, `docs/TODO.md`, or `docs/plan.md` from this skill. Routing happens later in `review-to-issue`.
+1. Confirm that the PR already exists.
+2. Confirm the current branch and matching issue file.
+3. Confirm `.tmp/review/<branch-name>/` exists. Create it when absent.
+4. Fetch or inspect the remote PR metadata, diff, discussion, reviews, and unresolved threads.
+5. Read the local `AGENTS.md`, current issue, relevant skills, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/plan.md`, `docs/TODO.md`, relevant design references, and affected local code when available.
+6. Find the latest `.tmp/review/<branch-name>/pr-review-N.md`.
 
----
+If no prior `pr-review-N.md` exists, write `pr-review-1.md` with the current PR metadata and head commit as the initial review baseline, then stop. Do not spawn reviewers because there is no post-baseline diff.
 
-## Required source checks
+If the remote PR head equals the latest reviewed head commit, stop. Do not duplicate a review.
 
-Before writing the review draft, fetch or inspect the following when available:
+## Review Scope
 
-1. PR metadata
-   - PR number
-   - title
-   - base branch
-   - head branch
-   - merge state
-   - head SHA
-   - merge commit SHA when merged
-2. PR diff
-   - changed files
-   - important hunks
-   - binary file changes noted as binary
-3. PR discussion
-   - issue comments
-   - review comments
-   - review submissions
-   - unresolved threads
-4. Project rules
-   - `AGENTS.md`
-   - relevant skill files under `.agents/skills/`
-5. Task contract
-   - matching `docs/issue/<task>.md` when available
-6. Project SSoT
-   - `docs/requirements.md`
-   - `docs/out-of-scope.md`
-   - `docs/plan.md`
-   - `docs/TODO.md`
-7. Design references when relevant
-   - `docs/design/<design-target>/`
-8. Existing code when relevant
-   - files touched by the PR
-   - nearby files needed to understand the implementation pattern
+Review every commit after the latest `pr-review-N.md` reviewed head commit through the current remote PR head commit.
 
-If any of these cannot be fetched, record them under `Unchecked / Not verified`.
+The document reviewer checks:
 
----
+- current issue scope
+- documentation consistency
+- requirements, out-of-scope, plan, TODO, and design consistency
+- review trail and follow-up routing
 
-## Review focus
+The technical reviewer checks:
 
-Assess the PR on the following axes.
+- bugs and behavior regressions
+- frontend behavior and GitHub Pages subpath risks
+- tests, validation, and maintainability
+- Codex workflow and agent-facing Markdown safety
 
-### Scope
-
-Check whether the PR stays within the task issue.
-
-Flag:
-
-- implementation outside the issue scope
-- features from `docs/out-of-scope.md`
-- unrelated refactors
-- broad formatting diffs
-- new dependencies without justification
-- generated artifacts committed in the wrong location
-
-### SSoT consistency
-
-Check whether the PR follows the repository's source-of-truth documents.
-
-Flag:
-
-- code that contradicts `docs/requirements.md`
-- code that violates `docs/out-of-scope.md`
-- task completion that is not supported by `docs/issue/*.md`
-- `docs/plan.md` checkbox updates outside the post-merge workflow
-- TODO-worthy work that is neither handled in the current issue nor tracked in `docs/TODO.md`
-- design reference changes not explained in the issue or PR body
-- docs and implementation drifting apart
-
-### Implementation quality
-
-Check whether the implementation is maintainable.
-
-Flag:
-
-- unclear responsibility boundaries
-- local one-off logic that should be shared
-- premature abstraction
-- hardcoded paths that break GitHub Pages subpath publishing
-- component APIs that will be awkward for later tasks
-- CSS/layout rules that preempt later layout tasks
-- type or schema shortcuts that will complicate data tasks
-- fragile assumptions not documented in the issue
-
-### Validation
-
-Check whether the PR reports suitable validation.
-
-Flag:
-
-- missing build or check validation when applicable
-- visual review claimed without screenshot outputs or notes
-- binary screenshots/design files changed without sufficient explanation
-- test or validation gaps that matter for the task type
-
-### Documentation and review trail
-
-Check whether the task leaves enough record for future humans and agents.
-
-Flag:
-
-- issue file missing or stale
-- review feedback not reflected in the issue
-- follow-up items not routed to `docs/TODO.md`
-- TODO items not linked to a later task or plan entry
-- decisions made in code but not documented
-- comments that imply future work without assigning it to a future issue or TODO
-
----
-
-## Review item routing hint
-
-For each issue found, make a routing recommendation for the later `review-to-issue` step.
-
-Use one of these hints:
-
-- `current-issue`: should be handled by the current issue / PR follow-up
-- `todo`: should be added to `docs/TODO.md`
-- `plan`: should require or reference a `docs/plan.md` item
-- `ignore`: not actionable after review
-
-This is only a hint. The local `review-to-issue` workflow makes the final routing decision after local validation.
-
----
-
-## Output format
-
-Write the review as markdown.
-
-Use this structure:
+Both reviewers return Japanese Markdown. Each report must use:
 
 ```md
-# PR #N review: PR_TITLE
+# Document Review / Technical Review
 
-## 対象PR
+## レビュー結論
 
-- PR: #N `PR_TITLE`
-- state:
-- merged:
-- base:
-- head:
-- head SHA:
-- merge commit SHA:
-
-## Source Snapshot
-
-- mode: remote PR review draft
-- repository: `owner/repo`
-- PR: #N
-- base:
-- head:
-- checked files:
-  - `path/to/file`
-- checked PR data:
-  - metadata
-  - diff
-  - comments / reviews / threads
-
-## Unchecked / Not verified
-
-- local working tree
-- local uncommitted changes
-- local branch state
-- command results unless explicitly provided
-- generated artifacts not fetched
-- binary files unless explicitly inspected
-- files not listed in Source Snapshot
-
-## Local Validation Required
-
-This review draft was generated from a remote PR snapshot.
-
-Before turning any item into an issue, TODO, plan item, or fix, validate it against the local repository state.
-
-## 総評
-
-A short assessment of whether the PR is generally sound.
+## 対象範囲・対象外
 
 ## 指摘事項
 
-### 1. TITLE
+### [重大度] タイトル
 
-Describe the issue.
+- 位置:
+- 根拠:
+- 影響:
+- 推奨対応:
+- routing hint: current-issue / todo / plan / ignore
 
-#### 根拠
+## 指摘なしとして確認した観点
 
-- file / diff / source references
-
-#### リスク
-
-Explain why it matters.
-
-#### routing hint
-
-- current-issue / todo / plan / ignore
-
-#### 対応案
-
-Suggest a concrete fix, TODO entry, plan entry, or follow-up.
-
-## 良かった点
-
-- ...
-
-## 重要度別まとめ
-
-### 要修正候補
-
-- ...
-
-### TODO化候補
-
-- ...
-
-### plan追加・更新候補
-
-- ...
-
-### 現時点では問題なし
-
-- ...
+## 判断不能・ユーザー確認事項
 ```
 
----
+## Workflow
 
-## Handling merged PRs
+1. Assign the next shared review number `N`.
+2. Spawn `document_reviewer` and `technical_reviewer` in parallel.
+3. Give both reviewers the remote PR information, reviewed commit range, current issue path, and required local SSoT paths.
+4. Write their responses to:
+   - `.tmp/review/<branch-name>/document-review-N.md`
+   - `.tmp/review/<branch-name>/technical-review-N.md`
+5. Write `.tmp/review/<branch-name>/pr-review-N.md` with:
+   - PR number, URL, base, head, and remote head commit
+   - reviewed commit range
+   - local agent and skill definitions used
+   - linked document and technical report paths
+   - known unchecked remote data
+6. Run `review-to-issue` for both reports.
+7. Stop after `review-to-issue` updates the tracking documents and reports its result.
 
-If the PR is already merged:
+When the user asks Codex to push an existing PR branch, run this skill after the push succeeds. Do not detect or review pushes performed outside Codex.
+
+## Handling Merged PRs
+
+When a PR is already merged:
 
 - do not write as if the PR can still be blocked
-- write follow-up items instead
-- point to a target issue, TODO, or later task when possible
-- produce a `.tmp`-ready review draft that can be fed into `review-to-issue`
+- route valid findings as follow-up or process improvements
+- keep the same temporary report format
+- stop after `review-to-issue`
 
-For merged PRs, prefer language like:
+## Required Report
 
-- `要修正候補`
-- `TODO化候補`
-- `plan追加・更新候補`
-- `後続タスクで回収`
-- `次回以降の運用改善`
-- `review-to-issue に取り込む候補`
+Report:
 
----
+- PR URL and reviewed commit range
+- created `.tmp/review/<branch-name>/` files
+- reviewer agents used
+- whether `review-to-issue` updated the issue, TODO, plan, or failure log
+- remaining unverified or user-confirmation items
 
-## Handoff to review-to-issue
-
-The intended next step is:
-
-1. Human copies this review draft to `.tmp/pr-N-review.md`
-2. Local agent runs `review-to-issue`
-3. Local agent validates the review against local SSoT
-4. Local agent classifies items as valid / doubtful / out-of-scope / stale / invalid / follow-up
-5. Local agent routes validated items to the current issue, `docs/TODO.md`, or `docs/plan.md` as appropriate
-6. Human reviews and approves the proposed intake / routing
-7. Local agent applies approved tracking updates and later implements only approved fixes
-
-Do not skip local validation.
-
----
-
-## What this skill does not do
-
-This skill does not:
-
-- replace human review
-- replace local validation
-- fix code
-- update issues
-- update `docs/TODO.md`
-- update `docs/plan.md`
-- post GitHub review comments
-- approve PRs
-- request changes on PRs
-- merge PRs
-- perform repository write operations
+Do not commit, push, merge, approve, request changes, or post GitHub comments.

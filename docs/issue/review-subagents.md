@@ -61,38 +61,38 @@
 
 ## 完了条件
 
-- [ ] `.codex/agents/*.toml`に3役割のreviewer sub-agentが定義され、model、責務、参照SSoT、出力、停止条件、対象外が明確である。
-- [ ] すべてのreviewer出力が日本語であり、レビュー結論、対象範囲・対象外、根拠を含む指摘事項、指摘なしの確認観点、判断不能事項を確認できる形式である。
-- [ ] `issue-first-development`がbranch作成後に`.tmp/review/<branch-name>/`を作成し、local repository modeでissue reviewerを最大2回実行する。
-- [ ] remote snapshot draft modeではreviewerやローカル一時ファイルを作成せず、ユーザーがローカルに置いたdraftのissue-first実行時だけreviewerを起動する。
-- [ ] 1回目に指摘がない場合、または2回目のreview完了後にユーザーレビューモードへ移行し、解消済み指摘の恒久的な履歴を要求しない。
-- [ ] ユーザーレビュー後はissue reviewerを再実行せず、ユーザーとの対話によるissue更新へ移る。
-- [ ] ユーザー明示指示による要求・スコープ変更が、変更元SSoT、current issue、`.tmp/review/<branch-name>/`の専用記録へ必要な粒度で記録される。
-- [ ] PR templateと`create-pr`が、専用記録をsourceとする要求・スコープ変更のPR description項目を扱う。
-- [ ] document reviewerが、前記PR description項目をレビュー対象外として扱う。
-- [ ] Codexへ既存PR branchへのpushを指示した場合だけ、前回の`pr-review-N.md`に記録したcommit以降の全commitを対象としてdocument reviewerとtechnical reviewerを起動する。
-- [ ] PR作成直後は差分レビューを実行せず、Codex外でのpushを検知・レビューしないことが明記されている。
-- [ ] `pr-review-N.md`が各PR review cycleのcommit基準とremote PR情報を保持し、同一commit範囲を重複レビューしない。
-- [ ] リモートPRをレビュー対象にし、ローカルのagent・skill定義が`main`未反映またはレビュー対象でも停止しない。
-- [ ] local reviewerの検証済み指摘が`review-to-issue`を通じてissueへ正本化され、取り込み後にユーザー確認待ちで停止する。
-- [ ] `post-merge-plan-update`が、正本化を確認してから対象branchの`.tmp/review/`ディレクトリだけを削除する。
-- [ ] 関連TODOを扱わない理由が記録されている。
-- [ ] `git diff --check`が通る。
-- [ ] Markdown formatterと`npm run check:md`が通る。
+- [x] `.codex/agents/*.toml`に3役割のreviewer sub-agentが定義され、model、責務、参照SSoT、出力、停止条件、対象外が明確である。
+- [x] すべてのreviewer出力が日本語であり、レビュー結論、対象範囲・対象外、根拠を含む指摘事項、指摘なしの確認観点、判断不能事項を確認できる形式である。
+- [x] `issue-first-development`がbranch作成後に`.tmp/review/<branch-name>/`を作成し、local repository modeでissue reviewerを最大2回実行する。
+- [x] remote snapshot draft modeではreviewerやローカル一時ファイルを作成せず、ユーザーがローカルに置いたdraftのissue-first実行時だけreviewerを起動する。
+- [x] 1回目に指摘がない場合、または2回目のreview完了後にユーザーレビューモードへ移行し、解消済み指摘の恒久的な履歴を要求しない。
+- [x] ユーザーレビュー後はissue reviewerを再実行せず、ユーザーとの対話によるissue更新へ移る。
+- [x] ユーザー明示指示による要求・スコープ変更が、変更元SSoT、current issue、`.tmp/review/<branch-name>/`の専用記録へ必要な粒度で記録される。
+- [x] PR templateと`create-pr`が、専用記録をsourceとする要求・スコープ変更のPR description項目を扱う。
+- [x] document reviewerが、前記PR description項目をレビュー対象外として扱う。
+- [x] Codexへ既存PR branchへのpushを指示した場合だけ、前回の`pr-review-N.md`に記録したcommit以降の全commitを対象としてdocument reviewerとtechnical reviewerを起動する。
+- [x] PR作成直後は差分レビューを実行せず、Codex外でのpushを検知・レビューしないことが明記されている。
+- [x] `pr-review-N.md`が各PR review cycleのcommit基準とremote PR情報を保持し、同一commit範囲を重複レビューしない。
+- [x] リモートPRをレビュー対象にし、ローカルのagent・skill定義が`main`未反映またはレビュー対象でも停止しない。
+- [x] local reviewerの検証済み指摘が`review-to-issue`を通じてissueへ正本化され、取り込み後にユーザー確認待ちで停止する。
+- [x] `post-merge-plan-update`が、正本化を確認してから対象branchの`.tmp/review/`ディレクトリだけを削除する。
+- [x] 関連TODOを扱わない理由が記録されている。
+- [x] `git diff --check`が通る。
+- [x] Markdown formatterと`npm run check:md`が通る。
 
 ## チェックポイント
 
-- [ ] reviewerの要件・判断基準が`AGENTS.md`、current issue、`docs/requirements.md`、`docs/out-of-scope.md`、`docs/plan.md`、`docs/TODO.md`の優先順位と矛盾していない。
-- [ ] remote snapshot draftをローカル検証済み事実として扱わない。
-- [ ] reviewerの起動が、既存の明示承認、commit、push、PR作成、mergeの安全制約を緩めていない。
-- [ ] reviewerが判断できない指摘を、自動で要求変更やscope拡大として扱わない。
-- [ ] ユーザー明示指示による既存要求変更で、変更元SSoT、current issue、PR description用一時記録が矛盾していない。
-- [ ] `.tmp/review/<branch-name>/`の一時出力と、issue・TODO・plan・failure logの正本を混同していない。
-- [ ] 差分reviewの比較基準が前回の`pr-review-N.md`のcommit hashであり、同一commit範囲を重複レビューしない。
-- [ ] 既存ルート、GitHub Pagesのサブパス公開、サイトbuildに影響する実装を追加していない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] reviewerの要件・判断基準が`AGENTS.md`、current issue、`docs/requirements.md`、`docs/out-of-scope.md`、`docs/plan.md`、`docs/TODO.md`の優先順位と矛盾していない。
+- [x] remote snapshot draftをローカル検証済み事実として扱わない。
+- [x] reviewerの起動が、既存の明示承認、commit、push、PR作成、mergeの安全制約を緩めていない。
+- [x] reviewerが判断できない指摘を、自動で要求変更やscope拡大として扱わない。
+- [x] ユーザー明示指示による既存要求変更で、変更元SSoT、current issue、PR description用一時記録が矛盾していない。
+- [x] `.tmp/review/<branch-name>/`の一時出力と、issue・TODO・plan・failure logの正本を混同していない。
+- [x] 差分reviewの比較基準が前回の`pr-review-N.md`のcommit hashであり、同一commit範囲を重複レビューしない。
+- [x] 既存ルート、GitHub Pagesのサブパス公開、サイトbuildに影響する実装を追加していない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -128,4 +128,5 @@
 
 - UI、CSS、layout、page、Component taskではないため、design targetおよび`design-image-generation`の前提条件はない。
 - `.tmp/`は共有成果物ではない。永続的に必要な情報だけをissue、TODO、plan、failure log、PR descriptionへ反映し、merge後に対象branchのreview一時ディレクトリを削除する。
+- non-interactive `codex exec`によるcustom subagent smoke testは、app-serverのsubagent threadを作成できず起動確認に使えなかった。TOML schema、local model catalog、strict-config読み込み、Markdown検査は確認済みである。interactive Codex clientでのcustom subagent起動は、このissueの次回実運用で確認する。
 - 実装開始には、このissueへの明示承認が必要である。
