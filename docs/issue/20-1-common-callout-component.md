@@ -123,9 +123,9 @@ interface Props {
 - `title` 省略時は、種別ごとの既定ラベルを表示する
 - 既定ラベルの初期案は以下とする
   - `note`: `補足`
-  - `tip`: `コツ`
+  - `tip`: `運用のコツ`
   - `warning`: `注意`
-  - `danger`: `重大注意`
+  - `danger`: `重要な注意`
   - `example`: `例`
   - `version`: `変更点`
 - `title` 指定時は既定ラベルの代わりに指定されたタイトルを表示する
@@ -140,8 +140,8 @@ interface Props {
 - slot内の先頭要素と末尾要素に不要な余白を残さない
 - ラベルまたはタイトルを常に視覚表示する
 - 種別ごとに識別可能なアイコン、記号、形状等の種別マーカーを表示する
-- 種別マーカーは既存依存の `simple-icons` を使って表示する
-- 初期アイコン案は `note`: `siNote`、`tip`: `siLighthouse`、`warning`: `siAdguard`、`danger`: `siOpenbugbounty`、`example`: `siBookstack`、`version`: `siGit` とする
+- 種別マーカーはブランドアイコンに依存せず、シンプルな記号マーカーとして表示する
+- 初期マーカー案は `note`: `i`、`tip`: `?`、`warning`: `!`、`danger`: `!!`、`example`: `#`、`version`: `v` とする
 - 装飾目的のアイコンは支援技術へ重複して読み上げられないようにする
 - 色、ラベル、種別マーカーの複数要素で種別を識別できるようにする
 - Callout内のタイトルによってページ見出し階層やPageTocを汚染しない
@@ -175,8 +175,8 @@ interface Props {
 
 以下を扱う。
 
-- `src/pages/mdx-test.mdx` での利用確認
-- `src/pages/local/callouts.mdx` で、目視確認とdesign正本作成に使うCallout一覧確認ページを作成する
+- `src/pages/-local/mdx-test.mdx` での利用確認
+- `src/pages/-local/callouts.mdx` で、目視確認とdesign正本作成に使うCallout一覧確認ページを作成する
 - 6種すべてのCalloutを表示する
 - `title` 省略時の既定ラベルを確認する
 - `title` 指定時の表示を確認する
@@ -195,9 +195,9 @@ interface Props {
 - `npm run build:public` を追加し、`npm run build` 後に公開しないrouteを `dist/` から削除する
 - GitHub Actions deployでは `npm run build:public` を使う
 - 初期除外対象は以下とする
-  - `dist/local/`
-  - `dist/mdx-test/`
+  - `dist/-local/`
 - 除外処理は `src/pages` のソースを削除・移動せず、build成果物だけを削除する
+- `_astro` assetはAstroのchunk共有とinline化に任せ、公開build後処理では削除しない
 
 ### READMEへの記載サンプル追加
 
@@ -213,7 +213,7 @@ interface Props {
 
 以下を扱う。
 
-- `/mdx-test` または専用の既存確認ルートで、6種をまとめて確認できる状態にする
+- `/-local/callouts/` で、6種をまとめて確認できる状態にする
 - desktop / mobileの実装結果を取得できる、対象を絞ったVisual Review用captureを追加または既存テストへ追加する
 - 実装結果を `docs/design/callout/` のinitial draftと比較する
 - `test-results/` やPlaywright actual screenshotはGit管理しない
@@ -262,7 +262,7 @@ interface Props {
 - hover animation
 - 発光表現
 - 大規模なアイコンライブラリの追加
-- `simple-icons` 以外の新規アイコンpackage追加
+- Callout用の新規アイコンpackage追加
 - UI frameworkの追加
 - client-side state managementの追加
 - 検索UI
@@ -312,7 +312,7 @@ interface Props {
 - [x] slot内の先頭・末尾要素に不要な余白が残らない
 - [x] 6種すべてでラベルまたはタイトルが視覚表示される
 - [x] 6種すべてで色以外の種別マーカーが表示される
-- [x] 6種すべてで既存依存の `simple-icons` アイコンが表示される
+- [x] 6種すべてでブランドアイコンに依存しない記号マーカーが表示される
 - [x] 種別マーカーが装飾目的の場合、支援技術による重複読み上げを避けている
 - [x] Calloutのタイトルがページ内目次へ混入しない
 - [x] 静的Calloutに不適切な `role="alert"` を付与していない
@@ -325,7 +325,7 @@ interface Props {
 ### 公開build除外
 
 - [x] `npm run build` ではローカル確認ページを含むbuildができる
-- [x] `npm run build:public` では `dist/local/` と `dist/mdx-test/` が削除される
+- [x] `npm run build:public` では `dist/-local/` が削除される
 - [x] GitHub Actions deployが `npm run build:public` を使っている
 - [x] 削除対象routeがソースファイルではなく `dist/` に限定されている
 
@@ -343,8 +343,8 @@ interface Props {
 
 ### 利用・表示確認
 
-- [x] `src/pages/local/callouts.mdx` で6種すべてを確認できる
-- [x] `src/pages/mdx-test.mdx` または同等の確認ページでMDX本文からの利用を確認できる
+- [x] `src/pages/-local/callouts.mdx` で6種すべてを確認できる
+- [x] `src/pages/-local/mdx-test.mdx` または同等の確認ページでMDX本文からの利用を確認できる
 - [x] MDX本文からimportして利用できる
 - [x] `title` 省略時と指定時の両方を確認している
 - [x] 段落以外のslot内容も確認している
@@ -382,7 +382,7 @@ interface Props {
 - [x] slot内のMarkdown要素へComponent外の想定外スタイルを広げていない
 - [x] `src/styles/prose.css` に使用されない暫定Callout CSSを残していない
 - [x] 特定ページの都合を共通Componentへ持ち込んでいない
-- [x] `/mdx-test` の変更がComponent確認に必要な範囲に留まっている
+- [x] `/-local/mdx-test/` の変更がComponent確認に必要な範囲に留まっている
 - [x] Visual Review actual screenshotをGit管理していない
 - [x] ユーザーの未コミット変更を破壊していない
 
@@ -394,8 +394,8 @@ interface Props {
 - `docs/design/callout/design-mobile.png`
 - `README.md`
 - `src/components/_common/Callout.astro`
-- `src/pages/local/callouts.mdx`
-- `src/pages/mdx-test.mdx`
+- `src/pages/-local/callouts.mdx`
+- `src/pages/-local/mdx-test.mdx`
 
 実装方針に応じて変更する可能性があるファイル:
 
@@ -452,21 +452,21 @@ interface Props {
 | spacing              | OK   | desktop / mobileともCallout同士の余白と本文内余白に破綻なし。                                 |
 | typography           | OK   | タイトルは見出し要素ではなくラベル相当で表示され、本文階層を汚染しない。                      |
 | color                | OK   | `example` は `version` より視認性が高く、`warning` / `danger` の強度差も確認できる。          |
-| marker               | OK   | 6種すべてで `simple-icons` 由来のアイコンが表示される。                                       |
+| marker               | OK   | 6種すべてでブランドアイコンに依存しない記号マーカーが表示される。                             |
 | responsive           | OK   | mobile幅で折り返し、本文幅、縦積みに破綻なし。                                                |
 | overflow             | OK   | Visual captureでページ全体の横スクロールがないことを確認。                                    |
 | accessibility basics | OK   | 装飾アイコンは `aria-hidden="true"`、静的本文なので `role="alert"` は付与しない。             |
 
 ### セルフ修正
 
-- `_local` 配下のAstro pageはbuild対象にならないため、一覧確認ページを `src/pages/local/callouts.mdx` とし、公開buildで `dist/local/` を削除する方針へ変更した。
+- `_local` 配下のAstro pageは直接route化されないため、最終的に `-local` prefixの通常routeへ変更した。
 - Callout一覧確認ページ内の内部リンクを `InternalLink` 経由へ変更した。
 - Visual captureにAstro dev toolbarが写り込まないよう、capture時にtoolbar要素を除去した。
 
 ### 人間確認事項
 
 - `test-results/visual/callout-*.png` はactual screenshotであり、design正本ではない。実装結果を新しいdesign正本にする場合は、別途 `design-image-generation` design fix modeで扱う。
-- `simple-icons` はブランドアイコン集のため、`siNote`, `siLighthouse`, `siAdguard`, `siOpenbugbounty`, `siBookstack`, `siGit` の種別割り当てが意味的に十分かは人間レビュー対象に残す。
+- `simple-icons` はブランドアイコン集のためCallout種別マーカーには使わず、新規依存のない記号マーカーへ変更した。汎用アイコンライブラリは、Callout初期実装では新規依存を増やすほどの必要性がないため採用しない。
 
 ### 実行確認
 
@@ -480,6 +480,68 @@ interface Props {
 - [x] `npm run build:public` が通った
 - [x] `npm run visual:capture -- --grep "@callout"` が通った
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- ローカル確認ページは `src/pages/local/` と公開rootの `src/pages/mdx-test.mdx` に分散させず、ローカル確認用のprefix付きpath配下へまとめる。当初は `_local` を検討したが、Astroで直接route化されないため、最終的に `src/pages/-local/` 配下へまとめる。
+- `mdx-test` も確認用ページ群として扱い、`-local` 配下へ移す。preview / postprocess前提の確認ページは `-local` に置かない前提にする。
+- production deployから外すrouteは明示指定でよい。削除対象HTMLからだけ参照されるJS / CSS assetが残る場合に追加削除が必要か再検討する。
+- `example` Calloutは色で区別できるため、破線borderで囲む必要はない。
+- default titleの `コツ` と `重大注意` は日本語として不自然なため再検討する。
+- `simple-icons` はブランドアイコン集であり、Callout種別マーカー用途として適切ではない。よりシンプルな汎用アイコン、または記号系マーカーを検討し、必要なら別アイコンライブラリを検討する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `src/pages/local/callouts.mdx` が存在し、Callout一覧確認ページは `/local/callouts/` として実装されていた。
+  - `src/pages/mdx-test.mdx` が公開root直下に残っていた。
+  - `scripts/remove-private-routes/main.ts` は `dist/local/` と `dist/mdx-test/` を削除していたが、削除対象HTMLからのみ参照される `_astro` assetの有無までは判定していなかった。
+  - `src/components/_common/Callout.astro` の `.callout-example` は `border-style: dashed` を指定している。
+  - `src/components/_common/Callout.astro` のdefault titleは `tip: "コツ"`、`danger: "重大注意"` である。
+  - `src/components/_common/Callout.astro` は `simple-icons` から `siNote`, `siLighthouse`, `siAdguard`, `siOpenbugbounty`, `siBookstack`, `siGit` をimportしている。
+  - `docs/requirements/components.md` はCalloutの種別として `tip: 運用のコツ`、`danger: 重大注意` を定義しているが、表示ラベルをこの文言へ固定してはいない。
+  - `docs/issue/20-1-common-callout-component.md` と `docs/design/callout/notes.md` は `simple-icons` 利用を前提にしているため、別ライブラリへ変更する場合はissue本文またはレビュー対応記録へ、追加理由、代替案、初期スコープ上の必要性を明記する必要がある。
+
+### 対応方針
+
+- `src/pages/local/callouts.mdx` と `src/pages/mdx-test.mdx` を `src/pages/-local/` 配下へ移し、dev serverでアクセスできるか確認する。
+- `-local` 配下への移動に合わせて、import path、Visual capture route、README、issue内の対象ファイル・公開build除外説明を更新する。
+- `build:public` は、private routeがbuild成果物に出る場合だけ明示削除を行う。private route HTMLからだけ参照されるJS / CSS assetの追加削除は、Astroのasset出力を確認して必要性を再判断する。
+- `example` Calloutの破線borderをやめ、色、ラベル、マーカーで識別する。
+- default titleは、初期案として `tip: "運用のコツ"`、`danger: "重要な注意"` へ変更する。別案が必要な場合は実装前に指定を受ける。
+- Callout種別マーカーは `simple-icons` 前提を取り下げる。対応時に汎用アイコンライブラリまたは記号系マーカーを比較し、採用案と不採用案、依存追加の有無をissueへ記録する。新規npm packageを追加する場合は、AGENTS.mdに従い追加理由、代替案、初期スコープに必要な理由を記録する。
+- design正本画像はこのレビュー対応では直接上書きしない。実装結果を新しいdesign正本にする場合は、別途 `design-image-generation` design fix modeで扱う。
+
+### 対応完了チェックリスト
+
+- [x] `src/pages/local/callouts.mdx` を `src/pages/-local/` 配下へ移している
+- [x] `src/pages/mdx-test.mdx` を `src/pages/-local/` 配下へ移している
+- [x] `-local` 配下の確認ページがdev serverで表示できる
+- [x] production build / public buildに確認ページが公開routeとして残らないことを確認している
+- [x] private route HTMLからだけ参照されるJS / CSS assetの有無を確認し、追加削除が不要であることを確認している
+- [x] Visual capture routeを移動後の確認ページへ更新している
+- [x] `example` Calloutの破線borderを削除している
+- [x] `tip` / `danger` のdefault titleを見直している
+- [x] Callout種別マーカーを `simple-icons` 前提から見直している
+- [x] 新規npm packageを追加する場合、追加理由、代替案、初期スコープに必要な理由をissueへ記録している
+- [x] READMEとissue本文の確認ページ配置・公開build除外説明を実装後の状態へ更新している
+- [x] design正本画像を直接上書きしていない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] `npm run build:public` が通る
+- [x] 対象を絞った `npm run visual:capture` が通る
+
+### 対応メモ
+
+- `src/pages/_local/*.mdx` は直接route化されなかった。route wrapper案は二重Layout等の複雑さが出たため採用せず、特別なローカル確認用prefixとして `src/pages/-local/` を使う方針へ変更した。
+- `build:public` は `dist/-local/` だけを削除する。Astro 7.0.6の現在の出力では `-local` pageが参照する外部assetは公開pageも参照する共有CSSのみで、private route専用の外部JS / CSSは生成されていない。小さいpage固有style / scriptはHTMLへinline化されるため、`dist/-local/` の削除で一緒に除外される。
+- `_astro` assetの参照解析とprivate専用asset削除は、現状の出力規模と公開リスクに対して複雑さが勝つため採用しない。将来、local確認ページが大きなroute固有assetを生成し、それが実際に問題になる場合に再検討する。
+- Callout種別マーカーは新規npm packageを追加せず、`i`, `?`, `!`, `!!`, `#`, `v` の記号マーカーで実装した。`simple-icons` はFooterの外部リンクアイコンでは引き続き使うが、Callout用途からは外した。
+- 汎用アイコンライブラリ案は、今回の静的Calloutでは記号マーカーで要件を満たせるため採用しない。新規依存を追加しない方が初期スコープと保守性に合う。
+
 ## レビュー観点
 
 人間レビュー時に確認してほしい観点。
@@ -490,23 +552,23 @@ interface Props {
 - `title` 省略時に日本語の既定ラベルを出す方針でよいか
 - 既定ラベルを以下とする方針でよいか
   - `補足`
-  - `コツ`
+  - `運用のコツ`
   - `注意`
-  - `重大注意`
+  - `重要な注意`
   - `例`
   - `変更点`
 - `version` の既定ラベルを `変更点` とし、具体的な版表記を本文内に書く方針でよいか
 - `version` 専用propsや `meta` propsを追加しない方針でよいか
 - `title` 指定時に既定ラベルを置き換える方針でよいか
 - Calloutタイトルを見出し要素ではなく、ラベル相当の要素として扱う方針でよいか
-- 種別マーカーを既存依存の `simple-icons` で実装する方針でよいか
-- `note`: `siNote`、`tip`: `siLighthouse`、`warning`: `siAdguard`、`danger`: `siOpenbugbounty`、`example`: `siBookstack`、`version`: `siGit` の割り当てでよいか
+- 種別マーカーを記号マーカーで実装する方針でよいか
+- `note`: `i`、`tip`: `?`、`warning`: `!`、`danger`: `!!`、`example`: `#`、`version`: `v` の割り当てでよいか
 - `note`, `tip`, `example`, `version` の違いを、色数を増やしすぎず識別できるdesignになっているか
 - `warning` と `danger` の視覚的な強度差が適切か
 - 既存 `.prose .callout*` スタイルを拡張するか、`Callout.astro` 側へ移管するか
 - Component scoped styleとglobal prose styleの責務境界が明確か
 - slot内で許容するMarkdown要素が初期実装として十分か
-- `/mdx-test` で6種すべてを表示する方針でよいか
+- `/-local/callouts/` で6種すべてを表示する方針でよいか
 - READMEへ追加するcontents指示書サンプルの粒度が、後続ページ実装者にとって十分か
 - READMEのサンプルが、このIssueで `.raw/contents/*.md` を作成・編集する誤解を生まないか
 - Callout専用Visual Review captureを追加することが過剰品質になっていないか
@@ -541,7 +603,7 @@ interface Props {
 - `docs/design/global-styles/notes.md`、`docs/design/base-layout/notes.md`、`docs/design/site-layout/notes.md` を既存整合参照として使える
 - `src/components/_common/` は共通Component配置先として使われている
 - `src/components/_common/ImageBlock.astro` が既存の共通Componentとして存在する
-- `src/pages/mdx-test.mdx` がMDX Componentの確認ページとして存在する
+- `src/pages/-local/mdx-test.mdx` がMDX Componentの確認ページとして存在する
 - `src/styles/prose.css` に暫定的な `.callout*` スタイルが存在する
 - `src/styles/tokens.css` にneutral、accent、warning、danger系の既存tokenが存在する
 - `tests/visual/` に既存のVisual Review capture構成が存在する

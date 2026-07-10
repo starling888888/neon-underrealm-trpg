@@ -1,13 +1,4 @@
 ---
-import {
-  siAdguard,
-  siBookstack,
-  siGit,
-  siLighthouse,
-  siNote,
-  siOpenbugbounty,
-} from "simple-icons";
-
 type CalloutType =
   | "note"
   | "tip"
@@ -25,33 +16,29 @@ const { type, title } = Astro.props;
 
 const defaultTitles = {
   note: "補足",
-  tip: "コツ",
+  tip: "運用のコツ",
   warning: "注意",
-  danger: "重大注意",
+  danger: "重要な注意",
   example: "例",
   version: "変更点",
 } satisfies Record<CalloutType, string>;
 
-const icons = {
-  note: siNote,
-  tip: siLighthouse,
-  warning: siAdguard,
-  danger: siOpenbugbounty,
-  example: siBookstack,
-  version: siGit,
-} satisfies Record<CalloutType, { path: string }>;
+const markers = {
+  note: "i",
+  tip: "?",
+  warning: "!",
+  danger: "!!",
+  example: "#",
+  version: "v",
+} satisfies Record<CalloutType, string>;
 
 const calloutTitle = title ?? defaultTitles[type];
-const icon = icons[type];
+const marker = markers[type];
 ---
 
 <aside class:list={["callout", `callout-${type}`]} data-callout-type={type}>
   <div class="callout-heading">
-    <span class="callout-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" focusable="false">
-        <path d={icon.path}></path>
-      </svg>
-    </span>
+    <span class="callout-marker" aria-hidden="true">{marker}</span>
     <span class="callout-title">{calloutTitle}</span>
   </div>
   <div class="callout-body">
@@ -118,9 +105,6 @@ const icon = icons[type];
     --callout-border: #94aeba;
     --callout-bg: #eef6f8;
     --callout-muted: #526775;
-
-    border-style: dashed;
-    border-left-style: solid;
   }
 
   .callout-version {
@@ -137,7 +121,7 @@ const icon = icons[type];
     min-width: 0;
   }
 
-  .callout-icon {
+  .callout-marker {
     display: inline-grid;
     flex: 0 0 auto;
     width: 2rem;
@@ -147,13 +131,9 @@ const icon = icons[type];
     border-radius: 999px;
     background: var(--color-surface);
     color: var(--callout-accent);
-  }
-
-  .callout-icon svg {
-    display: block;
-    width: 1.2rem;
-    height: 1.2rem;
-    fill: currentColor;
+    font-size: var(--text-sm);
+    font-weight: 800;
+    line-height: 1;
   }
 
   .callout-title {

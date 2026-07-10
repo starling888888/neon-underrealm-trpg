@@ -43,7 +43,7 @@ npm run visual:install
 - `npm run dev`: ローカル開発サーバーを起動する
 - `npm run check`: Astro / TypeScript / Biome の確認を実行する
 - `npm run build`: 静的サイトをビルドする
-- `npm run build:public`: GitHub Pages公開用にビルドし、ローカル確認用routeを `dist/` から除外する
+- `npm run build:public`: GitHub Pages公開用にビルドし、`-local` 配下のローカル確認用routeを `dist/` から除外する
 - `npm test`: Node.js test runnerでユニットテストを実行し、結果を `test-results/` に出力する
 - `npm run format`: BiomeとMarkdown formatterを実行する
 - `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
@@ -142,6 +142,7 @@ V1.5で処理順を明確化しました。
 ## ディレクトリ概要
 
 - `src/`: Astroサイトのソースコード
+- `src/pages/-local/`: dev serverで確認するローカル確認ページの本文ソース
 - `public/`: 静的アセット
 - `docs/`: 要件、計画、運用ドキュメント
 - `docs/design/`: Visual Reviewで参照するデザイン正本とdesign notes

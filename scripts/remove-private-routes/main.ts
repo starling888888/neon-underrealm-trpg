@@ -1,7 +1,7 @@
 import { rm } from "node:fs/promises";
 import path from "node:path";
 
-const privateRoutes = ["local", "mdx-test"];
+const privateRoutes = ["-local"];
 const distDir = path.resolve("dist");
 
 for (const route of privateRoutes) {
