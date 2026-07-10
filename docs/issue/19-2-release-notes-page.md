@@ -224,18 +224,18 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 
 ### レビュー結果
 
-| 領域                  | 判定 | 差分                                                                 | 対応                                         |
-| --------------------- | ---- | -------------------------------------------------------------------- | -------------------------------------------- |
-| レイアウト            | OK   | design画像は複数件、実装は現行データ1件のため縦量が少ない            | 現行データに従う差分として許容               |
-| 余白                  | OK   | designと同じくH1下に一覧を直接配置し、ToC枠はなし                    | `NoTocPageLayout` 側でdesktop余白を共通化    |
-| タイポグラフィ        | OK   | 初回確認で本文weightが強かった                                       | 本文weightを通常に修正                       |
-| 色                    | OK   | 初回確認でH1下線が既存prose accentの灰色だった                       | 更新履歴ページ内だけ `--color-accent` に修正 |
-| 配置・整列            | OK   | 日付が上、本文が下の単純な縦積み                                     | 修正不要                                     |
-| レスポンシブ          | OK   | desktop / mobileで横overflowなし                                     | 修正不要                                     |
-| overflow / scroll     | OK   | `scrollWidth` と `clientWidth` が一致                                | 修正不要                                     |
-| 既存デザインとの整合  | OK   | Header / SiteMenu / Footerは既存Layoutを使用                         | 修正不要                                     |
-| 既存Componentとの整合 | OK   | `NoTocPageLayout` が `BaseLayout` と `Seo` の既存propsを透過している | 修正不要                                     |
-| accessibility basics  | OK   | H1、`time datetime`、現在ページ `aria-current` を確認                | 修正不要                                     |
+| 領域                  | 判定 | 差分                                                                   | 対応                                          |
+| --------------------- | ---- | ---------------------------------------------------------------------- | --------------------------------------------- |
+| レイアウト            | OK   | design画像は複数件、実装は現行データ1件のため縦量が少ない              | 現行データに従う差分として許容                |
+| 余白                  | OK   | designと同じくH1下に一覧を直接配置し、ToC枠はなし                      | `NoTocPageLayout` 側でdesktop余白を共通化     |
+| タイポグラフィ        | OK   | 初回確認で本文weightが強かった                                         | 本文weightを通常に修正                        |
+| 色                    | OK   | 初回確認でH1下線が既存prose accentの灰色だった                         | 更新履歴ページ内だけ `--color-accent` に修正  |
+| 配置・整列            | OK   | 日付が上、本文が下の単純な縦積み                                       | 修正不要                                      |
+| レスポンシブ          | OK   | desktop / mobileで横overflowなし                                       | 修正不要                                      |
+| overflow / scroll     | OK   | `scrollWidth` と `clientWidth` が一致                                  | 修正不要                                      |
+| 既存デザインとの整合  | OK   | Header / SiteMenu / Footerは既存Layoutを使用                           | 修正不要                                      |
+| 既存Componentとの整合 | OK   | 初回確認では `NoTocPageLayout` が `BaseLayout` と `Seo` を透過していた | 後続レビュー指摘2で `AppContainer` 分離へ更新 |
+| accessibility basics  | OK   | H1、`time datetime`、現在ページ `aria-current` を確認                  | 修正不要                                      |
 
 ### 自己修正した項目
 
