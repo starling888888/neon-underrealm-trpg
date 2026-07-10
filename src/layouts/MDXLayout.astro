@@ -49,13 +49,13 @@ const showPageToc = propShowPageToc ?? frontmatter?.showPageToc ?? true;
   noindex={noindex}
   showPageToc={showPageToc}
 >
-  <article class="content-layout prose">
+  <article class="mdx-layout prose">
     <slot />
   </article>
 </AppContainer>
 
 <style>
-  .content-layout {
+  .mdx-layout {
     max-width: var(--content-width);
   }
 </style>

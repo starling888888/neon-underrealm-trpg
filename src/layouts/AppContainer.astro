@@ -8,7 +8,7 @@ import Seo from "../components/seo/Seo.astro";
 import type { SeoProps } from "../lib/site/seo";
 import { defaultSeo } from "../lib/site/seo";
 import { withBase } from "../lib/utils/paths";
-import BaseLayout from "./BaseLayout.astro";
+import TocPageLayout from "./TocPageLayout.astro";
 import NoTocPageLayout from "./NoTocPageLayout.astro";
 
 export interface Props extends SeoProps {
@@ -30,7 +30,7 @@ const {
   showPageToc = false,
 } = Astro.props;
 
-const ContentLayout = showPageToc ? BaseLayout : NoTocPageLayout;
+const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
 ---
 
 <!doctype html>
@@ -57,9 +57,9 @@ const ContentLayout = showPageToc ? BaseLayout : NoTocPageLayout;
 
       <MobileSiteMenuDrawer />
 
-      <ContentLayout>
+      <PageLayout>
         <slot />
-      </ContentLayout>
+      </PageLayout>
 
       <Footer />
     </div>

@@ -92,6 +92,8 @@
 - [x] `src/pages/release-notes.astro` が作成されている
 - [x] ToCなしページ用ラッパーComponent / Layoutが作成されている
 - [x] `AppContainer` が `showPageToc` に応じてToCあり/なし本文用Layoutを選択している
+- [x] ToCあり本文用Layoutが `TocPageLayout.astro` として分離されている
+- [x] MDX本文用Layoutが `MDXLayout.astro` として分離されている
 - [x] ToCなし本文用LayoutでPageToc / MobilePageTocが表示されない
 - [x] `/release-notes` がToCなしページ用ラッパーを使用している
 - [x] 既存のToCなしページであるトップページが、表示を大きく変えない範囲でToCなしページ用ラッパーを使用している
@@ -127,7 +129,7 @@
 - [x] 本文fallbackは `getReleaseNoteBody(note)` の責務と重複実装していない
 - [x] 改行反映は `white-space: pre-line` など、最小限の表示制御で実現している
 - [x] ToCなしページ用ラッパーの共通余白が、トップページと更新履歴ページで不自然な差を生んでいない
-- [x] ToCなしページ用ラッパーが、ToCありページの `ContentLayout` や既存MDXページへ不要に影響していない
+- [x] ToCなしページ用ラッパーが、ToCありページの `MDXLayout` や既存MDXページへ不要に影響していない
 - [x] SEO title生成変更が `description`、`og:description`、`og:image`、`og:url` の既存挙動を壊していない
 - [x] ページ固有CSSが他ページへ不要に波及していない
 - [x] 不要なnpm packageを追加していない
@@ -142,6 +144,9 @@
 - `docs/design/release-notes/notes.md`
 - `docs/design/release-notes/design-desktop.png`
 - `docs/design/release-notes/design-mobile.png`
+- `src/layouts/AppContainer.astro`
+- `src/layouts/TocPageLayout.astro`
+- `src/layouts/MDXLayout.astro`
 - `src/layouts/NoTocPageLayout.astro` または同等のToCなしページ用ラッパー
 - `src/pages/release-notes.astro`
 - `src/pages/index.astro`
@@ -290,6 +295,7 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 - [x] `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@release-notes"` が通る
+- [x] `VISUAL_BASE_PORT=4321 npm run visual:capture -- --grep "@site-layout"` が通る
 
 ## レビュー指摘 2
 
@@ -312,7 +318,7 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 - ToCあり本文用LayoutとToCなし本文用Layoutを、`AppContainer` から選ばれる別Componentとして分ける。
 - ToCありLayoutは `SiteMenu`、本文 `main`、`PageToc`、`MobilePageToc` を持つ。
 - ToCなしLayoutは `SiteMenu` と本文 `main` を持ち、ToCなし用のgrid、余白、`site-main` 相当の制御を自分の中に閉じる。
-- `NoTocPageLayout` は `BaseLayout` の再利用ではなく、ToCなし用Layoutとして独立させる。必要に応じて既存の `BaseLayout` はToCありLayout相当へ整理または改名する。
+- `NoTocPageLayout` はToCありLayoutの再利用ではなく、ToCなし用Layoutとして独立させる。既存の `BaseLayout` は `TocPageLayout` へ改名し、ToCありLayout相当へ整理する。
 - `NoTocPageLayout` は `no-toc-page` 共通ラッパーを持ち、ToCなしページ共通の本文幅と余白をそこで扱う。
 - 各ページは自分の `article` / `div` を自分で持つ。`prose`、`home-page`、`release-notes-page` など本文側classはページ側へ置き、ページ固有styleは通常のscoped CSSで扱う。
 - `contentClass` は廃止し、Layout内部CSSのページ別切り替えAPIとして使わない。
@@ -322,7 +328,9 @@ SEO title生成変更の実装後検証では `npm run check` と `npm run build
 
 - [x] `AppContainer.astro` を作成し、アプリ共通ロジック層を分離した
 - [x] ToCあり本文用LayoutとToCなし本文用Layoutを別Componentとして分離した
-- [x] `BaseLayout` / `NoTocPageLayout` の責務と名前を、分離後の構造に合わせて整理した
+- [x] `BaseLayout.astro` を `TocPageLayout.astro` へ改名した
+- [x] `ContentLayout.astro` を `MDXLayout.astro` へ改名した
+- [x] `TocPageLayout` / `NoTocPageLayout` の責務と名前を、分離後の構造に合わせて整理した
 - [x] `contentClass` を廃止した
 - [x] `NoTocPageLayout` が `no-toc-page` 共通ラッパーを持つ構造にした
 - [x] 各ページが自分の `article` / `div` とページ固有本文classを持つ構造にした

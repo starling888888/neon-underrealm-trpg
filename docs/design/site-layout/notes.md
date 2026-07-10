@@ -6,7 +6,7 @@
 
 ## Target
 
-- page / component: layout一式。`AppContainer.astro`、ToCあり本文用 `BaseLayout.astro`、ToCなし本文用 `NoTocPageLayout.astro`、`ContentLayout.astro`、Header、Footer、SiteMenu、`MobileSiteMenuDrawer.astro`、PageToc、MobilePageToc、現在ページハイライトを含む。
+- page / component: layout一式。`AppContainer.astro`、ToCあり本文用 `TocPageLayout.astro`、ToCなし本文用 `NoTocPageLayout.astro`、MDX本文用 `MDXLayout.astro`、Header、Footer、SiteMenu、`MobileSiteMenuDrawer.astro`、PageToc、MobilePageToc、現在ページハイライトを含む。
 - route:
   - `design-desktop.png`: `/mdx-test/`
   - `design-tablet.png`: `/mdx-test/`
