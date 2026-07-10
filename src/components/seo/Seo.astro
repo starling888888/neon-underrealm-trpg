@@ -5,9 +5,9 @@ import { toAbsoluteUrl } from "../../lib/utils/paths";
 export interface Props extends SeoProps {}
 
 const {
-  title = defaultSeo.title,
+  title: pageTitle,
   description = defaultSeo.description,
-  ogTitle = title,
+  ogTitle,
   ogDescription = description,
   ogType = defaultSeo.ogType,
   ogImage = defaultSeo.image,
@@ -16,6 +16,11 @@ const {
   noindex = false,
 } = Astro.props;
 
+const title =
+  pageTitle === undefined || pageTitle.trim() === ""
+    ? defaultSeo.title
+    : `${pageTitle} | ${defaultSeo.title}`;
+const resolvedOgTitle = ogTitle ?? title;
 const pageUrl = ogUrl ?? Astro.url.toString();
 const site = Astro.site ?? new URL(pageUrl);
 const absolutePageUrl = toAbsoluteUrl(pageUrl, site);
@@ -27,7 +32,7 @@ const absoluteImageUrl = toAbsoluteUrl(ogImage, site);
 {noindex && <meta name="robots" content="noindex" />}
 
 <meta property="og:site_name" content={defaultSeo.siteName} />
-<meta property="og:title" content={ogTitle} />
+<meta property="og:title" content={resolvedOgTitle} />
 <meta property="og:description" content={ogDescription} />
 <meta property="og:type" content={ogType} />
 <meta property="og:url" content={absolutePageUrl} />
@@ -36,6 +41,6 @@ const absoluteImageUrl = toAbsoluteUrl(ogImage, site);
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content={twitterCard} />
-<meta name="twitter:title" content={ogTitle} />
+<meta name="twitter:title" content={resolvedOgTitle} />
 <meta name="twitter:description" content={ogDescription} />
 <meta name="twitter:image" content={absoluteImageUrl} />

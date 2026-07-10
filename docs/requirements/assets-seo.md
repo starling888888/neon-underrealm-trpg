@@ -56,6 +56,28 @@ Markdown標準の画像記法、または画像表示用Componentから画像を
 
 各ページに `title` と `description` を設定できること。
 
+`defaultSeo.title` は、トップページ `/` のブラウザタイトル、共通のサイト名、未指定時のtitle fallbackとして扱う。
+
+`defaultSeo.title` と `defaultSeo.siteName` は、サイト共通のゲームタイトル定数 `gameTitle` を参照する。
+
+SEO ComponentまたはLayoutへページ固有の `title` が渡された場合、ブラウザタブや `<title>` に表示する文字列は以下の形式にする。
+
+```txt
+<page title> | <defaultSeo.title>
+```
+
+例:
+
+```txt
+更新履歴 | 光都暗域〈ネオン・アンダーレルム〉TRPG
+```
+
+ページ固有の `title` が渡されなかった場合は、`defaultSeo.title` をそのまま使う。
+
+トップページ `/` は `defaultSeo.title` をそのまま使うため、`src/pages/index.astro` からLayoutへ `title` を渡さない。
+
+`og:site_name` は `defaultSeo.siteName` を使用する。`defaultSeo.siteName` は原則として `defaultSeo.title` と同じサイト名を使う。
+
 SNS共有時に表示されるOGPメタ情報を設定できること。
 
 最低限、以下を設定する。

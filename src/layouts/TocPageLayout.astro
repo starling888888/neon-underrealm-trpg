@@ -1,0 +1,72 @@
+---
+import MobilePageToc from "../components/layout/MobilePageToc.astro";
+import PageToc from "../components/layout/PageToc.astro";
+import SiteMenu from "../components/layout/SiteMenu.astro";
+---
+
+<MobilePageToc />
+
+<div class="desktop-layout">
+  <aside class="layout-rail layout-rail-left">
+    <SiteMenu />
+  </aside>
+
+  <main class="site-main" data-page-content>
+    <slot />
+  </main>
+
+  <aside class="layout-rail layout-rail-right">
+    <PageToc />
+  </aside>
+</div>
+
+<style>
+  .desktop-layout {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 19.5rem minmax(46rem, 1fr) 19.5rem;
+    min-height: calc(100vh - 9rem);
+  }
+
+  .layout-rail {
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .layout-rail-left {
+    border-right: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-muted);
+  }
+
+  .layout-rail-right {
+    border-left: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .site-main {
+    min-width: 0;
+    width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
+    margin-inline: auto;
+    padding-block: var(--space-12);
+  }
+
+  @media (max-width: 63.999rem) {
+    .desktop-layout {
+      grid-template-columns: 17rem minmax(0, 1fr);
+    }
+
+    .layout-rail-right {
+      display: none;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .desktop-layout {
+      display: block;
+      min-height: 0;
+    }
+
+    .layout-rail {
+      display: none;
+    }
+  }
+</style>

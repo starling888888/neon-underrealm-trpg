@@ -1,0 +1,61 @@
+---
+import AppContainer from "./AppContainer.astro";
+import type { SeoProps } from "../lib/site/seo";
+
+export interface Props extends SeoProps {
+  title?: string;
+  description?: string;
+  showPageToc?: boolean;
+  frontmatter?: SeoProps & {
+    showPageToc?: boolean;
+  };
+}
+
+const {
+  frontmatter,
+  title: propTitle,
+  description: propDescription,
+  ogTitle: propOgTitle,
+  ogDescription: propOgDescription,
+  ogType: propOgType,
+  ogImage: propOgImage,
+  ogUrl: propOgUrl,
+  twitterCard: propTwitterCard,
+  noindex: propNoindex,
+  showPageToc: propShowPageToc,
+} = Astro.props;
+
+const title = propTitle ?? frontmatter?.title;
+const description = propDescription ?? frontmatter?.description;
+const ogTitle = propOgTitle ?? frontmatter?.ogTitle;
+const ogDescription = propOgDescription ?? frontmatter?.ogDescription;
+const ogType = propOgType ?? frontmatter?.ogType;
+const ogImage = propOgImage ?? frontmatter?.ogImage;
+const ogUrl = propOgUrl ?? frontmatter?.ogUrl;
+const twitterCard = propTwitterCard ?? frontmatter?.twitterCard;
+const noindex = propNoindex ?? frontmatter?.noindex;
+const showPageToc = propShowPageToc ?? frontmatter?.showPageToc ?? true;
+---
+
+<AppContainer
+  title={title}
+  description={description}
+  ogTitle={ogTitle}
+  ogDescription={ogDescription}
+  ogType={ogType}
+  ogImage={ogImage}
+  ogUrl={ogUrl}
+  twitterCard={twitterCard}
+  noindex={noindex}
+  showPageToc={showPageToc}
+>
+  <article class="mdx-layout prose">
+    <slot />
+  </article>
+</AppContainer>
+
+<style>
+  .mdx-layout {
+    max-width: var(--content-width);
+  }
+</style>

@@ -95,6 +95,15 @@ source種別は以下を使う。
 - 観測した失敗: design正本化時、既存運用では `tests/visual/*` 等のtestコードで実装スクリーンショットを `test-results/` に出力し、そのactual artifactを材料としてdesign正本へ反映する前提があるにもかかわらず、専用 `.tmp/capture-home-design-canonical.mjs` から直接 `docs/design/home/design-*.png` へ書き出した。さらに `notes.md` とissueに「`test-results/` を直接コピーせず再キャプチャした」と記録し、既存の正本化運用との関係を曖昧にした。
 - 一次対応: ユーザー確認に対し、既存運用は `test-results/` 由来のactual artifactを材料にする理解が妥当であり、今回の直接書き出しは運用ズレとして扱う方針に修正する。
 
+### Visual screenshot bypassed visual test file convention
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `19-2-release-notes-page` のVisual Review screenshot取得
+- 観測した失敗: 画面表示確認では `tests/visual/*` のvisual testファイルを作成または更新し、そのtest実行から `test-results/` へスクリーンショットを出力するべきだった。にもかかわらず、`node -e` の独自Playwrightコマンドを直接実行して `test-results/visual-implementation/*.png` を作成した。これは `18-2-home-page` のdesign正本化時に `.tmp/capture-home-design-canonical.mjs` から直接画像を書き出した手順逸脱に続く、同種の2回目の指摘である。
+- 一次対応: 本ログへ2回目の手順逸脱として記録した。以後、画面表示確認・Visual Reviewのスクリーンショット取得は、既存または新規の `tests/visual/*` を通して実行し、独自の一時Playwright scriptや `node -e` で代替しない。
+
 ### Page description changed without confirmation
 
 #### 2026-07-09

@@ -6,7 +6,7 @@
 
 ## Target
 
-- page / component: layout一式。`BaseLayout.astro` / `ContentLayout.astro`、Header、Footer、SiteMenu、MobileMenu、PageToc、MobilePageToc、現在ページハイライトを含む。
+- page / component: layout一式。`AppContainer.astro`、ToCあり本文用 `TocPageLayout.astro`、ToCなし本文用 `NoTocPageLayout.astro`、MDX本文用 `MDXLayout.astro`、Header、Footer、SiteMenu、`MobileSiteMenuDrawer.astro`、PageToc、MobilePageToc、現在ページハイライトを含む。
 - route:
   - `design-desktop.png`: `/mdx-test/`
   - `design-tablet.png`: `/mdx-test/`
@@ -59,7 +59,7 @@
 - `site-menu` と `page-toc` は役割差を維持する。SiteMenuはサイト内移動、PageToc / MobilePageTocは現在ページ内移動である。
 - `mobile-menu` と `mobile-page-toc` は役割差を維持する。MobileMenuはサイト全体のdrawer、MobilePageTocはH1付近から開く現在ページ内目次である。
 - `current-menu-highlight` の方針に従い、現在ページそのものとancestor表示は見分けられるが、hover / focusやページ内目次の現在位置ハイライトとは混同しない。
-- `/release-notes` と `/404` は未実装routeであり、このdesign targetでは新規作成しない。
+- このdesign targetの正本化時点では `/release-notes` と `/404` は未実装routeだった。現在の `/release-notes` は `docs/design/release-notes/` を正本として扱い、このdesign targetでは横断layout状態の代表routeには含めない。
 - `/data/items/weapons/` は現在地ハイライト目視確認用ダミーMDXページを含む。該当ページの本実装時に置き換える前提は `docs/TODO.md` で追跡する。
 
 ## Out of scope
@@ -72,7 +72,7 @@
 - パンくずリスト
 - ページ末尾の前後ナビゲーション
 - 検索UI、検索結果、Pagefind導入
-- `/release-notes`、`/404` の新規作成
+- `/release-notes`、`/404` の新規作成。このdesign targetでは扱わず、現在の `/release-notes` は `docs/design/release-notes/` を参照する。
 - ルール本文の本格移植
 - Excel変換、JSON変換パイプライン、データカード、一覧フィルタ
 - キャラクターシート、ダイスローラー、戦闘シミュレーター
@@ -89,7 +89,7 @@
 - スクロール後も本文H1とMobilePageToc triggerが上部に残り、目次triggerが画面外へ消えない。
 - 現在ページハイライトはSiteMenu上で識別でき、hover / focus / disclosure open stateと混同されない。
 - `/` では不要なPageToc / MobilePageTocや空のTOC枠が表示されない。
-- 未実装の `/release-notes` / `/404` をこのdesign targetで作成または描き足していない。
+- `/release-notes` / `/404` をこのdesign targetで作成または描き足していない。現在の `/release-notes` の比較は `docs/design/release-notes/` で扱う。
 - design画像はfullPage screenshotを正本として扱うため、コンテンツ全体像と縦方向の破綻有無を確認できる。
 
 ## Generation source
@@ -110,7 +110,7 @@
 - `site-menu` / `mobile-menu` の初期draftでは扱わなかった現在ページハイライトとancestor表示を、`current-menu-highlight` 実装後の完成状態として含む。
 - `mobile-page-toc` のtrigger可視ラベルは現行実装の `目次` に寄せる。
 - `mobile-page-toc` のH1横triggerは、スクロール時にH1とともに上部sticky表示される現行実装に寄せる。
-- `page-toc` の `/release-notes` / `/404` 非表示状態は、未実装routeのためこのdesign targetでは新規画像化しない。
+- `page-toc` の `/release-notes` / `/404` 非表示状態は、このdesign target正本化時点では未実装routeだったため新規画像化していない。現在の `/release-notes` は `docs/design/release-notes/` を参照する。
 - 正本画像はviewport cropではなくfullPage screenshotを含む。コンテンツ全体像と縦方向の破綻確認を優先するためである。
 
 ## Canonicalization rationale
@@ -121,6 +121,6 @@
 
 ## Open questions
 
-- `/release-notes` と `/404` 実装後に、site-layout正本へ非表示状態画像を追加するか。
+- `/404` 実装後に、site-layout正本へ非表示状態画像を追加するか。
 - `/data/items/weapons/` が本実装へ置き換わった後、mobile menu open stateの代表routeを維持するか。
 - fullPageとviewport cropの両方を将来のVisual Reviewで扱う必要があるか。

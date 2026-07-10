@@ -47,7 +47,7 @@
 - `12-1-site-menu-layout-copy` では、drawerヘッダーの可視テキストを `メニュー` にする。drawer内のSiteMenu本体には `SITE MENU` / `サイトメニュー` 相当の可視見出しを置かない。
 - `12-1-site-menu-layout-copy` では、子項目開閉トグルを項目左側ではなく右端へ移動する。親階層と子階層でトグル位置を段階的にずらさず、すべて同じ右端ラインに揃える。階層差はリンク本文の左インデントだけで表現する。子項目を持たない項目の左側には、トグル用の不要なspacerを置かない。
 - `SiteMenu.astro` / `SiteMenuItem.astro` / `siteMenuItems` をPC / mobileで共用する前提を崩さない。スマホ専用の別メニュー定義が必要に見えるデザインにしない。
-- `MobileMenu.astro` の新規作成を前提にしない。drawerの外側wrapperや表示モード追加で成立する見た目にする。
+- `MobileMenu.astro` というスマホ専用メニュー定義Componentの新規作成を前提にしない。現行実装では `MobileSiteMenuDrawer.astro` がdrawer外側を担当し、内部のメニュー項目は既存 `SiteMenu.astro` を再利用する。
 - 3階層表示は読めるが、スマホ幅では過密になりやすいため、drawer幅、インデント、タップ領域、縦スクロール余地を優先する。
 - drawer表示中は背景本文が操作対象ではないことが分かる。背景本文を完全に読ませる必要はないが、検索dialogやページ内目次に見える別パネルは描かない。
 - closed state / open state の2枚で、開閉前後の変化、drawerの位置、背景抑止、閉じる操作、階層メニューの見え方を確認できるようにする。

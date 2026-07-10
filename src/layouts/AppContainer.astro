@@ -1,0 +1,96 @@
+---
+import "../styles/global.css";
+import "../styles/prose.css";
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+import MobileSiteMenuDrawer from "../components/layout/MobileSiteMenuDrawer.astro";
+import Seo from "../components/seo/Seo.astro";
+import type { SeoProps } from "../lib/site/seo";
+import { defaultSeo } from "../lib/site/seo";
+import { withBase } from "../lib/utils/paths";
+import TocPageLayout from "./TocPageLayout.astro";
+import NoTocPageLayout from "./NoTocPageLayout.astro";
+
+export interface Props extends SeoProps {
+  title?: string;
+  description?: string;
+  showPageToc?: boolean;
+}
+
+const {
+  title,
+  description = defaultSeo.description,
+  ogTitle,
+  ogDescription,
+  ogType,
+  ogImage,
+  ogUrl,
+  twitterCard,
+  noindex,
+  showPageToc = false,
+} = Astro.props;
+
+const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
+    <Seo
+      title={title}
+      description={description}
+      ogTitle={ogTitle}
+      ogDescription={ogDescription}
+      ogType={ogType}
+      ogImage={ogImage}
+      ogUrl={ogUrl}
+      twitterCard={twitterCard}
+      noindex={noindex}
+    />
+  </head>
+  <body>
+    <div class="site-shell">
+      <Header />
+
+      <MobileSiteMenuDrawer />
+
+      <PageLayout>
+        <slot />
+      </PageLayout>
+
+      <Footer />
+    </div>
+  </body>
+</html>
+
+<script>
+  import { setupMobileMenu } from "../scripts/mobile-menu";
+
+  setupMobileMenu();
+</script>
+
+<style>
+  .site-shell {
+    width: 100%;
+    min-width: 1120px;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background: var(--color-surface);
+  }
+
+  @media (max-width: 63.999rem) {
+    .site-shell {
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .site-shell {
+      min-width: 0;
+    }
+  }
+</style>

@@ -113,6 +113,6 @@
 ## site-layout正本化後の扱い
 
 - `page-toc` はPC右サイドページ内目次単体の初期draftとして維持する。
-- `16-layout-screenshot-design-refresh` 時点では `/release-notes` と `/404` は未実装routeであり、`site-layout` では新規作成も新規正本画像化もしない。
+- `16-layout-screenshot-design-refresh` 時点では `/release-notes` と `/404` は未実装routeであり、`site-layout` では新規作成も新規正本画像化もしない。現在の `/release-notes` の非表示確認は `docs/design/release-notes/` で扱う。
 - `docs/design/site-layout/design-desktop.png` は、実装済み本文ページ `/mdx-test/` でPC右PageTocが表示される状態を確認する横断正本である。
-- `docs/design/site-layout/` では、非表示確認は実装済みの `/` を対象とする。`/release-notes` と `/404` の非表示確認は、該当ページ実装後に必要に応じて扱う。
+- `docs/design/site-layout/` では、非表示確認は実装済みの `/` を対象とする。現在の `/release-notes` の非表示確認は `docs/design/release-notes/` で扱い、`/404` は該当ページ実装後に必要に応じて扱う。

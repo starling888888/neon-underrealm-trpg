@@ -1,5 +1,7 @@
+export const gameTitle = "光都暗域〈ネオン・アンダーレルム〉TRPG";
+
 export const siteMeta = {
-  title: "ネオン・アンダーレルムTRPG",
+  title: gameTitle,
   titleLogo: {
     webp: "/title_logo.webp",
     png: "/title_logo.png",
