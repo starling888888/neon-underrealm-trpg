@@ -129,6 +129,7 @@ interface Props {
   - `example`: `例`
   - `version`: `変更点`
 - `title` 指定時は既定ラベルの代わりに指定されたタイトルを表示する
+- `version` の具体的な版表記はCallout本文内で扱い、`versionLabel` や `meta` 等の追加propsは初期実装では設けない
 - Callout本文をdefault slotとして受け取る
 - slot内で少なくとも以下を表示できる
   - 段落
@@ -139,6 +140,8 @@ interface Props {
 - slot内の先頭要素と末尾要素に不要な余白を残さない
 - ラベルまたはタイトルを常に視覚表示する
 - 種別ごとに識別可能なアイコン、記号、形状等の種別マーカーを表示する
+- 種別マーカーは既存依存の `simple-icons` を使って表示する
+- 初期アイコン案は `note`: `siNote`、`tip`: `siLighthouse`、`warning`: `siAdguard`、`danger`: `siOpenbugbounty`、`example`: `siBookstack`、`version`: `siGit` とする
 - 装飾目的のアイコンは支援技術へ重複して読み上げられないようにする
 - 色、ラベル、種別マーカーの複数要素で種別を識別できるようにする
 - Callout内のタイトルによってページ見出し階層やPageTocを汚染しない
@@ -239,10 +242,13 @@ interface Props {
 - 任意色を指定するprops
 - 任意アイコンを指定するprops
 - 任意HTML classを外部から注入するAPI
+- `version` 専用の版番号props
+- `meta` 等の汎用補助ラベルprops
 - `size`, `compact`, `outlined` 等の追加variant
 - hover animation
 - 発光表現
 - 大規模なアイコンライブラリの追加
+- `simple-icons` 以外の新規アイコンpackage追加
 - UI frameworkの追加
 - client-side state managementの追加
 - 検索UI
@@ -267,15 +273,15 @@ interface Props {
 
 ### Component design
 
-- [ ] `docs/design/callout/notes.md` が作成されている
-- [ ] `docs/design/callout/design-desktop.png` が作成されている
-- [ ] `docs/design/callout/design-mobile.png` が作成されている
-- [ ] design画像で `note`, `tip`, `warning`, `danger`, `example`, `version` の6種を比較できる
-- [ ] design画像で、色以外のラベルと種別マーカーによる識別方法が確認できる
-- [ ] desktop / mobileそれぞれで本文、ラベル、余白、折り返しが確認できる
-- [ ] `docs/design/global-styles/` の方向性と矛盾していない
-- [ ] design画像に初期スコープ外の機能を描いていない
-- [ ] `notes.md` に実装時の比較観点と未確定事項が記録されている
+- [x] `docs/design/callout/notes.md` が作成されている
+- [x] `docs/design/callout/design-desktop.png` が作成されている
+- [x] `docs/design/callout/design-mobile.png` が作成されている
+- [x] design画像で `note`, `tip`, `warning`, `danger`, `example`, `version` の6種を比較できる
+- [x] design画像で、色以外のラベルと種別マーカーによる識別方法が確認できる
+- [x] desktop / mobileそれぞれで本文、ラベル、余白、折り返しが確認できる
+- [x] `docs/design/global-styles/` の方向性と矛盾していない
+- [x] design画像に初期スコープ外の機能を描いていない
+- [x] `notes.md` に実装時の比較観点と未確定事項が記録されている
 - [ ] initial draftがユーザーにレビューされ、実装に使用してよいdesignとして明示承認されている
 
 ### Component実装
@@ -286,11 +292,13 @@ interface Props {
 - [ ] `title` propを省略できる
 - [ ] `title` 省略時に種別ごとの既定ラベルが表示される
 - [ ] `title` 指定時に指定されたタイトルが表示される
+- [ ] `version` の具体的な版表記を専用propsではなく本文内で扱う方針になっている
 - [ ] default slotに本文を配置できる
 - [ ] slot内の段落、箇条書き、リンク、inline code、`strong` が破綻しない
 - [ ] slot内の先頭・末尾要素に不要な余白が残らない
 - [ ] 6種すべてでラベルまたはタイトルが視覚表示される
 - [ ] 6種すべてで色以外の種別マーカーが表示される
+- [ ] 6種すべてで既存依存の `simple-icons` アイコンが表示される
 - [ ] 種別マーカーが装飾目的の場合、支援技術による重複読み上げを避けている
 - [ ] Calloutのタイトルがページ内目次へ混入しない
 - [ ] 静的Calloutに不適切な `role="alert"` を付与していない
@@ -407,10 +415,12 @@ interface Props {
   - `重大注意`
   - `例`
   - `変更点`
-- `version` の既定ラベルを `変更点` とするか、`バージョン情報` 等へ変更するか
+- `version` の既定ラベルを `変更点` とし、具体的な版表記を本文内に書く方針でよいか
+- `version` 専用propsや `meta` propsを追加しない方針でよいか
 - `title` 指定時に既定ラベルを置き換える方針でよいか
 - Calloutタイトルを見出し要素ではなく、ラベル相当の要素として扱う方針でよいか
-- 種別マーカーをComponent内部のinline SVGまたは単純な記号で実装し、アイコンpackageを追加しない方針でよいか
+- 種別マーカーを既存依存の `simple-icons` で実装する方針でよいか
+- `note`: `siNote`、`tip`: `siLighthouse`、`warning`: `siAdguard`、`danger`: `siOpenbugbounty`、`example`: `siBookstack`、`version`: `siGit` の割り当てでよいか
 - `note`, `tip`, `example`, `version` の違いを、色数を増やしすぎず識別できるdesignになっているか
 - `warning` と `danger` の視覚的な強度差が適切か
 - 既存 `.prose .callout*` スタイルを拡張するか、`Callout.astro` 側へ移管するか
