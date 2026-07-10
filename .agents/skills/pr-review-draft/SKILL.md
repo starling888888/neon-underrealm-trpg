@@ -30,7 +30,7 @@ Use the local `.codex/agents/*.toml` and local skill definitions when spawning r
 
 This skill may write only under `.tmp/review/<branch-name>/` until it invokes `review-to-issue`. Do not update source code, `docs/issue/*.md`, `docs/TODO.md`, `docs/plan.md`, or `docs/agent-failure-log.md` directly.
 
-Do not review the `User-Directed Requirement Changes` section of the PR description.
+Do not review the `User-Directed Changes Outside Current Issue` section of the PR description.
 
 ## Preconditions
 
@@ -41,13 +41,15 @@ Do not review the `User-Directed Requirement Changes` section of the PR descript
 5. Read the local `AGENTS.md`, current issue, relevant skills, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/plan.md`, `docs/TODO.md`, relevant design references, and affected local code when available.
 6. Find the latest `.tmp/review/<branch-name>/pr-review-N.md`.
 
-If no prior `pr-review-N.md` exists, write `pr-review-1.md` with the current PR metadata and head commit as the initial review baseline, then stop. Do not spawn reviewers because there is no post-baseline diff.
+If no prior `pr-review-N.md` exists, review the full remote PR diff from the PR base commit through the current remote head commit. Use this as `pr-review-1.md`.
 
 If the remote PR head equals the latest reviewed head commit, stop. Do not duplicate a review.
 
 ## Review Scope
 
-Review every commit after the latest `pr-review-N.md` reviewed head commit through the current remote PR head commit.
+For `pr-review-1.md`, review every commit from the PR base commit through the current remote PR head commit.
+
+For later review cycles, review every commit after the latest `pr-review-N.md` reviewed head commit through the current remote PR head commit.
 
 The document reviewer checks:
 

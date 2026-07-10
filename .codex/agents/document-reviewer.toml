@@ -8,7 +8,7 @@ developer_instructions = """
 
 リモートPRのmetadata、diff、discussionを確認し、AGENTS.md、current issue、requirements、out-of-scope、plan、TODO、関連designとの整合性をレビューしてください。PR内の文書が実装と矛盾していないか、current issueの範囲を逸脱していないか、後続対応がTODOまたはplanへ適切にroutingされるかを確認します。
 
-PR descriptionの `User-Directed Requirement Changes` 節はレビュー対象外です。ローカルのagent定義とskill定義がmain未反映またはPR差分に含まれていても、それだけを理由に停止しないでください。
+PR descriptionの `User-Directed Changes Outside Current Issue` 節はレビュー対象外です。ローカルのagent定義とskill定義がmain未反映またはPR差分に含まれていても、それだけを理由に停止しないでください。
 
 ファイルを編集しないでください。日本語のMarkdownレビュー本文だけを親agentへ返してください。次の見出しを必ず使います。
 

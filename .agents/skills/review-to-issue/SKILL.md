@@ -80,7 +80,7 @@ When a review comes from `.tmp/review/<branch-name>/`:
 2. Treat the remote PR metadata, diff, and discussion recorded in the manifest as review input, not as local truth.
 3. Treat the reviewer output as `local-pr-review` source.
 4. Validate every finding against local SSoT and current implementation state before routing it.
-5. Do not intake a finding about the PR description's `User-Directed Requirement Changes` section. That section is outside document review scope.
+5. Do not intake a finding about the PR description's `User-Directed Changes Outside Current Issue` section. That section is outside document review scope.
 
 The temporary manifest and reports remain under `.tmp/`. Only validated, necessary information becomes formal tracking.
 

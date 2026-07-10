@@ -27,15 +27,15 @@
   - 2回目のreview完了後は、指摘の有無にかかわらずユーザーレビューモードへ移行する。残る指摘または判断不能事項はユーザーへ明示する。
   - 解消済みのissue reviewer指摘は、レビュー履歴としてissueへ正本化しない。
   - ユーザーレビュー後のissue修正ではreviewerを再起動せず、ユーザーとの対話で改善する。
-- ユーザーの明示指示に従い、既存SSoTの要求または初期スコープ外を変更した場合、変更内容と指示に基づく旨を`.tmp/review/<branch-name>/`配下の専用記録ファイルへ追記するworkflowを追加する。
-  - 変更元のSSoT、変更前後、ユーザー指示、current issueへの反映先を記録する。
-  - 変更元のSSoTとcurrent issueを同じtaskで更新し、相互に矛盾させない。
+- ユーザーの明示指示によりcurrent issue外のGit管理ファイルを変更した場合、変更内容と指示に基づく旨を`.tmp/review/<branch-name>/`配下の専用記録ファイルへ追記するworkflowを追加する。
+  - ユーザー指示、分類、変更対象、変更前後、current issueとの関係、関連commitまたはPRを記録する。
+  - 要求または初期スコープ外SSoTを変更する場合は、変更元SSoTとcurrent issueを同じtaskで更新し、相互に矛盾させない。
   - 一時記録はPR作成時の説明のsourceとする。
-- PR templateと`create-pr`を更新し、前記の専用記録ファイルをsourceとして、ユーザー明示指示による要求・スコープ変更をPR descriptionへ記載する。
+- PR templateと`create-pr`を更新し、前記の専用記録ファイルをsourceとして、ユーザー明示指示によるcurrent issue外変更をPR descriptionへ記載する。
   - このPR description項目はdocument reviewerのレビュー対象外とする。
 - PR作成後と、Codexへ既存PR branchへのpushを指示した後に、local PR review workflowを実行する。
   - ユーザーがCodex外で実行したpushの検知・追従は対象外とする。
-  - PR作成直後は比較対象となる差分がないため、reviewerを起動しない。
+  - PR作成直後は、PR base commitからcurrent head commitまでの全差分をreview対象として、document reviewerとtechnical reviewerを起動する。
   - push後は、前回の`.tmp/review/<branch-name>/pr-review-N.md`に記録したreview対象commitの次から、現在のhead commitまでの全commitをレビュー対象とする。
   - 差分がある場合、document reviewerとtechnical reviewerは`.tmp/review/<branch-name>/document-review-N.md`および`technical-review-N.md`を出力する。
   - 各PR review cycleは`.tmp/review/<branch-name>/pr-review-N.md`に、review対象範囲、review対象head commit、利用したremote PR情報、関連する2つのreview出力を記録する。次回の比較範囲は、このcommit hashを基準にする。
@@ -67,11 +67,11 @@
 - [x] remote snapshot draft modeではreviewerやローカル一時ファイルを作成せず、ユーザーがローカルに置いたdraftのissue-first実行時だけreviewerを起動する。
 - [x] 1回目に指摘がない場合、または2回目のreview完了後にユーザーレビューモードへ移行し、解消済み指摘の恒久的な履歴を要求しない。
 - [x] ユーザーレビュー後はissue reviewerを再実行せず、ユーザーとの対話によるissue更新へ移る。
-- [x] ユーザー明示指示による要求・スコープ変更が、変更元SSoT、current issue、`.tmp/review/<branch-name>/`の専用記録へ必要な粒度で記録される。
-- [x] PR templateと`create-pr`が、専用記録をsourceとする要求・スコープ変更のPR description項目を扱う。
+- [x] ユーザー明示指示によるcurrent issue外変更が、必要なSSoT、current issue、`.tmp/review/<branch-name>/`の専用記録へ必要な粒度で記録される。
+- [x] PR templateと`create-pr`が、専用記録をsourceとするcurrent issue外変更のPR description項目を扱う。
 - [x] document reviewerが、前記PR description項目をレビュー対象外として扱う。
 - [x] Codexへ既存PR branchへのpushを指示した場合だけ、前回の`pr-review-N.md`に記録したcommit以降の全commitを対象としてdocument reviewerとtechnical reviewerを起動する。
-- [x] PR作成直後は差分レビューを実行せず、Codex外でのpushを検知・レビューしないことが明記されている。
+- [x] PR作成直後はPR base commitからcurrent head commitまでをレビューし、Codex外でのpushを検知・レビューしないことが明記されている。
 - [x] `pr-review-N.md`が各PR review cycleのcommit基準とremote PR情報を保持し、同一commit範囲を重複レビューしない。
 - [x] リモートPRをレビュー対象にし、ローカルのagent・skill定義が`main`未反映またはレビュー対象でも停止しない。
 - [x] local reviewerの検証済み指摘が`review-to-issue`を通じてissueへ正本化され、取り込み後にユーザー確認待ちで停止する。
@@ -86,7 +86,7 @@
 - [x] remote snapshot draftをローカル検証済み事実として扱わない。
 - [x] reviewerの起動が、既存の明示承認、commit、push、PR作成、mergeの安全制約を緩めていない。
 - [x] reviewerが判断できない指摘を、自動で要求変更やscope拡大として扱わない。
-- [x] ユーザー明示指示による既存要求変更で、変更元SSoT、current issue、PR description用一時記録が矛盾していない。
+- [x] ユーザー明示指示によるcurrent issue外変更で、必要なSSoT、current issue、PR description用一時記録が矛盾していない。
 - [x] `.tmp/review/<branch-name>/`の一時出力と、issue・TODO・plan・failure logの正本を混同していない。
 - [x] 差分reviewの比較基準が前回の`pr-review-N.md`のcommit hashであり、同一commit範囲を重複レビューしない。
 - [x] 既存ルート、GitHub Pagesのサブパス公開、サイトbuildに影響する実装を追加していない。
@@ -117,7 +117,7 @@
 - issue reviewer、document reviewer、technical reviewerの責務分割が明確で、同じ指摘を不必要に重複しないか。
 - reviewer出力が日本語で、ユーザーがレビュー根拠と判定を確認できる粒度か。
 - issue準備段階の最大2回の自己修正loop、remote draftをローカルに置いた後だけreviewする境界、ユーザーレビュー後に再レビューしない停止条件が明確か。
-- 要求・スコープ変更の記録について、変更元SSoTとcurrent issueを正本とし、一時記録をPR description作成用に限定できているか。
+- current issue外変更の記録について、必要なSSoTとcurrent issueを正本とし、一時記録をPR description作成用に限定できているか。
 - Codexへ指示したpushだけを契機に、前回の`pr-review-N.md`のcommit hash以降を累積レビューする基準が明確か。
 - remote PRを対象に、ローカルのagent・skill定義を用いることが実用上十分か。
 - `review-to-issue`へ渡すのが検証済みの必要情報だけになっているか。

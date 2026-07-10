@@ -33,7 +33,7 @@
 - 開発タスクは専用branchで行う。branch名は原則 `NN-slug` または `NN-M-slug` とする。承認済みissueが別名を明示する場合はそれに従う。
 - 実装範囲は現在の `docs/issue/*.md` に従う。範囲外作業は勝手に混ぜない。
 - ユーザーが「検討して」「確認して」「妥当性を見て」「どうかな」「レビューして」など、判断や意見を求めている場合は実装承認ではない。判断、選択肢、推奨方針を返して停止し、実装、生成、ファイル編集は「修正開始」「実装して」「反映して」などの明示指示を待つ。
-- ユーザーの明示指示で既存SSoTの要求または初期スコープ外を変更する場合は、変更元SSoT、current issue、`.tmp/review/<branch-name>/user-directed-requirement-changes.md` を同じtaskで更新する。
+- ユーザーの明示指示によりcurrent issue外のGit管理ファイルを変更する場合は、`.tmp/review/<branch-name>/user-directed-changes.md` に指示、分類、変更対象、変更前後、issueとの関係、関連commitまたはPRを記録する。要求または初期スコープ外SSoTを変更する場合は、変更元SSoTとcurrent issueも同じtaskで更新する。通常のcurrent issue内作業とGit操作は記録しない。
 - 実装中は、完了条件・チェックポイントを実際にローカル確認した時点で現在のissueへチェックを入れる。未確認項目や人間確認が必要な項目は未チェックのまま残す。
 - `docs/plan.md` のチェックボックスは、人間レビュー後のユーザー指示なしに完了扱いしない。
 - UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign参照を確認する。必要なdesign画像がない場合は `design-image-generation` に切り出す。

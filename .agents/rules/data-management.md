@@ -82,7 +82,7 @@ Use this branch-scoped structure for reviewer output:
 .tmp/review/<branch-name>/
 ├── issue-review-1.md
 ├── issue-review-2.md
-├── user-directed-requirement-changes.md
+├── user-directed-changes.md
 ├── pr-review-N.md
 ├── document-review-N.md
 └── technical-review-N.md
@@ -92,7 +92,16 @@ Use this branch-scoped structure for reviewer output:
 
 `pr-review-N.md` records the reviewed commit range, reviewed head commit, remote PR information, and associated reviewer outputs. The next PR review starts after its reviewed head commit.
 
-When a user explicitly changes an existing requirement or initial scope boundary, record the source SSoT, before/after values, user instruction, and issue reference in `user-directed-requirement-changes.md`. Update the source SSoT and current issue in the same task.
+When a user explicitly directs a Git-managed change outside the current issue, record the user instruction, classification, target paths, before/after values, issue relationship, and related commit or PR in `user-directed-changes.md`.
+
+Use these classifications:
+
+- requirement change
+- initial scope change
+- out-of-issue tracking work
+- other user-directed change
+
+When the change modifies an existing requirement or initial scope SSoT, also update that SSoT and the current issue in the same task. Do not record ordinary current-issue work or Git operations.
 
 After merge, `post-merge-plan-update` removes only `.tmp/review/<merged-branch>/` after confirming that required information was formalized. Do not remove other `.tmp/` files.
 

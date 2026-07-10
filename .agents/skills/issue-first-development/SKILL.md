@@ -413,13 +413,14 @@ Do not copy resolved issue-review findings into the issue as historical review s
 
 After the user starts reviewing the issue, do not rerun `issue_reviewer`. Update the issue through the user conversation instead.
 
-### User-directed requirement changes
+### User-directed changes outside the current issue
 
-When a user explicitly changes an existing requirement or initial scope boundary during issue preparation or user review:
+When a user explicitly directs a Git-managed change outside the current issue during issue preparation or user review:
 
-1. Update the source SSoT and current issue in the same task.
-2. Append the source path, before/after values, user instruction, and issue reference to `.tmp/review/<branch-name>/user-directed-requirement-changes.md`.
-3. Do not use the temporary record as the source of truth. It is the later PR description source only.
+1. Append the user instruction, classification, target paths, before/after values, issue relationship, and related commit or PR to `.tmp/review/<branch-name>/user-directed-changes.md`.
+2. When the change modifies an existing requirement or initial scope SSoT, update that SSoT and current issue in the same task.
+3. Do not record ordinary current-issue work or Git operations.
+4. Do not use the temporary record as the source of truth. It is the later PR description source only.
 
 Do not run this workflow in remote snapshot draft mode. The user may place a remote draft in the local repository and start this skill again; then use local repository mode.
 

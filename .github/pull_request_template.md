@@ -6,7 +6,7 @@
 
 -
 
-## User-Directed Requirement Changes
+## User-Directed Changes Outside Current Issue
 
 - None.
 
