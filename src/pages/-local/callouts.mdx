@@ -1,0 +1,51 @@
+---
+layout: ../../layouts/MDXLayout.astro
+title: Callout一覧確認
+description: Callout Componentの6種表示を確認するためのローカル確認ページです。
+noindex: true
+showPageToc: true
+---
+
+import Callout from "../../components/_common/Callout.astro";
+import InternalLink from "../../components/_common/InternalLink.astro";
+
+# Callout一覧確認
+
+## 既定ラベル
+
+<Callout type="note">
+本文の理解を助ける短い補足を置きます。通常本文より少しだけ面を分けます。
+
+- 箇条書きも配置できます。
+- `inline code` や **強調** も確認します。
+</Callout>
+
+<Callout type="tip">
+運用上のヒントを示します。青緑は控えめに使い、操作UIには見せません。
+</Callout>
+
+<Callout type="warning">
+読み落とすと処理を誤りやすい内容を示します。暖色で一段強くします。
+</Callout>
+
+<Callout type="danger">
+重大な誤解を防ぐ内容を示します。静的本文なので `role="alert"` は使いません。
+</Callout>
+
+<Callout type="example">
+処理例や記述例を示します。TRPG本文では例示の重要度を少し高めに扱います。
+</Callout>
+
+<Callout type="version">
+更新差分や注記を示します。V1.5 などの具体的な版表記は本文内の文章として扱います。
+</Callout>
+
+## タイトル指定
+
+<Callout type="warning" title="コンボ中の注意">
+`title` を指定した場合は既定ラベルの代わりに指定タイトルを表示します。
+</Callout>
+
+<Callout type="example" title="処理例">
+リンクは <InternalLink href="/">トップページ</InternalLink> のように本文中へ配置できます。
+</Callout>

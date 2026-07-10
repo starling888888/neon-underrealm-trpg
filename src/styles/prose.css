@@ -179,39 +179,6 @@
   font-weight: 700;
 }
 
-.prose .callout,
-.prose .callout-note,
-.prose .callout-warning,
-.prose .callout-danger {
-  margin-block: var(--space-6);
-  border: var(--border-width) solid
-    color-mix(in srgb, var(--color-prose-accent) 30%, var(--color-border));
-  border-left: 0.25rem solid var(--color-prose-accent);
-  border-radius: var(--radius-md);
-  background: var(--color-prose-accent-soft);
-  padding: var(--space-5);
-}
-
-.prose .callout-warning {
-  border-color: color-mix(
-    in srgb,
-    var(--color-warning) 45%,
-    var(--color-border)
-  );
-  border-left-color: var(--color-warning);
-  background: var(--color-warning-soft);
-}
-
-.prose .callout-danger {
-  border-color: color-mix(
-    in srgb,
-    var(--color-danger) 45%,
-    var(--color-border)
-  );
-  border-left-color: var(--color-danger);
-  background: var(--color-danger-soft);
-}
-
 @media (max-width: 640px) {
   .prose h1 {
     font-size: var(--text-2xl);
@@ -227,11 +194,7 @@
   }
 
   .prose blockquote,
-  .prose pre,
-  .prose .callout,
-  .prose .callout-note,
-  .prose .callout-warning,
-  .prose .callout-danger {
+  .prose pre {
     padding: var(--space-4);
   }
 }

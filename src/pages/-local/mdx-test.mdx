@@ -1,12 +1,13 @@
 ---
-layout: ../layouts/MDXLayout.astro
+layout: ../../layouts/MDXLayout.astro
 title: MDX表示確認
 description: Markdown本文として見出しや段落を書けることを確認するための最小ページです。
 ---
 
-import InternalLink from "../components/_common/InternalLink.astro";
-import ImageBlock from "../components/_common/ImageBlock.astro";
-import MdxExample from "../components/_common/MdxExample.astro";
+import InternalLink from "../../components/_common/InternalLink.astro";
+import Callout from "../../components/_common/Callout.astro";
+import ImageBlock from "../../components/_common/ImageBlock.astro";
+import MdxExample from "../../components/_common/MdxExample.astro";
 
 # MDX表示確認
 
@@ -43,6 +44,10 @@ const total = roll + ability + skill;
 | 補足 | 長文の読みやすさを確認します。 | 密度確認用 |
 
 <MdxExample label="Astro ComponentをMDX内から表示しています。" />
+
+<Callout type="note">
+CalloutをMDX本文内から表示しています。詳しい一覧確認はローカル確認ページで行います。
+</Callout>
 
 <ImageBlock
   src="/top_logo.webp"

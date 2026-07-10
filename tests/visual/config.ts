@@ -16,7 +16,8 @@ export const visualBaseUrl = `${visualBaseHost}:${visualBasePort}${normalizedVis
 export const visualRoutes = {
   home: "./",
   releaseNotes: "release-notes/",
-  mdxTest: "mdx-test/",
+  mdxTest: "-local/mdx-test/",
+  callouts: "-local/callouts/",
   dataItemsWeapons: "data/items/weapons/",
 } as const;
 
