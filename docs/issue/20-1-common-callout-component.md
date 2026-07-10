@@ -542,6 +542,44 @@ interface Props {
 - Callout種別マーカーは新規npm packageを追加せず、`i`, `?`, `!`, `!!`, `#`, `v` の記号マーカーで実装した。`simple-icons` はFooterの外部リンクアイコンでは引き続き使うが、Callout用途からは外した。
 - 汎用アイコンライブラリ案は、今回の静的Calloutでは記号マーカーで要件を満たせるため採用しない。新規依存を追加しない方が初期スコープと保守性に合う。
 
+## レビュー指摘 2
+
+### 指摘事項
+
+- `docs/design/callout/notes.md` が、旧 `simple-icons` マーカー案と `example` の破線borderを実装比較基準として残している。
+- `Callout.astro` とissue本文は記号マーカー方針へ更新済みのため、design target単体を参照した後続作業者が旧design方針を現行基準と誤読するリスクがある。
+- design画像自体を現行実装へ正本化するかどうかは、別途 `design-image-generation` design fix modeの明示承認が必要である。
+
+### 判定
+
+- source: pr-review-draft
+- classification: valid
+- local validation:
+  - review sourceは `.tmp/pr-31-review-draft.md` のremote PR review draftであり、ローカル検証が必要な入力として扱った。
+  - `docs/design/callout/notes.md` は `simple-icons` 利用、`example` の破線border、実装比較観点としての `simple-icons` 由来マーカーを残している。
+  - `src/components/_common/Callout.astro` は `i`, `?`, `!`, `!!`, `#`, `v` の記号マーカーを使っている。
+  - `docs/issue/20-1-common-callout-component.md` は、`simple-icons` をCallout用途から外し、記号マーカーへ変更した判断を記録している。
+  - `docs/design/callout/design-desktop.png` と `docs/design/callout/design-mobile.png` はinitial draft画像だったが、ユーザー承認に基づきdesign fix modeで現行実装へ正本化する。
+
+### 対応方針
+
+- ユーザー承認に基づき、`design-image-generation` design fix modeとして、現行実装を `docs/design/callout/` の新しいdesign正本へ反映する。
+- `docs/design/callout/notes.md` に、initial draftの `simple-icons` / 破線border案は実装レビューで置き換え済みであることを追記する。
+- `docs/design/callout/notes.md` の実装比較観点から、`simple-icons` 必須に読める表現を外し、現行の記号マーカー方針を優先するよう更新する。
+- `docs/design/callout/design-desktop.png` と `docs/design/callout/design-mobile.png` を、現行実装の `/-local/callouts/` desktop / mobile表示へ更新する。
+- 通常の実装修正ではなくdesign notes整理のため、UI実装・source code変更は行わない。
+
+### 対応完了チェックリスト
+
+- [x] `docs/design/callout/notes.md` が旧 `simple-icons` / 破線border案を現行実装基準として読ませない記述になっている
+- [x] `docs/design/callout/notes.md` が現行の記号マーカー方針を参照できる
+- [x] `docs/design/callout/design-desktop.png` を現行実装のdesktop表示へ正本化している
+- [x] `docs/design/callout/design-mobile.png` を現行実装のmobile表示へ正本化している
+- [x] source codeを変更していない
+- [x] `npm run format:md` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## レビュー観点
 
 人間レビュー時に確認してほしい観点。

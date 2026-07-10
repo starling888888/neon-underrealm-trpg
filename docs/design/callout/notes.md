@@ -2,19 +2,20 @@
 
 ## Mode
 
-- initial draft
+- design fix
 
 ## Target
 
 - page / component: `src/components/_common/Callout.astro`
-- route: Component単体design。実装後の確認 route は `/mdx-test/` を想定する。
+- route: `/-local/callouts/`
 - viewport:
-  - desktop: `1440x1200`
-  - mobile: `390x900`
+  - desktop: `1440x1200` viewport, full-page capture
+  - mobile: `390x900` viewport, full-page capture
 - states:
   - static default state
   - `note`, `tip`, `warning`, `danger`, `example`, `version` の6種
-  - title省略時の既定ラベル表示を主対象にする
+  - title省略時の既定ラベル表示
+  - `title` 指定時の表示
 
 ## Referenced SSoT
 
@@ -31,14 +32,24 @@
 - `docs/design/site-layout/notes.md`
 - `src/styles/tokens.css`
 - `src/styles/prose.css`
+- `src/components/_common/Callout.astro`
+- `src/pages/-local/callouts.mdx`
+- `tests/visual/callout.spec.ts`
+
+## Canonicalization Note
+
+- このdesignは、initial draftの `simple-icons` / 破線border案を、実装レビュー後の現行実装に合わせて正本化したもの。
+- 旧initial draft画像では `simple-icons` 由来のマーカーと `example` の破線borderを使っていたが、現在の正本では新規依存を追加しない記号マーカーを採用する。
+- 現行マーカーは `note`: `i`、`tip`: `?`、`warning`: `!`、`danger`: `!!`、`example`: `#`、`version`: `v` とする。
+- `example` は破線borderではなく、青灰色系の背景、実線border、左線、ラベル、記号マーカーで識別する。
 
 ## Design Direction
 
 - visual direction: 白寄り本文面、低彩度border、控えめな左線、ラベル、種別マーカーを組み合わせた本文内Calloutにする。通常本文より識別しやすいが、ページ全体の視線を奪いすぎない。
 - layout direction: 本文カラム内で幅いっぱいに置かれる静的な情報枠にする。desktop / mobileとも縦積みを基本にし、6種を同じ条件で比較できるようにする。
 - typography direction: system font、letter-spacing 0、本文より少し強いラベル、読みやすい本文行間を維持する。Calloutタイトルは見出し階層ではなくラベル相当として扱う。
-- color / accent usage: `note` と `version` はneutral / prose accent系、`example` は淡い青灰色の背景と破線border、`tip` は青緑accent系、`warning` はwarning、`danger` はdangerを使う。TRPGルール本文では例示の重要度が高いため、`example` は `version` より視認しやすくする。6種すべてを強い別色へ分けず、ラベルと種別マーカーで意味差を補う。
-- icon usage: 既存依存の `simple-icons` を使い、6種すべての種別マーカーを実装時に表示できるアイコンにする。初期案は `note` = `siNote`、`tip` = `siLighthouse`、`warning` = `siAdguard`、`danger` = `siOpenbugbounty`、`example` = `siBookstack`、`version` = `siGit` とする。
+- color / accent usage: `note` と `version` はneutral / prose accent系、`example` は淡い青灰色の背景と実線border、`tip` は青緑accent系、`warning` はwarning、`danger` はdangerを使う。TRPGルール本文では例示の重要度が高いため、`example` は `version` より視認しやすくする。6種すべてを強い別色へ分けず、ラベルと種別マーカーで意味差を補う。
+- marker usage: 新規アイコンpackageを追加せず、6種すべての種別マーカーを短い記号で表示する。マーカーは装飾要素として扱い、支援技術で重複して読ませない。
 
 ## Existing Design Constraints
 
@@ -47,8 +58,8 @@
 - warning / danger以外に暖色を強く使わない。
 - 過剰な発光、グラデーション、ぼかし、大面積のネオン表現は使わない。
 - `src/styles/prose.css` の暫定 `.callout*` は実装時に整理対象とし、designでは6種すべてをComponentとして扱う。
-- 本文カラム外のHeader、SiteMenu、PageToc、FooterはこのComponent単体designでは描かない。
-- Calloutの種別は色だけでなく、ラベル、左線、`simple-icons` 由来の種別マーカーで判別できるようにする。
+- full-page captureでは、既存SiteLayoutのHeader、SiteMenu、PageToc、Footerを含むが、評価対象は本文カラム内のCallout表示とする。
+- Calloutの種別は色だけでなく、ラベル、左線、記号マーカーで判別できるようにする。
 - 画像内の本文は見た目確認用の短い代表文であり、正式なゲームルール本文ではない。
 
 ## Out Of Scope
@@ -68,7 +79,7 @@
 ## Comparison Points For Implementation
 
 - 6種すべてに視覚表示されるラベルまたはタイトルがある。
-- 6種すべてに `simple-icons` 由来の色以外の種別マーカーがある。
+- 6種すべてに色以外の記号マーカーがある。
 - `warning` と `danger` は強度差が分かるが、`danger` が過剰に画面を支配しない。
 - `example` は本文理解を助ける重要な例示として、`version` より視認しやすい。
 - `note`, `tip`, `example`, `version` は色数を増やしすぎず、ラベルとマーカーで識別できる。
@@ -82,15 +93,14 @@
 
 ## Generation Source
 
-- generator or capture source: `simple-icons` のSVG pathを含む手製SVGを、Playwright / ChromiumでPNGへレンダリングしたinitial draft。`simple-icons` は既存依存を利用し、このdesign作成で新規npm packageは追加していない。
-- source branch / commit when applicable: `20-1-common-callout-component`
-- route when applicable: Component単体design。実装後の確認 route は `/mdx-test/` を想定する。
+- generator or capture source: `tests/visual/callout.spec.ts` のPlaywright captureを確認し、ユーザー承認済みのdesign fix modeで現行実装を正本化した。
+- source branch / commit when applicable: `20-1-common-callout-component` / `51f58d4`
+- route when applicable: `/-local/callouts/`
 - viewport:
-  - `design-desktop.png`: `1440x1200`
-  - `design-mobile.png`: `390x900`
-- prompt summary or capture notes: 6種のCalloutを同じ本文カラム条件で比較する。global stylesの白寄り背景、低彩度border、neutral / teal / warning / danger token方向を守り、色だけに依存しないラベルと `simple-icons` 由来の種別マーカーを配置した。元SVGは `.tmp/callout-design/` に作成した一時生成元であり、design正本ではない。
+  - `design-desktop.png`: `1440x1200` viewport, full-page capture
+  - `design-mobile.png`: `390x900` viewport, full-page capture
+- prompt summary or capture notes: 6種のCalloutとtitle指定例を実ページの本文カラム条件で比較する。global stylesの白寄り背景、低彩度border、neutral / teal / warning / danger token方向を守り、色だけに依存しないラベルと記号マーカーを配置した。
 
 ## Open Questions
 
-- `simple-icons` はブランドアイコン集であるため、各Callout種別への割り当てが意味的に不自然でないか。
 - `title` 指定時に既定ラベルを完全に置き換えるか、種別ラベルとtitleを併記するか。
