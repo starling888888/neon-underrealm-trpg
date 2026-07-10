@@ -21,7 +21,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/20-1-common-callout-component.md`
+- `docs/issue/done/phase-3/20-1-common-callout-component.md`
 - `docs/requirements.md`
 - `docs/requirements/components.md`
 - `docs/requirements/non-functional.md`
