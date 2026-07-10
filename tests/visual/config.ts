@@ -17,6 +17,7 @@ export const visualRoutes = {
   home: "./",
   releaseNotes: "release-notes/",
   mdxTest: "mdx-test/",
+  callouts: "local/callouts/",
   dataItemsWeapons: "data/items/weapons/",
 } as const;
 

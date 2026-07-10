@@ -12,6 +12,7 @@
     "check": "astro check && biome check . && npm run check:md",
     "check:astro": "astro check",
     "check:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint check && markdownlint-cli2",
+    "build:public": "npm run build && node --import tsx scripts/remove-private-routes/main.ts",
     "lint": "biome lint .",
     "format": "biome format --write . && npm run format:md",
     "format:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint fmt && markdownlint-cli2 --fix",

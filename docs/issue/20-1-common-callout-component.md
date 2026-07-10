@@ -176,6 +176,7 @@ interface Props {
 以下を扱う。
 
 - `src/pages/mdx-test.mdx` での利用確認
+- `src/pages/local/callouts.mdx` で、目視確認とdesign正本作成に使うCallout一覧確認ページを作成する
 - 6種すべてのCalloutを表示する
 - `title` 省略時の既定ラベルを確認する
 - `title` 指定時の表示を確認する
@@ -184,6 +185,19 @@ interface Props {
 - mobile幅での表示確認
 - Componentが本文幅を超えてページ全体の横スクロールを発生させないことの確認
 - Markdown由来の本文を最終的なMDXページへ配置する現在の運用を妨げないことの確認
+
+### 公開buildからのローカル確認ページ除外
+
+以下を扱う。
+
+- GitHub Pages deploy用に、ローカル確認ページを `dist/` から削除する公開buildコマンドを追加する
+- `npm run build` はローカル確認ページを含む通常buildとして維持する
+- `npm run build:public` を追加し、`npm run build` 後に公開しないrouteを `dist/` から削除する
+- GitHub Actions deployでは `npm run build:public` を使う
+- 初期除外対象は以下とする
+  - `dist/local/`
+  - `dist/mdx-test/`
+- 除外処理は `src/pages` のソースを削除・移動せず、build成果物だけを削除する
 
 ### READMEへの記載サンプル追加
 
@@ -282,87 +296,95 @@ interface Props {
 - [x] `docs/design/global-styles/` の方向性と矛盾していない
 - [x] design画像に初期スコープ外の機能を描いていない
 - [x] `notes.md` に実装時の比較観点と未確定事項が記録されている
-- [ ] initial draftがユーザーにレビューされ、実装に使用してよいdesignとして明示承認されている
+- [x] initial draftがユーザーにレビューされ、実装に使用してよいdesignとして明示承認されている
 
 ### Component実装
 
-- [ ] `src/components/_common/Callout.astro` が作成されている
-- [ ] `type` propが6種のTypeScript unionとして定義されている
-- [ ] 未定義のCallout種別をTypeScript上で指定できない
-- [ ] `title` propを省略できる
-- [ ] `title` 省略時に種別ごとの既定ラベルが表示される
-- [ ] `title` 指定時に指定されたタイトルが表示される
-- [ ] `version` の具体的な版表記を専用propsではなく本文内で扱う方針になっている
-- [ ] default slotに本文を配置できる
-- [ ] slot内の段落、箇条書き、リンク、inline code、`strong` が破綻しない
-- [ ] slot内の先頭・末尾要素に不要な余白が残らない
-- [ ] 6種すべてでラベルまたはタイトルが視覚表示される
-- [ ] 6種すべてで色以外の種別マーカーが表示される
-- [ ] 6種すべてで既存依存の `simple-icons` アイコンが表示される
-- [ ] 種別マーカーが装飾目的の場合、支援技術による重複読み上げを避けている
-- [ ] Calloutのタイトルがページ内目次へ混入しない
-- [ ] 静的Calloutに不適切な `role="alert"` を付与していない
-- [ ] client-side JavaScriptやhydrationを使用していない
-- [ ] PC / mobile幅でComponent表示が破綻しない
-- [ ] Componentがページ全体の横スクロールを発生させない
-- [ ] 特定ページ専用ではなく後続ページでも再利用できるAPIになっている
-- [ ] 新規npm packageを追加していない
+- [x] `src/components/_common/Callout.astro` が作成されている
+- [x] `type` propが6種のTypeScript unionとして定義されている
+- [x] 未定義のCallout種別をTypeScript上で指定できない
+- [x] `title` propを省略できる
+- [x] `title` 省略時に種別ごとの既定ラベルが表示される
+- [x] `title` 指定時に指定されたタイトルが表示される
+- [x] `version` の具体的な版表記を専用propsではなく本文内で扱う方針になっている
+- [x] default slotに本文を配置できる
+- [x] slot内の段落、箇条書き、リンク、inline code、`strong` が破綻しない
+- [x] slot内の先頭・末尾要素に不要な余白が残らない
+- [x] 6種すべてでラベルまたはタイトルが視覚表示される
+- [x] 6種すべてで色以外の種別マーカーが表示される
+- [x] 6種すべてで既存依存の `simple-icons` アイコンが表示される
+- [x] 種別マーカーが装飾目的の場合、支援技術による重複読み上げを避けている
+- [x] Calloutのタイトルがページ内目次へ混入しない
+- [x] 静的Calloutに不適切な `role="alert"` を付与していない
+- [x] client-side JavaScriptやhydrationを使用していない
+- [x] PC / mobile幅でComponent表示が破綻しない
+- [x] Componentがページ全体の横スクロールを発生させない
+- [x] 特定ページ専用ではなく後続ページでも再利用できるAPIになっている
+- [x] 新規npm packageを追加していない
+
+### 公開build除外
+
+- [x] `npm run build` ではローカル確認ページを含むbuildができる
+- [x] `npm run build:public` では `dist/local/` と `dist/mdx-test/` が削除される
+- [x] GitHub Actions deployが `npm run build:public` を使っている
+- [x] 削除対象routeがソースファイルではなく `dist/` に限定されている
 
 ### 既存スタイルとの統合
 
-- [ ] `src/styles/prose.css` の既存 `.callout*` スタイルの扱いが明確になっている
-- [ ] 既存スタイルを再利用・拡張する場合は6種すべてへ対応している
-- [ ] Component側へ移管する場合は不要な暫定スタイルを削除している
-- [ ] Component scoped styleとglobal styleが競合していない
-- [ ] 既存CSS tokensを優先利用している
-- [ ] 新規tokenを追加した場合は、用途と追加理由が明確である
-- [ ] `warning` と `danger` の強度差が視覚的に分かる
-- [ ] `note`, `tip`, `example`, `version` を色だけで区別していない
-- [ ] 既存の白寄り背景、低彩度、実務的な情報密度を維持している
+- [x] `src/styles/prose.css` の既存 `.callout*` スタイルの扱いが明確になっている
+- [x] 既存スタイルを再利用・拡張する場合は6種すべてへ対応している
+- [x] Component側へ移管する場合は不要な暫定スタイルを削除している
+- [x] Component scoped styleとglobal styleが競合していない
+- [x] 既存CSS tokensを優先利用している
+- [x] 新規tokenを追加した場合は、用途と追加理由が明確である
+- [x] `warning` と `danger` の強度差が視覚的に分かる
+- [x] `note`, `tip`, `example`, `version` を色だけで区別していない
+- [x] 既存の白寄り背景、低彩度、実務的な情報密度を維持している
 
 ### 利用・表示確認
 
-- [ ] `src/pages/mdx-test.mdx` または同等の確認ページで6種すべてを確認できる
-- [ ] MDX本文からimportして利用できる
-- [ ] `title` 省略時と指定時の両方を確認している
-- [ ] 段落以外のslot内容も確認している
-- [ ] `README.md` にcontents指示書でのCallout記載サンプルが追加されている
-- [ ] READMEのサンプルが `.raw/contents/*.md` 実ファイルの作成・編集を要求していない
-- [ ] desktop表示を確認している
-- [ ] mobile表示を確認している
-- [ ] 実装結果を `docs/design/callout/` のdesignと比較している
-- [ ] designとの差分がある場合は、その理由と扱いが記録されている
-- [ ] Playwright actual screenshotを `docs/design/` へ直接コピーしていない
-- [ ] 関連TODOをこのIssueへ取り込まない判断が記録されている
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
-- [ ] 対象を絞った `npm run visual:capture` が通る
+- [x] `src/pages/local/callouts.mdx` で6種すべてを確認できる
+- [x] `src/pages/mdx-test.mdx` または同等の確認ページでMDX本文からの利用を確認できる
+- [x] MDX本文からimportして利用できる
+- [x] `title` 省略時と指定時の両方を確認している
+- [x] 段落以外のslot内容も確認している
+- [x] `README.md` にcontents指示書でのCallout記載サンプルが追加されている
+- [x] READMEのサンプルが `.raw/contents/*.md` 実ファイルの作成・編集を要求していない
+- [x] desktop表示を確認している
+- [x] mobile表示を確認している
+- [x] 実装結果を `docs/design/callout/` のdesignと比較している
+- [x] designとの差分がある場合は、その理由と扱いが記録されている
+- [x] Playwright actual screenshotを `docs/design/` へ直接コピーしていない
+- [x] 関連TODOをこのIssueへ取り込まない判断が記録されている
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] 対象を絞った `npm run visual:capture` が通る
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない
-- [ ] GitHub Pagesのサブパス公開に影響しない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-- [ ] 関連する `docs/design/` と矛盾していない
-- [ ] `docs/design/callout/` のinitial draftが実装前に承認されている
-- [ ] 6種の違いを、6種類の強いアクセントカラーだけで表現していない
-- [ ] warning / danger以外へ暖色を過剰使用していない
-- [ ] 青緑accentを本文装飾へ過剰使用していない
-- [ ] Calloutを通常本文より目立たせすぎていない
-- [ ] `danger` がページ全体の視線を常に奪うほど過剰な表現になっていない
-- [ ] `version` が `note` や `tip` と識別できる
-- [ ] Calloutタイトルがページの見出し階層を壊していない
-- [ ] CalloutタイトルがPageTocへ追加されていない
-- [ ] screen reader向けの情報が、色や装飾アイコンだけに依存していない
-- [ ] static contentへ不必要なalert semanticsを付けていない
-- [ ] slot内のMarkdown要素へComponent外の想定外スタイルを広げていない
-- [ ] `src/styles/prose.css` に使用されない暫定Callout CSSを残していない
-- [ ] 特定ページの都合を共通Componentへ持ち込んでいない
-- [ ] `/mdx-test` の変更がComponent確認に必要な範囲に留まっている
-- [ ] Visual Review actual screenshotをGit管理していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] 既存ルートが壊れていない
+- [x] GitHub Pagesのサブパス公開に影響しない
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] 関連する `docs/design/` と矛盾していない
+- [x] `docs/design/callout/` のinitial draftが実装前に承認されている
+- [x] 6種の違いを、6種類の強いアクセントカラーだけで表現していない
+- [x] warning / danger以外へ暖色を過剰使用していない
+- [x] 青緑accentを本文装飾へ過剰使用していない
+- [x] Calloutを通常本文より目立たせすぎていない
+- [x] `danger` がページ全体の視線を常に奪うほど過剰な表現になっていない
+- [x] `version` が `note` や `tip` と識別できる
+- [x] Calloutタイトルがページの見出し階層を壊していない
+- [x] CalloutタイトルがPageTocへ追加されていない
+- [x] screen reader向けの情報が、色や装飾アイコンだけに依存していない
+- [x] static contentへ不必要なalert semanticsを付けていない
+- [x] slot内のMarkdown要素へComponent外の想定外スタイルを広げていない
+- [x] `src/styles/prose.css` に使用されない暫定Callout CSSを残していない
+- [x] 特定ページの都合を共通Componentへ持ち込んでいない
+- [x] `/mdx-test` の変更がComponent確認に必要な範囲に留まっている
+- [x] Visual Review actual screenshotをGit管理していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -372,10 +394,17 @@ interface Props {
 - `docs/design/callout/design-mobile.png`
 - `README.md`
 - `src/components/_common/Callout.astro`
+- `src/pages/local/callouts.mdx`
 - `src/pages/mdx-test.mdx`
 
 実装方針に応じて変更する可能性があるファイル:
 
+- `package.json`
+  - `build:public` scriptを追加する場合。
+- `.github/workflows/deploy.yml`
+  - GitHub Pages deployで公開buildコマンドを使う場合。
+- `scripts/remove-private-routes/main.ts`
+  - 公開build後にローカル確認routeを `dist/` から削除する場合。
 - `src/styles/prose.css`
   - 既存の暫定Calloutスタイルを再利用、拡張、移管または削除する場合。
 - `src/styles/tokens.css`
@@ -399,6 +428,57 @@ interface Props {
 - `docs/TODO.md`
 - `package.json`
 - `package-lock.json`
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/callout/`
+- reference desktop: `docs/design/callout/design-desktop.png`
+- reference mobile: `docs/design/callout/design-mobile.png`
+- notes: `docs/design/callout/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual/callout-desktop.png`
+- actual mobile: `test-results/visual/callout-mobile.png`
+- report: Playwright output
+
+### レビュー結果
+
+| 観点                 | 結果 | メモ                                                                                          |
+| -------------------- | ---- | --------------------------------------------------------------------------------------------- |
+| layout               | OK   | 実装は実ページ上の本文カラムで確認。designはComponent単体なのでSiteLayoutの有無だけが異なる。 |
+| spacing              | OK   | desktop / mobileともCallout同士の余白と本文内余白に破綻なし。                                 |
+| typography           | OK   | タイトルは見出し要素ではなくラベル相当で表示され、本文階層を汚染しない。                      |
+| color                | OK   | `example` は `version` より視認性が高く、`warning` / `danger` の強度差も確認できる。          |
+| marker               | OK   | 6種すべてで `simple-icons` 由来のアイコンが表示される。                                       |
+| responsive           | OK   | mobile幅で折り返し、本文幅、縦積みに破綻なし。                                                |
+| overflow             | OK   | Visual captureでページ全体の横スクロールがないことを確認。                                    |
+| accessibility basics | OK   | 装飾アイコンは `aria-hidden="true"`、静的本文なので `role="alert"` は付与しない。             |
+
+### セルフ修正
+
+- `_local` 配下のAstro pageはbuild対象にならないため、一覧確認ページを `src/pages/local/callouts.mdx` とし、公開buildで `dist/local/` を削除する方針へ変更した。
+- Callout一覧確認ページ内の内部リンクを `InternalLink` 経由へ変更した。
+- Visual captureにAstro dev toolbarが写り込まないよう、capture時にtoolbar要素を除去した。
+
+### 人間確認事項
+
+- `test-results/visual/callout-*.png` はactual screenshotであり、design正本ではない。実装結果を新しいdesign正本にする場合は、別途 `design-image-generation` design fix modeで扱う。
+- `simple-icons` はブランドアイコン集のため、`siNote`, `siLighthouse`, `siAdguard`, `siOpenbugbounty`, `siBookstack`, `siGit` の種別割り当てが意味的に十分かは人間レビュー対象に残す。
+
+### 実行確認
+
+- [x] desktop screenshotを取得した
+- [x] mobile screenshotを取得した
+- [x] design参照と実装結果を比較した
+- [x] Visual Review内で必要なセルフ修正を実施した
+- [x] actual screenshotを `docs/design/` へコピーしていない
+- [x] `npm run check` が通った
+- [x] `npm run build` が通った
+- [x] `npm run build:public` が通った
+- [x] `npm run visual:capture -- --grep "@callout"` が通った
 
 ## レビュー観点
 

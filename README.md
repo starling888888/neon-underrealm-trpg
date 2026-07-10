@@ -30,6 +30,7 @@ npm install
 npm run dev
 npm run check
 npm run build
+npm run build:public
 npm test
 npm run format
 npm run format:md
@@ -42,6 +43,7 @@ npm run visual:install
 - `npm run dev`: ローカル開発サーバーを起動する
 - `npm run check`: Astro / TypeScript / Biome の確認を実行する
 - `npm run build`: 静的サイトをビルドする
+- `npm run build:public`: GitHub Pages公開用にビルドし、ローカル確認用routeを `dist/` から除外する
 - `npm test`: Node.js test runnerでユニットテストを実行し、結果を `test-results/` に出力する
 - `npm run format`: BiomeとMarkdown formatterを実行する
 - `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
@@ -98,6 +100,44 @@ contents markdown用Google Docには、frontmatter、Markdown本文、HTMLコメ
 Google Docsの見出し、箇条書き、表、リンクなどのリッチテキスト書式でレイアウト済みドキュメントを作らないでください。
 
 contents markdown用Google Docは、agentが解釈する作業入力です。requirements、plan、issue、designの正本ではなく、公開ページ本文そのものでもありません。
+
+### contents指示書でのCallout指定例
+
+contents markdown上でCalloutを配置したい場合は、Markdown本文そのものに独自記法を混ぜず、HTMLコメントでagent向けの配置指示を書きます。
+
+例:
+
+```md
+## 判定の補足
+
+通常本文として判定手順を説明する。
+
+<!-- agent:
+ここに type="note" の Callout を配置する。
+title は省略し、既定ラベル「補足」を使う。
+本文:
+この補足は判定に慣れていないPL向けの読み替えです。
+-->
+
+## コンボの注意
+
+通常本文としてコンボ手順を説明する。
+
+<!-- agent:
+ここに type="warning" title="コンボ中の注意" の Callout を配置する。
+本文:
+この処理はコンボ中に一度だけ行えます。
+-->
+
+<!-- agent:
+ここに type="version" の Callout を配置する。
+version専用propsは使わず、V1.5 などの版表記は本文内に書く。
+本文:
+V1.5で処理順を明確化しました。
+-->
+```
+
+実装時は、agentが該当ページのMDXへ `<Callout type="...">...</Callout>` を配置します。`.raw/contents/*.md` 内でAstro Componentを直接実行する仕組みや、`:::warning` などの独自directiveは初期実装では使いません。
 
 ## ディレクトリ概要
 
