@@ -29,7 +29,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/19-2-release-notes-page.md`
 - `docs/requirements.md`
 - `docs/requirements/release-notes.md`
 - `docs/requirements/layout-navigation.md`
@@ -153,6 +152,7 @@
 
 - generator or capture source: `tests/visual/release-notes.spec.ts` のPlaywright screenshot。
 - source branch / commit when applicable: `19-2-release-notes-page` / `a9997b0`
+- historical issue: `docs/issue/done/phase-3/19-2-release-notes-page.md`
 - route when applicable: `/release-notes`
 - viewport / planned output:
   - `/release-notes`, desktop `1440x1200` viewportのfull-page screenshot `1440x1224`: `design-desktop.png`
