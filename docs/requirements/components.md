@@ -34,3 +34,15 @@ Markdown / MDX本文内で、注意書き、補足、例、警告、変更点な
 `Callout` は特定ページ専用ではなく、後続ページでも再利用できる共通Componentとして扱う。
 
 ---
+
+## 16. NPCカード要件
+
+### FR-11. NPCカード
+
+`/world` のNPC紹介は `NpcCard` Componentで表示できること。
+
+`NpcCard` は最低限、共通のシンプルな人物アイコン、ルビ付き二つ名、名前、説明を表示する。
+
+`21-2-world-page` では、各NPCをMDX内の静的propsで埋め込む。個別画像、Excel、JSONを使ったデータ管理への移行は `42-0-npc-data-normalization` で扱う。
+
+---
