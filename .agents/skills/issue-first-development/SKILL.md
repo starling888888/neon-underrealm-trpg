@@ -190,11 +190,13 @@ Rules:
 - Do not use spaces
 - Keep the slug short and descriptive
 
-If the branch already exists, do not overwrite it.
+Before preparing or validating a local issue draft, determine its target branch name.
 
-When the existing branch is the current branch and the user asks to prepare or validate a local issue draft, use that branch. Create `.tmp/review/<branch-name>/` and continue with local repository mode.
+When the target branch is the current branch, use it. Create `.tmp/review/<branch-name>/` and continue with local repository mode.
 
-Otherwise, stop and ask the user.
+When the target branch differs from the current branch and does not already exist, create the target branch from the current branch. Then create `.tmp/review/<branch-name>/` and continue with local repository mode. Branches may be created from an existing work branch when the user starts a different issue.
+
+When the target branch already exists but is not the current branch, do not overwrite it. Stop and ask the user how to proceed.
 
 In remote snapshot draft mode, do not claim the branch was created.
 

@@ -130,3 +130,26 @@
 - `.tmp/`は共有成果物ではない。永続的に必要な情報だけをissue、TODO、plan、failure log、PR descriptionへ反映し、merge後に対象branchのreview一時ディレクトリを削除する。
 - non-interactive `codex exec`によるcustom subagent smoke testは、app-serverのsubagent threadを作成できず起動確認に使えなかった。TOML schema、local model catalog、strict-config読み込み、Markdown検査は確認済みである。interactive Codex clientでのcustom subagent起動は、このissueの次回実運用で確認する。
 - 実装開始には、このissueへの明示承認が必要である。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- [中] `issue-first-development`が、current branchと対象issueのbranch名が異なる場合でも、対象branchを切らずにlocal issue draftの準備・検証を継続できる。新しいissueの開始が既存branchへ混在する。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `.agents/skills/issue-first-development/SKILL.md:195`はcurrent branchが既存branchであることだけを継続条件としている。対象issue名とcurrent branchが異なる場合に、対象branchをcurrent branchから作成する手順がない。
+- review records: `.tmp/review/review-subagents/pr-review-1.md`、`.tmp/review/review-subagents/document-review-1.md`、`.tmp/review/review-subagents/technical-review-1.md`
+- invalid review item: merge後cleanupで`user-directed-changes.md`の全entryを再確認する指摘は、変更時のSSoT更新とPR reviewで正本化済みの齟齬を確認する運用を重複させるため、対応対象から外す。
+
+### 対応方針
+
+- current branchと対象issueのbranch名が異なる場合は、current branchをbaseに対象branchを作成してからlocal issue draftの作成・検証を開始する。同名branchが既に存在する場合だけ上書きせず停止する。
+
+### 対応完了チェックリスト
+
+- [x] current branchと対象issue名が異なる場合に、対象branchを作成して開始する手順へ更新する。
+- [x] Markdown formatterと`npm run check:md`が通る。
