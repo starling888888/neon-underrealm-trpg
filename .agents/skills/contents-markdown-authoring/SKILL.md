@@ -71,6 +71,8 @@ When a lower-priority source differs from the user instruction or existing imple
 2. Explain which source conflicts and its priority.
 3. Ask the user whether the implementation, the local contents source, or both should change.
 4. Stop before changing implementation.
+5. After the user or an approved higher-priority source resolves the conflict, record it in the target contents file's `矛盾点` HTML-comment section.
+6. For each record, state the lower-priority source, a concise summary of its conflicting information, and the adopted document or user instruction.
 
 When the user approves an implementation change and that change is completed, update the corresponding local `.raw/contents/<slug>.md` in the same task. Do not write it back to Google Drive automatically. Use `raw-to-drive-sync` only after its explicit user invocation.
 
@@ -95,6 +97,9 @@ title: Page Title
 <!--
 Agent-facing instructions go here.
 They are not final page body.
+
+## 矛盾点
+- 確認時点で、優先度が低い文書との齟齬は検出されていない。
 -->
 
 # Page Title
@@ -119,7 +124,19 @@ Use normal Markdown for the page body:
 - fenced code blocks when needed
 - horizontal rules when needed
 
-Put agent-facing implementation or interpretation notes in HTML comments.
+Put agent-facing implementation or interpretation notes in HTML comments. Every new or updated contents file must include a `矛盾点` section in an HTML comment.
+
+When a lower-priority source conflict is resolved, replace or add an entry using this form:
+
+```md
+## 矛盾点
+
+- 低優先度の文書: `path/to/source.md`（優先度 N）
+  - 齟齬の概要: 低優先度の文書では……としている。
+  - 採用した文書またはユーザー指示: `path/to/adopted-source.md`（優先度 N）
+```
+
+When no conflict was found in the sources that were checked, keep the no-conflict entry. Do not claim that unavailable sources were checked.
 
 Do not use `:::` instruction blocks.
 
@@ -141,6 +158,7 @@ Report:
 - source-of-truth conflicts and correction authorization status
 - whether `.raw/contents/<slug>.md` was created or updated
 - confirmation that frontmatter and HTML comments are present when required
+- confirmation that the `矛盾点` comment section records each resolved lower-priority source conflict, or that no checked-source conflict was found
 - confirmation that `:::` instruction blocks and Google Docs rich-text layout are not used
 - whether Drive synchronization remains pending
 

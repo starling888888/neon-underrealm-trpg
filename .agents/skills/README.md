@@ -40,13 +40,13 @@ This skill reads the Drive folder URL from `<repo-root>/raw-google-drive.url` or
 
 Use when drafting or reviewing contents markdown locally for `.raw/contents/*.md`.
 
-This skill checks user instructions, local `src/pages/`, the current task issue, requirements, plan, out-of-scope, `.raw/contents/`, and `.raw/v1.0/` in that priority order. It treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, uses HTML comments for agent-facing instructions, and does not implement pages.
+This skill checks user instructions, local `src/pages/`, the current task issue, requirements, plan, out-of-scope, `.raw/contents/`, and `.raw/v1.0/` in that priority order. It treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, and uses HTML comments for agent-facing instructions and lower-priority source conflict records. It does not implement pages.
 
 ### `remote-contents-markdown-authoring`
 
 Use when ChatGPT drafts or reviews contents markdown from a remote repository snapshot.
 
-This skill checks user instructions, Git-managed `src/pages/`, the current task issue, requirements, plan, and out-of-scope in that priority order. It reports unavailable Git-managed sources and local `.raw/contents/` / `.raw/v1.0/` as unverified. It does not access `.raw/`, Google Drive, or local files.
+This skill checks user instructions, Git-managed `src/pages/`, the current task issue, requirements, plan, and out-of-scope in that priority order. It records remotely observed lower-priority source conflicts in agent-facing HTML comments, reports unavailable Git-managed sources and local `.raw/contents/` / `.raw/v1.0/` as unverified, and does not access `.raw/`, Google Drive, or local files.
 
 ### `raw-to-drive-sync`
 

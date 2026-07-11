@@ -31,6 +31,8 @@ HTML comments are instructions for agents.
 
 HTML comments are not final page body and must not be rendered as visible text.
 
+Every new or updated contents file must include a `矛盾点` section inside an HTML comment. When no conflict was found in the sources checked for that contents file, state that no checked-source conflict was found. Do not claim that unavailable sources were checked.
+
 Do not use `:::` instruction blocks for contents markdown.
 
 ## Google Docs Source Handling
@@ -100,6 +102,16 @@ When a higher-priority source conflicts with current implementation or local con
 When a Git-managed source of truth such as requirements, plan, or out-of-scope conflicts with the user instruction or the existing implementation, identify the conflict and ask whether the source of truth may be corrected. Do not correct it without the user's approval.
 
 `v1.0/` is for historical wording, old rules, and ideas. It must not replace the current site source of truth.
+
+## Conflict Records
+
+When a lower-priority source conflict is resolved, record it in the contents file's HTML-comment `矛盾点` section. Each entry must include:
+
+- the lower-priority source path and priority
+- a concise summary of the conflicting information
+- the adopted document or user instruction and its priority when applicable
+
+Keep this information agent-facing. Do not render it as page body.
 
 ## Drive Write Handling
 
