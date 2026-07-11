@@ -1,5 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 import { visualOutputDir, visualRoutes, visualViewports } from "./config";
+import { expectGeneratedPageToc } from "./helpers/page-toc";
 
 async function hideAstroDevToolbar(page: Page) {
   await page.locator("astro-dev-toolbar").evaluateAll((elements) => {
@@ -11,10 +12,8 @@ async function hideAstroDevToolbar(page: Page) {
 
 async function expectLegacyCalloutTitles(page: Page) {
   const titles = page.locator("[data-callout-type] .callout-title");
-  const desktopToc = page.locator(".page-toc [data-page-toc-content]");
-  const mobileToc = page.locator(
-    "[data-mobile-page-toc] [data-page-toc-content]",
-  );
+  const { desktop: desktopToc, mobile: mobileToc } =
+    await expectGeneratedPageToc(page, "既定ラベル");
 
   await expect(titles).toHaveCount(8);
   expect(

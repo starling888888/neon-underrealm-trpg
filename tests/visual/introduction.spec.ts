@@ -1,5 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 import { visualOutputDir, visualRoutes, visualViewports } from "./config";
+import { expectGeneratedPageToc } from "./helpers/page-toc";
 
 async function hideAstroDevToolbar(page: Page) {
   await page.locator("astro-dev-toolbar").evaluateAll((elements) => {
@@ -48,7 +49,7 @@ test("introduction desktop @introduction-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.introduction);
   await expectIntroductionContent(page);
-  await expect(page.locator(".page-toc")).toContainText("ゴールデンルール");
+  await expectGeneratedPageToc(page, "ゴールデンルール");
   await page.locator("[data-callout-type='warning']").scrollIntoViewIfNeeded();
   await hideAstroDevToolbar(page);
   await page.screenshot({
@@ -61,6 +62,7 @@ test("introduction mobile @introduction-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.introduction);
   await expectIntroductionContent(page);
+  await expectGeneratedPageToc(page, "ゴールデンルール");
   await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeVisible();
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toContainText(

@@ -197,6 +197,30 @@
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 2
+
+### 指摘事項
+
+- 既定Calloutのcustom titleがPageToc / MobilePageTocへ混入しないことを負の検証しているが、目次そのものがbuild後postprocessで生成済みであることを先に確認していない。
+
+### 判定
+
+- source: local-pr-review（PR #34、`.tmp/review/20-2-introduction-page/technical-review-2.md`）
+- classification: valid
+- local validation: `tests/visual/callout.spec.ts`の`expectLegacyCalloutTitles`はdesktop / mobileの目次に対して`not.toContainText`だけを実行している。PageTocはbuild後postprocessで内容が生成されるため、空の目次でも負の検証が通る。現行production build後HTMLでは「既定ラベル」「タイトル指定」が両目次に存在することを確認済みだが、test自身はその前提を固定していない。
+
+### 対応方針
+
+- desktopとmobileの両目次に、通常H2である「既定ラベル」または「タイトル指定」が存在することを、custom titleの負の検証前に追加する。
+- これにより、build後postprocess済みの目次に対して既存Callout titleの非混入を検証する。
+
+### 対応完了チェックリスト
+
+- [x] desktop / mobile PageTocが通常H2を含むことを検証する
+- [x] custom titleのPageToc / MobilePageToc非混入を、生成済み目次に対して検証する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 - mode: local repository mode
