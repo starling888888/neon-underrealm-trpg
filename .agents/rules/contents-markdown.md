@@ -81,3 +81,28 @@ It does not override:
 - `docs/plan.md`
 - `docs/issue/*.md`
 - `docs/design/<design-target>/`
+
+## Local Authoring Priority
+
+When `contents-markdown-authoring` creates or reviews a new local contents instruction, use this order:
+
+1. User instruction.
+2. Local `src/pages/` implementation.
+3. Current task issue under `docs/issue/`.
+4. `docs/requirements.md` and relevant `docs/requirements/` files.
+5. `docs/plan.md`.
+6. `docs/out-of-scope.md`.
+7. Local `.raw/contents/` source.
+8. Local `.raw/v1.0/` historical reference.
+
+When a higher-priority source conflicts with current implementation or local contents, identify the impact and ask the user before implementation changes.
+
+When a Git-managed source of truth such as requirements, plan, or out-of-scope conflicts with the user instruction or the existing implementation, identify the conflict and ask whether the source of truth may be corrected. Do not correct it without the user's approval.
+
+`v1.0/` is for historical wording, old rules, and ideas. It must not replace the current site source of truth.
+
+## Drive Write Handling
+
+Only `raw-to-drive-sync` may write a contents source to Google Drive, and only after its explicit user invocation.
+
+Map `.raw/contents/<slug>.md` to a Google Doc named `<slug>.md` in the Drive `contents/` folder. Preserve Markdown source as literal plain text. Do not use Google Docs rich-text formatting or Markdown import behavior.

@@ -26,11 +26,26 @@ Use this fixed local input structure:
 ├── release-notes.xlsx
 ├── data/
 │   └── *.xlsx
-└── contents/
+├── contents/
+│   └── *.md
+└── v1.0/
     └── *.md
 ```
 
-The Google Drive sync root must use the same relative structure.
+The Google Drive sync root is distinct from the local `.raw/` structure:
+
+```text
+<sync-root>/
+├── release-notes                 # existing Google Sheet
+├── data/
+│   └── Google Sheets
+├── contents/
+│   └── *.md                      # Google Docs with literal Markdown source
+└── v1.0/
+    └── Google Docs only
+```
+
+Map the existing Drive Google Sheet `release-notes` to local `.raw/release-notes.xlsx`. Do not look for or create `release-notes.xlsx` in the Drive root.
 
 Use `<repo-root>/raw-google-drive.url` to store the Google Drive sync folder URL for local development.
 
@@ -52,11 +67,17 @@ Google Docs sync to `.raw/contents/*.md`.
 
 Google Sheets sync to `.raw/release-notes.xlsx` or `.raw/data/*.xlsx`.
 
+Google Docs directly under Drive `v1.0/` sync to `.raw/v1.0/*.md` as historical references through `text/markdown` export. Remove inline `data:image/...;base64,...` Markdown image reference definitions before local storage. Do not treat them as current site source of truth. Stop if `v1.0/` contains a subdirectory or a non-Google-Doc file.
+
 Do not write Google Drive-derived files outside `<repo-root>/.raw/`.
 
 Do not create or use `<repo-root>/.raw/sheets/`.
 
-Do not write local `.raw/` changes back to Google Drive unless a future approved issue explicitly changes that policy.
+Google Drive remains the user-edited source of truth for `.raw/contents/` and `.raw/release-notes.xlsx`.
+
+Write local `.raw/` changes back to Google Drive only through `raw-to-drive-sync` after the user explicitly says `$raw-to-drive-sync` or `raw-to-drive-sync を実行して`.
+
+`raw-to-drive-sync` may update the existing `release-notes` Google Sheet and existing or new `contents/<slug>.md` Google Docs. It must write Markdown source as plain text, not rich text. It must refuse `.raw/data/` and `.raw/v1.0/` even when the user explicitly requests them.
 
 ## Generated Data
 

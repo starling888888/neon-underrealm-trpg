@@ -27,7 +27,7 @@
 
 - commit指示前に、ユーザーの明示指示なしに `git add` しない。commit指示が出た場合は、対象差分を確認したうえで必要な `git add` と `git commit` を実行してよい。
 - ユーザーの明示指示なしに `git commit`、`git push`、`git tag`、PR作成、remote branch作成、GitHub Release作成をしない。
-- 既に承認済みcommand prefixに一致するコマンドでは、`require_escalated` を明示指定して不要な追加承認を要求してはならない。追加承認は、承認済みprefixに一致せず、sandbox外実行が実際に必要な場合に限る。
+- 既に承認済みcommand prefixに一致するコマンドでは、`require_escalated` を明示指定して不要な追加承認を要求してはならない。追加承認は、承認済みprefixに一致せず、sandbox外実行が実際に必要な場合に限る。承認済みの状態変更Git操作（`git add`、`git commit`、`git push`など）は1つずつ実行し、`&&`、`;`、pipe、subshellでほかのGit操作と連結してはならない。
 - 開発タスクは、実装前に `.agents/skills/issue-first-development/SKILL.md` を使い、branch作成と `docs/issue/*.md` 作成または検証で停止する。
 - `issue-first-development` のlocal repository modeでは、branch作成後に `.tmp/review/<branch-name>/` を作成し、ユーザーレビュー前に `issue_reviewer` を最大2回実行する。remote snapshot draft modeではreviewerを実行しない。
 - 実装を開始してよいのは、ユーザーがissue内容を明示承認した後だけである。
@@ -42,6 +42,7 @@
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
 - Google Drive上のユーザー編集正本をローカル作業入力として使う場合は、`raw-google-drive.url` と `<repo-root>/.raw/` の扱いを `.agents/skills/drive-to-raw-sync/SKILL.md` と `.agents/rules/data-management.md` で確認する。
+- ローカル`.raw/`からGoogle Driveへ書き込んでよいのは、ユーザーが `$raw-to-drive-sync` または `raw-to-drive-sync を実行して` と明示した場合に限る。このとき `.agents/skills/raw-to-drive-sync/SKILL.md` に従い、`.raw/data/` と `.raw/v1.0/` は明示指示があっても拒否する。
 - 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由をissueまたは作業報告に書く。
 - ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、または同種のcheck/build/test/formatter失敗を1回の作業中に2回以上繰り返した場合は `docs/agent-failure-log.md` に記録する。
 
@@ -101,13 +102,15 @@ contents markdownを作成または解釈する場合は、`.agents/skills/conte
 ├── release-notes.xlsx
 ├── data/
 │   └── *.xlsx
-└── contents/
+├── contents/
+│   └── *.md
+└── v1.0/
     └── *.md
 ```
 
-Google Drive側も同期対象フォルダ直下で同じ構造にする。Google DocsはMarkdownソースをプレーンテキストとして保持し、Markdown `.md` として同期する。Google SheetsはExcel `.xlsx` として同期する。
+Google Drive側は、`release-notes` Google Sheet、`data/`、`contents/`、`v1.0/` を同期対象フォルダ直下に置く。`contents/` のGoogle DocsはMarkdownソースをプレーンテキストとして保持し、`text/plain` exportでファイル名 `<slug>.md` として同期する。`v1.0/` は直下Google Docsだけを旧版参照資料として置き、スタイルをMarkdown化するため `text/markdown` exportで同期し、inline base64画像定義はローカル保存前に除去する。Google SheetsはExcel `.xlsx` としてローカルへ同期する。
 
-Drive上の正本を書き換えてはならない。Drive同期はCI/CDでは実行しない。
+Google Driveは `.raw/contents/` と `.raw/release-notes.xlsx` のユーザー編集正本である。Drive書込みは `raw-to-drive-sync` の明示呼び出しだけに限定する。Drive同期はCI/CDでは実行しない。
 
 ---
 
@@ -125,6 +128,8 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - `.tmp/*.md` のレビュー指摘取り込み: `.agents/skills/review-to-issue/SKILL.md`
 - Google Drive正本から `<repo-root>/.raw/` への同期: `.agents/skills/drive-to-raw-sync/SKILL.md`
 - contents markdown草案作成または確認: `.agents/skills/contents-markdown-authoring/SKILL.md`
+- ChatGPTからのcontents markdown草案作成または確認: `.agents/skills/remote-contents-markdown-authoring/SKILL.md`
+- ローカル`.raw/`からGoogle Drive正本への明示同期: `.agents/skills/raw-to-drive-sync/SKILL.md`
 - GitHub PR snapshotからのレビュー草案作成: `.agents/skills/pr-review-draft/SKILL.md`
 - PR作成: `.agents/skills/create-pr/SKILL.md`
 - SKILL作成または更新: `.agents/skills/skill-authoring/SKILL.md`

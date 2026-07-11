@@ -38,9 +38,21 @@ This skill reads the Drive folder URL from `<repo-root>/raw-google-drive.url` or
 
 ### `contents-markdown-authoring`
 
-Use when drafting or reviewing contents markdown for `.raw/contents/*.md`.
+Use when drafting or reviewing contents markdown locally for `.raw/contents/*.md`.
 
-This skill treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, uses HTML comments for agent-facing instructions, and does not implement pages.
+This skill checks user instructions, local `src/pages/`, the current task issue, requirements, plan, out-of-scope, `.raw/contents/`, and `.raw/v1.0/` in that priority order. It treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, uses HTML comments for agent-facing instructions, and does not implement pages.
+
+### `remote-contents-markdown-authoring`
+
+Use when ChatGPT drafts or reviews contents markdown from a remote repository snapshot.
+
+This skill checks user instructions, Git-managed `src/pages/`, the current task issue, requirements, plan, and out-of-scope in that priority order. It reports unavailable Git-managed sources and local `.raw/contents/` / `.raw/v1.0/` as unverified. It does not access `.raw/`, Google Drive, or local files.
+
+### `raw-to-drive-sync`
+
+Use only when the user explicitly says `$raw-to-drive-sync` or `raw-to-drive-sync を実行して`.
+
+This skill updates the existing `release-notes` Google Sheet and `contents/<slug>.md` Google Docs from approved local `.raw/` inputs. It refuses `.raw/data/` and `.raw/v1.0/` writes even with explicit user direction.
 
 ### `pr-review-draft`
 

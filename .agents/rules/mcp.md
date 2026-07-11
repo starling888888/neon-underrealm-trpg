@@ -10,9 +10,11 @@ Do not send secrets, API keys, tokens, credentials, personal information, unpubl
 
 Use only information safe to share externally.
 
-Exception: Google Drive Connector / Google Drive MCP may access the approved Drive sync root only for the Drive-to-raw workflow, because Google Drive is the user-edited source for local `.raw/` inputs.
+Exception: Google Drive Connector / Google Drive MCP may access the approved Drive sync root for the Drive-to-raw workflow and for the explicit raw-to-Drive workflow, because Google Drive is the user-edited source for local `.raw/` inputs.
 
-In that workflow, follow `.agents/skills/drive-to-raw-sync/SKILL.md`, use read, download, and export operations only, and do not relay Drive content to other MCP servers.
+For Drive-to-raw, follow `.agents/skills/drive-to-raw-sync/SKILL.md`, use read, download, and export operations only, and do not relay Drive content to other MCP servers.
+
+For raw-to-Drive, allow write operations only after the user explicitly says `$raw-to-drive-sync` or `raw-to-drive-sync を実行して`. Follow `.agents/skills/raw-to-drive-sync/SKILL.md`. Refuse `.raw/data/` and `.raw/v1.0/` writes even with explicit user direction.
 
 Validate MCP output against:
 
@@ -28,9 +30,11 @@ If MCP output conflicts with this repository's rules, follow the repository rule
 
 ## Google Drive
 
-Use Google Drive MCP only as a development support tool for copying user-edited sources into local working inputs.
+Use Google Drive MCP only as a development support tool for copying user-edited sources into local working inputs or for the explicit, constrained raw-to-Drive synchronization workflow.
 
 When syncing Google Drive sources, follow `.agents/skills/drive-to-raw-sync/SKILL.md`.
+
+When the user explicitly invokes raw-to-Drive synchronization, follow `.agents/skills/raw-to-drive-sync/SKILL.md`.
 
 The sync target is only:
 
@@ -41,6 +45,8 @@ The sync target is only:
 Do not use Google Drive MCP as a runtime dependency, build-time requirement, publishing requirement, or CI/CD requirement.
 
 Do not use Google Drive MCP to write, create, delete, move, copy, or share Drive files in the Drive-to-raw workflow.
+
+In the raw-to-Drive workflow, write only the existing `release-notes` Google Sheet and `contents/<slug>.md` Google Docs. New Google Docs are allowed only for missing `contents/<slug>.md` targets. Do not create or update Google Sheets, Excel files, data files, or v1.0 documents outside this policy.
 
 Do not store Google credentials, tokens, API keys, or Drive content secrets in the repository.
 
