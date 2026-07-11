@@ -2,16 +2,16 @@
 
 ## Mode
 
-- initial draft
-- 横長1列をdraft段階のdesign正本として置く。実装へはユーザーレビュー後に進む。
+- design fix
+- 承認済みの`NpcCard`実装を、ユーザー指示によりdesign正本として採用した。
 
 ## Target
 
-- page / component: `/world` のNPC紹介で使う静的 `NpcCard`
-- route: `/world`。ただし、design画像はページ全体ではなくComponentだけを示す。
+- page / component: `/world` のNPC紹介で使う静的 `NpcCard` と、そのローカル確認用カタログ
+- route: `/-local/npc-cards/`
 - viewport:
-  - desktop: `1440x1200`。標準viewport内に横長カード1列を置く。
-  - mobile: `390x900`。標準viewport内に横長カード1列を置く。
+  - desktop: `1440x1200`。既存site layout内の横長カード1列を確認する。
+  - mobile: `390x900`。既存Header内の横長カード1列を確認する。
 - states:
   - desktop landscape card, 1 column
   - mobile landscape card, 1 column
@@ -55,7 +55,7 @@
 ## Existing design constraints
 
 - `global-styles` の白寄り背景、暗めの文字色、低彩度border、控えめな青緑accent、system font、実務的な情報密度を維持する。
-- `site-layout` のHeader、Footer、SiteMenu、PageToc、MobilePageTocの構造を変更しない。Component designではそれらを描かない。
+- `site-layout` のHeader、Footer、SiteMenu、PageToc、MobilePageTocの構造を変更しない。正本画像は既存site layoutを含むが、これらはNpcCard taskで再設計しない。
 - `NpcCard` はMDX内の静的propsで使う本文Componentであり、データ一覧用の汎用カード、検索結果、フィルタUIにはしない。
 - 人物アイコンは装飾であり、名前と説明と同じアクセシブルな名前を重複して持たせない。
 
@@ -84,16 +84,26 @@
 ## Generation source
 
 - prototype or generator source: `.tmp/design/npc-card/prototype.html` と `.tmp/design/npc-card/capture.mjs` を作成し、Playwrightでcaptureした。
-- source branch / commit when applicable: `21-2-world-page` / `27d6d1c`
-- route when applicable: `/world`。prototype自体は実サイトrouteを使用しない。
+- source branch / commit when applicable: `21-2-world-page` / `fc79074`
+- route when applicable: `/-local/npc-cards/`
 - viewport: desktop `1440x1200`、mobile `390x900`。いずれもviewport captureでありfull-pageではない。
 - prototype path / prompt summary / capture notes:
   - `.tmp/design/npc-card/prototype.html` は、共通のシンプルな人物アイコン、二つ名と名前、説明だけを持つ独立したHTML / CSS prototypeである。実サイトのComponentやrouteを読み込まない。
   - `.tmp/design/npc-card/capture.mjs` を `node .tmp/design/npc-card/capture.mjs` で実行し、以下のinitial draftを作成した。
     - `design-desktop.png`
     - `design-mobile.png`
-  - captureはactual implementation screenshotではない。`/world` 実装のVisual Reviewやdesign正本化は行っていない。
+  - initial draftはactual implementation screenshotではない。`/world` 実装のVisual Reviewやdesign正本化は行っていない。
+  - `tests/visual/npc-card.spec.ts` が、`/-local/npc-cards/` のactual screenshotを以下へ出力した。
+    - `test-results/visual/npc-card-desktop.png`
+    - `test-results/visual/npc-card-mobile.png`
+
+## Canonicalization rationale
+
+- user approval: `actualを正本としてコピーしてあげて`（2026-07-12）。
+- `design-desktop.png` と `design-mobile.png` は、`test-results/visual/npc-card-desktop.png` と `test-results/visual/npc-card-mobile.png` から、ユーザー承認後に置き換えたactual implementation screenshotである。
+- initial draftとの差分は、既存Header、Footer、desktop SiteMenu、mobile Header操作枠、カタログ見出し、実際のpage gutterを含む点である。`NpcCard`本体の横長1列、左側4:5人物領域、二つ名のruby / 文字色、shadowなしの方針は維持している。
+- 今後のVisual Reviewでは、`docs/design/npc-card/design-desktop.png` と `design-mobile.png` をNpcCardの比較基準とする。
 
 ## Open questions
 
-- なし。横長1列と左側`4:5`人物画像領域をdraft段階の正本とする。
+- なし。横長1列と左側`4:5`人物画像領域をNpcCardのdesign正本とする。
