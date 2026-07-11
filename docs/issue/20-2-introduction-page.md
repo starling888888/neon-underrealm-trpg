@@ -58,40 +58,40 @@
 
 ## 完了条件
 
-- [ ] `docs/design/introduction/` に、レビュー済みinitial draftの `notes.md`、desktop画像、mobile画像がある
-- [ ] `src/pages/introduction.mdx` があり、`/introduction` を静的ページとして表示できる
-- [ ] `.raw/contents/introduction.md` のfrontmatter、Markdown本文、HTMLコメント指示を必要な範囲で反映している
-- [ ] H1直下にページの役割を示す短い導入文があり、ゲーム概要・世界観を再掲していない
-- [ ] 必要なものに、各10個以上・20個程度推奨の10面体／6面体ダイスと、オンラインセッション推奨が表示される。未実装の `/support` へのリンクは表示しない
-- [ ] 基本用語がv1.0ルールブック準拠であり、判定数には常に10面体を使い、判定には6面体を使わないと表示される
-- [ ] ゴールデンルールの説明、4原則、端数処理が注意枠のCallout内に表示される
-- [ ] ゴールデンルールのHTML見出しが1つだけあり、H1→H2、PageToc、スクリーンリーダーの見出しナビゲーションを維持する
-- [ ] Calloutの可視titleとHTML見出しが同じゴールデンルールを表し、重複して読み上げられない。既定のCallout title仕様と既存CalloutのPageToc非混入を変えていない
-- [ ] `/support` を「次に読むページ」へ追加していない
-- [ ] 内部リンクがGitHub Pagesのsubpathで壊れない
-- [ ] desktopとmobileのVisual Review対象が追加され、designとの差異を確認している
-- [ ] 完成画面のスクリーンショットを取得し、design正本の更新可否をユーザーレビューへ提示している
-- [ ] 関連TODOを扱った結果と、Google Drive同期が未実行であることを記録している
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] `docs/design/introduction/` に、レビュー済みinitial draftの `notes.md`、desktop画像、mobile画像がある
+- [x] `src/pages/introduction.mdx` があり、`/introduction` を静的ページとして表示できる
+- [x] `.raw/contents/introduction.md` のfrontmatter、Markdown本文、HTMLコメント指示を必要な範囲で反映している
+- [x] H1直下にページの役割を示す短い導入文があり、ゲーム概要・世界観を再掲していない
+- [x] 必要なものに、各10個以上・20個程度推奨の10面体／6面体ダイスと、オンラインセッション推奨が表示される。未実装の `/support` へのリンクは表示しない
+- [x] 基本用語がv1.0ルールブック準拠であり、判定数には常に10面体を使い、判定には6面体を使わないと表示される
+- [x] ゴールデンルールの説明、4原則、端数処理が注意枠のCallout内に表示される
+- [x] ゴールデンルールのHTML見出しが1つだけあり、H1→H2、PageToc、スクリーンリーダーの見出しナビゲーションを維持する
+- [x] Calloutの可視titleとHTML見出しが同じゴールデンルールを表し、重複して読み上げられない。既定のCallout title仕様と既存CalloutのPageToc非混入を変えていない
+- [x] `/support` を「次に読むページ」へ追加していない
+- [x] 内部リンクがGitHub Pagesのsubpathで壊れない
+- [x] desktopとmobileのVisual Review対象が追加され、designとの差異を確認している
+- [x] 完成画面のスクリーンショットを取得し、design正本の更新可否をユーザーレビューへ提示している
+- [x] 関連TODOを扱った結果と、Google Drive同期が未実行であることを記録している
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
-- [ ] 既存ルート、トップページの `/introduction` 導線、SiteMenuの現在ページハイライトを壊していない
-- [ ] GitHub Pagesのsubpath公開に影響しない
-- [ ] frontmatterの `description` と `showPageToc` がページに反映される
-- [ ] `.raw/contents/introduction.md` のHTMLコメントや旧資料の画像記法を可視テキストとして描画していない
-- [ ] 旧資料の用語・ルールを現行要件やV1.5整理と矛盾する形で復元していない
-- [ ] GM専用のシナリオ、エネミー、運用情報をPL向け導入ページへ掲載していない
-- [ ] Calloutを見出しに変更しても、既存のCallout利用時のHTML構造・見た目・アクセシビリティを壊していない
-- [ ] `src/components/_common/Callout.astro` を変更した場合、`docs/design/callout/` の正本更新要否を確認している
-- [ ] 不要な依存関係や新規Componentを追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-- [ ] `docs/design/global-styles/`、`docs/design/site-layout/`、`docs/design/callout/`、承認済みの `docs/design/introduction/` と矛盾していない
-- [ ] initial draftを未レビューのままdesign正本として扱っていない
-- [ ] implementation actual screenshotをユーザー承認なしにdesign正本へコピーしていない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] 既存ルート、トップページの `/introduction` 導線、SiteMenuの現在ページハイライトを壊していない
+- [x] GitHub Pagesのsubpath公開に影響しない
+- [x] frontmatterの `description` と `showPageToc` がページに反映される
+- [x] `.raw/contents/introduction.md` のHTMLコメントや旧資料の画像記法を可視テキストとして描画していない
+- [x] 旧資料の用語・ルールを現行要件やV1.5整理と矛盾する形で復元していない
+- [x] GM専用のシナリオ、エネミー、運用情報をPL向け導入ページへ掲載していない
+- [x] Calloutを見出しに変更しても、既存のCallout利用時のHTML構造・見た目・アクセシビリティを壊していない
+- [x] `src/components/_common/Callout.astro` を変更した場合、`docs/design/callout/` の正本更新要否を確認している
+- [x] 不要な依存関係や新規Componentを追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] `docs/design/global-styles/`、`docs/design/site-layout/`、`docs/design/callout/`、承認済みの `docs/design/introduction/` と矛盾していない
+- [x] initial draftを未レビューのままdesign正本として扱っていない
+- [x] implementation actual screenshotをユーザー承認なしにdesign正本へコピーしていない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -119,11 +119,64 @@
 - design initial draftを実装より前の別承認段階として扱う前提が適切か。
 - 関連TODOのローカルコンテンツ作成ワークフロー確認を、このissueで回収してよいか。
 
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/introduction/`
+- reference desktop: `docs/design/introduction/design-desktop.png`（`1440x1200` viewport）
+- reference mobile: `docs/design/introduction/design-mobile.png`（`390x900` viewport）
+- notes: Calloutを中心にしたviewport design。既存site-layoutとwarning Calloutの方向を保ち、可視titleは枠内の単一H2とする。
+
+### 成果物
+
+- actual desktop: `test-results/visual/introduction-desktop.png`
+- actual mobile: `test-results/visual/introduction-mobile.png`
+- existing Callout regression: `test-results/visual/callout-desktop.png`、`test-results/visual/callout-mobile.png`
+- report: Playwright `@introduction` と `@callout` を対象に4件成功
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                              | 対応 |
+| --------------------- | ---- | --------------------------------------------------------------------------------- | ---- |
+| レイアウト            | OK   | 実装は既存site-layoutを使い、designの中央本文・左右railの方向と一致する           | 不要 |
+| 余白                  | OK   | Callout内外の余白は既存warning Calloutとproseの余白に一致する                     | 不要 |
+| タイポグラフィ        | OK   | Callout titleは枠内の単一H2で、枠外への同名H2重複はない                           | 不要 |
+| 色                    | OK   | 既存warning token、左線、markerを維持する                                         | 不要 |
+| 配置・整列            | OK   | desktop・mobileともCallout内のtitle、本文、番号リストが崩れない                   | 不要 |
+| レスポンシブ          | OK   | `1440x1200` と `390x900` で確認。mobile目次の開閉後もCalloutを隠さず撮影した      | 不要 |
+| overflow / scroll     | OK   | desktop・mobileのVisual testで横overflowなし                                      | 不要 |
+| 既存デザインとの整合  | OK   | 通常本文ページのまま、ゴールデンルールだけをwarning Calloutで識別する             | 不要 |
+| 既存Componentとの整合 | OK   | 既定Calloutは既存のspan titleを維持し、`titleAsHeading`を指定した場合だけH2になる | 不要 |
+| accessibility basics  | OK   | H1→H2の順序、単一のゴールデンルールH2、PageTocとMobilePageTocの導線を確認した     | 不要 |
+
+### 自己修正した項目
+
+- [x] mobile Visual testで目次内容を確認した後にoverlayを閉じ、Calloutが隠れない状態を撮影するよう修正した。
+
+### 人間判断が必要な差分
+
+- なし。実装画面はinitial draftの意図と一致し、design正本更新を要する差分は確認されなかった。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] 実装スクリーンショットをdesign正本化する必要はない。actual screenshotはVisual Review成果物として保持する。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が不要であることを記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 - mode: local repository mode
 - branch: `20-2-introduction-page`
 - `.tmp/review/20-2-introduction-page/` は作成済み。
-- `docs/design/introduction/` は未作成である。実装開始前に `design-image-generation` のinitial draft modeを実行し、人間レビューを受ける必要がある。ユーザーは本ターンでdesign生成を明示していないため、画像は作成していない。
-- `docs/requirements/pages.md`、`docs/plan.md`、`docs/TODO.md` の未コミット差分は、本issue作成前にユーザーが明示した責務整理を反映したものである。変更記録は `.tmp/review/20-2-introduction-page/user-directed-changes.md` にある。
+- `docs/design/introduction/` はinitial draftとして作成し、ユーザーの確認後に実装へ進んだ。actual screenshotはdesign正本へコピーしていない。
+- `docs/requirements/pages.md`、`docs/plan.md`、`docs/TODO.md` の責務整理は、issue作成前にユーザーが明示した指示を反映済みである。変更記録は `.tmp/review/20-2-introduction-page/user-directed-changes.md` にある。
 - `.raw/contents/introduction.md` はGoogle Driveへ同期していない。同期は `raw-to-drive-sync` の明示指示がある場合に限る。

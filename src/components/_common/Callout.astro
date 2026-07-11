@@ -10,9 +10,10 @@ type CalloutType =
 interface Props {
   type: CalloutType;
   title?: string;
+  titleAsHeading?: boolean;
 }
 
-const { type, title } = Astro.props;
+const { type, title, titleAsHeading = false } = Astro.props;
 
 const defaultTitles = {
   note: "補足",
@@ -34,12 +35,13 @@ const markers = {
 
 const calloutTitle = title ?? defaultTitles[type];
 const marker = markers[type];
+const CalloutTitle = titleAsHeading ? "h2" : "span";
 ---
 
 <aside class:list={["callout", `callout-${type}`]} data-callout-type={type}>
   <div class="callout-heading">
     <span class="callout-marker" aria-hidden="true">{marker}</span>
-    <span class="callout-title">{calloutTitle}</span>
+    <CalloutTitle class="callout-title">{calloutTitle}</CalloutTitle>
   </div>
   <div class="callout-body">
     <slot />
@@ -137,10 +139,13 @@ const marker = markers[type];
   }
 
   .callout-title {
+    margin: 0;
+    border: 0;
     color: var(--color-text);
     font-size: var(--text-lg);
     font-weight: 700;
     line-height: var(--line-height-tight);
+    padding: 0;
   }
 
   .callout-body {
