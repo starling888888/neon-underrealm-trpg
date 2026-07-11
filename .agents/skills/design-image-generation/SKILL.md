@@ -7,6 +7,8 @@ description: Use this skill when the user asks to create, update, or canonicaliz
 
 Create or canonicalize design images used as Visual Review references.
 
+For page, layout, UI, CSS, and component initial drafts, make a standalone HTML/CSS prototype under `.tmp/` and capture it with Playwright. This is the default way to create design images.
+
 Use when the user asks to:
 
 - create an initial design image for a UI, CSS, layout, page, or component task
@@ -43,6 +45,10 @@ Design images must not introduce UI, features, navigation, tools, or flows that 
 - existing global style and layout direction
 
 Design images are implementation guidance. Do not draw future features just because they look useful.
+
+Keep a design prototype separate from the actual site implementation. A prototype may reproduce the intended visual structure, but it must not import, alter, or capture the in-progress application.
+
+Use raster image generation only when the design itself needs a bitmap asset, such as an illustration, texture, or non-system visual. Do not use it as the default for page or component layout drafts.
 
 ---
 
@@ -192,6 +198,25 @@ Do not place temporary screenshots or trial images in `docs/design/` unless they
 
 Do not commit Playwright actual screenshots, `test-results/`, `playwright-report/`, or `.tmp/` artifacts as design source of truth.
 
+### Initial draft prototype files
+
+Put the temporary HTML/CSS prototype and its Playwright capture script under:
+
+```txt
+.tmp/design/<design-target>/
+```
+
+Recommended files:
+
+```txt
+.tmp/design/<design-target>/prototype.html
+.tmp/design/<design-target>/capture.mjs
+```
+
+These files are temporary and must not be committed. Capture the prototype at the recorded viewport, inspect the result, and place only the selected design reference images in `docs/design/<design-target>/`.
+
+The prototype capture is not an actual implementation screenshot. Do not use the local application route, `test-results/`, or `playwright-report/` as its source.
+
 ---
 
 ## notes.md requirements
@@ -249,11 +274,11 @@ Use this structure:
 
 ## Generation source
 
-- generator or capture source:
+- prototype or generator source:
 - source branch / commit when applicable:
 - route when applicable:
 - viewport:
-- prompt summary or capture notes:
+- prototype path / prompt summary / capture notes:
 
 ## Open questions
 
@@ -279,16 +304,16 @@ Component-only designs may use a smaller frame, but the frame size must be recor
 
 ---
 
-## Text in generated images
+## Text in initial design images
 
-Do not rely on generated images for exact text.
+Do not rely on raster image generation for exact text.
 
 Rules:
 
-- avoid long exact Japanese text inside generated images
-- use representative blocks or short labels when exact text is not required
-- record exact wording in `notes.md` or implementation, not only in the image
-- do not treat generated text accuracy as a design requirement unless explicitly requested
+- use the HTML prototype when exact Japanese text, heading hierarchy, spacing, or responsive behavior needs design review
+- use representative blocks or short labels in raster-generated assets when exact text is not required
+- record exact wording in `notes.md` or implementation, not only in an image
+- do not treat raster-generated text accuracy as a design requirement unless explicitly requested
 
 ---
 
@@ -300,9 +325,12 @@ Rules:
 4. Check existing global and layout design references.
 5. Identify out-of-scope elements that must not be drawn.
 6. Determine viewport and state coverage.
-7. Generate or prepare design image drafts.
-8. Create or update `notes.md` with design intent and source references.
-9. Stop for human review.
+7. Create a standalone HTML/CSS prototype in `.tmp/design/<design-target>/`. Do not alter application source files.
+8. Use Playwright to capture the prototype at every required viewport and state.
+9. Inspect the captures and place the selected design draft images in `docs/design/<design-target>/`.
+10. Create or update `notes.md` with design intent, prototype path, capture source, and viewport references.
+11. If a bitmap asset is still needed, use image generation only for that asset and record its source in `notes.md`.
+12. Stop for human review.
 
 Do not proceed to implementation from this skill.
 

@@ -145,6 +145,10 @@ Do not commit Visual Review output directories.
 
 Do not replace canonical design images with actual screenshots unless the design-image-generation design fix workflow is approved.
 
+For initial page, layout, UI, CSS, and component design drafts, put standalone HTML/CSS prototypes and Playwright capture scripts under `.tmp/design/<design-target>/`. These prototypes are temporary design work, not implementation source. Capture them at the documented viewports and move only the selected design reference images to `docs/design/<design-target>/`.
+
+Do not use the local application route, `test-results/`, or `playwright-report/` as the source of an initial design prototype image. Those are actual implementation screenshots and remain subject to the design fix approval workflow.
+
 ## Required Ignore Policy
 
 Keep these ignore rules:
