@@ -32,8 +32,12 @@ Use the following sources in order:
 
 1. User instruction.
 2. Local `src/pages/` implementation.
-3. Local `.raw/contents/` source.
-4. Local `.raw/v1.0/` reference documents.
+3. Current task issue under `docs/issue/`.
+4. `docs/requirements.md` and relevant `docs/requirements/` files.
+5. `docs/plan.md`.
+6. `docs/out-of-scope.md`.
+7. Local `.raw/contents/` source.
+8. Local `.raw/v1.0/` reference documents.
 
 Do not treat a lower-priority source as confirmation that a higher-priority source is correct.
 
@@ -52,22 +56,30 @@ Do not treat a lower-priority source as confirmation that a higher-priority sour
 ## Local Source Review
 
 1. Locate the implemented route and related page source under `src/pages/`.
-2. Read the matching `.raw/contents/<slug>.md` when it exists.
-3. Read relevant `.raw/v1.0/*.md` files only when they help with existing wording, terminology, or document style.
-4. Use v1.0 only as historical rule, playtest, idea, and style reference. Do not restore old rules over the current implementation.
-5. Respect observable v1.0 writing habits. Avoid generic, over-regular, or artificial-sounding prose.
-6. Report unavailable local sources as unverified. Do not guess their content.
+2. Read the current issue, relevant requirements, plan, and out-of-scope source.
+3. Read the matching `.raw/contents/<slug>.md` when it exists.
+4. Read relevant `.raw/v1.0/*.md` files only when they help with existing wording, terminology, or document style.
+5. Use v1.0 only as historical rule, playtest, idea, and style reference. Do not restore old rules over the current implementation.
+6. Respect observable v1.0 writing habits. Avoid generic, over-regular, or artificial-sounding prose.
+7. Report unavailable sources as unverified. Do not guess their content.
 
 ## Conflict Handling
 
-When user instruction differs from `src/pages/` or `.raw/contents/`:
+When a lower-priority source differs from the user instruction or existing implementation:
 
 1. Identify the affected page, internal links, shared Components, and data display.
-2. Explain which source conflicts with the user instruction.
+2. Explain which source conflicts and its priority.
 3. Ask the user whether the implementation, the local contents source, or both should change.
 4. Stop before changing implementation.
 
 When the user approves an implementation change and that change is completed, update the corresponding local `.raw/contents/<slug>.md` in the same task. Do not write it back to Google Drive automatically. Use `raw-to-drive-sync` only after its explicit user invocation.
+
+When a Git-managed source of truth such as requirements, plan, or out-of-scope conflicts with the user instruction or the existing implementation:
+
+1. Identify the conflict and its impact.
+2. Ask whether the source of truth may be corrected.
+3. Stop until the user approves the correction.
+4. After approval, handle the correction using the same change-control conditions as a user-instruction and implementation mismatch.
 
 ## Source Format
 
@@ -126,6 +138,7 @@ Report:
 - target slug and route
 - local sources checked and unavailable sources
 - detected source conflicts and required user decisions
+- source-of-truth conflicts and correction authorization status
 - whether `.raw/contents/<slug>.md` was created or updated
 - confirmation that frontmatter and HTML comments are present when required
 - confirmation that `:::` instruction blocks and Google Docs rich-text layout are not used

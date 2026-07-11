@@ -32,7 +32,20 @@ Use this fixed local input structure:
     └── *.md
 ```
 
-The Google Drive sync root must use the same relative structure.
+The Google Drive sync root is distinct from the local `.raw/` structure:
+
+```text
+<sync-root>/
+├── release-notes                 # existing Google Sheet
+├── data/
+│   └── Google Sheets
+├── contents/
+│   └── *.md                      # Google Docs with literal Markdown source
+└── v1.0/
+    └── Google Docs only
+```
+
+Map the existing Drive Google Sheet `release-notes` to local `.raw/release-notes.xlsx`. Do not look for or create `release-notes.xlsx` in the Drive root.
 
 Use `<repo-root>/raw-google-drive.url` to store the Google Drive sync folder URL for local development.
 

@@ -32,14 +32,16 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 
 - 既存 `.agents/skills/contents-markdown-authoring/SKILL.md` を拡張する。
   - 新規コンテンツ指示書の成果物は `.raw/contents/<slug>.md` とし、既存のfrontmatter、Markdown本文、HTMLコメントの形式を使う。比較結果・未解決差異は成果物へ混在させず、チャットで報告する。
-  - 新規コンテンツ指示書の情報源を、ユーザー指示、ローカル`src/pages/`の実装済み記載、ローカル`.raw/contents/`の既存記載、ローカル`.raw/v1.0/`の記載の順で照合する。
+  - 新規コンテンツ指示書の情報源を、ユーザー指示、ローカル`src/pages/`の実装済み記載、current issue、`docs/requirements.md`と関連`docs/requirements/`、`docs/plan.md`、`docs/out-of-scope.md`、ローカル`.raw/contents/`の既存記載、ローカル`.raw/v1.0/`の記載の順で照合する。
   - ユーザー指示が既存実装または `.raw/contents/` と異なる場合、対象ページ・関連リンク・共通Component・データ表示を含む影響範囲を特定し、実装変更前にユーザー判断を求めて停止する。
+  - requirements、plan、out-of-scopeなどのGit管理下の正本が、ユーザー指示または既存実装と齟齬を起こす場合は、齟齬と影響範囲を示し、正本を修正してよいかユーザーに確認する。承認後の対応は、既存実装とユーザー指示のズレを解決する場合と同じ停止・承認条件に従う。
   - 承認済みの実装変更で本文を変える場合は、対応する `.raw/contents/` の指示書もローカルで同期する。Git管理外であることと、Driveへの反映は別の明示操作であることを明記する。
   - `.raw/v1.0/` の旧資料を文体・言い回しの参照として扱い、定型的で過度に均質なAI風表現を避ける。参照資料が不足する場合は、文体を推測で固定しない。
 - `.agents/skills/remote-contents-markdown-authoring/SKILL.md` を新設する。
   - ChatGPTからコンテンツ指示書の草案を作成・確認するときだけ使う。
-  - ユーザー指示と、ChatGPTから取得できるGit管理下の`src/pages/`を照合する。
+  - 情報源を、ユーザー指示、ChatGPTから取得できるGit管理下の`src/pages/`の既存実装、取得可能なcurrent issue・`docs/requirements.md`と関連`docs/requirements/`・`docs/plan.md`・`docs/out-of-scope.md`の順で照合する。ローカル専用情報源は利用できない場合に未確認として報告する。
   - ローカル専用の`.raw/contents/`と`.raw/v1.0/`は参照せず、未確認として報告する。Google Driveの同期・読取り・書込み、ローカル`.raw/`への書込みは行わない。
+  - requirements、plan、out-of-scopeなど同一リモートsnapshotで取得できる正本が、ユーザー指示または既存実装と齟齬を起こす場合は、齟齬と影響範囲を示し、正本の修正可否をユーザーに確認する。リモートモードではローカルまたはGoogle Driveを書き換えず、承認後に必要な修正を実行可能な環境で扱う。
   - 成果物はチャット上のMarkdown草案とし、ローカル`.raw/contents/<slug>.md`を作成・更新したとは扱わない。使用したリモートsource snapshotと未確認のローカル情報源を報告する。
   - ローカルSKILLとリモートSKILLを分ける目的は、人間向けの読みやすさではなく、agentが不要なモードの手順・参照先・停止条件をコンテキストへ持ち込まず、モード誤認とコンテキスト肥大を防ぐこととする。
 - `drive-to-raw-sync` と `.raw/` の運用を更新する。
@@ -67,9 +69,9 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 
 ## 完了条件
 
-- [x] `contents-markdown-authoring` に、`.raw/contents/<slug>.md` を成果物とするローカル実行用の情報源優先順位、差異検出とユーザー確認、`.raw/contents/` 同期、v1.0文体参照のルールが記載されている。
-- [x] `remote-contents-markdown-authoring` に、チャット上のMarkdown草案を成果物とするリモート実行用の情報源優先順位とsource snapshot報告のルールが記載されている。
-- [x] `remote-contents-markdown-authoring` が、ユーザー指示と取得可能なGit管理下の`src/pages/`だけを照合し、`.raw/contents/`・`.raw/v1.0/`を未確認として報告する。
+- [x] `contents-markdown-authoring` に、`.raw/contents/<slug>.md` を成果物とするローカル実行用の情報源優先順位（ユーザー指示、既存実装、current issue、requirements、plan、out-of-scope、`.raw/contents/`、`.raw/v1.0/`）、差異検出とユーザー確認、`.raw/contents/` 同期、v1.0文体参照のルールが記載されている。
+- [x] `remote-contents-markdown-authoring` に、チャット上のMarkdown草案を成果物とするリモート実行用の情報源優先順位（ユーザー指示、既存実装、取得可能なcurrent issue・requirements・plan・out-of-scope）とsource snapshot報告のルールが記載されている。
+- [x] 両authoring SKILLが、requirements、plan、out-of-scopeなどの正本とユーザー指示または既存実装の齟齬を検出した場合、正本の修正可否をユーザー確認し、承認後に対応する条件を記載している。remote SKILLはローカル専用の`.raw/contents/`・`.raw/v1.0/`を未確認として報告し、ローカルまたはGoogle Driveを書き換えない。
 - [x] `remote-contents-markdown-authoring` が、Google Driveへの同期・読取り・書込み、ローカル`.raw/`への書込みを行わない。
 - [x] Drive→`.raw/` 同期で、`v1.0/` 直下のGoogle Docsを `text/markdown` のMarkdownとして扱い、inline base64画像定義をローカル保存前に除去し、`contents/` のGoogle Docsは `text/plain` とする。非Google Docsまたはサブディレクトリでは停止・報告するルールが記載されている。
 - [x] `raw-to-drive-sync` が新設され、`$raw-to-drive-sync` または `raw-to-drive-sync を実行して` の明示呼び出しだけで実行される。
@@ -85,7 +87,7 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 
 ## チェックポイント
 
-- [x] ユーザー指示と下位情報源の差異を、SKILLが勝手に解決・実装しない。
+- [x] ユーザー指示と下位情報源の差異を、SKILLが勝手に解決・実装しない。requirements、plan、out-of-scopeなどの正本修正はユーザー承認後に限る。
 - [x] リモートSKILLがローカル専用の情報源を、参照済みまたは差異なしと扱わない。
 - [x] 比較結果と未解決差異を `.raw/contents/<slug>.md` の公開用候補本文へ混在させない。
 - [x] `.raw/contents/<slug>.md` のDrive書込みで、Markdownをリッチテキストとして解釈・貼り付けず、ソースをプレーンテキストとして書き込む。
@@ -118,7 +120,8 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 ## レビュー観点
 
 - `contents-markdown-authoring`、`remote-contents-markdown-authoring`、`raw-to-drive-sync` の分割が、agentのコンテキストから不要な手順・参照先・停止条件を除外し、モード誤認とコンテキスト肥大を防げるか。
-- `remote-contents-markdown-authoring` で、`.raw/contents/`と`.raw/v1.0/`を利用できないこと、Google Driveを操作しないこと、ローカル成果物を作成しないことが明確か。
+- `remote-contents-markdown-authoring` が、ユーザー指示、既存実装、取得可能なcurrent issue・requirements・plan・out-of-scopeという優先順位を守り、`.raw/contents/`と`.raw/v1.0/`を利用できないこと、Google Driveを操作しないこと、ローカル成果物を作成しないことが明確か。
+- requirements、plan、out-of-scopeなどの正本がユーザー指示または既存実装と齟齬を起こす場合、正本修正の可否をユーザーに確認してから対応する条件が両モードで明確か。
 - `docs/plan.md` の現在のページ作成フェーズに対し、今回のSKILL整備は必要最小限か。補助スクリプト、CI/CD統合、双方向自動同期などのオーバーエンジニアリングを含んでいないか。
 - `.raw/v1.0/` のローカル保存先、直下Google Docsだけを対象とするDrive→`.raw/` の取込条件、現行サイトの正本との関係が明確か。
 - 新規コンテンツを初めてDriveへ同期するとき、`contents/`に`<slug>.md`というファイル名のGoogle Docを作成し、Markdownをプレーンテキストとして書き込む方針が、Google Driveを正本とする運用と整合するか。
@@ -137,3 +140,30 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 - 2026-07-11に、ユーザーが `$raw-to-drive-sync` で `.raw/contents/home.md` の同期を動作確認した。セッション内更新記憶がないため書込み前確認で停止し、ユーザーの上書き許可後に既存 `contents/home.md` を更新した。Markdownをプレーンテキストとして書込み、frontmatter・HTMLコメント・Markdown記号をconnector readbackで確認した。Google Sheet、Excel、`data/`、`v1.0/` は変更していない。後のPR作成時は、この動作確認結果を本文に含める。
 - 2026-07-11に、`v1.0/`のGoogle Docsを誤って `text/plain` exportする実装バグをユーザーが指摘した。`contents/` は `text/plain`、スタイル付きの`v1.0/`は `text/markdown` としてexportするよう修正した。誤った形式で作成済みのローカルv1.0ファイルは、正しいexportによる再同期が必要である。
 - 2026-07-11に、`text/markdown` exportが画像をinline base64データURIとして出力し、ローカル作業入力とagentコンテキストを肥大化させることを確認した。v1.0同期では画像定義だけをローカル保存前に除去し、通常の本文と画像リンクは保持する。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `remote-contents-markdown-authoring` のPreconditionsが、成果物の照合対象をユーザー指示とリモート`src/pages/`に限定する旧要件を超えて、current issue・requirements・plan・out-of-scopeを読むよう指示している。ユーザー指示により、requirements等はユーザー指示または既存実装との齟齬を検出し、修正可否を確認するために扱う要件へ更新する。
+- `.agents/rules/data-management.md` がDrive sync rootとローカル`.raw/`を同一相対構造とし、Drive rootの既存Google Sheet `release-notes` とローカル出力`release-notes.xlsx`の対応を誤認させる。
+- `.agents/rules/file-structure.md` の固定`.raw/`構造に、正式な旧版参照入力`.raw/v1.0/*.md`がない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `.tmp/review/local-content-authoring/pr-review-1.md`、document/technical reviewer報告、current issue、関連SKILL/rule、AC-07を確認した。3件ともcurrent issueの情報源境界と`.raw/`構造の整合性に関する完了条件・チェックポイントに属し、現在のlocal HEADでも未修正である。PR本文の`User-Directed Changes Outside Current Issue`は評価対象外とした。
+
+### 対応方針
+
+- remote SKILLの成果物の根拠を、ユーザー指示、既存実装、取得可能なcurrent issue・requirements・plan・out-of-scopeに限定する。requirements等はユーザー指示または既存実装との齟齬を検出し、正本の修正可否を確認するために扱う。
+- data-management ruleでDrive側とローカル側の構造・`release-notes`の対応を分けて明記する。
+- file-structure ruleの固定`.raw/`構造に`v1.0/`を旧版参照入力として追加する。
+
+### 対応完了チェックリスト
+
+- [x] remote SKILLの参照境界と、requirements等の齟齬時のユーザー確認をcurrent issueと一致させる
+- [x] Drive sync rootとローカル`.raw/`の構造・`release-notes`対応を明確に分離する
+- [x] file-structure ruleに`.raw/v1.0/`を追加する
+- [x] `npm run check:md` が通る

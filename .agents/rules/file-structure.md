@@ -23,8 +23,10 @@ Use this fixed structure:
 ├── release-notes.xlsx
 ├── data/
 │   └── *.xlsx
-└── contents/
-    └── *.md
+├── contents/
+│   └── *.md
+└── v1.0/
+    └── *.md                     # historical reference input only
 ```
 
 Do not add alternative raw input roots such as `raw/`, `contents/`, `data/`, or `.raw/sheets/`.

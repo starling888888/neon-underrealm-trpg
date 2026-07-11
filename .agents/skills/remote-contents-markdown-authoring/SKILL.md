@@ -30,6 +30,10 @@ Use these sources in order:
 
 1. User instruction.
 2. `src/pages/` files available from the remote repository snapshot.
+3. Current task issue under `docs/issue/` when available from the remote repository snapshot.
+4. `docs/requirements.md` and relevant `docs/requirements/` files when available from the remote repository snapshot.
+5. `docs/plan.md` when available from the remote repository snapshot.
+6. `docs/out-of-scope.md` when available from the remote repository snapshot.
 
 Do not access or infer `.raw/contents/` or `.raw/v1.0/`. They are local-only inputs and must be reported as unverified.
 
@@ -39,18 +43,20 @@ The result is a Markdown draft in chat. Do not claim that a local `.raw/contents
 
 1. Identify the remote repository and ref when available.
 2. Read the available `src/pages/` files relevant to the target route.
-3. Read the current issue, requirements, plan, and out-of-scope documents only when they are available from the same snapshot.
+3. Read the current issue, requirements, plan, and out-of-scope source when each is available from the same snapshot. Use them to identify a conflict with the user instruction or existing implementation, not as a replacement for either higher-priority source.
 4. Confirm the target slug, route, and title when the user did not provide them.
 5. Do not claim local working-tree, `.raw/`, Google Drive, or command validation results.
 
 ## Workflow
 
 1. State the source snapshot and the files used.
-2. Compare the user instruction with the remotely available `src/pages/` implementation.
-3. If they differ, identify the remotely observable page and link impact, ask for user direction, and do not propose an implementation change as completed.
-4. Draft normal Markdown with frontmatter and HTML comments when agent-facing notes are needed.
-5. Do not use `:::` instruction blocks.
-6. Report `.raw/contents/` and `.raw/v1.0/` as unchecked.
+2. Compare the sources in priority order.
+3. If a lower-priority source differs from the user instruction or existing implementation, identify the remotely observable page and link impact, ask for user direction, and do not propose an implementation change as completed.
+4. If an available requirement, plan, or out-of-scope source conflicts with the user instruction or existing implementation, identify the conflict and impact, then ask whether it may be corrected.
+5. Do not change a remote repository, local file, or Google Drive content in this mode. After user approval, report the required correction for an environment authorized to make it.
+6. Draft normal Markdown with frontmatter and HTML comments when agent-facing notes are needed.
+7. Do not use `:::` instruction blocks.
+8. Report `.raw/contents/` and `.raw/v1.0/` as unchecked.
 
 ## Required Report
 
@@ -62,6 +68,7 @@ Report:
 - checked remote files
 - unverified local sources: `.raw/contents/` and `.raw/v1.0/`
 - detected implementation differences and required user decisions
+- source-of-truth conflicts and correction authorization status
 - confirmation that no local file or Google Drive content was changed
 
 Do not commit, push, create a PR, access Google Drive, write local files, or implement pages.
