@@ -20,7 +20,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/20-2-introduction-page.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/non-functional.md`
 - `docs/requirements/components.md`
