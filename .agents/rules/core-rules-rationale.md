@@ -16,6 +16,10 @@ After the user asks to commit, staging the intended files is part of making the 
 
 Development work starts with a reviewed issue contract.
 
+This rule protects implementation work. It does not convert every task-number reference, branch request, scope adjustment, requirements adjustment, or local contents-authoring request into authorization to create an issue. The latest user instruction controls whether issue creation is allowed.
+
+When a user limits work to scope, requirements, or contents, the agent must complete only that work, report the result and unresolved decisions, and stop. Running an issue reviewer without first creating a user-authorized local issue would add unrequested work and can obscure the requested stopping point.
+
 The issue file defines:
 
 - task goal

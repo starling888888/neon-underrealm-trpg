@@ -28,8 +28,9 @@
 - commit指示前に、ユーザーの明示指示なしに `git add` しない。commit指示が出た場合は、対象差分を確認したうえで必要な `git add` と `git commit` を実行してよい。
 - ユーザーの明示指示なしに `git commit`、`git push`、`git tag`、PR作成、remote branch作成、GitHub Release作成をしない。
 - 既に承認済みcommand prefixに一致するコマンドでは、`require_escalated` を明示指定して不要な追加承認を要求してはならない。追加承認は、承認済みprefixに一致せず、sandbox外実行が実際に必要な場合に限る。承認済みの状態変更Git操作（`git add`、`git commit`、`git push`など）は1つずつ実行し、`&&`、`;`、pipe、subshellでほかのGit操作と連結してはならない。
-- 開発タスクは、実装前に `.agents/skills/issue-first-development/SKILL.md` を使い、branch作成と `docs/issue/*.md` 作成または検証で停止する。
-- `issue-first-development` のlocal repository modeでは、branch作成後に `.tmp/review/<branch-name>/` を作成し、ユーザーレビュー前に `issue_reviewer` を最大2回実行する。remote snapshot draft modeではreviewerを実行しない。
+- 実装タスクは、実装前に `.agents/skills/issue-first-development/SKILL.md` を使い、ユーザーが明示的に許可した `docs/issue/*.md` 作成または検証で停止する。task番号、`$issue-first-development` の呼び出し、branch作成指示、開発開始指示だけではissue作成を許可しない。
+- ユーザーがscope調整、requirements調整、contents作成だけを指示した場合は、issueを作成せずに該当skillまたは作業だけを行い、その完了時に判断・未確定事項を返して停止する。ユーザーがissueを作成しないと明示した場合は、その指定を優先する。
+- `issue-first-development` のlocal repository modeで `issue_reviewer` を実行してよいのは、このworkflowでユーザー許可済みのローカルissueを作成した後だけである。issueを作成していないbranch準備、scope調整、requirements調整、contents作成ではreviewerを実行しない。remote snapshot draft modeではreviewerを実行しない。
 - 実装を開始してよいのは、ユーザーがissue内容を明示承認した後だけである。
 - 開発タスクは専用branchで行う。branch名は原則 `NN-slug` または `NN-M-slug` とする。承認済みissueが別名を明示する場合はそれに従う。
 - 実装範囲は現在の `docs/issue/*.md` に従う。範囲外作業は勝手に混ぜない。
@@ -82,6 +83,8 @@ Git / GitHub CLI / PR作成 / 破壊的操作の詳細は `.agents/rules/git-ope
 - 開発作業の開始を指示した
 
 `issueを作って` は、GitHub Issueではなくローカルの `docs/issue/*.md` 作成を意味する。GitHub Issueを作成してよいのは、ユーザーが明示的に「GitHub Issueを作って」「GitHub上にissueを発行して」「gh issue createして」などと指示した場合だけである。
+
+`docs/plan.md` のタスク番号指定、`$issue-first-development` の呼び出し、task開始、branch作成は、該当skillを参照してユーザー指示を安全に実行する契機であり、ローカルissue作成の許可ではない。issueを作成しないと明示された場合、またはscope、requirements、contentsだけが指示された場合は、issue作成とissue reviewerを行わない。
 
 PRを作成してよいのは、ユーザーが明示的にPR作成を指示した場合だけである。PR作成時は `.agents/skills/create-pr/SKILL.md` と `.github/pull_request_template.md` を使い、GitHub connector経由でPRを作成する。
 

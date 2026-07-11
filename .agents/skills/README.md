@@ -8,9 +8,9 @@ Use this file as an index only. Do not read every skill by default. Read the ski
 
 ### `issue-first-development`
 
-Use when starting a development task, creating a task branch, creating or validating `docs/issue/*.md`, or drafting an issue from a remote snapshot.
+Use when starting a development task, creating a task branch, creating or validating `docs/issue/*.md`, or drafting an issue from a remote snapshot. Creating or validating an issue requires explicit user authorization; task numbers, skill invocation, and branch preparation do not grant it.
 
-In local repository mode, create `.tmp/review/<branch-name>/` and run the issue reviewer before user review. Implementation requires explicit user approval.
+For scope, requirements, or contents-only instructions, perform only the requested work and do not create an issue or run the issue reviewer. In local repository mode, run the issue reviewer only after creating a user-authorized local issue. Implementation requires explicit user approval.
 
 ### `design-image-generation`
 

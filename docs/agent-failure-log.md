@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Contents authoring was incorrectly blocked by issue-first workflow
+
+#### 2026-07-11
+
+- source: user
+- 発生箇所: `21-2-world-page` の作業開始
+- 観測した失敗: ユーザーは「issue作成をせずにcontentsを作り始めて」と明示した。`.raw/contents/` の作成は `contents-markdown-authoring` の対象であり、サイト実装ではないにもかかわらず、agentは `issue-first-development` を優先してbranch作成、ローカルissue作成、issue reviewer実行まで進めた。
+- 一次対応: 作成した `docs/issue/21-2-world-page.md` を削除し、contents authoring workflowへ切り替えた。今後、ユーザーが明示しているローカルcontents作成を、実装用issueの停止条件で妨げない。
+
 ### Content-instruction stopping point overrun
 
 #### 2026-07-11
