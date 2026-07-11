@@ -21,6 +21,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [ ] `/support` のオンラインセッションサポートページを作成する
+  - source: `20-2-introduction-page` のコンテンツ検討時のユーザー指示
+  - classification: follow-up
+  - plan: `docs/plan.md` の `41-2-support-page`
+  - handling plan: 本作で多数のダイスを使用することからオンラインセッションを推奨し、オンラインセッションの準備と進め方を説明する。特定ツールを必須にせず、Webキャラクターシート、ダイスローラー、戦闘支援機能は作らない。
+
 - [ ] 最初のページ作成タスクで、ローカルコンテンツ作成SKILLを実際に使って動作確認する
   - source: `local-content-authoring` issue 実装後のユーザー指示
   - classification: validation follow-up
@@ -30,7 +36,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
   - source: `17-github-actions-deploy-basic` issue review
   - classification: follow-up
-  - plan: `docs/plan.md` の `54-ci-non-main-branches`
+  - plan: `docs/plan.md` の `55-ci-non-main-branches`
   - handling plan: GitHub Pages deploy workflowとは分離し、main以外のbranch / pull requestで `npm ci`、`npm run check`、`npm run build`、必要なtestを実行するCIを整備する。deployは行わず、GitHub Pages環境を更新しない。docs-only更新、AGENTS / SKILL更新のみの場合の扱いもCI方針として明確化する。
 
 - [ ] 生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する
@@ -66,7 +72,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] VRT実装時に、mobile layout / MobilePageToc のCSS回帰検知を追加する
   - source: `.tmp/16-review.md` / PR #21 review
   - classification: follow-up
-  - plan: `docs/plan.md` の `48-1-vrt-css-regression-guards`
+  - plan: `docs/plan.md` の `49-1-vrt-css-regression-guards`
   - handling plan: 現在の `tests/visual/*` はdesign正本化用スクリーンショット取得として扱い、このIssueではCSS回帰検知を実装しない。将来VRTを導入する際、少なくとも390px mobile幅での意図しない横スクロール、MobilePageToc sticky headingの背景透過、TOC非表示対象ページでのPageToc / MobilePageToc非表示を自動検知する。
 
 <!--
