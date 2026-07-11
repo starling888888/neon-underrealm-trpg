@@ -51,5 +51,17 @@ import InternalLink from "../../components/_common/InternalLink.astro";
 </Callout>
 
 <Callout type="note" title="見出しレベル指定" titleHeadingLevel={3}>
-`titleHeadingLevel` を指定すると、Callout titleをページ内の見出し階層へ含められます。
+`titleHeadingLevel` を指定すると、Callout titleをページ内の見出し階層へ含められます。H2とH3はページ内目次にも表示されます。
+</Callout>
+
+<Callout type="note" title="H4見出し" titleHeadingLevel={4}>
+H4〜H6は見出し構造として出力しますが、ページ内目次には表示されません。
+</Callout>
+
+<Callout type="note" title="H5見出し" titleHeadingLevel={5}>
+この確認ページでは、対応するHTML見出し要素が出力されることを確認します。
+</Callout>
+
+<Callout type="note" title="H6見出し" titleHeadingLevel={6}>
+既存のPageTocはH2とH3だけを対象にします。
 </Callout>

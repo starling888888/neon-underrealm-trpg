@@ -178,7 +178,7 @@
 
 - design target: `docs/design/callout/`、`docs/design/introduction/`
 - reference: 既存Calloutのlabel密度、warning Callout、PageTocのH2 / H3階層
-- notes: `titleHeadingLevel`は見出しの意味構造と目次階層だけを変え、Callout titleの視覚サイズは既定ラベルと同じに保つ。
+- notes: `titleHeadingLevel`は見出しの意味構造を変え、H2 / H3指定時だけ既存の目次階層へ反映する。Callout titleの視覚サイズは既定ラベルと同じに保つ。
 
 ### 成果物
 
@@ -198,7 +198,7 @@
 
 ### 自己修正した項目
 
-- [x] `titleAsHeading`を、H2〜H6を明示指定できる`titleHeadingLevel`へ置き換えた。
+- [x] `titleAsHeading`を、H2〜H6を明示指定できる`titleHeadingLevel`へ置き換えた。既存PageToc / MobilePageTocの対象はH2 / H3だけであり、H4〜H6は見出し構造だけに反映する。
 
 ### 人間判断が必要な差分
 
@@ -212,7 +212,7 @@
 
 - [x] desktop screenshot を取得した
 - [x] mobile screenshot を取得した
-- [x] `titleHeadingLevel={3}`の目次階層と既定titleの非混入を確認した
+- [x] `titleHeadingLevel={3}`の目次階層と既定titleの非混入を確認した。H4〜H6の目次非混入はレビュー指摘4で追加確認する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -282,7 +282,7 @@
 - `titleAsHeading`を、`2 | 3 | 4 | 5 | 6`を受ける`titleHeadingLevel`へ置き換える。未指定時は従来どおり`span`を出力する。
 - ゴールデンルールは`titleHeadingLevel={2}`を指定し、H1→H2とPageToc導線を維持する。
 - Callout確認ページにH3指定例を追加し、既定／title指定Calloutがspanのまま、指定例だけがH3かつPageTocへ入ることをdesktop・mobileで検証する。
-- 見出しレベルはHTML構造と目次階層を指定するためのpropであり、Callout titleの視覚サイズは既存Componentのまま維持する。
+- 見出しレベルはHTML構造を指定するためのpropであり、既存PageToc / MobilePageTocの対象はH2 / H3だけとする。Callout titleの視覚サイズは既存Componentのまま維持する。
 
 ### 対応完了チェックリスト
 
@@ -290,6 +290,31 @@
 - [x] 未指定の既定／title指定Calloutがspanのままである
 - [x] H3指定例がPageToc / MobilePageTocへ入る
 - [x] ゴールデンルールがH2とPageToc導線を維持する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- `titleHeadingLevel` はH2〜H6を出力できるが、既存PageTocのpostprocess対象はH2/H3だけである。それにもかかわらず、Callout designとビジュアルレビュー記録が全レベルでPageTocへ入るように読める。
+
+### 判定
+
+- source: local-pr-review（PR #34、`.tmp/review/20-2-introduction-page/document-review-4.md`、`.tmp/review/20-2-introduction-page/technical-review-4.md`）
+- classification: valid
+- local validation: `scripts/postprocess-page-toc/lib.ts` は`h2`と`h3`だけを収集し、`PageTocItem.depth`と`createHeadingId`も`2 | 3`に限定する。一方、`Callout.astro` は`titleHeadingLevel`の`2 | 3 | 4 | 5 | 6`を対応する見出し要素へ出力する。`docs/requirements/components.md`は見出し出力だけを要件とし、H4〜H6のPageToc収集を要求していない。
+
+### 対応方針
+
+- 既存のPageToc対象をH2/H3に保つ。`titleHeadingLevel={2}`と`{3}`だけがPageToc / MobilePageTocの対象であり、H4〜H6は見出し構造・支援技術の見出しナビゲーションのために出力するが、PageTocの対象外であることをCallout要件、design、issue記録に明記する。
+- Callout確認ページとtestでH4〜H6の見出し出力、およびPageToc非混入を検証する。H4〜H6をPageTocへ拡張する案は、postprocess、TOC階層UI、既存要件を変える別スコープのため今回実装しない。
+- PR #34本文の旧prop名`titleAsHeading`はリモートPR説明の誤記である。ユーザー指示により`titleHeadingLevel`とH2 / H3限定のPageToc対象へ更新した。
+
+### 対応完了チェックリスト
+
+- [x] H2/H3だけがPageToc / MobilePageTocの対象であることを要件・design・issue記録へ明記する
+- [x] H4〜H6指定時に対応する見出し要素が出力され、PageToc / MobilePageTocへ入らないことを検証する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 

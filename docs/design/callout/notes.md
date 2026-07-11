@@ -61,7 +61,7 @@
 - `src/styles/prose.css` の暫定 `.callout*` は実装時に整理対象とし、designでは6種すべてをComponentとして扱う。
 - full-page captureでは、既存SiteLayoutのHeader、SiteMenu、PageToc、Footerを含むが、評価対象は本文カラム内のCallout表示とする。
 - Calloutの種別は色だけでなく、ラベル、左線、記号マーカーで判別できるようにする。
-- `titleHeadingLevel`は、ページ内目次と支援技術の見出し階層を指定するためのopt-inとする。未指定の既定titleと`title`指定titleは、引き続き目次へ入れない。
+- `titleHeadingLevel`は、支援技術の見出し階層を指定するためのopt-inとする。既存PageToc / MobilePageTocの対象はH2とH3だけであり、H4〜H6は目次へ入れない。未指定の既定titleと`title`指定titleも、引き続き目次へ入れない。
 - 画像内の本文は見た目確認用の短い代表文であり、正式なゲームルール本文ではない。
 
 ## Out Of Scope
@@ -88,7 +88,7 @@
 - `version` は専用のバージョン番号バッジや追加propsを持たず、必要な版表記はCallout本文内で扱う。
 - desktopでは本文カラム幅でCalloutが自然に縦積みされる。
 - mobileでは左右余白、ラベル、本文、折り返しが破綻しない。
-- 未指定のCalloutタイトルはページ内目次に入る見出し要素に見えすぎない。`titleHeadingLevel`を明示した場合だけ、指定レベルの見出しとして目次へ入る。
+- 未指定のCalloutタイトルはページ内目次に入る見出し要素に見えすぎない。`titleHeadingLevel`を明示した場合だけ、指定レベルの見出しとして出力する。H2とH3だけが既存PageToc / MobilePageTocへ入り、H4〜H6は見出し構造だけに反映する。
 - slot内の段落、箇条書き、リンク、inline code、`strong` を置いても余白が破綻しない方向になっている。
 - 実装時に既存 `.prose .callout*` とComponent scoped styleの責務が重複しない。
 - Playwright actual screenshotをこのdesign画像へ直接上書きしない。
@@ -101,7 +101,7 @@
 - viewport:
   - `design-desktop.png`: `1440x1200` viewport, full-page capture
   - `design-mobile.png`: `390x900` viewport, full-page capture
-- prompt summary or capture notes: 6種のCalloutとtitle指定例を実ページの本文カラム条件で比較する。global stylesの白寄り背景、低彩度border、neutral / teal / warning / danger token方向を守り、色だけに依存しないラベルと記号マーカーを配置した。`titleHeadingLevel`の追加はHTML構造とPageToc階層だけを変え、Calloutの視覚的なtitle密度は変えないため、design画像の更新は不要と判断した。
+- prompt summary or capture notes: 6種のCalloutとtitle指定例を実ページの本文カラム条件で比較する。global stylesの白寄り背景、低彩度border、neutral / teal / warning / danger token方向を守り、色だけに依存しないラベルと記号マーカーを配置した。`titleHeadingLevel`の追加はHTML構造だけを変え、H2とH3の指定時だけ既存PageToc階層へ反映する。Calloutの視覚的なtitle密度は変えないため、design画像の更新は不要と判断した。
 
 ## Open Questions
 
