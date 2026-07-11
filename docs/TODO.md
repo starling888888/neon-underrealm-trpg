@@ -87,6 +87,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `50-1-vrt-css-regression-guards`
   - handling plan: 現在の `tests/visual/*` はdesign正本化用スクリーンショット取得として扱い、このIssueではCSS回帰検知を実装しない。将来VRTを導入する際、少なくとも390px mobile幅での意図しない横スクロール、MobilePageToc sticky headingの背景透過、TOC非表示対象ページでのPageToc / MobilePageToc非表示を自動検知する。
 
+- [ ] ゲーム画像生成のbase promptを改訂し、利用方針を決定する
+  - source: `21-2-world-page` のPR #35 reviewとユーザー指示
+  - classification: follow-up
+  - plan: `docs/plan.md` の `54-1-game-image-generation-policy`
+  - handling plan: `docs/image-generation/base-prompt.md`は現時点ではsampleとして維持する。将来taskで、公式ロゴ、in-world signage、overlay typography、画像固有promptの役割分担、生成前の承認事項、base promptの改訂方針を決定する。
+
 <!--
 例:
 
