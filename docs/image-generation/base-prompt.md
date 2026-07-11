@@ -36,7 +36,9 @@ Express Osaka through street layout, building density, aging commercial architec
 
 If a landmark is included, allow buildings, wires, rain, haze, signage, and perspective to partially obscure it. Do not display every important object in full, unobstructed view. A landmark should feel like part of the city rather than a symbol placed for the viewer.
 
-Do not include text, logos, titles, or typography unless they are explicitly requested.
+Do not automatically include text, logos, titles, or typography. Follow the image-specific prompt when it explicitly requests them.
+
+When an image-specific prompt explicitly requests official game branding, include the requested game title or logo as composited branding. Treat it as a deliberate website-hero or key-art element, not as in-world signage. Render only the approved string, place it where the image-specific prompt specifies, and do not add other titles, logos, or overlay typography.
 
 When no exact text has been specified, signs and displays must contain no readable writing. Use blank panels, inactive screens, simple geometric symbols, pictograms, color blocks, or non-linguistic interface elements.
 
