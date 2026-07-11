@@ -19,6 +19,7 @@ export const visualRoutes = {
   releaseNotes: "release-notes/",
   mdxTest: "-local/mdx-test/",
   callouts: "-local/callouts/",
+  npcCards: "-local/npc-cards/",
   dataItemsWeapons: "data/items/weapons/",
 } as const;
 
