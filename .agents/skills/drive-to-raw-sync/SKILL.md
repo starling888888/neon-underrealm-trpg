@@ -1,26 +1,25 @@
 ---
 name: drive-to-raw-sync
-description: Use this skill when syncing Google Drive user-edited source files into the local <repo-root>/.raw/ working input directory through Google Drive MCP, without writing back to Drive or adding runtime/build dependencies.
+description: Use this skill when syncing Google Drive user-edited sources, including historical v1.0 Google Docs, into the local <repo-root>/.raw/ working input directory without writing back to Drive.
 ---
 
 # Drive To Raw Sync Skill
 
-Sync Google Drive user-edited sources into local `.raw/` working inputs.
+Sync approved Google Drive sources into local `.raw/` working inputs.
 
 Use when the user asks to:
 
-- sync Google Drive to `.raw`
-- sync Drive sources to `.raw`
-- update `.raw/contents`
-- sync Drive input before page creation
-- reflect Google Docs Markdown source into local input
-- download a Spreadsheet to `.raw`
-- fetch working input through Drive MCP
+- sync Google Drive to `.raw/`
+- sync Drive sources to `.raw/`
+- update `.raw/contents/`
+- fetch local content or data input through Google Drive
+- refresh local v1.0 historical reference documents
 
 Do not use for:
 
 - writing local changes back to Google Drive
 - creating, updating, deleting, moving, copying, or sharing Drive files
+- syncing a v1.0 document back to Drive
 - implementing a custom Google Drive API sync script
 - requiring `rclone` or another external sync CLI
 - CI/CD, build-time, runtime, or publishing workflows
@@ -35,7 +34,7 @@ Never write Drive-derived files outside `<repo-root>/.raw/`.
 
 Never write back to Google Drive in this workflow.
 
-Stop if the Drive folder, local path, ignore policy, MCP availability, export format, or overwrite safety is unclear.
+Stop if the Drive folder, local path, ignore policy, MCP availability, export format, expected v1.0 structure, or overwrite safety is unclear.
 
 ## Preconditions
 
@@ -47,24 +46,11 @@ Stop if the Drive folder, local path, ignore policy, MCP availability, export fo
    ```
 
 3. Treat `.raw/` as `<repo-root>/.raw/`.
-4. Confirm `.raw/` is Git-ignored:
-
-   ```sh
-   cd "$REPO_ROOT"
-   git check-ignore .raw
-   ```
-
-5. Confirm `<repo-root>/raw-google-drive.url` is Git-ignored:
-
-   ```sh
-   git check-ignore raw-google-drive.url
-   ```
-
-6. Stop if `.raw/` or `raw-google-drive.url` is not Git-ignored.
-7. Confirm Google Drive MCP is available and authenticated.
-8. Confirm the MCP can search files, read metadata, and download or export file content.
-9. Confirm Google Docs can be exported as plain text.
-10. Confirm Google Sheets can be exported as `.xlsx`.
+4. Confirm `.raw/` is Git-ignored.
+5. Confirm `<repo-root>/raw-google-drive.url` is Git-ignored.
+6. Confirm Google Drive MCP is available and authenticated.
+7. Confirm the MCP can list folders, read file metadata, download files, and export Google Docs as plain text and Google Sheets as `.xlsx`.
+8. Stop if any precondition fails.
 
 ## Drive Folder Resolution
 
@@ -73,26 +59,22 @@ Use the first available source that identifies one Drive sync root:
 1. An explicit Google Drive folder URL from the user.
 2. A single folder URL in `<repo-root>/raw-google-drive.url`.
 3. An explicit Google Drive folder ID from the user.
-4. An explicitly provided file URL for a one-file sync.
 
-If `raw-google-drive.url` is used:
-
-- read only `<repo-root>/raw-google-drive.url`
-- require exactly one Drive folder URL
-- stop if the file is missing, empty, ambiguous, or not a Drive folder URL
-- do not commit the file
+When `raw-google-drive.url` is used, read only that file. Require exactly one valid Drive folder URL. Do not commit it.
 
 ## Allowed Structure
 
-The Drive sync root and local `.raw/` directory must use the same relative structure:
+The Drive sync root and local `.raw/` directory use this structure:
 
 ```text
 <sync-root>/
-├── release-notes.xlsx
+├── release-notes                 # existing Google Sheet
 ├── data/
-│   └── *.xlsx
-└── contents/
-    └── *.md
+│   └── *.xlsx-compatible Sheets
+├── contents/
+│   └── *.md                      # Google Docs with literal Markdown source
+└── v1.0/
+    └── Google Docs only, directly under this folder
 ```
 
 Local outputs are limited to:
@@ -101,6 +83,7 @@ Local outputs are limited to:
 <repo-root>/.raw/release-notes.xlsx
 <repo-root>/.raw/data/*.xlsx
 <repo-root>/.raw/contents/*.md
+<repo-root>/.raw/v1.0/*.md
 ```
 
 Do not create or use:
@@ -114,97 +97,67 @@ Do not create or use:
 <repo-root>/data/generated/
 ```
 
+`v1.0/` is a historical reference only. It may contain old rules, playtest material, and v1.5 ideas. It is not the current site source of truth.
+
+Require every direct child of Drive `v1.0/` to be a Google Doc. Stop and report if it contains a subdirectory or another file type. Do not recurse into subdirectories or invent a conversion for unsupported files.
+
 ## Export Rules
 
-Export Google Docs contents markdown as plain text:
+Export contents and v1.0 Google Docs as:
 
 ```text
 text/plain
 ```
 
-Save Google Docs under:
+Save them as Markdown `.md` files. Keep Markdown symbols, frontmatter, and HTML comments as literal plain text.
+
+For `contents/`, map the Google Doc title `<slug>.md` to:
 
 ```text
-<repo-root>/.raw/contents/*.md
+<repo-root>/.raw/contents/<slug>.md
 ```
 
-Store the exported plain text as a Markdown `.md` file.
+For `v1.0/`, map each direct Google Doc title to a local filename ending in `.md` under:
 
-The Google Doc must contain Markdown source as plain text. Do not use Google Docs rich-text headings, lists, tables, or links as the source format for `.raw/contents/*.md`.
+```text
+<repo-root>/.raw/v1.0/
+```
 
-Do not use Google Docs `text/markdown` export for `.raw/contents/*.md`.
+Stop if two source documents map to the same local filename.
 
-Export Google Sheets as Excel:
+Export Google Sheets as:
 
 ```text
 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 ```
 
-Save Google Sheets under:
-
-```text
-<repo-root>/.raw/release-notes.xlsx
-<repo-root>/.raw/data/*.xlsx
-```
-
-If MCP returns base64 content, decode it before writing the local file.
+Map the root `release-notes` Google Sheet to `<repo-root>/.raw/release-notes.xlsx`. Map permitted data Sheets to `<repo-root>/.raw/data/*.xlsx`.
 
 ## Workflow
 
 1. Inspect local status and stop if unrelated uncommitted changes would be overwritten.
-2. Resolve `<repo-root>`.
-3. Verify `.raw/` and `raw-google-drive.url` ignore policy.
-4. Resolve exactly one Drive sync root or one explicit Drive file.
-5. List candidate Drive files under the sync root.
-6. Keep only files matching:
-
-   ```text
-   ./release-notes.xlsx
-   ./data/*.xlsx
-   ./contents/*.md
-   ```
-
-7. Map each Drive file to the matching local path under `<repo-root>/.raw/`.
-8. Stop if any output path escapes `<repo-root>/.raw/`.
-9. Stop if Drive structure does not map clearly to the allowed local structure.
-10. Stop if multiple Drive files map to the same local path.
-11. Before overwriting an existing local file, confirm the downloaded or exported content is non-empty and complete.
-12. If overwrite safety is unclear, stop and ask the user.
-13. Download or export the files through Google Drive MCP.
-14. Write files only under `<repo-root>/.raw/`.
-15. Report the result.
-
-## Stop Conditions
-
-Stop when:
-
-- `<repo-root>` cannot be resolved
-- `.raw/` is not Git-ignored
-- `raw-google-drive.url` is not Git-ignored
-- the Drive folder is missing, ambiguous, or inaccessible
-- Google Drive MCP is unavailable or unauthenticated
-- required MCP tools are unavailable
-- Google Docs plain-text export is unavailable
-- Google Sheets `.xlsx` export is unavailable
-- a Drive path cannot be mapped to the allowed `.raw/` structure
-- an output path would be outside `<repo-root>/.raw/`
-- a local output collision exists
-- a download or export is empty, partial, or failed
-- overwrite safety is unclear
+2. Resolve the repository root and verify the ignore policy.
+3. Resolve exactly one Drive sync root.
+4. List direct root children and verify `release-notes`, `data/`, `contents/`, and `v1.0/` map unambiguously.
+5. List direct children of `v1.0/` and verify that all are Google Docs.
+6. Map allowed Drive files to the allowed local paths.
+7. Stop if any path escapes `<repo-root>/.raw/`, maps twice, or has an unsupported type.
+8. Before overwriting a local file, confirm the exported content is non-empty and complete.
+9. Download or export the allowed files through Google Drive MCP.
+10. Write only under `<repo-root>/.raw/`.
+11. Report the result.
 
 ## Required Report
 
 Report:
 
-- Drive source folder or file
-- local repo root
-- synced file count
-- Google Docs exported through `text/plain` and saved as Markdown `.md`
-- Google Sheets exported to `.xlsx`
-- regular files downloaded
-- skipped files
-- failed files
-- overwritten files
+- Drive source folder
+- local repository root
+- synced contents, data, release-notes, and v1.0 file counts
+- v1.0 structure verification result
+- skipped or unsupported files
+- failed and overwritten files
+- confirmation that Google Docs used `text/plain`
 - confirmation that outputs stayed under `<repo-root>/.raw/`
 - confirmation that `.raw/` and `raw-google-drive.url` are Git-ignored
 - confirmation that no Drive write operation was used

@@ -42,6 +42,7 @@
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
 - Google Drive上のユーザー編集正本をローカル作業入力として使う場合は、`raw-google-drive.url` と `<repo-root>/.raw/` の扱いを `.agents/skills/drive-to-raw-sync/SKILL.md` と `.agents/rules/data-management.md` で確認する。
+- ローカル`.raw/`からGoogle Driveへ書き込んでよいのは、ユーザーが `$raw-to-drive-sync` または `raw-to-drive-sync を実行して` と明示した場合に限る。このとき `.agents/skills/raw-to-drive-sync/SKILL.md` に従い、`.raw/data/` と `.raw/v1.0/` は明示指示があっても拒否する。
 - 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由をissueまたは作業報告に書く。
 - ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、または同種のcheck/build/test/formatter失敗を1回の作業中に2回以上繰り返した場合は `docs/agent-failure-log.md` に記録する。
 
@@ -101,13 +102,15 @@ contents markdownを作成または解釈する場合は、`.agents/skills/conte
 ├── release-notes.xlsx
 ├── data/
 │   └── *.xlsx
-└── contents/
+├── contents/
+│   └── *.md
+└── v1.0/
     └── *.md
 ```
 
-Google Drive側も同期対象フォルダ直下で同じ構造にする。Google DocsはMarkdownソースをプレーンテキストとして保持し、Markdown `.md` として同期する。Google SheetsはExcel `.xlsx` として同期する。
+Google Drive側は、`release-notes` Google Sheet、`data/`、`contents/`、`v1.0/` を同期対象フォルダ直下に置く。`contents/` のGoogle DocsはMarkdownソースをプレーンテキストとして保持し、ファイル名を `<slug>.md` とする。`v1.0/` は直下Google Docsだけを旧版参照資料として置く。Google SheetsはExcel `.xlsx` としてローカルへ同期する。
 
-Drive上の正本を書き換えてはならない。Drive同期はCI/CDでは実行しない。
+Google Driveは `.raw/contents/` と `.raw/release-notes.xlsx` のユーザー編集正本である。Drive書込みは `raw-to-drive-sync` の明示呼び出しだけに限定する。Drive同期はCI/CDでは実行しない。
 
 ---
 
@@ -125,6 +128,8 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - `.tmp/*.md` のレビュー指摘取り込み: `.agents/skills/review-to-issue/SKILL.md`
 - Google Drive正本から `<repo-root>/.raw/` への同期: `.agents/skills/drive-to-raw-sync/SKILL.md`
 - contents markdown草案作成または確認: `.agents/skills/contents-markdown-authoring/SKILL.md`
+- ChatGPTからのcontents markdown草案作成または確認: `.agents/skills/remote-contents-markdown-authoring/SKILL.md`
+- ローカル`.raw/`からGoogle Drive正本への明示同期: `.agents/skills/raw-to-drive-sync/SKILL.md`
 - GitHub PR snapshotからのレビュー草案作成: `.agents/skills/pr-review-draft/SKILL.md`
 - PR作成: `.agents/skills/create-pr/SKILL.md`
 - SKILL作成または更新: `.agents/skills/skill-authoring/SKILL.md`

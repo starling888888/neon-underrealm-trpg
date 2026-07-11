@@ -1,24 +1,24 @@
 ---
 name: contents-markdown-authoring
-description: Use this skill when drafting or reviewing contents markdown for .raw/contents/*.md as plain Markdown source for Google Docs, without implementing pages or writing back to Drive.
+description: Use this skill when drafting or reviewing .raw/contents/*.md locally with the local site, local contents, and local v1.0 reference sources.
 ---
 
 # Contents Markdown Authoring Skill
 
-Draft contents markdown that can be stored in Google Docs as plain text.
+Draft or review local contents markdown without conflicting with the current site.
 
 Use when the user asks to:
 
-- draft contents markdown for `.raw/contents/*.md`
-- prepare source text for a contents Google Doc
-- review whether contents markdown can be interpreted by an agent
-- write page source with frontmatter, Markdown body, and agent comments
-- convert page intent into Markdown source before local implementation
+- draft contents markdown for `.raw/contents/*.md` locally
+- prepare a local source file for a contents Google Doc
+- review a local contents markdown file against local site sources
+- create a local content instruction for a page before implementation
+- update a local contents instruction after an approved page-content change
 
 Do not use for:
 
-- syncing Google Drive files into `.raw/`
-- writing local changes back to Google Drive
+- ChatGPT or remote-snapshot content drafting
+- syncing `.raw/` to or from Google Drive
 - implementing `.raw/contents/*.md` as Astro, MDX, or page source
 - creating UI, layout, Component, or design images
 - replacing requirements, plan, issue, or design source of truth
@@ -26,15 +26,52 @@ Do not use for:
 
 ## Core Rule
 
-Write Markdown source, not a formatted Google Docs document.
+This is the local-only content authoring workflow.
 
-The output must be suitable for pasting into a Google Doc as plain text and later exporting through `text/plain`.
+Use the following sources in order:
 
-Do not use `:::` instruction blocks.
+1. User instruction.
+2. Local `src/pages/` implementation.
+3. Local `.raw/contents/` source.
+4. Local `.raw/v1.0/` reference documents.
+
+Do not treat a lower-priority source as confirmation that a higher-priority source is correct.
+
+`.raw/contents/<slug>.md` is the local result. It is Git-ignored working input. It is not the published page source.
+
+## Preconditions
+
+1. Run `git status --short`.
+2. Resolve the repository root with `git rev-parse --show-toplevel`.
+3. Read the current issue when one exists.
+4. Read `.agents/rules/contents-markdown.md`.
+5. Confirm the target slug, route, and title with the user when they are not provided.
+6. Check which local sources exist before claiming they were used.
+7. Do not overwrite an existing `.raw/contents/<slug>.md` unless the user asks to update it.
+
+## Local Source Review
+
+1. Locate the implemented route and related page source under `src/pages/`.
+2. Read the matching `.raw/contents/<slug>.md` when it exists.
+3. Read relevant `.raw/v1.0/*.md` files only when they help with existing wording, terminology, or document style.
+4. Use v1.0 only as historical rule, playtest, idea, and style reference. Do not restore old rules over the current implementation.
+5. Respect observable v1.0 writing habits. Avoid generic, over-regular, or artificial-sounding prose.
+6. Report unavailable local sources as unverified. Do not guess their content.
+
+## Conflict Handling
+
+When user instruction differs from `src/pages/` or `.raw/contents/`:
+
+1. Identify the affected page, internal links, shared Components, and data display.
+2. Explain which source conflicts with the user instruction.
+3. Ask the user whether the implementation, the local contents source, or both should change.
+4. Stop before changing implementation.
+
+When the user approves an implementation change and that change is completed, update the corresponding local `.raw/contents/<slug>.md` in the same task. Do not write it back to Google Drive automatically. Use `raw-to-drive-sync` only after its explicit user invocation.
 
 ## Source Format
 
-Use this structure:
+Use this structure for `.raw/contents/<slug>.md`:
 
 ```md
 ---
@@ -55,7 +92,7 @@ Markdown body goes here.
 
 Use frontmatter for page metadata.
 
-Use normal Markdown for page body:
+Use normal Markdown for the page body:
 
 - ATX headings
 - paragraphs
@@ -70,55 +107,28 @@ Use normal Markdown for page body:
 - fenced code blocks when needed
 - horizontal rules when needed
 
-Use HTML comments for agent-facing instructions.
+Put agent-facing implementation or interpretation notes in HTML comments.
 
-HTML comments are not final page body and must not be rendered as visible page text.
+Do not use `:::` instruction blocks.
 
-## Google Docs Handling
+## Google Docs Compatibility
 
-When the markdown is pasted into Google Docs:
+The local file is Markdown source for a Google Doc stored as plain text.
 
-- paste the Markdown source as plain text
-- keep Markdown symbols visible in the document
-- keep frontmatter as literal text
-- keep HTML comments as literal text
-- do not convert headings, lists, tables, or links into Google Docs rich-text layout
-- do not use Google Docs formatting as the source of layout intent
+When it is later synchronized to Drive, preserve Markdown symbols, frontmatter, and HTML comments as literal text. Do not require Google Docs rich-text headings, lists, tables, or links.
 
-Google Docs is only a storage place for Markdown source in this workflow.
-
-## Noise Tolerance
-
-Google Docs `text/plain` export may add or preserve non-semantic noise.
-
-Treat these as noise unless the current task explicitly depends on them:
-
-- UTF-8 BOM
-- extra blank lines
-- trailing spaces
-
-Do not add a formatter workflow for `.raw/contents/*.md` unless an approved issue changes that policy.
-
-## Workflow
-
-1. Confirm the requested page slug, route, title, and intended content.
-2. Check the current issue, requirements, plan, and out-of-scope notes when available.
-3. Draft frontmatter as page metadata.
-4. Draft the page body in normal Markdown.
-5. Put agent-facing implementation or interpretation notes in HTML comments.
-6. Confirm no `:::` instruction blocks are used.
-7. Confirm the draft does not replace requirements, plan, issue, or design source of truth.
-8. Report any assumptions or missing source information.
+Do not run a formatter over `.raw/contents/*.md` unless an approved issue changes this policy.
 
 ## Required Report
 
 Report:
 
-- page slug and route
-- whether frontmatter is present
-- whether HTML comments are used for agent-facing instructions
-- confirmation that Google Docs rich-text layout is not required
-- confirmation that `:::` instruction blocks are not used
-- unverified assumptions
+- target slug and route
+- local sources checked and unavailable sources
+- detected source conflicts and required user decisions
+- whether `.raw/contents/<slug>.md` was created or updated
+- confirmation that frontmatter and HTML comments are present when required
+- confirmation that `:::` instruction blocks and Google Docs rich-text layout are not used
+- whether Drive synchronization remains pending
 
 Do not commit, push, create a PR, write to Google Drive, or implement pages unless the user explicitly asks through the appropriate workflow.

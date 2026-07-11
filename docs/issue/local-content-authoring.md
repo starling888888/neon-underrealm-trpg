@@ -26,7 +26,7 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 - `docs/requirements/architecture.md` の AC-07
 - `docs/plan.md` の `.raw/contents/*.md` を前提とするページ作成方針
 
-関連TODOはない。`docs/TODO.md` の既存項目は本issueで回収しない。
+関連TODOとして、`20-2-introduction-page` でローカルコンテンツ作成SKILLを実作業で確認する項目を `docs/TODO.md` に記録する。このissueでは動作確認を実施しない。
 
 ## 対象範囲
 
@@ -67,39 +67,39 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 
 ## 完了条件
 
-- [ ] `contents-markdown-authoring` に、`.raw/contents/<slug>.md` を成果物とするローカル実行用の情報源優先順位、差異検出とユーザー確認、`.raw/contents/` 同期、v1.0文体参照のルールが記載されている。
-- [ ] `remote-contents-markdown-authoring` に、チャット上のMarkdown草案を成果物とするリモート実行用の情報源優先順位とsource snapshot報告のルールが記載されている。
-- [ ] `remote-contents-markdown-authoring` が、ユーザー指示と取得可能なGit管理下の`src/pages/`だけを照合し、`.raw/contents/`・`.raw/v1.0/`を未確認として報告する。
-- [ ] `remote-contents-markdown-authoring` が、Google Driveへの同期・読取り・書込み、ローカル`.raw/`への書込みを行わない。
-- [ ] Drive→`.raw/` 同期で、`v1.0/` 直下のGoogle Docsを `text/plain` のMarkdownとして扱い、非Google Docsまたはサブディレクトリでは停止・報告するルールが記載されている。
-- [ ] `raw-to-drive-sync` が新設され、`$raw-to-drive-sync` または `raw-to-drive-sync を実行して` の明示呼び出しだけで実行される。
-- [ ] `raw-to-drive-sync` は、`.raw/release-notes.xlsx` の内容を既存Google Sheet `release-notes` へ反映し、`.raw/contents/<slug>.md` を同名のGoogle Doc `<slug>.md` として同期する。`.raw/data/` と `.raw/v1.0/` は同期対象外として明示的に拒否する。
-- [ ] 同一セッションで更新した記憶がないファイルを同期する前に、ユーザー確認で停止する条件が記載されている。
-- [ ] 同期先がないcontentsファイルは、対応する`<slug>.md`というファイル名の新規Google Docを`contents/`に作成し、Markdownソースをプレーンテキストとして同期する。`release-notes`の同期先は必ず既存Google Sheetとする。
-- [ ] Google Driveを `contents` と `release-notes.xlsx` の正本として維持する条件と、ローカル→Drive同期の書き込み権限が矛盾なく記載されている。
-- [ ] `.raw/` 構造、MCP利用、Google Drive書き込み制限に関する参照先が矛盾なく更新されている。
-- [ ] 関連TODOを扱わない理由が記録されている。
-- [ ] 新しいnpm packageを追加していない。
-- [ ] `git diff --check` が通る。
-- [ ] `npm run check:md` が通る。
+- [x] `contents-markdown-authoring` に、`.raw/contents/<slug>.md` を成果物とするローカル実行用の情報源優先順位、差異検出とユーザー確認、`.raw/contents/` 同期、v1.0文体参照のルールが記載されている。
+- [x] `remote-contents-markdown-authoring` に、チャット上のMarkdown草案を成果物とするリモート実行用の情報源優先順位とsource snapshot報告のルールが記載されている。
+- [x] `remote-contents-markdown-authoring` が、ユーザー指示と取得可能なGit管理下の`src/pages/`だけを照合し、`.raw/contents/`・`.raw/v1.0/`を未確認として報告する。
+- [x] `remote-contents-markdown-authoring` が、Google Driveへの同期・読取り・書込み、ローカル`.raw/`への書込みを行わない。
+- [x] Drive→`.raw/` 同期で、`v1.0/` 直下のGoogle Docsを `text/plain` のMarkdownとして扱い、非Google Docsまたはサブディレクトリでは停止・報告するルールが記載されている。
+- [x] `raw-to-drive-sync` が新設され、`$raw-to-drive-sync` または `raw-to-drive-sync を実行して` の明示呼び出しだけで実行される。
+- [x] `raw-to-drive-sync` は、`.raw/release-notes.xlsx` の内容を既存Google Sheet `release-notes` へ反映し、`.raw/contents/<slug>.md` を同名のGoogle Doc `<slug>.md` として同期する。`.raw/data/` と `.raw/v1.0/` は同期対象外として明示的に拒否する。
+- [x] 同一セッションで更新した記憶がないファイルを同期する前に、ユーザー確認で停止する条件が記載されている。
+- [x] 同期先がないcontentsファイルは、対応する`<slug>.md`というファイル名の新規Google Docを`contents/`に作成し、Markdownソースをプレーンテキストとして同期する。`release-notes`の同期先は必ず既存Google Sheetとする。
+- [x] Google Driveを `contents` と `release-notes.xlsx` の正本として維持する条件と、ローカル→Drive同期の書き込み権限が矛盾なく記載されている。
+- [x] `.raw/` 構造、MCP利用、Google Drive書き込み制限に関する参照先が矛盾なく更新されている。
+- [x] 関連TODOを後続の `20-2-introduction-page` へ記録し、このissueでは実作業の動作確認を行わない理由が記録されている。
+- [x] 新しいnpm packageを追加していない。
+- [x] `git diff --check` が通る。
+- [x] `npm run check:md` が通る。
 
 ## チェックポイント
 
-- [ ] ユーザー指示と下位情報源の差異を、SKILLが勝手に解決・実装しない。
-- [ ] リモートSKILLがローカル専用の情報源を、参照済みまたは差異なしと扱わない。
-- [ ] 比較結果と未解決差異を `.raw/contents/<slug>.md` の公開用候補本文へ混在させない。
-- [ ] `.raw/contents/<slug>.md` のDrive書込みで、Markdownをリッチテキストとして解釈・貼り付けず、ソースをプレーンテキストとして書き込む。
-- [ ] `src/pages/` が現行ページ本文・UI構造の正本であることと、Google Driveが `.raw/contents/`・`release-notes.xlsx` のユーザー編集正本であることを混同しない。
-- [ ] v1.0を現行仕様として取り込まず、文体・旧ルール・検討資料の参照に限定する。
-- [ ] `v1.0/` の直下Google Docsだけを同期し、想定外の階層または形式を独自変換しない。
-- [ ] Drive→`.raw/` と `.raw/`→Drive の対象方向、許可パス、停止条件が対称でなくても明確に分離されている。
-- [ ] `data/` 同期拒否は、ユーザーの明示指示より優先する固定安全条件として記載されている。
-- [ ] Drive書き込みは、`$raw-to-drive-sync` または `raw-to-drive-sync を実行して` の明示呼び出し、対象ファイル確認、上書き確認の条件を満たす場合だけ可能である。
-- [ ] `release-notes`は既存Google Sheetへの反映だけを許可し、新規Google SheetまたはExcelファイルを作成しない。
-- [ ] Google Drive MCPをruntime、build、CI/CD、公開処理に利用しない。
-- [ ] 不要なSKILL分割、補助スクリプト、依存関係、Git管理対象の生データを追加していない。
-- [ ] `docs/plan.md` の既存タスク・チェックボックスを変更していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザー指示と下位情報源の差異を、SKILLが勝手に解決・実装しない。
+- [x] リモートSKILLがローカル専用の情報源を、参照済みまたは差異なしと扱わない。
+- [x] 比較結果と未解決差異を `.raw/contents/<slug>.md` の公開用候補本文へ混在させない。
+- [x] `.raw/contents/<slug>.md` のDrive書込みで、Markdownをリッチテキストとして解釈・貼り付けず、ソースをプレーンテキストとして書き込む。
+- [x] `src/pages/` が現行ページ本文・UI構造の正本であることと、Google Driveが `.raw/contents/`・`release-notes.xlsx` のユーザー編集正本であることを混同しない。
+- [x] v1.0を現行仕様として取り込まず、文体・旧ルール・検討資料の参照に限定する。
+- [x] `v1.0/` の直下Google Docsだけを同期し、想定外の階層または形式を独自変換しない。
+- [x] Drive→`.raw/` と `.raw/`→Drive の対象方向、許可パス、停止条件が対称でなくても明確に分離されている。
+- [x] `data/` 同期拒否は、ユーザーの明示指示より優先する固定安全条件として記載されている。
+- [x] Drive書き込みは、`$raw-to-drive-sync` または `raw-to-drive-sync を実行して` の明示呼び出し、対象ファイル確認、上書き確認の条件を満たす場合だけ可能である。
+- [x] `release-notes`は既存Google Sheetへの反映だけを許可し、新規Google SheetまたはExcelファイルを作成しない。
+- [x] Google Drive MCPをruntime、build、CI/CD、公開処理に利用しない。
+- [x] 不要なSKILL分割、補助スクリプト、依存関係、Git管理対象の生データを追加していない。
+- [x] `docs/plan.md` の既存タスク・チェックボックスを変更していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
