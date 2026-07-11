@@ -10,6 +10,8 @@
 
 カードに表示するデータはMarkdown / MDX本文に直書きせず、Excelから変換されたJSONを参照すること。
 
+ただし、`/world` のNPC紹介用 `NpcCard` は世界観本文の構成要素として扱い、`21-2-world-page` ではMDX内の静的propsを許容する。NPCのExcel / JSON管理への移行は `42-0-npc-data-normalization` で行う。
+
 Markdown / MDX / Astroページでは、簡潔なComponent呼び出しでデータ表示を行えること。
 
 例は以下。

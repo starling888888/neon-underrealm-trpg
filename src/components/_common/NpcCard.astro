@@ -1,0 +1,145 @@
+---
+export interface NpcEpithet {
+  text: string;
+  reading: string;
+}
+
+interface Props {
+  name: string;
+  description: string;
+  epithet?: NpcEpithet;
+}
+
+const { name, description, epithet } = Astro.props;
+---
+
+<article class="npc-card" data-npc-card>
+  <div class="npc-card-portrait" aria-hidden="true">
+    <span class="npc-card-person-icon"></span>
+  </div>
+
+  <div class="npc-card-content">
+    <h4 class="npc-card-name">
+      {
+        epithet && (
+          <span class="npc-card-epithet">
+            <ruby>
+              {epithet.text}
+              <rt>{epithet.reading}</rt>
+            </ruby>
+          </span>
+        )
+      }
+      {epithet ? " " : null}
+      {name}
+    </h4>
+    <p>{description}</p>
+  </div>
+</article>
+
+<style>
+  .npc-card {
+    display: grid;
+    grid-template-columns: 8.25rem minmax(0, 1fr);
+    min-width: 0;
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .npc-card-portrait {
+    position: relative;
+    display: grid;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    place-items: center;
+    border-right: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-muted);
+  }
+
+  .npc-card-person-icon {
+    position: relative;
+    width: 42%;
+    height: 52%;
+  }
+
+  .npc-card-person-icon::before {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 40%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--color-list-marker);
+    content: "";
+    transform: translateX(-50%);
+  }
+
+  .npc-card-person-icon::after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 100%;
+    height: 58%;
+    border-radius: 50% 50% 14% 14%;
+    background: var(--color-list-marker);
+    content: "";
+    transform: translateX(-50%);
+  }
+
+  .npc-card-content {
+    align-self: center;
+    min-width: 0;
+    padding: var(--space-5) var(--space-6);
+  }
+
+  .npc-card-name {
+    margin: 0;
+    color: var(--color-text);
+    font-size: var(--text-xl);
+    line-height: var(--line-height-tight);
+  }
+
+  .npc-card-epithet {
+    color: var(--color-link-hover);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .npc-card-epithet ruby {
+    ruby-position: over;
+  }
+
+  .npc-card-epithet rt {
+    color: var(--color-link-hover);
+    font-size: 0.55em;
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  .npc-card-content p {
+    margin: var(--space-3) 0 0;
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    line-height: var(--line-height-base);
+  }
+
+  @media (max-width: 48rem) {
+    .npc-card {
+      grid-template-columns: 6.375rem minmax(0, 1fr);
+    }
+
+    .npc-card-content {
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .npc-card-name {
+      font-size: var(--text-lg);
+    }
+
+    .npc-card-content p {
+      margin-top: var(--space-2);
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+  }
+</style>

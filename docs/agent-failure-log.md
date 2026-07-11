@@ -86,6 +86,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### MDX emphasis and PageToc preview verification were incomplete
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `21-2-world-page` の`/world`実装とVisual Review
+- 観測した失敗: `**〈仕事人〉**`をMDX本文へそのまま書いたため、出力でMarkdown記法の`**`が可視化された。また、build後の処理でPageTocを生成するページにもかかわらず、`npm run dev`でVisual Review用captureを行い、`npm run preview`による確認をしていなかった。
+- 一次対応: 強調箇所をMDXで確実に解釈される`<strong>〈仕事人〉</strong>`へ置き換え、world visual testに生成済みPageTocの検証を追加する。build後に`npm run preview`を起動してdesktop / mobile captureを取り直し、そのactualだけを正本化の材料にする。
+
+### Contents authoring was incorrectly blocked by issue-first workflow
+
+#### 2026-07-11
+
+- source: user
+- 発生箇所: `21-2-world-page` の作業開始
+- 観測した失敗: ユーザーは「issue作成をせずにcontentsを作り始めて」と明示した。`.raw/contents/` の作成は `contents-markdown-authoring` の対象であり、サイト実装ではないにもかかわらず、agentは `issue-first-development` を優先してbranch作成、ローカルissue作成、issue reviewer実行まで進めた。
+- 一次対応: 作成した `docs/issue/21-2-world-page.md` を削除し、contents authoring workflowへ切り替えた。今後、ユーザーが明示しているローカルcontents作成を、実装用issueの停止条件で妨げない。
+
 ### Content-instruction stopping point overrun
 
 #### 2026-07-11
@@ -340,6 +358,15 @@ source種別は以下を使う。
 - 発生箇所: `20-2-introduction-page` のVisual Reviewテスト追加後の `npm run check`
 - 観測した失敗: 使用できないPlaywright matcherによるTypeScriptエラー、同じテストファイルのBiome整形不一致、リスト項目の一部を完全一致テキストとして探したPlaywright assertionの3件により、同一タスク内で検証失敗を繰り返した。
 - 一次対応: matcherをこのプロジェクトのPlaywright型定義で利用可能なlocator評価へ置き換え、Visual Review前のテスト編集後にBiome formatを実行する。本文の一部は親要素に対する部分一致で確認する。修正後に `npm run check`、`npm run build`、対象Visual testを再実行する。
+
+### Playwright sandbox launch failure
+
+#### 2026-07-12
+
+- source: agent self-report
+- 発生箇所: `21-2-world-page` の`NpcCard`ローカルカタログcapture test
+- 観測した失敗: sandbox内で `npx playwright test tests/visual/npc-card.spec.ts` を実行したところ、Chromiumが `sandbox_host_linux.cc` の `Operation not permitted` で起動できず、desktop / mobileの両testが同じ環境制約で失敗した。
+- 一次対応: browser起動が必要なPlaywright testは、sandbox内の失敗後に必要性を示してsandbox外実行の承認を得る。通常のunit checkやformatterはsandbox内で継続する。
 
 ### Unauthorized git publish
 

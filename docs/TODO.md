@@ -36,8 +36,20 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
   - source: `17-github-actions-deploy-basic` issue review
   - classification: follow-up
-  - plan: `docs/plan.md` の `55-ci-non-main-branches`
+  - plan: `docs/plan.md` の `56-ci-non-main-branches`
   - handling plan: GitHub Pages deploy workflowとは分離し、main以外のbranch / pull requestで `npm ci`、`npm run check`、`npm run build`、必要なtestを実行するCIを整備する。deployは行わず、GitHub Pages環境を更新しない。docs-only更新、AGENTS / SKILL更新のみの場合の扱いもCI方針として明確化する。
+
+- [ ] 各NPCの個別画像をpublic assetsへ配置する
+  - source: `21-2-world-page` のcontents作成時のユーザー指示
+  - classification: planned follow-up
+  - plan: `docs/plan.md` の `42-0-npc-data-normalization`
+  - handling plan: `public/assets/images/npc/` に各NPCの画像を配置し、`/world` の共通人物アイコンを個別画像へ置き換える。画像のaltと静的配信時のbase pathを確認する。
+
+- [ ] NPCをExcelとJSONで管理する
+  - source: `21-2-world-page` のcontents作成時のユーザー指示
+  - classification: planned follow-up
+  - plan: `docs/plan.md` の `42-0-npc-data-normalization`
+  - handling plan: `.raw/data/npcs.xlsx` をローカル正本とし、変換仕様、`data/generated/npcs.json`、検証スキーマ、取得層を整備する。`/world` の静的 `NpcCard` を生成JSON参照へ移行し、Excel本体をCI/CDへ含めない。
 
 - [ ] 生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する
   - source: `11-site-menu` 実装中のユーザー判断
@@ -72,8 +84,14 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] VRT実装時に、mobile layout / MobilePageToc のCSS回帰検知を追加する
   - source: `.tmp/16-review.md` / PR #21 review
   - classification: follow-up
-  - plan: `docs/plan.md` の `49-1-vrt-css-regression-guards`
+  - plan: `docs/plan.md` の `50-1-vrt-css-regression-guards`
   - handling plan: 現在の `tests/visual/*` はdesign正本化用スクリーンショット取得として扱い、このIssueではCSS回帰検知を実装しない。将来VRTを導入する際、少なくとも390px mobile幅での意図しない横スクロール、MobilePageToc sticky headingの背景透過、TOC非表示対象ページでのPageToc / MobilePageToc非表示を自動検知する。
+
+- [ ] ゲーム画像生成のbase promptを改訂し、利用方針を決定する
+  - source: `21-2-world-page` のPR #35 reviewとユーザー指示
+  - classification: follow-up
+  - plan: `docs/plan.md` の `54-1-game-image-generation-policy`
+  - handling plan: `docs/image-generation/base-prompt.md`は現時点ではsampleとして維持する。将来taskで、公式ロゴ、in-world signage、overlay typography、画像固有promptの役割分担、生成前の承認事項、base promptの改訂方針を決定する。
 
 <!--
 例:

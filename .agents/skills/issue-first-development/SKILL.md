@@ -21,12 +21,13 @@ Use when the user asks to:
 Do not use for:
 
 - implementation
+- drafting or reviewing `.raw/contents/*.md` when the user asks for contents work only; use `contents-markdown-authoring`
 - Visual Review
 - PR creation
 - post-merge cleanup
 - review note intake
 
-Create, draft, or validate the branch / issue contract, then stop for human review.
+Create, draft, or validate an issue contract only when the user explicitly authorizes issue work. Then stop for human review.
 
 ---
 
@@ -34,7 +35,15 @@ Create, draft, or validate the branch / issue contract, then stop for human revi
 
 Do not implement the task immediately.
 
-The local workflow is:
+Follow the latest user instruction exactly. A task number, `$issue-first-development`, a request to start work, or a request to create a branch does not authorize creating a local issue.
+
+Create or validate `docs/issue/*.md` only when the user explicitly asks to create, draft, or validate that issue. A clear negative instruction such as `issueを作成しない` overrides a generic issue-first invocation.
+
+When the user asks only for scope adjustment, requirements adjustment, or contents work, do only that requested work. Use the matching workflow when needed. Do not create an issue. Do not run `issue_reviewer`. Stop after the requested work and report the result and any decisions required from the user.
+
+Run `issue_reviewer` only after this workflow has created a user-authorized local issue file.
+
+After explicit local issue creation authorization, the local workflow is:
 
 1. Read the requested task from `docs/plan.md`.
 2. Determine the branch name.
@@ -66,14 +75,16 @@ In this mode, the agent may:
 - inspect local files
 - create a dedicated branch
 - create `.tmp/review/<branch-name>/`
-- create `docs/issue/NN-slug.md`
-- validate an existing local issue
+- create `docs/issue/NN-slug.md` only with explicit user authorization
+- validate an existing local issue only when the user explicitly asks to validate it
 - check `docs/TODO.md` for related future-work items
 - check local design references under `docs/design/`
 
 In this mode, the agent must not:
 
 - implement before issue approval
+- create, draft, validate, or review an issue without explicit user authorization
+- run `issue_reviewer` before this workflow creates a user-authorized local issue
 - overwrite user changes
 - update `docs/plan.md` checkboxes
 - treat a remote draft as final before local validation
@@ -400,7 +411,7 @@ The issue should not simultaneously claim that local validation is required and 
 
 ## Local issue review
 
-Run this section only in local repository mode, after the issue body is ready and before user review.
+Run this section only when this workflow created a user-authorized local issue in local repository mode. Do not run it for branch preparation, scope adjustment, requirements adjustment, contents work, or issue validation without creation.
 
 1. Create `.tmp/review/<branch-name>/` with `mkdir -p`.
 2. Spawn the `issue_reviewer` custom agent from `.codex/agents/issue-reviewer.toml`.
@@ -475,6 +486,8 @@ Git commit / push は未実行です。
 ```
 
 In remote snapshot draft mode, also state that the draft is not a final local issue until local validation is complete.
+
+When the user did not authorize issue creation, stop after the requested branch preparation, scope adjustment, requirements adjustment, or contents work. Report only the requested work, source conflicts, and decisions required from the user. Do not report an issue as prepared. Do not run `issue_reviewer`.
 
 ---
 
