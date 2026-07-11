@@ -10,7 +10,7 @@ Use this file as an index only. Do not read every skill by default. Read the ski
 
 Use when starting a development task, creating a task branch, creating or validating `docs/issue/*.md`, or drafting an issue from a remote snapshot.
 
-Stop after branch and issue preparation. Implementation requires explicit user approval.
+In local repository mode, create `.tmp/review/<branch-name>/` and run the issue reviewer before user review. Implementation requires explicit user approval.
 
 ### `design-image-generation`
 
@@ -44,9 +44,9 @@ This skill treats Google Docs as a plain-text storage place for Markdown source,
 
 ### `pr-review-draft`
 
-Use when producing a markdown review draft from a GitHub PR snapshot.
+Use when reviewing a remote GitHub PR with local document and technical reviewers, then handing validated findings to `review-to-issue`.
 
-This skill produces draft review notes only. Local validation and tracking updates happen later through `review-to-issue`.
+The remote PR is the review source. The workflow stores temporary reports under `.tmp/review/<branch-name>/` and stops after `review-to-issue`.
 
 ### `create-pr`
 

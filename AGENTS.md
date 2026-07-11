@@ -28,10 +28,12 @@
 - commit指示前に、ユーザーの明示指示なしに `git add` しない。commit指示が出た場合は、対象差分を確認したうえで必要な `git add` と `git commit` を実行してよい。
 - ユーザーの明示指示なしに `git commit`、`git push`、`git tag`、PR作成、remote branch作成、GitHub Release作成をしない。
 - 開発タスクは、実装前に `.agents/skills/issue-first-development/SKILL.md` を使い、branch作成と `docs/issue/*.md` 作成または検証で停止する。
+- `issue-first-development` のlocal repository modeでは、branch作成後に `.tmp/review/<branch-name>/` を作成し、ユーザーレビュー前に `issue_reviewer` を最大2回実行する。remote snapshot draft modeではreviewerを実行しない。
 - 実装を開始してよいのは、ユーザーがissue内容を明示承認した後だけである。
 - 開発タスクは専用branchで行う。branch名は原則 `NN-slug` または `NN-M-slug` とする。承認済みissueが別名を明示する場合はそれに従う。
 - 実装範囲は現在の `docs/issue/*.md` に従う。範囲外作業は勝手に混ぜない。
 - ユーザーが「検討して」「確認して」「妥当性を見て」「どうかな」「レビューして」など、判断や意見を求めている場合は実装承認ではない。判断、選択肢、推奨方針を返して停止し、実装、生成、ファイル編集は「修正開始」「実装して」「反映して」などの明示指示を待つ。
+- ユーザーの明示指示によりcurrent issue外のGit管理ファイルを変更する場合は、`.tmp/review/<branch-name>/user-directed-changes.md` に指示、分類、変更対象、変更前後、issueとの関係、関連commitまたはPRを記録する。要求または初期スコープ外SSoTを変更する場合は、変更元SSoTとcurrent issueも同じtaskで更新する。通常のcurrent issue内作業とGit操作は記録しない。
 - 実装中は、完了条件・チェックポイントを実際にローカル確認した時点で現在のissueへチェックを入れる。未確認項目や人間確認が必要な項目は未チェックのまま残す。
 - `docs/plan.md` のチェックボックスは、人間レビュー後のユーザー指示なしに完了扱いしない。
 - UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign参照を確認する。必要なdesign画像がない場合は `design-image-generation` に切り出す。
@@ -81,6 +83,8 @@ Git / GitHub CLI / PR作成 / 破壊的操作の詳細は `.agents/rules/git-ope
 
 PRを作成してよいのは、ユーザーが明示的にPR作成を指示した場合だけである。PR作成時は `.agents/skills/create-pr/SKILL.md` と `.github/pull_request_template.md` を使い、GitHub connector経由でPRを作成する。
 
+PR作成後に、ユーザーがCodexへ既存PR branchへのpushを指示した場合は、`.agents/skills/pr-review-draft/SKILL.md` を使い、前回PR review以降の差分をreviewする。Codex外で実行されたpushは自動検知しない。
+
 Google Drive上のユーザー編集正本をローカル作業入力へ同期する場合は、`.agents/skills/drive-to-raw-sync/SKILL.md` を使う。
 
 Google Drive同期対象フォルダのURLは、リポジトリルート直下の `raw-google-drive.url` で管理する。`raw-google-drive.url` はGit管理しない。
@@ -124,6 +128,10 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - PR作成: `.agents/skills/create-pr/SKILL.md`
 - SKILL作成または更新: `.agents/skills/skill-authoring/SKILL.md`
 - merge後のplan / TODO更新: `.agents/skills/post-merge-plan-update/SKILL.md`
+
+### Reviewer Subagents
+
+project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照する。
 
 ### Rules
 
@@ -174,7 +182,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - 実装中: 現在のissueを正本とし、必要なrequirements、out-of-scope、design、既存コードを読む。
 - UI系作業: issueで指定された `docs/design/<design-target>/` を確認する。design不足時は実装せずdesign作成へ切り出す。
 - レビュー指摘取り込み: `review-to-issue` を使い、`.tmp/*.md` をローカルSSoTと照合する。`.tmp/` は共有成果物ではないため、必要な情報だけ正式docsまたは報告へ反映する。
-- PRレビュー草案作成: `pr-review-draft` を使う。草案はローカル検証済みレビューではない。
+- PRレビュー草案作成: `pr-review-draft` を使う。リモートPRを対象にlocal reviewerを起動し、`review-to-issue`への取り込み後に停止する。
 - PR作成: `create-pr` を使う。未チェック項目が残る場合はユーザー承認なしにPRを作らない。
 - merge後tracking更新: `post-merge-plan-update` を使う。merge後に最新issueまたは過去issueの未チェック項目を確認できた場合は、チェックを入れてからdone移動可否を判定する。
 - ファイル移動や構造整理: `docs/development-structure.md` と `.agents/rules/file-structure.md` を参照する。

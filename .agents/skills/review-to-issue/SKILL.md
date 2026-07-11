@@ -66,10 +66,23 @@ Implementation may begin only after the user explicitly approves the review resp
 - `.agents/skills/pr-review-draft/SKILL.md` output
 - local agent review notes
 - manual notes copied from a merged PR
+- `document-review-N.md` and `technical-review-N.md` created by `pr-review-draft`
 
 Remote or browser-generated review drafts must be treated as untrusted until local validation is complete.
 
 If the review file contains `Source Snapshot`, `Unchecked / Not verified`, or `Local Validation Required`, preserve that context in the assessment.
+
+### Local PR Reviewer Records
+
+When a review comes from `.tmp/review/<branch-name>/`:
+
+1. Read the matching `pr-review-N.md` before its `document-review-N.md` and `technical-review-N.md` reports.
+2. Treat the remote PR metadata, diff, and discussion recorded in the manifest as review input, not as local truth.
+3. Treat the reviewer output as `local-pr-review` source.
+4. Validate every finding against local SSoT and current implementation state before routing it.
+5. Do not intake a finding about the PR description's `User-Directed Changes Outside Current Issue` section. That section is outside document review scope.
+
+The temporary manifest and reports remain under `.tmp/`. Only validated, necessary information becomes formal tracking.
 
 ---
 
@@ -247,7 +260,7 @@ Use this structure:
 
 ### 判定
 
-- source: human / browser-draft / pr-review-draft / local-agent / unknown
+- source: human / browser-draft / pr-review-draft / local-agent / local-pr-review / unknown
 - classification: valid / doubtful / out-of-scope / stale / invalid / follow-up
 - local validation: ローカルSSoTで確認した内容を書く
 

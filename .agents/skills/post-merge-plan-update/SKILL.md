@@ -47,11 +47,12 @@ Do the cleanup in this order:
 8. Update only the relevant `docs/plan.md` checkbox block.
 9. If active/done cleanup is requested, move completed plan entries from `docs/plan.md` to `docs/plan-done.md`.
 10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
-11. If the issue is complete, move the issue file to the correct `docs/issue/done/` archive.
-12. Keep active documents from depending on completed issue files.
-13. Run available validation commands.
-14. Commit only tracking files that were intentionally updated.
-15. Push `main`.
+11. Confirm that required review information was formalized, then remove only `.tmp/review/<WORK_BRANCH>/`.
+12. If the issue is complete, move the issue file to the correct `docs/issue/done/` archive.
+13. Keep active documents from depending on completed issue files.
+14. Run available validation commands.
+15. Commit only tracking files that were intentionally updated.
+16. Push `main`.
 
 Do not modify source code.
 
@@ -60,6 +61,8 @@ Do not edit unrelated plan items.
 Do not edit unrelated TODO items.
 
 Do not delete remote branches unless the user explicitly asks.
+
+Do not remove `.tmp/` as a whole or another branch's `.tmp/review/` directory.
 
 ---
 
@@ -204,6 +207,20 @@ When moving an issue file:
 
 ---
 
+## Review Artifact Cleanup
+
+After the merged work, issue, TODO, plan, and failure-log routing are confirmed:
+
+1. Inspect `.tmp/review/<WORK_BRANCH>/` when it exists.
+2. Confirm that required user-directed requirement changes were reflected in their source SSoT and current issue before cleanup.
+3. Remove only `.tmp/review/<WORK_BRANCH>/` and its contents.
+4. Do not remove another `.tmp/` path.
+5. Report whether the directory was removed or absent.
+
+The review artifact directory is Git-ignored and must never be staged.
+
+---
+
 ## Validation
 
 Run available checks after editing tracking files:
@@ -262,6 +279,7 @@ Report:
 - deleted local branch
 - updated plan item
 - completed TODO items, or explicitly state that no TODO item was completed
+- removed review artifact directory, or explicitly state that it was absent
 - validation commands and results
 - commit hash
 - push result

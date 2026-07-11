@@ -6,6 +6,10 @@
 
 -
 
+## User-Directed Changes Outside Current Issue
+
+- None.
+
 ## Review focus
 
 -

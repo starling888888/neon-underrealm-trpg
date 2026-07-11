@@ -38,7 +38,7 @@ Do not use `gh pr create`, `gh pr edit`, or `gh api` to create PRs or edit PR me
 
 If the GitHub connector is unavailable or cannot perform the required PR operation, stop and ask the user. Do not fall back to `gh` automatically.
 
-Never merge, tag, release, resolve review comments, or run `review-to-issue`.
+Never merge, tag, release, resolve review comments, or run `review-to-issue` directly.
 
 ## Preconditions
 
@@ -56,6 +56,7 @@ Identify:
 - repository full name from local `git remote -v`
 - matching issue file: `docs/issue/<issue-slug>.md`
 - PR template: `.github/pull_request_template.md`
+- optional user-directed change record: `.tmp/review/<branch-name>/user-directed-changes.md`
 
 If the PR template is missing, stop. Do not invent a replacement.
 
@@ -112,6 +113,7 @@ Use only:
 
 - Related issue
 - Summary
+- User-Directed Changes Outside Current Issue
 - Review focus
 - Review handling
 
@@ -124,6 +126,8 @@ Do not add:
 - Scope guard
 
 Keep detailed check status in the issue file, not in the PR body.
+
+Fill `User-Directed Changes Outside Current Issue` from `.tmp/review/<branch-name>/user-directed-changes.md`. When the file does not exist or has no entries, write `None.`. This section is outside document reviewer scope.
 
 Pass the PR body directly to the GitHub connector as structured tool input.
 
@@ -139,6 +143,7 @@ Do not embed the PR body in a shell command string.
 6. If unchecked issue items remain, stop and ask for explicit approval before PR creation.
 7. Create the PR with the GitHub connector only after all required permissions are satisfied.
 8. If PR metadata must be corrected after creation, use the GitHub connector update operation.
+9. Run `pr-review-draft` after PR creation. The first review covers the full PR diff from its base commit through its current head, then routes validated findings through `review-to-issue`.
 
 ## Required Report
 
@@ -152,6 +157,7 @@ After PR creation, report:
 - whether unchecked issue items remained
 - checks or validations reviewed
 - items not verified
+- initial PR review result
 
 ## Forbidden Actions
 

@@ -43,9 +43,11 @@ The local workflow is:
 5. Check `docs/TODO.md` for related follow-up items.
 6. For UI, CSS, layout, page, or component tasks, check whether a relevant design target exists under `docs/design/`.
 7. If design images are needed but missing, route design creation to `design-image-generation` initial draft mode instead of implementing UI.
-8. Create or validate `docs/issue/NN-slug.md`.
-9. Write the task goal, scope, completion criteria, checkpoints, design references, TODO references, design-generation prerequisites when relevant, and review points.
-10. Stop and wait for user review.
+8. Create `.tmp/review/<branch-name>/` after creating the branch.
+9. Create or validate `docs/issue/NN-slug.md`.
+10. Write the task goal, scope, completion criteria, checkpoints, design references, TODO references, design-generation prerequisites when relevant, and review points.
+11. Run the local issue review workflow.
+12. Stop and wait for user review.
 
 Implementation may begin only after the user explicitly approves the issue file.
 
@@ -63,6 +65,7 @@ In this mode, the agent may:
 - inspect the current branch
 - inspect local files
 - create a dedicated branch
+- create `.tmp/review/<branch-name>/`
 - create `docs/issue/NN-slug.md`
 - validate an existing local issue
 - check `docs/TODO.md` for related future-work items
@@ -99,6 +102,8 @@ In this mode, the agent must not:
 - update repository files
 - update `docs/plan.md`
 - claim design images were generated or verified locally
+- create `.tmp/review/` files
+- run reviewer subagents
 
 Remote snapshot output must include:
 
@@ -185,7 +190,13 @@ Rules:
 - Do not use spaces
 - Keep the slug short and descriptive
 
-If the branch already exists, do not overwrite it. Stop and ask the user.
+Before preparing or validating a local issue draft, determine its target branch name.
+
+When the target branch is the current branch, use it. Create `.tmp/review/<branch-name>/` and continue with local repository mode.
+
+When the target branch differs from the current branch and does not already exist, create the target branch from the current branch. Then create `.tmp/review/<branch-name>/` and continue with local repository mode. Branches may be created from an existing work branch when the user starts a different issue.
+
+When the target branch already exists but is not the current branch, do not overwrite it. Stop and ask the user how to proceed.
 
 In remote snapshot draft mode, do not claim the branch was created.
 
@@ -387,6 +398,36 @@ The issue should not simultaneously claim that local validation is required and 
 
 ---
 
+## Local issue review
+
+Run this section only in local repository mode, after the issue body is ready and before user review.
+
+1. Create `.tmp/review/<branch-name>/` with `mkdir -p`.
+2. Spawn the `issue_reviewer` custom agent from `.codex/agents/issue-reviewer.toml`.
+3. Give the agent the current issue path and the relevant SSoT paths.
+4. Write the agent's Japanese response to `.tmp/review/<branch-name>/issue-review-1.md`.
+5. If the first review has no findings or user-confirmation items, continue to the required stopping point.
+6. If the first review has valid findings, update only the issue file to resolve them, then run `issue_reviewer` once more.
+7. Write the second response to `.tmp/review/<branch-name>/issue-review-2.md`.
+8. After the second review, continue to the required stopping point even when findings remain. Report remaining findings or user-confirmation items clearly.
+
+Do not copy resolved issue-review findings into the issue as historical review sections.
+
+After the user starts reviewing the issue, do not rerun `issue_reviewer`. Update the issue through the user conversation instead.
+
+### User-directed changes outside the current issue
+
+When a user explicitly directs a Git-managed change outside the current issue during issue preparation or user review:
+
+1. Append the user instruction, classification, target paths, before/after values, issue relationship, and related commit or PR to `.tmp/review/<branch-name>/user-directed-changes.md`.
+2. When the change modifies an existing requirement or initial scope SSoT, update that SSoT and current issue in the same task.
+3. Do not record ordinary current-issue work or Git operations.
+4. Do not use the temporary record as the source of truth. It is the later PR description source only.
+
+Do not run this workflow in remote snapshot draft mode. The user may place a remote draft in the local repository and start this skill again; then use local repository mode.
+
+---
+
 ## Required stopping point
 
 After creating, drafting, or validating the issue, stop.
@@ -417,6 +458,8 @@ Report the following to the user:
 - 関連TODO
 - 関連design target
 - design-image-generation前提条件
+- issue reviewerの実行回数と結果
+- 残る判断不能事項
 
 ## レビューしてほしい点
 
