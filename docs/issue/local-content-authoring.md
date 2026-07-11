@@ -167,3 +167,30 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 - [x] Drive sync rootとローカル`.raw/`の構造・`release-notes`対応を明確に分離する
 - [x] file-structure ruleに`.raw/v1.0/`を追加する
 - [x] `npm run check:md` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- remote SKILLの情報源優先順位に、remote repository snapshotでの利用可能性という実行環境の表現が残っている。優先順位は実ファイルだけを列挙し、未取得の情報源は別途未確認として報告する必要がある。
+- `20-2-introduction-page`へ紐づくローカルauthoring SKILLの実作業確認TODOが、current issue・requirements・plan・out-of-scopeの照合と、正本齟齬時のユーザー確認を検証対象としていない。
+- `.agents/skills/README.md` のlocal / remote authoring SKILL説明が、更新後の情報源優先順位とremoteの未確認・非書込み条件を反映していない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `.tmp/review/local-content-authoring/pr-review-2.md`、document/technical reviewer報告、current issue、SKILL本文、`.agents/skills/README.md`、`docs/TODO.md`を確認した。3件はいずれもcurrent issueの情報源境界・参照先整合・後続動作確認に属し、local HEADでも未修正である。PR本文の`User-Directed Changes Outside Current Issue`は評価対象外とした。
+
+### 対応方針
+
+- remote SKILLの優先順位から実行環境の利用可能性表現を外し、`src/pages/`、current issue、requirements、plan、out-of-scopeを実ファイルとして列挙する。取得できない場合だけ、優先順位とは別に未確認として報告する。
+- TODOのhandling planをlocal SKILLの現在の優先順位と、正本齟齬時の確認条件に合わせる。
+- SKILL一覧READMEを両authoring SKILLの実際の情報源優先順位とremote制約へ更新する。
+
+### 対応完了チェックリスト
+
+- [x] remote SKILLの優先順位を実ファイル列挙へ修正する
+- [x] `20-2-introduction-page`のSKILL動作確認TODOを更新する
+- [x] `.agents/skills/README.md`をcurrent authoring SKILL仕様へ更新する
+- [x] `npm run check:md` が通る

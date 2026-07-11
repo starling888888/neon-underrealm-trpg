@@ -92,8 +92,8 @@ source種別は以下を使う。
 
 - source: user
 - 発生箇所: `local-content-authoring` の情報源優先順位を更新したSKILL/rule/issue
-- 観測した失敗: ユーザーが求めた「リモートモードで確認する情報源の列挙」を、実体のない「ユーザーがリモートで確認するよう明示した情報源」という条件文に置き換えた。どのファイルや正本を確認するかが定義されず、agentが再現可能に実行できない仕様にした。
-- 一次対応: 当該変更を不正確として扱い、remote modeで元から列挙されていたcurrent issue、requirements、plan、out-of-scopeを明示した優先順位へ修正する。
+- 観測した失敗: ユーザーが求めた「リモートモードで確認する情報源の列挙」を、実体のない「ユーザーがリモートで確認するよう明示した情報源」という条件文に置き換えた。どのファイルや正本を確認するかが定義されず、agentが再現可能に実行できない仕様にした。続く修正でも実行環境の取得可否を情報源の優先順位へ混在させ、SKILL入口READMEと後続の動作確認TODOを更新せずに完了チェックを付けた。
+- 一次対応: 当該変更を不正確として扱い、remote modeで元から列挙されていたcurrent issue、requirements、plan、out-of-scopeを明示した優先順位へ修正する。関連するSKILL本文、入口README、後続TODO、issueチェックをまとめて照合してから完了扱いにする。
 
 ### v1.0 Google Docs export format was incorrect
 

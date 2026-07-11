@@ -29,21 +29,23 @@ This is the remote-only workflow.
 Use these sources in order:
 
 1. User instruction.
-2. `src/pages/` files available from the remote repository snapshot.
-3. Current task issue under `docs/issue/` when available from the remote repository snapshot.
-4. `docs/requirements.md` and relevant `docs/requirements/` files when available from the remote repository snapshot.
-5. `docs/plan.md` when available from the remote repository snapshot.
-6. `docs/out-of-scope.md` when available from the remote repository snapshot.
+2. `src/pages/` files.
+3. Current task issue under `docs/issue/`.
+4. `docs/requirements.md` and relevant `docs/requirements/` files.
+5. `docs/plan.md`.
+6. `docs/out-of-scope.md`.
 
 Do not access or infer `.raw/contents/` or `.raw/v1.0/`. They are local-only inputs and must be reported as unverified.
+
+Report any unavailable Git-managed source as unverified. Do not silently skip it or change the source priority.
 
 The result is a Markdown draft in chat. Do not claim that a local `.raw/contents/<slug>.md` file was created or updated.
 
 ## Preconditions
 
 1. Identify the remote repository and ref when available.
-2. Read the available `src/pages/` files relevant to the target route.
-3. Read the current issue, requirements, plan, and out-of-scope source when each is available from the same snapshot. Use them to identify a conflict with the user instruction or existing implementation, not as a replacement for either higher-priority source.
+2. Read the `src/pages/` files relevant to the target route.
+3. Read the current issue, requirements, plan, and out-of-scope source. Use them to identify a conflict with the user instruction or existing implementation, not as a replacement for either higher-priority source.
 4. Confirm the target slug, route, and title when the user did not provide them.
 5. Do not claim local working-tree, `.raw/`, Google Drive, or command validation results.
 

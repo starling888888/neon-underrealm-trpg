@@ -25,7 +25,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - source: `local-content-authoring` issue 実装後のユーザー指示
   - classification: validation follow-up
   - plan: `docs/plan.md` の `20-2-introduction-page`
-  - handling plan: `.raw/contents/introduction.md` を `contents-markdown-authoring` で作成または更新し、ユーザー指示、`src/pages/`、既存`.raw/contents/`、`.raw/v1.0/`の照合、差異時の停止、v1.0文体参照、成果物形式を実作業で確認する。Google Drive同期は、このTODOだけでは実行しない。
+  - handling plan: `.raw/contents/introduction.md` を `contents-markdown-authoring` で作成または更新し、ユーザー指示、`src/pages/`、current issue、requirements、plan、out-of-scope、既存`.raw/contents/`、`.raw/v1.0/`の優先順の照合、差異時の停止、正本修正可否のユーザー確認、v1.0文体参照、成果物形式を実作業で確認する。Google Drive同期は、このTODOだけでは実行しない。
 
 - [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
   - source: `17-github-actions-deploy-basic` issue review
