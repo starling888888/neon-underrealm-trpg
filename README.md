@@ -54,6 +54,31 @@ npm run visual:install
 
 `npm test` はロジック検証用です。Visual Review用スクリーンショット取得は `npm run visual:capture` を使います。
 
+## 別端末からCodexセッションへ接続する
+
+tmuxとSSHサーバーを導入済みの環境では、Codexをtmux内で起動しておくことで、スマホなどの別端末から実行中のセッションへ接続し、必要な承認操作を行えます。
+
+最初に、接続先PCでIPアドレスを確認します。
+
+```sh
+hostname -I
+```
+
+次に、作業対象のリポジトリでtmuxセッションを作成または再接続し、その中でCodexを起動します。
+
+```sh
+tmux new-session -A -s codex
+codex
+```
+
+スマホなどの別端末から、表示されたIPアドレスを使ってSSHログインします。ログイン後、次のコマンドで既存のCodexセッションへ接続できます。
+
+```sh
+tmux attach -t codex
+```
+
+同じtmuxセッションには複数端末から接続できますが、同時に入力すると操作が競合します。操作する端末を1つに決めてください。
+
 ## 任意の開発支援設定
 
 `.mcp.json` では、必要に応じて Context7 MCP サーバーを利用できるようにしています。
