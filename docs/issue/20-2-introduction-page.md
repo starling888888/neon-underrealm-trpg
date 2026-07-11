@@ -172,6 +172,31 @@
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- `titleAsHeading` を追加した一方で、既定Calloutと`title`指定Calloutのtitleが引き続き`span`であり、PageToc / MobilePageTocへ混入しないことを自動検証していない。
+
+### 判定
+
+- source: local-pr-review（PR #34、`.tmp/review/20-2-introduction-page/technical-review-1.md`）
+- classification: valid
+- local validation: `Callout.astro` の既定値は`titleAsHeading = false`で、既存titleは`span`として実装されている。`tests/visual/callout.spec.ts`はCallout数、横overflow、スクリーンショットを確認するが、title要素のtag名とPageToc / MobilePageTocの非混入を検証していない。
+
+### 対応方針
+
+- `tests/visual/callout.spec.ts`へ、全Callout titleが既定で`SPAN`であることを追加する。
+- `title`指定の「コンボ中の注意」「処理例」がdesktop PageTocとmobile PageTocに入らないことを追加する。
+- `titleAsHeading`を指定した導入ページだけがH2としてPageTocに入る既存testと合わせ、opt-in境界を回帰テストで保護する。
+
+### 対応完了チェックリスト
+
+- [x] 既定Calloutと`title`指定Calloutのtitleが`span`であることを検証する
+- [x] `title`指定CalloutがPageToc / MobilePageTocへ混入しないことを検証する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 - mode: local repository mode

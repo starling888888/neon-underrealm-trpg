@@ -9,6 +9,26 @@ async function hideAstroDevToolbar(page: Page) {
   });
 }
 
+async function expectLegacyCalloutTitles(page: Page) {
+  const titles = page.locator("[data-callout-type] .callout-title");
+  const desktopToc = page.locator(".page-toc [data-page-toc-content]");
+  const mobileToc = page.locator(
+    "[data-mobile-page-toc] [data-page-toc-content]",
+  );
+
+  await expect(titles).toHaveCount(8);
+  expect(
+    await titles.evaluateAll((elements) =>
+      elements.every((element) => element.tagName === "SPAN"),
+    ),
+  ).toBe(true);
+
+  for (const title of ["コンボ中の注意", "処理例"]) {
+    await expect(desktopToc).not.toContainText(title);
+    await expect(mobileToc).not.toContainText(title);
+  }
+}
+
 test("callout desktop @callout-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.callouts);
@@ -16,6 +36,7 @@ test("callout desktop @callout-desktop", async ({ page }) => {
     page.getByRole("heading", { name: "Callout一覧確認" }),
   ).toBeVisible();
   await expect(page.locator("[data-callout-type]")).toHaveCount(8);
+  await expectLegacyCalloutTitles(page);
   await expect
     .poll(async () => {
       return await page.evaluate(
@@ -39,6 +60,7 @@ test("callout mobile @callout-mobile", async ({ page }) => {
     page.getByRole("heading", { name: "Callout一覧確認" }),
   ).toBeVisible();
   await expect(page.locator("[data-callout-type]")).toHaveCount(8);
+  await expectLegacyCalloutTitles(page);
   await expect
     .poll(async () => {
       return await page.evaluate(
