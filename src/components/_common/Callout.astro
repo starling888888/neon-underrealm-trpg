@@ -7,13 +7,16 @@ type CalloutType =
   | "example"
   | "version";
 
+type CalloutHeadingLevel = 2 | 3 | 4 | 5 | 6;
+type CalloutTitleTag = "span" | "h2" | "h3" | "h4" | "h5" | "h6";
+
 interface Props {
   type: CalloutType;
   title?: string;
-  titleAsHeading?: boolean;
+  titleHeadingLevel?: CalloutHeadingLevel;
 }
 
-const { type, title, titleAsHeading = false } = Astro.props;
+const { type, title, titleHeadingLevel } = Astro.props;
 
 const defaultTitles = {
   note: "補足",
@@ -35,7 +38,9 @@ const markers = {
 
 const calloutTitle = title ?? defaultTitles[type];
 const marker = markers[type];
-const CalloutTitle = titleAsHeading ? "h2" : "span";
+const CalloutTitle = (titleHeadingLevel
+  ? `h${titleHeadingLevel}`
+  : "span") as CalloutTitleTag;
 ---
 
 <aside class:list={["callout", `callout-${type}`]} data-callout-type={type}>

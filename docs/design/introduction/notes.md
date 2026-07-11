@@ -100,4 +100,4 @@
 
 ## Open Questions
 
-- なし。`titleAsHeading` opt-inによりゴールデンルールだけをH2として出力し、既存Calloutの正本更新は不要と確認した。
+- なし。`titleHeadingLevel={2}` opt-inによりゴールデンルールをH2として出力し、既存Calloutの正本更新は不要と確認した。

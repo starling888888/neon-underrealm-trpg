@@ -137,18 +137,18 @@
 
 ### レビュー結果
 
-| 領域                  | 判定 | 差分                                                                              | 対応 |
-| --------------------- | ---- | --------------------------------------------------------------------------------- | ---- |
-| レイアウト            | OK   | 実装は既存site-layoutを使い、designの中央本文・左右railの方向と一致する           | 不要 |
-| 余白                  | OK   | Callout内外の余白は既存warning Calloutとproseの余白に一致する                     | 不要 |
-| タイポグラフィ        | OK   | Callout titleは枠内の単一H2で、枠外への同名H2重複はない                           | 不要 |
-| 色                    | OK   | 既存warning token、左線、markerを維持する                                         | 不要 |
-| 配置・整列            | OK   | desktop・mobileともCallout内のtitle、本文、番号リストが崩れない                   | 不要 |
-| レスポンシブ          | OK   | `1440x1200` と `390x900` で確認。mobile目次の開閉後もCalloutを隠さず撮影した      | 不要 |
-| overflow / scroll     | OK   | desktop・mobileのVisual testで横overflowなし                                      | 不要 |
-| 既存デザインとの整合  | OK   | 通常本文ページのまま、ゴールデンルールだけをwarning Calloutで識別する             | 不要 |
-| 既存Componentとの整合 | OK   | 既定Calloutは既存のspan titleを維持し、`titleAsHeading`を指定した場合だけH2になる | 不要 |
-| accessibility basics  | OK   | H1→H2の順序、単一のゴールデンルールH2、PageTocとMobilePageTocの導線を確認した     | 不要 |
+| 領域                  | 判定 | 差分                                                                             | 対応 |
+| --------------------- | ---- | -------------------------------------------------------------------------------- | ---- |
+| レイアウト            | OK   | 実装は既存site-layoutを使い、designの中央本文・左右railの方向と一致する          | 不要 |
+| 余白                  | OK   | Callout内外の余白は既存warning Calloutとproseの余白に一致する                    | 不要 |
+| タイポグラフィ        | OK   | Callout titleは枠内の単一H2で、枠外への同名H2重複はない                          | 不要 |
+| 色                    | OK   | 既存warning token、左線、markerを維持する                                        | 不要 |
+| 配置・整列            | OK   | desktop・mobileともCallout内のtitle、本文、番号リストが崩れない                  | 不要 |
+| レスポンシブ          | OK   | `1440x1200` と `390x900` で確認。mobile目次の開閉後もCalloutを隠さず撮影した     | 不要 |
+| overflow / scroll     | OK   | desktop・mobileのVisual testで横overflowなし                                     | 不要 |
+| 既存デザインとの整合  | OK   | 通常本文ページのまま、ゴールデンルールだけをwarning Calloutで識別する            | 不要 |
+| 既存Componentとの整合 | OK   | 既定Calloutは既存のspan titleを維持し、`titleHeadingLevel`指定時だけ見出しになる | 不要 |
+| accessibility basics  | OK   | H1→H2の順序、単一のゴールデンルールH2、PageTocとMobilePageTocの導線を確認した    | 不要 |
 
 ### 自己修正した項目
 
@@ -169,6 +169,50 @@
 - [x] reference と actual を比較した
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
 - [x] ユーザー承認済みのdesign fix modeでdesign正本を更新した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### デザイン参照
+
+- design target: `docs/design/callout/`、`docs/design/introduction/`
+- reference: 既存Calloutのlabel密度、warning Callout、PageTocのH2 / H3階層
+- notes: `titleHeadingLevel`は見出しの意味構造と目次階層だけを変え、Callout titleの視覚サイズは既定ラベルと同じに保つ。
+
+### 成果物
+
+- actual desktop: `test-results/visual/callout-desktop.png`
+- actual mobile: `test-results/visual/callout-mobile.png`
+- regression: `test-results/visual/introduction-desktop.png`、`test-results/visual/introduction-mobile.png`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                    | 対応 |
+| --------------------- | ---- | ----------------------------------------------------------------------- | ---- |
+| タイポグラフィ        | OK   | H3指定例はCallout labelと同じ視覚密度を維持する                         | 不要 |
+| PageToc階層           | OK   | H3指定例は「タイトル指定」配下のH3としてdesktop PageTocに入る           | 不要 |
+| レスポンシブ          | OK   | mobileでもH3指定例の折り返し、Callout幅、footerまでの縦積みが破綻しない | 不要 |
+| 既存Componentとの整合 | OK   | 未指定の既定／title指定Calloutはspanのままで目次へ入らない              | 不要 |
+| accessibility basics  | OK   | ゴールデンルールはH2を維持し、H3指定例はH2「タイトル指定」の配下に置く  | 不要 |
+
+### 自己修正した項目
+
+- [x] `titleAsHeading`を、H2〜H6を明示指定できる`titleHeadingLevel`へ置き換えた。
+
+### 人間判断が必要な差分
+
+- なし。Callout titleの視覚的な表現は既存designと同じであり、design画像の更新は不要。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] `docs/design/callout/notes.md`へopt-inの意味構造を記録した。design画像の更新は不要。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] `titleHeadingLevel={3}`の目次階層と既定titleの非混入を確認した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -218,6 +262,34 @@
 
 - [x] desktop / mobile PageTocが通常H2を含むことを検証する
 - [x] custom titleのPageToc / MobilePageToc非混入を、生成済み目次に対して検証する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `titleAsHeading`はH2のみを出力するため、ページ内の見出し階層に合わせて他の見出しレベルを指定できない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `Callout.astro`は`titleAsHeading?: boolean`を受け、真の場合は固定で`h2`を出力する。Callout titleの意味的な見出し化を明示opt-inにする現在の方針は維持しつつ、H2〜H6の選択肢を渡せるようにできる。
+
+### 対応方針
+
+- `titleAsHeading`を、`2 | 3 | 4 | 5 | 6`を受ける`titleHeadingLevel`へ置き換える。未指定時は従来どおり`span`を出力する。
+- ゴールデンルールは`titleHeadingLevel={2}`を指定し、H1→H2とPageToc導線を維持する。
+- Callout確認ページにH3指定例を追加し、既定／title指定Calloutがspanのまま、指定例だけがH3かつPageTocへ入ることをdesktop・mobileで検証する。
+- 見出しレベルはHTML構造と目次階層を指定するためのpropであり、Callout titleの視覚サイズは既存Componentのまま維持する。
+
+### 対応完了チェックリスト
+
+- [x] `titleHeadingLevel`でH2〜H6を指定できる
+- [x] 未指定の既定／title指定Calloutがspanのままである
+- [x] H3指定例がPageToc / MobilePageTocへ入る
+- [x] ゴールデンルールがH2とPageToc導線を維持する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
