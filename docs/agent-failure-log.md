@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### MDX emphasis and PageToc preview verification were incomplete
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `21-2-world-page` の`/world`実装とVisual Review
+- 観測した失敗: `**〈仕事人〉**`をMDX本文へそのまま書いたため、出力でMarkdown記法の`**`が可視化された。また、build後の処理でPageTocを生成するページにもかかわらず、`npm run dev`でVisual Review用captureを行い、`npm run preview`による確認をしていなかった。
+- 一次対応: 強調箇所をMDXで確実に解釈される`<strong>〈仕事人〉</strong>`へ置き換え、world visual testに生成済みPageTocの検証を追加する。build後に`npm run preview`を起動してdesktop / mobile captureを取り直し、そのactualだけを正本化の材料にする。
+
 ### Contents authoring was incorrectly blocked by issue-first workflow
 
 #### 2026-07-11
