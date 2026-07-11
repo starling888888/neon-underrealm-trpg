@@ -254,9 +254,17 @@ source種別は以下を使う。
 - 観測した失敗: `git push` はすでに承認済みcommand prefixだったにもかかわらず、agentが `require_escalated` を明示指定して実行し、不要な追加承認を求めた。ユーザーから同じ事象が以前にも発生したと指摘された。
 - 一次対応: 承認済みprefixに一致するコマンドでは、必要性を確認せず `require_escalated` を付けない。既存の承認状態を利用して実行する。
 
+#### 2026-07-11
+
+- source: user
+- 発生箇所: `local-content-authoring` のcommit / push
+- 観測した失敗: ユーザーが明示的に「コミットpush」と指示した後、agentが複数のGit操作を`&&`で連結して実行し、承認済みcommand prefixを利用せず追加承認を求めた。さらに同じ承認要求を繰り返した。
+- 一次対応: userが明示承認したGit操作は、承認済みprefixを認識できる単独コマンドとして実行する。status・diff確認をcommit / pushの追加承認理由にしない。
+
 #### 恒久対応
 
 - `AGENTS.md` の最重要ルールへ、承認済みcommand prefixに一致するコマンドで `require_escalated` を明示指定して不要な追加承認を要求しないことを追加した。
+- `AGENTS.md` の最重要ルールへ、承認済みの状態変更Git操作を`&&`、`;`、pipe、subshellで連結せず、1つずつ実行することを追加した。
 
 ### Local dev server port left running
 
