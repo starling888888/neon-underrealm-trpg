@@ -43,7 +43,7 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
   - 成果物はチャット上のMarkdown草案とし、ローカル`.raw/contents/<slug>.md`を作成・更新したとは扱わない。使用したリモートsource snapshotと未確認のローカル情報源を報告する。
   - ローカルSKILLとリモートSKILLを分ける目的は、人間向けの読みやすさではなく、agentが不要なモードの手順・参照先・停止条件をコンテキストへ持ち込まず、モード誤認とコンテキスト肥大を防ぐこととする。
 - `drive-to-raw-sync` と `.raw/` の運用を更新する。
-  - Drive同期対象に `v1.0/` を追加し、直下のGoogle Docsを `text/plain` でMarkdownとして `.raw/v1.0/` に保持する。サブディレクトリを再帰的に扱わない。
+  - Drive同期対象に `v1.0/` を追加し、直下のGoogle Docsを `text/markdown` でMarkdownとして `.raw/v1.0/` に保持する。export結果に含まれるinline base64画像定義はローカル保存前に除去する。サブディレクトリを再帰的に扱わない。`contents/` のGoogle Docsは引き続き `text/plain` exportとする。
   - `v1.0/` は旧版の公開内容・テストプレイ・v1.5向け検討の参照資料として扱う。現行サイト本文の正本ではなく、ローカル→Drive同期の対象にも含めない。
   - `v1.0/` にGoogle Docs以外のファイルまたはサブディレクトリがある場合は、静かに破棄・別形式変換せず、同期結果で明示して停止する。
 - `.agents/skills/raw-to-drive-sync/SKILL.md` を新設する。
@@ -71,7 +71,7 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 - [x] `remote-contents-markdown-authoring` に、チャット上のMarkdown草案を成果物とするリモート実行用の情報源優先順位とsource snapshot報告のルールが記載されている。
 - [x] `remote-contents-markdown-authoring` が、ユーザー指示と取得可能なGit管理下の`src/pages/`だけを照合し、`.raw/contents/`・`.raw/v1.0/`を未確認として報告する。
 - [x] `remote-contents-markdown-authoring` が、Google Driveへの同期・読取り・書込み、ローカル`.raw/`への書込みを行わない。
-- [x] Drive→`.raw/` 同期で、`v1.0/` 直下のGoogle Docsを `text/plain` のMarkdownとして扱い、非Google Docsまたはサブディレクトリでは停止・報告するルールが記載されている。
+- [x] Drive→`.raw/` 同期で、`v1.0/` 直下のGoogle Docsを `text/markdown` のMarkdownとして扱い、inline base64画像定義をローカル保存前に除去し、`contents/` のGoogle Docsは `text/plain` とする。非Google Docsまたはサブディレクトリでは停止・報告するルールが記載されている。
 - [x] `raw-to-drive-sync` が新設され、`$raw-to-drive-sync` または `raw-to-drive-sync を実行して` の明示呼び出しだけで実行される。
 - [x] `raw-to-drive-sync` は、`.raw/release-notes.xlsx` の内容を既存Google Sheet `release-notes` へ反映し、`.raw/contents/<slug>.md` を同名のGoogle Doc `<slug>.md` として同期する。`.raw/data/` と `.raw/v1.0/` は同期対象外として明示的に拒否する。
 - [x] 同一セッションで更新した記憶がないファイルを同期する前に、ユーザー確認で停止する条件が記載されている。
@@ -91,7 +91,7 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 - [x] `.raw/contents/<slug>.md` のDrive書込みで、Markdownをリッチテキストとして解釈・貼り付けず、ソースをプレーンテキストとして書き込む。
 - [x] `src/pages/` が現行ページ本文・UI構造の正本であることと、Google Driveが `.raw/contents/`・`release-notes.xlsx` のユーザー編集正本であることを混同しない。
 - [x] v1.0を現行仕様として取り込まず、文体・旧ルール・検討資料の参照に限定する。
-- [x] `v1.0/` の直下Google Docsだけを同期し、想定外の階層または形式を独自変換しない。
+- [x] `v1.0/` の直下Google Docsだけを同期し、inline base64画像定義を除き、想定外の階層または形式を独自変換しない。
 - [x] Drive→`.raw/` と `.raw/`→Drive の対象方向、許可パス、停止条件が対称でなくても明確に分離されている。
 - [x] `data/` 同期拒否は、ユーザーの明示指示より優先する固定安全条件として記載されている。
 - [x] Drive書き込みは、`$raw-to-drive-sync` または `raw-to-drive-sync を実行して` の明示呼び出し、対象ファイル確認、上書き確認の条件を満たす場合だけ可能である。
@@ -134,3 +134,6 @@ Codex内でコンテンツ指示書を作成できるようにしつつ、実装
 - Google Drive MCPで実際に読み書きすること、Driveファイルを作成すること、既存Driveファイルを上書きすることは、このissue承認後も対象SKILLの明示呼び出し時だけに行う。
 - 2026-07-11にGoogle Drive同期ルートを確認した。`v1.0/` はルート直下にあり、直下にはGoogle Docs 4件だけが存在する。`release-notes` はルート直下の既存Google Sheetである。Drive URLおよびファイルIDはGit管理文書へ記録しない。
 - `remote-contents-markdown-authoring` は、ChatGPTから呼び出す場合を想定する。ローカル作業ツリーや`.raw/`が存在するとは仮定しない。
+- 2026-07-11に、ユーザーが `$raw-to-drive-sync` で `.raw/contents/home.md` の同期を動作確認した。セッション内更新記憶がないため書込み前確認で停止し、ユーザーの上書き許可後に既存 `contents/home.md` を更新した。Markdownをプレーンテキストとして書込み、frontmatter・HTMLコメント・Markdown記号をconnector readbackで確認した。Google Sheet、Excel、`data/`、`v1.0/` は変更していない。後のPR作成時は、この動作確認結果を本文に含める。
+- 2026-07-11に、`v1.0/`のGoogle Docsを誤って `text/plain` exportする実装バグをユーザーが指摘した。`contents/` は `text/plain`、スタイル付きの`v1.0/`は `text/markdown` としてexportするよう修正した。誤った形式で作成済みのローカルv1.0ファイルは、正しいexportによる再同期が必要である。
+- 2026-07-11に、`text/markdown` exportが画像をinline base64データURIとして出力し、ローカル作業入力とagentコンテキストを肥大化させることを確認した。v1.0同期では画像定義だけをローカル保存前に除去し、通常の本文と画像リンクは保持する。

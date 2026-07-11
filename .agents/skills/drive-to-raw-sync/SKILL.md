@@ -49,7 +49,7 @@ Stop if the Drive folder, local path, ignore policy, MCP availability, export fo
 4. Confirm `.raw/` is Git-ignored.
 5. Confirm `<repo-root>/raw-google-drive.url` is Git-ignored.
 6. Confirm Google Drive MCP is available and authenticated.
-7. Confirm the MCP can list folders, read file metadata, download files, and export Google Docs as plain text and Google Sheets as `.xlsx`.
+7. Confirm the MCP can list folders, read file metadata, export contents Google Docs as `text/plain`, export v1.0 Google Docs as `text/markdown`, and export Google Sheets as `.xlsx`.
 8. Stop if any precondition fails.
 
 ## Drive Folder Resolution
@@ -103,7 +103,7 @@ Require every direct child of Drive `v1.0/` to be a Google Doc. Stop and report 
 
 ## Export Rules
 
-Export contents and v1.0 Google Docs as:
+Export contents Google Docs as:
 
 ```text
 text/plain
@@ -116,6 +116,16 @@ For `contents/`, map the Google Doc title `<slug>.md` to:
 ```text
 <repo-root>/.raw/contents/<slug>.md
 ```
+
+Export v1.0 Google Docs as:
+
+```text
+text/markdown
+```
+
+This conversion preserves the source document's Google Docs styling as Markdown. Do not use `text/plain` for v1.0 documents.
+
+Google Drive export has no option to exclude inline data URI images. Before writing a v1.0 export, remove only Markdown image reference definitions that embed `data:image/...;base64,...`. Keep normal Markdown image links and all non-image text. Do not print or return the exported Markdown payload in tool output. Report only file names, counts, and validation results.
 
 For `v1.0/`, map each direct Google Doc title to a local filename ending in `.md` under:
 
@@ -144,8 +154,9 @@ Map the root `release-notes` Google Sheet to `<repo-root>/.raw/release-notes.xls
 7. Stop if any path escapes `<repo-root>/.raw/`, maps twice, or has an unsupported type.
 8. Before overwriting a local file, confirm the exported content is non-empty and complete.
 9. Download or export the allowed files through Google Drive MCP.
-10. Write only under `<repo-root>/.raw/`.
-11. Report the result.
+10. For each v1.0 Markdown export, remove inline base64 image reference definitions and confirm none remain.
+11. Write only under `<repo-root>/.raw/`.
+12. Report the result.
 
 ## Required Report
 
@@ -157,7 +168,9 @@ Report:
 - v1.0 structure verification result
 - skipped or unsupported files
 - failed and overwritten files
-- confirmation that Google Docs used `text/plain`
+- confirmation that contents Google Docs used `text/plain`
+- confirmation that v1.0 Google Docs used `text/markdown`
+- number of inline base64 image definitions removed from v1.0 exports, and confirmation that none remain
 - confirmation that outputs stayed under `<repo-root>/.raw/`
 - confirmation that `.raw/` and `raw-google-drive.url` are Git-ignored
 - confirmation that no Drive write operation was used

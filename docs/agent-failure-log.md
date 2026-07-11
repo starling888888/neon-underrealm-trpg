@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### v1.0 Google Docs export format was incorrect
+
+#### 2026-07-11
+
+- source: user
+- 発生箇所: `.agents/skills/drive-to-raw-sync/SKILL.md` と `v1.0/` の初回ローカル同期
+- 観測した失敗: スタイル付きGoogle Docsである `v1.0/` 配下の資料を、Markdown exportではなく `text/plain` exportで `.md` 化した。これによりGoogle Docs上のスタイル情報をMarkdownへ変換できなかった。
+- 一次対応: `contents/` はMarkdownソースをそのまま扱うため `text/plain` exportを維持し、`v1.0/` は `text/markdown` exportへ分離した。誤った形式で作成したローカルv1.0ファイルは、正しい形式で再同期するまで参照に使わない。
+
 ### Non-interactive custom subagent smoke test failed
 
 #### 2026-07-11

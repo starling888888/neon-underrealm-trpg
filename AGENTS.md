@@ -108,7 +108,7 @@ contents markdownを作成または解釈する場合は、`.agents/skills/conte
     └── *.md
 ```
 
-Google Drive側は、`release-notes` Google Sheet、`data/`、`contents/`、`v1.0/` を同期対象フォルダ直下に置く。`contents/` のGoogle DocsはMarkdownソースをプレーンテキストとして保持し、ファイル名を `<slug>.md` とする。`v1.0/` は直下Google Docsだけを旧版参照資料として置く。Google SheetsはExcel `.xlsx` としてローカルへ同期する。
+Google Drive側は、`release-notes` Google Sheet、`data/`、`contents/`、`v1.0/` を同期対象フォルダ直下に置く。`contents/` のGoogle DocsはMarkdownソースをプレーンテキストとして保持し、`text/plain` exportでファイル名 `<slug>.md` として同期する。`v1.0/` は直下Google Docsだけを旧版参照資料として置き、スタイルをMarkdown化するため `text/markdown` exportで同期し、inline base64画像定義はローカル保存前に除去する。Google SheetsはExcel `.xlsx` としてローカルへ同期する。
 
 Google Driveは `.raw/contents/` と `.raw/release-notes.xlsx` のユーザー編集正本である。Drive書込みは `raw-to-drive-sync` の明示呼び出しだけに限定する。Drive同期はCI/CDでは実行しない。
 

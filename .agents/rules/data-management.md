@@ -54,7 +54,7 @@ Google Docs sync to `.raw/contents/*.md`.
 
 Google Sheets sync to `.raw/release-notes.xlsx` or `.raw/data/*.xlsx`.
 
-Google Docs directly under Drive `v1.0/` sync to `.raw/v1.0/*.md` as historical references. Do not treat them as current site source of truth. Stop if `v1.0/` contains a subdirectory or a non-Google-Doc file.
+Google Docs directly under Drive `v1.0/` sync to `.raw/v1.0/*.md` as historical references through `text/markdown` export. Remove inline `data:image/...;base64,...` Markdown image reference definitions before local storage. Do not treat them as current site source of truth. Stop if `v1.0/` contains a subdirectory or a non-Google-Doc file.
 
 Do not write Google Drive-derived files outside `<repo-root>/.raw/`.
 
