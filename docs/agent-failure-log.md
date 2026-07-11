@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Content-instruction stopping point overrun
+
+#### 2026-07-11
+
+- source: user
+- 発生箇所: `20-2-introduction-page` のissue-first準備
+- 観測した失敗: ユーザーは、issueを作成する前にコンテンツ指示書を作成するよう明示した。agentは `.raw/contents/introduction.md` を作成した後、その完了を報告して指示を待たずに `docs/issue/20-2-introduction-page.md` まで作成した。コンテンツ指示書作成後の報告・停止というユーザー指定の確認地点を越えた。
+- 一次対応: ユーザー指示に従い、誤って作成した `docs/issue/20-2-introduction-page.md` を削除した。コンテンツ指示書だけを残し、以後のissue作成、reviewer実行、design作成、実装を行わず、ユーザーの次の指示を待つ。
+
 ### Ambiguous remote source placeholder replaced an explicit source list
 
 #### 2026-07-11
