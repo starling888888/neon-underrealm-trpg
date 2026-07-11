@@ -23,7 +23,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/21-2-world-page.md`
+- `docs/issue/done/phase-3/21-2-world-page.md`（historical source）
 - `docs/requirements/pages.md`
 - `docs/requirements/components.md`
 - `docs/requirements/data-display.md`
