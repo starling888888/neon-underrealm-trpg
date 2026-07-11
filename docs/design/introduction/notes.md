@@ -2,7 +2,7 @@
 
 ## Mode
 
-- initial draft
+- design fix
 
 ## Target
 
@@ -86,21 +86,18 @@
 
 ## Generation Source
 
-- prototype or generator source: standalone HTML/CSS prototype captured with Playwright.
-- source branch / commit when applicable: `20-2-introduction-page` / `7b0badd`
+- prototype or generator source: Playwright actual screenshotを、ユーザー承認済みのdesign fix modeで正本化した。
+- source branch / commit when applicable: `20-2-introduction-page` / `5eead14`
 - route when applicable: `/introduction`
 - viewport:
-  - desktop `1440x1200` viewport capture: `docs/design/introduction/design-desktop.png`
-  - mobile `390x900` viewport capture: `docs/design/introduction/design-mobile.png`
+  - desktop `1440x1200` viewport capture: `test-results/visual/introduction-desktop.png` から `docs/design/introduction/design-desktop.png` へ正本化
+  - mobile `390x900` viewport capture: `test-results/visual/introduction-mobile.png` から `docs/design/introduction/design-mobile.png` へ正本化
 - prototype path / prompt summary / capture notes:
-  - `.tmp/design/introduction/prototype.html` を、アプリケーションのrouteやComponentを読み込まない独立HTML/CSSとして作成した。
-  - `.tmp/design/introduction/capture.mjs` がPlaywrightの`page.setContent()`でprototypeを読み込み、ゴールデンルールのwarning Calloutがviewport中央に来る位置で指定サイズの画像を出力する。
-  - 既存site-layoutを踏襲し、通常サイズの画面で可視的な確認の中心をゴールデンルールのwarning Calloutに置いた。
-  - 可視titleをCallout内に1回だけ置き、同じtitleを枠外の大見出しとして重ねない。prototypeではこのtitle自体をH2にした。
-  - 本文の正確な文言は`.raw/contents/introduction.md`を正本とし、prototypeは見出し階層、折り返し、余白、Calloutとの関係を確認するためのdesign用成果物である。
-  - これはimplementation actual screenshotではない。実装後のVisual Reviewでは、同じdesktop `1440x1200`、mobile `390x900` viewportで比較する。
+  - `tests/visual/introduction.spec.ts` がbuild後previewの`/introduction`をcaptureしたactual screenshotを使用した。
+  - 初期prototypeとの差分は、実装済みproseの正確な行送り、用語説明の折り返し、Callout Componentの実際のpaddingと本文量である。いずれもrequirements、global styles、site-layout、calloutの方向と整合する。
+  - 可視titleはCallout内の単一H2であり、PageTocとMobilePageTocから到達できる。既定Callout titleはspanのままで、既存CalloutのPageToc非混入は維持する。
+  - user approval: `デザイン正本化`（2026-07-11）。Visual Reviewの差分を隠す目的ではなく、レビュー済み実装を導入ページの比較基準として採用する。
 
 ## Open Questions
 
-- `Callout` のtitleをゴールデンルールに限りHTML上のH2として出す方式を、明示的opt-in APIとページ側の構造のどちらで実装するか。
-- 上記方式が既存Calloutのdesign正本更新を必要とするか。
+- なし。`titleAsHeading` opt-inによりゴールデンルールだけをH2として出力し、既存Calloutの正本更新は不要と確認した。

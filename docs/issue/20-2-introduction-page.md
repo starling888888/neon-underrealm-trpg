@@ -156,11 +156,11 @@
 
 ### 人間判断が必要な差分
 
-- なし。実装画面はinitial draftの意図と一致し、design正本更新を要する差分は確認されなかった。
+- ユーザーが実装スクリーンショットのdesign正本化を承認したため、`docs/design/introduction/` へ反映済み。
 
 ### design-image-generation への引き継ぎ候補
 
-- [x] 実装スクリーンショットをdesign正本化する必要はない。actual screenshotはVisual Review成果物として保持する。
+- [x] ユーザー承認済みのdesign fix modeで、actual screenshotを`docs/design/introduction/`の正本画像へ更新した。
 
 ### 対応完了チェックリスト
 
@@ -168,7 +168,7 @@
 - [x] mobile screenshot を取得した
 - [x] reference と actual を比較した
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
-- [x] design正本の更新が不要であることを記録した
+- [x] ユーザー承認済みのdesign fix modeでdesign正本を更新した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -177,6 +177,6 @@
 - mode: local repository mode
 - branch: `20-2-introduction-page`
 - `.tmp/review/20-2-introduction-page/` は作成済み。
-- `docs/design/introduction/` はinitial draftとして作成し、ユーザーの確認後に実装へ進んだ。actual screenshotはdesign正本へコピーしていない。
+- `docs/design/introduction/` はinitial draftを経て、ユーザー承認済みのdesign fix modeでactual screenshotを正本化した。
 - `docs/requirements/pages.md`、`docs/plan.md`、`docs/TODO.md` の責務整理は、issue作成前にユーザーが明示した指示を反映済みである。変更記録は `.tmp/review/20-2-introduction-page/user-directed-changes.md` にある。
 - `.raw/contents/introduction.md` はGoogle Driveへ同期していない。同期は `raw-to-drive-sync` の明示指示がある場合に限る。
