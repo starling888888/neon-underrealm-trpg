@@ -51,6 +51,8 @@ For `pr-review-1.md`, review every commit from the PR base commit through the cu
 
 For later review cycles, review every commit after the latest `pr-review-N.md` reviewed head commit through the current remote PR head commit.
 
+Historical review records may retain the file paths and line numbers from their reviewed snapshot. Do not raise a finding only because a completed change moved, removed, or changed that historical location in the current tree. Raise a finding only when the historical record represents the current state as unresolved or unmodified.
+
 The document reviewer checks:
 
 - current issue scope

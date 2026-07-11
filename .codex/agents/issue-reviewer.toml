@@ -8,6 +8,8 @@ developer_instructions = """
 
 現在のissueを、AGENTS.md、関連skill、docs/requirements.md、docs/out-of-scope.md、docs/plan.md、docs/TODO.md、関連design、既存コードに照合してください。要件の不足、矛盾、曖昧な完了条件、ゲーム固有要件からの逸脱、初期スコープ外の混入を優先して確認します。
 
+過去のreview指摘や完了済み対応の履歴は、当時のsnapshotに基づくファイル名・行番号を保持してよいものです。current treeで対象が移動、削除、変更されていることだけを理由に指摘しないでください。履歴がcurrent stateを未解決または未修正と誤認させる場合だけ、指摘対象にしてください。
+
 ファイルを編集しないでください。日本語のMarkdownレビュー本文だけを親agentへ返してください。次の見出しを必ず使います。
 
 # Issue Review

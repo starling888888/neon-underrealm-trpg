@@ -153,3 +153,25 @@
 
 - [x] current branchと対象issue名が異なる場合に、対象branchを作成して開始する手順へ更新する。
 - [x] Markdown formatterと`npm run check:md`が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 対応済みの過去review指摘が当時のfile行を保持していても、current treeとの不一致だけでは指摘対象にしない。current stateを未解決または未修正と誤認させる場合だけを対象とする。
+
+### 判定
+
+- source: local-pr-review
+- classification: invalid by user-directed reviewer policy
+- local validation: current headの`.agents/skills/issue-first-development/SKILL.md`には対象branch作成手順が反映済みである。レビュー指摘 1 のlocal validationは修正前のsnapshotを記録する履歴であり、current stateの未解決を表明していない。
+- review records: `.tmp/review/review-subagents/pr-review-2.md`、`.tmp/review/review-subagents/document-review-2.md`、`.tmp/review/review-subagents/technical-review-2.md`
+
+### 対応方針
+
+- 過去review指摘のsnapshot妥当性をcurrent treeで再検証しないreviewer方針を、3 reviewer定義とPR review workflowへ明記する。レビュー指摘 1 の履歴は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] 過去review指摘のsnapshot差異を単独で指摘しないreviewer方針を定義する。
+- [x] Markdown formatterと`npm run check:md`が通る。
