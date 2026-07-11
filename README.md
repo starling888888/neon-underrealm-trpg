@@ -200,6 +200,7 @@ V1.5で処理順を明確化しました。
 - [TODO](docs/TODO.md)
 - [公開手順](docs/deployment.md)
 - [本文作成ガイド](docs/content-writing-guide.md)
+- [ゲーム画像生成用ベースプロンプト](docs/image-generation/base-prompt.md)
 - [生成データ方針](data/generated/README.md)
 - [Visual Review Tests](tests/visual/README.md)
 
