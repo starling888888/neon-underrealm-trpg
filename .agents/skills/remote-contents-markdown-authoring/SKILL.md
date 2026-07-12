@@ -56,7 +56,7 @@ The result is a Markdown draft in chat. Do not claim that a local `.raw/contents
 3. If a lower-priority source differs from the user instruction or existing implementation, identify the remotely observable page and link impact, ask for user direction, and do not propose an implementation change as completed.
 4. If an available requirement, plan, or out-of-scope source conflicts with the user instruction or existing implementation, identify the conflict and impact, then ask whether it may be corrected.
 5. Do not change a remote repository, local file, or Google Drive content in this mode. After user approval, report the required correction for an environment authorized to make it.
-6. Draft normal Markdown with frontmatter and HTML comments when agent-facing notes are needed.
+6. Draft normal Markdown with frontmatter and an HTML-comment `矛盾点` section. For each remotely observed lower-priority source conflict, record the lower-priority source, a concise conflict summary, and the adopted document or user instruction. When no checked-source conflict is found, state that result without claiming local `.raw/` sources were checked.
 7. Do not use `:::` instruction blocks.
 8. Report `.raw/contents/` and `.raw/v1.0/` as unchecked.
 
@@ -71,6 +71,7 @@ Report:
 - unverified local sources: `.raw/contents/` and `.raw/v1.0/`
 - detected implementation differences and required user decisions
 - source-of-truth conflicts and correction authorization status
+- `矛盾点` comment entries and any unavailable lower-priority sources
 - confirmation that no local file or Google Drive content was changed
 
 Do not commit, push, create a PR, access Google Drive, write local files, or implement pages.

@@ -17,6 +17,7 @@ export const visualRoutes = {
   home: "./",
   introduction: "introduction/",
   world: "world/",
+  characterMaking: "character-making/",
   releaseNotes: "release-notes/",
   mdxTest: "-local/mdx-test/",
   callouts: "-local/callouts/",
