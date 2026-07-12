@@ -13,10 +13,11 @@ import path from "node:path";
 import { describe, it } from "node:test";
 import { canonicalizeVisualDesign } from "../../scripts/canonicalize-visual-design/lib";
 import {
+  clearVisualArtifacts,
   getCaptureManifestPath,
   invalidateCaptureManifest,
+  writeCaptureManifest,
 } from "../../scripts/visual-capture/lib";
-import { resolveVisualBaseUrl } from "../../tests/visual/config";
 
 describe("visual design canonicalization", () => {
   it("copies current visual artifacts and records their provenance", async () => {
@@ -203,22 +204,92 @@ describe("visual design canonicalization", () => {
     );
   });
 
-  it("uses VISUAL_TARGET_URL as the complete visual base URL", () => {
-    assert.equal(
-      resolveVisualBaseUrl({
-        VISUAL_TARGET_URL: "http://127.0.0.1:4321/neon-underrealm-trpg",
-      }),
-      "http://127.0.0.1:4321/neon-underrealm-trpg/",
-    );
-  });
-
-  it("invalidates an old manifest before a new capture run", async () => {
+  it("clears old screenshots before a new capture run", async () => {
     const rootDir = await mkdtemp(path.join(tmpdir(), "visual-capture-"));
     const outputDirectory = path.join(rootDir, "test-results/visual");
     await mkdir(outputDirectory, { recursive: true });
+    await writeFile(
+      path.join(outputDirectory, "advancement-desktop.png"),
+      "old",
+    );
+    await writeFile(
+      path.join(outputDirectory, "advancement-mobile.png"),
+      "old",
+    );
+    await writeFile(path.join(outputDirectory, "node-tests.tap"), "keep");
     await writeFile(getCaptureManifestPath(outputDirectory), "old manifest");
 
     await invalidateCaptureManifest(outputDirectory);
+    await clearVisualArtifacts(outputDirectory);
+
+    await assert.rejects(readFile(getCaptureManifestPath(outputDirectory)));
+    await assert.rejects(
+      readFile(path.join(outputDirectory, "advancement-desktop.png")),
+    );
+    await assert.rejects(
+      readFile(path.join(outputDirectory, "advancement-mobile.png")),
+    );
+    assert.equal(
+      await readFile(path.join(outputDirectory, "node-tests.tap"), "utf8"),
+      "keep",
+    );
+  });
+
+  it("rejects a partial capture after old artifacts are cleared", async () => {
+    const rootDir = await prepareFixture();
+    const sourceDirectory = path.join(rootDir, "test-results/visual");
+    const startedAt = new Date().toISOString();
+    await clearVisualArtifacts(sourceDirectory);
+    await writeFile(
+      path.join(sourceDirectory, "advancement-desktop.png"),
+      "desktop",
+    );
+    await writeManifest(rootDir, {
+      completedAt: new Date(Date.parse(startedAt) + 2_000).toISOString(),
+      head: "abc123",
+      startedAt,
+    });
+    await utimes(
+      path.join(sourceDirectory, "advancement-desktop.png"),
+      new Date(Date.parse(startedAt) + 1_000),
+      new Date(Date.parse(startedAt) + 1_000),
+    );
+
+    await assert.rejects(
+      canonicalizeVisualDesign({
+        branch: "26-2-advancement-page",
+        head: "abc123",
+        rootDir,
+        route: "/advancement/",
+        target: "advancement",
+      }),
+      /Missing current screenshot.*advancement-mobile\.png/,
+    );
+  });
+
+  it("does not publish a manifest when the manifest write fails", async () => {
+    const rootDir = await mkdtemp(path.join(tmpdir(), "visual-capture-"));
+    const outputDirectory = path.join(rootDir, "test-results/visual");
+    await mkdir(outputDirectory, { recursive: true });
+
+    await assert.rejects(
+      writeCaptureManifest(
+        outputDirectory,
+        {
+          branch: "26-2-advancement-page",
+          completedAt: new Date().toISOString(),
+          head: "abc123",
+          playwrightArgs: [],
+          runId: "failed-run",
+          startedAt: new Date().toISOString(),
+          version: 1,
+        },
+        async () => {
+          throw new Error("manifest write failed");
+        },
+      ),
+      /manifest write failed/,
+    );
 
     await assert.rejects(readFile(getCaptureManifestPath(outputDirectory)));
   });

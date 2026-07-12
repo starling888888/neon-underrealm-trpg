@@ -129,8 +129,8 @@ Do not use `.tmp/*.mjs`, `node -e`, or another ad hoc Playwright command.
 
 ## Preview server selection
 
-Use an existing 4321 preview when it is available. Set `VISUAL_TARGET_URL` for
-the existing server when needed.
+Use the existing 4321 preview. Do not set a target URL, host, port, or path
+override for capture.
 
 If a newly started server selects 4322 or another alternate port, stop that
 server and report the port and process to the user. Do not retry startup, do not

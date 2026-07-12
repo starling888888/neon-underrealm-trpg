@@ -145,10 +145,7 @@ async function assertCapturedWithin(
 
   const captureStart = Date.parse(manifest.startedAt);
   const captureEnd = Date.parse(manifest.completedAt);
-  if (
-    details.mtimeMs + 1_000 < captureStart ||
-    details.mtimeMs - 1_000 > captureEnd
-  ) {
+  if (details.mtimeMs < captureStart || details.mtimeMs > captureEnd) {
     throw new Error(
       `Screenshot at ${screenshotPath} is outside the current capture manifest window.`,
     );

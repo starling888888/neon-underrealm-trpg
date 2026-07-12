@@ -3,30 +3,15 @@ declare const process: {
     VISUAL_BASE_HOST?: string;
     VISUAL_BASE_PATH?: string;
     VISUAL_BASE_PORT?: string;
-    VISUAL_TARGET_URL?: string;
   };
 };
 
-export type VisualEnvironment = {
-  VISUAL_BASE_HOST?: string;
-  VISUAL_BASE_PATH?: string;
-  VISUAL_BASE_PORT?: string;
-  VISUAL_TARGET_URL?: string;
-};
+const visualBaseHost = process.env.VISUAL_BASE_HOST ?? "http://127.0.0.1";
+const visualBasePort = process.env.VISUAL_BASE_PORT ?? "4321";
+const visualBasePath = process.env.VISUAL_BASE_PATH ?? "/neon-underrealm-trpg";
+const normalizedVisualBasePath = visualBasePath.replace(/\/?$/, "/");
 
-export function resolveVisualBaseUrl(environment: VisualEnvironment): string {
-  const targetUrl = environment.VISUAL_TARGET_URL;
-  if (targetUrl) {
-    return targetUrl.replace(/\/?$/, "/");
-  }
-
-  const host = environment.VISUAL_BASE_HOST ?? "http://127.0.0.1";
-  const port = environment.VISUAL_BASE_PORT ?? "4321";
-  const basePath = environment.VISUAL_BASE_PATH ?? "/neon-underrealm-trpg";
-  return `${host}:${port}${basePath.replace(/\/?$/, "/")}`;
-}
-
-export const visualBaseUrl = resolveVisualBaseUrl(process.env);
+export const visualBaseUrl = `${visualBaseHost}:${visualBasePort}${normalizedVisualBasePath}`;
 
 export const visualRoutes = {
   home: "./",

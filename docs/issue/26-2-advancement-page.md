@@ -54,6 +54,35 @@
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
+## レビュー指摘 2
+
+### 指摘事項
+
+- capture開始時に旧artifactが残るため、部分captureで生成したartifactと直前のartifactを混在させて正本化できる。
+- manifestを本番パスへ直接書き込むため、manifest書込み失敗後に有効形式のmanifestが残る可能性がある。
+- `VISUAL_TARGET_URL`は既定4321 captureに不要な別経路であり、skill・README・Visual test設定を不整合にする。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `scripts/visual-capture/main.ts`がmanifestだけを失効させartifactを残すこと、`scripts/canonicalize-visual-design/lib.ts`がrun IDをartifactと結び付けずmtimeに1秒の許容を置くこと、`scripts/visual-capture/lib.ts`がmanifestを直接書き込むこと、`tests/visual/config.ts`がURL文字列を末尾`/`で連結することを確認した。
+
+### 対応方針
+
+- capture開始時に既存のVisual artifactを削除し、成功runで生成されたdesktop / mobile artifactだけをmanifestと組み合わせる。
+- manifestは一時ファイルへ完全に書き込んでからrenameし、失敗時には本番manifestを残さない。
+- `VISUAL_TARGET_URL`の実装・skill記載・testを削除し、capture先を既定4321へ固定する。
+
+### 対応完了チェックリスト
+
+- [x] 部分captureと旧artifactの混在を拒否するcapture lifecycleへ修正し、Node testを追加する。
+- [x] manifestを原子的に公開し、書込み失敗後にcanonicalizeできないことをNode testで確認する。
+- [x] `VISUAL_TARGET_URL`を削除し、既定4321 capture先だけをskill・README・Visual test設定で共有する。
+- [x] `npm test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
 ## チェックポイント
 
 - [x] desktop / mobileでhero、表、Callout、本文、PageToc / MobilePageTocに横overflowや可読性低下がない。
@@ -75,6 +104,7 @@
 - `scripts/canonicalize-visual-design/`
 - `tests/node/canonicalize-visual-design.test.ts`
 - `tests/visual/config.ts`
+- `tests/visual/README.md`
 - `.agents/skills/design-image-generation/SKILL.md`
 - `.agents/skills/visual-implementation-review/SKILL.md`
 - `docs/design/advancement/`
@@ -160,7 +190,7 @@
 
 - current issueへ共通Visual workflow変更の理由・対象ファイル・ページtaskとの関係を明記する。
 - capture runを一意に識別し、失敗run・部分run・旧manifestのartifactを`visual:canonicalize`が受理しないようにする。
-- `VISUAL_TARGET_URL`を実装するか、skill・READMEを既存環境変数へ統一する。既存previewを指定する目的に合わせ、完全URL指定を実装する案を優先する。
+- `VISUAL_TARGET_URL`は既定4321 captureを不必要に複雑化するため実装しない。追加済みの設定・skill記載・testを削除し、READMEを既定capture先へ統一する。
 - 正本画像とprovenanceの更新を失敗時にrollbackできる一貫した処理へ変更する。
 - routeを安全なサイト内path形式へ制限し、異常入力を拒否する。
 
@@ -168,7 +198,7 @@
 
 - [x] 共通Visual workflow変更の理由・対象ファイル・issueとの関係を記録する。
 - [x] capture manifestのlifecycleとartifact鮮度検証を失敗・部分runに耐えるよう修正し、Node testを追加する。
-- [x] `VISUAL_TARGET_URL`をVisual test設定へ実装し、環境変数指定時のbase URLを検証する。
+- [x] `VISUAL_TARGET_URL`を削除し、既定4321 capture先だけをskill・README・Visual test設定で共有する。
 - [x] 正本画像と`notes.md`の更新を中断時に不整合を残さない処理へ修正し、Node testを追加する。
 - [x] route入力を検証し、異常routeの拒否testを追加する。
 - [x] `npm test` が通る。

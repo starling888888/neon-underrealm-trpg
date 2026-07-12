@@ -2,7 +2,11 @@ import { execFile, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { mkdir } from "node:fs/promises";
 import { promisify } from "node:util";
-import { invalidateCaptureManifest, writeCaptureManifest } from "./lib";
+import {
+  clearVisualArtifacts,
+  invalidateCaptureManifest,
+  writeCaptureManifest,
+} from "./lib";
 
 const execFileAsync = promisify(execFile);
 const outputDirectory = "test-results/visual";
@@ -51,6 +55,7 @@ async function main(): Promise<void> {
 
   await mkdir(outputDirectory, { recursive: true });
   await invalidateCaptureManifest(outputDirectory);
+  await clearVisualArtifacts(outputDirectory);
   await runPlaywright(playwrightArgs);
 
   await writeCaptureManifest(outputDirectory, {
