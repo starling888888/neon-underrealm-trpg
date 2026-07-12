@@ -28,6 +28,7 @@
 - commit指示前に、ユーザーの明示指示なしに `git add` しない。commit指示が出た場合は、対象差分を確認したうえで必要な `git add` と `git commit` を実行してよい。
 - ユーザーの明示指示なしに `git commit`、`git push`、`git tag`、PR作成、remote branch作成、GitHub Release作成をしない。
 - 既に承認済みcommand prefixに一致するコマンドでは、`require_escalated` を明示指定して不要な追加承認を要求してはならない。追加承認は、承認済みprefixに一致せず、sandbox外実行が実際に必要な場合に限る。承認済みの状態変更Git操作（`git add`、`git commit`、`git push`など）は1つずつ実行し、`&&`、`;`、pipe、subshellでほかのGit操作と連結してはならない。
+- `XXX=hogehoge command` のように環境変数をコマンド行で指定する形式は実行してはならない。環境変数の設定が必要なツールは、対象の`.env`ファイルで指定する。
 - 実装タスクは、実装前に `.agents/skills/issue-first-development/SKILL.md` を使い、ユーザーが明示的に許可した `docs/issue/*.md` 作成または検証で停止する。task番号、`$issue-first-development` の呼び出し、branch作成指示、開発開始指示だけではissue作成を許可しない。
 - ユーザーがscope調整、requirements調整、contents作成だけを指示した場合は、issueを作成せずに該当skillまたは作業だけを行い、その完了時に判断・未確定事項を返して停止する。ユーザーがissueを作成しないと明示した場合は、その指定を優先する。
 - `issue-first-development` のlocal repository modeで `issue_reviewer` を実行してよいのは、このworkflowでユーザー許可済みのローカルissueを作成した後だけである。issueを作成していないbranch準備、scope調整、requirements調整、contents作成ではreviewerを実行しない。remote snapshot draft modeではreviewerを実行しない。
