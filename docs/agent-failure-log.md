@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Character-making visual capture required two corrective attempts
+
+#### 2026-07-12
+
+- source: self
+- 発生箇所: `22-2-character-making-page` の`tests/visual/character-making.spec.ts`とVisual Review
+- 観測した失敗: 初回のVisual testは、本文の内部リンク数を検証する際にSiteMenuの同名リンクも数えて失敗した。本文領域へ検証対象を限定した再実行は、sandbox内でChromiumが起動できず失敗した。
+- 一次対応: 本文の`article.mdx-layout`内だけを検証対象にし、Playwrightのcaptureはsandbox外実行へ切り替えた。desktop / mobileのcaptureは成功した。
+
 ### MDX emphasis and PageToc preview verification were incomplete
 
 #### 2026-07-12
