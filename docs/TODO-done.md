@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] 戦闘ルール実装後、シナリオ終了後処理から死亡・覚悟の詳細へフラグメントリンクを置く
+  - completed: 2026-07-12 via PR #39 / `25-2-battle-page`
+  - source: `24-2-scenario-play-page` のユーザー指示
+  - classification: cross-page follow-up
+  - plan: `docs/plan.md` の `25-2-battle-page`
+  - handling: 戦闘ルールの「気絶と死亡」「覚悟」のbuild後フラグメントIDを確認し、`src/pages/rules/scenario-play.mdx` と `.raw/contents/scenario-play.md` の参照を対応するインラインリンクへ更新した。
+
 - [x] 既存MarkdownドキュメントのstyleをGoogle Markdown Style Guideに沿って統一する
   - completed: 2026-07-08 via `todo-md-style-unification` / main direct commit
   - source: `.tmp/追加要望.md` 01
