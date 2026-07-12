@@ -20,6 +20,14 @@ async function expectCharacterMakingContent(page: Page) {
     page.getByRole("heading", { name: "キャラクターメイキング" }),
   ).toHaveCount(1);
   await expect(
+    article.getByText("初めて仕事人を作るなら", { exact: false }),
+  ).toHaveCount(1);
+  await expect(
+    article.getByText("対応能力値を2倍にして判定数を決めます", {
+      exact: false,
+    }),
+  ).toHaveCount(2);
+  await expect(
     article.getByRole("img", {
       name: "港沿いの作業場で、4人の仕事人が義手、刺青、ドラッグ、戦闘装備を整えている。窓の外に通天閣を思わせる塔が見える。",
     }),

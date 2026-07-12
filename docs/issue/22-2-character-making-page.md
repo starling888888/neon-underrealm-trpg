@@ -143,6 +143,7 @@
 - [x] 体力増加値、精神力増加値、初期体力係数、初期精神力係数と、作成時の選択が最大体力・最大精神力へ反映される関係を基本説明へ追加した。
 - [x] 初期縁一覧への参照を「表の文章」から「初期縁一覧の文章」へ置き換え、raw入力と公開本文を揃えた。
 - [x] ユーザー提供のheroをH1直後へ既存`ImageBlock`で配置し、alt、GitHub Pagesのbase path、desktop / tablet / mobile表示を確認した。
+- [x] 導入へ作成方式の選び方を加え、得意技能の効果と記録方法を両作成方式へ追加した。
 
 ### 人間判断が必要な差分
 
@@ -162,6 +163,36 @@
 - [x] ユーザー承認済みのdesign正本化を`design-image-generation`のdesign fix modeで反映する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- 初めて作る読者に、コンストラクションとフルスクラッチのどちらから始めるべきかを導入で案内していない。
+- 得意技能を選ぶと判定で何が変わり、キャラクターシートへ何を記録するかがページ単体では分からない。
+- `GM`と`PL`の略称補足が導入にない。
+
+### 判定
+
+- source: contents-review-3
+- classification: valid / addressed
+- local validation: `.raw/contents/introduction.md`と`src/pages/introduction.mdx`にはプレイヤー（PL）とゲームマスター（GM）の定義があるため、略称の追加は不要とした。得意技能は`.raw/v1.0/01.ルールブック.md`および`.raw/v1.0/無料配布_PL向けルールブック.md`で、対応能力値を2倍にして非戦闘判定の判定数を決めると定義されている。
+
+### 対応方針
+
+- 導入直後に、初回にはコンストラクションを勧め、フルスクラッチは経験点で自由に調整する方式であることを追加する。
+- コンストラクションとフルスクラッチの得意技能手順へ、判定数の増加とキャラクターシートへの記録を追加する。
+- 公開本文とraw入力を同じ内容に揃え、heroを含むdesktop / mobile actualをユーザー許可済みのdesign正本へ更新する。
+
+### 対応完了チェックリスト
+
+- [x] 導入へ作成方式の選び方を追加する
+- [x] 両作成方式へ得意技能の効果と記録方法を追加する
+- [x] GM / PLの定義が`/introduction`に存在することを確認する
+- [x] heroを含むdesktop / mobileのdesign正本を更新する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] desktop / tablet / mobileのVisual testが通る
 
 ## レビュー指摘 2
 

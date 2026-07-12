@@ -59,8 +59,8 @@
 
 ## Comparison points for implementation
 
-- desktopではH1直後のhero、基本要素、初期縁、コンストラクション、フルスクラッチをPageTocとともに上から追える。
-- mobileではH1、hero、MobilePageToc triggerが成立し、長い表とCalloutに横overflowがない。
+- desktopではH1直後のheroと作成方式の案内、基本要素、初期縁、コンストラクション、フルスクラッチをPageTocとともに上から追える。
+- mobileではH1、hero、作成方式の案内、MobilePageToc triggerが成立し、長い表とCalloutに横overflowがない。
 - `tip`、`example`、`warning`のCalloutが既存Componentの種別・ラベル・記号マーカーで区別できる。
 - CalloutタイトルがH2 / H3として出力されず、PageTocへ混入しない。
 - 内部リンクがGitHub Pagesのbase pathを通り、本文と既存navigationが混同されない。
@@ -76,7 +76,7 @@
   - `test-results/visual/character-making-mobile.png`
 - hero asset: `public/images/character-making/hero.webp`
 - hero prompt: `.tmp/hero-prompt.md`
-- canonicalization: ユーザーは2026-07-12に、hero追加後のdesktop / mobile Visual Review actualをdesign正本へ反映することを明示承認した。ページ固有のinitial draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign正本として採用する。
+- canonicalization: ユーザーは2026-07-12に、contents review後のdesktop / mobile Visual Review actualをdesign正本へ反映することを明示承認した。ページ固有のinitial draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign正本として採用する。
 
 ## Differences from previous design references
 
@@ -84,6 +84,8 @@
 - 最大体力・最大精神力の決定要素を基本説明へ追加した。構成や既存Calloutの見た目は変更していない。
 - tabletは既存`site-layout`の正本と同じbreakpoint・MobilePageToc挙動を確認するためのVisual Review対象とし、ページ固有のcanonical imageはdesktopとmobileだけを維持する。
 - ユーザー提供のheroをH1直後へ追加した。画像内の公式ゲームロゴをそのまま用い、追加のoverlayやcaptionは設けていない。
+- 導入直後にコンストラクションとフルスクラッチの選び方を置き、手順を先に進めながら基本要素を参照できることを明記した。
+- 得意技能を選んだ非戦闘判定での判定数増加と、キャラクターシートへの記録を両作成方式に明記した。
 
 ## Open questions
 
