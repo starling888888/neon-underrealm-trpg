@@ -1,0 +1,194 @@
+---
+const initialTies = [
+  {
+    roll: 1,
+    target: "上司",
+    positive: "あなたは上司を尊敬している。この人に見いだされたから、今のあなたがあるのだ。",
+    negative: "あなたは上司を嫌っている。そのやり方に納得することができない。",
+  },
+  {
+    roll: 2,
+    target: "仲間",
+    positive: "競い合ってきた仲間だ。深い信頼を結んでいる。",
+    negative: "いつもあなたを出し抜こうとしている。油断がならない。",
+  },
+  {
+    roll: 3,
+    target: "後輩",
+    positive: "失敗は多いものの、かわいい後輩だ。",
+    negative: "面倒は見ているものの、その性格を好きになることはとてもできない。",
+  },
+  {
+    roll: 4,
+    target: "恋人",
+    positive: "大切な恋人だ。互いに支え合っている。",
+    negative: "関係は続いているが、相手を信じ切ることができない。",
+  },
+  {
+    roll: 5,
+    target: "友人",
+    positive: "古くからの友人だ。気のおけない仲間だ。",
+    negative: "友人だったが、今はそう呼んでも良いものか。憎しみすら抱いている。",
+  },
+  {
+    roll: 6,
+    target: "対立相手",
+    positive:
+      "対立するたびに顔を合わせ、いつの間にか親しくなってしまった。周囲に知られたらまずいかもしれない。",
+    negative: "何かにつけてぶつかる相手だ。あなたの計画をいつも邪魔してくる。",
+  },
+  {
+    roll: 7,
+    target: "家族",
+    positive: "深い愛情をもって接する家族だ。それと同時にあなたの弱点かもしれない。",
+    negative: "過去に何があったのか、家族とは思えない憎しみを持っている。",
+  },
+  {
+    roll: 8,
+    target: "有名人",
+    positive: "あの人のようになりたい。尊敬する相手だ。",
+    negative: "あの人物がこの世にいることが我慢できない。",
+  },
+  {
+    roll: 9,
+    target: "敵",
+    positive:
+      "あなたの大切な人を殺した敵だ。しかし、その事情を知っているため恨むに恨めない。",
+    negative: "あなたの大切な人を殺した敵だ。いつか復讐をしなくては。",
+  },
+  {
+    roll: 10,
+    target: "任意",
+    positive: "任意で決める。",
+    negative: "任意で決める。",
+  },
+];
+---
+
+<ol class="initial-ties" aria-label="初期縁一覧" data-initial-ties>
+  {
+    initialTies.map((tie) => (
+      <li class="initial-tie" data-initial-tie>
+        <div class="initial-tie-heading">
+          <span class="initial-tie-roll" aria-label={`出目 ${tie.roll}`}>
+            {tie.roll}
+          </span>
+          <span class="initial-tie-target">{tie.target}</span>
+        </div>
+        <div class="initial-tie-relations">
+          <div class="initial-tie-relation initial-tie-positive">
+            <span class="initial-tie-kind">ポジティブ</span>
+            <p>{tie.positive}</p>
+          </div>
+          <div class="initial-tie-relation initial-tie-negative">
+            <span class="initial-tie-kind">ネガティブ</span>
+            <p>{tie.negative}</p>
+          </div>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .initial-ties {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .initial-tie {
+    min-width: 0;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+
+  .initial-tie-heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    border-bottom: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-muted);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .initial-tie-roll {
+    display: inline-grid;
+    flex: 0 0 auto;
+    width: 1.75rem;
+    height: 1.75rem;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-prose-accent);
+    color: var(--color-text-inverse);
+    font-size: var(--text-sm);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .initial-tie-target {
+    color: var(--color-text);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+  }
+
+  .initial-tie-relations {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .initial-tie-relation {
+    min-width: 0;
+    padding: var(--space-4);
+  }
+
+  .initial-tie-relation + .initial-tie-relation {
+    border-left: var(--border-width) solid var(--color-border);
+  }
+
+  .initial-tie-kind {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+  }
+
+  .initial-tie-positive .initial-tie-kind {
+    color: var(--color-link-hover);
+  }
+
+  .initial-tie-negative .initial-tie-kind {
+    color: #8f3333;
+  }
+
+  .initial-tie-relation p {
+    margin: var(--space-2) 0 0;
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    line-height: var(--line-height-base);
+  }
+
+  @media (max-width: 1023px) {
+    .initial-ties {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .initial-tie-relations {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .initial-tie-relation + .initial-tie-relation {
+      border-top: var(--border-width) solid var(--color-border);
+      border-left: 0;
+    }
+  }
+</style>

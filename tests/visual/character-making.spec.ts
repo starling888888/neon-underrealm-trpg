@@ -31,6 +31,7 @@ async function expectCharacterMakingContent(page: Page) {
   await expect(page.locator("[data-callout-type='tip']")).toHaveCount(1);
   await expect(page.locator("[data-callout-type='warning']")).toHaveCount(1);
   await expect(page.locator("[data-callout-type='example']")).toHaveCount(4);
+  await expect(page.locator("[data-initial-tie]")).toHaveCount(10);
   await expect(
     page.locator(
       "[data-callout-type] h2.callout-title, [data-callout-type] h3.callout-title",
@@ -84,5 +85,18 @@ test("character making mobile @character-making-mobile", async ({ page }) => {
   await page.screenshot({
     fullPage: true,
     path: `${visualOutputDir}/character-making-mobile.png`,
+  });
+});
+
+test("character making tablet @character-making-tablet", async ({ page }) => {
+  await page.setViewportSize(visualViewports.tablet);
+  await page.goto(visualRoutes.characterMaking);
+  await expectCharacterMakingContent(page);
+  await expectGeneratedPageToc(page, "コンストラクション");
+  await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeVisible();
+  await hideAstroDevToolbar(page);
+  await page.screenshot({
+    fullPage: true,
+    path: `${visualOutputDir}/character-making-tablet.png`,
   });
 });

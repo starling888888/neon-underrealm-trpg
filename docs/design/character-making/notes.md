@@ -10,9 +10,11 @@
 - route: `/character-making/`
 - viewport:
   - desktop: `1440x1200`、fullPage
+  - tablet: `820x1180`、fullPage（Visual Reviewのみ。ページ固有のdesign正本は作成しない）
   - mobile: `390x900`、fullPage
 - states:
   - desktop: SiteMenu、PageToc、本文、表、Callout
+  - tablet: MobilePageToc trigger、本文、初期縁の対表示、Callout
   - mobile: Header、MobilePageToc trigger、本文、表、Callout
 
 ## Referenced SSoT
@@ -35,7 +37,7 @@
 ## Design direction
 
 - visual direction: 白寄りの本文面、暗めのHeader / Footer、控えめな青緑accent、実務的な情報密度を維持する。
-- layout direction: desktopでは既存SiteMenu、本文、PageTocの3列layoutを保つ。mobileではMobilePageToc triggerをH1横に残し、表とCalloutを本文幅に収めて縦に読めるようにする。
+- layout direction: desktopでは既存SiteMenu、本文、PageTocの3列layoutを保つ。初期縁は対象ごとにポジティブとネガティブを対にしたカードで示す。tabletでは対象カードを1列にしつつ感情を横並びで比較できるようにし、mobileでは感情ごとの説明を縦に積む。mobileではMobilePageToc triggerをH1横に残し、表とCalloutを本文幅に収めて縦に読めるようにする。
 - typography direction: H1からH3までで、基本要素、初期縁、作成方式、個別手順の順を追える構造にする。Calloutのタイトルは見出しではなくラベルとして扱う。
 - color / accent usage: 通常本文と表は既存のneutralな表現を使う。`tip`は青緑、`example`は青灰、`warning`は暖色の既存Calloutを使い、色だけに依存しないラベルと記号マーカーを維持する。
 
@@ -43,7 +45,7 @@
 
 - `site-layout`のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。
 - `callout`の6種の表示、ラベル、記号マーカー、見出し化の既定を変更しない。
-- desktop / mobileとも、長い初期縁表とスキル表を含めて本文カラム内に収め、横overflowを起こさない。
+- desktop / tablet / mobileとも、初期縁カード、スキル表、Calloutを本文カラム内に収め、横overflowを起こさない。
 - ページ固有のhero画像、バナー、装飾画像を追加しない。
 - 未実装のデータ・ルール詳細ページへの導線は、既存の内部リンク表現として残す。
 
@@ -69,8 +71,15 @@
 - capture: `tests/visual/character-making.spec.ts`を`npm run build`後の`npm run preview -- --host 127.0.0.1`に対して実行した。
 - source artifacts:
   - `test-results/visual/character-making-desktop.png`
+  - `test-results/visual/character-making-tablet.png`
   - `test-results/visual/character-making-mobile.png`
 - canonicalization: ユーザーは2026-07-12に、実装後のdesign正本作成までを明示承認した。ページ固有の初期draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign fixとして採用する。
+
+## Differences from previous design references
+
+- 初期縁一覧は横長の4列tableから、対象ごとにポジティブとネガティブを対にしたカードへ変更した。長い関係説明を各感情のラベルとともに読めるようにし、mobileでは縦積みにする。
+- 最大体力・最大精神力の決定要素を基本説明へ追加した。構成や既存Calloutの見た目は変更していない。
+- tabletは既存`site-layout`の正本と同じbreakpoint・MobilePageToc挙動を確認するためのVisual Review対象とし、ページ固有のcanonical imageはdesktopとmobileだけを維持する。
 
 ## Open questions
 
