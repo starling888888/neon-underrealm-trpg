@@ -498,3 +498,18 @@ source種別は以下を使う。
 - 発生箇所: `.raw/contents/advancement.md` の能力値成長節
 - 観測した失敗: ユーザーが各算出は現行のキャラクターメイキングを正と明示したにもかかわらず、agentは旧資料との矛盾を理由に能力値成長を未確定HTMLコメントのまま残した。さらに、ユーザーが明示的に上2点の反映を指示した後も、未確定節を確定本文へ更新しなかった。
 - 一次対応: 現行`src/pages/character-making.mdx`の格の定義（プライマリ流儀のレベル＋生き様のレベル）を使い、格15ごとの能力値成長、成長点、同一能力値への一度の配分上限を本文へ明記した。以後、ユーザーが競合の採用元を明示した場合は、未確定コメントを残さず、指定された範囲の本文と指示を同じ変更で確定する。
+
+### Unnecessary alternate-port preview during design canonicalization
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `26-2-advancement-page` のdesign正本化準備
+- 観測した失敗: 4321番portに既存previewがある状態で、そのpreviewをcapture元として使えるかをsandbox外のbrowser実行で確認する前に、新しいpreviewを起動した。Astroが4322へ退避したため停止してユーザー確認を求めたが、その後もsandbox内の接続失敗をport未使用と誤認し、再度4322への退避を発生させた。さらに、既存のcaptureワークフローを使わず、agentが作成した `.tmp/design/advancement/capture.mjs` を実行してdesign正本を書き出そうとした。
+- 一次対応: 既存previewのsocket確認とbrowser captureは、同じ実行環境で行う。4321が使用中の場合は新しいserverを起動せず、既存previewが対象commitの生成物かを確認する。別portへの退避が起きた時点で、そのserverを停止し、ユーザーの明示許可がない限り再起動しない。正本化では、既存の承認済みcapture workflow以外のアドホックな `.tmp/*.mjs` を作成・実行しない。
+
+#### 恒久対応
+
+- `package.json` の `visual:capture` はcapture manifestへbranch、HEAD、開始時刻、実行引数を記録するwrapperへ変更した。
+- `visual:canonicalize` は同一HEADのmanifestと、capture開始後に更新されたdesktop / mobile artifactを検証してから、design正本と`notes.md`のprovenanceを更新する。
+- `.agents/skills/design-image-generation/SKILL.md` と `.agents/skills/visual-implementation-review/SKILL.md` に、既存visual workflowの使用、アドホックcapture禁止、4322以降へのfallback禁止を明記した。

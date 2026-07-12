@@ -119,6 +119,23 @@ Do not create `docs/visual-review/<issue-slug>/` unless a future issue explicitl
 
 Actual screenshots captured by this skill are comparison artifacts. They are not canonical design images.
 
+Capture screenshots only through:
+
+```sh
+npm run visual:capture
+```
+
+Do not use `.tmp/*.mjs`, `node -e`, or another ad hoc Playwright command.
+
+## Preview server selection
+
+Use an existing 4321 preview when it is available. Set `VISUAL_TARGET_URL` for
+the existing server when needed.
+
+If a newly started server selects 4322 or another alternate port, stop that
+server and report the port and process to the user. Do not retry startup, do not
+use the alternate port, and do not create a fallback capture path.
+
 ---
 
 ## Review Workflow
@@ -127,7 +144,7 @@ Actual screenshots captured by this skill are comparison artifacts. They are not
 2. Read `docs/issue/<current-branch>.md`.
 3. Identify the design target from the issue or user instruction.
 4. Read files under `docs/design/<design-target>/`.
-5. Capture desktop and mobile screenshots with Playwright.
+5. Capture desktop and mobile screenshots with `npm run visual:capture`.
 6. Compare reference and actual views.
 7. Fix only obvious visual mismatches that are local, non-destructive, and inside issue scope.
 8. Re-capture screenshots when fixes are made.

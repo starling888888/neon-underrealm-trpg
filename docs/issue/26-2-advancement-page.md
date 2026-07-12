@@ -28,11 +28,11 @@
 - 経験点・信用の獲得、覚悟の累積、流儀・生き様・共通スキルの成長、格による能力値成長、共通スキルボーナス、最大体力・最大精神力の再計算、アイテムと信用を静的に説明する。
 - キャラクターロスト確認と縁の清算は `/rules/scenario-play` へのリンクだけを置き、本文を再掲しない。
 - 格30での能力値成長を `example` の `Callout` で例示する。
-- 既存の共通designを参照して実装し、page固有のinitial design draftや `docs/design/advancement/` は作成しない。
+- 既存の共通designを参照して実装し、page固有のinitial design draftは作成しない。ユーザーが承認したdesign fixでは、review済みの実装を `docs/design/advancement/` の正本として記録する。
 
 ## 初期スコープ外
 
-- 初期design画像の生成、新規design target、design画像の正本化
+- 初期design画像の生成
 - キャンペーン進行、セッション履歴、PC成長履歴、覚悟累積、信用をWeb上で管理する機能
 - キャラクターシート、入力フォーム、保存、自動計算、ダイスローラー、戦闘シミュレーター
 - GM向け裁定、シナリオ本文、エネミー運用、検索、CMS、DB、認証、SSR、API
@@ -47,8 +47,8 @@
 - [x] キャラクターロスト確認と縁の清算を本文へ再掲せず、`/rules/scenario-play` へリンクしている。
 - [x] 格、共通スキル上限、最大体力、最大精神力などの各算出が `src/pages/character-making.mdx` と一致する。
 - [x] 格30の能力値成長を `example` Calloutで示し、Callout titleをページ内目次の見出しにしない。
-- [x] 既存共通designとの整合を確認し、initial design draftまたは`docs/design/advancement/`を作成していない。
-- [x] 完成画面のスクリーンショットで既存共通designとの整合を確認し、design正本を更新していない。
+- [x] 既存共通designとの整合を確認し、initial design draftを作成していない。
+- [x] ユーザー承認済みのdesign fixとして、完成画面を`docs/design/advancement/`の正本へ記録する。
 - [x] GitHub Pagesのサブパス公開で画像と内部リンクが壊れない。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -60,7 +60,7 @@
 - [x] 既存ルート、Header、Footer、SiteMenu、PageToc、MobilePageToc、共通Componentを壊していない。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の管理機能・自動計算・入力UIを実装していない。
-- [x] 既存共通designと矛盾していない。新規のpage固有designは作成していない。
+- [x] 既存共通designと矛盾していない。initial design draftは作成していない。
 - [x] ユーザー提供の未追跡hero assetと、既存の未コミット `docs/agent-failure-log.md` の変更を破壊していない。
 
 ## 想定変更ファイル
@@ -83,7 +83,7 @@
 
 ## 備考
 
-- ユーザー指示により、initial design draftは作成しない。既存の共通designを参照する。`docs/plan.md` の当該記載もこの方針に更新し、`.tmp/review/26-2-advancement-page/user-directed-changes.md` に記録した。
+- ユーザー指示により、initial design draftは作成しない。既存の共通designを参照する。ユーザーが後にdesign正本化を承認したため、design fixとして`docs/design/advancement/`へ正本を記録する。`docs/plan.md` の当該記載もこの方針に更新し、`.tmp/review/26-2-advancement-page/user-directed-changes.md` に記録した。
 - hero画像はユーザー提供の未追跡assetである。issue準備では追加・変更・削除せず、実装後にユーザーがcommitを明示指示した場合だけ対象差分を確認してGitへ追加する。
 - `.tmp/hero-prompt.md` はhero生成時の作業記録であり、再生成には使わない。提供assetとpromptのロゴ有無の差は `.raw/contents/advancement.md` の`矛盾点`に記録済みで、提供assetを正とする。
 
@@ -96,7 +96,7 @@
 - `docs/design/callout/design-desktop.png`
 - `docs/design/site-layout/notes.md`、`docs/design/page-toc/notes.md`、`docs/design/mobile-page-toc/notes.md`、`docs/design/callout/notes.md`
 
-ユーザー指示により、新規のpage固有designおよびdesign正本の更新は行わない。
+ビジュアルレビュー時点では、ユーザー指示により新規のpage固有designおよびdesign正本の更新を行わなかった。後にユーザーがdesign fixとしての正本化を明示承認したため、正本化は `design-image-generation` workflowで別途扱う。
 
 ### 実測結果
 
@@ -121,12 +121,12 @@
 
 ### designへの引き渡し
 
-- なし。新規designまたはdesign正本の更新を行わない。
+- `docs/design/advancement/` をdesign fixとして正本化した。`npm run visual:capture -- --grep "@advancement"` のmanifestを確認し、`npm run visual:canonicalize -- advancement --route /advancement/` で更新した。
 
 ### 確認チェック
 
 - [x] desktop / mobileの実測スクリーンショットを取得した。
 - [x] site layout、PageToc / MobilePageToc、Calloutの既存designと比較した。
 - [x] hero、表、Callout、本文に修正が必要な視覚的差異がないことを確認した。
-- [x] design正本を作成・更新していない。
+- [x] ユーザー承認済みのdesign fixとして、正本化コマンドでdesign正本を更新する。
 - [x] `npm run check` と `npm run build` が通ることを確認した。

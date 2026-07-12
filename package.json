@@ -16,7 +16,8 @@
     "lint": "biome lint .",
     "format": "biome format --write . && npm run format:md",
     "format:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint fmt && markdownlint-cli2 --fix",
-    "visual:capture": "playwright test tests/visual",
+    "visual:capture": "node --import tsx scripts/visual-capture/main.ts",
+    "visual:canonicalize": "node --import tsx scripts/canonicalize-visual-design/main.ts",
     "visual:install": "playwright install chromium"
   },
   "dependencies": {
