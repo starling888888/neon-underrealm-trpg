@@ -68,6 +68,9 @@ async function expectCharacterMakingContent(page: Page) {
   await expect(
     article.getByRole("link", { name: "ルール", exact: true }),
   ).toHaveAttribute("href", "/neon-underrealm-trpg/rules");
+  await expect(article).toContainText("筋力・敏捷・感覚");
+  await expect(article).toContainText("肉体・精神");
+  await expect(article).not.toContainText("受け | 感覚");
   await expect
     .poll(async () => {
       return await page.evaluate(

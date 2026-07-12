@@ -473,3 +473,19 @@ source種別は以下を使う。
 - 発生箇所: `22-2-character-making-page` の`docs/design/character-making/design-desktop.png`と`design-mobile.png`更新
 - 観測した失敗: Visual Review actualをdesign正本へ反映する前に、ユーザーのdesign正本化許可が曖昧な状態だった。ユーザーは後に、actualを最終的なdesign正本へ反映する方針自体は正しく、問題は明確な許可前にコピーしたことだと訂正した。
 - 一次対応: ユーザーは文言修正後のactualをdesign正本へ反映することを明示許可した。以後、design fixではactualを正本化してよいかを事前に明示確認し、その許可とcapture元を`notes.md`とissueへ記録する。
+
+### Visual capture used dev output before PageToc postprocess
+
+#### 2026-07-12
+
+- source: agent self-report
+- 発生箇所: `25-2-battle-page` のVisual Review capture
+- 観測した失敗: sandbox外で起動したPlaywrightの初回test修正後、dev serverを対象にcaptureした。dev outputにはbuild後のPageToc postprocessが反映されないため、desktop / mobileともPageTocが空でVisual testが失敗した。
+- 一次対応: build後のpreview serverを対象にcaptureする。PageTocを確認するVisual Reviewでは、dev serverをcapture対象にしない。
+
+#### 2026-07-12（追記）
+
+- source: agent self-report
+- 発生箇所: `25-2-battle-page` の関連Visual test
+- 観測した失敗: 戦闘ページのフラグメントリンクを追加した後、buildを更新せずに既存previewへ関連Visual testを実行したため、古い出力にリンクがなくscenario-play testが失敗した。
+- 一次対応: previewを使うVisual testの前に、対象ソース変更後の `npm run build` が完了していることを確認し、既存previewを再起動する。

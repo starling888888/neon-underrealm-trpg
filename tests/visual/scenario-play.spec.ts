@@ -34,8 +34,13 @@ async function expectScenarioPlayContent(page: Page) {
   await expect(article).toContainText(
     "その情報収集シーンに登場している各PCは、シーンごとに1回だけ判定できます",
   );
-  await expect(article).toContainText(
-    "戦闘での死亡と、縁を覚悟にする処理は戦闘ルールで扱います",
+  await expect(article.getByRole("link", { name: "死亡" })).toHaveAttribute(
+    "href",
+    /rules\/battle#h-3a9f3437$/,
+  );
+  await expect(article.getByRole("link", { name: "覚悟" })).toHaveAttribute(
+    "href",
+    /rules\/battle#h-c33994be$/,
   );
   await expect(article.getByRole("link", { name: "外道堕ち" })).toHaveAttribute(
     "href",
