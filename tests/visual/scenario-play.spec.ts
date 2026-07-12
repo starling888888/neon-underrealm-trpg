@@ -25,6 +25,9 @@ async function expectScenarioPlayContent(page: Page) {
   await expect(
     article.getByRole("heading", { name: "シーン中の縁" }),
   ).toHaveCount(1);
+  await expect(
+    article.getByRole("heading", { name: "クライマックス前の装備変更" }),
+  ).toHaveCount(1);
   await expect(article.locator("[data-callout-type='example']")).toContainText(
     "判定数14",
   );
