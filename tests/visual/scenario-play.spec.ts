@@ -29,7 +29,7 @@ async function expectScenarioPlayContent(page: Page) {
     "判定数14",
   );
   await expect(article).toContainText(
-    "各PCは、1つの情報収集シーンにつき1回だけ判定できます",
+    "その情報収集シーンに登場している各PCは、シーンごとに1回だけ判定できます",
   );
   await expect(article).toContainText(
     "シナリオ中に増えず、使った分だけ減ります",

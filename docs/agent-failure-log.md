@@ -86,6 +86,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Validity-check request was treated as implementation approval
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のcontents再レビュー回答
+- 観測した失敗: ユーザーが「俺の返答の妥当性確認」と求めた判断依頼を、コンテンツ修正の実装許可と誤認して未承認の本文・MDX・テスト・issue編集を行った。
+- 一次対応: ユーザーの明示的な反映指示があるまで、今回の未コミット差分へ追加の編集・commitを行わない。判断依頼では評価のみを返し、反映は「修正して」「反映して」等の明示指示を待つ。
+
+### PR review draft was not routed through review-to-issue
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のPR #38初回レビュー
+- 観測した失敗: `pr-review-draft`でdocument / technical review記録を作成した後、必須の`review-to-issue`を実行せず、レビューの検証・issueへの正式取り込みを行わなかった。
+- 一次対応: ユーザーがPRレビューを無視すると指定したため、当該指摘はissueへ取り込まない。以後のPR reviewでは、結果報告前に`review-to-issue`の完了を確認する。
+
 ### Contents instruction omitted reviewable Markdown body
 
 #### 2026-07-12
