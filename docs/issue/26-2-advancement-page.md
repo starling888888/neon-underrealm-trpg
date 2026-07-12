@@ -1,0 +1,233 @@
+# 26-2-advancement-page
+
+## 目的
+
+`/advancement` に、シナリオ終了後の経験点・信用、覚悟の累積、能力値を含むキャラクター成長を説明する静的な成長ページを追加する。
+
+## 背景
+
+`docs/plan.md` の `26-2-advancement-page` は、初期公開範囲のキャラクター成長ページである。ページ本文のローカル作業入力は `.raw/contents/advancement.md` に作成済みであり、現行キャラクターメイキングを各算出の正とする。
+
+ユーザー提供の `public/images/advancement/hero.webp` は、三分割のhero画像である。H1直後に表示し、asset内の公式ゲームロゴは追加・隠蔽しない。
+
+関連する参照先は以下。
+
+- `docs/requirements/pages.md` の `/advancement`
+- `docs/out-of-scope.md` のキャンペーン管理機能、キャラクターシート、ダイスローラー等の初期スコープ外
+- `docs/design/site-layout/notes.md`、`docs/design/page-toc/notes.md`、`docs/design/mobile-page-toc/notes.md`、`docs/design/callout/notes.md` の既存共通design
+- `.raw/contents/advancement.md`
+
+`docs/TODO.md` に `26-2-advancement-page` を対象とする未対応項目はない。`20-2-introduction-page` のcontents skill動作確認TODOは完了済みページ向けであり、本issueでは扱わない。
+
+## 対象範囲
+
+- `src/pages/advancement.mdx` を追加し、`MDXLayout`、`ImageBlock`、`Callout`、`InternalLink`を既存方針で利用する。
+- `.raw/contents/advancement.md` のfrontmatterと本文を公開ページへ反映する。HTMLコメントは、hero、Callout、リンク、見出し順、tableに関する公開表示指示だけを実装へ反映する。
+- 優先資料、画像生成prompt、矛盾点、再生成禁止などのHTMLコメント内の作業記録は公開ページへ表示しない。
+- H1直後に `public/images/advancement/hero.webp` を `ImageBlock` で表示する。
+- 経験点・信用の獲得、覚悟の累積、流儀・生き様・共通スキルの成長、格による能力値成長、共通スキルボーナス、最大体力・最大精神力の再計算、アイテムと信用を静的に説明する。
+- キャラクターロスト確認と縁の清算は `/rules/scenario-play` へのリンクだけを置き、本文を再掲しない。
+- 格30での能力値成長を `example` の `Callout` で例示する。
+- 既存の共通designを参照して実装し、page固有のinitial design draftは作成しない。ユーザーが承認したdesign fixでは、review済みの実装を `docs/design/advancement/` の正本として記録する。
+- ユーザー指示によるrepository-wide countermeasureとして、Visual captureのrun provenanceと、検証済みartifactだけを正本化する共通workflowを追加する。これは成長ページのdesign fixで発生したcapture逸脱を恒久的に防ぐためである。
+
+## 初期スコープ外
+
+- 初期design画像の生成
+- キャンペーン進行、セッション履歴、PC成長履歴、覚悟累積、信用をWeb上で管理する機能
+- キャラクターシート、入力フォーム、保存、自動計算、ダイスローラー、戦闘シミュレーター
+- GM向け裁定、シナリオ本文、エネミー運用、検索、CMS、DB、認証、SSR、API
+- Header、Footer、SiteMenu、PageToc、MobilePageToc、Callout、ImageBlockの再設計または仕様変更
+- hero画像の再生成・加工、ロゴの追加または隠蔽
+
+## 完了条件
+
+- [x] `/advancement` が `src/pages/advancement.mdx` から静的に表示される。
+- [x] `.raw/contents/advancement.md` の本文と公開表示に関するHTMLコメント指示だけを反映し、作業記録や成長ページの責務外の本文を混入させていない。
+- [x] H1直後に提供heroを、指定alt、`loading="eager"`、captionなし、追加overlayなしで表示する。
+- [x] キャラクターロスト確認と縁の清算を本文へ再掲せず、`/rules/scenario-play` へリンクしている。
+- [x] 格、共通スキル上限、最大体力、最大精神力などの各算出が `src/pages/character-making.mdx` と一致する。
+- [x] 格30の能力値成長を `example` Calloutで示し、Callout titleをページ内目次の見出しにしない。
+- [x] 既存共通designとの整合を確認し、initial design draftを作成していない。
+- [x] ユーザー承認済みのdesign fixとして、完成画面を`docs/design/advancement/`の正本へ記録する。
+- [x] GitHub Pagesのサブパス公開で画像と内部リンクが壊れない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- capture開始時に旧artifactが残るため、部分captureで生成したartifactと直前のartifactを混在させて正本化できる。
+- manifestを本番パスへ直接書き込むため、manifest書込み失敗後に有効形式のmanifestが残る可能性がある。
+- `VISUAL_TARGET_URL`は既定4321 captureに不要な別経路であり、skill・README・Visual test設定を不整合にする。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `scripts/visual-capture/main.ts`がmanifestだけを失効させartifactを残すこと、`scripts/canonicalize-visual-design/lib.ts`がrun IDをartifactと結び付けずmtimeに1秒の許容を置くこと、`scripts/visual-capture/lib.ts`がmanifestを直接書き込むこと、`tests/visual/config.ts`がURL文字列を末尾`/`で連結することを確認した。
+
+### 対応方針
+
+- capture開始時に既存のVisual artifactを削除し、成功runで生成されたdesktop / mobile artifactだけをmanifestと組み合わせる。
+- manifestは一時ファイルへ完全に書き込んでからrenameし、失敗時には本番manifestを残さない。
+- `VISUAL_TARGET_URL`の実装・skill記載・testを削除し、capture先を既定4321へ固定する。
+
+### 対応完了チェックリスト
+
+- [x] 部分captureと旧artifactの混在を拒否するcapture lifecycleへ修正し、Node testを追加する。
+- [x] manifestを原子的に公開し、書込み失敗後にcanonicalizeできないことをNode testで確認する。
+- [x] `VISUAL_TARGET_URL`を削除し、既定4321 capture先だけをskill・README・Visual test設定で共有する。
+- [x] `npm test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `drive-to-raw-sync` が `REPO_ROOT="$(git rev-parse --show-toplevel)"` というinline環境変数代入を案内しており、新規最上位規約と矛盾する。
+- 禁止対象がagentが直接発行するshell commandだけか、package script内部の環境変数代入も含むかが最上位規約から判別できない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `.agents/skills/drive-to-raw-sync/SKILL.md` のPreconditionsと、`package.json`の`check:md`・`format:md`を確認した。前者はagentが直接実行する形式を案内し、後者はagentが`npm run ...`として実行するpackage script内部の固定設定である。第4回のVisual capture override再掲は、ユーザーが対応不要と明示したためstaleとして取り込まない。`.env`の秘密情報・Git管理方針はユーザー判断が必要なdoubtful項目として取り込まない。
+
+### 対応方針
+
+- 禁止対象を、agentがshell commandとして直接発行する `XXX=hogehoge command` 形式に限定すると明記する。
+- Drive同期skillではrepository rootを変数代入せず、`git rev-parse --show-toplevel` の出力を確認して以後の`<repo-root>`として扱う手順にする。
+
+### 対応完了チェックリスト
+
+- [x] `AGENTS.md`と理由ファイルで禁止対象をagentが直接発行するinline代入形式と明確化する。
+- [x] `drive-to-raw-sync`からinline環境変数代入の手順を削除する。
+- [x] Markdown formatterが通る。
+
+## チェックポイント
+
+- [x] desktop / mobileでhero、表、Callout、本文、PageToc / MobilePageTocに横overflowや可読性低下がない。
+- [x] hero内の公式ゲームロゴをページ側で重ねて表示せず、隠蔽もしていない。
+- [x] 既存ルート、Header、Footer、SiteMenu、PageToc、MobilePageToc、共通Componentを壊していない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の管理機能・自動計算・入力UIを実装していない。
+- [x] 既存共通designと矛盾していない。initial design draftは作成していない。
+- [x] ユーザー提供の未追跡hero assetと、既存の未コミット `docs/agent-failure-log.md` の変更を破壊していない。
+
+## 想定変更ファイル
+
+- `src/pages/advancement.mdx`
+- `public/images/advancement/hero.webp`
+- `.raw/contents/advancement.md`（Git管理外のローカル作業入力）
+- `tests/visual/advancement.spec.ts`
+- `package.json`
+- `scripts/visual-capture/`
+- `scripts/canonicalize-visual-design/`
+- `tests/node/canonicalize-visual-design.test.ts`
+- `tests/visual/config.ts`
+- `tests/visual/README.md`
+- `.agents/skills/design-image-generation/SKILL.md`
+- `.agents/skills/visual-implementation-review/SKILL.md`
+- `.agents/skills/drive-to-raw-sync/SKILL.md`
+- `AGENTS.md`
+- `.agents/rules/core-rules-rationale.md`
+- `docs/design/advancement/`
+- `docs/issue/26-2-advancement-page.md`
+- `docs/agent-failure-log.md`（既存の作業ログ変更。ページ実装そのものの範囲外）
+
+## レビュー観点
+
+- PL向け成長ページとして、経験点・信用・覚悟・成長・再計算の説明が過不足なく、キャラクターロスト確認と縁の清算を重複掲載していないか。
+- 格と各算出が現行キャラクターメイキングと矛盾していないか。
+- 格30の例が、格による能力値成長と同一能力値への配分制限を誤解なく示しているか。
+- 三分割heroがH1直後にあり、asset内ロゴを含めて既存本文layoutと整合するか。
+- user指示どおり新規design作成を行わず、既存共通design参照だけで十分か。
+- 静的な説明ページの範囲を越え、管理・入力・自動計算機能を混入させていないか。
+
+## 備考
+
+- ユーザー指示により、initial design draftは作成しない。既存の共通designを参照する。ユーザーが後にdesign正本化を承認したため、design fixとして`docs/design/advancement/`へ正本を記録する。`docs/plan.md` の当該記載もこの方針に更新し、`.tmp/review/26-2-advancement-page/user-directed-changes.md` に記録した。
+- hero画像はユーザー提供の未追跡assetである。issue準備では追加・変更・削除せず、実装後にユーザーがcommitを明示指示した場合だけ対象差分を確認してGitへ追加する。
+- `.tmp/hero-prompt.md` はhero生成時の作業記録であり、再生成には使わない。提供assetとpromptのロゴ有無の差は `.raw/contents/advancement.md` の`矛盾点`に記録済みで、提供assetを正とする。
+
+## ビジュアルレビュー 1
+
+### 参照したdesign
+
+- `docs/design/site-layout/design-desktop.png`
+- `docs/design/site-layout/design-mobile.png`
+- `docs/design/callout/design-desktop.png`
+- `docs/design/site-layout/notes.md`、`docs/design/page-toc/notes.md`、`docs/design/mobile-page-toc/notes.md`、`docs/design/callout/notes.md`
+
+ビジュアルレビュー時点では、ユーザー指示により新規のpage固有designおよびdesign正本の更新を行わなかった。後にユーザーがdesign fixとしての正本化を明示承認したため、正本化は `design-image-generation` workflowで別途扱う。
+
+### 実測結果
+
+- desktop: `test-results/visual/advancement-desktop.png`
+- mobile: `test-results/visual/advancement-mobile.png`
+
+| 観点                               | 結果                                                                                     |
+| ---------------------------------- | ---------------------------------------------------------------------------------------- |
+| layout・spacing・typography・color | OK。既存のsite layoutと本文レイアウトに整合する。                                        |
+| heroとCallout                      | OK。heroはH1直後に表示され、asset内ロゴを覆わない。Calloutは既存共通designに整合する。   |
+| desktopのPageToc                   | OK。本文見出しとCallout titleを区別して表示する。                                        |
+| mobileのMobilePageToc・overflow    | OK。目次の開閉ができ、表は本文コンテナ内で横スクロールし、ページ全体の横overflowはない。 |
+| responsive・accessibility          | OK。desktop / mobileとも本文とリンクの可読性を保つ。                                     |
+
+### 修正
+
+- なし。実装結果と既存共通designの間に、issue範囲で修正すべき視覚的な差異は見つからなかった。
+
+### 人間確認が必要な判断
+
+- なし。
+
+### designへの引き渡し
+
+- `docs/design/advancement/` をdesign fixとして正本化した。`npm run visual:capture -- --grep "@advancement"` のmanifestを確認し、`npm run visual:canonicalize -- advancement --route /advancement/` で更新した。
+
+### 確認チェック
+
+- [x] desktop / mobileの実測スクリーンショットを取得した。
+- [x] site layout、PageToc / MobilePageToc、Calloutの既存designと比較した。
+- [x] hero、表、Callout、本文に修正が必要な視覚的差異がないことを確認した。
+- [x] ユーザー承認済みのdesign fixとして、正本化コマンドでdesign正本を更新する。
+- [x] `npm run check` と `npm run build` が通ることを確認した。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 共通のVisual capture／design canonicalization基盤を追加したが、current issueの対象範囲・想定変更ファイル・導入理由に明示していない。
+- capture失敗後に旧manifestが残り、失敗・部分実行のartifactを同一HEADの成功結果として正本化できる。
+- `visual-implementation-review`が案内する`VISUAL_TARGET_URL`を、`tests/visual/config.ts`が解釈していない。
+- 正本画像2件と`notes.md`を逐次更新しており、途中失敗時にprovenanceと画像が不整合になる。
+- route引数がcontrol characterやMarkdown記法を含んでも`notes.md`へ書き込める。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/development-structure.md`のpackage script理由記録要件、current issueの想定変更ファイル、`scripts/visual-capture/main.ts`、`scripts/canonicalize-visual-design/lib.ts`、`tests/visual/config.ts`、関連skillを確認した。5件はいずれも現行実装で再現可能な不足であり、ユーザーが明示したrepository-wide countermeasureとcurrent issueのscope変更に含まれる。
+
+### 対応方針
+
+- current issueへ共通Visual workflow変更の理由・対象ファイル・ページtaskとの関係を明記する。
+- capture runを一意に識別し、失敗run・部分run・旧manifestのartifactを`visual:canonicalize`が受理しないようにする。
+- `VISUAL_TARGET_URL`は既定4321 captureを不必要に複雑化するため実装しない。追加済みの設定・skill記載・testを削除し、READMEを既定capture先へ統一する。
+- 正本画像とprovenanceの更新を失敗時にrollbackできる一貫した処理へ変更する。
+- routeを安全なサイト内path形式へ制限し、異常入力を拒否する。
+
+### 対応完了チェックリスト
+
+- [x] 共通Visual workflow変更の理由・対象ファイル・issueとの関係を記録する。
+- [x] capture manifestのlifecycleとartifact鮮度検証を失敗・部分runに耐えるよう修正し、Node testを追加する。
+- [x] `VISUAL_TARGET_URL`を削除し、既定4321 capture先だけをskill・README・Visual test設定で共有する。
+- [x] 正本画像と`notes.md`の更新を中断時に不整合を残さない処理へ修正し、Node testを追加する。
+- [x] route入力を検証し、異常routeの拒否testを追加する。
+- [x] `npm test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

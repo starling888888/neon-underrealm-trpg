@@ -18,13 +18,13 @@ npm run visual:install
 npm run dev
 ```
 
-対象URLを指定してスクリーンショットを取得します。
+既定の4321 previewからスクリーンショットを取得します。
 
 ```sh
-VISUAL_TARGET_URL=http://localhost:4321/neon-underrealm-trpg/ npm run visual:capture
+npm run visual:capture
 ```
 
-`VISUAL_TARGET_URL` を省略した場合は `http://localhost:4321/neon-underrealm-trpg/` を対象にします。
+capture先は常に `http://127.0.0.1:4321/neon-underrealm-trpg/` です。別portや別URLを指定してcaptureしません。
 
 ## 成果物
 

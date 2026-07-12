@@ -35,6 +35,21 @@ If the user asks to review, inspect, validate, or discuss a design direction, pr
 
 Design images must follow project SSoT.
 
+For design fix mode, use only the repository canonicalization workflow:
+
+```sh
+npm run visual:capture -- --grep "@<design-target>"
+npm run visual:canonicalize -- <design-target> --route /target-route/
+```
+
+`visual:canonicalize` verifies the current HEAD, the capture manifest, and the
+matching desktop / mobile Playwright artifacts before it updates design images
+and provenance in `notes.md`.
+
+Do not create or run `.tmp/*.mjs`, `node -e`, ad hoc Playwright commands, or
+other capture scripts for design fix mode. If this workflow cannot run, stop and
+report the blocker. Do not choose a fallback capture path.
+
 Design images must not introduce UI, features, navigation, tools, or flows that contradict:
 
 - `docs/requirements.md`
@@ -342,12 +357,14 @@ If `notes.md` is being created or updated as a review checkpoint before image ge
 
 1. Confirm the user asked to canonicalize from implementation.
 2. Identify source branch, commit, route, and viewport.
-3. Capture or inspect actual implementation screenshots.
+3. Capture or inspect actual implementation screenshots through
+   `npm run visual:capture`.
 4. Compare actual screenshots against existing design references.
 5. Explain the differences.
 6. Confirm the differences are compatible with requirements, out-of-scope constraints, global styles, and layout direction.
 7. Ask for explicit approval before replacing canonical design images.
-8. After approval, update `docs/design/<design-target>/design-*.png` and `notes.md`.
+8. After approval, run `npm run visual:canonicalize -- <design-target> --route /target-route/`.
+   Do not copy artifacts directly into `docs/design/`.
 9. Stop and report the updated design artifacts.
 
 Do not canonicalize implementation screenshots just because they exist.

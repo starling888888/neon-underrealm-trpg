@@ -42,15 +42,16 @@ Stop if the Drive folder, local path, ignore policy, MCP availability, export fo
 2. Resolve the repository root:
 
    ```sh
-   REPO_ROOT="$(git rev-parse --show-toplevel)"
+   git rev-parse --show-toplevel
    ```
 
-3. Treat `.raw/` as `<repo-root>/.raw/`.
-4. Confirm `.raw/` is Git-ignored.
-5. Confirm `<repo-root>/raw-google-drive.url` is Git-ignored.
-6. Confirm Google Drive MCP is available and authenticated.
-7. Confirm the MCP can list folders, read file metadata, export contents Google Docs as `text/plain`, export v1.0 Google Docs as `text/markdown`, and export Google Sheets as `.xlsx`.
-8. Stop if any precondition fails.
+3. Confirm the command output is the repository root. Treat that output as `<repo-root>` for the remaining steps. Do not assign it to an environment variable.
+4. Treat `.raw/` as `<repo-root>/.raw/`.
+5. Confirm `.raw/` is Git-ignored.
+6. Confirm `<repo-root>/raw-google-drive.url` is Git-ignored.
+7. Confirm Google Drive MCP is available and authenticated.
+8. Confirm the MCP can list folders, read file metadata, export contents Google Docs as `text/plain`, export v1.0 Google Docs as `text/markdown`, and export Google Sheets as `.xlsx`.
+9. Stop if any precondition fails.
 
 ## Drive Folder Resolution
 
