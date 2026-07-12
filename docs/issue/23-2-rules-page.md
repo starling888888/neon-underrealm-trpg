@@ -1,0 +1,110 @@
+# 23-2-rules-page
+
+## 目的
+
+`/rules` に、光都暗域〈ネオン・アンダーレルム〉TRPGの基本判定を説明するルールトップページを作成する。判定数、基準値、達成値、効果値、目標値、対抗判定を読み順に整理し、達成値と効果値は具体例を `example` Callout で示す。H1直後には、ルールページ用のhero画像を表示する。
+
+## 背景
+
+`docs/plan.md` の `23-2-rules-page` は、PL向け基本ルールを読む入口となるルールトップページを作るタスクである。ローカル作業入力 `.raw/contents/rules.md` は、ユーザー指定の資料優先順で作成・再レビュー済みであり、基本判定、11d10の具体例、ゴールデンルールへのフラグメントリンク、シナリオルール・戦闘ルールへの導線、hero画像生成プロンプトを含む。
+
+参照する正本・資料:
+
+- `docs/requirements/pages.md`
+- `docs/requirements/components.md`
+- `docs/requirements/non-functional.md`
+- `docs/out-of-scope.md`
+- `docs/plan.md`
+- `docs/TODO.md`
+- `.raw/contents/rules.md`
+- `.tmp/review/23-2-rules-page/contents-review-2.md`
+- `docs/design/global-styles/notes.md`
+- `docs/design/site-layout/notes.md`
+- `docs/design/page-toc/notes.md`
+- `docs/design/callout/notes.md`
+
+ユーザー指示により、`/rules` 専用のinitial design draftは作成しない。既存の共通designを参照して実装し、実装後のVisual Reviewとdesign正本化が必要になった場合は、その時点でユーザー承認を受ける。
+
+## 対象範囲
+
+- `src/pages/rules/index.mdx` を作成し、`.raw/contents/rules.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに実装する。
+- H1直後に `ImageBlock` で `/images/rules/hero.webp` を表示する。画像は `.raw/contents/rules.md` に埋め込まれた生成プロンプトを使って用意し、同ファイル指定の意味のあるalt文、`loading="eager"`、captionなし、追加overlayなしを守る。
+- 基本判定の手順として、判定数、通常の基準値5、10面体ダイス、達成値、効果値を表示する。得意技能の非戦闘技能では能力値だけを2倍にし、修正は2倍にしないことを説明する。
+- 筋力10、脅迫は得意技能ではない、サイバネで判定数+1、11d10、達成値6・効果値5の本文例を `Callout type="example"`、title `判定の例` で表示する。Callout titleは見出し化しない。
+- 目標値、対抗判定、同値時は受動側が勝つことを表示する。
+- `InternalLink` を使い、生成HTMLで確認済みの `/introduction#h-f3926bd3` へゴールデンルール参照を置く。`/introduction` の同見出しを変更した場合は、build後に実際のフラグメントIDを再確認する。
+- 末尾に `/rules/scenario-play` のシナリオルールと `/rules/battle` の戦闘ルールへの導線を置く。
+- `.raw/contents/rules.md` のHTMLコメントに残る「`/rules` 専用initial design draftを作成・承認する」旧指示を、ユーザー指定に従い「専用initial design draftは作成せず、既存共通designを参照する」へ更新する。ページ実装より先に、contents指示とissueの方針を一致させる。
+- 準備中に更新済みの `docs/requirements/pages.md` と `docs/plan.md` を維持する。`/rules` の端数処理要件は削除済みであり、23-2はinitial design draftを作成しない方針へ更新済みである。計画チェックボックスは人間レビュー後の指示があるまで完了にしない。
+- 実装確認用のVisual testを追加または更新し、既存の共通design参照との整合性を確認する。新規のdesignラフは作成しない。実装後のVisual Reviewは行い、design正本化はVisual Reviewの結果とユーザーの別途承認がある場合だけ行う。
+
+## 初期スコープ外
+
+- 端数処理、小銭による達成値上昇、所持信用の説明を `/rules` に掲載しない。前者はユーザー指示によりページ対象外、後二者はシナリオ進行ルール側で扱う。
+- 攻撃、リアクション、コンボ、掛け合い、ダメージ、気合、攻撃基準値の具体値を掲載しない。これらは `25-2-battle-page` の対象とする。
+- シーン、情報収集の進行、休息、シナリオ終了処理を掲載しない。これらは `24-2-scenario-play-page` の対象とする。
+- `/rules` 専用のinitial design draft、design画像生成、layout・Header・Footer・SiteMenu・PageToc・MobilePageTocの再設計を行わない。
+- ダイスローラー、達成値・効果値の自動計算、成功率計算、戦闘処理支援、入力フォーム、保存機能を追加しない。
+- 検索、パンくず、前後ナビゲーション、CMS、DB、認証、SSR、API、PWA、新規依存パッケージを追加しない。
+- Google Driveへの書込みを行わない。
+
+## 完了条件
+
+- [ ] `src/pages/rules/index.mdx` に `MDXLayout`、title、description、`showPageToc: true` を設定している。
+- [ ] `.raw/contents/rules.md` の本文とHTMLコメント指示に従い、基本判定、達成値、効果値、目標値、対抗判定を表示している。
+- [ ] H1直後にhero画像を `ImageBlock` で表示し、指定のalt、`loading="eager"`、captionなし、追加overlayなしを確認している。
+- [ ] hero画像は指示書の生成プロンプトにある「2個だけのd10」「オオサカの景観」「文字」「人物・構図」の要件を確認している。
+- [ ] 11d10の例を `example` Calloutで表示し、出目、基準値、達成値6、効果値5が一貫している。
+- [ ] ゴールデンルールへのフラグメントリンク、シナリオルール・戦闘ルールへの導線を表示している。
+- [ ] 端数処理、小銭、所持信用、戦闘・シナリオ詳細を掲載していない。
+- [ ] `.raw/contents/rules.md` の旧design前提を、専用initial design draftを作成しない方針へ更新してからページ実装している。
+- [x] `docs/requirements/pages.md` と `docs/plan.md` の端数処理・initial design draftの記載を、ユーザー承認済みの範囲へ修正している。計画チェックボックスは未完了のままである。
+- [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている。
+- [ ] `/rules` 専用のinitial design draftを作成せず、既存共通designの参照だけを記録している。
+- [ ] 実装後のVisual Reviewを行い、design正本化が必要な場合はユーザー承認後に別途扱っている。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。
+
+## チェックポイント
+
+- [ ] 既存ルートが壊れていない。
+- [ ] GitHub Pagesのサブパス公開で、hero画像とすべての内部リンク・フラグメントリンクが正しく動く。
+- [ ] build後の`/introduction`生成HTMLで、ゴールデンルールのIDが `h-f3926bd3` であること、または実際のIDへリンクを更新したことを確認している。
+- [ ] 見出し階層がH1から不自然に飛ばず、PageTocとMobilePageTocに必要なH2が現れる。
+- [ ] Calloutのtitleを見出し化せず、本文例として読める。
+- [ ] hero画像に意味のあるaltがあり、画像内の文字・2個のd10が本文理解を妨げない。
+- [ ] 不要な依存関係を追加していない。
+- [ ] 初期スコープ外の機能を実装していない。
+- [ ] 関連する`docs/TODO.md`項目と矛盾していない。
+- [ ] `docs/design/global-styles/`、`docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/callout/` と矛盾していない。
+- [ ] ユーザーの未コミット変更を破壊していない。
+
+## 想定変更ファイル
+
+- `docs/issue/23-2-rules-page.md`
+- `.raw/contents/rules.md`
+- `docs/requirements/pages.md`
+- `docs/plan.md`
+- `src/pages/rules/index.mdx`
+- `public/images/rules/hero.webp`
+- `tests/visual/rules.spec.ts` または既存のVisual test
+- 必要に応じてVisual Review用のtest設定
+
+## レビュー観点
+
+- ルールトップが、判定数から効果値までを初めて読むPLにも順に理解できる本文になっているか。
+- 11d10のCallout例が、本文の基本判定説明を繰り返すだけでなく、数え方を具体化できているか。
+- hero画像が、2個だけのd10、オオサカの景観、人物と机上の緊張感を示しつつ、本文より強くなりすぎていないか。
+- ゴールデンルールへのフラグメントリンクが、GitHub Pagesのbase pathを含む実際の生成HTMLで正しく到達できるか。
+- シナリオルール・戦闘ルールへの末尾導線が、未実装の詳細ページの内容をこのページへ混入させずに次の読み先を示せているか。
+- `/rules` 専用のdesignラフを作らないというユーザー指定と、共通designを使う実装が両立しているか。
+- initial design draftを省略しても、実装後のVisual Reviewは行い、design正本化を別途ユーザー承認へ分ける方針でよいか。
+- `docs/requirements/pages.md` と `docs/plan.md` の端数処理・initial design draftの記載を、現在のユーザー指定へ更新してよいか。
+
+## 備考
+
+- 関連TODOは確認したが、23-2を直接対象とする未対応項目はない。`/support`、データページ、CI、NPC、design運用などの既存TODOはこのissueで扱わない。
+- `docs/requirements/pages.md` と `docs/plan.md` は、準備中にユーザー承認済みの範囲へ更新した。`/rules` の端数処理を削除し、23-2はinitial design draftを作成せず、Visual Review後のdesign正本化をユーザー承認に分離する方針である。
+- `.raw/contents/rules.md` にもinitial design draftを必須とする旧指示が残る。実装前に、issueと同じ「initial draftなし・既存共通design参照」へ更新する。
+- `.raw/contents/rules.md` と `.tmp/review/23-2-rules-page/contents-review-2.md` はGit管理しないローカル作業入力・レビュー記録である。Google Driveへの同期は明示指示があるまで行わない。
+- hero画像生成はページ実装の静的アセット準備であり、`/rules` 専用のinitial design draft作成とは別である。ユーザー指定の「デザインラフは不要」はinitial draftだけを省略するものとして扱う。実装後のVisual Reviewは実施し、design正本化を行うかはVisual Review後にユーザー承認を受ける。
