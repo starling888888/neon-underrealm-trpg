@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Contents instruction omitted reviewable Markdown body
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` の `.raw/contents/scenario-play.md` 作成
+- 観測した失敗: ユーザーが評価すべきシーン進行ルールの本文を作らず、内容指示をHTMLコメントへ閉じ込めたため、Markdown本文がH1だけになった。
+- 一次対応: failure logへ記録した。ユーザーが明示的に修正を指示した後、本文として読めるシーン進行ルールを作成し、HTMLコメントは解釈・実装指示だけに限定する。
+
 ### Commit message language did not follow repository convention
 
 #### 2026-07-12
