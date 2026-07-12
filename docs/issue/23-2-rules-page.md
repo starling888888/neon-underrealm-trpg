@@ -36,7 +36,7 @@
 - 末尾に `/rules/scenario-play` のシナリオルールと `/rules/battle` の戦闘ルールへの導線を置く。
 - `.raw/contents/rules.md` のHTMLコメントに残る「`/rules` 専用initial design draftを作成・承認する」旧指示を、ユーザー指定に従い「専用initial design draftは作成せず、既存共通designを参照する」へ更新する。ページ実装より先に、contents指示とissueの方針を一致させる。
 - 準備中に更新済みの `docs/requirements/pages.md` と `docs/plan.md` を維持する。`/rules` の端数処理要件は削除済みであり、23-2はinitial design draftを作成しない方針へ更新済みである。計画チェックボックスは人間レビュー後の指示があるまで完了にしない。
-- 実装確認用のVisual testを追加または更新し、既存の共通design参照との整合性を確認する。新規のdesignラフは作成しない。design正本化は、contents reviewが完了するまで行わず、このPRでは `docs/design/` を変更しない。
+- 実装確認用のVisual testを追加または更新し、既存の共通design参照との整合性を確認する。新規のinitial design draftは作成しない。contents review完了後、ユーザー承認済みの現行実装を `docs/design/rules/` のdesign fix正本として記録する。
 
 ## 初期スコープ外
 
@@ -60,7 +60,7 @@
 - [x] `docs/requirements/pages.md` と `docs/plan.md` の端数処理・initial design draftの記載を、ユーザー承認済みの範囲へ修正している。計画チェックボックスは未完了のままである。
 - [x] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている。
 - [x] `/rules` 専用のinitial design draftを作成せず、既存共通designの参照だけを記録している。
-- [x] hero画像を含む実装後のVisual Reviewを行い、このPRではdesign正本化を行っていない。
+- [x] hero画像を含む実装後のVisual Reviewを行い、ユーザー承認済みのdesign fix正本を `docs/design/rules/` へ記録している。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -75,7 +75,7 @@
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`項目と矛盾していない。
-- [x] `docs/design/global-styles/`、`docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/callout/` と矛盾していない。
+- [x] `docs/design/global-styles/`、`docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/callout/`、`docs/design/rules/` と矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
@@ -86,6 +86,9 @@
 - `docs/plan.md`
 - `src/pages/rules/index.mdx`
 - `public/images/rules/hero.webp`
+- `docs/design/rules/notes.md`
+- `docs/design/rules/design-desktop.png`
+- `docs/design/rules/design-mobile.png`
 - `tests/visual/rules.spec.ts` または既存のVisual test
 - 必要に応じてVisual Review用のtest設定
 
@@ -106,7 +109,7 @@
 - `docs/requirements/pages.md` と `docs/plan.md` は、準備中にユーザー承認済みの範囲へ更新した。`/rules` の端数処理を削除し、23-2はinitial design draftを作成せず、Visual Review後のdesign正本化をユーザー承認に分離する方針である。
 - `.raw/contents/rules.md` のinitial design draftを必須とする旧指示は更新済みであり、専用initial draftを作らず既存共通designを参照する。
 - `.raw/contents/rules.md` と `.tmp/review/23-2-rules-page/contents-review-2.md` はGit管理しないローカル作業入力・レビュー記録である。Google Driveへの同期は明示指示があるまで行わない。
-- hero画像はユーザー提供の`public/images/rules/hero.webp`を表示する。ユーザー指定の「デザインラフは不要」はinitial draftだけを省略するものとして扱う。design正本化はcontents reviewが完了するまで行わず、このPRでは`docs/design/`を変更しない。
+- hero画像はユーザー提供の`public/images/rules/hero.webp`を表示する。画像右下のゲームロゴは意図したasset内要素として採用し、ページ側の追加overlayは行わない。ユーザー指定の「デザインラフは不要」はinitial draftだけを省略するものとして扱う。contents review後にユーザー承認を受け、現行実装を`docs/design/rules/`のdesign fix正本として記録する。
 
 ## ビジュアルレビュー 1
 
@@ -141,6 +144,32 @@
 - [x] 共通design参照とactualを比較した
 - [x] hero画像を今回のレビュー対象外として記録した
 - [x] design正本を変更していない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `[中] .raw/contents/rules.md のhero未提供・非表示指示が、H1直後にheroを表示する現行実装、current issue、ユーザー提供assetと矛盾している。`
+
+### 判定
+
+- source: local-pr-review / contents-review
+- classification: valid
+- local validation: 取り込み時点では、`.raw/contents/rules.md` の実装指示とH1直後のHTMLコメントに画像が未提供で表示しないと残っていた。一方、`src/pages/rules/index.mdx` は `public/images/rules/hero.webp` をH1直後へ表示し、Visual testとdesktop・mobileスクリーンショットでalt、`loading="eager"`、captionなしを確認済みだった。ユーザー承認後にcontentsを現行実装へ更新した。
+- user confirmation: hero右下に焼き込まれたゲームロゴは、ユーザー提供assetの意図した要素として採用する。生成プロンプトとcontents補足もこの方針へ更新した。
+
+### 対応方針
+
+- `.raw/contents/rules.md` のheroに関する実装指示とH1直後のHTMLコメントを、提供済みassetを表示する現状へ更新した。
+- ロゴ入りassetを意図して採用することをcontentsのagent-facing補足へ記録した。
+- ユーザー承認により、現行実装のスクリーンショットを `docs/design/rules/` のdesign fix正本へ記録した。画像の差し替えやページの新たなUI変更は行わない。
+
+### 対応完了チェックリスト
+
+- [x] contentsのhero指示とH1直後のHTMLコメントを現行実装へ一致させる
+- [x] ロゴ入りassetを採用する意図を確認し、contents補足へ記録する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
