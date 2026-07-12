@@ -83,6 +83,30 @@
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
+## レビュー指摘 3
+
+### 指摘事項
+
+- `drive-to-raw-sync` が `REPO_ROOT="$(git rev-parse --show-toplevel)"` というinline環境変数代入を案内しており、新規最上位規約と矛盾する。
+- 禁止対象がagentが直接発行するshell commandだけか、package script内部の環境変数代入も含むかが最上位規約から判別できない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `.agents/skills/drive-to-raw-sync/SKILL.md` のPreconditionsと、`package.json`の`check:md`・`format:md`を確認した。前者はagentが直接実行する形式を案内し、後者はagentが`npm run ...`として実行するpackage script内部の固定設定である。第4回のVisual capture override再掲は、ユーザーが対応不要と明示したためstaleとして取り込まない。`.env`の秘密情報・Git管理方針はユーザー判断が必要なdoubtful項目として取り込まない。
+
+### 対応方針
+
+- 禁止対象を、agentがshell commandとして直接発行する `XXX=hogehoge command` 形式に限定すると明記する。
+- Drive同期skillではrepository rootを変数代入せず、`git rev-parse --show-toplevel` の出力を確認して以後の`<repo-root>`として扱う手順にする。
+
+### 対応完了チェックリスト
+
+- [x] `AGENTS.md`と理由ファイルで禁止対象をagentが直接発行するinline代入形式と明確化する。
+- [x] `drive-to-raw-sync`からinline環境変数代入の手順を削除する。
+- [x] Markdown formatterが通る。
+
 ## チェックポイント
 
 - [x] desktop / mobileでhero、表、Callout、本文、PageToc / MobilePageTocに横overflowや可読性低下がない。
@@ -107,6 +131,9 @@
 - `tests/visual/README.md`
 - `.agents/skills/design-image-generation/SKILL.md`
 - `.agents/skills/visual-implementation-review/SKILL.md`
+- `.agents/skills/drive-to-raw-sync/SKILL.md`
+- `AGENTS.md`
+- `.agents/rules/core-rules-rationale.md`
 - `docs/design/advancement/`
 - `docs/issue/26-2-advancement-page.md`
 - `docs/agent-failure-log.md`（既存の作業ログ変更。ページ実装そのものの範囲外）

@@ -513,3 +513,12 @@ source種別は以下を使う。
 - `package.json` の `visual:capture` はcapture manifestへbranch、HEAD、開始時刻、実行引数を記録するwrapperへ変更した。
 - `visual:canonicalize` は同一HEADのmanifestと、capture開始後に更新されたdesktop / mobile artifactを検証してから、design正本と`notes.md`のprovenanceを更新する。
 - `.agents/skills/design-image-generation/SKILL.md` と `.agents/skills/visual-implementation-review/SKILL.md` に、既存visual workflowの使用、アドホックcapture禁止、4322以降へのfallback禁止を明記した。
+
+### Unnecessary approval request for an approved GitHub read
+
+#### 2026-07-13
+
+- source: user
+- 発生箇所: `26-2-advancement-page` のPR #40再レビュー時の`gh pr view`
+- 観測した失敗: `gh pr view` は承認済みcommand prefixだったにもかかわらず、sandbox内の最初の接続失敗をsandbox外実行が必要な根拠と誤認し、`require_escalated`を付けて不要な承認を求めた。ユーザーはcommit・push・local reviewer呼出しを指示しており、追加承認を求める必要はなかった。
+- 一次対応: 承認済みprefixのcommandは、接続失敗後も`require_escalated`を追加せずに扱う。PR再レビューでは、取得済みのremote headとlocal diffでreviewerを起動し、追加のGitHub API読取りは必要性が明確な場合だけ行う。

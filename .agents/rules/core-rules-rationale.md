@@ -14,11 +14,13 @@ After the user asks to commit, staging the intended files is part of making the 
 
 ## No Inline Environment-Variable Commands
 
-Do not execute commands in the form `XXX=hogehoge command`.
+Do not directly send shell commands in the form `XXX=hogehoge command`.
 
 Inline assignments alter the command prefix. That can cause an unnecessary approval request even when the command itself has an approved prefix, which makes the execution path unpredictable and interrupts the intended workflow.
 
 When a tool requires environment-variable configuration, place the setting in that tool's appropriate `.env` file instead. This keeps the invoked command stable and makes configuration explicit and reviewable.
+
+This rule applies to shell commands directly sent by an agent. It does not apply to fixed implementation details inside an existing package script, because the agent invokes that script through its stable command prefix.
 
 ## Issue-First Before Implementation
 
