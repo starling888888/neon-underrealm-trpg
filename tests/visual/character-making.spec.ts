@@ -20,6 +20,14 @@ async function expectCharacterMakingContent(page: Page) {
     page.getByRole("heading", { name: "キャラクターメイキング" }),
   ).toHaveCount(1);
   await expect(
+    article.getByRole("img", {
+      name: "港沿いの作業場で、4人の仕事人が義手、刺青、ドラッグ、戦闘装備を整えている。窓の外に通天閣を思わせる塔が見える。",
+    }),
+  ).toHaveAttribute(
+    "src",
+    "/neon-underrealm-trpg/images/character-making/hero.webp",
+  );
+  await expect(
     page.getByRole("heading", { name: "初期縁の決定（RoC方式）" }),
   ).toHaveCount(1);
   await expect(

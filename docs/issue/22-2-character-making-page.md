@@ -28,6 +28,7 @@
 ## 対象範囲
 
 - `src/pages/character-making.mdx` を作成し、`MDXLayout`、ページ固有の`title`・`description`、`showPageToc: true`を設定する。
+- ユーザー提供の`public/images/character-making/hero.webp`を、既存`ImageBlock`でH1直後に表示する。画像内の公式ロゴへ追加のoverlayは重ねない。
 - `.raw/contents/character-making.md` のfrontmatter、Markdown本文、HTMLコメントの指示をもとに、次を順に配置する。
   - キャラクターの基本要素、能力値、流儀と生き様、格、スキル、副能力値、アイテム、技能、縁
   - 初期縁のRoC方式と一覧表
@@ -69,7 +70,7 @@
 - [x] 初期縁一覧、表、Callout、リンクがdesktop / tablet / mobileで横overflowしない。
 - [x] H1から始まる見出し階層が不自然に飛ばず、既存PageToc / MobilePageTocが本文見出しを扱える。
 - [x] Calloutは色だけに依存せず、既存のラベルと記号マーカーを維持する。
-- [x] ページ固有の画像、画像生成、ヒーロー表現を追加していない。
+- [x] ユーザー提供のhero画像を既存`ImageBlock`で表示し、画像内の公式ロゴ以外のoverlayやページ固有UIを追加していない。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外のキャラクター作成支援機能を実装していない。
 - [x] 関連する`docs/TODO.md`項目と矛盾していない。
@@ -80,6 +81,7 @@
 
 - `docs/issue/22-2-character-making-page.md`
 - `src/pages/character-making.mdx`
+- `public/images/character-making/hero.webp`
 - `src/components/character-making/InitialTies.astro`
 - 必要に応じて`tests/visual/character-making.spec.ts`
 - 必要に応じてVisual Reviewとユーザー確認後の`docs/design/character-making/`配下の正本
@@ -89,7 +91,8 @@
 - `.raw/contents/character-making.md`のHTMLコメントにあるCallout種別・タイトル・対象範囲を、既存`Callout`の仕様に正しく対応付けられているか。
 - 基本要素、初期縁、コンストラクション、フルスクラッチを上から読んだときに、キャラクター作成の手順として迷わず追えるか。
 - 移動力、行動値、防御力、ダメージ軽減の決定方法と、最大体力・最大精神力の決定手順が矛盾なく読めるか。
-- 既存layout内で初期縁一覧、長い表、Calloutがdesktop / tablet / mobileで読みやすく、横overflowしないか。
+- hero画像、初期縁一覧、長い表、Calloutがdesktop / tablet / mobileで読みやすく、横overflowしないか。
+- hero画像がH1直後に表示され、意味のあるaltとGitHub Pagesのbase pathを通す既存`ImageBlock`を用いているか。画像内の公式ロゴ以外のoverlayやページ固有UIを追加していないか。
 - contentsで指定された内部リンクが`InternalLink`を用い、base pathと整合しているか。未実装4 routeは将来routeへのリンクとして残り、このissueで新設していないか。
 - 自動計算、入力フォーム、保存などの初期スコープ外機能を混入させていないか。
 - 実装前design draftを作らないというユーザー指定を守りつつ、実装後のVisual Reviewとdesign正本化の判断を適切に残せているか。
@@ -119,18 +122,18 @@
 
 ### レビュー結果
 
-| 領域                  | 判定 | 差分                                                                                                                                              | 対応 |
-| --------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| レイアウト            | OK   | 既存site layout内で本文、初期縁カード、表、PageTocが成立する。                                                                                    | 不要 |
-| 余白                  | OK   | 表、Callout、手順の間隔は既存proseとCalloutの間隔を使う。                                                                                         | 不要 |
-| タイポグラフィ        | OK   | H1からH3までで作成手順を追え、Calloutタイトルは見出しにしない。                                                                                   | 不要 |
-| 色                    | OK   | 本文はneutral、Calloutは既存のtip、example、warningの色とラベルを使う。                                                                           | 不要 |
-| 配置・整列            | OK   | 初期縁カード、能力値表、経験点表が本文カラムに収まる。                                                                                            | 不要 |
-| レスポンシブ          | OK   | desktopは初期縁カードを2列、tabletは対象ごとに1列の対表示、mobileは感情ごとに縦積みで表示する。MobilePageToc triggerもtablet / mobileで成立する。 | 不要 |
-| overflow / scroll     | OK   | desktop / tablet / mobileのVisual testでdocument横overflowがない。                                                                                | 不要 |
-| 既存デザインとの整合  | OK   | site-layoutとcalloutの正本に整合する。                                                                                                            | 不要 |
-| 既存Componentとの整合 | OK   | `Callout`と`InternalLink`を既存仕様どおり使う。                                                                                                   | 不要 |
-| accessibility basics  | OK   | 見出し階層、Calloutのラベル・記号、内部リンクを確認した。                                                                                         | 不要 |
+| 領域                  | 判定 | 差分                                                                                                                                                                    | 対応 |
+| --------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| レイアウト            | OK   | 既存site layout内でH1直後のhero、本文、初期縁カード、表、PageTocが成立する。                                                                                            | 不要 |
+| 余白                  | OK   | 表、Callout、手順の間隔は既存proseとCalloutの間隔を使う。                                                                                                               | 不要 |
+| タイポグラフィ        | OK   | H1からH3までで作成手順を追え、Calloutタイトルは見出しにしない。                                                                                                         | 不要 |
+| 色                    | OK   | 本文はneutral、Calloutは既存のtip、example、warningの色とラベルを使う。                                                                                                 | 不要 |
+| 配置・整列            | OK   | hero、初期縁カード、能力値表、経験点表が本文カラムに収まる。                                                                                                            | 不要 |
+| レスポンシブ          | OK   | heroは本文幅に収まり、desktopは初期縁カードを2列、tabletは対象ごとに1列の対表示、mobileは感情ごとに縦積みで表示する。MobilePageToc triggerもtablet / mobileで成立する。 | 不要 |
+| overflow / scroll     | OK   | desktop / tablet / mobileのVisual testでdocument横overflowがない。                                                                                                      | 不要 |
+| 既存デザインとの整合  | OK   | site-layoutとcalloutの正本に整合する。                                                                                                                                  | 不要 |
+| 既存Componentとの整合 | OK   | `Callout`と`InternalLink`を既存仕様どおり使う。                                                                                                                         | 不要 |
+| accessibility basics  | OK   | 見出し階層、Calloutのラベル・記号、内部リンクを確認した。                                                                                                               | 不要 |
 
 ### 自己修正した項目
 
@@ -139,6 +142,7 @@
 - [x] 初期縁一覧を専用`InitialTies` Componentへ置き換え、対象とポジティブ／ネガティブの説明を画面幅に応じて読み分けられるようにした。
 - [x] 体力増加値、精神力増加値、初期体力係数、初期精神力係数と、作成時の選択が最大体力・最大精神力へ反映される関係を基本説明へ追加した。
 - [x] 初期縁一覧への参照を「表の文章」から「初期縁一覧の文章」へ置き換え、raw入力と公開本文を揃えた。
+- [x] ユーザー提供のheroをH1直後へ既存`ImageBlock`で配置し、alt、GitHub Pagesのbase path、desktop / tablet / mobile表示を確認した。
 
 ### 人間判断が必要な差分
 

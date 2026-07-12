@@ -13,9 +13,9 @@
   - tablet: `820x1180`、fullPage（Visual Reviewのみ。ページ固有のdesign正本は作成しない）
   - mobile: `390x900`、fullPage
 - states:
-  - desktop: SiteMenu、PageToc、本文、表、Callout
-  - tablet: MobilePageToc trigger、本文、初期縁の対表示、Callout
-  - mobile: Header、MobilePageToc trigger、本文、表、Callout
+  - desktop: SiteMenu、PageToc、hero、本文、表、Callout
+  - tablet: MobilePageToc trigger、hero、本文、初期縁の対表示、Callout
+  - mobile: Header、MobilePageToc trigger、hero、本文、表、Callout
 
 ## Referenced SSoT
 
@@ -36,8 +36,8 @@
 
 ## Design direction
 
-- visual direction: 白寄りの本文面、暗めのHeader / Footer、控えめな青緑accent、実務的な情報密度を維持する。
-- layout direction: desktopでは既存SiteMenu、本文、PageTocの3列layoutを保つ。初期縁は対象ごとにポジティブとネガティブを対にしたカードで示す。tabletでは対象カードを1列にしつつ感情を横並びで比較できるようにし、mobileでは感情ごとの説明を縦に積む。mobileではMobilePageToc triggerをH1横に残し、表とCalloutを本文幅に収めて縦に読めるようにする。
+- visual direction: 白寄りの本文面、暗めのHeader / Footer、控えめな青緑accent、実務的な情報密度を維持する。heroはH1の直後に置き、作成前の準備を見せる本文の入口として使う。画像内の公式ゲームロゴはユーザー提供素材の一部であり、追加のoverlayは重ねない。
+- layout direction: desktopでは既存SiteMenu、本文、PageTocの3列layoutを保つ。初期縁は対象ごとにポジティブとネガティブを対にしたカードで示す。tabletでは対象カードを1列にしつつ感情を横並びで比較できるようにし、mobileでは感情ごとの説明を縦に積む。mobileではMobilePageToc triggerをH1横に残し、hero、表、Calloutを本文幅に収めて縦に読めるようにする。
 - typography direction: H1からH3までで、基本要素、初期縁、作成方式、個別手順の順を追える構造にする。Calloutのタイトルは見出しではなくラベルとして扱う。
 - color / accent usage: 通常本文と表は既存のneutralな表現を使う。`tip`は青緑、`example`は青灰、`warning`は暖色の既存Calloutを使い、色だけに依存しないラベルと記号マーカーを維持する。
 
@@ -45,8 +45,9 @@
 
 - `site-layout`のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。
 - `callout`の6種の表示、ラベル、記号マーカー、見出し化の既定を変更しない。
+- H1直後に既存`ImageBlock`を置き、heroには意味のあるaltを持たせる。画像内の公式ロゴ以外のoverlayは追加しない。
 - desktop / tablet / mobileとも、初期縁カード、スキル表、Calloutを本文カラム内に収め、横overflowを起こさない。
-- ページ固有のhero画像、バナー、装飾画像を追加しない。
+- ユーザー提供のhero以外のページ固有画像、バナー、装飾画像を追加しない。
 - 未実装のデータ・ルール詳細ページへの導線は、既存の内部リンク表現として残す。
 
 ## Out of scope
@@ -58,8 +59,8 @@
 
 ## Comparison points for implementation
 
-- desktopでは基本要素、初期縁、コンストラクション、フルスクラッチをPageTocとともに上から追える。
-- mobileではH1とMobilePageToc triggerが成立し、長い表とCalloutに横overflowがない。
+- desktopではH1直後のhero、基本要素、初期縁、コンストラクション、フルスクラッチをPageTocとともに上から追える。
+- mobileではH1、hero、MobilePageToc triggerが成立し、長い表とCalloutに横overflowがない。
 - `tip`、`example`、`warning`のCalloutが既存Componentの種別・ラベル・記号マーカーで区別できる。
 - CalloutタイトルがH2 / H3として出力されず、PageTocへ混入しない。
 - 内部リンクがGitHub Pagesのbase pathを通り、本文と既存navigationが混同されない。
@@ -73,13 +74,16 @@
   - `test-results/visual/character-making-desktop.png`
   - `test-results/visual/character-making-tablet.png`
   - `test-results/visual/character-making-mobile.png`
-- canonicalization: ユーザーは2026-07-12に、初期縁の参照文言を修正した後のdesktop / mobile Visual Review actualを、design fixの正本へ反映することを明示承認した。ページ固有のinitial draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign正本として採用する。
+- hero asset: `public/images/character-making/hero.webp`
+- hero prompt: `.tmp/hero-prompt.md`
+- canonicalization: ユーザーは2026-07-12に、hero追加後のdesktop / mobile Visual Review actualをdesign正本へ反映することを明示承認した。ページ固有のinitial draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign正本として採用する。
 
 ## Differences from previous design references
 
 - 初期縁一覧は横長の4列tableから、対象ごとにポジティブとネガティブを対にしたカードへ変更した。長い関係説明を各感情のラベルとともに読めるようにし、mobileでは縦積みにする。
 - 最大体力・最大精神力の決定要素を基本説明へ追加した。構成や既存Calloutの見た目は変更していない。
 - tabletは既存`site-layout`の正本と同じbreakpoint・MobilePageToc挙動を確認するためのVisual Review対象とし、ページ固有のcanonical imageはdesktopとmobileだけを維持する。
+- ユーザー提供のheroをH1直後へ追加した。画像内の公式ゲームロゴをそのまま用い、追加のoverlayやcaptionは設けていない。
 
 ## Open questions
 
