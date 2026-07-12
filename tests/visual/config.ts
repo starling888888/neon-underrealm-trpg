@@ -16,6 +16,7 @@ export const visualBaseUrl = `${visualBaseHost}:${visualBasePort}${normalizedVis
 export const visualRoutes = {
   home: "./",
   introduction: "introduction/",
+  rules: "rules/",
   world: "world/",
   characterMaking: "character-making/",
   releaseNotes: "release-notes/",

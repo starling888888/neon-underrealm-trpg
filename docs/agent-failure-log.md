@@ -86,6 +86,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Rules page Visual test formatting needed a second correction
+
+#### 2026-07-12
+
+- source: self
+- 発生箇所: `23-2-rules-page` の`tests/visual/rules.spec.ts`
+- 観測した失敗: 同タスク中にVisual testの追加・更新後、`npm run check`のBiome formatterで2回、Playwrightの期待値の改行形式が不一致となった。
+- 一次対応: formatterが要求する複数行形式へ修正し、hero画像の属性検証を再実行する。
+
+### Rules visual test matched a duplicated heading outside the article
+
+#### 2026-07-12
+
+- source: self
+- 発生箇所: `23-2-rules-page` の`tests/visual/rules.spec.ts`
+- 観測した失敗: `ルール`見出しをページ全体の`getByRole`で数えたため、本文外の同名見出しも含めてdesktop / mobileのVisual testがともに失敗した。本文領域へ限定した再実行でも、`getByRole`の部分一致により`ゴールデンルールを参照する`を同時に数えて同じ2テストが失敗した。
+- 一次対応: 検証対象を`article.mdx-layout`内へ限定し、H1の検証には`exact: true`を指定した。本文の見出し、Callout、リンク、hero非表示だけを確認する。
+
 ### Character-making visual capture required two corrective attempts
 
 #### 2026-07-12
