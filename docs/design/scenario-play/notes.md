@@ -17,7 +17,7 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `docs/issue/24-2-scenario-play-page.md`
+- `docs/issue/done/phase-3/24-2-scenario-play-page.md`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/components.md`
