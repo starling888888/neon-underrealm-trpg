@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Design canonicalization bypassed the visual test capture
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のdesign正本化
+- 観測した失敗: design fixで既存の`tests/visual/scenario-play.spec.ts`によるcaptureを正本化元にすべきところ、独自の`.tmp/design/scenario-play/capture.mjs`を作成して別経路でdesign画像を生成した。
+- 一次対応: 独自capture scriptを破棄し、既存visual testのdesktop / mobile captureを元にdesign画像を正本化した。以後、design fixでは既存visual testのcapture経路を使い、専用capture scriptは作成しない。
+
 ### Validity-check request was treated as implementation approval
 
 #### 2026-07-12
