@@ -1,6 +1,6 @@
 name = "contents_expert_reviewer"
 description = "TRPG経験者・文章校閲者の視点で、コンテンツページのPC画面と本文をレビューするreviewer。"
-model = "gpt-5.6-terra"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """
