@@ -489,3 +489,12 @@ source種別は以下を使う。
 - 発生箇所: `25-2-battle-page` の関連Visual test
 - 観測した失敗: 戦闘ページのフラグメントリンクを追加した後、buildを更新せずに既存previewへ関連Visual testを実行したため、古い出力にリンクがなくscenario-play testが失敗した。
 - 一次対応: previewを使うVisual testの前に、対象ソース変更後の `npm run build` が完了していることを確認し、既存previewを再起動する。
+
+### Resolved content conflict was left as an unresolved placeholder
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `.raw/contents/advancement.md` の能力値成長節
+- 観測した失敗: ユーザーが各算出は現行のキャラクターメイキングを正と明示したにもかかわらず、agentは旧資料との矛盾を理由に能力値成長を未確定HTMLコメントのまま残した。さらに、ユーザーが明示的に上2点の反映を指示した後も、未確定節を確定本文へ更新しなかった。
+- 一次対応: 現行`src/pages/character-making.mdx`の格の定義（プライマリ流儀のレベル＋生き様のレベル）を使い、格15ごとの能力値成長、成長点、同一能力値への一度の配分上限を本文へ明記した。以後、ユーザーが競合の採用元を明示した場合は、未確定コメントを残さず、指定された範囲の本文と指示を同じ変更で確定する。
