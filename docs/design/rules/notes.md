@@ -18,7 +18,7 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `docs/issue/23-2-rules-page.md`
+- `docs/issue/done/phase-3/23-2-rules-page.md`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/pages.md`
 - `docs/out-of-scope.md`
