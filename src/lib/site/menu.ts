@@ -24,6 +24,20 @@ export const siteMenuItems: SiteMenuItem[] = [
     href: "/character-making",
   },
   {
+    label: "ルール",
+    href: "/rules",
+    children: [
+      {
+        label: "シナリオ進行",
+        href: "/rules/scenario-play",
+      },
+      {
+        label: "戦闘",
+        href: "/rules/battle",
+      },
+    ],
+  },
+  {
     label: "データ",
     href: "/data",
     children: [
@@ -68,20 +82,6 @@ export const siteMenuItems: SiteMenuItem[] = [
             href: "/data/items/drugs",
           },
         ],
-      },
-    ],
-  },
-  {
-    label: "ルール",
-    href: "/rules",
-    children: [
-      {
-        label: "シナリオ進行",
-        href: "/rules/scenario-play",
-      },
-      {
-        label: "戦闘",
-        href: "/rules/battle",
       },
     ],
   },

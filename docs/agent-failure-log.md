@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Commit message language did not follow repository convention
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のサイトメニュー順序変更commit
+- 観測した失敗: 直近の英語コミットメッセージ形式を確認せず、日本語のcommit messageを作成した。
+- 一次対応: ユーザー許可のsoft resetで当該commitを取り消し、同一差分へ英語のcommit messageを付けて作り直す。
+
 ### Rules page Visual test formatting needed a second correction
 
 #### 2026-07-12

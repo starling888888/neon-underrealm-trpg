@@ -4,6 +4,7 @@ import {
   getSiteMenuItemInitialExpanded,
   getSiteMenuItemState,
   type SiteMenuItem,
+  siteMenuItems,
 } from "../../src/lib/site/menu";
 
 const menu: SiteMenuItem = {
@@ -24,6 +25,12 @@ const menu: SiteMenuItem = {
 };
 
 describe("site menu current state", () => {
+  it("places rules before data in the root menu", () => {
+    const labels = siteMenuItems.map((item) => item.label);
+
+    assert.ok(labels.indexOf("ルール") < labels.indexOf("データ"));
+  });
+
   it("marks exact matching menu items as current", () => {
     assert.equal(
       getSiteMenuItemState(
