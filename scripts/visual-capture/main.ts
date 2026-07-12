@@ -1,18 +1,11 @@
 import { execFile, spawn } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { mkdir } from "node:fs/promises";
 import { promisify } from "node:util";
+import { invalidateCaptureManifest, writeCaptureManifest } from "./lib";
 
 const execFileAsync = promisify(execFile);
 const outputDirectory = "test-results/visual";
-
-type CaptureManifest = {
-  version: 1;
-  branch: string;
-  head: string;
-  startedAt: string;
-  completedAt: string;
-  playwrightArgs: string[];
-};
 
 async function readGitValue(args: string[]): Promise<string> {
   const { stdout } = await execFileAsync("git", args);
@@ -54,22 +47,21 @@ async function main(): Promise<void> {
     readGitValue(["rev-parse", "HEAD"]),
   ]);
   const playwrightArgs = process.argv.slice(2);
+  const runId = randomUUID();
 
+  await mkdir(outputDirectory, { recursive: true });
+  await invalidateCaptureManifest(outputDirectory);
   await runPlaywright(playwrightArgs);
 
-  const manifest: CaptureManifest = {
+  await writeCaptureManifest(outputDirectory, {
     version: 1,
     branch,
     head,
     startedAt,
     completedAt: new Date().toISOString(),
     playwrightArgs,
-  };
-  await mkdir(outputDirectory, { recursive: true });
-  await writeFile(
-    `${outputDirectory}/capture-manifest.json`,
-    `${JSON.stringify(manifest, null, 2)}\n`,
-  );
+    runId,
+  });
   console.log(
     `[visual:capture] wrote ${outputDirectory}/capture-manifest.json`,
   );

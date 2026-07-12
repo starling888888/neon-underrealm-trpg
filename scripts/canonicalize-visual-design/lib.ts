@@ -1,5 +1,13 @@
 import type { Stats } from "node:fs";
-import { copyFile, readFile, stat, writeFile } from "node:fs/promises";
+import {
+  copyFile,
+  mkdtemp,
+  readFile,
+  rename,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import path from "node:path";
 
 const sourceStart = "<!-- visual-canonicalization:start -->";
@@ -16,7 +24,10 @@ type CaptureManifest = {
   startedAt: string;
   completedAt: string;
   playwrightArgs: string[];
+  runId: string;
 };
+
+type ReplaceFile = (source: string, destination: string) => Promise<void>;
 
 export type CanonicalizeVisualDesignOptions = {
   branch: string;
@@ -35,6 +46,7 @@ export type CanonicalizeVisualDesignResult = {
 
 export async function canonicalizeVisualDesign(
   options: CanonicalizeVisualDesignOptions,
+  replaceFile: ReplaceFile = rename,
 ): Promise<CanonicalizeVisualDesignResult> {
   validateTarget(options.target);
   validateRoute(options.route);
@@ -64,8 +76,8 @@ export async function canonicalizeVisualDesign(
     );
   }
 
-  await assertCapturedAfter(manifest.startedAt, desktopSource);
-  await assertCapturedAfter(manifest.startedAt, mobileSource);
+  await assertCapturedWithin(manifest, desktopSource);
+  await assertCapturedWithin(manifest, mobileSource);
 
   const notes = await readFile(notesPath, "utf8");
   const updatedNotes = replaceCanonicalizationSource(notes, {
@@ -75,12 +87,17 @@ export async function canonicalizeVisualDesign(
     target: options.target,
   });
 
-  await copyFile(
-    desktopSource,
-    path.join(designDirectory, "design-desktop.png"),
+  await replaceDesignArtifacts(
+    {
+      desktopDestination: path.join(designDirectory, "design-desktop.png"),
+      desktopSource,
+      mobileDestination: path.join(designDirectory, "design-mobile.png"),
+      mobileSource,
+      notes: updatedNotes,
+      notesPath,
+    },
+    replaceFile,
   );
-  await copyFile(mobileSource, path.join(designDirectory, "design-mobile.png"));
-  await writeFile(notesPath, updatedNotes);
 
   return {
     designDirectory,
@@ -112,8 +129,8 @@ async function readCaptureManifest(file: string): Promise<CaptureManifest> {
   return value;
 }
 
-async function assertCapturedAfter(
-  startedAt: string,
+async function assertCapturedWithin(
+  manifest: CaptureManifest,
   screenshotPath: string,
 ): Promise<void> {
   let details: Stats;
@@ -126,12 +143,77 @@ async function assertCapturedAfter(
     );
   }
 
-  const captureStart = Date.parse(startedAt);
-  if (details.mtimeMs + 1_000 < captureStart) {
+  const captureStart = Date.parse(manifest.startedAt);
+  const captureEnd = Date.parse(manifest.completedAt);
+  if (
+    details.mtimeMs + 1_000 < captureStart ||
+    details.mtimeMs - 1_000 > captureEnd
+  ) {
     throw new Error(
-      `Screenshot at ${screenshotPath} predates the current capture manifest.`,
+      `Screenshot at ${screenshotPath} is outside the current capture manifest window.`,
     );
   }
+}
+
+async function replaceDesignArtifacts(
+  artifacts: {
+    desktopDestination: string;
+    desktopSource: string;
+    mobileDestination: string;
+    mobileSource: string;
+    notes: string;
+    notesPath: string;
+  },
+  replaceFile: ReplaceFile,
+): Promise<void> {
+  const designDirectory = path.dirname(artifacts.notesPath);
+  const transactionDirectory = await mkdtemp(
+    path.join(designDirectory, ".canonicalize-"),
+  );
+  const stagedDesktop = path.join(transactionDirectory, "design-desktop.png");
+  const stagedMobile = path.join(transactionDirectory, "design-mobile.png");
+  const stagedNotes = path.join(transactionDirectory, "notes.md");
+  const backups = await Promise.all([
+    readOptional(artifacts.desktopDestination),
+    readOptional(artifacts.mobileDestination),
+    readOptional(artifacts.notesPath),
+  ]);
+
+  try {
+    await copyFile(artifacts.desktopSource, stagedDesktop);
+    await copyFile(artifacts.mobileSource, stagedMobile);
+    await writeFile(stagedNotes, artifacts.notes);
+    await replaceFile(stagedDesktop, artifacts.desktopDestination);
+    await replaceFile(stagedMobile, artifacts.mobileDestination);
+    await replaceFile(stagedNotes, artifacts.notesPath);
+  } catch (error) {
+    await restoreFile(artifacts.desktopDestination, backups[0]);
+    await restoreFile(artifacts.mobileDestination, backups[1]);
+    await restoreFile(artifacts.notesPath, backups[2]);
+    throw error;
+  } finally {
+    await rm(transactionDirectory, { force: true, recursive: true });
+  }
+}
+
+async function readOptional(file: string): Promise<Buffer | undefined> {
+  try {
+    return await readFile(file);
+  } catch {
+    return undefined;
+  }
+}
+
+async function restoreFile(
+  file: string,
+  contents: Buffer | undefined,
+): Promise<void> {
+  if (contents) {
+    await writeFile(file, contents);
+    return;
+  }
+
+  await rm(file, { force: true });
 }
 
 function replaceCanonicalizationSource(
@@ -181,13 +263,16 @@ function isCaptureManifest(value: unknown): value is CaptureManifest {
     typeof manifest.startedAt === "string" &&
     typeof manifest.completedAt === "string" &&
     Array.isArray(manifest.playwrightArgs) &&
-    manifest.playwrightArgs.every((argument) => typeof argument === "string")
+    manifest.playwrightArgs.every((argument) => typeof argument === "string") &&
+    typeof manifest.runId === "string"
   );
 }
 
 function validateRoute(route: string): void {
-  if (!route.startsWith("/")) {
-    throw new Error("Route must start with /.");
+  if (!/^\/(?:[a-z0-9-]+\/)*$/.test(route)) {
+    throw new Error(
+      "Route must be a lowercase site path with a trailing slash.",
+    );
   }
 }
 
