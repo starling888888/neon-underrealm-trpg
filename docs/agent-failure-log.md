@@ -401,3 +401,12 @@ source種別は以下を使う。
 - 発生箇所: `22-2-character-making-page` のレビュー指摘 1 に対する用語説明追加
 - 観測した失敗: ユーザーは内容の修正方針を示したが、レビュー指摘の取り込み後に必要な実装開始の明示指示を出していなかった。にもかかわらず、agentは公開MDX、`.raw/contents/character-making.md`、issue checklistを変更し、検証まで実行した。
 - 一次対応: ユーザー指示に従い差し戻しは行わず、変更は未コミットのまま保持する。レビュー指摘への内容追加や方針確認では実装せず、明示的な「実装開始」「修正して」等の指示を受けるまで停止する。
+
+### Ambiguous design canonicalization approval
+
+#### 2026-07-12
+
+- source: review
+- 発生箇所: `22-2-character-making-page` の`docs/design/character-making/design-desktop.png`と`design-mobile.png`更新
+- 観測した失敗: Visual Review actualをdesign正本へ反映する前に、ユーザーのdesign正本化許可が曖昧な状態だった。ユーザーは後に、actualを最終的なdesign正本へ反映する方針自体は正しく、問題は明確な許可前にコピーしたことだと訂正した。
+- 一次対応: ユーザーは文言修正後のactualをdesign正本へ反映することを明示許可した。以後、design fixではactualを正本化してよいかを事前に明示確認し、その許可とcapture元を`notes.md`とissueへ記録する。

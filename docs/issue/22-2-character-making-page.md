@@ -138,6 +138,7 @@
 - [x] Visual testの内部リンク検証を本文領域に限定し、SiteMenuの同名リンクを数えないようにした。
 - [x] 初期縁一覧を専用`InitialTies` Componentへ置き換え、対象とポジティブ／ネガティブの説明を画面幅に応じて読み分けられるようにした。
 - [x] 体力増加値、精神力増加値、初期体力係数、初期精神力係数と、作成時の選択が最大体力・最大精神力へ反映される関係を基本説明へ追加した。
+- [x] 初期縁一覧への参照を「表の文章」から「初期縁一覧の文章」へ置き換え、raw入力と公開本文を揃えた。
 
 ### 人間判断が必要な差分
 
@@ -157,6 +158,33 @@
 - [x] ユーザー承認済みのdesign正本化を`design-image-generation`のdesign fix modeで反映する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- design正本化の許可が明確でない時点で、Visual Reviewの`test-results/visual/character-making-*.png`を`docs/design/character-making/`へコピーしていた。ユーザーは、文言修正後のactualをdesign正本へ反映することを明示許可した。
+- 初期縁一覧を表ではない専用Componentへ置き換えた後も、本文と`.raw/contents/character-making.md`に「表の文章を手掛かりに」と残っている。
+
+### 判定
+
+- source: local-pr-review（PR #36）
+- classification: valid
+- local validation: `sha256sum`でdesktop / mobileのdesign正本と対応するVisual Review actualが一致することを確認した。ユーザーは、actualのdesign正本化自体は正しいが、許可が曖昧な時点でコピーしたことが問題だと明示した。`src/pages/character-making.mdx`と`.raw/contents/character-making.md`には「表の文章を手掛かりに」が残る一方、公開ページは`InitialTies`のカード表示であり、表は存在しない。
+
+### 対応方針
+
+- ユーザーの明示許可に従い、文言修正後に取得するdesktop / mobileのVisual Review actualをdesign fixの正本へ反映する。`notes.md`には、今回の明示許可とcapture元を記録する。
+- 本文とraw入力の「表の文章」を「初期縁一覧の文章」へ置き換える。
+- 修正後に`npm run check`、`npm run build`、desktop / tablet / mobileのVisual testを再実行する。
+
+### 対応完了チェックリスト
+
+- [x] 文言修正後のVisual Review actualを、ユーザー許可済みのdesign fixとしてdesign正本へ反映する
+- [x] 本文とraw入力の初期縁一覧の参照を表示形式に依存しない文言へ修正する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] desktop / tablet / mobileのVisual testが通る
 
 ## レビュー指摘 1
 

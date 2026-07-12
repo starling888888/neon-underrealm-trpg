@@ -73,7 +73,7 @@
   - `test-results/visual/character-making-desktop.png`
   - `test-results/visual/character-making-tablet.png`
   - `test-results/visual/character-making-mobile.png`
-- canonicalization: ユーザーは2026-07-12に、実装後のdesign正本作成までを明示承認した。ページ固有の初期draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign fixとして採用する。
+- canonicalization: ユーザーは2026-07-12に、初期縁の参照文言を修正した後のdesktop / mobile Visual Review actualを、design fixの正本へ反映することを明示承認した。ページ固有のinitial draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign正本として採用する。
 
 ## Differences from previous design references
 
