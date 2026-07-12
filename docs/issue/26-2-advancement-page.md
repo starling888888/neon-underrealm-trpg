@@ -41,27 +41,27 @@
 
 ## 完了条件
 
-- [ ] `/advancement` が `src/pages/advancement.mdx` から静的に表示される。
-- [ ] `.raw/contents/advancement.md` の本文と公開表示に関するHTMLコメント指示だけを反映し、作業記録や成長ページの責務外の本文を混入させていない。
-- [ ] H1直後に提供heroを、指定alt、`loading="eager"`、captionなし、追加overlayなしで表示する。
-- [ ] キャラクターロスト確認と縁の清算を本文へ再掲せず、`/rules/scenario-play` へリンクしている。
-- [ ] 格、共通スキル上限、最大体力、最大精神力などの各算出が `src/pages/character-making.mdx` と一致する。
-- [ ] 格30の能力値成長を `example` Calloutで示し、Callout titleをページ内目次の見出しにしない。
-- [ ] 既存共通designとの整合を確認し、initial design draftまたは`docs/design/advancement/`を作成していない。
-- [ ] 完成画面のスクリーンショットで既存共通designとの整合を確認し、design正本を更新していない。
-- [ ] GitHub Pagesのサブパス公開で画像と内部リンクが壊れない。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `/advancement` が `src/pages/advancement.mdx` から静的に表示される。
+- [x] `.raw/contents/advancement.md` の本文と公開表示に関するHTMLコメント指示だけを反映し、作業記録や成長ページの責務外の本文を混入させていない。
+- [x] H1直後に提供heroを、指定alt、`loading="eager"`、captionなし、追加overlayなしで表示する。
+- [x] キャラクターロスト確認と縁の清算を本文へ再掲せず、`/rules/scenario-play` へリンクしている。
+- [x] 格、共通スキル上限、最大体力、最大精神力などの各算出が `src/pages/character-making.mdx` と一致する。
+- [x] 格30の能力値成長を `example` Calloutで示し、Callout titleをページ内目次の見出しにしない。
+- [x] 既存共通designとの整合を確認し、initial design draftまたは`docs/design/advancement/`を作成していない。
+- [x] 完成画面のスクリーンショットで既存共通designとの整合を確認し、design正本を更新していない。
+- [x] GitHub Pagesのサブパス公開で画像と内部リンクが壊れない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] desktop / mobileでhero、表、Callout、本文、PageToc / MobilePageTocに横overflowや可読性低下がない。
-- [ ] hero内の公式ゲームロゴをページ側で重ねて表示せず、隠蔽もしていない。
-- [ ] 既存ルート、Header、Footer、SiteMenu、PageToc、MobilePageToc、共通Componentを壊していない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の管理機能・自動計算・入力UIを実装していない。
-- [ ] 既存共通designと矛盾していない。新規のpage固有designは作成していない。
-- [ ] ユーザー提供の未追跡hero assetと、既存の未コミット `docs/agent-failure-log.md` の変更を破壊していない。
+- [x] desktop / mobileでhero、表、Callout、本文、PageToc / MobilePageTocに横overflowや可読性低下がない。
+- [x] hero内の公式ゲームロゴをページ側で重ねて表示せず、隠蔽もしていない。
+- [x] 既存ルート、Header、Footer、SiteMenu、PageToc、MobilePageToc、共通Componentを壊していない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の管理機能・自動計算・入力UIを実装していない。
+- [x] 既存共通designと矛盾していない。新規のpage固有designは作成していない。
+- [x] ユーザー提供の未追跡hero assetと、既存の未コミット `docs/agent-failure-log.md` の変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -86,3 +86,47 @@
 - ユーザー指示により、initial design draftは作成しない。既存の共通designを参照する。`docs/plan.md` の当該記載もこの方針に更新し、`.tmp/review/26-2-advancement-page/user-directed-changes.md` に記録した。
 - hero画像はユーザー提供の未追跡assetである。issue準備では追加・変更・削除せず、実装後にユーザーがcommitを明示指示した場合だけ対象差分を確認してGitへ追加する。
 - `.tmp/hero-prompt.md` はhero生成時の作業記録であり、再生成には使わない。提供assetとpromptのロゴ有無の差は `.raw/contents/advancement.md` の`矛盾点`に記録済みで、提供assetを正とする。
+
+## ビジュアルレビュー 1
+
+### 参照したdesign
+
+- `docs/design/site-layout/design-desktop.png`
+- `docs/design/site-layout/design-mobile.png`
+- `docs/design/callout/design-desktop.png`
+- `docs/design/site-layout/notes.md`、`docs/design/page-toc/notes.md`、`docs/design/mobile-page-toc/notes.md`、`docs/design/callout/notes.md`
+
+ユーザー指示により、新規のpage固有designおよびdesign正本の更新は行わない。
+
+### 実測結果
+
+- desktop: `test-results/visual/advancement-desktop.png`
+- mobile: `test-results/visual/advancement-mobile.png`
+
+| 観点                               | 結果                                                                                     |
+| ---------------------------------- | ---------------------------------------------------------------------------------------- |
+| layout・spacing・typography・color | OK。既存のsite layoutと本文レイアウトに整合する。                                        |
+| heroとCallout                      | OK。heroはH1直後に表示され、asset内ロゴを覆わない。Calloutは既存共通designに整合する。   |
+| desktopのPageToc                   | OK。本文見出しとCallout titleを区別して表示する。                                        |
+| mobileのMobilePageToc・overflow    | OK。目次の開閉ができ、表は本文コンテナ内で横スクロールし、ページ全体の横overflowはない。 |
+| responsive・accessibility          | OK。desktop / mobileとも本文とリンクの可読性を保つ。                                     |
+
+### 修正
+
+- なし。実装結果と既存共通designの間に、issue範囲で修正すべき視覚的な差異は見つからなかった。
+
+### 人間確認が必要な判断
+
+- なし。
+
+### designへの引き渡し
+
+- なし。新規designまたはdesign正本の更新を行わない。
+
+### 確認チェック
+
+- [x] desktop / mobileの実測スクリーンショットを取得した。
+- [x] site layout、PageToc / MobilePageToc、Calloutの既存designと比較した。
+- [x] hero、表、Callout、本文に修正が必要な視覚的差異がないことを確認した。
+- [x] design正本を作成・更新していない。
+- [x] `npm run check` と `npm run build` が通ることを確認した。
