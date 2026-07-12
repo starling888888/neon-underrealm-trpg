@@ -28,7 +28,7 @@
 ## 対象範囲
 
 - `src/pages/rules/index.mdx` を作成し、`.raw/contents/rules.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに実装する。
-- hero画像は未提供のため、このPRでは `ImageBlock` と `public/images/rules/hero.webp` を追加しない。画像提供後の後続作業で、`.raw/contents/rules.md` の生成プロンプト、alt文、`loading="eager"`、captionなし、追加overlayなしに従ってH1直後へ追加する。
+- H1直後に `ImageBlock` で `/images/rules/hero.webp` を表示する。`.raw/contents/rules.md` 指定の意味のあるalt文、`loading="eager"`、captionなし、追加overlayなしを守る。
 - 基本判定の手順として、判定数、通常の基準値5、10面体ダイス、達成値、効果値を表示する。得意技能の非戦闘技能では能力値だけを2倍にし、修正は2倍にしないことを説明する。
 - 筋力10、脅迫は得意技能ではない、サイバネで判定数+1、11d10、達成値6・効果値5の本文例を `Callout type="example"`、title `判定の例` で表示する。Callout titleは見出し化しない。
 - 目標値、対抗判定、同値時は受動側が勝つことを表示する。
@@ -36,7 +36,7 @@
 - 末尾に `/rules/scenario-play` のシナリオルールと `/rules/battle` の戦闘ルールへの導線を置く。
 - `.raw/contents/rules.md` のHTMLコメントに残る「`/rules` 専用initial design draftを作成・承認する」旧指示を、ユーザー指定に従い「専用initial design draftは作成せず、既存共通designを参照する」へ更新する。ページ実装より先に、contents指示とissueの方針を一致させる。
 - 準備中に更新済みの `docs/requirements/pages.md` と `docs/plan.md` を維持する。`/rules` の端数処理要件は削除済みであり、23-2はinitial design draftを作成しない方針へ更新済みである。計画チェックボックスは人間レビュー後の指示があるまで完了にしない。
-- 実装確認用のVisual testを追加または更新し、既存の共通design参照との整合性を確認する。hero画像はレビュー対象外とする。新規のdesignラフは作成しない。design正本化は、contents reviewが完了するまで行わず、このPRでは `docs/design/` を変更しない。
+- 実装確認用のVisual testを追加または更新し、既存の共通design参照との整合性を確認する。新規のdesignラフは作成しない。design正本化は、contents reviewが完了するまで行わず、このPRでは `docs/design/` を変更しない。
 
 ## 初期スコープ外
 
@@ -52,7 +52,7 @@
 
 - [x] `src/pages/rules/index.mdx` に `MDXLayout`、title、description、`showPageToc: true` を設定している。
 - [x] `.raw/contents/rules.md` の本文とHTMLコメント指示に従い、基本判定、達成値、効果値、目標値、対抗判定を表示している。
-- [x] hero画像は未提供のため、このPRでは表示・レビュー対象外としている。画像提供後の後続作業でH1直後への表示、alt、生成プロンプト要件を確認する。
+- [x] H1直後にhero画像を `ImageBlock` で表示し、指定のalt、`loading="eager"`、captionなし、追加overlayなしを確認している。
 - [x] 11d10の例を `example` Calloutで表示し、出目、基準値、達成値6、効果値5が一貫している。
 - [x] ゴールデンルールへのフラグメントリンク、シナリオルール・戦闘ルールへの導線を表示している。
 - [x] 端数処理、小銭、所持信用、戦闘・シナリオ詳細を掲載していない。
@@ -60,18 +60,18 @@
 - [x] `docs/requirements/pages.md` と `docs/plan.md` の端数処理・initial design draftの記載を、ユーザー承認済みの範囲へ修正している。計画チェックボックスは未完了のままである。
 - [x] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている。
 - [x] `/rules` 専用のinitial design draftを作成せず、既存共通designの参照だけを記録している。
-- [x] hero画像を除く実装後のVisual Reviewを行い、このPRではdesign正本化を行っていない。
+- [x] hero画像を含む実装後のVisual Reviewを行い、このPRではdesign正本化を行っていない。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
 ## チェックポイント
 
 - [x] 既存ルートが壊れていない。
-- [x] GitHub Pagesのサブパス公開で、すべての内部リンク・フラグメントリンクが正しく動く。hero画像は未提供のため対象外とする。
+- [x] GitHub Pagesのサブパス公開で、hero画像を含むすべての内部リンク・フラグメントリンクが正しく動く。
 - [x] build後の`/introduction`生成HTMLで、ゴールデンルールのIDが `h-f3926bd3` であることを確認している。
 - [x] 見出し階層がH1から不自然に飛ばず、PageTocとMobilePageTocに必要なH2が現れる。
 - [x] Calloutのtitleを見出し化せず、本文例として読める。
-- [x] hero画像は未提供のため、画像のalt、文字、2個のd10はこのPRの確認対象外とする。
+- [x] hero画像に意味のあるalt、2個のd10、オオサカの景観、人物と机上の緊張感があることを確認している。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`項目と矛盾していない。
@@ -85,6 +85,7 @@
 - `docs/requirements/pages.md`
 - `docs/plan.md`
 - `src/pages/rules/index.mdx`
+- `public/images/rules/hero.webp`
 - `tests/visual/rules.spec.ts` または既存のVisual test
 - 必要に応じてVisual Review用のtest設定
 
@@ -92,7 +93,7 @@
 
 - ルールトップが、判定数から効果値までを初めて読むPLにも順に理解できる本文になっているか。
 - 11d10のCallout例が、本文の基本判定説明を繰り返すだけでなく、数え方を具体化できているか。
-- hero画像は未提供のため、このPRのレビュー対象外とする。後続で、2個だけのd10、オオサカの景観、人物と机上の緊張感を確認する。
+- hero画像が、2個のd10、オオサカの景観、人物と机上の緊張感を示しつつ、本文より強くなりすぎていないか。
 - ゴールデンルールへのフラグメントリンクが、GitHub Pagesのbase pathを含む実際の生成HTMLで正しく到達できるか。
 - シナリオルール・戦闘ルールへの末尾導線が、未実装の詳細ページの内容をこのページへ混入させずに次の読み先を示せているか。
 - `/rules` 専用のdesignラフを作らないというユーザー指定と、共通designを使う実装が両立しているか。
@@ -103,9 +104,9 @@
 
 - 関連TODOは確認したが、23-2を直接対象とする未対応項目はない。`/support`、データページ、CI、NPC、design運用などの既存TODOはこのissueで扱わない。
 - `docs/requirements/pages.md` と `docs/plan.md` は、準備中にユーザー承認済みの範囲へ更新した。`/rules` の端数処理を削除し、23-2はinitial design draftを作成せず、Visual Review後のdesign正本化をユーザー承認に分離する方針である。
-- `.raw/contents/rules.md` にもinitial design draftを必須とする旧指示が残る。実装前に、issueと同じ「initial draftなし・既存共通design参照」へ更新する。
+- `.raw/contents/rules.md` のinitial design draftを必須とする旧指示は更新済みであり、専用initial draftを作らず既存共通designを参照する。
 - `.raw/contents/rules.md` と `.tmp/review/23-2-rules-page/contents-review-2.md` はGit管理しないローカル作業入力・レビュー記録である。Google Driveへの同期は明示指示があるまで行わない。
-- hero画像は未提供のため、このPRでは表示・レビュー対象外とする。画像生成は後続作業で扱う。ユーザー指定の「デザインラフは不要」はinitial draftだけを省略するものとして扱う。design正本化はcontents reviewが完了するまで行わず、このPRでは`docs/design/`を変更しない。
+- hero画像はユーザー提供の`public/images/rules/hero.webp`を表示する。ユーザー指定の「デザインラフは不要」はinitial draftだけを省略するものとして扱う。design正本化はcontents reviewが完了するまで行わず、このPRでは`docs/design/`を変更しない。
 
 ## ビジュアルレビュー 1
 
@@ -139,6 +140,65 @@
 - [x] mobile screenshotを取得した
 - [x] 共通design参照とactualを比較した
 - [x] hero画像を今回のレビュー対象外として記録した
+- [x] design正本を変更していない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `[中] hero画像の保留方針と、目的・備考に残る表示必須／旧指示の記述が矛盾している。`対象範囲`、`完了条件`、`ビジュアルレビュー 1`は「画像未提供のためこのPRでは対象外」としている一方、`目的`はH1直後への表示を現在の必須要件としており、`備考`はinitial design draftの旧指示がrawに残ると記していた。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: ユーザーはhero画像を今回の実装・レビュー対象外とし、`docs/design/`の変更もcontents review完了後まで保留するよう指示した。`対象範囲`、`完了条件`、`レビュー観点`、`ビジュアルレビュー 1`はこの方針と一致するが、`目的`と`備考`には保留前の表現が残る。`.raw/contents/rules.md`のinitial design draft指示はすでに更新済みであり、備考の「残る」は現状と一致しない。
+
+### 対応方針
+
+- hero画像が未提供であるため今回のPRでは表示しないことを、`目的`にも明記する。
+- `備考`の旧initial design draft指示に関する記述を、更新済みの現状に合わせる。
+- 上記は文書整合性のみの修正として扱い、hero画像、`docs/design/`、ページ実装の範囲は広げない。
+
+### 対応完了チェックリスト
+
+- [x] `目的`と`備考`を、hero画像表示と更新済みcontents指示の現状へ一致させる
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### デザイン参照
+
+- design target: `docs/design/global-styles/`、`docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/callout/`
+- reference desktop: 共通design targetのdesktop画像とnotes
+- reference mobile: `docs/design/site-layout/design-mobile.png`、`docs/design/callout/design-mobile.png`
+- notes: hero画像をH1直後へ追加した。ユーザー指示により`docs/design/`の正本は更新しない。
+
+### 成果物
+
+- actual desktop: `test-results/visual/rules-desktop.png`
+- actual mobile: `test-results/visual/rules-mobile.png`
+- report: `tests/visual/rules.spec.ts`
+
+### レビュー結果
+
+| 領域         | 判定   | 差分                                                                                   | 対応 |
+| ------------ | ------ | -------------------------------------------------------------------------------------- | ---- |
+| hero画像     | OK     | desktop・mobileともに本文幅へ収まり、意味のあるalt、`eager`、captionなしで表示される。 | 不要 |
+| 本文・見出し | OK     | hero追加後もH2/H3、PageToc、Callout、末尾導線の読み順を維持する。                      | 不要 |
+| desktop      | OK     | hero、本文、例、右PageToc、左SiteMenuに横overflowがない。                              | 不要 |
+| mobile       | OK     | hero、例の本文、MobilePageTocが390px幅で折り返され、横overflowがない。                 | 不要 |
+| design正本   | 対象外 | ユーザー指示により`docs/design/`を変更しない。                                         | 不要 |
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshotを取得した
+- [x] mobile screenshotを取得した
+- [x] 共通design参照とactualを比較した
+- [x] hero画像の表示・alt・loading・captionを確認した
 - [x] design正本を変更していない
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

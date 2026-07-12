@@ -30,10 +30,21 @@ async function expectRulesContent(page: Page) {
     "11個の10面体ダイス",
   );
   await expect(article.locator("[data-callout-type='example']")).toContainText(
+    "1, 1, 3, 4, 5, 5, 7, 8, 10, 10, 10",
+  );
+  await expect(article.locator("[data-callout-type='example']")).toContainText(
     "達成値は6、効果値は5",
   );
+  await expect(article).toContainText("基準値の上限は 9、下限は 1");
+  const hero = article.locator("img[src$='images/rules/hero.webp']");
+  await expect(hero).toHaveCount(1);
+  await expect(hero).toHaveAttribute(
+    "alt",
+    "机上を転がる2個の10面体ダイスを見つめる、オオサカの裏社会の3人。窓の外に通天閣を思わせる塔が見える。",
+  );
+  await expect(hero).toHaveAttribute("loading", "eager");
   await expect(
-    article.locator("img[src*='/images/rules/hero.webp']"),
+    hero.locator("xpath=ancestor::figure").locator("figcaption"),
   ).toHaveCount(0);
   await expect(
     article.locator("a[href$='introduction#h-f3926bd3']"),
@@ -58,10 +69,9 @@ test("rules desktop @rules-desktop", async ({ page }) => {
   await page.goto(visualRoutes.rules);
   await expectRulesContent(page);
   await expectGeneratedPageToc(page, "達成値と効果値");
-  await page.locator("[data-callout-type='example']").scrollIntoViewIfNeeded();
   await hideAstroDevToolbar(page);
   await page.screenshot({
-    fullPage: false,
+    fullPage: true,
     path: `${visualOutputDir}/rules-desktop.png`,
   });
 });
@@ -78,10 +88,9 @@ test("rules mobile @rules-mobile", async ({ page }) => {
   );
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toBeHidden();
-  await page.locator("[data-callout-type='example']").scrollIntoViewIfNeeded();
   await hideAstroDevToolbar(page);
   await page.screenshot({
-    fullPage: false,
+    fullPage: true,
     path: `${visualOutputDir}/rules-mobile.png`,
   });
 });

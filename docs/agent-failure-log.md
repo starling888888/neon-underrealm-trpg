@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Rules page Visual test formatting needed a second correction
+
+#### 2026-07-12
+
+- source: self
+- 発生箇所: `23-2-rules-page` の`tests/visual/rules.spec.ts`
+- 観測した失敗: 同タスク中にVisual testの追加・更新後、`npm run check`のBiome formatterで2回、Playwrightの期待値の改行形式が不一致となった。
+- 一次対応: formatterが要求する複数行形式へ修正し、hero画像の属性検証を再実行する。
+
 ### Rules visual test matched a duplicated heading outside the article
 
 #### 2026-07-12
