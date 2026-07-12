@@ -86,6 +86,51 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Design canonicalization bypassed the visual test capture
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のdesign正本化
+- 観測した失敗: design fixで既存の`tests/visual/scenario-play.spec.ts`によるcaptureを正本化元にすべきところ、独自の`.tmp/design/scenario-play/capture.mjs`を作成して別経路でdesign画像を生成した。
+- 一次対応: 独自capture scriptを破棄し、既存visual testのdesktop / mobile captureを元にdesign画像を正本化した。以後、design fixでは既存visual testのcapture経路を使い、専用capture scriptは作成しない。
+
+### Validity-check request was treated as implementation approval
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のcontents再レビュー回答
+- 観測した失敗: ユーザーが「俺の返答の妥当性確認」と求めた判断依頼を、コンテンツ修正の実装許可と誤認して未承認の本文・MDX・テスト・issue編集を行った。
+- 一次対応: ユーザーの明示的な反映指示があるまで、今回の未コミット差分へ追加の編集・commitを行わない。判断依頼では評価のみを返し、反映は「修正して」「反映して」等の明示指示を待つ。
+
+### PR review draft was not routed through review-to-issue
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のPR #38初回レビュー
+- 観測した失敗: `pr-review-draft`でdocument / technical review記録を作成した後、必須の`review-to-issue`を実行せず、レビューの検証・issueへの正式取り込みを行わなかった。
+- 一次対応: ユーザーがPRレビューを無視すると指定したため、当該指摘はissueへ取り込まない。以後のPR reviewでは、結果報告前に`review-to-issue`の完了を確認する。
+
+### Contents instruction omitted reviewable Markdown body
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` の `.raw/contents/scenario-play.md` 作成
+- 観測した失敗: ユーザーが評価すべきシーン進行ルールの本文を作らず、内容指示をHTMLコメントへ閉じ込めたため、Markdown本文がH1だけになった。
+- 一次対応: failure logへ記録した。ユーザーが明示的に修正を指示した後、本文として読めるシーン進行ルールを作成し、HTMLコメントは解釈・実装指示だけに限定する。
+
+### Commit message language did not follow repository convention
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のサイトメニュー順序変更commit
+- 観測した失敗: 直近の英語コミットメッセージ形式を確認せず、日本語のcommit messageを作成した。
+- 一次対応: ユーザー許可のsoft resetで当該commitを取り消し、同一差分へ英語のcommit messageを付けて作り直す。
+
 ### Rules page Visual test formatting needed a second correction
 
 #### 2026-07-12

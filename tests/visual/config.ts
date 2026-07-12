@@ -17,6 +17,7 @@ export const visualRoutes = {
   home: "./",
   introduction: "introduction/",
   rules: "rules/",
+  scenarioPlay: "rules/scenario-play/",
   world: "world/",
   characterMaking: "character-making/",
   releaseNotes: "release-notes/",

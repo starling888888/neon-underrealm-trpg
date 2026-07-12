@@ -75,6 +75,18 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` のdesign / Visual Review / UI実装関連タスクに紐づける。適切な既存planがない場合は、design運用整理タスクを追加する
   - handling plan: 既存design targetごとに、mode / target / referenced SSoT / existing design constraints / out of scope / comparison points / generation source / open questions を必要範囲で追記する。既存design画像そのものは、このTODOだけでは変更しない
 
+- [ ] サイトメニュー順序変更を既存designへ一括反映する
+  - source: `24-2-scenario-play-page` 準備中のユーザー指示
+  - classification: design follow-up
+  - plan: `docs/plan.md` のdesign / Visual Review / UI実装関連タスクに紐づける。適切な一括design更新タスクを定めてから実施する
+  - handling plan: `ルール`を`データ`の上に置く現行メニュー順序を、関連する既存design画像・notesへまとめて反映する。個別ページ作成中に部分的なdesign更新は行わない。
+
+- [ ] 戦闘ルール実装後、シナリオ終了後処理から死亡・覚悟の詳細へフラグメントリンクを置く
+  - source: `24-2-scenario-play-page` のユーザー指示
+  - classification: cross-page follow-up
+  - plan: `docs/plan.md` の `25-2-battle-page`
+  - handling plan: 戦闘ルールの「気絶と死亡」「覚悟」に相当する最終見出しを実装してbuild後のIDを確認する。`src/pages/rules/scenario-play.mdx` と `.raw/contents/scenario-play.md` の戦闘参照を、そのIDを使う`/rules/battle#...`へのリンクへ更新し、生成HTMLでbase pathを含むリンク先を検証する。
+
 - [ ] 現在地ハイライト目視確認用のダミーMDXページを、本実装時に削除または置き換える
   - source: `15-current-menu-highlight` 実装中の目視確認用追加
   - classification: follow-up
