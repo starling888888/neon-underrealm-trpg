@@ -58,6 +58,9 @@ async function expectBattleContent(page: Page) {
     "href",
     "/neon-underrealm-trpg/data",
   );
+  await expect(
+    article.getByRole("link", { name: "キャラクターメイキングの戦闘技能表" }),
+  ).toHaveAttribute("href", "/neon-underrealm-trpg/character-making#戦闘技能");
   await expect
     .poll(async () => {
       return await page.evaluate(
