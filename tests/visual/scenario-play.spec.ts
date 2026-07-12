@@ -32,6 +32,13 @@ async function expectScenarioPlayContent(page: Page) {
     "その情報収集シーンに登場している各PCは、シーンごとに1回だけ判定できます",
   );
   await expect(article).toContainText(
+    "戦闘での死亡と、縁を覚悟にする処理は戦闘ルールで扱います",
+  );
+  await expect(article.getByRole("link", { name: "外道堕ち" })).toHaveAttribute(
+    "href",
+    /world#h-c03a6722$/,
+  );
+  await expect(article).toContainText(
     "シナリオ中に増えず、使った分だけ減ります",
   );
   const hero = article.locator("img[src$='images/scenario-play/hero.webp']");
