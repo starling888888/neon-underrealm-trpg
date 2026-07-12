@@ -42,6 +42,12 @@ Use when drafting or reviewing contents markdown locally for `.raw/contents/*.md
 
 This skill checks user instructions, local `src/pages/`, the current task issue, requirements, plan, out-of-scope, `.raw/contents/`, and `.raw/v1.0/` in that priority order. It treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, and uses HTML comments for agent-facing instructions and lower-priority source conflict records. It does not implement pages.
 
+### `contents-review`
+
+Use only when the user explicitly asks for a final review after contents feedback.
+
+This skill runs the local beginner and expert contents reviewers. They read the target contents and evaluate supplied screenshots or an already-running preview route without opening other target-site pages. The main agent stores their reports under `.tmp/review/<issue-slug>/` and stops before fixes.
+
 ### `remote-contents-markdown-authoring`
 
 Use when ChatGPT drafts or reviews contents markdown from a remote repository snapshot.
