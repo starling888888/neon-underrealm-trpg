@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Contents reviewers received current conversation history
+
+#### 2026-07-13
+
+- source: user
+- 発生箇所: `27-2-data-index-page` のcontents review
+- 観測した失敗: contents reviewerを`fork_turns="all"`で起動し、現在会話の履歴と親agentが要約した過去のフィードバックを渡した。レビュー対象としてユーザーが個別に指定していない会話情報が判定へ混ざり、独立したレビューにならなかった。
+- 一次対応: `contents-review`で`fork_turns="none"`を必須化し、ユーザーが当該レビューで明示指定した入力だけをreview packetとして渡すよう変更した。beginner / expert reviewer定義にも指定外の会話・資料を使わない境界を追記した。
+
 ### Design canonicalization bypassed the visual test capture
 
 #### 2026-07-12

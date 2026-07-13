@@ -27,6 +27,10 @@ Do not use for:
 
 Run this skill only after the user asks for the review.
 
+Each contents reviewer must be independent from the current conversation. Do not pass conversation history, inferred user intent, previous feedback, or a parent-agent summary to a reviewer.
+
+Pass only a review input packet that the user explicitly identifies for that review. If the user does not identify a target source, preview URL, screenshot, or review scope, ask for it. Do not infer it from the active task or prior conversation.
+
 Do not change the reviewed contents, source code, issue, TODO, plan, design, or Google Drive content.
 
 Use screenshots for visual findings. Do not review HTML, DOM, or CSS structure. Read the target contents text as well.
@@ -37,12 +41,13 @@ The reviewed page must stand on its own. Do not open another route in the target
 
 1. Run `git status --short`.
 2. Confirm the target `issue-slug` from the user instruction or the matching local issue file.
-3. Confirm at least one review input:
+3. Confirm that the user explicitly identified the target source, preview URL, screenshot, or review scope. Do not reuse a previous-turn target.
+4. Confirm at least one review input:
    - a target source file path,
    - an already-running preview URL and target route, or
    - supplied screenshot paths.
-4. Do not start, stop, or change a dev server or preview server in this workflow.
-5. Create `.tmp/review/<issue-slug>/` when absent.
+5. Do not start, stop, or change a dev server or preview server in this workflow.
+6. Create `.tmp/review/<issue-slug>/` when absent.
 
 When only a source file is available, allow text review. Record the visual review as unverified. Do not make visual claims without a screenshot.
 
@@ -57,20 +62,22 @@ Use the approved project visual-test workflow or supplied screenshots. Do not cr
 
 ## Workflow
 
-1. Read the target contents source when supplied and the user feedback that the review should validate.
+1. Read only the target contents source and the review input packet explicitly identified by the user for this review.
 2. Capture or collect the required screenshots from the running preview server when available.
 3. Spawn `contents_beginner_reviewer` and `contents_expert_reviewer` in parallel.
-4. Give both reviewers:
+4. Spawn each reviewer with `fork_turns="none"`. Do not give either reviewer the current conversation history.
+5. Give both reviewers only this review input packet:
    - target source path when supplied
    - preview URL and target route, or screenshot paths
    - issue slug
-   - current user feedback and review scope
+   - review scope only when the user explicitly supplied it for this review
    - the rule that they must not open other target-site pages or report link failures
-5. Save the Japanese reviewer responses as:
+6. Do not add a parent-agent interpretation, a summary of prior feedback, or any information that the user did not explicitly designate as reviewer input.
+7. Save the Japanese reviewer responses as:
    - `.tmp/review/<issue-slug>/contents-beginner-review-N.md`
    - `.tmp/review/<issue-slug>/contents-expert-review-N.md`
-6. Save a concise main-agent summary as `.tmp/review/<issue-slug>/contents-review-N.md`.
-7. Report the findings to the user and stop.
+8. Save a concise main-agent summary as `.tmp/review/<issue-slug>/contents-review-N.md`.
+9. Report the findings to the user and stop.
 
 Do not implement fixes from the review. Wait for explicit user instruction.
 
