@@ -26,6 +26,9 @@ async function expectDataContent(page: Page) {
   await expect(
     article.getByRole("heading", { name: "カードの項目", exact: true }),
   ).toHaveCount(1);
+  await expect(
+    article.getByRole("heading", { name: "①基本の一撃", exact: true }),
+  ).toHaveCount(0);
   await expect(article.locator("[data-skill-card]")).toHaveCount(1);
   await expect(legend).toContainText("①基本の一撃");
   await expect(legend).toContainText("②1");
@@ -86,11 +89,18 @@ async function expectDataContent(page: Page) {
     .toBe(0);
 }
 
+async function expectDataPageToc(page: Page) {
+  const tocs = await expectGeneratedPageToc(page, "アイテム");
+
+  await expect(tocs.desktop).not.toContainText("①基本の一撃");
+  await expect(tocs.mobile).not.toContainText("①基本の一撃");
+}
+
 test("data desktop @data-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.data);
   await expectDataContent(page);
-  await expectGeneratedPageToc(page, "アイテム");
+  await expectDataPageToc(page);
   await page.locator("[data-skill-legend]").evaluate((element) => {
     element.scrollIntoView({ block: "start" });
   });
@@ -102,7 +112,7 @@ test("data mobile @data-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.data);
   await expectDataContent(page);
-  await expectGeneratedPageToc(page, "アイテム");
+  await expectDataPageToc(page);
   await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeVisible();
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toContainText(
