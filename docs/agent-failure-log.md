@@ -86,6 +86,42 @@ source種別は以下を使う。
 
 ## 未反映
 
+### MDX-only `any` cast caused repeated build failures
+
+#### 2026-07-13
+
+- source: self
+- 発生箇所: `27-2-data-index-page` の `src/pages/data/index.mdx` にある凡例用`maxLevel` props
+- 観測した失敗: ユーザー指定の文字列値を`any`で渡すため、MDX Component直前へHTMLコメントとTypeScriptの`as any`を置いた。MDXは前者をJSXコメントとして、後者をJavaScript互換のJSDocキャストとして書く必要があり、`npm run build`が2回失敗した。
+- 一次対応: JSXコメントと`/** @type {any} */ (value)`のJSDocキャストへ置き換え、再ビルドで検証する。
+
+### Initial data design draft ignored existing layout and card designs
+
+#### 2026-07-13
+
+- source: user
+- 発生箇所: `27-2-data-index-page` の `docs/design/data/` initial draft
+- 観測した失敗: `/data` のSkillCard凡例と右側説明領域のdesign draftで、既存の`docs/design/skill-card/`が定めるdesktop 3列・mobile 2列のカードgridと、`docs/design/site-layout/`が定めるHeaderを含む既存layoutを比較基準にしなかった。対象領域だけを確認するという指示を、既存layoutを除外してよいという独自判断に置き換え、Headerなし・desktop 2列・mobile 1列のprototypeを作成した。さらに、contents指示が要求していない丸囲み番号のUIを右側説明へ加えた。
+- 一次対応: design artifactの修正はユーザーの明示指示まで行わない。再作成時は、既存Headerとlayout文脈を含むviewport captureを使い、SkillCardのdesktop 3列・mobile 2列の既存gridと、contents本文にある見出し付きの説明を維持する。丸囲み番号など新しい装飾を追加しない。
+
+### Issue-first required handoff was omitted
+
+#### 2026-07-13
+
+- source: user
+- 発生箇所: `27-2-data-index-page` のissue-first準備
+- 観測した失敗: ローカルissueを作成し、必須のissue reviewerを完了した後、`issue-first-development` が定める「作業前準備完了」報告、issue本文の要約、ユーザーへレビューしてほしい点の提示をせずに、designドラフトの準備へ進もうとした。ユーザーのissue承認前にdesign作業を始める誤った順序となり、ユーザーから作業状況を確認されるまで停止地点の逸脱を報告しなかった。
+- 一次対応: design画像、notes、実装コードを作成しないまま停止し、issueへ「issue承認後にdesign-image-generation initial draft modeを実行する」と明記した。本来のissue-first handoffをこの会話で提示し、以後はissue作成とreviewer完了の直後にrequired stopping pointの報告を先に返す。
+
+### Contents reviewers received current conversation history
+
+#### 2026-07-13
+
+- source: user
+- 発生箇所: `27-2-data-index-page` のcontents review
+- 観測した失敗: contents reviewerを`fork_turns="all"`で起動し、現在会話の履歴と親agentが要約した過去のフィードバックを渡した。レビュー対象としてユーザーが個別に指定していない会話情報が判定へ混ざり、独立したレビューにならなかった。
+- 一次対応: `contents-review`で`fork_turns="none"`を必須化し、ユーザーが当該レビューで明示指定した入力だけをreview packetとして渡すよう変更した。beginner / expert reviewer定義にも指定外の会話・資料を使わない境界を追記した。
+
 ### Design canonicalization bypassed the visual test capture
 
 #### 2026-07-12

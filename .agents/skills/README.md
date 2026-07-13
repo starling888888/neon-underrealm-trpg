@@ -46,7 +46,7 @@ This skill checks user instructions, local `src/pages/`, the current task issue,
 
 Use only when the user explicitly asks for a final review after contents feedback.
 
-This skill runs the local beginner and expert contents reviewers. They read the target contents and evaluate supplied screenshots or an already-running preview route without opening other target-site pages. The main agent stores their reports under `.tmp/review/<issue-slug>/` and stops before fixes.
+This skill runs the local beginner and expert contents reviewers. They receive no current conversation history and use only the target and review inputs explicitly identified by the user for that review. They evaluate supplied screenshots or an already-running preview route without opening other target-site pages. The main agent stores their reports under `.tmp/review/<issue-slug>/` and stops before fixes.
 
 ### `remote-contents-markdown-authoring`
 

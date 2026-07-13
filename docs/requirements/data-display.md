@@ -12,6 +12,8 @@
 
 ただし、`/world` のNPC紹介用 `NpcCard` は世界観本文の構成要素として扱い、`21-2-world-page` ではMDX内の静的propsを許容する。NPCのExcel / JSON管理への移行は `42-0-npc-data-normalization` で行う。
 
+実在データではない説明用のスキル凡例・アイテム凡例は、既存のCard ComponentへMDX内の静的propsを渡して表示してよい。凡例のためにExcel、生成JSON、schema、取得層を追加・変更しない。
+
 Markdown / MDX / Astroページでは、簡潔なComponent呼び出しでデータ表示を行えること。
 
 例は以下。
