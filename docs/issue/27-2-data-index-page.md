@@ -198,3 +198,37 @@
 - [x] Visual Reviewテストを更新する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 戦闘ページからデータページのタイミング節へ向けるリンクが、見出し文言から生成される不透明なhash IDを参照している。意味のある固定IDへ置き換える。
+- failure logの今回の自己観測entryが、定義済みsource種別外の`agent`になっている。`self`へ統一する。
+- 凡例の右側リストを局所的に小さくした最終判断が、design notesとVisual Review記録の「通常本文サイズ」という記載と矛盾している。
+- データページの覚悟コスト説明が、リンク先の戦闘ルールにある今生の縁の強化効果と矛盾している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `src/pages/rules/battle.mdx`のタイミング導線と`tests/visual/battle.spec.ts`は`/data#h-e1218826`を参照しており、`src/pages/data/index.mdx`のタイミング見出しには明示IDがない。failure logのsource種別は`user`、`self`、`review`、`unknown`に限定され、今回のentryだけが`agent`である。`docs/design/data/notes.md`と既存Visual Reviewは右側リストを通常本文サイズと記録する一方、`src/styles/prose.css`はdesktop `text-sm`、mobile `text-xs`を適用している。さらに、データページは今生の縁で効果が変わらないと説明するが、戦闘ルールは今生の縁で各覚悟効果が強くなると定義している。
+- current issue scope: いずれも`/data`、`/rules/battle`、対応するdesign・Visual Review記録、今回追加したfailure entryに限定される。
+- TODO routing: なし。
+- failure-log routing: source種別の修正は既存entryの形式是正であり、新たなfailure entryは不要。
+
+### 対応方針
+
+- データページのタイミング見出しへ`skill-timing`固定IDを付け、battle本文、visual test、issue記録をそのIDへ統一する。
+- 既存failure entryのsourceを`self`へ修正する。
+- design notesとVisual Reviewのタイポグラフィ記録を、右側リストだけカード高の抑制のため小さくする最終判断へ合わせる。design画像の正本化は行わない。
+- 今生の縁を覚悟コストにすると効果が強くなる旨へ、データページの説明を戦闘ルールと一致させる。
+
+### 対応完了チェックリスト
+
+- [ ] タイミング導線を`skill-timing`固定IDへ統一する
+- [ ] failure logのsourceを`self`へ統一する
+- [ ] design notesとVisual Reviewの文字サイズ記録を最終実装へ合わせる
+- [ ] 覚悟コストの今生の縁の説明を戦闘ルールと一致させる
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
