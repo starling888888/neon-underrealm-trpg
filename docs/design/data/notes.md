@@ -34,7 +34,7 @@
 
 - visual direction: 既存の白寄り本文面と低彩度borderを維持する。SkillCardは個別データを読むための密度を保ち、凡例専用の派手な装飾にはしない。
 - layout direction: desktopの中央本文カラムでは、既存SkillCard gridの3列へ凡例カード1列と右側説明領域2列を置く。mobileでは同じgridを2列へ切り替え、凡例カードと右側説明領域を各1列に置く。右側は「カードの項目」の見出しと、通常の順序付きリストを使う。既存Header、desktopのSiteMenuとPageToc、mobileのHeaderとMobilePageToc triggerを表示する。
-- typography direction: Card内の名称、最大LV、短いメタ情報、2×2の詳細枠は既存SkillCard designに従う。右側の説明は通常本文のサイズと行間を保ち、項目名だけを太字にして、カードのラベルと混同させない。
+- typography direction: Card内の名称、最大LV、短いメタ情報、2×2の詳細枠は既存SkillCard designに従う。右側の説明はカード高を抑えるためdesktopでは`text-sm`、mobileでは`text-xs`とし、項目名だけを太字にして、カードのラベルと混同させない。
 - color / accent usage: 青緑accentは既存SkillCardの名称下線と最大LVに限定する。右側の説明には新しい色分けやアイコンを追加しない。重大事項Calloutはこの確認領域に含めない。
 
 ## Existing design constraints

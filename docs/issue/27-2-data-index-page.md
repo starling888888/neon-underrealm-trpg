@@ -117,18 +117,18 @@
 
 ### レビュー結果
 
-| 領域                  | 判定 | 差分                                                       | 対応 |
-| --------------------- | ---- | ---------------------------------------------------------- | ---- |
-| レイアウト            | OK   | desktopはカード1列＋説明2列、mobileは2列。                 | 不要 |
-| 余白                  | OK   | 既存proseとSkillCardのspacingを使用。                      | 不要 |
-| タイポグラフィ        | OK   | 右側は通常の順序付きリストと太字の項目名。                 | 不要 |
-| 色                    | OK   | 既存accentとborderのみ。                                   | 不要 |
-| 配置・整列            | OK   | 右側説明の上端をカードと揃えた。                           | 不要 |
-| レスポンシブ          | OK   | mobile 2列で横overflowなし。説明文は列幅に応じて折り返す。 | 不要 |
-| overflow / scroll     | OK   | desktop・mobileとも横overflowなし。                        | 不要 |
-| 既存デザインとの整合  | OK   | site layoutとSkillCardのgrid方向を維持。                   | 不要 |
-| 既存Componentとの整合 | OK   | 静的propsを既存`SkillCard`へ直接渡した。                   | 不要 |
-| accessibility basics  | OK   | hero alt、見出し、順序付きリスト、内部リンクを確認。       | 不要 |
+| 領域                  | 判定 | 差分                                                                                                  | 対応 |
+| --------------------- | ---- | ----------------------------------------------------------------------------------------------------- | ---- |
+| レイアウト            | OK   | desktopはカード1列＋説明2列、mobileは2列。                                                            | 不要 |
+| 余白                  | OK   | 既存proseとSkillCardのspacingを使用。                                                                 | 不要 |
+| タイポグラフィ        | OK   | 右側はカード高を抑えるため、desktopでは`text-sm`、mobileでは`text-xs`の順序付きリストと太字の項目名。 | 不要 |
+| 色                    | OK   | 既存accentとborderのみ。                                                                              | 不要 |
+| 配置・整列            | OK   | 右側説明の上端をカードと揃えた。                                                                      | 不要 |
+| レスポンシブ          | OK   | mobile 2列で横overflowなし。説明文は列幅に応じて折り返す。                                            | 不要 |
+| overflow / scroll     | OK   | desktop・mobileとも横overflowなし。                                                                   | 不要 |
+| 既存デザインとの整合  | OK   | site layoutとSkillCardのgrid方向を維持。                                                              | 不要 |
+| 既存Componentとの整合 | OK   | 静的propsを既存`SkillCard`へ直接渡した。                                                              | 不要 |
+| accessibility basics  | OK   | hero alt、見出し、順序付きリスト、内部リンクを確認。                                                  | 不要 |
 
 ### 自己修正した項目
 
@@ -140,7 +140,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
 
 ### 対応完了チェックリスト
 
@@ -219,16 +219,16 @@
 
 ### 対応方針
 
-- データページのタイミング見出しへ`skill-timing`固定IDを付け、battle本文、visual test、issue記録をそのIDへ統一する。
+- タイミング導線の固定ID化は、他ページでも未対応のため行わず、現行hash参照を維持する。
 - 既存failure entryのsourceを`self`へ修正する。
 - design notesとVisual Reviewのタイポグラフィ記録を、右側リストだけカード高の抑制のため小さくする最終判断へ合わせる。design画像の正本化は行わない。
-- 今生の縁を覚悟コストにすると効果が強くなる旨へ、データページの説明を戦闘ルールと一致させる。
+- 今生の縁による強化は覚悟の力スキルに限るため、データページの一般的な覚悟コスト説明は変更しない。
 
 ### 対応完了チェックリスト
 
-- [ ] タイミング導線を`skill-timing`固定IDへ統一する
-- [ ] failure logのsourceを`self`へ統一する
-- [ ] design notesとVisual Reviewの文字サイズ記録を最終実装へ合わせる
-- [ ] 覚悟コストの今生の縁の説明を戦闘ルールと一致させる
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] タイミング導線の固定ID化は行わず、現行hash参照を維持する
+- [x] failure logのsourceを`self`へ統一する
+- [x] design notesとVisual Reviewの文字サイズ記録を最終実装へ合わせる
+- [x] 覚悟コストの今生の縁の説明は変更しない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
