@@ -69,6 +69,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `28-2-common-skills-page`
   - handling plan: `requirements.md` とサイドメニューに `/data/common-skills` が追加済みのため、データ表示UIフェーズで共通スキル一覧ページを作成し、スキル一覧Componentまたは同等の表示方針に接続する。
 
+- [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
+  - source: `28-0-common-skills-data` 実装中のユーザー指示
+  - classification: out-of-scope follow-up
+  - plan: `docs/out-of-scope.md` のWebキャラクターシート・DB利用を扱う将来タスク。現時点で対応する `docs/plan.md` 項目はない。
+  - handling plan: キャラクターシート機能がDBなどへスキルIDと取得レベルを保存する前に、Excel入力順による自動採番で同一スキルのIDが変わったことを検出してエラーにする方式を設計する。比較に使う不変キーまたは移行マッピング、既存保存データとの照合時点、エラー表示、移行手順を決定し、ID変更を黙って保存データへ適用しない。
+
 - [ ] Footerからクレジット導線を出すか将来検討する
   - source: `phase-2-prep-doc-agent-ops` Group 12
   - classification: low-priority follow-up
