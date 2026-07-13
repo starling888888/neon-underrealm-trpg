@@ -2,12 +2,12 @@
 
 ## Mode
 
-- initial draft
+- design fix
 
 ## Target
 
 - page / component: `SkillCard` と、後続の `SkillList` が配置する一覧gridの見え方。desktopは既存のHeader、左SiteMenu、右PageTocを含む。
-- route: なし。実サイトを読み込まない独立HTML prototype
+- route: `/-local/skill-cards/`
 - viewport:
   - desktop: `1440x1200`
   - mobile: `390x900`
@@ -67,13 +67,19 @@
 
 ## Generation source
 
-- prototype or generator source: `.tmp/design/skill-card/prototype.html` と `.tmp/design/skill-card/capture.mjs`
-- source branch / commit when applicable: `27-1-skill-card-component` / `a18fc92`
-- route when applicable: なし
-- viewport:
-  - `design-desktop.png`: `1440x1200`、3列
-  - `design-mobile.png`: `390x900`
-- prototype path / prompt summary / capture notes: 代表的なスキル値だけを使う独立HTML/CSS prototypeをPlaywrightでviewport captureする。desktopは既存のHeader、左SiteMenu、右PageTocの見た目だけを再現し、実サイトのrouteやComponentは読み込まない。効果欄には10文字、改行なし200文字、2回改行した300文字の表示例を置く。
+- initial draft: `.tmp/design/skill-card/prototype.html` と `.tmp/design/skill-card/capture.mjs`
+- canonicalization: 実装済みの`/-local/skill-cards/`を、desktop 3列・mobile 2列でcaptureする。
+
+<!-- visual-canonicalization:start -->
+
+- command: `npm run visual:canonicalize -- skill-card --route /-local/skill-cards/`
+- source branch: `27-1-skill-card-component`
+- source commit: `e3c3e4ed42ed9dc9a02ae2a555d4c6f38d80113d`
+- route: `/-local/skill-cards/`
+- viewport: desktop 1440x1200, mobile 390x900
+- capture manifest: `test-results/visual/capture-manifest.json`
+
+<!-- visual-canonicalization:end -->
 
 ## Open questions
 
