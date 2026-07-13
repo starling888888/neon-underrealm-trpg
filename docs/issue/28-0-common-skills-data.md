@@ -31,12 +31,12 @@
   - `最大レベル` は正の整数、`名称`、`対象`、`概要`、`効果` は空欄不可とする。`技能`、`コスト`、`取得制限`、`射程`、`使用制限` は空欄を許可し、生成JSONでは `null` とする。`Pv` など判定を伴わないスキルでは `技能` を空欄にする。
   - 改行を許可するフィールドとLF正規化の扱い、空行・未知ヘッダー・途中空行のエラーを定義する。
   - `sourceOrder` はExcelの2行目を1とする全スキル共通の正の連番かつ一意な値とする。生成JSONの各カテゴリ配列は、そのカテゴリのExcel入力順を保持し、後続UIはその配列順を独自に並び替えず表示する。
-  - カテゴリ内のタイミンググループは、攻撃、`R`、`Pv`、`M`、`SU`、`INI`、`CU`、`Aa`、`Ra`、`D`、`SP` の順を推奨する。順序の逆転は変換エラーにせず、カテゴリ、Excel行番号、スキル名を含むWarningを標準エラー出力へ出す。
+- カテゴリ内のタイミンググループは、攻撃、`R`、`Pv`、`M`、`SU`、`INI`、`CU`、`Aa`、`Ra`、`D`、`SP` の順を推奨する。攻撃グループには `A-A`、`×-A`、`A-×`、`☆-A`、`A-☆`、`○-○` を含め、これら詳細同士にWarning順は設けない。順序の逆転は変換エラーにせず、カテゴリ、Excel行番号、スキル名を含むWarningを標準エラー出力へ出す。
   - 出力先を `data/generated/common-skills.json` とし、`dataName`、内容が変わった時だけ更新する `updatedAt`、`bonus`、`basic`、`advanced` を固定キーに持つカテゴリ別の `data` オブジェクトを持つ形式を定義する。
   - スキルIDは常に変換時に自動採番する。共通スキルは `skill-common-{category}-{normalizedTiming}-{index}` とする。後続タスクでは、流儀スキルを `skill-ryugi-{ryugiId}-{category}-{normalizedTiming}-{index}`、生き様スキルを `skill-ikizama-{ikizamaId}-{category}-{normalizedTiming}-{index}` とする。初期スコープでは入力順の変更でIDと個別アンカーが変わることを許可する。この共通方針に合わせ、`docs/requirements/data-id-policy.md` と `docs/game-design/skills.md` を同一タスクで更新する。
   - `Skill` の出力フィールドを、`id`、`owner: "common"`、`category`、`name`、`maxLevel`、`timing`、`cost`、`proficiency`、`acquisitionRestriction`、`target`、`range`、`usageRestriction`、`summary`、`effect`、`sourceOrder` とする。`cost`、`proficiency`、`acquisitionRestriction`、`range`、`usageRestriction` は `string | null`、ほかは `string` または `number` とする。
 - `src/lib/schemas/skill.ts` に、共通スキルで使う `Skill` と `CommonSkillsJson` のZodスキーマ、TypeScript型、parse / assert helperを追加する。
-  - 生成JSONの必須項目、固定カテゴリキー、`owner: "common"`、承認済みのID形式、カテゴリ、タイミング、正の最大レベル、nullable項目、LF改行、ID重複、全カテゴリにわたる `sourceOrder` の連番・一意性、カテゴリ配列内の昇順を検証する。
+- 生成JSONの必須項目、固定カテゴリキー、`owner: "common"`、承認済みのID形式、カテゴリ、タイミング、正の最大レベル、nullable項目、JSTオフセット `+09:00` を持つ `updatedAt`、LF改行、ID重複、全カテゴリにわたる `sourceOrder` の連番・一意性、カテゴリ配列内の昇順を検証する。
   - 既存の `SkillCard.astro` が必要とする表示項目を、JSONから欠落させない。
 - `scripts/convert-common-skills/main.ts` と責務分離した `scripts/convert-common-skills/lib.ts` を追加し、Excel入力を読み込み、行番号を含む入力エラーを返し、生成JSONを出力する。
 - `src/lib/data/common-skills.ts` に、Git管理された生成JSONを読み込み、カテゴリ別スキル配列を返す共通スキル一覧用の取得関数を追加する。
@@ -60,7 +60,7 @@
 - [x] `docs/conversion/common-skills.md` が、確認済みの12列入力契約、ID・表示順・出力JSON・検証・テスト方針を定義している。
 - [x] 共通スキルIDを `skill-common-{category}-{normalizedTiming}-{index}` とし、関連SSoTを同一タスクで更新する範囲が承認されている。
 - [ ] 共通スキルの生成JSONが `data/generated/common-skills.json` にあり、カテゴリ別の `data` オブジェクトでExcelなしのサイトbuildに必要なデータを提供できる。
-- [ ] `Skill` と `CommonSkillsJson` のZodスキーマが、固定カテゴリキー、出力項目、`owner: "common"`、必須・nullable項目、ID重複、カテゴリ値、タイミング表記、最大レベル、改行正規化、カテゴリ別の表示順を検証する。
+- [ ] `Skill` と `CommonSkillsJson` のZodスキーマが、固定カテゴリキー、出力項目、`owner: "common"`、必須・nullable項目、ID重複、カテゴリ値、タイミング表記、最大レベル、JSTオフセット `+09:00` を持つ `updatedAt`、改行正規化、カテゴリ別の表示順を検証する。
 - [ ] 変換スクリプトが `.raw/data/common-skills.xlsx` の `common-skills` シートから生成JSONを作り、入力エラーには列または行番号を含める。
 - [ ] データ取得層が生成JSONを読み込み、後続の共通スキル一覧ページが利用できるカテゴリ別スキル配列を返す。
 - [ ] 変換・スキーマ・取得層のテストが、現在の1件のデータ、カテゴリ別 `data` オブジェクト、入力順による自動採番、必須項目欠落、重複ID、不正カテゴリ、不正タイミング、`技能` を含む空欄の`null`化、改行のLF正規化、`owner`、カテゴリ別の表示順、タイミング順逆転時のWarningを検証する。
