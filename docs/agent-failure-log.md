@@ -522,3 +522,12 @@ source種別は以下を使う。
 - 発生箇所: `26-2-advancement-page` のPR #40再レビュー時の`gh pr view`
 - 観測した失敗: `gh pr view` は承認済みcommand prefixだったにもかかわらず、sandbox内の最初の接続失敗をsandbox外実行が必要な根拠と誤認し、`require_escalated`を付けて不要な承認を求めた。ユーザーはcommit・push・local reviewer呼出しを指示しており、追加承認を求める必要はなかった。
 - 一次対応: 承認済みprefixのcommandは、接続失敗後も`require_escalated`を追加せずに扱う。PR再レビューでは、取得済みのremote headとlocal diffでreviewerを起動し、追加のGitHub API読取りは必要性が明確な場合だけ行う。
+
+### Biome formatter write did not apply
+
+#### 2026-07-13
+
+- source: agent self-report
+- 発生箇所: `27-1-skill-card-component` の`tests/visual/skill-card.spec.ts`
+- 観測した失敗: `npm run check` が新規Visual testのBiome format差分で失敗した。続けて `npm exec biome format --write tests/visual/skill-card.spec.ts` を実行したが、差分を表示するだけで書込みが行われず、同じformat errorが残った。
+- 一次対応: formatterが示した改行・インデントを`apply_patch`で反映し、`npm run check`で再確認する。formatterのwrite実行を前提にせず、失敗時は差分とファイル内容を照合して手動修正後に検証する。
