@@ -2,15 +2,15 @@
 
 ## Mode
 
-- initial draft
+- design fix（reviewed implementationからcanonicalize）
 
 ## Target
 
 - page / component: `/data` の「スキルの見方」内に置くSkillCard凡例と、その右側の項目説明領域。
 - route: `/data`
 - viewport:
-  - desktop: `1440x1200` viewport内で、既存Header、SiteMenu、中央本文、PageTocを含めてcaptureする。full-page captureは行わない。
-  - mobile: `390x900` viewport内で、既存Headerと中央本文を含めてcaptureする。full-page captureは行わない。
+  - desktop: `1440x1200`。凡例領域へスクロールしてcaptureするため、Headerは画像に含めない。SiteMenu、中央本文、PageTocを含める。full-page captureは行わない。
+  - mobile: `390x900`。凡例領域へスクロールしてcaptureするため、Headerは画像に含めない。中央本文を含める。full-page captureは行わない。
 - states:
   - desktop: 既存SkillCard gridの3列を使い、左1列にSkillCard凡例、右2列にカード項目の順序付き説明を置く。
   - mobile: 既存SkillCard gridの2列を使い、左1列にSkillCard凡例、右1列にカード項目の順序付き説明を置く。
@@ -40,7 +40,7 @@
 ## Existing design constraints
 
 - `global-styles` の白寄り背景、暗い本文色、低彩度border、青緑accent、system fontを維持する。
-- `site-layout` のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。full-page画面は使わないが、viewport captureには既存Headerと該当するlayout railsを含める。
+- `site-layout` のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。正本captureは凡例領域に限定するためHeaderは映さず、既存layoutを崩さないことだけを制約として扱う。
 - `SkillCard` は既存の縦長・高密度なカードを使う。名称、`最大LV`、メタ情報、取得制限、使用制限、対象、射程、概要、効果の表示順を変えない。右側の説明も「取得制限」「使用制限」「対象」「射程」を個別項目として扱い、項目名は「効果」だけにする。
 - 説明用のスキル凡例は実在データではない静的propsを既存`SkillCard`へ渡す。凡例専用Componentは作らない。
 - カードの右側に置く説明領域は、`.raw/contents/data.md` の「カードの項目」指示をもとにする。カード内へ改めてラベルを増やすためのUIではない。`①`は凡例カードの名称用の文字列であり、右側リストの番号装飾には使わない。
@@ -64,11 +64,19 @@
 
 ## Generation source
 
-- prototype or generator source: standalone HTML/CSS prototypeを使うinitial draft。実サイトや未実装の`/data` routeはcaptureしない。
-- source branch / commit when applicable: `27-2-data-index-page` / `93e8814`
-- route: `/data`
-- viewport: desktop `1440x1200`、mobile `390x900`。viewport screenshotを使い、full-page screenshotを使わない。
-- prototype path / prompt summary / capture notes: `.tmp/design/data/prototype.html` と `.tmp/design/data/capture.mjs`。既存Headerとlayout文脈を含むviewport screenshotで、`design-desktop.png` と `design-mobile.png` を生成した。heroを含むページ全体はcaptureしない。
+- initial draft source: standalone HTML/CSS prototype。`.tmp/design/data/prototype.html` と `.tmp/design/data/capture.mjs`を使い、既存Headerとlayout文脈を含むviewport screenshotで初期画像を生成した。
+- canonicalization source: reviewed implementationの`/data`を、approved visual capture workflowでdesktop・mobileともにcaptureする。heroを含むページ全体はcaptureしない。
+
+<!-- visual-canonicalization:start -->
+
+- command: `npm run visual:canonicalize -- data --route /data/`
+- source branch: `27-2-data-index-page`
+- source commit: `209e19d72609da899cca95516d64814a6d688497`
+- route: `/data/`
+- viewport: desktop 1440x1200, mobile 390x900
+- capture manifest: `test-results/visual/capture-manifest.json`
+
+<!-- visual-canonicalization:end -->
 
 ## Open questions
 
