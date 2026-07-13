@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] 現在地ハイライト目視確認用のダミーMDXページ`/data/index.mdx`を、本実装時に削除または置き換える
+  - completed: 2026-07-13 via PR #42 / `27-2-data-index-page`
+  - source: `15-current-menu-highlight` 実装中の目視確認用追加
+  - classification: follow-up
+  - plan: `docs/plan.md` の `27-2-data-index-page`
+  - handling: `src/pages/data/index.mdx`をデータトップページの本実装へ置き換えた。
+
 - [x] 戦闘ルール実装後、シナリオ終了後処理から死亡・覚悟の詳細へフラグメントリンクを置く
   - completed: 2026-07-12 via PR #39 / `25-2-battle-page`
   - source: `24-2-scenario-play-page` のユーザー指示

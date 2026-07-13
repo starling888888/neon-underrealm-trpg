@@ -19,7 +19,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/27-2-data-index-page.md`
 - `docs/requirements/data-display.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/out-of-scope.md`
