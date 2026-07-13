@@ -19,7 +19,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/27-1-skill-card-component.md`
+- 完了issue履歴: `docs/issue/done/phase-3/27-1-skill-card-component.md`
 - `docs/requirements/data-display.md`
 - `docs/game-design/skills.md`
 - `docs/out-of-scope.md`
