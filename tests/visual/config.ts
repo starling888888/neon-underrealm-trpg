@@ -22,6 +22,7 @@ export const visualRoutes = {
   advancement: "advancement/",
   world: "world/",
   characterMaking: "character-making/",
+  data: "data/",
   releaseNotes: "release-notes/",
   mdxTest: "-local/mdx-test/",
   callouts: "-local/callouts/",

@@ -179,6 +179,51 @@
   font-weight: 700;
 }
 
+[data-skill-legend] {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--space-4);
+  margin-block: var(--space-6) var(--space-10);
+}
+
+[data-skill-legend] > [data-skill-card] {
+  grid-column: span 1;
+}
+
+.skill-legend-guide {
+  grid-column: span 2;
+  min-width: 0;
+}
+
+.prose .skill-legend-guide > h3 {
+  margin-block-start: var(--space-2);
+}
+
+.prose .skill-legend-guide > ol {
+  margin-block: var(--space-4) 0;
+  font-size: var(--text-sm);
+}
+
+.prose .skill-legend-guide > ol > li {
+  line-height: var(--line-height-base);
+}
+
+@media (max-width: 48rem) {
+  [data-skill-legend] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .skill-legend-guide {
+    grid-column: span 1;
+  }
+
+  .prose .skill-legend-guide > ol {
+    font-size: var(--text-xs);
+  }
+}
+
 @media (max-width: 640px) {
   .prose h1 {
     font-size: var(--text-2xl);

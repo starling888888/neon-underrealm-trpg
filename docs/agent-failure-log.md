@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### MDX-only `any` cast caused repeated build failures
+
+#### 2026-07-13
+
+- source: agent
+- 発生箇所: `27-2-data-index-page` の `src/pages/data/index.mdx` にある凡例用`maxLevel` props
+- 観測した失敗: ユーザー指定の文字列値を`any`で渡すため、MDX Component直前へHTMLコメントとTypeScriptの`as any`を置いた。MDXは前者をJSXコメントとして、後者をJavaScript互換のJSDocキャストとして書く必要があり、`npm run build`が2回失敗した。
+- 一次対応: JSXコメントと`/** @type {any} */ (value)`のJSDocキャストへ置き換え、再ビルドで検証する。
+
 ### Initial data design draft ignored existing layout and card designs
 
 #### 2026-07-13

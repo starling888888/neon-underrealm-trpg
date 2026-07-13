@@ -25,6 +25,9 @@ async function expectBattleContent(page: Page) {
   await expect(
     article.getByRole("heading", { name: "攻撃基準値と気合" }),
   ).toHaveCount(1);
+  await expect(
+    article.getByRole("heading", { name: "クロスコンボ" }),
+  ).toHaveCount(1);
   await expect(article.getByRole("heading", { name: "掛け合い" })).toHaveCount(
     1,
   );
@@ -54,10 +57,16 @@ async function expectBattleContent(page: Page) {
   await expect(
     hero.locator("xpath=ancestor::figure").locator("figcaption"),
   ).toHaveCount(0);
-  await expect(article.getByRole("link", { name: "データ" })).toHaveAttribute(
-    "href",
-    "/neon-underrealm-trpg/data",
-  );
+  await expect(
+    article.getByRole("link", { name: "データ", exact: true }),
+  ).toHaveAttribute("href", "/neon-underrealm-trpg/data");
+  await expect(
+    article.getByRole("link", { name: "スキルのタイミング" }),
+  ).toHaveAttribute("href", "/neon-underrealm-trpg/data#h-e1218826");
+  await expect(article.locator("#cross-combo")).toHaveCount(1);
+  await expect(article).toContainText("コンボ中のどの攻撃でも使えます");
+  await expect(article).toContainText("×-A、☆-A");
+  await expect(article).toContainText("A-×、A-☆");
   await expect(
     article.getByRole("link", { name: "キャラクターメイキングの戦闘技能表" }),
   ).toHaveAttribute("href", "/neon-underrealm-trpg/character-making#戦闘技能");
