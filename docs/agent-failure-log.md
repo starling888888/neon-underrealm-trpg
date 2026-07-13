@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Initial data design draft ignored existing layout and card designs
+
+#### 2026-07-13
+
+- source: user
+- 発生箇所: `27-2-data-index-page` の `docs/design/data/` initial draft
+- 観測した失敗: `/data` のSkillCard凡例と右側説明領域のdesign draftで、既存の`docs/design/skill-card/`が定めるdesktop 3列・mobile 2列のカードgridと、`docs/design/site-layout/`が定めるHeaderを含む既存layoutを比較基準にしなかった。対象領域だけを確認するという指示を、既存layoutを除外してよいという独自判断に置き換え、Headerなし・desktop 2列・mobile 1列のprototypeを作成した。さらに、contents指示が要求していない丸囲み番号のUIを右側説明へ加えた。
+- 一次対応: design artifactの修正はユーザーの明示指示まで行わない。再作成時は、既存Headerとlayout文脈を含むviewport captureを使い、SkillCardのdesktop 3列・mobile 2列の既存gridと、contents本文にある見出し付きの説明を維持する。丸囲み番号など新しい装飾を追加しない。
+
 ### Issue-first required handoff was omitted
 
 #### 2026-07-13
