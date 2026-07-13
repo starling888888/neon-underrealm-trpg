@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Issue-first required handoff was omitted
+
+#### 2026-07-13
+
+- source: user
+- 発生箇所: `27-2-data-index-page` のissue-first準備
+- 観測した失敗: ローカルissueを作成し、必須のissue reviewerを完了した後、`issue-first-development` が定める「作業前準備完了」報告、issue本文の要約、ユーザーへレビューしてほしい点の提示をせずに、designドラフトの準備へ進もうとした。ユーザーのissue承認前にdesign作業を始める誤った順序となり、ユーザーから作業状況を確認されるまで停止地点の逸脱を報告しなかった。
+- 一次対応: design画像、notes、実装コードを作成しないまま停止し、issueへ「issue承認後にdesign-image-generation initial draft modeを実行する」と明記した。本来のissue-first handoffをこの会話で提示し、以後はissue作成とreviewer完了の直後にrequired stopping pointの報告を先に返す。
+
 ### Contents reviewers received current conversation history
 
 #### 2026-07-13
