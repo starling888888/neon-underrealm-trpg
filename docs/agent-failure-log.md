@@ -90,7 +90,7 @@ source種別は以下を使う。
 
 #### 2026-07-15
 
-- source: self
+- source: user
 - 発生箇所: `28-2-common-skills-page` の PR #45 初回レビューにおけるdocument reviewer
 - 観測した失敗: PR metadata・diff・discussionの確認でGitHub connectorを使うべきところ、reviewerが禁止されている`gh`コマンドを1回実行した。ユーザー指摘後、connectorだけでmetadata・diff・issue comments・inline threads・reviewsを再確認した。
 - 一次対応: reviewerへ`gh`禁止を即時共有し、以後のPR reviewとリモート確認をGitHub connectorだけに限定した。
