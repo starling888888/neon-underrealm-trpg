@@ -367,3 +367,13 @@
   - [x] 共通スキル一覧ページに必要なデータ取得処理を策定する
   - [x] 変換スクリプトと検証スキーマのテストを追加する
   - [x] 必須項目、ID重複、カテゴリ値、タイミング表記を検証する
+
+- [x] `28-2-common-skills-page` — 共通スキル一覧ページを作成する
+  - completed: 2026-07-15 via PR #45 / f904aa8
+
+  - [x] designを生成する
+  - [x] `/data/common-skills` ページを作成する
+  - [x] `.raw/contents/common-skills.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
+  - [x] 共通スキル一覧データを表示する
+  - [x] CardContainer / SkillCard の表示方針と整合させる
+  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する

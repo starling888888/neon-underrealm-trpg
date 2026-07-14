@@ -21,12 +21,9 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/28-2-common-skills-page.md`
 - `docs/requirements/data-display.md`
 - `docs/requirements/pages.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
-- `docs/TODO.md`
 - `.raw/contents/common-skills.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/data/notes.md`

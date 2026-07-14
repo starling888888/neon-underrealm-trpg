@@ -39,12 +39,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `41-2-support-page`
   - handling plan: 本作で多数のダイスを使用することからオンラインセッションを推奨し、オンラインセッションの準備と進め方を説明する。特定ツールを必須にせず、Webキャラクターシート、ダイスローラー、戦闘支援機能は作らない。
 
-- [ ] 最初のページ作成タスクで、ローカルコンテンツ作成SKILLを実際に使って動作確認する
-  - source: `local-content-authoring` issue 実装後のユーザー指示
-  - classification: validation follow-up
-  - plan: `docs/plan.md` の `28-2-common-skills-page`
-  - handling plan: `.raw/contents/common-skills.md` を `contents-markdown-authoring` で作成または更新し、ユーザー指示、`src/pages/`、current issue、requirements、plan、out-of-scope、既存`.raw/contents/`、`.raw/v1.0/`の優先順の照合、差異時の停止、正本修正可否のユーザー確認、v1.0文体参照、成果物形式を実作業で確認する。Google Drive同期は、このTODOだけでは実行しない。
-
 - [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
   - source: `17-github-actions-deploy-basic` issue review
   - classification: follow-up
@@ -68,12 +62,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - classification: follow-up
   - plan: `docs/plan.md` の `29-0-ryugi-index-data` / `31-0-ikizama-index-data` 後に、必要なら `29-2-ryugi-index-page` / `31-2-ikizama-index-page` または別のナビゲーション補完タスクで扱う
   - handling plan: 現時点では生成JSONが存在しないため `11-site-menu` では実装しない。`data/generated/ryugi.json` / `data/generated/ikizama.json` と `src/lib/data/ryugi.ts` / `src/lib/data/ikizama.ts` が整った後、手書き固定ではなく生成JSONまたはデータ取得層から流儀・生き様の項目を取得し、サイドメニューへ表示する。
-
-- [ ] `/data/common-skills` のページ作成を計画項目として追跡する
-  - source: `.tmp/11-review.md` / PR #14 review draft
-  - classification: follow-up
-  - plan: `docs/plan.md` の `28-2-common-skills-page`
-  - handling plan: `requirements.md` とサイドメニューに `/data/common-skills` が追加済みのため、データ表示UIフェーズで共通スキル一覧ページを作成し、スキル一覧Componentまたは同等の表示方針に接続する。
 
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
   - source: `28-0-common-skills-data` 実装中のユーザー指示

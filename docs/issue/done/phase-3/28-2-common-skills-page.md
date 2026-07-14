@@ -69,7 +69,7 @@
 - `src/components/_common/CardContainer.astro`
 - 既存のスキル専用一覧Componentの削除
 - `src/pages/data/common-skills.mdx`
-- `docs/issue/28-2-common-skills-page.md`
+- `docs/issue/done/phase-3/28-2-common-skills-page.md`
 - Visual Reviewで必要となるテスト・設定・成果物
 
 ## レビュー観点

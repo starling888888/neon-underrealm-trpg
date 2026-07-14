@@ -23,6 +23,20 @@
 
 ## 完了済み
 
+- [x] 最初のページ作成タスクで、ローカルコンテンツ作成SKILLを実際に使って動作確認する
+  - completed: 2026-07-15 via PR #45 / `28-2-common-skills-page`
+  - source: `local-content-authoring` issue 実装後のユーザー指示
+  - classification: validation follow-up
+  - plan: `docs/plan-done.md` の `28-2-common-skills-page`
+  - handling: `contents-markdown-authoring`で`.raw/contents/common-skills.md`のfrontmatter、本文、HTMLコメントを確認・更新し、CardContainer方針との矛盾を解消した。Google Drive同期はこのTODOの実装範囲に含めなかった。
+
+- [x] `/data/common-skills` のページ作成を計画項目として追跡する
+  - completed: 2026-07-15 via PR #45 / `28-2-common-skills-page`
+  - source: `.tmp/11-review.md` / PR #14 review draft
+  - classification: follow-up
+  - plan: `docs/plan-done.md` の `28-2-common-skills-page`
+  - handling: `/data/common-skills`を生成JSONのカテゴリ順で表示するページとして実装し、CardContainerとSkillCardへ接続した。
+
 - [x] 現在地ハイライト目視確認用のダミーMDXページ`/data/index.mdx`を、本実装時に削除または置き換える
   - completed: 2026-07-13 via PR #42 / `27-2-data-index-page`
   - source: `15-current-menu-highlight` 実装中の目視確認用追加
