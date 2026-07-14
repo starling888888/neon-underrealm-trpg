@@ -1,4 +1,5 @@
 ---
+import CardContainer from "../../components/_common/CardContainer.astro";
 import SkillCard from "../../components/data/SkillCard.astro";
 import AppContainer from "../../layouts/AppContainer.astro";
 
@@ -128,9 +129,9 @@ const skillGroups = [
       skillGroups.map((group) => (
         <section class="skill-card-section" aria-labelledby={`skill-group-${group.heading}`}>
           <h2 id={`skill-group-${group.heading}`}>{group.heading}</h2>
-          <div class="skill-card-grid" aria-label={`${group.heading}の表示例`}>
+          <CardContainer ariaLabel={`${group.heading}の表示例`}>
             {group.skills.map((skill) => <SkillCard {...skill} />)}
-          </div>
+          </CardContainer>
         </section>
       ))
     }
@@ -151,23 +152,9 @@ const skillGroups = [
     margin-top: var(--space-10);
   }
 
-  .skill-card-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: stretch;
-    gap: var(--space-4);
-    margin-top: var(--space-5);
-  }
-
   @media (max-width: 48rem) {
     .skill-card-section {
       margin-top: var(--space-8);
-    }
-
-    .skill-card-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-3);
-      margin-top: var(--space-4);
     }
   }
 </style>

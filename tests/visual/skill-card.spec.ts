@@ -31,6 +31,7 @@ async function expectSkillCardCatalog(page: Page) {
     "Pv",
     "-",
     "危険察知",
+    "最大LV: 2",
   ]);
   await expect(
     selfTargetSkill.locator(".skill-card-detail").nth(2),
@@ -60,7 +61,7 @@ async function expectSkillCardCatalog(page: Page) {
   expect(weights.acquisition).toBeGreaterThan(weights.usage);
 
   const gridHeights = await page
-    .locator(".skill-card-grid")
+    .locator("[data-card-container]")
     .evaluateAll((grids) =>
       grids.map((grid) =>
         Array.from(grid.querySelectorAll("[data-skill-card]"), (card) =>

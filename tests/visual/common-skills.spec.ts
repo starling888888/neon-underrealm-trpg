@@ -4,7 +4,7 @@ import { expectGeneratedPageToc } from "./helpers/page-toc";
 
 async function expectCommonSkillsPage(page: Page) {
   const article = page.locator("article.mdx-layout");
-  const lists = article.locator("[data-skill-list]");
+  const containers = article.locator("[data-card-container]");
   const cards = article.locator("[data-skill-card]");
 
   await expect(page).toHaveTitle(
@@ -25,7 +25,8 @@ async function expectCommonSkillsPage(page: Page) {
   await expect(
     article.getByRole("heading", { name: "上級スキル", exact: true }),
   ).toHaveCount(0);
-  await expect(lists).toHaveCount(2);
+  await expect(containers).toHaveCount(2);
+  await expect(article.locator("[data-skill-list]")).toHaveCount(0);
   await expect(cards).toHaveCount(32);
   await expect(cards.first()).toHaveAttribute("id", "skill-common-bonus-a-001");
   await expect(cards.nth(1)).toHaveAttribute("id", "skill-common-basic-pv-001");

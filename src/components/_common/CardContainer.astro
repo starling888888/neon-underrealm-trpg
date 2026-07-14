@@ -1,20 +1,17 @@
 ---
-import type { Skill } from "../../lib/schemas/skill";
-import SkillCard from "./SkillCard.astro";
-
 interface Props {
-  skills: Skill[];
+  ariaLabel?: string;
 }
 
-const { skills } = Astro.props;
+const { ariaLabel } = Astro.props;
 ---
 
-<div class="skill-list" data-skill-list>
-  {skills.map((skill) => <SkillCard {...skill} anchorId={skill.id} />)}
+<div class="card-container" data-card-container aria-label={ariaLabel}>
+  <slot />
 </div>
 
 <style>
-  .skill-list {
+  .card-container {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
@@ -23,7 +20,7 @@ const { skills } = Astro.props;
   }
 
   @media (max-width: 48rem) {
-    .skill-list {
+    .card-container {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-3);
       margin-top: var(--space-4);

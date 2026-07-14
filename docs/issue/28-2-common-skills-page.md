@@ -43,24 +43,24 @@
 
 ## 完了条件
 
-- [ ] `/data/common-skills` が静的に生成され、共通スキルを既存の生成JSONから表示する。
-- [ ] `CardContainer` がslotで受け取ったカードを配置し、カード表示仕様を重複実装していない。
-- [ ] 個別スキルの生成JSON `id` をHTMLアンカーとして利用できる。
-- [ ] `bonus`、`basic` をこの順に表示し、各カテゴリ内では生成JSONの配列順を維持する。
-- [ ] 現状データがない `advanced` は、見出し・空一覧とも表示しない。
+- [x] `/data/common-skills` が静的に生成され、共通スキルを既存の生成JSONから表示する。
+- [x] `CardContainer` がslotで受け取ったカードを配置し、カード表示仕様を重複実装していない。
+- [x] 個別スキルの生成JSON `id` をHTMLアンカーとして利用できる。
+- [x] `bonus`、`basic` をこの順に表示し、各カテゴリ内では生成JSONの配列順を維持する。
+- [x] 現状データがない `advanced` は、見出し・空一覧とも表示しない。
 - [x] `.raw/contents/common-skills.md` のfrontmatterとHTMLコメントを確認し、本文・カテゴリ指示との矛盾を残していない。Google Drive同期は未実行である。
-- [ ] 実装後にVisual Reviewを行い、既存design targetとの差分をこのissueへ記録する。
+- [x] 実装後にVisual Reviewを行い、既存design targetとの差分をこのissueへ記録する。
 - [ ] 初期designドラフトを作らず、Visual Reviewと人間確認の後に `design-image-generation` のdesign fix modeで `docs/design/common-skills/` を正本化する。
-- [ ] `npm run check` と `npm run build` が通る。
+- [x] `npm run check` と `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、とくに `/data` 配下が壊れていない。
-- [ ] 内部リンクと個別アンカーがGitHub Pagesのサブパス配下でも機能する。
+- [x] 既存ルート、とくに `/data` 配下が壊れていない。
+- [x] 内部リンクと個別アンカーがGitHub Pagesのサブパス配下でも機能する。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
 - [x] `docs/TODO.md` の関連項目と矛盾していない。
-- [ ] `docs/design/data/`、`docs/design/skill-card/`、`docs/design/site-layout/` の既存designと矛盾していない。
+- [x] `docs/design/data/`、`docs/design/skill-card/`、`docs/design/site-layout/` の既存designと矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
@@ -275,6 +275,59 @@
 
 - [x] 共通スキルページの正本化は、ユーザーレビュー後に`docs/design/common-skills/`をdesign fix modeで扱う。
 - [ ] 超横長viewportを`site-layout`の正本として追加する必要がある場合は、別途ユーザー判断後にdesign fix modeで扱う。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 5
+
+### デザイン参照
+
+- design target: `docs/design/skill-card/`
+- reference desktop: `docs/design/skill-card/design-desktop.png`
+- reference mobile: `docs/design/skill-card/design-mobile.png`
+- supporting references: `docs/design/data/notes.md`、`docs/design/site-layout/notes.md`
+- notes: `CardContainer`への責務分離は、カード内の見た目・列数・余白を変えず、カード配置を共通化する変更である。
+
+### 成果物
+
+- actual desktop: `test-results/visual/common-skills-desktop.png`、`test-results/visual/skill-card-desktop.png`
+- actual mobile: `test-results/visual/common-skills-mobile.png`、`test-results/visual/skill-card-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                                    | 対応     |
+| --------------------- | ---- | --------------------------------------------------------------------------------------- | -------- |
+| レイアウト            | OK   | 共通スキルとローカルカタログを`CardContainer`へ集約し、desktop 3列・mobile 2列を維持。  | 対応済み |
+| 配置・整列            | OK   | 同一行のカード高揃えを維持し、slot内のCardが同じ配置規則を使う。                        | 対応済み |
+| レスポンシブ          | OK   | 共通スキル・ローカルカタログともmobile 2列を維持。                                      | 不要     |
+| overflow / scroll     | OK   | 共通スキルdesktop / mobile、ローカルカタログdesktop / mobileで横overflowなし。          | 不要     |
+| 既存デザインとの整合  | OK   | 既存正本の白寄りsurface、border、3列・2列の情報密度を維持。                             | 不要     |
+| 既存Componentとの整合 | OK   | `CardContainer`はslot配置のみ、データ展開・Card props・個別アンカーは呼び出し側へ分離。 | 対応済み |
+| accessibility basics  | OK   | カタログの`aria-label`、ページのH2、PageToc、個別アンカーをVisual Testで確認。          | 対応済み |
+
+### 自己修正した項目
+
+- 旧スキル専用一覧Componentを削除し、`CardContainer`を共通Componentとして追加した。
+- 共通スキルページとローカルカタログがデータ展開・Card生成を担い、`CardContainer`へslotとして渡す形にした。
+- カタログVisual Testの`路地の勘`はfixtureに合わせ、最大LV 2として確認した。
+
+### 人間判断が必要な差分
+
+- `docs/design/skill-card/notes.md`は旧スキル専用一覧Componentの名称を記録している。見た目は変わらないため、design正本・notesの更新はユーザーレビュー後に判断する。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] 共通スキルページの正本化は、ユーザーレビュー後に`docs/design/common-skills/`をdesign fix modeで扱う。
+- [ ] 既存`skill-card` design notesのComponent名を更新する必要がある場合は、ユーザーが判断する。
 
 ### 対応完了チェックリスト
 
