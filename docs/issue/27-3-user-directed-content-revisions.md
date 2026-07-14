@@ -52,25 +52,25 @@
 
 ## 完了条件
 
-- [ ] `.raw/contents/world.md`と`src/pages/world.mdx`に、政治、企業4、裏社会3、独立勢力3を含む`勢力`節がある。政治と各組織は、v1.0ルールブックにある所属、支配状況、活動内容などの要点を説明している。
-- [ ] `/world`の既存NPC紹介が`著名なNPC`節となり、勢力を説明する旧導入文を残さず、著名なNPCを紹介する導入文へ差し替えている。既存のNPCカード内容と表示を維持している。
-- [ ] `.raw/contents/data.md`と`src/pages/data/index.mdx`に、指定された`「スキル名：XX」`の注記がスキル凡例・カード項目の直後にある。
-- [ ] 指定されたwarning Calloutが、タイトル、原則の説明、3項目の順序なしリストを持つ。
-- [ ] 更新したcontents markdownがfrontmatter、HTMLコメント、`矛盾点`節を維持し、`contents-markdown-authoring`の優先順位に従う。
-- [ ] 関連TODOは扱わず、NPC個別画像・Excel / JSON管理のTODOを未対応のまま維持する理由が記録されている。
-- [ ] 既存design targetを参照し、既存の`NpcCard`と`Callout`だけを利用するためdesign画像の新規作成が不要であることを記録している。
-- [ ] `npm run check`が通る。
-- [ ] `npm run build`が通る。
+- [x] `.raw/contents/world.md`と`src/pages/world.mdx`に、政治、企業4、裏社会3、独立勢力3を含む`勢力`節がある。政治と各組織は、v1.0ルールブックにある所属、支配状況、活動内容などの要点を説明している。
+- [x] `/world`の既存NPC紹介が`著名なNPC`節となり、勢力を説明する旧導入文を残さず、著名なNPCを紹介する導入文へ差し替えている。既存のNPCカード内容と表示を維持している。
+- [x] `.raw/contents/data.md`と`src/pages/data/index.mdx`に、指定された`「スキル名：XX」`の注記がスキル凡例・カード項目の直後にある。
+- [x] 指定されたwarning Calloutが、タイトル、原則の説明、3項目の順序なしリストを持つ。
+- [x] 更新したcontents markdownがfrontmatter、HTMLコメント、`矛盾点`節を維持し、`contents-markdown-authoring`の優先順位に従う。
+- [x] 関連TODOは扱わず、NPC個別画像・Excel / JSON管理のTODOを未対応のまま維持する理由が記録されている。
+- [x] 既存design targetを参照し、既存の`NpcCard`と`Callout`だけを利用するためdesign画像の新規作成が不要であることを記録している。
+- [x] `npm run check`が通る。
+- [x] `npm run build`が通る。
 
 ## チェックポイント
 
-- [ ] `/world`と`/data`の既存ルート、PageToc、MobilePageTocが壊れていない。
-- [ ] 新しい内部リンク・画像・assetを追加せず、GitHub Pagesのサブパス公開に影響しない。
-- [ ] 新しい依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] `docs/plan.md`を変更せず、関連する`docs/TODO.md`項目と矛盾していない。
-- [ ] `docs/design/world/`、`docs/design/data/`の既存layoutおよびComponent制約と矛盾していない。
-- [ ] 未追跡の`public/images/data/ryugi/`を含むユーザーの未コミット変更を破壊していない。
+- [x] `/world`と`/data`の既存ルート、PageToc、MobilePageTocが壊れていない。
+- [x] 新しい内部リンク・画像・assetを追加せず、GitHub Pagesのサブパス公開に影響しない。
+- [x] 新しい依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] `docs/plan.md`を変更せず、関連する`docs/TODO.md`項目と矛盾していない。
+- [x] `docs/design/world/`、`docs/design/data/`の既存layoutおよびComponent制約と矛盾していない。
+- [x] 未追跡の`public/images/data/ryugi/`を含むユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
