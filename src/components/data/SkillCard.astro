@@ -5,7 +5,7 @@ interface Props {
   maxLevel: number;
   timing: string;
   cost?: string | null;
-  proficiency: string;
+  proficiency?: string | null;
   acquisitionRestriction?: string | null;
   usageRestriction?: string | null;
   target: string;
@@ -39,13 +39,13 @@ function displayValue(value: string | null | undefined): string {
 <article id={anchorId} class:list={["skill-card", `skill-card-${variant}`]} data-skill-card>
   <header class="skill-card-header">
     <span class="skill-card-name">{name}</span>
-    <span class="skill-card-max-level">最大LV: {maxLevel}</span>
   </header>
 
   <p class="skill-card-meta">
     <span>{timing}</span>
     <span>{displayValue(cost)}</span>
-    <span>{proficiency}</span>
+    <span>{displayValue(proficiency)}</span>
+    <span class="skill-card-max-level">最大LV: {maxLevel}</span>
   </p>
 
   <dl class="skill-card-details">
@@ -84,11 +84,7 @@ function displayValue(value: string | null | undefined): string {
   }
 
   .skill-card-header {
-    display: flex;
     min-width: 0;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-2);
   }
 
   .skill-card-name {
@@ -97,7 +93,8 @@ function displayValue(value: string | null | undefined): string {
     margin: 0;
     border-left: 0;
     color: var(--color-text);
-    font-size: var(--text-xl);
+    font-size: var(--text-sm);
+    font-weight: 800;
     line-height: var(--line-height-tight);
     padding: 0;
   }
@@ -112,7 +109,7 @@ function displayValue(value: string | null | undefined): string {
   }
 
   .skill-card-max-level {
-    flex: 0 0 auto;
+    margin-left: auto;
     color: var(--color-link);
     font-size: var(--text-xs);
     font-weight: 800;
@@ -205,10 +202,6 @@ function displayValue(value: string | null | undefined): string {
     .skill-card {
       min-height: 23.5rem;
       padding: var(--space-3);
-    }
-
-    .skill-card-name {
-      font-size: var(--text-base);
     }
 
     .skill-card-name::after {

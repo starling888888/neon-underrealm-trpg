@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Common skills visual test formatting needed a second correction
+
+#### 2026-07-14
+
+- source: self
+- 発生箇所: `28-2-common-skills-page` の `tests/visual/common-skills.spec.ts`
+- 観測した失敗: Visual Testの初回追加と個別アンカー検証の追加後、Biomeが求める1行形式を手動で外し、同じ `npm run check` のformatter失敗を同一作業中に2回発生させた。
+- 一次対応: formatter差分をそのまま適用し、以後の検証前に新規・変更したTypeScriptの短い呼び出しを既存のBiome形式と照合する。
+
 ### PR title did not follow the issue-slug rule
 
 #### 2026-07-14

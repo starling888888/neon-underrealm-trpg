@@ -45,25 +45,25 @@
 
 ## 完了条件
 
-- [ ] `/data/common-skills` が静的に生成され、共通スキルを既存の生成JSONから表示する。
-- [ ] `SkillList` が受け取った配列を並び替えずに `SkillCard` へ渡し、カード表示仕様を重複実装していない。
-- [ ] 個別スキルの生成JSON `id` をHTMLアンカーとして利用できる。
-- [ ] `bonus`、`basic` をこの順に表示し、各カテゴリ内では生成JSONの配列順を維持する。
-- [ ] 現状データがない `advanced` は、見出し・空一覧とも表示しない。
-- [ ] `.raw/contents/common-skills.md` のfrontmatterとHTMLコメントを確認し、本文・カテゴリ指示との矛盾を残していない。Google Drive同期は未実行である。
-- [ ] 実装後にVisual Reviewを行い、既存design targetとの差分をこのissueへ記録する。
+- [x] `/data/common-skills` が静的に生成され、共通スキルを既存の生成JSONから表示する。
+- [x] `SkillList` が受け取った配列を並び替えずに `SkillCard` へ渡し、カード表示仕様を重複実装していない。
+- [x] 個別スキルの生成JSON `id` をHTMLアンカーとして利用できる。
+- [x] `bonus`、`basic` をこの順に表示し、各カテゴリ内では生成JSONの配列順を維持する。
+- [x] 現状データがない `advanced` は、見出し・空一覧とも表示しない。
+- [x] `.raw/contents/common-skills.md` のfrontmatterとHTMLコメントを確認し、本文・カテゴリ指示との矛盾を残していない。Google Drive同期は未実行である。
+- [x] 実装後にVisual Reviewを行い、既存design targetとの差分をこのissueへ記録する。
 - [ ] 初期designドラフトを作らず、Visual Reviewと人間確認の後に `design-image-generation` のdesign fix modeで `docs/design/common-skills/` を正本化する。
-- [ ] `npm run check` と `npm run build` が通る。
+- [x] `npm run check` と `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、とくに `/data` 配下が壊れていない。
-- [ ] 内部リンクと個別アンカーがGitHub Pagesのサブパス配下でも機能する。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] `docs/TODO.md` の関連項目と矛盾していない。
-- [ ] `docs/design/data/`、`docs/design/skill-card/`、`docs/design/site-layout/` の既存designと矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルート、とくに `/data` 配下が壊れていない。
+- [x] 内部リンクと個別アンカーがGitHub Pagesのサブパス配下でも機能する。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] `docs/TODO.md` の関連項目と矛盾していない。
+- [x] `docs/design/data/`、`docs/design/skill-card/`、`docs/design/site-layout/` の既存designと矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -88,3 +88,151 @@
 - `docs/requirements/data-display.md` と `docs/requirements/pages.md` はカテゴリ順として `bonus`、`basic`、`advanced` を定める。現状データがない `advanced` を空表示しない判断は、同順序を保ったまま最新ユーザー指示に従うものとする。上級スキルを追加する際は、contents指示書とこのページの表示条件を見直す。
 - `28-1-common-skills-components` の計画上のチェックとTODOの完了・done移動は、このissueの実装中には変更しない。merge後のtracking更新で、`28-1` を本issueの統合実装として扱えるか確認する。
 - Git commit / push、Google Drive同期、`docs/plan.md` と `docs/TODO.md` の完了更新は、このissueでは行わない。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/skill-card/`
+- reference desktop: `docs/design/skill-card/design-desktop.png`
+- reference mobile: `docs/design/skill-card/design-mobile.png`
+- supporting references: `docs/design/data/notes.md`、`docs/design/site-layout/notes.md`
+- notes: `advanced` の見出しと一覧を出さないのは、空配列である現状と最新ユーザー指示による意図した差分である。初期designドラフトは作成しない。
+
+### 成果物
+
+- actual desktop: `test-results/visual/common-skills-desktop.png`
+- actual mobile: `test-results/visual/common-skills-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                      | 対応 |
+| --------------------- | ---- | ------------------------------------------------------------------------- | ---- |
+| レイアウト            | OK   | desktopは3列、mobileは2列のSkillList grid。                               | 不要 |
+| 余白                  | OK   | section間とカード間に既存のspace tokenを使用。                            | 不要 |
+| タイポグラフィ        | OK   | SkillCardの既存の情報密度と本文サイズを維持。                             | 不要 |
+| 色                    | OK   | 既存border、白寄りsurface、青緑accentのみを使用。                         | 不要 |
+| 配置・整列            | OK   | 同一grid行のカード高が揃い、長い本文はカード内で自然に伸長する。          | 不要 |
+| レスポンシブ          | OK   | mobile 2列で情報を保持し、desktopは既存rails内で3列を維持。               | 不要 |
+| overflow / scroll     | OK   | desktop・mobileとも横overflowなしをVisual Testで確認。                    | 不要 |
+| 既存デザインとの整合  | OK   | 上級スキルの省略は空データと最新ユーザー指示による意図した差分。          | 不要 |
+| 既存Componentとの整合 | OK   | SkillListは配列順のままSkillCardを呼び出し、生成JSON idをアンカーへ渡す。 | 不要 |
+| accessibility basics  | OK   | H1/H2、PageToc、mobile PageToc、個別アンカー遷移を確認。                  | 不要 |
+
+### 自己修正した項目
+
+- `SkillCard` の `proficiency` が生成JSONのnullを受け取れるようにし、既存の空値表示`-`へ揃えた。
+- 個別アンカーのサブパス遷移をVisual Testへ追加した。
+
+### 人間判断が必要な差分
+
+- 実装スクリーンショットを `docs/design/common-skills/` の正本へ反映するかは、ユーザーレビュー後に判断する。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] ユーザーレビュー後、実装スクリーンショットを直接コピーせず、design fix modeで `docs/design/common-skills/` を正本化する。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### デザイン参照
+
+- design target: `docs/design/skill-card/`
+- reference desktop: `docs/design/skill-card/design-desktop.png`
+- reference mobile: `docs/design/skill-card/design-mobile.png`
+- notes: 最新ユーザー指示により、スキル名はカード内の他の情報と同じ `text-sm` にし、太字を維持する。
+
+### 成果物
+
+- actual desktop: `test-results/visual/common-skills-desktop.png`
+- actual mobile: `test-results/visual/common-skills-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                     | 対応     |
+| --------------------- | ---- | ------------------------------------------------------------------------ | -------- |
+| タイポグラフィ        | OK   | スキル名を`text-xl`から`text-sm`へ下げ、太字を維持した。                 | 対応済み |
+| レイアウト            | OK   | 名称サイズ変更後もdesktop 3列、mobile 2列のgridを維持。                  | 不要     |
+| レスポンシブ          | OK   | mobileで名称だけが拡大されず、カード内の情報密度を維持。                 | 不要     |
+| overflow / scroll     | OK   | desktop・mobileとも横overflowなし。                                      | 不要     |
+| 既存Componentとの整合 | OK   | 名前を太字で識別しつつ、カード内の既存情報順と空値表示を変更していない。 | 不要     |
+
+### 自己修正した項目
+
+- `SkillCard` のスキル名を`text-sm`・`font-weight: 800`へ変更し、mobileの個別拡大指定を削除した。
+
+### 人間判断が必要な差分
+
+- design正本化はユーザーレビュー後に行うため、今回の名称サイズ変更を含めた `docs/design/common-skills/` の正本化は未実行である。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] ユーザーレビュー後、design fix modeで `docs/design/common-skills/` を正本化する。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 3
+
+### デザイン参照
+
+- design target: `docs/design/skill-card/`
+- reference desktop: `docs/design/skill-card/design-desktop.png`
+- reference mobile: `docs/design/skill-card/design-mobile.png`
+- notes: 最新ユーザー指示により、スキル名を単独の最上段へ置き、`最大LV` をタイミング・コスト・技能のメタ行右端へ移動する。
+
+### 成果物
+
+- actual desktop: `test-results/visual/common-skills-desktop.png`
+- actual mobile: `test-results/visual/common-skills-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                   | 対応     |
+| --------------------- | ---- | ---------------------------------------------------------------------- | -------- |
+| タイポグラフィ        | OK   | スキル名は専用の最上段、`最大LV`は同じ情報密度のメタ行右端へ配置。     | 対応済み |
+| レイアウト            | OK   | スキル名が最大幅を使えるため、名称と最大LVが横に競合しない。           | 対応済み |
+| レスポンシブ          | OK   | mobile 2列でも名称と最大LVが別行となり、折り返しリスクを下げている。   | 対応済み |
+| overflow / scroll     | OK   | desktop・mobileとも横overflowなし。                                    | 不要     |
+| 既存Componentとの整合 | OK   | カードの表示項目・表示順は維持し、最大LVの視認性だけをメタ行へ移した。 | 不要     |
+
+### 自己修正した項目
+
+- `SkillCard` のheaderを名称専用にし、`最大LV` をタイミング・コスト・技能と同じメタ行の右端へ移動した。
+
+### 人間判断が必要な差分
+
+- design正本化はユーザーレビュー後に行うため、今回のheaderと最大LVの配置変更を含めた `docs/design/common-skills/` の正本化は未実行である。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] ユーザーレビュー後、design fix modeで `docs/design/common-skills/` を正本化する。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

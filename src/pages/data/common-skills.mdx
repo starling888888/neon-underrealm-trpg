@@ -1,0 +1,25 @@
+---
+layout: ../../layouts/MDXLayout.astro
+title: 共通スキル
+description: すべての仕事人が取得できる共通スキルを、カテゴリ別に確認するページです。
+showPageToc: true
+---
+
+import SkillList from "../../components/data/SkillList.astro";
+import { getCommonSkillsByCategory } from "../../lib/data/common-skills";
+
+export const commonSkills = getCommonSkillsByCategory();
+
+# 共通スキル
+
+プライマリ流儀、生き様を問わず取得できるスキルです。経験点が5点で取得できることに注意してください。ただし取得できるレベルの上限は **格(プライマリ流儀レベルと生き様レベルの合計)の半分** までです。
+
+## 自動習得スキル
+
+全てのPCはキャラクター作成時に以下の `基本の一撃` を自動習得します。経験点を支払う必要はありません。
+
+<SkillList skills={commonSkills.bonus} />
+
+## 初期作成時から取得可能なスキル
+
+<SkillList skills={commonSkills.basic} />
