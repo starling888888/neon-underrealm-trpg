@@ -1,0 +1,26 @@
+{
+  "dataName": "common-skills",
+  "updatedAt": "2026-07-14T18:59:36+09:00",
+  "data": {
+    "bonus": [
+      {
+        "category": "bonus",
+        "name": "基本の一撃",
+        "maxLevel": 1,
+        "timing": "○-○",
+        "cost": "気0",
+        "proficiency": "能動",
+        "acquisitionRestriction": "自動習得",
+        "target": "1体",
+        "range": "武器",
+        "usageRestriction": null,
+        "summary": "仕事人が最初に身につける攻撃スキル。",
+        "effect": "攻撃を行う。",
+        "sourceOrder": 1,
+        "id": "skill-common-bonus-a-001"
+      }
+    ],
+    "basic": [],
+    "advanced": []
+  }
+}

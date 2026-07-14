@@ -59,12 +59,12 @@
 
 - [x] `docs/conversion/skills.md` と `docs/conversion/common-skills.md` が、全スキル共通の入力契約・ID・表示順・出力JSON・検証・テスト方針と、共通スキル設定をそれぞれ定義している。
 - [x] 共通スキルIDを `skill-common-{category}-{normalizedTiming}-{index}` とし、関連SSoTを同一タスクで更新する範囲が承認されている。
-- [ ] 共通スキルの生成JSONが `data/generated/common-skills.json` にあり、カテゴリ別の `data` オブジェクトでExcelなしのサイトbuildに必要なデータを提供できる。
-- [ ] `Skill` と `SkillsJson` のZodスキーマが、全スキル種別共通の出力項目、固定カテゴリキー、設定した `dataName`、必須・nullable項目、ID重複、カテゴリ値、タイミング表記、最大レベル、JSTオフセット `+09:00` を持つ `updatedAt`、改行正規化、カテゴリ別の表示順を検証する。
-- [ ] 汎用変換器を使う共通スキル変換コマンドが、`.raw/data/common-skills.xlsx` の `common-skills` シートから生成JSONを作り、入力エラーには列または行番号を含める。
-- [ ] データ取得層が生成JSONを読み込み、後続の共通スキル一覧ページが利用できるカテゴリ別スキル配列を返す。
-- [ ] 変換・スキーマ・取得層のテストが、現在の1件のデータ、カテゴリ別 `data` オブジェクト、入力順による自動採番、必須項目欠落、重複ID、不正カテゴリ、不正タイミング、`技能` を含む空欄の`null`化、改行のLF正規化、カテゴリ別の表示順、タイミング順逆転時のWarningを検証する。
-- [ ] `npm run convert:common-skills`、`npm run test`、`npm run check`、`npm run build` が通る。
+- [x] 共通スキルの生成JSONが `data/generated/common-skills.json` にあり、カテゴリ別の `data` オブジェクトでExcelなしのサイトbuildに必要なデータを提供できる。
+- [x] `Skill` と `SkillsJson` のZodスキーマが、全スキル種別共通の出力項目、固定カテゴリキー、設定した `dataName`、必須・nullable項目、ID重複、カテゴリ値、タイミング表記、最大レベル、JSTオフセット `+09:00` を持つ `updatedAt`、改行正規化、カテゴリ別の表示順を検証する。
+- [x] 汎用変換器を使う共通スキル変換コマンドが、`.raw/data/common-skills.xlsx` の `common-skills` シートから生成JSONを作り、入力エラーには列または行番号を含める。
+- [x] データ取得層が生成JSONを読み込み、後続の共通スキル一覧ページが利用できるカテゴリ別スキル配列を返す。
+- [x] 変換・スキーマ・取得層のテストが、現在の1件のデータ、カテゴリ別 `data` オブジェクト、入力順による自動採番、必須項目欠落、重複ID、不正カテゴリ、不正タイミング、`技能` を含む空欄の`null`化、改行のLF正規化、カテゴリ別の表示順、タイミング順逆転時のWarningを検証する。
+- [x] `npm run convert:common-skills`、`npm run test`、`npm run check`、`npm run build` が通る。
 - [x] 関連TODOを確認し、ページ作成のTODOは `28-2-common-skills-page` に残す理由が記録されている。
 
 ## チェックポイント
@@ -143,11 +143,11 @@
 
 ### 対応完了チェックリスト
 
-- [ ] 攻撃タイミングの9通りの実表記と `a` 正規化を関連SSoT・Schema・変換器へ反映する。
+- [x] 攻撃タイミングの9通りの実表記と `a` 正規化を関連SSoT・Schema・変換器へ反映する。
 - [x] 全スキル共通の変換契約を `docs/conversion/skills.md` へ移し、`docs/conversion/common-skills.md` を共通スキル設定へ縮小する。
-- [ ] Warningの内部タイミンググループラベルを `A` とする。
-- [ ] `owner` をJSON・Schema・変換器・テストから削除する。
-- [ ] 入力パス、シート名、出力先、`dataName`、ID生成用識別子を設定できる汎用変換器へ分離する。
-- [ ] 共通スキルの生成JSONと取得層を汎用契約へ更新する。
-- [ ] 変換・Schema・取得層のテストを更新する。
-- [ ] `npm run convert:common-skills`、`npm run test`、`npm run check`、`npm run build` が通る。
+- [x] Warningの内部タイミンググループラベルを `A` とする。
+- [x] `owner` をJSON・Schema・変換器・テストから削除する。
+- [x] 入力パス、シート名、出力先、`dataName`、ID生成用識別子を設定できる汎用変換器へ分離する。
+- [x] 共通スキルの生成JSONと取得層を汎用契約へ更新する。
+- [x] 変換・Schema・取得層のテストを更新する。
+- [x] `npm run convert:common-skills`、`npm run test`、`npm run check`、`npm run build` が通る。
