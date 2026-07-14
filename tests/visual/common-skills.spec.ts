@@ -54,6 +54,25 @@ test("共通スキル desktop @common-skills-desktop", async ({ page }) => {
   });
 });
 
+test("共通スキル tablet @common-skills-tablet", async ({ page }) => {
+  await page.setViewportSize(visualViewports.tablet);
+  await page.goto(visualRoutes.commonSkills);
+  await expectCommonSkillsPage(page);
+
+  const columns = await page
+    .locator("[data-card-container]")
+    .first()
+    .evaluate((container) => {
+      return window.getComputedStyle(container).gridTemplateColumns;
+    });
+
+  expect(columns.trim().split(/\s+/)).toHaveLength(2);
+  await page.screenshot({
+    fullPage: true,
+    path: `${visualOutputDir}/common-skills-tablet.png`,
+  });
+});
+
 test("共通スキル mobile @common-skills-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.commonSkills);

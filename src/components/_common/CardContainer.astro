@@ -19,6 +19,12 @@ const { ariaLabel } = Astro.props;
     margin-top: var(--space-5);
   }
 
+  @media (max-width: 63.999rem) {
+    .card-container {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   @media (max-width: 48rem) {
     .card-container {
       grid-template-columns: repeat(2, minmax(0, 1fr));

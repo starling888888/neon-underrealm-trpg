@@ -338,3 +338,83 @@
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `CardContainer`が48rem超で3列固定のため、SiteMenuが残る820px前後ではカード幅が過度に狭くなり、カード最低幅を保つ要件と一致しない。
+- `.raw/contents/common-skills.md` のHTMLコメントが削除済みの`SkillList`を参照し、`CardContainer`へslotとして`SkillCard`を渡す現行の責務分離と矛盾している。
+
+### 判定
+
+- source: local-pr-review（PR #45）
+- classification: valid
+- local validation: `src/layouts/TocPageLayout.astro`は64rem未満かつ48rem超で17remの左レールを残す。`CardContainer`は同じ範囲で3列固定であり、820px標準tablet layoutではカード幅を保てない。`docs/requirements/data-display.md`はカード最低幅を保ったdesktop 3列または4列を定める。
+- local validation: `.raw/contents/common-skills.md`の優先資料・実装指示・矛盾点は`SkillList`を正としているが、current issue、`docs/requirements/data-display.md`、`docs/requirements/pages.md`、実装、`docs/design/common-skills/notes.md`は`CardContainer`を正としている。
+
+### 対応方針
+
+- `CardContainer`をtablet幅で2列へ切り替えるか、layoutのレール幅に対応した最低幅ベースの列数へ調整する。820px程度のtabletで列数、カード可読幅、横overflowを確認するVisual Testを追加する。
+- `contents-markdown-authoring`の手順で`.raw/contents/common-skills.md`のagent向けHTMLコメントを`CardContainer`、呼び出し側の配列展開、`SkillCard`生成へ更新し、矛盾点を再評価する。可視本文とGoogle Driveは変更しない。
+- `docs/design/skill-card/notes.md`の旧`SkillList`記録は既に人間判断待ちとして残っているため、このレビューでは重複してTODO化しない。
+
+### 対応完了チェックリスト
+
+- [x] CardContainerのtablet列数とカード最低幅をlayoutと整合させる
+- [x] 820px程度のtablet viewportで列数、可読幅、横overflowをVisual Testで確認する
+- [x] `.raw/contents/common-skills.md`のagent向け指示をCardContainer方針へ更新する
+- [x] `.raw/contents/common-skills.md`の矛盾点を再評価する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 6
+
+### デザイン参照
+
+- design target: `docs/design/common-skills/`
+- reference desktop: `docs/design/common-skills/design-desktop.png`
+- reference mobile: `docs/design/common-skills/design-mobile.png`
+- supporting reference: `docs/design/site-layout/notes.md` のtablet `820x1180` layout
+- notes: ユーザー承認済みのレビュー指摘 1 に従い、左SiteMenuが残るtablet幅ではCardContainerを2列へ切り替える。desktop 3列とmobile 2列の正本は変更しない。
+
+### 成果物
+
+- actual desktop: `test-results/visual/common-skills-desktop.png`
+- actual tablet: `test-results/visual/common-skills-tablet.png`
+- actual mobile: `test-results/visual/common-skills-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                 | 判定 | 差分                                                                                                 | 対応     |
+| -------------------- | ---- | ---------------------------------------------------------------------------------------------------- | -------- |
+| レイアウト           | OK   | desktopは3列、tabletは左レール内の可読幅を保つ2列、mobileは既存どおり2列。                           | 対応済み |
+| タイポグラフィ       | OK   | ユーザー指定どおり、導入文を`経験点が5点`から`経験点5点`へ変更。カードの文字サイズは変更していない。 | 対応済み |
+| レスポンシブ         | OK   | `63.999rem`以下でtablet 2列へ切り替わり、`48rem`以下のmobile gap・余白は既存どおり。                 | 対応済み |
+| overflow / scroll    | OK   | desktop・tablet・mobileともVisual Testで横overflowなし。                                             | 対応済み |
+| 既存デザインとの整合 | OK   | common-skills正本のdesktop 3列・mobile 2列と、site-layoutのtablet layout方針を維持。                 | 対応済み |
+| accessibility basics | OK   | H1/H2、PageToc、MobilePageToc、個別アンカーを既存Visual Testで確認。                                 | 対応済み |
+
+### 自己修正した項目
+
+- `CardContainer`へtablet 2列のbreakpointを追加した。
+- 共通スキルVisual Testへ820pxの2列・横overflow確認を追加した。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] common-skillsのtablet正本を追加する必要が生じた場合は、別途ユーザー判断後にdesign fix modeで扱う。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
