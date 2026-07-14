@@ -86,6 +86,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Skill conversion test rerun without focused error output
+
+#### 2026-07-14
+
+- source: self
+- 発生箇所: `28-0-common-skills-data` のレビュー指摘 2に対する`npm run test`
+- 観測した失敗: Schema・変換器・テストを同時に変更した後、テスト失敗の詳細を取得しないまま同じNode testを再実行した。原因は、既存の`isDeepStrictEqual` importの削除と、可変列fixtureでの末尾空ヘッダー処理の不足だった。
+- 一次対応: 初回失敗後はテストレポートまたは対象testを詳細出力で確認してから再実行する。変換器のheader検証では、入力ライブラリが補う末尾空セルを除外する。
+
+### Skill conversion formatter diff was applied with incorrect indentation
+
+#### 2026-07-14
+
+- source: self
+- 発生箇所: `28-0-common-skills-data` のレビュー指摘 2に対する`npm run check`
+- 観測した失敗: Biomeが示したformatter差分を手動反映した際、オブジェクトプロパティのインデントを1段深くしてしまい、同じ`npm run check`のformatter失敗を再発させた。
+- 一次対応: formatter差分を適用する際は、差分の空白数を行単位で確認する。再実行前に対象箇所を読み返す。
+
 ### MDX-only `any` cast caused repeated build failures
 
 #### 2026-07-13

@@ -145,10 +145,21 @@ async function readSkillsSheet(
 
 function assertHeaders(rows: Rows): void {
   const actual = (rows[0] ?? []).map((value) => text(value));
-  if (!isDeepStrictEqual(actual, [...HEADERS])) {
-    throw new Error(
-      `Invalid skill headers. Expected "${HEADERS.join(" / ")}".`,
-    );
+  while (actual.at(-1) === "") actual.pop();
+  const length = Math.max(actual.length, HEADERS.length);
+  for (let index = 0; index < length; index += 1) {
+    const expected = HEADERS[index];
+    const value = actual[index] ?? "";
+    if (expected === undefined) {
+      throw new Error(
+        `Unexpected header at row 1, column ${columnLetter(index)}: "${value}".`,
+      );
+    }
+    if (value !== expected) {
+      throw new Error(
+        `Invalid header at row 1, column ${columnLetter(index)}: expected "${expected}", received "${value}".`,
+      );
+    }
   }
 }
 
@@ -158,9 +169,13 @@ function collectRows(rows: Rows): RawSkill[] {
   for (let rowIndex = 1; rowIndex < rows.length; rowIndex += 1) {
     const rowNumber = rowIndex + 1;
     const row = rows[rowIndex] ?? [];
-    if (row.slice(HEADERS.length).some((value) => !blank(value))) {
+    const extraIndex = row
+      .slice(HEADERS.length)
+      .findIndex((value) => !blank(value));
+    if (extraIndex !== -1) {
+      const column = HEADERS.length + extraIndex;
       throw new Error(
-        `Unexpected value after ${HEADERS.length} columns at row ${rowNumber}.`,
+        `Unexpected value at row ${rowNumber}, column ${columnLetter(column)}: "${text(row[column])}".`,
       );
     }
     const values = HEADERS.map((_, index) => row[index]);
@@ -172,18 +187,23 @@ function collectRows(rows: Rows): RawSkill[] {
       throw new Error(`Blank row found before data row ${rowNumber}.`);
     }
     skills.push({
-      category: category(values[0], rowNumber),
-      name: requiredOneLine(values[1], "名称", rowNumber),
-      maxLevel: maxLevel(values[2], rowNumber),
-      timing: timing(values[3], rowNumber),
-      cost: optionalOneLine(values[4], "コスト", rowNumber),
-      proficiency: optionalOneLine(values[5], "技能", rowNumber),
-      acquisitionRestriction: optionalOneLine(values[6], "取得制限", rowNumber),
-      target: requiredOneLine(values[7], "対象", rowNumber),
-      range: optionalOneLine(values[8], "射程", rowNumber),
-      usageRestriction: optionalOneLine(values[9], "使用制限", rowNumber),
-      summary: requiredMultiline(values[10], "概要", rowNumber),
-      effect: requiredMultiline(values[11], "効果", rowNumber),
+      category: category(values[0], rowNumber, 0),
+      name: requiredOneLine(values[1], "名称", rowNumber, 1),
+      maxLevel: maxLevel(values[2], rowNumber, 2),
+      timing: timing(values[3], rowNumber, 3),
+      cost: optionalOneLine(values[4], "コスト", rowNumber, 4),
+      proficiency: optionalOneLine(values[5], "技能", rowNumber, 5),
+      acquisitionRestriction: optionalOneLine(
+        values[6],
+        "取得制限",
+        rowNumber,
+        6,
+      ),
+      target: requiredOneLine(values[7], "対象", rowNumber, 7),
+      range: optionalOneLine(values[8], "射程", rowNumber, 8),
+      usageRestriction: optionalOneLine(values[9], "使用制限", rowNumber, 9),
+      summary: requiredMultiline(values[10], "概要", rowNumber, 10),
+      effect: requiredMultiline(values[11], "効果", rowNumber, 11),
       sourceOrder: rowIndex,
       rowNumber,
     });
@@ -228,39 +248,59 @@ async function readExisting(
 function category(
   value: CellValue | null | undefined,
   row: number,
+  column: number,
 ): SkillCategory {
-  const result = requiredOneLine(value, "区分", row);
+  const result = requiredOneLine(value, "区分", row, column);
   if (!SKILL_CATEGORIES.includes(result as SkillCategory)) {
-    throw new Error(`区分 is invalid at row ${row}: "${result}".`);
+    throw new Error(
+      `区分 is invalid at ${cellLocation(row, column)}: "${result}".`,
+    );
   }
   return result as SkillCategory;
 }
 
-function timing(value: CellValue | null | undefined, row: number): SkillTiming {
-  const result = requiredOneLine(value, "タイミング", row);
+function timing(
+  value: CellValue | null | undefined,
+  row: number,
+  column: number,
+): SkillTiming {
+  const result = requiredOneLine(value, "タイミング", row, column);
   if (!(result in SKILL_TIMING_NORMALIZATIONS)) {
-    throw new Error(`タイミング is invalid at row ${row}: "${result}".`);
+    throw new Error(
+      `タイミング is invalid at ${cellLocation(row, column)}: "${result}".`,
+    );
   }
   return result as SkillTiming;
 }
 
-function maxLevel(value: CellValue | null | undefined, row: number): number {
+function maxLevel(
+  value: CellValue | null | undefined,
+  row: number,
+  column: number,
+): number {
   if (typeof value === "number" && Number.isInteger(value) && value > 0)
     return value;
   const result = text(value).trim();
   if (/^[1-9][0-9]*$/.test(result)) return Number(result);
-  throw new Error(`最大レベル must be a positive integer at row ${row}.`);
+  throw new Error(
+    `最大レベル must be a positive integer at ${cellLocation(row, column)}.`,
+  );
 }
 
 function requiredOneLine(
   value: CellValue | null | undefined,
   label: string,
   row: number,
+  column: number,
 ): string {
   const result = text(value).trim();
-  if (result === "") throw new Error(`${label} is required at row ${row}.`);
+  if (result === "") {
+    throw new Error(`${label} is required at ${cellLocation(row, column)}.`);
+  }
   if (result.includes("\n"))
-    throw new Error(`${label} must not contain line breaks at row ${row}.`);
+    throw new Error(
+      `${label} must not contain line breaks at ${cellLocation(row, column)}.`,
+    );
   return result;
 }
 
@@ -268,11 +308,14 @@ function optionalOneLine(
   value: CellValue | null | undefined,
   label: string,
   row: number,
+  column: number,
 ): string | null {
   const result = text(value).trim();
   if (result === "") return null;
   if (result.includes("\n"))
-    throw new Error(`${label} must not contain line breaks at row ${row}.`);
+    throw new Error(
+      `${label} must not contain line breaks at ${cellLocation(row, column)}.`,
+    );
   return result;
 }
 
@@ -280,9 +323,27 @@ function requiredMultiline(
   value: CellValue | null | undefined,
   label: string,
   row: number,
+  column: number,
 ): string {
   const result = text(value).trim();
-  if (result === "") throw new Error(`${label} is required at row ${row}.`);
+  if (result === "") {
+    throw new Error(`${label} is required at ${cellLocation(row, column)}.`);
+  }
+  return result;
+}
+
+function cellLocation(row: number, column: number): string {
+  return `row ${row}, column ${columnLetter(column)}`;
+}
+
+function columnLetter(index: number): string {
+  let value = index + 1;
+  let result = "";
+  while (value > 0) {
+    const remainder = (value - 1) % 26;
+    result = String.fromCharCode(65 + remainder) + result;
+    value = Math.floor((value - 1) / 26);
+  }
   return result;
 }
 

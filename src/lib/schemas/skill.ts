@@ -143,17 +143,31 @@ function assertContract(json: SkillsJson, contract: SkillJsonContract): void {
   }
 
   const ids = new Set<string>();
+  const nextIndexes = new Map<string, number>();
   const sourceOrders: number[] = [];
   for (const category of SKILL_CATEGORIES) {
     let previousSourceOrder = 0;
     for (const skill of json.data[category]) {
+      if (skill.category !== category) {
+        throw new Error(
+          `Skill "${skill.id}" must belong to category "${category}".`,
+        );
+      }
       const normalizedTiming = SKILL_TIMING_NORMALIZATIONS[skill.timing];
       const expectedPrefix = `${contract.idPrefix}-${category}-${normalizedTiming}-`;
-      if (!skill.id.startsWith(expectedPrefix)) {
+      const index = parseSkillIndex(skill.id, expectedPrefix);
+      if (index === undefined) {
         throw new Error(`Skill id "${skill.id}" does not match its contract.`);
       }
       if (ids.has(skill.id)) {
         throw new Error(`Duplicate skill id "${skill.id}".`);
+      }
+      const groupKey = `${category}:${normalizedTiming}`;
+      const expectedIndex = (nextIndexes.get(groupKey) ?? 0) + 1;
+      if (index !== expectedIndex) {
+        throw new Error(
+          `Skill id "${skill.id}" must use index ${formatSkillIndex(expectedIndex)}.`,
+        );
       }
       if (skill.sourceOrder <= previousSourceOrder) {
         throw new Error(
@@ -161,6 +175,7 @@ function assertContract(json: SkillsJson, contract: SkillJsonContract): void {
         );
       }
       ids.add(skill.id);
+      nextIndexes.set(groupKey, index);
       sourceOrders.push(skill.sourceOrder);
       previousSourceOrder = skill.sourceOrder;
     }
@@ -172,6 +187,17 @@ function assertContract(json: SkillsJson, contract: SkillJsonContract): void {
       throw new Error("Skill sourceOrder values must be consecutive.");
     }
   });
+}
+
+function parseSkillIndex(id: string, prefix: string): number | undefined {
+  const suffix = id.slice(prefix.length);
+  if (!id.startsWith(prefix) || !/^\d{3,}$/.test(suffix)) return undefined;
+  const index = Number(suffix);
+  return Number.isSafeInteger(index) && index > 0 ? index : undefined;
+}
+
+function formatSkillIndex(index: number): string {
+  return index.toString().padStart(3, "0");
 }
 
 function hasLineBreak(value: string): boolean {

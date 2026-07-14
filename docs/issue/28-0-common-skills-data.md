@@ -151,3 +151,32 @@
 - [x] 共通スキルの生成JSONと取得層を汎用契約へ更新する。
 - [x] 変換・Schema・取得層のテストを更新する。
 - [x] `npm run convert:common-skills`、`npm run test`、`npm run check`、`npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 生成JSONのSchemaが、カテゴリ配列キーと各スキルの `category` の一致を検証していない。
+- SchemaのID検証が接頭辞だけであり、`{idPrefix}-{category}-{normalizedTiming}-{index}` の完全な形式、正規化タイミング、`001` からの採番値を保証していない。
+- ヘッダー不一致と12列より右の値に対する入力エラーが、Excel行番号と列名を常に含まない。
+- 完了条件で検証済みとしている必須項目欠落、重複ID、不正カテゴリ、カテゴリ別配列の整合性・表示順などの異常系テストが不足している。
+
+### 判定
+
+- source: local-pr-review (PR #43, `.tmp/review/28-0-common-skills-data/`)
+- classification: valid
+- local validation: `assertSkillsJson()` はIDを `startsWith()` で確認するだけで、カテゴリ配列キーと `skill.category` を比較していない。`assertHeaders()` は期待ヘッダー全体だけを表示し、追加列の値も行番号だけを表示する。既存テストは正常変換・不正タイミング・Warning・`updatedAt` を中心とし、指摘された異常系を網羅していない。いずれも `docs/conversion/skills.md` と本issueのSchema・入力エラー・テスト契約に含まれる。
+
+### 対応方針
+
+- `assertSkillsJson()` で、カテゴリ配列キーと `skill.category`、IDの固定接頭辞・カテゴリ・正規化タイミング・3桁以上の正の採番値を完全一致で検証する。同一IDグループの採番連続性も検証する。
+- ヘッダーと追加値の検証エラーに、Excelの行番号、列記号、列名または実値を含める。
+- 指摘されたSchema・変換器の異常系をテストへ追加し、既存の完了条件を実際の自動テストで裏付ける。
+
+### 対応完了チェックリスト
+
+- [x] カテゴリ配列キーと各スキルの `category` の一致をSchemaで検証する。
+- [x] IDをカテゴリ・正規化タイミング・正の採番値まで含む完全形式で検証し、グループ内の採番連続性を検証する。
+- [x] ヘッダー不一致と追加列の値に、Excel行番号と列情報を含む入力エラーを出す。
+- [x] 必須項目欠落、重複ID、不正カテゴリ、不正ID、カテゴリ整合性、カテゴリ別表示順、LF正規化のテストを追加する。
+- [x] `npm run convert:common-skills`、`npm run test`、`npm run check`、`npm run build` が通る。

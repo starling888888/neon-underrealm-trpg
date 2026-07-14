@@ -49,6 +49,7 @@ describe("skill conversion", () => {
       ["skill-common-bonus-a-001", "skill-common-bonus-a-002"],
     );
     assert.equal(result.data.basic[0]?.proficiency, null);
+    assert.equal(result.data.bonus[0]?.summary, "概要\n詳細");
     assert.equal(result.updatedAt, "2026-07-14T09:00:00+09:00");
     assert.match(warnings[0] ?? "", /previous group "Pv".*timing "R"/);
     assert.doesNotThrow(() => assertSkillsJson(result, contract));
@@ -56,7 +57,7 @@ describe("skill conversion", () => {
     assert.equal(getCommonSkills("bonus")[0]?.id, "skill-common-bonus-a-001");
   });
 
-  it("keeps updatedAt for equal data and rejects invalid timing", async () => {
+  it("keeps updatedAt for equal data and reports invalid cell positions", async () => {
     await using fixture = await createFixture();
     await workbook(fixture.input, "skills", [
       headers,
@@ -111,11 +112,106 @@ describe("skill conversion", () => {
           sheetName: "skills",
           outputPath: fixture.output,
         }),
-      /タイミング is invalid at row 2/,
+      /タイミング is invalid at row 2, column D/,
     );
     assert.equal(
       JSON.parse(await readFile(fixture.output, "utf8")).dataName,
       "common-skills",
+    );
+  });
+
+  it("reports header and extra-cell locations", async () => {
+    await using fixture = await createFixture();
+    await workbook(fixture.input, "skills", [
+      [...headers, "ID"],
+      row("bonus", "一撃", "Pv"),
+    ]);
+    await assert.rejects(
+      () =>
+        convertSkills({
+          ...contract,
+          inputPath: fixture.input,
+          sheetName: "skills",
+          outputPath: fixture.output,
+        }),
+      /Unexpected header at row 1, column M: "ID"/,
+    );
+    await workbook(fixture.input, "skills", [
+      headers,
+      [...row("bonus", "一撃", "Pv"), "余分な値"],
+    ]);
+    await assert.rejects(
+      () =>
+        convertSkills({
+          ...contract,
+          inputPath: fixture.input,
+          sheetName: "skills",
+          outputPath: fixture.output,
+        }),
+      /Unexpected value at row 2, column M: "余分な値"/,
+    );
+  });
+
+  it("rejects missing fields and invalid categories", async () => {
+    await using fixture = await createFixture();
+    const missingName = row("bonus", "", "Pv");
+    await workbook(fixture.input, "skills", [headers, missingName]);
+    await assert.rejects(
+      () =>
+        convertSkills({
+          ...contract,
+          inputPath: fixture.input,
+          sheetName: "skills",
+          outputPath: fixture.output,
+        }),
+      /名称 is required at row 2, column B/,
+    );
+    await workbook(fixture.input, "skills", [
+      headers,
+      row("unknown", "不正区分", "Pv"),
+    ]);
+    await assert.rejects(
+      () =>
+        convertSkills({
+          ...contract,
+          inputPath: fixture.input,
+          sheetName: "skills",
+          outputPath: fixture.output,
+        }),
+      /区分 is invalid at row 2, column A/,
+    );
+  });
+
+  it("rejects malformed IDs, category mismatches, duplicate IDs, and source-order gaps", () => {
+    const malformedId = structuredClone(generated);
+    malformedId.data.bonus[0].id = "skill-common-bonus-a-001-extra";
+    assert.throws(
+      () => assertSkillsJson(malformedId, contract),
+      /does not match/,
+    );
+
+    const categoryMismatch = structuredClone(generated);
+    categoryMismatch.data.bonus[0].category = "basic";
+    assert.throws(
+      () => assertSkillsJson(categoryMismatch, contract),
+      /must belong/,
+    );
+
+    const duplicateId = structuredClone(generated);
+    duplicateId.data.bonus.push({
+      ...duplicateId.data.bonus[0],
+      sourceOrder: 2,
+    });
+    assert.throws(
+      () => assertSkillsJson(duplicateId, contract),
+      /Duplicate skill id/,
+    );
+
+    const sourceOrderGap = structuredClone(generated);
+    sourceOrderGap.data.bonus[0].sourceOrder = 2;
+    assert.throws(
+      () => assertSkillsJson(sourceOrderGap, contract),
+      /consecutive/,
     );
   });
 });
