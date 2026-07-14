@@ -37,6 +37,12 @@ Playwrightの標準出力先を使います。
 
 Playwrightで取得したスクリーンショットは、実装結果を確認するための actual artifact です。取得したスクリーンショットは、そのままデザイン正本ではありません。
 
+## テスト責務
+
+Visual Testは、画面の基本構造、responsive layout、横overflow、ナビゲーション状態、スクリーンショット取得を確認する。ローカルカタログのfixtureや外部データの、固有の文言、値、件数、本文の内容を期待値に含めない。
+
+Card Componentが固定propsを受けたときの文言、値、fallback、タグ、属性は、将来のComponent contract testで確認する。release notesなど外部データの内容、並び順、変換結果は、Nodeのデータ変換・schema・取得層テストで確認する。
+
 ## デザイン正本
 
 比較対象となるデザイン正本は `docs/design/<design-target>/` に置きます。issue単位の `docs/design/<issue-slug>/` は前提にしません。
