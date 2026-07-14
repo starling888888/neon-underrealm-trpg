@@ -236,3 +236,52 @@
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## ビジュアルレビュー 4
+
+### デザイン参照
+
+- design target: `docs/design/site-layout/`
+- reference desktop: `docs/design/site-layout/design-desktop.png`
+- reference mobile: `docs/design/site-layout/design-mobile.png`
+- supporting references: `docs/design/skill-card/notes.md`、`docs/design/data/notes.md`
+- notes: 最大表示幅で`46rem`のMDX本文が`64rem`の中央カラム左端に寄っていたユーザー報告を確認した。既存designはstandard desktop / mobileだけを正本とし、超横長画面の非対称な余白を意図として定めていない。
+
+### 成果物
+
+- actual desktop: `test-results/visual/common-skills-desktop.png`
+- actual mobile: `test-results/visual/common-skills-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                 | 判定 | 差分                                                                                                | 対応     |
+| -------------------- | ---- | --------------------------------------------------------------------------------------------------- | -------- |
+| レイアウト           | OK   | `MDXLayout`の`46rem`本文を中央寄せにし、最大表示幅で余剰の`18rem`が右側だけへ偏る状態を解消。       | 対応済み |
+| 配置・整列           | OK   | 左SiteMenu・中央本文・右PageTocの3領域に対し、本文の左右余白を同じ基準で確保。                      | 対応済み |
+| レスポンシブ         | OK   | standard desktopでは既存の本文幅を維持し、mobileでは親幅が`46rem`未満のため従来どおり全幅で表示。   | 不要     |
+| overflow / scroll    | OK   | 共通スキルのdesktop・mobileで横overflowなし。                                                       | 不要     |
+| 既存デザインとの整合 | OK   | 既存正本のstandard desktop / mobileの本文可読幅、左右レール、カード3列・2列の構成を変更していない。 | 不要     |
+
+### 自己修正した項目
+
+- `src/layouts/MDXLayout.astro` の`.mdx-layout`へ`margin-inline: auto`を追加し、最大幅のMDX本文を中央カラム内で中央寄せにした。
+
+### 人間判断が必要な差分
+
+- `docs/design/site-layout/`には超横長viewportの正本がない。今回の修正は既存のstandard desktop / mobile正本を変えないため、design画像の更新は行わない。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] 共通スキルページの正本化は、ユーザーレビュー後に`docs/design/common-skills/`をdesign fix modeで扱う。
+- [ ] 超横長viewportを`site-layout`の正本として追加する必要がある場合は、別途ユーザー判断後にdesign fix modeで扱う。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
