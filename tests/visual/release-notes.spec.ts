@@ -11,9 +11,6 @@ test("release notes desktop viewport @release-notes-desktop", async ({
     "更新履歴 | 光都暗域〈ネオン・アンダーレルム〉TRPG",
   );
   await expect(page.getByRole("heading", { name: "更新履歴" })).toBeVisible();
-  await expect(page.getByText("2026-07-07")).toBeVisible();
-  await expect(page.getByText("仮公開しました。")).toBeVisible();
-  await expect(page.getByText("現在作成中です。")).toBeVisible();
   await expect(page.locator("[data-page-toc-empty='true']")).toHaveCount(0);
   await expect(page.locator("[data-mobile-page-toc-trigger]")).toHaveCount(0);
   await expect(
@@ -45,9 +42,6 @@ test("release notes mobile viewport @release-notes-mobile", async ({
     "更新履歴 | 光都暗域〈ネオン・アンダーレルム〉TRPG",
   );
   await expect(page.getByRole("heading", { name: "更新履歴" })).toBeVisible();
-  await expect(page.getByText("2026-07-07")).toBeVisible();
-  await expect(page.getByText("仮公開しました。")).toBeVisible();
-  await expect(page.getByText("現在作成中です。")).toBeVisible();
   await expect(page.locator("[data-mobile-page-toc-trigger]")).toHaveCount(0);
   await expect
     .poll(async () => {

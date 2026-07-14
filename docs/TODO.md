@@ -21,6 +21,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [ ] Astro Component contract testの基盤を導入する
+  - source: `28-2-common-skills-page` の技術レビューにおけるユーザー指示
+  - classification: test architecture follow-up
+  - plan: なし。費用対効果を再評価してから必要なら計画化する。
+  - handling plan: `SkillCard`、`NpcCard`などへ固定propsを渡し、文言、値、fallback、想定タグ、属性をComponent単位で確認できる基盤を検討する。Visual Testはfixture・外部データの内容へ依存させず、画面構造、responsive layout、overflow、ナビゲーション状態、スクリーンショットに限定する。
+
 - [ ] 表全体が初期表示で収まらない場合のレイアウト対策を検討する
   - source: `26-2-advancement-page` のcontents review 3 とユーザー指示
   - classification: visual usability follow-up
