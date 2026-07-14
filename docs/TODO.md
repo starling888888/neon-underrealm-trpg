@@ -24,7 +24,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] 表全体が初期表示で収まらない場合のレイアウト対策を検討する
   - source: `26-2-advancement-page` のcontents review 3 とユーザー指示
   - classification: visual usability follow-up
-  - plan: `docs/plan.md` の `26-2-advancement-page` に関連する後続改善タスクとして扱う
+  - plan: `docs/plan.md` の `50-responsive-pass`
   - handling plan: 成長ページの「生き様係数」表など、本文コンテナ内で横スクロールが必要になり初期表示で全列を確認できない表について、情報の分割、列・見出しの再構成、画面幅に応じた表示、スクロール誘導などを比較する。既存table layout・共通design・アクセシビリティへの影響を確認し、方針を決めてから実装する。
 
 - [ ] `/support` のオンラインセッションサポートページを作成する
@@ -36,8 +36,8 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] 最初のページ作成タスクで、ローカルコンテンツ作成SKILLを実際に使って動作確認する
   - source: `local-content-authoring` issue 実装後のユーザー指示
   - classification: validation follow-up
-  - plan: `docs/plan.md` の `20-2-introduction-page`
-  - handling plan: `.raw/contents/introduction.md` を `contents-markdown-authoring` で作成または更新し、ユーザー指示、`src/pages/`、current issue、requirements、plan、out-of-scope、既存`.raw/contents/`、`.raw/v1.0/`の優先順の照合、差異時の停止、正本修正可否のユーザー確認、v1.0文体参照、成果物形式を実作業で確認する。Google Drive同期は、このTODOだけでは実行しない。
+  - plan: `docs/plan.md` の `28-2-common-skills-page`
+  - handling plan: `.raw/contents/common-skills.md` を `contents-markdown-authoring` で作成または更新し、ユーザー指示、`src/pages/`、current issue、requirements、plan、out-of-scope、既存`.raw/contents/`、`.raw/v1.0/`の優先順の照合、差異時の停止、正本修正可否のユーザー確認、v1.0文体参照、成果物形式を実作業で確認する。Google Drive同期は、このTODOだけでは実行しない。
 
 - [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
   - source: `17-github-actions-deploy-basic` issue review
