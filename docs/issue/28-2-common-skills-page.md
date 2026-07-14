@@ -2,11 +2,11 @@
 
 ## 目的
 
-共通スキルをカテゴリごとに参照できる静的な `/data/common-skills` ページを作成する。ユーザー指示により `28-1-common-skills-components` で予定されていた `SkillList` を同時に実装し、既存の `SkillCard` に表示責務を集約する。
+共通スキルをカテゴリごとに参照できる静的な `/data/common-skills` ページを作成する。ユーザー指示により、カードをslotで受けて配置だけを担う `CardContainer` を同時に実装し、既存の `SkillCard` に表示責務を集約する。
 
 ## 背景
 
-`docs/plan.md` の `28-2-common-skills-page` は、共通スキル一覧ページ、`.raw/contents/common-skills.md` に基づく本文、カテゴリ別データ表示を求めている。`docs/requirements/data-display.md` の FR-04-01 と `docs/requirements/pages.md` は、この一覧に `SkillList` / `SkillCard` を利用し、生成JSONのカテゴリ・配列順を維持することを定めている。
+`docs/plan.md` の `28-2-common-skills-page` は、共通スキル一覧ページ、`.raw/contents/common-skills.md` に基づく本文、カテゴリ別データ表示を求めている。`docs/requirements/data-display.md` の FR-04-01 と `docs/requirements/pages.md` は、この一覧に `CardContainer` / `SkillCard` を利用し、生成JSONのカテゴリ・配列順を維持することを定めている。
 
 関連TODOは以下のとおり。
 
@@ -15,19 +15,17 @@
 
 現状は上級スキルのデータがないため、最新のユーザー指示に従い、`上級スキル` の見出しと空の一覧は作成しない。`bonus`、`basic` の順で、存在するデータだけを表示する。
 
-`28-1-common-skills-components` は `docs/plan.md` 上では未完了の独立項目である。このissueではユーザー指示により同項目の `SkillList` 実装範囲を統合するが、`docs/plan.md` のチェック変更は行わない。merge後のtracking更新で、`28-1` の完了・計画上の扱いを確認する。
-
 ## 対象範囲
 
 - `.raw/contents/common-skills.md` のfrontmatter、本文、HTMLコメント指示を、最新のユーザー指示と既存要件に照合する。
-- `src/components/data/SkillList.astro` を追加する。
-  - 受け取った `Skill[]` を順序変更せずに既存 `SkillCard` へ渡す。
-  - 個別スキルの `id` をカードのアンカーIDとして利用する。
-  - スマホ幅は2列、デスクトップ幅はカードの最低幅を維持した3列または4列のgridとする。
-  - カードの項目や表示順は重複実装せず、`SkillCard` に委ねる。
+- `src/components/_common/CardContainer.astro` を追加する。
+  - slotで受け取ったCardを、カード内の項目や表示順を実装せずに配置する。
+  - スマホ幅は2列、デスクトップ幅はカードの最低幅を維持した3列または4列で配置する。内部レイアウトの実装方式は固定しない。
+  - データ配列の展開、個別アンカーID、Cardのpropsは呼び出し側が担当する。
+- 既存のスキル専用一覧Componentを削除し、ページとローカルカタログのカード配置を `CardContainer` に統一する。
 - `src/pages/data/common-skills.mdx` を追加し、`getCommonSkillsByCategory()` の生成JSONデータを使って `/data/common-skills` を実装する。
   - `.raw/contents/common-skills.md` のH1本文とカテゴリごとの本文を反映する。表示するH2は `自動習得スキル` を `bonus`、`初期作成時から取得可能なスキル` を `basic` に対応させる。
-  - `bonus`、`basic` をこの順に `SkillList` へ渡す。
+  - `bonus`、`basic` をこの順に展開して `SkillCard` を生成し、各カテゴリの `CardContainer` slotへ渡す。
   - 現状データがない `advanced` は、H2・空一覧とも出力しない。
   - ページ内目次はcontentsのfrontmatterに従って有効にする。
 - 実装後、既存の `docs/design/data/`、`docs/design/skill-card/`、`docs/design/site-layout/` を参照してVisual Reviewを行い、結果をこのissueへ記録する。
@@ -45,38 +43,39 @@
 
 ## 完了条件
 
-- [x] `/data/common-skills` が静的に生成され、共通スキルを既存の生成JSONから表示する。
-- [x] `SkillList` が受け取った配列を並び替えずに `SkillCard` へ渡し、カード表示仕様を重複実装していない。
-- [x] 個別スキルの生成JSON `id` をHTMLアンカーとして利用できる。
-- [x] `bonus`、`basic` をこの順に表示し、各カテゴリ内では生成JSONの配列順を維持する。
-- [x] 現状データがない `advanced` は、見出し・空一覧とも表示しない。
+- [ ] `/data/common-skills` が静的に生成され、共通スキルを既存の生成JSONから表示する。
+- [ ] `CardContainer` がslotで受け取ったカードを配置し、カード表示仕様を重複実装していない。
+- [ ] 個別スキルの生成JSON `id` をHTMLアンカーとして利用できる。
+- [ ] `bonus`、`basic` をこの順に表示し、各カテゴリ内では生成JSONの配列順を維持する。
+- [ ] 現状データがない `advanced` は、見出し・空一覧とも表示しない。
 - [x] `.raw/contents/common-skills.md` のfrontmatterとHTMLコメントを確認し、本文・カテゴリ指示との矛盾を残していない。Google Drive同期は未実行である。
-- [x] 実装後にVisual Reviewを行い、既存design targetとの差分をこのissueへ記録する。
+- [ ] 実装後にVisual Reviewを行い、既存design targetとの差分をこのissueへ記録する。
 - [ ] 初期designドラフトを作らず、Visual Reviewと人間確認の後に `design-image-generation` のdesign fix modeで `docs/design/common-skills/` を正本化する。
-- [x] `npm run check` と `npm run build` が通る。
+- [ ] `npm run check` と `npm run build` が通る。
 
 ## チェックポイント
 
-- [x] 既存ルート、とくに `/data` 配下が壊れていない。
-- [x] 内部リンクと個別アンカーがGitHub Pagesのサブパス配下でも機能する。
+- [ ] 既存ルート、とくに `/data` 配下が壊れていない。
+- [ ] 内部リンクと個別アンカーがGitHub Pagesのサブパス配下でも機能する。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
 - [x] `docs/TODO.md` の関連項目と矛盾していない。
-- [x] `docs/design/data/`、`docs/design/skill-card/`、`docs/design/site-layout/` の既存designと矛盾していない。
+- [ ] `docs/design/data/`、`docs/design/skill-card/`、`docs/design/site-layout/` の既存designと矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
 - `.raw/contents/common-skills.md`
-- `src/components/data/SkillList.astro`
+- `src/components/_common/CardContainer.astro`
+- 既存のスキル専用一覧Componentの削除
 - `src/pages/data/common-skills.mdx`
 - `docs/issue/28-2-common-skills-page.md`
 - Visual Reviewで必要となるテスト・設定・成果物
 
 ## レビュー観点
 
-- `SkillList` が一覧gridだけを担当し、カードの表示仕様を `SkillCard` に重複実装していないか。
-- `28-1-common-skills-components` の `SkillList` 範囲をこのissueへ統合し、merge後のtracking更新で計画上の扱いを確認する方針でよいか。
+- `CardContainer` がslot内のカード配置だけを担当し、カードの表示仕様を `SkillCard` に重複実装していないか。
+- `CardContainer` の名称が特定のレイアウト実装に依存せず、将来のカード種別でも利用できるか。
 - `bonus`、`basic` の順序と各配列の順序が保たれ、現状は上級スキルの空見出しを出さない方針が適切か。
 - `.raw/contents/common-skills.md` の導入文、`bonus`に対応する`自動習得スキル`、`basic`に対応する`初期作成時から取得可能なスキル`、HTMLコメント指示をページの表示範囲に正しく反映できるか。
 - 初期designドラフトを作成せず、既存のdata・skill-card・site-layout designを参照し、最後にdesign fix modeで `docs/design/common-skills/` を正本化する順序でよいか。
@@ -86,7 +85,8 @@
 
 - design画像の初期ドラフトを作成しないのは、最新のユーザー指示による。実装後は既存design targetを参照してVisual Reviewを行い、人間確認後の最後の作業で `design-image-generation` のdesign fix modeを使って `docs/design/common-skills/` を正本化する。Visual Reviewのactual screenshotを `docs/design/` へ直接コピーしない。
 - `docs/requirements/data-display.md` と `docs/requirements/pages.md` はカテゴリ順として `bonus`、`basic`、`advanced` を定める。現状データがない `advanced` を空表示しない判断は、同順序を保ったまま最新ユーザー指示に従うものとする。上級スキルを追加する際は、contents指示書とこのページの表示条件を見直す。
-- `28-1-common-skills-components` の計画上のチェックとTODOの完了・done移動は、このissueの実装中には変更しない。merge後のtracking更新で、`28-1` を本issueの統合実装として扱えるか確認する。
+- `CardContainer` は共通Componentとして実装し、データ配列の展開と個別アンカーIDの付与はページまたはテンプレート側の責務とする。
+- `CardContainer` への置換前に記録したビジュアルレビュー 1〜4は旧構成の記録として残す。置換後は、新しい実装結果に対して改めてVisual Reviewを行う。
 - Git commit / push、Google Drive同期、`docs/plan.md` と `docs/TODO.md` の完了更新は、このissueでは行わない。
 
 ## ビジュアルレビュー 1
@@ -107,18 +107,18 @@
 
 ### レビュー結果
 
-| 領域                  | 判定 | 差分                                                                      | 対応 |
-| --------------------- | ---- | ------------------------------------------------------------------------- | ---- |
-| レイアウト            | OK   | desktopは3列、mobileは2列のSkillList grid。                               | 不要 |
-| 余白                  | OK   | section間とカード間に既存のspace tokenを使用。                            | 不要 |
-| タイポグラフィ        | OK   | SkillCardの既存の情報密度と本文サイズを維持。                             | 不要 |
-| 色                    | OK   | 既存border、白寄りsurface、青緑accentのみを使用。                         | 不要 |
-| 配置・整列            | OK   | 同一grid行のカード高が揃い、長い本文はカード内で自然に伸長する。          | 不要 |
-| レスポンシブ          | OK   | mobile 2列で情報を保持し、desktopは既存rails内で3列を維持。               | 不要 |
-| overflow / scroll     | OK   | desktop・mobileとも横overflowなしをVisual Testで確認。                    | 不要 |
-| 既存デザインとの整合  | OK   | 上級スキルの省略は空データと最新ユーザー指示による意図した差分。          | 不要 |
-| 既存Componentとの整合 | OK   | SkillListは配列順のままSkillCardを呼び出し、生成JSON idをアンカーへ渡す。 | 不要 |
-| accessibility basics  | OK   | H1/H2、PageToc、mobile PageToc、個別アンカー遷移を確認。                  | 不要 |
+| 領域                  | 判定 | 差分                                                                          | 対応 |
+| --------------------- | ---- | ----------------------------------------------------------------------------- | ---- |
+| レイアウト            | OK   | desktopは3列、mobileは2列のカード一覧配置。                                   | 不要 |
+| 余白                  | OK   | section間とカード間に既存のspace tokenを使用。                                | 不要 |
+| タイポグラフィ        | OK   | SkillCardの既存の情報密度と本文サイズを維持。                                 | 不要 |
+| 色                    | OK   | 既存border、白寄りsurface、青緑accentのみを使用。                             | 不要 |
+| 配置・整列            | OK   | 同一grid行のカード高が揃い、長い本文はカード内で自然に伸長する。              | 不要 |
+| レスポンシブ          | OK   | mobile 2列で情報を保持し、desktopは既存rails内で3列を維持。                   | 不要 |
+| overflow / scroll     | OK   | desktop・mobileとも横overflowなしをVisual Testで確認。                        | 不要 |
+| 既存デザインとの整合  | OK   | 上級スキルの省略は空データと最新ユーザー指示による意図した差分。              | 不要 |
+| 既存Componentとの整合 | OK   | 一覧Componentは配列順のままSkillCardを呼び出し、生成JSON idをアンカーへ渡す。 | 不要 |
+| accessibility basics  | OK   | H1/H2、PageToc、mobile PageToc、個別アンカー遷移を確認。                      | 不要 |
 
 ### 自己修正した項目
 
