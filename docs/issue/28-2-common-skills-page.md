@@ -50,7 +50,7 @@
 - [x] 現状データがない `advanced` は、見出し・空一覧とも表示しない。
 - [x] `.raw/contents/common-skills.md` のfrontmatterとHTMLコメントを確認し、本文・カテゴリ指示との矛盾を残していない。Google Drive同期は未実行である。
 - [x] 実装後にVisual Reviewを行い、既存design targetとの差分をこのissueへ記録する。
-- [ ] 初期designドラフトを作らず、Visual Reviewと人間確認の後に `design-image-generation` のdesign fix modeで `docs/design/common-skills/` を正本化する。
+- [x] 初期designドラフトを作らず、Visual Reviewと人間確認の後に `design-image-generation` のdesign fix modeで `docs/design/common-skills/` を正本化する。
 - [x] `npm run check` と `npm run build` が通る。
 
 ## チェックポイント
