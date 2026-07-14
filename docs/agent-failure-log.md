@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### PR title did not follow the issue-slug rule
+
+#### 2026-07-14
+
+- source: user
+- 発生箇所: `28-0-common-skills-data` のPR #43作成
+- 観測した失敗: PRタイトルを`28-0: 共通スキルデータ基盤`として作成した。しかしGit操作規約と`create-pr`は、既定のPRタイトルをissue slugのみの`28-0-common-skills-data`と定めている。
+- 一次対応: PR #43のタイトルを`28-0-common-skills-data`へ更新した。以後、PR作成前にissue slugをそのままタイトルへ使うことを確認する。
+
 ### Skill conversion test rerun without focused error output
 
 #### 2026-07-14
