@@ -13,7 +13,7 @@ Use when the user asks to:
 - pull merged changes and confirm the result
 - delete the merged work branch
 - mark the corresponding `docs/plan.md` task complete
-- move completed `docs/plan.md` entries to `docs/plan-done.md` when the user asks for active/done cleanup
+- move a fully completed `docs/plan.md` entry to `docs/plan-done.md`
 - mark handled `docs/TODO.md` items complete and move them to `docs/TODO-done.md`
 - move completed issue files to `docs/issue/done/phase-N/` or `docs/issue/done/cross-phase/`
 - commit and push tracking updates to `main`
@@ -45,7 +45,7 @@ Do the cleanup in this order:
 6. Confirm the work branch is merged into `main`.
 7. Delete the local work branch only when it is safely merged.
 8. Update only the relevant `docs/plan.md` checkbox block.
-9. If active/done cleanup is requested, move completed plan entries from `docs/plan.md` to `docs/plan-done.md`.
+9. Move the completed plan entry from `docs/plan.md` to `docs/plan-done.md` when every checkbox in that entry is checked.
 10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
 11. Confirm that required review information was formalized, then remove only `.tmp/review/<WORK_BRANCH>/`.
 12. If the issue is complete, move the issue file to the correct `docs/issue/done/` archive.
@@ -118,14 +118,16 @@ Rules:
 - Do not update the `初期スコープ外として維持するもの` checklist unless the user specifically asks.
 - If no matching `docs/plan.md` item exists, do not create a new plan item. Report that there was no plan checkbox to update.
 
-If the user requested active/done cleanup, move completed plan entries that no longer need to stay in active context to `docs/plan-done.md`.
+After updating the relevant plan entry, check every checkbox in that entry.
+
+Move the entry from `docs/plan.md` to `docs/plan-done.md` when every checkbox in the entry is checked.
 
 Rules:
 
 - Move only completed entries.
 - Preserve the original task ID, task title, and relevant subtask context.
 - Add completion context when available: merged PR number, completion date, related commit, or task name.
-- Do not move incomplete tasks.
+- Do not move the entry when any checkbox in the entry remains unchecked.
 - Do not move future or in-progress phase headings if they still provide active planning context.
 - If moving an item would make the active plan hard to understand, keep a concise phase placeholder or summary in `docs/plan.md`.
 
