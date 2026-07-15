@@ -1,0 +1,144 @@
+# 29-0-ryugi-index-data
+
+## 目的
+
+`/data/ryugi/` の後続一覧ページと流儀詳細ページが参照できる、流儀の非スキル情報用Excel由来データ基盤を整備する。
+
+## 背景
+
+`docs/plan.md` の `29-0-ryugi-index-data` は、流儀一覧用の変換仕様、検証、変換処理、取得層、テストを先行して整備するタスクである。ユーザー指示により、`ryugi-list.xlsx` に含まれる流儀詳細ページ用の非スキル情報も同じ変換仕様と生成JSONで扱う。静的サイトのCI/CD buildはExcel本体に依存せず、Git管理する生成JSONを読み込む必要がある。
+
+変換仕様は推測で固定しない。ユーザーが後ほど `<repo-root>/.raw/data/ryugi-list.xlsx` に配置するExcelを実際に確認してから、対象シート、列、必須・任意項目、空欄・改行・表示順・IDの扱い、出力JSON、検証、テストを `docs/conversion/ryugi-index.md` に定義する。
+
+- `docs/requirements/architecture.md` の AC-06〜AC-13
+- `docs/requirements/data-id-policy.md`
+- `docs/out-of-scope.md`
+- `docs/plan.md` の `29-0-ryugi-index-data`
+- `docs/TODO.md` の「生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する」
+
+## 対象範囲
+
+- `.raw/data/ryugi-list.xlsx` の実ファイルを確認後、`docs/conversion/ryugi-index.md` に流儀一覧データと流儀詳細ページで共用する非スキル情報の変換仕様を定義する。
+- 流儀一覧ページと流儀詳細ページで必要な非スキル情報の最小データ形状の `Ryugi` 検証スキーマと、`ryugi-list.json` 全体または一覧配列を検証するschema / helperを策定する。
+- Excelから `data/generated/ryugi-list.json` を生成するローカル変換処理とnpm scriptを追加する。
+- 生成JSONを読み込む、流儀一覧ページと後続の流儀詳細ページ用のデータ取得層を追加する。
+- 変換、スキーマ、取得層のテストを追加し、必須項目、ID重複、表示順を検証する。
+- Excelを配置するまでは、実データを仮定して変換仕様、列契約、生成JSON、変換処理を作成しない。Excel配置後に本issueを承認して実装する。
+
+## 初期スコープ外
+
+- `/data/ryugi/index.astro`、一覧UI、流儀詳細ページ、導線、MDX本文、design画像を作成しない。これらは `29-2-ryugi-index-page`、`30-2-ryugi-detail-page` または後続タスクで扱う。
+- 流儀スキルデータ、流儀スキルとの関連、流儀スキルExcelの変換・検証は `30-0-ryugi-detail-data` で扱う。`29-0` では `ryugi-list.xlsx` に含まれる非スキル情報だけをデータ化する。
+- 生き様、アイテム、NPC、共通スキルのデータ変換・取得層を変更しない。
+- `.raw/data/ryugi-list.xlsx`、Google Drive、`raw-google-drive.url` を変更しない。Excel本体をGit管理しない。
+- サイドメニューへの流儀リスト表示は、関連TODOに従い本issueでは実装しない。
+- `Callout.astro` の表示・props・CSSは変更しない。流儀の補足タイプと共通化する型の参照へ置き換える変更だけは、ユーザー指示により許可する。
+- 検索、DB、認証、SSR、CMS、クライアント状態管理、不要な依存関係を追加しない。
+- 初期スコープ外の項目は `docs/out-of-scope.md` に従う。
+
+## 完了条件
+
+- [x] 実際に配置された `.raw/data/ryugi-list.xlsx` を根拠として、`docs/conversion/ryugi-index.md` に流儀一覧と流儀詳細ページ用非スキル情報の入力・出力・検証・テスト契約を定義している。
+- [x] 流儀一覧と流儀詳細ページに必要な非スキル情報を表す `Ryugi` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperが、必須項目、ID重複、表示順を検証する。
+- [x] ローカル変換コマンドが `.raw/data/ryugi-list.xlsx` から `data/generated/ryugi-list.json` を生成し、CI/CD buildをExcelに依存させない。
+- [x] 流儀一覧用と流儀詳細ページ用のデータ取得層が、生成JSONから後続ページが必要とする非スキル情報を返す。
+- [x] 変換・スキーマ・取得層のテストが、実Excelに依存しないfixtureを用いて必須項目欠落、ID重複、表示順、および確定した仕様に必要な異常系を検証する。
+- [x] 関連TODOを確認し、サイドメニュー表示を本issueで扱わない理由を記録している。
+- [x] 実Excel確認で確定した流儀IDと表示順の規則を、`docs/conversion/ryugi-index.md` と本issueへ反映し、ユーザーがその具体化内容を明示承認している。
+- [x] `npm run test`、`npm run check`、`npm run build` が通る。
+
+## チェックポイント
+
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
+- [x] 生成JSONを手編集せず、Excel変換の出力として管理している。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外のページ、Component、UIを実装していない。
+- [x] `docs/TODO.md` のサイドメニュー追跡項目と矛盾していない。
+- [x] UI、CSS、layout、page、Componentタスクではないため、design targetおよびdesign-image-generation前提条件は不要である。
+- [x] ユーザーの未コミット変更を破壊していない。
+
+## 想定変更ファイル
+
+- `docs/conversion/ryugi-index.md`
+- `src/lib/schemas/ryugi.ts`
+- `src/lib/types/callout.ts`
+- `scripts/convert-ryugi-index/main.ts`
+- `src/lib/data/ryugi-list.ts`
+- `src/components/_common/Callout.astro`
+- `data/generated/ryugi-list.json`
+- `tests/node/ryugi-index.test.ts`
+- `package.json`
+
+Excel確認の結果、汎用変換器の拡張または分離が必要な場合に限り、既存の `scripts/convert-*/`、関連スキーマ、関連テストを変更してよい。その変更理由と、既存の共通スキル変換への影響を記録する。
+
+## レビュー観点
+
+- 変換仕様を実Excel確認後に作成する前提が明確で、未配置のExcelから列・シート・ID規則を推測して固定しない範囲になっているか。
+- `ryugi-list.xlsx` に含まれる流儀詳細用非スキル情報を今回の生成JSONへ含めつつ、流儀スキル・UI・サイドメニューを後続タスクへ分離できているか。
+- `ryugi-list.xlsx` をローカル作業入力として保持し、Git管理・CI/CD依存に含めない方針が明確か。
+- 実Excelの構造確認後に、スキーマとテストの契約を十分に具体化できる完了条件になっているか。
+
+## 備考
+
+このissueはデータ基盤だけを対象とする。後続の流儀一覧ページは、ユーザーが準備する `.raw/contents/ryugi-index.md` と `29-2-ryugi-index-page` の承認済みissueで扱う。29-2では、各流儀の共通スキルボーナスによるキャラクターメイキングと成長の項を、今回の変換済み流儀データから表示する。この補足は `docs/TODO.md` で追跡する。
+
+`docs/TODO.md` のサイドメニュー項目は、`data/generated/ryugi-list.json` とデータ取得層が整った後に検討する追跡項目である。本issueでは生成基盤を整備するが、メニューを変更しない。
+
+Excel配置後に対象Excelを確認し、流儀IDの入力元・形式・変更時の扱いと、表示順の根拠・重複／欠番／並び替え時の扱いを `docs/conversion/ryugi-index.md` へ定義した。ユーザーは現時点の変換仕様を承認済みである。変換処理、schema、生成JSONの実装開始には、本issue全体への明示承認が別途必要である。
+
+実装前にこのissueの内容をユーザーが明示承認する。Git commit / push はこのissue準備では実行しない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 流儀IDの変更時に、後続の詳細URLと流儀スキルの所属IDをどのように同期・検証するかが変換仕様に未定義である。
+- 内部完全空行の入力エラーが、仕様で要求する列記号と列見出しを含まない。
+- 生成JSONのschemaが、変換済みJSONとして不正な末尾改行・CRを`trim()`によって受理する。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/conversion/ryugi-index.md`はID変更時の扱いを明示せず、内部完全空行の実装エラーは`row`だけを返す。`assertRyugiJson()`へ`id: "kenkaya\\n"`を渡すと、改行を保持したまま受理することをローカルで確認した。
+
+### 対応方針
+
+- 流儀の名称とIDを変更・削除できないものとし、再変換時に既存出力との対応を検証する契約を変換仕様へ追加する。
+- 完全空行の位置を、行番号・列記号・列見出しを含むエラーで報告する。
+- schemaは生成JSONの未正規化な空白・改行を拒否し、回帰テストを追加する。
+
+### 対応完了チェックリスト
+
+- [x] 流儀ID変更時の扱いを変換仕様へ定義する。
+- [x] 内部完全空行の入力エラーを契約どおりに報告する。
+- [x] 未正規化な生成JSONをschemaが拒否する。
+- [x] `npm run test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 変換処理と生成JSON schemaは流儀名称の重複を拒否するが、変換仕様は初回変換を含む名称一意性とその検証責務を明記していない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `collectRyugi()`と`assertRyugiJson()`はともに名称重複を拒否し、名称とIDの恒久対応にも名称一意性が必要である。一方、`docs/conversion/ryugi-index.md`は追加時の既存名称との重複禁止だけを定め、全入力・生成JSONに対する名称一意性、schemaの検証対象、Excel fixtureの回帰観点を明記していない。
+
+### 対応方針
+
+- 変換仕様の入力規則・IDと表示順・検証・テスト節へ、全流儀の名称一意性、入力時と生成JSON検証時の拒否、fixtureでの回帰検証を明記する。
+
+### 対応完了チェックリスト
+
+- [x] 全流儀の名称一意性と、入力・生成JSON双方での検証責務を変換仕様へ追加する。
+- [x] Excel fixtureで名称重複を拒否する回帰テストを追加する。
+- [x] `npm run test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
