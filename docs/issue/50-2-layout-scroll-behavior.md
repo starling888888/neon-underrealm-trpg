@@ -228,3 +228,25 @@
 - [x] 幅 `768px` の Header 固定を確認する Visual Test を追加する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- 幅 `768px` の Header 固定を確認する Visual Test が、scroll event による Header 制御の `requestAnimationFrame` 実行前に成功し得るため、今回修正した境界バグを確実に検出できない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `mobile-header.ts` は scroll event 後に `requestAnimationFrame` で表示状態を更新する一方、境界テストは `window.scrollTo()` の直後に `is-hidden` と座標を検証している。旧実装でも非同期更新前の初期表示状態で成功する経路があることを確認した。
+
+### 対応方針
+
+- 境界テストで scroll 後に少なくとも二重の `requestAnimationFrame` を待機し、Header 制御が実行済みの状態で `is-hidden` が付与されず、座標が画面上端であることを検証する。
+
+### 対応完了チェックリスト
+
+- [x] `768px` 境界の Visual Test が Header scroll handler 実行後を検証するよう修正する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

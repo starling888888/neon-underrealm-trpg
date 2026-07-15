@@ -48,6 +48,14 @@ test("site layout keeps the header fixed at the 768px tablet boundary @site-layo
   const header = page.locator("[data-site-header]");
 
   await page.evaluate(() => window.scrollTo(0, 520));
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => resolve());
+        });
+      }),
+  );
   await expect(header).not.toHaveClass(/is-hidden/);
   await expect
     .poll(async () => Math.round((await header.boundingBox())?.y ?? Number.NaN))
