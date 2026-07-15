@@ -612,3 +612,12 @@ source種別は以下を使う。
 - 発生箇所: `27-1-skill-card-component` の`tests/visual/skill-card.spec.ts`
 - 観測した失敗: `npm run check` が新規Visual testのBiome format差分で失敗した。続けて `npm exec biome format --write tests/visual/skill-card.spec.ts` を実行したが、差分を表示するだけで書込みが行われず、同じformat errorが残った。
 - 一次対応: formatterが示した改行・インデントを`apply_patch`で反映し、`npm run check`で再確認する。formatterのwrite実行を前提にせず、失敗時は差分とファイル内容を照合して手動修正後に検証する。
+
+### Markdown formatter check was rerun after a cache write failure
+
+#### 2026-07-15
+
+- source: self
+- 発生箇所: `29-0-ryugi-index-data` の `docs/conversion/ryugi-index.md`
+- 観測した失敗: dprintの対象ファイル整形を試みたが、既定cache directoryへの書込みがread-only filesystemで失敗した。その結果を確認せず、未整形のまま同じ`npm run check:md`を再実行して同じtable format errorを2回発生させた。
+- 一次対応: formatterの失敗後は、出力と対象ファイルの変更有無を確認してから再検証する。今回のtable整形は`apply_patch`で反映し、以後のcheckは差分確認後に1回だけ実行する。

@@ -19,8 +19,8 @@
 ## 対象範囲
 
 - `.raw/data/ryugi-list.xlsx` の実ファイルを確認後、`docs/conversion/ryugi-index.md` に流儀一覧データと流儀詳細ページで共用する非スキル情報の変換仕様を定義する。
-- 流儀一覧ページと流儀詳細ページで必要な非スキル情報の最小データ形状の `Ryugi` 検証スキーマと、`ryugi.json` 全体または一覧配列を検証するschema / helperを策定する。
-- Excelから `data/generated/ryugi.json` を生成するローカル変換処理とnpm scriptを追加する。
+- 流儀一覧ページと流儀詳細ページで必要な非スキル情報の最小データ形状の `Ryugi` 検証スキーマと、`ryugi-list.json` 全体または一覧配列を検証するschema / helperを策定する。
+- Excelから `data/generated/ryugi-list.json` を生成するローカル変換処理とnpm scriptを追加する。
 - 生成JSONを読み込む、流儀一覧ページと後続の流儀詳細ページ用のデータ取得層を追加する。
 - 変換、スキーマ、取得層のテストを追加し、必須項目、ID重複、表示順を検証する。
 - Excelを配置するまでは、実データを仮定して変換仕様、列契約、生成JSON、変換処理を作成しない。Excel配置後に本issueを承認して実装する。
@@ -37,13 +37,13 @@
 
 ## 完了条件
 
-- [ ] 実際に配置された `.raw/data/ryugi-list.xlsx` を根拠として、`docs/conversion/ryugi-index.md` に流儀一覧と流儀詳細ページ用非スキル情報の入力・出力・検証・テスト契約を定義している。
+- [x] 実際に配置された `.raw/data/ryugi-list.xlsx` を根拠として、`docs/conversion/ryugi-index.md` に流儀一覧と流儀詳細ページ用非スキル情報の入力・出力・検証・テスト契約を定義している。
 - [ ] 流儀一覧と流儀詳細ページに必要な非スキル情報を表す `Ryugi` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperが、必須項目、ID重複、表示順を検証する。
-- [ ] ローカル変換コマンドが `.raw/data/ryugi-list.xlsx` から `data/generated/ryugi.json` を生成し、CI/CD buildをExcelに依存させない。
+- [ ] ローカル変換コマンドが `.raw/data/ryugi-list.xlsx` から `data/generated/ryugi-list.json` を生成し、CI/CD buildをExcelに依存させない。
 - [ ] 流儀一覧用と流儀詳細ページ用のデータ取得層が、生成JSONから後続ページが必要とする非スキル情報を返す。
 - [ ] 変換・スキーマ・取得層のテストが、実Excelに依存しないfixtureを用いて必須項目欠落、ID重複、表示順、および確定した仕様に必要な異常系を検証する。
 - [ ] 関連TODOを確認し、サイドメニュー表示を本issueで扱わない理由を記録している。
-- [ ] 実Excel確認で確定した流儀IDと表示順の規則を、`docs/conversion/ryugi-index.md` と本issueへ反映し、ユーザーがその具体化内容を明示承認している。
+- [x] 実Excel確認で確定した流儀IDと表示順の規則を、`docs/conversion/ryugi-index.md` と本issueへ反映し、ユーザーがその具体化内容を明示承認している。
 - [ ] `npm run test`、`npm run check`、`npm run build` が通る。
 
 ## チェックポイント
@@ -63,8 +63,8 @@
 - `docs/conversion/ryugi-index.md`
 - `src/lib/schemas/ryugi.ts`
 - `scripts/convert-ryugi-index/main.ts`
-- `src/lib/data/ryugi.ts`
-- `data/generated/ryugi.json`
+- `src/lib/data/ryugi-list.ts`
+- `data/generated/ryugi-list.json`
 - `tests/node/ryugi-index.test.ts`
 - `package.json`
 
@@ -81,8 +81,8 @@ Excel確認の結果、汎用変換器の拡張または分離が必要な場合
 
 このissueはデータ基盤だけを対象とする。後続の流儀一覧ページは、ユーザーが準備する `.raw/contents/ryugi-index.md` と `29-2-ryugi-index-page` の承認済みissueで扱う。29-2では、各流儀の共通スキルボーナスによるキャラクターメイキングと成長の項を、今回の変換済み流儀データから表示する。この補足は `docs/TODO.md` で追跡する。
 
-`docs/TODO.md` のサイドメニュー項目は、`data/generated/ryugi.json` とデータ取得層が整った後に検討する追跡項目である。本issueでは生成基盤を整備するが、メニューを変更しない。
+`docs/TODO.md` のサイドメニュー項目は、`data/generated/ryugi-list.json` とデータ取得層が整った後に検討する追跡項目である。本issueでは生成基盤を整備するが、メニューを変更しない。
 
-Excelが未配置の間は、変換仕様を確定できず実装を開始しない。ユーザーが `<repo-root>/.raw/data/ryugi-list.xlsx` を配置した後、対象Excelを確認する。流儀IDは後続の詳細URLと流儀スキルIDの基準になるため、IDの入力元・形式・変更時の扱いをこの確認で定義する。表示順はExcel入力順または専用順序列のどちらを使うか、重複・欠番・並び替え時の扱いとあわせて定義する。これらの具体化内容を本issueへ反映し、ユーザーが明示承認してから実装する。
+Excel配置後に対象Excelを確認し、流儀IDの入力元・形式・変更時の扱いと、表示順の根拠・重複／欠番／並び替え時の扱いを `docs/conversion/ryugi-index.md` へ定義した。ユーザーは現時点の変換仕様を承認済みである。変換処理、schema、生成JSONの実装開始には、本issue全体への明示承認が別途必要である。
 
 実装前にこのissueの内容をユーザーが明示承認する。Git commit / push はこのissue準備では実行しない。
