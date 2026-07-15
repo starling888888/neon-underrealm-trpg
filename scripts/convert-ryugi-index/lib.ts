@@ -75,6 +75,7 @@ export async function convertRyugiList(
   assertHeaderRow(rows[1], FIELDS, 2);
   const data = collectRyugi(rows);
   const existing = await readExisting(options.outputPath);
+  if (existing) assertExistingIdentity(existing.data, data);
   const result: RyugiJson = {
     dataName: RYUGI_LIST_DATA_NAME,
     updatedAt:
@@ -130,19 +131,23 @@ function assertHeaderRow(
 
 function collectRyugi(rows: Rows): Ryugi[] {
   const data: Ryugi[] = [];
-  let foundBlank = false;
+  let blankRowNumber: number | undefined;
   const ids = new Set<string>();
+  const names = new Set<string>();
   for (let rowIndex = 2; rowIndex < rows.length; rowIndex += 1) {
     const rowNumber = rowIndex + 1;
     const row = rows[rowIndex] ?? [];
     assertNoExtraValues(row, rowNumber);
     const values = FIELDS.map((_, index) => row[index]);
     if (values.every(blank)) {
-      foundBlank = true;
+      blankRowNumber ??= rowNumber;
       continue;
     }
-    if (foundBlank)
-      throw new Error(`Blank row found before data row ${rowNumber}.`);
+    if (blankRowNumber !== undefined) {
+      throw new Error(
+        `Blank row found at ${location(blankRowNumber, 0)} before data row ${rowNumber}.`,
+      );
+    }
 
     const id = requiredOneLine(values[0], "ID", rowNumber, 0);
     if (!/^[a-z][a-z0-9-]*$/.test(id)) {
@@ -151,10 +156,17 @@ function collectRyugi(rows: Rows): Ryugi[] {
     if (ids.has(id)) {
       throw new Error(`Duplicate ID at ${location(rowNumber, 0)}: "${id}".`);
     }
+    const name = requiredOneLine(values[1], "名称", rowNumber, 1);
+    if (names.has(name)) {
+      throw new Error(
+        `Duplicate 名称 at ${location(rowNumber, 1)}: "${name}".`,
+      );
+    }
     ids.add(id);
+    names.add(name);
     data.push({
       id,
-      name: requiredOneLine(values[1], "名称", rowNumber, 1),
+      name,
       shortDescription: requiredOneLine(values[2], "短い説明", rowNumber, 2),
       description: requiredText(values[3], "説明", rowNumber, 3),
       note: note(values, rowNumber),
@@ -269,6 +281,29 @@ async function readExisting(
   } catch (error) {
     if (isNodeError(error) && error.code === "ENOENT") return undefined;
     throw error;
+  }
+}
+
+function assertExistingIdentity(existing: Ryugi[], next: Ryugi[]): void {
+  const nextById = new Map(next.map((ryugi) => [ryugi.id, ryugi]));
+  const nextByName = new Map(next.map((ryugi) => [ryugi.name, ryugi]));
+
+  for (const ryugi of existing) {
+    const matchingName = nextByName.get(ryugi.name);
+    if (matchingName && matchingName.id !== ryugi.id) {
+      throw new Error(
+        `Existing ryugi "${ryugi.name}" ID must not change from "${ryugi.id}" to "${matchingName.id}".`,
+      );
+    }
+    const matchingId = nextById.get(ryugi.id);
+    if (!matchingId) {
+      throw new Error(`Existing ryugi ID "${ryugi.id}" must not be removed.`);
+    }
+    if (matchingId.name !== ryugi.name) {
+      throw new Error(
+        `Existing ryugi name for ID "${ryugi.id}" must not change from "${ryugi.name}" to "${matchingId.name}".`,
+      );
+    }
   }
 }
 

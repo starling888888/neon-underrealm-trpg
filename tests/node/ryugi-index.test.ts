@@ -49,11 +49,13 @@ const headers = [
 describe("ryugi-list conversion", () => {
   it("converts input order, normalizes CRLF, and exposes generated data", async () => {
     await using fixture = await createFixture();
+    const emono = row("emono");
+    emono[1] = "別流儀";
     await workbook(fixture.input, "ryugi-list", [
       groupHeaders,
       headers,
       row("kenkaya", "warning", "注意\r\n補足"),
-      row("emono"),
+      emono,
     ]);
 
     const result = await convertRyugiList({
@@ -102,6 +104,63 @@ describe("ryugi-list conversion", () => {
       sheetName: "ryugi-list",
     });
     assert.equal(result.updatedAt, "2026-01-01T00:00:00+09:00");
+  });
+
+  it("rejects existing ryugi changes and allows additions", async () => {
+    await using fixture = await createFixture();
+    await writeFile(
+      fixture.output,
+      JSON.stringify({
+        dataName: "ryugi-list",
+        updatedAt: "2026-01-01T00:00:00+09:00",
+        data: [expectedRyugi("kenkaya", 1)],
+      }),
+    );
+
+    const renamed = row("kenkaya");
+    renamed[1] = "改名";
+    await workbook(fixture.input, "ryugi-list", [
+      groupHeaders,
+      headers,
+      renamed,
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /name for ID "kenkaya" must not change/,
+    );
+
+    await workbook(fixture.input, "ryugi-list", [
+      groupHeaders,
+      headers,
+      row("kenka-ya"),
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /ID must not change from "kenkaya" to "kenka-ya"/,
+    );
+
+    const replacement = row("emono");
+    replacement[1] = "新規流儀";
+    await workbook(fixture.input, "ryugi-list", [
+      groupHeaders,
+      headers,
+      replacement,
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /ID "kenkaya" must not be removed/,
+    );
+
+    const added = row("emono");
+    added[1] = "新規流儀";
+    await workbook(fixture.input, "ryugi-list", [
+      groupHeaders,
+      headers,
+      row("kenkaya"),
+      added,
+    ]);
+    const result = await convert(fixture);
+    assert.equal(result.data.length, 2);
   });
 
   it("rejects IDs, missing fields, partial rows, note pairs, and numeric values", async () => {
@@ -217,11 +276,11 @@ describe("ryugi-list conversion", () => {
     ]);
     await assert.rejects(
       () => convert(fixture),
-      /Blank row found before data row 5/,
+      /Blank row found at row 4, column A \(ID\) before data row 5/,
     );
   });
 
-  it("rejects duplicate IDs and source-order changes in generated JSON", () => {
+  it("rejects duplicate IDs, duplicate names, source-order changes, and untrimmed values", () => {
     const duplicateId = structuredClone(generated);
     duplicateId.data[1] = {
       ...duplicateId.data[1],
@@ -229,9 +288,27 @@ describe("ryugi-list conversion", () => {
     };
     assert.throws(() => assertRyugiJson(duplicateId), /Duplicate ryugi id/);
 
+    const duplicateName = structuredClone(generated);
+    duplicateName.data[1] = {
+      ...duplicateName.data[1],
+      name: duplicateName.data[0].name,
+    };
+    assert.throws(() => assertRyugiJson(duplicateName), /Duplicate ryugi name/);
+
     const sourceOrder = structuredClone(generated);
     sourceOrder.data[0].sourceOrder = 2;
     assert.throws(() => assertRyugiJson(sourceOrder), /must match input order/);
+
+    const untrimmedId = structuredClone(generated);
+    untrimmedId.data[0].id = "kenkaya\n";
+    assert.throws(() => assertRyugiJson(untrimmedId), /Value must be trimmed/);
+
+    const unnormalizedDescription = structuredClone(generated);
+    unnormalizedDescription.data[0].description = "説明\r";
+    assert.throws(
+      () => assertRyugiJson(unnormalizedDescription),
+      /Value must be trimmed/,
+    );
   });
 });
 

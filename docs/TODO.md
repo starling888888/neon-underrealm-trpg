@@ -75,6 +75,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: なし。共通スキルボーナスを条件や効果種別で検索・集計・比較する要件が明確になった時点で計画する。
   - handling plan: 現行の`ryugi-list.json`では、2／5／9レベルごとのボーナスを改行を含む表示文字列として保持する。将来、効果種別、対象、増減値などを構造化する必要が生じた場合に、Excel入力列、JSON形状、既存表示との互換性、検索・表示要件、migration方針を定義してから別タスクで変換する。
 
+- [ ] 流儀スキル変換仕様のファイル名を計画と要件で統一する
+  - source: PR #46の`pr-review-1.md`
+  - classification: follow-up
+  - plan: `docs/plan.md` の `30-0-ryugi-detail-data`
+  - handling plan: `docs/conversion/ryugi-skills.md` と `docs/conversion/ryugi-detail.md` のどちらを流儀スキルExcelの正本ファイル名にするかを30-0のissueで決定し、`docs/requirements/architecture.md`、plan、関連参照を同じ名前へ揃える。
+
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
   - source: `28-0-common-skills-data` 実装中のユーザー指示
   - classification: out-of-scope follow-up

@@ -5,16 +5,18 @@ export const RYUGI_LIST_DATA_NAME = "ryugi-list";
 
 export const RyugiNoteTypeSchema = z.enum(CALLOUT_TYPES);
 
-const requiredOneLine = z
+const requiredText = z
   .string()
-  .trim()
   .min(1)
-  .refine((value) => !hasLineBreak(value), "Value must be one line.");
-const requiredLf = z
-  .string()
-  .trim()
-  .min(1)
-  .refine((value) => !value.includes("\r"), "Line breaks must use LF.");
+  .refine((value) => value === value.trim(), "Value must be trimmed.");
+const requiredOneLine = requiredText.refine(
+  (value) => !hasLineBreak(value),
+  "Value must be one line.",
+);
+const requiredLf = requiredText.refine(
+  (value) => !value.includes("\r"),
+  "Line breaks must use LF.",
+);
 const positiveInteger = z.number().int().positive();
 
 export const RyugiNoteSchema = z
@@ -79,12 +81,17 @@ export function assertRyugiJson(value: unknown): asserts value is RyugiJson {
   if (!result.success) throw new Error(formatIssues(result.error.issues));
 
   const ids = new Set<string>();
+  const names = new Set<string>();
   result.data.data.forEach((ryugi, index) => {
     if (ids.has(ryugi.id)) throw new Error(`Duplicate ryugi id "${ryugi.id}".`);
+    if (names.has(ryugi.name)) {
+      throw new Error(`Duplicate ryugi name "${ryugi.name}".`);
+    }
     if (ryugi.sourceOrder !== index + 1) {
       throw new Error("Ryugi sourceOrder values must match input order.");
     }
     ids.add(ryugi.id);
+    names.add(ryugi.name);
   });
 }
 
