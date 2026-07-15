@@ -241,6 +241,19 @@ describe("ryugi-list conversion", () => {
       () => convert(fixture),
       /Duplicate ID at row 4, column A \(ID\)/,
     );
+
+    const duplicateName = row("emono");
+    duplicateName[1] = "流儀名";
+    await workbook(fixture.input, "ryugi-list", [
+      groupHeaders,
+      headers,
+      row("kenkaya"),
+      duplicateName,
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /Duplicate 名称 at row 4, column B \(名称\)/,
+    );
   });
 
   it("rejects header changes, extra cells, and interior blank rows", async () => {
