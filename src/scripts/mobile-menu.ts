@@ -124,11 +124,9 @@ export function setupMobileMenu(): void {
     handleTabKey(event, elements);
   });
 
-  window
-    .matchMedia("(min-width: 48.001rem)")
-    .addEventListener("change", (event) => {
-      if (event.matches && !elements.drawer.hidden) {
-        setOpen(elements, false);
-      }
-    });
+  window.matchMedia("(width >= 48rem)").addEventListener("change", (event) => {
+    if (event.matches && !elements.drawer.hidden) {
+      setOpen(elements, false);
+    }
+  });
 }

@@ -51,7 +51,7 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
     }
   }
 
-  @media (max-width: 48rem) {
+  @media (width < 48rem) {
     .desktop-layout-no-toc {
       display: block;
       min-height: 0;
@@ -66,7 +66,7 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
     }
   }
 
-  @media (min-width: 48.001rem) {
+  @media (width >= 48rem) {
     .no-toc-page {
       max-width: min(100%, 62rem);
       padding: var(--space-5) var(--space-6);

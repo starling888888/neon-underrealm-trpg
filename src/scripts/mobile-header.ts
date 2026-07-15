@@ -1,6 +1,6 @@
 const mobileHeaderHiddenClass = "mobile-header-hidden";
 const headerHiddenClass = "is-hidden";
-const mobileMediaQuery = "(max-width: 48rem)";
+const mobileMediaQuery = "(width < 48rem)";
 const layoutOverlayChangeEvent = "layout-overlay-change";
 
 function hasOpenLayoutOverlay(): boolean {

@@ -198,3 +198,27 @@
 - [x] 上スクロール途中の隙間を検証する Visual Test を追加した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `768px` ちょうどではモバイル用の Header スクロール制御が有効になり、下スクロール時に Header が隠れる。仕様上この幅は tablet であり、Header は固定表示される必要がある。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `src/scripts/mobile-header.ts` と Header／layout の mobile 側 media query が `max-width: 48rem` を使っており、標準の 16px root font-size では `768px` を含む。issue の対象範囲は mobile を `768px` 未満、tablet を `768px` 以上と定義しているため、境界条件が不整合であることを確認した。
+
+### 対応方針
+
+- mobile 側の Header スクロール制御と関連レイアウトの境界を `768px` 未満へ統一し、`768px` 以上では Header を常時固定表示する。
+- 幅 `768px` を明示した Visual Test を追加し、下スクロール後も Header が隠れないことを確認する。
+
+### 対応完了チェックリスト
+
+- [x] `768px` ちょうどで mobile Header 挙動が有効にならないよう、関連する breakpoint を整合させる。
+- [x] 幅 `768px` の Header 固定を確認する Visual Test を追加する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

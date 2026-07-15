@@ -76,7 +76,7 @@ textarea {
   color: var(--color-text);
 }
 
-@media (max-width: 48rem) {
+@media (width < 48rem) {
   :root {
     --site-header-height: 4rem;
   }

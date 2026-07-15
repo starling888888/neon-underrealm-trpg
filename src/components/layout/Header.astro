@@ -217,7 +217,7 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
     top: 0.44rem;
   }
 
-  @media (max-width: 48rem) {
+  @media (width < 48rem) {
     .site-header {
       inline-size: 100vw;
       min-height: 4rem;
@@ -243,7 +243,7 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
     }
   }
 
-  @media (min-width: 48.001rem) {
+  @media (width >= 48rem) {
     .site-header.is-hidden {
       transform: none;
     }

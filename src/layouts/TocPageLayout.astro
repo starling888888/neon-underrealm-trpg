@@ -60,7 +60,7 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
     }
   }
 
-  @media (max-width: 48rem) {
+  @media (width < 48rem) {
     .desktop-layout {
       display: block;
       min-height: 0;
@@ -70,5 +70,4 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
       display: none;
     }
   }
-
 </style>

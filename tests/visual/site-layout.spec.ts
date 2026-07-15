@@ -40,6 +40,20 @@ test("site layout tablet keeps the header above the sticky page heading @site-la
     .toBe(88);
 });
 
+test("site layout keeps the header fixed at the 768px tablet boundary @site-layout-scroll-behavior", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await page.goto(visualRoutes.mdxTest);
+  const header = page.locator("[data-site-header]");
+
+  await page.evaluate(() => window.scrollTo(0, 520));
+  await expect(header).not.toHaveClass(/is-hidden/);
+  await expect
+    .poll(async () => Math.round((await header.boundingBox())?.y ?? Number.NaN))
+    .toBe(0);
+});
+
 test("site layout mobile @site-layout-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.mdxTest);
