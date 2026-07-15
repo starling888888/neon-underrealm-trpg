@@ -32,38 +32,41 @@
 - 生き様、アイテム、NPC、共通スキルのデータ変換・取得層を変更しない。
 - `.raw/data/ryugi-list.xlsx`、Google Drive、`raw-google-drive.url` を変更しない。Excel本体をGit管理しない。
 - サイドメニューへの流儀リスト表示は、関連TODOに従い本issueでは実装しない。
+- `Callout.astro` の表示・props・CSSは変更しない。流儀の補足タイプと共通化する型の参照へ置き換える変更だけは、ユーザー指示により許可する。
 - 検索、DB、認証、SSR、CMS、クライアント状態管理、不要な依存関係を追加しない。
 - 初期スコープ外の項目は `docs/out-of-scope.md` に従う。
 
 ## 完了条件
 
 - [x] 実際に配置された `.raw/data/ryugi-list.xlsx` を根拠として、`docs/conversion/ryugi-index.md` に流儀一覧と流儀詳細ページ用非スキル情報の入力・出力・検証・テスト契約を定義している。
-- [ ] 流儀一覧と流儀詳細ページに必要な非スキル情報を表す `Ryugi` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperが、必須項目、ID重複、表示順を検証する。
-- [ ] ローカル変換コマンドが `.raw/data/ryugi-list.xlsx` から `data/generated/ryugi-list.json` を生成し、CI/CD buildをExcelに依存させない。
-- [ ] 流儀一覧用と流儀詳細ページ用のデータ取得層が、生成JSONから後続ページが必要とする非スキル情報を返す。
-- [ ] 変換・スキーマ・取得層のテストが、実Excelに依存しないfixtureを用いて必須項目欠落、ID重複、表示順、および確定した仕様に必要な異常系を検証する。
-- [ ] 関連TODOを確認し、サイドメニュー表示を本issueで扱わない理由を記録している。
+- [x] 流儀一覧と流儀詳細ページに必要な非スキル情報を表す `Ryugi` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperが、必須項目、ID重複、表示順を検証する。
+- [x] ローカル変換コマンドが `.raw/data/ryugi-list.xlsx` から `data/generated/ryugi-list.json` を生成し、CI/CD buildをExcelに依存させない。
+- [x] 流儀一覧用と流儀詳細ページ用のデータ取得層が、生成JSONから後続ページが必要とする非スキル情報を返す。
+- [x] 変換・スキーマ・取得層のテストが、実Excelに依存しないfixtureを用いて必須項目欠落、ID重複、表示順、および確定した仕様に必要な異常系を検証する。
+- [x] 関連TODOを確認し、サイドメニュー表示を本issueで扱わない理由を記録している。
 - [x] 実Excel確認で確定した流儀IDと表示順の規則を、`docs/conversion/ryugi-index.md` と本issueへ反映し、ユーザーがその具体化内容を明示承認している。
-- [ ] `npm run test`、`npm run check`、`npm run build` が通る。
+- [x] `npm run test`、`npm run check`、`npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
-- [ ] 生成JSONを手編集せず、Excel変換の出力として管理している。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外のページ、Component、UIを実装していない。
-- [ ] `docs/TODO.md` のサイドメニュー追跡項目と矛盾していない。
-- [ ] UI、CSS、layout、page、Componentタスクではないため、design targetおよびdesign-image-generation前提条件は不要である。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
+- [x] 生成JSONを手編集せず、Excel変換の出力として管理している。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外のページ、Component、UIを実装していない。
+- [x] `docs/TODO.md` のサイドメニュー追跡項目と矛盾していない。
+- [x] UI、CSS、layout、page、Componentタスクではないため、design targetおよびdesign-image-generation前提条件は不要である。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
 - `docs/conversion/ryugi-index.md`
 - `src/lib/schemas/ryugi.ts`
+- `src/lib/types/callout.ts`
 - `scripts/convert-ryugi-index/main.ts`
 - `src/lib/data/ryugi-list.ts`
+- `src/components/_common/Callout.astro`
 - `data/generated/ryugi-list.json`
 - `tests/node/ryugi-index.test.ts`
 - `package.json`

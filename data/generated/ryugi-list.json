@@ -1,0 +1,229 @@
+{
+  "dataName": "ryugi-list",
+  "updatedAt": "2026-07-15T20:20:58+09:00",
+  "data": [
+    {
+      "id": "kenkaya",
+      "name": "ケンカヤ",
+      "shortDescription": "気合獲得に優れた扱いやすい流儀です。",
+      "description": "多くの気合いを獲得することができ、最も攻撃に優れた流儀です。気合いに応じて効果の変わるスキルを数多く持ち、喧嘩、または暗殺武器を用いて大ダメージを与えることを得意とします。一方で守勢に回ると弱く、強力な防御効果を持つスキルはあるものの、回数制限があるため使い所を見極める必要があるでしょう。",
+      "note": {
+        "type": "warning",
+        "content": "ケンカヤのスキルの「気SP」とコストが表記されているものは気合を1点以上、3点以下で任意に消費する必要があります。"
+      },
+      "healthIncrease": 5,
+      "mindIncrease": 2,
+      "baseAttributes": {
+        "strength": 5,
+        "agility": 5,
+        "perception": 1,
+        "body": 3,
+        "mind": 2
+      },
+      "commonSkillBonuses": {
+        "level2": "攻撃判定数+1\n攻撃力+3",
+        "level5": "行動回数+1",
+        "level9": "攻撃判定数+1\nリアクション判定数+1"
+      },
+      "sourceOrder": 1
+    },
+    {
+      "id": "emono",
+      "name": "エモノ",
+      "shortDescription": "コンボを捨てた一撃特化の流儀です。",
+      "description": "あえてコンボを捨て、一撃の重さに特化した流儀です。最初の一撃であれば、強力なボーナスを得るスキルを数多く持ちます。防御面は耐える能力が高く、優秀なダメージ減少スキルを有します。戦場で不沈艦として君臨しましょう。",
+      "note": null,
+      "healthIncrease": 6,
+      "mindIncrease": 1,
+      "baseAttributes": {
+        "strength": 5,
+        "agility": 1,
+        "perception": 5,
+        "body": 4,
+        "mind": 1
+      },
+      "commonSkillBonuses": {
+        "level2": "攻撃判定数+2",
+        "level5": "行動回数+1",
+        "level9": "攻撃判定数+1\nリアクション判定数+1"
+      },
+      "sourceOrder": 2
+    },
+    {
+      "id": "sutegoro",
+      "name": "ステゴロ",
+      "shortDescription": "気合を溜め込み己の肉体を強化する流儀です。",
+      "description": "己の肉体でしか戦えない代わりに、気合いを糧に、戦えば戦うほど強くなる流儀です。気合いを溜めて攻防を固め、戦況を見てスキルを使うタフな戦い方ができるでしょう。攻撃回数にも優れ、気合が溜まりきったときのコンボの爆発力は随一です。",
+      "note": null,
+      "healthIncrease": 6,
+      "mindIncrease": 1,
+      "baseAttributes": {
+        "strength": 5,
+        "agility": 3,
+        "perception": 2,
+        "body": 5,
+        "mind": 1
+      },
+      "commonSkillBonuses": {
+        "level2": "行動回数+1",
+        "level5": "攻撃判定数+1\nリアクション判定数+1",
+        "level9": "行動回数+1"
+      },
+      "sourceOrder": 3
+    },
+    {
+      "id": "kabe",
+      "name": "カベ",
+      "shortDescription": "防御に優れ仲間の盾となれる流儀です。",
+      "description": "防御に優れ、他者を守ることに長けた流儀です。仲間を守る盾として、信頼できる兄貴分となることでしょう。一方行動回数は少なく、強力な一撃も持たないため、主戦力としては不安な一面もあります。",
+      "note": null,
+      "healthIncrease": 6,
+      "mindIncrease": 1,
+      "baseAttributes": {
+        "strength": 5,
+        "agility": 1,
+        "perception": 1,
+        "body": 4,
+        "mind": 5
+      },
+      "commonSkillBonuses": {
+        "level2": "リアクション判定数+2",
+        "level5": "攻撃判定数+1\nリアクション判定数+1",
+        "level9": "行動回数+1"
+      },
+      "sourceOrder": 4
+    },
+    {
+      "id": "shabazou",
+      "name": "シャバゾウ",
+      "shortDescription": "バッドステータスに特化したテクニカルな流儀です。",
+      "description": "「卑怯者」、それを意味する名を持つ流儀です。毒や出血といったバッドステータスを与えることに強みをもち、一風変わった形で相手にダメージを叩き込みます。弱いものを更に痛めつけることを彼らは厭いません。毒や出血で弱ったキャラクターに対してはより強力になります。",
+      "note": null,
+      "healthIncrease": 4,
+      "mindIncrease": 3,
+      "baseAttributes": {
+        "strength": 1,
+        "agility": 5,
+        "perception": 5,
+        "body": 3,
+        "mind": 2
+      },
+      "commonSkillBonuses": {
+        "level2": "行動回数+1",
+        "level5": "攻撃判定数+1\nリアクション判定数+1",
+        "level9": "行動回数+1"
+      },
+      "sourceOrder": 5
+    },
+    {
+      "id": "teppoudama",
+      "name": "テッポウダマ",
+      "shortDescription": "最多の行動回数に達するコンボ特化の流儀です。",
+      "description": "自らの身を顧みず、連撃を繰り出す攻撃特化の流儀です。守りに優れた能力値を持ちながら、攻撃に対応するリアクションスキルはハイリスクなスキルが一つだけです。。その代わりすべての流儀の中で、最多の攻撃回数を有し、攻撃を重ねれれば重ねるほどその攻撃は強力なものとなります。",
+      "note": null,
+      "healthIncrease": 5,
+      "mindIncrease": 2,
+      "baseAttributes": {
+        "strength": 1,
+        "agility": 5,
+        "perception": 3,
+        "body": 5,
+        "mind": 2
+      },
+      "commonSkillBonuses": {
+        "level2": "行動回数+1",
+        "level5": "行動回数+1",
+        "level9": "行動回数+1"
+      },
+      "sourceOrder": 6
+    },
+    {
+      "id": "yamiuchi",
+      "name": "ヤミウチ",
+      "shortDescription": "隠密からの一撃と妨害に優れた流儀です。",
+      "description": "「隠密」と呼ばれる行動を得意とする流儀です。影からの一撃に特化し、暗がりでの攻撃で大ダメージを与えることができます。回避にも秀でており、流麗に舞って戦況をコントロールできるでしょう。",
+      "note": null,
+      "healthIncrease": 4,
+      "mindIncrease": 3,
+      "baseAttributes": {
+        "strength": 2,
+        "agility": 5,
+        "perception": 1,
+        "body": 3,
+        "mind": 5
+      },
+      "commonSkillBonuses": {
+        "level2": "攻撃判定数+1\nリアクション判定数+1",
+        "level5": "攻撃判定数+1\n攻撃力+3",
+        "level9": "行動回数+1"
+      },
+      "sourceOrder": 7
+    },
+    {
+      "id": "kaeshi",
+      "name": "カエシ",
+      "shortDescription": "後の先をとるカウンターに優れた流儀です。",
+      "description": "後の先を取ることの達人です。相手の攻撃をいなすことを最も得意としており、強力なカウンタースキルを複数持ちます。一方で行動回数は多くなく、攻撃にも癖があるため、使いこなすのが難しい流儀でもあります。",
+      "note": null,
+      "healthIncrease": 4,
+      "mindIncrease": 3,
+      "baseAttributes": {
+        "strength": 1,
+        "agility": 1,
+        "perception": 5,
+        "body": 5,
+        "mind": 4
+      },
+      "commonSkillBonuses": {
+        "level2": "攻撃判定数+1\nリアクション判定数+1",
+        "level5": "攻撃判定数+1\nリアクション判定数+1",
+        "level9": "行動回数+1"
+      },
+      "sourceOrder": 8
+    },
+    {
+      "id": "gotoshi",
+      "name": "ゴトシ",
+      "shortDescription": "範囲攻撃と支援に長けた流儀です。",
+      "description": "遠距離からの攻撃に長けた流儀です。気合の代わりに精神力を消費することができ、序盤から強力な攻撃を繰り出すことができます。また、味方のサポートを行うスキルを複数持ち、いぶし銀な活躍ができるでしょう。",
+      "note": null,
+      "healthIncrease": 2,
+      "mindIncrease": 5,
+      "baseAttributes": {
+        "strength": 2,
+        "agility": 2,
+        "perception": 5,
+        "body": 2,
+        "mind": 5
+      },
+      "commonSkillBonuses": {
+        "level2": "攻撃力+5",
+        "level5": "攻撃判定数+1\n攻撃力+3",
+        "level9": "行動回数+1"
+      },
+      "sourceOrder": 9
+    },
+    {
+      "id": "kashira",
+      "name": "カシラ",
+      "shortDescription": "支援と指揮に特化した流儀です。",
+      "description": "ヤクザの若頭として仲間を支え、指示することに長けた流儀です。他の流儀に比べ攻撃スキルは少ないものの、自身の行動で他者の攻撃、防御を大きく強化することができます。また、強力なリソースである「覚悟」を仲間のために使える唯一無二の能力を持ちます。",
+      "note": null,
+      "healthIncrease": 3,
+      "mindIncrease": 4,
+      "baseAttributes": {
+        "strength": 2,
+        "agility": 2,
+        "perception": 2,
+        "body": 5,
+        "mind": 5
+      },
+      "commonSkillBonuses": {
+        "level2": "縁の数+1",
+        "level5": "行動回数+1",
+        "level9": "縁の数+1"
+      },
+      "sourceOrder": 10
+    }
+  ]
+}
