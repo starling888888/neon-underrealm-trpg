@@ -29,6 +29,7 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
   }
 
   .layout-rail {
+    min-height: 0;
     padding: var(--space-8) var(--space-6);
   }
 
@@ -59,7 +60,7 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
     }
   }
 
-  @media (max-width: 48rem) {
+  @media (width < 48rem) {
     .desktop-layout {
       display: block;
       min-height: 0;

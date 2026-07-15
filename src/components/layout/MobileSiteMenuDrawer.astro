@@ -44,7 +44,7 @@ import SiteMenu from "./SiteMenu.astro";
     display: none;
   }
 
-  @media (max-width: 48rem) {
+  @media (width < 48rem) {
     :global(body.mobile-menu-open) {
       overflow: hidden;
     }

@@ -67,8 +67,10 @@ const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
 </html>
 
 <script>
+  import { setupMobileHeader } from "../scripts/mobile-header";
   import { setupMobileMenu } from "../scripts/mobile-menu";
 
+  setupMobileHeader();
   setupMobileMenu();
 </script>
 
@@ -78,8 +80,9 @@ const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
     min-width: 1120px;
     min-height: 100vh;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: minmax(0, 1fr) auto;
     background: var(--color-surface);
+    padding-block-start: var(--site-header-height);
   }
 
   @media (max-width: 63.999rem) {
@@ -88,7 +91,7 @@ const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
     }
   }
 
-  @media (max-width: 48rem) {
+  @media (width < 48rem) {
     .site-shell {
       min-width: 0;
     }
