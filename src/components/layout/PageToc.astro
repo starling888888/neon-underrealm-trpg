@@ -18,8 +18,7 @@ const { enabled = true } = Astro.props;
 
 <style>
   .page-toc {
-    position: sticky;
-    top: var(--space-8);
+    position: static;
     display: grid;
     gap: var(--space-5);
   }
@@ -73,5 +72,18 @@ const { enabled = true } = Astro.props;
     color: var(--color-link-hover);
     text-decoration: underline;
     text-underline-offset: 0.18em;
+  }
+
+  @media (min-width: 64rem) {
+    .page-toc {
+      position: sticky;
+      top: calc(var(--site-header-height) + var(--space-8));
+      max-block-size: calc(
+        100dvh - var(--site-header-height) - (var(--space-8) * 2)
+      );
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+    }
   }
 </style>

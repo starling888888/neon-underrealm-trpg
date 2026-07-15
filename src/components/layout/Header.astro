@@ -7,7 +7,7 @@ const logoWebpPath = withBase(siteMeta.titleLogo.webp);
 const logoPngPath = withBase(siteMeta.titleLogo.png);
 ---
 
-<header class="site-header">
+<header class="site-header" data-site-header>
   <div class="mobile-header-control">
     <button
       class="icon-button"
@@ -56,6 +56,11 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
 
 <style>
   .site-header {
+    position: fixed;
+    z-index: 5;
+    inset-block-start: 0;
+    inset-inline: 0;
+    width: 100%;
     min-height: 5.5rem;
     display: grid;
     grid-template-columns: auto 1fr;
@@ -64,6 +69,11 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
     background: var(--color-surface-inverse);
     color: var(--color-text-inverse);
     padding-inline: var(--space-8);
+    transition: transform 180ms ease;
+  }
+
+  .site-header.is-hidden {
+    transform: translateY(-100%);
   }
 
   .site-logo-link {
@@ -230,6 +240,12 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
 
     .header-actions {
       display: none;
+    }
+  }
+
+  @media (min-width: 48.001rem) {
+    .site-header.is-hidden {
+      transform: none;
     }
   }
 </style>

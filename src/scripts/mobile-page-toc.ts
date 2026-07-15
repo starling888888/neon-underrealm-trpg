@@ -5,6 +5,31 @@ type MobilePageTocElements = {
 };
 
 const initializedAttribute = "data-mobile-page-toc-initialized";
+const layoutOverlayChangeEvent = "layout-overlay-change";
+const mobilePageHeadingHeightVariable = "--mobile-page-heading-height";
+
+function syncMobilePageHeadingHeight(): void {
+  const heading = document.querySelector<HTMLElement>(
+    "[data-mobile-page-heading]",
+  );
+
+  if (!heading) {
+    document.documentElement.style.removeProperty(
+      mobilePageHeadingHeightVariable,
+    );
+    return;
+  }
+
+  const updateHeight = () => {
+    document.documentElement.style.setProperty(
+      mobilePageHeadingHeightVariable,
+      `${Math.ceil(heading.getBoundingClientRect().height)}px`,
+    );
+  };
+
+  new ResizeObserver(updateHeight).observe(heading);
+  updateHeight();
+}
 
 function setOpen(elements: MobilePageTocElements, isOpen: boolean): void {
   elements.panel.hidden = !isOpen;
@@ -14,6 +39,7 @@ function setOpen(elements: MobilePageTocElements, isOpen: boolean): void {
     "aria-label",
     isOpen ? "このページの目次を閉じる" : "このページの目次を開く",
   );
+  window.dispatchEvent(new Event(layoutOverlayChangeEvent));
 }
 
 function closeAllExcept(currentRoot?: HTMLElement): void {
@@ -51,6 +77,8 @@ function createElements(root: HTMLElement): MobilePageTocElements | null {
 }
 
 export function setupMobilePageToc(): void {
+  syncMobilePageHeadingHeight();
+
   document
     .querySelectorAll<HTMLElement>("[data-mobile-page-toc]")
     .forEach((root) => {

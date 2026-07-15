@@ -6,6 +6,8 @@ type MobileMenuElements = {
   focusableElements: () => HTMLElement[];
 };
 
+const layoutOverlayChangeEvent = "layout-overlay-change";
+
 const focusableSelector = [
   "a[href]",
   "button:not([disabled])",
@@ -47,6 +49,7 @@ function setOpen(elements: MobileMenuElements, isOpen: boolean): void {
   elements.drawer.hidden = !isOpen;
   elements.openButton.setAttribute("aria-expanded", String(isOpen));
   document.body.classList.toggle("mobile-menu-open", isOpen);
+  window.dispatchEvent(new Event(layoutOverlayChangeEvent));
 
   if (isOpen) {
     const [firstFocusable] = elements.focusableElements();

@@ -42,33 +42,33 @@
 
 ## 完了条件
 
-- [ ] `768px` 以上で Header が固定され、本文をスクロールしても画面外へ移動しない。
-- [ ] デスクトップで SiteMenu が Header 下の利用可能な高さに収まり、展開時も内部だけを縦スクロールできる。
-- [ ] デスクトップで PageToc が Header 下の利用可能な高さに収まり、長い目次を内部だけで縦スクロールできる。
-- [ ] モバイルで下スクロール時に Header が隠れ、上スクロール時とページ最上部で Header が画面上部に表示される。
-- [ ] モバイルでサイトメニューまたはページ内目次を開くと、Header が表示され、閉じるまでその状態を維持する。
-- [ ] desktop の PageToc と `1024px` 未満の MobilePageToc のリンクで移動した見出し、同じ幅の sticky heading と目次 trigger が Header に隠れない。
-- [ ] モバイルの SiteMenu は短い画面高・全階層展開時にも内部スクロールでき、本文はスクロールしない。
-- [ ] MobilePageToc の開閉と sticky heading、既存ルートの PageToc 表示／非表示を回帰させない。
-- [ ] GitHub Pages のサブパス配下で既存のナビゲーションリンクとページ内アンカーが壊れない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `768px` 以上で Header が固定され、本文をスクロールしても画面外へ移動しない。
+- [x] デスクトップで SiteMenu が Header 下の利用可能な高さに収まり、展開時も内部だけを縦スクロールできる。
+- [x] デスクトップで PageToc が Header 下の利用可能な高さに収まり、長い目次を内部だけで縦スクロールできる。
+- [x] モバイルで下スクロール時に Header が隠れ、上スクロール時とページ最上部で Header が画面上部に表示される。
+- [x] モバイルでサイトメニューまたはページ内目次を開くと、Header が表示され、閉じるまでその状態を維持する。
+- [x] desktop の PageToc と `1024px` 未満の MobilePageToc のリンクで移動した見出し、同じ幅の sticky heading と目次 trigger が Header に隠れない。
+- [x] モバイルの SiteMenu は短い画面高・全階層展開時にも内部スクロールでき、本文はスクロールしない。
+- [x] MobilePageToc の開閉と sticky heading、既存ルートの PageToc 表示／非表示を回帰させない。
+- [x] GitHub Pages のサブパス配下で既存のナビゲーションリンクとページ内アンカーが壊れない。
+- [x] 不要な依存関係を追加していない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] `1024px` 以上、`768px` 以上 `1024px` 未満、`768px` 未満で Header とレイアウトの表示対象が要件どおりである。
-- [ ] desktop で Header、SiteMenu、PageToc の固定／独立スクロールが本文と干渉しない。
-- [ ] desktop で SiteMenu の展開操作と PageToc リンクが利用できる。
-- [ ] mobile で Header の下スクロール非表示・上スクロール再表示、メニュー／目次を開く際の表示復帰をブラウザで確認する。
-- [ ] desktop、`768px` 以上 `1024px` 未満、`768px` 未満のページ内アンカー移動で、移動先の見出しと該当する sticky heading / MobilePageToc trigger が Header に隠れない。
-- [ ] mobile で MobileMenu と MobilePageToc の開閉時に本文の意図しないスクロールや表示崩れがない。
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pages のサブパス公開に影響しない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない。
-- [ ] 関連する `docs/design/` と矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] `1024px` 以上、`768px` 以上 `1024px` 未満、`768px` 未満で Header とレイアウトの表示対象が要件どおりである。
+- [x] desktop で Header、SiteMenu、PageToc の固定／独立スクロールが本文と干渉しない。
+- [x] desktop で SiteMenu の展開操作と PageToc リンクが利用できる。
+- [x] mobile で Header の下スクロール非表示・上スクロール再表示、メニュー／目次を開く際の表示復帰をブラウザで確認する。
+- [x] desktop、`768px` 以上 `1024px` 未満、`768px` 未満のページ内アンカー移動で、移動先の見出しと該当する sticky heading / MobilePageToc trigger が Header に隠れない。
+- [x] mobile で MobileMenu と MobilePageToc の開閉時に本文の意図しないスクロールや表示崩れがない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pages のサブパス公開に影響しない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない。
+- [x] 関連する `docs/design/` と矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -96,3 +96,56 @@
 - 関連 TODO の「表全体が初期表示で収まらない場合のレイアウト対策」は同じ `50-responsive-pass` に紐づくが、本 issue の対象外として残す。
 - 「VRT実装時に、mobile layout / MobilePageToc のCSS回帰検知を追加する」は `50-1-vrt-css-regression-guards` で扱うため、本 issue ではスクロール挙動を確認するテストに限定する。
 - issue 作成時点の作業ツリーには `public/images/data/` 配下の未追跡画像がある。今回の task では変更・削除・stage しない。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/site-layout/`
+- reference desktop: `docs/design/site-layout/design-desktop.png`
+- reference mobile: `docs/design/site-layout/design-mobile.png`、`design-mobile-menu-open.png`、`design-mobile-page-toc-open.png`
+- notes: 3カラムのレール背景、暗め Header、MobileMenu と MobilePageToc の役割差を維持する。
+
+### 成果物
+
+- actual desktop: `test-results/visual/site-layout-desktop.png`、`world-desktop.png`
+- actual mobile: `test-results/visual/site-layout-mobile.png`、`site-layout-mobile-menu-open.png`、`site-layout-mobile-page-toc-open.png`、`world-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                           | 対応                                                   |
+| --------------------- | ---- | ---------------------------------------------- | ------------------------------------------------------ |
+| レイアウト            | OK   | 3カラム背景を維持                              | レール本体ではなく内部ナビゲーションを独立スクロール化 |
+| 余白                  | OK   | Header 下の配置を維持                          | `--site-header-height` を共通利用                      |
+| タイポグラフィ        | OK   | 変更なし                                       | 変更なし                                               |
+| 色                    | OK   | 変更なし                                       | 変更なし                                               |
+| 配置・整列            | OK   | 固定 Header と sticky heading が競合しない     | sticky heading の top を Header 高さに合わせた         |
+| レスポンシブ          | OK   | 768px 以上は固定 Header、768px 未満は方向連動  | browser testで確認                                     |
+| overflow / scroll     | OK   | desktop の SiteMenu / PageToc が独立スクロール | 展開状態を含む browser testで確認                      |
+| 既存デザインとの整合  | OK   | 左右レール背景を本文末尾まで維持               | visual review中に自己修正                              |
+| 既存Componentとの整合 | OK   | MobileMenu / MobilePageToc の開閉を維持        | overlay状態イベントで Header 表示を同期                |
+| accessibility basics  | OK   | アンカー先が固定 Header に隠れない             | `scroll-padding-top` と browser確認                    |
+
+### 自己修正した項目
+
+- [x] 独立スクロールで左右レール背景が viewport 高で終わる差分を、内部ナビゲーションの sticky / overflow 化で修正した。
+- [x] `1024px` 未満の目次アンカーが sticky H1 エリアに隠れる差分を、H1 実測高を含む scroll padding と tablet / mobile の自動テストで修正した。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

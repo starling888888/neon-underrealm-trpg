@@ -41,8 +41,7 @@ const basePath = import.meta.env.BASE_URL;
 
 <style>
   .site-menu {
-    position: sticky;
-    top: var(--space-6);
+    position: static;
   }
 
   .site-menu-drawer {
@@ -181,6 +180,19 @@ const basePath = import.meta.env.BASE_URL;
   @media (max-width: 48rem) {
     .site-menu-desktop {
       display: none;
+    }
+  }
+
+  @media (min-width: 48.001rem) {
+    .site-menu-desktop {
+      position: sticky;
+      top: calc(var(--site-header-height) + var(--space-8));
+      max-block-size: calc(
+        100dvh - var(--site-header-height) - (var(--space-8) * 2)
+      );
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
     }
   }
 </style>

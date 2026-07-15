@@ -56,7 +56,7 @@ const panelId = "mobile-page-toc-panel";
   @media (max-width: 63.999rem) {
     :global(.mobile-page-heading) {
       position: sticky;
-      top: 0;
+      top: var(--site-header-height);
       z-index: 4;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -67,6 +67,10 @@ const panelId = "mobile-page-toc-panel";
       margin-block-start: calc(var(--space-3) * -1);
       margin-block-end: var(--space-8);
       padding-block-start: var(--space-3);
+    }
+
+    :global(body.mobile-header-hidden .mobile-page-heading) {
+      top: 0;
     }
 
     :global(.prose .mobile-page-heading > h1) {
