@@ -112,6 +112,26 @@ test("site layout mobile header follows scroll direction and overlay state @site
 
   await page.evaluate(() => window.scrollTo(0, 420));
   await expect(header).not.toHaveClass(/is-hidden/);
+  await page.waitForTimeout(40);
+  await expect
+    .poll(async () => {
+      return await page.evaluate(() => {
+        const headerElement = document.querySelector("[data-site-header]");
+        const headingElement = document.querySelector(
+          "[data-mobile-page-heading]",
+        );
+
+        if (!headerElement || !headingElement) {
+          return Number.NaN;
+        }
+
+        return Math.round(
+          headingElement.getBoundingClientRect().top -
+            headerElement.getBoundingClientRect().bottom,
+        );
+      });
+    })
+    .toBeLessThanOrEqual(1);
   await expect
     .poll(async () => Math.round((await header.boundingBox())?.y ?? Number.NaN))
     .toBe(0);

@@ -131,6 +131,7 @@
 
 - [x] 独立スクロールで左右レール背景が viewport 高で終わる差分を、内部ナビゲーションの sticky / overflow 化で修正した。
 - [x] `1024px` 未満の目次アンカーが sticky H1 エリアに隠れる差分を、H1 実測高を含む scroll padding と tablet / mobile の自動テストで修正した。
+- [x] 上スクロール時に Header と sticky H1 エリアの間へ一瞬の隙間が出る差分を、両者の 180ms transition 同期と途中時点の自動テストで修正した。
 
 ### 人間判断が必要な差分
 
@@ -149,3 +150,51 @@
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- mobile／tablet では目次リンクの移動先が固定 Header には隠れないが、本文上部に固定される H1 エリアに隠れる。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: tablet で PageToc のアンカー先が Header 下端と同じ位置になり、sticky H1 エリアと重なることを確認した。`1024px` 未満の scroll padding が Header 高さだけを考慮していた。
+
+### 対応方針
+
+- `ResizeObserver` で sticky H1 エリアの実測高さを取得し、`1024px` 未満の scroll padding に Header 高さ、H1 高さ、最小余白を加える。
+- tablet／mobile の目次リンク後、移動先の見出しが sticky H1 エリアの下にあることを Visual Test で確認する。
+
+### 対応完了チェックリスト
+
+- [x] sticky H1 エリアの実測高さを scroll padding に反映した。
+- [x] tablet／mobile の目次アンカーが sticky H1 エリアに隠れない Visual Test を追加した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- モバイルで Header が隠れている状態から上スクロールした直後、sticky H1 エリアと Header の間に一瞬のスペースが表れる。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: 実ブラウザで上スクロール直後に最大 64px の隙間を確認した。Header の `transform` と sticky H1 エリアの `top` の遷移タイミングが異なることが原因だった。
+
+### 対応方針
+
+- Header と sticky H1 エリアを同じ `180ms ease` で遷移させる。
+- 上スクロール開始から 40ms 時点で両者の隙間が 1px 以下であることを Visual Test に追加する。
+
+### 対応完了チェックリスト
+
+- [x] Header と sticky H1 エリアの遷移を同期した。
+- [x] 上スクロール途中の隙間を検証する Visual Test を追加した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
