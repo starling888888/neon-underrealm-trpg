@@ -6,6 +6,11 @@ type MobileMenuElements = {
   focusableElements: () => HTMLElement[];
 };
 
+type OverlayChangeDetail = {
+  source: "mobile-menu" | "mobile-page-toc" | "search";
+  isOpen: boolean;
+};
+
 const layoutOverlayChangeEvent = "layout-overlay-change";
 
 const focusableSelector = [
@@ -49,7 +54,11 @@ function setOpen(elements: MobileMenuElements, isOpen: boolean): void {
   elements.drawer.hidden = !isOpen;
   elements.openButton.setAttribute("aria-expanded", String(isOpen));
   document.body.classList.toggle("mobile-menu-open", isOpen);
-  window.dispatchEvent(new Event(layoutOverlayChangeEvent));
+  window.dispatchEvent(
+    new CustomEvent(layoutOverlayChangeEvent, {
+      detail: { source: "mobile-menu", isOpen },
+    }),
+  );
 
   if (isOpen) {
     const [firstFocusable] = elements.focusableElements();
@@ -126,6 +135,22 @@ export function setupMobileMenu(): void {
 
   window.matchMedia("(width >= 48rem)").addEventListener("change", (event) => {
     if (event.matches && !elements.drawer.hidden) {
+      setOpen(elements, false);
+    }
+  });
+
+  window.addEventListener(layoutOverlayChangeEvent, (event) => {
+    if (!(event instanceof CustomEvent)) {
+      return;
+    }
+
+    const detail = event.detail as OverlayChangeDetail | undefined;
+
+    if (
+      detail?.source === "search" &&
+      detail.isOpen &&
+      !elements.drawer.hidden
+    ) {
       setOpen(elements, false);
     }
   });

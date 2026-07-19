@@ -4,6 +4,11 @@ type MobilePageTocElements = {
   panel: HTMLElement;
 };
 
+type OverlayChangeDetail = {
+  source: "mobile-menu" | "mobile-page-toc" | "search";
+  isOpen: boolean;
+};
+
 const initializedAttribute = "data-mobile-page-toc-initialized";
 const layoutOverlayChangeEvent = "layout-overlay-change";
 const mobilePageHeadingHeightVariable = "--mobile-page-heading-height";
@@ -39,7 +44,11 @@ function setOpen(elements: MobilePageTocElements, isOpen: boolean): void {
     "aria-label",
     isOpen ? "このページの目次を閉じる" : "このページの目次を開く",
   );
-  window.dispatchEvent(new Event(layoutOverlayChangeEvent));
+  window.dispatchEvent(
+    new CustomEvent(layoutOverlayChangeEvent, {
+      detail: { source: "mobile-page-toc", isOpen },
+    }),
+  );
 }
 
 function closeAllExcept(currentRoot?: HTMLElement): void {
@@ -135,4 +144,16 @@ export function setupMobilePageToc(): void {
         closeAllExcept();
       }
     });
+
+  window.addEventListener(layoutOverlayChangeEvent, (event) => {
+    if (!(event instanceof CustomEvent)) {
+      return;
+    }
+
+    const detail = event.detail as OverlayChangeDetail | undefined;
+
+    if (detail?.source === "search" && detail.isOpen) {
+      closeAllExcept();
+    }
+  });
 }

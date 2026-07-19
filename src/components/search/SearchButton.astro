@@ -1,0 +1,166 @@
+---
+export interface Props {
+  variant: "desktop" | "mobile";
+}
+
+const { variant } = Astro.props;
+const isDesktop = variant === "desktop";
+---
+
+{
+  isDesktop ? (
+    <label class="search-button search-button-desktop">
+      <span class="search-icon" aria-hidden="true"></span>
+      <input
+        type="search"
+        placeholder="サイト内を検索"
+        aria-label="サイト内を検索"
+        aria-controls="site-search-panel"
+        aria-expanded="false"
+        data-search-desktop-input
+      />
+    </label>
+  ) : (
+    <button
+      class="search-button search-button-mobile"
+      type="button"
+      aria-label="検索を開く"
+      aria-controls="site-search-panel"
+      aria-expanded="false"
+      data-search-mobile-toggle
+    >
+      <span class="search-icon" aria-hidden="true"></span>
+      <span class="search-close-icon" aria-hidden="true"></span>
+    </button>
+  )
+}
+
+<style>
+  .search-button {
+    color: var(--color-text-inverse);
+  }
+
+  .search-button-desktop {
+    width: min(23rem, 36vw);
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: rgb(248 250 249 / 0.08);
+    padding-inline: var(--space-4);
+  }
+
+  .search-button-desktop:focus-within {
+    border-color: var(--color-focus);
+    outline: 0.125rem solid color-mix(in srgb, var(--color-focus) 35%, transparent);
+    outline-offset: 0.125rem;
+  }
+
+  .search-button-desktop input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-inverse);
+    outline: 0;
+  }
+
+  .search-button-desktop input::placeholder {
+    color: color-mix(in srgb, var(--color-text-inverse) 82%, transparent);
+    opacity: 1;
+  }
+
+  .search-button-mobile {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: inline-grid;
+    place-items: center;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .search-button-mobile:hover {
+    background: rgb(248 250 249 / 0.1);
+  }
+
+  .search-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  .search-icon::before,
+  .search-icon::after {
+    content: "";
+    position: absolute;
+    display: block;
+  }
+
+  .search-icon::before {
+    width: 0.72rem;
+    height: 0.72rem;
+    top: 0.1rem;
+    left: 0.1rem;
+    border: 0.15rem solid color-mix(in srgb, currentColor 82%, transparent);
+    border-radius: 50%;
+  }
+
+  .search-icon::after {
+    width: 0.5rem;
+    height: 0.15rem;
+    top: 0.85rem;
+    left: 0.78rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, currentColor 82%, transparent);
+    transform: rotate(45deg);
+    transform-origin: left center;
+  }
+
+  .search-close-icon,
+  .search-close-icon::after {
+    width: 1.125rem;
+    height: 0.125rem;
+    display: none;
+    border-radius: var(--radius-sm);
+    background: currentColor;
+  }
+
+  :global(body.search-open) .search-button-mobile .search-icon {
+    display: none;
+  }
+
+  :global(body.search-open) .search-button-mobile .search-close-icon,
+  :global(body.search-open) .search-button-mobile .search-close-icon::after {
+    display: block;
+  }
+
+  :global(body.search-open) .search-button-mobile .search-close-icon {
+    position: relative;
+    transform: rotate(45deg);
+  }
+
+  :global(body.search-open) .search-button-mobile .search-close-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: rotate(90deg);
+  }
+
+  @media (width < 48rem) {
+    .search-button-desktop {
+      display: none;
+    }
+  }
+
+  @media (width >= 48rem) {
+    .search-button-mobile {
+      display: none;
+    }
+  }
+</style>
