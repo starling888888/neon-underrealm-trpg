@@ -23,7 +23,7 @@ Pagefindをビルド時専用の依存関係として導入し、公開用に生
 
 ## 初期スコープ外
 
-- 検索ボタン、検索モーダル、検索結果表示、キーボード操作などのUI実装（Task 44、47）
+- 検索ボタン、検索モーダル、検索結果表示、キーボード操作などのUI実装（Task 44）
 - Pagefind client APIを使う検索実行・結果遷移（Task 45）
 - 検索対象の除外、タイトル・種別metadata、データカードanchorの調整（Task 46）
 - `.github/workflows/deploy.yml`、CI/CDのbuild手順、GitHub Pagesへのindex配布の変更（Task 48）
