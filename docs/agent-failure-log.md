@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Search UI check needed separate type and formatter corrections
+
+#### 2026-07-19
+
+- source: self
+- 発生箇所: `44-search-modal-ui` の `src/scripts/search-modal.ts` 初回実装後の `npm run check`
+- 観測した失敗: 開閉判定で`HTMLElement.hidden`をBooleanとして渡し、Astro type checkが`string | boolean`を検出した。型修正後に同じ`npm run check`を再実行したところ、Biome formatterの改行差分で再度停止した。
+- 一次対応: 開閉判定を明示的なBoolean比較へ修正し、Biome formatterの出力を対象ファイルへ適用してから再検証する。
+
 ### dprint cache prevented formatting an untracked issue
 
 #### 2026-07-19

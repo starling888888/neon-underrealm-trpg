@@ -1,6 +1,7 @@
 ---
 import { siteMeta } from "../../lib/site/siteMeta";
 import { withBase } from "../../lib/utils/paths";
+import SearchButton from "../search/SearchButton.astro";
 
 const homePath = withBase("/");
 const logoWebpPath = withBase(siteMeta.titleLogo.webp);
@@ -37,20 +38,11 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
   </a>
 
   <div class="header-actions">
-    <div
-      class="search-mock"
-      role="search"
-      aria-label="検索入力欄の表示枠。検索機能は未実装です。"
-    >
-      <span class="search-icon" aria-hidden="true"></span>
-      <span class="search-placeholder" aria-hidden="true"></span>
-    </div>
+    <SearchButton variant="desktop" />
   </div>
 
   <div class="mobile-header-control">
-    <button class="icon-button" type="button" aria-label="検索ダイアログを開く" disabled>
-      <span class="search-icon" aria-hidden="true"></span>
-    </button>
+    <SearchButton variant="mobile" />
   </div>
 </header>
 
@@ -105,59 +97,6 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
   .header-actions {
     display: flex;
     justify-content: flex-end;
-  }
-
-  .search-mock {
-    width: min(23rem, 36vw);
-    min-height: 2.75rem;
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    border: var(--border-width) solid var(--color-border-strong);
-    border-radius: var(--radius-lg);
-    background: rgb(248 250 249 / 0.08);
-    padding-inline: var(--space-4);
-  }
-
-  .search-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    position: relative;
-    flex: 0 0 auto;
-  }
-
-  .search-icon::before,
-  .search-icon::after {
-    content: "";
-    position: absolute;
-    display: block;
-  }
-
-  .search-icon::before {
-    width: 0.72rem;
-    height: 0.72rem;
-    top: 0.1rem;
-    left: 0.1rem;
-    border: 0.15rem solid color-mix(in srgb, var(--color-text-inverse) 82%, transparent);
-    border-radius: 50%;
-  }
-
-  .search-icon::after {
-    width: 0.5rem;
-    height: 0.15rem;
-    top: 0.85rem;
-    left: 0.78rem;
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-text-inverse) 82%, transparent);
-    transform: rotate(45deg);
-    transform-origin: left center;
-  }
-
-  .search-placeholder {
-    width: min(13rem, 100%);
-    height: 0.65rem;
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-border-strong) 68%, white);
   }
 
   .mobile-header-control {

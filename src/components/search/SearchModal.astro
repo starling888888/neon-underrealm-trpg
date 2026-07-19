@@ -1,0 +1,203 @@
+<button
+  class="search-scrim"
+  type="button"
+  data-search-scrim
+  tabindex="-1"
+  aria-label="検索結果を閉じる"
+  hidden
+></button>
+
+<section
+  id="site-search-panel"
+  class="search-panel"
+  role="search"
+  aria-label="サイト内検索"
+  hidden
+  data-search-panel
+>
+  <div class="search-panel-content">
+    <div class="mobile-search-heading">
+      <h2>サイト内検索</h2>
+    </div>
+
+    <label class="mobile-search-input">
+      <input
+        type="search"
+        placeholder="キーワードを入力"
+        aria-label="サイト内を検索"
+        data-search-mobile-input
+      />
+    </label>
+
+    <section class="search-results" aria-labelledby="search-results-title">
+      <span class="search-results-icon" aria-hidden="true"></span>
+      <h2 id="search-results-title">検索機能は準備中です</h2>
+      <p>検索結果はここに表示されます。</p>
+    </section>
+
+    <p class="search-hint"><kbd>Esc</kbd> キーで検索を閉じます。</p>
+  </div>
+</section>
+
+<style>
+  .search-scrim,
+  .search-panel {
+    display: none;
+  }
+
+  .search-scrim[hidden],
+  .search-panel[hidden] {
+    display: none;
+  }
+
+  .search-results {
+    min-height: 9.75rem;
+    display: grid;
+    place-items: center;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-muted);
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  .search-results-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    position: relative;
+    display: block;
+    margin-inline: auto;
+    border: 0.125rem solid var(--color-link);
+    border-radius: 50%;
+  }
+
+  .search-results-icon::after {
+    width: 0.8rem;
+    height: 0.125rem;
+    position: absolute;
+    inset-block-end: 0.25rem;
+    inset-inline-end: -0.45rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-link);
+    content: "";
+    transform: rotate(45deg);
+    transform-origin: left center;
+  }
+
+  .search-results h2 {
+    margin: var(--space-4) 0 0;
+    color: var(--color-text);
+    font-size: var(--text-base);
+    line-height: var(--line-height-tight);
+  }
+
+  .search-results p {
+    margin: var(--space-2) 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  @media (width >= 48rem) {
+    .search-scrim:not([hidden]) {
+      position: fixed;
+      z-index: 3;
+      inset: var(--site-header-height) 0 0;
+      display: block;
+      border: 0;
+      background: rgb(17 24 32 / 0.24);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .search-panel:not([hidden]) {
+      width: min(23rem, 36vw);
+      position: fixed;
+      z-index: 4;
+      inset-block-start: var(--site-header-height);
+      inset-inline-end: var(--space-8);
+      display: block;
+      border: var(--border-width) solid var(--color-border-strong);
+      border-block-start: 0;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      background: var(--color-surface);
+      box-shadow: 0 1rem 2rem rgb(17 24 32 / 0.22);
+    }
+
+    .search-panel-content {
+      padding: var(--space-5);
+    }
+
+    .mobile-search-heading,
+    .mobile-search-input,
+    .search-hint {
+      display: none;
+    }
+  }
+
+  @media (width < 48rem) {
+    :global(body.search-open) {
+      overflow: hidden;
+    }
+
+    .search-panel:not([hidden]) {
+      position: fixed;
+      z-index: 6;
+      inset: var(--site-header-height) 0 0;
+      display: block;
+      overflow-y: auto;
+      background: var(--color-surface);
+    }
+
+    .search-panel-content {
+      min-height: 100%;
+      padding: var(--space-6) var(--space-5) var(--space-8);
+    }
+
+    .mobile-search-heading h2 {
+      margin: 0;
+      color: var(--color-text);
+      font-size: var(--text-xl);
+      line-height: var(--line-height-tight);
+    }
+
+    .mobile-search-input {
+      display: block;
+      margin-block-start: var(--space-6);
+    }
+
+    .mobile-search-input input {
+      width: 100%;
+      min-height: 3rem;
+      border: 0.125rem solid var(--color-focus);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      color: var(--color-text);
+      outline: 0.1875rem solid color-mix(in srgb, var(--color-focus) 28%, transparent);
+      outline-offset: 0.125rem;
+      padding-inline: var(--space-4);
+    }
+
+    .search-results {
+      min-height: 13.75rem;
+      margin-block-start: var(--space-6);
+    }
+
+    .search-hint {
+      margin: var(--space-5) 0 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      text-align: center;
+    }
+
+    kbd {
+      border: var(--border-width) solid var(--color-border-strong);
+      border-block-end-width: 0.125rem;
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-family: inherit;
+      font-size: var(--text-xs);
+      padding: 0.0625rem var(--space-2);
+    }
+  }
+</style>

@@ -10,6 +10,12 @@ function hasOpenLayoutOverlay(): boolean {
     return true;
   }
 
+  const searchPanel = document.getElementById("site-search-panel");
+
+  if (searchPanel && !searchPanel.hidden) {
+    return true;
+  }
+
   return Array.from(
     document.querySelectorAll<HTMLElement>("[data-mobile-page-toc-panel]"),
   ).some((panel) => !panel.hidden);

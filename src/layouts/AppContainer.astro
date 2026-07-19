@@ -4,6 +4,7 @@ import "../styles/prose.css";
 import Footer from "../components/layout/Footer.astro";
 import Header from "../components/layout/Header.astro";
 import MobileSiteMenuDrawer from "../components/layout/MobileSiteMenuDrawer.astro";
+import SearchModal from "../components/search/SearchModal.astro";
 import Seo from "../components/seo/Seo.astro";
 import type { SeoProps } from "../lib/site/seo";
 import { defaultSeo } from "../lib/site/seo";
@@ -55,6 +56,8 @@ const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
     <div class="site-shell">
       <Header />
 
+      <SearchModal />
+
       <MobileSiteMenuDrawer />
 
       <PageLayout>
@@ -69,9 +72,11 @@ const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
 <script>
   import { setupMobileHeader } from "../scripts/mobile-header";
   import { setupMobileMenu } from "../scripts/mobile-menu";
+  import { setupSearchModal } from "../scripts/search-modal";
 
   setupMobileHeader();
   setupMobileMenu();
+  setupSearchModal();
 </script>
 
 <style>

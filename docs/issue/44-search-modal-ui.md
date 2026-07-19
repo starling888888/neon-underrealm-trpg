@@ -51,27 +51,27 @@
 ## 完了条件
 
 - [x] 実装前に `docs/design/search-modal/` のinitial draft（notesとdesktop / mobile design画像）が作成・承認済みである。
-- [ ] `SearchButton.astro` と `SearchModal.astro` が作成され、共通Header / layoutから利用されている。
-- [ ] desktop Headerの検索入力欄から結果panelを開け、mobile Header右側の検索アイコンから検索panelを開ける。mobileの検索表示中は同じ位置が `×` の閉じる操作へ切り替わる。
-- [ ] 検索UIには検索語入力欄と、検索結果を同一画面内に表示する空の枠がある。
-- [ ] Pagefind、固定結果、検索実行、検索index生成を実装していない。
-- [ ] desktop結果panelとmobile検索panelの検索UIとしての意味付け、検索起点の `aria-expanded` / `aria-controls`、入力欄への初期focus、EscとHeader右側の `×` による閉鎖、各検索起点へのfocus復帰を確認できる。
-- [ ] mobileで検索panelを開く前にsite menu / page TOC overlayが開いている場合はそれらを閉じ、検索表示中にsite menu / page TOCを開いた場合は検索panelを閉じる。複数のoverlayを同時に開かない。
-- [ ] mobileで検索panelを開いている間、背景本文の不用意なスクロールを抑止し、`layout-overlay-change` によりHeaderを表示状態に維持する。
-- [ ] desktopで検索表示中、Headerを除く背景に控えめなグレーscrimが表示され、検索入力欄と結果panelは読みやすい明るさを保つ。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `SearchButton.astro` と `SearchModal.astro` が作成され、共通Header / layoutから利用されている。
+- [x] desktop Headerの検索入力欄から結果panelを開け、mobile Header右側の検索アイコンから検索panelを開ける。mobileの検索表示中は同じ位置が `×` の閉じる操作へ切り替わる。
+- [x] 検索UIには検索語入力欄と、検索結果を同一画面内に表示する空の枠がある。
+- [x] Pagefind、固定結果、検索実行、検索index生成を実装していない。
+- [x] desktop結果panelとmobile検索panelの検索UIとしての意味付け、検索起点の `aria-expanded` / `aria-controls`、入力欄への初期focus、EscとHeader右側の `×` による閉鎖、各検索起点へのfocus復帰を確認できる。
+- [x] mobileで検索panelを開く前にsite menu / page TOC overlayが開いている場合はそれらを閉じ、検索表示中にsite menu / page TOCを開いた場合は検索panelを閉じる。複数のoverlayを同時に開かない。
+- [x] mobileで検索panelを開いている間、背景本文の不用意なスクロールを抑止し、`layout-overlay-change` によりHeaderを表示状態に維持する。
+- [x] desktopで検索表示中、Headerを除く背景に控えめなグレーscrimが表示され、検索入力欄と結果panelは読みやすい明るさを保つ。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、Header、mobile site menu、PageTocが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。検索UIの接続で `/` 固定のURLを追加していない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] Pagefind連携、検索メタデータなど後続taskの範囲を先取りしていない。
-- [ ] `docs/requirements/search.md`、`docs/requirements/layout-navigation.md`、`docs/out-of-scope.md` と矛盾していない。
-- [ ] `docs/design/search-modal/` のdesktop / mobile design、および既存Header / global layout designと矛盾していない。
-- [ ] mobile search、site menu、page TOCの任意の操作順で、overlayが1つだけ開き、Header表示状態とbodyのスクロール抑止が既存overlayと矛盾しない。
-- [ ] ユーザーの未コミット画像変更を破壊していない。
+- [x] 既存ルート、Header、mobile site menu、PageTocが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。検索UIの接続で `/` 固定のURLを追加していない。
+- [x] 不要な依存関係を追加していない。
+- [x] Pagefind連携、検索メタデータなど後続taskの範囲を先取りしていない。
+- [x] `docs/requirements/search.md`、`docs/requirements/layout-navigation.md`、`docs/out-of-scope.md` と矛盾していない。
+- [x] `docs/design/search-modal/` のdesktop / mobile design、および既存Header / global layout designと矛盾していない。
+- [x] mobile search、site menu、page TOCの任意の操作順で、overlayが1つだけ開き、Header表示状態とbodyのスクロール抑止が既存overlayと矛盾しない。
+- [x] ユーザーの未コミット画像変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -96,3 +96,48 @@
 - 現在の `Header.astro` はdesktopの検索入力欄mockと、disabledのmobile検索アイコンを表示している。task 44では前者を入力欄、後者を開く / `×` で閉じる操作へ移行する想定だが、Header全体の再設計は含めない。
 - design画像は作成・ユーザー確認済みである。実装後のVisual Review actual screenshotをdesign正本として扱わず、正本化には別途の明示承認を要する。
 - `docs/TODO.md` の既存項目はtask 44に直接関係しないため、変更しない。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/search-modal/`
+- reference desktop: `docs/design/search-modal/design-desktop.png`
+- reference mobile: `docs/design/search-modal/design-mobile.png`
+- notes: `docs/design/search-modal/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual/search-modal-desktop.png`
+- actual mobile: `test-results/visual/search-modal-mobile.png`
+- report: `test-results/visual/capture-manifest.json`、Playwright 3 tests passed
+
+### レビュー結果
+
+| 領域                 | 判定 | 差分・確認内容                                                                                          | 対応     |
+| -------------------- | ---- | ------------------------------------------------------------------------------------------------------- | -------- |
+| レイアウト           | OK   | DesktopはHeader検索入力と同じ右端・幅で、その直下に結果panelを表示する。MobileはHeader下にpanelを表示。 | 対応不要 |
+| 色・階層             | OK   | DesktopはHeaderを残し、本文のみ控えめなグレーscrimで抑え、panelと入力欄は明るさを保つ。                 | 対応不要 |
+| mobile操作           | OK   | 右側の検索アイコンはpanel表示時に `×` となり、Header内の同じ位置から閉じられる。                        | 対応不要 |
+| 結果未接続時の内容   | OK   | 「検索機能は準備中です」と空の結果枠を表示し、実検索済みとは誤認させない。                              | 対応不要 |
+| overlay・scroll      | OK   | Playwrightで検索、site menu、page TOCの相互排他とmobile背景スクロール抑止を確認した。                   | 対応不要 |
+| 既存デザインとの整合 | OK   | 既存Header・global layoutの色、border、余白tokenを使い、design draftと整合する。                        | 対応不要 |
+
+### コンテンツレビュー
+
+- [x] desktop / mobileの結果未接続時メッセージをscreenshot上で確認した。
+- [x] 検索結果・検索メタデータ・Pagefind連携を示す固定コンテンツを追加していない。
+
+### 人間判断が必要な差分
+
+- 実装screenshotはdesign正本ではない。検索結果の内容・種別・抜粋はtask 45〜46で設計・実装する。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 検索、site menu、page TOCのoverlay排他を自動テストした
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
