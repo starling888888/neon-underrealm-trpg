@@ -75,6 +75,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: なし。共通スキルボーナスを条件や効果種別で検索・集計・比較する要件が明確になった時点で計画する。
   - handling plan: 現行の`ryugi-list.json`では、2／5／9レベルごとのボーナスを改行を含む表示文字列として保持する。将来、効果種別、対象、増減値などを構造化する必要が生じた場合に、Excel入力列、JSON形状、既存表示との互換性、検索・表示要件、migration方針を定義してから別タスクで変換する。
 
+- [ ] React Islandの導入を検討する
+  - source: ユーザー指示
+  - classification: out-of-scope follow-up
+  - plan: なし。ファーストステップ完了後に必要性と導入範囲を判断する。
+  - handling plan: vanilla JavaScriptでUIロジックとHTMLセレクタの対応を維持する負荷が高まっているため、必要な画面に限定したReact Islandの導入可否を検討する。初期スコープ外のままとし、現時点では実装・`docs/plan.md`への追加を行わない。
+
 - [ ] 流儀スキル変換仕様のファイル名を計画と要件で統一する
   - source: PR #46の`pr-review-1.md`
   - classification: follow-up
