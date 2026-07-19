@@ -140,7 +140,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
 
 ### 対応完了チェックリスト
 

@@ -171,6 +171,10 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
   await expect(
     page.locator('.search-result-link[href$="#skill-common-bonus-a-001"]'),
   ).toBeVisible();
+  await page.screenshot({
+    fullPage: false,
+    path: `${visualOutputDir}/search-modal-results-mobile.png`,
+  });
 });
 
 test("search panel guides one-character kana and ASCII searches @search-modal-query-validation", async ({
