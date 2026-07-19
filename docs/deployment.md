@@ -44,7 +44,7 @@ npm run build:search-index
 
 `build:search-index` はサイト自体をbuildせず、既にある `dist/` を入力にPagefindの静的検索bundleを `dist/pagefind/` へ生成します。生成物はGit管理しません。
 
-GitHub Actionsでの検索index生成と配布は、Task 48で扱います。
+GitHub Actionsのdeploy workflowも、公開用build後に同じ順序で検索indexを生成します。`dist/pagefind/`を含む`dist/`全体をGitHub Pages artifactとして配布します。
 
 ## GitHub Pages公開手順
 
@@ -55,10 +55,11 @@ workflowの基本処理は以下です。
 1. `npm ci` を実行する。
 2. `npm run check` を実行する。
 3. `npm run build:public` を実行する。
-4. `dist/` をGitHub Pages artifactとしてアップロードする。
-5. GitHub Pagesへデプロイする。
+4. `npm run build:search-index` を実行する。
+5. `dist/pagefind/`を含む`dist/`をGitHub Pages artifactとしてアップロードする。
+6. GitHub Pagesへデプロイする。
 
-この段階では検索インデックス生成を含めません。検索indexはTask 48でworkflowへ追加します。
+検索UIはGitHub Pagesのサブパス配下から`pagefind/`を参照するため、indexは公開用buildと同じ`dist/`へ生成する必要があります。
 
 workflowは `main` へのpushで実行します。
 

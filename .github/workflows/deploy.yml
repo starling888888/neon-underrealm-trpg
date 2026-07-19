@@ -45,6 +45,9 @@ jobs:
       - name: Build
         run: npm run build:public
 
+      - name: Build search index
+        run: npm run build:search-index
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
