@@ -397,3 +397,15 @@
   - [x] Pagefind package追加
   - [x] build後にindex生成できる
   - [x] `npm run build:search-index` 追加
+
+- [x] `44-search-modal-ui` — 検索モーダルUIを作成する
+  - completed: 2026-07-19 via PR #49 / b2149b5
+
+  - [x] designを生成する
+  - [x] `SearchButton.astro` 作成
+  - [x] `SearchModal.astro` 作成
+  - [x] 検索結果を同一画面内に表示する枠を作成
+  - [x] ヘッダー右側に検索アイコンを表示する
+  - [x] 検索アイコンからポップアップ表示する
+  - [x] 検索中に背景本文が不用意にスクロールしないよう調整する
+  - [x] Escまたは閉じる操作で検索UIを閉じられるようにする

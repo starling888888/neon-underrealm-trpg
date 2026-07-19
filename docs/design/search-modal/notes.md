@@ -20,7 +20,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/44-search-modal-ui.md`
+- historical issue: `docs/issue/done/phase-4/44-search-modal-ui.md`
 - `docs/requirements/search.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/architecture.md`
