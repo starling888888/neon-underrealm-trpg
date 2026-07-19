@@ -86,6 +86,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Search highlight test assumed one mark element twice
+
+#### 2026-07-20
+
+- source: self
+- 発生箇所: `45-search-pagefind-integration` の `tests/visual/search-modal.spec.ts` に対する `npm run visual:capture`
+- 観測した失敗: Pagefindが検索語を複数の`mark`要素へ分割することを考慮せず、検索結果抜粋と遷移先本文のハイライトを単一locatorとして2回検証したため、Playwright strict modeで同じVisual Testが連続して停止した。
+- 一次対応: 検索語と一致する`mark`だけをfilterして検証する。複数のハイライト要素がありうるUIでは、locatorの件数または対象語を先に限定する。
+
+### Visual capture Chromium sandbox launch failed twice
+
+#### 2026-07-19
+
+- source: self
+- 発生箇所: `45-search-pagefind-integration` の `npm run visual:capture`
+- 観測した失敗: 同一作業中にChromiumがsandbox hostを初期化できず、visual captureが2回起動前に停止した。承認済みのcapture実行では成功したため、検索UIのbrowser検証自体は完了している。
+- 一次対応: 同じ失敗を繰り返す前に実行権限を確認し、成功したcaptureでdesktop、mobile、overlay、実index検索をまとめて確認した。sandbox実行環境の恒久対応要否は別途監査する。
+
 ### PR title missed the issue-slug rule again
 
 #### 2026-07-19
@@ -648,3 +666,12 @@ source種別は以下を使う。
 - 発生箇所: `29-0-ryugi-index-data` の `docs/conversion/ryugi-index.md`
 - 観測した失敗: dprintの対象ファイル整形を試みたが、既定cache directoryへの書込みがread-only filesystemで失敗した。その結果を確認せず、未整形のまま同じ`npm run check:md`を再実行して同じtable format errorを2回発生させた。
 - 一次対応: formatterの失敗後は、出力と対象ファイルの変更有無を確認してから再検証する。今回のtable整形は`apply_patch`で反映し、以後のcheckは差分確認後に1回だけ実行する。
+
+### Node test used an Astro-only environment value
+
+#### 2026-07-20
+
+- source: agent self-report
+- 発生箇所: `45-search-pagefind-integration` の検索metadata utility test
+- 観測した失敗: utilityの既定引数で`import.meta.env.BASE_URL`を参照したため、Astro外で実行するNode testが読み込み時に失敗した。同じ`npm test`と対象testの再実行で2回確認した。
+- 一次対応: utilityは環境値を参照せず`/`を既定値にし、Astro layoutから`import.meta.env.BASE_URL`を明示して渡す。環境非依存のutilityはNode testからも読み込める形にする。

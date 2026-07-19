@@ -34,6 +34,7 @@ export type CanonicalizeVisualDesignOptions = {
   head: string;
   rootDir: string;
   route: string;
+  state?: string;
   target: string;
 };
 
@@ -50,6 +51,7 @@ export async function canonicalizeVisualDesign(
 ): Promise<CanonicalizeVisualDesignResult> {
   validateTarget(options.target);
   validateRoute(options.route);
+  validateState(options.state);
 
   const sourceDirectory = path.join(options.rootDir, "test-results/visual");
   const designDirectory = path.join(
@@ -57,13 +59,14 @@ export async function canonicalizeVisualDesign(
     "docs/design",
     options.target,
   );
+  const stateSuffix = options.state ? `-${options.state}` : "";
   const desktopSource = path.join(
     sourceDirectory,
-    `${options.target}-desktop.png`,
+    `${options.target}${stateSuffix}-desktop.png`,
   );
   const mobileSource = path.join(
     sourceDirectory,
-    `${options.target}-mobile.png`,
+    `${options.target}${stateSuffix}-mobile.png`,
   );
   const notesPath = path.join(designDirectory, "notes.md");
   const manifest = await readCaptureManifest(
@@ -84,14 +87,21 @@ export async function canonicalizeVisualDesign(
     branch: options.branch,
     head: options.head,
     route: options.route,
+    state: options.state,
     target: options.target,
   });
 
   await replaceDesignArtifacts(
     {
-      desktopDestination: path.join(designDirectory, "design-desktop.png"),
+      desktopDestination: path.join(
+        designDirectory,
+        `design-desktop${stateSuffix}.png`,
+      ),
       desktopSource,
-      mobileDestination: path.join(designDirectory, "design-mobile.png"),
+      mobileDestination: path.join(
+        designDirectory,
+        `design-mobile${stateSuffix}.png`,
+      ),
       mobileSource,
       notes: updatedNotes,
       notesPath,
@@ -219,6 +229,7 @@ function replaceCanonicalizationSource(
     branch: string;
     head: string;
     route: string;
+    state?: string;
     target: string;
   },
 ): string {
@@ -233,10 +244,13 @@ function replaceCanonicalizationSource(
 
   const block = [
     sourceStart,
-    `- command: \`npm run visual:canonicalize -- ${values.target} --route ${values.route}\``,
+    `- command: \`npm run visual:canonicalize -- ${values.target} --route ${values.route}${
+      values.state ? ` --state ${values.state}` : ""
+    }\``,
     `- source branch: \`${values.branch}\``,
     `- source commit: \`${values.head}\``,
     `- route: \`${values.route}\``,
+    `- state: \`${values.state ?? "default"}\``,
     `- viewport: desktop ${supportedViewports.desktop}, mobile ${supportedViewports.mobile}`,
     `- capture manifest: \`test-results/visual/capture-manifest.json\``,
     sourceEnd,
@@ -277,6 +291,14 @@ function validateTarget(target: string): void {
   if (!/^[a-z0-9-]+$/.test(target)) {
     throw new Error(
       "Design target must use lowercase letters, digits, and hyphens.",
+    );
+  }
+}
+
+function validateState(state: string | undefined): void {
+  if (state !== undefined && !/^[a-z0-9-]+$/.test(state)) {
+    throw new Error(
+      "State must use lowercase letters, digits, and hyphens when provided.",
     );
   }
 }

@@ -4,6 +4,58 @@ type SearchElements = {
   desktopInput: HTMLInputElement;
   mobileInput: HTMLInputElement;
   mobileToggle: HTMLButtonElement;
+  mobileForm: HTMLFormElement;
+  resultsStatus: HTMLParagraphElement;
+  resultsList: HTMLOListElement;
+};
+
+type PagefindAnchor = {
+  element: string;
+  id: string;
+  location: number;
+  text: string;
+};
+
+type PagefindResultData = {
+  anchors: PagefindAnchor[];
+  content: string;
+  excerpt: string;
+  locations: number[];
+  url: string;
+  meta: Record<string, string | undefined>;
+  plain_excerpt: string;
+  sub_results: PagefindSubResult[];
+};
+
+type PagefindSubResult = {
+  excerpt: string;
+  url: string;
+  title: string;
+};
+
+type PagefindSearchResult = {
+  data: () => Promise<PagefindResultData>;
+};
+
+type PagefindSearchResponse = {
+  results: PagefindSearchResult[];
+};
+
+type PagefindApi = {
+  options: (options: {
+    bundlePath: string;
+    highlightParam: string;
+  }) => Promise<void> | void;
+  init: () => Promise<void> | void;
+  debouncedSearch: (term: string) => Promise<PagefindSearchResponse | null>;
+};
+
+type SearchResultItem = {
+  excerptHtml: string;
+  pageTitle: string;
+  sectionTitle: string | null;
+  typeLabel: string;
+  url: string;
 };
 
 type OverlayChangeDetail = {
@@ -14,7 +66,21 @@ type OverlayChangeDetail = {
 const layoutOverlayChangeEvent = "layout-overlay-change";
 const initializedAttribute = "data-search-initialized";
 const mobileMediaQuery = "(width < 48rem)";
-let isRestoringDesktopFocus = false;
+const searchHighlightParam = "highlight";
+const oneCharacterSearchPattern = /^[ぁ-ゖゝゞァ-ヺヽヾーA-Za-z]$/u;
+const searchExcerptLength = 30;
+let pagefindPromise: Promise<PagefindApi> | undefined;
+let pagefindLoadAttempt = 0;
+let searchRequestId = 0;
+const skillCardPromises = new Map<
+  string,
+  Promise<Map<string, SkillCardSearchData>>
+>();
+
+type SkillCardSearchData = {
+  content: string;
+  name: string;
+};
 
 function getElements(): SearchElements | null {
   const panel = document.querySelector<HTMLElement>("[data-search-panel]");
@@ -30,12 +96,403 @@ function getElements(): SearchElements | null {
   const mobileToggle = document.querySelector<HTMLButtonElement>(
     "[data-search-mobile-toggle]",
   );
+  const mobileForm = document.querySelector<HTMLFormElement>(
+    "[data-search-mobile-form]",
+  );
+  const resultsStatus = document.querySelector<HTMLParagraphElement>(
+    "[data-search-results-status]",
+  );
+  const resultsList = document.querySelector<HTMLOListElement>(
+    "[data-search-results-list]",
+  );
 
-  if (!panel || !scrim || !desktopInput || !mobileInput || !mobileToggle) {
+  if (
+    !panel ||
+    !scrim ||
+    !desktopInput ||
+    !mobileInput ||
+    !mobileToggle ||
+    !mobileForm ||
+    !resultsStatus ||
+    !resultsList
+  ) {
     return null;
   }
 
-  return { panel, scrim, desktopInput, mobileInput, mobileToggle };
+  return {
+    panel,
+    scrim,
+    desktopInput,
+    mobileInput,
+    mobileToggle,
+    mobileForm,
+    resultsStatus,
+    resultsList,
+  };
+}
+
+function getBasePath(): string {
+  const basePath = import.meta.env.BASE_URL;
+  return basePath.endsWith("/") ? basePath : `${basePath}/`;
+}
+
+function getPagefindPath(): string {
+  return `${getBasePath()}pagefind/`;
+}
+
+async function loadPagefind(): Promise<PagefindApi> {
+  if (!pagefindPromise) {
+    const loadingPromise = (async () => {
+      const bundlePath = getPagefindPath();
+      const pagefind = (await import(
+        /* @vite-ignore */ `${bundlePath}pagefind.js?attempt=${pagefindLoadAttempt++}`
+      )) as PagefindApi;
+
+      await pagefind.options({
+        bundlePath,
+        highlightParam: searchHighlightParam,
+      });
+      await pagefind.init();
+      return pagefind;
+    })();
+    pagefindPromise = loadingPromise;
+
+    void loadingPromise.catch(() => {
+      if (pagefindPromise === loadingPromise) {
+        pagefindPromise = undefined;
+      }
+    });
+  }
+
+  return pagefindPromise;
+}
+
+function preloadPagefind(): void {
+  void loadPagefind().catch(() => {
+    // Search input reports a loading failure only when the user enters a query.
+  });
+}
+
+function normalizeSearchResultUrl(url: string): string | null {
+  const basePath = getBasePath();
+
+  try {
+    const target = new URL(url, new URL(basePath, window.location.origin));
+
+    if (target.origin !== window.location.origin) {
+      return null;
+    }
+
+    if (!target.pathname.startsWith(basePath)) {
+      target.pathname = `${basePath}${target.pathname.replace(/^\/+/, "")}`;
+    }
+
+    return `${target.pathname}${target.search}${target.hash}`;
+  } catch {
+    return null;
+  }
+}
+
+function renderStatus(elements: SearchElements, message: string): void {
+  elements.panel.removeAttribute("data-search-has-results");
+  elements.resultsList.hidden = true;
+  elements.resultsList.replaceChildren();
+  elements.resultsStatus.hidden = false;
+  elements.resultsStatus.textContent = message;
+}
+
+function createTextElement(
+  tagName: "p" | "span" | "strong",
+  className: string,
+  text: string,
+): HTMLElement {
+  const element = document.createElement(tagName);
+  element.className = className;
+  element.textContent = text;
+  return element;
+}
+
+function createExcerptElement(excerptHtml: string): HTMLParagraphElement {
+  const excerpt = document.createElement("p");
+  excerpt.className = "search-result-excerpt";
+  // Pagefind encodes the excerpt content before inserting its own <mark> tags.
+  excerpt.innerHTML = excerptHtml;
+  return excerpt;
+}
+
+function renderResults(
+  elements: SearchElements,
+  results: SearchResultItem[],
+): void {
+  elements.resultsStatus.hidden = true;
+  elements.panel.setAttribute("data-search-has-results", "true");
+  elements.resultsList.replaceChildren();
+
+  for (const result of results) {
+    const listItem = document.createElement("li");
+    const link = document.createElement("a");
+    const meta = document.createElement("span");
+
+    link.className = "search-result-link";
+    link.href = result.url;
+    meta.className = "search-result-meta";
+    meta.append(
+      createTextElement("span", "search-result-type", result.typeLabel),
+    );
+    link.append(
+      meta,
+      createTextElement("strong", "search-result-title", result.pageTitle),
+    );
+
+    if (result.sectionTitle) {
+      link.append(
+        createTextElement("span", "search-result-section", result.sectionTitle),
+      );
+    }
+
+    link.append(createExcerptElement(result.excerptHtml));
+    listItem.append(link);
+    elements.resultsList.append(listItem);
+  }
+
+  elements.resultsList.hidden = false;
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/gu, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return entities[character] ?? character;
+  });
+}
+
+function getSkillCards(url: string): Promise<Map<string, SkillCardSearchData>> {
+  const cached = skillCardPromises.get(url);
+
+  if (cached) {
+    return cached;
+  }
+
+  const titles = (async () => {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return new Map<string, SkillCardSearchData>();
+    }
+
+    const document = new DOMParser().parseFromString(
+      await response.text(),
+      "text/html",
+    );
+    const cards = new Map<string, SkillCardSearchData>();
+
+    for (const card of document.querySelectorAll<HTMLElement>(
+      "[data-skill-card][id]",
+    )) {
+      const name = card.querySelector(".skill-card-name")?.textContent?.trim();
+      const content = card.textContent?.trim();
+
+      if (name && content) {
+        cards.set(card.id, { name, content });
+      }
+    }
+
+    return cards;
+  })().catch(() => new Map<string, SkillCardSearchData>());
+
+  skillCardPromises.set(url, titles);
+  return titles;
+}
+
+function getSearchResultUrl(pageUrl: string, anchorId?: string): string | null {
+  const url = new URL(pageUrl, new URL(getBasePath(), window.location.origin));
+
+  if (anchorId) {
+    url.hash = anchorId;
+  }
+
+  return normalizeSearchResultUrl(`${url.pathname}${url.search}${url.hash}`);
+}
+
+function normalizeSearchText(value: string): string {
+  return value.normalize("NFKC").replace(/\s+/gu, " ").trim();
+}
+
+function createCardExcerpt(content: string, query: string): string {
+  const normalizedContent = normalizeSearchText(content);
+  const normalizedQuery = normalizeSearchText(query);
+  const matchIndex = normalizedContent
+    .toLocaleLowerCase()
+    .indexOf(normalizedQuery.toLocaleLowerCase());
+
+  if (matchIndex < 0) {
+    return "";
+  }
+
+  const excerptStart = Math.max(0, matchIndex - searchExcerptLength);
+  const excerptEnd = Math.min(
+    normalizedContent.length,
+    matchIndex + normalizedQuery.length + searchExcerptLength,
+  );
+  const before = normalizedContent.slice(excerptStart, matchIndex);
+  const matched = normalizedContent.slice(
+    matchIndex,
+    matchIndex + normalizedQuery.length,
+  );
+  const after = normalizedContent.slice(
+    matchIndex + normalizedQuery.length,
+    excerptEnd,
+  );
+
+  return `${excerptStart > 0 ? "…" : ""}${escapeHtml(before)}<mark>${escapeHtml(
+    matched,
+  )}</mark>${escapeHtml(after)}${
+    excerptEnd < normalizedContent.length ? "…" : ""
+  }`;
+}
+
+async function collectPageSearchResultItems(
+  page: PagefindResultData,
+  query: string,
+): Promise<SearchResultItem[]> {
+  const pageTitle = page.meta.title?.trim() || "無題のページ";
+  const typeLabel = page.meta.type?.trim() || "本文";
+  const pageUrl = getSearchResultUrl(page.url);
+
+  if (!pageUrl) {
+    return [];
+  }
+
+  const cards = await getSkillCards(pageUrl);
+  const skillCardAnchors = new Set(
+    page.anchors
+      .filter((anchor) => anchor.element === "article" && cards.has(anchor.id))
+      .map((anchor) => anchor.id),
+  );
+  const normalizedQuery = normalizeSearchText(query).toLocaleLowerCase();
+  const matchingCards = [...cards.entries()].filter(
+    ([id, card]) =>
+      skillCardAnchors.has(id) &&
+      normalizeSearchText(card.content)
+        .toLocaleLowerCase()
+        .includes(normalizedQuery),
+  );
+
+  if (matchingCards.length > 0) {
+    return matchingCards.flatMap(([id, card]) => {
+      const url = getSearchResultUrl(page.url, id);
+      const excerptHtml = createCardExcerpt(card.content, query);
+
+      if (!url || !excerptHtml) {
+        return [];
+      }
+
+      return [
+        {
+          url,
+          pageTitle,
+          sectionTitle: card.name,
+          typeLabel,
+          excerptHtml,
+        },
+      ];
+    });
+  }
+
+  return page.sub_results.flatMap((subResult) => {
+    const url = normalizeSearchResultUrl(subResult.url);
+
+    if (!url) {
+      return [];
+    }
+
+    const sectionTitle = subResult.title.trim();
+    return [
+      {
+        url,
+        pageTitle,
+        sectionTitle: sectionTitle === pageTitle ? null : sectionTitle,
+        typeLabel,
+        excerptHtml: subResult.excerpt.trim(),
+      },
+    ];
+  });
+}
+
+async function collectSearchResultItems(
+  results: PagefindSearchResult[],
+  query: string,
+): Promise<SearchResultItem[]> {
+  const pages = await Promise.all(results.map((result) => result.data()));
+  const items = await Promise.all(
+    pages.map((page) => collectPageSearchResultItems(page, query)),
+  );
+  return items.flat();
+}
+
+async function search(elements: SearchElements, term: string): Promise<void> {
+  const requestId = ++searchRequestId;
+  const query = term.trim().normalize("NFKC");
+  const compactQuery = query.replace(/\s/gu, "");
+
+  if (!query) {
+    renderStatus(elements, "キーワードを入力すると検索結果を表示します。");
+    return;
+  }
+
+  if (oneCharacterSearchPattern.test(compactQuery)) {
+    renderStatus(
+      elements,
+      "ひらがな、カタカナ、英字は2文字以上で入力してください。",
+    );
+    return;
+  }
+
+  renderStatus(elements, "検索しています…");
+
+  try {
+    const pagefind = await loadPagefind();
+    const response = await pagefind.debouncedSearch(query);
+
+    if (requestId !== searchRequestId || response === null) {
+      return;
+    }
+
+    const items = await collectSearchResultItems(response.results, query);
+
+    if (requestId !== searchRequestId) {
+      return;
+    }
+
+    if (items.length === 0) {
+      renderStatus(elements, "一致する検索結果はありません。");
+      return;
+    }
+
+    renderResults(elements, items);
+  } catch {
+    if (requestId === searchRequestId) {
+      renderStatus(
+        elements,
+        "検索indexを読み込めませんでした。時間をおいて再度お試しください。",
+      );
+    }
+  }
+}
+
+function synchronizeInputs(
+  elements: SearchElements,
+  source: HTMLInputElement,
+): void {
+  const value = source.value;
+  elements.desktopInput.value = value;
+  elements.mobileInput.value = value;
+  void search(elements, value);
 }
 
 function dispatchOverlayChange(isOpen: boolean): void {
@@ -61,7 +518,7 @@ function setOpen(
     "aria-label",
     isOpen ? "検索を閉じる" : "検索を開く",
   );
-  document.body.classList.toggle("search-open", isOpen && isMobile);
+  document.body.classList.toggle("search-open", isOpen);
   dispatchOverlayChange(isOpen);
 
   if (!shouldFocus) {
@@ -69,6 +526,7 @@ function setOpen(
   }
 
   if (isOpen) {
+    preloadPagefind();
     (isMobile ? elements.mobileInput : elements.desktopInput).focus();
     return;
   }
@@ -78,9 +536,23 @@ function setOpen(
     return;
   }
 
-  isRestoringDesktopFocus = true;
-  elements.desktopInput.focus();
-  isRestoringDesktopFocus = false;
+  elements.desktopInput.blur();
+}
+
+export function setupSearchHighlight(): void {
+  if (!new URLSearchParams(window.location.search).has(searchHighlightParam)) {
+    return;
+  }
+
+  void import(
+    /* @vite-ignore */ `${getPagefindPath()}pagefind-highlight.js`
+  ).then(({ default: PagefindHighlight }) => {
+    new PagefindHighlight({
+      highlightParam: searchHighlightParam,
+      markContext: "[data-pagefind-body]",
+      addStyles: false,
+    });
+  });
 }
 
 function isOverlayOpening(event: Event): boolean {
@@ -102,12 +574,23 @@ export function setupSearchModal(): void {
   elements.panel.setAttribute(initializedAttribute, "true");
 
   elements.desktopInput.addEventListener("focus", () => {
-    if (
-      !isRestoringDesktopFocus &&
-      !window.matchMedia(mobileMediaQuery).matches
-    ) {
+    if (!window.matchMedia(mobileMediaQuery).matches) {
       setOpen(elements, true, false);
+      preloadPagefind();
     }
+  });
+
+  elements.desktopInput.addEventListener("input", () => {
+    synchronizeInputs(elements, elements.desktopInput);
+  });
+
+  elements.mobileInput.addEventListener("input", () => {
+    synchronizeInputs(elements, elements.mobileInput);
+  });
+
+  elements.mobileForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    synchronizeInputs(elements, elements.mobileInput);
   });
 
   elements.mobileToggle.addEventListener("click", () => {

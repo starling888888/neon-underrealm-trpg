@@ -9,20 +9,30 @@ async function readGitValue(args: string[]): Promise<string> {
   return stdout.trim();
 }
 
-function readArguments(args: string[]): { route: string; target: string } {
-  const [target, routeFlag, route] = args;
+function readArguments(args: string[]): {
+  route: string;
+  state?: string;
+  target: string;
+} {
+  const [target, routeFlag, route, stateFlag, state] = args;
 
-  if (!target || routeFlag !== "--route" || !route || args.length !== 3) {
+  if (
+    !target ||
+    routeFlag !== "--route" ||
+    !route ||
+    (args.length !== 3 &&
+      (args.length !== 5 || stateFlag !== "--state" || !state))
+  ) {
     throw new Error(
-      "Usage: npm run visual:canonicalize -- <design-target> --route /route/",
+      "Usage: npm run visual:canonicalize -- <design-target> --route /route/ [--state state]",
     );
   }
 
-  return { target, route };
+  return { target, route, state };
 }
 
 async function main(): Promise<void> {
-  const { target, route } = readArguments(process.argv.slice(2));
+  const { target, route, state } = readArguments(process.argv.slice(2));
   const [branch, head] = await Promise.all([
     readGitValue(["branch", "--show-current"]),
     readGitValue(["rev-parse", "HEAD"]),
@@ -32,6 +42,7 @@ async function main(): Promise<void> {
     head,
     rootDir: process.cwd(),
     route,
+    state,
     target,
   });
 

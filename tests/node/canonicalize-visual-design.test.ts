@@ -79,6 +79,53 @@ describe("visual design canonicalization", () => {
     );
   });
 
+  it("copies state-specific visual artifacts with separate design filenames", async () => {
+    const rootDir = await prepareFixture();
+    const startedAt = new Date().toISOString();
+    await writeFile(
+      path.join(rootDir, "test-results/visual/advancement-results-desktop.png"),
+      "results desktop",
+    );
+    await writeFile(
+      path.join(rootDir, "test-results/visual/advancement-results-mobile.png"),
+      "results mobile",
+    );
+    await writeManifest(rootDir, {
+      completedAt: new Date(Date.parse(startedAt) + 2_000).toISOString(),
+      head: "abc123",
+      startedAt,
+    });
+    await setScreenshotTimes(rootDir, new Date(Date.parse(startedAt) + 1_000), [
+      "advancement-results-desktop.png",
+      "advancement-results-mobile.png",
+    ]);
+
+    const result = await canonicalizeVisualDesign({
+      branch: "26-2-advancement-page",
+      head: "abc123",
+      rootDir,
+      route: "/advancement/",
+      state: "results",
+      target: "advancement",
+    });
+
+    assert.equal(
+      await readFile(
+        path.join(result.designDirectory, "design-desktop-results.png"),
+        "utf8",
+      ),
+      "results desktop",
+    );
+    assert.equal(
+      await readFile(
+        path.join(result.designDirectory, "design-mobile-results.png"),
+        "utf8",
+      ),
+      "results mobile",
+    );
+    assert.match(await readFile(result.notesPath, "utf8"), /--state results/);
+  });
+
   it("rejects screenshots modified after the capture completes", async () => {
     const rootDir = await prepareFixture();
     const startedAt = new Date().toISOString();
@@ -312,8 +359,12 @@ async function prepareFixture(): Promise<string> {
   return rootDir;
 }
 
-async function setScreenshotTimes(rootDir: string, time: Date): Promise<void> {
-  for (const name of ["advancement-desktop.png", "advancement-mobile.png"]) {
+async function setScreenshotTimes(
+  rootDir: string,
+  time: Date,
+  names = ["advancement-desktop.png", "advancement-mobile.png"],
+): Promise<void> {
+  for (const name of names) {
     const file = path.join(rootDir, "test-results/visual", name);
     await utimes(file, time, time);
     assert.ok((await stat(file)).mtimeMs > 0);

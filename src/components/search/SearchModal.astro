@@ -20,19 +20,31 @@
       <h2>サイト内検索</h2>
     </div>
 
-    <label class="mobile-search-input">
-      <input
-        type="search"
-        placeholder="キーワードを入力"
-        aria-label="サイト内を検索"
-        data-search-mobile-input
-      />
-    </label>
+    <form class="mobile-search-form" data-search-mobile-form>
+      <label class="mobile-search-input">
+        <span class="visually-hidden">サイト内を検索</span>
+        <input
+          type="search"
+          placeholder="キーワードを入力"
+          aria-label="サイト内を検索"
+          autocomplete="off"
+          data-search-mobile-input
+        />
+      </label>
+      <button class="mobile-search-submit" type="submit">検索</button>
+    </form>
 
-    <section class="search-results" aria-labelledby="search-results-title">
+    <section
+      class="search-results"
+      aria-labelledby="search-results-title"
+      data-search-results
+    >
       <span class="search-results-icon" aria-hidden="true"></span>
-      <h2 id="search-results-title">検索機能は準備中です</h2>
-      <p>検索結果はここに表示されます。</p>
+      <h2 id="search-results-title">検索結果</h2>
+      <p data-search-results-status aria-live="polite">
+        キーワードを入力すると検索結果を表示します。
+      </p>
+      <ol class="search-result-list" data-search-results-list hidden></ol>
     </section>
 
     <p class="search-hint"><kbd>Esc</kbd> キーで検索を閉じます。</p>
@@ -97,6 +109,98 @@
     font-size: var(--text-sm);
   }
 
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  :global(.search-result-list) {
+    display: grid;
+    gap: var(--space-3);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+  }
+
+  :global(.search-result-list[hidden]) {
+    display: none;
+  }
+
+  :global(.search-result-link) {
+    display: grid;
+    gap: var(--space-2);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    padding: var(--space-4);
+    text-decoration: none;
+  }
+
+  :global(.search-result-link:hover) {
+    border-color: var(--color-link);
+    background: var(--color-surface);
+  }
+
+  :global(.search-result-link:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--color-focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  :global(.search-result-meta) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+  }
+
+  :global(.search-result-type) {
+    border-radius: var(--radius-sm);
+    background: var(--color-accent-soft);
+    color: var(--color-link-hover);
+    padding: 0.125rem var(--space-2);
+  }
+
+  :global(.search-result-title) {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 800;
+    line-height: var(--line-height-tight);
+  }
+
+  :global(.search-result-section) {
+    color: var(--color-link);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+  }
+
+  :global(.search-result-excerpt) {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    line-height: var(--line-height-base);
+  }
+
+  :global(.search-result-excerpt mark) {
+    border-radius: var(--radius-sm);
+    background: #ffe36e;
+    color: var(--color-text);
+    padding-inline: 0.0625em;
+  }
+
+  :global(body.search-open) {
+    overflow: hidden;
+  }
+
   @media (width >= 48rem) {
     .search-scrim:not([hidden]) {
       position: fixed;
@@ -121,24 +225,43 @@
       border-radius: 0 0 var(--radius-lg) var(--radius-lg);
       background: var(--color-surface);
       box-shadow: 0 1rem 2rem rgb(17 24 32 / 0.22);
+      max-block-size: calc(50dvh - var(--site-header-height));
+      overflow: hidden;
     }
 
-    .search-panel-content {
+    .search-panel[data-search-has-results] .search-panel-content {
+      box-sizing: border-box;
       padding: var(--space-5);
     }
 
+    .search-panel[data-search-has-results] .search-results {
+      min-height: 0;
+      display: block;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      padding: 0;
+      text-align: left;
+    }
+
+    .search-panel[data-search-has-results]
+      :global(.search-results-icon) {
+      display: none;
+    }
+
+    .search-panel[data-search-has-results] {
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
     .mobile-search-heading,
-    .mobile-search-input,
+    .mobile-search-form,
     .search-hint {
       display: none;
     }
   }
 
   @media (width < 48rem) {
-    :global(body.search-open) {
-      overflow: hidden;
-    }
-
     .search-panel:not([hidden]) {
       position: fixed;
       z-index: 6;
@@ -160,8 +283,10 @@
       line-height: var(--line-height-tight);
     }
 
-    .mobile-search-input {
-      display: block;
+    .mobile-search-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-3);
       margin-block-start: var(--space-6);
     }
 
@@ -177,9 +302,35 @@
       padding-inline: var(--space-4);
     }
 
+    .mobile-search-submit {
+      width: 100%;
+      min-height: 3rem;
+      border: 0;
+      border-radius: var(--radius-lg);
+      background: var(--color-link);
+      color: var(--color-text-inverse);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      padding-inline: var(--space-4);
+    }
+
+    .mobile-search-submit:hover {
+      background: var(--color-link-hover);
+    }
+
+    .mobile-search-submit:focus-visible {
+      outline: var(--focus-ring-width) solid var(--color-focus);
+      outline-offset: var(--focus-ring-offset);
+    }
+
     .search-results {
       min-height: 13.75rem;
       margin-block-start: var(--space-6);
+    }
+
+    :global(.search-result-list) {
+      gap: var(--space-3);
     }
 
     .search-hint {
