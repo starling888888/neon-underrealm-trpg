@@ -32,6 +32,37 @@ const {
 } = Astro.props;
 
 const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
+
+function getSearchTypeLabel(pathname: string): string {
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+  const path = pathname.startsWith(basePath)
+    ? pathname.slice(basePath.length) || "/"
+    : pathname;
+
+  if (path === "/") {
+    return "トップ";
+  }
+
+  if (path.startsWith("/data/")) {
+    return "データ";
+  }
+
+  if (path.startsWith("/rules/") || path === "/advancement/" || path === "/character-making/") {
+    return "ルール";
+  }
+
+  if (path === "/release-notes/") {
+    return "更新履歴";
+  }
+
+  if (path === "/world/") {
+    return "ワールド";
+  }
+
+  return "本文";
+}
+
+const searchTypeLabel = getSearchTypeLabel(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -39,6 +70,7 @@ const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta data-pagefind-meta="type[content]" content={searchTypeLabel} />
     <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
     <Seo
       title={title}
@@ -72,11 +104,15 @@ const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
 <script>
   import { setupMobileHeader } from "../scripts/mobile-header";
   import { setupMobileMenu } from "../scripts/mobile-menu";
-  import { setupSearchModal } from "../scripts/search-modal";
+  import {
+    setupSearchHighlight,
+    setupSearchModal,
+  } from "../scripts/search-modal";
 
   setupMobileHeader();
   setupMobileMenu();
   setupSearchModal();
+  setupSearchHighlight();
 </script>
 
 <style>
@@ -88,6 +124,13 @@ const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
     grid-template-rows: minmax(0, 1fr) auto;
     background: var(--color-surface);
     padding-block-start: var(--site-header-height);
+  }
+
+  :global([data-pagefind-body] mark.pagefind-highlight) {
+    border-radius: var(--radius-sm);
+    background: var(--color-accent-soft);
+    color: inherit;
+    padding-inline: 0.0625em;
   }
 
   @media (max-width: 63.999rem) {

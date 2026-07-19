@@ -319,6 +319,7 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - GitHub Actions
 - GitHub Pages
 - Astro scoped CSS + CSS variables
+- Pagefind
 
 - Zod
 - read-excel-file
@@ -326,14 +327,13 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 
 以下は後続タスクで追加予定の技術である。
 
-- Pagefind
 - Astro Content Collectionsまたは同等のデータ管理
 
 本サイトはサーバーサイド処理、DB、認証、CMSを前提にしない。
 
 Markdown / MDX本文、Excelから変換したJSON、Astro Componentを組み合わせて静的HTMLを生成する。
 
-検索は後続タスクでPagefindを導入し、公開用ビルド後に静的HTMLから検索インデックスを生成する。
+検索にはPagefindを導入し、公開用ビルド後に静的HTMLから検索インデックスを生成する。CI/CDでの検索インデックス生成とdeploy成果物への組込みは、検索runtime・metadata実装後の後続タスクで扱う。
 
 Excel変換は、ローカル実行用のNode.js / TypeScriptスクリプトとして実装する。
 
