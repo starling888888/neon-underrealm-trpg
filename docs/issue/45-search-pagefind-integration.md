@@ -52,7 +52,7 @@
 - [x] 各結果にページタイトル、該当セクション、抜粋、種別ラベルを表示し、クリックで正しいページ、見出し、またはデータカード個別アンカーへ遷移できる。
 - [x] Header、Footer、サイトメニュー、ページ内目次、検索overlayなどの共通UIが検索結果へ混入しない。
 - [x] Markdown / MDX本文、流儀・生き様ページ、スキル・アイテム一覧、戦闘・成長ルール、更新履歴を検索対象として確認する。ただし、ローカルtreeに未実装の対象ページは未実装であることをissueに記録し、存在する代表ページで確認する。
-- [ ] 日本語本文、カタカナ用語、英数字ID、およびデータカード個別アンカーへの検索・遷移をローカル生成indexで確認する。
+- [x] 日本語本文、カタカナ用語、英数字ID、およびデータカード個別アンカーへの検索・遷移をローカル生成indexで確認する。
 - [x] Pagefind indexの読込みと検索結果リンクがGitHub Pagesサブパスで壊れないことを、公開対象の `data/common-skills/` を使うローカルpreviewで確認する。
 - [x] `docs/design/search-modal/` のdesktop/mobile design制約、既存のoverlay排他制御、Esc、focus復帰を維持する。
 - [x] `npm run build:public`、`npm run build:search-index`、`npm run preview` を使い、生成済みindexで実検索結果とデータカード個別アンカーへの遷移を確認する。CI/CDへの組込みは本タスクで行わない。
