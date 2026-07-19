@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### PR title missed the issue-slug rule again
+
+#### 2026-07-19
+
+- source: user
+- 発生箇所: `44-search-modal-ui` のPR #49作成
+- 観測した失敗: `create-pr` が定めるissue slugのみのPRタイトルではなく、`feat: search panel UI`としてPRを作成した。ユーザー指摘後にタイトルを`44-search-modal-ui`へ修正した。
+- 一次対応: PR #49のタイトルをissue slugへ更新した。以後、PR作成またはmetadata修正時は、connector呼び出し前にcurrent issueのslugをタイトル値として照合する。
+
 ### Search UI check needed separate type and formatter corrections
 
 #### 2026-07-19
