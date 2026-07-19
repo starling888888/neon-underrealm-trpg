@@ -44,6 +44,7 @@
 - Excel変換、生成JSONの手編集、データカードのID・アンカー仕様変更。
 - `docs/design/search-modal/` の新規design画像作成・正本化。既存designとの差分は本タスクのVisual Reviewで確認する。
 - 未追跡の `.webp` 画像を含む、検索と無関係な既存ユーザー変更の編集・commit。
+- 検索結果遷移URLの Text Fragment（`#:~:text=`）によるブラウザ標準ハイライト、および現行Pagefindハイライトからの置き換え。
 
 ## 完了条件
 
