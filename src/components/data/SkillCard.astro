@@ -36,11 +36,13 @@ function displayValue(value: string | null | undefined): string {
 }
 ---
 
-<article class:list={["skill-card", `skill-card-${variant}`]} data-skill-card>
+<article
+  id={anchorId}
+  class:list={["skill-card", `skill-card-${variant}`]}
+  data-skill-card
+>
   <header class="skill-card-header">
-    <h4 id={anchorId} class="skill-card-name" data-toc-exclude>
-      {name}
-    </h4>
+    <span class="skill-card-name">{name}</span>
   </header>
 
   <p class="skill-card-meta">

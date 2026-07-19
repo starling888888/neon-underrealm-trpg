@@ -10,6 +10,12 @@ test("search panel desktop @search-modal-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.commonSkills);
 
+  await expect(
+    page.locator(
+      "#skill-common-bonus-a-001 > .skill-card-header > span.skill-card-name",
+    ),
+  ).toHaveText("基本の一撃");
+
   const searchInput = page.locator("[data-search-desktop-input]");
   const panel = page.locator("[data-search-panel]");
 
@@ -41,7 +47,7 @@ test("search panel desktop @search-modal-desktop", async ({ page }) => {
     .toBeLessThanOrEqual(visualViewports.desktop.height / 2);
   await expect
     .poll(async () =>
-      page.locator("[data-search-results-list]").evaluate((element) => {
+      panel.evaluate((element) => {
         return element.scrollHeight > element.clientHeight;
       }),
     )
@@ -137,6 +143,10 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
   await expect(
     result.locator(".search-result-excerpt mark").first(),
   ).toContainText("基本");
+  await expect(result.locator(".search-result-excerpt mark").first()).toHaveCSS(
+    "background-color",
+    "rgb(255, 227, 110)",
+  );
 
   await result.click();
   await expect(page).toHaveURL(
@@ -148,6 +158,12 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
       .filter({ hasText: /^基本$/ })
       .first(),
   ).toContainText("基本");
+  await expect(
+    page
+      .locator("[data-pagefind-body] mark.pagefind-highlight")
+      .filter({ hasText: /^基本$/ })
+      .first(),
+  ).toHaveCSS("background-color", "rgb(255, 227, 110)");
 
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.commonSkills);

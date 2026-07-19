@@ -9,19 +9,28 @@ type SearchElements = {
   resultsList: HTMLOListElement;
 };
 
-type PagefindSubResult = {
-  excerpt: string;
-  url: string;
-  title: string;
-  plain_excerpt: string;
+type PagefindAnchor = {
+  element: string;
+  id: string;
+  location: number;
+  text: string;
 };
 
 type PagefindResultData = {
+  anchors: PagefindAnchor[];
+  content: string;
   excerpt: string;
+  locations: number[];
   url: string;
   meta: Record<string, string | undefined>;
   plain_excerpt: string;
   sub_results: PagefindSubResult[];
+};
+
+type PagefindSubResult = {
+  excerpt: string;
+  url: string;
+  title: string;
 };
 
 type PagefindSearchResult = {
@@ -59,8 +68,18 @@ const initializedAttribute = "data-search-initialized";
 const mobileMediaQuery = "(width < 48rem)";
 const searchHighlightParam = "highlight";
 const oneCharacterSearchPattern = /^[ぁ-ゖゝゞァ-ヺヽヾーA-Za-z]$/u;
+const searchExcerptLength = 30;
 let pagefindPromise: Promise<PagefindApi> | undefined;
 let searchRequestId = 0;
+const skillCardPromises = new Map<
+  string,
+  Promise<Map<string, SkillCardSearchData>>
+>();
+
+type SkillCardSearchData = {
+  content: string;
+  name: string;
+};
 
 function getElements(): SearchElements | null {
   const panel = document.querySelector<HTMLElement>("[data-search-panel]");
@@ -232,47 +251,181 @@ function renderResults(
   elements.resultsList.hidden = false;
 }
 
-function collectSearchResultItems(
-  results: PagefindSearchResult[],
-): Promise<SearchResultItem[]> {
-  const items: SearchResultItem[] = [];
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/gu, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return entities[character] ?? character;
+  });
+}
 
-  return Promise.all(results.map((result) => result.data())).then((pages) => {
-    for (const page of pages) {
-      const pageTitle = page.meta.title?.trim() || "無題のページ";
-      const typeLabel = page.meta.type?.trim() || "本文";
-      const subResults =
-        page.sub_results.length > 0
-          ? page.sub_results
-          : [
-              {
-                excerpt: page.excerpt,
-                url: page.url,
-                title: pageTitle,
-                plain_excerpt: page.plain_excerpt,
-              },
-            ];
+function getSkillCards(url: string): Promise<Map<string, SkillCardSearchData>> {
+  const cached = skillCardPromises.get(url);
 
-      for (const subResult of subResults) {
-        const url = normalizeSearchResultUrl(subResult.url);
+  if (cached) {
+    return cached;
+  }
 
-        if (!url) {
-          continue;
-        }
+  const titles = (async () => {
+    const response = await fetch(url);
 
-        const sectionTitle = subResult.title.trim();
-        items.push({
-          url,
-          pageTitle,
-          sectionTitle: sectionTitle === pageTitle ? null : sectionTitle,
-          typeLabel,
-          excerptHtml: subResult.excerpt.trim(),
-        });
+    if (!response.ok) {
+      return new Map<string, SkillCardSearchData>();
+    }
+
+    const document = new DOMParser().parseFromString(
+      await response.text(),
+      "text/html",
+    );
+    const cards = new Map<string, SkillCardSearchData>();
+
+    for (const card of document.querySelectorAll<HTMLElement>(
+      "[data-skill-card][id]",
+    )) {
+      const name = card.querySelector(".skill-card-name")?.textContent?.trim();
+      const content = card.textContent?.trim();
+
+      if (name && content) {
+        cards.set(card.id, { name, content });
       }
     }
 
-    return items;
+    return cards;
+  })().catch(() => new Map<string, SkillCardSearchData>());
+
+  skillCardPromises.set(url, titles);
+  return titles;
+}
+
+function getSearchResultUrl(pageUrl: string, anchorId?: string): string | null {
+  const url = new URL(pageUrl, new URL(getBasePath(), window.location.origin));
+
+  if (anchorId) {
+    url.hash = anchorId;
+  }
+
+  return normalizeSearchResultUrl(`${url.pathname}${url.search}${url.hash}`);
+}
+
+function normalizeSearchText(value: string): string {
+  return value.normalize("NFKC").replace(/\s+/gu, " ").trim();
+}
+
+function createCardExcerpt(content: string, query: string): string {
+  const normalizedContent = normalizeSearchText(content);
+  const normalizedQuery = normalizeSearchText(query);
+  const matchIndex = normalizedContent
+    .toLocaleLowerCase()
+    .indexOf(normalizedQuery.toLocaleLowerCase());
+
+  if (matchIndex < 0) {
+    return "";
+  }
+
+  const excerptStart = Math.max(0, matchIndex - searchExcerptLength);
+  const excerptEnd = Math.min(
+    normalizedContent.length,
+    matchIndex + normalizedQuery.length + searchExcerptLength,
+  );
+  const before = normalizedContent.slice(excerptStart, matchIndex);
+  const matched = normalizedContent.slice(
+    matchIndex,
+    matchIndex + normalizedQuery.length,
+  );
+  const after = normalizedContent.slice(
+    matchIndex + normalizedQuery.length,
+    excerptEnd,
+  );
+
+  return `${excerptStart > 0 ? "…" : ""}${escapeHtml(before)}<mark>${escapeHtml(
+    matched,
+  )}</mark>${escapeHtml(after)}${
+    excerptEnd < normalizedContent.length ? "…" : ""
+  }`;
+}
+
+async function collectPageSearchResultItems(
+  page: PagefindResultData,
+  query: string,
+): Promise<SearchResultItem[]> {
+  const pageTitle = page.meta.title?.trim() || "無題のページ";
+  const typeLabel = page.meta.type?.trim() || "本文";
+  const pageUrl = getSearchResultUrl(page.url);
+
+  if (!pageUrl) {
+    return [];
+  }
+
+  const cards = await getSkillCards(pageUrl);
+  const skillCardAnchors = new Set(
+    page.anchors
+      .filter((anchor) => anchor.element === "article" && cards.has(anchor.id))
+      .map((anchor) => anchor.id),
+  );
+  const normalizedQuery = normalizeSearchText(query).toLocaleLowerCase();
+  const matchingCards = [...cards.entries()].filter(
+    ([id, card]) =>
+      skillCardAnchors.has(id) &&
+      normalizeSearchText(card.content)
+        .toLocaleLowerCase()
+        .includes(normalizedQuery),
+  );
+
+  if (matchingCards.length > 0) {
+    return matchingCards.flatMap(([id, card]) => {
+      const url = getSearchResultUrl(page.url, id);
+      const excerptHtml = createCardExcerpt(card.content, query);
+
+      if (!url || !excerptHtml) {
+        return [];
+      }
+
+      return [
+        {
+          url,
+          pageTitle,
+          sectionTitle: card.name,
+          typeLabel,
+          excerptHtml,
+        },
+      ];
+    });
+  }
+
+  return page.sub_results.flatMap((subResult) => {
+    const url = normalizeSearchResultUrl(subResult.url);
+
+    if (!url) {
+      return [];
+    }
+
+    const sectionTitle = subResult.title.trim();
+    return [
+      {
+        url,
+        pageTitle,
+        sectionTitle: sectionTitle === pageTitle ? null : sectionTitle,
+        typeLabel,
+        excerptHtml: subResult.excerpt.trim(),
+      },
+    ];
   });
+}
+
+async function collectSearchResultItems(
+  results: PagefindSearchResult[],
+  query: string,
+): Promise<SearchResultItem[]> {
+  const pages = await Promise.all(results.map((result) => result.data()));
+  const items = await Promise.all(
+    pages.map((page) => collectPageSearchResultItems(page, query)),
+  );
+  return items.flat();
 }
 
 async function search(elements: SearchElements, term: string): Promise<void> {
@@ -303,7 +456,7 @@ async function search(elements: SearchElements, term: string): Promise<void> {
       return;
     }
 
-    const items = await collectSearchResultItems(response.results);
+    const items = await collectSearchResultItems(response.results, query);
 
     if (requestId !== searchRequestId) {
       return;

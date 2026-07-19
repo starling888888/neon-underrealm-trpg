@@ -237,3 +237,160 @@
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- SkillCard名を`h4`へ変更してはならない。SkillCardは親側の見出し階層に依存せずに使えるよう、名称を`span`として維持する。
+- `AppContainer.astro`に検索種別のroute分類をベタ書きしている。検索metadataとしての役割を明確にし、layoutから分類ロジックを分離する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `src/pages/data/common-skills.mdx`は`h2`のスキル区分の直下で`SkillCard`を並べており、現在の`h4`は見出し階層を飛ばす。さらにSkillCardは複数の親文脈で使えるComponentのため、`h3`への変更も親の見出し階層に依存する不適切な解決である。Pagefindの標準sub-resultは見出しを使うが、JavaScript APIでは任意の`id`要素を`anchors`として取得できる。日本語検索ではPagefindの位置配列がカード内の一致語だけに限定されないため、個別結果の抜粋には使えない。Pagefindの`article` anchorを候補の照合に使い、公開HTMLの`span.skill-card-name`とカード本文から一致するカード・抜粋を組み立て、通常ページは標準sub-resultへfallbackする。`getSearchTypeLabel()`は`data-pagefind-meta="type[content]"`に渡す値を決め、`SearchModal`が検索結果の種別ラベルとして表示するための分類である。metadata tagを全ページ共通layoutの`head`へ置くことは妥当だが、route分類ルールはlayout固有の責務ではない。
+
+### 対応方針
+
+- SkillCard名を`span`へ戻し、個別anchorを`article`へ戻す。Pagefindの`article` anchorを公開HTML上のSkillCardと照合し、カード本文に検索語がある個別anchor結果を組み立てる。日本語検索で位置配列がカード単位の抜粋に使えないため、抜粋とハイライトは一致したカード本文から生成し、該当カードがない通常ページはPagefind標準sub-resultを使う。spanを維持することと個別anchor結果を検証するテストを追加する。
+- Pagefind検索結果の種別ラベルを決めるroute分類を、小さな検索metadata utilityへ移す。AppContainerはutilityの結果をmetadata tagへ渡すだけにし、routeと種別の対応はutility内のデータとして管理する。
+
+### 対応完了チェックリスト
+
+- [x] SkillCard名のspanとデータカード個別anchorを修正・検証する。
+- [x] 検索種別metadataのroute分類をlayoutから検索utilityへ分離する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 3
+
+### デザイン参照
+
+- design target: `docs/design/search-modal/`、`docs/design/site-layout/`
+- reference desktop: `docs/design/search-modal/design-desktop.png`
+- reference mobile: `docs/design/search-modal/design-mobile.png`
+- notes: 検索結果の生成方式を変更しても、desktopのHeader直下panel、背景scrim、mobileのHeader下panelを維持する。
+
+### 成果物
+
+- actual desktop: `test-results/visual/search-modal-results-desktop.png`（Playwright output）
+- actual mobile: `test-results/visual/search-modal-mobile.png`（Playwright output）
+- report: `test-results/visual/capture-manifest.json`（Playwright output）
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                           | 対応     |
+| --------------------- | ---- | ------------------------------ | -------- |
+| レイアウト            | OK   | なし                           | 不要     |
+| 余白                  | OK   | なし                           | 不要     |
+| タイポグラフィ        | OK   | なし                           | 不要     |
+| 色                    | OK   | なし                           | 不要     |
+| 配置・整列            | OK   | なし                           | 不要     |
+| レスポンシブ          | OK   | なし                           | 不要     |
+| overflow / scroll     | OK   | 結果リストのみ内部scrollを維持 | 不要     |
+| 既存デザインとの整合  | OK   | なし                           | 不要     |
+| 既存Componentとの整合 | OK   | SkillCard名は`span`へ復元      | 修正済み |
+| accessibility basics  | OK   | 既存のfocus・Esc挙動を維持     | 不要     |
+
+### 自己修正した項目
+
+- [x] SkillCardの見出し化を取り消し、個別anchorを`article`へ戻した。
+- [x] Pagefind候補と公開カード本文から個別結果・検索語ハイライトを生成した。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した。
+- [x] mobile screenshot を取得した。
+- [x] reference と actual を比較した。
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した。
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- 検索結果の抜粋と遷移先本文の検索語ハイライトが淡い青緑で、検索語として認識しにくい。可視性を優先し、黄色系の明確なハイライトへ変更する。
+- desktopで検索結果があるときだけ、`search-results`のグレー枠・内側padding・結果リスト単独scrollbarが現れる。結果領域が二重になって狭く見え、scrollbarの位置も不自然である。mobileの結果枠は維持してよいが、desktop結果時は内枠をなくし、panel全体で一貫した結果領域にする。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: 4321 previewで`基本の一撃`を検索し、`test-results/visual/search-modal-results-desktop.png`を確認した。結果抜粋と遷移先本文の`mark`はともに`--color-accent-soft`（`#e3f7f7`）を背景にしており、白い面では視認性が低い。desktopの`[data-search-has-results] .search-results`は通常状態のborder、角丸、`--color-surface-muted`背景、paddingを維持したままflex containerへ切り替え、その内側の`.search-result-list`だけへ`overflow-y: auto`と右paddingを指定している。このため結果表示時だけグレーの入れ子領域と内側scrollbarが生じる。いずれも検索結果UIの可視性・desktop layoutに属し、現在のissue範囲内である。
+
+### 対応方針
+
+- 検索結果抜粋と`data-pagefind-body`内の遷移先本文に共通の黄色系highlight styleを適用する。文字色とのコントラストを保ち、検索種別labelの青緑とは用途を区別する。
+- desktopで結果がある場合は`.search-results`の通常状態用のグレー枠・背景・paddingを解除し、panel内の余白だけで結果を配置する。結果リストのscroll領域をpanel幅に合わせ、scrollbarを右端の一貫した位置へ移す。mobileの検索結果枠とscroll挙動は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] 検索結果抜粋と遷移先本文の検索語ハイライトを高可視性の黄色系へ変更・確認する。
+- [x] desktop結果状態の内側グレー枠・余分なpadding・scrollbar位置を修正し、mobile結果状態を維持する。
+- [x] desktop / mobileの検索UIと結果表示をVisual Testで確認する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 4
+
+### デザイン参照
+
+- design target: `docs/design/search-modal/`、`docs/design/site-layout/`
+- reference desktop: `docs/design/search-modal/design-desktop.png`
+- reference mobile: `docs/design/search-modal/design-mobile.png`
+- notes: desktopのHeader直下panel・scrimとmobileの結果枠を維持し、desktop結果時の入れ子枠だけを解消する。検索語は青緑の操作accentと区別できる黄色で示す。
+
+### 成果物
+
+- actual desktop: `test-results/visual/search-modal-results-desktop.png`（Playwright output）
+- actual mobile: `test-results/visual/search-modal-mobile.png`（Playwright output）
+- report: `test-results/visual/capture-manifest.json`（Playwright output）
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                              | 対応     |
+| --------------------- | ---- | --------------------------------- | -------- |
+| レイアウト            | OK   | desktop結果時の内側グレー枠を除去 | 修正済み |
+| 余白                  | OK   | 結果カードの余白をpanel基準へ統一 | 修正済み |
+| タイポグラフィ        | OK   | なし                              | 不要     |
+| 色                    | OK   | 検索語を黄色で明確化              | 修正済み |
+| 配置・整列            | OK   | scrollbarをpanel右端へ統一        | 修正済み |
+| レスポンシブ          | OK   | mobileの結果枠を維持              | 不要     |
+| overflow / scroll     | OK   | desktopはpanel全体を内部scroll    | 修正済み |
+| 既存デザインとの整合  | OK   | Header直下panel・scrimを維持      | 不要     |
+| 既存Componentとの整合 | OK   | なし                              | 不要     |
+| accessibility basics  | OK   | 色を結果抜粋・遷移先本文で共通化  | 修正済み |
+
+### 自己修正した項目
+
+- [x] 結果抜粋と遷移先本文の`mark`背景を`#ffe36e`へ統一した。
+- [x] desktopの結果あり状態で通常用の`search-results`枠・背景・paddingを解除し、panel全体をscroll領域にした。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した。
+- [x] mobile screenshot を取得した。
+- [x] reference と actual を比較した。
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した。
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

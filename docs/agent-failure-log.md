@@ -666,3 +666,12 @@ source種別は以下を使う。
 - 発生箇所: `29-0-ryugi-index-data` の `docs/conversion/ryugi-index.md`
 - 観測した失敗: dprintの対象ファイル整形を試みたが、既定cache directoryへの書込みがread-only filesystemで失敗した。その結果を確認せず、未整形のまま同じ`npm run check:md`を再実行して同じtable format errorを2回発生させた。
 - 一次対応: formatterの失敗後は、出力と対象ファイルの変更有無を確認してから再検証する。今回のtable整形は`apply_patch`で反映し、以後のcheckは差分確認後に1回だけ実行する。
+
+### Node test used an Astro-only environment value
+
+#### 2026-07-20
+
+- source: agent self-report
+- 発生箇所: `45-search-pagefind-integration` の検索metadata utility test
+- 観測した失敗: utilityの既定引数で`import.meta.env.BASE_URL`を参照したため、Astro外で実行するNode testが読み込み時に失敗した。同じ`npm test`と対象testの再実行で2回確認した。
+- 一次対応: utilityは環境値を参照せず`/`を既定値にし、Astro layoutから`import.meta.env.BASE_URL`を明示して渡す。環境非依存のutilityはNode testからも読み込める形にする。
