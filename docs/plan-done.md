@@ -419,3 +419,13 @@
   - [x] ヘッダー、フッター、サイトメニュー、ページ内目次を検索対象から除外
   - [x] ページタイトル、セクション、種別ラベルを検索結果に表示
   - [x] データカード個別アンカーが検索結果から利用できることを確認する
+
+- [x] `48-search-index-ci-deploy` — CIを更新して検索index生成込みでデプロイする
+  - completed: 2026-07-20 via PR #51 / 6ecf322
+
+  - [x] `.github/workflows/deploy.yml` を更新する
+  - [x] `npm run check` を実行する
+  - [x] `npm run build:public` 後に `npm run build:search-index` を実行する
+  - [x] Pagefind生成物がGitHub Pagesへdeployされる成果物に含まれることを確認する
+  - [x] 公開環境で検索UIがPagefind indexを参照できることを確認する
+  - [x] GitHub Pagesサブパス配下で検索indexのパスが壊れないことを確認する
