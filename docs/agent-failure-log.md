@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### dprint cache prevented formatting an untracked issue
+
+#### 2026-07-19
+
+- source: self
+- 発生箇所: `43-install-pagefind` のissue-first準備における `docs/issue/43-install-pagefind.md` のMarkdown formatter実行
+- 観測した失敗: 新規issueだけを対象にdprint formatterを2回実行したが、dprintが既定のcache directoryを作成しようとしてread-only file system errorになり、formatterを完了できなかった。
+- 一次対応: 同一formatterを繰り返さず、Markdownlintでissue本文の構文・styleを確認した。新規・未追跡Markdownを安全にformatできるcache設定または専用scriptの要否は、別途検討する。
+
 ### PR reviewer used `gh` despite connector-only workflow
 
 #### 2026-07-15
