@@ -15,6 +15,7 @@
     "check:astro": "astro check",
     "check:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint check && markdownlint-cli2",
     "build:public": "npm run build && node --import tsx scripts/remove-private-routes/main.ts",
+    "build:search-index": "pagefind --site dist",
     "lint": "biome lint .",
     "format": "biome format --write . && npm run format:md",
     "format:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint fmt && markdownlint-cli2 --fix",
@@ -38,6 +39,7 @@
     "dprint": "^0.55.1",
     "fflate": "^0.8.3",
     "markdownlint-cli2": "^0.23.0",
+    "pagefind": "^1.5.2",
     "read-excel-file": "^9.2.0",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3"

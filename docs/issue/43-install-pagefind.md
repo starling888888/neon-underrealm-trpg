@@ -34,24 +34,24 @@ Pagefindをビルド時専用の依存関係として導入し、公開用に生
 
 ## 完了条件
 
-- [ ] `pagefind` がindex生成専用の開発用dependencyとして追加され、lockfileが更新されている
-- [ ] `npm run build:search-index` が `dist/` を入力にPagefind indexを生成できる
-- [ ] `npm run build:public` の後に `npm run build:search-index` を実行し、公開用成果物内にindexが生成されることを確認している
-- [ ] `docs/deployment.md` の公開用build説明が現行実装の `npm run build:public` と一致し、ローカル実行手順とTask 48との責務分離が記録されている
-- [ ] Pagefind追加の理由、代替案、初期スコープに必要な理由がこのissueまたは作業報告に記録されている
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] `pagefind` がindex生成専用の開発用dependencyとして追加され、lockfileが更新されている
+- [x] `npm run build:search-index` が `dist/` を入力にPagefind indexを生成できる
+- [x] `npm run build:public` の後に `npm run build:search-index` を実行し、公開用成果物内にindexが生成されることを確認している
+- [x] `docs/deployment.md` の公開用build説明が現行実装の `npm run build:public` と一致し、ローカル実行手順とTask 48との責務分離が記録されている
+- [x] Pagefind追加の理由、代替案、初期スコープに必要な理由がこのissueまたは作業報告に記録されている
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
-- [ ] `npm run build:search-index` はサイトbuildを暗黙実行せず、`dist/` を明示入力とする
-- [ ] `npm run build:public` 後のindex生成で、`-local` routeを公開用indexに含めない
-- [ ] index生成物はGit管理対象のソースではなく `dist/` にだけ出力される
-- [ ] GitHub Pagesサブパスを前提に、ルート絶対パスを新規導入していない
-- [ ] 不要な依存関係を追加していない
-- [ ] CI/CD統合、検索UI、検索metadataの責務をTask 43へ混在させていない
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-- [ ] ユーザーの未コミット変更（WebPを含む）を破壊していない
+- [x] `npm run build:search-index` はサイトbuildを暗黙実行せず、`dist/` を明示入力とする
+- [x] `npm run build:public` 後のindex生成で、`-local` routeを公開用indexに含めない
+- [x] index生成物はGit管理対象のソースではなく `dist/` にだけ出力される
+- [x] GitHub Pagesサブパスを前提に、ルート絶対パスを新規導入していない
+- [x] 不要な依存関係を追加していない
+- [x] CI/CD統合、検索UI、検索metadataの責務をTask 43へ混在させていない
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] ユーザーの未コミット変更（WebPを含む）を破壊していない
 
 ## 想定変更ファイル
 
