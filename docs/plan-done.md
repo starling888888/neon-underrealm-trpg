@@ -388,3 +388,12 @@
   - [x] 流儀一覧ページと後続の流儀詳細ページに必要なデータ取得処理を策定する
   - [x] 変換スクリプトと検証スキーマのテストを追加する
   - [x] 必須項目、ID重複、表示順を検証する
+
+## Phase 4: 検索
+
+- [x] `43-install-pagefind` — Pagefindを導入する
+  - completed: 2026-07-19 via PR #48 / c98e6d3
+
+  - [x] Pagefind package追加
+  - [x] build後にindex生成できる
+  - [x] `npm run build:search-index` 追加
