@@ -19,7 +19,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/45-search-pagefind-integration.md`
+- historical issue: `docs/issue/done/phase-4/45-search-pagefind-integration.md`
 - `docs/requirements/search.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/architecture.md`

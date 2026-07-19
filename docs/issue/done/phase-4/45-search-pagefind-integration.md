@@ -82,7 +82,7 @@
 - `tests/visual/search-modal.spec.ts`
 - 検索metadata・path処理を分離する場合の最小限のNode test
 - `docs/requirements/architecture.md`
-- `docs/issue/45-search-pagefind-integration.md`
+- `docs/issue/done/phase-4/45-search-pagefind-integration.md`
 
 ## レビュー観点
 
@@ -227,7 +227,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
 
 ### 対応完了チェックリスト
 
@@ -305,7 +305,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
 
 ### 対応完了チェックリスト
 
@@ -384,7 +384,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
 
 ### 対応完了チェックリスト
 
