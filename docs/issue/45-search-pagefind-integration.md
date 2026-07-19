@@ -395,3 +395,29 @@
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- Pagefind runtimeの初回dynamic import・初期化が一時的に失敗すると、rejected Promiseが保持され、案内文どおりに再入力してもページ再読み込みまで検索を再試行できない。
+- 検索結果リンク内でページタイトルを種別メタと強調行の両方に表示しており、同じ情報が二重になる。
+
+### 判定
+
+- source: local-pr-review（PR #50）
+- classification: valid
+- local validation: `loadPagefind()` は初期化Promiseを `pagefindPromise` へ代入するだけでreject時に解除しない。`search()` は次回入力でも同じPromiseをawaitするため、初回読込失敗から復旧できない。`renderResults()` は`.search-result-meta`に`result.pageTitle`を追加した直後、`.search-result-title`にも同じ`result.pageTitle`を追加している。両方とも現在の検索runtime・結果表示の範囲内であり、task 45で対応する。
+
+### 対応方針
+
+- Pagefind初期化Promiseが失敗した場合はキャッシュを解除し、次の検索操作で再読込・再初期化できるようにする。初回失敗後の再検索が成功することをテストで確認する。
+- 結果カードのページタイトルは一箇所へ集約し、種別ラベル、該当セクション、抜粋を保ったまま重複表示をなくす。Visual Testの期待値も表示構造に合わせて更新する。
+
+### 対応完了チェックリスト
+
+- [x] 初回Pagefind読込失敗後の再検索を可能にし、再試行をテストで確認する。
+- [x] 検索結果のページタイトル重複をなくし、必要な結果情報を維持する。
+- [x] desktop / mobileの検索UIと結果表示をVisual Testで確認する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

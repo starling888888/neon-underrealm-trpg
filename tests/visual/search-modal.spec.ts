@@ -133,9 +133,7 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
   await expect(page.locator("[data-search-results-list]")).toBeVisible();
   await expect(result).toHaveAttribute("href", /#skill-common-bonus-a-001$/);
   await expect(result.locator(".search-result-type")).toHaveText("データ");
-  await expect(result.locator(".search-result-page-title")).toHaveText(
-    "共通スキル",
-  );
+  await expect(result.locator(".search-result-title")).toHaveText("共通スキル");
   await expect(result.locator(".search-result-section")).toHaveText(
     "基本の一撃",
   );
@@ -196,4 +194,44 @@ test("search panel guides one-character kana and ASCII searches @search-modal-qu
 
   await searchInput.fill("毒");
   await expect(page.locator("[data-search-results-list]")).toBeVisible();
+});
+
+test("search panel retries Pagefind after an initial load failure @search-modal-retry", async ({
+  page,
+}) => {
+  const index = await page.request.get(`${visualBaseUrl}pagefind/pagefind.js`);
+
+  test.skip(
+    !index.ok(),
+    "Pagefind index has not been generated for this server.",
+  );
+
+  let pagefindRequestCount = 0;
+  await page.route(/pagefind\/pagefind\.js(?:\?.*)?$/u, async (route) => {
+    pagefindRequestCount += 1;
+
+    if (pagefindRequestCount === 1) {
+      await route.fulfill({ status: 503, body: "temporarily unavailable" });
+      return;
+    }
+
+    await route.continue();
+  });
+
+  await page.setViewportSize(visualViewports.desktop);
+  await page.goto(visualRoutes.commonSkills);
+
+  const searchInput = page.locator("[data-search-desktop-input]");
+  const status = page.locator("[data-search-results-status]");
+
+  await searchInput.fill("基本の一撃");
+  await expect(status).toHaveText(
+    "検索indexを読み込めませんでした。時間をおいて再度お試しください。",
+  );
+
+  await searchInput.fill("基本の一撃 ");
+  await expect(
+    page.locator('.search-result-link[href$="#skill-common-bonus-a-001"]'),
+  ).toBeVisible();
+  await expect.poll(() => pagefindRequestCount).toBeGreaterThanOrEqual(2);
 });

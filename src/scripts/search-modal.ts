@@ -70,6 +70,7 @@ const searchHighlightParam = "highlight";
 const oneCharacterSearchPattern = /^[ぁ-ゖゝゞァ-ヺヽヾーA-Za-z]$/u;
 const searchExcerptLength = 30;
 let pagefindPromise: Promise<PagefindApi> | undefined;
+let pagefindLoadAttempt = 0;
 let searchRequestId = 0;
 const skillCardPromises = new Map<
   string,
@@ -141,10 +142,10 @@ function getPagefindPath(): string {
 
 async function loadPagefind(): Promise<PagefindApi> {
   if (!pagefindPromise) {
-    pagefindPromise = (async () => {
+    const loadingPromise = (async () => {
       const bundlePath = getPagefindPath();
       const pagefind = (await import(
-        /* @vite-ignore */ `${bundlePath}pagefind.js`
+        /* @vite-ignore */ `${bundlePath}pagefind.js?attempt=${pagefindLoadAttempt++}`
       )) as PagefindApi;
 
       await pagefind.options({
@@ -154,6 +155,13 @@ async function loadPagefind(): Promise<PagefindApi> {
       await pagefind.init();
       return pagefind;
     })();
+    pagefindPromise = loadingPromise;
+
+    void loadingPromise.catch(() => {
+      if (pagefindPromise === loadingPromise) {
+        pagefindPromise = undefined;
+      }
+    });
   }
 
   return pagefindPromise;
@@ -230,7 +238,6 @@ function renderResults(
     meta.className = "search-result-meta";
     meta.append(
       createTextElement("span", "search-result-type", result.typeLabel),
-      createTextElement("span", "search-result-page-title", result.pageTitle),
     );
     link.append(
       meta,
