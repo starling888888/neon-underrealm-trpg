@@ -141,3 +141,21 @@
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 検索panelを開いたままdesktop / mobileのbreakpointをまたぐと、画面幅変更の片方向だけを処理しているため、mobileの `×` 表示、背景スクロール抑止、表示中inputへのfocusが不整合になる。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `src/scripts/search-modal.ts` は `(width >= 48rem)` への変更だけを監視しており、desktopからmobileへの変更時に開いたpanelの状態を再適用していない。`body.search-open` は `setOpen` 時のmedia query結果だけで切り替わるため、指摘どおりmobile状態との不整合が発生する。
+- local validation: breakpoint変更時の開いた検索UIの操作・focus同期はcurrent issueの「mobile背景スクロール抑止」「Header右側の `×`」「keyboard操作後のfocus復帰」の範囲内である。
+
+### 対応方針
+
+- 今回は対応しない。検索表示中にdesktop / mobileのbreakpointをまたいだ場合、mobileでは検索アイコンが閉じる操作として機能し、desktopではscrimまたはEscで閉じられるため、通常操作が不能にはならない。
+- window幅変更、端末回転、分割表示での視覚・focus同期は、実利用頻度と初期リリースの優先度を踏まえた低優先度の既知エッジケースとして扱う。後続taskの実検索連携時に必要であれば再検討する。
