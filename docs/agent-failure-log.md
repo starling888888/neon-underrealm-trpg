@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Site menu expansion predicate returned a non-boolean value
+
+#### 2026-07-22
+
+- source: self
+- 発生箇所: `29-2-ryugi-index-page` の `getSiteMenuItemInitialExpanded()` とNode test
+- 観測した失敗: 流儀一覧をcurrent時に展開する条件を、optional booleanをそのまま論理和へ渡す形で実装したため、該当設定がない通常のメニュー項目で`false`ではなく`undefined`を返した。全体Node testと対象testを連続して失敗させた。
+- 一次対応: optional booleanは`=== true`で判定し、常にbooleanを返す条件へ修正する。optional値を返却値へそのまま伝播させる分岐を追加した場合は、設定なしの既存ケースを対象testで確認する。
+
 ### Design draft overrode contents instructions
 
 #### 2026-07-22

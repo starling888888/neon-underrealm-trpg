@@ -1,7 +1,10 @@
+import { getRyugiList } from "../data/ryugi-list";
+
 export type SiteMenuItem = {
   label: string;
   href: string;
   children?: SiteMenuItem[];
+  expandWhenCurrent?: boolean;
 };
 
 export type SiteMenuItemState = "current" | "ancestor" | "none";
@@ -44,6 +47,11 @@ export const siteMenuItems: SiteMenuItem[] = [
       {
         label: "流儀",
         href: "/data/ryugi",
+        expandWhenCurrent: true,
+        children: getRyugiList().map((ryugi) => ({
+          label: ryugi.name,
+          href: `/data/ryugi/${ryugi.id}`,
+        })),
       },
       {
         label: "生き様",
@@ -127,7 +135,11 @@ export function getSiteMenuItemInitialExpanded(
   currentPath: string,
   basePath = "/",
 ): boolean {
-  return getSiteMenuItemState(item, currentPath, basePath) === "ancestor";
+  const state = getSiteMenuItemState(item, currentPath, basePath);
+  return (
+    state === "ancestor" ||
+    (item.expandWhenCurrent === true && state === "current")
+  );
 }
 
 function normalizeCurrentPath(currentPath: string, basePath: string): string {

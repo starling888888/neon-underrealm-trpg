@@ -50,27 +50,27 @@
 ## 完了条件
 
 - [x] `docs/design/ryugi-index/notes.md`、desktop design、mobile designを作成し、一覧ページと流儀詳細項目を展開したサイトメニューを比較対象として記録している
-- [ ] `/data/ryugi` が静的に生成され、contentsのH1、導入、`流儀データの見方`、`流儀一覧`を表示する
-- [ ] `流儀データの見方`でケンカヤの`RyugiDataSection`を表示し、流儀一覧では生成データを入力順で表示する
-- [ ] 各流儀に、本文見出しより大きくしない名称リンクと、横に自然に折り返すshortDescriptionを表示する。別途の詳細導線文言は置かない
-- [ ] `流儀データの見方`の本文が、プライマリボーナス、基礎能力値、副能力増加値、共通スキルボーナスの説明をcontentsどおりに表示する
-- [ ] サイトメニューが生成済み流儀データから詳細子項目を表示し、一覧・詳細ページでcurrent / ancestor / initial expanded状態が維持される
-- [ ] キャラクターメイキングと成長の流儀データ固定記述を生成データ参照へ置き換え、流儀由来の値を手書きで重複管理しない
-- [ ] 関連TODOについて、キャラクターメイキングと成長の流儀データ参照の対応結果と、生き様サイドメニューが未対応である理由をissueへ記録している
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] `/data/ryugi` が静的に生成され、contentsのH1、導入、`流儀データの見方`、`流儀一覧`を表示する
+- [x] `流儀データの見方`でケンカヤの`RyugiDataSection`を表示し、流儀一覧では生成データを入力順で表示する
+- [x] 各流儀に、本文見出しより大きくしない名称リンクと、横に自然に折り返すshortDescriptionを表示する。別途の詳細導線文言は置かない
+- [x] `流儀データの見方`の本文が、プライマリボーナス、基礎能力値、副能力増加値、共通スキルボーナスの説明をcontentsどおりに表示する
+- [x] サイトメニューが生成済み流儀データから詳細子項目を表示し、一覧・詳細ページでcurrent / ancestor / initial expanded状態が維持される
+- [x] キャラクターメイキングと成長の流儀データ固定記述を生成データ参照へ置き換え、流儀由来の値を手書きで重複管理しない
+- [x] 関連TODOについて、キャラクターメイキングと成長の流儀データ参照の対応結果と、生き様サイドメニューが未対応である理由をissueへ記録している
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
-- [ ] `getRyugiList()`の入力順、`sourceOrder`、共通スキルボーナスの改行を表示側で変えない
-- [ ] `/data/ryugi/[ryugiId]`、メニューの詳細リンク、既存のページ内リンクがGitHub Pagesのサブパス配下で壊れない
-- [ ] `/data/ryugi`と詳細ページにおいて、PC / tablet / mobileで長い説明・複数行のボーナス・メニュー階層が横overflowや切り詰めなく読める
-- [ ] PCサイドバーとmobile drawerの両方で、流儀詳細ページを開いたときに`データ`と`流儀`の祖先階層が展開される
-- [ ] キャラクターメイキングと成長の例は、流儀データ値を生成データから読む一方、計算例としての説明文を失わない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] `docs/design/site-layout/`、`docs/design/ryugi-detail/`、新設する`docs/design/ryugi-index/`との関係を記録し、詳細ページ用designを一覧ページの正本として流用していない
-- [ ] ユーザーの未コミット画像ファイルを破壊・stage・commitしていない
+- [x] `getRyugiList()`の入力順、`sourceOrder`、共通スキルボーナスの改行を表示側で変えない
+- [x] `/data/ryugi/[ryugiId]`、メニューの詳細リンク、既存のページ内リンクがGitHub Pagesのサブパス配下で壊れない
+- [x] `/data/ryugi`と詳細ページにおいて、PC / tablet / mobileで長い説明・複数行のボーナス・メニュー階層が横overflowや切り詰めなく読める
+- [x] PCサイドバーとmobile drawerの両方で、流儀詳細ページを開いたときに`データ`と`流儀`の祖先階層が展開される
+- [x] キャラクターメイキングと成長の例は、流儀データ値を生成データから読む一方、計算例としての説明文を失わない
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] `docs/design/site-layout/`、`docs/design/ryugi-detail/`、新設する`docs/design/ryugi-index/`との関係を記録し、詳細ページ用designを一覧ページの正本として流用していない
+- [x] ユーザーの未コミット画像ファイルを破壊・stage・commitしていない
 
 ## 想定変更ファイル
 
@@ -99,3 +99,55 @@
 - issue作成時点では `docs/design/ryugi-index/` が存在しない。UI実装前に `design-image-generation` initial draft modeを実行し、design画像を人間レビューする。
 - `.raw/contents/ryugi-index.md` はGit管理外のローカル作業入力である。Drive同期はこのissueの範囲に含めない。
 - current working treeにはユーザーの未追跡`.webp`ファイルが存在する。今回のissue作成では変更していない。明示指示がない限り、`.webp`をstage / commitしない。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/ryugi-index/`
+- reference desktop: `docs/design/ryugi-index/design-desktop.png`
+- reference mobile: `docs/design/ryugi-index/design-mobile.png`
+- notes: contentsのH1、hero、ケンカヤの`RyugiDataSection`、4項目説明、流儀名リンクと`shortDescription`のみの一覧を比較した。
+
+### 成果物
+
+- actual desktop: `test-results/visual/ryugi-index-desktop.png`
+- actual mobile: `test-results/visual/ryugi-index-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分 | 対応                                         |
+| --------------------- | ---- | ---- | -------------------------------------------- |
+| レイアウト            | OK   | なし | 3レールとmobile本文幅を維持                  |
+| 余白                  | OK   | なし | designの密度を維持                           |
+| タイポグラフィ        | OK   | なし | 流儀名リンクは本文見出しより小さい           |
+| 色                    | OK   | なし | 説明本文は通常の本文色                       |
+| 配置・整列            | OK   | なし | `shortDescription`はリンク横で自然に折り返す |
+| レスポンシブ          | OK   | なし | 390px幅で2列の流儀データと一覧が読める       |
+| overflow / scroll     | OK   | なし | Visual Testで横overflowなしを確認            |
+| 既存デザインとの整合  | OK   | なし | SiteMenu、PageToc、heroの役割を維持          |
+| 既存Componentとの整合 | OK   | なし | 既存`RyugiDataSection`を再利用               |
+| accessibility basics  | OK   | なし | 見出し、リンク、table scopeを確認            |
+
+### 自己修正した項目
+
+- [x] 流儀一覧ページでcurrentの`流儀`メニュー項目も詳細子項目を初期展開するようにした。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

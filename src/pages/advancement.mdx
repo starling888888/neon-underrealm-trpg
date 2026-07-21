@@ -8,6 +8,10 @@ showPageToc: true
 import Callout from "../components/_common/Callout.astro";
 import ImageBlock from "../components/_common/ImageBlock.astro";
 import InternalLink from "../components/_common/InternalLink.astro";
+import RyugiCommonSkillBonusTable from "../components/data/RyugiCommonSkillBonusTable.astro";
+import { getRyugiList } from "../lib/data/ryugi-list";
+
+export const ryugiList = getRyugiList();
 
 # 成長ルール
 
@@ -82,18 +86,7 @@ import InternalLink from "../components/_common/InternalLink.astro";
 
 共通スキルの合計レベルが2、5、9レベルに達するたびに、プライマリ流儀に応じたボーナスを得ます。
 
-| 流儀 | 2レベル | 5レベル | 9レベル |
-| --- | --- | --- | --- |
-| ケンカヤ | 攻撃判定数+1、攻撃力+3 | 行動回数+1 | 攻撃判定数+1、リアクション判定数+1 |
-| シャバゾウ | 行動回数+1 | 攻撃判定数+1、リアクション判定数+1 | 行動回数+1 |
-| カエシ | 攻撃判定数+1、リアクション判定数+1 | 攻撃判定数+1、リアクション判定数+1 | 行動回数+1 |
-| ステゴロ | 行動回数+1 | 攻撃判定数+1、リアクション判定数+1 | 行動回数+1 |
-| エモノ | 攻撃判定数+2 | 行動回数+1 | 攻撃判定数+1、リアクション判定数+1 |
-| ゴトシ | 攻撃力+5 | 攻撃判定数+1、攻撃力+3 | 行動回数+1 |
-| ヤミウチ | 攻撃判定数+1、リアクション判定数+1 | 攻撃判定数+1、攻撃力+3 | 行動回数+1 |
-| テッポウダマ | 行動回数+1 | 行動回数+1 | 行動回数+1 |
-| カベ | リアクション判定数+2 | 攻撃判定数+1、リアクション判定数+1 | 行動回数+1 |
-| カシラ | 縁の数+1 | 行動回数+1 | 縁の数+1 |
+<RyugiCommonSkillBonusTable ryugiList={ryugiList} />
 
 ## 最大体力と最大精神力の再計算
 
