@@ -21,13 +21,13 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/30-2-ryugi-detail-page.md`
+- 完了issue: `docs/issue/done/phase-3/30-2-ryugi-detail-page.md`
 - `docs/requirements/pages.md` の FR-05
 - `docs/requirements/architecture.md` の AC-14
 - `docs/requirements/data-display.md` の FR-04-01、FR-04-04
 - `docs/requirements/non-functional.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md` の `30-2-ryugi-detail-page`
+- 完了plan: `docs/plan-done.md` の `30-2-ryugi-detail-page`
 - `docs/TODO.md` の流儀サイドメニューと共通スキルボーナス構造化の未対応項目
 - `.raw/contents/ryugi-detail.md`
 - `docs/design/global-styles/notes.md`

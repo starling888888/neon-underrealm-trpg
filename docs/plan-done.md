@@ -398,6 +398,17 @@
   - [x] 変換スクリプトと検証スキーマのテストを追加する
   - [x] 所属流儀ID、スキルID、個別アンカーIDの整合性を検証する
 
+- [x] `30-2-ryugi-detail-page` — 流儀詳細ページを作成する
+  - completed: 2026-07-21 via PR #53 / be092df
+
+  - [x] designを生成する
+  - [x] `/data/ryugi/[ryugiId].astro` を作成する
+  - [x] `.raw/contents/ryugi-detail.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
+  - [x] 共通テンプレートから流儀詳細ページを静的生成する
+  - [x] 流儀説明、基礎能力値、プライマリボーナス、共通スキルボーナス、流儀スキル一覧を表示する
+  - [x] 個別流儀ごとのページファイルを複製しない
+  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
+
 ## Phase 4: 検索
 
 - [x] `43-install-pagefind` — Pagefindを導入する
