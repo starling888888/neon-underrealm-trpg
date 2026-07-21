@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Used `gh` after the repository workflow prohibited it
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `31-0-ikizama-index-data` のpush後に既存PRを確認する操作
+- 観測した失敗: リポジトリのGitHub操作ではconnectorを使うべきというユーザー指示に反して、既存PRの確認に`gh pr list`を実行した。
+- 一次対応: `gh`を以後のPR確認・レビューに使わず、GitHub connectorだけで確認する。実行済みの`gh`は読み取り専用であり、GitHub上の状態変更は行っていない。
+
 ### Site menu expansion predicate returned a non-boolean value
 
 #### 2026-07-22
