@@ -16,6 +16,7 @@ async function expectSkillCardCatalog(page: Page) {
     "スキルカード カタログ | 光都暗域〈ネオン・アンダーレルム〉TRPG",
   );
   await expect(cards).not.toHaveCount(0);
+  await expect(cards.locator(".skill-card-summary")).toHaveCount(0);
 
   const gridHeights = await page
     .locator("[data-card-container]")

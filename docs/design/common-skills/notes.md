@@ -34,14 +34,14 @@
 
 - visual direction: 白寄りsurfaceと低彩度borderによる、縦長で高密度なルール参照カードの一覧。shadow、gradient、強いneon glowは使わない。
 - layout direction: カテゴリ本文の直後にCardContainerを置く。desktopは3列、tabletとmobileは2列とし、同じ行のカードは最も長い本文に合わせて高さを揃える。desktopでは既存のSiteMenu・PageToc、tabletではSiteMenu、mobileではMobilePageToc triggerを維持する。
-- typography direction: H1とカテゴリH2で本文構造を示す。各カードは名称を最上段へ単独で置き、`最大LV`はタイミング・コスト・技能と同じメタ行右端に置く。カード本文は通常本文より小さくし、長文を切り詰めない。
+- typography direction: H1とカテゴリH2で本文構造を示す。各カードは名称を最上段へ単独で置き、`最大LV`は名称行の下の独立行に置く。summaryは全スキル分の内容が完成するまで表示せず、効果本文だけを通常本文より小さく表示する。長文を切り詰めない。
 - color / accent usage: 青緑accentはSkillCardの名称下線と最大LVの控えめな強調に限定する。カード種別やカテゴリを色分けしない。
 
 ## Existing design constraints
 
 - `global-styles` の白寄り背景、暗い本文色、低彩度border、青緑accent、system fontを維持する。
 - `site-layout` のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。
-- `SkillCard` の名称、メタ情報、詳細枠、概要・効果の既存表示順と可変高さを維持する。
+- `SkillCard` の名称、名称行下の最大LV、メタ情報、詳細枠、効果本文の表示順と可変高さを維持する。summaryはデータとして保持するが、全スキル分の内容が完成するまで表示しない。
 - `CardContainer` はslotで渡されたCardを配置するだけとし、データ配列の展開、個別アンカーID、Card props、Card内の表示仕様を担わない。
 - カテゴリは生成JSONの順に `bonus`、`basic` を表示する。現在データがない `advanced` の見出し・空一覧は表示しない。
 
@@ -70,13 +70,16 @@
 <!-- visual-canonicalization:start -->
 
 - command: `npm run visual:canonicalize -- common-skills --route /data/common-skills/`
-- source branch: `28-2-common-skills-page`
-- source commit: `affe2203feb764dd5c8144ea72e73b91049b16da`
+- source branch: `30-2-ryugi-detail-page`
+- source commit: `8327e058a44b8e780240afda778d832d6ad75867`
 - route: `/data/common-skills/`
+- state: `default`
 - viewport: desktop 1440x1200, mobile 390x900
 - capture manifest: `test-results/visual/capture-manifest.json`
 
 <!-- visual-canonicalization:end -->
+
+- implementation state: `8327e05`後の未コミット変更。summaryを非表示にする共有`SkillCard`の表示方針を含む。
 
 ## Open questions
 

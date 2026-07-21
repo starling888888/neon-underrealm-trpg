@@ -33,7 +33,7 @@
 
 - visual direction: 白い面と低彩度borderで区切る、縦長・高密度なルール参照カード。shadow、gradient、強いneon glowは使わない。
 - layout direction: カードは最低高さを持ちつつ本文量で縦に伸びる。同じgrid行では最も長いスキルに合わせてカードの高さを揃える。デスクトップでは既存のHeader、左SiteMenu、右PageTocを含む残り幅で3列、モバイルでは2列とする。実際の一覧gridは後続の `SkillList` が担当する。
-- typography direction: 名称と `最大LV: N` は最初に視認できる大きさにする。タイミング、コスト、技能は短い値としてまとめる。2×2の情報枠は上段を取得制限・使用制限、下段を対象・射程とし、取得制限の内容だけを太字にする。効果欄は罫線で分けず上に詰め、概要相当の文は薄く、効果相当の文は太くして改行だけで分ける。長文は通常本文より小さくする。
+- typography direction: 名称と `最大LV: N` は最初に視認できる大きさにし、最大LVは名称行の下に独立して置く。タイミング、コスト、技能は短い値としてまとめる。2×2の情報枠は上段を取得制限・使用制限、下段を対象・射程とし、取得制限の内容だけを太字にする。効果欄は罫線で分けず上に詰め、効果本文だけを太く表示する。summaryはデータとして保持するが、全スキル分の内容が完成するまで表示しない。長文は通常本文より小さくする。
 - color / accent usage: 青緑accentは名称下の細い罫線と `LV` の控えめな強調に限定する。カードの種類、所属、区分を色分けしない。
 
 ## Existing design constraints
@@ -53,9 +53,9 @@
 
 ## Comparison points for implementation
 
-- 所属・区分・IDがカードに可視表示されず、名称、`最大LV: N`、タイミング、コスト、技能、取得制限、対象、射程、使用制限、効果だけで読める。
+- 所属・区分・IDがカードに可視表示されず、名称、名称行の下にある`最大LV: N`、タイミング、コスト、技能、取得制限、対象、射程、使用制限、効果だけで読める。summaryは全スキル分の内容が完成するまで表示しない。
 - タイミング、コスト、技能はラベルを付けず、上段に取得制限・使用制限、下段に対象・射程を置く。取得制限の内容だけを太字にする。
-- 効果欄には罫線を置かず、上に詰める。概要相当と効果相当を使う場合はラベルなしの改行だけで分け、文字色・重さの差で読み分ける。
+- 効果欄には罫線を置かず、上に詰める。summaryは表示せず、効果本文をラベルなしで読み取れるようにする。
 - カードは最低高さを保つが、長い本文や制限で自然に縦へ伸びる。本文を切り詰めない。
 - 同じgrid行のカードは、最も長い本文のカードと同じ高さになる。
 - mobileでは2列で横overflowせず、desktopでは左右のレールを含む幅でも3列の情報密度が保たれる。
@@ -73,13 +73,16 @@
 <!-- visual-canonicalization:start -->
 
 - command: `npm run visual:canonicalize -- skill-card --route /-local/skill-cards/`
-- source branch: `27-1-skill-card-component`
-- source commit: `e3c3e4ed42ed9dc9a02ae2a555d4c6f38d80113d`
+- source branch: `30-2-ryugi-detail-page`
+- source commit: `8327e058a44b8e780240afda778d832d6ad75867`
 - route: `/-local/skill-cards/`
+- state: `default`
 - viewport: desktop 1440x1200, mobile 390x900
 - capture manifest: `test-results/visual/capture-manifest.json`
 
 <!-- visual-canonicalization:end -->
+
+- implementation state: `8327e05`後の未コミット変更。summaryを非表示にする共有`SkillCard`の表示方針を含む。
 
 ## Open questions
 

@@ -1,0 +1,314 @@
+---
+import type { RyugiDetail } from "../../lib/data/ryugi-detail";
+import CardContainer from "../_common/CardContainer.astro";
+import SkillCard from "./SkillCard.astro";
+
+interface Props {
+  heading?: string;
+  ryugiId: string;
+  detailsByRyugiId: Readonly<Record<string, RyugiDetail>>;
+}
+
+const { heading = "流儀データ", ryugiId, detailsByRyugiId } = Astro.props;
+const detail = detailsByRyugiId[ryugiId];
+
+if (!detail) {
+  throw new Error(`Missing ryugi detail data for "${ryugiId}".`);
+}
+
+const { ryugi, skills } = detail;
+const baseAttributes = [
+  ["筋力", ryugi.baseAttributes.strength],
+  ["敏捷", ryugi.baseAttributes.agility],
+  ["感覚", ryugi.baseAttributes.perception],
+  ["肉体", ryugi.baseAttributes.body],
+  ["精神", ryugi.baseAttributes.mind],
+] as const;
+const commonSkillBonuses = [
+  ["共通スキル 2LV", ryugi.commonSkillBonuses.level2],
+  ["共通スキル 5LV", ryugi.commonSkillBonuses.level5],
+  ["共通スキル 9LV", ryugi.commonSkillBonuses.level9],
+] as const;
+---
+
+<section class="ryugi-data-section" data-ryugi-data-section data-ryugi-id={ryugiId}>
+  <h2>{heading}</h2>
+
+  <div class="ryugi-data-grid">
+    {skills.bonus.length > 0 && (
+      <section class="ryugi-data-primary" aria-labelledby="primary-bonus-heading">
+        <h3 id="primary-bonus-heading">プライマリボーナス</h3>
+        <CardContainer ariaLabel="プライマリボーナス">
+          {skills.bonus.map((skill) => (
+            <SkillCard {...skill} anchorId={skill.id} />
+          ))}
+        </CardContainer>
+      </section>
+    )}
+
+    <section class="ryugi-data-base" aria-labelledby="base-attributes-heading">
+      <h3 id="base-attributes-heading">基礎能力値</h3>
+      <dl class="attribute-list">
+        {
+          baseAttributes.map(([name, value]) => (
+            <div>
+              <dt>{name}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="ryugi-data-increase" aria-labelledby="increase-heading">
+      <h3 id="increase-heading">副能力増加値</h3>
+      <dl class="increase-list">
+        <div>
+          <dt>体力増加値</dt>
+          <dd>+{ryugi.healthIncrease}</dd>
+          <small>流儀レベルごと</small>
+        </div>
+        <div>
+          <dt>精神力増加値</dt>
+          <dd>+{ryugi.mindIncrease}</dd>
+          <small>流儀レベルごと</small>
+        </div>
+      </dl>
+    </section>
+
+    <section class="ryugi-data-common" aria-labelledby="common-bonus-heading">
+      <h3 id="common-bonus-heading">共通スキルボーナス</h3>
+      <dl class="common-bonus-list">
+        {
+          commonSkillBonuses.map(([level, bonus]) => (
+            <div>
+              <dt>{level}</dt>
+              <dd>{bonus}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </div>
+</section>
+
+<style>
+  .ryugi-data-section > h2 {
+    margin-block-start: var(--space-12);
+  }
+
+  .ryugi-data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--space-6);
+  }
+
+  .ryugi-data-grid section {
+    min-width: 0;
+  }
+
+  .ryugi-data-grid h3 {
+    margin-block: var(--space-5) var(--space-4);
+    border-left: 0;
+    font-size: var(--text-lg);
+    padding-inline-start: 0;
+  }
+
+  .ryugi-data-grid h3::after {
+    display: block;
+    width: 1.625rem;
+    height: 0.125rem;
+    margin-top: var(--space-2);
+    background: var(--color-link);
+    content: "";
+  }
+
+  .ryugi-data-primary :global(.card-container) {
+    display: block;
+    margin-top: 0;
+  }
+
+  .ryugi-data-primary :global([data-skill-card]) {
+    min-height: 25.5rem;
+  }
+
+  .attribute-list,
+  .increase-list,
+  .common-bonus-list {
+    margin: 0;
+  }
+
+  .attribute-list div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border-top: var(--border-width) solid var(--color-border);
+    padding-block: var(--space-3);
+  }
+
+  .attribute-list div:last-child {
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  .attribute-list dt,
+  .increase-list dt {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .attribute-list dd,
+  .increase-list dd {
+    margin: 0;
+    color: var(--color-text);
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    line-height: var(--line-height-tight);
+  }
+
+  .increase-list {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .increase-list div {
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding-bottom: var(--space-4);
+  }
+
+  .increase-list dd {
+    margin-top: var(--space-1);
+  }
+
+  .increase-list small {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .ryugi-data-common {
+    grid-column: span 3;
+  }
+
+  .ryugi-data-common > p {
+    margin: 0 0 var(--space-4);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .common-bonus-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .common-bonus-list div {
+    min-width: 0;
+    border-left: var(--border-width) solid var(--color-border);
+    padding-inline: var(--space-4);
+  }
+
+  .common-bonus-list div:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .common-bonus-list dt {
+    color: var(--color-prose-accent);
+    font-size: var(--text-xs);
+    font-weight: 800;
+  }
+
+  .common-bonus-list dd {
+    margin: 0;
+    color: var(--color-text);
+    font-size: var(--text-base);
+    font-weight: 700;
+    line-height: var(--line-height-base);
+    white-space: pre-line;
+  }
+
+  @media (max-width: 63.999rem) {
+    .ryugi-data-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ryugi-data-common {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .ryugi-data-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-5) var(--space-3);
+    }
+
+    .ryugi-data-grid h3 {
+      margin-block: var(--space-4) var(--space-3);
+      font-size: var(--text-base);
+    }
+
+    .ryugi-data-primary :global([data-skill-card]) {
+      min-height: 23.5rem;
+    }
+
+    .attribute-list div {
+      padding-block: var(--space-2);
+    }
+
+    .attribute-list dt,
+    .increase-list dt {
+      font-size: var(--text-xs);
+    }
+
+    .attribute-list dd {
+      font-size: var(--text-xl);
+    }
+
+    .increase-list {
+      gap: var(--space-3);
+    }
+
+    .increase-list div {
+      padding-bottom: var(--space-3);
+    }
+
+    .increase-list dd {
+      font-size: var(--text-xl);
+    }
+
+    .increase-list small,
+    .ryugi-data-common > p {
+      font-size: var(--text-xs);
+    }
+
+    .ryugi-data-common {
+      grid-column: auto;
+    }
+
+    .common-bonus-list {
+      grid-template-columns: 1fr;
+    }
+
+    .common-bonus-list div,
+    .common-bonus-list div:first-child {
+      border-top: var(--border-width) solid var(--color-border);
+      border-left: 0;
+      padding: var(--space-2) 0;
+    }
+
+    .common-bonus-list div:last-child {
+      border-bottom: var(--border-width) solid var(--color-border);
+    }
+
+    .common-bonus-list dt {
+      font-size: 0.625rem;
+    }
+
+    .common-bonus-list dd {
+      font-size: var(--text-xs);
+      line-height: var(--line-height-tight);
+    }
+  }
+</style>

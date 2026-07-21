@@ -684,3 +684,12 @@ source種別は以下を使う。
 - 発生箇所: `45-search-pagefind-integration` の検索metadata utility test
 - 観測した失敗: utilityの既定引数で`import.meta.env.BASE_URL`を参照したため、Astro外で実行するNode testが読み込み時に失敗した。同じ`npm test`と対象testの再実行で2回確認した。
 - 一次対応: utilityは環境値を参照せず`/`を既定値にし、Astro layoutから`import.meta.env.BASE_URL`を明示して渡す。環境非依存のutilityはNode testからも読み込める形にする。
+
+### Page-specific content was invented from agent-authored assumptions
+
+#### 2026-07-21
+
+- source: user
+- 発生箇所: `30-2-ryugi-detail-page` の `src/pages/data/ryugi/[ryugiId].astro`
+- 観測した失敗: 流儀詳細の実装で、ユーザーの当時のコンテンツ指示に含まれていない関連ページリンクを独自に追加した。また、データにないケンカヤ固有の画像説明を`heroAlt`として分岐実装した。後者はagent自身が作成したdesign noteの文言を根拠にしており、独立した正本ではない。要件・既存実装・agent作成物の記述を、ユーザー承認済みのページ本文や画像代替テキストの根拠として扱った。
+- 一次対応: 関連ページリンクとケンカヤ固有の`heroAlt`は、明示されたcontentsまたはデータから導ける範囲に限定する。agentが作成したdesign noteやprototypeの固有文言は、ユーザーが採用を明示しない限り新しい実装コンテンツの根拠にしない。既存実装の修正は、現在のreview-to-issue手順に従いユーザー承認後に行う。

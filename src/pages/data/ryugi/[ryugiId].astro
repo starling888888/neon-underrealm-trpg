@@ -1,0 +1,94 @@
+---
+import Callout from "../../../components/_common/Callout.astro";
+import CardContainer from "../../../components/_common/CardContainer.astro";
+import SkillCard from "../../../components/data/SkillCard.astro";
+import RyugiDataSection from "../../../components/data/RyugiDataSection.astro";
+import AppContainer from "../../../layouts/AppContainer.astro";
+import { getRyugiDetail, type RyugiDetail } from "../../../lib/data/ryugi-detail";
+import { getRyugiList } from "../../../lib/data/ryugi-list";
+import { withBase } from "../../../lib/utils/paths";
+
+export function getStaticPaths() {
+  return getRyugiList().map((ryugi) => ({
+    params: { ryugiId: ryugi.id },
+  }));
+}
+
+const { ryugiId = "" } = Astro.params;
+const detail = getRyugiDetail(ryugiId);
+
+if (!detail) {
+  throw new Error(`Unknown ryugiId "${ryugiId}".`);
+}
+
+const detailsByRyugiId: Record<string, RyugiDetail> = { [ryugiId]: detail };
+const { ryugi, skills } = detail;
+const heroAlt = `${ryugi.name}のイメージ`;
+const skillCategories = [
+  ["初期作成から取得できるスキル", skills.basic],
+  ["流儀レベル6以上から取得できるスキル", skills.advanced],
+] as const;
+---
+
+<AppContainer
+  title={`流儀：${ryugi.name}`}
+  description={ryugi.shortDescription}
+  showPageToc={true}
+>
+  <article class="mdx-layout prose ryugi-detail">
+    <h1>流儀：{ryugi.name}</h1>
+
+    <img
+      class="ryugi-hero"
+      src={withBase(`/images/data/ryugi/${ryugiId}_hero.webp`)}
+      alt={heroAlt}
+      loading="eager"
+    />
+
+    <p>{ryugi.description}</p>
+
+    {
+      ryugi.note && (
+        <Callout type={ryugi.note.type}>
+          <p>{ryugi.note.content}</p>
+        </Callout>
+      )
+    }
+
+    <RyugiDataSection
+      ryugiId={ryugiId}
+      detailsByRyugiId={detailsByRyugiId}
+    />
+
+    <section data-ryugi-skills>
+      <h2>流儀スキル</h2>
+      {
+        skillCategories.map(([heading, category]) =>
+          category.length > 0 ? (
+            <section>
+              <h3>{heading}</h3>
+              <CardContainer ariaLabel={heading}>
+                {category.map((skill) => (
+                  <SkillCard {...skill} anchorId={skill.id} />
+                ))}
+              </CardContainer>
+            </section>
+          ) : null,
+        )
+      }
+    </section>
+  </article>
+</AppContainer>
+
+<style>
+  .ryugi-detail {
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .ryugi-hero {
+    width: 100%;
+    margin-block: 0 var(--space-6);
+    border: var(--border-width) solid var(--color-border);
+  }
+</style>

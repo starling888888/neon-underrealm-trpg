@@ -26,7 +26,6 @@ const {
   usageRestriction,
   target,
   range,
-  summary,
   effect,
   variant = "default",
 } = Astro.props;
@@ -45,11 +44,12 @@ function displayValue(value: string | null | undefined): string {
     <span class="skill-card-name">{name}</span>
   </header>
 
+  <p class="skill-card-max-level">最大LV: {maxLevel}</p>
+
   <p class="skill-card-meta">
     <span>{timing}</span>
     <span>{displayValue(cost)}</span>
     <span>{displayValue(proficiency)}</span>
-    <span class="skill-card-max-level">最大LV: {maxLevel}</span>
   </p>
 
   <dl class="skill-card-details">
@@ -72,7 +72,6 @@ function displayValue(value: string | null | undefined): string {
   </dl>
 
   <div class="skill-card-effect">
-    <p class="skill-card-summary">{summary}</p>
     <p class="skill-card-rule">{effect}</p>
   </div>
 </article>
@@ -113,7 +112,7 @@ function displayValue(value: string | null | undefined): string {
   }
 
   .skill-card-max-level {
-    margin-left: auto;
+    margin: var(--space-2) 0 0;
     color: var(--color-link);
     font-size: var(--text-xs);
     font-weight: 800;
@@ -196,10 +195,6 @@ function displayValue(value: string | null | undefined): string {
   .skill-card-rule {
     color: var(--color-text);
     font-weight: 750;
-  }
-
-  .skill-card-summary + .skill-card-rule {
-    margin-top: var(--space-2);
   }
 
   @media (max-width: 48rem) {
