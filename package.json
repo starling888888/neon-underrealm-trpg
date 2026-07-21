@@ -11,6 +11,7 @@
     "convert:ryugi-skills": "node --import tsx scripts/convert-ryugi-skills/main.ts",
     "convert:ryugi-list": "node --import tsx scripts/convert-ryugi-index/main.ts",
     "convert:ikizama": "node --import tsx scripts/convert-ikizama-index/main.ts",
+    "convert:ikizama-skills": "node --import tsx scripts/convert-ikizama-skills/main.ts",
     "convert:release-notes": "node --import tsx scripts/convert-release-notes/main.ts",
     "test": "mkdir -p test-results && node --import tsx --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=tap --test-reporter-destination=test-results/node-tests.tap tests/node/**/*.test.ts",
     "check": "astro check && biome check . && npm run check:md",

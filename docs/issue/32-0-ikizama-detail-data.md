@@ -74,37 +74,37 @@ Excel正本でも `cybernetics` を使う。関連アイテム検証の境界は
 
 - [x] 実際に配置された `.raw/data/ikizama-skills.xlsx` を根拠として、
       `docs/conversion/ikizama-skills.md` に入力・出力・関連検証・テスト契約を定義している。
-- [ ] `docs/conversion/skills.md` の共通契約を再利用し、生き様スキルIDが
+- [x] `docs/conversion/skills.md` の共通契約を再利用し、生き様スキルIDが
       `skill-ikizama-{ikizamaId}-{category}-{timing}-{index}` に一致する。
-- [ ] 入力Excelのシート名集合と `Ikizama.id` 集合を完全一致で検証し、所属生き様ID、
+- [x] 入力Excelのシート名集合と `Ikizama.id` 集合を完全一致で検証し、所属生き様ID、
       スキルID、詳細ページ用の個別アンカーIDが整合する。
-- [ ] ローカル変換コマンドが対象ExcelからGit管理する生成JSONを出力し、CI/CD buildが
+- [x] ローカル変換コマンドが対象ExcelからGit管理する生成JSONを出力し、CI/CD buildが
       `.raw/` またはExcel本体に依存しない。
-- [ ] 後続詳細ページが生き様IDを指定して、既存の `Ikizama` 基礎情報と対応する
+- [x] 後続詳細ページが生き様IDを指定して、既存の `Ikizama` 基礎情報と対応する
       生き様スキルを合わせて取得できる。
-- [ ] 承認済みの `cybernetics` 正本と関連アイテム検証境界を、変換仕様、schema、fixture、
+- [x] 承認済みの `cybernetics` 正本と関連アイテム検証境界を、変換仕様、schema、fixture、
       生成JSONの扱いへ反映している。
-- [ ] 承認された検証境界に従い、関連アイテム種別ID・リンク先・個別アンカーについて、
+- [x] 承認された検証境界に従い、関連アイテム種別ID・リンク先・個別アンカーについて、
       現在検証できる契約と実アイテムデータが必要な検証を分けて仕様化している。
-- [ ] 更新済みのExcel入力を再変換し、`cybanetics` のaliasを追加せず、`cybernetics` と
+- [x] 更新済みのExcel入力を再変換し、`cybanetics` のaliasを追加せず、`cybernetics` と
       既存ルートの整合を確認している。
-- [ ] fixtureを使うテストが、必須項目、カテゴリ・タイミング、ID採番、所属生き様ID不整合、
+- [x] fixtureを使うテストが、必須項目、カテゴリ・タイミング、ID採番、所属生き様ID不整合、
       ID／アンカー重複、表示順、改行、出力JSON形状を検証する。
-- [ ] 関連TODOを本issueで扱わない理由が記録されている。
-- [ ] `npm run test`、`npm run check`、`npm run build` が通る。
+- [x] 関連TODOを本issueで扱わない理由が記録されている。
+- [x] `npm run test`、`npm run check`、`npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
-- [ ] 生成JSONを手編集せず、Excel変換の出力として管理している。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の詳細ページ、導線、design、アイテム実体データを実装していない。
-- [ ] `docs/TODO.md` のサイドメニュー項目と矛盾していない。
-- [ ] UI、CSS、layout、page、Componentタスクではないため、design targetおよび
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
+- [x] 生成JSONを手編集せず、Excel変換の出力として管理している。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の詳細ページ、導線、design、アイテム実体データを実装していない。
+- [x] `docs/TODO.md` のサイドメニュー項目と矛盾していない。
+- [x] UI、CSS、layout、page、Componentタスクではないため、design targetおよび
       design-image-generation前提条件は不要である。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -133,6 +133,8 @@ Excel正本でも `cybernetics` を使う。関連アイテム検証の境界は
   実装と一致するか。
 - 更新済み入力の `cybernetics` が、生成JSON、リンク先、fixtureで一貫し、`cybanetics` の
   aliasまたは推測による補正を含まないか。
+- 武器・防具を生き様専用アイテムとして集約・検証・リンクしておらず、お守り、サイバネ、
+  ナノマシン、ドラッグの4種だけを専用アイテム種別として扱っているか。
 - 未追跡のWebP画像を本issueおよびcommit対象から除外する指定が明確か。
 
 ## 備考

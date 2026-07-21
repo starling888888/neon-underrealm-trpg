@@ -106,8 +106,6 @@ interface IkizamaDetail {
 
 | 種別ID         | 表示名     | リンク先                   |
 | -------------- | ---------- | -------------------------- |
-| `weapons`      | 武器       | `/data/items/weapons`      |
-| `armors`       | 防具       | `/data/items/armors`       |
 | `omamori`      | お守り     | `/data/items/omamori`      |
 | `cybernetics`  | サイバネ   | `/data/items/cybernetics`  |
 | `nanomachines` | ナノマシン | `/data/items/nanomachines` |

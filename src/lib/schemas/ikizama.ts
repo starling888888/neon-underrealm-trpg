@@ -3,6 +3,13 @@ import { CALLOUT_TYPES, type CalloutType } from "../types/callout";
 
 export const IKIZAMA_DATA_NAME = "ikizama";
 
+export const IKIZAMA_EXCLUSIVE_ITEM_TYPES = {
+  omamori: { name: "お守り", href: "/data/items/omamori" },
+  cybernetics: { name: "サイバネ", href: "/data/items/cybernetics" },
+  nanomachines: { name: "ナノマシン", href: "/data/items/nanomachines" },
+  drugs: { name: "ドラッグ", href: "/data/items/drugs" },
+} as const;
+
 export const IkizamaNoteTypeSchema = z.enum(CALLOUT_TYPES);
 
 const requiredText = z
@@ -26,18 +33,20 @@ export const IkizamaNoteSchema = z
   })
   .strict();
 
-export const IkizamaSchema = z
+const IkizamaExclusiveItemShapeSchema = z
+  .object({
+    id: requiredOneLine,
+    name: requiredOneLine,
+  })
+  .strict();
+
+const IkizamaShapeSchema = z
   .object({
     id: requiredOneLine.regex(/^[a-z][a-z0-9-]*$/),
     name: requiredOneLine,
     shortDescription: requiredOneLine,
     description: requiredLf,
-    exclusiveItem: z
-      .object({
-        id: requiredOneLine,
-        name: requiredOneLine,
-      })
-      .strict(),
+    exclusiveItem: IkizamaExclusiveItemShapeSchema,
     note: IkizamaNoteSchema.nullable(),
     secondaryAttributeCoefficients: z
       .object({
@@ -53,6 +62,46 @@ export const IkizamaSchema = z
       positiveInteger,
     ]),
     sourceOrder: positiveInteger,
+  })
+  .strict();
+
+export const IkizamaSchema = IkizamaShapeSchema.superRefine(
+  (ikizama, context) => {
+    const expected =
+      IKIZAMA_EXCLUSIVE_ITEM_TYPES[
+        ikizama.exclusiveItem.id as IkizamaExclusiveItemType
+      ];
+    if (!expected) {
+      context.addIssue({
+        code: "custom",
+        path: ["exclusiveItem", "id"],
+        message: `Unsupported exclusive item type "${ikizama.exclusiveItem.id}".`,
+      });
+      return;
+    }
+    if (ikizama.exclusiveItem.name !== expected.name) {
+      context.addIssue({
+        code: "custom",
+        path: ["exclusiveItem", "name"],
+        message: `Exclusive item type "${ikizama.exclusiveItem.id}" must use name "${expected.name}".`,
+      });
+    }
+  },
+);
+
+export const IkizamaJsonShapeSchema = z
+  .object({
+    dataName: z.literal(IKIZAMA_DATA_NAME),
+    updatedAt: z.iso
+      .datetime({
+        error: "updatedAt must be an ISO 8601 datetime.",
+        offset: true,
+      })
+      .refine(
+        (value) => value.endsWith("+09:00"),
+        "updatedAt must use the JST +09:00 offset.",
+      ),
+    data: z.array(IkizamaShapeSchema).min(1),
   })
   .strict();
 
@@ -76,6 +125,8 @@ export type IkizamaNoteType = CalloutType;
 export type IkizamaNote = z.infer<typeof IkizamaNoteSchema>;
 export type Ikizama = z.infer<typeof IkizamaSchema>;
 export type IkizamaJson = z.infer<typeof IkizamaJsonSchema>;
+export type IkizamaExclusiveItemType =
+  keyof typeof IKIZAMA_EXCLUSIVE_ITEM_TYPES;
 
 export function assertIkizamaJson(
   value: unknown,
@@ -98,6 +149,25 @@ export function assertIkizamaJson(
     ids.add(ikizama.id);
     names.add(ikizama.name);
   });
+}
+
+export function assertIkizamaJsonShape(
+  value: unknown,
+): asserts value is IkizamaJson {
+  const result = IkizamaJsonShapeSchema.safeParse(value);
+  if (!result.success) throw new Error(formatIssues(result.error.issues));
+}
+
+export function assertIkizamaExclusiveItem(id: string, name: string): void {
+  const expected = IKIZAMA_EXCLUSIVE_ITEM_TYPES[id as IkizamaExclusiveItemType];
+  if (!expected) {
+    throw new Error(`Unsupported exclusive item type "${id}".`);
+  }
+  if (name !== expected.name) {
+    throw new Error(
+      `Exclusive item type "${id}" must use name "${expected.name}".`,
+    );
+  }
 }
 
 export function parseIkizamaJson(value: unknown): IkizamaJson {
