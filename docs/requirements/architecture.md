@@ -185,7 +185,7 @@ Excel由来データについて、ExcelからJSONへ変換する仕様をMarkdo
 docs/conversion/release-notes.md
 docs/conversion/common-skills.md
 docs/conversion/ryugi-index.md
-docs/conversion/ryugi-detail.md
+docs/conversion/ryugi-skills.md
 docs/conversion/ikizama-index.md
 docs/conversion/ikizama-detail.md
 docs/conversion/items-weapons.md

@@ -1,24 +1,25 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
-import { isDeepStrictEqual } from "node:util";
 import { type CellValue, readSheet } from "read-excel-file/node";
 import {
-  assertSkillsJson,
+  getSkillTimingParts,
+  normalizeSkillTiming,
   SKILL_CATEGORIES,
   SKILL_TIMING_NORMALIZATIONS,
   type Skill,
   type SkillCategory,
-  type SkillJsonContract,
   type SkillsByCategory,
-  type SkillsJson,
   type SkillTiming,
 } from "../../src/lib/schemas/skill";
 
-export interface ConvertSkillsOptions extends SkillJsonContract {
+export interface ConvertSkillsOptions {
   inputPath: string;
   sheetName: string;
-  outputPath: string;
-  now?: Date;
+  idPrefix: string;
+  onWarning?: (warning: string) => void;
+}
+
+export interface ConvertSkillSheetOptions {
+  idPrefix: string;
+  sheetName: string;
   onWarning?: (warning: string) => void;
 }
 
@@ -73,26 +74,19 @@ const GROUP_ORDER = new Map<SkillTiming, number>(
 
 export async function convertSkills(
   options: ConvertSkillsOptions,
-): Promise<SkillsJson> {
+): Promise<SkillsByCategory> {
   const rows = await readSkillsSheet(options.inputPath, options.sheetName);
+  return convertSkillSheet(rows, options);
+}
+
+export function convertSkillSheet(
+  rows: Rows,
+  options: ConvertSkillSheetOptions,
+): SkillsByCategory {
   assertHeaders(rows);
   const rawSkills = collectRows(rows);
-  warnTimingOrder(rawSkills, options.onWarning);
-  const data = createSkillsData(rawSkills, options.idPrefix);
-  const existing = await readExisting(options.outputPath, options);
-  const result: SkillsJson = {
-    dataName: options.dataName,
-    updatedAt:
-      existing && isDeepStrictEqual(existing.data, data)
-        ? existing.updatedAt
-        : formatDateTimeJst(options.now ?? new Date()),
-    data,
-  };
-
-  assertSkillsJson(result, options);
-  await mkdir(dirname(options.outputPath), { recursive: true });
-  await writeFile(options.outputPath, `${JSON.stringify(result, null, 2)}\n`);
-  return result;
+  warnTimingOrder(rawSkills, options);
+  return createSkillsData(rawSkills, options.idPrefix);
 }
 
 export function createSkillsData(
@@ -103,7 +97,7 @@ export function createSkillsData(
   const counts = new Map<string, number>();
 
   for (const rawSkill of rawSkills) {
-    const normalized = SKILL_TIMING_NORMALIZATIONS[rawSkill.timing];
+    const normalized = normalizeSkillTiming(rawSkill.timing);
     const groupKey = `${rawSkill.category}:${normalized}`;
     const index = (counts.get(groupKey) ?? 0) + 1;
     counts.set(groupKey, index);
@@ -117,16 +111,6 @@ export function createSkillsData(
   }
 
   return data;
-}
-
-export function formatDateTimeJst(date: Date): string {
-  const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-  const pad = (value: number) => value.toString().padStart(2, "0");
-  return `${jst.getUTCFullYear()}-${pad(jst.getUTCMonth() + 1)}-${pad(
-    jst.getUTCDate(),
-  )}T${pad(jst.getUTCHours())}:${pad(jst.getUTCMinutes())}:${pad(
-    jst.getUTCSeconds(),
-  )}+09:00`;
 }
 
 async function readSkillsSheet(
@@ -188,7 +172,7 @@ function collectRows(rows: Rows): RawSkill[] {
     }
     skills.push({
       category: category(values[0], rowNumber, 0),
-      name: requiredOneLine(values[1], "名称", rowNumber, 1),
+      name: requiredMultiline(values[1], "名称", rowNumber, 1),
       maxLevel: maxLevel(values[2], rowNumber, 2),
       timing: timing(values[3], rowNumber, 3),
       cost: optionalOneLine(values[4], "コスト", rowNumber, 4),
@@ -199,10 +183,10 @@ function collectRows(rows: Rows): RawSkill[] {
         rowNumber,
         6,
       ),
-      target: requiredOneLine(values[7], "対象", rowNumber, 7),
+      target: optionalOneLine(values[7], "対象", rowNumber, 7),
       range: optionalOneLine(values[8], "射程", rowNumber, 8),
       usageRestriction: optionalOneLine(values[9], "使用制限", rowNumber, 9),
-      summary: requiredMultiline(values[10], "概要", rowNumber, 10),
+      summary: optionalMultiline(values[10]),
       effect: requiredMultiline(values[11], "効果", rowNumber, 11),
       sourceOrder: rowIndex,
       rowNumber,
@@ -213,35 +197,27 @@ function collectRows(rows: Rows): RawSkill[] {
 
 function warnTimingOrder(
   skills: RawSkill[],
-  onWarning: ConvertSkillsOptions["onWarning"],
+  options: ConvertSkillSheetOptions,
 ): void {
+  const { onWarning } = options;
   if (!onWarning) return;
   const highest = new Map<SkillCategory, number>();
   for (const skill of skills) {
-    const group = GROUP_ORDER.get(skill.timing);
-    if (group === undefined) continue;
+    const groups = getSkillTimingParts(skill.timing).map((timing) => {
+      const group = GROUP_ORDER.get(timing);
+      if (group === undefined) {
+        throw new Error(`Timing group is not configured for "${timing}".`);
+      }
+      return group;
+    });
+    const group = Math.min(...groups);
     const previous = highest.get(skill.category);
     if (previous !== undefined && group < previous) {
       onWarning(
-        `Timing order warning: category "${skill.category}", row ${skill.rowNumber}, skill "${skill.name}", previous group "${GROUP_LABELS[previous]}", timing "${skill.timing}", expected order "${GROUP_LABELS.join(" → ")}".`,
+        `Timing order warning: sheet "${options.sheetName}", category "${skill.category}", row ${skill.rowNumber}, skill "${skill.name}", previous group "${GROUP_LABELS[previous]}", timing "${skill.timing}", expected order "${GROUP_LABELS.join(" → ")}".`,
       );
     }
     highest.set(skill.category, Math.max(previous ?? group, group));
-  }
-}
-
-async function readExisting(
-  outputPath: string,
-  contract: SkillJsonContract,
-): Promise<SkillsJson | undefined> {
-  try {
-    const source = await readFile(outputPath, "utf8");
-    const value: unknown = JSON.parse(source);
-    assertSkillsJson(value, contract);
-    return value;
-  } catch (error) {
-    if (isNodeError(error) && error.code === "ENOENT") return undefined;
-    throw error;
   }
 }
 
@@ -265,12 +241,17 @@ function timing(
   column: number,
 ): SkillTiming {
   const result = requiredOneLine(value, "タイミング", row, column);
-  if (!(result in SKILL_TIMING_NORMALIZATIONS)) {
+  const parts = result.split("/").map((part) => part.trim());
+  const normalized = parts.join("/");
+  if (
+    parts.some((part) => !(part in SKILL_TIMING_NORMALIZATIONS)) ||
+    new Set(parts).size !== parts.length
+  ) {
     throw new Error(
       `タイミング is invalid at ${cellLocation(row, column)}: "${result}".`,
     );
   }
-  return result as SkillTiming;
+  return normalized as SkillTiming;
 }
 
 function maxLevel(
@@ -332,6 +313,10 @@ function requiredMultiline(
   return result;
 }
 
+function optionalMultiline(value: CellValue | null | undefined): string {
+  return text(value).trim();
+}
+
 function cellLocation(row: number, column: number): string {
   return `row ${row}, column ${columnLetter(column)}`;
 }
@@ -354,7 +339,4 @@ function text(value: CellValue | null | undefined): string {
 }
 function blank(value: CellValue | null | undefined): boolean {
   return text(value).trim() === "";
-}
-function isNodeError(error: unknown): error is NodeJS.ErrnoException {
-  return error instanceof Error && "code" in error;
 }

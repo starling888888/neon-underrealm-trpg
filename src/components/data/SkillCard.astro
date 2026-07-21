@@ -8,7 +8,7 @@ interface Props {
   proficiency?: string | null;
   acquisitionRestriction?: string | null;
   usageRestriction?: string | null;
-  target: string;
+  target?: string | null;
   range?: string | null;
   summary: string;
   effect: string;
@@ -63,7 +63,7 @@ function displayValue(value: string | null | undefined): string {
     </div>
     <div class="skill-card-detail">
       <dt>対象</dt>
-      <dd>{target}</dd>
+      <dd>{displayValue(target)}</dd>
     </div>
     <div class="skill-card-detail">
       <dt>射程</dt>
