@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const SkillCategorySchema = z.enum(["bonus", "basic", "advanced"]);
-export const SkillTimingSchema = z.enum([
+export const SkillTimingPartSchema = z.enum([
   "Pv",
   "SU",
   "INI",
@@ -28,7 +28,7 @@ export const SKILL_CATEGORIES = [
   "basic",
   "advanced",
 ] as const satisfies readonly SkillCategory[];
-
+export const SKILL_TIMING_PARTS = SkillTimingPartSchema.options;
 export const SKILL_TIMING_NORMALIZATIONS = {
   Pv: "pv",
   SU: "su",
@@ -49,7 +49,7 @@ export const SKILL_TIMING_NORMALIZATIONS = {
   Ra: "ra",
   D: "d",
   SP: "sp",
-} as const satisfies Record<SkillTiming, string>;
+} as const satisfies Record<SkillTimingPart, string>;
 
 const requiredOneLine = z
   .string()
@@ -62,21 +62,28 @@ const requiredLf = z
   .trim()
   .min(1)
   .refine((value) => !value.includes("\r"), "Line breaks must use LF.");
+const optionalLf = z
+  .string()
+  .refine((value) => !value.includes("\r"), "Line breaks must use LF.");
+
+export const SkillTimingSchema = z
+  .string()
+  .refine(isSkillTiming, "Timing must use permitted timing notation.");
 
 export const SkillSchema = z
   .object({
     id: requiredOneLine,
     category: SkillCategorySchema,
-    name: requiredOneLine,
+    name: requiredLf,
     maxLevel: z.number().int().positive(),
     timing: SkillTimingSchema,
     cost: optionalOneLine,
     proficiency: optionalOneLine,
     acquisitionRestriction: optionalOneLine,
-    target: requiredOneLine,
+    target: optionalOneLine,
     range: optionalOneLine,
     usageRestriction: optionalOneLine,
-    summary: requiredLf,
+    summary: optionalLf,
     effect: requiredLf,
     sourceOrder: z.number().int().positive(),
   })
@@ -107,14 +114,18 @@ export const SkillsJsonSchema = z
   .strict();
 
 export type SkillCategory = z.infer<typeof SkillCategorySchema>;
+export type SkillTimingPart = z.infer<typeof SkillTimingPartSchema>;
 export type SkillTiming = z.infer<typeof SkillTimingSchema>;
 export type Skill = z.infer<typeof SkillSchema>;
 export type SkillsByCategory = z.infer<typeof SkillsByCategorySchema>;
 export type SkillsJson = z.infer<typeof SkillsJsonSchema>;
 
-export interface SkillJsonContract {
-  dataName: string;
+export interface SkillDataContract {
   idPrefix: string;
+}
+
+export interface SkillJsonContract extends SkillDataContract {
+  dataName: string;
 }
 
 export function assertSkillsJson(
@@ -125,35 +136,29 @@ export function assertSkillsJson(
   if (!result.success) {
     throw new Error(formatIssues(result.error.issues));
   }
-
-  assertContract(result.data, contract);
-}
-
-export function parseSkillsJson(
-  value: unknown,
-  contract: SkillJsonContract,
-): SkillsJson {
-  assertSkillsJson(value, contract);
-  return value;
-}
-
-function assertContract(json: SkillsJson, contract: SkillJsonContract): void {
-  if (json.dataName !== contract.dataName) {
+  if (result.data.dataName !== contract.dataName) {
     throw new Error(`dataName must be "${contract.dataName}".`);
   }
 
+  assertSkillsData(result.data.data, contract);
+}
+
+export function assertSkillsData(
+  data: SkillsByCategory,
+  contract: SkillDataContract,
+): void {
   const ids = new Set<string>();
   const nextIndexes = new Map<string, number>();
   const sourceOrders: number[] = [];
   for (const category of SKILL_CATEGORIES) {
     let previousSourceOrder = 0;
-    for (const skill of json.data[category]) {
+    for (const skill of data[category]) {
       if (skill.category !== category) {
         throw new Error(
           `Skill "${skill.id}" must belong to category "${category}".`,
         );
       }
-      const normalizedTiming = SKILL_TIMING_NORMALIZATIONS[skill.timing];
+      const normalizedTiming = normalizeSkillTiming(skill.timing);
       const expectedPrefix = `${contract.idPrefix}-${category}-${normalizedTiming}-`;
       const index = parseSkillIndex(skill.id, expectedPrefix);
       if (index === undefined) {
@@ -187,6 +192,39 @@ function assertContract(json: SkillsJson, contract: SkillJsonContract): void {
       throw new Error("Skill sourceOrder values must be consecutive.");
     }
   });
+}
+
+export function parseSkillsJson(
+  value: unknown,
+  contract: SkillJsonContract,
+): SkillsJson {
+  assertSkillsJson(value, contract);
+  return value;
+}
+
+export function getSkillTimingParts(timing: SkillTiming): SkillTimingPart[] {
+  return timing.split("/") as SkillTimingPart[];
+}
+
+export function normalizeSkillTiming(timing: SkillTiming): string {
+  return [...getSkillTimingParts(timing)]
+    .sort(
+      (left, right) =>
+        SKILL_TIMING_PARTS.indexOf(left) - SKILL_TIMING_PARTS.indexOf(right),
+    )
+    .map((part) => SKILL_TIMING_NORMALIZATIONS[part])
+    .join("_");
+}
+
+function isSkillTiming(value: string): boolean {
+  const parts = value.split("/");
+  if (
+    parts.length === 0 ||
+    parts.some((part) => !SkillTimingPartSchema.safeParse(part).success)
+  ) {
+    return false;
+  }
+  return new Set(parts).size === parts.length;
 }
 
 function parseSkillIndex(id: string, prefix: string): number | undefined {

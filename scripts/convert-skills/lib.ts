@@ -4,6 +4,8 @@ import { isDeepStrictEqual } from "node:util";
 import { type CellValue, readSheet } from "read-excel-file/node";
 import {
   assertSkillsJson,
+  getSkillTimingParts,
+  normalizeSkillTiming,
   SKILL_CATEGORIES,
   SKILL_TIMING_NORMALIZATIONS,
   type Skill,
@@ -19,6 +21,12 @@ export interface ConvertSkillsOptions extends SkillJsonContract {
   sheetName: string;
   outputPath: string;
   now?: Date;
+  onWarning?: (warning: string) => void;
+}
+
+export interface ConvertSkillSheetOptions {
+  idPrefix: string;
+  sheetName: string;
   onWarning?: (warning: string) => void;
 }
 
@@ -75,10 +83,7 @@ export async function convertSkills(
   options: ConvertSkillsOptions,
 ): Promise<SkillsJson> {
   const rows = await readSkillsSheet(options.inputPath, options.sheetName);
-  assertHeaders(rows);
-  const rawSkills = collectRows(rows);
-  warnTimingOrder(rawSkills, options.onWarning);
-  const data = createSkillsData(rawSkills, options.idPrefix);
+  const data = convertSkillSheet(rows, options);
   const existing = await readExisting(options.outputPath, options);
   const result: SkillsJson = {
     dataName: options.dataName,
@@ -95,6 +100,16 @@ export async function convertSkills(
   return result;
 }
 
+export function convertSkillSheet(
+  rows: Rows,
+  options: ConvertSkillSheetOptions,
+): SkillsByCategory {
+  assertHeaders(rows);
+  const rawSkills = collectRows(rows);
+  warnTimingOrder(rawSkills, options);
+  return createSkillsData(rawSkills, options.idPrefix);
+}
+
 export function createSkillsData(
   rawSkills: RawSkill[],
   idPrefix: string,
@@ -103,7 +118,7 @@ export function createSkillsData(
   const counts = new Map<string, number>();
 
   for (const rawSkill of rawSkills) {
-    const normalized = SKILL_TIMING_NORMALIZATIONS[rawSkill.timing];
+    const normalized = normalizeSkillTiming(rawSkill.timing);
     const groupKey = `${rawSkill.category}:${normalized}`;
     const index = (counts.get(groupKey) ?? 0) + 1;
     counts.set(groupKey, index);
@@ -188,7 +203,7 @@ function collectRows(rows: Rows): RawSkill[] {
     }
     skills.push({
       category: category(values[0], rowNumber, 0),
-      name: requiredOneLine(values[1], "名称", rowNumber, 1),
+      name: requiredMultiline(values[1], "名称", rowNumber, 1),
       maxLevel: maxLevel(values[2], rowNumber, 2),
       timing: timing(values[3], rowNumber, 3),
       cost: optionalOneLine(values[4], "コスト", rowNumber, 4),
@@ -199,10 +214,10 @@ function collectRows(rows: Rows): RawSkill[] {
         rowNumber,
         6,
       ),
-      target: requiredOneLine(values[7], "対象", rowNumber, 7),
+      target: optionalOneLine(values[7], "対象", rowNumber, 7),
       range: optionalOneLine(values[8], "射程", rowNumber, 8),
       usageRestriction: optionalOneLine(values[9], "使用制限", rowNumber, 9),
-      summary: requiredMultiline(values[10], "概要", rowNumber, 10),
+      summary: optionalMultiline(values[10]),
       effect: requiredMultiline(values[11], "効果", rowNumber, 11),
       sourceOrder: rowIndex,
       rowNumber,
@@ -213,17 +228,24 @@ function collectRows(rows: Rows): RawSkill[] {
 
 function warnTimingOrder(
   skills: RawSkill[],
-  onWarning: ConvertSkillsOptions["onWarning"],
+  options: ConvertSkillSheetOptions,
 ): void {
+  const { onWarning } = options;
   if (!onWarning) return;
   const highest = new Map<SkillCategory, number>();
   for (const skill of skills) {
-    const group = GROUP_ORDER.get(skill.timing);
-    if (group === undefined) continue;
+    const groups = getSkillTimingParts(skill.timing).map((timing) => {
+      const group = GROUP_ORDER.get(timing);
+      if (group === undefined) {
+        throw new Error(`Timing group is not configured for "${timing}".`);
+      }
+      return group;
+    });
+    const group = Math.min(...groups);
     const previous = highest.get(skill.category);
     if (previous !== undefined && group < previous) {
       onWarning(
-        `Timing order warning: category "${skill.category}", row ${skill.rowNumber}, skill "${skill.name}", previous group "${GROUP_LABELS[previous]}", timing "${skill.timing}", expected order "${GROUP_LABELS.join(" → ")}".`,
+        `Timing order warning: sheet "${options.sheetName}", category "${skill.category}", row ${skill.rowNumber}, skill "${skill.name}", previous group "${GROUP_LABELS[previous]}", timing "${skill.timing}", expected order "${GROUP_LABELS.join(" → ")}".`,
       );
     }
     highest.set(skill.category, Math.max(previous ?? group, group));
@@ -265,12 +287,17 @@ function timing(
   column: number,
 ): SkillTiming {
   const result = requiredOneLine(value, "タイミング", row, column);
-  if (!(result in SKILL_TIMING_NORMALIZATIONS)) {
+  const parts = result.split("/").map((part) => part.trim());
+  const normalized = parts.join("/");
+  if (
+    parts.some((part) => !(part in SKILL_TIMING_NORMALIZATIONS)) ||
+    new Set(parts).size !== parts.length
+  ) {
     throw new Error(
       `タイミング is invalid at ${cellLocation(row, column)}: "${result}".`,
     );
   }
-  return result as SkillTiming;
+  return normalized as SkillTiming;
 }
 
 function maxLevel(
@@ -330,6 +357,10 @@ function requiredMultiline(
     throw new Error(`${label} is required at ${cellLocation(row, column)}.`);
   }
   return result;
+}
+
+function optionalMultiline(value: CellValue | null | undefined): string {
+  return text(value).trim();
 }
 
 function cellLocation(row: number, column: number): string {

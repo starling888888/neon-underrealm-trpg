@@ -1,6 +1,6 @@
 {
   "dataName": "common-skills",
-  "updatedAt": "2026-07-15T21:41:19+09:00",
+  "updatedAt": "2026-07-21T20:31:46+09:00",
   "data": {
     "bonus": [
       {
@@ -112,7 +112,7 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "lv/Sn",
-        "summary": "精神力の代わりに体力でを使用できるようになる。",
+        "summary": "精神力の代わりに体力を消費できるようになる。",
         "effect": "スキルのコストとして精神力を支払う際に使用。そのコストのすべてまたは一部を体力で支払っても良い。体力が0未満になるように支払うことはできない。",
         "sourceOrder": 7,
         "id": "skill-common-basic-sp-001"

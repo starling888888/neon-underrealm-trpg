@@ -16,8 +16,8 @@
 
 変換仕様の正本ファイル名は `ryugi-skills.md` とする。`docs/plan.md` のタスク名・参照と
 一致し、汎用の `docs/conversion/skills.md` が共通契約、`ryugi-skills.md` が流儀スキル固有の
-入力・関連契約を担う構成とする。`docs/requirements/architecture.md` の例示にある
-`ryugi-detail.md` は、このissueで `ryugi-skills.md` へ統一する。
+入力・関連契約を担う構成とする。`docs/requirements/architecture.md` の変換仕様例も、この
+ファイル名へ統一する。
 
 - `docs/requirements/architecture.md` の AC-06〜AC-16
 - `docs/requirements/data-id-policy.md` の 10.1〜10.3
@@ -35,6 +35,8 @@
   共通契約の拡張が必要と判明した場合だけ、影響範囲と理由を記録して変更する。
 - 流儀スキルの所属流儀IDと、`data/generated/ryugi-list.json` の `Ryugi.id` の関連を検証する
   schema / helperを整備する。
+- 既存の共通スキル変換も実Excelから再出力し、流儀スキル向けの共通契約拡張後も
+  `data/generated/common-skills.json` と既存ページが壊れていないことを確認する。
 - 実Excelで確定した構造に従い、ローカル変換処理、npm script、生成JSON、生成JSONを読む
   後続詳細ページ用のデータ取得層を追加する。詳細用取得層は流儀IDを受け取り、既存の `Ryugi` と
   対応する流儀スキルを同じ結果として返す。
@@ -49,7 +51,10 @@
   実装する。
 - `/data/ryugi/[ryugiId].astro`、詳細ページUI、MDX本文、導線、design画像を作成しない。
   これらは `30-2-ryugi-detail-page` で扱う。
-- `ryugi-list.json` の非スキル情報、共通スキル、生き様、アイテム、NPCの変換・取得層を変更しない。
+- 既存`SkillCard`の`対象` propは、生成JSONのnullable契約を受け取れるようにするだけとし、
+  レイアウト・導線・詳細ページUIは変更しない。
+- `ryugi-list.json` の非スキル情報、生き様、アイテム、NPCの変換・取得層を変更しない。
+  共通スキルは共通変換契約の互換性確認として再出力するが、出力形状やページ構成を変更しない。
 - `.raw/data/`、Google Drive、`raw-google-drive.url` を変更しない。Excel本体をGit管理しない。
 - 未追跡の `public/images/data/` 配下のWebP・画像フォルダはユーザーの既存作業であり、
   本issueおよびこのセッション中のcommit対象に含めない。
@@ -59,35 +64,37 @@
 
 ## 完了条件
 
-- [ ] 実際に配置された対象Excelを根拠として、`docs/conversion/ryugi-skills.md` に流儀スキルの
+- [x] 実際に配置された対象Excelを根拠として、`docs/conversion/ryugi-skills.md` に流儀スキルの
       入力・出力・関連検証・テスト契約を定義している。
-- [ ] `docs/conversion/skills.md` の共通契約を再利用し、流儀スキルのIDが
+- [x] `docs/conversion/skills.md` の共通契約を再利用し、流儀スキルのIDが
       `skill-ryugi-{ryugiId}-{category}-{timing}-{index}` に一致する。
-- [ ] 所属流儀IDが `ryugi-list.json` の既存 `Ryugi.id` に存在すること、スキルID、
+- [x] 所属流儀IDが `ryugi-list.json` の既存 `Ryugi.id` に存在すること、スキルID、
       後続ページで使う個別アンカーIDが整合することを検証する。
-- [ ] ローカル変換コマンドが対象ExcelからGit管理する生成JSONを出力し、CI/CD buildが
+- [x] ローカル変換コマンドが対象ExcelからGit管理する生成JSONを出力し、CI/CD buildが
       `.raw/` またはExcel本体に依存しない。
-- [ ] 後続の流儀詳細ページが流儀IDを指定して、既存の `Ryugi` 非スキル情報と対応する流儀スキルを
+- [x] `convert:common-skills` が共通スキルJSONを再出力でき、既存の共通スキル取得層・ページを
+      壊していないことを確認する。
+- [x] 後続の流儀詳細ページが流儀IDを指定して、既存の `Ryugi` 非スキル情報と対応する流儀スキルを
       合わせて取得できる。詳細用取得結果の正確な型・JSON形状は実Excel確認後に確定する。
-- [ ] fixtureを使うテストが、必須項目、カテゴリ・タイミング、ID採番、所属流儀ID不整合、
+- [x] fixtureを使うテストが、必須項目、カテゴリ・タイミング、ID採番、所属流儀ID不整合、
       ID／アンカー重複、表示順、改行、出力JSON形状を検証する。
-- [ ] `docs/requirements/architecture.md`、`docs/plan.md`、関連参照で、流儀スキル変換仕様の
+- [x] `docs/requirements/architecture.md`、`docs/plan.md`、関連参照で、流儀スキル変換仕様の
       正本名が `docs/conversion/ryugi-skills.md` に統一されている。
-- [ ] 関連TODOを扱った結果が記録されている。
-- [ ] `npm run test`、`npm run check`、`npm run build` が通る。
+- [x] 関連TODOを扱った結果が記録されている。
+- [x] `npm run test`、`npm run check`、`npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
-- [ ] 生成JSONを手編集せず、Excel変換の出力として管理している。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外のページ、Component、UIを実装していない。
-- [ ] `docs/TODO.md` の流儀スキル変換仕様ファイル名の追跡項目と矛盾していない。
-- [ ] UI、CSS、layout、page、Componentタスクではないため、design targetおよび
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
+- [x] 生成JSONを手編集せず、Excel変換の出力として管理している。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の詳細ページ、導線、designを実装していない。
+- [x] `docs/TODO.md` の流儀スキル変換仕様ファイル名の追跡項目と矛盾していない。
+- [x] UI、CSS、layout、page、Componentタスクではないため、design targetおよび
       design-image-generation前提条件は不要である。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -95,11 +102,13 @@
 - `docs/conversion/skills.md`（共通契約の拡張が実Excel確認で必要な場合のみ）
 - `docs/requirements/architecture.md`
 - `docs/plan.md`
+- `docs/TODO.md`
 - `src/lib/schemas/skill.ts`
 - `scripts/convert-skills/`
 - `scripts/convert-ryugi-skills/`
 - `src/lib/data/ryugi-skills.ts`
 - `src/lib/data/ryugi-detail.ts`
+- `src/components/data/SkillCard.astro`
 - `data/generated/ryugi-skills.json`
 - `tests/node/ryugi-skills.test.ts`
 - `package.json`

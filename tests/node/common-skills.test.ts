@@ -120,6 +120,38 @@ describe("skill conversion", () => {
     );
   });
 
+  it("accepts multiline names, nullable targets, empty summaries, and combined timings", async () => {
+    await using fixture = await createFixture();
+    const skill = row("basic", "連携\r\n行動", "Ra / Aa");
+    skill[7] = "";
+    skill[10] = "";
+    await workbook(fixture.input, "skills", [headers, skill]);
+
+    const result = await convertSkills({
+      ...contract,
+      inputPath: fixture.input,
+      sheetName: "skills",
+      outputPath: fixture.output,
+    });
+
+    assert.deepEqual(result.data.basic[0], {
+      id: "skill-common-basic-aa_ra-001",
+      category: "basic",
+      name: "連携\n行動",
+      maxLevel: 1,
+      timing: "Ra/Aa",
+      cost: null,
+      proficiency: "能動",
+      acquisitionRestriction: null,
+      target: null,
+      range: null,
+      usageRestriction: null,
+      summary: "",
+      effect: "効果",
+      sourceOrder: 1,
+    });
+  });
+
   it("reports header and extra-cell locations", async () => {
     await using fixture = await createFixture();
     await workbook(fixture.input, "skills", [
