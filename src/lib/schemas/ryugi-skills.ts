@@ -26,17 +26,23 @@ export const RyugiSkillsJsonSchema = z
 
 export type RyugiSkillsJson = z.infer<typeof RyugiSkillsJsonSchema>;
 
+export function assertRyugiSkillsJsonShape(
+  value: unknown,
+): asserts value is RyugiSkillsJson {
+  const result = RyugiSkillsJsonSchema.safeParse(value);
+  if (!result.success) throw new Error(formatIssues(result.error.issues));
+}
+
 export function assertRyugiSkillsJson(
   value: unknown,
   ryugiIds: readonly string[],
 ): asserts value is RyugiSkillsJson {
-  const result = RyugiSkillsJsonSchema.safeParse(value);
-  if (!result.success) throw new Error(formatIssues(result.error.issues));
+  assertRyugiSkillsJsonShape(value);
 
   const expectedIds = new Set(ryugiIds);
-  const actualIds = Object.keys(result.data.data);
+  const actualIds = Object.keys(value.data);
   for (const ryugiId of ryugiIds) {
-    if (!(ryugiId in result.data.data)) {
+    if (!(ryugiId in value.data)) {
       throw new Error(`Missing ryugi skills for "${ryugiId}".`);
     }
   }
@@ -48,7 +54,7 @@ export function assertRyugiSkillsJson(
 
   const skillIds = new Set<string>();
   for (const ryugiId of ryugiIds) {
-    const skills = result.data.data[ryugiId];
+    const skills = value.data[ryugiId];
     if (!skills) throw new Error(`Missing ryugi skills for "${ryugiId}".`);
     assertSkillsData(skills, { idPrefix: `skill-ryugi-${ryugiId}` });
     for (const skill of flattenSkills(skills)) {

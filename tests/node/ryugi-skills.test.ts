@@ -26,43 +26,65 @@ const headers = [
 ];
 
 describe("ryugi skill conversion", () => {
-  it("aggregates owner sheets into one JSON and resets sourceOrder per ryugi", async () => {
+  it("aggregates owner sheets and regenerates after owner additions or removals", async () => {
     await using fixture = await createFixture();
     const kenkaya = row("basic", "連携\r\n斬撃", "Aa/Ra");
     kenkaya[7] = "";
     kenkaya[10] = "";
     await workbook(fixture.input, [
       { name: "kenkaya", rows: [headers, kenkaya] },
-      { name: "emono", rows: [headers, row("bonus", "必中", "Pv")] },
     ]);
 
-    const result = await convertRyugiSkills({
+    const initial = await convertRyugiSkills({
       inputPath: fixture.input,
       outputPath: fixture.output,
-      ryugiIds: ["kenkaya", "emono"],
+      ryugiIds: ["kenkaya"],
       now: new Date("2026-07-21T00:00:00Z"),
     });
 
-    assert.equal(result.updatedAt, "2026-07-21T09:00:00+09:00");
+    assert.equal(initial.updatedAt, "2026-07-21T09:00:00+09:00");
     assert.equal(
-      result.data.kenkaya.basic[0]?.id,
+      initial.data.kenkaya.basic[0]?.id,
       "skill-ryugi-kenkaya-basic-aa_ra-001",
     );
-    assert.equal(result.data.kenkaya.basic[0]?.name, "連携\n斬撃");
-    assert.equal(result.data.kenkaya.basic[0]?.target, null);
-    assert.equal(result.data.kenkaya.basic[0]?.summary, "");
-    assert.equal(result.data.kenkaya.basic[0]?.sourceOrder, 1);
-    assert.equal(result.data.emono.bonus[0]?.sourceOrder, 1);
-    const unchanged = await convertRyugiSkills({
+    assert.equal(initial.data.kenkaya.basic[0]?.name, "連携\n斬撃");
+    assert.equal(initial.data.kenkaya.basic[0]?.target, null);
+    assert.equal(initial.data.kenkaya.basic[0]?.summary, "");
+    assert.equal(initial.data.kenkaya.basic[0]?.sourceOrder, 1);
+
+    await workbook(fixture.input, [
+      { name: "kenkaya", rows: [headers, kenkaya] },
+      { name: "emono", rows: [headers, row("bonus", "必中", "Pv")] },
+    ]);
+    const added = await convertRyugiSkills({
       inputPath: fixture.input,
       outputPath: fixture.output,
       ryugiIds: ["kenkaya", "emono"],
       now: new Date("2026-07-22T00:00:00Z"),
     });
-    assert.equal(unchanged.updatedAt, "2026-07-21T09:00:00+09:00");
-    assert.doesNotThrow(() =>
-      assertRyugiSkillsJson(result, ["kenkaya", "emono"]),
-    );
+    assert.equal(added.updatedAt, "2026-07-22T09:00:00+09:00");
+    assert.equal(added.data.emono.bonus[0]?.sourceOrder, 1);
+
+    const unchanged = await convertRyugiSkills({
+      inputPath: fixture.input,
+      outputPath: fixture.output,
+      ryugiIds: ["kenkaya", "emono"],
+      now: new Date("2026-07-23T00:00:00Z"),
+    });
+    assert.equal(unchanged.updatedAt, "2026-07-22T09:00:00+09:00");
+
+    await workbook(fixture.input, [
+      { name: "kenkaya", rows: [headers, kenkaya] },
+    ]);
+    const removed = await convertRyugiSkills({
+      inputPath: fixture.input,
+      outputPath: fixture.output,
+      ryugiIds: ["kenkaya"],
+      now: new Date("2026-07-24T00:00:00Z"),
+    });
+    assert.equal(removed.updatedAt, "2026-07-24T09:00:00+09:00");
+    assert.deepEqual(Object.keys(removed.data), ["kenkaya"]);
+    assert.doesNotThrow(() => assertRyugiSkillsJson(removed, ["kenkaya"]));
   });
 
   it("rejects missing and unexpected owner sheets", async () => {

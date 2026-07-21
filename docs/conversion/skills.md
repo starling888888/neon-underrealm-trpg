@@ -7,23 +7,30 @@
 各データ種別はこの仕様を基礎とし、入力ファイル・シート・出力先・所属データとの関連は、それぞれの
 `docs/conversion/*.md` で定義する。
 
-## 変換設定
+## 変換処理の責務
 
-汎用変換器は、少なくとも次の設定を受け取る。
+変換処理は、次の3つの責務を分離する。個別仕様は、入力ファイル・シート・出力先・所有者IDの入力元を
+定義し、この共通仕様の各処理へ必要な設定を渡す。
 
-| 設定         | 説明                                                                   |
-| ------------ | ---------------------------------------------------------------------- |
-| `inputPath`  | 入力Excelファイルのパス。                                              |
-| `sheetName`  | 所属を持たないスキル用の単一シート名。                                 |
-| `ownerKind`  | 所属を持つスキルの所属種別。`ryugi`、`ikizama`など。                   |
-| `ownerIds`   | 所属を持つスキルで許可する所属IDの、表示順を持つ配列。                 |
-| `outputPath` | Git管理する生成JSONの出力先。                                          |
-| `dataName`   | 生成JSONの `dataName`。既存JSONを読む場合も同じ値を要求する。          |
-| `idPrefix`   | 所属を持たないスキル用の固定ID prefix。共通スキルでは `skill-common`。 |
+### 1シート変換
 
-所属を持つ入力では、各シート名を所属IDとして使う。変換器は `ownerIds` とExcelシート名の集合が
-完全一致することを検証し、各シートのスキルID prefixを `skill-{ownerKind}-{ownerId}` から導出する。
-所属列の追加、流儀名からの所属推測、シート名以外の所属決定は行わない。
+`convertSkills()` は `inputPath`、`sheetName`、`idPrefix`、Warning出力を受け取り、単一シートを
+`SkillsByCategory` へ変換する。`convertSkillSheet()` は読み込み済みの行と同じ変換設定を受け取り、
+Excelのヘッダー・行・値を検証し、カテゴリ分割、ID採番、`sourceOrder`設定を行う。
+
+### 所有者別集約
+
+所属を持つ入力では、個別の集約変換器が許可する所有者IDとExcelシート名の集合の完全一致を検証する。
+各シート名を所属IDとして使い、各シートの`idPrefix`を `skill-{ownerKind}-{ownerId}` から導出して
+1シート変換を呼び出す。所属列の追加、流儀名からの所属推測、シート名以外の所属決定は行わない。
+
+### 生成JSON書込み
+
+`writeGeneratedJson()` は `outputPath`、`dataName`、変換済みの`data`、出力JSON用のassert helper、
+必要に応じて既存JSON用のassert helper、変換時刻を受け取る。出力前には常に出力JSON用のhelperで
+今回の結果を検証する。既存JSONは、同じ`dataName`を含む比較に必要な形状を検証できる場合にだけ読み、
+`data`が同一なら`updatedAt`を維持する。所有者ID集合の変更など、今回の出力契約とは異なる既存JSONでも
+形状が読めて`data`が異なる場合は、新しい`updatedAt`で今回の出力を生成する。
 
 ## 入力Excel
 
@@ -153,8 +160,9 @@ Ra/Aa -> aa_ra
 `maxLevel`、`timing`、`cost`、`proficiency`、`acquisitionRestriction`、`target`、`range`、
 `usageRestriction`、`summary`、`effect`、`sourceOrder` を持つ。所属IDを各 `Skill` に重複出力しない。
 
-`updatedAt` はISO 8601かつJSTオフセット `+09:00` を持つ。変換器は既存JSONの `data` と
-今回の `data` が同一なら既存値を維持し、異なる場合だけ今回の生成時刻へ更新する。
+`updatedAt` はISO 8601かつJSTオフセット `+09:00` を持つ。既存JSONが比較に必要な形状であり、
+既存JSONの `data` と今回の `data` が同一なら既存値を維持する。異なる場合は、所有者ID集合の変更を
+含めて今回の生成時刻へ更新する。
 
 ## タイミング順Warning
 

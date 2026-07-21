@@ -16,6 +16,7 @@ export interface WriteGeneratedJsonOptions<
   dataName: Json["dataName"];
   data: Data;
   assertJson: (value: unknown) => asserts value is Json;
+  assertExistingJson?: (value: unknown) => asserts value is Json;
   now?: Date;
 }
 
@@ -23,7 +24,10 @@ export async function writeGeneratedJson<
   Data,
   Json extends GeneratedJson<Data>,
 >(options: WriteGeneratedJsonOptions<Data, Json>): Promise<Json> {
-  const existing = await readExisting(options.outputPath, options.assertJson);
+  const existing = await readExisting(
+    options.outputPath,
+    options.assertExistingJson ?? options.assertJson,
+  );
   const result = {
     dataName: options.dataName,
     updatedAt:

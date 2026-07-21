@@ -1,6 +1,7 @@
 import readXlsxFile from "read-excel-file/node";
 import {
   assertRyugiSkillsJson,
+  assertRyugiSkillsJsonShape,
   RYUGI_SKILLS_DATA_NAME,
   type RyugiSkillsJson,
 } from "../../src/lib/schemas/ryugi-skills";
@@ -45,6 +46,7 @@ export async function convertRyugiSkills(
     dataName: RYUGI_SKILLS_DATA_NAME,
     data,
     now: options.now,
+    assertExistingJson: assertRyugiSkillsJsonShape,
     assertJson: (value): asserts value is RyugiSkillsJson =>
       assertRyugiSkillsJson(value, options.ryugiIds),
   });

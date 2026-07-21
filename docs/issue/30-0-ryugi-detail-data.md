@@ -174,3 +174,40 @@
 - [x] `npm test` が通る。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 実装済みの`npm run convert:ryugi-skills`と`src/lib/data/ryugi-detail.ts`を、
+  `docs/conversion/ryugi-skills.md`が「（予定）」と記載している。
+- 共通変換仕様が、1シート変換器へ所有者集合・JSON出力設定を渡す構成として記載しており、
+  実装済みの責務分離と一致していない。
+- 流儀ID集合を追加・削除した場合、既存`ryugi-skills.json`を出力用schemaで検証してから読むため、
+  正しいExcel入力から再生成できない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: PR #52の`3233f09..41b86e2`を、`document_reviewer`と`technical_reviewer`で
+  確認した。仕様表の「（予定）」と実装済み入口の不一致、共通仕様と責務分離の不一致は現行treeで
+  再現する。`writeGeneratedJson()`は既存JSONにも出力用assertを適用するため、流儀ID集合が変化した
+  場合に再生成を拒否する。PR上のコメント、review submission、未解決threadはなかった。
+
+### 対応方針
+
+- 流儀固有仕様から実装済み入口の「（予定）」を除去する。
+- 共通変換仕様を、1シート変換、所有者別集約、生成JSON書込みの責務ごとの契約へ更新する。
+- 共通書込みhelperは、現在の出力契約に合わない既存JSONでも比較に必要な形状なら読み込めるようにする。
+  流儀ID集合が変化した既存JSONは、`updatedAt`を維持せず新しい変換時刻で更新する。
+- 流儀IDの追加・削除をfixtureで検証する。
+
+### 対応完了チェックリスト
+
+- [x] 仕様書が実装済みの変換コマンド・取得層・責務分離と一致する。
+- [x] 流儀ID集合の追加・削除後も、既存生成JSONを手編集せずに再生成できる。
+- [x] 流儀ID集合が変化した場合、`updatedAt`を新しい変換時刻へ更新する。
+- [x] `npm test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
