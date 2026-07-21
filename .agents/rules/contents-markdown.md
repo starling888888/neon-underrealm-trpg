@@ -12,12 +12,10 @@ Do not treat `.raw/contents/*.md` as:
 
 - Git-managed source
 - final published page source
-- design source of truth
-- requirements source of truth
-- plan source of truth
-- issue source of truth
+- a replacement for safety or workflow rules
+- a source for unrelated page requirements
 
-Final page body and UI structure belong in Git-managed `.mdx`, `.astro`, or related source files under `src/pages` and supporting code.
+For a matching page, user-edited Markdown body and HTML comments are the source of truth for the page body and visible display structure. Git-managed page files are the published implementation of those instructions.
 
 ## Format
 
@@ -73,33 +71,25 @@ Do not add formatter processing for `.raw/contents/*.md` unless an approved issu
 
 Contents markdown helps agents create or update site pages.
 
-It does not override:
-
-- `AGENTS.md`
-- `.agents/skills/*`
-- `.agents/rules/*`
-- `docs/requirements.md`
-- `docs/out-of-scope.md`
-- `docs/plan.md`
-- `docs/issue/*.md`
-- `docs/design/<design-target>/`
+For a matching page's body and visible display structure, user-edited Markdown and HTML comments override the current issue, requirements, out-of-scope, plan, TODO, design, and existing implementation. They do not override the latest user instruction, `AGENTS.md`, or applicable skill and rule safety or workflow constraints.
 
 ## Local Authoring Priority
 
 When `contents-markdown-authoring` creates or reviews a new local contents instruction, use this order:
 
 1. User instruction.
-2. Local `src/pages/` implementation.
+2. Matching local `.raw/contents/` Markdown body and HTML comments for page body and visible display structure.
 3. Current task issue under `docs/issue/`.
 4. `docs/requirements.md` and relevant `docs/requirements/` files.
-5. `docs/plan.md`.
-6. `docs/out-of-scope.md`.
-7. Local `.raw/contents/` source.
-8. Local `.raw/v1.0/` historical reference.
+5. `docs/out-of-scope.md`.
+6. `docs/plan.md` and `docs/TODO.md`.
+7. Related `docs/design/<design-target>/`.
+8. Local `src/pages/` implementation.
+9. Local `.raw/v1.0/` historical reference.
 
-When a higher-priority source conflicts with current implementation or local contents, identify the impact and ask the user before implementation changes.
+The latest user instruction and the applicable `AGENTS.md`, skill, and rule safety or workflow constraints remain above this local priority.
 
-When a Git-managed source of truth such as requirements, plan, or out-of-scope conflicts with the user instruction or the existing implementation, identify the conflict and ask whether the source of truth may be corrected. Do not correct it without the user's approval.
+When matching contents conflicts with a lower-priority source, align the lower-priority Git-managed documents before implementation when the user has authorized the correction. Otherwise, identify the impact and ask the user before implementation changes.
 
 `v1.0/` is for historical wording, old rules, and ideas. It must not replace the current site source of truth.
 

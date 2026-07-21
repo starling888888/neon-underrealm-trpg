@@ -1,0 +1,45 @@
+---
+import { getRyugiById } from "../../lib/data/ryugi-list";
+
+interface Props {
+  level: 3 | 4;
+}
+
+const { level } = Astro.props;
+const kenkaya = getRyugiById("kenkaya");
+
+if (!kenkaya) {
+  throw new Error('Missing ryugi data for "kenkaya".');
+}
+
+const body = kenkaya.baseAttributes.body + 4;
+const mind = kenkaya.baseAttributes.mind + 4;
+const health = kenkaya.healthIncrease * level + 12 * body;
+const mental = kenkaya.mindIncrease * level + 6 * mind;
+---
+
+<p>
+  ケンカヤの体力増加値は{kenkaya.healthIncrease}、精神力増加値は{kenkaya.mindIncrease}です。ケジメの初期体力係数は12、初期精神力係数は6です。能力値決定の例で肉体を{body}、精神を{mind}とした場合、スキルによる修正を加える前の値は次のとおりです。
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">項目</th>
+      <th scope="col">計算</th>
+      <th scope="col">結果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">最大体力</th>
+      <td>{kenkaya.healthIncrease} × {level} + 12 × {body}</td>
+      <td>{health}</td>
+    </tr>
+    <tr>
+      <th scope="row">最大精神力</th>
+      <td>{kenkaya.mindIncrease} × {level} + 6 × {mind}</td>
+      <td>{mental}</td>
+    </tr>
+  </tbody>
+</table>

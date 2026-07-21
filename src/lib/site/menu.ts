@@ -1,7 +1,10 @@
+import { getRyugiList } from "../data/ryugi-list";
+
 export type SiteMenuItem = {
   label: string;
   href: string;
   children?: SiteMenuItem[];
+  expandWhenCurrent?: boolean;
 };
 
 export type SiteMenuItemState = "current" | "ancestor" | "none";
@@ -26,6 +29,7 @@ export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "ルール",
     href: "/rules",
+    expandWhenCurrent: true,
     children: [
       {
         label: "シナリオ進行",
@@ -40,14 +44,21 @@ export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "データ",
     href: "/data",
+    expandWhenCurrent: true,
     children: [
       {
         label: "流儀",
         href: "/data/ryugi",
+        expandWhenCurrent: true,
+        children: getRyugiList().map((ryugi) => ({
+          label: ryugi.name,
+          href: `/data/ryugi/${ryugi.id}`,
+        })),
       },
       {
         label: "生き様",
         href: "/data/ikizama",
+        expandWhenCurrent: true,
       },
       {
         label: "共通スキル",
@@ -56,6 +67,7 @@ export const siteMenuItems: SiteMenuItem[] = [
       {
         label: "アイテム",
         href: "/data/items",
+        expandWhenCurrent: true,
         children: [
           {
             label: "武器",
@@ -127,7 +139,11 @@ export function getSiteMenuItemInitialExpanded(
   currentPath: string,
   basePath = "/",
 ): boolean {
-  return getSiteMenuItemState(item, currentPath, basePath) === "ancestor";
+  const state = getSiteMenuItemState(item, currentPath, basePath);
+  return (
+    state === "ancestor" ||
+    (item.expandWhenCurrent === true && state === "current")
+  );
 }
 
 function normalizeCurrentPath(currentPath: string, basePath: string): string {

@@ -21,7 +21,7 @@ Do not use for:
 - syncing `.raw/` to or from Google Drive
 - implementing `.raw/contents/*.md` as Astro, MDX, or page source
 - creating UI, layout, Component, or design images
-- replacing requirements, plan, issue, or design source of truth
+- replacing unrelated requirements, plan, issue, or design source of truth
 - using Google Docs rich-text layout as the source format
 
 ## Core Rule
@@ -31,17 +31,20 @@ This is the local-only content authoring workflow.
 Use the following sources in order:
 
 1. User instruction.
-2. Local `src/pages/` implementation.
+2. Matching local `.raw/contents/` Markdown body and HTML comments for page body and visible display structure.
 3. Current task issue under `docs/issue/`.
 4. `docs/requirements.md` and relevant `docs/requirements/` files.
-5. `docs/plan.md`.
-6. `docs/out-of-scope.md`.
-7. Local `.raw/contents/` source.
-8. Local `.raw/v1.0/` reference documents.
+5. `docs/out-of-scope.md`.
+6. `docs/plan.md` and `docs/TODO.md`.
+7. Related `docs/design/<design-target>/`.
+8. Local `src/pages/` implementation.
+9. Local `.raw/v1.0/` reference documents.
 
 Do not treat a lower-priority source as confirmation that a higher-priority source is correct.
 
-`.raw/contents/<slug>.md` is the local result. It is Git-ignored working input. It is not the published page source.
+The latest user instruction and applicable `AGENTS.md`, skill, and rule safety or workflow constraints remain above this order.
+
+`.raw/contents/<slug>.md` is Git-ignored working input. For its matching page, user-edited Markdown body and HTML comments are the source of truth for page body and visible display structure. It is not itself the published page source.
 
 ## Preconditions
 
@@ -55,9 +58,9 @@ Do not treat a lower-priority source as confirmation that a higher-priority sour
 
 ## Local Source Review
 
-1. Locate the implemented route and related page source under `src/pages/`.
-2. Read the current issue, relevant requirements, plan, and out-of-scope source.
-3. Read the matching `.raw/contents/<slug>.md` when it exists.
+1. Read the matching `.raw/contents/<slug>.md` when it exists.
+2. Locate the implemented route and related page source under `src/pages/`.
+3. Read the current issue, relevant requirements, plan, TODO, out-of-scope source, and related design when they exist.
 4. Read relevant `.raw/v1.0/*.md` files only when they help with existing wording, terminology, or document style.
 5. Use v1.0 only as historical rule, playtest, idea, and style reference. Do not restore old rules over the current implementation.
 6. Respect observable v1.0 writing habits. Avoid generic, over-regular, or artificial-sounding prose.
@@ -65,23 +68,23 @@ Do not treat a lower-priority source as confirmation that a higher-priority sour
 
 ## Conflict Handling
 
-When a lower-priority source differs from the user instruction or existing implementation:
+When matching contents differs from a lower-priority source:
 
 1. Identify the affected page, internal links, shared Components, and data display.
 2. Explain which source conflicts and its priority.
-3. Ask the user whether the implementation, the local contents source, or both should change.
-4. Stop before changing implementation.
+3. Align the lower-priority Git-managed source when the user has authorized the correction; otherwise, ask for authorization.
+4. Stop before changing implementation until the documents are aligned.
 5. After the user or an approved higher-priority source resolves the conflict, record it in the target contents file's `矛盾点` HTML-comment section.
 6. For each record, state the lower-priority source, a concise summary of its conflicting information, and the adopted document or user instruction.
 
 When the user approves an implementation change and that change is completed, update the corresponding local `.raw/contents/<slug>.md` in the same task. Do not write it back to Google Drive automatically. Use `raw-to-drive-sync` only after its explicit user invocation.
 
-When a Git-managed source of truth such as requirements, plan, or out-of-scope conflicts with the user instruction or the existing implementation:
+When a Git-managed source such as requirements, plan, issue, design, or out-of-scope conflicts with matching contents:
 
 1. Identify the conflict and its impact.
-2. Ask whether the source of truth may be corrected.
-3. Stop until the user approves the correction.
-4. After approval, handle the correction using the same change-control conditions as a user-instruction and implementation mismatch.
+2. Ask whether the source may be corrected when the user has not already authorized it.
+3. Stop until the documents are aligned.
+4. After approval, correct the lower-priority source and record the resolution in the contents file.
 
 ## Source Format
 

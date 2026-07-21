@@ -1,0 +1,58 @@
+---
+import type { Ryugi } from "../../lib/schemas/ryugi";
+
+interface Props {
+  level?: 2 | 5 | 9;
+  ryugiList: readonly Ryugi[];
+}
+
+const { level, ryugiList } = Astro.props;
+const levelKey = level ? `level${level}` as const : undefined;
+---
+
+<div class="ryugi-common-skill-bonus-table" data-ryugi-common-skill-bonuses>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">流儀</th>
+        {
+          levelKey ? (
+            <th scope="col">共通スキル {level}レベル</th>
+          ) : (
+            <>
+              <th scope="col">2レベル</th>
+              <th scope="col">5レベル</th>
+              <th scope="col">9レベル</th>
+            </>
+          )
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        ryugiList.map((ryugi) => (
+          <tr data-ryugi-id={ryugi.id}>
+            <th scope="row">{ryugi.name}</th>
+            {
+              levelKey ? (
+                <td>{ryugi.commonSkillBonuses[levelKey]}</td>
+              ) : (
+                <>
+                  <td>{ryugi.commonSkillBonuses.level2}</td>
+                  <td>{ryugi.commonSkillBonuses.level5}</td>
+                  <td>{ryugi.commonSkillBonuses.level9}</td>
+                </>
+              )
+            }
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .ryugi-common-skill-bonus-table td {
+    white-space: pre-line;
+  }
+</style>

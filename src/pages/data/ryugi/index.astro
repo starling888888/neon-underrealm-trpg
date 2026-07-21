@@ -1,0 +1,122 @@
+---
+import ImageBlock from "../../../components/_common/ImageBlock.astro";
+import RyugiDataSection from "../../../components/data/RyugiDataSection.astro";
+import AppContainer from "../../../layouts/AppContainer.astro";
+import { getRyugiDetail, type RyugiDetail } from "../../../lib/data/ryugi-detail";
+import { getRyugiList } from "../../../lib/data/ryugi-list";
+import { withBase } from "../../../lib/utils/paths";
+
+const ryugiList = getRyugiList();
+const kenkayaDetail = getRyugiDetail("kenkaya");
+
+if (!kenkayaDetail) {
+  throw new Error('Missing ryugi detail data for "kenkaya".');
+}
+
+const detailsByRyugiId: Record<string, RyugiDetail> = {
+  kenkaya: kenkayaDetail,
+};
+---
+
+<AppContainer
+  title="流儀"
+  description="仕事人の戦い方を決める流儀を一覧で確認するページです。"
+  showPageToc={true}
+>
+  <article class="mdx-layout prose ryugi-index">
+    <h1>流儀</h1>
+
+    <ImageBlock
+      src="/images/data/ryugi_hero.webp"
+      alt="刀、短剣、格闘、銃、特殊能力を使って戦う5人の仕事人。"
+      loading="eager"
+    />
+
+    <p>
+      仕事人としての戦い方を表します。複数の流儀を同時に修めることも可能ですが、どれか一つをプライマリ流儀として選ぶ必要があります。
+      「気合」と呼ばれる戦闘中に得られるリソースを消費して、強力な攻撃や防御を操ることとなります。
+    </p>
+
+    <RyugiDataSection
+      heading="流儀データの見方"
+      ryugiId="kenkaya"
+      detailsByRyugiId={detailsByRyugiId}
+      excludeDetailHeadingsFromToc={true}
+    />
+
+    <ul class="ryugi-data-notes">
+      <li>
+        <strong>プライマリボーナス</strong>：その流儀をプライマリボーナスとして選択した場合に自動取得するスキルです。1レベル時の流儀スキルの取得、成長とは別に取得します。プライマリ流儀として選ばなかった流儀の成長時には取得できません。
+      </li>
+      <li>
+        <strong>基礎能力値</strong>：プライマリ流儀として選んだ流儀によって決まる能力値の基礎値です。
+      </li>
+      <li>
+        <strong>副能力増加値</strong>：プライマリ流儀として選んだ流儀のレベルを上昇させるたびに増加する体力と精神力の値です。プライマリ流儀以外の流儀を成長させても体力、精神力は増加しません。
+      </li>
+      <li>
+        <strong>共通スキルボーナス</strong>：共通スキルのレベルが一定ごとになるたびに得られるボーナスです。累積します。プライマリ流儀のもののみ適用され、それ以外の流儀のボーナスは適用されません。
+      </li>
+    </ul>
+
+    <section aria-labelledby="ryugi-list-heading">
+      <h2 id="ryugi-list-heading">流儀一覧</h2>
+      <ul class="ryugi-list" data-ryugi-list>
+        {
+          ryugiList.map((ryugi) => (
+            <li data-ryugi-id={ryugi.id}>
+              <a href={withBase(`/data/ryugi/${ryugi.id}`)}>{ryugi.name}</a>
+              <span>{ryugi.shortDescription}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </article>
+</AppContainer>
+
+<style>
+  .ryugi-index {
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .ryugi-data-notes {
+    margin-block: var(--space-6) 0;
+  }
+
+  .ryugi-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ryugi-list li {
+    display: grid;
+    grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr);
+    gap: var(--space-4);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding-block: var(--space-4);
+  }
+
+  .ryugi-list li:first-child {
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .ryugi-list a {
+    align-self: start;
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+
+  .ryugi-list span {
+    min-width: 0;
+  }
+
+  @media (width < 48rem) {
+    .ryugi-list li {
+      grid-template-columns: minmax(5.5rem, 7rem) minmax(0, 1fr);
+      gap: var(--space-3);
+    }
+  }
+</style>

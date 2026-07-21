@@ -316,7 +316,7 @@ CI/CDではExcel変換を必須工程にしない。
 
 `.raw/contents` の内容を公開サイトから直接参照する仕組みは初期スコープ外とする。
 
-最終的な画面本文・UI構造のSSoTは、`src/pages` 配下の `.mdx` または `.astro` とする。
+対応するcontentsのユーザー編集Markdown本文とHTMLコメントは、ページ本文・可視の表示構成の正本とする。`src/pages` 配下の `.mdx` または `.astro` は、その指示を反映する公開用実装とする。
 
 ---
 

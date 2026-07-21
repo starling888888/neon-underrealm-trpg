@@ -9,6 +9,12 @@ import Callout from "../components/_common/Callout.astro";
 import ImageBlock from "../components/_common/ImageBlock.astro";
 import InternalLink from "../components/_common/InternalLink.astro";
 import InitialTies from "../components/character-making/InitialTies.astro";
+import KenkayaAttributesExample from "../components/character-making/KenkayaAttributesExample.astro";
+import KenkayaHealthExample from "../components/character-making/KenkayaHealthExample.astro";
+import RyugiCommonSkillBonusTable from "../components/data/RyugiCommonSkillBonusTable.astro";
+import { getRyugiList } from "../lib/data/ryugi-list";
+
+export const ryugiList = getRyugiList();
 
 # キャラクターメイキング
 
@@ -198,13 +204,7 @@ import InitialTies from "../components/character-making/InitialTies.astro";
 
 <Callout type="example" title="ケンカヤとケジメを選んだ場合">
 
-ケンカヤの基礎能力値は、筋力5、敏捷5、感覚1、肉体3、精神2です。ケジメの能力値ポイントは5、4、4、1です。
-
-ここでは、筋力へ5点、精神へ4点、肉体へ4点、敏捷へ1点を割り振ります。最終的な能力値は次のとおりです。
-
-| 筋力 | 敏捷 | 感覚 | 肉体 | 精神 |
-| --- | --- | --- | --- | --- |
-| 10 | 6 | 1 | 7 | 6 |
+<KenkayaAttributesExample />
 
 </Callout>
 
@@ -220,18 +220,7 @@ import InitialTies from "../components/character-making/InitialTies.astro";
 
 コンストラクションでは、共通スキルを合計2レベル取得しているため、プライマリ流儀に応じた追加ボーナスを得ます。
 
-| 流儀 | ボーナス |
-| --- | --- |
-| ケンカヤ | 攻撃判定数+1、攻撃力+3 |
-| シャバゾウ | 行動回数+1 |
-| カエシ | 攻撃判定数+1、リアクション判定数+1 |
-| ステゴロ | 行動回数+1 |
-| エモノ | 攻撃判定数+2 |
-| ゴトシ | 攻撃力+5 |
-| ヤミウチ | 攻撃判定数+1、リアクション判定数+1 |
-| テッポウダマ | 行動回数+1 |
-| カベ | リアクション判定数+2 |
-| カシラ | 縁の数+1 |
+<RyugiCommonSkillBonusTable level={2} ryugiList={ryugiList} />
 
 「判定数+1」などの数値がルール上で何を意味するかは、<InternalLink href="/rules">ルール</InternalLink>セクションで説明します。
 
@@ -246,12 +235,7 @@ import InitialTies from "../components/character-making/InitialTies.astro";
 
 <Callout type="example" title="ケンカヤとケジメを選んだ場合">
 
-ケンカヤの体力増加値は5、精神力増加値は2です。ケジメの初期体力係数は12、初期精神力係数は6です。能力値決定の例で肉体を7、精神を6とした場合、スキルによる修正を加える前の値は次のとおりです。
-
-| 項目 | 計算 | 結果 |
-| --- | --- | --- |
-| 最大体力 | 5 × 4 + 12 × 7 | 104 |
-| 最大精神力 | 2 × 4 + 6 × 6 | 44 |
+<KenkayaHealthExample level={4} />
 
 取得したスキルに修正がある場合は、この値へ加えます。
 
@@ -328,12 +312,9 @@ import InitialTies from "../components/character-making/InitialTies.astro";
 
 <Callout type="example" title="経験点配分の例における最大体力と最大精神力">
 
-上の経験点配分では、プライマリ流儀はケンカヤ3レベル、生き様はケジメ2レベルです。能力値は前の例と同じく、肉体7、精神6とします。スキルによる修正を加えない場合、最大体力と最大精神力は次のとおりです。
+上の経験点配分では、プライマリ流儀はケンカヤ3レベル、生き様はケジメ2レベルです。能力値は前の例と同じくします。スキルによる修正を加えない場合、最大体力と最大精神力は次のとおりです。
 
-| 項目 | 計算 | 結果 |
-| --- | --- | --- |
-| 最大体力 | 5 × 3 + 12 × 7 | 99 |
-| 最大精神力 | 2 × 3 + 6 × 6 | 42 |
+<KenkayaHealthExample level={3} />
 
 </Callout>
 

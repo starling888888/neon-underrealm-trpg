@@ -86,6 +86,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Site menu expansion predicate returned a non-boolean value
+
+#### 2026-07-22
+
+- source: self
+- 発生箇所: `29-2-ryugi-index-page` の `getSiteMenuItemInitialExpanded()` とNode test
+- 観測した失敗: 流儀一覧をcurrent時に展開する条件を、optional booleanをそのまま論理和へ渡す形で実装したため、該当設定がない通常のメニュー項目で`false`ではなく`undefined`を返した。全体Node testと対象testを連続して失敗させた。
+- 一次対応: optional booleanは`=== true`で判定し、常にbooleanを返す条件へ修正する。optional値を返却値へそのまま伝播させる分岐を追加した場合は、設定なしの既存ケースを対象testで確認する。
+
+### Design draft overrode contents instructions
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `29-2-ryugi-index-page` の `docs/design/ryugi-index/` initial draft
+- 観測した失敗: ユーザーが`.raw/contents/ryugi-index.md`を他資料より優先すると明示していたにもかかわらず、planとTODOから流儀一覧に全流儀の共通スキルボーナスを追加した。contentsが指定する「ケンカヤの`RyugiDataSection`と4項目説明」「名称リンクとshortDescriptionだけの流儀一覧」を再現せず、design、notes、issueに実装ノイズとなる別の表示方針を書いた。
+- 一次対応: flow一覧から全流儀のボーナス表を削除し、contentsの4項目説明と一覧構成へ修正した。contents優先が指定された場合は、下位資料の補足を画面本文やdesignへ追加せず、contentsに存在しない表示を必要と判断した時点で実装前にユーザーへ確認する。
+
 ### Conflated one JSON output with one Excel sheet
 
 #### 2026-07-21
@@ -693,3 +711,12 @@ source種別は以下を使う。
 - 発生箇所: `30-2-ryugi-detail-page` の `src/pages/data/ryugi/[ryugiId].astro`
 - 観測した失敗: 流儀詳細の実装で、ユーザーの当時のコンテンツ指示に含まれていない関連ページリンクを独自に追加した。また、データにないケンカヤ固有の画像説明を`heroAlt`として分岐実装した。後者はagent自身が作成したdesign noteの文言を根拠にしており、独立した正本ではない。要件・既存実装・agent作成物の記述を、ユーザー承認済みのページ本文や画像代替テキストの根拠として扱った。
 - 一次対応: 関連ページリンクとケンカヤ固有の`heroAlt`は、明示されたcontentsまたはデータから導ける範囲に限定する。agentが作成したdesign noteやprototypeの固有文言は、ユーザーが採用を明示しない限り新しい実装コンテンツの根拠にしない。既存実装の修正は、現在のreview-to-issue手順に従いユーザー承認後に行う。
+
+### Repeated visual capture against stale build output
+
+#### 2026-07-22
+
+- source: agent self-report
+- 発生箇所: `29-2-ryugi-index-page` のPageToc修正後のVisual Test
+- 観測した失敗: `RyugiDataSection`のPageToc除外属性を修正した後、`npm run build`で`dist/`を更新せずに`npm run visual:capture`を2回実行した。captureはpostprocess済みの既存build出力を使うため、両回とも旧出力のH3を読み、同じPageToc assertionが失敗した。
+- 一次対応: PageTocまたは生成HTMLに影響する変更後は、Visual Testの前に必ず`npm run build`を実行する。Visual Test失敗時は、ソース変更かbuild出力の鮮度かを先に区別してから再実行する。

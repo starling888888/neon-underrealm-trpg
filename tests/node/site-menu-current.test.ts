@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { getRyugiList } from "../../src/lib/data/ryugi-list";
 import {
   getSiteMenuItemInitialExpanded,
   getSiteMenuItemState,
@@ -29,6 +30,46 @@ describe("site menu current state", () => {
     const labels = siteMenuItems.map((item) => item.label);
 
     assert.ok(labels.indexOf("ルール") < labels.indexOf("データ"));
+  });
+
+  it("uses generated ryugi data for the ryugi detail menu items", () => {
+    const dataMenu = siteMenuItems.find((item) => item.href === "/data");
+    const ryugiMenu = dataMenu?.children?.find(
+      (item) => item.href === "/data/ryugi",
+    );
+
+    assert.deepEqual(
+      ryugiMenu?.children?.map(({ label, href }) => ({ label, href })),
+      getRyugiList().map((ryugi) => ({
+        label: ryugi.name,
+        href: `/data/ryugi/${ryugi.id}`,
+      })),
+    );
+  });
+
+  it("keeps the data and ryugi menu ancestors expanded for ryugi detail pages", () => {
+    const dataMenu = siteMenuItems.find((item) => item.href === "/data");
+    const ryugiMenu = dataMenu?.children?.find(
+      (item) => item.href === "/data/ryugi",
+    );
+    const detailPath = `/data/ryugi/${getRyugiList()[0]?.id ?? "kenkaya"}`;
+
+    assert.equal(
+      getSiteMenuItemState(dataMenu ?? menu, detailPath),
+      "ancestor",
+    );
+    assert.equal(
+      getSiteMenuItemState(ryugiMenu ?? menu, detailPath),
+      "ancestor",
+    );
+    assert.equal(
+      getSiteMenuItemInitialExpanded(dataMenu ?? menu, detailPath),
+      true,
+    );
+    assert.equal(
+      getSiteMenuItemInitialExpanded(ryugiMenu ?? menu, detailPath),
+      true,
+    );
   });
 
   it("marks exact matching menu items as current", () => {
@@ -87,6 +128,31 @@ describe("site menu initial expansion", () => {
     assert.equal(getSiteMenuItemInitialExpanded(menu, "/data"), false);
   });
 
+  it("expands a current item when its configuration requests it", () => {
+    assert.equal(
+      getSiteMenuItemInitialExpanded(
+        { ...menu, expandWhenCurrent: true },
+        "/data",
+      ),
+      true,
+    );
+  });
+
+  it("expands the configured category when its own page is current", () => {
+    const expectedPaths = ["/rules", "/data", "/data/ikizama", "/data/items"];
+
+    for (const expectedPath of expectedPaths) {
+      const item = findSiteMenuItemByHref(siteMenuItems, expectedPath);
+
+      assert.equal(item?.expandWhenCurrent, true, expectedPath);
+      assert.equal(
+        getSiteMenuItemInitialExpanded(item ?? menu, expectedPath),
+        true,
+        expectedPath,
+      );
+    }
+  });
+
   it("expands parent items of the current child item", () => {
     assert.equal(getSiteMenuItemInitialExpanded(menu, "/data/items"), true);
   });
@@ -119,3 +185,21 @@ describe("site menu initial expansion", () => {
     assert.equal(getSiteMenuItemInitialExpanded(menu, "/rules/battle"), false);
   });
 });
+
+function findSiteMenuItemByHref(
+  items: readonly SiteMenuItem[],
+  href: string,
+): SiteMenuItem | undefined {
+  for (const item of items) {
+    if (item.href === href) {
+      return item;
+    }
+
+    const child = item.children && findSiteMenuItemByHref(item.children, href);
+    if (child) {
+      return child;
+    }
+  }
+
+  return undefined;
+}

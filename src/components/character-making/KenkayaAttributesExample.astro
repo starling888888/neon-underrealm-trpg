@@ -1,0 +1,45 @@
+---
+import { getRyugiById } from "../../lib/data/ryugi-list";
+
+const kenkaya = getRyugiById("kenkaya");
+
+if (!kenkaya) {
+  throw new Error('Missing ryugi data for "kenkaya".');
+}
+
+const additions = {
+  strength: 5,
+  agility: 1,
+  body: 4,
+  mind: 4,
+};
+---
+
+<p>
+  ケンカヤの基礎能力値は、筋力{kenkaya.baseAttributes.strength}、敏捷{kenkaya.baseAttributes.agility}、感覚{kenkaya.baseAttributes.perception}、肉体{kenkaya.baseAttributes.body}、精神{kenkaya.baseAttributes.mind}です。ケジメの能力値ポイントは5、4、4、1です。
+</p>
+
+<p>
+  ここでは、筋力へ5点、精神へ4点、肉体へ4点、敏捷へ1点を割り振ります。最終的な能力値は次のとおりです。
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">筋力</th>
+      <th scope="col">敏捷</th>
+      <th scope="col">感覚</th>
+      <th scope="col">肉体</th>
+      <th scope="col">精神</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{kenkaya.baseAttributes.strength + additions.strength}</td>
+      <td>{kenkaya.baseAttributes.agility + additions.agility}</td>
+      <td>{kenkaya.baseAttributes.perception}</td>
+      <td>{kenkaya.baseAttributes.body + additions.body}</td>
+      <td>{kenkaya.baseAttributes.mind + additions.mind}</td>
+    </tr>
+  </tbody>
+</table>

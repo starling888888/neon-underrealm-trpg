@@ -24,6 +24,7 @@ export const visualRoutes = {
   characterMaking: "character-making/",
   data: "data/",
   commonSkills: "data/common-skills/",
+  dataRyugi: "data/ryugi/",
   dataRyugiKenkaya: "data/ryugi/kenkaya/",
   releaseNotes: "release-notes/",
   mdxTest: "-local/mdx-test/",
