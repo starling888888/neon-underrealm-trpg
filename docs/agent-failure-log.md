@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Ikizama skills conversion specification table formatting repeated
+
+#### 2026-07-22
+
+- source: self
+- 発生箇所: `32-0-ikizama-detail-data` の `docs/conversion/ikizama-skills.md` にある関連アイテム種別の表
+- 観測した失敗: `npm run check:md` が示したdprintの表列幅差分を手動で反映したが、期待する列幅を再現できず、同じMarkdown整形チェックを2回連続で失敗させた。
+- 一次対応: 手動で空白数を推測して直し続けず、対象ファイルだけをdprint formatterへ渡してから`npm run check:md`で確認する。
+
 ### Used `gh` after the repository workflow prohibited it
 
 #### 2026-07-22

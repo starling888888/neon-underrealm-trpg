@@ -49,8 +49,8 @@ describe("ikizama conversion", () => {
     await using fixture = await createFixture();
     const second = row("another");
     second[1] = "別の生き様";
-    second[4] = "another-item";
-    second[5] = "別の専用アイテム";
+    second[4] = "cybernetics";
+    second[5] = "サイバネ";
     await workbook(fixture.input, "ikizama-list", [
       groupHeaders,
       headers,
@@ -73,8 +73,8 @@ describe("ikizama conversion", () => {
       ],
     );
     assert.deepEqual(result.data[0]?.exclusiveItem, {
-      id: "exclusive-item",
-      name: "専用アイテム",
+      id: "omamori",
+      name: "お守り",
     });
     assert.equal(result.data[0]?.description, "説明\n詳細");
     assert.equal(result.data[0]?.note?.content, "注意\n補足");
@@ -197,6 +197,43 @@ describe("ikizama conversion", () => {
     await assert.rejects(
       () => convert(fixture),
       /専用アイテム名称 is required at row 3, column F \(専用アイテム名称\)/,
+    );
+
+    const invalidItemType = row("first");
+    invalidItemType[4] = "cybanetics";
+    await workbook(fixture.input, "ikizama-list", [
+      groupHeaders,
+      headers,
+      invalidItemType,
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /専用アイテムIDと専用アイテム名称 are invalid at row 3, column E \(専用アイテムID\): Unsupported exclusive item type "cybanetics"/,
+    );
+
+    const nonExclusiveItemType = row("first");
+    nonExclusiveItemType[4] = "weapons";
+    nonExclusiveItemType[5] = "武器";
+    await workbook(fixture.input, "ikizama-list", [
+      groupHeaders,
+      headers,
+      nonExclusiveItemType,
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /Unsupported exclusive item type "weapons"/,
+    );
+
+    const mismatchedItemName = row("first");
+    mismatchedItemName[5] = "サイバネ";
+    await workbook(fixture.input, "ikizama-list", [
+      groupHeaders,
+      headers,
+      mismatchedItemName,
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /Exclusive item type "omamori" must use name "お守り"/,
     );
 
     await workbook(fixture.input, "ikizama-list", [
@@ -366,8 +403,8 @@ function row(
     "生き様名",
     "短い説明",
     "説明\r\n詳細",
-    "exclusive-item",
-    "専用アイテム",
+    "omamori",
+    "お守り",
     noteType,
     noteContent,
     11,
@@ -387,8 +424,8 @@ function expectedIkizama(id: string, sourceOrder: number) {
     shortDescription: "短い説明",
     description: "説明\n詳細",
     exclusiveItem: {
-      id: "exclusive-item",
-      name: "専用アイテム",
+      id: "omamori",
+      name: "お守り",
     },
     note: null,
     secondaryAttributeCoefficients: {

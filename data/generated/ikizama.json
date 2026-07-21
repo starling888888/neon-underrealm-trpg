@@ -1,6 +1,6 @@
 {
   "dataName": "ikizama",
-  "updatedAt": "2026-07-22T07:32:34+09:00",
+  "updatedAt": "2026-07-22T08:28:17+09:00",
   "data": [
     {
       "id": "burai",
@@ -35,7 +35,7 @@
       "shortDescription": "機械で身体を置換して強化することを選んだ生き様です。",
       "description": "体の一部を機械に置き換えて生きることを選んだ人々の生き様です。ヤクザが落とし前をつけ、体の一部を切り落とす「けじめをつける」という言葉から転じて、体を切り刻み機械に置き換える人々をこう呼びます。",
       "exclusiveItem": {
-        "id": "cybanetics",
+        "id": "cybernetics",
         "name": "サイバネ"
       },
       "note": null,

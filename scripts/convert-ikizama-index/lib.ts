@@ -3,7 +3,9 @@ import { dirname } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { type CellValue, readSheet } from "read-excel-file/node";
 import {
+  assertIkizamaExclusiveItem,
   assertIkizamaJson,
+  assertIkizamaJsonShape,
   IKIZAMA_DATA_NAME,
   type Ikizama,
   type IkizamaJson,
@@ -167,10 +169,7 @@ function collectIkizama(rows: Rows): Ikizama[] {
       name,
       shortDescription: requiredOneLine(values[2], "短い説明", rowNumber, 2),
       description: requiredText(values[3], "説明", rowNumber, 3),
-      exclusiveItem: {
-        id: requiredOneLine(values[4], "専用アイテムID", rowNumber, 4),
-        name: requiredOneLine(values[5], "専用アイテム名称", rowNumber, 5),
-      },
+      exclusiveItem: exclusiveItem(values, rowNumber),
       note: note(values, rowNumber),
       secondaryAttributeCoefficients: {
         level1: coefficient(values, rowNumber, 8),
@@ -220,6 +219,23 @@ function note(
     throw new Error(`補足タイプ is invalid at ${location(row, 6)}: "${type}".`);
   }
   return { type: type as IkizamaNoteType, content };
+}
+
+function exclusiveItem(
+  values: Array<CellValue | null | undefined>,
+  row: number,
+): Ikizama["exclusiveItem"] {
+  const id = requiredOneLine(values[4], "専用アイテムID", row, 4);
+  const name = requiredOneLine(values[5], "専用アイテム名称", row, 5);
+  try {
+    assertIkizamaExclusiveItem(id, name);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `専用アイテムIDと専用アイテム名称 are invalid at ${location(row, 4)}: ${message}`,
+    );
+  }
+  return { id, name };
 }
 
 function coefficient(
@@ -305,7 +321,7 @@ async function readExisting(
 ): Promise<IkizamaJson | undefined> {
   try {
     const value: unknown = JSON.parse(await readFile(outputPath, "utf8"));
-    assertIkizamaJson(value);
+    assertIkizamaJsonShape(value);
     return value;
   } catch (error) {
     if (isNodeError(error) && error.code === "ENOENT") return undefined;
