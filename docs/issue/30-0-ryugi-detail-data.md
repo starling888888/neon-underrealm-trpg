@@ -142,3 +142,35 @@
 
 実装前にこのissueの内容をユーザーが明示承認する。Git commit / push はこのissue準備では
 実行しない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `convertSkills()` が1シートの変換とJSONの読書きの両方を担うため、共通スキルと流儀スキルで
+  出力処理が重複している。変換結果を組み立ててから、共通の書込み処理を使う構成へ整理できないか。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `convertSkillSheet()` はすでに1シートから`SkillsByCategory`を返す純粋変換として
+  分離されている。一方、`convertSkills()` と`convertRyugiSkills()` は、それぞれ既存JSON比較、
+  `updatedAt`保持、schema検証、ファイル書込みを持つ。流儀IDとシート名集合の検証は流儀固有であり、
+  CLIの`main.ts`へ移すとfixtureテストが難しくなる。
+
+### 対応方針
+
+- `main.ts` は入力パス、出力パス、流儀ID、Warning出力の設定だけに保つ。
+- 変換器はドメイン固有のシート検証と`data`組み立てを保持し、既存JSON比較、`updatedAt`保持、
+  schema検証、書込みは共通helperへ抽出する。
+- 共通・流儀のfixtureテストで、同一データの`updatedAt`保持と出力JSONの検証を継続する。
+
+### 対応完了チェックリスト
+
+- [x] 共通の生成JSON書込みhelperへ、既存JSON比較・`updatedAt`保持・schema検証・書込みを集約する。
+- [x] 共通スキルと流儀スキルの変換器が、ドメイン固有の`data`組み立てだけを担うよう整理する。
+- [x] 共通・流儀スキルのfixtureテストで出力時刻保持とJSON検証を確認する。
+- [x] `npm test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

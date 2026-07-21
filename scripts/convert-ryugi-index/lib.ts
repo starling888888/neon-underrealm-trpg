@@ -10,7 +10,7 @@ import {
   type RyugiNote,
   type RyugiNoteType,
 } from "../../src/lib/schemas/ryugi";
-import { formatDateTimeJst } from "../convert-skills/lib";
+import { formatDateTimeJst } from "../convert-skills/write-generated-json";
 
 export interface ConvertRyugiListOptions {
   inputPath: string;

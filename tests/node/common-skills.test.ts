@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { strToU8, zipSync } from "fflate";
 import generated from "../../data/generated/common-skills.json";
-import { convertSkills } from "../../scripts/convert-skills/lib";
+import { convertCommonSkills } from "../../scripts/convert-common-skills/lib";
 import { getCommonSkills } from "../../src/lib/data/common-skills";
 import { assertSkillsJson } from "../../src/lib/schemas/skill";
 
@@ -36,8 +36,7 @@ describe("skill conversion", () => {
       row("basic", "反応", "R"),
     ]);
     const warnings: string[] = [];
-    const result = await convertSkills({
-      ...contract,
+    const result = await convertCommonSkills({
       inputPath: fixture.input,
       sheetName: "skills",
       outputPath: fixture.output,
@@ -93,8 +92,7 @@ describe("skill conversion", () => {
       }),
       "utf8",
     );
-    const result = await convertSkills({
-      ...contract,
+    const result = await convertCommonSkills({
       inputPath: fixture.input,
       sheetName: "skills",
       outputPath: fixture.output,
@@ -106,8 +104,7 @@ describe("skill conversion", () => {
     ]);
     await assert.rejects(
       () =>
-        convertSkills({
-          ...contract,
+        convertCommonSkills({
           inputPath: fixture.input,
           sheetName: "skills",
           outputPath: fixture.output,
@@ -127,8 +124,7 @@ describe("skill conversion", () => {
     skill[10] = "";
     await workbook(fixture.input, "skills", [headers, skill]);
 
-    const result = await convertSkills({
-      ...contract,
+    const result = await convertCommonSkills({
       inputPath: fixture.input,
       sheetName: "skills",
       outputPath: fixture.output,
@@ -160,8 +156,7 @@ describe("skill conversion", () => {
     ]);
     await assert.rejects(
       () =>
-        convertSkills({
-          ...contract,
+        convertCommonSkills({
           inputPath: fixture.input,
           sheetName: "skills",
           outputPath: fixture.output,
@@ -174,8 +169,7 @@ describe("skill conversion", () => {
     ]);
     await assert.rejects(
       () =>
-        convertSkills({
-          ...contract,
+        convertCommonSkills({
           inputPath: fixture.input,
           sheetName: "skills",
           outputPath: fixture.output,
@@ -190,8 +184,7 @@ describe("skill conversion", () => {
     await workbook(fixture.input, "skills", [headers, missingName]);
     await assert.rejects(
       () =>
-        convertSkills({
-          ...contract,
+        convertCommonSkills({
           inputPath: fixture.input,
           sheetName: "skills",
           outputPath: fixture.output,
@@ -204,8 +197,7 @@ describe("skill conversion", () => {
     ]);
     await assert.rejects(
       () =>
-        convertSkills({
-          ...contract,
+        convertCommonSkills({
           inputPath: fixture.input,
           sheetName: "skills",
           outputPath: fixture.output,

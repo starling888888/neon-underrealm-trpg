@@ -1,13 +1,11 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
-import { isDeepStrictEqual } from "node:util";
 import readXlsxFile from "read-excel-file/node";
 import {
   assertRyugiSkillsJson,
   RYUGI_SKILLS_DATA_NAME,
   type RyugiSkillsJson,
 } from "../../src/lib/schemas/ryugi-skills";
-import { convertSkillSheet, formatDateTimeJst } from "../convert-skills/lib";
+import { convertSkillSheet } from "../convert-skills/lib";
+import { writeGeneratedJson } from "../convert-skills/write-generated-json";
 
 export interface ConvertRyugiSkillsOptions {
   inputPath: string;
@@ -42,20 +40,14 @@ export async function convertRyugiSkills(
       ];
     }),
   );
-  const existing = await readExisting(options.outputPath, options.ryugiIds);
-  const result: RyugiSkillsJson = {
+  return writeGeneratedJson({
+    outputPath: options.outputPath,
     dataName: RYUGI_SKILLS_DATA_NAME,
-    updatedAt:
-      existing && isDeepStrictEqual(existing.data, data)
-        ? existing.updatedAt
-        : formatDateTimeJst(options.now ?? new Date()),
     data,
-  };
-
-  assertRyugiSkillsJson(result, options.ryugiIds);
-  await mkdir(dirname(options.outputPath), { recursive: true });
-  await writeFile(options.outputPath, `${JSON.stringify(result, null, 2)}\n`);
-  return result;
+    now: options.now,
+    assertJson: (value): asserts value is RyugiSkillsJson =>
+      assertRyugiSkillsJson(value, options.ryugiIds),
+  });
 }
 
 function assertSheetNames(
@@ -74,22 +66,4 @@ function assertSheetNames(
       throw new Error(`Unexpected worksheet "${sheetName}".`);
     }
   }
-}
-
-async function readExisting(
-  outputPath: string,
-  ryugiIds: readonly string[],
-): Promise<RyugiSkillsJson | undefined> {
-  try {
-    const value: unknown = JSON.parse(await readFile(outputPath, "utf8"));
-    assertRyugiSkillsJson(value, ryugiIds);
-    return value;
-  } catch (error) {
-    if (isNodeError(error) && error.code === "ENOENT") return undefined;
-    throw error;
-  }
-}
-
-function isNodeError(error: unknown): error is NodeJS.ErrnoException {
-  return error instanceof Error && "code" in error;
 }

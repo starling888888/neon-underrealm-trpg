@@ -1,26 +1,19 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
-import { isDeepStrictEqual } from "node:util";
 import { type CellValue, readSheet } from "read-excel-file/node";
 import {
-  assertSkillsJson,
   getSkillTimingParts,
   normalizeSkillTiming,
   SKILL_CATEGORIES,
   SKILL_TIMING_NORMALIZATIONS,
   type Skill,
   type SkillCategory,
-  type SkillJsonContract,
   type SkillsByCategory,
-  type SkillsJson,
   type SkillTiming,
 } from "../../src/lib/schemas/skill";
 
-export interface ConvertSkillsOptions extends SkillJsonContract {
+export interface ConvertSkillsOptions {
   inputPath: string;
   sheetName: string;
-  outputPath: string;
-  now?: Date;
+  idPrefix: string;
   onWarning?: (warning: string) => void;
 }
 
@@ -81,23 +74,9 @@ const GROUP_ORDER = new Map<SkillTiming, number>(
 
 export async function convertSkills(
   options: ConvertSkillsOptions,
-): Promise<SkillsJson> {
+): Promise<SkillsByCategory> {
   const rows = await readSkillsSheet(options.inputPath, options.sheetName);
-  const data = convertSkillSheet(rows, options);
-  const existing = await readExisting(options.outputPath, options);
-  const result: SkillsJson = {
-    dataName: options.dataName,
-    updatedAt:
-      existing && isDeepStrictEqual(existing.data, data)
-        ? existing.updatedAt
-        : formatDateTimeJst(options.now ?? new Date()),
-    data,
-  };
-
-  assertSkillsJson(result, options);
-  await mkdir(dirname(options.outputPath), { recursive: true });
-  await writeFile(options.outputPath, `${JSON.stringify(result, null, 2)}\n`);
-  return result;
+  return convertSkillSheet(rows, options);
 }
 
 export function convertSkillSheet(
@@ -132,16 +111,6 @@ export function createSkillsData(
   }
 
   return data;
-}
-
-export function formatDateTimeJst(date: Date): string {
-  const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-  const pad = (value: number) => value.toString().padStart(2, "0");
-  return `${jst.getUTCFullYear()}-${pad(jst.getUTCMonth() + 1)}-${pad(
-    jst.getUTCDate(),
-  )}T${pad(jst.getUTCHours())}:${pad(jst.getUTCMinutes())}:${pad(
-    jst.getUTCSeconds(),
-  )}+09:00`;
 }
 
 async function readSkillsSheet(
@@ -249,21 +218,6 @@ function warnTimingOrder(
       );
     }
     highest.set(skill.category, Math.max(previous ?? group, group));
-  }
-}
-
-async function readExisting(
-  outputPath: string,
-  contract: SkillJsonContract,
-): Promise<SkillsJson | undefined> {
-  try {
-    const source = await readFile(outputPath, "utf8");
-    const value: unknown = JSON.parse(source);
-    assertSkillsJson(value, contract);
-    return value;
-  } catch (error) {
-    if (isNodeError(error) && error.code === "ENOENT") return undefined;
-    throw error;
   }
 }
 
@@ -385,7 +339,4 @@ function text(value: CellValue | null | undefined): string {
 }
 function blank(value: CellValue | null | undefined): boolean {
   return text(value).trim() === "";
-}
-function isNodeError(error: unknown): error is NodeJS.ErrnoException {
-  return error instanceof Error && "code" in error;
 }

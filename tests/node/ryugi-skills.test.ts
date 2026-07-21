@@ -53,6 +53,13 @@ describe("ryugi skill conversion", () => {
     assert.equal(result.data.kenkaya.basic[0]?.summary, "");
     assert.equal(result.data.kenkaya.basic[0]?.sourceOrder, 1);
     assert.equal(result.data.emono.bonus[0]?.sourceOrder, 1);
+    const unchanged = await convertRyugiSkills({
+      inputPath: fixture.input,
+      outputPath: fixture.output,
+      ryugiIds: ["kenkaya", "emono"],
+      now: new Date("2026-07-22T00:00:00Z"),
+    });
+    assert.equal(unchanged.updatedAt, "2026-07-21T09:00:00+09:00");
     assert.doesNotThrow(() =>
       assertRyugiSkillsJson(result, ["kenkaya", "emono"]),
     );
