@@ -39,24 +39,24 @@
 ## 完了条件
 
 - [x] 実際に配置された `.raw/data/ikizama-list.xlsx` を根拠として、`docs/conversion/ikizama-index.md` に入力・出力・検証・テスト契約を定義している。
-- [ ] 生き様一覧と後続詳細ページで共用する基礎データおよび専用アイテム対応表を表す `Ikizama` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperが、変換仕様で定める必須項目、ID重複、表示順を検証する。
-- [ ] ローカル変換コマンドが `.raw/data/ikizama-list.xlsx` から `data/generated/ikizama.json` を生成し、CI/CD buildをExcelに依存させない。
-- [ ] 生き様一覧用と後続詳細ページ用のデータ取得層が、生成JSONから変換仕様で定める共用基礎データを返す。
-- [ ] 変換・スキーマ・取得層のテストが、実Excelに依存しないfixtureを用いて、必須項目欠落、ID重複、表示順、および確定した仕様に必要な異常系を検証する。
-- [ ] 関連TODOを確認し、サイドメニュー表示を本issueで扱わない理由を記録している。
-- [ ] `npm run test`、`npm run check`、`npm run build` が通る。
+- [x] 生き様一覧と後続詳細ページで共用する基礎データおよび専用アイテム対応表を表す `Ikizama` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperが、変換仕様で定める必須項目、ID重複、表示順を検証する。
+- [x] ローカル変換コマンドが `.raw/data/ikizama-list.xlsx` から `data/generated/ikizama.json` を生成し、CI/CD buildをExcelに依存させない。
+- [x] 生き様一覧用と後続詳細ページ用のデータ取得層が、生成JSONから変換仕様で定める共用基礎データを返す。
+- [x] 変換・スキーマ・取得層のテストが、実Excelに依存しないfixtureを用いて、必須項目欠落、ID重複、表示順、および確定した仕様に必要な異常系を検証する。
+- [x] 関連TODOを確認し、サイドメニュー表示を本issueで扱わない理由を記録している。
+- [x] `npm run test`、`npm run check`、`npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
-- [ ] 生成JSONを手編集せず、Excel変換の出力として管理している。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外のページ、Component、UIを実装していない。
-- [ ] `docs/TODO.md` のサイドメニュー追跡項目と矛盾していない。
-- [ ] UI、CSS、layout、page、Componentタスクではないため、design targetおよびdesign-image-generation前提条件は不要である。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] CI/CDのbuildが `.raw/` またはExcel本体に依存しない。
+- [x] 生成JSONを手編集せず、Excel変換の出力として管理している。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外のページ、Component、UIを実装していない。
+- [x] `docs/TODO.md` のサイドメニュー追跡項目と矛盾していない。
+- [x] UI、CSS、layout、page、Componentタスクではないため、design targetおよびdesign-image-generation前提条件は不要である。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 

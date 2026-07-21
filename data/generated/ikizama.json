@@ -1,0 +1,117 @@
+{
+  "dataName": "ikizama",
+  "updatedAt": "2026-07-22T07:32:34+09:00",
+  "data": [
+    {
+      "id": "burai",
+      "name": "ブライ",
+      "shortDescription": "あえて科学技術を使わないことを選んだ生き様です。",
+      "description": "あえて科学技術に頼らず生きることを選んだ人々の生き様です。「無頼」を語源とし、技術に頼らないその生き方に侮蔑あるいは尊敬を込めてこう呼ばれます。汎用的に使えるスキルを複数持ちます。",
+      "exclusiveItem": {
+        "id": "omamori",
+        "name": "お守り"
+      },
+      "note": null,
+      "secondaryAttributeCoefficients": {
+        "level1": {
+          "health": 11,
+          "mind": 7
+        },
+        "level4": {
+          "health": 12,
+          "mind": 9
+        },
+        "level10": {
+          "health": 14,
+          "mind": 10
+        }
+      },
+      "attributePoints": [5, 4, 3, 2],
+      "sourceOrder": 1
+    },
+    {
+      "id": "kejime",
+      "name": "ケジメ",
+      "shortDescription": "機械で身体を置換して強化することを選んだ生き様です。",
+      "description": "体の一部を機械に置き換えて生きることを選んだ人々の生き様です。ヤクザが落とし前をつけ、体の一部を切り落とす「けじめをつける」という言葉から転じて、体を切り刻み機械に置き換える人々をこう呼びます。",
+      "exclusiveItem": {
+        "id": "cybanetics",
+        "name": "サイバネ"
+      },
+      "note": null,
+      "secondaryAttributeCoefficients": {
+        "level1": {
+          "health": 12,
+          "mind": 6
+        },
+        "level4": {
+          "health": 14,
+          "mind": 7
+        },
+        "level10": {
+          "health": 16,
+          "mind": 8
+        }
+      },
+      "attributePoints": [5, 4, 4, 1],
+      "sourceOrder": 2
+    },
+    {
+      "id": "sumi",
+      "name": "スミ",
+      "shortDescription": "入れ墨として小さな金属生命体を体に埋め込み、戦闘時に発動、身体を変化させて戦う生き様です。",
+      "description": "体に微小な金属生命体ーナノマシンを埋め込み、体を強化することを選んだ人々の生き様です。入れ墨を入れることでナノマシンを体に埋め込むことからこう呼ばれます。精神力を費やすことでナノマシンは発動し、入れ墨を中心に体を変容させ、強力な戦闘力をもたらします。",
+      "exclusiveItem": {
+        "id": "nanomachines",
+        "name": "ナノマシン"
+      },
+      "note": {
+        "type": "note",
+        "content": "スミを生き様に選んだ場合、埋め込んだナノマシンの発動精神力のうち最大の値だけ最大体力が上昇します。スキルやアイテムの効果で変化する前の最大の発動精神力が最大体力に加算されます。"
+      },
+      "secondaryAttributeCoefficients": {
+        "level1": {
+          "health": 9,
+          "mind": 9
+        },
+        "level4": {
+          "health": 11,
+          "mind": 10
+        },
+        "level10": {
+          "health": 12,
+          "mind": 12
+        }
+      },
+      "attributePoints": [5, 3, 3, 3],
+      "sourceOrder": 3
+    },
+    {
+      "id": "yaku",
+      "name": "ヤク",
+      "shortDescription": "肉体に精神への大きな負荷を代償に強大な力を得られるドラッグを使用する生き様です。",
+      "description": "反動を受けながらも特殊な力を得られるドラッグを使うことを選んだ人々の生き様です。「麻薬」を意味するスラングからこう呼ばれます。戦闘中自分の体力と精神力が減っていくため、ブライ、ケジメ、スミより上級者向けです。",
+      "exclusiveItem": {
+        "id": "drugs",
+        "name": "ドラッグ"
+      },
+      "note": null,
+      "secondaryAttributeCoefficients": {
+        "level1": {
+          "health": 10,
+          "mind": 8
+        },
+        "level4": {
+          "health": 12,
+          "mind": 9
+        },
+        "level10": {
+          "health": 13,
+          "mind": 11
+        }
+      },
+      "attributePoints": [5, 5, 2, 2],
+      "sourceOrder": 4
+    }
+  ]
+}
