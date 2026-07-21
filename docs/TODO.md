@@ -27,6 +27,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: なし。費用対効果を再評価してから必要なら計画化する。
   - handling plan: `SkillCard`、`NpcCard`などへ固定propsを渡し、文言、値、fallback、想定タグ、属性をComponent単位で確認できる基盤を検討する。Visual Testはfixture・外部データの内容へ依存させず、画面構造、responsive layout、overflow、ナビゲーション状態、スクリーンショットに限定する。
 
+- [ ] 全スキルのsummary整備後に、`SkillCard`でsummaryを再表示する
+  - source: `30-2-ryugi-detail-page` 実装後のユーザー指示
+  - classification: data quality follow-up
+  - plan: なし。全スキルのsummaryを確認できるデータ整備タスクを計画した時点で紐付ける。
+  - handling plan: 現行の生成JSONと`SkillCard` propsではsummaryを保持するが、全スキル分の内容が完成するまでカードに表示しない。再表示時はデータ完成範囲、`docs/requirements/data-display.md`、`docs/design/skill-card/`、各スキル一覧・詳細ページのVisual Reviewを確認する。
+
 - [ ] 表全体が初期表示で収まらない場合のレイアウト対策を検討する
   - source: `26-2-advancement-page` のcontents review 3 とユーザー指示
   - classification: visual usability follow-up

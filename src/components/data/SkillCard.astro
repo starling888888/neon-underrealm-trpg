@@ -26,7 +26,6 @@ const {
   usageRestriction,
   target,
   range,
-  summary,
   effect,
   variant = "default",
 } = Astro.props;
@@ -73,7 +72,6 @@ function displayValue(value: string | null | undefined): string {
   </dl>
 
   <div class="skill-card-effect">
-    <p class="skill-card-summary">{summary}</p>
     <p class="skill-card-rule">{effect}</p>
   </div>
 </article>
@@ -197,10 +195,6 @@ function displayValue(value: string | null | undefined): string {
   .skill-card-rule {
     color: var(--color-text);
     font-weight: 750;
-  }
-
-  .skill-card-summary + .skill-card-rule {
-    margin-top: var(--space-2);
   }
 
   @media (max-width: 48rem) {
