@@ -33,6 +33,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `50-responsive-pass`
   - handling plan: 成長ページの「生き様係数」表など、本文コンテナ内で横スクロールが必要になり初期表示で全列を確認できない表について、情報の分割、列・見出しの再構成、画面幅に応じた表示、スクロール誘導などを比較する。既存table layout・共通design・アクセシビリティへの影響を確認し、方針を決めてから実装する。
 
+- [ ] 1024px以上1360px未満で3レールlayoutの横overflowを解消する
+  - source: `30-2-ryugi-detail-page` のレビュー指摘 1
+  - classification: follow-up
+  - plan: `docs/plan.md` の `50-responsive-pass`
+  - handling plan: `TocPageLayout`の左右レールと中央本文の最小幅・breakpointを確認し、PC 3レール表示とtablet 2レール表示の切替幅を調整する。既存ページの横overflowとナビゲーション表示をVisual Testで確認する。
+
 - [ ] `/support` のオンラインセッションサポートページを作成する
   - source: `20-2-introduction-page` のコンテンツ検討時のユーザー指示
   - classification: follow-up
