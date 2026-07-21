@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Conflated one JSON output with one Excel sheet
+
+#### 2026-07-21
+
+- source: user
+- 発生箇所: `30-0-ryugi-detail-data` の変換仕様草案
+- 観測した失敗: ユーザーの「1jsonにまとめる」という出力形式の決定を、Excel入力を1シートへ統合する指示と誤読した。既存の流儀別シートを所属の判断根拠として使う明示指示がないまま、`流儀ID`列の追加と単一シートへの移行を仕様へ記述した。
+- 一次対応: 草案はレビューで止め、コード・Excel・issueを変更していない。以後、入力構造と生成物構造に関する指示は別々に復唱し、入力変更を伴う提案を仕様へ反映する前に明示承認を確認する。
+
 ### Search highlight test assumed one mark element twice
 
 #### 2026-07-20
