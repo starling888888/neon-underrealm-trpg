@@ -2,8 +2,8 @@
 
 ## Mode
 
-- initial draft
-- ケンカヤの実データと個別hero画像を使ったdesktop / mobile design画像を作成した。流儀スキル一覧はユーザー指示により画像へ含めない。
+- design fix
+- initial draftでは、ケンカヤの実データと個別hero画像を使ったdesktop / mobile design画像を作成した。流儀スキル一覧はユーザー指示により画像へ含めない。
 
 ## Target
 
@@ -73,18 +73,42 @@
 
 ## Generation source
 
-- prototype or generator source: standalone HTML/CSS prototypeをPlaywrightでcaptureした。実装済みサイトやVisual Review成果物は画像源に使っていない。
-- source branch / commit when applicable: `30-2-ryugi-detail-page` / `4a8d344`
-- route when applicable: `/data/ryugi/[ryugiId]`
-- viewport: desktop `1440x1200`（full page `1440x1659`）、mobile `390x900`（full page `390x1469`）
-- prototype path / prompt summary / capture notes:
-  - `.tmp/design/ryugi-detail/prototype.html`
-  - `.tmp/design/ryugi-detail/capture.mjs`
-  - `data/generated/ryugi-list.json` のケンカヤの説明、補足、基礎能力値、副能力増加値、共通スキルボーナスを表示した。
-  - `data/generated/ryugi-skills.json` のケンカヤのプライマリボーナス `気合十分` を表示した。
-  - `public/images/data/ryugi/kenkaya_hero.webp` をprototypeへ埋め込んでcaptureした。
-  - `design-desktop.png` と `design-mobile.png` は、流儀スキル一覧の前で終えるfull-page screenshotである。
+- initial draft: standalone HTML/CSS prototypeをPlaywrightでcaptureした。実装済みサイトやVisual Review成果物は画像源に使っていない。
+  - source branch / commit: `30-2-ryugi-detail-page` / `4a8d344`
+  - route: `/data/ryugi/[ryugiId]`
+  - viewport: desktop `1440x1200`（full page `1440x1659`）、mobile `390x900`（full page `390x1469`）
+  - prototype path / prompt summary / capture notes:
+    - `.tmp/design/ryugi-detail/prototype.html`
+    - `.tmp/design/ryugi-detail/capture.mjs`
+    - `data/generated/ryugi-list.json` のケンカヤの説明、補足、基礎能力値、副能力増加値、共通スキルボーナスを表示した。
+    - `data/generated/ryugi-skills.json` のケンカヤのプライマリボーナス `気合十分` を表示した。
+    - `public/images/data/ryugi/kenkaya_hero.webp` をprototypeへ埋め込んでcaptureした。
+    - `design-desktop.png` と `design-mobile.png` は、流儀スキル一覧の前で終えるfull-page screenshotである。
+- canonicalization: reviewed implementation screenshotをdesign fixとして正本化する。
+
+<!-- visual-canonicalization:start -->
+
+- command: `npm run visual:canonicalize -- ryugi-detail --route /data/ryugi/kenkaya/`
+- source branch: `30-2-ryugi-detail-page`
+- source commit: `9100bec127383469370d9f12a2cc7ed270fb67e2`
+- route: `/data/ryugi/kenkaya/`
+- state: `default`
+- viewport: desktop 1440x1200, mobile 390x900
+- capture manifest: `test-results/visual/capture-manifest.json`
+
+<!-- visual-canonicalization:end -->
+
+## Differences from initial design references
+
+- 正本画像は、初期draftで比較対象外だった流儀スキル一覧まで含むfull-page screenshotへ更新した。
+- `最大LV`は名称行の下の独立行とし、流儀データgridはdesktopの3列＋下段全幅、`1024px`未満の2列2行を現行実装どおり記録する。
+- hero altの文言は画像に描画されないため、流儀名由来の汎用表現という方針をnotesの比較条件として維持する。
+
+## Canonicalization rationale
+
+- 実装後のVisual ReviewとPRレビューで、初期designとの差分とscope内であることを確認した。
+- Visual Reviewのactual screenshotを、差分を隠す目的ではなく、レビュー済みの流儀詳細ページ全体を後続比較の正本として採用する。
 
 ## Open questions
 
-- なし。流儀スキル一覧は既存の共通スキルページ／`SkillCard` designを使うため、今回の初期draft画像では比較対象から外す。
+- なし。正本画像では流儀スキル一覧を含め、既存の`SkillCard` designを比較基準として維持する。
