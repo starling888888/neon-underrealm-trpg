@@ -187,7 +187,7 @@ docs/conversion/common-skills.md
 docs/conversion/ryugi-index.md
 docs/conversion/ryugi-skills.md
 docs/conversion/ikizama-index.md
-docs/conversion/ikizama-detail.md
+docs/conversion/ikizama-skills.md
 docs/conversion/items-weapons.md
 docs/conversion/items-armors.md
 docs/conversion/items-omamori.md

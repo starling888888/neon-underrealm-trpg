@@ -15,9 +15,8 @@
 いる。この共通契約と、完了済み `30-0-ryugi-detail-data` の所有者別集約を再利用する。
 
 一方、関連アイテムの実体JSON・個別アンカーは未整備であり、アイテムデータは後続の
-`34-0`〜`39-0`で扱う。さらに、ケジメのExcel上の専用アイテム種別IDは `cybanetics` だが、既存要件と
-ルートは `cybernetics` を使う。この差異を推測で補正せず、関連アイテム検証の境界とともに実装前に
-ユーザー確認する。
+`34-0`〜`39-0`で扱う。ケジメの専用アイテム種別IDは、既存要件・ルートに合わせて、ユーザー更新済みの
+Excel正本でも `cybernetics` を使う。関連アイテム検証の境界は、実装前にユーザー承認済みの方針に従う。
 
 - `docs/requirements/architecture.md` の AC-06〜AC-16
 - `docs/requirements/data-id-policy.md` の 10.1〜10.3
@@ -43,7 +42,7 @@
 ## 対象範囲
 
 - `.raw/data/ikizama-skills.xlsx` の実構造を根拠として、
-  `docs/conversion/ikizama-detail.md` に生き様詳細用データの変換・関連検証・テスト契約を定義する。
+  `docs/conversion/ikizama-skills.md` に生き様スキルの変換・関連検証・テスト契約を定義する。
 - `docs/conversion/skills.md` の共通スキル契約を再利用し、シート名と `Ikizama.id` の完全一致、
   生き様ごとのスキルID、`sourceOrder`、全スキルIDの一意性を検証する。
 - 生き様スキルを `data/generated/ikizama-skills.json` へ集約するローカル変換処理、npm script、
@@ -73,8 +72,8 @@
 
 ## 完了条件
 
-- [ ] 実際に配置された `.raw/data/ikizama-skills.xlsx` を根拠として、
-      `docs/conversion/ikizama-detail.md` に入力・出力・関連検証・テスト契約を定義している。
+- [x] 実際に配置された `.raw/data/ikizama-skills.xlsx` を根拠として、
+      `docs/conversion/ikizama-skills.md` に入力・出力・関連検証・テスト契約を定義している。
 - [ ] `docs/conversion/skills.md` の共通契約を再利用し、生き様スキルIDが
       `skill-ikizama-{ikizamaId}-{category}-{timing}-{index}` に一致する。
 - [ ] 入力Excelのシート名集合と `Ikizama.id` 集合を完全一致で検証し、所属生き様ID、
@@ -109,7 +108,7 @@
 
 ## 想定変更ファイル
 
-- `docs/conversion/ikizama-detail.md`
+- `docs/conversion/ikizama-skills.md`
 - `docs/conversion/skills.md`（実Excel確認で共通契約の拡張が必要な場合のみ）
 - `src/lib/schemas/ikizama.ts`
 - `src/lib/schemas/ikizama-skills.ts`
