@@ -140,6 +140,18 @@ describe("ikizama conversion", () => {
       /ID must not change from "first" to "changed"/,
     );
 
+    const removed = row("another");
+    removed[1] = "別の生き様";
+    await workbook(fixture.input, "ikizama-list", [
+      groupHeaders,
+      headers,
+      removed,
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /Existing ikizama ID "first" must not be removed/,
+    );
+
     const added = row("another");
     added[1] = "別の生き様";
     await workbook(fixture.input, "ikizama-list", [
@@ -277,6 +289,16 @@ describe("ikizama conversion", () => {
     await assert.rejects(
       () => convert(fixture),
       /Invalid header at row 1, column E: expected "専用アイテム", received "専用"/,
+    );
+
+    await workbook(fixture.input, "ikizama-list", [
+      groupHeaders,
+      headers.slice(0, -1),
+      row("first"),
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /Invalid header at row 2, column O: expected "能力値ポイント", received ""/,
     );
 
     await workbook(fixture.input, "ikizama-list", [

@@ -83,3 +83,28 @@
 `docs/TODO.md` のサイドメニュー項目は、`data/generated/ikizama.json` と `src/lib/data/ikizama.ts` が整った後に検討する追跡項目である。本issueでは生成基盤を整備するが、メニューを変更しない。
 
 このissueはデータ基盤だけを対象とする。変換仕様の具体化は `docs/conversion/ikizama-index.md` を参照し、issue本文へ列定義やJSONフィールドを展開しない。31-0では専用アイテム対応表をExcel由来の基礎データとして保持し、アイテム実体との整合性検証などの詳細関連データを先取りしない。実装前にこのissueの内容をユーザーが明示承認する。Git commit / push はこのissue準備では実行しない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- [軽微] 変換仕様がテスト契約として定める、既存生き様の削除拒否とヘッダー列削除のfixtureテストがない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/conversion/ikizama-index.md` は既存IDの削除拒否と列削除のエラー検証をテスト対象として定めている。`scripts/convert-ikizama-index/lib.ts` には両方を拒否する実装がある一方、`tests/node/ikizama-index.test.ts` はこれら2経路を個別には検証していない。
+
+### 対応方針
+
+- 既存JSONの生き様を入力から除いたfixtureで削除エラーを検証する。
+- 15列未満のヘッダーfixtureで、列・見出しを含む列削除エラーを検証する。
+
+### 対応完了チェックリスト
+
+- [x] 既存生き様の削除を拒否するfixtureテストを追加する。
+- [x] ヘッダー列削除を拒否するfixtureテストを追加する。
+- [x] `npm run test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
