@@ -2,7 +2,8 @@
 
 ## Mode
 
-- initial draft
+- design fix
+- `29-2-ryugi-index-page`のレビュー済み実装を、ユーザー承認に基づき流儀一覧のdesign正本として更新する。
 
 ## Target
 
@@ -73,7 +74,7 @@
 
 ## Generation source
 
-- prototype or generator source: standalone HTML/CSS prototypeをPlaywrightでcaptureした。実装済みサイトやVisual Review成果物は画像源に使っていない。
+- initial draft source: standalone HTML/CSS prototypeをPlaywrightでcaptureした。実装済みサイトやVisual Review成果物は画像源に使っていない。
 - source branch / commit: `29-2-ryugi-index-page` / `8388c86`
 - route: `/data/ryugi`（未実装のためprototypeで表現）
 - viewport: desktop `1440x1200`、mobile `390x900`。両方ともfull-page screenshot。
@@ -82,8 +83,20 @@
   - `.tmp/design/ryugi-index/capture.mjs`
   - `public/images/data/ryugi_hero.webp` をdata URLとしてprototypeへ埋め込み、ページ側の文字overlayやcaptionは追加していない。
   - 流儀一覧は入力順の代表6件を表示し、名称リンクとshortDescriptionだけを示す。実装時は全件を生成データから表示する。
+- canonicalization source: review済み実装の`/data/ryugi`を、ユーザー承認後に公式visual capture workflowでdesktop / mobileともにcaptureする。
+
+<!-- visual-canonicalization:start -->
+
+- command: `npm run visual:canonicalize -- ryugi-index --route /data/ryugi/`
+- source branch: `29-2-ryugi-index-page`
+- source commit: `77d56aa4ecc187de2ac3431a27b1e004275e8ab1`
+- route: `/data/ryugi/`
+- state: `default`
+- viewport: desktop 1440x1200, mobile 390x900
+- capture manifest: `test-results/visual/capture-manifest.json`
+
+<!-- visual-canonicalization:end -->
 
 ## Open questions
 
-- desktopの`/data/ryugi`では、現在の`流儀`項目を開いたときに詳細子項目を初期展開するか、ユーザー操作で展開するかを、既存SiteMenuの開閉挙動と合わせて実装時に確認する。
-- 流儀一覧のリンク列幅、shortDescriptionの行数、heroの表示高さなどの最終的な余白・サイズ調整は、実装後のVisual Reviewで実データと既存layoutを見て判断する。
+- なし。current時のカテゴリ初期展開と実データでの余白・表示密度は、レビュー済み実装を正本とする。
