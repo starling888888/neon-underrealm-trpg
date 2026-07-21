@@ -20,7 +20,7 @@
 ## 対象範囲
 
 - `.raw/data/ikizama-list.xlsx` を実際に確認し、`docs/conversion/ikizama-index.md` に生き様一覧および後続詳細ページで共用する基礎データの変換仕様を定義する。
-- 31-0では一覧表示に必要なデータと詳細ページでも共用する基礎データだけを扱う。詳細専用データ、および生き様スキル・関連アイテム・関連ページとの関連変換や整合性検証は `32-0-ikizama-detail-data` で扱う。
+- 31-0では一覧表示に必要なデータと詳細ページでも共用する基礎データを扱う。`.raw/data/ikizama-list.xlsx` の専用アイテムID・名称は、生き様との対応表として生成JSONへ含める。アイテム実体、個別アンカー、リンク先との整合性検証、生き様スキル、関連ページとの関連変換は `32-0-ikizama-detail-data` で扱う。
 - 変換仕様に従う `Ikizama` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperを策定する。
 - Excelから `data/generated/ikizama.json` を生成するローカル変換処理とnpm scriptを追加する。
 - 生成JSONを読み込む、生き様一覧ページと後続の生き様詳細ページ用のデータ取得層を追加する。
@@ -30,7 +30,7 @@
 ## 初期スコープ外
 
 - `/data/ikizama/index.astro`、一覧UI、生き様詳細ページ、導線、MDX本文、design画像を作成しない。これらは `31-2-ikizama-index-page`、`32-2-ikizama-detail-page` または後続タスクで扱う。
-- 詳細ページだけで使用するデータ、および生き様スキル・関連アイテム・関連ページとの関連変換・整合性検証は `32-0-ikizama-detail-data` で扱う。流儀、共通スキル、NPCのデータ変換・取得層も変更しない。
+- 詳細ページだけで使用するデータ、生き様スキル、関連ページとの関連変換・整合性検証は `32-0-ikizama-detail-data` で扱う。専用アイテム対応表の出力は本issueに含めるが、アイテム実体、個別アンカー、リンク先との整合性検証は32-0で扱う。流儀、共通スキル、NPCのデータ変換・取得層も変更しない。
 - `.raw/data/ikizama-list.xlsx`、Google Drive、`raw-google-drive.url` を変更しない。Excel本体をGit管理しない。
 - サイドメニューへの生き様リスト表示は、関連TODOに従い本issueでは実装しない。
 - 検索、DB、認証、SSR、CMS、クライアント状態管理、不要な依存関係を追加しない。
@@ -38,8 +38,8 @@
 
 ## 完了条件
 
-- [ ] 実際に配置された `.raw/data/ikizama-list.xlsx` を根拠として、`docs/conversion/ikizama-index.md` に入力・出力・検証・テスト契約を定義している。
-- [ ] 生き様一覧と後続詳細ページで共用する基礎データを表す `Ikizama` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperが、変換仕様で定める必須項目、ID重複、表示順を検証する。
+- [x] 実際に配置された `.raw/data/ikizama-list.xlsx` を根拠として、`docs/conversion/ikizama-index.md` に入力・出力・検証・テスト契約を定義している。
+- [ ] 生き様一覧と後続詳細ページで共用する基礎データおよび専用アイテム対応表を表す `Ikizama` 検証スキーマと、生成JSON全体または一覧配列を検証するschema / helperが、変換仕様で定める必須項目、ID重複、表示順を検証する。
 - [ ] ローカル変換コマンドが `.raw/data/ikizama-list.xlsx` から `data/generated/ikizama.json` を生成し、CI/CD buildをExcelに依存させない。
 - [ ] 生き様一覧用と後続詳細ページ用のデータ取得層が、生成JSONから変換仕様で定める共用基礎データを返す。
 - [ ] 変換・スキーマ・取得層のテストが、実Excelに依存しないfixtureを用いて、必須項目欠落、ID重複、表示順、および確定した仕様に必要な異常系を検証する。
@@ -74,7 +74,7 @@
 ## レビュー観点
 
 - `docs/conversion/ikizama-index.md` を変換仕様の正本とし、issue本文でExcelの列やJSON形状を早期に重複固定していないか。
-- 生き様のデータ基盤だけを対象とし、一覧UI、詳細UI、サイドメニュー、関連データを後続taskへ分離できているか。
+- 生き様のデータ基盤と専用アイテム対応表だけを対象とし、一覧UI、詳細UI、サイドメニュー、アイテム実体との整合性検証、生き様スキル、関連ページを後続taskへ分離できているか。
 - `.raw/data/ikizama-list.xlsx` をローカル作業入力として保持し、Git管理・CI/CD依存に含めない方針が明確か。
 - 実Excelの構造確認後に、変換仕様・スキーマ・テストの契約を十分に具体化できる完了条件になっているか。
 
@@ -82,4 +82,4 @@
 
 `docs/TODO.md` のサイドメニュー項目は、`data/generated/ikizama.json` と `src/lib/data/ikizama.ts` が整った後に検討する追跡項目である。本issueでは生成基盤を整備するが、メニューを変更しない。
 
-このissueはデータ基盤だけを対象とする。変換仕様の具体化は `docs/conversion/ikizama-index.md` を参照し、issue本文へ列定義やJSONフィールドを展開しない。31-0と32-0の実際のフィールド境界は、Excel構造を確認した変換仕様で定義し、詳細専用データや関連データを31-0へ先取りしない。実装前にこのissueの内容をユーザーが明示承認する。Git commit / push はこのissue準備では実行しない。
+このissueはデータ基盤だけを対象とする。変換仕様の具体化は `docs/conversion/ikizama-index.md` を参照し、issue本文へ列定義やJSONフィールドを展開しない。31-0では専用アイテム対応表をExcel由来の基礎データとして保持し、アイテム実体との整合性検証などの詳細関連データを先取りしない。実装前にこのissueの内容をユーザーが明示承認する。Git commit / push はこのissue準備では実行しない。
