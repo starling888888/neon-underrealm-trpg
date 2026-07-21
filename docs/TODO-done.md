@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] 流儀スキル変換仕様のファイル名を計画と要件で統一する
+  - completed: 2026-07-21 via PR #52 / `30-0-ryugi-detail-data`
+  - source: PR #46の`pr-review-1.md`
+  - classification: follow-up
+  - plan: `docs/plan-done.md` の `30-0-ryugi-detail-data`
+  - handling: `30-0-ryugi-detail-data`で正本名を`docs/conversion/ryugi-skills.md`に決定し、`docs/requirements/architecture.md`と関連変換仕様を同名へ統一した。
+
 - [x] 最初のページ作成タスクで、ローカルコンテンツ作成SKILLを実際に使って動作確認する
   - completed: 2026-07-15 via PR #45 / `28-2-common-skills-page`
   - source: `local-content-authoring` issue 実装後のユーザー指示

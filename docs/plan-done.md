@@ -389,6 +389,15 @@
   - [x] 変換スクリプトと検証スキーマのテストを追加する
   - [x] 必須項目、ID重複、表示順を検証する
 
+- [x] `30-0-ryugi-detail-data` — 流儀詳細ページ用の流儀スキルデータを整備する
+  - completed: 2026-07-21 via PR #52 / 071a035
+
+  - [x] `docs/conversion/ryugi-skills.md` に流儀スキルExcel用のデータ変換仕様を策定する
+  - [x] `Ryugi` と `Skill` の関連検証スキーマを策定する
+  - [x] 流儀スキルExcelから流儀スキルを変換し、`29-0-ryugi-index-data` の流儀情報と合わせて取得できる処理を策定する
+  - [x] 変換スクリプトと検証スキーマのテストを追加する
+  - [x] 所属流儀ID、スキルID、個別アンカーIDの整合性を検証する
+
 ## Phase 4: 検索
 
 - [x] `43-install-pagefind` — Pagefindを導入する

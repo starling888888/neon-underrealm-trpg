@@ -81,12 +81,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: なし。ファーストステップ完了後に必要性と導入範囲を判断する。
   - handling plan: vanilla JavaScriptでUIロジックとHTMLセレクタの対応を維持する負荷が高まっているため、必要な画面に限定したReact Islandの導入可否を検討する。初期スコープ外のままとし、現時点では実装・`docs/plan.md`への追加を行わない。
 
-- [ ] 流儀スキル変換仕様のファイル名を計画と要件で統一する
-  - source: PR #46の`pr-review-1.md`
-  - classification: follow-up
-  - plan: `docs/plan.md` の `30-0-ryugi-detail-data`
-  - handling result: `30-0-ryugi-detail-data` で正本名を`docs/conversion/ryugi-skills.md`に決定し、`docs/requirements/architecture.md`と関連変換仕様を同名へ統一した。TODOの完了扱いは人間レビュー後に決定する。
-
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
   - source: `28-0-common-skills-data` 実装中のユーザー指示
   - classification: out-of-scope follow-up
