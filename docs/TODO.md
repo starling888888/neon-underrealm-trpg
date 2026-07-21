@@ -75,12 +75,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `29-0-ryugi-index-data` / `31-0-ikizama-index-data` 後に、必要なら `29-2-ryugi-index-page` / `31-2-ikizama-index-page` または別のナビゲーション補完タスクで扱う
   - handling plan: 現時点では生成JSONが存在しないため `11-site-menu` では実装しない。`data/generated/ryugi-list.json` / `data/generated/ikizama.json` と `src/lib/data/ryugi-list.ts` / `src/lib/data/ikizama.ts` が整った後、手書き固定ではなく生成JSONまたはデータ取得層から流儀・生き様の項目を取得し、サイドメニューへ表示する。
 
-- [ ] キャラクターメイキングと成長で、流儀の共通スキルボーナスを変換済みデータから表示する
-  - source: `29-0-ryugi-index-data` のissueレビュー中のユーザー指示
-  - classification: planned task scope supplement
-  - plan: `docs/plan.md` の `29-2-ryugi-index-page`
-  - handling plan: `29-0-ryugi-index-data` が `.raw/data/ryugi-list.xlsx` から生成する流儀データを、キャラクターメイキングと成長で参照して表示する。`/data/ryugi` はcontentsに従い、ケンカヤの代表データと4項目の説明、流儀名リンクと `shortDescription` の一覧を表示し、全流儀の共通スキルボーナス表は置かない。手書き固定値や別のデータ入力は使わない。
-
 - [ ] 流儀の共通スキルボーナスを構造化データへ変換する
   - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
   - classification: out-of-scope follow-up

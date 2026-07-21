@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] キャラクターメイキングと成長で、流儀の共通スキルボーナスを変換済みデータから表示する
+  - completed: 2026-07-22 via PR #54 / `29-2-ryugi-index-page`
+  - source: `29-0-ryugi-index-data` のissueレビュー中のユーザー指示
+  - classification: planned task scope supplement
+  - plan: `docs/plan-done.md` の `29-2-ryugi-index-page`
+  - handling: `29-0-ryugi-index-data` が `.raw/data/ryugi-list.xlsx` から生成する流儀データを、キャラクターメイキングと成長で参照して表示する。`/data/ryugi` はcontentsに従い、ケンカヤの代表データと4項目の説明、流儀名リンクと `shortDescription` の一覧を表示し、全流儀の共通スキルボーナス表は置かない。手書き固定値や別のデータ入力は使わない。
+
 - [x] 流儀スキル変換仕様のファイル名を計画と要件で統一する
   - completed: 2026-07-21 via PR #52 / `30-0-ryugi-detail-data`
   - source: PR #46の`pr-review-1.md`

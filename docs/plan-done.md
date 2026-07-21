@@ -389,6 +389,17 @@
   - [x] 変換スクリプトと検証スキーマのテストを追加する
   - [x] 必須項目、ID重複、表示順を検証する
 
+- [x] `29-2-ryugi-index-page` — 流儀一覧ページを作成する
+  - completed: 2026-07-22 via PR #54 / `da8b5d7`
+
+  - [x] designを生成する
+  - [x] `/data/ryugi/index.astro` を作成する
+  - [x] `.raw/contents/ryugi-index.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
+  - [x] ケンカヤの `RyugiDataSection` と、流儀データの4項目の説明を表示する
+  - [x] 入力順の流儀名リンクと横に配置する `shortDescription` だけを一覧に表示する
+  - [x] キャラクターメイキングと成長では、流儀の共通スキルボーナスを変換済み流儀データから表示する
+  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
+
 - [x] `30-0-ryugi-detail-data` — 流儀詳細ページ用の流儀スキルデータを整備する
   - completed: 2026-07-21 via PR #52 / 071a035
 
