@@ -29,6 +29,7 @@ export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "ルール",
     href: "/rules",
+    expandWhenCurrent: true,
     children: [
       {
         label: "シナリオ進行",
@@ -43,6 +44,7 @@ export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "データ",
     href: "/data",
+    expandWhenCurrent: true,
     children: [
       {
         label: "流儀",
@@ -56,6 +58,7 @@ export const siteMenuItems: SiteMenuItem[] = [
       {
         label: "生き様",
         href: "/data/ikizama",
+        expandWhenCurrent: true,
       },
       {
         label: "共通スキル",
@@ -64,6 +67,7 @@ export const siteMenuItems: SiteMenuItem[] = [
       {
         label: "アイテム",
         href: "/data/items",
+        expandWhenCurrent: true,
         children: [
           {
             label: "武器",

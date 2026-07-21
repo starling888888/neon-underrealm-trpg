@@ -138,6 +138,21 @@ describe("site menu initial expansion", () => {
     );
   });
 
+  it("expands the configured category when its own page is current", () => {
+    const expectedPaths = ["/rules", "/data", "/data/ikizama", "/data/items"];
+
+    for (const expectedPath of expectedPaths) {
+      const item = findSiteMenuItemByHref(siteMenuItems, expectedPath);
+
+      assert.equal(item?.expandWhenCurrent, true, expectedPath);
+      assert.equal(
+        getSiteMenuItemInitialExpanded(item ?? menu, expectedPath),
+        true,
+        expectedPath,
+      );
+    }
+  });
+
   it("expands parent items of the current child item", () => {
     assert.equal(getSiteMenuItemInitialExpanded(menu, "/data/items"), true);
   });
@@ -170,3 +185,21 @@ describe("site menu initial expansion", () => {
     assert.equal(getSiteMenuItemInitialExpanded(menu, "/rules/battle"), false);
   });
 });
+
+function findSiteMenuItemByHref(
+  items: readonly SiteMenuItem[],
+  href: string,
+): SiteMenuItem | undefined {
+  for (const item of items) {
+    if (item.href === href) {
+      return item;
+    }
+
+    const child = item.children && findSiteMenuItemByHref(item.children, href);
+    if (child) {
+      return child;
+    }
+  }
+
+  return undefined;
+}

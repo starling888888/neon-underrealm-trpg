@@ -32,6 +32,7 @@
 - contentsの指示に従い、`流儀データの見方`ではケンカヤの`RyugiDataSection`と、その下の4項目の説明を表示する。流儀一覧は`getRyugiList()`の入力順で表示し、各流儀の`name`を本文見出しより大きくしないリンクとして、横に`shortDescription`を自然に折り返して表示する。別途の「流儀詳細を見る」文言は置かない。
 - 共通スキルボーナスの2 / 5 / 9LV値と改行は、ケンカヤの`RyugiDataSection`、キャラクターメイキング、成長の生成データ参照で維持する。流儀一覧へ全流儀のボーナス表は追加しない。
 - `src/lib/site/menu.ts` を、生成済み流儀リストから`/data/ryugi/[ryugiId]`の子項目を作る構成へ更新する。既存の`流儀`一覧リンクは保持し、PCサイドバーとmobile drawerの両方で詳細ページの現在地・祖先展開が正しく機能するようにする。
+- 最新のユーザー指示により、`ルール`、`データ`、`生き様`、`アイテム`は、それぞれの一覧ページが現在地である場合も子項目を初期展開する。生き様の子項目は将来追加されるまで表示しない。
 - `src/pages/character-making.mdx` の流儀データ固定記述を、取得層またはそれを使う共通表示Componentへ置き換える。対象は共通スキルボーナス表、ケンカヤの基礎能力値例、ケンカヤの体力増加値・精神力増加値例である。例としてケンカヤを選ぶ説明文は残してよいが、流儀由来の数値は生成データを参照する。
 - `src/pages/advancement.mdx` の流儀別共通スキルボーナス表を、生成済み流儀データを使う共通表示へ置き換える。
 - 既存のデータ取得層と表示Componentを再利用し、必要な最小限の流儀一覧／ボーナス表示ComponentとNode / Visual Testを追加または更新する。
@@ -55,6 +56,7 @@
 - [x] 各流儀に、本文見出しより大きくしない名称リンクと、横に自然に折り返すshortDescriptionを表示する。別途の詳細導線文言は置かない
 - [x] `流儀データの見方`の本文が、プライマリボーナス、基礎能力値、副能力増加値、共通スキルボーナスの説明をcontentsどおりに表示する
 - [x] サイトメニューが生成済み流儀データから詳細子項目を表示し、一覧・詳細ページでcurrent / ancestor / initial expanded状態が維持される
+- [x] `ルール`、`データ`、`生き様`、`アイテム`の一覧ページで、子項目を持つカテゴリがcurrent時にも初期展開する
 - [x] キャラクターメイキングと成長の流儀データ固定記述を生成データ参照へ置き換え、流儀由来の値を手書きで重複管理しない
 - [x] 関連TODOについて、キャラクターメイキングと成長の流儀データ参照の対応結果と、生き様サイドメニューが未対応である理由をissueへ記録している
 - [x] `npm run check` が通る
@@ -149,5 +151,35 @@
 - [x] reference と actual を比較した
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- PageTocが、designで指定したH2の2項目だけではなく、`RyugiDataSection`内のH3も表示している。
+- 流儀一覧Visual Testが、生成データの件数10件と先頭のケンカヤに固定で依存している。
+- `.raw/contents/ryugi-index.md` のHTMLコメントに、現在のユーザー指示と反する旧表示方針が残っている。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/design/ryugi-index/notes.md`はPageTocをH2の2項目だけと定めるが、push済みheadのdesktop / mobile screenshotでは`RyugiDataSection`内H3も表示される。`tests/visual/ryugi-index.spec.ts`は生成データの正当な変更でも失敗しうる固定件数・固定名称を検証している。contentsの旧HTMLコメントは、最新ユーザー指示、current issue、designで採用した名称リンクと`shortDescription`だけの一覧、および流儀メニュー対応と矛盾する。
+- stale: review開始時のcapture manifestがPR head以前を指す指摘は、push済みheadで`npm run visual:capture -- --grep "@ryugi-index"`を再実行して解消した。
+
+### 対応方針
+
+- PageTocのH3を非表示にするか、実装結果をdesign方針へ反映するかは、人間判断を待つ。
+- Visual Testは、生成データに依存しない構造検証へ置き換える。
+- contentsの旧HTMLコメントは、ユーザー承認後に最新方針へ更新して`矛盾点`へ解消内容を記録する。Drive同期は明示指示があるまで行わない。
+- 最新のユーザー指示により、PageTocは`RyugiDataSection`内のH3を除外し、`流儀データの見方`と`流儀一覧`のH2だけを表示する。`ルール`、`データ`、`生き様`、`アイテム`もcurrent時に子項目を初期展開する。
+
+### 対応完了チェックリスト
+
+- [x] PageTocのH3表示方針を決定し、designと実装を整合する
+- [x] 流儀一覧Visual Testを生成データに依存しない構造検証へ更新する
+- [ ] contentsの旧HTMLコメントを現在の表示方針へ更新する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

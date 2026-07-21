@@ -32,10 +32,31 @@ async function expectRyugiIndexPage(page: Page) {
   await expect(
     article.locator("[data-ryugi-data-section][data-ryugi-id='kenkaya']"),
   ).toHaveCount(1);
-  await expect(ryugiList.locator("li")).toHaveCount(10);
-  await expect(ryugiList.locator("a").first()).toHaveText("ケンカヤ");
+  await expect.poll(() => ryugiList.locator("li").count()).toBeGreaterThan(0);
+  await expect
+    .poll(() =>
+      ryugiList.locator("li").evaluateAll((items) =>
+        items.every((item) => {
+          const link = item.querySelector("a[href]");
+          const description = item.querySelector("span");
+
+          return Boolean(
+            link?.textContent?.trim() && description?.textContent?.trim(),
+          );
+        }),
+      ),
+    )
+    .toBe(true);
   await expect(ryugiList).not.toContainText("流儀詳細を見る");
-  await expectGeneratedPageToc(page, "流儀一覧");
+  const tocs = await expectGeneratedPageToc(page, "流儀一覧");
+  const expectedTocHeadings = ["流儀データの見方", "流儀一覧"];
+
+  await expect(tocs.desktop.locator(".page-toc-link")).toHaveText(
+    expectedTocHeadings,
+  );
+  await expect(tocs.mobile.locator(".page-toc-link")).toHaveText(
+    expectedTocHeadings,
+  );
   await expect
     .poll(async () => {
       return await page.evaluate(

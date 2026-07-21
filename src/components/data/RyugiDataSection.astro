@@ -7,9 +7,15 @@ interface Props {
   heading?: string;
   ryugiId: string;
   detailsByRyugiId: Readonly<Record<string, RyugiDetail>>;
+  excludeDetailHeadingsFromToc?: boolean;
 }
 
-const { heading = "流儀データ", ryugiId, detailsByRyugiId } = Astro.props;
+const {
+  heading = "流儀データ",
+  ryugiId,
+  detailsByRyugiId,
+  excludeDetailHeadingsFromToc = false,
+} = Astro.props;
 const detail = detailsByRyugiId[ryugiId];
 
 if (!detail) {
@@ -37,7 +43,12 @@ const commonSkillBonuses = [
   <div class="ryugi-data-grid">
     {skills.bonus.length > 0 && (
       <section class="ryugi-data-primary" aria-labelledby="primary-bonus-heading">
-        <h3 id="primary-bonus-heading">プライマリボーナス</h3>
+        <h3
+          id="primary-bonus-heading"
+          data-toc-exclude={excludeDetailHeadingsFromToc ? "true" : undefined}
+        >
+          プライマリボーナス
+        </h3>
         <CardContainer ariaLabel="プライマリボーナス">
           {skills.bonus.map((skill) => (
             <SkillCard {...skill} anchorId={skill.id} />
@@ -47,7 +58,12 @@ const commonSkillBonuses = [
     )}
 
     <section class="ryugi-data-base" aria-labelledby="base-attributes-heading">
-      <h3 id="base-attributes-heading">基礎能力値</h3>
+      <h3
+        id="base-attributes-heading"
+        data-toc-exclude={excludeDetailHeadingsFromToc ? "true" : undefined}
+      >
+        基礎能力値
+      </h3>
       <dl class="attribute-list">
         {
           baseAttributes.map(([name, value]) => (
@@ -61,7 +77,12 @@ const commonSkillBonuses = [
     </section>
 
     <section class="ryugi-data-increase" aria-labelledby="increase-heading">
-      <h3 id="increase-heading">副能力増加値</h3>
+      <h3
+        id="increase-heading"
+        data-toc-exclude={excludeDetailHeadingsFromToc ? "true" : undefined}
+      >
+        副能力増加値
+      </h3>
       <dl class="increase-list">
         <div>
           <dt>体力増加値</dt>
@@ -77,7 +98,12 @@ const commonSkillBonuses = [
     </section>
 
     <section class="ryugi-data-common" aria-labelledby="common-bonus-heading">
-      <h3 id="common-bonus-heading">共通スキルボーナス</h3>
+      <h3
+        id="common-bonus-heading"
+        data-toc-exclude={excludeDetailHeadingsFromToc ? "true" : undefined}
+      >
+        共通スキルボーナス
+      </h3>
       <dl class="common-bonus-list">
         {
           commonSkillBonuses.map(([level, bonus]) => (
