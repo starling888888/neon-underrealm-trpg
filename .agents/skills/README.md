@@ -40,7 +40,7 @@ This skill reads the Drive folder URL from `<repo-root>/raw-google-drive.url` or
 
 Use when drafting or reviewing contents markdown locally for `.raw/contents/*.md`.
 
-This skill checks user instructions, local `src/pages/`, the current task issue, requirements, plan, out-of-scope, `.raw/contents/`, and `.raw/v1.0/` in that priority order. It treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, and uses HTML comments for agent-facing instructions and lower-priority source conflict records. It does not implement pages.
+For page body and visible display structure, this skill checks user instructions, matching `.raw/contents/`, the current task issue, requirements, out-of-scope, plan and TODO, design, local `src/pages/`, and `.raw/v1.0/` in that priority order. `AGENTS.md` and applicable skill and rule safety or workflow constraints remain above this order. It treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, and uses HTML comments for agent-facing instructions and lower-priority source conflict records. It does not implement pages.
 
 ### `contents-review`
 

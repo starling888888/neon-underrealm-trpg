@@ -9,7 +9,7 @@
 ## 背景
 
 - `docs/plan.md` の `29-2-ryugi-index-page` は、流儀一覧、共通スキルボーナス、詳細ページ導線を定義している。
-- `docs/TODO.md` には、生成JSONと取得層を用いたサイトメニューの流儀・生き様リスト表示、および流儀一覧における共通スキルボーナス表示が残っている。
+- `docs/TODO.md` には、生成JSONと取得層を用いたサイトメニューの流儀・生き様リスト表示、およびキャラクターメイキングと成長における流儀由来データの参照が残っている。
 - 最新のユーザー指示により、このissueではサイトメニューの**流儀**一覧も表示する。生き様一覧は `31-2-ikizama-index-page` または別途承認されたタスクまで扱わない。
 - `src/pages/character-making.mdx` と `src/pages/advancement.mdx` には、流儀ごとの共通スキルボーナス表と、ケンカヤの基礎能力値・副能力増加値の例が固定記述されている。
 - `.raw/contents/ryugi-index.md` は、このタスクのページ本文・表示方針に関する優先資料とする。他の計画、要件、TODO、既存実装と矛盾する場合は、最新ユーザー指示に反しない範囲でcontentsを優先する。
@@ -19,7 +19,7 @@
 
 - `.raw/contents/ryugi-index.md`
 - `docs/plan.md` の `29-2-ryugi-index-page`
-- `docs/TODO.md` の流儀・生き様サイドメニュー、および流儀一覧の共通スキルボーナス
+- `docs/TODO.md` の流儀・生き様サイドメニュー、および流儀データの参照
 - `docs/conversion/ryugi-index.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/layout-navigation.md`
@@ -29,8 +29,8 @@
 
 - `docs/design/ryugi-index/` を新設し、流儀一覧ページと流儀詳細項目が展開されたサイトメニューのdesktop / mobile designを作成する。
 - `/data/ryugi/index.astro` を作成し、`.raw/contents/ryugi-index.md` のH1、導入、`流儀データの見方`、`流儀一覧`を表示する。
-- contentsの指示に従い、`流儀データの見方`ではケンカヤの`RyugiDataSection`を表示する。流儀一覧は`getRyugiList()`の入力順で表示し、各流儀の`name`、`shortDescription`、共通スキルボーナス、`/data/ryugi/[ryugiId]`への導線を対応付ける。
-- 共通スキルボーナスは、プライマリ流儀を選んだキャラクターメイキング時と、共通スキル取得による成長時に確認するデータとして説明する。`level2`、`level5`、`level9`の順序と、各値に含まれる改行を維持する。
+- contentsの指示に従い、`流儀データの見方`ではケンカヤの`RyugiDataSection`と、その下の4項目の説明を表示する。流儀一覧は`getRyugiList()`の入力順で表示し、各流儀の`name`を本文見出しより大きくしないリンクとして、横に`shortDescription`を自然に折り返して表示する。別途の「流儀詳細を見る」文言は置かない。
+- 共通スキルボーナスの2 / 5 / 9LV値と改行は、ケンカヤの`RyugiDataSection`、キャラクターメイキング、成長の生成データ参照で維持する。流儀一覧へ全流儀のボーナス表は追加しない。
 - `src/lib/site/menu.ts` を、生成済み流儀リストから`/data/ryugi/[ryugiId]`の子項目を作る構成へ更新する。既存の`流儀`一覧リンクは保持し、PCサイドバーとmobile drawerの両方で詳細ページの現在地・祖先展開が正しく機能するようにする。
 - `src/pages/character-making.mdx` の流儀データ固定記述を、取得層またはそれを使う共通表示Componentへ置き換える。対象は共通スキルボーナス表、ケンカヤの基礎能力値例、ケンカヤの体力増加値・精神力増加値例である。例としてケンカヤを選ぶ説明文は残してよいが、流儀由来の数値は生成データを参照する。
 - `src/pages/advancement.mdx` の流儀別共通スキルボーナス表を、生成済み流儀データを使う共通表示へ置き換える。
@@ -49,14 +49,14 @@
 
 ## 完了条件
 
-- [ ] `docs/design/ryugi-index/notes.md`、desktop design、mobile designを作成し、一覧ページと流儀詳細項目を展開したサイトメニューを比較対象として記録している
+- [x] `docs/design/ryugi-index/notes.md`、desktop design、mobile designを作成し、一覧ページと流儀詳細項目を展開したサイトメニューを比較対象として記録している
 - [ ] `/data/ryugi` が静的に生成され、contentsのH1、導入、`流儀データの見方`、`流儀一覧`を表示する
 - [ ] `流儀データの見方`でケンカヤの`RyugiDataSection`を表示し、流儀一覧では生成データを入力順で表示する
-- [ ] 各流儀に、名称、shortDescription、2 / 5 / 9LVの共通スキルボーナス、個別詳細ページへの導線を表示する
-- [ ] 共通スキルボーナスの説明が、キャラクターメイキングと成長の文脈、およびプライマリ流儀だけに適用される条件を示す
+- [ ] 各流儀に、本文見出しより大きくしない名称リンクと、横に自然に折り返すshortDescriptionを表示する。別途の詳細導線文言は置かない
+- [ ] `流儀データの見方`の本文が、プライマリボーナス、基礎能力値、副能力増加値、共通スキルボーナスの説明をcontentsどおりに表示する
 - [ ] サイトメニューが生成済み流儀データから詳細子項目を表示し、一覧・詳細ページでcurrent / ancestor / initial expanded状態が維持される
 - [ ] キャラクターメイキングと成長の流儀データ固定記述を生成データ参照へ置き換え、流儀由来の値を手書きで重複管理しない
-- [ ] 関連TODOについて、流儀一覧の共通スキルボーナス対応結果と、生き様サイドメニューが未対応である理由をissueへ記録している
+- [ ] 関連TODOについて、キャラクターメイキングと成長の流儀データ参照の対応結果と、生き様サイドメニューが未対応である理由をissueへ記録している
 - [ ] `npm run check` が通る
 - [ ] `npm run build` が通る
 

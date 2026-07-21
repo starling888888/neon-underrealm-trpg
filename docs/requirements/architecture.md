@@ -115,7 +115,7 @@ Google Docsのリッチテキスト書式でレイアウト済み文書を作成
 
 Google Driveへのローカル変更反映は、ユーザーが明示的に`raw-to-drive-sync`を実行した場合だけ許可する。このとき `.raw/contents/<slug>.md` は同名のGoogle Doc `<slug>.md` へプレーンテキストとして反映し、`.raw/release-notes.xlsx` は既存Google Sheet `release-notes` へ反映する。`.raw/data/` と `.raw/v1.0/` はDrive書込みを許可しない。
 
-`.raw/contents/SLUG.md` はコミットしない作業入力であり、最終的な画面本文・UI構造のSSoTは `src/pages` 配下の `.mdx` または `.astro` とする。
+`.raw/contents/SLUG.md` はコミットしない作業入力である。対応ページでは、ユーザー編集のMarkdown本文とHTMLコメントを、ページ本文・可視の表示構成の正本とする。ユーザーの最新指示、および `AGENTS.md` と該当skill・ruleの安全・workflow規約を除き、issue、requirements、out-of-scope、plan、TODO、design、既存の `src/pages` 実装より優先する。`src/pages` 配下の `.mdx` または `.astro` は、それらの指示を反映した公開用実装であり、齟齬時に正本として扱わない。
 
 Excel変換スクリプトは、必要に応じて `.raw/` 配下のExcelファイルを読み込めること。
 

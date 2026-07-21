@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Design draft overrode contents instructions
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `29-2-ryugi-index-page` の `docs/design/ryugi-index/` initial draft
+- 観測した失敗: ユーザーが`.raw/contents/ryugi-index.md`を他資料より優先すると明示していたにもかかわらず、planとTODOから流儀一覧に全流儀の共通スキルボーナスを追加した。contentsが指定する「ケンカヤの`RyugiDataSection`と4項目説明」「名称リンクとshortDescriptionだけの流儀一覧」を再現せず、design、notes、issueに実装ノイズとなる別の表示方針を書いた。
+- 一次対応: flow一覧から全流儀のボーナス表を削除し、contentsの4項目説明と一覧構成へ修正した。contents優先が指定された場合は、下位資料の補足を画面本文やdesignへ追加せず、contentsに存在しない表示を必要と判断した時点で実装前にユーザーへ確認する。
+
 ### Conflated one JSON output with one Excel sheet
 
 #### 2026-07-21

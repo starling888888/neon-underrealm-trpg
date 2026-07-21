@@ -11,6 +11,7 @@
 - Excel変換仕様、JSON出力仕様、変換処理の詳細は、作成後の `docs/conversion/*` を正本とする。
 - 実装ファイル、script、Component、補助ドキュメントの配置方針は `docs/development-structure.md` を正本とする。
 - 具体的な作業範囲と完了条件は、承認済みの `docs/issue/<issue-slug>.md` を優先する。
+- 対応する `.raw/contents/<slug>.md` があるページでは、ユーザー編集のMarkdown本文とHTMLコメントを、ページ本文・可視の表示構成に関する正本とする。ユーザーの最新指示、および `AGENTS.md` と該当skill・ruleの安全・workflow規約を除き、issue、要件、out-of-scope、plan、TODO、design、既存実装より優先する。
 
 ## 参照優先順位
 
@@ -18,15 +19,17 @@
 
 1. ユーザーの最新指示
 2. `AGENTS.md`
-3. 承認済みの `docs/issue/<issue-slug>.md`
-4. この索引と関連する `docs/requirements/*`
-5. `docs/out-of-scope.md`
-6. `docs/conversion/*`
-7. `docs/development-structure.md`
-8. `docs/plan.md`
-9. `docs/TODO.md`
+3. 対応する `.raw/contents/<slug>.md` のMarkdown本文とHTMLコメント（ページ本文・可視の表示構成に限る）
+4. 該当skill・ruleの安全・workflow規約
+5. 承認済みの `docs/issue/<issue-slug>.md`
+6. この索引と関連する `docs/requirements/*`
+7. `docs/out-of-scope.md`
+8. `docs/conversion/*`
+9. `docs/development-structure.md`
+10. `docs/plan.md`
+11. `docs/TODO.md`
 
-矛盾がある場合は、推測で実装せずユーザーに確認する。
+contentsと下位文書が矛盾する場合は、ユーザー承認のもとで下位文書をcontentsへ合わせて修正してから実装する。ユーザーの最新指示または安全・workflow規約と矛盾する場合は、推測で実装せずユーザーに確認する。
 
 ## 要件ファイル一覧
 
