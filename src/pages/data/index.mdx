@@ -37,13 +37,9 @@ export const kakugoHeadingId = createHeadingId(2, "覚悟");
 スキルカードには、使える場面、必要なコスト、判定に使う技能、取得や使用の条件がまとまっています。効果の詳しい処理は、カード本文と<InternalLink href="/rules/battle">戦闘</InternalLink>のルールを合わせて確認してください。
 
 <div class="skill-legend-layout" data-skill-legend>
-  {/*
-    凡例の項目番号を表示するためだけに、maxLevelへ文字列を渡す。
-    既存の数値props型を避ける、この凡例限定でやむを得ない例外である。
-  */}
   <SkillCard
     name="①基本の一撃"
-    maxLevel={/** @type {any} */ ("②1")}
+    maxLevel="②1"
     timing="③○-○"
     cost="④気0"
     proficiency="⑤能動"

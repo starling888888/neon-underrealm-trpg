@@ -53,14 +53,14 @@
 - [ ] Cardの横幅は`CardContainer`のgridを継承し、短い本文では`aspect-ratio: 5 / 7`を基準とする。長文ではその高さから自然に伸長し、本文を切り詰めない。`SkillCard`の既定最低高さはこの基準より過度に縦長でない。
 - [ ] `SkillCard`と各Item Cardが、承認済みかつ更新済みの`docs/design/item-card/`および`docs/design/skill-card/`の共通表現と矛盾しない。
 - [ ] 関連TODOを確認し、このissueでは扱わない理由が記録されている。
-- [ ] `npm run check`が通る。
-- [ ] `npm run build`が通る。
+- [x] `npm run check`が通る。
+- [x] `npm run build`が通る。
 
 ## チェックポイント
 
-- [ ] `docs/design/item-card/design-desktop.png`、`design-mobile.png`、`notes.md`が承認済みであり、`5 / 7`の基準比率・可変高さを含む実装の参照正本として記録されている。
+- [x] `docs/design/item-card/design-desktop.png`、`design-mobile.png`、`notes.md`が承認済みであり、`5 / 7`の基準比率・可変高さを含む実装の参照正本として記録されている。
 - [ ] `docs/design/skill-card/design-desktop.png`、`design-mobile.png`、`notes.md`が、変更後の最低高さ・共通表現を反映して更新・承認されている。
-- [ ] 既存の`SkillCard`利用箇所とローカル確認ページが壊れていない。
+- [x] 既存の`SkillCard`利用箇所とローカル確認ページが壊れていない。
 - [ ] 空文字列を表示する文章項目と`-`を表示する値項目を、通常データと凡例データで混同していない。
 - [ ] CardContainerは各Cardの表示仕様を重複して実装していない。
 - [ ] GitHub Pagesのサブパス公開に影響しない。

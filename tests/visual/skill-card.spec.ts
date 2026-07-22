@@ -22,13 +22,20 @@ async function expectSkillCardCatalog(page: Page) {
     .locator("[data-card-container]")
     .evaluateAll((grids) =>
       grids.map((grid) =>
-        Array.from(grid.querySelectorAll("[data-skill-card]"), (card) =>
-          Math.round(card.getBoundingClientRect().height),
-        ),
+        Array.from(grid.querySelectorAll("[data-skill-card]"), (card) => {
+          const rectangle = card.getBoundingClientRect();
+          return {
+            height: Math.round(rectangle.height),
+            top: Math.round(rectangle.top),
+          };
+        }),
       ),
     );
-  for (const heights of gridHeights) {
-    expect(new Set(heights).size).toBe(1);
+  for (const cards of gridHeights) {
+    const heightsByRow = Map.groupBy(cards, (card) => card.top);
+    for (const row of heightsByRow.values()) {
+      expect(new Set(row.map((card) => card.height)).size).toBe(1);
+    }
   }
 
   await expect

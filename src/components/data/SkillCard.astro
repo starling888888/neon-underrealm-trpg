@@ -1,8 +1,10 @@
 ---
+type DisplayValue = string | number | null | undefined;
+
 interface Props {
   anchorId?: string;
   name: string;
-  maxLevel: number;
+  maxLevel: DisplayValue;
   timing: string;
   cost?: string | null;
   proficiency?: string | null;
@@ -10,8 +12,8 @@ interface Props {
   usageRestriction?: string | null;
   target?: string | null;
   range?: string | null;
-  summary: string;
-  effect: string;
+  summary?: string | null;
+  effect?: string | null;
   variant?: "default" | "legend";
 }
 
@@ -30,8 +32,13 @@ const {
   variant = "default",
 } = Astro.props;
 
-function displayValue(value: string | null | undefined): string {
+function displayValue(value: DisplayValue): string {
+  if (typeof value === "number") return String(value);
   return value?.trim() || "-";
+}
+
+function displayText(value: string | null | undefined): string {
+  return value?.trim() || "";
 }
 ---
 
@@ -40,50 +47,65 @@ function displayValue(value: string | null | undefined): string {
   class:list={["skill-card", `skill-card-${variant}`]}
   data-skill-card
 >
-  <header class="skill-card-header">
-    <span class="skill-card-name">{name}</span>
-  </header>
+  <div class="skill-card-content">
+    <header class="skill-card-header">
+      <span class="skill-card-name">{name}</span>
+    </header>
 
-  <p class="skill-card-max-level">最大LV: {maxLevel}</p>
+    <p class="skill-card-max-level">最大LV: {maxLevel}</p>
 
-  <p class="skill-card-meta">
-    <span>{timing}</span>
-    <span>{displayValue(cost)}</span>
-    <span>{displayValue(proficiency)}</span>
-  </p>
+    <p class="skill-card-meta">
+      <span>{timing}</span>
+      <span>{displayValue(cost)}</span>
+      <span>{displayValue(proficiency)}</span>
+    </p>
 
-  <dl class="skill-card-details">
-    <div class="skill-card-detail skill-card-detail-acquisition">
-      <dt>取得制限</dt>
-      <dd>{displayValue(acquisitionRestriction)}</dd>
-    </div>
-    <div class="skill-card-detail">
-      <dt>使用制限</dt>
-      <dd>{displayValue(usageRestriction)}</dd>
-    </div>
-    <div class="skill-card-detail">
-      <dt>対象</dt>
-      <dd>{displayValue(target)}</dd>
-    </div>
-    <div class="skill-card-detail">
-      <dt>射程</dt>
-      <dd>{displayValue(range)}</dd>
-    </div>
-  </dl>
+    <dl class="skill-card-details">
+      <div class="skill-card-detail skill-card-detail-acquisition">
+        <dt>取得制限</dt>
+        <dd>{displayValue(acquisitionRestriction)}</dd>
+      </div>
+      <div class="skill-card-detail">
+        <dt>使用制限</dt>
+        <dd>{displayValue(usageRestriction)}</dd>
+      </div>
+      <div class="skill-card-detail">
+        <dt>対象</dt>
+        <dd>{displayValue(target)}</dd>
+      </div>
+      <div class="skill-card-detail">
+        <dt>射程</dt>
+        <dd>{displayValue(range)}</dd>
+      </div>
+    </dl>
 
-  <div class="skill-card-effect">
-    <p class="skill-card-rule">{effect}</p>
+    <div class="skill-card-effect">
+      <p class="skill-card-rule">{displayText(effect)}</p>
+    </div>
   </div>
 </article>
 
 <style>
   .skill-card {
+    width: 100%;
+    max-width: 100%;
     min-width: 0;
-    min-height: 25.5rem;
-    height: 100%;
+    display: grid;
     border: var(--border-width) solid var(--color-border);
     background: var(--color-surface);
     padding: var(--space-4);
+  }
+
+  .skill-card::before {
+    grid-area: 1 / 1;
+    padding-top: 140%;
+    content: "";
+  }
+
+  .skill-card-content {
+    z-index: 1;
+    grid-area: 1 / 1;
+    min-width: 0;
   }
 
   .skill-card-header {
@@ -199,7 +221,6 @@ function displayValue(value: string | null | undefined): string {
 
   @media (max-width: 48rem) {
     .skill-card {
-      min-height: 23.5rem;
       padding: var(--space-3);
     }
 
