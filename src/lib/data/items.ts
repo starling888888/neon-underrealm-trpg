@@ -1,5 +1,13 @@
 import itemsJson from "../../../data/generated/items.json";
-import type { Cybernetic, ItemsData, ItemsJson, Weapon } from "../schemas/item";
+import {
+  type Cybernetic,
+  CyberneticPartKeySchema,
+  type ItemsData,
+  type ItemsJson,
+  type Weapon,
+  WeaponCheckKeySchema,
+  WeaponGroupSchema,
+} from "../schemas/item";
 
 const generatedItemsJson = itemsJson as ItemsJson;
 
@@ -15,10 +23,16 @@ export function getWeapons(
   group: string,
   checkKey: string,
 ): Weapon[] | undefined {
-  const checks = getItemsData().weapons[group as keyof ItemsData["weapons"]];
-  return checks?.[checkKey as keyof typeof checks];
+  const parsedGroup = WeaponGroupSchema.safeParse(group);
+  const parsedCheckKey = WeaponCheckKeySchema.safeParse(checkKey);
+  if (!parsedGroup.success || !parsedCheckKey.success) return undefined;
+
+  return getItemsData().weapons[parsedGroup.data]?.[parsedCheckKey.data];
 }
 
 export function getCybernetics(part: string): Cybernetic[] | undefined {
-  return getItemsData().cybernetics[part as keyof ItemsData["cybernetics"]];
+  const parsedPart = CyberneticPartKeySchema.safeParse(part);
+  if (!parsedPart.success) return undefined;
+
+  return getItemsData().cybernetics[parsedPart.data];
 }

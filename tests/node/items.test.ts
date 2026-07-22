@@ -145,6 +145,11 @@ describe("item conversion", () => {
     assert.equal(getWeapons("unknown", "kenka"), undefined);
     assert.equal(getCybernetics("head")?.[0]?.part, "頭");
     assert.equal(getCybernetics("unknown"), undefined);
+    for (const key of ["toString", "constructor", "__proto__"]) {
+      assert.equal(getWeapons("normal", key), undefined);
+      assert.equal(getWeapons(key, "kenka"), undefined);
+      assert.equal(getCybernetics(key), undefined);
+    }
 
     const malformedId = structuredClone(generated);
     malformedId.data.armors[0].id = "item-armor-malformed";

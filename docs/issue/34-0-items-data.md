@@ -147,3 +147,34 @@
 - `docs/TODO.md`の永続Skill参照の検出は、キャラクターシート実装時のfollow-upとして維持する。このissueでは永続データを導入しないため、実装範囲を広げない。
 - `npm-run-all2`は、固定した変換依存グラフを`run-s`と`run-p`で宣言的に表すため追加する。代替案のカスタムNodeランナーは実装済みだったが、プロセス起動・待機・失敗伝播を保守する必要があり、この小さな固定グラフには不要である。追加したv8.0.4はNode v20以上で動作し、Node v24.18.0を固定した本プロジェクトで利用できるため、初期スコープのローカル一括変換に必要な最小依存として採用する。
 - 2026-07-22のコミット前回帰確認では、Node v24.18.0で`npm run convert:data`、`npm test`（12件）、`npm run check`、`npm run build`、`npm run build:public`、`npm audit`（脆弱性0件）がすべて成功した。生成データ、静的チェック、通常／公開用ビルド、依存更新後のテストにデグレは確認されなかった。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `getWeapons()`と`getCybernetics()`が任意文字列を通常のObjectへ直接アクセスするため、`toString`や`__proto__`などの不明キーで配列以外を返す。
+- `items.xlsx`の未知な追加シートを検出せずに変換する。
+- 共通スキル変換仕様が、既存の流儀・生き様スキル変換を「後続タスクで追加」と記述している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `src/lib/data/items.ts`はObjectのown property確認または入力キー検証なしにブラケットアクセスしており、戻り値契約の`undefined`と矛盾する。追加シートを変換対象外とする判断はユーザーが明示した。`docs/conversion/common-skills.md`の後続タスク記述は、既存の流儀・生き様専用entrypointと変換仕様に一致しない。
+- remote snapshot: PR #61、`7237af6eb1bf5d1068b574a7c1a468017e3251c5..5bd47dc3ca32f49647e65c56facc1564d8824256`。remote discussion、review、未解決threadは開始時点でなし。
+
+### 対応方針
+
+- 取得APIはown propertyだけを返すか、既存のSchemaで入力キーを検証し、prototype由来の値を返さない。回帰テストに`toString`、`constructor`、`__proto__`を加える。
+- 追加シート検出は実装しない。変換対象は明示した6シートだけとし、既存の個別シート検証を維持する。
+- 共通スキル仕様の対象外説明を、流儀・生き様の専用変換仕様とentrypointを参照する内容へ訂正する。
+
+### 対応完了チェックリスト
+
+- [x] 取得APIがprototype由来の不明キーで`undefined`を返し、回帰テストで検証する
+- [x] Item Excelの追加シート検出は行わず、明示した6シートだけを変換対象とする（ユーザー判断）
+- [x] 共通スキル変換仕様の流儀・生き様に関する記述を現行実装へ整合する
+- [x] `npm run convert:data` が通る
+- [x] `npm test` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
