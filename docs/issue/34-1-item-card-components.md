@@ -127,3 +127,24 @@
 - [x] `npx playwright test tests/visual/search-modal.spec.ts`の対象selector回帰が解消することを確認する。
 - [x] `npm run check`が通る。
 - [x] `npm run build`が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `docs/agent-failure-log.md`へ追加したfailure entryのsourceが、定義済みの`self`ではなく`agent self-report`になっている。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: failure logのsource種別は`user`、`self`、`review`、`unknown`に限定されている。今回のentryは作業中の自己観測であり、`self`が適切である。
+
+### 対応方針
+
+- failure entryのsourceを`self`へ修正し、Markdown formatterを実行する。
+
+### 対応完了チェックリスト
+
+- [x] failure entryのsourceを`self`へ修正する。
+- [x] `npm run format:md`が通る。

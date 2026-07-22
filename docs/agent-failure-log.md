@@ -815,7 +815,7 @@ source種別は以下を使う。
 
 #### 2026-07-23
 
-- source: agent self-report
+- source: self
 - 発生箇所: `34-1-item-card-components` の `tests/visual/search-modal.spec.ts`
 - 観測した失敗: `SkillCard`のDOM変更に合わせてselectorを更新した際、Biomeが要求する複数行呼び出しの改行位置を確認せず、同じ`npm run check`を2回formatter不一致で停止させた。
 - 一次対応: formatter出力の差分をそのまま`apply_patch`へ反映し、同一検証を再実行する前に対象行を読み直す。
