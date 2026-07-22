@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Visual capture used dev server without page-TOC postprocessing
+
+#### 2026-07-22
+
+- source: self
+- 発生箇所: `32-2-ikizama-detail-page` の `npm run visual:capture -- --grep @ikizama-detail`
+- 観測した失敗: Page TOCがbuild後のHTML postprocessで生成されることを確認せず、Astro dev serverに対してdesktopとmobileのVisual Testを実行したため、両方で目次が空として失敗した。ページ実装ではなく検証用serverの選択が原因だった。
+- 一次対応: dev serverを停止し、`npm run build`後にpreview serverへ切り替えてVisual Testを再実行する。page TOCを検証するVisual Testはpostprocess済みの出力を使う。
+
 ### Ikizama skills conversion specification table formatting repeated
 
 #### 2026-07-22

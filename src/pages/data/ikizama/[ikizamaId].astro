@@ -1,0 +1,121 @@
+---
+import Callout from "../../../components/_common/Callout.astro";
+import CardContainer from "../../../components/_common/CardContainer.astro";
+import InternalLink from "../../../components/_common/InternalLink.astro";
+import IkizamaDataSection from "../../../components/data/IkizamaDataSection.astro";
+import SkillCard from "../../../components/data/SkillCard.astro";
+import AppContainer from "../../../layouts/AppContainer.astro";
+import { getIkizamaDetail } from "../../../lib/data/ikizama-detail";
+import { getIkizamaList } from "../../../lib/data/ikizama";
+import {
+  IKIZAMA_EXCLUSIVE_ITEM_TYPES,
+  type IkizamaExclusiveItemType,
+} from "../../../lib/schemas/ikizama";
+import { withBase } from "../../../lib/utils/paths";
+
+export function getStaticPaths() {
+  return getIkizamaList().map((ikizama) => ({
+    params: { ikizamaId: ikizama.id },
+  }));
+}
+
+const { ikizamaId = "" } = Astro.params;
+const detail = getIkizamaDetail(ikizamaId);
+
+if (!detail) {
+  throw new Error(`Unknown ikizamaId "${ikizamaId}".`);
+}
+
+const { ikizama, skills } = detail;
+const exclusiveItem =
+  IKIZAMA_EXCLUSIVE_ITEM_TYPES[
+    ikizama.exclusiveItem.id as IkizamaExclusiveItemType
+  ];
+
+if (!exclusiveItem) {
+  throw new Error(`Unknown exclusive item type "${ikizama.exclusiveItem.id}".`);
+}
+
+const dataByIkizamaId = {
+  [ikizamaId]: {
+    attributePoints: ikizama.attributePoints,
+    bonusSkill: skills.bonus[0],
+    secondaryAttributeCoefficients: ikizama.secondaryAttributeCoefficients,
+  },
+};
+const heroAlt = `${ikizama.name}のイメージ`;
+const skillCategories = [
+  ["初期作成から取得できるスキル", skills.basic],
+  ["生き様レベル4以上から取得できるスキル", skills.advanced],
+] as const;
+---
+
+<AppContainer
+  title={`生き様：${ikizama.name}`}
+  description={ikizama.shortDescription}
+  showPageToc={true}
+>
+  <article class="mdx-layout prose ikizama-detail">
+    <h1>生き様：{ikizama.name}</h1>
+
+    <img
+      class="ikizama-hero"
+      src={withBase(`/images/data/ikizama/${ikizamaId}_hero.webp`)}
+      alt={heroAlt}
+      loading="eager"
+    />
+
+    <p>{ikizama.description}</p>
+
+    {
+      ikizama.note && (
+        <Callout type={ikizama.note.type}>
+          <p>{ikizama.note.content}</p>
+        </Callout>
+      )
+    }
+
+    <IkizamaDataSection
+      ikizamaId={ikizamaId}
+      dataByIkizamaId={dataByIkizamaId}
+    />
+
+    <section data-ikizama-skills>
+      <h2>生き様スキル</h2>
+      {
+        skillCategories.map(([heading, category]) =>
+          category.length > 0 ? (
+            <section>
+              <h3>{heading}</h3>
+              <CardContainer ariaLabel={heading}>
+                {category.map((skill) => (
+                  <SkillCard {...skill} anchorId={skill.id} />
+                ))}
+              </CardContainer>
+            </section>
+          ) : null,
+        )
+      }
+    </section>
+
+    <section data-ikizama-exclusive-item>
+      <h2>専用アイテム</h2>
+      <p>
+        {ikizama.name}の専用アイテムは <InternalLink href={exclusiveItem.href}>{ikizama.exclusiveItem.name}</InternalLink> です。
+      </p>
+    </section>
+  </article>
+</AppContainer>
+
+<style>
+  .ikizama-detail {
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .ikizama-hero {
+    width: 100%;
+    margin-block: 0 var(--space-6);
+    border: var(--border-width) solid var(--color-border);
+  }
+</style>

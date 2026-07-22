@@ -1,0 +1,264 @@
+---
+import type { Ikizama } from "../../lib/schemas/ikizama";
+import type { Skill } from "../../lib/schemas/skill";
+import CardContainer from "../_common/CardContainer.astro";
+import SkillCard from "./SkillCard.astro";
+
+export interface IkizamaDataSectionData {
+  attributePoints: Ikizama["attributePoints"];
+  bonusSkill?: Skill;
+  secondaryAttributeCoefficients: Ikizama["secondaryAttributeCoefficients"];
+}
+
+interface Props {
+  dataByIkizamaId: Readonly<Record<string, IkizamaDataSectionData>>;
+  excludeDetailHeadingsFromToc?: boolean;
+  heading?: string;
+  ikizamaId: string;
+}
+
+const {
+  dataByIkizamaId,
+  excludeDetailHeadingsFromToc = false,
+  heading = "生き様データ",
+  ikizamaId,
+} = Astro.props;
+const data = dataByIkizamaId[ikizamaId];
+
+if (!data) {
+  throw new Error(`Missing ikizama detail data for "${ikizamaId}".`);
+}
+
+const coefficientLevels = [
+  ["レベル1〜3", data.secondaryAttributeCoefficients.level1],
+  ["レベル4〜9", data.secondaryAttributeCoefficients.level4],
+  ["レベル10以上", data.secondaryAttributeCoefficients.level10],
+] as const;
+---
+
+<section class="ikizama-data-section" data-ikizama-data-section data-ikizama-id={ikizamaId}>
+  <h2>{heading}</h2>
+
+  <div class="ikizama-data-grid">
+    {
+      data.bonusSkill && (
+        <section class="ikizama-data-bonus" aria-labelledby="ikizama-bonus-heading">
+          <h3
+            id="ikizama-bonus-heading"
+            data-toc-exclude={excludeDetailHeadingsFromToc ? "true" : undefined}
+          >
+            生き様ボーナス
+          </h3>
+          <CardContainer ariaLabel="生き様ボーナス">
+            <SkillCard {...data.bonusSkill} anchorId={data.bonusSkill.id} />
+          </CardContainer>
+        </section>
+      )
+    }
+
+    <section class="ikizama-data-points" aria-labelledby="ikizama-points-heading">
+      <h3
+        id="ikizama-points-heading"
+        data-toc-exclude={excludeDetailHeadingsFromToc ? "true" : undefined}
+      >
+        能力値ポイント
+      </h3>
+      <p>キャラクター作成時に、4つの異なる能力値へ割り振ります。</p>
+      <dl class="attribute-point-list">
+        {
+          data.attributePoints.map((point, index) => (
+            <div>
+              <dt>ポイント {index + 1}</dt>
+              <dd>{point}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="ikizama-data-coefficients" aria-labelledby="ikizama-coefficients-heading">
+      <h3
+        id="ikizama-coefficients-heading"
+        data-toc-exclude={excludeDetailHeadingsFromToc ? "true" : undefined}
+      >
+        副能力係数
+      </h3>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">項目</th>
+            {coefficientLevels.map(([level]) => <th scope="col">{level}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">体力係数</th>
+            {coefficientLevels.map(([, coefficient]) => <td>{coefficient.health}</td>)}
+          </tr>
+          <tr>
+            <th scope="row">精神力係数</th>
+            {coefficientLevels.map(([, coefficient]) => <td>{coefficient.mind}</td>)}
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</section>
+
+<style>
+  .ikizama-data-section > h2 {
+    margin-block-start: var(--space-12);
+  }
+
+  .ikizama-data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--space-6);
+  }
+
+  .ikizama-data-grid > section {
+    min-width: 0;
+  }
+
+  .ikizama-data-grid h3 {
+    margin-block: var(--space-5) var(--space-4);
+    border-left: 0;
+    padding-inline-start: 0;
+    font-size: var(--text-lg);
+  }
+
+  .ikizama-data-grid h3::after {
+    display: block;
+    width: 1.625rem;
+    height: 0.125rem;
+    margin-top: var(--space-2);
+    background: var(--color-link);
+    content: "";
+  }
+
+  .ikizama-data-bonus :global(.card-container) {
+    display: block;
+    margin-top: 0;
+  }
+
+  .ikizama-data-points > p {
+    margin: 0 0 var(--space-4);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: var(--line-height-base);
+  }
+
+  .attribute-point-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+  }
+
+  .attribute-point-list div {
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding-block: var(--space-3);
+  }
+
+  .attribute-point-list dt {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: 700;
+  }
+
+  .attribute-point-list dd {
+    margin: var(--space-1) 0 0;
+    color: var(--color-text);
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    line-height: var(--line-height-tight);
+  }
+
+  .ikizama-data-coefficients table {
+    display: table;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-spacing: 0;
+    border-collapse: separate;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .ikizama-data-coefficients :global(th),
+  .ikizama-data-coefficients :global(td) {
+    min-width: 0;
+    padding: var(--space-3) var(--space-2);
+    border: 0;
+    border-right: var(--border-width) solid var(--color-border);
+    border-bottom: var(--border-width) solid var(--color-border);
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .ikizama-data-coefficients tr > :last-child {
+    border-right: 0;
+  }
+
+  .ikizama-data-coefficients tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .ikizama-data-coefficients :global(th) {
+    background: var(--color-surface-muted);
+    font-size: var(--text-xs);
+  }
+
+  .ikizama-data-coefficients :global(td) {
+    font-size: var(--text-lg);
+    font-weight: 800;
+  }
+
+  @media (max-width: 48rem) {
+    .ikizama-data-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-5) var(--space-3);
+    }
+
+    .ikizama-data-coefficients {
+      grid-column: span 2;
+    }
+
+    .ikizama-data-grid h3 {
+      margin-block: var(--space-4) var(--space-3);
+      font-size: var(--text-base);
+    }
+
+    .ikizama-data-points > p {
+      font-size: var(--text-xs);
+    }
+
+    .attribute-point-list {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .attribute-point-list div {
+      padding-block: var(--space-2);
+    }
+
+    .attribute-point-list dd {
+      font-size: var(--text-xl);
+    }
+
+    .ikizama-data-coefficients :global(th),
+    .ikizama-data-coefficients :global(td) {
+      padding: var(--space-2) var(--space-1);
+    }
+
+    .ikizama-data-coefficients :global(th) {
+      font-size: 0.625rem;
+    }
+
+    .ikizama-data-coefficients :global(td) {
+      font-size: var(--text-sm);
+    }
+  }
+</style>
