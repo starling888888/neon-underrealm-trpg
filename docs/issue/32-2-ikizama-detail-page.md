@@ -77,42 +77,42 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 
 - [x] `design-image-generation` initial draft modeで `docs/design/ikizama-detail/notes.md`、
       `design-desktop.png`、`design-mobile.png` を作成し、実装前の比較対象を記録している
-- [ ] `/data/ikizama/[ikizamaId]` が既存生き様IDごとに静的生成され、個別ページファイルを複製していない
-- [ ] 生き様データが、生き様IDをキーに渡す生き様ボーナス、能力値ポイント、副能力係数を受け取る再利用可能なコンポーネントになっており、
+- [x] `/data/ikizama/[ikizamaId]` が既存生き様IDごとに静的生成され、個別ページファイルを複製していない
+- [x] 生き様データが、生き様IDをキーに渡す生き様ボーナス、能力値ポイント、副能力係数を受け取る再利用可能なコンポーネントになっており、
       詳細ページ固有のhero・説明・基本・上級スキル一覧・専用アイテムへ依存していない
-- [ ] 生き様データコンポーネントはdesktopで生き様ボーナス、能力値ポイント、副能力係数の1行3列、mobileで
+- [x] 生き様データコンポーネントはdesktopで生き様ボーナス、能力値ポイント、副能力係数の1行3列、mobileで
       生き様ボーナスと能力値ポイントの上段2列および副能力係数の下段全幅として表示する
-- [ ] 各ページで、生き様名、説明、任意の補足、hero、生き様ボーナス、能力値ポイント、副能力係数、
+- [x] 各ページで、生き様名、説明、任意の補足、hero、生き様ボーナス、能力値ポイント、副能力係数、
       生き様スキル一覧、専用アイテムリンクをcontentsの見出し順で表示する
-- [ ] hero画像と代替テキストが、対象生き様を誤認させず、desktop / mobileで破綻なく表示される
-- [ ] `ikizama.note` がある場合は既存 `Callout` のtypeと本文を反映し、ない場合は空のCalloutを表示しない
-- [ ] 生き様ボーナスはH3とし、`skills.bonus` の先頭要素だけを表示する。生き様スキルは`basic`、`advanced` の順と
+- [x] hero画像と代替テキストが、対象生き様を誤認させず、desktop / mobileで破綻なく表示される
+- [x] `ikizama.note` がある場合は既存 `Callout` のtypeと本文を反映し、ない場合は空のCalloutを表示しない
+- [x] 生き様ボーナスはH3とし、`skills.bonus` の先頭要素だけを表示する。生き様スキルは`basic`、`advanced` の順と
       カテゴリ内の配列順を保つ。`bonus`、`basic`、`advanced` の空カテゴリは見出しや空一覧を表示しない
-- [ ] 専用アイテムリンクが種別IDの固定対応を使い、個別Item ID・個別アンカーを追加しない
-- [ ] 既存の `SkillCard` と `CardContainer` の表示契約、SiteMenu、PageToc、MobilePageTocを壊していない
-- [ ] 実装後のVisual Reviewでdesignとの具体的な差分を確認し、必要な修正と結果をこのissueへ記録している
-- [ ] 関連TODOを扱った場合は対応結果を記録し、扱わない関連TODOは未対応理由を記録している
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] 専用アイテムリンクが種別IDの固定対応を使い、個別Item ID・個別アンカーを追加しない
+- [x] 既存の `SkillCard` と `CardContainer` の表示契約、SiteMenu、PageToc、MobilePageTocを壊していない
+- [x] 実装後のVisual Reviewでdesignとの具体的な差分を確認し、必要な修正と結果をこのissueへ記録している
+- [x] 関連TODOを扱った場合は対応結果を記録し、扱わない関連TODOは未対応理由を記録している
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
-- [ ] `getIkizamaDetail(ikizamaId)` が存在する生き様とスキルデータだけを共通テンプレートへ渡している
-- [ ] GitHub Pagesのサブパス配下で、hero画像、専用アイテムリンク、スキルカード個別アンカーが壊れない
-- [ ] `ikizama.note` がある生き様では既存Calloutのtypeと本文を反映し、ない生き様では空のCalloutを表示しない
-- [ ] 生き様ボーナスはH3としてカテゴリ全体を重複表示せず、contents指定どおり`skills.bonus`の先頭要素だけを表示する
-- [ ] Visual Test対象のdesktop `1440px`、tablet `820px`、mobile `390px`で、長い説明、補足、係数表、
+- [x] `getIkizamaDetail(ikizamaId)` が存在する生き様とスキルデータだけを共通テンプレートへ渡している
+- [x] GitHub Pagesのサブパス配下で、hero画像、専用アイテムリンク、スキルカード個別アンカーが壊れない
+- [x] `ikizama.note` がある生き様では既存Calloutのtypeと本文を反映し、ない生き様では空のCalloutを表示しない
+- [x] 生き様ボーナスはH3としてカテゴリ全体を重複表示せず、contents指定どおり`skills.bonus`の先頭要素だけを表示する
+- [x] Visual Test対象のdesktop `1440px`、tablet `820px`、mobile `390px`で、長い説明、補足、係数表、
       長いスキル本文に横overflowや切り詰めがない
-- [ ] 生き様データコンポーネントがdesktop `1440px`では生き様ボーナス、能力値ポイント、副能力係数の順で1行3列、mobile `390px`では前2者の上段2列と副能力係数の下段全幅で表示される
-- [ ] desktopでは既存の `CardContainer`、mobileでは既存の2列配置を維持する
-- [ ] Visual Testは外部データの固有内容へ依存せず、画面構造、responsive layout、横overflow、
+- [x] 生き様データコンポーネントがdesktop `1440px`では生き様ボーナス、能力値ポイント、副能力係数の順で1行3列、mobile `390px`では前2者の上段2列と副能力係数の下段全幅で表示される
+- [x] desktopでは既存の `CardContainer`、mobileでは既存の2列配置を維持する
+- [x] Visual Testは外部データの固有内容へ依存せず、画面構造、responsive layout、横overflow、
       スクリーンショット取得だけを確認する
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] サイドメニューの生き様リスト表示TODOは、一覧ページまたはナビゲーション補完タスクの責務として未対応のまま維持している
-- [ ] `docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/skill-card/` と、作成する
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] サイドメニューの生き様リスト表示TODOは、一覧ページまたはナビゲーション補完タスクの責務として未対応のまま維持している
+- [x] `docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/skill-card/` と、作成する
       `docs/design/ikizama-detail/` に矛盾していない
-- [ ] ユーザーの未コミットのhero画像とcontents修正を破壊していない
+- [x] ユーザーの未コミットのhero画像とcontents修正を破壊していない
 
 ## 想定変更ファイル
 
@@ -153,3 +153,55 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 - `docs/conversion/ikizama-index.md` と `docs/conversion/ikizama-skills.md` の「関連アイテム」は、
   `exclusiveItem`をアイテム種別とし種別一覧へリンクするデータ契約を指す。contentsの専用アイテム指示と矛盾しないため変更しない。
   `docs/plan-done.md` と `docs/issue/done/` の過去時点の記録は履歴として保持し、現行要件の正本にはしない。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/ikizama-detail/`
+- reference desktop: `docs/design/ikizama-detail/design-desktop.png`
+- reference mobile: `docs/design/ikizama-detail/design-mobile.png`
+- notes: `docs/design/ikizama-detail/notes.md`。既存`SkillCard`の可変高さと、実データによるカード件数・本文量は許容差分とする。
+
+### 成果物
+
+- actual desktop: `test-results/visual/ikizama-detail-desktop.png`
+- actual mobile: `test-results/visual/ikizama-detail-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                | 対応     |
+| --------------------- | ---- | --------------------------------------------------- | -------- |
+| レイアウト            | OK   | 指定した3列・2行構成を維持                          | 修正不要 |
+| 余白                  | OK   | 実データのSkillCard高さに伴う縦方向の差分は許容範囲 | 修正不要 |
+| タイポグラフィ        | OK   | H3の生き様ボーナスを含む既存見出し階層を維持        | 修正不要 |
+| 色                    | OK   | 既存の本文色、border、青緑accentを維持              | 修正不要 |
+| 配置・整列            | OK   | desktopはボーナス、ポイント、係数の1行3列           | 修正不要 |
+| レスポンシブ          | OK   | mobileはボーナス・ポイントの上段2列と係数の下段全幅 | 修正不要 |
+| overflow / scroll     | OK   | desktop / mobileのVisual Testで横overflowなし       | 修正不要 |
+| 既存デザインとの整合  | OK   | site layout、PageToc、hero表示を維持                | 修正不要 |
+| 既存Componentとの整合 | OK   | 既存`SkillCard`と`CardContainer`をそのまま利用      | 修正不要 |
+| accessibility basics  | OK   | heroのalt、table scope、見出し階層、リンクを確認    | 修正不要 |
+
+### 自己修正した項目
+
+- [x] dev serverではpage TOC postprocessが行われないため、build済みpreviewを使ってVisual Testを再実行した
+
+### 人間判断が必要な差分
+
+- なし
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
