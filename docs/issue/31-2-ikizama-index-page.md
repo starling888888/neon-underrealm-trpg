@@ -49,7 +49,7 @@
 - 検索、絞り込み、ソート、ページネーション、比較・計算UI、キャラクター作成ウィザード
 - DB、認証、SSR、CMS、APIサーバー、新しいUIライブラリ
 - `.raw/contents/ikizama-index.md`、Google Drive、`raw-google-drive.url`の変更・同期
-- ユーザーの未追跡`.webp`を変更、stage、commitすること
+- `public/images/data/ikizama_hero.webp`の変更・削除、またはユーザーの未追跡画像をstage・commitすること
 - `docs/out-of-scope.md` が定める初期スコープ外の項目
 
 ## 完了条件
@@ -100,6 +100,6 @@
 ## 備考
 
 - `.raw/contents/ikizama-index.md` はGit管理外のローカル作業入力である。Drive同期はこのissueの範囲に含めない。
-- `public/images/data/ikizama_hero.webp` はユーザーの未追跡画像である。本issueでは表示に利用するが、変更・削除・commit対象には含めない。
+- `public/images/data/ikizama_hero.webp` はcommit `75fa730` でGit管理済みである。本issueでは表示に利用するが、変更・削除対象には含めない。
 - `docs/TODO.md` の「生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する」は、一覧ページの実装だけで完了にはしない。
 - 実装開始前に、ユーザーがこのissue内容を明示承認する。Git commit / push はこのissue準備では実行しない。
