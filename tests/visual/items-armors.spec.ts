@@ -7,7 +7,7 @@ async function expectArmorsPage(page: Page) {
   const hero = article.locator(
     "img[src$='images/data/items/armors_hero.webp']",
   );
-  const legend = article.locator(".armor-legend");
+  const legend = article.locator("[data-legend-container]");
   const armorList = article.locator(
     '[data-card-container][aria-label="防具一覧"]',
   );
@@ -40,10 +40,18 @@ async function expectArmorsPage(page: Page) {
     .toBe(0);
 }
 
+async function expectLegendColumns(page: Page, count: number) {
+  const columns = await page
+    .locator("[data-legend-container]")
+    .evaluate((legend) => window.getComputedStyle(legend).gridTemplateColumns);
+  expect(columns.trim().split(/\s+/)).toHaveLength(count);
+}
+
 test("防具一覧 desktop @items-armors-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.dataItemsArmors);
   await expectArmorsPage(page);
+  await expectLegendColumns(page, 3);
   await page.screenshot({
     fullPage: true,
     path: `${visualOutputDir}/items-armors-desktop.png`,
@@ -54,6 +62,7 @@ test("防具一覧 mobile @items-armors-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.dataItemsArmors);
   await expectArmorsPage(page);
+  await expectLegendColumns(page, 2);
   await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeVisible();
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toContainText(

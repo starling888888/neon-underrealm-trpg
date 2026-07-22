@@ -15,7 +15,7 @@ async function expectWeaponsPage(page: Page) {
   const hero = article.locator(
     "img[src$='images/data/items/weapons_hero.webp']",
   );
-  const legend = article.locator(".weapon-legend");
+  const legend = article.locator("[data-legend-container]");
 
   await expect(page).toHaveTitle(
     "武器 | 光都暗域〈ネオン・アンダーレルム〉TRPG",
@@ -52,10 +52,18 @@ async function expectWeaponsPage(page: Page) {
     .toBe(0);
 }
 
+async function expectLegendColumns(page: Page, count: number) {
+  const columns = await page
+    .locator("[data-legend-container]")
+    .evaluate((legend) => window.getComputedStyle(legend).gridTemplateColumns);
+  expect(columns.trim().split(/\s+/)).toHaveLength(count);
+}
+
 test("武器一覧 desktop @items-weapons-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.dataItemsWeapons);
   await expectWeaponsPage(page);
+  await expectLegendColumns(page, 3);
   await page.screenshot({
     fullPage: true,
     path: `${visualOutputDir}/items-weapons-desktop.png`,
@@ -66,6 +74,7 @@ test("武器一覧 mobile @items-weapons-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.dataItemsWeapons);
   await expectWeaponsPage(page);
+  await expectLegendColumns(page, 2);
   await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeVisible();
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toContainText(

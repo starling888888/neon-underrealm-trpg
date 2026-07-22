@@ -8,6 +8,7 @@ showPageToc: true
 import Callout from "../../components/_common/Callout.astro";
 import ImageBlock from "../../components/_common/ImageBlock.astro";
 import InternalLink from "../../components/_common/InternalLink.astro";
+import LegendContainer from "../../components/data/LegendContainer.astro";
 import SkillCard from "../../components/data/SkillCard.astro";
 import { createHeadingId } from "../../lib/utils/heading-id";
 
@@ -36,8 +37,9 @@ export const kakugoHeadingId = createHeadingId(2, "覚悟");
 
 スキルカードには、使える場面、必要なコスト、判定に使う技能、取得や使用の条件がまとまっています。効果の詳しい処理は、カード本文と<InternalLink href="/rules/battle">戦闘</InternalLink>のルールを合わせて確認してください。
 
-<div class="skill-legend-layout" data-skill-legend>
+<LegendContainer ariaLabel="スキルデータの見方">
   <SkillCard
+    slot="card"
     name="①基本の一撃"
     maxLevel="②1"
     timing="③○-○"
@@ -52,8 +54,6 @@ export const kakugoHeadingId = createHeadingId(2, "覚悟");
     variant="legend"
   />
 
-  <div class="skill-legend-guide">
-
 ### カードの項目
 
 1. **名称**: スキルの名前です。同じスキルは、本文に特記がない限り複数取得できません。
@@ -66,9 +66,7 @@ export const kakugoHeadingId = createHeadingId(2, "覚悟");
 8. **対象**: 攻撃や効果を受けるキャラクターや範囲です。
 9. **射程**: 攻撃や効果を届かせられる距離です。
 10. **効果**: スキルができることと、その詳しい処理です。`lv` はそのスキルの取得レベルを表します。
-
-  </div>
-</div>
+</LegendContainer>
 
 「スキル名：XX」という記載があった場合、XXには任意の文字が入ります。それらは同名のスキルとして扱います。例えば「命中強化：清林」と「命中強化：大山」という名称のスキルは同名のスキルとして扱い、同時に取得できません。別のスキルとして扱う場合は効果に記載があります。
 

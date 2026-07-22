@@ -9,6 +9,7 @@ import Callout from "../../../components/_common/Callout.astro";
 import CardContainer from "../../../components/_common/CardContainer.astro";
 import ImageBlock from "../../../components/_common/ImageBlock.astro";
 import InternalLink from "../../../components/_common/InternalLink.astro";
+import LegendContainer from "../../../components/data/LegendContainer.astro";
 import OmamoriCard from "../../../components/data/OmamoriCard.astro";
 import { getItemsData } from "../../../lib/data/items";
 
@@ -27,8 +28,9 @@ export const divineProtectionSkillId = "skill-ikizama-burai-basic-pv-570c394fe08
 
 ## データの見方
 
-<div class="omamori-legend">
+<LegendContainer ariaLabel="お守りデータの見方">
   <OmamoriCard
+    slot="card"
     name="①活気のお守り"
     credit="②2"
     effect="③攻撃の判定で2点以上気合いを獲得したならば体力を5点回復する。"
@@ -39,35 +41,10 @@ export const divineProtectionSkillId = "skill-ikizama-burai-basic-pv-570c394fe08
     <li><strong>信用</strong>：そのお守りを取得するのに必要な信用の数値です。</li>
     <li><strong>効果</strong>：そのお守りの持つ特殊な効果です。</li>
   </ol>
-</div>
+</LegendContainer>
 
 ## お守り一覧
 
 <CardContainer ariaLabel="お守り一覧">
   {omamori.map((item) => <OmamoriCard {...item} anchorId={item.id} />)}
 </CardContainer>
-
-<style>{`
-  .omamori-legend {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-5);
-    align-items: start;
-    margin-top: var(--space-5);
-  }
-
-  .omamori-legend :global(.omamori-card) {
-    margin: 0;
-  }
-
-  .omamori-legend ol {
-    margin: 0;
-  }
-
-  @media (max-width: 48rem) {
-    .omamori-legend {
-      gap: var(--space-4);
-      margin-top: var(--space-4);
-    }
-  }
-`}</style>

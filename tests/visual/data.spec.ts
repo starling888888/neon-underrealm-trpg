@@ -12,7 +12,7 @@ async function hideAstroDevToolbar(page: Page) {
 
 async function expectDataContent(page: Page) {
   const article = page.locator("article.mdx-layout");
-  const legend = article.locator("[data-skill-legend]");
+  const legend = article.locator("[data-legend-container]");
 
   await expect(page).toHaveTitle(
     "データ | 光都暗域〈ネオン・アンダーレルム〉TRPG",
@@ -39,7 +39,6 @@ async function expectDataContent(page: Page) {
   await expect(legend).toContainText("⑦-");
   await expect(legend).toContainText("⑧1体");
   await expect(legend).toContainText("⑨武器");
-  await expect(legend).toContainText("仕事人が最初に身につける攻撃スキル。");
   await expect(legend).toContainText("⑩攻撃を行う。");
   await expect(legend).toContainText("取得制限");
   await expect(legend).toContainText("使用制限");
@@ -96,12 +95,20 @@ async function expectDataPageToc(page: Page) {
   await expect(tocs.mobile).not.toContainText("①基本の一撃");
 }
 
+async function expectLegendColumns(page: Page, count: number) {
+  const columns = await page
+    .locator("[data-legend-container]")
+    .evaluate((legend) => window.getComputedStyle(legend).gridTemplateColumns);
+  expect(columns.trim().split(/\s+/)).toHaveLength(count);
+}
+
 test("data desktop @data-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.data);
   await expectDataContent(page);
   await expectDataPageToc(page);
-  await page.locator("[data-skill-legend]").evaluate((element) => {
+  await expectLegendColumns(page, 3);
+  await page.locator("[data-legend-container]").evaluate((element) => {
     element.scrollIntoView({ block: "start" });
   });
   await hideAstroDevToolbar(page);
@@ -113,6 +120,7 @@ test("data mobile @data-mobile", async ({ page }) => {
   await page.goto(visualRoutes.data);
   await expectDataContent(page);
   await expectDataPageToc(page);
+  await expectLegendColumns(page, 2);
   await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeVisible();
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toContainText(
@@ -120,7 +128,7 @@ test("data mobile @data-mobile", async ({ page }) => {
   );
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toBeHidden();
-  await page.locator("[data-skill-legend]").evaluate((element) => {
+  await page.locator("[data-legend-container]").evaluate((element) => {
     element.scrollIntoView({ block: "start" });
   });
   await hideAstroDevToolbar(page);

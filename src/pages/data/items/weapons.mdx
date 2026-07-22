@@ -8,6 +8,7 @@ showPageToc: true
 import CardContainer from "../../../components/_common/CardContainer.astro";
 import ImageBlock from "../../../components/_common/ImageBlock.astro";
 import InternalLink from "../../../components/_common/InternalLink.astro";
+import LegendContainer from "../../../components/data/LegendContainer.astro";
 import WeaponCard from "../../../components/data/WeaponCard.astro";
 import { getWeapons } from "../../../lib/data/items";
 import { createHeadingId } from "../../../lib/utils/heading-id";
@@ -31,8 +32,9 @@ export const kanshouWeapons = getWeapons("normal", "kanshou") ?? [];
 
 ## データの見方
 
-<div class="weapon-legend">
+<LegendContainer ariaLabel="武器データの見方">
   <WeaponCard
+    slot="card"
     name="①拳銃"
     credit="②2"
     kind="③射撃"
@@ -55,7 +57,7 @@ export const kanshouWeapons = getWeapons("normal", "kanshou") ?? [];
     <li><strong>装弾数</strong>：射撃武器だけが持ちます。この回数だけ攻撃を行うと<InternalLink href={`/rules/battle#${battleReloadHeadingId}`}>装填</InternalLink>を行わないとその武器では攻撃ができなくなります。</li>
     <li><strong>効果</strong>：その武器が持つ特別な効果です。</li>
   </ol>
-</div>
+</LegendContainer>
 
 ## 武器一覧
 
@@ -98,29 +100,3 @@ export const kanshouWeapons = getWeapons("normal", "kanshou") ?? [];
 <CardContainer ariaLabel="干渉武器">
   {kanshouWeapons.map((weapon) => <WeaponCard {...weapon} anchorId={weapon.id} />)}
 </CardContainer>
-
-<style>{`
-  .weapon-legend {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-5);
-    align-items: start;
-    margin-top: var(--space-5);
-  }
-
-  .weapon-legend :global(.weapon-card) {
-    margin: 0;
-  }
-
-  .weapon-legend ol {
-    margin: 0;
-  }
-
-  @media (max-width: 48rem) {
-    .weapon-legend {
-      grid-template-columns: 1fr;
-      gap: var(--space-4);
-      margin-top: var(--space-4);
-    }
-  }
-`}</style>

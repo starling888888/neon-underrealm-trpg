@@ -837,3 +837,12 @@ source種別は以下を使う。
 - 発生箇所: `40-2-404-page` の`docs/design/404/` canonicalization
 - 観測した失敗: 404実装を未コミットworktreeに置いたままcanonicalizeを実行し、`notes.md`のsource commitには実装前の`e71bbb1`を記録した。そのcommitには404ページ、Visual Test、design artifactがなく、正本画像を固定済み実装から再現できない。
 - 一次対応: PR #63のローカルレビューでcurrent issueへ記録した。以後、canonicalizeは対象実装を含むcommitをHEADにしてから実行し、source commitが画面状態を再現できることを確認する。今回の再captureとprovenance更新はユーザー承認後に行う。
+
+### Data visual test retained an assertion for an unrendered property
+
+#### 2026-07-23
+
+- source: agent self-report
+- 発生箇所: `34-2-items-pages` の`tests/visual/data.spec.ts`
+- 観測した失敗: SkillLegendの共通Component移行後にVisual Testを実行したところ、desktopとmobileの両testが、`SkillCard`が表示していない`summary` propの文言を期待して失敗した。既存の`SkillCard`実装は移行前から`summary`を描画しておらず、testだけが実際の表示契約とずれていた。
+- 一次対応: `summary`の期待を削除し、実際に表示する`effect`、カード項目、3→2カラム構成と横overflowを検証する。Visual Test実行前に、ComponentのpropがDOMへ描画されるかを対象Componentで確認する。

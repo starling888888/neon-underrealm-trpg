@@ -51,10 +51,18 @@ async function expectOmamoriPage(page: Page) {
     .toBe(0);
 }
 
+async function expectLegendColumns(page: Page, count: number) {
+  const columns = await page
+    .locator("[data-legend-container]")
+    .evaluate((legend) => window.getComputedStyle(legend).gridTemplateColumns);
+  expect(columns.trim().split(/\s+/)).toHaveLength(count);
+}
+
 test("お守り一覧 desktop @items-omamori-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.dataItemsOmamori);
   await expectOmamoriPage(page);
+  await expectLegendColumns(page, 3);
   await page.screenshot({
     fullPage: true,
     path: `${visualOutputDir}/items-omamori-desktop.png`,
@@ -65,10 +73,7 @@ test("お守り一覧 mobile @items-omamori-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.dataItemsOmamori);
   await expectOmamoriPage(page);
-  const legendColumns = await page
-    .locator(".omamori-legend")
-    .evaluate((legend) => window.getComputedStyle(legend).gridTemplateColumns);
-  expect(legendColumns.trim().split(/\s+/)).toHaveLength(2);
+  await expectLegendColumns(page, 2);
   await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeVisible();
   await page.locator("[data-mobile-page-toc-trigger]").click();
   await expect(page.locator("[data-mobile-page-toc-panel]")).toContainText(

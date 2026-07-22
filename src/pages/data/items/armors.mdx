@@ -8,6 +8,7 @@ showPageToc: true
 import CardContainer from "../../../components/_common/CardContainer.astro";
 import ImageBlock from "../../../components/_common/ImageBlock.astro";
 import ArmorCard from "../../../components/data/ArmorCard.astro";
+import LegendContainer from "../../../components/data/LegendContainer.astro";
 import { getItemsData } from "../../../lib/data/items";
 
 export const armors = getItemsData().armors;
@@ -20,8 +21,9 @@ export const armors = getItemsData().armors;
 
 ## データの見方
 
-<div class="armor-legend">
+<LegendContainer ariaLabel="防具データの見方">
   <ArmorCard
+    slot="card"
     name="①特攻服"
     credit="②5"
     defense="③9"
@@ -38,36 +40,10 @@ export const armors = getItemsData().armors;
     <li>その防具を装備するために必要な能力値です。</li>
     <li>その防具の持つ特別な効果です。</li>
   </ol>
-</div>
+</LegendContainer>
 
 ## 防具一覧
 
 <CardContainer ariaLabel="防具一覧">
   {armors.map((armor) => <ArmorCard {...armor} anchorId={armor.id} />)}
 </CardContainer>
-
-<style>{`
-  .armor-legend {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-5);
-    align-items: start;
-    margin-top: var(--space-5);
-  }
-
-  .armor-legend :global(.armor-card) {
-    margin: 0;
-  }
-
-  .armor-legend ol {
-    margin: 0;
-  }
-
-  @media (max-width: 48rem) {
-    .armor-legend {
-      grid-template-columns: 1fr;
-      gap: var(--space-4);
-      margin-top: var(--space-4);
-    }
-  }
-`}</style>

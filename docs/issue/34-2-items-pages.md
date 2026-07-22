@@ -22,6 +22,8 @@
 - 防具contentsに従い、`/data/items/armors` でhero、`ArmorCard`凡例、右カラムの6項目説明、生成済み防具の一覧を表示する。
 - お守りcontentsに従い、`/data/items/omamori` でhero、warning Callout、`OmamoriCard`凡例、生成済みお守りの一覧を表示する。
 - お守りのwarningでは、ブライ詳細ページの神仏の加護カード `skill-ikizama-burai-basic-pv-570c394fe082` へリンクする。
+- `LegendContainer` を用い、武器・防具・お守りの凡例をdesktopではカード1カラム＋説明2カラム、768px以下ではカードと説明の2カラムで共通表示する。
+- 既存のSkillLegendも`LegendContainer`へ移し、ページ固有の凡例CSSを削除する。
 - 残る3種別は、対応するcontents指示書が確定後に同じissue内で追加する。
 - 6種別すべてについて、対応するCardの凡例と一覧を実装し、種別ごとのVisual Review・design canonicalizeを行う。
 
@@ -42,10 +44,106 @@
 - [x] `ArmorCard` の凡例と16件の防具一覧が表示される
 - [x] `/data/items/omamori` がcontentsの本文・HTMLコメント指示に従う
 - [x] warning Callout、神仏の加護への導線、`OmamoriCard`の凡例と21件の一覧が表示される
+- [x] 武器・防具・お守りの凡例が共通の3→2カラムレイアウトで表示される
+- [x] 既存SkillLegendも`LegendContainer`を使用し、凡例専用CSSを持たない
 - [ ] 6種別すべてについて、確定したcontentsに従うページ、対応Cardの凡例と一覧を実装している
 - [ ] 6種別それぞれのVisual Reviewを行い、designをcanonicalizeしている
-- [x] `npm run build` が通る
 - [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 5
+
+### デザイン参照
+
+- design target: 該当なし。既存`SkillLegend`の表示仕様を`LegendContainer`へ移管する。
+- reference desktop: 既存のSkillLegend（変更前）
+- reference mobile: 既存のSkillLegend（変更前）
+- notes: データページのカードと説明の3→2カラム構成を維持し、ページ固有CSSを削除する。
+
+### 成果物
+
+- actual desktop: `test-results/visual/data-desktop.png`
+- actual mobile: `test-results/visual/data-mobile.png`
+- report: `npm run visual:capture -- --grep '@data-(desktop|mobile)'`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                     | 対応     |
+| --------------------- | ---- | -------------------------------------------------------- | -------- |
+| レイアウト            | OK   | desktopはカード1カラム＋説明2カラムを維持する            | 修正不要 |
+| レスポンシブ          | OK   | 390px幅ではカードと説明を2カラムで表示し、横overflowなし | 修正不要 |
+| 共通Componentとの整合 | OK   | アイテム凡例と同じ`LegendContainer`へ統一する            | 修正不要 |
+| 既存デザインとの整合  | OK   | カード・見出し・説明リストの表示を維持する               | 修正不要 |
+
+### 自己修正した項目
+
+- [x] SkillLegendのページ内wrapperと`prose.css`の専用CSSを削除した
+- [x] `LegendContainer`へ見出しと説明リストの共通スタイルを移した
+
+### 人間判断が必要な差分
+
+- なし
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] なし
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新は不要と判断した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 4
+
+### デザイン参照
+
+- design target: `docs/design/items/`。各アイテム個別ページは対象外であり、初期designの新規作成はユーザー指示により行わない。
+- reference desktop: 該当なし
+- reference mobile: 該当なし
+- notes: 既存の`SkillLegend`の3→2カラム構成を基準に、武器・防具・お守りの凡例を共通Componentへ統一する。
+
+### 成果物
+
+- actual desktop: `test-results/visual/items-weapons-desktop.png`、`test-results/visual/items-armors-desktop.png`、`test-results/visual/items-omamori-desktop.png`
+- actual mobile: `test-results/visual/items-weapons-mobile.png`、`test-results/visual/items-armors-mobile.png`、`test-results/visual/items-omamori-mobile.png`
+- report: `npm run visual:capture -- --grep '@items-(weapons|armors|omamori)'`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                  | 対応     |
+| --------------------- | ---- | --------------------------------------------------------------------- | -------- |
+| レイアウト            | OK   | desktopはカード1カラム＋説明2カラムの3カラム構成へ統一する            | 修正不要 |
+| レスポンシブ          | OK   | 390px幅では全3ページともカードと説明を2カラムで表示し、横overflowなし | 修正不要 |
+| 既存Componentとの整合 | OK   | Card本体と一覧Card gridの契約を変更しない                             | 修正不要 |
+| 既存デザインとの整合  | OK   | 共通layout、hero、既存Card表現を維持する                              | 修正不要 |
+
+### 自己修正した項目
+
+- [x] `LegendContainer` を追加し、3ページに重複していた凡例レイアウトを共通化した
+- [x] 武器・防具のmobile凡例を1カラムから2カラムへ変更した
+
+### 人間判断が必要な差分
+
+- アイテム個別ページの初期designは作成しない。実装後のdesign canonicalizeの要否は、6種別の実装完了時に判断する。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
@@ -64,6 +162,10 @@
 - `tests/visual/items-armors.spec.ts`（防具実装開始後）
 - `src/pages/data/items/omamori.mdx`
 - `tests/visual/items-omamori.spec.ts`
+- `src/components/data/LegendContainer.astro`
+- `src/pages/data/index.mdx`（既存SkillLegendの共通Component移行）
+- `src/styles/prose.css`（既存SkillLegend専用CSSの削除）
+- `tests/visual/data.spec.ts`（共通Componentのselectorへ更新）
 - `tests/visual/config.ts`
 - 必要に応じて、武器ページ専用の既存コード配下のファイル
 
@@ -72,6 +174,7 @@
 - 武器contentsの本文・HTMLコメント指示がそのまま表示構成へ反映されているか
 - 防具contentsの本文・HTMLコメント指示がそのまま表示構成へ反映されているか
 - お守りcontentsの本文・HTMLコメント指示がそのまま表示構成へ反映されているか
+- 武器・防具・お守りの凡例が共通レイアウトを使い、desktopと768px以下で指定のカラム構成になるか
 - 3種別の未確定contentsをこの時点で実装対象に含めない判断でよいか
 - 6種別の実装後に、種別ごとのVisual Review・design canonicalizeを行う計画でよいか
 
