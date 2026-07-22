@@ -10,7 +10,7 @@
 
 カードに表示するデータはMarkdown / MDX本文に直書きせず、Excelから変換されたJSONを参照すること。
 
-ただし、`/world` のNPC紹介用 `NpcCard` は世界観本文の構成要素として扱い、`21-2-world-page` ではMDX内の静的propsを許容する。NPCのExcel / JSON管理への移行は `42-0-npc-data-normalization` で行う。
+`/world`のNPC紹介用`NpcCard`は世界観本文の構成要素として扱うが、NPCデータはExcelから変換した生成JSONを参照する。画像パスはExcelと生成JSONへ保持せず、表示層が`id`を対応キーとして個別`.webp`または`no_image.webp`を解決する。
 
 実在データではない説明用のスキル凡例・アイテム凡例は、既存のCard ComponentへMDX内の静的propsを渡して表示してよい。凡例のためにExcel、生成JSON、schema、取得層を追加・変更しない。
 

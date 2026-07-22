@@ -60,7 +60,7 @@
 - hero右下に、公式ゲームロゴ`光都暗域〈ネオン・アンダーレルム〉TRPG`だけが合成されている。
 - desktopのPageTocとmobileのMobilePageTocが、build後に生成された見出しを含む。
 - `〈仕事人〉`の強調記法が文字として露出せず、太字として表示される。
-- NPCカードがdesktop / mobileとも横長1列を保ち、11件のNPC画像、セリフ、グループ内の左右交互を表示し、個別画像がないIDではfallback画像を表示して横overflowしない。
+- NPCカードがdesktop / mobileとも横長1列を保ち、11件のNPC画像、セリフ、グループ内の左右交互を表示し、同IDの個別`.webp`がない場合は`public/images/npc/no_image.webp`を表示して横overflowしない。
 
 ## Generation source
 
