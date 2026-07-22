@@ -430,6 +430,18 @@
   - [x] 変換スクリプトと検証スキーマのテストを追加する
   - [x] 必須項目、ID重複、表示順を検証する
 
+- [x] `31-2-ikizama-index-page` — 生き様一覧ページを作成する
+  - completed: 2026-07-22 via PR #58 / `31-2-ikizama-index-page`
+
+  - [x] designを生成する
+  - [x] `/data/ikizama/index.astro` を作成する
+  - [x] `.raw/contents/ikizama-index.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
+  - [x] 生き様一覧を表示する
+  - [x] 各生き様詳細ページへの導線を配置する
+  - [x] サイドメニューの生き様を、変換済みデータの入力順から子項目として展開する
+  - [x] キャラクターメイキングの専用アイテム対応と成長ルールの生き様係数表を、変換済み生き様データから表示する
+  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
+
 - [x] `32-0-ikizama-detail-data` — 生き様詳細ページ用データを整備する
   - completed: 2026-07-22 via PR #56 / 98544ae
 
