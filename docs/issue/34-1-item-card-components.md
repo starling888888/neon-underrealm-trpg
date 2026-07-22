@@ -53,7 +53,7 @@
 - [x] 実在データの`id`を利用できる個別アンカーIDを各Cardに付与できる。
 - [x] Cardの横幅は`CardContainer`のgridを継承し、短い本文では`aspect-ratio: 5 / 7`を基準とする。長文ではその高さから自然に伸長し、本文を切り詰めない。`SkillCard`の既定最低高さはこの基準より過度に縦長でない。
 - [x] `SkillCard`と各Item Cardが、`docs/design/data-cards/`の共通表現と矛盾しない。
-- [ ] 関連TODOを確認し、このissueでは扱わない理由が記録されている。
+- [x] 関連TODOを確認し、このissueでは扱わない理由が記録されている。
 - [x] `npm run check`が通る。
 - [x] `npm run build`が通る。
 
