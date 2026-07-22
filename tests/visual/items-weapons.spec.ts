@@ -26,6 +26,18 @@ async function expectWeaponsPage(page: Page) {
   await expect(hero).toHaveCount(1);
   await expect(hero).toHaveAttribute("alt", "");
   await expect(hero).toHaveAttribute("loading", "eager");
+  await expect(
+    article.getByRole("link", { name: "サイバネ武器", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    "/neon-underrealm-trpg/data/items/cybernetics#h-dccb000a",
+  );
+  await expect(
+    article.getByRole("link", { name: "武器化ナノマシン", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    "/neon-underrealm-trpg/data/items/nanomachines#h-4a335266",
+  );
   await expect(legend.locator("[data-weapon-card]")).toHaveCount(1);
   await expect(legend).toContainText("③射撃武器");
 

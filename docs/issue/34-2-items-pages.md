@@ -61,6 +61,38 @@
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- ナノマシンの発動・持続、非戦闘時ペナルティの参照数値をページ内で明確にする。
+- ドラッグのバッドトリップと使用タイミングを、戦闘ルールへ導線する。凡例に「データの見方」見出しを追加する。
+- 武器ページから専用アイテムで得られる武器を案内し、お守り・サイバネの本文と表記を修正する。
+
+### 判定
+
+- source: local-agent（`.tmp/review/34-2-items-pages/contents-review-1.md`）およびhuman response（`contents-review-action-items-1.md`）
+- classification: valid（指摘1〜7、10、11）
+- classification: follow-up（指摘8、9。ユーザー指示により今回は対応しない）
+- local validation: `.raw/contents/items-{weapons,omamori,cybernetics,nanomachines,drugs}.md`、現在のMDX実装、戦闘ルールの該当見出しを確認した。新規機能・依存関係・design作成は伴わない。
+
+### 対応方針
+
+- ユーザーの記入方針に従い、ナノマシンの導入文・warning、ドラッグの導入文・凡例、武器の導入文、お守りとサイバネの本文を更新する。
+- ドラッグはバッドステータスと戦闘の流れへ、武器はサイバネ武器と武器化ナノマシンへリンクする。
+- 表記修正は対応するcontentsと実装を同じtaskで揃える。
+
+### 対応完了チェックリスト
+
+- [x] ナノマシンの発動・持続・非戦闘ペナルティを明記する
+- [x] ドラッグの導線と凡例見出しを追加する
+- [x] 武器、お守り、サイバネの本文・表記を修正する
+- [x] 対応するcontents Markdownを更新する
+- [x] 関連するVisual Testを更新する
+- [x] `npm run visual:capture -- --grep '@items-(weapons|omamori|cybernetics|nanomachines|drugs)'` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## ビジュアルレビュー 5
 
 ### デザイン参照

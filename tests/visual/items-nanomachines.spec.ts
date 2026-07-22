@@ -25,7 +25,13 @@ async function expectNanomachinesPage(page: Page) {
   await expect(hero).toHaveCount(1);
   await expect(hero).toHaveAttribute("alt", "");
   await expect(hero).toHaveAttribute("loading", "eager");
+  await expect(article).toContainText(
+    "シーン終了時またはスキルの効果で解除されるまで持続し、任意に解除することはできません。",
+  );
   await expect(warning).toContainText("威圧感を与えてしまいます");
+  await expect(warning).toContainText(
+    "発動させているナノマシンの「埋め込み点数」の合計だけ",
+  );
   await expect(legend.locator("[data-nanomachine-card]")).toHaveCount(1);
   await expect(legend).toContainText("③15");
   await expect(legend).toContainText(

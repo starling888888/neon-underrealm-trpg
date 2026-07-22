@@ -17,6 +17,8 @@ export const battleAttackHeadingId = createHeadingId(3, "攻撃");
 export const battleWeaponHeadingId = createHeadingId(3, "戦闘に使える武器");
 export const battleConcealedWeaponHeadingId = createHeadingId(3, "暗器");
 export const battleReloadHeadingId = createHeadingId(3, "発砲武器の装填");
+export const cyberneticWeaponHeadingId = createHeadingId(2, "サイバネ武器");
+export const nanomachineWeaponHeadingId = createHeadingId(2, "武器化ナノマシン");
 
 export const kenkaWeapons = getWeapons("normal", "kenka") ?? [];
 export const ansatsuWeapons = getWeapons("normal", "ansatsu") ?? [];
@@ -29,6 +31,8 @@ export const kanshouWeapons = getWeapons("normal", "kanshou") ?? [];
 <ImageBlock src="/images/data/items/weapons_hero.webp" alt="" loading="eager" />
 
 攻撃に使うアイテムのことを「武器」と呼びます。複数所持することができますが、特別な場合を除き戦闘中に使用できるのは1つだけです。（特別な場合は<InternalLink href={`/rules/battle#${battleWeaponHeadingId}`}>戦闘ルールの「戦闘に使える武器」</InternalLink>で説明されます。）スキルやアイテムによって得られる特殊な攻撃方法もデータ上は武器として扱われます。
+
+サイバネやナノマシンなどの専用アイテムの効果で得られる武器は、<InternalLink href={`/data/items/cybernetics#${cyberneticWeaponHeadingId}`}>サイバネ武器</InternalLink>と<InternalLink href={`/data/items/nanomachines#${nanomachineWeaponHeadingId}`}>武器化ナノマシン</InternalLink>で確認してください。
 
 ## データの見方
 

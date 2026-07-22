@@ -23,6 +23,7 @@ async function expectOmamoriPage(page: Page) {
   await expect(hero).toHaveCount(1);
   await expect(hero).toHaveAttribute("alt", "");
   await expect(hero).toHaveAttribute("loading", "eager");
+  await expect(article).toContainText("お守りは常時効果を発揮します");
   await expect(warning).toContainText(
     "ブライを生き様に選んだだけでは取得できない",
   );

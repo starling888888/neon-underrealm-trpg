@@ -20,8 +20,20 @@ async function expectDrugsPage(page: Page) {
   await expect(hero).toHaveCount(1);
   await expect(hero).toHaveAttribute("alt", "");
   await expect(hero).toHaveAttribute("loading", "eager");
+  await expect(
+    article.getByRole("link", { name: "バッドステータス", exact: true }),
+  ).toHaveAttribute("href", "/neon-underrealm-trpg/rules/battle#h-62b2ec2b");
   await expect(warning).toContainText("戦闘外では使用することができません");
+  await expect(
+    article.getByRole("heading", { name: "データの見方", exact: true }),
+  ).toHaveCount(1);
   await expect(legend.locator("[data-drug-card]")).toHaveCount(1);
+  await expect(
+    legend.getByRole("link", {
+      name: "戦闘ルールの「戦闘の流れ」",
+      exact: true,
+    }),
+  ).toHaveAttribute("href", "/neon-underrealm-trpg/rules/battle#h-c71679af");
   await expect(legend).toContainText("③SU");
   await expect(legend).toContainText(
     "効果：ドラッグを使用した際、得られる効果です。",

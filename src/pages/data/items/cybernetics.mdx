@@ -31,7 +31,7 @@ export const cyberneticWeapons = Object.values(
 サイバネの使用は精神に負担がかかるため、**サイバネごとに設定された「埋め込み点数」の合計が「精神」以下でなければなりません。**
 
 <Callout type="warning">
-サイバネは埋め込めば埋め込むほど人間性が失われていきます。使用しているサイバネの点数の合計に応じて非戦闘技能による判定の判定数が減少します。
+サイバネは埋め込めば埋め込むほど人間性が失われていきます。使用しているサイバネの埋め込み点数の合計に応じて非戦闘技能による判定の判定数が減少します。
 
 - 5点以下：判定数は減少しません。
 - 6点以上、10点以下：判定数が3減少します。
@@ -40,7 +40,7 @@ export const cyberneticWeapons = Object.values(
 
 ## サイバネの破壊
 
-サイバネはサイバネ自身やスキルの効果で破壊されることがあります。破壊されたサイバネは、そのシナリオ中効果を発揮しなくなります。<InternalLink href="/rules/scenario-play#休息シーン">休息シーン</InternalLink>において、破壊されたサイバネ一つに付き、精神力を5点支払うことでそのサイバネを修理して、再度効果を使用できるようになります。ただし、ここで消費した精神力はその休息シーンで回復しません。
+サイバネはサイバネ自身やスキルの効果で破壊されることがあります。破壊されたサイバネは、そのシナリオ中効果を発揮しなくなります。<InternalLink href="/rules/scenario-play#休息シーン">休息シーン</InternalLink>において、破壊されたサイバネ1つにつき、精神力を5点支払うことでそのサイバネを修理して、再度効果を使用できるようになります。ただし、ここで消費した精神力はその休息シーンで回復しません。
 
 ## データの見方
 
@@ -59,7 +59,7 @@ export const cyberneticWeapons = Object.values(
     <li><strong>信用</strong>：そのサイバネを埋め込むのに必要な信用の数値です。</li>
     <li><strong>部位</strong>：そのサイバネを埋め込むことのできる部位です。この部位によらず、「その他」にそのサイバネを埋め込むことができます。</li>
     <li><strong>埋め込み点数</strong>：そのサイバネが精神に与える負荷です。埋め込んでいるサイバネのこの値の合計が精神以下でなければなりません。</li>
-    <li><strong>効果</strong>：そのサイバネの持つ特殊庵効果です。</li>
+    <li><strong>効果</strong>：そのサイバネの持つ特殊な効果です。</li>
   </ol>
 </LegendContainer>
 
@@ -71,9 +71,9 @@ export const cyberneticWeapons = Object.values(
   {headCybernetics.map((item) => <CyberneticCard {...item} anchorId={item.id} />)}
 </CardContainer>
 
-### 胴体に埋め込む最バネ
+### 胴体に埋め込むサイバネ
 
-<CardContainer ariaLabel="胴体に埋め込む最バネ">
+<CardContainer ariaLabel="胴体に埋め込むサイバネ">
   {torsoCybernetics.map((item) => <CyberneticCard {...item} anchorId={item.id} />)}
 </CardContainer>
 

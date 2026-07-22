@@ -4,7 +4,7 @@ import { expectGeneratedPageToc } from "./helpers/page-toc";
 
 const cyberneticCategories = [
   ["頭部に埋め込むサイバネ", 5],
-  ["胴体に埋め込む最バネ", 7],
+  ["胴体に埋め込むサイバネ", 7],
   ["腕に埋め込むサイバネ", 8],
   ["足に埋め込むサイバネ", 6],
   ["どの部位にも埋め込めるサイバネ", 5],
@@ -30,7 +30,9 @@ async function expectCyberneticsPage(page: Page) {
   await expect(hero).toHaveCount(1);
   await expect(hero).toHaveAttribute("alt", "");
   await expect(hero).toHaveAttribute("loading", "eager");
-  await expect(warning).toContainText("11点以上：判定数が6減少します。");
+  await expect(warning).toContainText(
+    "埋め込み点数の合計に応じて非戦闘技能による判定の判定数が減少します。",
+  );
   await expect(
     article.getByRole("link", { name: "休息シーン", exact: true }),
   ).toHaveAttribute(
@@ -40,7 +42,7 @@ async function expectCyberneticsPage(page: Page) {
   await expect(legend.locator("[data-cybernetic-card]")).toHaveCount(1);
   await expect(legend).toContainText("④2");
   await expect(legend).toContainText(
-    "効果：そのサイバネの持つ特殊庵効果です。",
+    "効果：そのサイバネの持つ特殊な効果です。",
   );
 
   for (const [label, count] of cyberneticCategories) {
