@@ -1,0 +1,60 @@
+---
+import CardContainer from "../../components/_common/CardContainer.astro";
+import ArmorCard from "../../components/data/ArmorCard.astro";
+import CyberneticCard from "../../components/data/CyberneticCard.astro";
+import DrugCard from "../../components/data/DrugCard.astro";
+import NanomachineCard from "../../components/data/NanomachineCard.astro";
+import OmamoriCard from "../../components/data/OmamoriCard.astro";
+import SkillCard from "../../components/data/SkillCard.astro";
+import WeaponCard from "../../components/data/WeaponCard.astro";
+import { getCommonSkills } from "../../lib/data/common-skills";
+import { getItemsData } from "../../lib/data/items";
+import AppContainer from "../../layouts/AppContainer.astro";
+
+const skill = getCommonSkills("bonus").find((item) => item.name === "基本の一撃");
+const items = getItemsData();
+const weapon = items.weapons.nanomachines?.happou?.find((item) => item.name === "ビャッコ");
+const armor = items.armors.find((item) => item.name === "アームドスーツ");
+const omamori = items.omamori.find((item) => item.name === "健康のお守り");
+const cybernetic = items.cybernetics.any?.find((item) => item.name === "ペインシャッター");
+const nanomachine = items.nanomachines.find((item) => item.name === "ドクロ");
+const drug = items.drugs.find((item) => item.name === "アドレナリン");
+
+if (!skill || !weapon || !armor || !omamori || !cybernetic || !nanomachine || !drug) {
+  throw new Error("Missing data card catalog sample data.");
+}
+---
+
+<AppContainer
+  title="データカード カタログ"
+  description="SkillCardと各種Item Card Componentのローカル確認用カタログです。"
+  showPageToc={true}
+>
+  <article class="data-card-catalog prose" data-data-card-catalog>
+    <h1>データカード</h1>
+    <p class="data-card-catalog-lead">
+      SkillCardと6種のItem Cardを実在データで比較するローカル確認用ページです。
+    </p>
+
+    <CardContainer ariaLabel="データカードの表示例">
+      <SkillCard {...skill} anchorId={skill.id} />
+      <WeaponCard {...weapon} anchorId={weapon.id} />
+      <ArmorCard {...armor} anchorId={armor.id} />
+      <OmamoriCard {...omamori} anchorId={omamori.id} />
+      <CyberneticCard {...cybernetic} anchorId={cybernetic.id} />
+      <NanomachineCard {...nanomachine} anchorId={nanomachine.id} />
+      <DrugCard {...drug} anchorId={drug.id} />
+    </CardContainer>
+  </article>
+</AppContainer>
+
+<style>
+  .data-card-catalog {
+    max-width: none;
+  }
+
+  .data-card-catalog-lead {
+    max-width: 46rem;
+    color: var(--color-text-muted);
+  }
+</style>

@@ -24,6 +24,7 @@
 ## 対象範囲
 
 - `WeaponCard.astro`、`ArmorCard.astro`、`OmamoriCard.astro`、`CyberneticCard.astro`、`NanomachineCard.astro`、`DrugCard.astro`を`src/components/data/`に追加する。
+- `SkillCard`と6種の実在アイテムデータを並べて確認するローカルカタログページ`/-local/data-cards`を追加する。公開ページ・データ一覧ページは追加しない。
 - 各Cardが対応する`src/lib/types/item.ts`のアイテムデータを通常表示でき、MDXから凡例用の静的Propsを渡しても表示できるよう、各Component内のProps契約を定義する。
 - 表示上数値となるPropsは、未設定値を含めて`string | number | null | undefined`を受け付ける。`SkillCard`の`maxLevel`を含め、既存`SkillCard`の数値的Propsも同じ方針へリファクタする。`null`、空文字列、`undefined`は、後述のフィールド分類に従って表示する。
 - 各Cardに`anchorId`を渡せるようにし、実在データの`id`を個別アンカーとしてそのまま利用できる構造にする。
@@ -37,7 +38,7 @@
 
 - `SkillLegend`、`ItemLegend`などの凡例専用Componentは作成しない。
 - 全アイテム種別を単一の汎用`ItemCard`へ統合しない。共通helperや共通CSSの再利用は許容する。
-- アイテム一覧・種別別ページ、MDX本文、CardContainerの一覧配置、検索、フィルタ、ソート、ページネーション、詳細ページ遷移を実装しない。
+- 公開するアイテム一覧・種別別ページ、MDX本文、検索、フィルタ、ソート、ページネーション、詳細ページ遷移を実装しない。
 - Excel、`.raw/`、変換スクリプト、生成JSON、schema、データ取得層の契約を変更しない。
 - Header、Footer、SiteMenu、PageToc、`public/images/data/items/`の個別画像表示を変更しない。
 - 新規npm package、クライアント側状態管理、DB、認証、SSR、CMSを追加しない。
@@ -45,13 +46,13 @@
 
 ## 完了条件
 
-- [ ] 6種の個別Item Card Componentが通常データと凡例用静的Propsの両方を表示できる。
-- [ ] `SkillCard`を含む全対象Cardの数値的Propsが`string | number`を受け付け、`①2`などの凡例用表記をそのまま表示できる。
-- [ ] 全Cardの`effect`と`ArmorCard.restriction`は、`null`、空文字列、`undefined`で空文字列となる。現在非表示の`SkillCard.summary`は表示しない。
-- [ ] `SkillCard`の`cost`、`proficiency`、`acquisitionRestriction`、`usageRestriction`、`target`、`range`と、Item Cardの名称・効果・詳細文章以外の表示Propsは、`null`、空文字列、`undefined`で`-`となる。
-- [ ] 実在データの`id`を利用できる個別アンカーIDを各Cardに付与できる。
-- [ ] Cardの横幅は`CardContainer`のgridを継承し、短い本文では`aspect-ratio: 5 / 7`を基準とする。長文ではその高さから自然に伸長し、本文を切り詰めない。`SkillCard`の既定最低高さはこの基準より過度に縦長でない。
-- [ ] `SkillCard`と各Item Cardが、承認済みかつ更新済みの`docs/design/item-card/`および`docs/design/skill-card/`の共通表現と矛盾しない。
+- [x] 6種の個別Item Card Componentが通常データと凡例用静的Propsの両方を表示できる。
+- [x] `SkillCard`を含む全対象Cardの数値的Propsが`string | number`を受け付け、`①2`などの凡例用表記をそのまま表示できる。
+- [x] 全Cardの`effect`と`ArmorCard.restriction`は、`null`、空文字列、`undefined`で空文字列となる。現在非表示の`SkillCard.summary`は表示しない。
+- [x] `SkillCard`の`cost`、`proficiency`、`acquisitionRestriction`、`usageRestriction`、`target`、`range`と、Item Cardの名称・効果・詳細文章以外の表示Propsは、`null`、空文字列、`undefined`で`-`となる。
+- [x] 実在データの`id`を利用できる個別アンカーIDを各Cardに付与できる。
+- [x] Cardの横幅は`CardContainer`のgridを継承し、短い本文では`aspect-ratio: 5 / 7`を基準とする。長文ではその高さから自然に伸長し、本文を切り詰めない。`SkillCard`の既定最低高さはこの基準より過度に縦長でない。
+- [x] `SkillCard`と各Item Cardが、承認済みの`docs/design/item-card/`および`docs/design/skill-card/`の共通表現と矛盾しない。
 - [ ] 関連TODOを確認し、このissueでは扱わない理由が記録されている。
 - [x] `npm run check`が通る。
 - [x] `npm run build`が通る。
@@ -61,13 +62,13 @@
 - [x] `docs/design/item-card/design-desktop.png`、`design-mobile.png`、`notes.md`が承認済みであり、`5 / 7`の基準比率・可変高さを含む実装の参照正本として記録されている。
 - [ ] `docs/design/skill-card/design-desktop.png`、`design-mobile.png`、`notes.md`が、変更後の最低高さ・共通表現を反映して更新・承認されている。
 - [x] 既存の`SkillCard`利用箇所とローカル確認ページが壊れていない。
-- [ ] 空文字列を表示する文章項目と`-`を表示する値項目を、通常データと凡例データで混同していない。
-- [ ] CardContainerは各Cardの表示仕様を重複して実装していない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する`docs/TODO.md`項目と矛盾していない。
-- [ ] ユーザーの未追跡`public/images/data/items/`を変更・削除していない。
+- [x] 空文字列を表示する文章項目と`-`を表示する値項目を、通常データと凡例データで混同していない。
+- [x] CardContainerは各Cardの表示仕様を重複して実装していない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する`docs/TODO.md`項目と矛盾していない。
+- [x] ユーザーの未追跡`public/images/data/items/`を変更・削除していない。
 
 ## 想定変更ファイル
 

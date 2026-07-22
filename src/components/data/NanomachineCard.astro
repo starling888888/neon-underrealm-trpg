@@ -1,0 +1,43 @@
+---
+import {
+  displayText,
+  displayValue,
+  type DisplayValue,
+} from "./card-display";
+
+interface Props {
+  anchorId?: string;
+  name: string;
+  credit?: DisplayValue;
+  activationMentalCost?: DisplayValue;
+  implantPoints?: DisplayValue;
+  effect?: string | null;
+}
+
+const { anchorId, name, credit, activationMentalCost, implantPoints, effect } = Astro.props;
+---
+
+<article id={anchorId} class="data-card nanomachine-card" data-nanomachine-card>
+  <div class="data-card-content">
+    <header class="data-card-header">
+      <span class="data-card-name">{name}</span>
+    </header>
+
+    <p class="data-card-meta"><span class="data-card-credit">信用：{displayValue(credit)}</span></p>
+
+    <dl class="data-card-details">
+      <div class="data-card-detail">
+        <dt>発動精神力</dt>
+        <dd>{displayValue(activationMentalCost)}</dd>
+      </div>
+      <div class="data-card-detail">
+        <dt>埋め込み点数</dt>
+        <dd>{displayValue(implantPoints)}</dd>
+      </div>
+    </dl>
+
+    <div class="data-card-effect">
+      <p class="data-card-rule">{displayText(effect)}</p>
+    </div>
+  </div>
+</article>
