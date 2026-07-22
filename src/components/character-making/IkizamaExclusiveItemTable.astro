@@ -1,0 +1,31 @@
+---
+import type { Ikizama } from "../../lib/schemas/ikizama";
+
+interface Props {
+  ikizamaList: readonly Ikizama[];
+}
+
+const { ikizamaList } = Astro.props;
+---
+
+<table data-ikizama-exclusive-items>
+  <thead>
+    <tr>
+      <th scope="col">種別</th>
+      <th scope="col">説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      ikizamaList.map((ikizama) => (
+        <tr data-ikizama-id={ikizama.id}>
+          <th scope="row">{ikizama.exclusiveItem.name}</th>
+          <td>
+            生き様が{ikizama.name}の仕事人だけが使える
+            {ikizama.exclusiveItem.id === "drugs" ? "消費" : ""}アイテムです。
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

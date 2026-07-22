@@ -48,6 +48,9 @@ async function expectAdvancementContent(page: Page) {
       "[data-callout-type] h2.callout-title, [data-callout-type] h3.callout-title",
     ),
   ).toHaveCount(0);
+  await expect
+    .poll(() => article.locator("[data-ikizama-coefficients] tbody tr").count())
+    .toBeGreaterThan(0);
   await expect(
     article.getByRole("link", { name: "今生の縁で外道堕ちを解消した" }),
   ).toHaveAttribute("href", "/neon-underrealm-trpg/rules/battle#h-aa7d87a4");

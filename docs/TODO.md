@@ -69,12 +69,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `42-0-npc-data-normalization`
   - handling plan: `.raw/data/npcs.xlsx` をローカル正本とし、変換仕様、`data/generated/npcs.json`、検証スキーマ、取得層を整備する。`/world` の静的 `NpcCard` を生成JSON参照へ移行し、Excel本体をCI/CDへ含めない。
 
-- [ ] 生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する
-  - source: `11-site-menu` 実装中のユーザー判断
-  - classification: follow-up
-  - plan: `docs/plan.md` の `29-0-ryugi-index-data` / `31-0-ikizama-index-data` 後に、必要なら `29-2-ryugi-index-page` / `31-2-ikizama-index-page` または別のナビゲーション補完タスクで扱う
-  - handling plan: 現時点では生成JSONが存在しないため `11-site-menu` では実装しない。`data/generated/ryugi-list.json` / `data/generated/ikizama.json` と `src/lib/data/ryugi-list.ts` / `src/lib/data/ikizama.ts` が整った後、手書き固定ではなく生成JSONまたはデータ取得層から流儀・生き様の項目を取得し、サイドメニューへ表示する。
-
 - [ ] 流儀の共通スキルボーナスを構造化データへ変換する
   - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
   - classification: out-of-scope follow-up

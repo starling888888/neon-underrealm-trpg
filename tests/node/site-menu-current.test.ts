@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { getIkizamaList } from "../../src/lib/data/ikizama";
 import { getRyugiList } from "../../src/lib/data/ryugi-list";
 import {
   getSiteMenuItemInitialExpanded,
@@ -43,6 +44,21 @@ describe("site menu current state", () => {
       getRyugiList().map((ryugi) => ({
         label: ryugi.name,
         href: `/data/ryugi/${ryugi.id}`,
+      })),
+    );
+  });
+
+  it("uses generated ikizama data for the ikizama detail menu items", () => {
+    const dataMenu = siteMenuItems.find((item) => item.href === "/data");
+    const ikizamaMenu = dataMenu?.children?.find(
+      (item) => item.href === "/data/ikizama",
+    );
+
+    assert.deepEqual(
+      ikizamaMenu?.children?.map(({ label, href }) => ({ label, href })),
+      getIkizamaList().map((ikizama) => ({
+        label: ikizama.name,
+        href: `/data/ikizama/${ikizama.id}`,
       })),
     );
   });

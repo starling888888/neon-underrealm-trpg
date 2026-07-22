@@ -8,9 +8,12 @@ showPageToc: true
 import Callout from "../components/_common/Callout.astro";
 import ImageBlock from "../components/_common/ImageBlock.astro";
 import InternalLink from "../components/_common/InternalLink.astro";
+import IkizamaCoefficientTable from "../components/data/IkizamaCoefficientTable.astro";
 import RyugiCommonSkillBonusTable from "../components/data/RyugiCommonSkillBonusTable.astro";
+import { getIkizamaList } from "../lib/data/ikizama";
 import { getRyugiList } from "../lib/data/ryugi-list";
 
+export const ikizamaList = getIkizamaList();
 export const ryugiList = getRyugiList();
 
 # 成長ルール
@@ -92,12 +95,7 @@ export const ryugiList = getRyugiList();
 
 流儀、生き様、スキルが変わったら、最大体力と最大精神力を再計算します。生き様の係数は、レベル4とレベル10で変化します。
 
-| 生き様 | 初期体力係数 | 初期精神力係数 | 4レベル体力係数 | 4レベル精神力係数 | 10レベル体力係数 | 10レベル精神力係数 |
-| --- | --- | --- | --- | --- | --- | --- |
-| ブライ | 11 | 7 | 12 | 9 | 14 | 10 |
-| ケジメ | 12 | 6 | 14 | 7 | 16 | 8 |
-| スミ | 9 | 9 | 11 | 10 | 12 | 12 |
-| ヤク | 10 | 8 | 12 | 9 | 13 | 11 |
+<IkizamaCoefficientTable ikizamaList={ikizamaList} />
 
 | 項目 | 計算式 |
 | --- | --- |
