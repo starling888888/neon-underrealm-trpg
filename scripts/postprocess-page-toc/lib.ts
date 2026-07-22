@@ -63,12 +63,16 @@ export function processPageTocHtml(html: string): PageTocProcessResult {
   });
   const tocItems = collectTocItems(headings, warnings);
 
-  if (tocItems.length <= 1) {
+  if (tocItems.length === 0) {
     for (const slot of slots) {
-      setAttr(slot, "hidden", "");
       setAttr(slot, "data-page-toc-empty", "true");
-      replaceChildren(findTocContentElement(slot) ?? slot, []);
+      replaceChildren(
+        findTocContentElement(slot) ?? slot,
+        renderEmptyTocNodes(),
+      );
     }
+
+    placeMobileTocWithPageHeading(content, slots, warnings);
 
     return {
       html: serialize(document),
@@ -185,6 +189,14 @@ function assertAsciiId(value: string, label: string): void {
 
 function isAsciiId(value: string): boolean {
   return ASCII_ID_PATTERN.test(value);
+}
+
+function renderEmptyTocNodes(): ChildNode[] {
+  const fragment = parseFragment(
+    '<p class="page-toc-empty">見出しがありません</p>',
+  );
+
+  return fragment.childNodes;
 }
 
 function renderTocNodes(items: PageTocItem[]): ChildNode[] {

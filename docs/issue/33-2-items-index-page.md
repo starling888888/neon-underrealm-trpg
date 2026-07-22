@@ -34,6 +34,7 @@
 - `tests/visual/config.ts`へ`/data/items`のrouteを追加し、`tests/visual/items-index.spec.ts`でdesktop・mobileのVisual Review captureを定義する。
 - 実装完了後にVisual Reviewを行い、actual screenshotと`docs/design/items/`を比較する。design正本化が必要な場合は、Visual Reviewで候補として記録して停止し、ユーザーの明示承認後にdesign fix modeで扱う。
 - `docs/plan.md`と`docs/requirements/pages.md`を、contentsの正本に追従させる。
+- 単一見出しのページでも目次リンクを表示し、目次対象の見出しが0件のページでは「見出しがありません」と表示する共通PageToc仕様へ、`/data/items`と関連テストを整合させる。
 
 ## 初期スコープ外
 
@@ -58,6 +59,7 @@
 - [x] desktop・mobileの完成画面をVisual Reviewでdesignと比較している。
 - [ ] design正本化が必要な場合は、Visual Reviewへ候補を記録し、ユーザーの明示承認後にdesign fix modeで更新している。
 - [x] `npm run check`と`npm run build`が通る。
+- [x] 1件の見出しをdesktop・mobileのPageTocへ表示し、0件のPageTocでは空状態を表示している。
 
 ## チェックポイント
 
@@ -78,8 +80,13 @@
 - `docs/design/items/design-mobile.png`
 - `tests/visual/config.ts`
 - `tests/visual/items-index.spec.ts`
+- `scripts/postprocess-page-toc/lib.ts`
+- `src/components/layout/PageToc.astro`
+- `src/components/layout/MobilePageToc.astro`
+- `tests/node/page-toc-postprocess.test.ts`
 - `docs/plan.md`
 - `docs/requirements/pages.md`
+- `docs/requirements/layout-navigation.md`
 - `docs/issue/33-2-items-index-page.md`
 
 ## レビュー観点
@@ -139,6 +146,77 @@
 ### design-image-generation への引き継ぎ候補
 
 - [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 単一H2の`/data/items`で、desktopには空の目次見出しだけが表示され、mobileでは目次トリガーが非表示になる。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `scripts/postprocess-page-toc/lib.ts`は目次項目が1件以下の場合に内容を空にしていた。`docs/design/items/design-desktop.png`と`design-mobile.png`は「アイテムの種類」への目次導線を示しており、ユーザーは「1件以上は表示、0件は『見出しがありません』」と共通方針を明示した。
+
+### 対応方針
+
+- postprocessを0件と1件以上で分岐し、1件以上では通常の目次リンク、0件では空状態をdesktop・mobileへ描画する。
+- Node testと`/data/items`のVisual testで、単一見出し・0件・mobile目次の状態を検証する。
+
+### 対応完了チェックリスト
+
+- [x] PageTocの単一見出し・空状態を実装する
+- [x] Node testとVisual testを更新する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### デザイン参照
+
+- design target: `docs/design/items/`
+- reference desktop: `docs/design/items/design-desktop.png`
+- reference mobile: `docs/design/items/design-mobile.png`
+- notes: `docs/design/items/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual/items-index-desktop.png`
+- actual mobile: `test-results/visual/items-index-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分 | 対応                                                          |
+| --------------------- | ---- | ---- | ------------------------------------------------------------- |
+| レイアウト            | OK   | -    | 単一見出しでもdesktop・mobileのPageTocを表示する。            |
+| レスポンシブ          | OK   | -    | mobileの目次トリガー開閉とリンク表示をVisual testで確認した。 |
+| 既存デザインとの整合  | OK   | -    | initial designの「アイテムの種類」導線と一致する。            |
+| 既存Componentとの整合 | OK   | -    | 0件時はdesktop・mobile双方で空状態を表示する。                |
+
+### 自己修正した項目
+
+- [x] PageToc postprocessを、0件と1件以上で分岐した。
+- [x] 0件時の「見出しがありません」空状態を追加した。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] design正本の更新は不要。
 
 ### 対応完了チェックリスト
 

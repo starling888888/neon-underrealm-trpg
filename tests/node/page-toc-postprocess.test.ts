@@ -119,7 +119,7 @@ describe("page toc postprocess", () => {
     assert.doesNotMatch(result.html, /除外する見出し<\/a>/);
   });
 
-  it("hides the toc shell when there are too few toc items", () => {
+  it("renders a toc link for a single toc item", () => {
     const result = processPageTocHtml(
       pageWithHeadings(html`
         <h2>単独見出し</h2>
@@ -127,12 +127,12 @@ describe("page toc postprocess", () => {
     );
 
     assert.equal(result.tocItems.length, 1);
-    assert.match(result.html, /data-page-toc-empty="true"/);
-    assert.match(result.html, /<nav[^>]*hidden=""/);
-    assert.doesNotMatch(result.html, /page-toc-list/);
+    assert.doesNotMatch(result.html, /data-page-toc-empty="true"/);
+    assert.match(result.html, /<ol class="page-toc-list">/);
+    assert.match(result.html, /単独見出し<\/a>/);
   });
 
-  it("hides every enabled toc shell when there are too few toc items", () => {
+  it("renders every enabled toc shell for a single toc item", () => {
     const result = processPageTocHtml(
       pageWithHeadings(
         html`
@@ -143,8 +143,21 @@ describe("page toc postprocess", () => {
     );
 
     assert.equal(result.tocItems.length, 1);
+    assert.equal(countMatches(result.html, /<ol class="page-toc-list">/g), 2);
+    assert.equal(countMatches(result.html, /単独見出し<\/a>/g), 2);
+  });
+
+  it("renders an empty message in every enabled toc shell without toc items", () => {
+    const result = processPageTocHtml(
+      pageWithHeadings(html`<p>見出しはありません。</p>`, {
+        mobileSlot: true,
+      }),
+    );
+
+    assert.equal(result.tocItems.length, 0);
     assert.equal(countMatches(result.html, /data-page-toc-empty="true"/g), 2);
-    assert.equal(countMatches(result.html, /hidden=""/g), 2);
+    assert.equal(countMatches(result.html, /見出しがありません/g), 2);
+    assert.equal(countMatches(result.html, /hidden=""/g), 0);
     assert.doesNotMatch(result.html, /page-toc-list/);
   });
 });

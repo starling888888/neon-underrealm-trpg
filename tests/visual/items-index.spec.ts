@@ -1,5 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 import { visualOutputDir, visualRoutes, visualViewports } from "./config";
+import { expectGeneratedPageToc } from "./helpers/page-toc";
 
 async function hideAstroDevToolbar(page: Page) {
   await page.locator("astro-dev-toolbar").evaluateAll((elements) => {
@@ -71,6 +72,14 @@ async function expectItemsIndexPage(page: Page) {
     ).toHaveAttribute("href", href);
   }
 
+  const tocs = await expectGeneratedPageToc(page, "アイテムの種類");
+  await expect(tocs.desktop.locator(".page-toc-link")).toHaveText([
+    "アイテムの種類",
+  ]);
+  await expect(tocs.mobile.locator(".page-toc-link")).toHaveText([
+    "アイテムの種類",
+  ]);
+
   await expect
     .poll(async () => {
       return await page.evaluate(
@@ -97,6 +106,13 @@ test("アイテム一覧 mobile @items-index-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.dataItems);
   await expectItemsIndexPage(page);
+  await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeVisible();
+  await page.locator("[data-mobile-page-toc-trigger]").click();
+  await expect(page.locator("[data-mobile-page-toc-panel]")).toContainText(
+    "アイテムの種類",
+  );
+  await page.locator("[data-mobile-page-toc-trigger]").click();
+  await expect(page.locator("[data-mobile-page-toc-panel]")).toBeHidden();
   await hideAstroDevToolbar(page);
   await page.screenshot({
     fullPage: true,
