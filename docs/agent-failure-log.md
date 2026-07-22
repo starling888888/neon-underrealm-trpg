@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Visual capture repeated without the required Pagefind index
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: `34-2-items-pages` の `npm run visual:capture`
+- 観測した失敗: `npm run build`後のpreviewに対してVisual Captureを2回実行したが、Pagefind indexを生成していなかった。そのため、武器ページのdesktop / mobile Visual Testは成功した一方、既存の`data.spec.ts`と`search-modal.spec.ts`の検索結果を期待する4件が同じ理由で失敗した。
+- 一次対応: 実装対象の武器Visual Testは成功し、`test-results/visual/items-weapons-desktop.png`と`test-results/visual/items-weapons-mobile.png`を取得した。検索を含むVisual Captureを再実行する前に、Pagefind indexを生成する手順を確認する。
+
 ### Repeated PR reviews discovered one documentation dependency at a time
 
 #### 2026-07-22
