@@ -146,9 +146,9 @@ function displayText(value: string | null | undefined): string {
     display: flex;
     min-width: 0;
     flex-wrap: wrap;
-    margin: var(--space-3) 0 0;
+    margin: var(--space-2) 0 0;
     color: var(--color-prose-accent);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     font-weight: 750;
     line-height: var(--line-height-tight);
   }
@@ -169,30 +169,30 @@ function displayText(value: string | null | undefined): string {
   .skill-card-details {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin: var(--space-4) 0 0;
+    margin: var(--space-3) 0 0;
     border-top: var(--border-width) solid var(--color-border);
     border-left: var(--border-width) solid var(--color-border);
   }
 
   .skill-card-detail {
     min-width: 0;
-    min-height: 3.1875rem;
-    padding: var(--space-2);
+    min-height: 2.75rem;
+    padding: 0.375rem;
     border-right: var(--border-width) solid var(--color-border);
     border-bottom: var(--border-width) solid var(--color-border);
   }
 
   .skill-card-detail dt {
     color: var(--color-text-muted);
-    font-size: 0.625rem;
+    font-size: 0.5625rem;
     font-weight: 750;
     line-height: var(--line-height-tight);
   }
 
   .skill-card-detail dd {
-    margin: var(--space-1) 0 0;
+    margin: 0.1875rem 0 0;
     color: var(--color-text);
-    font-size: var(--text-xs);
+    font-size: 0.6875rem;
     font-weight: 500;
     line-height: var(--line-height-tight);
     overflow-wrap: anywhere;
@@ -247,8 +247,8 @@ function displayText(value: string | null | undefined): string {
     }
 
     .skill-card-detail {
-      min-height: 2.875rem;
-      padding: 0.375rem;
+      min-height: 2.5rem;
+      padding: 0.25rem;
     }
 
     .skill-card-detail dt {
@@ -256,7 +256,8 @@ function displayText(value: string | null | undefined): string {
     }
 
     .skill-card-detail dd {
-      font-size: 0.625rem;
+      margin-top: 0.125rem;
+      font-size: 0.5625rem;
     }
 
     .skill-card-effect {
