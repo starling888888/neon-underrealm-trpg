@@ -96,7 +96,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] 現在地ハイライト目視確認用のダミーMDXページ`/data/items`と`/data/items/weapons`を、本実装時に削除または置き換える
   - source: `15-current-menu-highlight` 実装中の目視確認用追加
   - classification: follow-up
-  - plan: `docs/plan.md` の該当するデータページ実装タスクで扱う
+  - plan: `docs/plan.md` の `34-2-items-pages`
   - handling plan: `src/pages/data/items/index.mdx`と`src/pages/data/items/weapons.mdx`は現在地ハイライトの目視確認用ダミーである。`/data/items`と`/data/items/weapons`の本実装時に削除するか、正式なページ実装へ置き換える。
 
 - [ ] VRT実装時に、mobile layout / MobilePageToc のCSS回帰検知を追加する
