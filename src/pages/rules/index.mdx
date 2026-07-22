@@ -8,6 +8,9 @@ showPageToc: true
 import Callout from "../../components/_common/Callout.astro";
 import ImageBlock from "../../components/_common/ImageBlock.astro";
 import InternalLink from "../../components/_common/InternalLink.astro";
+import { createHeadingId } from "../../lib/utils/heading-id";
+
+export const goldenRuleHeadingId = createHeadingId(2, "ゴールデンルール");
 
 # ルール
 
@@ -59,11 +62,11 @@ GMから目標値が示された判定では、達成値が目標値以上なら
 
 複数のキャラクターが達成値を比べる判定を対抗判定と呼びます。通常は先に判定する側が能動側、後に判定する側が受動側です。戦闘中の攻撃が能動側、リアクションが受動側になることが代表例です。
 
-達成値が同じときは受動側が勝ちます。効果の優先、ルールの矛盾、裁定、巻き戻しの扱いは、<InternalLink href="/introduction#h-f3926bd3">はじめにのゴールデンルール</InternalLink>に従います。
+達成値が同じときは受動側が勝ちます。効果の優先、ルールの矛盾、裁定、巻き戻しの扱いは、<InternalLink href={`/introduction#${goldenRuleHeadingId}`}>はじめにのゴールデンルール</InternalLink>に従います。
 
 ## ゴールデンルールを参照する
 
-このページの基本判定では解決できないルールの矛盾や解釈、裁定、処理の誤りが出た場合は、<InternalLink href="/introduction#h-f3926bd3">はじめにのゴールデンルール</InternalLink>を参照してください。
+このページの基本判定では解決できないルールの矛盾や解釈、裁定、処理の誤りが出た場合は、<InternalLink href={`/introduction#${goldenRuleHeadingId}`}>はじめにのゴールデンルール</InternalLink>を参照してください。
 
 ## 次に読むページ
 

@@ -8,6 +8,10 @@ showPageToc: true
 import Callout from "../../components/_common/Callout.astro";
 import ImageBlock from "../../components/_common/ImageBlock.astro";
 import InternalLink from "../../components/_common/InternalLink.astro";
+import { createHeadingId } from "../../lib/utils/heading-id";
+
+export const skillTimingHeadingId = createHeadingId(3, "タイミング");
+export const counterHeadingId = createHeadingId(3, "カウンター");
 
 # 戦闘ルール
 
@@ -35,7 +39,7 @@ import InternalLink from "../../components/_common/InternalLink.astro";
 | `×-A`、`☆-A` | コンボの最初の攻撃でだけ使えます。 |
 | `A-×`、`A-☆` | コンボの最後の攻撃でだけ使えます。 |
 
-表記の詳しい意味は、<InternalLink href="/data#h-e1218826">スキルのタイミング</InternalLink>を参照してください。
+表記の詳しい意味は、<InternalLink href={`/data#${skillTimingHeadingId}`}>スキルのタイミング</InternalLink>を参照してください。
 
 攻撃を行うときは、スキルや武器の条件を満たし、攻撃種別ごとの対象条件を確認してください。攻撃に使う技能は、攻撃ごとに変更してかまいません。使える武器は、後述する「戦闘に使える武器」に限られます。
 
@@ -145,7 +149,7 @@ import InternalLink from "../../components/_common/InternalLink.astro";
 2. 能動判定の直後に使える効果を適用する。
 3. 受動側がリアクション判定を行う。
 4. 受動判定の直後に使える効果を適用する。
-5. 回避に成功していた場合は、以降のダメージ処理を行わずコンボを終える。<InternalLink href="/rules/battle#h-cd7544a1">カウンター</InternalLink>に成功した場合は、通常のダメージ処理を行わず、カウンターのダメージ処理を行った後にコンボを終える。
+5. 回避に成功していた場合は、以降のダメージ処理を行わずコンボを終える。<InternalLink href={`/rules/battle#${counterHeadingId}`}>カウンター</InternalLink>に成功した場合は、通常のダメージ処理を行わず、カウンターのダメージ処理を行った後にコンボを終える。
 6. 攻撃力やガード値を一時的に増減する効果を適用する。
 7. 効果値を増減する効果を適用する。
 8. `攻撃力 + 効果値d6`で基本ダメージを算出する。

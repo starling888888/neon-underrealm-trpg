@@ -35,6 +35,7 @@
 - 既存Skill変換を名称hash IDへ変更し、`common-skills.json`、`ryugi-skills.json`、`ikizama-skills.json`をローカルの`.raw/data/*.xlsx`から再生成する
 - Skill Schema、変換テスト、生成済みJSON、IDを示す要件例、ゲーム仕様、TODOの説明を、名称hash ID方針と矛盾しないよう更新する
 - 旧Skill IDを直接参照するVisual Testを、再生成した名称hash IDへ更新する
+- 見出しアンカーIDを生成する`createHeadingId(depth, text)`を共有utilityとして定義し、MDX本文とVisual Testにある自動生成見出しへの直接hashリンクを、リンク先の見出しが分かる意味名付きconstから組み立てる
 - アイテム変換、Schema、データ取得層、生成JSONのテストを追加する
 - `src/lib/data/items.ts`に、生成済みJSONを静的importして全データを返す取得関数、武器の`group`／`checkKey`から配列を返す取得関数、サイバネの`part`から配列を返す取得関数を追加する。不明なキーは`undefined`を返し、Nodeのfilesystem APIまたはExcel入力へ依存しない
 - 変換コマンドを追加し、CI/CDのbuildがExcel入力または変換実行に依存しないことを維持する
@@ -64,6 +65,7 @@
 - [ ] `docs/requirements/data-id-policy.md`に定めるItem IDと重複制約を`items.json`全体で検証できる
 - [x] 既存SkillのID生成・Schema・テストが名称hash形式へ移行し、3つの生成済みSkill JSONを再生成している
 - [x] 既存のID例、ゲーム仕様、関連TODO、Visual Testが名称hash ID方針と矛盾していない
+- [x] MDX本文とVisual Testの自動生成見出しへのリンクが、共有`createHeadingId(depth, text)`から組み立てた意味名付きconstを使い、既存リンク先を変えていない
 - [ ] アイテム取得層が、静的importした全Itemデータ、武器の`group`／`checkKey`配列、サイバネの`part`配列を返し、不明キーでは`undefined`を返す
 - [ ] 生成JSONを手編集せず、ローカル変換コマンドで更新している
 - [ ] 新しいnpm packageを追加していない。追加が必要になった場合は、理由・代替案・初期スコープに必要な理由を記録する
@@ -100,13 +102,24 @@
 - `scripts/convert-skills/lib.ts`
 - `src/lib/schemas/item.ts`
 - `src/lib/schemas/skill.ts`
+- `src/lib/utils/heading-id.ts`
 - `src/lib/data/items.ts`
+- `scripts/postprocess-page-toc/lib.ts`
+- `src/pages/advancement.mdx`
+- `src/pages/data/index.mdx`
+- `src/pages/rules/index.mdx`
+- `src/pages/rules/battle.mdx`
+- `src/pages/rules/scenario-play.mdx`
 - `tests/node/items.test.ts`
 - `tests/node/common-skills.test.ts`
 - `tests/node/ryugi-skills.test.ts`
 - `tests/node/ikizama-skills.test.ts`
 - `tests/visual/common-skills.spec.ts`
 - `tests/visual/search-modal.spec.ts`
+- `tests/visual/advancement.spec.ts`
+- `tests/visual/battle.spec.ts`
+- `tests/visual/rules.spec.ts`
+- `tests/visual/scenario-play.spec.ts`
 - `data/generated/items.json`
 - `data/generated/common-skills.json`
 - `data/generated/ryugi-skills.json`
@@ -119,6 +132,7 @@
 - 武器・サイバネのJSON構造が、将来のクライアント側キャラクターシートでもそのまま利用できるか
 - `-`、武器射程、ナノマシン`埋め込み点数`の入力契約がDriveの最新`items`と一致しているか
 - Skill IDの再生成とID例・TODOの更新が、アイテム変換の範囲を超えてキャラクターシート実装へ広がっていないか
+- 自動生成見出しへのリンクが、元の見出しの深さと文字列から組み立てられ、リンク先の既存アンカーを変えていないか
 
 ## 備考
 
