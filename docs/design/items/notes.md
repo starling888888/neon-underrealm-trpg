@@ -19,7 +19,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/33-2-items-index-page.md`
+- `docs/issue/done/phase-3/33-2-items-index-page.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/assets-seo.md`
 - `docs/out-of-scope.md`

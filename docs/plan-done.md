@@ -462,6 +462,17 @@
   - [x] 個別生き様ごとのページファイルを複製しない
   - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
 
+- [x] `33-2-items-index-page` — アイテムトップページを作成する
+  - completed: 2026-07-22 via PR #60 / `db63a1c`
+
+  - [x] designを生成する
+  - [x] `/data/items/index.mdx` を作成する
+  - [x] `.raw/contents/items.md` のfrontmatterをページmetadataとして使い、H1以下のMarkdown本文とHTMLコメントをもとに、H1直後へ`items_hero.webp`を表示し、信用・アイテムの基本ルールを説明する
+  - [x] アイテム種別説明を、武器、防具、お守り、サイバネ、ナノマシン、ドラッグの順の表で配置する
+  - [x] 各アイテム種別と、ブライ、ケジメ、スミ、ヤクの生き様ページへの導線を配置する
+  - [x] 1件以上の見出しをPageTocへ表示し、0件の場合は空状態を表示する共通PageToc仕様と整合させる
+  - [x] 完成画面をVisual Reviewで確認し、design正本化が必要な場合はユーザーの明示承認後にdesign fix modeで更新する
+
 - [x] `42-0-npc-data-normalization` — NPCデータと画像を正規化する
   - completed: 2026-07-22 via PR #59 / `42-0-npc-data-normalization`
 

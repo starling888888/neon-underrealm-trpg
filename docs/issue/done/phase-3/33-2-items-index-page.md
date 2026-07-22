@@ -57,7 +57,7 @@
 - [x] ダミーの`/data/items`ページを本実装へ置き換え、関連TODOの`/data/items`分を解消している。
 - [x] `tests/visual/config.ts`と`tests/visual/items-index.spec.ts`で、desktop・mobileのcaptureを再現可能にしている。
 - [x] desktop・mobileの完成画面をVisual Reviewでdesignと比較している。
-- [ ] design正本化が必要な場合は、Visual Reviewへ候補を記録し、ユーザーの明示承認後にdesign fix modeで更新している。
+- [x] design正本化が必要な場合は、Visual Reviewへ候補を記録し、ユーザーの明示承認後にdesign fix modeで更新している。今回はビジュアルレビュー 2で更新不要と判断した。
 - [x] `npm run check`と`npm run build`が通る。
 - [x] 1件の見出しをdesktop・mobileのPageTocへ表示し、0件のPageTocでは空状態を表示している。
 
@@ -145,7 +145,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ（ビジュアルレビュー 2で不要と判断）
 
 ### 対応完了チェックリスト
 
