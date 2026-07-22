@@ -1,0 +1,73 @@
+---
+layout: ../../../layouts/MDXLayout.astro
+title: 防具
+description: 仕事人が使用する防具を一覧で確認するページです。
+showPageToc: true
+---
+
+import CardContainer from "../../../components/_common/CardContainer.astro";
+import ImageBlock from "../../../components/_common/ImageBlock.astro";
+import ArmorCard from "../../../components/data/ArmorCard.astro";
+import { getItemsData } from "../../../lib/data/items";
+
+export const armors = getItemsData().armors;
+
+# 防具
+
+<ImageBlock src="/images/data/items/armors_hero.webp" alt="" loading="eager" />
+
+戦闘中、受けるダメージを減らすアイテムのことを「防具」と呼びます。1つだけ所持、装備でき、その防具が戦闘中効果を発揮します。一部の防具は能力値が一定以上でないと使用できません。
+
+## データの見方
+
+<div class="armor-legend">
+  <ArmorCard
+    name="①特攻服"
+    credit="②5"
+    defense="③9"
+    damageReduction="④0"
+    restriction="⑤肉体4以上"
+    effect="⑥気合いを3点以上所持しているとダメージ軽減+3。"
+  />
+
+  <ol>
+    <li>その防具の名称です。</li>
+    <li>その防具を使用するのに必要な信用の数値です。</li>
+    <li>その防具の防御力です。近接、射撃攻撃のダメージを減少させます。</li>
+    <li>その防具のダメージ軽減です。全ての攻撃のダメージを減少させます。</li>
+    <li>その防具を装備するために必要な能力値です。</li>
+    <li>その防具の持つ特別な効果です。</li>
+  </ol>
+</div>
+
+## 防具一覧
+
+<CardContainer ariaLabel="防具一覧">
+  {armors.map((armor) => <ArmorCard {...armor} anchorId={armor.id} />)}
+</CardContainer>
+
+<style>{`
+  .armor-legend {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+    margin-top: var(--space-5);
+  }
+
+  .armor-legend :global(.armor-card) {
+    margin: 0;
+  }
+
+  .armor-legend ol {
+    margin: 0;
+  }
+
+  @media (max-width: 48rem) {
+    .armor-legend {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+  }
+`}</style>

@@ -8,7 +8,8 @@
 
 - `docs/plan.md` の `34-2-items-pages` は、6種別のページを同一issue・branch・PRで扱う。
 - `.raw/contents/items-weapons.md` は、武器ページの本文と表示構成の正本である。以前の雛形作成時の「実装やdesign正本化は行わない」指示は、今回のユーザーによる実装開始指示で置き換わる。
-- 防具・お守り・サイバネ・ナノマシン・ドラッグのcontents指示書は未確定のため、内容を推測して実装しない。
+- `.raw/contents/items-armors.md` は、防具ページの本文と表示構成の正本である。雛形作成時の実装禁止指示は、今回のユーザーによる実装開始指示で置き換わる。
+- お守り・サイバネ・ナノマシン・ドラッグのcontents指示書は未確定のため、内容を推測して実装しない。
 - 関連TODO: ダミーの `src/pages/data/items/weapons.mdx` を正式実装に置き換える。
 
 ## 対象範囲
@@ -17,12 +18,13 @@
 - ダミーの `src/pages/data/items/weapons.mdx` を正式ページへ置き換える。
 - `WeaponCard` と `CardContainer` を使い、凡例とカテゴリ別の武器一覧を表示する。
 - `weapons_hero.webp` をcontents指示どおり表示する。
-- 残る5種別は、対応するcontents指示書が確定後に同じissue内で追加する。
+- 防具contentsに従い、`/data/items/armors` でhero、`ArmorCard`凡例、右カラムの6項目説明、生成済み防具の一覧を表示する。
+- 残る4種別は、対応するcontents指示書が確定後に同じissue内で追加する。
 - 6種別すべてについて、対応するCardの凡例と一覧を実装し、種別ごとのVisual Review・design canonicalizeを行う。
 
 ## 初期スコープ外
 
-- 未確定のcontentsをもとにした防具・お守り・サイバネ・ナノマシン・ドラッグページの実装
+- 未確定のcontentsをもとにしたお守り・サイバネ・ナノマシン・ドラッグページの実装
 - 検索、絞り込み、ソート、ページネーション、比較・計算、詳細ページ遷移
 - `WeaponCard` の表示契約の変更、データ変換仕様の変更、新規依存関係の追加
 - 新規design画像の作成。既存の共通layoutと `docs/design/items/` の方向性を維持する。
@@ -32,11 +34,13 @@
 - [x] `/data/items/weapons` がcontentsの本文・HTMLコメント指示に従う
 - [x] 凡例、喧嘩・暗殺・発砲・格闘・干渉の武器一覧が `WeaponCard` で表示される
 - [x] ダミーの武器ページが正式実装に置き換わる
-- [x] 未確定の5種別ページを推測実装していない
+- [x] 未確定の4種別ページを推測実装していない
+- [x] `/data/items/armors` がcontentsの本文・HTMLコメント指示に従う
+- [x] `ArmorCard` の凡例と16件の防具一覧が表示される
 - [ ] 6種別すべてについて、確定したcontentsに従うページ、対応Cardの凡例と一覧を実装している
 - [ ] 6種別それぞれのVisual Reviewを行い、designをcanonicalizeしている
-- [ ] `npm run build` が通る
-- [ ] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] `npm run check` が通る
 
 ## チェックポイント
 
@@ -51,19 +55,24 @@
 
 - `src/pages/data/items/weapons.mdx`
 - `tests/visual/items-weapons.spec.ts`
+- `src/pages/data/items/armors.mdx`（防具実装開始後）
+- `tests/visual/items-armors.spec.ts`（防具実装開始後）
+- `tests/visual/config.ts`
 - 必要に応じて、武器ページ専用の既存コード配下のファイル
 
 ## レビュー観点
 
 - 武器contentsの本文・HTMLコメント指示がそのまま表示構成へ反映されているか
-- 5種別の未確定contentsをこの時点で実装対象に含めない判断でよいか
+- 防具contentsの本文・HTMLコメント指示がそのまま表示構成へ反映されているか
+- 4種別の未確定contentsをこの時点で実装対象に含めない判断でよいか
 - 6種別の実装後に、種別ごとのVisual Review・design canonicalizeを行う計画でよいか
 
 ## 備考
 
 - design参照: `docs/design/items/` はアイテムトップページの既存designであり、武器個別ページには適用しない。初期designの新規作成はユーザー指示により行わないが、`docs/plan.md` に従い各種別の実装後にVisual Review・design canonicalizeを行う。
 - Previewサーバーは、実装開始後の作業中は起動を維持する。作業後には `npm run build` を実行する。
-- 実装開始前に、武器contentsの `#ハッシュ` のリンク先、重複した説明番号、`normal.ansatu` と実データキー `ansatsu` の対応、武器種別の凡例表示を確定する。
+- 武器実装開始前に、contentsの `#ハッシュ` のリンク先、重複した説明番号、`normal.ansatu` と実データキー `ansatsu` の対応、武器種別の凡例表示を確定した。
+- 防具contentsは、既存の`ArmorCard`契約（`信用`、`防御力`、`ダメージ軽減`、`装備制限`、`効果`）と整合することを確認した。`armors_hero.webp` も配置済みである。
 
 ## ビジュアルレビュー 1
 
@@ -96,6 +105,52 @@
 ### 人間判断が必要な差分
 
 - 武器個別ページの初期designは作成しない。実装後のdesign canonicalizeの要否は、6種別の実装完了時に判断する。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### デザイン参照
+
+- design target: `docs/design/items/`。防具個別ページは対象外であり、初期designの新規作成はユーザー指示により行わない。
+- reference desktop: 該当なし
+- reference mobile: 該当なし
+- notes: 既存の共通layout、`ArmorCard`、`CardContainer`との整合性を確認する。
+
+### 成果物
+
+- actual desktop: `test-results/visual/items-armors-desktop.png`
+- actual mobile: `test-results/visual/items-armors-mobile.png`
+- report: `npm run visual:capture -- --grep @items-armors`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                            | 対応     |
+| --------------------- | ---- | ----------------------------------------------- | -------- |
+| レイアウト            | OK   | PCは凡例を2カラム、mobileは1カラムで表示する    | 修正不要 |
+| レスポンシブ          | OK   | 390px幅で横overflowなし                         | 修正不要 |
+| 既存Componentとの整合 | OK   | 既存の3列／2列Card gridと個別アンカーを維持する | 修正不要 |
+| 既存デザインとの整合  | OK   | 共通layout、hero、既存Card表現を維持する        | 修正不要 |
+
+### 自己修正した項目
+
+- [ ]
+
+### 人間判断が必要な差分
+
+- 防具個別ページの初期designは作成しない。実装後のdesign canonicalizeの要否は、6種別の実装完了時に判断する。
 
 ### design-image-generation への引き継ぎ候補
 

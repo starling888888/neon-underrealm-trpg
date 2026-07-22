@@ -30,6 +30,7 @@ export const visualRoutes = {
   dataIkizamaBurai: "data/ikizama/burai/",
   dataItems: "data/items/",
   releaseNotes: "release-notes/",
+  dataItemsArmors: "data/items/armors/",
   notFound: "not-found/",
   mdxTest: "-local/mdx-test/",
   callouts: "-local/callouts/",
