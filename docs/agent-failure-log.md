@@ -819,3 +819,12 @@ source種別は以下を使う。
 - 発生箇所: `34-1-item-card-components` の `tests/visual/search-modal.spec.ts`
 - 観測した失敗: `SkillCard`のDOM変更に合わせてselectorを更新した際、Biomeが要求する複数行呼び出しの改行位置を確認せず、同じ`npm run check`を2回formatter不一致で停止させた。
 - 一次対応: formatter出力の差分をそのまま`apply_patch`へ反映し、同一検証を再実行する前に対象行を読み直す。
+
+### Canonical design was captured before its implementation was committed
+
+#### 2026-07-23
+
+- source: review
+- 発生箇所: `40-2-404-page` の`docs/design/404/` canonicalization
+- 観測した失敗: 404実装を未コミットworktreeに置いたままcanonicalizeを実行し、`notes.md`のsource commitには実装前の`e71bbb1`を記録した。そのcommitには404ページ、Visual Test、design artifactがなく、正本画像を固定済み実装から再現できない。
+- 一次対応: PR #63のローカルレビューでcurrent issueへ記録した。以後、canonicalizeは対象実装を含むcommitをHEADにしてから実行し、source commitが画面状態を再現できることを確認する。今回の再captureとprovenance更新はユーザー承認後に行う。
