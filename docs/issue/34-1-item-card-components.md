@@ -123,7 +123,7 @@
 ### 対応完了チェックリスト
 
 - [x] `ArmorCard.restriction`の表示契約を`-`へ文書統一する。
-- [ ] 検索モーダルVisual Testのselectorを更新する。
-- [ ] `npx playwright test tests/visual/search-modal.spec.ts`の対象selector回帰が解消することを確認する。
-- [ ] `npm run check`が通る。
-- [ ] `npm run build`が通る。
+- [x] 検索モーダルVisual Testのselectorを更新する。
+- [x] `npx playwright test tests/visual/search-modal.spec.ts`の対象selector回帰が解消することを確認する。
+- [x] `npm run check`が通る。
+- [x] `npm run build`が通る。

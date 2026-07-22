@@ -810,3 +810,12 @@ source種別は以下を使う。
 - 発生箇所: `34-0-items-data` のSkill ID移行後の `tests/visual/search-modal.spec.ts`
 - 観測した失敗: build済みpreviewに対して検索Visual Testを実行したが、`dist/`へPagefind indexを生成していなかった。そのため、検索結果を期待するdesktop testと短い日本語検索のtestが同じ理由で失敗した。
 - 一次対応: 検索結果を検証するVisual Testの前に、`npm run build`の後でPagefind indexを生成し、previewをその出力から再起動する。Pagefind依存testの失敗時は、IDや検索UIの変更とindex未生成を先に区別する。
+
+### Repeated formatter failure while updating a Visual Test selector
+
+#### 2026-07-23
+
+- source: agent self-report
+- 発生箇所: `34-1-item-card-components` の `tests/visual/search-modal.spec.ts`
+- 観測した失敗: `SkillCard`のDOM変更に合わせてselectorを更新した際、Biomeが要求する複数行呼び出しの改行位置を確認せず、同じ`npm run check`を2回formatter不一致で停止させた。
+- 一次対応: formatter出力の差分をそのまま`apply_patch`へ反映し、同一検証を再実行する前に対象行を読み直す。

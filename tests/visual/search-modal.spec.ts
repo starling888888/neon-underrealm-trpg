@@ -14,9 +14,7 @@ test("search panel desktop @search-modal-desktop", async ({ page }) => {
   await page.goto(visualRoutes.commonSkills);
 
   await expect(
-    page.locator(
-      `#${basicAttackId} > .skill-card-header > span.skill-card-name`,
-    ),
+    page.locator(`#${basicAttackId} .skill-card-header > span.skill-card-name`),
   ).toHaveText("基本の一撃");
 
   const searchInput = page.locator("[data-search-desktop-input]");
