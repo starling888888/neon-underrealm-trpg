@@ -30,10 +30,10 @@ async function expectDrugsPage(page: Page) {
   await expect(legend.locator("[data-drug-card]")).toHaveCount(1);
   await expect(
     legend.getByRole("link", {
-      name: "戦闘ルールの「戦闘の流れ」",
+      name: "スキルの見方の「タイミング」",
       exact: true,
     }),
-  ).toHaveAttribute("href", "/neon-underrealm-trpg/rules/battle#h-c71679af");
+  ).toHaveAttribute("href", "/neon-underrealm-trpg/data#h-e1218826");
   await expect(legend).toContainText("③SU");
   await expect(legend).toContainText(
     "効果：ドラッグを使用した際、得られる効果です。",

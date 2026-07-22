@@ -15,7 +15,7 @@ import { getItemsData } from "../../../lib/data/items";
 import { createHeadingId } from "../../../lib/utils/heading-id";
 
 export const drugs = getItemsData().drugs;
-export const battleFlowHeadingId = createHeadingId(2, "戦闘の流れ");
+export const skillTimingHeadingId = createHeadingId(3, "タイミング");
 export const badStatusHeadingId = createHeadingId(2, "バッドステータス");
 
 # ドラッグ
@@ -41,14 +41,12 @@ export const badStatusHeadingId = createHeadingId(2, "バッドステータス")
     effect="⑥戦闘終了まで敏捷+2。"
   />
 
-  <ol>
-    <li><strong>名称</strong>：そのドラッグの名称です。</li>
-    <li><strong>信用</strong>：そのドラッグを取得するために必要な信用の数値です。</li>
-    <li><strong>使用タイミング</strong>：戦闘中いつそのドラッグを使用できるタイミングです。詳しくは<InternalLink href={`/rules/battle#${battleFlowHeadingId}`}>戦闘ルールの「戦闘の流れ」</InternalLink>を確認してください。同じタイミングのドラッグは複数同時に使用できますが、**同名のドラッグの効果は重複して発揮されません。**</li>
-    <li><strong>1セット数量</strong>：そのドラッグ1つあたり、シナリオ中何回使用できるかを表します。同名のドラッグを複数取得した場合は、その数×1セット数量だけシナリオ中使用できます。</li>
-    <li><strong>BT強度</strong>：そのドラッグを使用した際に受けるバッドトリップの強度です。</li>
-    <li><strong>効果</strong>：ドラッグを使用した際、得られる効果です。</li>
-  </ol>
+1. **名称**：そのドラッグの名称です。
+2. **信用**：そのドラッグを取得するために必要な信用の数値です。
+3. **使用タイミング**：戦闘中いつそのドラッグを使用できるタイミングです。詳しくは<InternalLink href={`/data#${skillTimingHeadingId}`}>スキルの見方の「タイミング」</InternalLink>を確認してください。同じタイミングのドラッグは複数同時に使用できますが、**同名のドラッグの効果は重複して発揮されません。**
+4. **1セット数量**：そのドラッグ1つあたり、シナリオ中何回使用できるかを表します。同名のドラッグを複数取得した場合は、その数×1セット数量だけシナリオ中使用できます。
+5. **BT強度**：そのドラッグを使用した際に受けるバッドトリップの強度です。
+6. **効果**：ドラッグを使用した際、得られる効果です。
 </LegendContainer>
 
 ## ドラッグ一覧
