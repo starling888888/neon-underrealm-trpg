@@ -51,9 +51,7 @@ Excelのシート名集合は `ikizama.json` の `Ikizama.id` 集合と完全一
 
 - シート名は既存 `Ikizama.id` とスキルを結び付ける唯一の外部キーとする。生き様名、シートの位置、
   スキル行の値から所属を推測しない。
-- スキルIDは `skill-ikizama-{ikizamaId}-{category}-{normalizedTiming}-{index}` とする。
-- `index` は同じ生き様ID、カテゴリ、正規化タイミングのグループ内で、該当シートのExcel入力順に
-  `001`から自動採番する。
+- スキルIDは`nameHash`を採用する。形式、生成規則、重複検証は[データID管理方針](../requirements/data-id-policy.md)に従う。行の途中挿入と並び替えはIDを変更しない。
 - `sourceOrder` は各生き様シートのExcel入力順を表す1からの連番とする。同じ生き様のカテゴリ配列は
   `sourceOrder`昇順を維持する。異なる生き様間で同じ `sourceOrder` を持つことは許可する。
 - 生成JSON全体でスキルIDは一意でなければならない。データカードの個別アンカーはこのIDを使う。
@@ -127,7 +125,7 @@ interface IkizamaDetail {
 - `updatedAt`がJSTオフセット付きISO 8601形式であること
 - 入力Excelのシート名集合と、生成JSONの生き様ID集合が `ikizama.json` の `Ikizama.id` 集合と完全一致すること
 - 各生き様が `bonus`、`basic`、`advanced` の固定キーをすべて持つこと
-- 各スキルIDが所属生き様ID、カテゴリ、正規化タイミング、連番と一致し、全体で一意であること
+- 各スキルIDが所属生き様ID、カテゴリ、正規化タイミング、名称hashと一致し、全体で一意であること
 - `sourceOrder`が生き様ごとに1からの連番かつ一意であり、各カテゴリ配列が昇順であること
 - 詳細用取得層が返す `Ikizama` とスキルの所有者IDが一致すること
 - `Ikizama.exclusiveItem` がアイテム種別の固定対応に一致し、`cybanetics` を受け入れないこと
@@ -141,7 +139,7 @@ interface IkizamaDetail {
 
 - 12列・1行ヘッダー・複数生き様シートを、1つのJSONへ正しく集約できること
 - シート名と `Ikizama.id` の一致、シートの欠落・余分・不正なシート名を検証できること
-- 生き様ごとのID採番、`sourceOrder`、カテゴリ配列の表示順を検証すること
+- 生き様ごとの名称hash ID、行の途中挿入と並び替えでIDが変わらないこと、`sourceOrder`、カテゴリ配列の表示順を検証すること
 - スキルID重複、必須値欠落、部分空行を拒否すること
 - 生き様IDと対応するスキルを、詳細用取得層が同じ結果として返すこと
 - 存在しない生き様ID、または生き様・スキルの対応欠落で詳細用取得層が `undefined` を返すこと

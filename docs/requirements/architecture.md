@@ -140,7 +140,7 @@ ExcelからJSONへ変換するスクリプトを用意する。
 
 CSV出力は必要に応じて追加してよいが、初期実装の主形式はJSONとする。
 
-同じデータドメインであっても、取得元シート、抽出条件、出力先JSON、ページで必要なデータ形状が異なる場合は、変換仕様を分けてよい。
+同じデータドメインであっても、取得元シート、抽出条件、出力先JSON、ページで必要なデータ形状が異なる場合は、変換仕様を分けてよい。1つのExcelを1つのJSONへ集約する場合でも、シートごとに入力契約または出力形状が異なるなら、変換関数は種別ごとに分離する。
 
 変換処理の内部ロジックは、必要に応じて共通関数として再利用する。
 
@@ -180,7 +180,7 @@ Markdown / MDX本文、構造化データ、表示コンポーネントを分離
 
 Excel由来データについて、ExcelからJSONへ変換する仕様をMarkdownファイルとして管理する。
 
-変換仕様ファイルは、単一ファイルではなく、対象ページまたはデータ出力単位で `docs/conversion/` 配下に分割して管理する。
+変換仕様ファイルは、対象ページ、データ出力、または独立して変更される入力契約の単位で `docs/conversion/` 配下に分割して管理する。1つの出力JSONを共有し、共通の変換契約として管理する方が明確な場合は、1ファイルに集約してよい。
 
 例は以下。
 
@@ -191,15 +191,10 @@ docs/conversion/ryugi-index.md
 docs/conversion/ryugi-skills.md
 docs/conversion/ikizama-index.md
 docs/conversion/ikizama-skills.md
-docs/conversion/items-weapons.md
-docs/conversion/items-armors.md
-docs/conversion/items-omamori.md
-docs/conversion/items-cybernetics.md
-docs/conversion/items-nanomachines.md
-docs/conversion/items-drugs.md
+docs/conversion/items.md
 ```
 
-同じデータドメインであっても、取得元シート、抽出条件、出力先JSON、ページで必要なデータ形状が異なる場合は、変換仕様を別ファイルとして管理してよい。
+`items.xlsx`のように1つのJSONへ集約する複数シートは、共通の変換仕様内でシート別契約を定義してよい。この場合でも、実装は各シートの専用変換関数を持ち、共通helperへ種別固有の条件分岐を集約しない。
 
 リリースノートは、トップページの最新5件表示と `/release-notes` の全件表示で同じ `release-notes.json` を参照するため、共通の変換仕様として扱う。
 

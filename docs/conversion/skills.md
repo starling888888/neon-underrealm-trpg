@@ -16,7 +16,7 @@
 
 `convertSkills()` は `inputPath`、`sheetName`、`idPrefix`、Warning出力を受け取り、単一シートを
 `SkillsByCategory` へ変換する。`convertSkillSheet()` は読み込み済みの行と同じ変換設定を受け取り、
-Excelのヘッダー・行・値を検証し、カテゴリ分割、ID採番、`sourceOrder`設定を行う。
+Excelのヘッダー・行・値を検証し、カテゴリ分割、名称hashを使ったID生成、`sourceOrder`設定を行う。
 
 ### 所有者別集約
 
@@ -113,11 +113,10 @@ Ra/Aa -> aa_ra
 スキルIDは次の形式とする。
 
 ```txt
-{idPrefix}-{category}-{normalizedTiming}-{index}
+{idPrefix}-{category}-{normalizedTiming}-{nameHash}
 ```
 
-`index` は同じ `idPrefix`、カテゴリ、正規化タイミングのグループ内で、各入力シートのExcel
-入力順に `001`から自動採番する。Excel上のID列は使わない。
+Skill IDには`nameHash`を採用する。`nameHash`の生成規則とIDの重複検証は[データID管理方針](../requirements/data-id-policy.md)に従う。Excel入力順はIDに使わず、`sourceOrder`として記録する。Excel上のID列は使わない。
 
 `idPrefix` は、共通スキルでは `skill-common`、流儀スキルでは
 `skill-ryugi-{ryugiId}`、生き様スキルでは `skill-ikizama-{ikizamaId}` とする。
@@ -176,11 +175,11 @@ Ra/Aa -> aa_ra
 
 ## 検証とテスト
 
-Schemaは、固定カテゴリキー、設定した `dataName`、必須・nullable項目、ID形式・重複・
+Schemaは、固定カテゴリキー、設定した `dataName`、必須・nullable項目、[データID管理方針](../requirements/data-id-policy.md)に定めるID制約、
 カテゴリとタイミングの整合、JSTの `updatedAt`、LF改行、`sourceOrder` の連番・一意性・
 カテゴリ内昇順を検証する。
 
-変換・Schema・取得層のテストは、入力順による採番、必須項目、無効なカテゴリ・タイミング、
+変換・Schema・取得層のテストは、行の途中挿入と並び替えでIDが変わらないこと、必須項目、無効なカテゴリ・タイミング、
 複合タイミングの正規化、nullable項目、`概要`の空文字列fallback、`対象`の`null`化、
 LF正規化、Warning、`updatedAt`更新規則を検証する。所属を持つスキルでは、
 シート名と所属IDの集合一致、シート単位の`sourceOrder`、複数シートから1つのJSONへの集約も検証する。
