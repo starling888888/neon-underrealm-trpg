@@ -1,6 +1,6 @@
-import { createHash } from "node:crypto";
 import type { DefaultTreeAdapterMap } from "parse5";
 import { parse, parseFragment, serialize } from "parse5";
+import { createHash } from "../../src/lib/utils/hash";
 
 type ChildNode = DefaultTreeAdapterMap["childNode"];
 type Document = DefaultTreeAdapterMap["document"];
@@ -103,10 +103,7 @@ export function processPageTocHtml(html: string): PageTocProcessResult {
 
 export function createHeadingId(depth: 2 | 3, text: string): string {
   const hashInput = `${depth}|${normalizeHeadingText(text)}`;
-  const shortHash = createHash("sha256")
-    .update(hashInput)
-    .digest("hex")
-    .slice(0, 8);
+  const shortHash = createHash(hashInput, 8);
   return `h-${shortHash}`;
 }
 

@@ -8,6 +8,7 @@ import generated from "../../data/generated/common-skills.json";
 import { convertCommonSkills } from "../../scripts/convert-common-skills/lib";
 import { getCommonSkills } from "../../src/lib/data/common-skills";
 import { assertSkillsJson } from "../../src/lib/schemas/skill";
+import { createHash } from "../../src/lib/utils/hash";
 
 const headers = [
   "区分",
@@ -46,8 +47,8 @@ describe("skill conversion", () => {
     assert.deepEqual(
       result.data.bonus.map((skill) => skill.id),
       [
-        "skill-common-bonus-a-606436cb9f53",
-        "skill-common-bonus-a-5327f0163926",
+        skillId("skill-common", "bonus", "a", "一撃"),
+        skillId("skill-common", "bonus", "a", "終撃"),
       ],
     );
     assert.equal(result.data.basic[0]?.proficiency, null);
@@ -58,7 +59,7 @@ describe("skill conversion", () => {
     assert.doesNotThrow(() => assertSkillsJson(generated, contract));
     assert.equal(
       getCommonSkills("bonus")[0]?.id,
-      "skill-common-bonus-a-82c112996f93",
+      skillId("skill-common", "bonus", "a", "基本の一撃"),
     );
   });
 
@@ -76,7 +77,7 @@ describe("skill conversion", () => {
         data: {
           bonus: [
             {
-              id: "skill-common-bonus-a-606436cb9f53",
+              id: skillId("skill-common", "bonus", "a", "一撃"),
               category: "bonus",
               name: "一撃",
               maxLevel: 1,
@@ -137,7 +138,7 @@ describe("skill conversion", () => {
     });
 
     assert.deepEqual(result.data.basic[0], {
-      id: "skill-common-basic-aa_ra-2e2d30cebf56",
+      id: skillId("skill-common", "basic", "aa_ra", "連携\n行動"),
       category: "basic",
       name: "連携\n行動",
       maxLevel: 1,
@@ -214,7 +215,12 @@ describe("skill conversion", () => {
 
   it("rejects malformed IDs, category mismatches, duplicate IDs, and source-order gaps", () => {
     const malformedId = structuredClone(generated);
-    malformedId.data.bonus[0].id = "skill-common-bonus-a-000000000000";
+    malformedId.data.bonus[0].id = skillId(
+      "skill-common",
+      "bonus",
+      "a",
+      "different name",
+    );
     assert.throws(
       () => assertSkillsJson(malformedId, contract),
       /does not match/,
@@ -294,6 +300,16 @@ function row(
     "効果",
   ];
 }
+
+function skillId(
+  idPrefix: string,
+  category: string,
+  timing: string,
+  name: string,
+): string {
+  return `${idPrefix}-${category}-${timing}-${createHash(name.trim().replace(/\r\n?/g, "\n"))}`;
+}
+
 async function createFixture() {
   const directory = await mkdtemp(join(tmpdir(), "skills-"));
   return {

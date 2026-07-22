@@ -9,6 +9,7 @@ import { convertIkizamaSkills } from "../../scripts/convert-ikizama-skills/lib";
 import { getIkizamaList } from "../../src/lib/data/ikizama";
 import { getIkizamaDetail } from "../../src/lib/data/ikizama-detail";
 import { assertIkizamaSkillsJson } from "../../src/lib/schemas/ikizama-skills";
+import { createHash } from "../../src/lib/utils/hash";
 
 const headers = [
   "区分",
@@ -43,7 +44,7 @@ describe("ikizama skill conversion", () => {
     assert.equal(initial.updatedAt, "2026-07-21T09:00:00+09:00");
     assert.equal(
       initial.data.burai.basic[0]?.id,
-      "skill-ikizama-burai-basic-aa_ra-747a6ed5ac49",
+      `skill-ikizama-burai-basic-aa_ra-${createHash("連携\n生存術")}`,
     );
     assert.equal(initial.data.burai.basic[0]?.name, "連携\n生存術");
     assert.equal(initial.data.burai.basic[0]?.target, null);

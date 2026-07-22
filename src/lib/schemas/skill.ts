@@ -1,5 +1,5 @@
-import { createHash } from "node:crypto";
 import { z } from "zod";
+import { createNameHash } from "../utils/hash";
 
 export const SkillCategorySchema = z.enum(["bonus", "basic", "advanced"]);
 export const SkillTimingPartSchema = z.enum([
@@ -230,13 +230,6 @@ export function createSkillId({
   name: string;
 }): string {
   return `${idPrefix}-${category}-${normalizedTiming}-${createNameHash(name)}`;
-}
-
-export function createNameHash(name: string): string {
-  return createHash("sha256")
-    .update(name.trim().replace(/\r\n?/g, "\n"), "utf8")
-    .digest("hex")
-    .slice(0, 12);
 }
 
 function isSkillTiming(value: string): boolean {
