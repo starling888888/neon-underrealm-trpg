@@ -46,28 +46,28 @@
 
 ## 完了条件
 
-- [ ] `docs/design/items/`のinitial draftとdesktop・mobile design画像を作成し、人間レビューを受けている。
-- [ ] `src/pages/data/items/index.mdx`がcontentsのfrontmatter、およびH1以下のMarkdown本文とHTMLコメントの指示に従っている。H1より前の作業履歴コメントを実装指示として採用していない。
-- [ ] H1直後に`public/images/data/items_hero.webp`を表示し、内容を変更せずGit管理へ含めている。
-- [ ] hero画像を装飾画像として扱い、空`alt`を設定している。
-- [ ] 信用、生き様専用アイテム、同一アイテムの効果の原則非重複、戦闘ルールへの参照をcontentsどおりに表示している。
-- [ ] 「アイテムの種類」表が、武器、防具、お守り、サイバネ、ナノマシン、ドラッグの順で表示されている。
-- [ ] 各アイテム種別と、ブライ、ケジメ、スミ、ヤクの生き様リンクがcontents指定のrouteへ遷移する。
-- [ ] ダミーの`/data/items`ページを本実装へ置き換え、関連TODOの`/data/items`分を解消している。
-- [ ] `tests/visual/config.ts`と`tests/visual/items-index.spec.ts`で、desktop・mobileのcaptureを再現可能にしている。
-- [ ] desktop・mobileの完成画面をVisual Reviewでdesignと比較している。
+- [x] `docs/design/items/`のinitial draftとdesktop・mobile design画像を作成し、人間レビューを受けている。
+- [x] `src/pages/data/items/index.mdx`がcontentsのfrontmatter、およびH1以下のMarkdown本文とHTMLコメントの指示に従っている。H1より前の作業履歴コメントを実装指示として採用していない。
+- [x] H1直後に`public/images/data/items_hero.webp`を表示し、内容を変更せずGit管理へ含めている。
+- [x] hero画像を装飾画像として扱い、空`alt`を設定している。
+- [x] 信用、生き様専用アイテム、同一アイテムの効果の原則非重複、戦闘ルールへの参照をcontentsどおりに表示している。
+- [x] 「アイテムの種類」表が、武器、防具、お守り、サイバネ、ナノマシン、ドラッグの順で表示されている。
+- [x] 各アイテム種別と、ブライ、ケジメ、スミ、ヤクの生き様リンクがcontents指定のrouteへ遷移する。
+- [x] ダミーの`/data/items`ページを本実装へ置き換え、関連TODOの`/data/items`分を解消している。
+- [x] `tests/visual/config.ts`と`tests/visual/items-index.spec.ts`で、desktop・mobileのcaptureを再現可能にしている。
+- [x] desktop・mobileの完成画面をVisual Reviewでdesignと比較している。
 - [ ] design正本化が必要な場合は、Visual Reviewへ候補を記録し、ユーザーの明示承認後にdesign fix modeで更新している。
-- [ ] `npm run check`と`npm run build`が通る。
+- [x] `npm run check`と`npm run build`が通る。
 
 ## チェックポイント
 
-- [ ] contentsのH1以下の表形式、項目順、本文リンクを、下位のplan、requirements、既存ダミー実装より優先している。H1より前の作業履歴コメントは実装指示として採用していない。
-- [ ] `InternalLink`など既存のbase path対応の仕組みを用い、GitHub Pagesのサブパス公開で内部リンクと画像参照が壊れない。
-- [ ] 未実装の各種別ページへのリンクを、将来routeとして残し、このissueで新設していない。
-- [ ] `docs/TODO.md`のダミーMDXページTODOは`/data/items`分だけを解消し、`/data/items/weapons`分を後続taskへ残している。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 既存の未追跡アイテム画像を破壊していない。
+- [x] contentsのH1以下の表形式、項目順、本文リンクを、下位のplan、requirements、既存ダミー実装より優先している。H1より前の作業履歴コメントは実装指示として採用していない。
+- [x] `InternalLink`など既存のbase path対応の仕組みを用い、GitHub Pagesのサブパス公開で内部リンクと画像参照が壊れない。
+- [x] 未実装の各種別ページへのリンクを、将来routeとして残し、このissueで新設していない。
+- [x] `docs/TODO.md`のダミーMDXページTODOは`/data/items`分だけを解消し、`/data/items/weapons`分を後続taskへ残している。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 既存の未追跡アイテム画像を破壊していない。
 
 ## 想定変更ファイル
 
@@ -97,3 +97,55 @@
 - `.raw/contents/items.md`はGit管理外のローカル作業入力である。Google Driveへの書込みは、ユーザーが`raw-to-drive-sync`を明示するまで行わない。
 - `public/images/data/items_hero.webp`と`public/images/data/items/`は、作業開始時から未追跡のユーザー変更である。実装時は前者だけを内容を変えずに公開assetとして含め、後者は後続個別ページtaskまで変更しない。
 - `npm run check`、`npm run build`、design生成、Visual Reviewは実装後の未検証項目である。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/items/`
+- reference desktop: `docs/design/items/design-desktop.png`
+- reference mobile: `docs/design/items/design-mobile.png`
+- notes: `docs/design/items/notes.md`
+
+### 成果物
+
+- actual desktop: `test-results/visual/items-index-desktop.png`
+- actual mobile: `test-results/visual/items-index-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定       | 差分                                                                                | 対応                                   |
+| --------------------- | ---------- | ----------------------------------------------------------------------------------- | -------------------------------------- |
+| レイアウト            | 要人間判断 | desktopのPageTocは項目を1件だけでは生成しない既存処理により、見出しだけ表示される。 | 共通PageTocの変更はscope外として扱う。 |
+| 余白                  | OK         | 段落量に伴う縦方向の差分。                                                          | contents本文を優先する。               |
+| タイポグラフィ        | OK         | -                                                                                   | -                                      |
+| 色                    | OK         | -                                                                                   | -                                      |
+| 配置・整列            | OK         | hero、本文、表の順序は一致する。                                                    | -                                      |
+| レスポンシブ          | OK         | mobileの種別名は1行を維持し、説明列が折り返される。                                 | -                                      |
+| overflow / scroll     | OK         | desktop・mobileとも横overflowなし。                                                 | -                                      |
+| 既存デザインとの整合  | 要人間判断 | initial draftのdesktop PageTocには「アイテムの種類」がある。                        | design正本は更新しない。               |
+| 既存Componentとの整合 | OK         | 既存の`ImageBlock`、`InternalLink`、表スタイルを使用する。                          | -                                      |
+| accessibility basics  | OK         | heroは空`alt`、内部リンクは既存component経由。                                      | -                                      |
+
+### 自己修正した項目
+
+- [x] mobile表の横overflowがないことをVisual testで確認した。
+
+### 人間判断が必要な差分
+
+- PageTocの項目を1件でも表示する共通仕様へ変更するか。変更は初期design画像・共通layoutへ影響するため、このissueでは行わない。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

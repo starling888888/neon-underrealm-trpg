@@ -783,3 +783,21 @@ source種別は以下を使う。
 - 発生箇所: `31-2-ikizama-index-page` のコンテンツレビュー後のissue更新
 - 観測した失敗: ユーザーの「全部無視でいいや」を、直前に報告したコンテンツレビューの指摘だけでなく、先行するPRレビュー指摘にも適用した。PRレビューの未コミット`レビュー指摘 3`をissueから削除したが、ユーザーはコンテンツレビューだけを見送る意図だった。
 - 一次対応: `レビュー指摘 3`を元の内容で復元した。複数のレビュー結果が並行している場合、「全部」などの参照範囲は直前の成果物に限定して確認し、既存の別レビュー記録を変更する前には対象を明示的に照合する。
+
+### Chained Git state operations
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `33-2-items-index-page` のGit操作
+- 観測した失敗: 追加承認を減らす目的で、複数のGit状態変更操作を`&&`で連結した。各Git操作の対象と結果を個別に確認するリポジトリ規約に反していた。
+- 一次対応: 状態変更を伴う`git add`、`git commit`、`git push`は、それぞれ独立したcommandとして実行する。以後、承認済みprefixであってもGit操作をshell演算子で連結しない。
+
+### Repeated validation failure in one implementation task
+
+#### 2026-07-22
+
+- source: agent self-report
+- 発生箇所: `33-2-items-index-page` の`tests/visual/items-index.spec.ts`追加後の`npm run check`
+- 観測した失敗: 初回に`HTMLElement`へのtable cell参照とtest閉じ括弧のTypeScriptエラーが発生し、修正後の再実行ではBiomeの整形不一致、Visual Review記録追加後にはMarkdown表の整形不一致が発生した。Markdown表を手動整形した再実行でも同じ整形不一致が残り、同一タスクでvalidation failureを複数回発生させた。
+- 一次対応: Visual testを追加する際は、Playwright callbackのDOM型を事前に確認し、`npm run check`が示す整形差分を`apply_patch`で反映してから再実行する。
