@@ -209,3 +209,28 @@
 - [x] `npm test` が通る
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `schemas/conversion`のZod Schemaと、`types`の手書き公開型がコンパイル時に同値であることを検証していない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `src/lib/types/`はブラウザ安全性のため変換Schemaをimportしない。一方で、Zodの出力型と公開型が同じプロパティ、nullable性、配列階層、literalを持つことを保証する型レベルの検査はない。今回の8データ種別は目視上整合するが、将来片側だけを変更しても`asserts value is ...`だけでは乖離を検出できない。
+- remote snapshot: PR #61、`8bf7862854b955c5bf705a9ea27abbb41c01540e..c575c5530e68dacd1fb166bb7beb8b008145f28a`。GitHub API接続障害により、remote discussion、review、未解決threadの最新状態は未確認。
+
+### 対応方針
+
+- `schemas/conversion/`側またはNode専用型テストに、各root Schemaの`z.output`と公開JSON型が双方向に代入可能であることをコンパイル時に検証する契約を置く。`types/`から変換Schemaへの依存は追加しない。
+
+### 対応完了チェックリスト
+
+- [x] 8種のroot Schemaと対応する公開JSON型の同値性を型レベルで検証する
+- [x] `types/`がZod、hash utility、Node builtinへ実行時依存しないことを維持する
+- [x] `npm test` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

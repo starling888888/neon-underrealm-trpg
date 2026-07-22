@@ -274,6 +274,8 @@ Zod Schemaは、生成済みJSONのデータ契約を定義し、変換スクリ
 
 通常表示処理および将来のクライアント側機能は、`schemas/conversion/`を実行時importしない。クライアント入力の検証が必要な場合は、生成済みデータのID存在確認など用途に必要な独立Schemaを定義する。
 
+`src/lib/types/`の公開型と`schemas/conversion/`のZod Schemaは別モジュールで管理するため、Node test内で各root JSON型と`z.output<typeof Schema>`の双方向代入可能性をコンパイル時に検証する。これはnullable、必須項目、配列階層、literal型の片側変更による乖離を検出するための契約テストであり、型専用importと空の型アサーションだけで構成する。実行時のJSON再検証、ブラウザbundle、公開型から変換Schemaへの依存は追加しない。
+
 サイトの通常表示処理では、Git管理された `data/generated/` 配下のJSONを信頼する。ページ表示やComponent描画のたびに、生成済みJSONをZodで再検証することを必須にしない。
 
 Excel入力そのものの検証は、変換スクリプトの責務とする。ヘッダー、途中空行、日付の入力順、Excel列ごとの入力エラーなど、ユーザーがExcelを修正するための行番号付きエラーは、変換処理側で扱う。
