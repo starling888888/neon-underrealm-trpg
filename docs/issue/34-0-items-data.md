@@ -40,6 +40,7 @@
 - `src/lib/data/items.ts`に、生成済みJSONを静的importして全データを返す取得関数、武器の`group`／`checkKey`から配列を返す取得関数、サイバネの`part`から配列を返す取得関数を追加する。不明なキーは`undefined`を返し、Nodeのfilesystem APIまたはExcel入力へ依存しない
 - 変換コマンドを追加し、CI/CDのbuildがExcel入力または変換実行に依存しないことを維持する
 - `npm-run-all2`を使う`npm run convert:data`を追加し、流儀一覧→流儀スキル、生き様一覧→生き様スキルをそれぞれ直列にしつつ、独立したデータ変換を並列実行する
+- 全データ種別の変換・生成JSON検証・ID生成用Zod Schemaを`src/lib/schemas/conversion/`へ集約し、ブラウザ安全な型・定数を`src/lib/types/`へ分離する
 
 ### アーキテクチャ制約
 
@@ -47,6 +48,7 @@
 - 各専用変換関数は、自身のシート名、ヘッダー、行の型変換、種別固有の検証、出力形状を責務として持つ
 - 共通の文字列正規化、数値検証、名称hash、JSON書込みなどだけを共有helperへ抽出する
 - 1つの巨大な条件分岐で全シートを変換する実装、ページ側でのシート別データ整形、Excel入力へのID列追加は行わない
+- 通常表示処理または将来のクライアント側機能から、`schemas/conversion/`を実行時importしない
 
 ## 初期スコープ外
 
@@ -102,8 +104,11 @@
 - `package.json`
 - `scripts/convert-items/*`
 - `scripts/convert-skills/lib.ts`
-- `src/lib/schemas/item.ts`
-- `src/lib/schemas/skill.ts`
+- `src/lib/schemas/conversion/item.ts`
+- `src/lib/types/item.ts`
+- `src/lib/schemas/conversion/*`
+- `src/lib/types/{skill,ryugi,ikizama,npc,release-notes,ryugi-skills,ikizama-skills}.ts`
+- `src/lib/data/{common-skills,ryugi-skills,ikizama-skills,ryugi-list,ryugi-detail,ikizama,ikizama-detail,npcs,release-notes}.ts`
 - `src/lib/utils/heading-id.ts`
 - `src/lib/data/items.ts`
 - `scripts/postprocess-page-toc/lib.ts`
@@ -175,6 +180,32 @@
 - [x] Item Excelの追加シート検出は行わず、明示した6シートだけを変換対象とする（ユーザー判断）
 - [x] 共通スキル変換仕様の流儀・生き様に関する記述を現行実装へ整合する
 - [x] `npm run convert:data` が通る
+- [x] `npm test` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- prototypeキー対策で取得層がZod Schemaをruntime importし、`node:crypto`を使うhash utilityまでブラウザ向け依存グラフへ含める。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `src/lib/data/items.ts`は`WeaponGroupSchema`、`WeaponCheckKeySchema`、`CyberneticPartKeySchema`をruntime importしていた。これらを定義していたSchemaは`src/lib/utils/hash.ts`をimportし、同utilityは`node:crypto`に依存する。取得層は将来のクライアント側キャラクターシートでも利用する前提のため、Node専用依存を持ち込まない必要がある。
+- remote snapshot: PR #61、`5bd47dc3ca32f49647e65c56facc1564d8824256..8bf7862854b955c5bf705a9ea27abbb41c01540e`。remote discussion、review、未解決threadは開始時点でなし。
+
+### 対応方針
+
+- 全データ種別の変換・生成JSON検証・ID生成は`src/lib/schemas/conversion/`へ集約し、ブラウザ安全なJSON型・定数は`src/lib/types/`へ分離する。取得層はSchemaをruntime importせず、生成済みdataのown propertyだけを`Object.hasOwn()`で参照してprototype由来の値を返さない。将来のクライアント入力検証は、生成済みデータのID存在確認に特化した独立Schemaとする。
+
+### 対応完了チェックリスト
+
+- [x] 全データ種別の変換・生成JSON検証・ID生成を`schemas/conversion`へ、JSON型・表示用定数をブラウザ安全な`types`へ分離する
+- [x] 取得APIがSchemaのruntime importなしでown propertyだけを返す
+- [x] prototypeキーの回帰テストを維持する
 - [x] `npm test` が通る
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

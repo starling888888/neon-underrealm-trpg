@@ -7,7 +7,7 @@ import { strToU8, zipSync } from "fflate";
 import generated from "../../data/generated/common-skills.json";
 import { convertCommonSkills } from "../../scripts/convert-common-skills/lib";
 import { getCommonSkills } from "../../src/lib/data/common-skills";
-import { assertSkillsJson } from "../../src/lib/schemas/skill";
+import { assertSkillsJson } from "../../src/lib/schemas/conversion/skill";
 import { createHash } from "../../src/lib/utils/hash";
 
 const headers = [

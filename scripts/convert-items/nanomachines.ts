@@ -1,7 +1,5 @@
-import {
-  createNanomachineId,
-  type Nanomachine,
-} from "../../src/lib/schemas/item";
+import { createNanomachineId } from "../../src/lib/schemas/conversion/item";
+import type { Nanomachine } from "../../src/lib/types/item";
 import {
   collectItemSheetRows,
   type ItemRows,

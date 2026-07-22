@@ -1,8 +1,5 @@
-import {
-  assertItemsJson,
-  type ItemsData,
-  type ItemsJson,
-} from "../../src/lib/schemas/item";
+import { assertItemsJson } from "../../src/lib/schemas/conversion/item";
+import type { ItemsData, ItemsJson } from "../../src/lib/types/item";
 import { writeGeneratedJson } from "../convert-skills/write-generated-json";
 import { convertArmors } from "./armors";
 import { convertCybernetics } from "./cybernetics";

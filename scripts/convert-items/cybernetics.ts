@@ -1,11 +1,13 @@
 import {
-  type Cybernetic,
-  type CyberneticPart,
   CyberneticPartSchema,
-  type CyberneticsByPart,
   createCyberneticId,
   createCyberneticPartKey,
-} from "../../src/lib/schemas/item";
+} from "../../src/lib/schemas/conversion/item";
+import type {
+  Cybernetic,
+  CyberneticPart,
+  CyberneticsByPart,
+} from "../../src/lib/types/item";
 import {
   collectItemSheetRows,
   type ItemRows,

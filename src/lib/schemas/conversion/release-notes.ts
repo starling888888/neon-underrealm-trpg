@@ -1,9 +1,13 @@
 import { z } from "zod";
+import {
+  RELEASE_NOTES_DATA_NAME,
+  type ReleaseNote,
+  type ReleaseNotesJson,
+} from "../../types/release-notes";
 
-const DATA_NAME = "release-notes";
 const ID_PATTERN = /^\d{4}-\d{2}-\d{2}-\d{3}$/;
 
-export const ReleaseNotesDataNameSchema = z.literal(DATA_NAME);
+export const ReleaseNotesDataNameSchema = z.literal(RELEASE_NOTES_DATA_NAME);
 
 export const ReleaseNoteSchema = z
   .object({
@@ -76,10 +80,6 @@ export const ReleaseNotesJsonSchema = z
       previous = note;
     });
   });
-
-export type ReleaseNotesDataName = z.infer<typeof ReleaseNotesDataNameSchema>;
-export type ReleaseNote = z.infer<typeof ReleaseNoteSchema>;
-export type ReleaseNotesJson = z.infer<typeof ReleaseNotesJsonSchema>;
 
 export function assertReleaseNotesJson(
   value: unknown,

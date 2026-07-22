@@ -1,6 +1,6 @@
 import generatedIkizamaSkillsSource from "../../../data/generated/ikizama-skills.json";
-import type { IkizamaSkillsJson } from "../schemas/ikizama-skills";
-import type { SkillsByCategory } from "../schemas/skill";
+import type { IkizamaSkillsJson } from "../types/ikizama-skills";
+import type { SkillsByCategory } from "../types/skill";
 import { getIkizamaList } from "./ikizama";
 
 const generatedIkizamaSkillsJson =

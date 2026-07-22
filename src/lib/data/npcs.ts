@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import npcJson from "../../../data/generated/npcs.json";
-import type { Npc, NpcJson } from "../schemas/npcs";
+import type { Npc, NpcJson } from "../types/npc";
 
 export interface NpcGroup {
   group: string;

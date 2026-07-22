@@ -1,15 +1,17 @@
 import {
   createWeaponCheckKey,
   createWeaponId,
-  type Weapon,
-  type WeaponCheck,
   WeaponCheckSchema,
-  type WeaponGroup,
   WeaponGroupSchema,
-  type WeaponKind,
   WeaponKindSchema,
-  type WeaponsByGroup,
-} from "../../src/lib/schemas/item";
+} from "../../src/lib/schemas/conversion/item";
+import type {
+  Weapon,
+  WeaponCheck,
+  WeaponGroup,
+  WeaponKind,
+  WeaponsByGroup,
+} from "../../src/lib/types/item";
 import {
   cellLocation,
   collectItemSheetRows,

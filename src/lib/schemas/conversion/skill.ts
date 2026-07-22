@@ -1,56 +1,20 @@
 import { z } from "zod";
-import { createNameHash } from "../utils/hash";
+import {
+  SKILL_CATEGORIES,
+  SKILL_TIMING_NORMALIZATIONS,
+  SKILL_TIMING_PARTS,
+  type SkillCategory,
+  type SkillDataContract,
+  type SkillJsonContract,
+  type SkillsByCategory,
+  type SkillsJson,
+  type SkillTiming,
+  type SkillTimingPart,
+} from "../../types/skill";
+import { createNameHash } from "../../utils/hash";
 
-export const SkillCategorySchema = z.enum(["bonus", "basic", "advanced"]);
-export const SkillTimingPartSchema = z.enum([
-  "Pv",
-  "SU",
-  "INI",
-  "CU",
-  "M",
-  "○-○",
-  "○-×",
-  "○-☆",
-  "×-○",
-  "×-×",
-  "×-☆",
-  "☆-○",
-  "☆-×",
-  "☆-☆",
-  "R",
-  "Aa",
-  "Ra",
-  "D",
-  "SP",
-]);
-
-export const SKILL_CATEGORIES = [
-  "bonus",
-  "basic",
-  "advanced",
-] as const satisfies readonly SkillCategory[];
-export const SKILL_TIMING_PARTS = SkillTimingPartSchema.options;
-export const SKILL_TIMING_NORMALIZATIONS = {
-  Pv: "pv",
-  SU: "su",
-  INI: "ini",
-  CU: "cu",
-  M: "m",
-  "○-○": "a",
-  "○-×": "a",
-  "○-☆": "a",
-  "×-○": "a",
-  "×-×": "a",
-  "×-☆": "a",
-  "☆-○": "a",
-  "☆-×": "a",
-  "☆-☆": "a",
-  R: "r",
-  Aa: "aa",
-  Ra: "ra",
-  D: "d",
-  SP: "sp",
-} as const satisfies Record<SkillTimingPart, string>;
+export const SkillCategorySchema = z.enum(SKILL_CATEGORIES);
+export const SkillTimingPartSchema = z.enum(SKILL_TIMING_PARTS);
 
 const requiredOneLine = z
   .string()
@@ -113,21 +77,6 @@ export const SkillsJsonSchema = z
     data: SkillsByCategorySchema,
   })
   .strict();
-
-export type SkillCategory = z.infer<typeof SkillCategorySchema>;
-export type SkillTimingPart = z.infer<typeof SkillTimingPartSchema>;
-export type SkillTiming = z.infer<typeof SkillTimingSchema>;
-export type Skill = z.infer<typeof SkillSchema>;
-export type SkillsByCategory = z.infer<typeof SkillsByCategorySchema>;
-export type SkillsJson = z.infer<typeof SkillsJsonSchema>;
-
-export interface SkillDataContract {
-  idPrefix: string;
-}
-
-export interface SkillJsonContract extends SkillDataContract {
-  dataName: string;
-}
 
 export function assertSkillsJson(
   value: unknown,

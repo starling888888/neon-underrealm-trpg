@@ -1,9 +1,8 @@
 import {
   createDrugId,
-  type Drug,
-  type DrugTiming,
   DrugTimingSchema,
-} from "../../src/lib/schemas/item";
+} from "../../src/lib/schemas/conversion/item";
+import type { Drug, DrugTiming } from "../../src/lib/types/item";
 import {
   collectItemSheetRows,
   type ItemRows,

@@ -12,7 +12,7 @@ import {
   getNpcList,
   getNpcPortraitPath,
 } from "../../src/lib/data/npcs";
-import { assertNpcJson } from "../../src/lib/schemas/npcs";
+import { assertNpcJson } from "../../src/lib/schemas/conversion/npcs";
 
 const headers = ["グループ", "ID", "名前", "二つ名", "ルビ", "セリフ", "説明"];
 

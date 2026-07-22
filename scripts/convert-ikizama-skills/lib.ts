@@ -2,9 +2,11 @@ import readXlsxFile from "read-excel-file/node";
 import {
   assertIkizamaSkillsJson,
   assertIkizamaSkillsJsonShape,
+} from "../../src/lib/schemas/conversion/ikizama-skills";
+import {
   IKIZAMA_SKILLS_DATA_NAME,
   type IkizamaSkillsJson,
-} from "../../src/lib/schemas/ikizama-skills";
+} from "../../src/lib/types/ikizama-skills";
 import { convertSkillSheet } from "../convert-skills/lib";
 import { writeGeneratedJson } from "../convert-skills/write-generated-json";
 

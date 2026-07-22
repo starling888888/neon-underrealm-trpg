@@ -15,7 +15,10 @@ import {
   getItemsData,
   getWeapons,
 } from "../../src/lib/data/items";
-import { assertItemsJson, createWeaponId } from "../../src/lib/schemas/item";
+import {
+  assertItemsJson,
+  createWeaponId,
+} from "../../src/lib/schemas/conversion/item";
 
 const weaponHeaders = [
   "区分",

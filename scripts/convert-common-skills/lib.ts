@@ -1,9 +1,8 @@
 import {
   assertSkillsJson,
   assertSkillsJsonShape,
-  type SkillsByCategory,
-  type SkillsJson,
-} from "../../src/lib/schemas/skill";
+} from "../../src/lib/schemas/conversion/skill";
+import type { SkillsByCategory, SkillsJson } from "../../src/lib/types/skill";
 import { convertSkills } from "../convert-skills/lib";
 import { writeGeneratedJson } from "../convert-skills/write-generated-json";
 

@@ -1,4 +1,5 @@
-import { createOmamoriId, type Omamori } from "../../src/lib/schemas/item";
+import { createOmamoriId } from "../../src/lib/schemas/conversion/item";
+import type { Omamori } from "../../src/lib/types/item";
 import {
   collectItemSheetRows,
   type ItemRows,

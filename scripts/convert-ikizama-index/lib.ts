@@ -6,12 +6,14 @@ import {
   assertIkizamaExclusiveItem,
   assertIkizamaJson,
   assertIkizamaJsonShape,
+} from "../../src/lib/schemas/conversion/ikizama";
+import {
   IKIZAMA_DATA_NAME,
   type Ikizama,
   type IkizamaJson,
   type IkizamaNote,
   type IkizamaNoteType,
-} from "../../src/lib/schemas/ikizama";
+} from "../../src/lib/types/ikizama";
 import { formatDateTimeJst } from "../convert-skills/write-generated-json";
 
 export interface ConvertIkizamaOptions {

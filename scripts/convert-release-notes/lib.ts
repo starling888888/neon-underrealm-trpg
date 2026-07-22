@@ -2,11 +2,11 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { type CellValue, readSheet } from "read-excel-file/node";
-import {
-  assertReleaseNotesJson,
-  type ReleaseNote,
-  type ReleaseNotesJson,
-} from "../../src/lib/schemas/release-notes";
+import { assertReleaseNotesJson } from "../../src/lib/schemas/conversion/release-notes";
+import type {
+  ReleaseNote,
+  ReleaseNotesJson,
+} from "../../src/lib/types/release-notes";
 
 export interface ConvertReleaseNotesOptions {
   inputPath: string;

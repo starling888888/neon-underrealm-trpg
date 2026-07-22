@@ -2,9 +2,11 @@ import readXlsxFile from "read-excel-file/node";
 import {
   assertRyugiSkillsJson,
   assertRyugiSkillsJsonShape,
+} from "../../src/lib/schemas/conversion/ryugi-skills";
+import {
   RYUGI_SKILLS_DATA_NAME,
   type RyugiSkillsJson,
-} from "../../src/lib/schemas/ryugi-skills";
+} from "../../src/lib/types/ryugi-skills";
 import { convertSkillSheet } from "../convert-skills/lib";
 import { writeGeneratedJson } from "../convert-skills/write-generated-json";
 

@@ -1,14 +1,11 @@
 import { z } from "zod";
-import { CALLOUT_TYPES, type CalloutType } from "../types/callout";
-
-export const IKIZAMA_DATA_NAME = "ikizama";
-
-export const IKIZAMA_EXCLUSIVE_ITEM_TYPES = {
-  omamori: { name: "お守り", href: "/data/items/omamori" },
-  cybernetics: { name: "サイバネ", href: "/data/items/cybernetics" },
-  nanomachines: { name: "ナノマシン", href: "/data/items/nanomachines" },
-  drugs: { name: "ドラッグ", href: "/data/items/drugs" },
-} as const;
+import { CALLOUT_TYPES } from "../../types/callout";
+import {
+  IKIZAMA_DATA_NAME,
+  IKIZAMA_EXCLUSIVE_ITEM_TYPES,
+  type IkizamaExclusiveItemType,
+  type IkizamaJson,
+} from "../../types/ikizama";
 
 export const IkizamaNoteTypeSchema = z.enum(CALLOUT_TYPES);
 
@@ -120,13 +117,6 @@ export const IkizamaJsonSchema = z
     data: z.array(IkizamaSchema).min(1),
   })
   .strict();
-
-export type IkizamaNoteType = CalloutType;
-export type IkizamaNote = z.infer<typeof IkizamaNoteSchema>;
-export type Ikizama = z.infer<typeof IkizamaSchema>;
-export type IkizamaJson = z.infer<typeof IkizamaJsonSchema>;
-export type IkizamaExclusiveItemType =
-  keyof typeof IKIZAMA_EXCLUSIVE_ITEM_TYPES;
 
 export function assertIkizamaJson(
   value: unknown,

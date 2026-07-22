@@ -8,7 +8,7 @@ import generated from "../../data/generated/ryugi-skills.json";
 import { convertRyugiSkills } from "../../scripts/convert-ryugi-skills/lib";
 import { getRyugiDetail } from "../../src/lib/data/ryugi-detail";
 import { getRyugiList } from "../../src/lib/data/ryugi-list";
-import { assertRyugiSkillsJson } from "../../src/lib/schemas/ryugi-skills";
+import { assertRyugiSkillsJson } from "../../src/lib/schemas/conversion/ryugi-skills";
 import { createHash } from "../../src/lib/utils/hash";
 
 const headers = [

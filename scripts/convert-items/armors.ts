@@ -1,4 +1,5 @@
-import { type Armor, createArmorId } from "../../src/lib/schemas/item";
+import { createArmorId } from "../../src/lib/schemas/conversion/item";
+import type { Armor } from "../../src/lib/types/item";
 import {
   collectItemSheetRows,
   type ItemRows,

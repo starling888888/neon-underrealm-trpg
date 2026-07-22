@@ -3,13 +3,15 @@ import {
   createSkillId,
   getSkillTimingParts,
   normalizeSkillTiming,
+} from "../../src/lib/schemas/conversion/skill";
+import {
   SKILL_CATEGORIES,
   SKILL_TIMING_NORMALIZATIONS,
   type Skill,
   type SkillCategory,
   type SkillsByCategory,
   type SkillTiming,
-} from "../../src/lib/schemas/skill";
+} from "../../src/lib/types/skill";
 
 export interface ConvertSkillsOptions {
   inputPath: string;

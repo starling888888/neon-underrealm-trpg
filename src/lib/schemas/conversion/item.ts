@@ -1,7 +1,36 @@
 import { z } from "zod";
-import { createNameHash } from "../utils/hash";
+import {
+  CYBERNETIC_PART_KEYS,
+  CYBERNETIC_PARTS,
+  type Cybernetic,
+  type CyberneticPart,
+  type CyberneticPartKey,
+  type CyberneticsByPart,
+  DRUG_TIMINGS,
+  type DrugTiming,
+  ITEM_DATA_NAME,
+  type Item,
+  type ItemsData,
+  type ItemsJson,
+  WEAPON_CHECK_KEYS,
+  WEAPON_CHECKS,
+  WEAPON_GROUPS,
+  WEAPON_KINDS,
+  type Weapon,
+  type WeaponCheck,
+  type WeaponCheckKey,
+  type WeaponGroup,
+  type WeaponsByGroup,
+} from "../../types/item";
+import { createNameHash } from "../../utils/hash";
 
-export const ITEM_DATA_NAME = "items";
+export const WeaponGroupSchema = z.enum(WEAPON_GROUPS);
+export const WeaponKindSchema = z.enum(WEAPON_KINDS);
+export const WeaponCheckSchema = z.enum(WEAPON_CHECKS);
+export const WeaponCheckKeySchema = z.enum(WEAPON_CHECK_KEYS);
+export const CyberneticPartSchema = z.enum(CYBERNETIC_PARTS);
+export const CyberneticPartKeySchema = z.enum(CYBERNETIC_PART_KEYS);
+export const DrugTimingSchema = z.enum(DRUG_TIMINGS);
 
 const requiredText = z
   .string()
@@ -15,47 +44,7 @@ const optionalText = z
   .nullable();
 const nonNegativeInteger = z.number().int().nonnegative();
 
-export const WeaponGroupSchema = z.enum([
-  "normal",
-  "cybernetics",
-  "nanomachines",
-]);
-export const WeaponKindSchema = z.enum(["近接", "射撃", "特殊"]);
-export const WeaponCheckSchema = z.enum([
-  "喧嘩",
-  "暗殺",
-  "発砲",
-  "格闘",
-  "干渉",
-  "格闘/干渉",
-]);
-export const WeaponCheckKeySchema = z.enum([
-  "kenka",
-  "ansatsu",
-  "happou",
-  "kakutou",
-  "kanshou",
-  "kakutou_kanshou",
-]);
-export const CyberneticPartSchema = z.enum(["頭", "胴体", "腕", "足", "任意"]);
-export const CyberneticPartKeySchema = z.enum([
-  "head",
-  "torso",
-  "arm",
-  "leg",
-  "any",
-]);
-export const DrugTimingSchema = z.enum(["SU", "INI", "CU", "SP"]);
-
-export type WeaponGroup = z.infer<typeof WeaponGroupSchema>;
-export type WeaponKind = z.infer<typeof WeaponKindSchema>;
-export type WeaponCheck = z.infer<typeof WeaponCheckSchema>;
-export type WeaponCheckKey = z.infer<typeof WeaponCheckKeySchema>;
-export type CyberneticPart = z.infer<typeof CyberneticPartSchema>;
-export type CyberneticPartKey = z.infer<typeof CyberneticPartKeySchema>;
-export type DrugTiming = z.infer<typeof DrugTimingSchema>;
-
-export const WEAPON_CHECK_KEYS = {
+const weaponCheckKeys = {
   喧嘩: "kenka",
   暗殺: "ansatsu",
   発砲: "happou",
@@ -64,7 +53,7 @@ export const WEAPON_CHECK_KEYS = {
   "格闘/干渉": "kakutou_kanshou",
 } as const satisfies Record<WeaponCheck, WeaponCheckKey>;
 
-export const CYBERNETIC_PART_KEYS = {
+const cyberneticPartKeys = {
   頭: "head",
   胴体: "torso",
   腕: "arm",
@@ -158,26 +147,14 @@ export const ItemsJsonSchema = z
   })
   .strict();
 
-export type Item = z.infer<typeof ItemSchema>;
-export type Weapon = z.infer<typeof WeaponSchema>;
-export type Armor = z.infer<typeof ArmorSchema>;
-export type Omamori = z.infer<typeof OmamoriSchema>;
-export type Cybernetic = z.infer<typeof CyberneticSchema>;
-export type Nanomachine = z.infer<typeof NanomachineSchema>;
-export type Drug = z.infer<typeof DrugSchema>;
-export type WeaponsByGroup = z.infer<typeof WeaponsByGroupSchema>;
-export type CyberneticsByPart = z.infer<typeof CyberneticsByPartSchema>;
-export type ItemsData = z.infer<typeof ItemsDataSchema>;
-export type ItemsJson = z.infer<typeof ItemsJsonSchema>;
-
 export function createWeaponCheckKey(check: WeaponCheck): WeaponCheckKey {
-  return WEAPON_CHECK_KEYS[check];
+  return weaponCheckKeys[check];
 }
 
 export function createCyberneticPartKey(
   part: CyberneticPart,
 ): CyberneticPartKey {
-  return CYBERNETIC_PART_KEYS[part];
+  return cyberneticPartKeys[part];
 }
 
 export function createWeaponId({
@@ -228,7 +205,7 @@ export function assertItemsJson(value: unknown): asserts value is ItemsJson {
   const result = ItemsJsonSchema.safeParse(value);
   if (!result.success) throw new Error(formatIssues(result.error.issues));
 
-  assertItemsData(result.data.data);
+  assertItemsData(result.data.data as ItemsData);
 }
 
 export function assertItemsData(data: ItemsData): void {

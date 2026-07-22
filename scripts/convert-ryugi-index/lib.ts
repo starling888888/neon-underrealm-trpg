@@ -2,14 +2,14 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { type CellValue, readSheet } from "read-excel-file/node";
+import { assertRyugiJson } from "../../src/lib/schemas/conversion/ryugi";
 import {
-  assertRyugiJson,
   RYUGI_LIST_DATA_NAME,
   type Ryugi,
   type RyugiJson,
   type RyugiNote,
   type RyugiNoteType,
-} from "../../src/lib/schemas/ryugi";
+} from "../../src/lib/types/ryugi";
 import { formatDateTimeJst } from "../convert-skills/write-generated-json";
 
 export interface ConvertRyugiListOptions {

@@ -1,12 +1,10 @@
 import { z } from "zod";
 import {
-  assertSkillsData,
-  type Skill,
-  type SkillsByCategory,
-  SkillsByCategorySchema,
-} from "./skill";
-
-export const IKIZAMA_SKILLS_DATA_NAME = "ikizama-skills";
+  IKIZAMA_SKILLS_DATA_NAME,
+  type IkizamaSkillsJson,
+} from "../../types/ikizama-skills";
+import type { Skill, SkillsByCategory } from "../../types/skill";
+import { assertSkillsData, SkillsByCategorySchema } from "./skill";
 
 export const IkizamaSkillsJsonSchema = z
   .object({
@@ -23,8 +21,6 @@ export const IkizamaSkillsJsonSchema = z
     data: z.record(z.string(), SkillsByCategorySchema),
   })
   .strict();
-
-export type IkizamaSkillsJson = z.infer<typeof IkizamaSkillsJsonSchema>;
 
 export function assertIkizamaSkillsJsonShape(
   value: unknown,

@@ -18,8 +18,8 @@ import {
 import {
   assertReleaseNotesJson,
   parseReleaseNotesJson,
-  type ReleaseNotesJson,
-} from "../../src/lib/schemas/release-notes";
+} from "../../src/lib/schemas/conversion/release-notes";
+import type { ReleaseNotesJson } from "../../src/lib/types/release-notes";
 
 describe("release notes conversion", () => {
   it("converts release notes, preserves line breaks, and sorts latest first", async () => {

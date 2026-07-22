@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { CALLOUT_TYPES, type CalloutType } from "../types/callout";
-
-export const RYUGI_LIST_DATA_NAME = "ryugi-list";
+import { CALLOUT_TYPES } from "../../types/callout";
+import { RYUGI_LIST_DATA_NAME, type RyugiJson } from "../../types/ryugi";
 
 export const RyugiNoteTypeSchema = z.enum(CALLOUT_TYPES);
 
@@ -70,11 +69,6 @@ export const RyugiJsonSchema = z
     data: z.array(RyugiSchema).min(1),
   })
   .strict();
-
-export type RyugiNoteType = CalloutType;
-export type RyugiNote = z.infer<typeof RyugiNoteSchema>;
-export type Ryugi = z.infer<typeof RyugiSchema>;
-export type RyugiJson = z.infer<typeof RyugiJsonSchema>;
 
 export function assertRyugiJson(value: unknown): asserts value is RyugiJson {
   const result = RyugiJsonSchema.safeParse(value);
