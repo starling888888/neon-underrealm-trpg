@@ -194,7 +194,7 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] スミの実装スクリーンショットをdesign fix modeで正本化した（`/data/ikizama/sumi/`）
 
 ### 対応完了チェックリスト
 

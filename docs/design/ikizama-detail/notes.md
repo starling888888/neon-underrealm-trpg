@@ -2,14 +2,14 @@
 
 ## Mode
 
-- initial draft
+- design fix
 
 ## Target
 
 - page / component: 生き様詳細ページ / 生き様データComponent
 - route: `/data/ikizama/[ikizamaId]`
 - viewport: desktop `1440x1200`、mobile `390x900`
-- states: default。ブライのデータを表示する。
+- states: default。スミのデータと、存在する`note`のCalloutを表示する。
 
 ## Referenced SSoT
 
@@ -29,9 +29,9 @@
 
 ## Design direction
 
-- visual direction: 白寄りの本文面、低彩度border、暗い本文色、青緑accentを維持する。ブライのhero画像をH1直後へ置き、画像上の文字overlayやcaptionは追加しない。
+- visual direction: 白寄りの本文面、低彩度border、暗い本文色、青緑accentを維持する。スミのhero画像をH1直後へ置き、画像上の文字overlayやcaptionは追加しない。
 - layout direction: desktopは既存の左右レールと中央本文の3レールlayoutを使う。本文ではH1、hero、説明、生き様データ、生き様スキル、専用アイテムをcontentsの順に置く。生き様データはdesktopで、生き様ボーナス、能力値ポイント、副能力係数をこの順の1行3列に置く。mobileは、生き様ボーナスと能力値ポイントを上段の2列、副能力係数を下段の全幅に置く。
-- typography direction: H1は `生き様：ブライ` と表示し、underlineのaccentは既存prose見出しと同じ暗いグレーを使う。H2は左borderと下線を持つ。生き様データ内の生き様ボーナス、能力値ポイント、副能力係数はH3とする。スキルの名称、最大LV、メタ情報、詳細表、効果文の順は既存`SkillCard`を維持する。
+- typography direction: H1は `生き様：スミ` と表示し、underlineのaccentは既存prose見出しと同じ暗いグレーを使う。H2は左borderと下線を持つ。生き様データ内の生き様ボーナス、能力値ポイント、副能力係数はH3とする。スキルの名称、最大LV、メタ情報、詳細表、効果文の順は既存`SkillCard`を維持する。
 - color / accent usage: 青緑はスキル名下線、最大LV、専用アイテムリンクに限定する。所属、カテゴリ、IDは可視ラベルにしない。
 
 ## Existing design constraints
@@ -40,7 +40,7 @@
 - `page-toc` に従い、H1を目次に含めず、H2 / H3の見出し階層を維持する。目次の現在位置ハイライトを描かない。
 - `skill-card` のdesktop 3列・mobile 2列、情報の順序、可変高さ、summary非表示を維持する。
 - 生き様データComponentは、hero、説明、基本・上級スキル、専用アイテムに依存しない。desktopでは生き様ボーナス、能力値ポイント、副能力係数の順で1行3列、mobileでは前2者を上段2列、副能力係数を下段全幅とする。
-- heroは `public/images/data/ikizama/burai_hero.webp` を表示し、altは`ブライのイメージ`とする。実装時は静的公開のbase pathを考慮する。
+- heroは `public/images/data/ikizama/sumi_hero.webp` を表示し、altは`スミのイメージ`とする。実装時は静的公開のbase pathを考慮する。
 
 ## Out of scope
 
@@ -63,19 +63,20 @@
 
 ## Generation source
 
-- prototype or generator source: standalone HTML/CSS prototypeをPlaywrightでcaptureした。実装済みサイト、`test-results/`、`playwright-report/`は画像源に使っていない。
-- source branch / commit: `32-2-ikizama-detail-page` / `e062aba`
-- route: `/data/ikizama/[ikizamaId]` の想定画面。prototype内ではブライを使った。
-- viewport: desktop `1440x1200`（full page `1440x2655`）、mobile `390x900`（full page `390x2627`）
-- prototype path / capture notes:
-  - `.tmp/design/ikizama-detail/prototype.html`
-  - `.tmp/design/ikizama-detail/capture.mjs`
-  - `data/generated/ikizama.json` のブライの説明、能力値ポイント、副能力係数、専用アイテムを表示した。
-  - `data/generated/ikizama-skills.json` のブライのボーナススキル、基本スキル、上級スキルを代表例として表示した。
-  - `public/images/data/ikizama/burai_hero.webp` をprototypeへ埋め込んでcaptureした。
-  - Chromium sandboxの制約により、captureは承認済みのローカル実行で行った。
+- canonicalization source: reviewed implementation screenshot。`npm run visual:capture -- --grep "@ikizama-detail"` で、スミの実装画面を取得する。
+
+<!-- visual-canonicalization:start -->
+
+- command: `npm run visual:canonicalize -- ikizama-detail --route /data/ikizama/sumi/`
+- source branch: `32-2-ikizama-detail-page`
+- source commit: `eceea3157418fa3d3e033daf009494485dfafd1a`
+- route: `/data/ikizama/sumi/`
+- state: `default`
+- viewport: desktop 1440x1200, mobile 390x900
+- capture manifest: `test-results/visual/capture-manifest.json`
+
+<!-- visual-canonicalization:end -->
 
 ## Open questions
 
-- 初期draft。生き様ボーナスは生き様データ内のH3として扱い、desktopの1行3列とmobileの上段2列・下段全幅の配置を確認する。
-- ブライ以外に任意の`note`を持つ生き様では、hero直後のCalloutを既存Componentの見た目のまま追加する。
+- スミの`note`を既存`Callout`で表示する状態を正本とする。
