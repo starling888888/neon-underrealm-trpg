@@ -10,10 +10,6 @@ const requiredOneLine = requiredText.refine(
   (value) => !hasLineBreak(value),
   "Value must be one line.",
 );
-const optionalOneLine = z
-  .string()
-  .refine((value) => value === value.trim(), "Value must be trimmed.")
-  .refine((value) => !hasLineBreak(value), "Value must be one line.");
 const requiredLf = requiredText.refine(
   (value) => !value.includes("\r"),
   "Line breaks must use LF.",
@@ -28,7 +24,7 @@ export const NpcEpithetSchema = z
 
 export const NpcSchema = z
   .object({
-    group: optionalOneLine,
+    group: requiredOneLine,
     id: requiredOneLine.regex(/^[a-z][a-z0-9_]*$/),
     name: requiredOneLine,
     epithet: NpcEpithetSchema.nullable(),
@@ -63,6 +59,8 @@ export function assertNpcJson(value: unknown): asserts value is NpcJson {
 
   const ids = new Set<string>();
   const names = new Set<string>();
+  const completedGroups = new Set<string>();
+  let previousGroup: string | undefined;
   result.data.data.forEach((npc, index) => {
     if (ids.has(npc.id)) throw new Error(`Duplicate NPC id "${npc.id}".`);
     if (names.has(npc.name))
@@ -70,8 +68,15 @@ export function assertNpcJson(value: unknown): asserts value is NpcJson {
     if (npc.sourceOrder !== index + 1) {
       throw new Error("NPC sourceOrder values must match input order.");
     }
+    if (previousGroup !== undefined && npc.group !== previousGroup) {
+      completedGroups.add(previousGroup);
+    }
+    if (completedGroups.has(npc.group)) {
+      throw new Error(`NPC groups must be contiguous: "${npc.group}".`);
+    }
     ids.add(npc.id);
     names.add(npc.name);
+    previousGroup = npc.group;
   });
 }
 

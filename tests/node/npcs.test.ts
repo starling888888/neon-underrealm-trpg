@@ -17,12 +17,12 @@ import { assertNpcJson } from "../../src/lib/schemas/npcs";
 const headers = ["グループ", "ID", "名前", "二つ名", "ルビ", "セリフ", "説明"];
 
 describe("npcs conversion", () => {
-  it("converts input order, blank groups, CRLF, and exposes generated data", async () => {
+  it("converts input order, groups, CRLF, and exposes generated data", async () => {
     await using fixture = await createFixture();
     await workbook(fixture.input, "npcs", [
       headers,
       row("第一勢力", "alpha", "アルファ", "異名", "イミョウ"),
-      row("", "beta", "ベータ"),
+      row("第二勢力", "beta", "ベータ"),
     ]);
 
     const result = await convert(fixture, new Date("2026-07-22T00:00:00Z"));
@@ -30,7 +30,7 @@ describe("npcs conversion", () => {
       result.data.map((npc) => [npc.id, npc.group, npc.sourceOrder]),
       [
         ["alpha", "第一勢力", 1],
-        ["beta", "", 2],
+        ["beta", "第二勢力", 2],
       ],
     );
     assert.deepEqual(result.data[0]?.epithet, {
@@ -93,7 +93,7 @@ describe("npcs conversion", () => {
     );
   });
 
-  it("rejects invalid IDs, required fields, partial epithet pairs, headers, and interior blank rows", async () => {
+  it("rejects invalid IDs, invalid groups, required fields, partial epithet pairs, headers, and interior blank rows", async () => {
     await using fixture = await createFixture();
     await workbook(fixture.input, "npcs", [
       headers,
@@ -102,6 +102,12 @@ describe("npcs conversion", () => {
     await assert.rejects(
       () => convert(fixture),
       /ID is invalid at row 2, column B \(ID\)/,
+    );
+
+    await workbook(fixture.input, "npcs", [headers, row("", "alpha", "名前")]);
+    await assert.rejects(
+      () => convert(fixture),
+      /グループ is required at row 2, column A \(グループ\)/,
     );
 
     await workbook(fixture.input, "npcs", [headers, row("勢力", "alpha", "")]);
@@ -137,6 +143,31 @@ describe("npcs conversion", () => {
     await assert.rejects(
       () => convert(fixture),
       /Blank row found at row 3, column A \(グループ\) before data row 4/,
+    );
+
+    await workbook(fixture.input, "npcs", [
+      headers,
+      row("第一勢力", "alpha", "名前A"),
+      row("第二勢力", "beta", "名前B"),
+      row("第一勢力", "gamma", "名前C"),
+    ]);
+    await assert.rejects(
+      () => convert(fixture),
+      /Group "第一勢力" must be contiguous at row 4, column A \(グループ\)/,
+    );
+
+    assert.throws(
+      () =>
+        assertNpcJson({
+          dataName: "npcs",
+          updatedAt: "2026-07-22T09:00:00+09:00",
+          data: [
+            { ...expectedNpc("alpha", "名前A", 1), group: "第一勢力" },
+            { ...expectedNpc("beta", "名前B", 2), group: "第二勢力" },
+            { ...expectedNpc("gamma", "名前C", 3), group: "第一勢力" },
+          ],
+        }),
+      /NPC groups must be contiguous: "第一勢力"/,
     );
   });
 });

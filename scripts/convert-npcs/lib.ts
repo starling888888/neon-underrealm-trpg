@@ -82,7 +82,9 @@ function collectNpcs(rows: Rows): Npc[] {
   const data: Npc[] = [];
   const ids = new Set<string>();
   const names = new Set<string>();
+  const completedGroups = new Set<string>();
   let blankRowNumber: number | undefined;
+  let previousGroup: string | undefined;
 
   for (let rowIndex = 1; rowIndex < rows.length; rowIndex += 1) {
     const rowNumber = rowIndex + 1;
@@ -98,6 +100,17 @@ function collectNpcs(rows: Rows): Npc[] {
         `Blank row found at ${location(blankRowNumber, 0)} before data row ${rowNumber}.`,
       );
     }
+
+    const group = requiredOneLine(values[0], "グループ", rowNumber, 0);
+    if (previousGroup !== undefined && group !== previousGroup) {
+      completedGroups.add(previousGroup);
+    }
+    if (completedGroups.has(group)) {
+      throw new Error(
+        `Group "${group}" must be contiguous at ${location(rowNumber, 0)}.`,
+      );
+    }
+    previousGroup = group;
 
     const id = requiredOneLine(values[1], "ID", rowNumber, 1);
     if (!/^[a-z][a-z0-9_]*$/.test(id)) {
@@ -115,7 +128,7 @@ function collectNpcs(rows: Rows): Npc[] {
     ids.add(id);
     names.add(name);
     data.push({
-      group: optionalOneLine(values[0], "グループ", rowNumber, 0),
+      group,
       id,
       name,
       epithet: epithet(values, rowNumber),
