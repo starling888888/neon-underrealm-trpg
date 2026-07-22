@@ -39,6 +39,7 @@
 - アイテム変換、Schema、データ取得層、生成JSONのテストを追加する
 - `src/lib/data/items.ts`に、生成済みJSONを静的importして全データを返す取得関数、武器の`group`／`checkKey`から配列を返す取得関数、サイバネの`part`から配列を返す取得関数を追加する。不明なキーは`undefined`を返し、Nodeのfilesystem APIまたはExcel入力へ依存しない
 - 変換コマンドを追加し、CI/CDのbuildがExcel入力または変換実行に依存しないことを維持する
+- `npm-run-all2`を使う`npm run convert:data`を追加し、流儀一覧→流儀スキル、生き様一覧→生き様スキルをそれぞれ直列にしつつ、独立したデータ変換を並列実行する
 
 ### アーキテクチャ制約
 
@@ -68,10 +69,11 @@
 - [x] MDX本文とVisual Testの自動生成見出しへのリンクが、共有`createHeadingId(depth, text)`から組み立てた意味名付きconstを使い、既存リンク先を変えていない
 - [x] アイテム取得層が、静的importした全Itemデータ、武器の`group`／`checkKey`配列、サイバネの`part`配列を返し、不明キーでは`undefined`を返す
 - [x] 生成JSONを手編集せず、ローカル変換コマンドで更新している
-- [x] 新しいnpm packageを追加していない。追加が必要になった場合は、理由・代替案・初期スコープに必要な理由を記録する
+- [x] `npm-run-all2`を追加し、理由・代替案・初期スコープに必要な理由を記録している
 - [x] `npm run check` が通る
 - [x] `npm test` が通る
 - [x] `npm run build` が通る
+- [x] `npm run convert:data`が全生成JSONを更新でき、流儀・生き様の依存する変換順を守る
 
 ## チェックポイント
 
@@ -124,6 +126,8 @@
 - `data/generated/common-skills.json`
 - `data/generated/ryugi-skills.json`
 - `data/generated/ikizama-skills.json`
+- `data/generated/README.md`
+- `package-lock.json`
 
 ## レビュー観点
 
@@ -133,6 +137,7 @@
 - `-`、武器射程、ナノマシン`埋め込み点数`の入力契約がDriveの最新`items`と一致しているか
 - Skill IDの再生成とID例・TODOの更新が、アイテム変換の範囲を超えてキャラクターシート実装へ広がっていないか
 - 自動生成見出しへのリンクが、元の見出しの深さと文字列から組み立てられ、リンク先の既存アンカーを変えていないか
+- 一括変換が依存する一覧JSONの完了を待ってから対応するスキルJSONを変換し、独立した変換を不必要に直列化していないか
 
 ## 備考
 
@@ -140,3 +145,5 @@
 - 2026-07-22時点で、`happou`、`kakutou`、`kanshou`をID用の長音表記として採用する。
 - UI、CSS、layout、page、Componentを変更しないため、design targetおよびdesign画像は不要。
 - `docs/TODO.md`の永続Skill参照の検出は、キャラクターシート実装時のfollow-upとして維持する。このissueでは永続データを導入しないため、実装範囲を広げない。
+- `npm-run-all2`は、固定した変換依存グラフを`run-s`と`run-p`で宣言的に表すため追加する。代替案のカスタムNodeランナーは実装済みだったが、プロセス起動・待機・失敗伝播を保守する必要があり、この小さな固定グラフには不要である。追加したv8.0.4はNode v20以上で動作し、Node v24.18.0を固定した本プロジェクトで利用できるため、初期スコープのローカル一括変換に必要な最小依存として採用する。
+- 2026-07-22のコミット前回帰確認では、Node v24.18.0で`npm run convert:data`、`npm test`（12件）、`npm run check`、`npm run build`、`npm run build:public`、`npm audit`（脆弱性0件）がすべて成功した。生成データ、静的チェック、通常／公開用ビルド、依存更新後のテストにデグレは確認されなかった。
