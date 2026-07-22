@@ -1,0 +1,53 @@
+---
+import {
+  displayText,
+  displayValue,
+  type DisplayValue,
+} from "./card-display";
+
+interface Props {
+  anchorId?: string;
+  name: string;
+  credit?: DisplayValue;
+  timing?: DisplayValue;
+  setQuantity?: DisplayValue;
+  badTripIntensity?: DisplayValue;
+  effect?: string | null;
+}
+
+const { anchorId, name, credit, timing, setQuantity, badTripIntensity, effect } = Astro.props;
+---
+
+<article id={anchorId} class="data-card drug-card" data-drug-card>
+  <div class="data-card-content">
+    <header class="data-card-header">
+      <span class="data-card-name">{name}</span>
+    </header>
+
+    <p class="data-card-meta"><span class="data-card-credit">信用：{displayValue(credit)}</span></p>
+    <p class="data-card-meta data-card-meta-secondary">
+      <span>使用タイミング：{displayValue(timing)}</span>
+    </p>
+
+    <dl class="data-card-details">
+      <div class="data-card-detail">
+        <dt>1セット数量</dt>
+        <dd>{displayValue(setQuantity)}</dd>
+      </div>
+      <div class="data-card-detail drug-card-detail-bad-trip">
+        <dt>BT強度</dt>
+        <dd>{displayValue(badTripIntensity)}</dd>
+      </div>
+    </dl>
+
+    <div class="data-card-effect">
+      <p class="data-card-rule">{displayText(effect)}</p>
+    </div>
+  </div>
+</article>
+
+<style>
+  .drug-card-detail-bad-trip dt {
+    white-space: nowrap;
+  }
+</style>

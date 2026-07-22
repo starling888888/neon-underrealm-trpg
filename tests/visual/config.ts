@@ -33,7 +33,7 @@ export const visualRoutes = {
   mdxTest: "-local/mdx-test/",
   callouts: "-local/callouts/",
   npcCards: "-local/npc-cards/",
-  skillCards: "-local/skill-cards/",
+  dataCards: "-local/data-cards/",
   dataItemsWeapons: "data/items/weapons/",
 } as const;
 

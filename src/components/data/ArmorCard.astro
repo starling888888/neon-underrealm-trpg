@@ -1,0 +1,54 @@
+---
+import {
+  displayText,
+  displayValue,
+  type DisplayValue,
+} from "./card-display";
+
+interface Props {
+  anchorId?: string;
+  name: string;
+  credit?: DisplayValue;
+  defense?: DisplayValue;
+  damageReduction?: DisplayValue;
+  restriction?: string | null;
+  effect?: string | null;
+}
+
+const { anchorId, name, credit, defense, damageReduction, restriction, effect } = Astro.props;
+---
+
+<article id={anchorId} class="data-card armor-card" data-armor-card>
+  <div class="data-card-content">
+    <header class="data-card-header">
+      <span class="data-card-name">{name}</span>
+    </header>
+
+    <p class="data-card-meta"><span class="data-card-credit">信用：{displayValue(credit)}</span></p>
+
+    <dl class="data-card-details">
+      <div class="data-card-detail">
+        <dt>防御力</dt>
+        <dd>{displayValue(defense)}</dd>
+      </div>
+      <div class="data-card-detail">
+        <dt>ダメージ軽減</dt>
+        <dd>{displayValue(damageReduction)}</dd>
+      </div>
+      <div class="data-card-detail armor-card-detail-restriction">
+        <dt>装備制限</dt>
+        <dd>{displayValue(restriction)}</dd>
+      </div>
+    </dl>
+
+    <div class="data-card-effect">
+      <p class="data-card-rule">{displayText(effect)}</p>
+    </div>
+  </div>
+</article>
+
+<style>
+  .armor-card-detail-restriction {
+    grid-column: 1 / -1;
+  }
+</style>

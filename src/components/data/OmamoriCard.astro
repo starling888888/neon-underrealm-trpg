@@ -1,0 +1,31 @@
+---
+import {
+  displayText,
+  displayValue,
+  type DisplayValue,
+} from "./card-display";
+
+interface Props {
+  anchorId?: string;
+  name: string;
+  credit?: DisplayValue;
+  effect?: string | null;
+}
+
+const { anchorId, name, credit, effect } = Astro.props;
+---
+
+<article id={anchorId} class="data-card omamori-card" data-omamori-card>
+  <div class="data-card-content">
+    <header class="data-card-header">
+      <span class="data-card-name">{name}</span>
+    </header>
+
+    <p class="data-card-meta"><span class="data-card-credit">信用：{displayValue(credit)}</span></p>
+    <hr class="data-card-divider" />
+
+    <div class="data-card-effect data-card-effect-compact">
+      <p class="data-card-rule">{displayText(effect)}</p>
+    </div>
+  </div>
+</article>
