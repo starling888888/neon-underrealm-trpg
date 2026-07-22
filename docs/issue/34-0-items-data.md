@@ -58,33 +58,33 @@
 
 ## 完了条件
 
-- [ ] `docs/conversion/items.md`、`docs/requirements/data-id-policy.md`、関連するSkill変換仕様が、実装・生成JSON・要件例と整合している
-- [ ] 6種別のアイテムを、種別ごとに独立した変換関数で`items.json`へ変換できる
-- [ ] `items.json`が武器の`group`・`checkKey`階層とサイバネの`part`階層を持ち、全Item IDが名称hashを含む
-- [ ] 入力ヘッダー、必須値、数値、`-`、武器射程、列挙値、名称／hash／ID重複、`sourceOrder`を検証できる
-- [ ] `docs/requirements/data-id-policy.md`に定めるItem IDと重複制約を`items.json`全体で検証できる
+- [x] `docs/conversion/items.md`、`docs/requirements/data-id-policy.md`、関連するSkill変換仕様が、実装・生成JSON・要件例と整合している
+- [x] 6種別のアイテムを、種別ごとに独立した変換関数で`items.json`へ変換できる
+- [x] `items.json`が武器の`group`・`checkKey`階層とサイバネの`part`階層を持ち、全Item IDが名称hashを含む
+- [x] 入力ヘッダー、必須値、数値、`-`、武器射程、列挙値、名称／hash／ID重複、`sourceOrder`を検証できる
+- [x] `docs/requirements/data-id-policy.md`に定めるItem IDと重複制約を`items.json`全体で検証できる
 - [x] 既存SkillのID生成・Schema・テストが名称hash形式へ移行し、3つの生成済みSkill JSONを再生成している
 - [x] 既存のID例、ゲーム仕様、関連TODO、Visual Testが名称hash ID方針と矛盾していない
 - [x] MDX本文とVisual Testの自動生成見出しへのリンクが、共有`createHeadingId(depth, text)`から組み立てた意味名付きconstを使い、既存リンク先を変えていない
-- [ ] アイテム取得層が、静的importした全Itemデータ、武器の`group`／`checkKey`配列、サイバネの`part`配列を返し、不明キーでは`undefined`を返す
-- [ ] 生成JSONを手編集せず、ローカル変換コマンドで更新している
-- [ ] 新しいnpm packageを追加していない。追加が必要になった場合は、理由・代替案・初期スコープに必要な理由を記録する
-- [ ] `npm run check` が通る
-- [ ] `npm test` が通る
-- [ ] `npm run build` が通る
+- [x] アイテム取得層が、静的importした全Itemデータ、武器の`group`／`checkKey`配列、サイバネの`part`配列を返し、不明キーでは`undefined`を返す
+- [x] 生成JSONを手編集せず、ローカル変換コマンドで更新している
+- [x] 新しいnpm packageを追加していない。追加が必要になった場合は、理由・代替案・初期スコープに必要な理由を記録する
+- [x] `npm run check` が通る
+- [x] `npm test` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
 - [x] 既存のSkill変換コマンドと再生成済みJSONが名称hash ID・入力順とは独立した`sourceOrder`を持つ
-- [ ] アイテム変換は各シートの専用変換関数を経由し、共通helperへ種別固有分岐を集約していない
-- [ ] 既存ルートとGitHub Pagesのサブパス公開に影響しない
-- [ ] CI/CDのbuildが`.raw/`または変換コマンドに依存しない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] `docs/TODO.md` の永続Skill参照のfollow-upを、キャラクターシート実装へ拡大せず更新または維持理由を記録している
-- [ ] 最新のDriveとローカル`items.xlsx`が、ナノマシン`埋め込み点数`、武器信用欄の`-`なし、武器射程の空欄なしの入力契約に一致している
-- [ ] design targetは不要なデータ変換タスクであり、`design-image-generation`を実行していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] アイテム変換は各シートの専用変換関数を経由し、共通helperへ種別固有分岐を集約していない
+- [x] 既存ルートとGitHub Pagesのサブパス公開に影響しない
+- [x] CI/CDのbuildが`.raw/`または変換コマンドに依存しない
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] `docs/TODO.md` の永続Skill参照のfollow-upを、キャラクターシート実装へ拡大せず更新または維持理由を記録している
+- [x] 最新のDriveとローカル`items.xlsx`が、ナノマシン`埋め込み点数`、武器信用欄の`-`なし、武器射程の空欄なしの入力契約に一致している
+- [x] design targetは不要なデータ変換タスクであり、`design-image-generation`を実行していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -139,3 +139,4 @@
 - `.raw/data/items.xlsx`はGit管理しない。同期済みのDrive `items`とローカル入力で、ナノマシンの見出しが`埋め込み点数`であり、武器信用欄の`-`と武器射程の空欄がないことを確認済み。
 - 2026-07-22時点で、`happou`、`kakutou`、`kanshou`をID用の長音表記として採用する。
 - UI、CSS、layout、page、Componentを変更しないため、design targetおよびdesign画像は不要。
+- `docs/TODO.md`の永続Skill参照の検出は、キャラクターシート実装時のfollow-upとして維持する。このissueでは永続データを導入しないため、実装範囲を広げない。

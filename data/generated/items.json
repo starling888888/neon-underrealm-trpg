@@ -1,0 +1,1697 @@
+{
+  "dataName": "items",
+  "updatedAt": "2026-07-22T20:59:33+09:00",
+  "data": {
+    "weapons": {
+      "normal": {
+        "kenka": [
+          {
+            "id": "item-weapon-normal-kenka-f7bff9ed8550",
+            "group": "normal",
+            "name": "刀",
+            "credit": 3,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 20,
+            "guard": 5,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 1
+          },
+          {
+            "id": "item-weapon-normal-kenka-5e8b3c40289d",
+            "group": "normal",
+            "name": "バット",
+            "credit": 3,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 15,
+            "guard": 6,
+            "ammo": null,
+            "effect": "渾身での攻撃時攻撃力+8。",
+            "sourceOrder": 2
+          },
+          {
+            "id": "item-weapon-normal-kenka-e1e3f2ab675e",
+            "group": "normal",
+            "name": "特殊警棒",
+            "credit": 3,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 12,
+            "guard": 10,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 3
+          },
+          {
+            "id": "item-weapon-normal-kenka-793af7fbf90d",
+            "group": "normal",
+            "name": "バールのようなもの",
+            "credit": 3,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 15,
+            "guard": 8,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 4
+          }
+        ],
+        "ansatsu": [
+          {
+            "id": "item-weapon-normal-ansatsu-6ded6d695d9a",
+            "group": "normal",
+            "name": "短刀",
+            "credit": 2,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 10,
+            "guard": 4,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 5
+          },
+          {
+            "id": "item-weapon-normal-ansatsu-c50255d0d2d9",
+            "group": "normal",
+            "name": "小盾",
+            "credit": 2,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 8,
+            "guard": 7,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 6
+          },
+          {
+            "id": "item-weapon-normal-ansatsu-19b327cb34ab",
+            "group": "normal",
+            "name": "長針",
+            "credit": 3,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 17,
+            "guard": null,
+            "ammo": null,
+            "effect": "暗器。シナリオ3回使用可能。",
+            "sourceOrder": 7
+          },
+          {
+            "id": "item-weapon-normal-ansatsu-6d8e33c72e61",
+            "group": "normal",
+            "name": "カミソリ刃",
+            "credit": 2,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": null,
+            "guard": null,
+            "ammo": null,
+            "effect": "暗器。ダメージの代わりに出血2を与える。シナリオ3回使用可能。",
+            "sourceOrder": 8
+          },
+          {
+            "id": "item-weapon-normal-ansatsu-adfc95808ef4",
+            "group": "normal",
+            "name": "毒針",
+            "credit": 2,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": null,
+            "guard": null,
+            "ammo": null,
+            "effect": "暗器。ダメージの代わりに毒2を与える。シナリオ3回使用可能。",
+            "sourceOrder": 9
+          },
+          {
+            "id": "item-weapon-normal-ansatsu-706c7aa8a30e",
+            "group": "normal",
+            "name": "目潰し",
+            "credit": 2,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": null,
+            "guard": null,
+            "ammo": null,
+            "effect": "暗器。ダメージの代わりに次の味方キャラクターの手番終了時まで命中した対象のリアクション達成値を1下げる。この効果は累積せず、強度2のバッドステータスとして扱う。シナリオ5回使用可能。",
+            "sourceOrder": 10
+          },
+          {
+            "id": "item-weapon-normal-ansatsu-b816ab5fd406",
+            "group": "normal",
+            "name": "ブラックジャック",
+            "credit": 2,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": null,
+            "guard": null,
+            "ammo": null,
+            "effect": "暗器。ダメージの代わりに命中した対象の次の手番終了時まで攻撃の達成値を1さげる。この効果は累積せず、強度2のバッドステータスとして扱う。シナリオ5回使用可能。",
+            "sourceOrder": 11
+          }
+        ],
+        "happou": [
+          {
+            "id": "item-weapon-normal-happou-09b7eab87468",
+            "group": "normal",
+            "name": "拳銃",
+            "credit": 2,
+            "range": 1,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 10,
+            "guard": 3,
+            "ammo": 6,
+            "effect": null,
+            "sourceOrder": 12
+          },
+          {
+            "id": "item-weapon-normal-happou-7fdfd7476cbe",
+            "group": "normal",
+            "name": "大型拳銃",
+            "credit": 3,
+            "range": 1,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 13,
+            "guard": 6,
+            "ammo": 3,
+            "effect": null,
+            "sourceOrder": 13
+          },
+          {
+            "id": "item-weapon-normal-happou-94d642d116d5",
+            "group": "normal",
+            "name": "機関銃",
+            "credit": 3,
+            "range": 3,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 7,
+            "guard": 2,
+            "ammo": 15,
+            "effect": null,
+            "sourceOrder": 14
+          },
+          {
+            "id": "item-weapon-normal-happou-56e2f49804f8",
+            "group": "normal",
+            "name": "狙撃銃",
+            "credit": 3,
+            "range": 5,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 18,
+            "guard": null,
+            "ammo": 3,
+            "effect": null,
+            "sourceOrder": 15
+          },
+          {
+            "id": "item-weapon-normal-happou-ad30ae82438e",
+            "group": "normal",
+            "name": "グレネードランチャー",
+            "credit": 4,
+            "range": 4,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 23,
+            "guard": 8,
+            "ammo": 1,
+            "effect": null,
+            "sourceOrder": 16
+          }
+        ],
+        "kakutou": [
+          {
+            "id": "item-weapon-normal-kakutou-b185a2a13844",
+            "group": "normal",
+            "name": "素手",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘",
+            "attack": 5,
+            "guard": 6,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 17
+          },
+          {
+            "id": "item-weapon-normal-kakutou-364d3e804724",
+            "group": "normal",
+            "name": "素足",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘",
+            "attack": 7,
+            "guard": 4,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 18
+          },
+          {
+            "id": "item-weapon-normal-kakutou-7f9c30df8490",
+            "group": "normal",
+            "name": "メリケンサック",
+            "credit": 3,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘",
+            "attack": 12,
+            "guard": 8,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 19
+          },
+          {
+            "id": "item-weapon-normal-kakutou-36c9d7bee828",
+            "group": "normal",
+            "name": "ハードブーツ",
+            "credit": 3,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘",
+            "attack": 10,
+            "guard": 12,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 20
+          }
+        ],
+        "kanshou": [
+          {
+            "id": "item-weapon-normal-kanshou-4a05f7253bcf",
+            "group": "normal",
+            "name": "衝撃",
+            "credit": null,
+            "range": 2,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 10,
+            "guard": 6,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 21
+          },
+          {
+            "id": "item-weapon-normal-kanshou-fc5e9d061b2e",
+            "group": "normal",
+            "name": "斬撃",
+            "credit": null,
+            "range": 4,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 7,
+            "guard": null,
+            "ammo": null,
+            "effect": "リアクションに失敗した対象に出血1を与える。",
+            "sourceOrder": 22
+          },
+          {
+            "id": "item-weapon-normal-kanshou-7e850bc31c60",
+            "group": "normal",
+            "name": "怪光線",
+            "credit": null,
+            "range": 4,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 7,
+            "guard": null,
+            "ammo": null,
+            "effect": "リアクションの成否を問わず、対象の防御力を3点減少させる。この効果は累積しない。バッドステータスとしては扱われない。",
+            "sourceOrder": 23
+          },
+          {
+            "id": "item-weapon-normal-kanshou-eff8bf6ea2fc",
+            "group": "normal",
+            "name": "怪音波",
+            "credit": null,
+            "range": "シーン",
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 8,
+            "guard": 5,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 24
+          },
+          {
+            "id": "item-weapon-normal-kanshou-10c3914c94c2",
+            "group": "normal",
+            "name": "幻影",
+            "credit": null,
+            "range": 3,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 5,
+            "guard": null,
+            "ammo": null,
+            "effect": "判定を2回行い、好きな方の結果を採用できる。",
+            "sourceOrder": 25
+          },
+          {
+            "id": "item-weapon-normal-kanshou-1352d2fccac8",
+            "group": "normal",
+            "name": "力壁",
+            "credit": null,
+            "range": 1,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 8,
+            "guard": 8,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 26
+          },
+          {
+            "id": "item-weapon-normal-kanshou-3d9edf6ecc4b",
+            "group": "normal",
+            "name": "毒息",
+            "credit": null,
+            "range": 2,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 5,
+            "guard": null,
+            "ammo": null,
+            "effect": "リアクションに失敗した対象に毒1を与える。",
+            "sourceOrder": 27
+          },
+          {
+            "id": "item-weapon-normal-kanshou-30f6f746924c",
+            "group": "normal",
+            "name": "幻覚",
+            "credit": null,
+            "range": 4,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 4,
+            "guard": 0,
+            "ammo": null,
+            "effect": "受けているバッドトリップの強度×3だけ攻撃力が増加する。受けているバッドトリップの強度×2だけガード値が増加する。",
+            "sourceOrder": 28
+          },
+          {
+            "id": "item-weapon-normal-kanshou-b6f5731ede79",
+            "group": "normal",
+            "name": "光輪",
+            "credit": null,
+            "range": 3,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 8,
+            "guard": 7,
+            "ammo": null,
+            "effect": "タイミング:Mで干渉判定を行い、射程内のキャラクター1体の体力を攻撃力+効果値d6点回復する。気合獲得値は1で気合を獲得できる。",
+            "sourceOrder": 29
+          },
+          {
+            "id": "item-weapon-normal-kanshou-f97f17745342",
+            "group": "normal",
+            "name": "圧力",
+            "credit": null,
+            "range": 5,
+            "kind": "特殊",
+            "check": "干渉",
+            "attack": 0,
+            "guard": 0,
+            "ammo": null,
+            "effect": "攻撃の基準値を3から7まで選択できる。防御判定に失敗しても(効果値÷2)d6点ダメージを軽減できる。",
+            "sourceOrder": 30
+          }
+        ]
+      },
+      "cybernetics": {
+        "kenka": [
+          {
+            "id": "item-weapon-cybernetics-kenka-7a279385c3dd",
+            "group": "cybernetics",
+            "name": "ブレードフィスト",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 22,
+            "guard": 6,
+            "ammo": null,
+            "effect": "サイバネ武器",
+            "sourceOrder": 31
+          },
+          {
+            "id": "item-weapon-cybernetics-kenka-853730005d91",
+            "group": "cybernetics",
+            "name": "ガードアーム",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 15,
+            "guard": 10,
+            "ammo": null,
+            "effect": "サイバネ武器",
+            "sourceOrder": 32
+          },
+          {
+            "id": "item-weapon-cybernetics-kenka-348a9ee7d8e7",
+            "group": "cybernetics",
+            "name": "ヘビーハンド",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": null,
+            "guard": 20,
+            "ammo": null,
+            "effect": "サイバネ武器。この武器では攻撃できない。",
+            "sourceOrder": 33
+          },
+          {
+            "id": "item-weapon-cybernetics-kenka-a6cfd7412944",
+            "group": "cybernetics",
+            "name": "ハンマーアーム",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 20,
+            "guard": 14,
+            "ammo": null,
+            "effect": "サイバネ武器。基準値4以下の攻撃の判定数+2。ただし基準値4以下で攻撃を行うと転倒2を受ける。",
+            "sourceOrder": 34
+          }
+        ],
+        "ansatsu": [
+          {
+            "id": "item-weapon-cybernetics-ansatsu-b1a30aaba71a",
+            "group": "cybernetics",
+            "name": "ナイフレッグ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 12,
+            "guard": 8,
+            "ammo": null,
+            "effect": "サイバネ武器",
+            "sourceOrder": 35
+          },
+          {
+            "id": "item-weapon-cybernetics-ansatsu-4383a446790a",
+            "group": "cybernetics",
+            "name": "フィルムブレード",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 10,
+            "guard": null,
+            "ammo": null,
+            "effect": "サイバネ武器。暗器。シナリオ5回使用可能。サイバネを装備していない部位一つに付き攻撃力+4。",
+            "sourceOrder": 36
+          }
+        ],
+        "happou": [
+          {
+            "id": "item-weapon-cybernetics-happou-c2a3887cf37c",
+            "group": "cybernetics",
+            "name": "ガトリングアーム",
+            "credit": null,
+            "range": 3,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 8,
+            "guard": 10,
+            "ammo": 10,
+            "effect": "サイバネ武器。",
+            "sourceOrder": 37
+          },
+          {
+            "id": "item-weapon-cybernetics-happou-903d7a2dc31d",
+            "group": "cybernetics",
+            "name": "ミサイルニー",
+            "credit": null,
+            "range": 5,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 20,
+            "guard": null,
+            "ammo": 2,
+            "effect": "サイバネ武器。",
+            "sourceOrder": 38
+          },
+          {
+            "id": "item-weapon-cybernetics-happou-4e8108d376aa",
+            "group": "cybernetics",
+            "name": "グレネードバズーカ",
+            "credit": null,
+            "range": 5,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 18,
+            "guard": 8,
+            "ammo": 3,
+            "effect": "サイバネ武器。基準値4以下の攻撃の判定数+2。ただし基準値4以下で攻撃を行うと転倒2を受ける。",
+            "sourceOrder": 39
+          }
+        ],
+        "kakutou_kanshou": [
+          {
+            "id": "item-weapon-cybernetics-kakutou_kanshou-d669f39ace59",
+            "group": "cybernetics",
+            "name": "ブラストハンド",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘/干渉",
+            "attack": 16,
+            "guard": 13,
+            "ammo": null,
+            "effect": "サイバネ武器。",
+            "sourceOrder": 40
+          }
+        ]
+      },
+      "nanomachines": {
+        "kenka": [
+          {
+            "id": "item-weapon-nanomachines-kenka-edcd28fa7ea4",
+            "group": "nanomachines",
+            "name": "ツルギ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 24,
+            "guard": 4,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 41
+          },
+          {
+            "id": "item-weapon-nanomachines-kenka-ac88455724ca",
+            "group": "nanomachines",
+            "name": "マシラ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 17,
+            "guard": 8,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 42
+          },
+          {
+            "id": "item-weapon-nanomachines-kenka-7eee4320c880",
+            "group": "nanomachines",
+            "name": "セイリュウ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "喧嘩",
+            "attack": 21,
+            "guard": 8,
+            "ammo": null,
+            "effect": "攻撃の基準値を3から8まで選択できる。ただし、他の基準値変更の効果を受けれない。",
+            "sourceOrder": 43
+          }
+        ],
+        "ansatsu": [
+          {
+            "id": "item-weapon-nanomachines-ansatsu-38d8640b68c4",
+            "group": "nanomachines",
+            "name": "スザク",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 21,
+            "guard": null,
+            "ammo": null,
+            "effect": "暗器。シナリオ3回使用可能。発動するたびに使用回数が復活する。",
+            "sourceOrder": 44
+          },
+          {
+            "id": "item-weapon-nanomachines-ansatsu-2107912f1997",
+            "group": "nanomachines",
+            "name": "ウサギ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 15,
+            "guard": 3,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 45
+          },
+          {
+            "id": "item-weapon-nanomachines-ansatsu-68a2477920dd",
+            "group": "nanomachines",
+            "name": "トカゲ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 9,
+            "guard": 7,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 46
+          }
+        ],
+        "kakutou": [
+          {
+            "id": "item-weapon-nanomachines-kakutou-f4366fba20ee",
+            "group": "nanomachines",
+            "name": "カメ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘",
+            "attack": 14,
+            "guard": 10,
+            "ammo": null,
+            "effect": null,
+            "sourceOrder": 47
+          },
+          {
+            "id": "item-weapon-nanomachines-kakutou-3399837c6420",
+            "group": "nanomachines",
+            "name": "ゲンブ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘",
+            "attack": "特殊",
+            "guard": "特殊",
+            "ammo": null,
+            "effect": "この武器は素手として扱う。攻撃力とガード値はあなたの肉体に等しい。",
+            "sourceOrder": 48
+          }
+        ],
+        "happou": [
+          {
+            "id": "item-weapon-nanomachines-happou-955d83d5e33c",
+            "group": "nanomachines",
+            "name": "ヤジリ",
+            "credit": null,
+            "range": 4,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 14,
+            "guard": 4,
+            "ammo": 5,
+            "effect": "装弾数5。",
+            "sourceOrder": 49
+          },
+          {
+            "id": "item-weapon-nanomachines-happou-46e456057dc4",
+            "group": "nanomachines",
+            "name": "ビャッコ",
+            "credit": null,
+            "range": 3,
+            "kind": "射撃",
+            "check": "発砲",
+            "attack": 18,
+            "guard": 8,
+            "ammo": 2,
+            "effect": "弾丸1発消費のかわりに精神力3点を消費してもよい。",
+            "sourceOrder": 50
+          }
+        ]
+      }
+    },
+    "armors": [
+      {
+        "id": "item-armor-0fa89fb308be",
+        "name": "チンピラ服",
+        "credit": 2,
+        "defense": 8,
+        "damageReduction": 0,
+        "restriction": null,
+        "effect": null,
+        "sourceOrder": 1
+      },
+      {
+        "id": "item-armor-445ef2cc2d46",
+        "name": "特攻服",
+        "credit": 5,
+        "defense": 9,
+        "damageReduction": 0,
+        "restriction": "肉体4以上",
+        "effect": "気合いを3点以上所持しているとダメージ軽減+3。",
+        "sourceOrder": 2
+      },
+      {
+        "id": "item-armor-151072012e38",
+        "name": "ヤクザスーツ",
+        "credit": 5,
+        "defense": 8,
+        "damageReduction": 3,
+        "restriction": "精神4以上",
+        "effect": null,
+        "sourceOrder": 3
+      },
+      {
+        "id": "item-armor-c8f1cfc72f2a",
+        "name": "防弾ジャケット",
+        "credit": 5,
+        "defense": 15,
+        "damageReduction": 0,
+        "restriction": "筋力4以上",
+        "effect": null,
+        "sourceOrder": 4
+      },
+      {
+        "id": "item-armor-dc0aec761fe7",
+        "name": "ブランドジャージ",
+        "credit": 5,
+        "defense": 8,
+        "damageReduction": 0,
+        "restriction": "感覚4以上",
+        "effect": "戦闘開始時に行動値を+2から-5まで変化させることができる。",
+        "sourceOrder": 5
+      },
+      {
+        "id": "item-armor-a95e36603c83",
+        "name": "ニンジャスーツ",
+        "credit": 5,
+        "defense": 9,
+        "damageReduction": 0,
+        "restriction": "敏捷4以上",
+        "effect": "移動時のみ隠密状態として扱う。",
+        "sourceOrder": 6
+      },
+      {
+        "id": "item-armor-935d3f1ef739",
+        "name": "刺繍入り特攻服",
+        "credit": 7,
+        "defense": 12,
+        "damageReduction": 0,
+        "restriction": "肉体7以上",
+        "effect": "気合いを3点以上所持しているとダメージ軽減+5。",
+        "sourceOrder": 7
+      },
+      {
+        "id": "item-armor-645bbaca2c5d",
+        "name": "覚悟のサラシ",
+        "credit": 8,
+        "defense": 12,
+        "damageReduction": 0,
+        "restriction": "肉体7以上",
+        "effect": "素手と素足の攻撃力+3。",
+        "sourceOrder": 8
+      },
+      {
+        "id": "item-armor-80921db247ad",
+        "name": "オヤブンスーツ",
+        "credit": 8,
+        "defense": 8,
+        "damageReduction": 6,
+        "restriction": "精神7以上",
+        "effect": null,
+        "sourceOrder": 9
+      },
+      {
+        "id": "item-armor-b913276f0569",
+        "name": "特殊戦闘服",
+        "credit": 8,
+        "defense": 10,
+        "damageReduction": 0,
+        "restriction": "精神7以上",
+        "effect": "特殊攻撃の攻撃力+3。",
+        "sourceOrder": 10
+      },
+      {
+        "id": "item-armor-f31ec6c5aa51",
+        "name": "ジェラルミン加工ジャケット",
+        "credit": 9,
+        "defense": 17,
+        "damageReduction": 0,
+        "restriction": "筋力7以上",
+        "effect": null,
+        "sourceOrder": 11
+      },
+      {
+        "id": "item-armor-c3262d4d704a",
+        "name": "ミラージュウェア",
+        "credit": 10,
+        "defense": 0,
+        "damageReduction": "特殊",
+        "restriction": "感覚7以上",
+        "effect": "この防具のダメージ軽減はあなたの行動値の半分（端数切り捨て）である。",
+        "sourceOrder": 12
+      },
+      {
+        "id": "item-armor-f8bf7efdddda",
+        "name": "ハイブランドジャージ",
+        "credit": 9,
+        "defense": 10,
+        "damageReduction": 0,
+        "restriction": "感覚7以上",
+        "effect": "あなたはラウンド開始時に行動値が0になり、もともとの行動値以下の任意のイニシアチブで行動できる。",
+        "sourceOrder": 13
+      },
+      {
+        "id": "item-armor-e587b59a3fc4",
+        "name": "ダンサーウェア",
+        "credit": 8,
+        "defense": 11,
+        "damageReduction": 0,
+        "restriction": "敏捷7以上",
+        "effect": "リアクションの判定数+1。",
+        "sourceOrder": 14
+      },
+      {
+        "id": "item-armor-c5c6c3ec25e6",
+        "name": "上忍スーツ",
+        "credit": 8,
+        "defense": 11,
+        "damageReduction": 2,
+        "restriction": "敏捷7以上",
+        "effect": "隠密状態での判定数が+2される。",
+        "sourceOrder": 15
+      },
+      {
+        "id": "item-armor-eee631848e90",
+        "name": "アームドスーツ",
+        "credit": 11,
+        "defense": 13,
+        "damageReduction": 0,
+        "restriction": "最低能力値が3以上",
+        "effect": "生き様によらず点数が3点までのサイバネを一つ装備可能。埋め込み点数には加算しない。",
+        "sourceOrder": 16
+      }
+    ],
+    "omamori": [
+      {
+        "id": "item-omamori-23c937152e7e",
+        "name": "活気のお守り",
+        "credit": 2,
+        "effect": "攻撃の判定で2点以上気合いを獲得したならば体力を5点回復する",
+        "sourceOrder": 1
+      },
+      {
+        "id": "item-omamori-dd0e43e590b1",
+        "name": "疫病神のお守り",
+        "credit": 2,
+        "effect": "1ラウンドに1回与える出血か毒の強度を+1してよい",
+        "sourceOrder": 2
+      },
+      {
+        "id": "item-omamori-c5341347f6e3",
+        "name": "全力のお守り",
+        "credit": 2,
+        "effect": "手番最初の攻撃の判定数+1。ただし基準値が6以上なら転倒1を受ける",
+        "sourceOrder": 3
+      },
+      {
+        "id": "item-omamori-215df0c868f5",
+        "name": "強運のお守り",
+        "credit": 2,
+        "effect": "1シナリオに1回、カウンターに失敗してもダメージを受けない",
+        "sourceOrder": 4
+      },
+      {
+        "id": "item-omamori-5c207a38377c",
+        "name": "暗がりのお守り",
+        "credit": 2,
+        "effect": "隠密中1ラウンドに1回、攻撃またはリアクションの判定数+1",
+        "sourceOrder": 5
+      },
+      {
+        "id": "item-omamori-e2383465b063",
+        "name": "援護のお守り",
+        "credit": 2,
+        "effect": "攻撃、リアクション以外で効果値が参照されるなら効果値+3",
+        "sourceOrder": 6
+      },
+      {
+        "id": "item-omamori-a4f704951835",
+        "name": "拳願のお守り",
+        "credit": 2,
+        "effect": "気合いを1点以上所持しているなら素手素足の攻撃力+2、ガード値+2",
+        "sourceOrder": 7
+      },
+      {
+        "id": "item-omamori-02fc78ee4f84",
+        "name": "庇護のお守り",
+        "credit": 2,
+        "effect": "カバーリングを行った際、ダメージ軽減+3",
+        "sourceOrder": 8
+      },
+      {
+        "id": "item-omamori-61d6b7723684",
+        "name": "不退転のお守り",
+        "credit": 2,
+        "effect": "戦闘中の判定をスキルやアイテムの効果で振り直すなら判定数+2して振り直す。",
+        "sourceOrder": 9
+      },
+      {
+        "id": "item-omamori-96ab7f74fee0",
+        "name": "絆のお守り",
+        "credit": 2,
+        "effect": "既に他人に覚悟を使っているなら攻撃の気合獲得値+1",
+        "sourceOrder": 10
+      },
+      {
+        "id": "item-omamori-800d578cec93",
+        "name": "金剛のお守り",
+        "credit": 3,
+        "effect": "武器のガード値+4",
+        "sourceOrder": 11
+      },
+      {
+        "id": "item-omamori-42646d737eac",
+        "name": "夜叉のお守り",
+        "credit": 3,
+        "effect": "１ラウンドに1回、暗殺武器の攻撃でダメージ軽減を半減してダメージ軽減適用を行っても良い",
+        "sourceOrder": 12
+      },
+      {
+        "id": "item-omamori-ff6762a7514d",
+        "name": "如来のお守り",
+        "credit": 3,
+        "effect": "あなたがダメージを受けるとき、弾丸を1発消費して4点受けるダメージを減らして良い",
+        "sourceOrder": 13
+      },
+      {
+        "id": "item-omamori-bb77b7820699",
+        "name": "仁王のお守り",
+        "credit": 3,
+        "effect": "シナリオ1回、格闘判定で任意の攻撃にリアクションを行える。成功した場合ダメージは0となる。",
+        "sourceOrder": 14
+      },
+      {
+        "id": "item-omamori-778e3d533dbf",
+        "name": "阿修羅のお守り",
+        "credit": 3,
+        "effect": "シナリオ1回、干渉判定の判定数+3。",
+        "sourceOrder": 15
+      },
+      {
+        "id": "item-omamori-c37c581342fa",
+        "name": "金運のお守り",
+        "credit": 2,
+        "effect": "このシナリオ中小銭4点を得る。あなたは小銭を同じシーンに登場しているキャラクターの非戦闘技能による判定に使用できる。",
+        "sourceOrder": 16
+      },
+      {
+        "id": "item-omamori-f20bcae88291",
+        "name": "健康のお守り",
+        "credit": 2,
+        "effect": "「ど根性」を使用した際、BSを1つ解除する、または体力を10点回復する。この効果は1度に複数回ど根性を使用しても累積しない。",
+        "sourceOrder": 17
+      },
+      {
+        "id": "item-omamori-eade26e756b7",
+        "name": "融通のお守り",
+        "credit": 2,
+        "effect": "非戦闘判定の判定数全て+2",
+        "sourceOrder": 18
+      },
+      {
+        "id": "item-omamori-06d6b8adf3a3",
+        "name": "長持ちのお守り",
+        "credit": 3,
+        "effect": "シナリオ1回ダメージ軽減や防御力を無視する効果を無効化する",
+        "sourceOrder": 19
+      },
+      {
+        "id": "item-omamori-d017bc1c5893",
+        "name": "背水の陣のお守り",
+        "credit": 3,
+        "effect": "あなたのいるマスの地形効果のうち最大の強度だけすべての判定数が増加する。",
+        "sourceOrder": 20
+      },
+      {
+        "id": "item-omamori-06ed93f2302e",
+        "name": "明王のお守り",
+        "credit": 4,
+        "effect": "シナリオ開始時に選択した技能の判定数+1d。",
+        "sourceOrder": 21
+      }
+    ],
+    "cybernetics": {
+      "head": [
+        {
+          "id": "item-cybernetics-head-b6608e588fb0",
+          "part": "頭",
+          "name": "サイバーアイ",
+          "credit": 2,
+          "implantPoints": 2,
+          "effect": "感覚を用いる判定+1d。",
+          "sourceOrder": 1
+        },
+        {
+          "id": "item-cybernetics-head-74d54edf6ef3",
+          "part": "頭",
+          "name": "サイコヘッド",
+          "credit": 3,
+          "implantPoints": 3,
+          "effect": "「怪光線」「怪音波」を使用できるようになる。",
+          "sourceOrder": 2
+        },
+        {
+          "id": "item-cybernetics-head-102185e26fd0",
+          "part": "頭",
+          "name": "マインドコネクタ",
+          "credit": 2,
+          "implantPoints": 2,
+          "effect": "精神を用いる判定+1d。",
+          "sourceOrder": 3
+        },
+        {
+          "id": "item-cybernetics-head-20dacfd0f36c",
+          "part": "頭",
+          "name": "イニシアチブブースト",
+          "credit": 7,
+          "implantPoints": 1,
+          "effect": "戦闘開始時に精神力を10点まで消費してその点数行動値を上下させられる。",
+          "sourceOrder": 4
+        },
+        {
+          "id": "item-cybernetics-head-992d0a0d369c",
+          "part": "頭",
+          "name": "ナイトビジョン",
+          "credit": 2,
+          "implantPoints": 1,
+          "effect": "隠密状態のキャラクターに攻撃できるようになる。隠密状態のキャラクターから攻撃されてもリアクションの判定数が減少しない。",
+          "sourceOrder": 5
+        }
+      ],
+      "torso": [
+        {
+          "id": "item-cybernetics-torso-2b7ff14339ba",
+          "part": "胴体",
+          "name": "スキンアーマー",
+          "credit": 2,
+          "implantPoints": 2,
+          "effect": "防御力+5。",
+          "sourceOrder": 6
+        },
+        {
+          "id": "item-cybernetics-torso-09cf1ab6f17f",
+          "part": "胴体",
+          "name": "ナーブブースト",
+          "credit": 1,
+          "implantPoints": 1,
+          "effect": "行動値+3。",
+          "sourceOrder": 7
+        },
+        {
+          "id": "item-cybernetics-torso-1aeeef29396d",
+          "part": "胴体",
+          "name": "アーティフィシャルマッスル",
+          "credit": 2,
+          "implantPoints": 2,
+          "effect": "肉体を用いる判定+1d。",
+          "sourceOrder": 8
+        },
+        {
+          "id": "item-cybernetics-torso-b39b9ea17f7a",
+          "part": "胴体",
+          "name": "アイアンハート",
+          "credit": 5,
+          "implantPoints": 1,
+          "effect": "最大体力+10。体力が0以下になった際に破壊することで現在体力が50点になる。気絶も受けない。この効果は回復として扱う。",
+          "sourceOrder": 9
+        },
+        {
+          "id": "item-cybernetics-torso-4383a446790a",
+          "part": "胴体",
+          "name": "フィルムブレード",
+          "credit": 5,
+          "implantPoints": 3,
+          "effect": "サイバネ武器",
+          "sourceOrder": 10
+        },
+        {
+          "id": "item-cybernetics-torso-0dec8f808077",
+          "part": "胴体",
+          "name": "ファイティングエンジン",
+          "credit": 6,
+          "implantPoints": 1,
+          "effect": "戦闘終了時の気合の保持点数+1。",
+          "sourceOrder": 11
+        },
+        {
+          "id": "item-cybernetics-torso-b7c38a2b9c94",
+          "part": "胴体",
+          "name": "カメレオンコート",
+          "credit": 3,
+          "implantPoints": 1,
+          "effect": "ラウンド1回イニシアチブで隠密状態になれる。",
+          "sourceOrder": 12
+        }
+      ],
+      "arm": [
+        {
+          "id": "item-cybernetics-arm-853730005d91",
+          "part": "腕",
+          "name": "ガードアーム",
+          "credit": 3,
+          "implantPoints": 3,
+          "effect": "サイバネ武器。",
+          "sourceOrder": 13
+        },
+        {
+          "id": "item-cybernetics-arm-c2a3887cf37c",
+          "part": "腕",
+          "name": "ガトリングアーム",
+          "credit": 3,
+          "implantPoints": 3,
+          "effect": "サイバネ武器",
+          "sourceOrder": 14
+        },
+        {
+          "id": "item-cybernetics-arm-3a3539e9f100",
+          "part": "腕",
+          "name": "ヘヴィーハンド",
+          "credit": 5,
+          "implantPoints": 4,
+          "effect": "サイバネ武器。",
+          "sourceOrder": 15
+        },
+        {
+          "id": "item-cybernetics-arm-7a279385c3dd",
+          "part": "腕",
+          "name": "ブレードフィスト",
+          "credit": 3,
+          "implantPoints": 3,
+          "effect": "サイバネ武器。",
+          "sourceOrder": 16
+        },
+        {
+          "id": "item-cybernetics-arm-0a75ad9bcccf",
+          "part": "腕",
+          "name": "アームブースター",
+          "credit": 2,
+          "implantPoints": 2,
+          "effect": "筋力を用いる判定+1d。",
+          "sourceOrder": 17
+        },
+        {
+          "id": "item-cybernetics-arm-a6cfd7412944",
+          "part": "腕",
+          "name": "ハンマーアーム",
+          "credit": 6,
+          "implantPoints": 4,
+          "effect": "サイバネ武器。",
+          "sourceOrder": 18
+        },
+        {
+          "id": "item-cybernetics-arm-4e8108d376aa",
+          "part": "腕",
+          "name": "グレネードバズーカ",
+          "credit": 7,
+          "implantPoints": 3,
+          "effect": "サイバネ武器",
+          "sourceOrder": 19
+        },
+        {
+          "id": "item-cybernetics-arm-d669f39ace59",
+          "part": "腕",
+          "name": "ブラストハンド",
+          "credit": 7,
+          "implantPoints": 3,
+          "effect": "サイバネ武器。リアクションの判定数+1。",
+          "sourceOrder": 20
+        }
+      ],
+      "leg": [
+        {
+          "id": "item-cybernetics-leg-b1a30aaba71a",
+          "part": "足",
+          "name": "ナイフレッグ",
+          "credit": 3,
+          "implantPoints": 3,
+          "effect": "サイバネ武器。",
+          "sourceOrder": 21
+        },
+        {
+          "id": "item-cybernetics-leg-903d7a2dc31d",
+          "part": "足",
+          "name": "ミサイルニー",
+          "credit": 3,
+          "implantPoints": 3,
+          "effect": "サイバネ武器。",
+          "sourceOrder": 22
+        },
+        {
+          "id": "item-cybernetics-leg-3b15de7bff90",
+          "part": "足",
+          "name": "タイヤフット",
+          "credit": 1,
+          "implantPoints": 1,
+          "effect": "移動力+1。",
+          "sourceOrder": 23
+        },
+        {
+          "id": "item-cybernetics-leg-2fcd423ff5d5",
+          "part": "足",
+          "name": "ジャンピングサポーター",
+          "credit": 2,
+          "implantPoints": 2,
+          "effect": "敏捷を用いる判定+1d。",
+          "sourceOrder": 24
+        },
+        {
+          "id": "item-cybernetics-leg-e117499826cf",
+          "part": "足",
+          "name": "スタビライザー",
+          "credit": 3,
+          "implantPoints": 1,
+          "effect": "近接攻撃と防御、回避の判定数+1。この効果は移動をしたラウンドには発揮されない。サイバネの埋め込み点数が6点以上ならば転倒を受けない。",
+          "sourceOrder": 25
+        },
+        {
+          "id": "item-cybernetics-leg-d649ccf78cd7",
+          "part": "足",
+          "name": "フライトシューズ",
+          "credit": 4,
+          "implantPoints": 1,
+          "effect": "戦闘中飛行状態になる。移動力+2。",
+          "sourceOrder": 26
+        }
+      ],
+      "any": [
+        {
+          "id": "item-cybernetics-any-264e18464251",
+          "part": "任意",
+          "name": "コールド・ブラッド",
+          "credit": 4,
+          "implantPoints": 1,
+          "effect": "あなたが毒によって失う体力は半分になり、出血は一度体力を失ったら解除される。",
+          "sourceOrder": 27
+        },
+        {
+          "id": "item-cybernetics-any-033a21c90877",
+          "part": "任意",
+          "name": "チタンプレート",
+          "credit": 2,
+          "implantPoints": 1,
+          "effect": "防御力+3。複数埋め込み可能。",
+          "sourceOrder": 28
+        },
+        {
+          "id": "item-cybernetics-any-bd53326cdf15",
+          "part": "任意",
+          "name": "ブラストプレート",
+          "credit": 3,
+          "implantPoints": 1,
+          "effect": "防御力+1。「過負荷攻撃」で破壊するとダメージ+10。（過負荷攻撃の制限は無視する）複数埋め込み可能。",
+          "sourceOrder": 29
+        },
+        {
+          "id": "item-cybernetics-any-aa7892f5069d",
+          "part": "任意",
+          "name": "ライトニングブースター",
+          "credit": 7,
+          "implantPoints": 2,
+          "effect": "全判定数+1。",
+          "sourceOrder": 30
+        },
+        {
+          "id": "item-cybernetics-any-bd9db9f504ab",
+          "part": "任意",
+          "name": "ペインシャッター",
+          "credit": 3,
+          "implantPoints": 1,
+          "effect": "激痛が与えられるならば、次の手番終了時まで攻撃の効果値がその激痛の強度だけ上昇する。サイバネの埋め込み点数が6以上ならば激痛を受けない。（効果値上昇の効果は適用される）",
+          "sourceOrder": 31
+        }
+      ]
+    },
+    "nanomachines": [
+      {
+        "id": "item-nanomachine-ac88455724ca",
+        "name": "マシラ",
+        "credit": 4,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。筋力+1。",
+        "sourceOrder": 1
+      },
+      {
+        "id": "item-nanomachine-edcd28fa7ea4",
+        "name": "ツルギ",
+        "credit": 4,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。筋力+1。",
+        "sourceOrder": 2
+      },
+      {
+        "id": "item-nanomachine-2107912f1997",
+        "name": "ウサギ",
+        "credit": 4,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。敏捷+1。",
+        "sourceOrder": 3
+      },
+      {
+        "id": "item-nanomachine-68a2477920dd",
+        "name": "トカゲ",
+        "credit": 4,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。敏捷+1。",
+        "sourceOrder": 4
+      },
+      {
+        "id": "item-nanomachine-955d83d5e33c",
+        "name": "ヤジリ",
+        "credit": 4,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。感覚 +1。",
+        "sourceOrder": 5
+      },
+      {
+        "id": "item-nanomachine-f4366fba20ee",
+        "name": "カメ",
+        "credit": 4,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。肉体+1。",
+        "sourceOrder": 6
+      },
+      {
+        "id": "item-nanomachine-1f2405e0b163",
+        "name": "クジラ",
+        "credit": 4,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "肉体+1。格闘武器の攻撃力+3またはガード値+3。（発動時に選択）",
+        "sourceOrder": 7
+      },
+      {
+        "id": "item-nanomachine-189bcf6b67f8",
+        "name": "ドクロ",
+        "credit": 4,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "精神+1「幻影」と「力壁」を使えるようになる。",
+        "sourceOrder": 8
+      },
+      {
+        "id": "item-nanomachine-7eee4320c880",
+        "name": "セイリュウ",
+        "credit": 6,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。筋力+1。",
+        "sourceOrder": 9
+      },
+      {
+        "id": "item-nanomachine-38d8640b68c4",
+        "name": "スザク",
+        "credit": 6,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。敏捷+1。",
+        "sourceOrder": 10
+      },
+      {
+        "id": "item-nanomachine-46e456057dc4",
+        "name": "ビャッコ",
+        "credit": 6,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。感覚+1。",
+        "sourceOrder": 11
+      },
+      {
+        "id": "item-nanomachine-3399837c6420",
+        "name": "ゲンブ",
+        "credit": 6,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "武器化。肉体+1。",
+        "sourceOrder": 12
+      },
+      {
+        "id": "item-nanomachine-5d87ea81721b",
+        "name": "キリン",
+        "credit": 6,
+        "implantPoints": 3,
+        "activationMentalCost": 15,
+        "effect": "精神+1。「光輪」を使えるようになる。",
+        "sourceOrder": 13
+      },
+      {
+        "id": "item-nanomachine-26cd35c82ec4",
+        "name": "ハヤブサ",
+        "credit": 5,
+        "implantPoints": 2,
+        "activationMentalCost": 10,
+        "effect": "任意の2つの能力値+1。",
+        "sourceOrder": 14
+      },
+      {
+        "id": "item-nanomachine-6a3066320d28",
+        "name": "ハクタク",
+        "credit": 4,
+        "implantPoints": 2,
+        "activationMentalCost": 10,
+        "effect": "任意の能力値+1。ダメージ軽減+5。",
+        "sourceOrder": 15
+      },
+      {
+        "id": "item-nanomachine-df1f09c2aafe",
+        "name": "ツバサ",
+        "credit": 4,
+        "implantPoints": 2,
+        "activationMentalCost": 10,
+        "effect": "任意の能力値+1。飛行状態になる。",
+        "sourceOrder": 16
+      },
+      {
+        "id": "item-nanomachine-b1d74dcab2f1",
+        "name": "クマ",
+        "credit": 3,
+        "implantPoints": 2,
+        "activationMentalCost": 5,
+        "effect": "ダメージ軽減+4。",
+        "sourceOrder": 17
+      },
+      {
+        "id": "item-nanomachine-975e7f4e8ba7",
+        "name": "サクラ",
+        "credit": 3,
+        "implantPoints": 2,
+        "activationMentalCost": 10,
+        "effect": "あなたの「強制修復」と「状態復元」 の現在レベルと最大レベルは+1される。取得していない場合は0レベルで取得しているものとして扱う。",
+        "sourceOrder": 18
+      },
+      {
+        "id": "item-nanomachine-38fa00be8f64",
+        "name": "ヌエ",
+        "credit": 6,
+        "implantPoints": 2,
+        "activationMentalCost": 20,
+        "effect": "発動したラウンドは行動回数+1。",
+        "sourceOrder": 19
+      }
+    ],
+    "drugs": [
+      {
+        "id": "item-drug-su-2aa707d7471d",
+        "name": "マッスルドラッグ",
+        "credit": 2,
+        "timing": "SU",
+        "setQuantity": 3,
+        "badTripIntensity": 2,
+        "effect": "シーン終了まで筋力+2。",
+        "sourceOrder": 1
+      },
+      {
+        "id": "item-drug-su-c6a79112f679",
+        "name": "スピードドラッグ",
+        "credit": 2,
+        "timing": "SU",
+        "setQuantity": 3,
+        "badTripIntensity": 2,
+        "effect": "シーン終了まで敏捷+2。",
+        "sourceOrder": 2
+      },
+      {
+        "id": "item-drug-su-2f3d917fcc4e",
+        "name": "センスドラッグ",
+        "credit": 2,
+        "timing": "SU",
+        "setQuantity": 3,
+        "badTripIntensity": 2,
+        "effect": "シーン終了まで感覚+2。",
+        "sourceOrder": 3
+      },
+      {
+        "id": "item-drug-su-639a0f245a1f",
+        "name": "フィジカルドラッグ",
+        "credit": 2,
+        "timing": "SU",
+        "setQuantity": 3,
+        "badTripIntensity": 2,
+        "effect": "シーン終了まで肉体+2。",
+        "sourceOrder": 4
+      },
+      {
+        "id": "item-drug-su-873856f4ac25",
+        "name": "マインドドラッグ",
+        "credit": 2,
+        "timing": "SU",
+        "setQuantity": 3,
+        "badTripIntensity": 2,
+        "effect": "シーン終了まで精神+2。",
+        "sourceOrder": 5
+      },
+      {
+        "id": "item-drug-su-5bdb005b333a",
+        "name": "アタックドラッグ",
+        "credit": 3,
+        "timing": "SU",
+        "setQuantity": 3,
+        "badTripIntensity": 1,
+        "effect": "「毒息」「幻覚」で攻撃できるようになる。",
+        "sourceOrder": 6
+      },
+      {
+        "id": "item-drug-su-bf1550168330",
+        "name": "クイックドラッグ",
+        "credit": 3,
+        "timing": "SU",
+        "setQuantity": 3,
+        "badTripIntensity": 0,
+        "effect": "ラウンド終了まで任意の能力値+1。",
+        "sourceOrder": 7
+      },
+      {
+        "id": "item-drug-su-b9f0418c8975",
+        "name": "ブルームドラッグ",
+        "credit": 4,
+        "timing": "SU",
+        "setQuantity": 2,
+        "badTripIntensity": 3,
+        "effect": "シーン終了までダメージ軽減+10。",
+        "sourceOrder": 8
+      },
+      {
+        "id": "item-drug-su-b4114de77f89",
+        "name": "ミュータントドラッグ",
+        "credit": 3,
+        "timing": "SU",
+        "setQuantity": 2,
+        "badTripIntensity": 2,
+        "effect": "シーン終了まで近接武器の射程+2。",
+        "sourceOrder": 9
+      },
+      {
+        "id": "item-drug-su-2aba28f8a5ef",
+        "name": "ストライクドラッグ",
+        "credit": 3,
+        "timing": "SU",
+        "setQuantity": 3,
+        "badTripIntensity": 2,
+        "effect": "「圧力」で攻撃できるようになる。",
+        "sourceOrder": 10
+      },
+      {
+        "id": "item-drug-su-8dae3db98a93",
+        "name": "リアクションドラッグ",
+        "credit": 3,
+        "timing": "SU",
+        "setQuantity": 2,
+        "badTripIntensity": 2,
+        "effect": "ラウンド終了時までリアクションの判定数+2。",
+        "sourceOrder": 11
+      },
+      {
+        "id": "item-drug-su-e9177ede2bd5",
+        "name": "スライムドラッグ",
+        "credit": 2,
+        "timing": "SU",
+        "setQuantity": 2,
+        "badTripIntensity": 1,
+        "effect": "シーン終了時までダメージ軽減+3、ダメージを与える効果を持たない地形効果を無視する。",
+        "sourceOrder": 12
+      },
+      {
+        "id": "item-drug-ini-3ce06b4d1fbf",
+        "name": "ヒールドラッグ",
+        "credit": 1,
+        "timing": "INI",
+        "setQuantity": 3,
+        "badTripIntensity": 1,
+        "effect": "体力を5d6点回復する。ラウンド1回使用可能。",
+        "sourceOrder": 13
+      },
+      {
+        "id": "item-drug-ini-6dc8f6201b1b",
+        "name": "アドレナリン",
+        "credit": 2,
+        "timing": "INI",
+        "setQuantity": 1,
+        "badTripIntensity": 1,
+        "effect": "シーン終了時まで攻撃の判定数+1。また、激痛と放心を受けず、現在受けている激痛と放心を解除する。",
+        "sourceOrder": 14
+      },
+      {
+        "id": "item-drug-ini-ceb65dfde858",
+        "name": "リラックスドラッグ",
+        "credit": 5,
+        "timing": "INI",
+        "setQuantity": 1,
+        "badTripIntensity": 3,
+        "effect": "精神力を6d6点回復する。ラウンド1回使用可能。",
+        "sourceOrder": 15
+      },
+      {
+        "id": "item-drug-ini-942db2dc4d83",
+        "name": "リバースドラッグ",
+        "credit": 2,
+        "timing": "INI",
+        "setQuantity": 3,
+        "badTripIntensity": 1,
+        "effect": "現在受けている毒の強度d6点の体力を回復する。その後、毒を解除する。使用したラウンドの終了時に汚染帯にいる場合もそれにより体力を失わず、代わりにその強度d6点の体力を回復する。",
+        "sourceOrder": 16
+      },
+      {
+        "id": "item-drug-cu-efb5fc606842",
+        "name": "キャンセルドラッグ",
+        "credit": 4,
+        "timing": "CU",
+        "setQuantity": 1,
+        "badTripIntensity": 2,
+        "effect": "このクリンナップではバッドトリップによって体力と精神力が失われない。",
+        "sourceOrder": 17
+      },
+      {
+        "id": "item-drug-sp-5f203ab27ca0",
+        "name": "ヴェノム",
+        "credit": 3,
+        "timing": "SP",
+        "setQuantity": 1,
+        "badTripIntensity": 0,
+        "effect": "戦闘移動のかわりに使用。その手番の射撃攻撃は命中した対象にバッドトリップ1を与える。このドラッグは1つしか取得できない。",
+        "sourceOrder": 18
+      }
+    ]
+  }
+}

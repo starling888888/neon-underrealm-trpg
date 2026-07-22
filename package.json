@@ -8,6 +8,7 @@
     "build": "astro build && node --import tsx scripts/postprocess-page-toc/main.ts",
     "preview": "astro preview",
     "convert:npcs": "node --import tsx scripts/convert-npcs/main.ts",
+    "convert:items": "node --import tsx scripts/convert-items/main.ts",
     "convert:common-skills": "node --import tsx scripts/convert-common-skills/main.ts",
     "convert:ryugi-skills": "node --import tsx scripts/convert-ryugi-skills/main.ts",
     "convert:ryugi-list": "node --import tsx scripts/convert-ryugi-index/main.ts",
