@@ -28,6 +28,7 @@ export const visualRoutes = {
   dataRyugiKenkaya: "data/ryugi/kenkaya/",
   dataIkizama: "data/ikizama/",
   dataIkizamaBurai: "data/ikizama/burai/",
+  dataItems: "data/items/",
   releaseNotes: "release-notes/",
   mdxTest: "-local/mdx-test/",
   callouts: "-local/callouts/",

@@ -157,6 +157,14 @@ const panelId = "mobile-page-toc-panel";
       list-style: none;
     }
 
+    .mobile-page-toc-content :global(.page-toc-empty) {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: var(--line-height-base);
+      padding: var(--space-2) var(--space-4);
+    }
+
     .mobile-page-toc-content :global(.page-toc-item) {
       border-left: 0.1875rem solid var(--color-border);
       padding-inline-start: var(--space-3);

@@ -37,6 +37,13 @@ const { enabled = true } = Astro.props;
     min-height: 0;
   }
 
+  .page-toc-content :global(.page-toc-empty) {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: var(--line-height-base);
+  }
+
   .page-toc-content :global(.page-toc-list) {
     display: grid;
     gap: var(--space-3);

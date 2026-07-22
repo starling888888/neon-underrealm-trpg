@@ -1,11 +1,28 @@
 ---
 layout: ../../../layouts/MDXLayout.astro
 title: アイテム
-description: サイトメニュー現在地ハイライトの目視確認用ダミーページです。
+description: 仕事人が使用する武器、防具、お守り、サイバネ、ナノマシン、ドラッグを確認するページです。
+showPageToc: true
 ---
+
+import ImageBlock from "../../../components/_common/ImageBlock.astro";
+import InternalLink from "../../../components/_common/InternalLink.astro";
 
 # アイテム
 
-このページは、サイトメニュー現在地ハイライトの目視確認用ダミーページです。
+<ImageBlock src="/images/data/items_hero.webp" alt="" loading="eager" />
 
-後続のアイテムページ実装時に削除または本実装へ置き換えます。
+アイテムをシナリオ中使用するには、「信用」が必要となります。具体的には、使いたいアイテムそれぞれに設定された信用の合計が、キャラクターの持つ信用以下でなければなりません。
+
+アイテムは「武器」「防具」と、キャラクターの選んだ生き様によって使えるようになる「お守り」「サイバネ」「ナノマシン」「ドラッグ」があります。お守り、サイバネ、ナノマシン、ドラッグの4つを合わせて「生き様専用アイテム」と表記されることもあります。アイテムは、その種類によって個別のルールが決まっているため、それぞれ説明します。このページでは説明しないことがあるため、<InternalLink href="/rules/battle">戦闘ルール</InternalLink>と合わせて読んでください。同じアイテムを複数装備、使用しても、原則効果は重複しません。
+
+## アイテムの種類
+
+| 区分 | 説明 |
+| --- | --- |
+| <InternalLink href="/data/items/weapons">武器</InternalLink> | 攻撃や武器を使った防御に使用するアイテムです。 |
+| <InternalLink href="/data/items/armors">防具</InternalLink> | 常時ダメージを減少させるアイテムです。 |
+| <InternalLink href="/data/items/omamori">お守り</InternalLink> | <InternalLink href="/data/ikizama/burai">ブライ</InternalLink>だけが使える専用アイテムです。 |
+| <InternalLink href="/data/items/cybernetics">サイバネ</InternalLink> | <InternalLink href="/data/ikizama/kejime">ケジメ</InternalLink>だけが使える専用アイテムです。 |
+| <InternalLink href="/data/items/nanomachines">ナノマシン</InternalLink> | <InternalLink href="/data/ikizama/sumi">スミ</InternalLink>だけが使える専用アイテムです。 |
+| <InternalLink href="/data/items/drugs">ドラッグ</InternalLink> | <InternalLink href="/data/ikizama/yaku">ヤク</InternalLink>だけが使える専用**消費**アイテムです。 |
