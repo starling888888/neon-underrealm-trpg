@@ -61,7 +61,7 @@
 
 ## Out of scope
 
-- 個別NPCの肖像、顔写真、生成画像、`public/assets/images/npc/` への画像配置
+- 個別NPCの肖像、顔写真、生成画像、`public/images/npc/` への画像配置
 - Excel、JSON、schema、取得層、一覧ページ、詳細ページ、カード一覧Component
 - NPCの能力値、GM専用情報、エネミーデータ、シナリオ情報
 - 検索、フィルタ、並べ替え、ページネーション、カードクリック時の詳細遷移

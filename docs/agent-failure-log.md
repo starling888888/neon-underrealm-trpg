@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Misread a no-newline Drive URL file as empty
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `42-0-npc-data-normalization` のDrive-to-raw同期前提確認
+- 観測した失敗: `raw-google-drive.url`の内容確認に`wc -l`だけを使い、末尾改行のない有効な1行URLを0行、すなわち空ファイルだと誤判定した。ユーザーにURL共有を求める前に、バイト数、非空行数、URL形式を確認すべきだった。
+- 一次対応: URL自体を出力せず、バイト数、非空行数、DriveフォルダURL形式を検証して有効な同期ルートを確認した。以後、設定ファイルの空判定は行数だけに依存せず、非空の内容を検証する。
+
 ### Ikizama review changes missed formatter requirements twice
 
 #### 2026-07-22

@@ -93,7 +93,7 @@ import { withBase } from "../lib/utils/paths";
 ---
 
 <a href={withBase("/rules/")}>ルール</a>
-<img src={withBase("/assets/images/example.png")} alt="" />
+<img src={withBase("/images/example.png")} alt="" />
 ```
 
 Markdown / MDX本文では、通常の内部リンクはMarkdownリンク記法を優先します。

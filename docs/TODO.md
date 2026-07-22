@@ -61,7 +61,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - source: `21-2-world-page` のcontents作成時のユーザー指示
   - classification: planned follow-up
   - plan: `docs/plan.md` の `42-0-npc-data-normalization`
-  - handling plan: `public/assets/images/npc/` に各NPCの画像を配置し、`/world` の共通人物アイコンを個別画像へ置き換える。画像のaltと静的配信時のbase pathを確認する。
+  - handling plan: `public/images/npc/` に各NPCの画像を配置し、`/world` の共通人物アイコンを個別画像へ置き換える。画像のaltと静的配信時のbase pathを確認する。
 
 - [ ] NPCをExcelとJSONで管理する
   - source: `21-2-world-page` のcontents作成時のユーザー指示
