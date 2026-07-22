@@ -205,3 +205,26 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `IkizamaDataSection` を同一ページに複数配置すると、固定のH2/H3 IDと
+  `aria-labelledby` が重複する。通常の目次対象ではPageTocのpostprocessがbuildを失敗させ、
+  `excludeDetailHeadingsFromToc` 有効時もDOM上の見出し参照が一意にならない。
+
+### 判定
+
+- source: local-pr-review（PR #57、`.tmp/review/32-2-ikizama-detail-page/pr-review-1.md`）
+- classification: invalid
+- local validation: 同Componentの再利用は異なるページでの利用を想定しており、同一ページに複数配置する契約はない。
+  ユーザー確認により、同一ページ内で再利用しないため、固定IDによる重複は現行scopeの不具合ではない。
+
+### 対応方針
+
+- 実装変更は行わない。
+
+### 対応完了チェックリスト
+
+- [x] 同一ページ内で再利用しない契約を確認し、実装変更不要と判断した
