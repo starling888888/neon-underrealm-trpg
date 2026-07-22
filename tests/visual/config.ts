@@ -26,6 +26,7 @@ export const visualRoutes = {
   commonSkills: "data/common-skills/",
   dataRyugi: "data/ryugi/",
   dataRyugiKenkaya: "data/ryugi/kenkaya/",
+  dataIkizama: "data/ikizama/",
   dataIkizamaBurai: "data/ikizama/burai/",
   releaseNotes: "release-notes/",
   mdxTest: "-local/mdx-test/",

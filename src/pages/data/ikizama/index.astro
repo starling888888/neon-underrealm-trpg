@@ -1,0 +1,151 @@
+---
+import ImageBlock from "../../../components/_common/ImageBlock.astro";
+import IkizamaDataSection from "../../../components/data/IkizamaDataSection.astro";
+import AppContainer from "../../../layouts/AppContainer.astro";
+import { getIkizamaDetail } from "../../../lib/data/ikizama-detail";
+import { getIkizamaList } from "../../../lib/data/ikizama";
+import { withBase } from "../../../lib/utils/paths";
+
+const ikizamaList = getIkizamaList();
+const buraiDetail = getIkizamaDetail("burai");
+
+if (!buraiDetail) {
+  throw new Error('Missing ikizama detail data for "burai".');
+}
+
+const dataByIkizamaId = {
+  burai: {
+    attributePoints: buraiDetail.ikizama.attributePoints,
+    bonusSkill: buraiDetail.skills.bonus[0],
+    secondaryAttributeCoefficients:
+      buraiDetail.ikizama.secondaryAttributeCoefficients,
+  },
+};
+---
+
+<AppContainer
+  title="生き様"
+  description="仕事人が選ぶ生き様を一覧で確認するページです。"
+  showPageToc={true}
+>
+  <article class="mdx-layout prose ikizama-index">
+    <h1>生き様</h1>
+
+    <ImageBlock
+      src="/images/data/ikizama_hero.webp"
+      alt="近未来の都市を生きる人物たち。"
+      loading="eager"
+    />
+
+    <p>
+      近未来の科学技術のうちどれを使って、あるいは使わずにオオサカを生き抜くかを表します。キャラクターはいずれか1つのみを選び、戦闘中は主に精神力を消費してスキルを使います。
+    </p>
+
+    <IkizamaDataSection
+      heading="生き様データの見方"
+      ikizamaId="burai"
+      dataByIkizamaId={dataByIkizamaId}
+      excludeDetailHeadingsFromToc={true}
+    />
+
+    <ul class="ikizama-data-notes">
+      <li>
+        <strong>生き様ボーナス</strong>：その生き様を選択した場合に自動取得するスキルです。1レベル時の生き様スキルの取得、成長とは別に取得します。経験点による生き様レベルの成長時にこのスキルを成長させることができます。
+      </li>
+      <li>
+        <strong>能力値ポイント</strong>：4つの能力値ポイントをそれぞれ1つの能力値に割り振り、流儀によって決まる基礎能力値と合わせて能力値を決定します。能力値ポイントを同じ能力値に2回以上割り振ることはできません。
+      </li>
+      <li>
+        <strong>副能力値係数</strong>：体力、精神力の決定に影響する係数です。生き様レベルが上昇すると変化します。
+      </li>
+    </ul>
+
+    <section aria-labelledby="ikizama-list-heading">
+      <h2 id="ikizama-list-heading">生き様一覧</h2>
+      <ul class="ikizama-list" data-ikizama-list>
+        {
+          ikizamaList.map((ikizama) => {
+            const detailHref = withBase(`/data/ikizama/${ikizama.id}`);
+
+            return (
+              <li data-ikizama-id={ikizama.id}>
+                <a href={detailHref}>{ikizama.name}</a>
+                <span>{ikizama.shortDescription}</span>
+                <a class="ikizama-exclusive-item" href={detailHref}>
+                  <small>専用アイテム</small>
+                  {ikizama.exclusiveItem.name}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </section>
+  </article>
+</AppContainer>
+
+<style>
+  .ikizama-index {
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .ikizama-data-notes {
+    margin-block: var(--space-6) 0;
+  }
+
+  .ikizama-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ikizama-list li {
+    display: grid;
+    grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr) minmax(4.5rem, 6rem);
+    gap: var(--space-4);
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding-block: var(--space-4);
+  }
+
+  .ikizama-list li:first-child {
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .ikizama-list a {
+    align-self: start;
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+
+  .ikizama-list span {
+    min-width: 0;
+  }
+
+  .ikizama-exclusive-item {
+    display: block;
+  }
+
+  .ikizama-exclusive-item small {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: 700;
+  }
+
+  @media (width < 48rem) {
+    .ikizama-list li {
+      grid-template-columns: minmax(5.5rem, 7rem) minmax(0, 1fr);
+      gap: var(--space-2) var(--space-3);
+    }
+
+    .ikizama-list li > :first-child {
+      grid-row: span 2;
+    }
+
+    .ikizama-exclusive-item small {
+      display: inline;
+      margin-inline-end: var(--space-2);
+    }
+  }
+</style>
