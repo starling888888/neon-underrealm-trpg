@@ -56,24 +56,24 @@ async function expectDataCardCatalog(page: Page) {
     .toBe(0);
 }
 
-test("データカード カタログ desktop @data-card-desktop", async ({ page }) => {
+test("データカード カタログ desktop @data-cards-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.dataCards);
   await expectDataCardCatalog(page);
   await hideAstroDevToolbar(page);
   await page.screenshot({
     fullPage: true,
-    path: `${visualOutputDir}/data-card-desktop.png`,
+    path: `${visualOutputDir}/data-cards-desktop.png`,
   });
 });
 
-test("データカード カタログ mobile @data-card-mobile", async ({ page }) => {
+test("データカード カタログ mobile @data-cards-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
   await page.goto(visualRoutes.dataCards);
   await expectDataCardCatalog(page);
   await hideAstroDevToolbar(page);
   await page.screenshot({
     fullPage: true,
-    path: `${visualOutputDir}/data-card-mobile.png`,
+    path: `${visualOutputDir}/data-cards-mobile.png`,
   });
 });

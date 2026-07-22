@@ -59,7 +59,7 @@
 
 ## チェックポイント
 
-- [ ] `docs/design/data-cards/design-desktop.png`、`design-mobile.png`、`notes.md`が、レビュー済み実装からcanonicalizeされ、`5 / 7`の基準比率・可変高さを含む参照正本として記録されている。
+- [x] `docs/design/data-cards/design-desktop.png`、`design-mobile.png`、`notes.md`が、レビュー済み実装からcanonicalizeされ、`5 / 7`の基準比率・可変高さを含む参照正本として記録されている。
 - [x] 既存の`SkillCard`利用箇所とローカル確認ページが壊れていない。
 - [x] 空文字列を表示する文章項目と`-`を表示する値項目を、通常データと凡例データで混同していない。
 - [x] CardContainerは各Cardの表示仕様を重複して実装していない。

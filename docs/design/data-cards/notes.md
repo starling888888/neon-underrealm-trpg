@@ -2,7 +2,7 @@
 
 ## Mode
 
-- design fix; reviewed implementation images are canonicalized later
+- design fix; reviewed implementation images are canonicalized
 
 ## Target
 
@@ -88,10 +88,15 @@
 ## Generation source
 
 - previous design targets: `skill-card`と`item-card`のnotesを統合した。
-- canonical design images: 未作成。既存画像は削除し、レビュー済みの`/-local/data-cards/`を後続作業でcanonicalizeする。
-- expected canonicalization command: `npm run visual:canonicalize -- data-cards --route /-local/data-cards/`
-- viewport: desktop `1440x1200`、mobile `390x900`
 
-## Open questions
+<!-- visual-canonicalization:start -->
 
-- 正本画像のcanonicalizeは、現行実装の人間レビュー後に実施する。
+- command: `npm run visual:canonicalize -- data-cards --route /-local/data-cards/`
+- source branch: `main`
+- source commit: `cd27f0650a93a15e4e952edd91a3312e39392b7b`
+- route: `/-local/data-cards/`
+- state: `default`
+- viewport: desktop 1440x1200, mobile 390x900
+- capture manifest: `test-results/visual/capture-manifest.json`
+
+<!-- visual-canonicalization:end -->
