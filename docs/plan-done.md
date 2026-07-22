@@ -484,6 +484,17 @@
   - [x] 変換スクリプトと検証スキーマのテストを追加する
   - [x] 必須項目、ID重複、アイテム種別、種別固有項目を検証する
 
+- [x] `34-1-item-card-components` — アイテム種別ごとのCardを整備する
+  - completed: 2026-07-23 via PR #62 / `34-1-item-card-components`
+
+  - [x] Component designを作成する
+  - [x] `WeaponCard.astro`、`ArmorCard.astro`、`OmamoriCard.astro`、`CyberneticCard.astro`、`NanomachineCard.astro`、`DrugCard.astro` を作成する
+  - [x] 各Cardで共通項目と種別固有項目をPropsで表示できるようにする
+  - [x] `SkillCard` を含めてカードデザインを統一する
+  - [x] 各Cardの通常表示と凡例表示で共通利用するProps定義を整理する
+  - [x] `SkillCard` を含む凡例用Props定義を整理する
+  - [x] 各Cardに個別アンカーIDを付与する
+
 - [x] `42-0-npc-data-normalization` — NPCデータと画像を正規化する
   - completed: 2026-07-22 via PR #59 / `42-0-npc-data-normalization`
 
