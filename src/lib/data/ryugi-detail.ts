@@ -1,5 +1,5 @@
-import type { Ryugi } from "../schemas/ryugi";
-import type { SkillsByCategory } from "../schemas/skill";
+import type { Ryugi } from "../types/ryugi";
+import type { SkillsByCategory } from "../types/skill";
 import { getRyugiById } from "./ryugi-list";
 import { getRyugiSkillsById } from "./ryugi-skills";
 

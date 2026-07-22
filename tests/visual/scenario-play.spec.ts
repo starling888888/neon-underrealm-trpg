@@ -1,6 +1,11 @@
 import { expect, type Page, test } from "@playwright/test";
+import { createHeadingId } from "../../src/lib/utils/heading-id";
 import { visualOutputDir, visualRoutes, visualViewports } from "./config";
 import { expectGeneratedPageToc } from "./helpers/page-toc";
+
+const deathHeadingId = createHeadingId(2, "気絶と死亡");
+const kakugoHeadingId = createHeadingId(2, "覚悟");
+const gedouHeadingId = createHeadingId(3, "外道");
 
 async function hideAstroDevToolbar(page: Page) {
   await page.locator("astro-dev-toolbar").evaluateAll((elements) => {
@@ -36,15 +41,15 @@ async function expectScenarioPlayContent(page: Page) {
   );
   await expect(article.getByRole("link", { name: "死亡" })).toHaveAttribute(
     "href",
-    /rules\/battle#h-3a9f3437$/,
+    new RegExp(`rules/battle#${deathHeadingId}$`),
   );
   await expect(article.getByRole("link", { name: "覚悟" })).toHaveAttribute(
     "href",
-    /rules\/battle#h-c33994be$/,
+    new RegExp(`rules/battle#${kakugoHeadingId}$`),
   );
   await expect(article.getByRole("link", { name: "外道堕ち" })).toHaveAttribute(
     "href",
-    /world#h-c03a6722$/,
+    new RegExp(`world#${gedouHeadingId}$`),
   );
   await expect(article).toContainText(
     "シナリオ中に増えず、使った分だけ減ります",

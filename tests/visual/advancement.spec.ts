@@ -1,6 +1,12 @@
 import { expect, type Page, test } from "@playwright/test";
+import { createHeadingId } from "../../src/lib/utils/heading-id";
 import { visualOutputDir, visualRoutes, visualViewports } from "./config";
 import { expectGeneratedPageToc } from "./helpers/page-toc";
+
+const resolveGedouOchiHeadingId = createHeadingId(
+  3,
+  "今生の縁で外道堕ちを解消する",
+);
 
 async function hideAstroDevToolbar(page: Page) {
   await page.locator("astro-dev-toolbar").evaluateAll((elements) => {
@@ -53,7 +59,10 @@ async function expectAdvancementContent(page: Page) {
     .toBeGreaterThan(0);
   await expect(
     article.getByRole("link", { name: "今生の縁で外道堕ちを解消した" }),
-  ).toHaveAttribute("href", "/neon-underrealm-trpg/rules/battle#h-aa7d87a4");
+  ).toHaveAttribute(
+    "href",
+    `/neon-underrealm-trpg/rules/battle#${resolveGedouOchiHeadingId}`,
+  );
   await expect(
     article.getByRole("link", { name: "シナリオ進行ルール" }).first(),
   ).toHaveAttribute("href", "/neon-underrealm-trpg/rules/scenario-play");

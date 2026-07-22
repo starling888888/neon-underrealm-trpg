@@ -1,5 +1,5 @@
 import releaseNotesJson from "../../../data/generated/release-notes.json";
-import type { ReleaseNote, ReleaseNotesJson } from "../schemas/release-notes";
+import type { ReleaseNote, ReleaseNotesJson } from "../types/release-notes";
 
 const generatedReleaseNotesJson = releaseNotesJson as ReleaseNotesJson;
 

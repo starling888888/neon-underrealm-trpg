@@ -1,6 +1,5 @@
 import { z } from "zod";
-
-export const NPC_DATA_NAME = "npcs";
+import { NPC_DATA_NAME, type NpcJson } from "../../types/npc";
 
 const requiredText = z
   .string()
@@ -49,9 +48,6 @@ export const NpcJsonSchema = z
     data: z.array(NpcSchema).min(1),
   })
   .strict();
-
-export type Npc = z.infer<typeof NpcSchema>;
-export type NpcJson = z.infer<typeof NpcJsonSchema>;
 
 export function assertNpcJson(value: unknown): asserts value is NpcJson {
   const result = NpcJsonSchema.safeParse(value);

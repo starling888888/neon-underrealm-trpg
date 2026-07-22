@@ -1,11 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { type CellValue, readSheet } from "read-excel-file/node";
-import {
-  assertNpcJson,
-  NPC_DATA_NAME,
-  type Npc,
-  type NpcJson,
-} from "../../src/lib/schemas/npcs";
+import { assertNpcJson } from "../../src/lib/schemas/conversion/npcs";
+import { NPC_DATA_NAME, type Npc, type NpcJson } from "../../src/lib/types/npc";
 import { writeGeneratedJson } from "../convert-skills/write-generated-json";
 
 export interface ConvertNpcsOptions {

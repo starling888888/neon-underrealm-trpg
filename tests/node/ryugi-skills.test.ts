@@ -8,7 +8,8 @@ import generated from "../../data/generated/ryugi-skills.json";
 import { convertRyugiSkills } from "../../scripts/convert-ryugi-skills/lib";
 import { getRyugiDetail } from "../../src/lib/data/ryugi-detail";
 import { getRyugiList } from "../../src/lib/data/ryugi-list";
-import { assertRyugiSkillsJson } from "../../src/lib/schemas/ryugi-skills";
+import { assertRyugiSkillsJson } from "../../src/lib/schemas/conversion/ryugi-skills";
+import { createHash } from "../../src/lib/utils/hash";
 
 const headers = [
   "区分",
@@ -45,7 +46,7 @@ describe("ryugi skill conversion", () => {
     assert.equal(initial.updatedAt, "2026-07-21T09:00:00+09:00");
     assert.equal(
       initial.data.kenkaya.basic[0]?.id,
-      "skill-ryugi-kenkaya-basic-aa_ra-001",
+      `skill-ryugi-kenkaya-basic-aa_ra-${createHash("連携\n斬撃")}`,
     );
     assert.equal(initial.data.kenkaya.basic[0]?.name, "連携\n斬撃");
     assert.equal(initial.data.kenkaya.basic[0]?.target, null);

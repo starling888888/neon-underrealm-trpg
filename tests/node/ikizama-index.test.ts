@@ -7,7 +7,7 @@ import { strToU8, zipSync } from "fflate";
 import generated from "../../data/generated/ikizama.json";
 import { convertIkizama } from "../../scripts/convert-ikizama-index/lib";
 import { getIkizamaById, getIkizamaList } from "../../src/lib/data/ikizama";
-import { assertIkizamaJson } from "../../src/lib/schemas/ikizama";
+import { assertIkizamaJson } from "../../src/lib/schemas/conversion/ikizama";
 
 const groupHeaders = [
   "",

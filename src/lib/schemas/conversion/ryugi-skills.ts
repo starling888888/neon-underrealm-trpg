@@ -1,12 +1,10 @@
 import { z } from "zod";
 import {
-  assertSkillsData,
-  type Skill,
-  type SkillsByCategory,
-  SkillsByCategorySchema,
-} from "./skill";
-
-export const RYUGI_SKILLS_DATA_NAME = "ryugi-skills";
+  RYUGI_SKILLS_DATA_NAME,
+  type RyugiSkillsJson,
+} from "../../types/ryugi-skills";
+import type { Skill, SkillsByCategory } from "../../types/skill";
+import { assertSkillsData, SkillsByCategorySchema } from "./skill";
 
 export const RyugiSkillsJsonSchema = z
   .object({
@@ -23,8 +21,6 @@ export const RyugiSkillsJsonSchema = z
     data: z.record(z.string(), SkillsByCategorySchema),
   })
   .strict();
-
-export type RyugiSkillsJson = z.infer<typeof RyugiSkillsJsonSchema>;
 
 export function assertRyugiSkillsJsonShape(
   value: unknown,

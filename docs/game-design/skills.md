@@ -18,7 +18,7 @@ NPC専用スキルを追加するときは、この仕様を拡張する。
 
 | 項目       | 必須性 | 定義                                                                          |
 | ---------- | ------ | ----------------------------------------------------------------------------- |
-| ID         | 必須   | スキルを一意に識別するID。形式は `skill-所属種別-区分-タイミング-連番`。      |
+| ID         | 必須   | スキルを一意に識別するID。形式は `skill-所属種別-区分-タイミング-名称hash`。  |
 | 区分       | 必須   | スキルの標準的な取得規則を表す区分。`bonus`、`basic`、`advanced` のいずれか。 |
 | 名称       | 必須   | スキルを識別する名称。                                                        |
 | 最大レベル | 必須   | そのスキルを取得・成長できる上限。                                            |
@@ -34,26 +34,26 @@ NPC専用スキルを追加するときは、この仕様を拡張する。
 
 ## ID
 
-スキルIDは、変換時にExcelの入力順から自動採番する。Excel上で入力・固定しない。
+スキルIDは、変換時に名称から自動生成する。Excel上で入力・固定しない。
 
 形式は、次のいずれかとする。
 
 ```text
-skill-common-{category}-{timing}-{index}
-skill-ryugi-{ryugiId}-{category}-{timing}-{index}
-skill-ikizama-{ikizamaId}-{category}-{timing}-{index}
+skill-common-{category}-{timing}-{nameHash}
+skill-ryugi-{ryugiId}-{category}-{timing}-{nameHash}
+skill-ikizama-{ikizamaId}-{category}-{timing}-{nameHash}
 ```
 
 IDに使うタイミングは `docs/requirements/data-id-policy.md` のタイミング正規化表に従う。
 
-| 要素       | IDでの表記                                                              |
-| ---------- | ----------------------------------------------------------------------- |
-| 所属       | `common`、`ryugi-{ryugiId}`、`ikizama-{ikizamaId}` のいずれか。         |
-| 区分       | `bonus`、`basic`、`advanced`。                                          |
-| タイミング | `docs/requirements/data-id-policy.md` の正規化値。                      |
-| 連番       | 同一の所属・区分・タイミングからなるprefix内で、Excel入力順に採番する。 |
+| 要素       | IDでの表記                                                      |
+| ---------- | --------------------------------------------------------------- |
+| 所属       | `common`、`ryugi-{ryugiId}`、`ikizama-{ikizamaId}` のいずれか。 |
+| 区分       | `bonus`、`basic`、`advanced`。                                  |
+| タイミング | `docs/requirements/data-id-policy.md` の正規化値。              |
+| 名称hash   | [データID管理方針](../requirements/data-id-policy.md)に従う。   |
 
-初期スコープでは、入力順の変更によってIDと個別アンカーが変わることを許可する。キャラクターシート機能がスキルIDを保存する段階での変更検出は、別タスクで扱う。
+行の途中挿入と並び替えではIDと個別アンカーを変更しない。名称、所属、区分、タイミングなど、IDに使う入力値を変更した場合のID変更は許可する。キャラクターシート機能がスキルIDを保存する段階での変更検出は、別タスクで扱う。
 
 ## 区分
 
@@ -210,7 +210,7 @@ IDに使うタイミングは `docs/requirements/data-id-policy.md` のタイミ
 
 | 項目       | 値                                   |
 | ---------- | ------------------------------------ |
-| ID         | `skill-common-bonus-a-001`           |
+| ID         | `skill-common-bonus-a-{nameHash}`    |
 | 所属       | 共通スキル                           |
 | 区分       | `bonus`                              |
 | 名称       | 基本の一撃                           |

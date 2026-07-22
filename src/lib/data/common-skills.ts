@@ -4,7 +4,7 @@ import type {
   SkillCategory,
   SkillsByCategory,
   SkillsJson,
-} from "../schemas/skill";
+} from "../types/skill";
 
 const generatedCommonSkillsJson = commonSkillsJson as SkillsJson;
 

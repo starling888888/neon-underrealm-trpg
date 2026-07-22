@@ -1,6 +1,6 @@
 {
   "dataName": "ikizama-skills",
-  "updatedAt": "2026-07-22T08:28:24+09:00",
+  "updatedAt": "2026-07-22T20:29:02+09:00",
   "data": {
     "burai": {
       "bonus": [
@@ -18,7 +18,7 @@
           "summary": "",
           "effect": "気合を2点獲得する。",
           "sourceOrder": 1,
-          "id": "skill-ikizama-burai-bonus-su-001"
+          "id": "skill-ikizama-burai-bonus-su-359f2342b1e4"
         }
       ],
       "basic": [
@@ -36,7 +36,7 @@
           "summary": "",
           "effect": "「衝撃」「斬撃」を使用できるようになる。",
           "sourceOrder": 2,
-          "id": "skill-ikizama-burai-basic-pv-001"
+          "id": "skill-ikizama-burai-basic-pv-11cfa93ba309"
         },
         {
           "category": "basic",
@@ -52,7 +52,7 @@
           "summary": "",
           "effect": "追加で1つ武器を装備することができる。直前の攻撃と異なる武器で攻撃したならダメージ+4。防具の制限を無視して装備することができる。",
           "sourceOrder": 3,
-          "id": "skill-ikizama-burai-basic-pv-002"
+          "id": "skill-ikizama-burai-basic-pv-0bb9eeb79a1c"
         },
         {
           "category": "basic",
@@ -68,7 +68,7 @@
           "summary": "",
           "effect": "装備しているすべての武器の攻撃力+5、ガード値+3。",
           "sourceOrder": 4,
-          "id": "skill-ikizama-burai-basic-pv-003"
+          "id": "skill-ikizama-burai-basic-pv-a6d99ecbc3e3"
         },
         {
           "category": "basic",
@@ -84,7 +84,7 @@
           "summary": "",
           "effect": "防御力+4、ダメージ軽減+2。",
           "sourceOrder": 5,
-          "id": "skill-ikizama-burai-basic-pv-004"
+          "id": "skill-ikizama-burai-basic-pv-db471de19bf8"
         },
         {
           "category": "basic",
@@ -100,7 +100,7 @@
           "summary": "",
           "effect": "最大体力+20、最大精神力+10",
           "sourceOrder": 6,
-          "id": "skill-ikizama-burai-basic-pv-005"
+          "id": "skill-ikizama-burai-basic-pv-ff7677079066"
         },
         {
           "category": "basic",
@@ -116,7 +116,7 @@
           "summary": "",
           "effect": "あなたは追加でlv個まで非戦闘技能を得意技能として指定できる。",
           "sourceOrder": 7,
-          "id": "skill-ikizama-burai-basic-pv-006"
+          "id": "skill-ikizama-burai-basic-pv-87d58ae38aa1"
         },
         {
           "category": "basic",
@@ -132,7 +132,7 @@
           "summary": "",
           "effect": "あなたはアイテム「お守り」をlv個まで取得できる。（信用は消費する必要がある）。また、ど根性の現在lvと最大lvが+このスキルのlvされる。取得していない場合0lvで取得しているものとして扱う。",
           "sourceOrder": 8,
-          "id": "skill-ikizama-burai-basic-pv-007"
+          "id": "skill-ikizama-burai-basic-pv-570c394fe082"
         },
         {
           "category": "basic",
@@ -148,7 +148,7 @@
           "summary": "",
           "effect": "1lvごとに能力値を1つ選ぶ。選んだ能力値+1。同じ能力値は2回まで選択可能。",
           "sourceOrder": 9,
-          "id": "skill-ikizama-burai-basic-pv-008"
+          "id": "skill-ikizama-burai-basic-pv-1677b1e83e6c"
         },
         {
           "category": "basic",
@@ -164,7 +164,7 @@
           "summary": "",
           "effect": "任意のマスに移動する。",
           "sourceOrder": 10,
-          "id": "skill-ikizama-burai-basic-ini-001"
+          "id": "skill-ikizama-burai-basic-ini-35d0064cb993"
         },
         {
           "category": "basic",
@@ -180,7 +180,7 @@
           "summary": "",
           "effect": "体力をlv×10d6点回復する。",
           "sourceOrder": 11,
-          "id": "skill-ikizama-burai-basic-cu-001"
+          "id": "skill-ikizama-burai-basic-cu-1ca6d464536b"
         }
       ],
       "advanced": [
@@ -198,7 +198,7 @@
           "summary": "",
           "effect": "任意のキャラクターのシーン制限、シナリオ制限のあるスキルの使用回数を1回回復する。このスキルはシーン制限のスキルに対して1シーンに1回、シナリオ制限のスキルに対して1シナリオに1回使用できる。",
           "sourceOrder": 12,
-          "id": "skill-ikizama-burai-advanced-ini-001"
+          "id": "skill-ikizama-burai-advanced-ini-3c658481c228"
         },
         {
           "category": "advanced",
@@ -214,7 +214,7 @@
           "summary": "",
           "effect": "小銭を3点まで支払う。小銭1点に付き以下のいずれかの効果を得る。攻撃力+3。ガード値+2。防御力+3。ダメージ軽減+2。同じ効果を2回まで選んでも良い。複数回使用したとき、それぞれの効果は累積する。",
           "sourceOrder": 13,
-          "id": "skill-ikizama-burai-advanced-ini-002"
+          "id": "skill-ikizama-burai-advanced-ini-7dcf9a05ea38"
         },
         {
           "category": "advanced",
@@ -230,7 +230,7 @@
           "summary": "",
           "effect": "達成値を上昇させる共通スキルの使用時や効果が発揮されたときに使用する。達成値をさらに+1する。この効果でちょうど判定が成功した場合は気合を1点得る。",
           "sourceOrder": 14,
-          "id": "skill-ikizama-burai-advanced-sp-001"
+          "id": "skill-ikizama-burai-advanced-sp-77e829bb2f8e"
         },
         {
           "category": "advanced",
@@ -246,7 +246,7 @@
           "summary": "",
           "effect": "「タイミング：Pv」以外のスキルを選択した後、使用直前に使用。同じタイミングで使用できる任意のスキルを、そのタイミング中使用予定だったスキルのレベルで取得しているものとして扱い使用する。ラウンド1回使用可能。ただし、シーン制限、シナリオ制限のあるスキルは使用できない。\nlv2: シーン制限のあるスキルを使用できるようになる。この効果はシーン1回使用できる。\nlv3: シナリオ制限のあるスキルを使用できるようになる。この効果はシナリオ1回使用できる。",
           "sourceOrder": 15,
-          "id": "skill-ikizama-burai-advanced-sp-002"
+          "id": "skill-ikizama-burai-advanced-sp-727398a7c72d"
         },
         {
           "category": "advanced",
@@ -262,7 +262,7 @@
           "summary": "",
           "effect": "取得時に一つ自身のメイン流儀以外のメインボーナススキルを選ぶ。セットアップに精神力10点を支払うことでラウンド終了時まで選んだスキルの効果が発揮される。技能の制限は無視して良い。",
           "sourceOrder": 16,
-          "id": "skill-ikizama-burai-advanced-pv-001"
+          "id": "skill-ikizama-burai-advanced-pv-fe4f049f25b7"
         },
         {
           "category": "advanced",
@@ -278,7 +278,7 @@
           "summary": "",
           "effect": "取得時に自身のメイン流儀から一つスキルを選ぶ。そのスキルのタイミングが「Pv」 以外ならば消費気合は-1され（最低0）、スキルのタイミングによらず、最大lvと取得lvが+1される。",
           "sourceOrder": 17,
-          "id": "skill-ikizama-burai-advanced-pv-002"
+          "id": "skill-ikizama-burai-advanced-pv-dba7c6660e3f"
         }
       ]
     },
@@ -298,7 +298,7 @@
           "summary": "",
           "effect": "シナリオ開始時に気合をlv+1点獲得する。戦闘終了時に持ち越せる気合の点数がlv+1点になる。",
           "sourceOrder": 1,
-          "id": "skill-ikizama-kejime-bonus-pv-001"
+          "id": "skill-ikizama-kejime-bonus-pv-f78f03ac5129"
         }
       ],
       "basic": [
@@ -316,7 +316,7 @@
           "summary": "",
           "effect": "最大体力+lv×20点。",
           "sourceOrder": 2,
-          "id": "skill-ikizama-kejime-basic-pv-001"
+          "id": "skill-ikizama-kejime-basic-pv-c0cd4edd94c9"
         },
         {
           "category": "basic",
@@ -332,7 +332,7 @@
           "summary": "",
           "effect": "サイバネを破壊したラウンドの終了時までリアクションの判定数が+lv個される。複数破壊してもこの効果は累積しない。",
           "sourceOrder": 3,
-          "id": "skill-ikizama-kejime-basic-pv-002"
+          "id": "skill-ikizama-kejime-basic-pv-8d1c508e5f12"
         },
         {
           "category": "basic",
@@ -348,7 +348,7 @@
           "summary": "",
           "effect": "防御力+lv×5点。",
           "sourceOrder": 4,
-          "id": "skill-ikizama-kejime-basic-pv-003"
+          "id": "skill-ikizama-kejime-basic-pv-3e9cf0ab1224"
         },
         {
           "category": "basic",
@@ -364,7 +364,7 @@
           "summary": "",
           "effect": "壊れたサイバネ1つを修復する。",
           "sourceOrder": 5,
-          "id": "skill-ikizama-kejime-basic-ini-001"
+          "id": "skill-ikizama-kejime-basic-ini-ac4802af656a"
         },
         {
           "category": "basic",
@@ -380,7 +380,7 @@
           "summary": "",
           "effect": "移動を行う。敵対キャラクターのいるマスを通り抜けて良い。このラウンド中、すべての判定の判定数+lv。",
           "sourceOrder": 6,
-          "id": "skill-ikizama-kejime-basic-su-001"
+          "id": "skill-ikizama-kejime-basic-su-a0a34078cf90"
         },
         {
           "category": "basic",
@@ -396,7 +396,7 @@
           "summary": "",
           "effect": "サイバネを一つ破壊する。ダメージ+破壊したサイバネの埋め込み点数×10。ただし、生き様レベル×5点までしか上昇しない。",
           "sourceOrder": 7,
-          "id": "skill-ikizama-kejime-basic-d-001"
+          "id": "skill-ikizama-kejime-basic-d-d4177d874023"
         },
         {
           "category": "basic",
@@ -412,7 +412,7 @@
           "summary": "",
           "effect": "1lvごとに1つ非戦闘技能を選ぶ。その技能はサイバネ埋め込み点数によるペナルティを受けない。",
           "sourceOrder": 8,
-          "id": "skill-ikizama-kejime-basic-pv-004"
+          "id": "skill-ikizama-kejime-basic-pv-de32a3368c75"
         }
       ],
       "advanced": [
@@ -430,7 +430,7 @@
           "summary": "",
           "effect": "サイバネ埋め込み部位の「その他」がlv個増える。「その他」に埋め込むサイバネの埋め込み点数は-1される。",
           "sourceOrder": 9,
-          "id": "skill-ikizama-kejime-advanced-pv-001"
+          "id": "skill-ikizama-kejime-advanced-pv-85b747f79c94"
         },
         {
           "category": "advanced",
@@ -446,7 +446,7 @@
           "summary": "",
           "effect": "サイバネを埋め込んでいない部位1つにつきいずれかの効果を選ぶ。同じ効果は一度しか選べない。最大体力+15。攻撃力+3。防御力+3。行動値+4。移動力+3。サイバネの埋め込み点数+2。",
           "sourceOrder": 10,
-          "id": "skill-ikizama-kejime-advanced-pv-002"
+          "id": "skill-ikizama-kejime-advanced-pv-e346f6f4768d"
         },
         {
           "category": "advanced",
@@ -462,7 +462,7 @@
           "summary": "",
           "effect": "サイバネの埋め込み点数+2。あなたのサイバネによる判定数増加+2。（各判定数増加の合計から+2される。）サイバネ武器の攻撃力+8、ガード値+5。あなたは合計3つまでしかサイバネを埋め込めない。",
           "sourceOrder": 11,
-          "id": "skill-ikizama-kejime-advanced-pv-003"
+          "id": "skill-ikizama-kejime-advanced-pv-f3ab66ed9b54"
         },
         {
           "category": "advanced",
@@ -478,7 +478,7 @@
           "summary": "",
           "effect": "サイバネの埋め込み可能点数+6。攻撃力+「埋め込んでいるサイバネの数」。防御力+「サイバネの埋め込み点数の合計」。サイバネを埋め込んでいる際の非戦闘技能による判定のペナルティが更に-3される。（5点以下でも判定数に-3のペナルティがかかる）",
           "sourceOrder": 12,
-          "id": "skill-ikizama-kejime-advanced-pv-004"
+          "id": "skill-ikizama-kejime-advanced-pv-a21a42ccccb9"
         }
       ]
     },
@@ -498,7 +498,7 @@
           "summary": "",
           "effect": "ナノマシン発動中にしか使用できない。気合いをlv点まで獲得する。このスキルのコストは獲得した気合×5点である。",
           "sourceOrder": 1,
-          "id": "skill-ikizama-sumi-bonus-ini-001"
+          "id": "skill-ikizama-sumi-bonus-ini-4cc330521451"
         }
       ],
       "basic": [
@@ -516,7 +516,7 @@
           "summary": "",
           "effect": "最大体力+10点。最大精神力+lv×10点。ラウンド中精神力が減少していたならば、クリンナップに精神力が5点回復する。",
           "sourceOrder": 2,
-          "id": "skill-ikizama-sumi-basic-pv-001"
+          "id": "skill-ikizama-sumi-basic-pv-407381cc4964"
         },
         {
           "category": "basic",
@@ -532,7 +532,7 @@
           "summary": "",
           "effect": "1回の発動で埋め込んでいるすべてのナノマシンを発動できる。発動に必要な精神力が合計の発動精神力から-10される。ただし10未満にはならない。",
           "sourceOrder": 3,
-          "id": "skill-ikizama-sumi-basic-pv-002"
+          "id": "skill-ikizama-sumi-basic-pv-34a468b41794"
         },
         {
           "category": "basic",
@@ -548,7 +548,7 @@
           "summary": "",
           "effect": "ナノマシン発動中にしか使用できない。体力をlv×4d6点回復する。",
           "sourceOrder": 4,
-          "id": "skill-ikizama-sumi-basic-ini-001"
+          "id": "skill-ikizama-sumi-basic-ini-58f5bf5d0e32"
         },
         {
           "category": "basic",
@@ -564,7 +564,7 @@
           "summary": "",
           "effect": "ナノマシン発動中にしか使用できない。全てのBSを解除する。解除したBS1つにつきラウンド終了時まですべての判定数+1。ラウンド1回、シーンlv回使用可能。",
           "sourceOrder": 5,
-          "id": "skill-ikizama-sumi-basic-ini-002"
+          "id": "skill-ikizama-sumi-basic-ini-f820d83bac5d"
         },
         {
           "category": "basic",
@@ -580,7 +580,7 @@
           "summary": "",
           "effect": "ナノマシン発動時に使用。ただちに1回手番を行い、行動済みにならない。ただしこの手番での行動回数はlv回であり、貴方のもともとの行動回数を超えることはできない。",
           "sourceOrder": 6,
-          "id": "skill-ikizama-sumi-basic-sp-001"
+          "id": "skill-ikizama-sumi-basic-sp-c6906690f930"
         },
         {
           "category": "basic",
@@ -596,7 +596,7 @@
           "summary": "",
           "effect": "任意の判定時に使用。1つ発動中のナノマシンを選択する。そのナノマシンの埋め込み点数だけ判定数が上昇する。判定後、もしくはその判定が攻撃ならその掛け合い終了時にそのナノマシンの発動状態は解除される。",
           "sourceOrder": 7,
-          "id": "skill-ikizama-sumi-basic-sp-002"
+          "id": "skill-ikizama-sumi-basic-sp-75c95804c767"
         },
         {
           "category": "basic",
@@ -612,7 +612,7 @@
           "summary": "",
           "effect": "lv1: 戦闘外でナノマシンを発動させた際の非戦闘技能へのペナルティが発生しない。lv2: 戦闘外でナノマシンを発動させた時のコストが0になり次の戦闘シーンの終了時まで解除されない。",
           "sourceOrder": 8,
-          "id": "skill-ikizama-sumi-basic-pv-003"
+          "id": "skill-ikizama-sumi-basic-pv-cec874ba5ff4"
         }
       ],
       "advanced": [
@@ -630,7 +630,7 @@
           "summary": "",
           "effect": "lv1:ナノマシンの発動精神力-5点。\nlv2: ナノマシン発動中にのみ効果を発揮するスキルのコスト-5点。\nlv3: ナノマシン発動中にのみ効果を発揮するスキルの現在lvと最大lvが+1される。（取得していない場合は0lvで取得しているものとして扱う。）\n発動精神力もスキルのコストも5点未満にはならない。",
           "sourceOrder": 9,
-          "id": "skill-ikizama-sumi-advanced-pv-001"
+          "id": "skill-ikizama-sumi-advanced-pv-bdca391f0e4e"
         },
         {
           "category": "advanced",
@@ -646,7 +646,7 @@
           "summary": "",
           "effect": "ナノマシンを埋め込んでいない部位に対して以下の効果を得る。それが頭ならば精神力+15。それが胴体ならば体力+15。それが腕ならば防御力+3。それが足ならば行動値+4。2つ以上の部位にナノマシンが埋め込まれていないならば更に攻撃力+3、ダメージ軽減+3。",
           "sourceOrder": 10,
-          "id": "skill-ikizama-sumi-advanced-pv-002"
+          "id": "skill-ikizama-sumi-advanced-pv-93f6203fbe9c"
         },
         {
           "category": "advanced",
@@ -662,7 +662,7 @@
           "summary": "",
           "effect": "すべての能力値が+1され、あなたが選んだ能力値2つはさらに+1される。あなたは1つしかナノマシンを埋め込めない。",
           "sourceOrder": 11,
-          "id": "skill-ikizama-sumi-advanced-pv-003"
+          "id": "skill-ikizama-sumi-advanced-pv-d33691350b6e"
         },
         {
           "category": "advanced",
@@ -678,7 +678,7 @@
           "summary": "",
           "effect": "ナノマシンの埋め込み可能点数+2。ナノマシン発動中攻撃力とダメージ軽減+「ナノマシンの埋め込み点数の合計」。ナノマシン発動中、クリンナップに精神力が5点回復する。戦闘外でナノマシンを発動した際のペナルティが2倍になる。",
           "sourceOrder": 12,
-          "id": "skill-ikizama-sumi-advanced-pv-004"
+          "id": "skill-ikizama-sumi-advanced-pv-fb25e21f8dd9"
         }
       ]
     },
@@ -698,7 +698,7 @@
           "summary": "",
           "effect": "気合を2点獲得する。受けているバッドトリップの強度を+1するなら、追加で気合を1点獲得する。",
           "sourceOrder": 1,
-          "id": "skill-ikizama-yaku-bonus-ini-001"
+          "id": "skill-ikizama-yaku-bonus-ini-812485697d9d"
         }
       ],
       "basic": [
@@ -716,7 +716,7 @@
           "summary": "",
           "effect": "最大体力+lv×15点、最大精神力+lv×10点。",
           "sourceOrder": 2,
-          "id": "skill-ikizama-yaku-basic-pv-001"
+          "id": "skill-ikizama-yaku-basic-pv-f39380ba6776"
         },
         {
           "category": "basic",
@@ -732,7 +732,7 @@
           "summary": "",
           "effect": "精神力と体力を回復する効果が+lv×3d6点される。",
           "sourceOrder": 3,
-          "id": "skill-ikizama-yaku-basic-pv-002"
+          "id": "skill-ikizama-yaku-basic-pv-c0144090d805"
         },
         {
           "category": "basic",
@@ -748,7 +748,7 @@
           "summary": "",
           "effect": "ダメージ軽減+「受けているバッドトリップの強度」+lv×2。",
           "sourceOrder": 4,
-          "id": "skill-ikizama-yaku-basic-pv-003"
+          "id": "skill-ikizama-yaku-basic-pv-37ce0affc87a"
         },
         {
           "category": "basic",
@@ -764,7 +764,7 @@
           "summary": "",
           "effect": "自身の受けているバッドトリップの強度に等しい強度のバッドトリップを攻撃対象に与える。すでにバッドトリップを受けているキャラクターには効果を発揮しない。",
           "sourceOrder": 5,
-          "id": "skill-ikizama-yaku-basic-d-001"
+          "id": "skill-ikizama-yaku-basic-d-ae8d08fd1ae7"
         },
         {
           "category": "basic",
@@ -780,7 +780,7 @@
           "summary": "",
           "effect": "ドラッグ服薬時に使用。即座に移動を行う。この移動では敵と同じマスに入っても移動を終了する必要がなく、敵と同じマスにいても使用できる。",
           "sourceOrder": 6,
-          "id": "skill-ikizama-yaku-basic-sp-001"
+          "id": "skill-ikizama-yaku-basic-sp-74f73ca70483"
         },
         {
           "category": "basic",
@@ -796,7 +796,7 @@
           "summary": "",
           "effect": "任意の判定時に使用。ドラッグを即座に使用する。すでに効果が発動しているドラッグでも効果を発揮するが、効果は判定終了時に消滅する。",
           "sourceOrder": 7,
-          "id": "skill-ikizama-yaku-basic-sp-002"
+          "id": "skill-ikizama-yaku-basic-sp-7c29f5df60a2"
         },
         {
           "category": "basic",
@@ -812,7 +812,7 @@
           "summary": "",
           "effect": "戦闘外でドラッグを使用できるようになる。効果は一度判定を行うと失われ、判定後にバッドトリップによって体力と精神力を失う。lv2: 使用したドラッグでは体力と精神力が失われない。",
           "sourceOrder": 8,
-          "id": "skill-ikizama-yaku-basic-pv-004"
+          "id": "skill-ikizama-yaku-basic-pv-f13eb240dbce"
         }
       ],
       "advanced": [
@@ -830,7 +830,7 @@
           "summary": "",
           "effect": "バッドトリップの強度をlv×2だけ低いものとして体力と精神力減少のダイスを振る。ただし最低でも強度が1あるものとして扱う。あなたが振ったバッドトリップのダイスによって体力が0以下になるのであれば、一度だけすべてのダイスを振り直しても良い。",
           "sourceOrder": 9,
-          "id": "skill-ikizama-yaku-advanced-pv-001"
+          "id": "skill-ikizama-yaku-advanced-pv-57085e4d78ac"
         },
         {
           "category": "advanced",
@@ -846,7 +846,7 @@
           "summary": "",
           "effect": "ラウンド終了時にすべてのバッドステータスの強度を-1する。（毒、バッドトリップのダメージを受ける前に-1する。）ドラッグを使用するたび、そのシーン中使用したことがないドラッグであれば、シーン終了時まで攻撃力が+2される。この効果は累積する。",
           "sourceOrder": 10,
-          "id": "skill-ikizama-yaku-advanced-pv-002"
+          "id": "skill-ikizama-yaku-advanced-pv-40dd97399f1f"
         },
         {
           "category": "advanced",
@@ -862,7 +862,7 @@
           "summary": "",
           "effect": "攻撃力+受けているバッドトリップの強度×3。バッドトリップを受けるたび、合計強度が+1される。",
           "sourceOrder": 11,
-          "id": "skill-ikizama-yaku-advanced-pv-003"
+          "id": "skill-ikizama-yaku-advanced-pv-c48724ae8825"
         },
         {
           "category": "advanced",
@@ -878,7 +878,7 @@
           "summary": "",
           "effect": "バッドトリップによって体力が失われなくなる。精神力が0以下になった場合、すべてのドラッグの効果が失われる。",
           "sourceOrder": 12,
-          "id": "skill-ikizama-yaku-advanced-pv-004"
+          "id": "skill-ikizama-yaku-advanced-pv-fe4180bfe25a"
         }
       ]
     }

@@ -1,6 +1,11 @@
-import { createHash } from "node:crypto";
 import type { DefaultTreeAdapterMap } from "parse5";
 import { parse, parseFragment, serialize } from "parse5";
+import {
+  createHeadingId,
+  normalizeHeadingText,
+} from "../../src/lib/utils/heading-id";
+
+export { createHeadingId, normalizeHeadingText };
 
 type ChildNode = DefaultTreeAdapterMap["childNode"];
 type Document = DefaultTreeAdapterMap["document"];
@@ -99,19 +104,6 @@ export function processPageTocHtml(html: string): PageTocProcessResult {
     tocItems,
     warnings,
   };
-}
-
-export function createHeadingId(depth: 2 | 3, text: string): string {
-  const hashInput = `${depth}|${normalizeHeadingText(text)}`;
-  const shortHash = createHash("sha256")
-    .update(hashInput)
-    .digest("hex")
-    .slice(0, 8);
-  return `h-${shortHash}`;
-}
-
-export function normalizeHeadingText(text: string): string {
-  return text.trim().replace(/\s+/g, " ");
 }
 
 function collectTocItems(

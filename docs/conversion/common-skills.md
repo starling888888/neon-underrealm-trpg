@@ -23,10 +23,10 @@
 共通スキルIDは次の形式とする。
 
 ```txt
-skill-common-{category}-{normalizedTiming}-{index}
+skill-common-{category}-{normalizedTiming}-{nameHash}
 ```
 
-現在の入力例は、`skill-common-bonus-a-001` になる。
+Skill IDには`nameHash`を採用する。生成規則は[データID管理方針](../requirements/data-id-policy.md)に従う。現在の入力例は、`skill-common-bonus-a-{nameHash}` になる。
 
 ## 変換コマンド
 
@@ -38,4 +38,4 @@ npm run convert:common-skills
 
 ## 対象外
 
-この設定は共通スキルだけを対象とする。流儀・生き様スキルは、同じ共通仕様に従う別の変換設定とentrypointを後続タスクで追加する。
+この設定は共通スキルだけを対象とする。流儀・生き様スキルは、それぞれの専用変換仕様とentrypointを参照する。

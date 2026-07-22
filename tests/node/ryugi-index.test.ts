@@ -7,7 +7,7 @@ import { strToU8, zipSync } from "fflate";
 import generated from "../../data/generated/ryugi-list.json";
 import { convertRyugiList } from "../../scripts/convert-ryugi-index/lib";
 import { getRyugiById, getRyugiList } from "../../src/lib/data/ryugi-list";
-import { assertRyugiJson } from "../../src/lib/schemas/ryugi";
+import { assertRyugiJson } from "../../src/lib/schemas/conversion/ryugi";
 
 const groupHeaders = [
   "",

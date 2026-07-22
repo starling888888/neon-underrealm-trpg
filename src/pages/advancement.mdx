@@ -12,9 +12,15 @@ import IkizamaCoefficientTable from "../components/data/IkizamaCoefficientTable.
 import RyugiCommonSkillBonusTable from "../components/data/RyugiCommonSkillBonusTable.astro";
 import { getIkizamaList } from "../lib/data/ikizama";
 import { getRyugiList } from "../lib/data/ryugi-list";
+import { createHeadingId } from "../lib/utils/heading-id";
 
 export const ikizamaList = getIkizamaList();
 export const ryugiList = getRyugiList();
+export const resolveGedouOchiHeadingId = createHeadingId(
+  3,
+  "今生の縁で外道堕ちを解消する",
+);
+export const goldenRuleHeadingId = createHeadingId(2, "ゴールデンルール");
 
 # 成長ルール
 
@@ -49,7 +55,7 @@ export const ryugiList = getRyugiList();
 
 ## 覚悟の累積
 
-キャンペーンでは、<InternalLink href="/rules/battle#h-aa7d87a4">今生の縁で外道堕ちを解消した</InternalLink>場合を除き、使った覚悟の累積数を記録します。これは感情がなくなることを示すものではありません。何を大事にし、何を判断材料にするかが少しずつ変わっていく、その目安です。
+キャンペーンでは、<InternalLink href={`/rules/battle#${resolveGedouOchiHeadingId}`}>今生の縁で外道堕ちを解消した</InternalLink>場合を除き、使った覚悟の累積数を記録します。これは感情がなくなることを示すものではありません。何を大事にし、何を判断材料にするかが少しずつ変わっていく、その目安です。
 
 | 覚悟の累積数 | 変化の目安 |
 | --- | --- |
@@ -71,7 +77,7 @@ export const ryugiList = getRyugiList();
 | 生き様 | 1レベルごとに10点 |
 | 共通スキル | 1レベルごとに5点 |
 
-共通スキルの合計レベルは、格の半分までです。端数の扱いは、<InternalLink href="/introduction#h-f3926bd3">ゴールデンルール</InternalLink>に従います。流儀、生き様、共通スキルの詳細は、それぞれのデータページで確認してください。
+共通スキルの合計レベルは、格の半分までです。端数の扱いは、<InternalLink href={`/introduction#${goldenRuleHeadingId}`}>ゴールデンルール</InternalLink>に従います。流儀、生き様、共通スキルの詳細は、それぞれのデータページで確認してください。
 
 ## 能力値の成長
 

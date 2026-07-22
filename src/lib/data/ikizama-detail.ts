@@ -1,5 +1,5 @@
-import type { Ikizama } from "../schemas/ikizama";
-import type { SkillsByCategory } from "../schemas/skill";
+import type { Ikizama } from "../types/ikizama";
+import type { SkillsByCategory } from "../types/skill";
 import { getIkizamaById } from "./ikizama";
 import { getIkizamaSkillsById } from "./ikizama-skills";
 

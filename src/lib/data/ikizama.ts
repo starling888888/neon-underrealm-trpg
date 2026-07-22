@@ -1,5 +1,5 @@
 import ikizamaJson from "../../../data/generated/ikizama.json";
-import type { Ikizama, IkizamaJson } from "../schemas/ikizama";
+import type { Ikizama, IkizamaJson } from "../types/ikizama";
 
 const generatedIkizamaJson = ikizamaJson as IkizamaJson;
 

@@ -1,6 +1,9 @@
 import { expect, type Page, test } from "@playwright/test";
+import { createHeadingId } from "../../src/lib/utils/heading-id";
 import { visualOutputDir, visualRoutes, visualViewports } from "./config";
 import { expectGeneratedPageToc } from "./helpers/page-toc";
+
+const skillTimingHeadingId = createHeadingId(3, "タイミング");
 
 async function hideAstroDevToolbar(page: Page) {
   await page.locator("astro-dev-toolbar").evaluateAll((elements) => {
@@ -62,7 +65,10 @@ async function expectBattleContent(page: Page) {
   ).toHaveAttribute("href", "/neon-underrealm-trpg/data");
   await expect(
     article.getByRole("link", { name: "スキルのタイミング" }),
-  ).toHaveAttribute("href", "/neon-underrealm-trpg/data#h-e1218826");
+  ).toHaveAttribute(
+    "href",
+    `/neon-underrealm-trpg/data#${skillTimingHeadingId}`,
+  );
   await expect(article.locator("#cross-combo")).toHaveCount(1);
   await expect(article).toContainText("コンボ中のどの攻撃でも使えます");
   await expect(article).toContainText("×-A、☆-A");

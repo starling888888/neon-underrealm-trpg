@@ -1,6 +1,6 @@
 import generatedRyugiSkillsSource from "../../../data/generated/ryugi-skills.json";
-import type { RyugiSkillsJson } from "../schemas/ryugi-skills";
-import type { SkillsByCategory } from "../schemas/skill";
+import type { RyugiSkillsJson } from "../types/ryugi-skills";
+import type { SkillsByCategory } from "../types/skill";
 import { getRyugiList } from "./ryugi-list";
 
 const generatedRyugiSkillsJson = generatedRyugiSkillsSource as RyugiSkillsJson;

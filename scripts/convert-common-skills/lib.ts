@@ -1,8 +1,8 @@
 import {
   assertSkillsJson,
-  type SkillsByCategory,
-  type SkillsJson,
-} from "../../src/lib/schemas/skill";
+  assertSkillsJsonShape,
+} from "../../src/lib/schemas/conversion/skill";
+import type { SkillsByCategory, SkillsJson } from "../../src/lib/types/skill";
 import { convertSkills } from "../convert-skills/lib";
 import { writeGeneratedJson } from "../convert-skills/write-generated-json";
 
@@ -30,6 +30,7 @@ export async function convertCommonSkills(
     dataName: contract.dataName,
     data,
     now: options.now,
+    assertExistingJson: assertSkillsJsonShape,
     assertJson: (value): asserts value is SkillsJson =>
       assertSkillsJson(value, contract),
   });

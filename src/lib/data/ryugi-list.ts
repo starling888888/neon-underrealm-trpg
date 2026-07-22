@@ -1,5 +1,5 @@
 import ryugiListJson from "../../../data/generated/ryugi-list.json";
-import type { Ryugi, RyugiJson } from "../schemas/ryugi";
+import type { Ryugi, RyugiJson } from "../types/ryugi";
 
 const generatedRyugiListJson = ryugiListJson as RyugiJson;
 

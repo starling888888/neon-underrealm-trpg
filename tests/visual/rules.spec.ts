@@ -1,6 +1,9 @@
 import { expect, type Page, test } from "@playwright/test";
+import { createHeadingId } from "../../src/lib/utils/heading-id";
 import { visualOutputDir, visualRoutes, visualViewports } from "./config";
 import { expectGeneratedPageToc } from "./helpers/page-toc";
+
+const goldenRuleHeadingId = createHeadingId(2, "ゴールデンルール");
 
 async function hideAstroDevToolbar(page: Page) {
   await page.locator("astro-dev-toolbar").evaluateAll((elements) => {
@@ -47,7 +50,7 @@ async function expectRulesContent(page: Page) {
     hero.locator("xpath=ancestor::figure").locator("figcaption"),
   ).toHaveCount(0);
   await expect(
-    article.locator("a[href$='introduction#h-f3926bd3']"),
+    article.locator(`a[href$='introduction#${goldenRuleHeadingId}']`),
   ).toHaveCount(2);
   await expect(article.locator("a[href$='rules/scenario-play']")).toHaveCount(
     1,

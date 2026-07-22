@@ -1,6 +1,11 @@
 import { expect, type Page, test } from "@playwright/test";
+import { createHash } from "../../src/lib/utils/hash";
 import { visualOutputDir, visualRoutes, visualViewports } from "./config";
 import { expectGeneratedPageToc } from "./helpers/page-toc";
+
+const basicAttackId = `skill-common-bonus-a-${createHash("基本の一撃")}`;
+const basicComboId = `skill-common-basic-pv-${createHash("基本の連撃")}`;
+const finalBasicId = `skill-common-basic-d-${createHash("火力集中")}`;
 
 async function expectCommonSkillsPage(page: Page) {
   const article = page.locator("article.mdx-layout");
@@ -28,10 +33,10 @@ async function expectCommonSkillsPage(page: Page) {
   await expect(containers).toHaveCount(2);
   await expect(article.locator("[data-skill-list]")).toHaveCount(0);
   await expect(cards).toHaveCount(32);
-  await expect(cards.first()).toHaveAttribute("id", "skill-common-bonus-a-001");
-  await expect(cards.nth(1)).toHaveAttribute("id", "skill-common-basic-pv-001");
-  await expect(cards.last()).toHaveAttribute("id", "skill-common-basic-d-006");
-  await expect(cards.first()).not.toContainText("skill-common-bonus-a-001");
+  await expect(cards.first()).toHaveAttribute("id", basicAttackId);
+  await expect(cards.nth(1)).toHaveAttribute("id", basicComboId);
+  await expect(cards.last()).toHaveAttribute("id", finalBasicId);
+  await expect(cards.first()).not.toContainText(basicAttackId);
   await expectGeneratedPageToc(page, "初期作成時から取得可能なスキル");
   await expect
     .poll(async () => {
@@ -92,8 +97,8 @@ test("共通スキル mobile @common-skills-mobile", async ({ page }) => {
 
 test("共通スキルの個別アンカー @common-skills-anchor", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
-  await page.goto(`${visualRoutes.commonSkills}#skill-common-basic-pv-001`);
+  await page.goto(`${visualRoutes.commonSkills}#${basicComboId}`);
 
-  await expect(page).toHaveURL(/#skill-common-basic-pv-001$/);
-  await expect(page.locator("#skill-common-basic-pv-001")).toBeInViewport();
+  await expect(page).toHaveURL(new RegExp(`#${basicComboId}$`));
+  await expect(page.locator(`#${basicComboId}`)).toBeInViewport();
 });

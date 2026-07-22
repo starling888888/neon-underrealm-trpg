@@ -1,14 +1,17 @@
 import { type CellValue, readSheet } from "read-excel-file/node";
 import {
+  createSkillId,
   getSkillTimingParts,
   normalizeSkillTiming,
+} from "../../src/lib/schemas/conversion/skill";
+import {
   SKILL_CATEGORIES,
   SKILL_TIMING_NORMALIZATIONS,
   type Skill,
   type SkillCategory,
   type SkillsByCategory,
   type SkillTiming,
-} from "../../src/lib/schemas/skill";
+} from "../../src/lib/types/skill";
 
 export interface ConvertSkillsOptions {
   inputPath: string;
@@ -94,19 +97,17 @@ export function createSkillsData(
   idPrefix: string,
 ): SkillsByCategory {
   const data: SkillsByCategory = { bonus: [], basic: [], advanced: [] };
-  const counts = new Map<string, number>();
-
   for (const rawSkill of rawSkills) {
     const normalized = normalizeSkillTiming(rawSkill.timing);
-    const groupKey = `${rawSkill.category}:${normalized}`;
-    const index = (counts.get(groupKey) ?? 0) + 1;
-    counts.set(groupKey, index);
     const { rowNumber: _, ...skill } = rawSkill;
     data[skill.category].push({
       ...skill,
-      id: `${idPrefix}-${skill.category}-${normalized}-${index
-        .toString()
-        .padStart(3, "0")}`,
+      id: createSkillId({
+        idPrefix,
+        category: skill.category,
+        normalizedTiming: normalized,
+        name: skill.name,
+      }),
     });
   }
 

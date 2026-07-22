@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { createHash } from "../../src/lib/utils/hash";
 import {
   visualBaseUrl,
   visualOutputDir,
@@ -6,13 +7,15 @@ import {
   visualViewports,
 } from "./config";
 
+const basicAttackId = `skill-common-bonus-a-${createHash("基本の一撃")}`;
+
 test("search panel desktop @search-modal-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
   await page.goto(visualRoutes.commonSkills);
 
   await expect(
     page.locator(
-      "#skill-common-bonus-a-001 > .skill-card-header > span.skill-card-name",
+      `#${basicAttackId} > .skill-card-header > span.skill-card-name`,
     ),
   ).toHaveText("基本の一撃");
 
@@ -37,7 +40,7 @@ test("search panel desktop @search-modal-desktop", async ({ page }) => {
   await searchInput.fill("基本の一撃");
   await expect(panel).toBeVisible();
   await expect(
-    page.locator('.search-result-link[href$="#skill-common-bonus-a-001"]'),
+    page.locator(`.search-result-link[href$="#${basicAttackId}"]`),
   ).toBeVisible();
   await expect
     .poll(async () => {
@@ -127,11 +130,12 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
   const searchInput = page.locator("[data-search-desktop-input]");
   await searchInput.fill("基本の一撃");
 
-  const result = page.locator(
-    '.search-result-link[href$="#skill-common-bonus-a-001"]',
-  );
+  const result = page.locator(`.search-result-link[href$="#${basicAttackId}"]`);
   await expect(page.locator("[data-search-results-list]")).toBeVisible();
-  await expect(result).toHaveAttribute("href", /#skill-common-bonus-a-001$/);
+  await expect(result).toHaveAttribute(
+    "href",
+    new RegExp(`#${basicAttackId}$`),
+  );
   await expect(result.locator(".search-result-type")).toHaveText("データ");
   await expect(result.locator(".search-result-title")).toHaveText("共通スキル");
   await expect(result.locator(".search-result-section")).toHaveText(
@@ -148,7 +152,7 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
 
   await result.click();
   await expect(page).toHaveURL(
-    /data\/common-skills\/\?highlight=.*#skill-common-bonus-a-001$/,
+    new RegExp(`data/common-skills/\\?highlight=.*#${basicAttackId}$`),
   );
   await expect(
     page
@@ -169,7 +173,7 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
   await page.locator("[data-search-mobile-input]").fill("基本の一撃");
   await page.locator(".mobile-search-submit").click();
   await expect(
-    page.locator('.search-result-link[href$="#skill-common-bonus-a-001"]'),
+    page.locator(`.search-result-link[href$="#${basicAttackId}"]`),
   ).toBeVisible();
   await page.screenshot({
     fullPage: false,
@@ -235,7 +239,7 @@ test("search panel retries Pagefind after an initial load failure @search-modal-
 
   await searchInput.fill("基本の一撃 ");
   await expect(
-    page.locator('.search-result-link[href$="#skill-common-bonus-a-001"]'),
+    page.locator(`.search-result-link[href$="#${basicAttackId}"]`),
   ).toBeVisible();
   await expect.poll(() => pagefindRequestCount).toBeGreaterThanOrEqual(2);
 });

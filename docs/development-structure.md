@@ -132,13 +132,15 @@ src/components/search/
 ```text
 src/lib/data/
 src/lib/schemas/
+src/lib/schemas/conversion/
 src/lib/site/
+src/lib/types/
 src/lib/utils/
 ```
 
 データ駆動ページは、生成JSONへのアクセスを `src/lib/data/` 経由にする。
 
-共有するschemaやruntime validationは、必要に応じて `src/lib/schemas/` に置く。
+Excel変換・生成JSON検証・ID生成に使うZod Schemaは `src/lib/schemas/conversion/` に置く。ブラウザでも安全に参照する型と定数は `src/lib/types/` に置き、通常表示処理は変換用Schemaを実行時importしない。
 
 サイトmetadata、menu定義、URL helperは、責務に応じて `src/lib/site/` または `src/lib/utils/` に置く。
 
