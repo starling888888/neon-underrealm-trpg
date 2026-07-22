@@ -756,3 +756,12 @@ source種別は以下を使う。
 - 発生箇所: `29-2-ryugi-index-page` のPageToc修正後のVisual Test
 - 観測した失敗: `RyugiDataSection`のPageToc除外属性を修正した後、`npm run build`で`dist/`を更新せずに`npm run visual:capture`を2回実行した。captureはpostprocess済みの既存build出力を使うため、両回とも旧出力のH3を読み、同じPageToc assertionが失敗した。
 - 一次対応: PageTocまたは生成HTMLに影響する変更後は、Visual Testの前に必ず`npm run build`を実行する。Visual Test失敗時は、ソース変更かbuild出力の鮮度かを先に区別してから再実行する。
+
+### Review scope was over-broadened
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `31-2-ikizama-index-page` のコンテンツレビュー後のissue更新
+- 観測した失敗: ユーザーの「全部無視でいいや」を、直前に報告したコンテンツレビューの指摘だけでなく、先行するPRレビュー指摘にも適用した。PRレビューの未コミット`レビュー指摘 3`をissueから削除したが、ユーザーはコンテンツレビューだけを見送る意図だった。
+- 一次対応: `レビュー指摘 3`を元の内容で復元した。複数のレビュー結果が並行している場合、「全部」などの参照範囲は直前の成果物に限定して確認し、既存の別レビュー記録を変更する前には対象を明示的に照合する。

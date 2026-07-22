@@ -26,8 +26,7 @@
 - `docs/design/ikizama-detail/`（`IkizamaDataSection`の既存表示制約のみ）
 - `docs/out-of-scope.md`
 
-`docs/design/ikizama-index/` は未作成である。UI実装前に
-`design-image-generation` のinitial draft modeでdesktop / mobileのdesign正本候補を作成し、人間レビューできる状態にする。
+`docs/design/ikizama-index/` は、ユーザー確認済みの実装スクリーンショットをdesign fix modeで正本化する。desktop / mobileともに、生き様詳細のSiteMenu子項目と専用アイテム種別ページへの導線を含む現行実装を比較基準とする。
 
 ## 対象範囲
 
@@ -100,10 +99,10 @@
 
 - contentsのH1、hero、導入、ブライの生き様データ凡例、3項目説明、一覧の表示密度を、designと実装へ過不足なく反映できるか。
 - 生き様一覧で名称、短い説明、専用アイテム導線だけを表示し、詳細ページの情報を重複させない方針が妥当か。
-- 専用アイテム名称を各生き様詳細ページへのリンクにするcontents指示を、利用者に分かりやすい形で表現できるか。
+- 専用アイテム名称を対応する専用アイテム種別ページへのリンクにするcontents指示を、利用者に分かりやすい形で表現できるか。
 - `IkizamaDataSection`を一覧の凡例に再利用しても、詳細ページ、PageToc、既存designの制約を壊さないか。
-- サイドメニューの生き様リスト追加を、このissueの対象外として残すことが妥当か。
-- design画像作成を実装前の別前提として扱う範囲が妥当か。
+- サイドメニューの生き様リストを`getIkizamaList()`の入力順で展開しても、SiteMenuの情報設計や表示方式を再設計していないか。
+- reviewed implementation screenshotをdesign正本化しても、global layoutと初期スコープを逸脱していないか。
 
 ## 備考
 
@@ -153,7 +152,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [x] 実装スクリーンショットをdesign正本化する必要はない。
+- [x] PRレビュー指摘 3 への対応として、実装スクリーンショットをdesign正本化した。
 
 ### 対応完了チェックリスト
 
@@ -264,5 +263,29 @@
 - [x] reference と actual を比較した
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `docs/design/ikizama-index/`が、承認済みの生き様詳細子メニューと専用アイテム種別ページへの導線を対象外としており、current issueおよび実装と矛盾している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/design/ikizama-index/notes.md`は、生き様詳細のSiteMenu項目追加とアイテム種別ページへの導線を対象外とする。一方、ユーザー承認済みのcurrent issueは、`getIkizamaList()`による生き様子メニューと専用アイテム種別URLを対象範囲に含めている。実装とVisual Review 2もこの方針で確認済みである。
+
+### 対応方針
+
+- `design-image-generation` のdesign fix modeで、`ikizama-index`のnotesとdesktop / mobile designを現在の承認済みscopeへ整合させる。current issueの古い背景・レビュー観点も、design正本を更新した後に同じ方針へ整理する。
+
+### 対応完了チェックリスト
+
+- [x] `docs/design/ikizama-index/notes.md`を承認済みscopeへ更新する
+- [x] desktop / mobile designを生き様子メニューと専用アイテム種別導線へ整合させる
+- [x] current issueの古い背景・レビュー観点を整合させる
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
