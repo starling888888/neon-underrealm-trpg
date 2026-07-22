@@ -25,7 +25,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/40-2-404-page.md`
+- historical task issue: `docs/issue/done/phase-3/40-2-404-page.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/assets-seo.md`
