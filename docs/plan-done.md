@@ -439,6 +439,17 @@
   - [x] 変換スクリプトと検証スキーマのテストを追加する
   - [x] 生き様ID、スキルID、関連アイテムID、個別アンカーIDの整合性を検証する
 
+- [x] `32-2-ikizama-detail-page` — 生き様詳細ページを作成する
+  - completed: 2026-07-22 via PR #57 / e13125f
+
+  - [x] designを生成する
+  - [x] `/data/ikizama/[ikizamaId].astro` を作成する
+  - [x] `.raw/contents/ikizama-detail.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
+  - [x] 共通テンプレートから生き様詳細ページを静的生成する
+  - [x] 生き様説明、生き様データ（生き様ボーナス、能力値ポイント、副能力係数）、生き様スキル一覧、専用アイテムリンクを表示する
+  - [x] 個別生き様ごとのページファイルを複製しない
+  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
+
 ## Phase 4: 検索
 
 - [x] `43-install-pagefind` — Pagefindを導入する
