@@ -23,6 +23,20 @@
 
 ## 完了済み
 
+- [x] NPC画像をpublic assetsへ配置し、個別画像がないIDはfallback表示する
+  - completed: 2026-07-22 via PR #59 / `42-0-npc-data-normalization`
+  - source: `21-2-world-page` のcontents作成時のユーザー指示
+  - classification: planned follow-up
+  - plan: `docs/plan-done.md` の `42-0-npc-data-normalization`
+  - handling plan: `public/images/npc/` にNPC画像を配置し、`/world` の共通人物アイコンを個別画像へ置き換える。同IDの個別`.webp`がない場合は`no_image.webp`を表示する。画像のaltと静的配信時のbase pathを確認する。
+
+- [x] NPCをExcelとJSONで管理する
+  - completed: 2026-07-22 via PR #59 / `42-0-npc-data-normalization`
+  - source: `21-2-world-page` のcontents作成時のユーザー指示
+  - classification: planned follow-up
+  - plan: `docs/plan-done.md` の `42-0-npc-data-normalization`
+  - handling plan: `.raw/data/npcs.xlsx` をローカル正本とし、変換仕様、`data/generated/npcs.json`、検証スキーマ、取得層を整備する。`/world` の静的 `NpcCard` を生成JSON参照へ移行し、Excel本体をCI/CDへ含めない。
+
 - [x] キャラクターメイキングと成長で、流儀の共通スキルボーナスを変換済みデータから表示する
   - completed: 2026-07-22 via PR #54 / `29-2-ryugi-index-page`
   - source: `29-0-ryugi-index-data` のissueレビュー中のユーザー指示

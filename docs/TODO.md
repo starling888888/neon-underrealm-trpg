@@ -57,18 +57,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `56-ci-non-main-branches`
   - handling plan: GitHub Pages deploy workflowとは分離し、main以外のbranch / pull requestで `npm ci`、`npm run check`、`npm run build`、必要なtestを実行するCIを整備する。deployは行わず、GitHub Pages環境を更新しない。docs-only更新、AGENTS / SKILL更新のみの場合の扱いもCI方針として明確化する。
 
-- [ ] NPC画像をpublic assetsへ配置し、個別画像がないIDはfallback表示する
-  - source: `21-2-world-page` のcontents作成時のユーザー指示
-  - classification: planned follow-up
-  - plan: `docs/plan.md` の `42-0-npc-data-normalization`
-  - handling plan: `public/images/npc/` にNPC画像を配置し、`/world` の共通人物アイコンを個別画像へ置き換える。同IDの個別`.webp`がない場合は`no_image.webp`を表示する。画像のaltと静的配信時のbase pathを確認する。
-
-- [ ] NPCをExcelとJSONで管理する
-  - source: `21-2-world-page` のcontents作成時のユーザー指示
-  - classification: planned follow-up
-  - plan: `docs/plan.md` の `42-0-npc-data-normalization`
-  - handling plan: `.raw/data/npcs.xlsx` をローカル正本とし、変換仕様、`data/generated/npcs.json`、検証スキーマ、取得層を整備する。`/world` の静的 `NpcCard` を生成JSON参照へ移行し、Excel本体をCI/CDへ含めない。
-
 - [ ] 流儀の共通スキルボーナスを構造化データへ変換する
   - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
   - classification: out-of-scope follow-up

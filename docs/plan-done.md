@@ -462,6 +462,15 @@
   - [x] 個別生き様ごとのページファイルを複製しない
   - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
 
+- [x] `42-0-npc-data-normalization` — NPCデータと画像を正規化する
+  - completed: 2026-07-22 via PR #59 / `42-0-npc-data-normalization`
+
+  - [x] `.raw/data/npcs.xlsx` をNPCデータのローカル正本として整備する
+  - [x] NPCデータを `data/generated/npcs.json` へ変換する仕様、スキーマ、取得層を整備する
+  - [x] 各NPC画像を `public/images/npc/` に配置し、個別画像がないIDは `no_image.webp` を表示する
+  - [x] `/world` の静的 `NpcCard` を生成JSONと個別画像を参照する表示へ移行する
+  - [x] 変換はローカル明示実行とし、CI/CDでExcel本体を扱わない
+
 ## Phase 4: 検索
 
 - [x] `43-install-pagefind` — Pagefindを導入する
