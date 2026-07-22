@@ -4,6 +4,10 @@ import IkizamaDataSection from "../../../components/data/IkizamaDataSection.astr
 import AppContainer from "../../../layouts/AppContainer.astro";
 import { getIkizamaDetail } from "../../../lib/data/ikizama-detail";
 import { getIkizamaList } from "../../../lib/data/ikizama";
+import {
+  IKIZAMA_EXCLUSIVE_ITEM_TYPES,
+  type IkizamaExclusiveItemType,
+} from "../../../lib/schemas/ikizama";
 import { withBase } from "../../../lib/utils/paths";
 
 const ikizamaList = getIkizamaList();
@@ -66,12 +70,23 @@ const dataByIkizamaId = {
         {
           ikizamaList.map((ikizama) => {
             const detailHref = withBase(`/data/ikizama/${ikizama.id}`);
+            const exclusiveItem =
+              IKIZAMA_EXCLUSIVE_ITEM_TYPES[
+                ikizama.exclusiveItem.id as IkizamaExclusiveItemType
+              ];
+
+            if (!exclusiveItem) {
+              throw new Error(
+                `Unknown exclusive item type "${ikizama.exclusiveItem.id}".`,
+              );
+            }
+            const exclusiveItemHref = withBase(exclusiveItem.href);
 
             return (
               <li data-ikizama-id={ikizama.id}>
                 <a href={detailHref}>{ikizama.name}</a>
                 <span>{ikizama.shortDescription}</span>
-                <a class="ikizama-exclusive-item" href={detailHref}>
+                <a class="ikizama-exclusive-item" href={exclusiveItemHref}>
                   <small>専用アイテム</small>
                   {ikizama.exclusiveItem.name}
                 </a>

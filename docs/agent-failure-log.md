@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Ikizama review changes missed formatter requirements twice
+
+#### 2026-07-22
+
+- source: self
+- 発生箇所: `31-2-ikizama-index-page` の`tests/visual/character-making.spec.ts`と`docs/issue/31-2-ikizama-index-page.md`に対する`npm run check`
+- 観測した失敗: 実装後のVisual Test追記とVisual Review記録で、Biomeとdprintが求める改行・表列幅の形式を手動編集で外し、同一作業中に`npm run check`のformatter検証を2回停止させた。
+- 一次対応: formatter出力に従って対象を整形し、`npm run format:md`を実行した。以後の再検証はformatter適用後に行う。
+
 ### Visual capture used dev server without page-TOC postprocessing
 
 #### 2026-07-22

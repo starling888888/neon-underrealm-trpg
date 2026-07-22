@@ -60,10 +60,10 @@
 - [x] `/data/ikizama` が静的に生成され、contentsのH1、hero、導入、`生き様データの見方`、`生き様一覧`を表示する。
 - [x] contentsの`showPageToc: true`に従い、PC PageTocとMobilePageTocを有効にし、`生き様データの見方`と`生き様一覧`のH2だけを目次へ表示する。
 - [x] `生き様データの見方`でブライの`IkizamaDataSection`と、contentsにある3項目の説明を表示する。
-- [ ] 生き様一覧が`getIkizamaList()`の入力順を保ち、各生き様の名称を詳細ページ、専用アイテム名称を対応するアイテム種別の詳細ページへリンクし、`shortDescription`を対応付けて表示する。
+- [x] 生き様一覧が`getIkizamaList()`の入力順を保ち、各生き様の名称を詳細ページ、専用アイテム名称を対応するアイテム種別の詳細ページへリンクし、`shortDescription`を対応付けて表示する。
 - [x] 生き様ID、専用アイテムID、固定の生き様データ、別途の詳細導線文言を可視表示として追加していない。
-- [ ] サイドメニューの生き様リストを`getIkizamaList()`の入力順で展開し、各生き様詳細ページへリンクしている。
-- [ ] キャラクターメイキングの専用アイテム対応と成長ルールの生き様係数表を`getIkizamaList()`から表示している。
+- [x] サイドメニューの生き様リストを`getIkizamaList()`の入力順で展開し、各生き様詳細ページへリンクしている。
+- [x] キャラクターメイキングの専用アイテム対応と成長ルールの生き様係数表を`getIkizamaList()`から表示している。
 - [x] 実装後にVisual Reviewを行い、desktop / mobileの比較結果をこのissueへ記録している。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -75,7 +75,7 @@
 - [x] desktop / mobileでhero、凡例、一覧の長い説明が横overflowや不自然な切り詰めなく読める。
 - [x] PageTocとMobilePageTocがH2の`生き様データの見方`、`生き様一覧`を表示し、`IkizamaDataSection`内のH3を重複表示しない。
 - [x] `getIkizamaList()`の入力順と`shortDescription`を、ページ側で並べ替え・再編集していない。
-- [ ] サイドメニュー、キャラクターメイキング、成長ルールが生き様の名称・専用アイテム対応・係数を手書きで重複せず、`getIkizamaList()`の入力順と値を表示している。
+- [x] サイドメニュー、キャラクターメイキング、成長ルールが生き様の名称・専用アイテム対応・係数を手書きで重複せず、`getIkizamaList()`の入力順と値を表示している。
 - [x] `docs/design/site-layout/`、`docs/design/page-toc/`、新設する`docs/design/ikizama-index/`との関係を記録し、詳細ページ用designを一覧ページの正本として流用していない。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
@@ -89,6 +89,8 @@
 - `docs/design/ikizama-index/design-mobile.png`
 - `src/pages/data/ikizama/index.astro`
 - `src/components/data/IkizamaDataSection.astro`（一覧用の最小限の見出し・目次制御が必要な場合のみ）
+- `src/components/character-making/IkizamaExclusiveItemTable.astro`
+- `src/components/data/IkizamaCoefficientTable.astro`
 - `tests/visual/` 配下の生き様一覧確認
 - `src/lib/site/menu.ts`
 - `src/pages/character-making.mdx`
@@ -152,7 +154,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign正本化する必要はない。
 
 ### 対応完了チェックリスト
 
@@ -182,11 +184,11 @@
 
 ### 対応完了チェックリスト
 
-- [ ] 専用アイテム名を対応するアイテム種別の詳細ページへリンクする
-- [ ] 生き様名の詳細ページリンクと一覧の表示構成を維持する
-- [ ] GitHub Pagesのサブパス配下のリンクをVisual Testで確認する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] 専用アイテム名を対応するアイテム種別の詳細ページへリンクする
+- [x] 生き様名の詳細ページリンクと一覧の表示構成を維持する
+- [x] GitHub Pagesのサブパス配下のリンクをVisual Testで確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## レビュー指摘 2
 
@@ -206,9 +208,62 @@
 
 ### 対応完了チェックリスト
 
-- [ ] サイトメニューの生き様を入力順の子項目として展開する
-- [ ] キャラクターメイキングの専用アイテム対応を変換済みデータから表示する
-- [ ] 成長ルールの生き様係数表を変換済みデータから表示する
-- [ ] desktop / mobileでメニューと表の表示を確認する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] サイトメニューの生き様を入力順の子項目として展開する
+- [x] キャラクターメイキングの専用アイテム対応を変換済みデータから表示する
+- [x] 成長ルールの生き様係数表を変換済みデータから表示する
+- [x] desktop / mobileでメニューと表の表示を確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### デザイン参照
+
+- design target: `docs/design/ikizama-index/`、`docs/design/site-menu/`、`docs/design/character-making/`、`docs/design/advancement/`
+- reference desktop: 各targetの`design-desktop.png`
+- reference mobile: `ikizama-index`、`character-making`、`advancement`の`design-mobile.png`
+- notes: 既存の3レールlayout、最大3階層のSiteMenu、本文tableの密度と横overflow制約を比較した。
+
+### 成果物
+
+- actual desktop: `test-results/visual/ikizama-index-desktop.png`、`test-results/visual/character-making-desktop.png`、`test-results/visual/advancement-desktop.png`
+- actual mobile: `test-results/visual/ikizama-index-mobile.png`、`test-results/visual/character-making-mobile.png`、`test-results/visual/advancement-mobile.png`
+- actual tablet: `test-results/visual/character-making-tablet.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分 | 対応                                                     |
+| --------------------- | ---- | ---- | -------------------------------------------------------- |
+| レイアウト            | OK   | なし | 3レールと本文幅を維持                                    |
+| 余白                  | OK   | なし | 既存tableの余白を維持                                    |
+| タイポグラフィ        | OK   | なし | 既存のtable見出し・本文階層を維持                        |
+| 色                    | OK   | なし | 既存の青緑linkとneutral tableを維持                      |
+| 配置・整列            | OK   | なし | 生き様の第3階層とtable列を既存方針で表示                 |
+| レスポンシブ          | OK   | なし | mobile / tabletで既存の積み上げとtable表示を維持         |
+| overflow / scroll     | OK   | なし | Visual Testで画面全体の横overflowなしを確認              |
+| 既存デザインとの整合  | OK   | なし | SiteMenuの最大3階層と各ページdesignのtable制約に従う     |
+| 既存Componentとの整合 | OK   | なし | 既存のMDX table表示を保つ小さなデータ表示Componentを追加 |
+| accessibility basics  | OK   | なし | tableの`scope`、リンク、見出し構造を確認                 |
+
+### 自己修正した項目
+
+- なし。
+
+### 人間判断が必要な差分
+
+- 専用アイテム種別のリンク先（`/data/items/omamori`など）は、現時点ではアイテム種別ページが未実装のため404になる。リンク先は既存の変換仕様で定義されたURLを使っており、ページ実体の追加はこのissueの対象外である。
+
+### design-image-generation への引き継ぎ候補
+
+- [x] 実装スクリーンショットをdesign正本化する必要はない。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

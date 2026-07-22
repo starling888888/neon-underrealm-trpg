@@ -9,11 +9,14 @@ import Callout from "../components/_common/Callout.astro";
 import ImageBlock from "../components/_common/ImageBlock.astro";
 import InternalLink from "../components/_common/InternalLink.astro";
 import InitialTies from "../components/character-making/InitialTies.astro";
+import IkizamaExclusiveItemTable from "../components/character-making/IkizamaExclusiveItemTable.astro";
 import KenkayaAttributesExample from "../components/character-making/KenkayaAttributesExample.astro";
 import KenkayaHealthExample from "../components/character-making/KenkayaHealthExample.astro";
 import RyugiCommonSkillBonusTable from "../components/data/RyugiCommonSkillBonusTable.astro";
+import { getIkizamaList } from "../lib/data/ikizama";
 import { getRyugiList } from "../lib/data/ryugi-list";
 
+export const ikizamaList = getIkizamaList();
 export const ryugiList = getRyugiList();
 
 # キャラクターメイキング
@@ -113,10 +116,8 @@ export const ryugiList = getRyugiList();
 | --- | --- |
 | 武器 | 戦闘中の攻撃に使うアイテムです。特別な場合を除き、装備できるのは1つです。 |
 | 防具 | 主に防御力とダメージ軽減に影響するアイテムです。所持できるのは1つで、その防具を装備しているものとします。 |
-| お守り | 生き様がブライの仕事人だけが使えるアイテムです。 |
-| サイバネ | 生き様がケジメの仕事人だけが使えるアイテムです。 |
-| ナノマシン | 生き様がスミの仕事人だけが使えるアイテムです。 |
-| ドラッグ | 生き様がヤクの仕事人だけが使える消費アイテムです。 |
+
+<IkizamaExclusiveItemTable ikizamaList={ikizamaList} />
 
 ### 技能
 

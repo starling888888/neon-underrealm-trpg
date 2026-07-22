@@ -48,6 +48,11 @@ async function expectCharacterMakingContent(page: Page) {
   await expect(page.locator("[data-callout-type='warning']")).toHaveCount(1);
   await expect(page.locator("[data-callout-type='example']")).toHaveCount(4);
   await expect(page.locator("[data-initial-tie]")).toHaveCount(10);
+  await expect
+    .poll(() =>
+      article.locator("[data-ikizama-exclusive-items] tbody tr").count(),
+    )
+    .toBeGreaterThan(0);
   await expect(
     page.locator(
       "[data-callout-type] h2.callout-title, [data-callout-type] h3.callout-title",

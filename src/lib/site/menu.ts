@@ -1,3 +1,4 @@
+import { getIkizamaList } from "../data/ikizama";
 import { getRyugiList } from "../data/ryugi-list";
 
 export type SiteMenuItem = {
@@ -59,6 +60,10 @@ export const siteMenuItems: SiteMenuItem[] = [
         label: "生き様",
         href: "/data/ikizama",
         expandWhenCurrent: true,
+        children: getIkizamaList().map((ikizama) => ({
+          label: ikizama.name,
+          href: `/data/ikizama/${ikizama.id}`,
+        })),
       },
       {
         label: "共通スキル",

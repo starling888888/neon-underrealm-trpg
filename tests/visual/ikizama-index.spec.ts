@@ -39,9 +39,12 @@ async function expectIkizamaIndexPage(page: Page) {
         items.every((item) => {
           const links = item.querySelectorAll("a[href]");
           const description = item.querySelector("span");
+          const itemHref = links.item(1)?.getAttribute("href") ?? "";
 
           return (
-            links.length === 2 && Boolean(description?.textContent?.trim())
+            links.length === 2 &&
+            Boolean(description?.textContent?.trim()) &&
+            itemHref.includes("/data/items/")
           );
         }),
       ),
