@@ -30,8 +30,16 @@ async function expectWorldGuide(page: Page) {
   );
   await expect(page.getByRole("heading", { name: "悪魔" })).toHaveCount(1);
   await expectGeneratedPageToc(page, "強大な敵");
-  await expect(page.locator("[data-npc-card]")).toHaveCount(9);
-  await expect(page.locator(".npc-card-epithet")).toHaveCount(7);
+  await expect(page.locator("[data-npc-card]")).toHaveCount(11);
+  await expect(page.locator(".npc-card-epithet")).toHaveCount(8);
+  await expect(page.locator(".npc-card-quote")).toHaveCount(11);
+  await expect(page.locator('[data-npc-portrait-position="left"]')).toHaveCount(
+    6,
+  );
+  await expect(
+    page.locator('[data-npc-portrait-position="right"]'),
+  ).toHaveCount(5);
+  await expect(page.locator('img[src*="no_image.webp"]')).toHaveCount(1);
   await expect
     .poll(async () => {
       return await page.evaluate(

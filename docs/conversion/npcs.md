@@ -66,7 +66,7 @@
 }
 ```
 
-この変換は画像パスをExcelまたは生成JSONへ持ち込まない。`id`を個別画像の対応キーとして利用するか、`no_image.webp`をどの条件で使うか、公開アセットの最終パスは42-0のissueで既存SSoTと未追跡画像を照合して決める。
+この変換は画像パスをExcelまたは生成JSONへ持ち込まない。表示層は`id`を対応キーとして`public/images/npc/<id>.webp`を参照し、同名ファイルがない場合は`public/images/npc/no_image.webp`を使う。公開時のURLはサイトのbase pathを考慮して解決する。
 
 ## 検証
 

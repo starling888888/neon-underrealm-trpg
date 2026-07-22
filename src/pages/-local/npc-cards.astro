@@ -1,31 +1,9 @@
 ---
 import NpcCard from "../../components/_common/NpcCard.astro";
+import { getNpcList, getNpcPortraitPath } from "../../lib/data/npcs";
 import AppContainer from "../../layouts/AppContainer.astro";
 
-const npcCards = [
-  {
-    name: "オオグス・アルマ",
-    description:
-      "互助組合ヨドの盟主の一つ、オオグス組の組長。企業勢力を秤にかけ、組の立ち位置を確保する老獪な人物だ。",
-  },
-  {
-    name: "カンダ・サクラモン",
-    epithet: { text: "古強者", reading: "レガシー" },
-    description:
-      "当代最強と名高いブライ。企業からの中立を保つ互助組合ヨドに、用心棒として身を寄せている。",
-  },
-  {
-    name: "イヴ",
-    epithet: { text: "鏖殺者", reading: "アナイアレイター" },
-    description:
-      "企業勢力に関わる暗部を担う。街に残る争いの気配を、誰より早く嗅ぎ取る人物だ。",
-  },
-  {
-    name: "アシカガ・シンゾ",
-    description:
-      "複数の企業から援助を受ける組の組長。慎重で冷酷な判断により、支配地を広げてきた。",
-  },
-];
+const npcCards = getNpcList();
 ---
 
 <AppContainer
@@ -36,11 +14,19 @@ const npcCards = [
   <article class="npc-card-catalog prose" data-npc-card-catalog>
     <h1>NPCカード カタログ</h1>
     <p class="npc-card-catalog-lead">
-      NpcCardの横長1列レイアウトを確認するローカルページです。人物アイコンは装飾であり、個別NPC画像ではありません。
+      NpcCardの横長1列レイアウト、個別画像、左右の画像位置を確認するローカルページです。
     </p>
 
     <div class="npc-card-list" aria-label="NPCカードの表示例">
-      {npcCards.map((card) => <NpcCard {...card} />)}
+      {
+        npcCards.map((npc, index) => (
+          <NpcCard
+            npc={npc}
+            portraitPath={getNpcPortraitPath(npc.id)}
+            portraitPosition={index % 2 === 0 ? "left" : "right"}
+          />
+        ))
+      }
     </div>
   </article>
 </AppContainer>
