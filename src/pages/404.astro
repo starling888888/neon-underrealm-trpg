@@ -1,0 +1,72 @@
+---
+import InternalLink from "../components/_common/InternalLink.astro";
+import AppContainer from "../layouts/AppContainer.astro";
+import { withBase } from "../lib/utils/paths";
+
+const title = "404 Not Found";
+const imagePath = withBase("/images/404.webp");
+---
+
+<AppContainer title={title} showPageToc={false}>
+  <article class="not-found-page">
+    <h1 class="visually-hidden">{title}</h1>
+
+    <img
+      class="not-found-image"
+      src={imagePath}
+      alt="404 Not Found"
+      loading="eager"
+      decoding="async"
+    />
+
+    <p>お探しのページは存在しません</p>
+
+    <p class="not-found-link"><InternalLink href="/">トップに戻る</InternalLink></p>
+  </article>
+</AppContainer>
+
+<style>
+  .not-found-page {
+    display: grid;
+    justify-items: center;
+    max-width: 34rem;
+    margin-inline: auto;
+    padding-block: var(--space-6);
+    text-align: center;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .not-found-image {
+    width: min(100%, 24.6875rem);
+  }
+
+  .not-found-page p {
+    margin: var(--space-5) 0 0;
+    font-size: var(--text-lg);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .not-found-page .not-found-link {
+    margin-top: var(--space-3);
+    font-size: var(--text-base);
+  }
+
+  @media (width < 48rem) {
+    .not-found-page {
+      padding-block: var(--space-3);
+    }
+
+    .not-found-page p {
+      font-size: var(--text-base);
+    }
+  }
+</style>
