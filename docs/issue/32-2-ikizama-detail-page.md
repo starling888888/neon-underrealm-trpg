@@ -8,12 +8,14 @@
 ## 背景
 
 `docs/plan.md` の `32-2-ikizama-detail-page` は、生き様詳細ページを共通テンプレートから生成し、
-生き様説明、生き様データ、生き様ボーナススキル、生き様スキル一覧、専用アイテムリンクを表示することを
+生き様説明、生き様データ、生き様スキル一覧、専用アイテムリンクを表示することを
 求めている。
 
 ユーザー編集済みの `.raw/contents/ikizama-detail.md` は、ページ本文と可視構成の最優先正本である。
-H1直後に生き様ごとのheroを置き、`生き様データ`、`生き様ボーナススキル`、`生き様スキル`、
-`専用アイテム` の順で表示する。従来の `専用ルール`、`関連アイテム`、`関連ページリンク` の表示指示は
+H1直後に生き様ごとのheroを置き、`生き様データ`（H3の`生き様ボーナス`、`能力値ポイント`、`副能力係数`）、
+`生き様スキル`、`専用アイテム` の順で表示する。desktopでは生き様ボーナス、能力値ポイント、副能力係数を
+この順の1行3列、mobileでは生き様ボーナスと能力値ポイントを上段2列、副能力係数を下段の全幅で表示する。
+従来の `専用ルール`、`関連アイテム`、`関連ページリンク` の表示指示は
 contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs/requirements/pages.md` をcontentsへ
 整合させる。
 
@@ -41,15 +43,15 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 - `docs/design/ikizama-detail/` のdesign notesとdesktop / mobile design画像を、実装前提として作成・確認する
 - `src/pages/data/ikizama/[ikizamaId].astro` を追加し、生き様IDごとの静的ページを共通テンプレートから生成する
 - `src/lib/data/ikizama-detail.ts` の `getIkizamaDetail(ikizamaId)` と既存の変換済みJSONを表示に利用する
-- 生き様データを再利用可能なコンポーネントにする。生き様IDをキーに、能力値ポイントと副能力係数を表示する
-  値を渡し、生き様一覧の凡例にも利用できるよう、詳細ページ固有のhero、説明、スキル一覧、専用アイテムへ
+- 生き様データを再利用可能なコンポーネントにする。生き様IDをキーに、生き様ボーナス、能力値ポイント、副能力係数を
+  表示する値を渡し、生き様一覧の凡例にも利用できるよう、詳細ページ固有のhero、説明、基本・上級スキル一覧、専用アイテムへ
   依存させない
 - `.raw/contents/ikizama-detail.md` のfrontmatter、Markdown本文、HTMLコメント指示を実装へ反映する
 - `public/images/data/ikizama/<ikizamaId>_hero.webp` を各生き様詳細ページのhero画像として利用する
 - H1に `生き様：${ikizama.name}` を表示し、`ikizama.description`、任意の `ikizama.note`、`ikizama.attributePoints`、
   `ikizama.secondaryAttributeCoefficients` を表示する
 - `ikizama.note` がある場合は既存の `Callout` へ `type` と `content` を渡し、ない場合はCalloutを出力しない
-- `skills.bonus` の先頭要素だけを `生き様ボーナススキル` として `SkillCard` で表示する
+- `skills.bonus` の先頭要素だけを、生き様データ内のH3 `生き様ボーナス` として `SkillCard` で表示する
 - `skills.basic`、`skills.advanced` を `生き様スキル` 内にこの順で `CardContainer` と `SkillCard` を使って表示する。
   カテゴリ内の配列順を変えず、空のカテゴリでは対応する見出しとカード一覧を出力しない
 - スキルカードの個別アンカーには生成済みスキルIDを使い、カードへID・所属・区分を可視表示しない
@@ -73,17 +75,18 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 
 ## 完了条件
 
-- [ ] `design-image-generation` initial draft modeで `docs/design/ikizama-detail/notes.md`、
+- [x] `design-image-generation` initial draft modeで `docs/design/ikizama-detail/notes.md`、
       `design-desktop.png`、`design-mobile.png` を作成し、実装前の比較対象を記録している
 - [ ] `/data/ikizama/[ikizamaId]` が既存生き様IDごとに静的生成され、個別ページファイルを複製していない
-- [ ] 生き様データが、生き様IDをキーに渡す能力値ポイントと副能力係数を受け取る再利用可能なコンポーネントになっており、
-      詳細ページ固有のhero・説明・スキル一覧・専用アイテムへ依存していない
-- [ ] 生き様データコンポーネントはdesktopで3列、tablet / mobileで2列として表示する
-- [ ] 各ページで、生き様名、説明、任意の補足、hero、能力値ポイント、副能力係数、生き様ボーナススキル、
+- [ ] 生き様データが、生き様IDをキーに渡す生き様ボーナス、能力値ポイント、副能力係数を受け取る再利用可能なコンポーネントになっており、
+      詳細ページ固有のhero・説明・基本・上級スキル一覧・専用アイテムへ依存していない
+- [ ] 生き様データコンポーネントはdesktopで生き様ボーナス、能力値ポイント、副能力係数の1行3列、mobileで
+      生き様ボーナスと能力値ポイントの上段2列および副能力係数の下段全幅として表示する
+- [ ] 各ページで、生き様名、説明、任意の補足、hero、生き様ボーナス、能力値ポイント、副能力係数、
       生き様スキル一覧、専用アイテムリンクをcontentsの見出し順で表示する
 - [ ] hero画像と代替テキストが、対象生き様を誤認させず、desktop / mobileで破綻なく表示される
 - [ ] `ikizama.note` がある場合は既存 `Callout` のtypeと本文を反映し、ない場合は空のCalloutを表示しない
-- [ ] 生き様ボーナススキルは `skills.bonus` の先頭要素だけを表示し、生き様スキルは`basic`、`advanced` の順と
+- [ ] 生き様ボーナスはH3とし、`skills.bonus` の先頭要素だけを表示する。生き様スキルは`basic`、`advanced` の順と
       カテゴリ内の配列順を保つ。`bonus`、`basic`、`advanced` の空カテゴリは見出しや空一覧を表示しない
 - [ ] 専用アイテムリンクが種別IDの固定対応を使い、個別Item ID・個別アンカーを追加しない
 - [ ] 既存の `SkillCard` と `CardContainer` の表示契約、SiteMenu、PageToc、MobilePageTocを壊していない
@@ -97,10 +100,10 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 - [ ] `getIkizamaDetail(ikizamaId)` が存在する生き様とスキルデータだけを共通テンプレートへ渡している
 - [ ] GitHub Pagesのサブパス配下で、hero画像、専用アイテムリンク、スキルカード個別アンカーが壊れない
 - [ ] `ikizama.note` がある生き様では既存Calloutのtypeと本文を反映し、ない生き様では空のCalloutを表示しない
-- [ ] 生き様ボーナススキルはカテゴリ全体を重複表示せず、contents指定どおり`skills.bonus`の先頭要素だけを表示する
+- [ ] 生き様ボーナスはH3としてカテゴリ全体を重複表示せず、contents指定どおり`skills.bonus`の先頭要素だけを表示する
 - [ ] Visual Test対象のdesktop `1440px`、tablet `820px`、mobile `390px`で、長い説明、補足、係数表、
       長いスキル本文に横overflowや切り詰めがない
-- [ ] 生き様データコンポーネントがdesktop `1440px`では3列、tablet `820px`とmobile `390px`では2列で表示される
+- [ ] 生き様データコンポーネントがdesktop `1440px`では生き様ボーナス、能力値ポイント、副能力係数の順で1行3列、mobile `390px`では前2者の上段2列と副能力係数の下段全幅で表示される
 - [ ] desktopでは既存の `CardContainer`、mobileでは既存の2列配置を維持する
 - [ ] Visual Testは外部データの固有内容へ依存せず、画面構造、responsive layout、横overflow、
       スクリーンショット取得だけを確認する
@@ -127,7 +130,7 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 
 ## レビュー観点
 
-- `.raw/contents/ikizama-detail.md` のH1、hero、生き様データ、生き様ボーナススキル、
+- `.raw/contents/ikizama-detail.md` のH1、hero、生き様データ内のH3生き様ボーナス・能力値ポイント・副能力係数、
   生き様スキル、専用アイテムの構成が過不足なく実装要件へ対応しているか
 - `skills.bonus` の先頭要素だけを表示する指定と、`basic`、`advanced` の表示順・空カテゴリ非表示が
   レビュー可能か
@@ -138,8 +141,9 @@ contentsと矛盾するため、このissue作成時に `docs/plan.md` と `docs
 ## 備考
 
 - ローカルissue作成時点で `docs/design/ikizama-detail/` は存在しない。ユーザーによるdesign作成の明示指示があるまで、design画像は生成しない。
-- ユーザー確認済み: 能力値ポイントと副能力係数は `生き様データ` 内に置く。`skills.bonus` が空の場合は
-  `生き様ボーナススキル` のH2全体を表示しない。可視H1は `生き様：{名称}` とする。
+- ユーザー確認済み: 生き様ボーナス、能力値ポイント、副能力係数は `生き様データ` 内に置く。生き様ボーナスはH3とし、
+  desktopはこの順の1行3列、mobileは生き様ボーナスと能力値ポイントの上段2列および副能力係数の下段全幅とする。
+  `skills.bonus` が空の場合は生き様ボーナスのH3とカードを表示しない。可視H1は `生き様：{名称}` とする。
 - `public/images/data/ikizama/*.webp` と `public/images/data/ikizama_hero.webp` はユーザーの未追跡画像であり、
   本issueでは表示に利用するが、変更・削除・commit対象には含めない。
 - `docs/TODO.md` の「生成JSONとデータ取得層ができた後、サイドメニューに流儀リストと生き様リストを表示する」は、
