@@ -289,3 +289,24 @@
 - [x] current issueの古い背景・レビュー観点を整合させる
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- `docs/design/ikizama-index/notes.md`のOpen questionsが、design fixで正本化済みのmobile配置をinitial draft確認後の未確定事項として残している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `notes.md`はdesign fix mode、current issueはレビュー指摘 3 でdesktop / mobileの正本化完了を記録している。一方、Open questionsは「initial draftの確認後」としており、現在の正本化状態と一致しない。
+
+### 対応方針
+
+- mobileの専用アイテム名称の配置は現行正本として採用済みであることをnotesへ記録し、initial draftを前提とする未解決事項を閉じる。UI・リンク・画像は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] `docs/design/ikizama-index/notes.md`のOpen questionsを正本化後の状態へ更新する
+- [x] `npm run check:md` が通る
