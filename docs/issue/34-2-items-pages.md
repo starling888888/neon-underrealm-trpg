@@ -10,7 +10,7 @@
 - `.raw/contents/items-weapons.md` は、武器ページの本文と表示構成の正本である。以前の雛形作成時の「実装やdesign正本化は行わない」指示は、今回のユーザーによる実装開始指示で置き換わる。
 - `.raw/contents/items-armors.md` は、防具ページの本文と表示構成の正本である。雛形作成時の実装禁止指示は、今回のユーザーによる実装開始指示で置き換わる。
 - `.raw/contents/items-omamori.md` は、お守りページの本文と表示構成の正本である。雛形作成時の実装禁止指示は、今回のユーザーによる実装開始指示で置き換わる。
-- サイバネ・ナノマシン・ドラッグのcontents指示書は未確定のため、内容を推測して実装しない。
+- `.raw/contents/items-cybernetics.md`、`.raw/contents/items-nanomachines.md`、`.raw/contents/items-drugs.md` は、残る3種別の本文と表示構成の正本である。ユーザーの実装開始指示により、3ページを実装する。
 - 関連TODO: ダミーの `src/pages/data/items/weapons.mdx` を正式実装に置き換える。
 
 ## 対象範囲
@@ -25,12 +25,15 @@
 - `LegendContainer` を用い、武器・防具・お守りの凡例をdesktopではカード1カラム＋説明2カラム、768px以下ではカードと説明の2カラムで共通表示する。
 - 既存のSkillLegendも`LegendContainer`へ移し、ページ固有の凡例CSSを削除する。
 - SkillLegendの説明リストは右カラムへ直接表示し、「カードの項目」見出し・ラベルと目次項目を置かない。
-- 残る3種別は、対応するcontents指示書が確定後に同じissue内で追加する。
-- 6種別すべてについて、対応するCardの凡例と一覧を実装し、種別ごとのVisual Review・design canonicalizeを行う。
+- サイバネcontentsに従い、`/data/items/cybernetics` でhero、warning、サイバネ破壊の説明、`CyberneticCard`凡例、部位別サイバネ一覧、サイバネ武器一覧を表示する。
+- ナノマシンcontentsに従い、`/data/items/nanomachines` でhero、warning、身体強化の説明、`NanomachineCard`凡例、ナノマシン一覧、武器化ナノマシン一覧を表示する。
+- ドラッグcontentsに従い、`/data/items/drugs` でhero、warning、`DrugCard`凡例、ドラッグ一覧を表示する。
+- 3種別の凡例は既存の`LegendContainer`を用い、対応Cardへcontents指定の静的Propsを渡して右カラムの説明を表示する。
+- サイバネ破壊の休息シーンへの内部リンク先は、実装時に現在の見出しIDを確認して決定する。
+- 6種別すべてについて、対応するCardの凡例と一覧を実装し、種別ごとのVisual Reviewを行う。designの新規作成・canonicalizeはユーザー指示により行わない。
 
 ## 初期スコープ外
 
-- 未確定のcontentsをもとにしたサイバネ・ナノマシン・ドラッグページの実装
 - 検索、絞り込み、ソート、ページネーション、比較・計算、詳細ページ遷移
 - `WeaponCard` の表示契約の変更、データ変換仕様の変更、新規依存関係の追加
 - 新規design画像の作成。既存の共通layoutと `docs/design/items/` の方向性を維持する。
@@ -40,7 +43,12 @@
 - [x] `/data/items/weapons` がcontentsの本文・HTMLコメント指示に従う
 - [x] 凡例、喧嘩・暗殺・発砲・格闘・干渉の武器一覧が `WeaponCard` で表示される
 - [x] ダミーの武器ページが正式実装に置き換わる
-- [x] 未確定の3種別ページを推測実装していない
+- [x] `/data/items/cybernetics` がcontentsの本文・HTMLコメント指示に従う
+- [x] `CyberneticCard`の凡例、部位別サイバネ一覧、サイバネ武器一覧が表示される
+- [x] `/data/items/nanomachines` がcontentsの本文・HTMLコメント指示に従う
+- [x] `NanomachineCard`の凡例、ナノマシン一覧、武器化ナノマシン一覧が表示される
+- [x] `/data/items/drugs` がcontentsの本文・HTMLコメント指示に従う
+- [x] `DrugCard`の凡例とドラッグ一覧が表示される
 - [x] `/data/items/armors` がcontentsの本文・HTMLコメント指示に従う
 - [x] `ArmorCard` の凡例と16件の防具一覧が表示される
 - [x] `/data/items/omamori` がcontentsの本文・HTMLコメント指示に従う
@@ -48,8 +56,8 @@
 - [x] 武器・防具・お守りの凡例が共通の3→2カラムレイアウトで表示される
 - [x] 既存SkillLegendも`LegendContainer`を使用し、凡例専用CSSを持たない
 - [x] SkillLegendに「カードの項目」見出し・ラベル・目次項目がない
-- [ ] 6種別すべてについて、確定したcontentsに従うページ、対応Cardの凡例と一覧を実装している
-- [ ] 6種別それぞれのVisual Reviewを行い、designをcanonicalizeしている
+- [x] 6種別すべてについて、確定したcontentsに従うページ、対応Cardの凡例と一覧を実装している
+- [x] 6種別それぞれのVisual Reviewを行い、design正本の更新は不要と判断している
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -194,6 +202,53 @@
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## ビジュアルレビュー 7
+
+### デザイン参照
+
+- design target: `docs/design/items/`。各アイテム個別ページは対象外であり、初期designの新規作成はユーザー指示により行わない。
+- reference desktop: 該当なし
+- reference mobile: 該当なし
+- notes: 既存の共通layoutとCard表現を維持し、凡例は`LegendContainer`のdesktop 3カラム・mobile 2カラム構成を使う。
+
+### 成果物
+
+- actual desktop: `test-results/visual/items-cybernetics-desktop.png`、`test-results/visual/items-nanomachines-desktop.png`、`test-results/visual/items-drugs-desktop.png`
+- actual mobile: `test-results/visual/items-cybernetics-mobile.png`、`test-results/visual/items-nanomachines-mobile.png`、`test-results/visual/items-drugs-mobile.png`
+- report: `npm run visual:capture -- --grep '@items-(cybernetics|nanomachines|drugs)'`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                          | 対応     |
+| --------------------- | ---- | ----------------------------------------------------------------------------- | -------- |
+| レイアウト            | OK   | 3ページともdesktopではカード1カラム＋説明2カラムで表示する                    | 修正不要 |
+| レスポンシブ          | OK   | 390px幅では凡例と一覧を2カラムで表示し、横overflowなし                        | 修正不要 |
+| 本文・導線            | OK   | Callout、指定本文、サイバネ破壊の休息シーンへの導線をcontentsに従って表示する | 修正不要 |
+| 既存Componentとの整合 | OK   | `LegendContainer`と各Cardの既存契約を変更せず、実データIDを個別アンカーに使う | 修正不要 |
+
+### 自己修正した項目
+
+- [x] 3ページの凡例を`LegendContainer`へ統一した
+- [x] サイバネ破壊の導線を現在の見出しID `/rules/scenario-play#休息シーン` に合わせた
+
+### 人間判断が必要な差分
+
+- なし
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] なし
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新は不要と判断した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## チェックポイント
 
 - [x] 既存ルートとGitHub Pagesのサブパス公開に影響しない
@@ -211,6 +266,12 @@
 - `tests/visual/items-armors.spec.ts`（防具実装開始後）
 - `src/pages/data/items/omamori.mdx`
 - `tests/visual/items-omamori.spec.ts`
+- `src/pages/data/items/cybernetics.mdx`（サイバネ実装開始後）
+- `tests/visual/items-cybernetics.spec.ts`（サイバネ実装開始後）
+- `src/pages/data/items/nanomachines.mdx`（ナノマシン実装開始後）
+- `tests/visual/items-nanomachines.spec.ts`（ナノマシン実装開始後）
+- `src/pages/data/items/drugs.mdx`（ドラッグ実装開始後）
+- `tests/visual/items-drugs.spec.ts`（ドラッグ実装開始後）
 - `src/components/data/LegendContainer.astro`
 - `src/pages/data/index.mdx`（既存SkillLegendの共通Component移行）
 - `src/styles/prose.css`（既存SkillLegend専用CSSの削除）
@@ -223,9 +284,12 @@
 - 武器contentsの本文・HTMLコメント指示がそのまま表示構成へ反映されているか
 - 防具contentsの本文・HTMLコメント指示がそのまま表示構成へ反映されているか
 - お守りcontentsの本文・HTMLコメント指示がそのまま表示構成へ反映されているか
+- サイバネcontentsのwarning、破壊説明、部位別一覧、サイバネ武器一覧がそのまま表示構成へ反映されているか
+- ナノマシンcontentsのwarning、身体強化説明、武器化ナノマシン一覧がそのまま表示構成へ反映されているか
+- ドラッグcontentsのwarning、凡例、一覧がそのまま表示構成へ反映されているか
 - 武器・防具・お守りの凡例が共通レイアウトを使い、desktopと768px以下で指定のカラム構成になるか
-- 3種別の未確定contentsをこの時点で実装対象に含めない判断でよいか
-- 6種別の実装後に、種別ごとのVisual Review・design canonicalizeを行う計画でよいか
+- サイバネ破壊の休息シーンへの内部リンクが現在の見出しIDを参照するか
+- 6種別の実装後に、種別ごとのVisual Reviewを行い、design正本の更新を不要と判断したことを確認する
 
 ## 備考
 
@@ -234,6 +298,7 @@
 - 武器実装開始前に、contentsの `#ハッシュ` のリンク先、重複した説明番号、`normal.ansatu` と実データキー `ansatsu` の対応、武器種別の凡例表示を確定した。
 - 防具contentsは、既存の`ArmorCard`契約（`信用`、`防御力`、`ダメージ軽減`、`装備制限`、`効果`）と整合することを確認した。`armors_hero.webp` も配置済みである。
 - お守りcontentsは、既存の`OmamoriCard`契約（`信用`、`効果`）と整合することを確認した。`omamori_hero.webp` と21件の生成済みデータも配置済みである。warning内の神仏の加護リンク先は、`/data/ikizama/burai#skill-ikizama-burai-basic-pv-570c394fe082` とする。
+- サイバネ・ナノマシン・ドラッグのcontents指示に従い、3ページを実装した。初期designの新規作成はユーザー指示により行わず、Visual Reviewで既存共通layoutとの整合を確認した。
 
 ## ビジュアルレビュー 1
 
