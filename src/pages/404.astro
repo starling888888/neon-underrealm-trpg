@@ -7,8 +7,8 @@ const title = "404 Not Found";
 const imagePath = withBase("/images/404.webp");
 ---
 
-<AppContainer title={title} showPageToc={false}>
-  <article class="not-found-page">
+<AppContainer title={title} noindex showPageToc={false}>
+  <article class="not-found-page" data-pagefind-ignore>
     <h1 class="visually-hidden">{title}</h1>
 
     <img
