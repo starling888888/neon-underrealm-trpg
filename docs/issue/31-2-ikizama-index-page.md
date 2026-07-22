@@ -71,7 +71,6 @@
 ## チェックポイント
 
 - [x] 既存の生き様詳細ルート、`IkizamaDataSection`、スキルカード表示を壊していない。
-- [ ] 生き様名の詳細ページリンクと専用アイテム名のアイテム種別詳細ページリンクが、GitHub Pagesのサブパス配下で壊れない。
 - [x] desktop / mobileでhero、凡例、一覧の長い説明が横overflowや不自然な切り詰めなく読める。
 - [x] PageTocとMobilePageTocがH2の`生き様データの見方`、`生き様一覧`を表示し、`IkizamaDataSection`内のH3を重複表示しない。
 - [x] `getIkizamaList()`の入力順と`shortDescription`を、ページ側で並べ替え・再編集していない。
@@ -252,7 +251,7 @@
 
 ### 人間判断が必要な差分
 
-- 専用アイテム種別のリンク先（`/data/items/omamori`など）は、現時点ではアイテム種別ページが未実装のため404になる。リンク先は既存の変換仕様で定義されたURLを使っており、ページ実体の追加はこのissueの対象外である。
+- なし。専用アイテム種別のリンク先は現時点で未実装だが、ユーザー判断によりこのissueでは許容する。
 
 ### design-image-generation への引き継ぎ候補
 
