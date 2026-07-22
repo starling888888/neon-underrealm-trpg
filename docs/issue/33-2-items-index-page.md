@@ -41,7 +41,7 @@
 - 武器、防具、お守り、サイバネ、ナノマシン、ドラッグの個別一覧ページ、データ変換、Item系Card Component、カード凡例を作成・変更しない。
 - 検索、絞り込み、ソート、ページネーション、比較・計算、アイテム選択支援、入力フォーム、保存機能を追加しない。
 - 新しいnpm package、CMS、DB、認証、SSR、API、PWA、クライアント状態管理を追加しない。
-- Header、Footer、SiteMenu、PageToc、MobilePageTocの設計・実装を変更しない。
+- Header、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。ただし、レビュー指摘1でユーザーが承認した、単一見出しの表示と0件時の空状態に限る共通PageToc変更は対象範囲に含める。
 - `public/images/data/items_hero.webp`の内容を再生成、加工、置換しない。`public/images/data/items/`配下の後続個別ページ用画像を変更・追加しない。
 - `.raw/contents/items.md`をGoogle Driveへ同期しない。
 
@@ -68,7 +68,7 @@
 - [x] 未実装の各種別ページへのリンクを、将来routeとして残し、このissueで新設していない。
 - [x] `docs/TODO.md`のダミーMDXページTODOは`/data/items`分だけを解消し、`/data/items/weapons`分を後続taskへ残している。
 - [x] 不要な依存関係を追加していない。
-- [x] 初期スコープ外の機能を実装していない。
+- [x] 初期スコープ外の機能を実装していない。レビュー指摘1で承認された共通PageToc変更を除く。
 - [x] 既存の未追跡アイテム画像を破壊していない。
 
 ## 想定変更ファイル
@@ -95,7 +95,7 @@
 - hero画像が装飾画像として空`alt`を設定し、本文の理解に必要な情報を画像だけへ置いていないか。
 - H1直後のhero画像と、本文・表が既存のsite layoutと整合し、desktop・mobileで読みやすいか。
 - `docs/design/items/`のinitial draftがcontentsの可視構成を優先し、カード一覧や検索などの範囲外UIを追加していないか。
-- `/data/items`のダミー置換だけに留まり、個別アイテムページや共通ナビゲーションへ変更を広げていないか。
+- `/data/items`のダミー置換と、レビュー指摘1で承認された単一見出し・0件空状態の共通PageToc変更に留まり、個別アイテムページや他の共通ナビゲーション再設計へ変更を広げていないか。
 - Visual Review後にdesign正本化が必要か。必要な場合、design fix modeを明示承認するか。
 - `docs/TODO.md`のダミーMDX TODOを`/data/items`分だけ完了にしてよいか。
 
@@ -227,3 +227,26 @@
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 共通PageTocの単一見出し・0件空状態を実装した後も、issueの初期スコープ外とreview観点、design notesにはPageToc / MobilePageToc変更を禁止する旧記述が残っている。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: ユーザーはレビュー指摘1に対し、「1件以上は表示、0件は『見出しがありません』」と方針を明示し、実装を承認した。`docs/requirements/layout-navigation.md`、`docs/plan.md`、実装・テストは新方針に一致する一方、`docs/issue/33-2-items-index-page.md`と`docs/design/items/notes.md`の旧記述が矛盾する。
+
+### 対応方針
+
+- 初期スコープ外とreview観点を、単一見出し・0件空状態のPageToc変更だけを承認済み例外として明記する形へ更新する。
+- design notesにも同じ共通PageToc仕様を記録し、その他のHeader、Footer、SiteMenu、PageToc、MobilePageTocの再設計は引き続き範囲外とする。
+
+### 対応完了チェックリスト
+
+- [x] issueのscope・review観点を更新する
+- [x] design notesを更新する
+- [x] `npm run check` が通る

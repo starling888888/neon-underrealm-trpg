@@ -39,7 +39,7 @@
 ## Existing design constraints
 
 - `global-styles` の白寄り背景、暗めグレーのHeader、system font、低彩度border、青緑accentを維持する。
-- `site-layout` のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。
+- `site-layout` のHeader、Footer、SiteMenuを再設計しない。PageTocとMobilePageTocは、目次対象の見出しが1件以上なら表示し、0件なら「見出しがありません」と表示する共通仕様に従う。この仕様以外の再設計はしない。
 - heroは`public/images/data/items_hero.webp`を全幅で自然な縦横比のまま表示し、装飾画像として空`alt`にする。
 - 「アイテムの種類」は、武器、防具、お守り、サイバネ、ナノマシン、ドラッグの順を変えない。お守り以降は対応する生き様へのリンクを説明文に含める。「生き様専用アイテム」の重複注釈は表示しない。
 - 表はdesktop・mobileともにページ全体の横overflowを生まず、長い説明が自然に折り返されることを優先する。mobileの種別名は改行せず、説明列が折り返す。
@@ -49,7 +49,7 @@
 - アイテムカード、カード凡例、個別アイテム一覧、個別種別ページ。
 - 検索、絞り込み、ソート、ページネーション、比較・計算、アイテム選択支援。
 - パンくず、前後ナビゲーション、準備中表示、画像上の文字・overlay・caption。
-- Header、Footer、SiteMenu、PageToc、MobilePageTocの変更。
+- Header、Footer、SiteMenuの変更、および単一見出し表示・0件空状態以外のPageToc、MobilePageTocの再設計。
 - `public/images/data/items/`配下の後続個別ページ用画像の表示。
 
 ## Comparison points for implementation
@@ -58,6 +58,7 @@
 - desktopでは中央本文幅にheroと表が収まり、左SiteMenuと右PageTocを圧迫しない。
 - mobileではhero、導入文、表が390px幅で自然に収まり、ページ全体の横overflowを起こさない。`ナノマシン`を含む種別名は1行で表示する。
 - 表の種別名と生き様名だけを青緑のリンクとして扱い、カードUIや過剰な色分けを加えない。
+- 「アイテムの種類」だけでもdesktop PageTocとMobilePageTocへ表示される。目次対象の見出しがないページでは、共通Componentが「見出しがありません」と表示する。
 - 許容差分: 段落・表セルの改行位置、導入文と表の高さ。
 - 要レビュー差分: heroへのcaptionやoverlayの追加、表の順序変更、表をカード一覧へ置換、検索・操作UIの追加、global navigationの再設計。
 
@@ -74,4 +75,4 @@
 ## Open questions
 
 - 初期draftの表を、実装時も通常のHTML tableとして維持するか。contentsの表形式指定に従うため、現時点ではtableを採用している。
-- PageTocには「アイテムの種類」のみを載せる想定でよいか。H1はPageToc対象外であり、contentsに追加のH2はない。
+- PageTocには「アイテムの種類」のみを表示する。H1はPageToc対象外であり、contentsに追加のH2はない。
