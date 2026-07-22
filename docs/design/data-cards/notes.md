@@ -55,7 +55,7 @@
 - 所属、区分、IDはCardに可視表示しない。anchor IDは実装上の属性だけに使う。
 - 通常データと凡例用静的Propsを同じCardで表示する。凡例専用Componentは作らない。
 - 数値的な表示Propsは`string | number`を受け入れ、`①2`などの文字列は変換せずに表示する。
-- `effect`と`ArmorCard.restriction`は`null`、空文字列、`undefined`で空文字列とし、その他の未設定表示値は`-`とする。`SkillCard.summary`は非表示を維持する。
+- `effect`は`null`、空文字列、`undefined`で空文字列とし、`ArmorCard.restriction`を含むその他の未設定表示値は`-`とする。`SkillCard.summary`は非表示を維持する。
 
 ## Catalog sample data
 

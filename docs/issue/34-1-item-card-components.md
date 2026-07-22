@@ -28,7 +28,7 @@
 - 各Cardが対応する`src/lib/types/item.ts`のアイテムデータを通常表示でき、MDXから凡例用の静的Propsを渡しても表示できるよう、各Component内のProps契約を定義する。
 - 表示上数値となるPropsは、未設定値を含めて`string | number | null | undefined`を受け付ける。`SkillCard`の`maxLevel`を含め、既存`SkillCard`の数値的Propsも同じ方針へリファクタする。`null`、空文字列、`undefined`は、後述のフィールド分類に従って表示する。
 - 各Cardに`anchorId`を渡せるようにし、実在データの`id`を個別アンカーとしてそのまま利用できる構造にする。
-- 効果・詳細説明の文章Propsは`null`、空文字列、`undefined`で空文字列を表示する。対象は全Cardの`effect`、および`ArmorCard`の`restriction`とする。現在非表示の`SkillCard.summary`は表示・fallback処理の対象外とし、既存TODOどおり非表示を維持する。
+- 効果の文章Propsは`null`、空文字列、`undefined`で空文字列を表示する。対象は全Cardの`effect`とする。現在非表示の`SkillCard.summary`は表示・fallback処理の対象外とし、既存TODOどおり非表示を維持する。`ArmorCard.restriction`を含むその他の表示値は`-`へfallbackする。
 - `SkillCard`の`cost`、`proficiency`、`acquisitionRestriction`、`usageRestriction`、`target`、`range`と、Item Cardの名称・効果・詳細文章以外の表示Propsは、`null`、空文字列、`undefined`で`-`を表示する。名称は通常データ・凡例データとも必須とする。
 - `SkillCard`を含むCardのデザインを統一する。横幅は`CardContainer`のgrid配置を継承し、本文が短い場合の基準はトランプに近い`aspect-ratio: 5 / 7`とする。本文量が基準高さを超える場合は、内容に応じて縦へ伸長し、切り詰めない。現在の`SkillCard`の既定最低高さを、この比率より過度に縦長にしない。
 - `docs/design/data-cards/`をCard表示のdesign targetとし、各種別の項目配置、共通表現、`5 / 7`の基準比率、可変高さ、凡例表示を記録する。正本画像はレビュー済み実装から後続作業でcanonicalizeする。
@@ -48,7 +48,7 @@
 
 - [x] 6種の個別Item Card Componentが通常データと凡例用静的Propsの両方を表示できる。
 - [x] `SkillCard`を含む全対象Cardの数値的Propsが`string | number`を受け付け、`①2`などの凡例用表記をそのまま表示できる。
-- [x] 全Cardの`effect`と`ArmorCard.restriction`は、`null`、空文字列、`undefined`で空文字列となる。現在非表示の`SkillCard.summary`は表示しない。
+- [x] 全Cardの`effect`は、`null`、空文字列、`undefined`で空文字列となる。現在非表示の`SkillCard.summary`は表示しない。その他の表示値は`-`へfallbackする。
 - [x] `SkillCard`の`cost`、`proficiency`、`acquisitionRestriction`、`usageRestriction`、`target`、`range`と、Item Cardの名称・効果・詳細文章以外の表示Propsは、`null`、空文字列、`undefined`で`-`となる。
 - [x] 実在データの`id`を利用できる個別アンカーIDを各Cardに付与できる。
 - [x] Cardの横幅は`CardContainer`のgridを継承し、短い本文では`aspect-ratio: 5 / 7`を基準とする。長文ではその高さから自然に伸長し、本文を切り詰めない。`SkillCard`の既定最低高さはこの基準より過度に縦長でない。
@@ -88,7 +88,7 @@
 
 - 6種のCardを個別Componentのまま保ちつつ、通常表示と凡例表示のProps契約が各種別で十分に読みやすいか。
 - 数値的Propsの`string | number`受け入れが、実データの数値型や生成JSONのschemaを不用意に広げていないか。
-- 全Cardの`effect`と`ArmorCard.restriction`を空文字列にし、`SkillCard.summary`は引き続き非表示、その他の未設定表示値は`-`にする区別が明確か。
+- 全Cardの`effect`を空文字列にし、`SkillCard.summary`は引き続き非表示、`ArmorCard.restriction`を含むその他の未設定表示値は`-`にする区別が明確か。
 - `SkillCard`の最低高さ縮小と、短文時の`aspect-ratio: 5 / 7`・可変高さが、desktop 3列 / mobile 2列の可読性を損なわないか。
 - `docs/design/data-cards/`へCard designを統合し、レビュー済み実装から正本画像をcanonicalizeする方針が適切か。
 - TODOのComponent contract test基盤を今回のCard実装へ含めず、後続検討に残すことが適切か。
@@ -98,3 +98,32 @@
 - `docs/design/items/`はアイテムトップページのdesignであり、Cardを初期スコープ外としている。Card表示のdesign正本は`docs/design/data-cards/`に統合し、正本画像は後続でcanonicalizeする。
 - `docs/TODO.md`の`/data/items/weapons`ダミーMDXの置換は、武器ページ実装タスクで扱う。このComponent-only taskでは変更しない。
 - issue作成時点で、`public/images/data/items/`は未追跡である。ユーザーの既存作業として扱い、本issueで操作しない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `ArmorCard.restriction`の未設定表示が、issue・requirements・design notesの「空文字列」記載と、実装およびユーザーの明示指示「装備制限は`-`にフォールバックして」の間で矛盾している。
+- `SkillCard`のDOM変更後も、検索モーダルVisual Testが旧来の直接子selectorを参照している。
+
+### 判定
+
+- source: local-pr-review
+- `ArmorCard.restriction`: valid（文書整合性）。実装はユーザー明示指示どおり`-`を表示しており、コード不具合ではない。issue、requirements、design notesの空文字列記載が古い。
+- 検索モーダルVisual Test: valid。 `npx playwright test tests/visual/search-modal.spec.ts`で、`#<id> > .skill-card-header > span.skill-card-name`が0件となることを確認した。
+- 同コマンドのPagefind検索結果1件の失敗は、今回のDOM変更との因果を確認できないためdoubtfulとして扱い、対応対象に含めない。
+- local validation: `ArmorCard.astro`は`displayValue(restriction)`を用い、ユーザー明示指示と一致する。検索モーダルdesktop testは上記selector不一致で失敗した。
+
+### 対応方針
+
+- ユーザー明示指示に合わせて、`restriction`のfallbackを`-`とする表示契約へissue・requirements・design notesを統一する。
+- 検索モーダルVisual Testのselectorを現在の`SkillCard` DOM階層に対応させ、対象testを通す。
+- Pagefind検索結果の失敗は、今回の指摘対応後に再確認し、再現時だけ別途切り分ける。
+
+### 対応完了チェックリスト
+
+- [x] `ArmorCard.restriction`の表示契約を`-`へ文書統一する。
+- [ ] 検索モーダルVisual Testのselectorを更新する。
+- [ ] `npx playwright test tests/visual/search-modal.spec.ts`の対象selector回帰が解消することを確認する。
+- [ ] `npm run check`が通る。
+- [ ] `npm run build`が通る。
