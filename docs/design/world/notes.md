@@ -42,14 +42,14 @@
 ## Existing design constraints
 
 - `site-layout`のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。
-- `npc-card`の横長1列、左側`4:5`人物アイコン領域、shadowなし、二つ名のruby / 文字色を維持する。
+- `npc-card`の横長1列、`4:5`個別画像領域、shadowなし、二つ名のruby / 文字色、セリフの薄い斜体を維持する。
 - H1直後に`ImageBlock`を置き、heroには意味のあるaltを持たせる。
 - build後のPageToc生成を前提に、正本のcaptureは`npm run preview`で確認する。
 - hero内の公式ゲームロゴは、world heroで明示承認された合成ブランディングである。in-world signageと混同せず、他のoverlay typographyを追加しない。
 
 ## Out of scope
 
-- NPC個別画像、Excel、JSON、schema、取得層、一覧・詳細ページ
+- NPC一覧・詳細ページ
 - GM専用情報、エネミーデータ、シナリオ本文、キャンペーン本文
 - Header、Footer、SiteMenu、PageToc、MobilePageTocの再設計
 - 検索、パンくず、前後ナビゲーション、ダイスローラー、キャラクターシート、CMS、DB、認証、SSR、API、PWA
@@ -60,25 +60,34 @@
 - hero右下に、公式ゲームロゴ`光都暗域〈ネオン・アンダーレルム〉TRPG`だけが合成されている。
 - desktopのPageTocとmobileのMobilePageTocが、build後に生成された見出しを含む。
 - `〈仕事人〉`の強調記法が文字として露出せず、太字として表示される。
-- NPCカードがdesktop / mobileとも横長1列を保ち、横overflowしない。
+- NPCカードがdesktop / mobileとも横長1列を保ち、11件のNPC画像、セリフ、グループ内の左右交互を表示し、同IDの個別`.webp`がない場合は`public/images/npc/no_image.webp`を表示して横overflowしない。
 
 ## Generation source
 
-- source branch / commit when applicable: `21-2-world-page` / `ea6591f`を基点とする未commit実装
 - route: `/world/`
-- capture: `tests/visual/world.spec.ts`を`npm run build`後の`npm run preview -- --host 127.0.0.1`に対して実行した。
+- capture: `tests/visual/world.spec.ts`をbuild後の`npm run preview`に対して実行する。
 - source artifacts:
   - `test-results/visual/world-desktop.png`
   - `test-results/visual/world-mobile.png`
-- user approval: `PR出す前に正本化もやっていいからねどうせ最後は俺がレビューするし。`（2026-07-12）
-- logo approval: `ロゴありが正しいです。グローバルにそれが正しくなるように記述修正してください。`（2026-07-12）
+- user approval: `デザイン正本化。ワールドガイドとローカル用のNPCカード用ページ。`（2026-07-22）。
 
 ## Canonicalization rationale
 
-- 事前のworld専用draftを作らず、既存`site-layout`と`npc-card`正本を組み合わせる方針だった。
-- build後のpreviewでPageTocを含めて確認済みのactualを採用し、後続のworld実装が比較できるpage-level正本を作る。
+- build後のpreviewでPageTocを含めて確認済みのactualを採用し、個別NPC画像、セリフ、左右交互を含むpage-level正本を作る。
 - Visual Reviewの不備を隠すためではなく、ユーザーが明示承認した現行実装の状態を比較基準にするための正本化である。
+
+<!-- visual-canonicalization:start -->
+
+- command: `npm run visual:canonicalize -- world --route /world/`
+- source branch: `42-0-npc-data-normalization`
+- source commit: `f28b6984623e89b05b0329466de4468d7bc882bb`
+- route: `/world/`
+- state: `default`
+- viewport: desktop 1440x1200, mobile 390x900
+- capture manifest: `test-results/visual/capture-manifest.json`
+
+<!-- visual-canonicalization:end -->
 
 ## Open questions
 
-- なし。
+- mobileでも左右交互を維持する。実ユーザーから読みにくさの指摘が出た場合は、画像位置の統一を別taskで検討する。

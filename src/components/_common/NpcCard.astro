@@ -1,39 +1,42 @@
 ---
-export interface NpcEpithet {
-  text: string;
-  reading: string;
-}
+import { withBase } from "../../lib/utils/paths";
+import type { Npc } from "../../lib/schemas/npcs";
 
 interface Props {
-  name: string;
-  description: string;
-  epithet?: NpcEpithet;
+  npc: Npc;
+  portraitPath: string;
+  portraitPosition?: "left" | "right";
 }
 
-const { name, description, epithet } = Astro.props;
+const { npc, portraitPath, portraitPosition = "left" } = Astro.props;
 ---
 
-<article class="npc-card" data-npc-card>
-  <div class="npc-card-portrait" aria-hidden="true">
-    <span class="npc-card-person-icon"></span>
+<article
+  class:list={["npc-card", `npc-card-${portraitPosition}`]}
+  data-npc-card
+  data-npc-portrait-position={portraitPosition}
+>
+  <div class="npc-card-portrait">
+    <img src={withBase(portraitPath)} alt={`${npc.name}の肖像`} loading="lazy" decoding="async" />
   </div>
 
   <div class="npc-card-content">
     <h4 class="npc-card-name">
       {
-        epithet && (
+        npc.epithet && (
           <span class="npc-card-epithet">
             <ruby>
-              {epithet.text}
-              <rt>{epithet.reading}</rt>
+              {npc.epithet.text}
+              <rt>{npc.epithet.reading}</rt>
             </ruby>
           </span>
         )
       }
-      {epithet ? " " : null}
-      {name}
+      {npc.epithet ? " " : null}
+      {npc.name}
     </h4>
-    <p>{description}</p>
+    <p class="npc-card-quote">{npc.quote}</p>
+    <p class="npc-card-description">{npc.description}</p>
   </div>
 </article>
 
@@ -47,43 +50,17 @@ const { name, description, epithet } = Astro.props;
   }
 
   .npc-card-portrait {
-    position: relative;
-    display: grid;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    place-items: center;
     border-right: var(--border-width) solid var(--color-border);
     background: var(--color-surface-muted);
   }
 
-  .npc-card-person-icon {
-    position: relative;
-    width: 42%;
-    height: 52%;
-  }
-
-  .npc-card-person-icon::before {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 40%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: var(--color-list-marker);
-    content: "";
-    transform: translateX(-50%);
-  }
-
-  .npc-card-person-icon::after {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
+  .npc-card-portrait img {
+    display: block;
     width: 100%;
-    height: 58%;
-    border-radius: 50% 50% 14% 14%;
-    background: var(--color-list-marker);
-    content: "";
-    transform: translateX(-50%);
+    height: 100%;
+    object-fit: cover;
   }
 
   .npc-card-content {
@@ -118,14 +95,41 @@ const { name, description, epithet } = Astro.props;
 
   .npc-card-content p {
     margin: var(--space-3) 0 0;
-    color: var(--color-text);
     font-size: var(--text-sm);
     line-height: var(--line-height-base);
+  }
+
+  .npc-card-quote {
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  .npc-card-description {
+    color: var(--color-text);
+  }
+
+  .npc-card-right {
+    grid-template-columns: minmax(0, 1fr) 8.25rem;
+  }
+
+  .npc-card-right .npc-card-portrait {
+    grid-column: 2;
+    border-right: 0;
+    border-left: var(--border-width) solid var(--color-border);
+  }
+
+  .npc-card-right .npc-card-content {
+    grid-row: 1;
+    grid-column: 1;
   }
 
   @media (max-width: 48rem) {
     .npc-card {
       grid-template-columns: 6.375rem minmax(0, 1fr);
+    }
+
+    .npc-card-right {
+      grid-template-columns: minmax(0, 1fr) 6.375rem;
     }
 
     .npc-card-content {

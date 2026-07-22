@@ -86,6 +86,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeated PR reviews discovered one documentation dependency at a time
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `42-0-npc-data-normalization`の`no_image.webp` fallback仕様を正式化した後のPRレビュー
+- 観測した失敗: 仕様変更時に、plan、TODO、変換仕様、requirements、out-of-scope、architecture、designを横断して影響範囲を一括確認せず、差分中心のPRレビューを繰り返した。そのためworld design、requirements / out-of-scope、architectureの旧仕様が第1回から第3回に分けて発見され、レビュー品質が低く見える連鎖を生んだ。
+- 一次対応: 第3回レビューまでの有効な指摘をcurrent issueへ記録した。以後、仕様・データ契約・公開asset規約を変更するPRでは、初回レビュー前に関連語で全SSoTを探索し、更新対象と「確認済み・変更不要」の一覧をレビューmanifestへ残す恒久対応を検討する。
+
+### Misread a no-newline Drive URL file as empty
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `42-0-npc-data-normalization` のDrive-to-raw同期前提確認
+- 観測した失敗: `raw-google-drive.url`の内容確認に`wc -l`だけを使い、末尾改行のない有効な1行URLを0行、すなわち空ファイルだと誤判定した。ユーザーにURL共有を求める前に、バイト数、非空行数、URL形式を確認すべきだった。
+- 一次対応: URL自体を出力せず、バイト数、非空行数、DriveフォルダURL形式を検証して有効な同期ルートを確認した。以後、設定ファイルの空判定は行数だけに依存せず、非空の内容を検証する。
+
 ### Ikizama review changes missed formatter requirements twice
 
 #### 2026-07-22

@@ -25,7 +25,7 @@ Markdown / MDX ページ内で画像を表示できること。
 初期配置案は以下とする。
 
 ```text
-public/assets/images/
+public/images/
 ```
 
 画像、CSS、JS、内部リンクは、GitHub Pages等のサブパス公開でも壊れないようにbase pathを考慮して参照すること。
