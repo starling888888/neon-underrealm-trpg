@@ -31,6 +31,7 @@ export const visualRoutes = {
   dataItems: "data/items/",
   releaseNotes: "release-notes/",
   dataItemsArmors: "data/items/armors/",
+  dataItemsOmamori: "data/items/omamori/",
   notFound: "not-found/",
   mdxTest: "-local/mdx-test/",
   callouts: "-local/callouts/",
