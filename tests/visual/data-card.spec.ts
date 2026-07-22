@@ -9,20 +9,27 @@ async function hideAstroDevToolbar(page: Page) {
   });
 }
 
-async function expectSkillCardCatalog(page: Page) {
-  const cards = page.locator("[data-skill-card]");
+async function expectDataCardCatalog(page: Page) {
+  const cards = page.locator("[data-card-container] > .data-card");
 
   await expect(page).toHaveTitle(
-    "スキルカード カタログ | 光都暗域〈ネオン・アンダーレルム〉TRPG",
+    "データカード カタログ | 光都暗域〈ネオン・アンダーレルム〉TRPG",
   );
-  await expect(cards).not.toHaveCount(0);
-  await expect(cards.locator(".skill-card-summary")).toHaveCount(0);
+  await expect(cards).toHaveCount(7);
+  await expect(page.locator("[data-skill-card]")).toHaveCount(1);
+  await expect(page.locator("[data-weapon-card]")).toHaveCount(1);
+  await expect(page.locator("[data-armor-card]")).toHaveCount(1);
+  await expect(page.locator("[data-omamori-card]")).toHaveCount(1);
+  await expect(page.locator("[data-cybernetic-card]")).toHaveCount(1);
+  await expect(page.locator("[data-nanomachine-card]")).toHaveCount(1);
+  await expect(page.locator("[data-drug-card]")).toHaveCount(1);
+  await expect(page.locator(".skill-card-summary")).toHaveCount(0);
 
   const gridHeights = await page
     .locator("[data-card-container]")
     .evaluateAll((grids) =>
       grids.map((grid) =>
-        Array.from(grid.querySelectorAll("[data-skill-card]"), (card) => {
+        Array.from(grid.querySelectorAll(":scope > .data-card"), (card) => {
           const rectangle = card.getBoundingClientRect();
           return {
             height: Math.round(rectangle.height),
@@ -49,24 +56,24 @@ async function expectSkillCardCatalog(page: Page) {
     .toBe(0);
 }
 
-test("スキルカード カタログ desktop @skill-card-desktop", async ({ page }) => {
+test("データカード カタログ desktop @data-card-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
-  await page.goto(visualRoutes.skillCards);
-  await expectSkillCardCatalog(page);
+  await page.goto(visualRoutes.dataCards);
+  await expectDataCardCatalog(page);
   await hideAstroDevToolbar(page);
   await page.screenshot({
     fullPage: true,
-    path: `${visualOutputDir}/skill-card-desktop.png`,
+    path: `${visualOutputDir}/data-card-desktop.png`,
   });
 });
 
-test("スキルカード カタログ mobile @skill-card-mobile", async ({ page }) => {
+test("データカード カタログ mobile @data-card-mobile", async ({ page }) => {
   await page.setViewportSize(visualViewports.mobile);
-  await page.goto(visualRoutes.skillCards);
-  await expectSkillCardCatalog(page);
+  await page.goto(visualRoutes.dataCards);
+  await expectDataCardCatalog(page);
   await hideAstroDevToolbar(page);
   await page.screenshot({
     fullPage: true,
-    path: `${visualOutputDir}/skill-card-mobile.png`,
+    path: `${visualOutputDir}/data-card-mobile.png`,
   });
 });

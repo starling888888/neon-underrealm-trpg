@@ -18,7 +18,7 @@
 - `docs/out-of-scope.md` の凡例専用Component禁止、および汎用`ItemCard`への統合禁止
 - `docs/plan.md` の`34-1-item-card-components`
 - `docs/TODO.md` のAstro Component contract test基盤、およびダミー`/data/items/weapons`ページの後続対応
-- `docs/design/skill-card/` の既存Card表現
+- `docs/design/data-cards/` のCard共通表現
 - `.agents/skills/design-image-generation/SKILL.md`
 
 ## 対象範囲
@@ -31,7 +31,7 @@
 - 効果・詳細説明の文章Propsは`null`、空文字列、`undefined`で空文字列を表示する。対象は全Cardの`effect`、および`ArmorCard`の`restriction`とする。現在非表示の`SkillCard.summary`は表示・fallback処理の対象外とし、既存TODOどおり非表示を維持する。
 - `SkillCard`の`cost`、`proficiency`、`acquisitionRestriction`、`usageRestriction`、`target`、`range`と、Item Cardの名称・効果・詳細文章以外の表示Propsは、`null`、空文字列、`undefined`で`-`を表示する。名称は通常データ・凡例データとも必須とする。
 - `SkillCard`を含むCardのデザインを統一する。横幅は`CardContainer`のgrid配置を継承し、本文が短い場合の基準はトランプに近い`aspect-ratio: 5 / 7`とする。本文量が基準高さを超える場合は、内容に応じて縦へ伸長し、切り詰めない。現在の`SkillCard`の既定最低高さを、この比率より過度に縦長にしない。
-- 実装前に`docs/design/item-card/`を新規design targetとして初期作成し、desktop・mobileの画像とnotesで、各種別の項目配置、`SkillCard`との共通表現、`5 / 7`の基準比率、可変高さ、凡例表示を確認可能にする。同じ前段作業で、変更後の`SkillCard`を正本化するため`docs/design/skill-card/`のnotesとdesktop・mobile画像を更新する。
+- `docs/design/data-cards/`をCard表示のdesign targetとし、各種別の項目配置、共通表現、`5 / 7`の基準比率、可変高さ、凡例表示を記録する。正本画像はレビュー済み実装から後続作業でcanonicalizeする。
 - 上記の`null`表示規則を`docs/requirements/data-display.md`へ明文化し、issueと実装の表示契約を一致させる。
 
 ## 初期スコープ外
@@ -52,15 +52,14 @@
 - [x] `SkillCard`の`cost`、`proficiency`、`acquisitionRestriction`、`usageRestriction`、`target`、`range`と、Item Cardの名称・効果・詳細文章以外の表示Propsは、`null`、空文字列、`undefined`で`-`となる。
 - [x] 実在データの`id`を利用できる個別アンカーIDを各Cardに付与できる。
 - [x] Cardの横幅は`CardContainer`のgridを継承し、短い本文では`aspect-ratio: 5 / 7`を基準とする。長文ではその高さから自然に伸長し、本文を切り詰めない。`SkillCard`の既定最低高さはこの基準より過度に縦長でない。
-- [x] `SkillCard`と各Item Cardが、承認済みの`docs/design/item-card/`および`docs/design/skill-card/`の共通表現と矛盾しない。
+- [x] `SkillCard`と各Item Cardが、`docs/design/data-cards/`の共通表現と矛盾しない。
 - [ ] 関連TODOを確認し、このissueでは扱わない理由が記録されている。
 - [x] `npm run check`が通る。
 - [x] `npm run build`が通る。
 
 ## チェックポイント
 
-- [x] `docs/design/item-card/design-desktop.png`、`design-mobile.png`、`notes.md`が承認済みであり、`5 / 7`の基準比率・可変高さを含む実装の参照正本として記録されている。
-- [ ] `docs/design/skill-card/design-desktop.png`、`design-mobile.png`、`notes.md`が、変更後の最低高さ・共通表現を反映して更新・承認されている。
+- [ ] `docs/design/data-cards/design-desktop.png`、`design-mobile.png`、`notes.md`が、レビュー済み実装からcanonicalizeされ、`5 / 7`の基準比率・可変高さを含む参照正本として記録されている。
 - [x] 既存の`SkillCard`利用箇所とローカル確認ページが壊れていない。
 - [x] 空文字列を表示する文章項目と`-`を表示する値項目を、通常データと凡例データで混同していない。
 - [x] CardContainerは各Cardの表示仕様を重複して実装していない。
@@ -80,12 +79,9 @@
 - `src/components/data/NanomachineCard.astro`
 - `src/components/data/DrugCard.astro`
 - `src/components/data/`配下のCard共通helperまたは共通style（必要な場合のみ）
-- `docs/design/item-card/notes.md`
-- `docs/design/item-card/design-desktop.png`
-- `docs/design/item-card/design-mobile.png`
-- `docs/design/skill-card/notes.md`
-- `docs/design/skill-card/design-desktop.png`
-- `docs/design/skill-card/design-mobile.png`
+- `docs/design/data-cards/notes.md`
+- `docs/design/data-cards/design-desktop.png`
+- `docs/design/data-cards/design-mobile.png`
 - `docs/requirements/data-display.md`
 
 ## レビュー観点
@@ -94,11 +90,11 @@
 - 数値的Propsの`string | number`受け入れが、実データの数値型や生成JSONのschemaを不用意に広げていないか。
 - 全Cardの`effect`と`ArmorCard.restriction`を空文字列にし、`SkillCard.summary`は引き続き非表示、その他の未設定表示値は`-`にする区別が明確か。
 - `SkillCard`の最低高さ縮小と、短文時の`aspect-ratio: 5 / 7`・可変高さが、desktop 3列 / mobile 2列の可読性を損なわないか。
-- `docs/design/item-card/`の新規作成と`docs/design/skill-card/`の正本更新を、実装前段の同一design作業とする方針が適切か。
+- `docs/design/data-cards/`へCard designを統合し、レビュー済み実装から正本画像をcanonicalizeする方針が適切か。
 - TODOのComponent contract test基盤を今回のCard実装へ含めず、後続検討に残すことが適切か。
 
 ## 備考
 
-- `docs/design/items/`はアイテムトップページのdesignであり、カードを初期スコープ外としている。そのため、アイテムカードの実装前に専用`docs/design/item-card/`を作成する。`docs/design/item-card/`は、更新する`docs/design/skill-card/`と合わせて本issueのCard表示のdesign正本となる。
+- `docs/design/items/`はアイテムトップページのdesignであり、Cardを初期スコープ外としている。Card表示のdesign正本は`docs/design/data-cards/`に統合し、正本画像は後続でcanonicalizeする。
 - `docs/TODO.md`の`/data/items/weapons`ダミーMDXの置換は、武器ページ実装タスクで扱う。このComponent-only taskでは変更しない。
 - issue作成時点で、`public/images/data/items/`は未追跡である。ユーザーの既存作業として扱い、本issueで操作しない。
