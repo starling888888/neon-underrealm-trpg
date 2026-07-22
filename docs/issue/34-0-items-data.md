@@ -62,8 +62,8 @@
 - [ ] `items.json`が武器の`group`・`checkKey`階層とサイバネの`part`階層を持ち、全Item IDが名称hashを含む
 - [ ] 入力ヘッダー、必須値、数値、`-`、武器射程、列挙値、名称／hash／ID重複、`sourceOrder`を検証できる
 - [ ] `docs/requirements/data-id-policy.md`に定めるItem IDと重複制約を`items.json`全体で検証できる
-- [ ] 既存SkillのID生成・Schema・テストが名称hash形式へ移行し、3つの生成済みSkill JSONを再生成している
-- [ ] 既存のID例、ゲーム仕様、関連TODO、Visual Testが名称hash ID方針と矛盾していない
+- [x] 既存SkillのID生成・Schema・テストが名称hash形式へ移行し、3つの生成済みSkill JSONを再生成している
+- [x] 既存のID例、ゲーム仕様、関連TODO、Visual Testが名称hash ID方針と矛盾していない
 - [ ] アイテム取得層が、静的importした全Itemデータ、武器の`group`／`checkKey`配列、サイバネの`part`配列を返し、不明キーでは`undefined`を返す
 - [ ] 生成JSONを手編集せず、ローカル変換コマンドで更新している
 - [ ] 新しいnpm packageを追加していない。追加が必要になった場合は、理由・代替案・初期スコープに必要な理由を記録する
@@ -73,7 +73,7 @@
 
 ## チェックポイント
 
-- [ ] 既存のSkill変換コマンドと再生成済みJSONが名称hash ID・入力順とは独立した`sourceOrder`を持つ
+- [x] 既存のSkill変換コマンドと再生成済みJSONが名称hash ID・入力順とは独立した`sourceOrder`を持つ
 - [ ] アイテム変換は各シートの専用変換関数を経由し、共通helperへ種別固有分岐を集約していない
 - [ ] 既存ルートとGitHub Pagesのサブパス公開に影響しない
 - [ ] CI/CDのbuildが`.raw/`または変換コマンドに依存しない

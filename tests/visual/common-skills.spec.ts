@@ -28,10 +28,21 @@ async function expectCommonSkillsPage(page: Page) {
   await expect(containers).toHaveCount(2);
   await expect(article.locator("[data-skill-list]")).toHaveCount(0);
   await expect(cards).toHaveCount(32);
-  await expect(cards.first()).toHaveAttribute("id", "skill-common-bonus-a-001");
-  await expect(cards.nth(1)).toHaveAttribute("id", "skill-common-basic-pv-001");
-  await expect(cards.last()).toHaveAttribute("id", "skill-common-basic-d-006");
-  await expect(cards.first()).not.toContainText("skill-common-bonus-a-001");
+  await expect(cards.first()).toHaveAttribute(
+    "id",
+    "skill-common-bonus-a-82c112996f93",
+  );
+  await expect(cards.nth(1)).toHaveAttribute(
+    "id",
+    "skill-common-basic-pv-f2cf28459e4f",
+  );
+  await expect(cards.last()).toHaveAttribute(
+    "id",
+    "skill-common-basic-d-f5c506096925",
+  );
+  await expect(cards.first()).not.toContainText(
+    "skill-common-bonus-a-82c112996f93",
+  );
   await expectGeneratedPageToc(page, "初期作成時から取得可能なスキル");
   await expect
     .poll(async () => {
@@ -92,8 +103,12 @@ test("共通スキル mobile @common-skills-mobile", async ({ page }) => {
 
 test("共通スキルの個別アンカー @common-skills-anchor", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
-  await page.goto(`${visualRoutes.commonSkills}#skill-common-basic-pv-001`);
+  await page.goto(
+    `${visualRoutes.commonSkills}#skill-common-basic-pv-f2cf28459e4f`,
+  );
 
-  await expect(page).toHaveURL(/#skill-common-basic-pv-001$/);
-  await expect(page.locator("#skill-common-basic-pv-001")).toBeInViewport();
+  await expect(page).toHaveURL(/#skill-common-basic-pv-f2cf28459e4f$/);
+  await expect(
+    page.locator("#skill-common-basic-pv-f2cf28459e4f"),
+  ).toBeInViewport();
 });

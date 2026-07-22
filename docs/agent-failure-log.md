@@ -801,3 +801,12 @@ source種別は以下を使う。
 - 発生箇所: `33-2-items-index-page` の`tests/visual/items-index.spec.ts`追加後の`npm run check`
 - 観測した失敗: 初回に`HTMLElement`へのtable cell参照とtest閉じ括弧のTypeScriptエラーが発生し、修正後の再実行ではBiomeの整形不一致、Visual Review記録追加後にはMarkdown表の整形不一致が発生した。Markdown表を手動整形した再実行でも同じ整形不一致が残り、同一タスクでvalidation failureを複数回発生させた。
 - 一次対応: Visual testを追加する際は、Playwright callbackのDOM型を事前に確認し、`npm run check`が示す整形差分を`apply_patch`で反映してから再実行する。
+
+### Visual test ran before the Pagefind index was generated
+
+#### 2026-07-22
+
+- source: agent self-report
+- 発生箇所: `34-0-items-data` のSkill ID移行後の `tests/visual/search-modal.spec.ts`
+- 観測した失敗: build済みpreviewに対して検索Visual Testを実行したが、`dist/`へPagefind indexを生成していなかった。そのため、検索結果を期待するdesktop testと短い日本語検索のtestが同じ理由で失敗した。
+- 一次対応: 検索結果を検証するVisual Testの前に、`npm run build`の後でPagefind indexを生成し、previewをその出力から再起動する。Pagefind依存testの失敗時は、IDや検索UIの変更とindex未生成を先に区別する。

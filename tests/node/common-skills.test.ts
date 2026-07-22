@@ -45,7 +45,10 @@ describe("skill conversion", () => {
     });
     assert.deepEqual(
       result.data.bonus.map((skill) => skill.id),
-      ["skill-common-bonus-a-001", "skill-common-bonus-a-002"],
+      [
+        "skill-common-bonus-a-606436cb9f53",
+        "skill-common-bonus-a-5327f0163926",
+      ],
     );
     assert.equal(result.data.basic[0]?.proficiency, null);
     assert.equal(result.data.bonus[0]?.summary, "概要\n詳細");
@@ -53,7 +56,10 @@ describe("skill conversion", () => {
     assert.match(warnings[0] ?? "", /previous group "Pv".*timing "R"/);
     assert.doesNotThrow(() => assertSkillsJson(result, contract));
     assert.doesNotThrow(() => assertSkillsJson(generated, contract));
-    assert.equal(getCommonSkills("bonus")[0]?.id, "skill-common-bonus-a-001");
+    assert.equal(
+      getCommonSkills("bonus")[0]?.id,
+      "skill-common-bonus-a-82c112996f93",
+    );
   });
 
   it("keeps updatedAt for equal data and reports invalid cell positions", async () => {
@@ -70,7 +76,7 @@ describe("skill conversion", () => {
         data: {
           bonus: [
             {
-              id: "skill-common-bonus-a-001",
+              id: "skill-common-bonus-a-606436cb9f53",
               category: "bonus",
               name: "一撃",
               maxLevel: 1,
@@ -131,7 +137,7 @@ describe("skill conversion", () => {
     });
 
     assert.deepEqual(result.data.basic[0], {
-      id: "skill-common-basic-aa_ra-001",
+      id: "skill-common-basic-aa_ra-2e2d30cebf56",
       category: "basic",
       name: "連携\n行動",
       maxLevel: 1,
@@ -208,7 +214,7 @@ describe("skill conversion", () => {
 
   it("rejects malformed IDs, category mismatches, duplicate IDs, and source-order gaps", () => {
     const malformedId = structuredClone(generated);
-    malformedId.data.bonus[0].id = "skill-common-bonus-a-001-extra";
+    malformedId.data.bonus[0].id = "skill-common-bonus-a-000000000000";
     assert.throws(
       () => assertSkillsJson(malformedId, contract),
       /does not match/,
@@ -236,6 +242,32 @@ describe("skill conversion", () => {
     assert.throws(
       () => assertSkillsJson(sourceOrderGap, contract),
       /consecutive/,
+    );
+  });
+
+  it("keeps name-hash IDs when rows are reordered", async () => {
+    await using fixture = await createFixture();
+    const first = row("bonus", "一撃", "○-○");
+    const second = row("bonus", "終撃", "○-☆");
+    await workbook(fixture.input, "skills", [headers, first, second]);
+    const initial = await convertCommonSkills({
+      inputPath: fixture.input,
+      sheetName: "skills",
+      outputPath: fixture.output,
+    });
+
+    await workbook(fixture.input, "skills", [headers, second, first]);
+    const reordered = await convertCommonSkills({
+      inputPath: fixture.input,
+      sheetName: "skills",
+      outputPath: fixture.output,
+    });
+
+    const idsByName = (skills: typeof initial.data.bonus) =>
+      new Map(skills.map((skill) => [skill.name, skill.id]));
+    assert.deepEqual(
+      idsByName(reordered.data.bonus),
+      idsByName(initial.data.bonus),
     );
   });
 });

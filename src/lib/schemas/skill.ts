@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { z } from "zod";
 
 export const SkillCategorySchema = z.enum(["bonus", "basic", "advanced"]);
@@ -132,15 +133,21 @@ export function assertSkillsJson(
   value: unknown,
   contract: SkillJsonContract,
 ): asserts value is SkillsJson {
+  assertSkillsJsonShape(value);
+  if (value.dataName !== contract.dataName) {
+    throw new Error(`dataName must be "${contract.dataName}".`);
+  }
+
+  assertSkillsData(value.data, contract);
+}
+
+export function assertSkillsJsonShape(
+  value: unknown,
+): asserts value is SkillsJson {
   const result = SkillsJsonSchema.safeParse(value);
   if (!result.success) {
     throw new Error(formatIssues(result.error.issues));
   }
-  if (result.data.dataName !== contract.dataName) {
-    throw new Error(`dataName must be "${contract.dataName}".`);
-  }
-
-  assertSkillsData(result.data.data, contract);
 }
 
 export function assertSkillsData(
@@ -148,7 +155,6 @@ export function assertSkillsData(
   contract: SkillDataContract,
 ): void {
   const ids = new Set<string>();
-  const nextIndexes = new Map<string, number>();
   const sourceOrders: number[] = [];
   for (const category of SKILL_CATEGORIES) {
     let previousSourceOrder = 0;
@@ -159,20 +165,17 @@ export function assertSkillsData(
         );
       }
       const normalizedTiming = normalizeSkillTiming(skill.timing);
-      const expectedPrefix = `${contract.idPrefix}-${category}-${normalizedTiming}-`;
-      const index = parseSkillIndex(skill.id, expectedPrefix);
-      if (index === undefined) {
+      const expectedId = createSkillId({
+        idPrefix: contract.idPrefix,
+        category,
+        normalizedTiming,
+        name: skill.name,
+      });
+      if (skill.id !== expectedId) {
         throw new Error(`Skill id "${skill.id}" does not match its contract.`);
       }
       if (ids.has(skill.id)) {
         throw new Error(`Duplicate skill id "${skill.id}".`);
-      }
-      const groupKey = `${category}:${normalizedTiming}`;
-      const expectedIndex = (nextIndexes.get(groupKey) ?? 0) + 1;
-      if (index !== expectedIndex) {
-        throw new Error(
-          `Skill id "${skill.id}" must use index ${formatSkillIndex(expectedIndex)}.`,
-        );
       }
       if (skill.sourceOrder <= previousSourceOrder) {
         throw new Error(
@@ -180,7 +183,6 @@ export function assertSkillsData(
         );
       }
       ids.add(skill.id);
-      nextIndexes.set(groupKey, index);
       sourceOrders.push(skill.sourceOrder);
       previousSourceOrder = skill.sourceOrder;
     }
@@ -216,6 +218,27 @@ export function normalizeSkillTiming(timing: SkillTiming): string {
     .join("_");
 }
 
+export function createSkillId({
+  idPrefix,
+  category,
+  normalizedTiming,
+  name,
+}: {
+  idPrefix: string;
+  category: SkillCategory;
+  normalizedTiming: string;
+  name: string;
+}): string {
+  return `${idPrefix}-${category}-${normalizedTiming}-${createNameHash(name)}`;
+}
+
+export function createNameHash(name: string): string {
+  return createHash("sha256")
+    .update(name.trim().replace(/\r\n?/g, "\n"), "utf8")
+    .digest("hex")
+    .slice(0, 12);
+}
+
 function isSkillTiming(value: string): boolean {
   const parts = value.split("/");
   if (
@@ -225,17 +248,6 @@ function isSkillTiming(value: string): boolean {
     return false;
   }
   return new Set(parts).size === parts.length;
-}
-
-function parseSkillIndex(id: string, prefix: string): number | undefined {
-  const suffix = id.slice(prefix.length);
-  if (!id.startsWith(prefix) || !/^\d{3,}$/.test(suffix)) return undefined;
-  const index = Number(suffix);
-  return Number.isSafeInteger(index) && index > 0 ? index : undefined;
-}
-
-function formatSkillIndex(index: number): string {
-  return index.toString().padStart(3, "0");
 }
 
 function hasLineBreak(value: string): boolean {

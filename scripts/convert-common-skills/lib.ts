@@ -1,5 +1,6 @@
 import {
   assertSkillsJson,
+  assertSkillsJsonShape,
   type SkillsByCategory,
   type SkillsJson,
 } from "../../src/lib/schemas/skill";
@@ -30,6 +31,7 @@ export async function convertCommonSkills(
     dataName: contract.dataName,
     data,
     now: options.now,
+    assertExistingJson: assertSkillsJsonShape,
     assertJson: (value): asserts value is SkillsJson =>
       assertSkillsJson(value, contract),
   });

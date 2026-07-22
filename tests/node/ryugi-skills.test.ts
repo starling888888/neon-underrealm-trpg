@@ -45,7 +45,7 @@ describe("ryugi skill conversion", () => {
     assert.equal(initial.updatedAt, "2026-07-21T09:00:00+09:00");
     assert.equal(
       initial.data.kenkaya.basic[0]?.id,
-      "skill-ryugi-kenkaya-basic-aa_ra-001",
+      "skill-ryugi-kenkaya-basic-aa_ra-439ee092a8b8",
     );
     assert.equal(initial.data.kenkaya.basic[0]?.name, "連携\n斬撃");
     assert.equal(initial.data.kenkaya.basic[0]?.target, null);

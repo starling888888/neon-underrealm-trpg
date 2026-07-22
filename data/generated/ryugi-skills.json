@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-07-21T23:16:36+09:00",
+  "updatedAt": "2026-07-22T20:28:56+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -18,7 +18,7 @@
           "summary": "攻撃時により多くの気合を獲得できるようになる。",
           "effect": "攻撃時の喧嘩判定、暗殺判定の気合獲得値+1。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-kenkaya-bonus-pv-001"
+          "id": "skill-ryugi-kenkaya-bonus-pv-759e476cc5f5"
         }
       ],
       "basic": [
@@ -36,7 +36,7 @@
           "summary": "気合を爆発させ周囲の敵に攻撃する。",
           "effect": "攻撃を行う。この攻撃の対象は、範囲「消費気合-1」である。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-kenkaya-basic-a-001"
+          "id": "skill-ryugi-kenkaya-basic-a-9d9ac8229787"
         },
         {
           "category": "basic",
@@ -52,7 +52,7 @@
           "summary": "気合を飛ばし遠くの敵を攻撃する。",
           "effect": "攻撃を行う。この攻撃の射程は「武器の射程+消費気合+lv」である。対象との距離×2点ダメージが増加する。一回の手番で複数回使用可能。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-kenkaya-basic-a-002"
+          "id": "skill-ryugi-kenkaya-basic-a-1a6f546d4fe4"
         },
         {
           "category": "basic",
@@ -68,7 +68,7 @@
           "summary": "その手番の攻撃力を爆発的に上昇させる必殺攻撃。",
           "effect": "攻撃を行う。この手番中攻撃力+15。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-kenkaya-basic-a-003"
+          "id": "skill-ryugi-kenkaya-basic-a-6a5f294695c5"
         },
         {
           "category": "basic",
@@ -84,7 +84,7 @@
           "summary": "気合を注ぎ込み高火力を叩き込む攻撃する。",
           "effect": "攻撃を行う。ダメージ+消費気合×lv×4。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-kenkaya-basic-a-004"
+          "id": "skill-ryugi-kenkaya-basic-a-6a0c0676bad3"
         },
         {
           "category": "basic",
@@ -100,7 +100,7 @@
           "summary": "気合を注ぎ込み次の攻撃の補助を行う攻撃をする。",
           "effect": "攻撃を行う。コンボ増加値+「消費気合+この攻撃で獲得した気合の点数」。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-kenkaya-basic-a-005"
+          "id": "skill-ryugi-kenkaya-basic-a-93f60136d285"
         },
         {
           "category": "basic",
@@ -116,7 +116,7 @@
           "summary": "仲間を即座に攻撃させる必殺攻撃。",
           "effect": "攻撃を行う。未行動の味方キャラクターを1人指定し、そのキャラクターは即座に手番を行う。そのキャラクターは次の手番中攻撃力+7。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-kenkaya-basic-a-006"
+          "id": "skill-ryugi-kenkaya-basic-a-e7ceac1f0a51"
         },
         {
           "category": "basic",
@@ -132,7 +132,7 @@
           "summary": "気合を集中させ防御を顧みずに攻撃する。",
           "effect": "攻撃を行う。攻撃力+消費気合×6、次の手番までリアクションの判定数が-2される。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-kenkaya-basic-a-007"
+          "id": "skill-ryugi-kenkaya-basic-a-7130c0c89825"
         },
         {
           "category": "basic",
@@ -148,7 +148,7 @@
           "summary": "気合をより多く獲得し、戦闘中の攻撃力をわずかに上げる攻撃をする。",
           "effect": "攻撃を行う。気合獲得値+1。シーン終了時までこの攻撃で獲得した気合点、攻撃力が上昇する。この効果は重複する。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-kenkaya-basic-a-008"
+          "id": "skill-ryugi-kenkaya-basic-a-a8afd09a7fa0"
         },
         {
           "category": "basic",
@@ -164,7 +164,7 @@
           "summary": "気合を体に流し込み華麗に攻撃に応じる。",
           "effect": "カウンターを除くリアクションの判定数+2×消費気合。気合獲得値1で気合を獲得できる。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-kenkaya-basic-r-001"
+          "id": "skill-ryugi-kenkaya-basic-r-651045d6be6a"
         },
         {
           "category": "basic",
@@ -180,7 +180,7 @@
           "summary": "気合を大量に消費した瞬間に戦闘中の攻撃力を向上させる。",
           "effect": "一回のスキルで気合を3点以上消費すると戦闘終了時まで攻撃力+lv×2。この効果は重複する。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-kenkaya-basic-pv-001"
+          "id": "skill-ryugi-kenkaya-basic-pv-4419bc57dc1c"
         },
         {
           "category": "basic",
@@ -196,7 +196,7 @@
           "summary": "攻撃で獲得した気合を攻撃力に転換する。",
           "effect": "攻撃で獲得した気合の点数だけその攻撃のダメージが上昇する。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-kenkaya-basic-pv-002"
+          "id": "skill-ryugi-kenkaya-basic-pv-84f5461b99c9"
         },
         {
           "category": "basic",
@@ -212,7 +212,7 @@
           "summary": "体に気合を循環させ受けたバッドステータスを解除する。",
           "effect": "自身の受けている任意のBSを解除する。ただし、合計強度が消費気合+lv点以下でなければならない。解除したBSの合計強度だけ気合を獲得する。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-kenkaya-basic-ini-001"
+          "id": "skill-ryugi-kenkaya-basic-ini-cb4e77bac2cd"
         },
         {
           "category": "basic",
@@ -228,7 +228,7 @@
           "summary": "気合を込めて攻撃のダメージを上昇させる。",
           "effect": "攻撃の効果値+消費気合×lv。1ラウンドに気合3点分まで使用できる。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-kenkaya-basic-d-001"
+          "id": "skill-ryugi-kenkaya-basic-d-59b5bd691130"
         }
       ],
       "advanced": [
@@ -246,7 +246,7 @@
           "summary": "受け流しを強化する。",
           "effect": "受け流しでリアクションに失敗した場合、使用回数を消費せず、同じラウンドに再使用できる。受け流しの気合獲得値が2になる。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-kenkaya-advanced-pv-001"
+          "id": "skill-ryugi-kenkaya-advanced-pv-8c0cf3a259d5"
         },
         {
           "category": "advanced",
@@ -262,7 +262,7 @@
           "summary": "気合込めを強化する。",
           "effect": "気合込めで1ラウンドに使用できる気合が5点までになる。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-kenkaya-advanced-pv-002"
+          "id": "skill-ryugi-kenkaya-advanced-pv-ee46b76a93a5"
         },
         {
           "category": "advanced",
@@ -278,7 +278,7 @@
           "summary": "気合を身にまとい、ダメージを減少させる。",
           "effect": "ダメージ軽減+「所持している気合」。ただし上限は5である。\nlv2: 気合を2点以上消費する度、気合を1点獲得する。\nlv3: ダメージ軽減の上限が10点となる。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-kenkaya-advanced-pv-003"
+          "id": "skill-ryugi-kenkaya-advanced-pv-15b9cfe20564"
         },
         {
           "category": "advanced",
@@ -294,7 +294,7 @@
           "summary": "己を鼓舞し、短時間の間使った気合以上の効果を得られるようになる。",
           "effect": "このラウンド中使用したスキルが消費した気合によって効果が変わる場合1点多く気合を消費したものとして扱う。ただし1点以上消費をしなければならない。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-kenkaya-advanced-su-001"
+          "id": "skill-ryugi-kenkaya-advanced-su-fbe4bc497540"
         },
         {
           "category": "advanced",
@@ -310,7 +310,7 @@
           "summary": "より自在な攻撃を行う。",
           "effect": "手番開始時に使用。この手番の攻撃では基準値8を選べるようになる。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-kenkaya-advanced-sp-001"
+          "id": "skill-ryugi-kenkaya-advanced-sp-b773990bfeb0"
         },
         {
           "category": "advanced",
@@ -326,7 +326,7 @@
           "summary": "瞬間的に気合獲得量を増やす。",
           "effect": "任意の判定時に使用する。その判定の気合獲得値+1。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-kenkaya-advanced-sp-002"
+          "id": "skill-ryugi-kenkaya-advanced-sp-258a8124758e"
         },
         {
           "category": "advanced",
@@ -342,7 +342,7 @@
           "summary": "攻撃で獲得できる気合を大幅に増やし、火力に変える覚悟の力。",
           "effect": "手番開始時に使用。この手番中気合獲得値が+2される。攻撃で獲得した気合の点数だけその攻撃の効果値が上昇する。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-kenkaya-advanced-sp-003"
+          "id": "skill-ryugi-kenkaya-advanced-sp-65d1f183f7b1"
         },
         {
           "category": "advanced",
@@ -358,7 +358,7 @@
           "summary": "大量の気合を瞬間的に獲得し、短時間の間全ての技の効果を上昇させる覚悟の力。",
           "effect": "気合を10点獲得する。ラウンド終了時まで気合を消費する効果で消費できる最大気合が5点になる。気合込めを取得している場合、このラウンド中、気合込めに使用できる気合が10点になる。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-kenkaya-advanced-su-002"
+          "id": "skill-ryugi-kenkaya-advanced-su-4c5d542ea66e"
         }
       ]
     },
@@ -378,7 +378,7 @@
           "summary": "限られた攻撃に集中することでその攻撃を強力にする。",
           "effect": "自身の手番の攻撃時の喧嘩判定、発砲判定でその手番中攻撃しなかった行動一回につき、判定数が+2、気合い獲得値が+1される。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-emono-bonus-pv-001"
+          "id": "skill-ryugi-emono-bonus-pv-1f00939d3eab"
         }
       ],
       "basic": [
@@ -396,7 +396,7 @@
           "summary": "巨大な武器で範囲を一掃する。この攻撃に集中すると更に広い範囲を殲滅する。",
           "effect": "攻撃を行う。この攻撃の対象は範囲1である。この手番最初の攻撃ならば攻撃の対象が範囲3となる。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-emono-basic-a-001"
+          "id": "skill-ryugi-emono-basic-a-3b71d89e78d9"
         },
         {
           "category": "basic",
@@ -412,7 +412,7 @@
           "summary": "巨大な武器で力強い一撃を繰り出す。この攻撃に集中すると攻撃を強力にできる。",
           "effect": "攻撃を行う。ダメージ+効果値×2。この手番最初の攻撃ならば判定数+lv×2。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-emono-basic-a-002"
+          "id": "skill-ryugi-emono-basic-a-645153b27279"
         },
         {
           "category": "basic",
@@ -428,7 +428,7 @@
           "summary": "比類なきダメージを叩き出す必殺攻撃。",
           "effect": "攻撃を行う。効果値を2倍にしてダメージを算出する。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-emono-basic-a-003"
+          "id": "skill-ryugi-emono-basic-a-e3b716c1b909"
         },
         {
           "category": "basic",
@@ -444,7 +444,7 @@
           "summary": "一体の敵に弾丸を集中させダメージを上昇させる。この攻撃に集中すると精密さも増す。",
           "effect": "攻撃を行う。弾丸を追加で3発まで消費し、ダメージ+消費した弾数×5。この手番最初の攻撃なら追加で消費した弾数だけ判定数が増加する。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-emono-basic-a-004"
+          "id": "skill-ryugi-emono-basic-a-4f1a171d54d8"
         },
         {
           "category": "basic",
@@ -460,7 +460,7 @@
           "summary": "無差別に広範囲に爆撃を繰り出す。この攻撃に集中すると精密な制御が可能になる。",
           "effect": "攻撃を行う。ただし、自身以外のキャラクターを任意に攻撃対象から外すことはできない。この手番最初の攻撃ならば任意のキャラクターを攻撃対象から外すことができる。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-emono-basic-a-005"
+          "id": "skill-ryugi-emono-basic-a-acac70e7585f"
         },
         {
           "category": "basic",
@@ -476,7 +476,7 @@
           "summary": "敵の体勢を大きく崩し、次の味方の攻撃を強力にする必殺攻撃。",
           "effect": "次の味方の最初の攻撃の判定数はこの攻撃のコンボ増加値点増加する。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-emono-basic-a-006"
+          "id": "skill-ryugi-emono-basic-a-f1bc53ae13df"
         },
         {
           "category": "basic",
@@ -492,7 +492,7 @@
           "summary": "全力で一体の敵を攻撃する。この攻撃に集中するとダメージが飛躍的に伸びる。",
           "effect": "攻撃を行う。ダメージ+lv×5。この手番最初の攻撃ならばさらにダメージ+lv×4。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-emono-basic-a-007"
+          "id": "skill-ryugi-emono-basic-a-ca1147782392"
         },
         {
           "category": "basic",
@@ -508,7 +508,7 @@
           "summary": "己が傷つくのを厭わず強力な攻撃を繰り出す。",
           "effect": "攻撃を行う。ダメージ+15。次の手番開始時まで1点以上のダメージを受けるなら更に受けるダメージが+5される。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-emono-basic-a-008"
+          "id": "skill-ryugi-emono-basic-a-9370c62b44c6"
         },
         {
           "category": "basic",
@@ -524,7 +524,7 @@
           "summary": "味方をかばうための安定した体を得る。",
           "effect": "カバーリングによって減少する行動回数が-1される。カバーリングを行った際、次に行う能動判定の判定数が+3される。この効果は重複しない。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-emono-basic-pv-001"
+          "id": "skill-ryugi-emono-basic-pv-d21f5f331eb9"
         },
         {
           "category": "basic",
@@ -540,7 +540,7 @@
           "summary": "あらゆる攻撃に対する強力な障壁を得る。",
           "effect": "ダメージ軽減が+lv×4される。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-emono-basic-pv-002"
+          "id": "skill-ryugi-emono-basic-pv-5ec7f9ec424e"
         },
         {
           "category": "basic",
@@ -556,7 +556,7 @@
           "summary": "攻撃を放棄して準備を整え、次の攻撃のダメージを上昇させる。",
           "effect": "次の攻撃のダメージ+lv×7。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-emono-basic-m-001"
+          "id": "skill-ryugi-emono-basic-m-0d87a4b5c48b"
         },
         {
           "category": "basic",
@@ -572,7 +572,7 @@
           "summary": "離れた味方のもとに飛び込み、攻撃をかばう。",
           "effect": "カバーリングを行う。このカバーリングでは行動回数の減少が1となり、他のマスにいるキャラクターのダメージを肩代わりできる。スキル使用後に元々の攻撃対象がいるマスに移動しても良い。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-emono-basic-d-001"
+          "id": "skill-ryugi-emono-basic-d-e35652f7c22f"
         },
         {
           "category": "basic",
@@ -588,7 +588,7 @@
           "summary": "武器を奮って風を起こし、攻撃のダメージを大幅に減少させる。",
           "effect": "自身を対象に含む攻撃のダメージ決定時に使用する。喧嘩または発砲判定を行う。効果値d6点、その攻撃のダメージを減少させる。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-emono-basic-d-002"
+          "id": "skill-ryugi-emono-basic-d-dc53abce6ea6"
         }
       ],
       "advanced": [
@@ -606,7 +606,7 @@
           "summary": "狩人の体捌きを強化する。",
           "effect": "狩人の体捌きを一回の手番に複数回使用してよく、その効果は重複する。狩人の体捌きのダメージ上昇を10点に変更するならば消費気合が0点になる。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-emono-advanced-pv-001"
+          "id": "skill-ryugi-emono-advanced-pv-417d3eef06a2"
         },
         {
           "category": "advanced",
@@ -622,7 +622,7 @@
           "summary": "攻撃を食らうたびに怒りを気合に変換する。",
           "effect": "攻撃によるダメージを受けるたびに気合を1点獲得する。ただし1ラウンドにlv×2点までしかこの効果で気合が獲得できない。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-emono-advanced-pv-002"
+          "id": "skill-ryugi-emono-advanced-pv-7bbc035e86fb"
         },
         {
           "category": "advanced",
@@ -638,7 +638,7 @@
           "summary": "初撃の質を向上させる。",
           "effect": "lv1: あなたが受ける自身の攻撃スキル以外のスキル、アイテムの効果によるダメージ上昇は+5される。それがラウンド中複数回効果が発揮されうるものであれば、更に+5される。\nlv2: 手番中の最初の攻撃の判定数+1。\nlv3: あなたが受けるスキル、アイテムによる攻撃力上昇の効果は2倍になる。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-emono-advanced-pv-003"
+          "id": "skill-ryugi-emono-advanced-pv-4346c4f86059"
         },
         {
           "category": "advanced",
@@ -654,7 +654,7 @@
           "summary": "強力な障壁を獲得し、敵の攻撃を引きつける。",
           "effect": "ダメージ軽減が+8される。敵対キャラクターを1体指定する。そのキャラクターは、可能な限り次の手番あなたを1回は攻撃しなければならない。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-emono-advanced-m-001"
+          "id": "skill-ryugi-emono-advanced-m-a025dfe3dc9a"
         },
         {
           "category": "advanced",
@@ -670,7 +670,7 @@
           "summary": "殺意を攻撃に載せ、飛躍的にダメージを上昇させる。",
           "effect": "効果値+6。ラウンド1回、シーンlv回使用可能。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-emono-advanced-d-001"
+          "id": "skill-ryugi-emono-advanced-d-e6e1b3783bf3"
         },
         {
           "category": "advanced",
@@ -686,7 +686,7 @@
           "summary": "武器の振るい方をコントロールし、より繊細な攻撃も強力な攻撃も可能にする。。",
           "effect": "攻撃の判定時に使用する。その攻撃では基準値を3から8まで選べる。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-emono-advanced-sp-001"
+          "id": "skill-ryugi-emono-advanced-sp-9d90b43546ab"
         },
         {
           "category": "advanced",
@@ -702,7 +702,7 @@
           "summary": "爆発的に攻撃の命中力と威力を増大させる覚悟の力。",
           "effect": "手番開始時に使用する。手番最初の攻撃の判定数が+15される。手番中、判定の基準値を2から9まで選べるようになる。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-emono-advanced-sp-002"
+          "id": "skill-ryugi-emono-advanced-sp-b0aa095dc114"
         },
         {
           "category": "advanced",
@@ -718,7 +718,7 @@
           "summary": "あらゆる攻撃を耐え、全ての味方をかばえるようになる覚悟の力。",
           "effect": "このラウンド中、ダメージ軽減が+15され、いかなる効果でも、あなたのダメージ軽減は無視されない。また、カバーリングを行っても行動回数が減少しない。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-emono-advanced-su-001"
+          "id": "skill-ryugi-emono-advanced-su-c6c25f443d65"
         }
       ]
     },
@@ -738,7 +738,7 @@
           "summary": "",
           "effect": "素手、素足以外の武器が使えなくなる。素手、素足を喧嘩武器として使用できる。素手と素足の攻撃力が所持気合×4点上昇し、ガード値が所持気合×2点上昇する。ただし気合5点までしか効果を発揮しない。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-sutegoro-bonus-pv-001"
+          "id": "skill-ryugi-sutegoro-bonus-pv-a844ed21bddd"
         }
       ],
       "basic": [
@@ -756,7 +756,7 @@
           "summary": "",
           "effect": "攻撃を行う。対象に強度lvの激痛を与える。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-sutegoro-basic-a-001"
+          "id": "skill-ryugi-sutegoro-basic-a-4d104ad78c4e"
         },
         {
           "category": "basic",
@@ -772,7 +772,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+所持気合×4。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-sutegoro-basic-a-002"
+          "id": "skill-ryugi-sutegoro-basic-a-5eba31b3ef87"
         },
         {
           "category": "basic",
@@ -788,7 +788,7 @@
           "summary": "",
           "effect": "攻撃を行う。対象に強度lvの転倒を与える。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-sutegoro-basic-a-003"
+          "id": "skill-ryugi-sutegoro-basic-a-724568294541"
         },
         {
           "category": "basic",
@@ -804,7 +804,7 @@
           "summary": "",
           "effect": "攻撃を行う。気合獲得値+2。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-sutegoro-basic-a-004"
+          "id": "skill-ryugi-sutegoro-basic-a-c10ec7106580"
         },
         {
           "category": "basic",
@@ -820,7 +820,7 @@
           "summary": "",
           "effect": "攻撃を行う。この攻撃は前の攻撃の基準値と同じ基準値で攻撃できる。この攻撃の次の攻撃は基準値を1しか下げられない。1ラウンドに複数回使用可能。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-sutegoro-basic-a-005"
+          "id": "skill-ryugi-sutegoro-basic-a-30178e48fb1b"
         },
         {
           "category": "basic",
@@ -836,7 +836,7 @@
           "summary": "",
           "effect": "攻撃を行う。この手番中判定数+3。この手番のあなたの最後の攻撃は「A-☆」となる。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-sutegoro-basic-a-006"
+          "id": "skill-ryugi-sutegoro-basic-a-baaf02d6d1dd"
         },
         {
           "category": "basic",
@@ -852,7 +852,7 @@
           "summary": "",
           "effect": "可能な受動判定を行う。この判定で気合を獲得することができる。気合獲得値は1である。リアクションの判定数を3点まで減らして良い。そうした場合、出目によらず気合を最低でも減らした判定数に等しい点数獲得できる。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-sutegoro-basic-r-001"
+          "id": "skill-ryugi-sutegoro-basic-r-f27e369c6c53"
         },
         {
           "category": "basic",
@@ -868,7 +868,7 @@
           "summary": "",
           "effect": "防御判定を肉体の能力値で行うことができる。防御判定にボーナスを与える効果は適用される。ダメージ軽減+3。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-sutegoro-basic-pv-001"
+          "id": "skill-ryugi-sutegoro-basic-pv-1761671cc5fd"
         },
         {
           "category": "basic",
@@ -884,7 +884,7 @@
           "summary": "",
           "effect": "カバーリングによって減少する行動回数が-1される。カバーリングを行った際、次の手番終了時まで能動判定の判定数が+1される。この効果は重複する。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-sutegoro-basic-pv-002"
+          "id": "skill-ryugi-sutegoro-basic-pv-b606d656f37d"
         },
         {
           "category": "basic",
@@ -900,7 +900,7 @@
           "summary": "",
           "effect": "ラウンド終了時まで攻撃の判定数+2、またはすべての判定数+1。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-sutegoro-basic-su-001"
+          "id": "skill-ryugi-sutegoro-basic-su-c42e9dd9e1bd"
         },
         {
           "category": "basic",
@@ -916,7 +916,7 @@
           "summary": "",
           "effect": "耐え判定を行う。自身の受けている任のBSを解除する。ただし、合計強度が達成値以下でなければならない。解除の成否によらず、効果値×3点体力を回復する。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-sutegoro-basic-ini-001"
+          "id": "skill-ryugi-sutegoro-basic-ini-1e3307f7930f"
         },
         {
           "category": "basic",
@@ -932,7 +932,7 @@
           "summary": "",
           "effect": "カバーリングを行う。このカバーリングでは行動回数の減少が-1される。攻撃キャラクターの手番終了時までダメージを受けるたびに気合を1点獲得し、次のあなたの手番中の攻撃力を+5点する。この効果は重複する。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-sutegoro-basic-d-001"
+          "id": "skill-ryugi-sutegoro-basic-d-ba2367ca54f6"
         },
         {
           "category": "basic",
@@ -948,7 +948,7 @@
           "summary": "",
           "effect": "受けるダメージをlvd6点減少させる。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-sutegoro-basic-d-002"
+          "id": "skill-ryugi-sutegoro-basic-d-9e0e01da138c"
         }
       ],
       "advanced": [
@@ -966,7 +966,7 @@
           "summary": "",
           "effect": "刃弾きを1ラウンドに複数回使用できる。このラウンド中の偶数回目に使用する刃弾きのコストは0になる。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-sutegoro-advanced-pv-001"
+          "id": "skill-ryugi-sutegoro-advanced-pv-2dfae05540b1"
         },
         {
           "category": "advanced",
@@ -982,7 +982,7 @@
           "summary": "",
           "effect": "あなたがスキルのコストとして精神力を消費する場合、その点数によらず気合1点で代用して良い。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-sutegoro-advanced-pv-002"
+          "id": "skill-ryugi-sutegoro-advanced-pv-6cf58a6af4f3"
         },
         {
           "category": "advanced",
@@ -998,7 +998,7 @@
           "summary": "",
           "effect": "戦闘中同じ武器で攻撃、リアクションをし続ける限り、1lvごとに以下の効果を得られる。\n・攻撃の判定数+1d\n・近接・射撃攻撃に対するリアクションの判定数+1d\n・血まみれの手足の上限が+1される。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-sutegoro-advanced-pv-003"
+          "id": "skill-ryugi-sutegoro-advanced-pv-e6167e11886b"
         },
         {
           "category": "advanced",
@@ -1014,7 +1014,7 @@
           "summary": "",
           "effect": "「最大体力-現在体力」÷10だけ与えるダメージを上昇させる。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-sutegoro-advanced-d-001"
+          "id": "skill-ryugi-sutegoro-advanced-d-859b54cf75eb"
         },
         {
           "category": "advanced",
@@ -1030,7 +1030,7 @@
           "summary": "",
           "effect": "掛け合いの前に使用する。気合を1点獲得する。その掛け合いでは血まみれの手足の上限が1点上昇する。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-sutegoro-advanced-sp-001"
+          "id": "skill-ryugi-sutegoro-advanced-sp-b2de8198161f"
         },
         {
           "category": "advanced",
@@ -1046,7 +1046,7 @@
           "summary": "",
           "effect": "攻撃判定時に使用する。その攻撃の気合獲得値を+1する。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-sutegoro-advanced-sp-002"
+          "id": "skill-ryugi-sutegoro-advanced-sp-8ae2af6b59a4"
         },
         {
           "category": "advanced",
@@ -1062,7 +1062,7 @@
           "summary": "",
           "effect": "体力が0以下になったときに使用する。最大体力まで体力を回復する。気絶も受けない。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-sutegoro-advanced-sp-003"
+          "id": "skill-ryugi-sutegoro-advanced-sp-d4634026ca06"
         },
         {
           "category": "advanced",
@@ -1078,7 +1078,7 @@
           "summary": "",
           "effect": "気合を5点獲得する。このラウンド中血まみれの手足で上昇する攻撃力と防御力の上限が気合10点分になる。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-sutegoro-advanced-su-001"
+          "id": "skill-ryugi-sutegoro-advanced-su-0d00fec8bb97"
         }
       ]
     },
@@ -1098,7 +1098,7 @@
           "summary": "",
           "effect": "攻撃によるダメージを受けるたび、気合を1点獲得する。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-kabe-bonus-pv-001"
+          "id": "skill-ryugi-kabe-bonus-pv-2689a3890a94"
         }
       ],
       "basic": [
@@ -1116,7 +1116,7 @@
           "summary": "",
           "effect": "攻撃を行う。次のあなたの手番までリアクションの判定数が+lv個される。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-kabe-basic-a-001"
+          "id": "skill-ryugi-kabe-basic-a-959e449ea7d4"
         },
         {
           "category": "basic",
@@ -1132,7 +1132,7 @@
           "summary": "",
           "effect": "攻撃を行う。このダメージ-10。次の攻撃のダメージ+15。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-kabe-basic-a-002"
+          "id": "skill-ryugi-kabe-basic-a-65b5b47e8fdd"
         },
         {
           "category": "basic",
@@ -1148,7 +1148,7 @@
           "summary": "",
           "effect": "攻撃を行う。次に行動する味方の最初の攻撃は防御力を無視する。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-kabe-basic-a-003"
+          "id": "skill-ryugi-kabe-basic-a-af3c95dfa814"
         },
         {
           "category": "basic",
@@ -1164,7 +1164,7 @@
           "summary": "",
           "effect": "攻撃を行う。対象は次のあなたの手番まで移動できなくなる。この効果は強度2のBSとして扱う。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-kabe-basic-a-004"
+          "id": "skill-ryugi-kabe-basic-a-0520f0118964"
         },
         {
           "category": "basic",
@@ -1180,7 +1180,7 @@
           "summary": "",
           "effect": "攻撃を行う。あなたの次の手番まで、ダメージを受けるキャラクターの位置によらず、対象の攻撃はカバーリングできる。カバーリングを行った場合、あなたの現在位置によらず、ダメージを受けるキャラクターのいるマスに移動する。対象があなたに与える攻撃のダメージはlv×3点減少する。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-kabe-basic-a-005"
+          "id": "skill-ryugi-kabe-basic-a-f4ad4c3dd222"
         },
         {
           "category": "basic",
@@ -1196,7 +1196,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+「装備している武器１つのガード値」。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-kabe-basic-a-006"
+          "id": "skill-ryugi-kabe-basic-a-4db944f1c848"
         },
         {
           "category": "basic",
@@ -1212,7 +1212,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージは攻撃力ではなく使用した武器のガード値を用いて算出する。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-kabe-basic-a-007"
+          "id": "skill-ryugi-kabe-basic-a-d32a74fe3ec1"
         },
         {
           "category": "basic",
@@ -1228,7 +1228,7 @@
           "summary": "",
           "effect": "防御を行う。判定数+2。\nlv2: このスキルの基本コストが0になる。\nlv3: 気合を追加で1点消費することで更に判定数+2。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-kabe-basic-r-001"
+          "id": "skill-ryugi-kabe-basic-r-79415d0ad597"
         },
         {
           "category": "basic",
@@ -1244,7 +1244,7 @@
           "summary": "",
           "effect": "防御判定を精神の能力値で行うことができる。防御判定にボーナスを与える効果は適用される。ガード値+3。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-kabe-basic-pv-001"
+          "id": "skill-ryugi-kabe-basic-pv-399b4d250a29"
         },
         {
           "category": "basic",
@@ -1260,7 +1260,7 @@
           "summary": "",
           "effect": "装備しているすべての武器の攻撃力+lv×2、ガード値+lv×4。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-kabe-basic-pv-002"
+          "id": "skill-ryugi-kabe-basic-pv-26c4a218756e"
         },
         {
           "category": "basic",
@@ -1276,7 +1276,7 @@
           "summary": "",
           "effect": "ラウンド終了時までlv体までのあなたが指定したキャラクターはあなたを攻撃しなければならず、範囲攻撃の中心対象にしなければならない。シーン1回使用可能。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-kabe-basic-su-001"
+          "id": "skill-ryugi-kabe-basic-su-150ef67270cb"
         },
         {
           "category": "basic",
@@ -1292,7 +1292,7 @@
           "summary": "",
           "effect": "カバーリングを行う。このスキルによるカバーリングは行動回数の減少が起こらない。カバーリングした攻撃のコンボ増加値を-lvする。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-kabe-basic-d-001"
+          "id": "skill-ryugi-kabe-basic-d-7ebddb382a15"
         },
         {
           "category": "basic",
@@ -1308,7 +1308,7 @@
           "summary": "",
           "effect": "効果値+lv。このスキルはあなたが能動側でも受動側でも使用できる。1ラウンドに攻撃時とリアクション時1回ずつ使用可能。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-kabe-basic-d-002"
+          "id": "skill-ryugi-kabe-basic-d-c30f5926f720"
         }
       ],
       "advanced": [
@@ -1326,7 +1326,7 @@
           "summary": "",
           "effect": "弾除けを1ラウンドに2回使用できるようになる。シーン1回、弾除けを使用した際、コンボ増加値を0にする。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-kabe-advanced-pv-001"
+          "id": "skill-ryugi-kabe-advanced-pv-ff1a338bcdf4"
         },
         {
           "category": "advanced",
@@ -1342,7 +1342,7 @@
           "summary": "",
           "effect": "盾振りを使用した際の効果値+1。1ラウンドに攻撃に2回、リアクションに2回使用できるようになる。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-kabe-advanced-pv-002"
+          "id": "skill-ryugi-kabe-advanced-pv-076f6a10c990"
         },
         {
           "category": "advanced",
@@ -1358,7 +1358,7 @@
           "summary": "",
           "effect": "攻撃力+lv×所持気合。ダメージ軽減+所持気合。ただし気合5点までしか効果を発揮しない。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-kabe-advanced-pv-003"
+          "id": "skill-ryugi-kabe-advanced-pv-74992da24719"
         },
         {
           "category": "advanced",
@@ -1374,7 +1374,7 @@
           "summary": "",
           "effect": "次の手番開始時までダメージ軽減+lv×3。次の攻撃の判定数+lv。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-kabe-advanced-m-001"
+          "id": "skill-ryugi-kabe-advanced-m-ab3947182229"
         },
         {
           "category": "advanced",
@@ -1390,7 +1390,7 @@
           "summary": "",
           "effect": "あなたを含む複数体を対象とする攻撃の対象を自身のみにする。貴方以外が中心対象だった場合貴方が中心対象となる。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-kabe-advanced-aa-001"
+          "id": "skill-ryugi-kabe-advanced-aa-dcaf288ae86c"
         },
         {
           "category": "advanced",
@@ -1406,7 +1406,7 @@
           "summary": "",
           "effect": "敵対キャラクターの手番開始時に使用。そのキャラクターの手番中ダメージ軽減+5。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-kabe-advanced-sp-001"
+          "id": "skill-ryugi-kabe-advanced-sp-3a9edd9375ae"
         },
         {
           "category": "advanced",
@@ -1422,7 +1422,7 @@
           "summary": "",
           "effect": "PCが使用できない能力をエネミーが使用した時に使用する。その効果を打ち消す。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-kabe-advanced-sp-002"
+          "id": "skill-ryugi-kabe-advanced-sp-83c0da3cc140"
         },
         {
           "category": "advanced",
@@ -1438,7 +1438,7 @@
           "summary": "",
           "effect": "ラウンド終了時まですべての武器のガード値+15。防御判定の判定数+10。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-kabe-advanced-su-001"
+          "id": "skill-ryugi-kabe-advanced-su-cdffdb0ef66e"
         }
       ]
     },
@@ -1458,7 +1458,7 @@
           "summary": "",
           "effect": "暗殺、発砲判定の基準値が5から8になる。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-shabazou-bonus-pv-001"
+          "id": "skill-ryugi-shabazou-bonus-pv-e4bac528ca55"
         }
       ],
       "basic": [
@@ -1476,7 +1476,7 @@
           "summary": "",
           "effect": "攻撃を行う。次のあなたの手番開始時まで、対象のあなたへの攻撃の判定数は-lv個される。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-shabazou-basic-a-001"
+          "id": "skill-ryugi-shabazou-basic-a-3cd8848b32d7"
         },
         {
           "category": "basic",
@@ -1492,7 +1492,7 @@
           "summary": "",
           "effect": "攻撃を行う。強度1の毒を与える。ラウンド複数回使用可能。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-shabazou-basic-a-002"
+          "id": "skill-ryugi-shabazou-basic-a-524ce8e75a94"
         },
         {
           "category": "basic",
@@ -1508,7 +1508,7 @@
           "summary": "",
           "effect": "攻撃を行う。次の貴方の手番まで攻撃が命中した対象の防御力を対象が現在受けているBSの強度の合計×3、ダメージ軽減を対象が現在受けているBSの強度の合計だけ減少させる。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-shabazou-basic-a-003"
+          "id": "skill-ryugi-shabazou-basic-a-390b91644863"
         },
         {
           "category": "basic",
@@ -1524,7 +1524,7 @@
           "summary": "",
           "effect": "攻撃を行う。強度1の出血を与える。ラウンド複数回使用可能。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-shabazou-basic-a-004"
+          "id": "skill-ryugi-shabazou-basic-a-8bd7ea7eac80"
         },
         {
           "category": "basic",
@@ -1540,7 +1540,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+「前の掛け合いのコンボ増加値」×3。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-shabazou-basic-a-005"
+          "id": "skill-ryugi-shabazou-basic-a-e056ce183c74"
         },
         {
           "category": "basic",
@@ -1556,7 +1556,7 @@
           "summary": "",
           "effect": "攻撃を行う。次の味方の最初の攻撃のダメージ+「この手番に与えたBSの強度の合計」×6。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-shabazou-basic-a-006"
+          "id": "skill-ryugi-shabazou-basic-a-96d6e9ed8cce"
         },
         {
           "category": "basic",
@@ -1572,7 +1572,7 @@
           "summary": "",
           "effect": "攻撃を行う。強度4の毒または出血を与える。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-shabazou-basic-a-007"
+          "id": "skill-ryugi-shabazou-basic-a-e3e0661337e2"
         },
         {
           "category": "basic",
@@ -1588,7 +1588,7 @@
           "summary": "",
           "effect": "回避を行う。回避の基準値を+1する。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-shabazou-basic-r-001"
+          "id": "skill-ryugi-shabazou-basic-r-4edf81e42633"
         },
         {
           "category": "basic",
@@ -1604,7 +1604,7 @@
           "summary": "",
           "effect": "lv1:BSを受けているキャラクターに対するリアクションの判定数が+1される。\nlv2:BSを受けているキャラクターに対する攻撃の判定数が+1される。\nlv3:それぞれ+1ではなく+2される。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-shabazou-basic-pv-001"
+          "id": "skill-ryugi-shabazou-basic-pv-d5940682163a"
         },
         {
           "category": "basic",
@@ -1620,7 +1620,7 @@
           "summary": "",
           "effect": "暗器で攻撃する際は判定数が+lvされる。暗器での攻撃の判定を発砲判定でも行える。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-shabazou-basic-pv-002"
+          "id": "skill-ryugi-shabazou-basic-pv-7ce5e96208ee"
         },
         {
           "category": "basic",
@@ -1636,7 +1636,7 @@
           "summary": "",
           "effect": "BSを受けている任意のキャラクターを対象とする。そのキャラクターは次の手番であなたを攻撃しなければならない。この効果は強度2のBSとして扱う。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-shabazou-basic-ini-001"
+          "id": "skill-ryugi-shabazou-basic-ini-383032ce2312"
         },
         {
           "category": "basic",
@@ -1652,7 +1652,7 @@
           "summary": "",
           "effect": "攻撃で体力、精神力を減少させるBSを与えた際に使用する。次のあなたの手番開始時までその攻撃で与えたBSが解除されるなら代わりにその強度が半分になる。BSとして扱う効果を与えた際にはこのスキルは使用できない。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-shabazou-basic-sp-001"
+          "id": "skill-ryugi-shabazou-basic-sp-6acb9aefbecd"
         },
         {
           "category": "basic",
@@ -1668,7 +1668,7 @@
           "summary": "",
           "effect": "手番開始時に使用する。この手番の射撃攻撃では射程を+2する。射程を伸ばすかわりにこの版中障害物を無視して射撃攻撃を行っても良い。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-shabazou-basic-sp-002"
+          "id": "skill-ryugi-shabazou-basic-sp-9d81a8f321ee"
         }
       ],
       "advanced": [
@@ -1686,7 +1686,7 @@
           "summary": "",
           "effect": "ダメージを与えない暗器でもダメージを与えられるようになる。基本の攻撃力は10である。暗器による攻撃は相手の防御力を半減する。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-shabazou-advanced-pv-001"
+          "id": "skill-ryugi-shabazou-advanced-pv-48130bd7c849"
         },
         {
           "category": "advanced",
@@ -1702,7 +1702,7 @@
           "summary": "",
           "effect": "任意の受動判定を行う。基準値を+1する。このスキルは他の「タイミング:R」のスキルと同時に使用できる。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-shabazou-advanced-r-001"
+          "id": "skill-ryugi-shabazou-advanced-r-a05b11901f5a"
         },
         {
           "category": "advanced",
@@ -1718,7 +1718,7 @@
           "summary": "",
           "effect": "毒、出血を受けているキャラクターを攻撃対象に含む場合、その強度だけ攻撃の効果値が増加する。ただしシャバゾウの流儀レベルまでしか増加しない。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-shabazou-advanced-pv-002"
+          "id": "skill-ryugi-shabazou-advanced-pv-245f8dac8d66"
         },
         {
           "category": "advanced",
@@ -1734,7 +1734,7 @@
           "summary": "",
           "effect": "BSを与える攻撃と同時に使用する。その攻撃の対象をlv+1体に変更する。攻撃を受けるキャラクターの数がlv+1より低ければこのスキルのコストは0になる。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-shabazou-advanced-sp-001"
+          "id": "skill-ryugi-shabazou-advanced-sp-2f63fbbd8025"
         },
         {
           "category": "advanced",
@@ -1750,7 +1750,7 @@
           "summary": "",
           "effect": "攻撃対象が受けている毒と出血の強度を2倍にする。（現在受けている毒、出血それぞれの強度に等しい毒、出血を与える。）",
           "sourceOrder": 19,
-          "id": "skill-ryugi-shabazou-advanced-d-001"
+          "id": "skill-ryugi-shabazou-advanced-d-1e4466f101fc"
         },
         {
           "category": "advanced",
@@ -1766,7 +1766,7 @@
           "summary": "",
           "effect": "毒1か出血1を与える。このスキルは他の「タイミング:D」のスキルと同時に使用できる。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-shabazou-advanced-d-002"
+          "id": "skill-ryugi-shabazou-advanced-d-ef22d1e2ae4a"
         },
         {
           "category": "advanced",
@@ -1782,7 +1782,7 @@
           "summary": "",
           "effect": "このラウンド中、スキルやアイテムの効果で基準値が変わった全ての判定は判定数が+5される。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-shabazou-advanced-su-001"
+          "id": "skill-ryugi-shabazou-advanced-su-a7e565113249"
         },
         {
           "category": "advanced",
@@ -1798,7 +1798,7 @@
           "summary": "",
           "effect": "手番開始時に使用する。この手番中与える毒と出血の強度が2倍になる。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-shabazou-advanced-sp-002"
+          "id": "skill-ryugi-shabazou-advanced-sp-5a1a325c9339"
         }
       ]
     },
@@ -1818,7 +1818,7 @@
           "summary": "",
           "effect": "手番中暗殺判定、格闘判定による攻撃が失敗した際、同じ基準値で判定数を+2して振り直す。コンボは継続する。この効果はラウンド1回しか使用できない。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-teppoudama-bonus-pv-001"
+          "id": "skill-ryugi-teppoudama-bonus-pv-ab9d3a3823fa"
         }
       ],
       "basic": [
@@ -1836,7 +1836,7 @@
           "summary": "",
           "effect": "攻撃を行う。手番終了時まで攻撃力+lv×2。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-teppoudama-basic-a-001"
+          "id": "skill-ryugi-teppoudama-basic-a-584e48f6a73a"
         },
         {
           "category": "basic",
@@ -1852,7 +1852,7 @@
           "summary": "",
           "effect": "攻撃を行う。追加で任意の数のキャラクターを攻撃対象に選んで良い。増やした攻撃対象の数-lvだけ消費気合が増加する。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-teppoudama-basic-a-002"
+          "id": "skill-ryugi-teppoudama-basic-a-87eb54d4d53b"
         },
         {
           "category": "basic",
@@ -1868,7 +1868,7 @@
           "summary": "",
           "effect": "攻撃を行う。1手番に複数回使用可能。このスキルは前の攻撃対象と異なる対象を攻撃でき、この攻撃の後の攻撃は対象を変更しても良い。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-teppoudama-basic-a-003"
+          "id": "skill-ryugi-teppoudama-basic-a-51a38ede53d2"
         },
         {
           "category": "basic",
@@ -1884,7 +1884,7 @@
           "summary": "",
           "effect": "この攻撃で敵の現在体力の半分以上のダメージを与えた場合、対象の体力を0にする。この攻撃で対象の体力を0以下にできなかった場合、このスキルは「☆-○」になり、この手番中攻撃力+10。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-teppoudama-basic-a-004"
+          "id": "skill-ryugi-teppoudama-basic-a-9393392c0afe"
         },
         {
           "category": "basic",
@@ -1900,7 +1900,7 @@
           "summary": "",
           "effect": "攻撃を行う。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-teppoudama-basic-a-005"
+          "id": "skill-ryugi-teppoudama-basic-a-cf6ee345820a"
         },
         {
           "category": "basic",
@@ -1916,7 +1916,7 @@
           "summary": "",
           "effect": "攻撃を行う。強度:消費気合-1の激痛または転倒を与える。\nlv2: 与えるBSの強度が消費気合の値になる。\nlv3: 与えるBSの強度が消費気合+1の値になる。（0点消費可能）\n与えるBSの強度が0点以下や4点以上になるように気合を消費することはできない。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-teppoudama-basic-a-006"
+          "id": "skill-ryugi-teppoudama-basic-a-46748d00bd93"
         },
         {
           "category": "basic",
@@ -1932,7 +1932,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×lv。1ラウンドに複数回使用可能。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-teppoudama-basic-a-007"
+          "id": "skill-ryugi-teppoudama-basic-a-74297b7e9a60"
         },
         {
           "category": "basic",
@@ -1948,7 +1948,7 @@
           "summary": "",
           "effect": "攻撃を行う。次の味方の最初の攻撃のダメージ+この攻撃のコンボ増加値×7。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-teppoudama-basic-a-008"
+          "id": "skill-ryugi-teppoudama-basic-a-ff22c9584315"
         },
         {
           "category": "basic",
@@ -1964,7 +1964,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×6。強度1の出血を受ける。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-teppoudama-basic-a-009"
+          "id": "skill-ryugi-teppoudama-basic-a-97e7235d170e"
         },
         {
           "category": "basic",
@@ -1980,7 +1980,7 @@
           "summary": "",
           "effect": "近接攻撃に対して、暗殺判定または格闘判定でリアクションを行う。「執念」を取得している場合、基準値+1。カウンターを行ったものとして扱う。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-teppoudama-basic-r-001"
+          "id": "skill-ryugi-teppoudama-basic-r-6bcae2d415bd"
         },
         {
           "category": "basic",
@@ -1996,7 +1996,7 @@
           "summary": "",
           "effect": "受けているBS一種類につき攻撃力+3。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-teppoudama-basic-pv-001"
+          "id": "skill-ryugi-teppoudama-basic-pv-e69cc31a29ad"
         },
         {
           "category": "basic",
@@ -2012,7 +2012,7 @@
           "summary": "",
           "effect": "相手の防御力を半減してダメージを算出する。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-teppoudama-basic-d-001"
+          "id": "skill-ryugi-teppoudama-basic-d-c1f21899eb50"
         },
         {
           "category": "basic",
@@ -2028,7 +2028,7 @@
           "summary": "",
           "effect": "攻撃が失敗した後に使用する。コンボを継続する。コンボ増加値は失敗する前の攻撃のものを引き継ぐ。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-teppoudama-basic-sp-001"
+          "id": "skill-ryugi-teppoudama-basic-sp-602a248b9020"
         }
       ],
       "advanced": [
@@ -2046,7 +2046,7 @@
           "summary": "",
           "effect": "「迎撃」を使用する際リアクションへのペナルティを受けない。「迎撃」を使用したリアクションが失敗した場合でも攻撃してきた対象に「使用した武器の攻撃力+判定の効果値d6」点の防御力、ダメージ軽減が有効なダメージを与える。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-teppoudama-advanced-pv-001"
+          "id": "skill-ryugi-teppoudama-advanced-pv-c112e3b8a2ce"
         },
         {
           "category": "advanced",
@@ -2062,7 +2062,7 @@
           "summary": "",
           "effect": "鎧貫きを使用した際、防御力だけでなく、ガード値と防御判定の結果も半減する。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-teppoudama-advanced-pv-002"
+          "id": "skill-ryugi-teppoudama-advanced-pv-149a597557c4"
         },
         {
           "category": "advanced",
@@ -2078,7 +2078,7 @@
           "summary": "",
           "effect": "覚悟を使用するとき、判定数上昇が+lv個、体力回復が+lv×3個される。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-teppoudama-advanced-pv-003"
+          "id": "skill-ryugi-teppoudama-advanced-pv-a4f22e97cc81"
         },
         {
           "category": "advanced",
@@ -2094,7 +2094,7 @@
           "summary": "",
           "effect": "バッドトリップを除くBSは、強度が2点低いものとして扱う。（解除はされずBSそのものは受けているものとして扱う。）セットアップに気合1点支払ってもよい。そうしたなら受けているBSの強度は更にlv点低いものとして扱う。\nBSを1つでも受けている間、クリンナップに10点体力を回復する。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-teppoudama-advanced-pv-004"
+          "id": "skill-ryugi-teppoudama-advanced-pv-40667e07a7f5"
         },
         {
           "category": "advanced",
@@ -2110,7 +2110,7 @@
           "summary": "",
           "effect": "手番最後の攻撃の判定時に使用。コンボ増加値が直前の攻撃の判定数に加算される。（直前だけでなく、その前のコンボ増加値が加算される）。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-teppoudama-advanced-sp-001"
+          "id": "skill-ryugi-teppoudama-advanced-sp-80f450c05107"
         },
         {
           "category": "advanced",
@@ -2126,7 +2126,7 @@
           "summary": "",
           "effect": "戦闘移動のかわりに攻撃を行う。この攻撃の基準値は5から8までで選択できる。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-teppoudama-advanced-sp-002"
+          "id": "skill-ryugi-teppoudama-advanced-sp-50ac41195faf"
         },
         {
           "category": "advanced",
@@ -2142,7 +2142,7 @@
           "summary": "",
           "effect": "手番開始時に使用する。この手番の行動回数+2。この手番中同じスキルを何回でも使用してよい。回数制限と、タイミングの制限は無視できない。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-teppoudama-advanced-sp-003"
+          "id": "skill-ryugi-teppoudama-advanced-sp-d00b024f6376"
         },
         {
           "category": "advanced",
@@ -2158,7 +2158,7 @@
           "summary": "",
           "effect": "手番開始時に使用する。この手番中コンボ増加値は累積する。ただし上限は15点である。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-teppoudama-advanced-sp-004"
+          "id": "skill-ryugi-teppoudama-advanced-sp-1a7c75b2711f"
         }
       ]
     },
@@ -2178,7 +2178,7 @@
           "summary": "",
           "effect": "手番中1回、行動回数を消費せず攻撃ではない行動を行うことができる。ただし、その手番では必ず暗殺判定もしくは干渉判定を用いる攻撃を行わなければならない。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-yamiuchi-bonus-pv-001"
+          "id": "skill-ryugi-yamiuchi-bonus-pv-f0210c6c6640"
         }
       ],
       "basic": [
@@ -2196,7 +2196,7 @@
           "summary": "",
           "effect": "攻撃を行う。次の手番対象は可能ならばあなたを1回は攻撃しなければならない。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-yamiuchi-basic-a-001"
+          "id": "skill-ryugi-yamiuchi-basic-a-3e0f6f064d63"
         },
         {
           "category": "basic",
@@ -2212,7 +2212,7 @@
           "summary": "",
           "effect": "攻撃を行う。隠密状態ならば防御力を無視してダメージを与える。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-yamiuchi-basic-a-002"
+          "id": "skill-ryugi-yamiuchi-basic-a-dc8a281f1805"
         },
         {
           "category": "basic",
@@ -2228,7 +2228,7 @@
           "summary": "",
           "effect": "次に行動する味方キャラクターは隠密状態になる。そのキャラクターは次の手番中攻撃力+5。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-yamiuchi-basic-a-003"
+          "id": "skill-ryugi-yamiuchi-basic-a-aef210e353c8"
         },
         {
           "category": "basic",
@@ -2244,7 +2244,7 @@
           "summary": "",
           "effect": "攻撃を行う。次の対象の手番、対象はあなたの指定したキャラクターを1回は攻撃しなければならない。この効果は強度2のBSとして扱う。手番終了時に指定したキャラクターを攻撃できなかった場合は体力を10点失う。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-yamiuchi-basic-a-004"
+          "id": "skill-ryugi-yamiuchi-basic-a-cab589b19141"
         },
         {
           "category": "basic",
@@ -2260,7 +2260,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×3。隠密状態ならばこの攻撃はダメージ軽減を無視する。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-yamiuchi-basic-a-005"
+          "id": "skill-ryugi-yamiuchi-basic-a-f8f8a64d40e5"
         },
         {
           "category": "basic",
@@ -2276,7 +2276,7 @@
           "summary": "",
           "effect": "攻撃を行う。この攻撃の対象に対する、この手番中のあなたの攻撃すべては「耐え」のダメージ減少および「抵抗」成功時のダメージ半減が発生しない。あなたが隠密状態なら、それらの攻撃はダメージ軽減も無視する。\nただし、上記のダメージ減少・半減を無視しても、リアクション成功時にコンボが終了することは変わらない。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-yamiuchi-basic-a-006"
+          "id": "skill-ryugi-yamiuchi-basic-a-790a40d0ba2d"
         },
         {
           "category": "basic",
@@ -2292,7 +2292,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+前の掛け合いのコンボ増加値。隠密状態ならばさらにダメージ+lv×前の掛け合いのコンボ増加値。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-yamiuchi-basic-a-007"
+          "id": "skill-ryugi-yamiuchi-basic-a-c7b7e5b170e9"
         },
         {
           "category": "basic",
@@ -2308,7 +2308,7 @@
           "summary": "",
           "effect": "隠密状態になるたび、気合をlv点獲得する。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-yamiuchi-basic-pv-001"
+          "id": "skill-ryugi-yamiuchi-basic-pv-141e80b6c86b"
         },
         {
           "category": "basic",
@@ -2324,7 +2324,7 @@
           "summary": "",
           "effect": "任意のキャラクター1体に強度lvの激痛または転倒または放心を与える。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-yamiuchi-basic-m-001"
+          "id": "skill-ryugi-yamiuchi-basic-m-d8141697629b"
         },
         {
           "category": "basic",
@@ -2340,7 +2340,7 @@
           "summary": "",
           "effect": "次の攻撃の判定数+lv。隠密状態ならばこの手番中の攻撃の判定数+lv。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-yamiuchi-basic-m-002"
+          "id": "skill-ryugi-yamiuchi-basic-m-73aa1cf31e99"
         },
         {
           "category": "basic",
@@ -2356,7 +2356,7 @@
           "summary": "",
           "effect": "隠密状態になる。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-yamiuchi-basic-su-001"
+          "id": "skill-ryugi-yamiuchi-basic-su-99756a2be6b2"
         },
         {
           "category": "basic",
@@ -2372,7 +2372,7 @@
           "summary": "",
           "effect": "任意のキャラクターの判定直後に使用。判定達成値を-1する。隠密状態なら消費気合-1。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-yamiuchi-basic-aa_ra-001"
+          "id": "skill-ryugi-yamiuchi-basic-aa_ra-26989494424b"
         },
         {
           "category": "basic",
@@ -2388,7 +2388,7 @@
           "summary": "",
           "effect": "あなただけを対象とする攻撃の判定直前（基準値の決定後）に使用する。攻撃したキャラクターは基準値を-1して判定を行う。隠密状態なら任意の攻撃に使用可能。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-yamiuchi-basic-sp-001"
+          "id": "skill-ryugi-yamiuchi-basic-sp-b3da1d1c3c9f"
         }
       ],
       "advanced": [
@@ -2406,7 +2406,7 @@
           "summary": "",
           "effect": "絡みつく影の消費気合を1点にして使用するか、2点支払って基準値を-2するか選択できるようになる。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-yamiuchi-advanced-pv-001"
+          "id": "skill-ryugi-yamiuchi-advanced-pv-e92fffd01282"
         },
         {
           "category": "advanced",
@@ -2422,7 +2422,7 @@
           "summary": "",
           "effect": "隠密状態の間攻撃力+lv×6。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-yamiuchi-advanced-pv-002"
+          "id": "skill-ryugi-yamiuchi-advanced-pv-caed8d909b9e"
         },
         {
           "category": "advanced",
@@ -2438,7 +2438,7 @@
           "summary": "",
           "effect": "あなたと同じマスにいる味方キャラクターのリアクションの判定数は+1される。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-yamiuchi-advanced-pv-003"
+          "id": "skill-ryugi-yamiuchi-advanced-pv-8559875a24fa"
         },
         {
           "category": "advanced",
@@ -2454,7 +2454,7 @@
           "summary": "",
           "effect": "攻撃対象に強度lvの激痛か転倒か放心を与える。すでに激痛または転倒または放心を受けている場合、かわりにそれらのBSの合計強度×2点効果値が上昇する。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-yamiuchi-advanced-d-001"
+          "id": "skill-ryugi-yamiuchi-advanced-d-42dcacb98ecd"
         },
         {
           "category": "advanced",
@@ -2470,7 +2470,7 @@
           "summary": "",
           "effect": "「タイミング: M」のスキル使用時、または行動で隠密状態になったときに使用。\n同時に使用した「タイミング：M」のスキルの現在レベルと最大レベルは+1される。隠密状態になったなら、その手番中攻撃力が+6される。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-yamiuchi-advanced-sp-001"
+          "id": "skill-ryugi-yamiuchi-advanced-sp-089471f51771"
         },
         {
           "category": "advanced",
@@ -2486,7 +2486,7 @@
           "summary": "",
           "effect": "自身の攻撃がリアクションに成功された直後に使用する。同じ基準値で判定数+2して判定を振り直す。コンボは継続する。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-yamiuchi-advanced-sp-002"
+          "id": "skill-ryugi-yamiuchi-advanced-sp-7ecf0d4f5ccc"
         },
         {
           "category": "advanced",
@@ -2502,7 +2502,7 @@
           "summary": "",
           "effect": "隠密状態になる。ラウンド終了時までこの隠密状態は解除されない。ラウンド終了時まで隠密状態で効果があるスキルのレベルが+2される。最大レベルを超えても良い。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-yamiuchi-advanced-su-001"
+          "id": "skill-ryugi-yamiuchi-advanced-su-08755dc98fc8"
         },
         {
           "category": "advanced",
@@ -2518,7 +2518,7 @@
           "summary": "",
           "effect": "攻撃、またはリアクションの達成値と効果値を-5する。ただし0未満にはならない。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-yamiuchi-advanced-ra-001"
+          "id": "skill-ryugi-yamiuchi-advanced-ra-e10c5b678ef8"
         }
       ]
     },
@@ -2538,7 +2538,7 @@
           "summary": "",
           "effect": "近接・射撃攻撃に対するリアクションの基準値+1。（カウンターにも適用される）装備している武器の種別によらずカウンターを行える。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-kaeshi-bonus-pv-001"
+          "id": "skill-ryugi-kaeshi-bonus-pv-96e8a3feca3f"
         }
       ],
       "basic": [
@@ -2556,7 +2556,7 @@
           "summary": "",
           "effect": "攻撃を行う。次のあなたの手番開始時までこの攻撃を含み、武器の攻撃力が+lv×2される。この攻撃の対象が同じマスにいるならばさらに+lv×3される。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-kaeshi-basic-a-001"
+          "id": "skill-ryugi-kaeshi-basic-a-019432453cdd"
         },
         {
           "category": "basic",
@@ -2572,7 +2572,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×3。対象との距離が2以下ならば更にダメージ+lv×2。対象との距離が0ならば更にダメージ+10。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-kaeshi-basic-a-002"
+          "id": "skill-ryugi-kaeshi-basic-a-8b880f338de6"
         },
         {
           "category": "basic",
@@ -2588,7 +2588,7 @@
           "summary": "",
           "effect": "攻撃を行う。対象の次の攻撃の行動回数を2減少させる。この効果は強度5のBSとして扱う。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-kaeshi-basic-a-003"
+          "id": "skill-ryugi-kaeshi-basic-a-a5a30ca1c156"
         },
         {
           "category": "basic",
@@ -2604,7 +2604,7 @@
           "summary": "",
           "effect": "攻撃を行う。対象は次の手番終了時まですべての攻撃力がlv×3点減少する。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-kaeshi-basic-a-004"
+          "id": "skill-ryugi-kaeshi-basic-a-7c6c18b6a456"
         },
         {
           "category": "basic",
@@ -2620,7 +2620,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×3。前の手番以降リアクションに1度でも成功していた場合、更にダメージ+10。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-kaeshi-basic-a-005"
+          "id": "skill-ryugi-kaeshi-basic-a-6271e94b22f5"
         },
         {
           "category": "basic",
@@ -2636,7 +2636,7 @@
           "summary": "",
           "effect": "対象に強度3の放心を与える。この効果で与えた放心は次のクリンナップに解除されない。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-kaeshi-basic-a-006"
+          "id": "skill-ryugi-kaeshi-basic-a-10d551fd60d0"
         },
         {
           "category": "basic",
@@ -2652,7 +2652,7 @@
           "summary": "",
           "effect": "攻撃を行う。対象は次の手番であなた以外を対象に含む攻撃をする場合、判定数が3個減少する。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-kaeshi-basic-a-007"
+          "id": "skill-ryugi-kaeshi-basic-a-74167f9f6a2b"
         },
         {
           "category": "basic",
@@ -2668,7 +2668,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ-6。次の手番までリアクションの判定数+lv×2。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-kaeshi-basic-a-008"
+          "id": "skill-ryugi-kaeshi-basic-a-b6824e9346f6"
         },
         {
           "category": "basic",
@@ -2684,7 +2684,7 @@
           "summary": "",
           "effect": "基準値+1して、耐え判定または抵抗判定を行う。このスキルを使用した場合、特殊攻撃に対してもカウンターが使用可能になる。カウンターを行った場合はダメージ処理はカウンターに従う。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-kaeshi-basic-r-001"
+          "id": "skill-ryugi-kaeshi-basic-r-274fcdfd8b73"
         },
         {
           "category": "basic",
@@ -2700,7 +2700,7 @@
           "summary": "",
           "effect": "可能なリアクションを行う。基準値+1。気合いを追加で2点消費することで、基準値をさらに+1できる。他の「タイミング:R」のスキルと同時に使用できる。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-kaeshi-basic-r-002"
+          "id": "skill-ryugi-kaeshi-basic-r-4df325e974ab"
         },
         {
           "category": "basic",
@@ -2716,7 +2716,7 @@
           "summary": "",
           "effect": "喧嘩、暗殺、格闘判定を感覚の能力値で行える。同じマスにいるキャラクターに対して、発砲武器による攻撃を行える。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-kaeshi-basic-pv-001"
+          "id": "skill-ryugi-kaeshi-basic-pv-54b46798e56c"
         },
         {
           "category": "basic",
@@ -2732,7 +2732,7 @@
           "summary": "",
           "effect": "同じマスにいるキャラクターが受ける攻撃の対象をあなたに変更する。それが範囲攻撃だった場合、中心対象が同じマスのキャラクターの場合は中心対象があなたになる。あなたがこの攻撃に対してリアクションに失敗した場合は、このラウンドこのスキルを再度使用できる。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-kaeshi-basic-aa-001"
+          "id": "skill-ryugi-kaeshi-basic-aa-1a946408a0b0"
         },
         {
           "category": "basic",
@@ -2748,7 +2748,7 @@
           "summary": "",
           "effect": "効果値+2。このスキルはカウンターを含むリアクション時も使用できる。カウンターに使用した場合は効果値+3。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-kaeshi-basic-d-001"
+          "id": "skill-ryugi-kaeshi-basic-d-38d5a0f226a9"
         }
       ],
       "advanced": [
@@ -2766,7 +2766,7 @@
           "summary": "",
           "effect": "孤月を使用してリアクションに失敗した場合、使用回数を消費せず、同じラウンドに再度使用できる。 孤月の追加コストが気合い1点になる。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-kaeshi-advanced-pv-001"
+          "id": "skill-ryugi-kaeshi-advanced-pv-94555a90c81f"
         },
         {
           "category": "advanced",
@@ -2782,7 +2782,7 @@
           "summary": "",
           "effect": "追撃の効果値上昇が更に+2される。カウンターに使用するならば更に+1される。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-kaeshi-advanced-pv-002"
+          "id": "skill-ryugi-kaeshi-advanced-pv-8e230826cf33"
         },
         {
           "category": "advanced",
@@ -2798,7 +2798,7 @@
           "summary": "",
           "effect": "カウンターを行う。このリアクションが成功した場合即座に一回掛け合いを行う。カウンターの達成値が相手の攻撃の達成値を上回った分だけ掛け合いの判定数が増加する。対象はカウンター不可。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-kaeshi-advanced-r-001"
+          "id": "skill-ryugi-kaeshi-advanced-r-4ca6551c8299"
         },
         {
           "category": "advanced",
@@ -2814,7 +2814,7 @@
           "summary": "",
           "effect": "カウンターのダメージ+lv×6。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-kaeshi-advanced-pv-003"
+          "id": "skill-ryugi-kaeshi-advanced-pv-1eb9013aad98"
         },
         {
           "category": "advanced",
@@ -2830,7 +2830,7 @@
           "summary": "",
           "effect": "手番開始時に使用。この手番の行動回数+1。ただし増えた行動回数で攻撃はできない。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-kaeshi-advanced-sp-001"
+          "id": "skill-ryugi-kaeshi-advanced-sp-0e5bdb8151a7"
         },
         {
           "category": "advanced",
@@ -2846,7 +2846,7 @@
           "summary": "",
           "effect": "リアクション成功時に使用。気合を1点獲得し、次の攻撃の判定数が+1される。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-kaeshi-advanced-sp-002"
+          "id": "skill-ryugi-kaeshi-advanced-sp-69c3f8a8032e"
         },
         {
           "category": "advanced",
@@ -2862,7 +2862,7 @@
           "summary": "",
           "effect": "このラウンド中リアクションの判定数が+2され、リアクションに成功した場合、即座に行動回数1回の手番を行う。カウンターに成功した場合は行動回数2回の手番を行う。この効果で手番を行っても行動済みにならない。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-kaeshi-advanced-su-001"
+          "id": "skill-ryugi-kaeshi-advanced-su-f8cba9ec3c7c"
         },
         {
           "category": "advanced",
@@ -2878,7 +2878,7 @@
           "summary": "",
           "effect": "攻撃を失敗させる。達成値、効果値はともに0となる。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-kaeshi-advanced-aa-001"
+          "id": "skill-ryugi-kaeshi-advanced-aa-32fc021be19d"
         }
       ]
     },
@@ -2898,7 +2898,7 @@
           "summary": "",
           "effect": "共通スキルまたはゴトシのスキルで消費する気合1点の代わりに精神力5点で消費を行える。ただし1回の消費で気合2点以上を精神力で消費することはできない。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-gotoshi-bonus-pv-001"
+          "id": "skill-ryugi-gotoshi-bonus-pv-ea7782fd397a"
         }
       ],
       "basic": [
@@ -2916,7 +2916,7 @@
           "summary": "",
           "effect": "攻撃を行う。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-gotoshi-basic-a-001"
+          "id": "skill-ryugi-gotoshi-basic-a-d18e3c54ad1d"
         },
         {
           "category": "basic",
@@ -2932,7 +2932,7 @@
           "summary": "",
           "effect": "攻撃を行う。強度2の放心を与える。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-gotoshi-basic-a-002"
+          "id": "skill-ryugi-gotoshi-basic-a-bc017e0ef18d"
         },
         {
           "category": "basic",
@@ -2948,7 +2948,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×4。この攻撃は弾丸を消費しない。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-gotoshi-basic-a-003"
+          "id": "skill-ryugi-gotoshi-basic-a-0896dad9a253"
         },
         {
           "category": "basic",
@@ -2964,7 +2964,7 @@
           "summary": "",
           "effect": "攻撃を行う。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-gotoshi-basic-a-004"
+          "id": "skill-ryugi-gotoshi-basic-a-0a08b1afbdb1"
         },
         {
           "category": "basic",
@@ -2980,7 +2980,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×2。追加で気合を2点消費すると更にダメージ+lv×5。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-gotoshi-basic-a-005"
+          "id": "skill-ryugi-gotoshi-basic-a-3997e7dc3d6d"
         },
         {
           "category": "basic",
@@ -2996,7 +2996,7 @@
           "summary": "",
           "effect": "攻撃を行う。次の攻撃はそのキャラクターのいるマスの範囲0となる。元の攻撃の対象が範囲Xの場合、対象が範囲X+1となる。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-gotoshi-basic-a-006"
+          "id": "skill-ryugi-gotoshi-basic-a-405fb51c0613"
         },
         {
           "category": "basic",
@@ -3012,7 +3012,7 @@
           "summary": "",
           "effect": "攻撃を行う。ラウンド終了時までそのキャラクターの判定達成値を-lvする。この効果は強度lvのバッドステータスとして扱う。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-gotoshi-basic-a-007"
+          "id": "skill-ryugi-gotoshi-basic-a-60dbc6b08022"
         },
         {
           "category": "basic",
@@ -3028,7 +3028,7 @@
           "summary": "",
           "effect": "攻撃を行う。この攻撃の対象を視界内の任意のマスに移動させる。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-gotoshi-basic-a-008"
+          "id": "skill-ryugi-gotoshi-basic-a-da9a2d57e6e9"
         },
         {
           "category": "basic",
@@ -3044,7 +3044,7 @@
           "summary": "",
           "effect": "攻撃を行う。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-gotoshi-basic-a-009"
+          "id": "skill-ryugi-gotoshi-basic-a-31dd50d6756f"
         },
         {
           "category": "basic",
@@ -3060,7 +3060,7 @@
           "summary": "",
           "effect": "抵抗を行う。このスキルを使用した場合、近接、射撃攻撃に対しても抵抗でリアクションを行える。リアクションは回避を行ったものとして処理する。\nlv2: 抵抗の基準値を+1する。\nlv3: このスキルの基本コストが0になる。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-gotoshi-basic-r-001"
+          "id": "skill-ryugi-gotoshi-basic-r-e72485d0d147"
         },
         {
           "category": "basic",
@@ -3076,7 +3076,7 @@
           "summary": "",
           "effect": "味方キャラクターが行うリアクションの判定数を+2する。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-gotoshi-basic-r-002"
+          "id": "skill-ryugi-gotoshi-basic-r-04c5c6e6bc30"
         },
         {
           "category": "basic",
@@ -3092,7 +3092,7 @@
           "summary": "",
           "effect": "発砲判定を行う。装備している発砲武器の射程内のキャラクター1人が受けるダメージを効果値点減少させる。弾丸を1発消費する。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-gotoshi-basic-d-001"
+          "id": "skill-ryugi-gotoshi-basic-d-f045ef2b1c02"
         },
         {
           "category": "basic",
@@ -3108,7 +3108,7 @@
           "summary": "",
           "effect": "干渉判定を行う。使用できる干渉武器の射程内のキャラクターが与えるダメージを効果値点上昇させる。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-gotoshi-basic-d-002"
+          "id": "skill-ryugi-gotoshi-basic-d-c44a2c4cba5a"
         }
       ],
       "advanced": [
@@ -3126,7 +3126,7 @@
           "summary": "",
           "effect": "後押しで上昇するダメージが効果値×2になる。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-gotoshi-advanced-pv-001"
+          "id": "skill-ryugi-gotoshi-advanced-pv-246199099ce7"
         },
         {
           "category": "advanced",
@@ -3142,7 +3142,7 @@
           "summary": "",
           "effect": "lv1: 助けの手のタイミングがSPとなり、任意の判定の判定数を+2できるようになる。\nlv2: 助けの手を1ラウンドに2回使用できるようになる。\nlv3: 助けの手をリアクションに使う場合は判定数を+3できるようになる。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-gotoshi-advanced-pv-002"
+          "id": "skill-ryugi-gotoshi-advanced-pv-5c29d218b919"
         },
         {
           "category": "advanced",
@@ -3158,7 +3158,7 @@
           "summary": "",
           "effect": "タイミング「A-A」以外のスキルを使用するたび次の手番の攻撃の判定数が+1される。ただしlv点までしか累積しない。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-gotoshi-advanced-pv-003"
+          "id": "skill-ryugi-gotoshi-advanced-pv-9f378d1df584"
         },
         {
           "category": "advanced",
@@ -3174,7 +3174,7 @@
           "summary": "",
           "effect": "任意の味方キャラクター一人をそのキャラクターの現在位置から5マス以内のマスに移動させる。ラウンド1回使用可能。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-gotoshi-advanced-ini-001"
+          "id": "skill-ryugi-gotoshi-advanced-ini-83a25f83976a"
         },
         {
           "category": "advanced",
@@ -3190,7 +3190,7 @@
           "summary": "",
           "effect": "攻撃の効果値+6。このスキルは複数のキャラクターか徒党にダメージを与えるときにしか使用できない。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-gotoshi-advanced-d-001"
+          "id": "skill-ryugi-gotoshi-advanced-d-d4b5fba0a70f"
         },
         {
           "category": "advanced",
@@ -3206,7 +3206,7 @@
           "summary": "",
           "effect": "タイミング「A-A」「Aa」「Aa」「Ra」「D」のスキルを使用する直前に使用する。掛け合いの間、任意の流儀の「A-☆」「☆-A」以外のタイミング「A-A」「Aa」「Ra」「D」スキルを1レベルで取得する。ただし、スキルの技能は変わらない。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-gotoshi-advanced-sp-001"
+          "id": "skill-ryugi-gotoshi-advanced-sp-758830accaf9"
         },
         {
           "category": "advanced",
@@ -3222,7 +3222,7 @@
           "summary": "",
           "effect": "手番開始時に使用する。手番中、任意の流儀の、タイミング「Pv」以外の全てのスキルを最大レベルで取得しているものとして扱う。攻撃スキルに技能が指定されている場合、「発砲」または「干渉」として使用できる。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-gotoshi-advanced-sp-002"
+          "id": "skill-ryugi-gotoshi-advanced-sp-c3b98b70b981"
         },
         {
           "category": "advanced",
@@ -3238,7 +3238,7 @@
           "summary": "",
           "effect": "手番開始時に使用する。この手番の攻撃はすべて「対象：シーン」となる。もともと複数体を対象とする攻撃は判定数が4点増加する。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-gotoshi-advanced-sp-003"
+          "id": "skill-ryugi-gotoshi-advanced-sp-9dddca773ec0"
         }
       ]
     },
@@ -3258,7 +3258,7 @@
           "summary": "",
           "effect": "戦闘中、同一陣営のキャラクターに対して、自身の縁を覚悟として効果を適用できる。覚悟によって発揮するダイスはあなたのものを参照する。",
           "sourceOrder": 1,
-          "id": "skill-ryugi-kashira-bonus-pv-001"
+          "id": "skill-ryugi-kashira-bonus-pv-fdd2d3700516"
         }
       ],
       "basic": [
@@ -3276,7 +3276,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×3。この手番中行った攻撃以外の行動一回につきダメージ+6。",
           "sourceOrder": 2,
-          "id": "skill-ryugi-kashira-basic-a-001"
+          "id": "skill-ryugi-kashira-basic-a-e54465c61c53"
         },
         {
           "category": "basic",
@@ -3292,7 +3292,7 @@
           "summary": "",
           "effect": "攻撃を行う。判定数+覚悟にした縁一つに付き+5。",
           "sourceOrder": 3,
-          "id": "skill-ryugi-kashira-basic-a-002"
+          "id": "skill-ryugi-kashira-basic-a-63531d5850bd"
         },
         {
           "category": "basic",
@@ -3308,7 +3308,7 @@
           "summary": "",
           "effect": "攻撃を行う。ダメージ+lv×3。覚悟にした縁一つに付きさらにダメージ+5。",
           "sourceOrder": 4,
-          "id": "skill-ryugi-kashira-basic-a-003"
+          "id": "skill-ryugi-kashira-basic-a-8551f40f81ed"
         },
         {
           "category": "basic",
@@ -3324,7 +3324,7 @@
           "summary": "",
           "effect": "攻撃を行う。次の味方の最初の攻撃のダメージ+「すでに覚悟にした縁の数×10」。",
           "sourceOrder": 5,
-          "id": "skill-ryugi-kashira-basic-a-004"
+          "id": "skill-ryugi-kashira-basic-a-fa091e34d2ec"
         },
         {
           "category": "basic",
@@ -3340,7 +3340,7 @@
           "summary": "",
           "effect": "攻撃を行う。この手番最初の攻撃なら直前に行動した味方キャラクターのコンボ増加値だけ判定数が上昇し、この手番最後の攻撃なら次に行動を行う味方キャラクターの最初の攻撃の判定数がこの攻撃のコンボ増加値だけ増加する。手番最初で最後の攻撃の場合、いずれか一方の効果しか得られない。",
           "sourceOrder": 6,
-          "id": "skill-ryugi-kashira-basic-a-005"
+          "id": "skill-ryugi-kashira-basic-a-1c2c31436b1a"
         },
         {
           "category": "basic",
@@ -3356,7 +3356,7 @@
           "summary": "",
           "effect": "基準値+1して、防御判定を行う。この防御判定は肉体または精神の能力値で行って良い。",
           "sourceOrder": 7,
-          "id": "skill-ryugi-kashira-basic-r-001"
+          "id": "skill-ryugi-kashira-basic-r-63a328c2188b"
         },
         {
           "category": "basic",
@@ -3372,7 +3372,7 @@
           "summary": "",
           "effect": "覚悟を使用すると気合を3点獲得する。",
           "sourceOrder": 8,
-          "id": "skill-ryugi-kashira-basic-pv-001"
+          "id": "skill-ryugi-kashira-basic-pv-d95c9c49e7ff"
         },
         {
           "category": "basic",
@@ -3388,7 +3388,7 @@
           "summary": "",
           "effect": "対象は次のあなたの手番開始時まですべての判定数が+2個される。",
           "sourceOrder": 9,
-          "id": "skill-ryugi-kashira-basic-m-001"
+          "id": "skill-ryugi-kashira-basic-m-f73d74ee07de"
         },
         {
           "category": "basic",
@@ -3404,7 +3404,7 @@
           "summary": "",
           "effect": "対象は次のあなたの手番開始時まで攻撃のダメージ+lv×4。",
           "sourceOrder": 10,
-          "id": "skill-ryugi-kashira-basic-m-002"
+          "id": "skill-ryugi-kashira-basic-m-c47fa6132e73"
         },
         {
           "category": "basic",
@@ -3420,7 +3420,7 @@
           "summary": "",
           "effect": "対象が受けているBS一つを解除し、次のあなたの手番終了時まで気合獲得値を+1する。このスキルは対象がBSを受けていないときでも使用可能。",
           "sourceOrder": 11,
-          "id": "skill-ryugi-kashira-basic-m-003"
+          "id": "skill-ryugi-kashira-basic-m-c9a87fe067ec"
         },
         {
           "category": "basic",
@@ -3436,7 +3436,7 @@
           "summary": "",
           "effect": "ラウンド終了時まで合計lv×5点分あなたを含む味方キャラクターのイニシアチブを好きに割り振って上昇させる。",
           "sourceOrder": 12,
-          "id": "skill-ryugi-kashira-basic-su-001"
+          "id": "skill-ryugi-kashira-basic-su-d04ca3870c6c"
         },
         {
           "category": "basic",
@@ -3452,7 +3452,7 @@
           "summary": "",
           "effect": "ダメージを受けるキャラクターの位置によらず、自分以外の味方キャラクター一人にカバーリングを行わせる。このカバーリングでは行動回数が減少しない。そのキャラクターはカバーリング対象のキャラクターのマスに移動する。",
           "sourceOrder": 13,
-          "id": "skill-ryugi-kashira-basic-d-001"
+          "id": "skill-ryugi-kashira-basic-d-d1ac0b141a6b"
         },
         {
           "category": "basic",
@@ -3468,7 +3468,7 @@
           "summary": "",
           "effect": "キャラクター一人の攻撃の効果値を+lv点する。1ラウンド1キャラクターにつき1回使用可能。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-kashira-basic-d-002"
+          "id": "skill-ryugi-kashira-basic-d-a66fb32ca44b"
         }
       ],
       "advanced": [
@@ -3486,7 +3486,7 @@
           "summary": "",
           "effect": "1ラウンドに1回タイミング:Mのスキルをイニシアチブに使用できる。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-kashira-advanced-pv-001"
+          "id": "skill-ryugi-kashira-advanced-pv-3a22d2fd4e24"
         },
         {
           "category": "advanced",
@@ -3502,7 +3502,7 @@
           "summary": "",
           "effect": "この手番で次に使用するタイミングMのスキルは2体を対象にできる。気合を追加で1点支払うごとに対象を1体増やしてよい。",
           "sourceOrder": 16,
-          "id": "skill-ryugi-kashira-advanced-m-001"
+          "id": "skill-ryugi-kashira-advanced-m-03bfa47d915c"
         },
         {
           "category": "advanced",
@@ -3518,7 +3518,7 @@
           "summary": "",
           "effect": "気合1点を精神力5点で消費できる。同時に2点以上使用できない。この効果は1ラウンドにlv回使用可能。",
           "sourceOrder": 17,
-          "id": "skill-ryugi-kashira-advanced-pv-002"
+          "id": "skill-ryugi-kashira-advanced-pv-73627e11069b"
         },
         {
           "category": "advanced",
@@ -3534,7 +3534,7 @@
           "summary": "",
           "effect": "キャラクター1人の覚悟を縁に戻す。ただし、今生の縁は元に戻せない。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-kashira-advanced-ini-001"
+          "id": "skill-ryugi-kashira-advanced-ini-0be5d3568e31"
         },
         {
           "category": "advanced",
@@ -3550,7 +3550,7 @@
           "summary": "",
           "effect": "味方キャラクターの手番開始時に使用する。そのキャラクターの行動回数を+1する。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-kashira-advanced-sp-001"
+          "id": "skill-ryugi-kashira-advanced-sp-745038d9b883"
         },
         {
           "category": "advanced",
@@ -3566,7 +3566,7 @@
           "summary": "",
           "effect": "自身を含む味方キャラクターが覚悟を使用した際に使用する。そのキャラクターは気合を1点得る。複数のキャラクターが同じ攻撃へのリアクションや気絶からの復活で覚悟を使用した場合はそれらすべてのキャラクターが気合を1点得る。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-kashira-advanced-sp-002"
+          "id": "skill-ryugi-kashira-advanced-sp-54bc8188e6e3"
         },
         {
           "category": "advanced",
@@ -3582,7 +3582,7 @@
           "summary": "",
           "effect": "味方キャラクター一人に即座に手番を行わせる。行動済みのキャラクターであっても選択でき、この効果で行動しても行動済みにならない。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-kashira-advanced-ini-002"
+          "id": "skill-ryugi-kashira-advanced-ini-c845175a96f3"
         },
         {
           "category": "advanced",
@@ -3598,7 +3598,7 @@
           "summary": "",
           "effect": "あなたを含むすべての味方キャラクターは即座に気合を5点獲得する。",
           "sourceOrder": 22,
-          "id": "skill-ryugi-kashira-advanced-su-001"
+          "id": "skill-ryugi-kashira-advanced-su-a199db46bf26"
         }
       ]
     }
