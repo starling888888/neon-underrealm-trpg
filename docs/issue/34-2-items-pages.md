@@ -24,6 +24,7 @@
 - お守りのwarningでは、ブライ詳細ページの神仏の加護カード `skill-ikizama-burai-basic-pv-570c394fe082` へリンクする。
 - `LegendContainer` を用い、武器・防具・お守りの凡例をdesktopではカード1カラム＋説明2カラム、768px以下ではカードと説明の2カラムで共通表示する。
 - 既存のSkillLegendも`LegendContainer`へ移し、ページ固有の凡例CSSを削除する。
+- SkillLegendの説明リストは右カラムへ直接表示し、「カードの項目」見出し・ラベルと目次項目を置かない。
 - 残る3種別は、対応するcontents指示書が確定後に同じissue内で追加する。
 - 6種別すべてについて、対応するCardの凡例と一覧を実装し、種別ごとのVisual Review・design canonicalizeを行う。
 
@@ -46,6 +47,7 @@
 - [x] warning Callout、神仏の加護への導線、`OmamoriCard`の凡例と21件の一覧が表示される
 - [x] 武器・防具・お守りの凡例が共通の3→2カラムレイアウトで表示される
 - [x] 既存SkillLegendも`LegendContainer`を使用し、凡例専用CSSを持たない
+- [x] SkillLegendに「カードの項目」見出し・ラベル・目次項目がない
 - [ ] 6種別すべてについて、確定したcontentsに従うページ、対応Cardの凡例と一覧を実装している
 - [ ] 6種別それぞれのVisual Reviewを行い、designをcanonicalizeしている
 - [x] `npm run check` が通る
@@ -68,17 +70,18 @@
 
 ### レビュー結果
 
-| 領域                  | 判定 | 差分                                                     | 対応     |
-| --------------------- | ---- | -------------------------------------------------------- | -------- |
-| レイアウト            | OK   | desktopはカード1カラム＋説明2カラムを維持する            | 修正不要 |
-| レスポンシブ          | OK   | 390px幅ではカードと説明を2カラムで表示し、横overflowなし | 修正不要 |
-| 共通Componentとの整合 | OK   | アイテム凡例と同じ`LegendContainer`へ統一する            | 修正不要 |
-| 既存デザインとの整合  | OK   | カード・見出し・説明リストの表示を維持する               | 修正不要 |
+| 領域                  | 判定 | 差分                                                                  | 対応     |
+| --------------------- | ---- | --------------------------------------------------------------------- | -------- |
+| レイアウト            | OK   | desktopはカード1カラム＋説明2カラムを維持し、説明リストを直接表示する | 修正不要 |
+| レスポンシブ          | OK   | 390px幅ではカードと説明を2カラムで表示し、横overflowなし              | 修正不要 |
+| 共通Componentとの整合 | OK   | アイテム凡例と同じ`LegendContainer`へ統一する                         | 修正不要 |
+| 既存デザインとの整合  | OK   | カードと説明リストの表示を維持し、凡例の冗長な見出しを置かない        | 修正不要 |
 
 ### 自己修正した項目
 
 - [x] SkillLegendのページ内wrapperと`prose.css`の専用CSSを削除した
-- [x] `LegendContainer`へ見出しと説明リストの共通スタイルを移した
+- [x] `LegendContainer`へ説明リストの共通スタイルを移した
+- [x] 「カードの項目」H3とラベルを削除し、Page TOCに含まれないことを確認した
 
 ### 人間判断が必要な差分
 
@@ -142,6 +145,52 @@
 - [x] reference と actual を比較した
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 6
+
+### デザイン参照
+
+- design target: `docs/design/items/`。防具個別ページは対象外であり、初期designの新規作成はユーザー指示により行わない。
+- reference desktop: 該当なし
+- reference mobile: 該当なし
+- notes: `.raw/contents/items-armors.md` の凡例右カラムの項目名表示を正本とする。
+
+### 成果物
+
+- actual desktop: `test-results/visual/items-armors-desktop.png`
+- actual mobile: `test-results/visual/items-armors-mobile.png`
+- report: `npm run visual:capture -- --grep @items-armors`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                    | 対応     |
+| --------------------- | ---- | ------------------------------------------------------- | -------- |
+| レイアウト            | OK   | 凡例のカードと右カラムの既存レイアウトを維持する        | 修正不要 |
+| 本文                  | OK   | 右カラムの全6項目を「項目名：説明」の太字表記で表示する | 修正不要 |
+| レスポンシブ          | OK   | 390px幅で横overflowなし                                 | 修正不要 |
+| 既存Componentとの整合 | OK   | `ArmorCard`と`LegendContainer`の契約を変更しない        | 修正不要 |
+
+### 自己修正した項目
+
+- [x] contents指示に合わせ、右カラムの項目名を太字で表示した
+
+### 人間判断が必要な差分
+
+- なし
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] なし
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新は不要と判断した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 

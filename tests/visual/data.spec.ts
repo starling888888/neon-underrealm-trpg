@@ -25,7 +25,7 @@ async function expectDataContent(page: Page) {
   ).toHaveCount(1);
   await expect(
     article.getByRole("heading", { name: "カードの項目", exact: true }),
-  ).toHaveCount(1);
+  ).toHaveCount(0);
   await expect(
     article.getByRole("heading", { name: "①基本の一撃", exact: true }),
   ).toHaveCount(0);
@@ -93,6 +93,8 @@ async function expectDataPageToc(page: Page) {
 
   await expect(tocs.desktop).not.toContainText("①基本の一撃");
   await expect(tocs.mobile).not.toContainText("①基本の一撃");
+  await expect(tocs.desktop).not.toContainText("カードの項目");
+  await expect(tocs.mobile).not.toContainText("カードの項目");
 }
 
 async function expectLegendColumns(page: Page, count: number) {

@@ -23,6 +23,8 @@ async function expectArmorsPage(page: Page) {
   await expect(hero).toHaveAttribute("loading", "eager");
   await expect(legend.locator("[data-armor-card]")).toHaveCount(1);
   await expect(legend).toContainText("⑤肉体4以上");
+  await expect(legend).toContainText("名称：その防具の名称です。");
+  await expect(legend).toContainText("効果：その防具の持つ特別な効果です。");
   await expect(armorList.locator("[data-armor-card]")).toHaveCount(16);
   await expect(armorList.locator("[data-armor-card]").first()).toHaveAttribute(
     "id",
