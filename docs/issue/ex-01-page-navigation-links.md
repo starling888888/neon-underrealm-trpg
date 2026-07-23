@@ -20,19 +20,21 @@
 
 ## 対象範囲
 
-- `AppContainer` に任意の `prevPage` / `nextPage` propsを追加する。
-  - propsの値は `path` と `label` を持つobjectとする。`label` は対応するサイトメニュー項目の表示名を使う。
+- `AppContainer` に任意の `prevPath` / `nextPath` propsを追加する。
+  - propsの値はパス文字列とする。
+  - `siteMenuItems` を親・子・孫の順に再帰的に平坦化し、`href` と `label` の配列からパスに対応するサイトメニュー表示名を解決する。
+  - 指定されたパスが平坦化したサイトメニューに存在しない場合、および同じ `href` が重複する場合は、build時にエラーとする。
   - propsが渡されなかった場合は、該当するリンクを表示しない。
   - ナビゲーションは各ページ本文の直後、Footerの前に表示する。
-- MDXページでは、frontmatterの `prevPage` / `nextPage` から `AppContainer` へ値を渡す。
-- Astroページでは、各ページが `AppContainer` へ `prevPage` / `nextPage` を明示して渡す。
+- MDXページでは、frontmatterの `prevPath` / `nextPath` から `AppContainer` へ値を渡す。
+- Astroページでは、各ページが `AppContainer` へ `prevPath` / `nextPath` を明示して渡す。
 - 対象ページごとの前後関係は、共通configへ集約せず、各ページで愚直に設定する。
 - 流儀詳細と生き様詳細だけは、それぞれの一覧データから前後関係を生成する。
   - `getRyugiList()` と `getIkizamaList()` の順序を使う。
   - 一覧ページ自身と各詳細ページは、サイトメニューの親・子・孫の順に接続する。
 - 読書順の始端と終端は以下とする。
-  - `/introduction` は `prevPage` を持たず、`nextPage` を `/world` とする。
-  - `/advancement` は `prevPage` を `/data/items/drugs` とし、`nextPage` を持たない。
+  - `/introduction` は `prevPath` を持たず、`nextPath` を `/world` とする。
+  - `/advancement` は `prevPath` を `/data/items/drugs` とし、`nextPath` を持たない。
   - 読書順の外側にあるページへの前後リンクを作らない。
 - 対象ページは以下とする。
   - `/introduction`
@@ -61,7 +63,7 @@
 ## 初期スコープ外
 
 - トップページ `/`、更新履歴 `/release-notes`、サポート `/support`、Webキャラクターシート `/character-sheet`、404ページ `/404` に前後ナビゲーションを追加しない。
-- `siteMenuItems` または別の共通configから、対象ページ全体の前後関係を生成しない。
+- `siteMenuItems` または別の共通configから、対象ページ全体の前後関係を生成しない。サイトメニューの表示名を解決するための平坦化・検索だけは行う。
 - 流儀詳細と生き様詳細以外で、前後関係の自動生成処理を作らない。
 - サイトメニュー、ページ内目次、パンくずリスト、検索UIの機能や並び順を変更しない。
 - ダイスローラー、キャラクター作成ウィザード、永続保存、DB、認証、SSR、CMSを追加しない。
@@ -69,9 +71,11 @@
 
 ## 完了条件
 
-- [ ] `AppContainer` が `prevPage` / `nextPage` を任意propsとして受け取り、未指定のリンクを表示しない。
+- [ ] `AppContainer` が `prevPath` / `nextPath` を任意propsとして受け取り、未指定のリンクを表示しない。
+- [ ] サイトメニューを親・子・孫の順に平坦化した `href` と `label` の配列から、各pathのリンク表示名を解決する。
+- [ ] 存在しないpathまたは重複する `href` が指定・検出された場合、build時にエラーとなる。
 - [ ] ナビゲーションが対象ページの本文直後かつFooterの前に表示される。
-- [ ] MDXページがfrontmatterの `prevPage` / `nextPage` を使う。
+- [ ] MDXページがfrontmatterの `prevPath` / `nextPath` を使う。
 - [ ] Astroページが各ページで前後関係を明示して渡す。
 - [ ] 流儀詳細と生き様詳細が、それぞれの一覧データ順で前後ページを生成する。
 - [ ] 対象ページが、サイトメニューの親・子・孫を含む深さ優先順で連続する。
@@ -115,7 +119,8 @@
 - 対象ページと対象外ページの境界が、サイトメニュー順およびユーザー指定どおりか。
 - 親・子・孫を含む深さ優先順が、実際のサイトメニューと一致するか。
 - 各ページに設定を明示する方針と、流儀詳細・生き様詳細だけを一覧データから生成する例外が守られているか。
-- `label` が対応するサイトメニュー項目の表示名と一致し、`path`、`prevPage`、`nextPage` のprops名が既存の型・コンポーネントと整合するか。
+- `prevPath` / `nextPath` の指定だけで、対応するサイトメニュー項目の表示名が解決されるか。存在しないpathや重複hrefを見逃さないか。
+- `prevPath`、`nextPath` のprops名が既存の型・コンポーネントと整合するか。
 - design image generationを実装前の独立した前提作業として扱う範囲が適切か。
 
 ## 備考
@@ -123,4 +128,4 @@
 - `docs/design/base-layout/`、`docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/mobile-page-toc/`、`docs/design/site-menu/` は、既存のlayout・ナビゲーションとの役割差を確認する参考資料とする。前後ナビゲーション専用のdesign targetとdesign画像は未作成である。
 - `docs/requirements/architecture.md` のAC-01に従い、静的ホスティングで成立する実装にする。
 - 前後関係testは、静的ページの順序、流儀・生き様の一覧データ順、両データ群の境界接続、`/introduction` と `/advancement` の片側リンク非表示を確認する。
-- `label` は対応するサイトメニュー項目の表示名を使う。流儀・生き様詳細も、対応するサイトメニュー項目の表示名を使う。
+- リンクラベルは、平坦化したサイトメニューから対応する表示名を解決する。流儀・生き様詳細も同じ解決処理を使う。
