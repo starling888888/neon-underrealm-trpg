@@ -18,13 +18,14 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
   .desktop-layout-no-toc {
     min-width: 0;
     display: grid;
-    grid-template-columns: 19.5rem minmax(46rem, 1fr);
+    grid-template-columns: 15rem minmax(46rem, 1fr);
     min-height: calc(100vh - 9rem);
   }
 
   .layout-rail {
     min-height: 0;
-    padding: var(--space-8) var(--space-6);
+    padding-block: var(--space-8);
+    padding-inline: var(--space-3) var(--space-2);
   }
 
   .layout-rail-left {
@@ -45,9 +46,9 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
     padding: var(--space-10) var(--space-12);
   }
 
-  @media (max-width: 63.999rem) {
+  @media (max-width: 79.999rem) {
     .desktop-layout-no-toc {
-      grid-template-columns: 17rem minmax(0, 1fr);
+      grid-template-columns: 15rem minmax(0, 1fr);
     }
   }
 

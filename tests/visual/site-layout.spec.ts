@@ -21,6 +21,98 @@ test("site layout tablet @site-layout-tablet", async ({ page }) => {
   });
 });
 
+for (const [width, expected] of [
+  [767, { siteMenu: false, pageToc: false, mobilePageToc: true }],
+  [768, { siteMenu: true, pageToc: false, mobilePageToc: true }],
+  [1023, { siteMenu: true, pageToc: false, mobilePageToc: true }],
+  [1024, { siteMenu: true, pageToc: false, mobilePageToc: true }],
+  [1279, { siteMenu: true, pageToc: false, mobilePageToc: true }],
+  [1280, { siteMenu: true, pageToc: true, mobilePageToc: false }],
+  [1359, { siteMenu: true, pageToc: true, mobilePageToc: false }],
+  [1360, { siteMenu: true, pageToc: true, mobilePageToc: false }],
+  [1440, { siteMenu: true, pageToc: true, mobilePageToc: false }],
+] as const) {
+  test(`site layout switches navigation rails at ${width}px @site-layout-breakpoints`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto(visualRoutes.mdxTest);
+
+    await expect(page.locator(".site-menu-desktop")).toHaveCount(1);
+    await expect(page.locator(".page-toc")).toHaveCount(1);
+    await expect(page.locator("[data-mobile-page-toc-trigger]")).toHaveCount(1);
+
+    if (expected.siteMenu) {
+      await expect(page.locator(".site-menu-desktop")).toBeVisible();
+    } else {
+      await expect(page.locator(".site-menu-desktop")).toBeHidden();
+    }
+
+    if (expected.pageToc) {
+      await expect(page.locator(".page-toc")).toBeVisible();
+    } else {
+      await expect(page.locator(".page-toc")).toBeHidden();
+    }
+
+    if (expected.mobilePageToc) {
+      await expect(
+        page.locator("[data-mobile-page-toc-trigger]"),
+      ).toBeVisible();
+    } else {
+      await expect(page.locator("[data-mobile-page-toc-trigger]")).toBeHidden();
+    }
+
+    await expect
+      .poll(async () => {
+        return await page.evaluate(
+          () => document.documentElement.scrollWidth - window.innerWidth,
+        );
+      })
+      .toBe(0);
+  });
+}
+
+test("site menu disclosure controls keep a 32px target @site-layout-breakpoints", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 1000 });
+  await page.goto(visualRoutes.world);
+
+  const toggle = page.locator(".site-menu-desktop .site-menu-toggle").first();
+  await expect(toggle).toBeVisible();
+  await expect(toggle).toHaveCSS("width", "32px");
+  await expect(toggle).toHaveCSS("height", "32px");
+});
+
+test("site menu uses its full row width for the longest non-disclosure link @site-layout-breakpoints", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 1000 });
+  await page.goto(visualRoutes.world);
+
+  const characterMaking = page
+    .locator(".site-menu-desktop .site-menu-link")
+    .filter({ hasText: "キャラクターメイキング" });
+
+  await expect(characterMaking).toHaveCount(1);
+  await expect
+    .poll(async () => {
+      return await characterMaking.evaluate((link) => {
+        const row = link.parentElement;
+
+        if (!row) {
+          return false;
+        }
+
+        return (
+          link.getBoundingClientRect().height <= 32 &&
+          getComputedStyle(row).gridTemplateColumns.split(" ").length === 1
+        );
+      });
+    })
+    .toBe(true);
+});
+
 test("site layout tablet keeps the header above the sticky page heading @site-layout-scroll-behavior", async ({
   page,
 }) => {

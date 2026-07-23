@@ -138,7 +138,7 @@ export function setupMobilePageToc(): void {
   });
 
   window
-    .matchMedia("(min-width: 64rem)")
+    .matchMedia("(min-width: 80rem)")
     .addEventListener("change", (event) => {
       if (event.matches) {
         closeAllExcept();

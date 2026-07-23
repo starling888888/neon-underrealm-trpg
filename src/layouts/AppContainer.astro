@@ -102,7 +102,6 @@ const searchTypeLabel = getSearchTypeLabel(
 <style>
   .site-shell {
     width: 100%;
-    min-width: 1120px;
     min-height: 100vh;
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
@@ -117,15 +116,4 @@ const searchTypeLabel = getSearchTypeLabel(
     padding-inline: 0.0625em;
   }
 
-  @media (max-width: 63.999rem) {
-    .site-shell {
-      min-width: 0;
-    }
-  }
-
-  @media (width < 48rem) {
-    .site-shell {
-      min-width: 0;
-    }
-  }
 </style>

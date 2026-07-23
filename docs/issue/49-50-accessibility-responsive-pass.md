@@ -46,18 +46,19 @@
 - 承認済みの修正計画だけを実装し、該当する回帰確認、`npm run check`、`npm run build` を実行する。
 - 修正実装中に新たな重大な不整合または design 判断不能事項が見つかった場合は、その項目を実装から分離してユーザーへ報告する。
 
-### Phase D: 全 design 正本の更新
+### Phase D: VRT baseline への design 正本移行
 
-- Phase C の全修正と回帰確認が完了し、実装差分が理解・レビューされた後に、既存の全 `docs/design/<design-target>/` を対象として design 正本を更新する。
-- 既存の desktop / mobile 正本は現行実装から再取得して更新し、tablet の正本画像を各 design target に新規追加する。tablet は標準状態だけでなく、既存 design target が定義する開閉・結果・非表示などの状態についても、必要な状態を記録する。
-- 各 target の route、状態、desktop / tablet / mobile viewport、既存正本との差分、適用した要件・scope、canonicalization の根拠を `notes.md` に記録する。ページまたは layout 系 target は原則として desktop `1440px`、tablet `820px`、mobile `390px` を比較基準とする。
-- design fix / canonicalization は `design-image-generation` の workflow に従い、実装 screenshot を直接 `docs/design/` へコピーせず、`npm run visual:capture` と `npm run visual:canonicalize` を使う。実行不能な target は代替手段で置き換えず、原因と必要な判断をユーザーへ報告する。
-- 実装差分が既存 design、requirements、out-of-scope、または global style / layout direction と矛盾する target は、正本を更新して差分を隠さない。Phase C の修正へ戻すか、別の design 判断としてユーザーへ報告する。
+- Phase C の全修正と回帰確認が完了し、実装差分が理解・レビューされた後に、既存の全 `docs/design/<design-target>/` を対象として行う。
+- `docs/design/<design-target>/` は `notes.md` だけを保持する。比較画像はPlaywright標準の `toHaveScreenshot()` baseline snapshotへ移行する。
+- 各 targetのroute、状態、desktop `1440px` / tablet `820px` / mobile `390px` viewport、VRT test名、baseline名、既存正本との差分と移行根拠を `notes.md` に記録する。状態を持つtargetはtablet状態も扱う。
+- 通常のVRT実行は比較だけを行う。baselineの初回作成・更新は、差分を報告した上でユーザーが明示指示した場合だけ `--update-snapshots` で行う。
+- non-VRTのstyle tileなどは `/-local/` の専用pageを作成してVRT対象へ移す。実装と同じCSSを使い、未使用styleのデグレも検出対象にする。
+- 実装差分が既存design、requirements、out-of-scope、またはglobal style / layout directionと矛盾するtargetは、baselineを更新して差分を隠さない。Phase Cの修正へ戻すか、別のdesign判断としてユーザーへ報告する。
 
 ## 初期スコープ外
 
 - WCAG 完全準拠監査、支援技術ごとの完全な互換性保証、アクセシビリティ認証
-- `50-1-vrt-css-regression-guards` の VRT 導入および CSS 回帰検知基盤
+- ユーザーの明示指示なしのVRT baseline作成・更新
 - 新規 UI 機能、検索機能の拡張、ナビゲーション構造・情報設計の再設計
 - Header / Footer、SiteMenu、PageToc、MobilePageToc、Search UI の design を根拠なく再設計すること
 - 既存 design で判断できない変更を design-image-generation なしに実装すること
@@ -67,38 +68,38 @@
 
 ## 完了条件
 
-- [ ] Phase A の確認対象、route / viewport、操作状態、確認結果、未確認事項が検証レポートに記録され、ユーザーへ報告されている。
-- [ ] 検証レポートの報告前に、検証目的のソースコード・テスト・design 正本の変更を行っていない。
-- [ ] Phase B の修正計画に、採用項目、対象ファイル、依存関係、競合回避、回帰確認、実施順、保留項目が記録され、ユーザーへ報告されている。
-- [ ] Phase B の修正計画は `fix-plan.md` に保存され、Phase C の実装対象となる報告済み版を特定できる。
-- [ ] Phase C は、ユーザーの明示的な「修正開始」指示後にのみ着手している。
-- [ ] 承認済み修正後、NFR-02 の画像・リンク・キーボード・フォーカス・状態表現・タップ領域の対象項目と、NFR-03 の各基準幅で、計画した確認が通っている。
+- [x] Phase A の確認対象、route / viewport、操作状態、確認結果、未確認事項が検証レポートに記録され、ユーザーへ報告されている。
+- [x] 検証レポートの報告前に、検証目的のソースコード・テスト・design 正本の変更を行っていない。
+- [x] Phase B の修正計画に、採用項目、対象ファイル、依存関係、競合回避、回帰確認、実施順、保留項目が記録され、ユーザーへ報告されている。
+- [x] Phase B の修正計画は `fix-plan.md` に保存され、Phase C の実装対象となる報告済み版を特定できる。
+- [x] Phase C は、ユーザーの明示的な「修正開始」指示後にのみ着手している。
+- [x] 承認済み修正後、NFR-02 の画像・リンク・キーボード・フォーカス・状態表現・タップ領域の対象項目と、NFR-03 の各基準幅で、計画した確認が通っている。
 - [ ] Phase C の修正内容がレビューされ、全 design 正本を更新してよい差分であることを確認してから Phase D を実行している。
-- [ ] 既存の全 `docs/design/<design-target>/` について、desktop / mobile 正本を更新し、tablet 正本を新規追加している。状態を持つ target は必要な tablet 状態も記録している。
-- [ ] 各 design target の `notes.md` に route、状態、desktop / tablet / mobile viewport、既存正本との差分、canonicalization の根拠を記録している。
-- [ ] design 正本の更新は `npm run visual:capture` と `npm run visual:canonicalize` による workflow で行い、actual screenshot を直接コピーしていない。
-- [ ] 関連 TODO を扱った場合、対応結果または本 issue で保留する理由が記録されている。
+- [ ] 各 design targetの比較画像をPlaywright標準VRT baseline snapshotへ移し、`docs/design/<design-target>/` を `notes.md` 専用にしている。
+- [ ] 各 design targetの `notes.md` にroute、状態、desktop / tablet / mobile viewport、VRT test名、baseline名、既存正本との差分と移行根拠を記録している。
+- [ ] VRT baselineの初回作成・更新はユーザーの明示指示がある場合だけ `--update-snapshots` で行い、通常実行で更新していない。
+- [x] 関連 TODO を扱った場合、対応結果または本 issue で保留する理由が記録されている。
 - [ ] 既存 design を変更した場合、変更の必要性と design-image-generation の扱いが記録されている。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートと GitHub Pages のサブパス公開を回帰させていない。
-- [ ] `1024px` 以上、`768px` 以上 `1024px` 未満、`768px` 未満で、意図しない横 overflow と操作不能な表示がない。
-- [ ] ブラウザ確認は `768px` / `1024px` の境界と直前幅、`1024px` 以上 `1360px` 未満、design 正本の `390px` / `820px` / `1440px` を含み、代表 route の選定理由を記録している。
-- [ ] mobile Header の下スクロール非表示・上スクロール再表示、メニュー・ページ内目次を開く際の表示維持を回帰させていない。
-- [ ] SiteMenu、MobileMenu、PageToc、MobilePageToc、Search UI の役割と同時表示の制約を混同させていない。
-- [ ] 画像の意味に応じた `alt`、アイコンリンクの accessible name、`aria-current`、見出し階層、色以外の状態表現、タップ領域を確認している。
-- [ ] Search UI、PC 版 SiteMenu の階層 disclosure、MobileMenu、MobilePageToc のキーボード開閉、Esc 閉鎖、フォーカス移動・復帰、focus outline、関連 ARIA 属性、overlay 中の背景操作抑止を確認している。
-- [ ] contents 由来の指摘を、`.raw/contents` と公開実装を整合させないまま修正していない。
-- [ ] PageToc / MobilePageToc の 0 / 1 件表示を、`docs/requirements/layout-navigation.md` を基準として確認し、design notes との整合方針を記録している。
-- [ ] 全 design target の canonicalization 対象、route、状態、desktop / tablet / mobile coverage を一覧化し、欠ける capture は原因とともに報告している。
-- [ ] design 正本化前に、actual screenshot と既存正本の差分を確認し、requirements、out-of-scope、global style、layout direction との整合を確認している。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
+- [x] 既存ルートと GitHub Pages のサブパス公開を回帰させていない。
+- [x] `1280px` 以上、`768px` 以上 `1280px` 未満、`768px` 未満で、意図しない横 overflow と操作不能な表示がない。
+- [x] ブラウザ確認は `768px` / `1280px` の境界と直前幅、`1280px` 以上 `1360px` 未満、design 正本の `390px` / `820px` / `1440px` を含み、代表 route の選定理由を記録している。
+- [x] mobile Header の下スクロール非表示・上スクロール再表示、メニュー・ページ内目次を開く際の表示維持を回帰させていない。
+- [x] SiteMenu、MobileMenu、PageToc、MobilePageToc、Search UI の役割と同時表示の制約を混同させていない。
+- [x] 画像の意味に応じた `alt`、アイコンリンクの accessible name、`aria-current`、見出し階層、色以外の状態表現、タップ領域を確認している。
+- [x] Search UI、PC 版 SiteMenu の階層 disclosure、MobileMenu、MobilePageToc のキーボード開閉、Esc 閉鎖、フォーカス移動・復帰、focus outline、関連 ARIA 属性、overlay 中の背景操作抑止を確認している。
+- [x] contents 由来の指摘を、`.raw/contents` と公開実装を整合させないまま修正していない。
+- [x] PageToc / MobilePageToc の 0 / 1 件表示を、`docs/requirements/layout-navigation.md` を基準として確認し、design notes との整合方針を記録している。
+- [ ] 全 design target のVRT移行対象、route、状態、desktop / tablet / mobile coverageを一覧化し、欠けるbaselineは原因とともに報告している。
+- [ ] VRT baseline更新前に、既存正本との差分を確認し、requirements、out-of-scope、global style、layout directionとの整合を確認している。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
 - [ ] 関連する `docs/TODO.md` と既存 `docs/design/` に矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -113,7 +114,7 @@ Phase B / C で変更するファイルは、Phase A の結果と修正計画で
 - `tests/visual/` または `tests/node/` の必要最小限の既存確認
 - `docs/issue/49-50-accessibility-responsive-pass.md` の完了条件・チェックポイント
 
-Phase D では、全 `docs/design/<design-target>/` の既存正本画像と `notes.md` を更新対象に含める。tablet 正本は各 target の状態に応じて `design-tablet.png` または状態を示す明確なファイル名で新規追加する。
+Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlaywright標準VRT baseline snapshotへ移し、`notes.md` をVRT参照へ更新する。tablet baselineは各targetの状態に応じた明確なsnapshot名で追加する。
 
 ## レビュー観点
 
@@ -129,7 +130,7 @@ Phase D では、全 `docs/design/<design-target>/` の既存正本画像と `no
 
 ## 備考
 
-- `50-1-vrt-css-regression-guards` は別計画項目のため、この issue で VRT 基盤を追加しない。必要なブラウザ確認は手動または既存の Visual Test に限定する。
+- VRT baseline移行はこのissueのPhase Dで扱う。baselineの初回作成・更新は、Phase Cの差分をレビューした後の明示指示まで実行しない。
 - 検証・修正計画・修正実装の各段階で、未確認事項とユーザー判断が必要な項目を混在させずに報告する。
 - Phase A の完了報告は本 issue の実装承認ではない。Phase B の修正計画を確認した後、ユーザーが「修正開始」と明示した場合にだけ Phase C へ進む。
-- ユーザー指示により、Phase C の完了・レビュー後には Phase D で全 design 正本を更新する。Phase D は Visual Reviewのactual screenshotをそのまま正本化する工程ではなく、既存正本との差分と SSoT 整合を確認した上での design fix / canonicalization とする。
+- ユーザー指示により、Phase Cの完了・レビュー後にはPhase Dで全design正本をPlaywright標準VRT baselineへ移行する。Phase DはVisual Reviewのactual screenshotをそのまま正本化する工程ではなく、既存正本との差分とSSoT整合を確認した上で、ユーザーの明示指示時だけbaselineを更新する。
