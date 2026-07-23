@@ -1,0 +1,88 @@
+---
+import { withBase } from "../../lib/utils/paths";
+import type { SiteMenuLink } from "../../lib/site/menu";
+
+export interface Props {
+  prevPage?: SiteMenuLink;
+  nextPage?: SiteMenuLink;
+}
+
+const { prevPage, nextPage } = Astro.props;
+---
+
+{
+  (prevPage || nextPage) && (
+    <nav class="page-navigation" aria-label="ページ間ナビゲーション">
+      {prevPage && (
+        <a class="page-navigation-link" href={withBase(prevPage.href)}>
+          <span class="page-navigation-icon" aria-hidden="true">◀</span>
+          <span class="page-navigation-label">{prevPage.label}</span>
+        </a>
+      )}
+      {nextPage && (
+        <a
+          class="page-navigation-link page-navigation-link-next"
+          href={withBase(nextPage.href)}
+        >
+          <span class="page-navigation-label">{nextPage.label}</span>
+          <span class="page-navigation-icon" aria-hidden="true">▶</span>
+        </a>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .page-navigation {
+    display: flex;
+    max-width: var(--content-width);
+    margin: var(--space-12) auto 0;
+    gap: var(--space-4);
+  }
+
+  .page-navigation-link {
+    display: inline-flex;
+    min-width: 0;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--color-link);
+    font-size: var(--text-base);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .page-navigation-link-next {
+    margin-left: auto;
+  }
+
+  .page-navigation-label {
+    text-decoration: underline;
+    text-decoration-color: color-mix(
+      in srgb,
+      var(--color-link) 55%,
+      transparent
+    );
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+
+  .page-navigation-link:hover .page-navigation-label {
+    text-decoration-color: currentColor;
+  }
+
+  .page-navigation-icon {
+    flex: 0 0 auto;
+    font-size: 0.78em;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  @media (width < 30rem) {
+    .page-navigation {
+      gap: var(--space-2);
+    }
+  }
+</style>

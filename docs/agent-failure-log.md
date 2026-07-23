@@ -86,6 +86,33 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Page navigation contract test ran before and then misread the 404 output path
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: `ex-01-page-navigation-links` の `npm test`
+- 観測した失敗: 公開build HTML contract testを既存node test globに置いたため、build前に実行して失敗した。移動後の再実行ではAstroの404出力が`dist/404.html`であることを見落とし、`dist/404/index.html`を読もうとして再び失敗した。
+- 一次対応: contract testを通常のnode test glob外へ移し、`npm run build:public`の後に実行するscriptへ分離した。404の出力pathを明示的に扱うよう修正した。
+
+### Misread the PageToc confirmation page heading instruction
+
+#### 2026-07-23
+
+- source: user
+- 発生箇所: `ex-01-page-navigation-links` の `/-local/page-navigation` 確認ページ
+- 観測した失敗: ユーザーの「見出しなくて良い」を、本文の`h1`も不要という意味に誤解した。本来は、PageTocに表示される`h2`以下の見出しを置かないという意図だった。
+- 一次対応: `h1`を復元し、確認ページは`h1`のみ、PageToc項目となる`h2`以下なしの構成へ修正した。
+
+### Visual capture rerun exposed unrelated Pagefind search failures
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: `ex-01-page-navigation-links` の `npm run visual:capture`
+- 観測した失敗: Pagefind indexなしの初回captureでは検索UIの2件が失敗した。index生成後の再実行では、`-local/data-cards`もindex化されたため、既存の検索結果testが同一アンカーを2件見つけ、search modalの3件がstrict locatorで失敗した。
+- 一次対応: 前後ナビゲーションのVisual Reviewは、対象componentだけを実行するcaptureで継続する。`-local`ページのindex除外またはsearch testの対象絞り込みはcurrent issue外として扱い、恒久対応を別途検討する。
+
 ### Visual capture repeated without the required Pagefind index
 
 #### 2026-07-23

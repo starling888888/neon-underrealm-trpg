@@ -8,6 +8,8 @@ export type SiteMenuItem = {
   expandWhenCurrent?: boolean;
 };
 
+export type SiteMenuLink = Pick<SiteMenuItem, "href" | "label">;
+
 export type SiteMenuItemState = "current" | "ancestor" | "none";
 
 export const siteMenuItems: SiteMenuItem[] = [
@@ -111,6 +113,38 @@ export const siteMenuItems: SiteMenuItem[] = [
     href: "/release-notes",
   },
 ];
+
+export const siteMenuLinks = flattenSiteMenuItems(siteMenuItems);
+
+export function getSiteMenuLink(href: string): SiteMenuLink {
+  const link = siteMenuLinks.find((item) => item.href === href);
+
+  if (!link) {
+    throw new Error(`Unknown site menu path "${href}".`);
+  }
+
+  return link;
+}
+
+export function flattenSiteMenuItems(
+  items: readonly SiteMenuItem[],
+): SiteMenuLink[] {
+  const links = items.flatMap(({ href, label, children }) => [
+    { href, label },
+    ...(children ? flattenSiteMenuItems(children) : []),
+  ]);
+  const hrefs = new Set<string>();
+
+  for (const { href } of links) {
+    if (hrefs.has(href)) {
+      throw new Error(`Duplicate site menu path "${href}".`);
+    }
+
+    hrefs.add(href);
+  }
+
+  return links;
+}
 
 export function getSiteMenuItemState(
   item: SiteMenuItem,

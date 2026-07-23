@@ -2,7 +2,7 @@
 
 ネオン・アンダーレルムTRPG の公式ルールサイトを構築するための静的サイトプロジェクトです。
 
-初期実装では、PL向けの基本ルール、世界観、キャラクターメイキング、データ、アイテム、戦闘ルール、成長ルール、更新履歴を、静的サイトとして公開・更新できる状態にすることを優先します。
+初期実装では、PL向けの基本ルール、世界観、キャラクターメイキング、Webキャラクターシート、データ、アイテム、戦闘ルール、成長ルール、更新履歴を、静的サイトとして公開・更新できる状態にすることを優先します。1st stepでは、初回告知を見た人がなるべく長くサイトを読み、「遊んでみたい」と思えることを目指します。
 
 ## 技術スタック
 
@@ -44,7 +44,7 @@ npm run visual:install
 - `npm run check`: Astro / TypeScript / Biome の確認を実行する
 - `npm run build`: 静的サイトをビルドする
 - `npm run build:public`: GitHub Pages公開用にビルドし、`-local` 配下のローカル確認用routeを `dist/` から除外する
-- `npm test`: Node.js test runnerでユニットテストを実行し、結果を `test-results/` に出力する
+- `npm test`: Node.js unit testに加え、GitHub Pages公開用buildと公開HTMLのcontract testを実行する。buildにより `dist/` を再生成し、`dist/-local/` を除外する。unit test結果は `test-results/` に、contract test結果は標準出力に出力する
 - `npm run format`: BiomeとMarkdown formatterを実行する
 - `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
 - `npm run check:md`: Markdown `.md` のformat / 最小style ruleを確認する
@@ -52,7 +52,7 @@ npm run visual:install
 - `npm run visual:capture`: PlaywrightでVisual Review用スクリーンショットを取得する
 - `npm run visual:install`: Visual Review用のChromiumをインストールする
 
-`npm test` はロジック検証用です。Visual Review用スクリーンショット取得は `npm run visual:capture` を使います。
+`npm test` はロジックと公開HTMLのcontract検証用です。Visual Review用スクリーンショット取得は `npm run visual:capture` を使います。
 
 ## 別端末からCodexセッションへ接続する
 
@@ -296,6 +296,6 @@ Visual Reviewの失敗を隠す目的で、actual screenshotを直接 `docs/desi
 
 ## 初期スコープ外
 
-GMガイド、シナリオ本文、キャラクターシート、ダイスローラー、CMS、認証、DB、サーバーサイド処理、アクセス解析などは初期実装に含めません。
+GMガイド、シナリオ本文、キャラクター作成ウィザード、ダイスローラー、CMS、認証、DB、サーバーサイド処理、アクセス解析などは初期実装に含めません。Webキャラクターシートのログイン、サーバー保存、共有、PDF出力も初期スコープ外です。
 
 詳細は [初期スコープ外](docs/out-of-scope.md) を参照してください。

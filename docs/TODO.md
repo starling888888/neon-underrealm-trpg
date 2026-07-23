@@ -49,7 +49,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - source: `20-2-introduction-page` のコンテンツ検討時のユーザー指示
   - classification: follow-up
   - plan: `docs/plan.md` の `41-2-support-page`
-  - handling plan: 本作で多数のダイスを使用することからオンラインセッションを推奨し、オンラインセッションの準備と進め方を説明する。特定ツールを必須にせず、Webキャラクターシート、ダイスローラー、戦闘支援機能は作らない。
+  - handling plan: 本作で多数のダイスを使用することからオンラインセッションを推奨し、オンラインセッションの準備と進め方を説明する。特定ツールを必須にせず、サポートページ内にダイスローラー、戦闘支援機能は作らない。
 
 - [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
   - source: `17-github-actions-deploy-basic` issue review
@@ -71,8 +71,8 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
   - source: `28-0-common-skills-data` 実装中のユーザー指示
-  - classification: out-of-scope follow-up
-  - plan: `docs/out-of-scope.md` のWebキャラクターシート・DB利用を扱う将来タスク。現時点で対応する `docs/plan.md` 項目はない。
+  - classification: future data compatibility follow-up
+  - plan: `ex-02-web-character-sheet` の初期範囲外。永続保存を追加する場合は、別taskを計画する。
   - handling plan: キャラクターシート機能がDBなどへスキルIDと取得レベルを保存する前に、名称、所属、区分、タイミングなどID入力値の変更で同一スキルのIDが変わったことを検出してエラーにする方式を設計する。比較に使う不変キーまたは移行マッピング、既存保存データとの照合時点、エラー表示、移行手順を決定し、ID変更を黙って保存データへ適用しない。
 
 - [ ] Footerからクレジット導線を出すか将来検討する

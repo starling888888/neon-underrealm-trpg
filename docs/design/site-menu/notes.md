@@ -98,7 +98,7 @@
 - source branch / commit when applicable: initial version `11-site-menu`; updated for `12-1-site-menu-layout-copy`
 - route when applicable: `/`
 - viewport: desktop `1440x1200`
-- prompt summary or capture notes: PC左サイド常設サイトメニューのinitial draft画像を `12-1-site-menu-layout-copy` 向けに更新した。`base-layout` の左レールをSiteMenuへ置き換える前提で、global stylesとHeader / Footerの方向性を維持する。サイドバー本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、メニュー項目を上に詰めた。親カテゴリもリンクとして扱い、最大3階層の親子階層が分かることを優先する。階層を持つ項目には、折りたたみ可能であることが分かる disclosure indicator を階層レベルに関係なく同じ右端ラインへ表示する。項目表示の正確性はdesign画像では固定しないため、画像内ラベルはASCIIの短い代表ラベルにしている。サイドメニュー幅は3階層表示の読みやすさを見て判断する。mobile drawer、現在地ハイライト、PageToc、検索、パンくず、前後ナビゲーションなど後続タスクや初期スコープ外の機能は描き込まない。
+- prompt summary or capture notes: PC左サイド常設サイトメニューのinitial draft画像を `12-1-site-menu-layout-copy` 向けに更新した。`base-layout` の左レールをSiteMenuへ置き換える前提で、global stylesとHeader / Footerの方向性を維持する。サイドバー本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、メニュー項目を上に詰めた。親カテゴリもリンクとして扱い、最大3階層の親子階層が分かることを優先する。階層を持つ項目には、折りたたみ可能であることが分かる disclosure indicator を階層レベルに関係なく同じ右端ラインへ表示する。項目表示の正確性はdesign画像では固定しないため、画像内ラベルはASCIIの短い代表ラベルにしている。サイドメニュー幅は3階層表示の読みやすさを見て判断する。mobile drawer、現在地ハイライト、PageToc、検索、パンくず、前後ナビゲーションなど、このdesignの対象外である後続taskの機能は描き込まない。
 
 ## Open questions
 

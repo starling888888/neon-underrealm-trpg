@@ -6,8 +6,12 @@ export interface Props extends SeoProps {
   title?: string;
   description?: string;
   showPageToc?: boolean;
+  prevPath?: string;
+  nextPath?: string;
   frontmatter?: SeoProps & {
     showPageToc?: boolean;
+    prevPath?: string;
+    nextPath?: string;
   };
 }
 
@@ -23,6 +27,8 @@ const {
   twitterCard: propTwitterCard,
   noindex: propNoindex,
   showPageToc: propShowPageToc,
+  prevPath: propPrevPath,
+  nextPath: propNextPath,
 } = Astro.props;
 
 const title = propTitle ?? frontmatter?.title;
@@ -35,6 +41,8 @@ const ogUrl = propOgUrl ?? frontmatter?.ogUrl;
 const twitterCard = propTwitterCard ?? frontmatter?.twitterCard;
 const noindex = propNoindex ?? frontmatter?.noindex;
 const showPageToc = propShowPageToc ?? frontmatter?.showPageToc ?? true;
+const prevPath = propPrevPath ?? frontmatter?.prevPath;
+const nextPath = propNextPath ?? frontmatter?.nextPath;
 ---
 
 <AppContainer
@@ -48,6 +56,8 @@ const showPageToc = propShowPageToc ?? frontmatter?.showPageToc ?? true;
   twitterCard={twitterCard}
   noindex={noindex}
   showPageToc={showPageToc}
+  prevPath={prevPath}
+  nextPath={nextPath}
 >
   <article class="mdx-layout prose">
     <slot />

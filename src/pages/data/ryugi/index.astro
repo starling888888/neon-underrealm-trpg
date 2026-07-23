@@ -7,7 +7,12 @@ import { getRyugiList } from "../../../lib/data/ryugi-list";
 import { withBase } from "../../../lib/utils/paths";
 
 const ryugiList = getRyugiList();
+const firstRyugi = ryugiList[0];
 const kenkayaDetail = getRyugiDetail("kenkaya");
+
+if (!firstRyugi) {
+  throw new Error("Missing ryugi list data.");
+}
 
 if (!kenkayaDetail) {
   throw new Error('Missing ryugi detail data for "kenkaya".');
@@ -22,6 +27,8 @@ const detailsByRyugiId: Record<string, RyugiDetail> = {
   title="流儀"
   description="仕事人の戦い方を決める流儀を一覧で確認するページです。"
   showPageToc={true}
+  prevPath="/data"
+  nextPath={`/data/ryugi/${firstRyugi.id}`}
 >
   <article class="mdx-layout prose ryugi-index">
     <h1>流儀</h1>

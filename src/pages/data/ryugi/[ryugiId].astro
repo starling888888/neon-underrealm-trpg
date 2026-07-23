@@ -16,14 +16,26 @@ export function getStaticPaths() {
 
 const { ryugiId = "" } = Astro.params;
 const detail = getRyugiDetail(ryugiId);
+const ryugiList = getRyugiList();
+const ryugiIndex = ryugiList.findIndex((ryugi) => ryugi.id === ryugiId);
 
 if (!detail) {
   throw new Error(`Unknown ryugiId "${ryugiId}".`);
 }
 
+if (ryugiIndex < 0) {
+  throw new Error(`Missing ryugi list data for "${ryugiId}".`);
+}
+
 const detailsByRyugiId: Record<string, RyugiDetail> = { [ryugiId]: detail };
 const { ryugi, skills } = detail;
 const heroAlt = `${ryugi.name}のイメージ`;
+const prevPath =
+  ryugiIndex === 0 ? "/data/ryugi" : `/data/ryugi/${ryugiList[ryugiIndex - 1].id}`;
+const nextPath =
+  ryugiIndex === ryugiList.length - 1
+    ? "/data/ikizama"
+    : `/data/ryugi/${ryugiList[ryugiIndex + 1].id}`;
 const skillCategories = [
   ["初期作成から取得できるスキル", skills.basic],
   ["流儀レベル6以上から取得できるスキル", skills.advanced],
@@ -34,6 +46,8 @@ const skillCategories = [
   title={`流儀：${ryugi.name}`}
   description={ryugi.shortDescription}
   showPageToc={true}
+  prevPath={prevPath}
+  nextPath={nextPath}
 >
   <article class="mdx-layout prose ryugi-detail">
     <h1>流儀：{ryugi.name}</h1>
