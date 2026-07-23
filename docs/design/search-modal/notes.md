@@ -73,11 +73,7 @@
 ## Generation source
 
 - implementation source: reviewed task 45 implementation on `45-search-pagefind-integration`.
-- output images:
-  - `docs/design/search-modal/design-desktop.png`
-  - `docs/design/search-modal/design-mobile.png`
-  - `docs/design/search-modal/design-desktop-results.png`
-  - `docs/design/search-modal/design-mobile-results.png`
+- VRT states: desktop / tablet / mobileで、search openとsearch resultsを比較する。
 
 ## Open questions
 

@@ -82,9 +82,7 @@
 - prototype or generator source: ユーザー承認済みの現行実装をdesign fix modeで正本化した。
 - source branch / commit when applicable: `24-2-scenario-play-page` / `e190558`
 - route: `/rules/scenario-play/`
-- viewport:
-  - `design-desktop.png`: `1440x1200`、full-page
-  - `design-mobile.png`: `390x900`、full-page
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
 - current VRT: `tests/visual/vrt/scenario-play.spec.ts` の`@vrt @scenario-play`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions

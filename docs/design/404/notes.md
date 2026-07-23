@@ -28,9 +28,7 @@
 - states:
   - desktop full-page screenshot
   - mobile full-page screenshot
-- design images:
-  - `docs/design/404/design-desktop.png`
-  - `docs/design/404/design-mobile.png`
+- VRT coverage: `tests/visual/vrt/404.spec.ts` の default state をdesktop / tablet / mobileで比較する。
 
 ## Referenced SSoT
 

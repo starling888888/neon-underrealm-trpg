@@ -20,7 +20,7 @@ Do not use for:
 - ChatGPT or remote-snapshot content drafting
 - syncing `.raw/` to or from Google Drive
 - implementing `.raw/contents/*.md` as Astro, MDX, or page source
-- creating UI, layout, Component, or design images
+- creating UI, layout, Component, or VRT baseline
 - replacing unrelated requirements, plan, issue, or design source of truth
 - using Google Docs rich-text layout as the source format
 

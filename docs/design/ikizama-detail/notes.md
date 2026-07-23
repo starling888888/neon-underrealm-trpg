@@ -74,7 +74,7 @@
 
 ## Generation source
 
-- canonicalization source: reviewed implementation screenshot。`npm run visual:capture -- --grep "@ikizama-detail"` で、スミの実装画面を取得する。
+- baseline source: `tests/visual/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail` 比較結果。baseline更新はユーザー明示指示時だけ行う。
 
 ## Open questions
 

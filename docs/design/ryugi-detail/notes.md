@@ -94,8 +94,8 @@
     - `data/generated/ryugi-list.json` のケンカヤの説明、補足、基礎能力値、副能力増加値、共通スキルボーナスを表示した。
     - `data/generated/ryugi-skills.json` のケンカヤのプライマリボーナス `気合十分` を表示した。
     - `public/images/data/ryugi/kenkaya_hero.webp` をprototypeへ埋め込んでcaptureした。
-    - `design-desktop.png` と `design-mobile.png` は、流儀スキル一覧の前で終えるfull-page screenshotである。
-- canonicalization: reviewed implementation screenshotをdesign fixとして正本化する。
+    - VRT baselineは、流儀スキル一覧の前で終える状態を比較する。
+- baseline update: reviewed implementationとの差分を確認し、ユーザーが明示指示した場合だけ更新する。
 
 - implementation state: `8327e05`後の未コミット変更。summaryを非表示にする共有`SkillCard`の表示方針を含む。
 

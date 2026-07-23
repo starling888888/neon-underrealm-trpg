@@ -26,9 +26,7 @@
 - states:
   - desktop landscape card, 1 column
   - mobile landscape card, 1 column
-- design images:
-  - `design-desktop.png`
-  - `design-mobile.png`
+- VRT coverage: `tests/visual/vrt/npc-card.spec.ts`のdesktop / tablet / mobile baseline
 
 ## Referenced SSoT
 
@@ -101,9 +99,8 @@
 ## Canonicalization rationale
 
 - user approval: `デザイン正本化。ワールドガイドとローカル用のNPCカード用ページ。`（2026-07-22）。
-- `design-desktop.png` と `design-mobile.png` は、`test-results/visual/npc-card-desktop.png` と `test-results/visual/npc-card-mobile.png`から、ユーザー承認後に置き換えたactual implementation screenshotである。
 - 旧正本との差分は、個別NPC画像、セリフ、グループごとの左右交互配置である。横長1列、`4:5`画像領域、二つ名のruby / 文字色、shadowなしの方針は維持する。
-- 今後のVisual Reviewでは、`docs/design/npc-card/design-desktop.png` と `design-mobile.png` をNpcCardの比較基準とする。
+- 今後のVisual Reviewでは、NpcCardのVRT baselineを比較基準とする。
 
 ## Open questions
 

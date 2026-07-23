@@ -78,9 +78,7 @@
 - prototype or generator source: ユーザー承認済みの現行実装をdesign fix modeで正本化した。
 - source branch / commit when applicable: `23-2-rules-page` / `42f0580`
 - route: `/rules/`
-- viewport:
-  - `design-desktop.png`: `1440x1200`、full-page
-  - `design-mobile.png`: `390x900`、full-page
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
 - current VRT: `tests/visual/vrt/rules.spec.ts` の`@vrt @rules`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions

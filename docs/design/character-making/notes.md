@@ -81,10 +81,7 @@
 - source branch: `22-2-character-making-page`
 - source route: `/character-making/`
 - current VRT: `tests/visual/vrt/character-making.spec.ts` の`@vrt @character-making`で、desktop / tablet / mobileを比較する。
-- source artifacts:
-  - `test-results/visual/character-making-desktop.png`
-  - `test-results/visual/character-making-tablet.png`
-  - `test-results/visual/character-making-mobile.png`
+- snapshots: `canonical-snapshots/visual/character-making/` のdesktop / tablet / mobile baseline
 - hero asset: `public/images/character-making/hero.webp`
 - hero prompt: `.tmp/hero-prompt.md`
 - canonicalization: ユーザーは2026-07-12に、contents review後のdesktop / mobile Visual Review actualをdesign正本へ反映することを明示承認した。ページ固有のinitial draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign正本として採用する。

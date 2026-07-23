@@ -51,7 +51,7 @@ After explicit local issue creation authorization, the local workflow is:
 4. Check whether a matching `docs/issue/NN-slug.md` already exists.
 5. Check `docs/TODO.md` for related follow-up items.
 6. For UI, CSS, layout, page, or component tasks, check whether a relevant design target exists under `docs/design/`.
-7. If design images are needed but missing, route design creation to `design-image-generation` initial draft mode instead of implementing UI.
+7. If required design intent or VRT reference notes are missing, route the notes work to `design-image-generation` instead of implementing UI.
 8. Create `.tmp/review/<branch-name>/` after creating the branch.
 9. Create or validate `docs/issue/NN-slug.md`.
 10. Write the task goal, scope, completion criteria, checkpoints, design references, TODO references, design-generation prerequisites when relevant, and review points.
@@ -88,7 +88,7 @@ In this mode, the agent must not:
 - overwrite user changes
 - update `docs/plan.md` checkboxes
 - treat a remote draft as final before local validation
-- create design images unless the user explicitly asks to run `design-image-generation`
+- create design notes unless the user explicitly asks to run `design-image-generation`
 
 ### Remote snapshot draft mode
 
@@ -112,7 +112,7 @@ In this mode, the agent must not:
 - implement code
 - update repository files
 - update `docs/plan.md`
-- claim design images were generated or verified locally
+- claim design notes or VRT baselines were generated or verified locally
 - create `.tmp/review/` files
 - run reviewer subagents
 
@@ -254,7 +254,7 @@ Check:
 - checkpoints cover build, check, subpath behavior, unnecessary dependencies, and scope discipline when relevant
 - expected files match the likely implementation area
 - design references are recorded for UI, CSS, layout, page, or component tasks
-- when design images are missing, `design-image-generation` initial draft mode is recorded as a pre-implementation prerequisite
+- when design intent or VRT reference notes are missing, `design-image-generation` is recorded as a pre-implementation prerequisite
 - related `docs/TODO.md` items are referenced or deliberately left for later
 - existing code paths mentioned in the issue exist or are clearly marked as planned
 - the issue does not contradict `AGENTS.md`, this skill, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, `docs/plan.md`, or relevant `docs/design/` files
@@ -302,23 +302,21 @@ docs/design/components/
 
 Record the design target and key reference files in `背景`, `対象範囲`, `完了条件`, `レビュー観点`, or `備考`, whichever is clearest for the task.
 
-For UI implementation tasks, design images must exist before implementation begins.
+For UI implementation tasks, relevant design intent and VRT reference notes must exist before implementation begins.
 
-If no relevant design target exists, or if the design target exists but lacks required design images, record `design-image-generation initial draft mode を実行する` as a required pre-implementation item in the issue.
+If no relevant design target exists, or if the design target lacks required notes, record `design-image-generation を実行する` as a required pre-implementation item in the issue.
 
-When design generation is required, record the expected artifacts where relevant:
+When design note preparation is required, record the expected artifact where relevant:
 
 ```txt
 docs/design/<design-target>/notes.md
-docs/design/<design-target>/design-desktop.png
-docs/design/<design-target>/design-mobile.png
 ```
 
-Design image creation belongs to `.agents/skills/design-image-generation/SKILL.md`.
+Design note preparation belongs to `.agents/skills/design-image-generation/SKILL.md`.
 
-Do not create new design images during issue-first preparation unless the user explicitly asks to run `design-image-generation`.
+Do not create or update design notes during issue-first preparation unless the user explicitly asks to run `design-image-generation`.
 
-Do not treat unreviewed initial design drafts as final design source of truth.
+Do not treat an unapproved VRT baseline update as a final design source of truth.
 
 In remote snapshot draft mode, record whether the design target was found in the fetched snapshot. Do not assume local design files exist.
 
@@ -478,7 +476,7 @@ Report the following to the user:
 - 初期スコープ外が明確か
 - 完了条件がレビュー可能か
 - 関連TODOをこのissueで扱ってよいか
-- design画像作成を別タスクまたは前段作業として扱うべきか
+- design notesの作成またはVRT baseline更新を別タスクまたは前段作業として扱うべきか
 
 ユーザー承認後に実装を開始します。
 
@@ -536,7 +534,7 @@ Examples of work that should be split or routed:
 - Adding character sheet features during rule site work
 - Introducing a large UI library for a small component
 - Pulling unrelated TODO items into the current issue
-- Generating new design images while preparing an implementation issue
+- Creating or updating design notes while preparing an implementation issue
 
 ---
 
@@ -552,7 +550,7 @@ Follow this priority order:
 6. `docs/out-of-scope.md`
 7. `docs/plan.md`
 8. `docs/TODO.md`
-9. `.agents/skills/design-image-generation/SKILL.md` when design images are required
+9. `.agents/skills/design-image-generation/SKILL.md` when design notes or a VRT baseline update are required
 10. Relevant `docs/design/<design-target>/`
 11. Existing code
 

@@ -22,9 +22,7 @@
 - viewport:
   - mobile: `390x900`
   - desktop: `1440x1200`
-- states:
-  - `design-mobile.png`: リンク文字列のみ + 横向き三角
-  - `design-desktop.png`: リンク文字列のみ + 横向き三角
+- states: desktop / mobileともに、リンク文字列と横向き三角を表示する。
 
 ## Referenced SSoT
 

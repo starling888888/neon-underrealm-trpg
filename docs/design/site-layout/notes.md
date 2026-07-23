@@ -20,11 +20,8 @@
 
 - page / component: layout一式。`AppContainer.astro`、ToCあり本文用 `TocPageLayout.astro`、ToCなし本文用 `NoTocPageLayout.astro`、MDX本文用 `MDXLayout.astro`、Header、Footer、SiteMenu、`MobileSiteMenuDrawer.astro`、PageToc、MobilePageToc、現在ページハイライトを含む。
 - route:
-  - `design-desktop.png`: `/mdx-test/`
-  - `design-tablet.png`: `/mdx-test/`
-  - `design-mobile.png`: `/mdx-test/`
-  - `design-mobile-menu-open.png`: `/data/items/weapons/`
-  - `design-mobile-page-toc-open.png`: `/mdx-test/`
+  - standard layout / mobile page toc open: `/-local/mdx-test/`
+  - mobile menu open: `/-local/data-cards/`
 - viewport:
   - desktop: `1440x1200`
   - tablet: `820x1180`
@@ -72,7 +69,7 @@
 - `mobile-menu` と `mobile-page-toc` は役割差を維持する。MobileMenuはサイト全体のdrawer、MobilePageTocはH1付近から開く現在ページ内目次である。
 - `current-menu-highlight` の方針に従い、現在ページそのものとancestor表示は見分けられるが、hover / focusやページ内目次の現在位置ハイライトとは混同しない。
 - このdesign targetの正本化時点では `/release-notes` と `/404` は未実装routeだった。現在の `/release-notes` は `docs/design/release-notes/` を正本として扱い、このdesign targetでは横断layout状態の代表routeには含めない。
-- `/data/items/weapons/` は正式実装済みの武器一覧ページである。`design-mobile-menu-open.png` は、このルートで取得したMobileMenu open stateの横断layout参照として維持する。
+- `/-local/data-cards/` は、MobileMenu open stateを比較する横断layout用fixtureである。
 
 ## Out of scope
 
@@ -102,19 +99,16 @@
 - 現在ページハイライトはSiteMenu上で識別でき、hover / focus / disclosure open stateと混同されない。
 - `/` では不要なPageToc / MobilePageTocや空のTOC枠が表示されない。
 - `/release-notes` / `/404` をこのdesign targetで作成または描き足していない。現在の `/release-notes` の比較は `docs/design/release-notes/` で扱う。
-- design画像はfullPage screenshotを正本として扱うため、コンテンツ全体像と縦方向の破綻有無を確認できる。
+- VRT baselineで、コンテンツ全体像と縦方向の破綻有無を確認できる。
 
 ## Generation source
 
-- generator or capture source: Playwright actual screenshotをdesign fixとして正本化した。
 - source branch / commit when applicable: `16-layout-screenshot-design-refresh`
-- route / viewport / output:
-  - `/mdx-test/`, desktop `1440x1200`, fullPage: `design-desktop.png`
-  - `/mdx-test/`, tablet `820x1180`, fullPage: `design-tablet.png`
-  - `/mdx-test/`, mobile `390x900`, fullPage: `design-mobile.png`
-  - `/data/items/weapons/`, mobile `390x900`, menu open: `design-mobile-menu-open.png`
-  - `/mdx-test/`, mobile `390x900`, page toc open fullPage: `design-mobile-page-toc-open.png`
-- prompt summary or capture notes: `test-results/visual/site-layout-*.png` の実装スクリーンショットを元にした。Visual Review失敗を隠す目的ではなく、Phase 2完了時点の現行実装を後続比較の横断正本として採用する。
+- route / viewport / snapshots:
+  - `/-local/mdx-test/`, desktop `1440x1200`, tablet `820x1180`, mobile `390x900`: default state
+  - `/-local/data-cards/`, mobile `390x900`: mobile menu open
+  - `/-local/mdx-test/`, mobile `390x900`: mobile page toc open
+- baseline rationale: Phase 2完了時点の横断layoutを後続比較の基準とする。Visual Review失敗を隠す目的で更新しない。
 
 ## Differences from previous design references
 

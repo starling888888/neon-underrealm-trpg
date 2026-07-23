@@ -75,9 +75,7 @@
 - prototype or generator source: ユーザーが明示承認した現行実装をdesign fixとして正本化した。
 - source branch / commit: `25-2-battle-page` / `594448a5b3a0fd8bc3b228505f325b49e00ce544`
 - route: `/rules/battle/`
-- viewport:
-  - `design-desktop.png`: `1440x1200`、full-page
-  - `design-mobile.png`: `390x900`、full-page
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
 - current VRT: `tests/visual/vrt/battle.spec.ts` の`@vrt @battle`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions

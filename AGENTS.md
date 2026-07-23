@@ -39,7 +39,7 @@
 - ユーザーの明示指示によりcurrent issue外のGit管理ファイルを変更する場合は、`.tmp/review/<branch-name>/user-directed-changes.md` に指示、分類、変更対象、変更前後、issueとの関係、関連commitまたはPRを記録する。要求または初期スコープ外SSoTを変更する場合は、変更元SSoTとcurrent issueも同じtaskで更新する。通常のcurrent issue内作業とGit操作は記録しない。
 - 実装中は、完了条件・チェックポイントを実際にローカル確認した時点で現在のissueへチェックを入れる。未確認項目や人間確認が必要な項目は未チェックのまま残す。
 - `docs/plan.md` のチェックボックスは、人間レビュー後のユーザー指示なしに完了扱いしない。
-- UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign参照を確認する。必要なdesign画像がない場合は `design-image-generation` に切り出す。
+- UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign intentとVRT参照情報を確認する。必要なdesign notesがない場合は `design-image-generation` に切り出す。
 - Visual Review screenshotは実装結果であり、design正本ではない。actual screenshotを直接 `docs/design/` にコピーしない。
 - VRTは高コストな比較である。Markdownのみの変更、または画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。ローカルで全件VRTを通常実行しない。全件VRTはGitHub Actionsの定期実行または公開直後の実行として別taskで整備する。
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
@@ -130,7 +130,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 主な入口は以下。
 
 - 開発タスク開始、branch作成、issue作成または検証: `.agents/skills/issue-first-development/SKILL.md`
-- design画像作成または正本化: `.agents/skills/design-image-generation/SKILL.md`
+- design intent / VRT参照情報の作成またはbaseline更新: `.agents/skills/design-image-generation/SKILL.md`
 - UI実装後のVisual Review: `.agents/skills/visual-implementation-review/SKILL.md`
 - `.tmp/*.md` のレビュー指摘取り込み: `.agents/skills/review-to-issue/SKILL.md`
 - Google Drive正本から `<repo-root>/.raw/` への同期: `.agents/skills/drive-to-raw-sync/SKILL.md`

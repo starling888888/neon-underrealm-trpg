@@ -26,9 +26,7 @@
 - states:
   - desktop: SiteMenu、PageToc、本文、hero、NpcCard
   - mobile: Header、MobilePageToc trigger、本文、hero、NpcCard
-- design images:
-  - `design-desktop.png`
-  - `design-mobile.png`
+- VRT coverage: `tests/visual/vrt/world.spec.ts` のdesktop / tablet / mobile baseline
 
 ## Referenced SSoT
 
@@ -77,9 +75,7 @@
 
 - route: `/world/`
 - current VRT: `tests/visual/vrt/world.spec.ts` の`@vrt @world`で、desktop / tablet / mobileを比較する。
-- source artifacts:
-  - `test-results/visual/world-desktop.png`
-  - `test-results/visual/world-mobile.png`
+- snapshots: `canonical-snapshots/visual/world/` のdesktop / tablet / mobile baseline
 - user approval: `デザイン正本化。ワールドガイドとローカル用のNPCカード用ページ。`（2026-07-22）。
 
 ## Canonicalization rationale

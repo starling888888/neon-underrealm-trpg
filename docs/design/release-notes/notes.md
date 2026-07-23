@@ -28,13 +28,7 @@
   - desktop full-page screenshot
   - mobile full-page screenshot
   - 現行 `data/generated/release-notes.json` の1件を表示する標準状態
-- planned design images:
-  - `docs/design/release-notes/design-desktop.png`
-    - desktop `1440x1224`
-    - `@vrt @release-notes @desktop` のfull-page snapshot。
-  - `docs/design/release-notes/design-mobile.png`
-    - mobile `390x900`
-    - `@vrt @release-notes @mobile` のfull-page snapshot。
+- VRT coverage: `@vrt @release-notes`でdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`のdefault stateを比較する。
 
 ## Referenced SSoT
 
@@ -137,8 +131,7 @@
 
 ## Comparison Points For Implementation
 
-- planned images:
-  - `design-desktop.png` と `design-mobile.png` では、full-pageの余白、ページタイトル、現行リリースノート項目、ToC非表示状態を確認する。
+- VRTでは、full-pageの余白、ページタイトル、現行リリースノート項目、ToC非表示状態を確認する。
 - `/release-notes` がToCなしページ用ラッパーを使っている前提に見えること。
 - H1直下に説明文が表示されていないこと。
 - PageToc / MobilePageToc、空TOC枠、`目次はありません` のような表示が出ていないこと。
@@ -165,9 +158,7 @@
 - source branch / commit when applicable: `19-2-release-notes-page` / `a9997b0`
 - historical issue: `docs/issue/done/phase-3/19-2-release-notes-page.md`
 - route when applicable: `/release-notes`
-- viewport / planned output:
-  - `/release-notes`, desktop `1440x1200` viewportのfull-page screenshot `1440x1224`: `design-desktop.png`
-  - `/release-notes`, mobile `390x900` full-page screenshot: `design-mobile.png`
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
 - prompt summary or capture notes:
   - `19-2-release-notes-page` の実装後Visual Review結果を、ユーザー指示によりdesign fix modeで正本化した。
   - 旧design draftは複数件の代表更新履歴を描いていたが、現行実装と生成JSONは1件であるため、canonical imageは現行データ1件の表示を正とする。

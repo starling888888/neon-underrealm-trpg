@@ -1,460 +1,140 @@
 ---
 name: design-image-generation
-description: Use this skill when the user asks to create, update, or canonicalize design images under docs/design/<design-target> for UI, CSS, layout, page, or component work. This skill produces design artifacts only and must preserve requirements, out-of-scope constraints, and existing design consistency.
+description: Use this skill when the user asks to create or update design intent and VRT reference notes under docs/design/<design-target>, or to update an approved VRT baseline.
 ---
 
-# Design Image Generation Skill
+# Design Notes and VRT Baseline Skill
 
-Create or canonicalize design images used as Visual Review references.
-
-For page, layout, UI, CSS, and component initial drafts, make a standalone HTML/CSS prototype under `.tmp/` and capture it with Playwright. This is the default way to create design images.
+Maintain design intent notes and approved VRT baselines. Do not create design images.
 
 Use when the user asks to:
 
-- create an initial design image for a UI, CSS, layout, page, or component task
-- prepare design references under `docs/design/<design-target>/`
-- generate desktop / mobile design images before implementation
-- update design images after a reviewed implementation should become the new canonical design
 - create or update `docs/design/<design-target>/notes.md`
+- prepare design intent, routes, states, viewports, or comparison points for a UI task
+- record a VRT target and its snapshot names
+- create or update a Playwright VRT baseline after explicitly approving it
 
 Do not use for:
 
-- code implementation
-- Visual Review execution
-- screenshot comparison after implementation
-- PR creation
-- post-merge cleanup
+- implementation
+- Visual Review or VRT comparison before the user approves a baseline update
+- screenshot capture for a design document
+- PR creation, commit, push, or post-merge cleanup
 
-Prepare design artifacts, then stop for human review or approval.
+## Core Rule
 
-If the user asks to review, inspect, validate, or discuss a design direction, prepare only the requested analysis or draft notes and stop. Do not generate or update design images until the user explicitly asks to create, update, generate, or canonicalize the images.
+`docs/design/<design-target>/` is notes-only. The canonical visual baseline is
+the Playwright `toHaveScreenshot()` snapshot under
+`canonical-snapshots/visual/<target>/`.
 
----
+Do not create, copy, or canonicalize PNG images under `docs/design/`. Do not
+run `visual:capture`, use `test-results/` or `playwright-report/` as a design
+source, create a standalone screenshot prototype, or use an ad hoc Playwright
+command.
 
-## Core rule
+Run `npm run visual:update` only after the user explicitly approves creation or
+update of the baseline. Limit the update to the approved target. Do not update a
+baseline merely to hide a Visual Review difference.
 
-Design images must follow project SSoT.
+## Preconditions
 
-For design fix mode, use only the repository VRT workflow:
+Before editing design notes or a VRT baseline:
 
-```sh
-npm run visual:build
-npm run preview
-npm run visual:test
-```
+1. Read `AGENTS.md` and the current issue when one exists.
+2. Read the relevant requirements, out-of-scope constraints, TODOs, and
+   existing `docs/design/` notes.
+3. Identify the target, route, states, viewports, VRT test file, tags, and
+   snapshot names.
+4. For a baseline update, confirm that the user explicitly approved the
+   affected target and that the implementation difference is understood.
 
-The canonical baseline is the Playwright standard `toHaveScreenshot()` snapshot.
-`docs/design/<design-target>/` is notes-only and records the target route,
-states, viewports, VRT test name, snapshot names, and comparison rationale.
-Run `npm run visual:update` only when the user explicitly approves baseline
-creation or update after reviewing the differences.
+Stop and report missing information or an SSoT conflict. Do not implement a UI
+change from this skill.
 
-Do not create or run `.tmp/*.mjs`, `node -e`, ad hoc Playwright commands, or
-other capture scripts for design fix mode. If this workflow cannot run, stop and
-report the blocker. Do not choose a fallback capture path.
+## Notes Format
 
-Design images must not introduce UI, features, navigation, tools, or flows that contradict:
-
-- `docs/requirements.md`
-- `docs/out-of-scope.md`
-- `AGENTS.md`
-- the current task issue
-- existing design references
-- existing global style and layout direction
-
-Design images are implementation guidance. Do not draw future features just because they look useful.
-
-Keep a design prototype separate from the actual site implementation. A prototype may reproduce the intended visual structure, but it must not import, alter, or capture the in-progress application.
-
-Use raster image generation only when the design itself needs a bitmap asset, such as an illustration, texture, or non-system visual. Do not use it as the default for page or component layout drafts.
-
----
-
-## Modes
-
-### Mode A: Design initial draft
-
-Use this mode before implementation when a UI, CSS, layout, page, or component task needs a design reference.
-
-This mode creates an initial design image from:
-
-- project requirements
-- out-of-scope constraints
-- current task issue
-- existing global design
-- existing layout or component design
-- relevant content/data assumptions
-
-Output from this mode is a design draft until the user reviews and accepts it.
-
-Do not treat an unreviewed initial draft as the final design source of truth.
-
-### Mode B: Design fix / canonicalize from implementation
-
-Use this mode after implementation when the user explicitly wants a reviewed implementation screenshot to become the new canonical design image.
-
-This mode may use actual implementation screenshots as the basis for `docs/design/<design-target>/design-*.png`.
-
-This mode is allowed only when:
-
-- the relevant implementation has been reviewed
-- differences from the previous design reference are understood
-- the differences do not contradict requirements, out-of-scope constraints, global styles, or layout direction
-- the user explicitly approves canonicalizing the implementation screenshot as design source of truth
-
-Do not update design source-of-truth images merely to hide Visual Review mismatches.
-
----
-
-## Required inputs
-
-Before generating or canonicalizing design images, identify:
-
-- design target name
-- target page or component
-- target route when applicable
-- viewport requirements
-- desktop / mobile requirements
-- relevant UI states
-- source task issue
-- relevant plan item
-- relevant TODO item when applicable
-- existing design references to preserve
-- whether this is initial draft mode or design fix mode
-
-If these cannot be identified, stop and ask the user or record the missing items in `notes.md`.
-
----
-
-## SSoT references
-
-Read or inspect these sources when relevant:
-
-1. latest user instruction
-2. `AGENTS.md`
-3. current task issue under `docs/issue/`
-4. `docs/requirements.md`
-5. `docs/out-of-scope.md`
-6. `docs/plan.md`
-7. `docs/TODO.md`
-8. `docs/design/global-styles/`
-9. existing layout design under `docs/design/`
-10. existing target design under `docs/design/<design-target>/`
-11. existing implementation when design fix mode is used
-
-If these conflict, stop and ask the user.
-
----
-
-## Existing design consistency
-
-Before creating a new image, check existing design targets.
-
-At minimum, preserve consistency with:
-
-- global color direction
-- typography direction
-- spacing rhythm
-- link / button / callout treatment
-- content width and page gutter direction
-- desktop and mobile layout expectations
-
-A page or component design may vary by purpose, but it must not look like a separate site unless the task explicitly requires that.
-
----
-
-## Out-of-scope constraints
-
-`docs/out-of-scope.md` applies to design images, not only implementation code.
-
-Do not draw out-of-scope features unless the current task explicitly allows them.
-
-Examples of commonly risky design elements:
-
-- search UI
-- login UI
-- CMS or editing UI
-- character sheet tools
-- dice rollers
-- advanced filters
-- breadcrumbs
-- previous / next navigation
-- current-position table of contents highlighting
-- analytics UI
-- server-backed workflows
-
-If a design would benefit from an out-of-scope element, record it as a TODO or future note instead of drawing it into the canonical design.
-
----
-
-## Output location
-
-Design artifacts belong under:
-
-```txt
-docs/design/<design-target>/
-```
-
-Recommended files:
-
-```txt
-docs/design/<design-target>/notes.md
-docs/design/<design-target>/design-desktop.png
-docs/design/<design-target>/design-mobile.png
-```
-
-State-specific images may use explicit suffixes:
-
-```txt
-design-desktop-default.png
-design-desktop-hover.png
-design-mobile-default.png
-design-mobile-menu-open.png
-```
-
-Do not place temporary screenshots or trial images in `docs/design/` unless they are intended for review as design artifacts.
-
-Do not commit Playwright actual screenshots, `test-results/`, `playwright-report/`, or `.tmp/` artifacts as design source of truth.
-
-### Initial draft prototype files
-
-Put the temporary HTML/CSS prototype and its Playwright capture script under:
-
-```txt
-.tmp/design/<design-target>/
-```
-
-Recommended files:
-
-```txt
-.tmp/design/<design-target>/prototype.html
-.tmp/design/<design-target>/capture.mjs
-```
-
-These files are temporary and must not be committed. Capture the prototype at the recorded viewport, inspect the result, and place only the selected design reference images in `docs/design/<design-target>/`.
-
-The prototype capture is not an actual implementation screenshot. Do not use the local application route, `test-results/`, or `playwright-report/` as its source.
-
----
-
-## notes.md requirements
-
-Every design target should include `notes.md`.
-
-Use this structure:
+Create or update `docs/design/<design-target>/notes.md` with the information
+needed to understand and review the target:
 
 ```md
 # <design-target>
 
-## Mode
+## VRT baseline
 
-- initial draft / design fix
+- test: `tests/visual/vrt/<target>.spec.ts` and its tags
+- route:
+- states:
+- snapshots:
+- baseline update: user approval is required before `npm run visual:update`
 
 ## Target
 
 - page / component:
-- route:
-- viewport:
-- states:
+- viewports:
 
 ## Referenced SSoT
 
-- `docs/requirements.md`
-- `docs/out-of-scope.md`
-- `docs/plan.md`
-- `docs/TODO.md` when relevant
-- `docs/issue/<task>.md`
-- `docs/design/<design-target>/`
+- ...
 
 ## Design direction
 
-- visual direction
-- layout direction
-- typography direction
-- color / accent usage
+- ...
 
-## Existing design constraints
+## Existing constraints
 
-- global styles to preserve
-- layout assumptions to preserve
-- component conventions to preserve
+- ...
 
 ## Out of scope
 
-- elements intentionally not shown
-- future ideas intentionally not included
+- ...
 
-## Comparison points for implementation
+## Comparison points
 
-- what Visual Review should compare
-- what differences are acceptable
-- what differences need review
-
-## Generation source
-
-- prototype or generator source:
-- source branch / commit when applicable:
-- route when applicable:
-- viewport:
-- prototype path / prompt summary / capture notes:
+- ...
 
 ## Open questions
 
-- unresolved design questions
-```
-
-Do not rely on the image alone to carry design intent.
-
----
-
-## Viewport rules
-
-Default viewport targets should align with Visual Review capture settings when possible.
-
-Recommended defaults:
-
-- desktop: `1440x1200`
-- mobile: `390x900`
-
-If a different viewport is required, record it in `notes.md`.
-
-Component-only designs may use a smaller frame, but the frame size must be recorded.
-
----
-
-## Text in initial design images
-
-Do not rely on raster image generation for exact text.
-
-Rules:
-
-- use the HTML prototype when exact Japanese text, heading hierarchy, spacing, or responsive behavior needs design review
-- use representative blocks or short labels in raster-generated assets when exact text is not required
-- record exact wording in `notes.md` or implementation, not only in an image
-- do not treat raster-generated text accuracy as a design requirement unless explicitly requested
-
----
-
-## Initial draft workflow
-
-1. Identify the design target.
-2. Read project SSoT and current task issue.
-3. Check `docs/TODO.md` for related design follow-ups.
-4. Check existing global and layout design references.
-5. Identify out-of-scope elements that must not be drawn.
-6. Determine viewport and state coverage.
-7. Create a standalone HTML/CSS prototype in `.tmp/design/<design-target>/`. Do not alter application source files.
-8. Use Playwright to capture the prototype at every required viewport and state.
-9. Inspect the captures and create VRT snapshots only after explicit user approval.
-10. Create or update `notes.md` with design intent, prototype path, route, state, viewport, VRT test, and snapshot references.
-11. If a bitmap asset is still needed, use image generation only for that asset and record its source in `notes.md`.
-12. Stop for human review.
-
-Do not proceed to implementation from this skill.
-
-If `notes.md` is being created or updated as a review checkpoint before image generation, stop after `notes.md` and report the unresolved design questions. Generate image drafts only after explicit user approval of that next step.
-
----
-
-## Design fix workflow
-
-1. Confirm the user asked to canonicalize from implementation.
-2. Identify source branch, commit, route, and viewport.
-3. Capture or inspect actual implementation screenshots through the VRT test.
-4. Compare actual screenshots against existing design references.
-5. Explain the differences.
-6. Confirm the differences are compatible with requirements, out-of-scope constraints, global styles, and layout direction.
-7. Ask for explicit approval before creating or updating the VRT baseline.
-8. After approval, run `npm run visual:update`. Do not copy artifacts directly into `docs/design/`.
-9. Update `notes.md` and report the snapshot baseline change.
-
-Do not canonicalize implementation screenshots just because they exist.
-
-Do not canonicalize screenshots to make a Visual Review failure disappear.
-
----
-
-## Relationship to visual-implementation-review
-
-This skill and `visual-implementation-review` have different responsibilities.
-
-`design-image-generation`:
-
-- creates initial design references
-- updates canonical design references after explicit approval
-- maintains `docs/design/<design-target>/` artifacts
-
-`visual-implementation-review`:
-
-- captures actual implementation screenshots
-- compares actual screenshots with canonical design references
-- reports mismatches
-- may propose implementation fixes
-
-Visual Review actual screenshots are not canonical design images until explicitly approved and moved into `docs/design/<design-target>/` by this workflow or an equivalent approved process.
-
----
-
-## Approval gates
-
-Initial draft mode:
-
-- create design draft and notes
-- stop for user review
-- do not treat the draft as approved until the user says so
-
-Design fix mode:
-
-- capture or inspect actual screenshot
-- explain differences from existing design
-- stop before canonical replacement unless approval is already explicit
-- update canonical design only after explicit approval
-
----
-
-## Final report
-
-After creating or updating design artifacts, report:
-
-```md
-## デザイン画像作成結果
-
-- mode: initial draft / design fix
-- design target: `docs/design/<design-target>/`
-- updated files:
-  - `docs/design/<design-target>/notes.md`
-  - `docs/design/<design-target>/design-desktop.png`
-  - `docs/design/<design-target>/design-mobile.png`
-
-## 参照したSSoT
-
-- ...
-
-## 守ったスコープ
-
-- ...
-
-## 初期スコープ外として描かなかったもの
-
-- ...
-
-## レビューしてほしい点
-
 - ...
 ```
 
----
+Record the intent in text. Do not rely on a screenshot that is not in the VRT
+baseline to carry a design decision.
 
-## What this skill does not do
+## Workflow
 
-This skill does not:
+### Design intent or VRT reference notes
 
-- implement source code
-- replace Visual Review
-- update `docs/plan.md` checkboxes
-- commit temporary screenshots
-- commit `test-results/`
-- commit `playwright-report/`
-- commit `.tmp/`
-- introduce out-of-scope features through design images
-- turn implementation screenshots into canonical design without approval
+1. Identify the design target and its relationship to the current task.
+2. Read the required SSoT and existing design notes.
+3. Record the route, states, viewports, constraints, and comparison points in
+   `notes.md`.
+4. If the VRT target does not yet exist, record that implementation work must
+   add it; do not create implementation code from this skill.
+5. Stop and report the notes and open questions.
+
+### Approved VRT baseline update
+
+1. Confirm the explicit user approval and the affected target tags.
+2. Build the VRT fixture and use the existing 4321 preview server.
+3. Run the target-only VRT comparison and inspect any difference.
+4. Update only the approved target with `npm run visual:update` and its target
+   tag.
+5. Run the same target-only comparison without `--update-snapshots`.
+6. Update `notes.md` when the route, state, viewport, test, or snapshot mapping
+   changed.
+7. Stop and report. Do not commit or push.
+
+Do not run a full local VRT suite unless the user explicitly asks or the task is
+to investigate VRT infrastructure.
+
+## Required Report
+
+Report:
+
+- mode: notes update / approved baseline update
+- design target and changed files
+- VRT target, tags, and snapshots when applicable
+- SSoT and constraints checked
+- commands run and their results
+- open questions or unverified items
+- Git operations: not performed unless explicitly instructed

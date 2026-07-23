@@ -115,7 +115,7 @@
 
 - actual desktop: `test-results/visual/ryugi-index-desktop.png`
 - actual mobile: `test-results/visual/ryugi-index-mobile.png`
-- report: `test-results/visual/capture-manifest.json`
+- report: Playwright VRT output（legacy capture manifestはPhase Dで削除済み）
 
 ### レビュー結果
 
@@ -167,7 +167,7 @@
 - source: local-pr-review
 - classification: valid
 - local validation: `docs/design/ryugi-index/notes.md`はPageTocをH2の2項目だけと定めるが、push済みheadのdesktop / mobile screenshotでは`RyugiDataSection`内H3も表示される。`tests/visual/ryugi-index.spec.ts`は生成データの正当な変更でも失敗しうる固定件数・固定名称を検証している。contentsの旧HTMLコメントは、最新ユーザー指示、current issue、designで採用した名称リンクと`shortDescription`だけの一覧、および流儀メニュー対応と矛盾する。
-- stale: review開始時のcapture manifestがPR head以前を指す指摘は、push済みheadで`npm run visual:capture -- --grep "@ryugi-index"`を再実行して解消した。
+- stale: review開始時のlegacy capture manifestがPR head以前を指す指摘は、当時の再実行で解消した。Phase Dで`visual:capture`を削除し、現行は`@vrt @ryugi-index`のtarget限定比較を使う。
 
 ### 対応方針
 

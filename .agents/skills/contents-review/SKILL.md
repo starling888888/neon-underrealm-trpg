@@ -18,7 +18,7 @@ Do not use for:
 
 - drafting or revising contents
 - issue-first preparation
-- Visual Review against canonical design images
+- VRT-based Visual Review
 - link checking
 - implementation fixes
 - commit, push, or PR work
