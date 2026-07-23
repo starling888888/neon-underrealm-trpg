@@ -21,6 +21,18 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [ ] 覚悟から縁へ戻す効果の表現を整理する
+  - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
+  - classification: rule wording follow-up
+  - plan: なし。ルール文言の整理が必要になった時点で独立taskを計画する。
+  - handling plan: `src/pages/rules/battle.mdx`の「入れ替えができなくなる」と、スキル効果の「覚悟を縁に戻す」を、覚悟を解除する効果は許可する意図が明確になる表現へ整理する。生成JSONのスキル本文を変更する場合は、対応する生成元から更新する。
+
+- [ ] JSONのスキーマバージョン差異との互換性を担保する
+  - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
+  - classification: future data compatibility follow-up
+  - plan: なし。複数のJSON形式を継続して扱う必要が明確になった時点で独立taskを計画する。
+  - handling plan: 現在はスキーマバージョンを保存・比較せず、正常に処理できないJSONを一律エラーにする。将来、バージョン番号、受け入れ可能な旧形式、移行処理、エラー表示、テストfixtureを定義して互換性を担保する。
+
 - [ ] Astro Component contract testの基盤を導入する
   - source: `28-2-common-skills-page` の技術レビューにおけるユーザー指示
   - classification: test architecture follow-up
