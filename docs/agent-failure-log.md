@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Page navigation contract test ran before and then misread the 404 output path
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: `ex-01-page-navigation-links` の `npm test`
+- 観測した失敗: 公開build HTML contract testを既存node test globに置いたため、build前に実行して失敗した。移動後の再実行ではAstroの404出力が`dist/404.html`であることを見落とし、`dist/404/index.html`を読もうとして再び失敗した。
+- 一次対応: contract testを通常のnode test glob外へ移し、`npm run build:public`の後に実行するscriptへ分離した。404の出力pathを明示的に扱うよう修正した。
+
 ### Misread the PageToc confirmation page heading instruction
 
 #### 2026-07-23

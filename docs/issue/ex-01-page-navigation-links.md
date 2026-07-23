@@ -187,3 +187,50 @@
 - [x] design正本の更新が必要な場合は、人間判断項目として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `npm test` が公開buildとHTML contract testを含むようになったが、READMEはunit testだけを実行し、結果を`test-results/`へ出すと説明している。
+
+### 判定
+
+- source: local-agent
+- classification: valid
+- local validation: `package.json` の `test` は `test:node` と `test:page-navigation-contract` を順に実行する。後者は`npm run build:public`を実行するため`dist/`を再生成し、`dist/-local/`を除外する。READMEの既存説明にはこの副作用と標準出力へ出るcontract test結果がない。
+
+### 対応方針
+
+- READMEの`npm test`説明を、Node unit testに加えて公開buildとHTML contract testを実行すること、`dist/-local/`が除外されることへ更新する。
+
+### 対応完了チェックリスト
+
+- [ ] READMEの`npm test`説明を更新する
+- [ ] `npm run check` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 前後ナビゲーションの読書順、流儀・生き様詳細の境界、始端・終端、対象外ページ、GitHub Pagesのサブパスを、実際の公開buildのHTMLで回帰検知するtestがない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `tests/node/page-navigation.test.ts` は静的MDXのfrontmatterとsite menu配列を検証するが、動的ページと生成HTMLを検証しない。`tests/visual/page-navigation.spec.ts` のhrefは末尾一致のため、base path欠落を検知できない。current issueの完了条件・レビュー観点には動的データ群、始端・終端、対象外、GitHub Pagesサブパスの保証が含まれる。
+- 文書レビューのscope混在指摘はinvalidとして取り込まない。該当SSoT変更はcurrent issue作成前のユーザー明示指示に基づく `90d52cf docs: align 1st step scope` であり、PR branchに含まれた経緯を確認した。design正本化もユーザーの明示指示に基づく。
+
+### 対応方針
+
+- 公開build後のHTMLを対象に、対象区間の前後リンク数とhrefを検証するcontract testを追加する。
+- 流儀・生き様のデータ群境界、`/introduction`と`/advancement`の片側リンク、対象外ページの非表示、`/neon-underrealm-trpg/` prefixを明示的にassertする。
+
+### 対応完了チェックリスト
+
+- [x] 公開build HTMLの前後ナビゲーションcontract testを追加する
+- [x] 動的データ群の境界、始端・終端、対象外ページ、GitHub Pagesサブパスを検証する
+- [x] `npm test` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
