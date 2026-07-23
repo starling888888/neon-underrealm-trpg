@@ -131,6 +131,7 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 ## 備考
 
 - VRT baseline移行はこのissueのPhase Dで扱う。baselineの初回作成・更新は、Phase Cの差分をレビューした後の明示指示まで実行しない。
+- ユーザー指示により、`50-1-vrt-css-regression-guards` は本issueのPhase Dへ統合した。`docs/plan.md` に独立taskは残さず、Phase DでVRTのroute・状態・3 viewport baseline、横overflow・MobilePageToc・TOC非表示の回帰検知を扱う。
 - 検証・修正計画・修正実装の各段階で、未確認事項とユーザー判断が必要な項目を混在させずに報告する。
 - Phase A の完了報告は本 issue の実装承認ではない。Phase B の修正計画を確認した後、ユーザーが「修正開始」と明示した場合にだけ Phase C へ進む。
 - ユーザー指示により、Phase Cの完了・レビュー後にはPhase Dで全design正本をPlaywright標準VRT baselineへ移行する。Phase DはVisual Reviewのactual screenshotをそのまま正本化する工程ではなく、既存正本との差分とSSoT整合を確認した上で、ユーザーの明示指示時だけbaselineを更新する。
@@ -154,6 +155,6 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 
 ### 対応完了チェックリスト
 
-- [ ] Phase Dと50-1の責務分担をユーザー確認のうえで明文化する。
+- [x] Phase Dと50-1の責務分担をユーザー確認のうえで明文化する。
 - [x] `header-footer` のnotesを現行WebP実装と整合させる、またはPhase Dのnotes-only移行で置き換える。
 - [ ] 対応後に必要なVRT・`npm run check`・`npm run build`を実行する。
