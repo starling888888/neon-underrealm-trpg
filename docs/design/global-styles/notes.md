@@ -1,5 +1,16 @@
 # Global Styles Design Notes
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT global-styles default <viewport>`
+- route: `/-local/style-tiles/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `global-styles-default-desktop.png`
+  - tablet `820x1180`: `global-styles-default-tablet.png`
+  - mobile `390x900`: `global-styles-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## 目的
 
 07-global-styles で実装するCSS基盤のデザイン方針を定義する。

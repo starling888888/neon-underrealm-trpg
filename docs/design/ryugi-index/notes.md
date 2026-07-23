@@ -1,5 +1,16 @@
 # ryugi-index
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT ryugi-index default <viewport>`
+- route: `/data/ryugi/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `ryugi-index-default-desktop.png`
+  - tablet `820x1180`: `ryugi-index-default-tablet.png`
+  - mobile `390x900`: `ryugi-index-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -84,18 +95,6 @@
   - `public/images/data/ryugi_hero.webp` をdata URLとしてprototypeへ埋め込み、ページ側の文字overlayやcaptionは追加していない。
   - 流儀一覧は入力順の代表6件を表示し、名称リンクとshortDescriptionだけを示す。実装時は全件を生成データから表示する。
 - canonicalization source: review済み実装の`/data/ryugi`を、ユーザー承認後に公式visual capture workflowでdesktop / mobileともにcaptureする。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- ryugi-index --route /data/ryugi/`
-- source branch: `29-2-ryugi-index-page`
-- source commit: `77d56aa4ecc187de2ac3431a27b1e004275e8ab1`
-- route: `/data/ryugi/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

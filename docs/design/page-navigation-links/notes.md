@@ -1,5 +1,16 @@
 # page-navigation-links
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT page-navigation-links default <viewport>`
+- route: `/-local/page-navigation/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `page-navigation-links-default-desktop.png`
+  - tablet `820x1180`: `page-navigation-links-default-tablet.png`
+  - mobile `390x900`: `page-navigation-links-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -67,18 +78,6 @@
   - mobile: `.tmp/design/page-navigation-links/prototype.html`
   - desktop: `.tmp/design/page-navigation-links/prototype-desktop.html`
 - canonicalization capture: `tests/visual/page-navigation.spec.ts` の `@page-navigation-links`
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- page-navigation-links --route /-local/page-navigation/`
-- source branch: `ex-01-page-navigation-links`
-- source commit: `88856c1f1bdd1f64f2a9acb282d7151c44034ebd`
-- route: `/-local/page-navigation/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

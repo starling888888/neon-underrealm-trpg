@@ -1,5 +1,16 @@
 # ikizama-detail
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT ikizama-detail default <viewport>`
+- route: `/data/ikizama/burai/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `ikizama-detail-default-desktop.png`
+  - tablet `820x1180`: `ikizama-detail-default-tablet.png`
+  - mobile `390x900`: `ikizama-detail-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -64,18 +75,6 @@
 ## Generation source
 
 - canonicalization source: reviewed implementation screenshot。`npm run visual:capture -- --grep "@ikizama-detail"` で、スミの実装画面を取得する。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- ikizama-detail --route /data/ikizama/sumi/`
-- source branch: `32-2-ikizama-detail-page`
-- source commit: `eceea3157418fa3d3e033daf009494485dfafd1a`
-- route: `/data/ikizama/sumi/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

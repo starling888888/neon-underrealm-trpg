@@ -1,5 +1,16 @@
 # current-menu-highlight
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT current-menu-highlight default <viewport>`
+- route: `/world/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `current-menu-highlight-default-desktop.png`
+  - tablet `820x1180`: `current-menu-highlight-default-tablet.png`
+  - mobile `390x900`: `current-menu-highlight-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft

@@ -1,5 +1,17 @@
 # site-layout
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT site-layout default <viewport>`
+- route: `/-local/mdx-test/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `site-layout-default-desktop.png`
+  - tablet `820x1180`: `site-layout-default-tablet.png`
+  - mobile `390x900`: `site-layout-default-mobile.png`
+- mobile state snapshots: `site-layout-mobile-menu-open-mobile.png`, `site-layout-mobile-page-toc-open-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix

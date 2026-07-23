@@ -1,5 +1,16 @@
 # introduction
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT introduction default <viewport>`
+- route: `/introduction/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `introduction-default-desktop.png`
+  - tablet `820x1180`: `introduction-default-tablet.png`
+  - mobile `390x900`: `introduction-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix

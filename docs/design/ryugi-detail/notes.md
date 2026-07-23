@@ -1,5 +1,16 @@
 # ryugi-detail
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT ryugi-detail default <viewport>`
+- route: `/data/ryugi/kenkaya/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `ryugi-detail-default-desktop.png`
+  - tablet `820x1180`: `ryugi-detail-default-tablet.png`
+  - mobile `390x900`: `ryugi-detail-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -85,18 +96,6 @@
     - `public/images/data/ryugi/kenkaya_hero.webp` をprototypeへ埋め込んでcaptureした。
     - `design-desktop.png` と `design-mobile.png` は、流儀スキル一覧の前で終えるfull-page screenshotである。
 - canonicalization: reviewed implementation screenshotをdesign fixとして正本化する。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- ryugi-detail --route /data/ryugi/kenkaya/`
-- source branch: `30-2-ryugi-detail-page`
-- source commit: `8327e058a44b8e780240afda778d832d6ad75867`
-- route: `/data/ryugi/kenkaya/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 - implementation state: `8327e05`後の未コミット変更。summaryを非表示にする共有`SkillCard`の表示方針を含む。
 

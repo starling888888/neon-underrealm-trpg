@@ -1,5 +1,15 @@
 # mobile-menu
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT mobile-menu <state> mobile`
+- route: `/data/items/weapons/`
+- states / snapshots:
+  - closed, mobile `390x900`: `mobile-menu-default-mobile.png`
+  - open, mobile `390x900`: `mobile-menu-mobile-menu-open-mobile.png`
+- desktop / tablet: mobile-only Componentのため対象外。
+- baseline update: 通常実行では比較のみ行う。ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft

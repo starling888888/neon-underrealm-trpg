@@ -74,12 +74,12 @@
 - [x] Phase B の修正計画は `fix-plan.md` に保存され、Phase C の実装対象となる報告済み版を特定できる。
 - [x] Phase C は、ユーザーの明示的な「修正開始」指示後にのみ着手している。
 - [x] 承認済み修正後、NFR-02 の画像・リンク・キーボード・フォーカス・状態表現・タップ領域の対象項目と、NFR-03 の各基準幅で、計画した確認が通っている。
-- [ ] Phase C の修正内容がレビューされ、全 design 正本を更新してよい差分であることを確認してから Phase D を実行している。
-- [ ] 各 design targetの比較画像をPlaywright標準VRT baseline snapshotへ移し、`docs/design/<design-target>/` を `notes.md` 専用にしている。
-- [ ] 各 design targetの `notes.md` にroute、状態、desktop / tablet / mobile viewport、VRT test名、baseline名、既存正本との差分と移行根拠を記録している。
-- [ ] VRT baselineの初回作成・更新はユーザーの明示指示がある場合だけ `--update-snapshots` で行い、通常実行で更新していない。
+- [x] Phase C の修正内容がレビューされ、全 design 正本を更新してよい差分であることを確認してから Phase D を実行している。
+- [x] 各 design targetの比較画像をPlaywright標準VRT baseline snapshotへ移し、`docs/design/<design-target>/` を `notes.md` 専用にしている。
+- [x] 各 design targetの `notes.md` にroute、状態、desktop / tablet / mobile viewport、VRT test名、baseline名、既存正本との差分と移行根拠を記録している。
+- [x] VRT baselineの初回作成・更新はユーザーの明示指示がある場合だけ `--update-snapshots` で行い、通常実行で更新していない。
 - [x] 関連 TODO を扱った場合、対応結果または本 issue で保留する理由が記録されている。
-- [ ] 既存 design を変更した場合、変更の必要性と design-image-generation の扱いが記録されている。
+- [x] 既存 design を変更した場合、変更の必要性と design-image-generation の扱いが記録されている。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -94,11 +94,11 @@
 - [x] Search UI、PC 版 SiteMenu の階層 disclosure、MobileMenu、MobilePageToc のキーボード開閉、Esc 閉鎖、フォーカス移動・復帰、focus outline、関連 ARIA 属性、overlay 中の背景操作抑止を確認している。
 - [x] contents 由来の指摘を、`.raw/contents` と公開実装を整合させないまま修正していない。
 - [x] PageToc / MobilePageToc の 0 / 1 件表示を、`docs/requirements/layout-navigation.md` を基準として確認し、design notes との整合方針を記録している。
-- [ ] 全 design target のVRT移行対象、route、状態、desktop / tablet / mobile coverageを一覧化し、欠けるbaselineは原因とともに報告している。
-- [ ] VRT baseline更新前に、既存正本との差分を確認し、requirements、out-of-scope、global style、layout directionとの整合を確認している。
+- [x] 全 design target のVRT移行対象、route、状態、desktop / tablet / mobile coverageを一覧化し、欠けるbaselineは原因とともに報告している。
+- [x] VRT baseline更新前に、既存正本との差分を確認し、requirements、out-of-scope、global style、layout directionとの整合を確認している。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
-- [ ] 関連する `docs/TODO.md` と既存 `docs/design/` に矛盾していない。
+- [x] 関連する `docs/TODO.md` と既存 `docs/design/` に矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
@@ -157,4 +157,4 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 
 - [x] Phase Dと50-1の責務分担をユーザー確認のうえで明文化する。
 - [x] `header-footer` のnotesを現行WebP実装と整合させる、またはPhase Dのnotes-only移行で置き換える。
-- [ ] 対応後に必要なVRT・`npm run check`・`npm run build`を実行する。
+- [x] 対応後に必要なVRT・`npm run check`・`npm run build`を実行する。

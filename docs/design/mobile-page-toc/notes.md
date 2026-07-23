@@ -1,5 +1,15 @@
 # mobile-page-toc
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT mobile-page-toc <state> mobile`
+- route: `/-local/mdx-test/`
+- states / snapshots:
+  - closed, mobile `390x900`: `mobile-page-toc-default-mobile.png`
+  - open, mobile `390x900`: `mobile-page-toc-mobile-page-toc-open-mobile.png`
+- desktop / tablet: mobile-only Componentのため対象外。
+- baseline update: 通常実行では比較のみ行う。ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft

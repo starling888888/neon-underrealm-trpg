@@ -1,5 +1,16 @@
 # header-footer
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT header-footer default <viewport>`
+- route: `/-local/header-footer/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `header-footer-default-desktop.png`
+  - tablet `820x1180`: `header-footer-default-tablet.png`
+  - mobile `390x900`: `header-footer-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## モード
 
 - initial draft

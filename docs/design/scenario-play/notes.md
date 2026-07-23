@@ -1,5 +1,16 @@
 # scenario-play
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT scenario-play default <viewport>`
+- route: `/rules/scenario-play/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `scenario-play-default-desktop.png`
+  - tablet `820x1180`: `scenario-play-default-tablet.png`
+  - mobile `390x900`: `scenario-play-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix

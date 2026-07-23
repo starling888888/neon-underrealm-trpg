@@ -1,5 +1,17 @@
 # page-toc
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT page-toc default <viewport>`
+- route: `/-local/mdx-test/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `page-toc-default-desktop.png`
+  - tablet `820x1180`: `page-toc-default-tablet.png`
+  - mobile `390x900`: `page-toc-default-mobile.png`
+- hidden state snapshots: `page-toc-no-toc-home-desktop.png`, `page-toc-no-toc-not-found-desktop.png`, `page-toc-no-toc-release-notes-desktop.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft

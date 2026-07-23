@@ -1,5 +1,16 @@
 # npc-card
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT npc-card default <viewport>`
+- route: `/-local/npc-cards/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `npc-card-default-desktop.png`
+  - tablet `820x1180`: `npc-card-default-tablet.png`
+  - mobile `390x900`: `npc-card-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -96,18 +107,6 @@
 - `design-desktop.png` と `design-mobile.png` は、`test-results/visual/npc-card-desktop.png` と `test-results/visual/npc-card-mobile.png`から、ユーザー承認後に置き換えたactual implementation screenshotである。
 - 旧正本との差分は、個別NPC画像、セリフ、グループごとの左右交互配置である。横長1列、`4:5`画像領域、二つ名のruby / 文字色、shadowなしの方針は維持する。
 - 今後のVisual Reviewでは、`docs/design/npc-card/design-desktop.png` と `design-mobile.png` をNpcCardの比較基準とする。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- npc-card --route /-local/npc-cards/`
-- source branch: `42-0-npc-data-normalization`
-- source commit: `f28b6984623e89b05b0329466de4468d7bc882bb`
-- route: `/-local/npc-cards/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

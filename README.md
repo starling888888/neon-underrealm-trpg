@@ -37,6 +37,8 @@ npm run format:md
 npm run check:md
 npm run preview
 npm run visual:capture
+npm run visual:build
+npm run visual:test
 npm run visual:install
 ```
 
@@ -50,9 +52,12 @@ npm run visual:install
 - `npm run check:md`: Markdown `.md` のformat / 最小style ruleを確認する
 - `npm run preview`: ビルド済みサイトをローカルで確認する
 - `npm run visual:capture`: PlaywrightでVisual Review用スクリーンショットを取得する
+- `npm run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
+- `npm run visual:test`: Playwright標準VRT baselineを比較する
+- `npm run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
 - `npm run visual:install`: Visual Review用のChromiumをインストールする
 
-`npm test` はロジックと公開HTMLのcontract検証用です。Visual Review用スクリーンショット取得は `npm run visual:capture` を使います。
+`npm test` はロジックと公開HTMLのcontract検証用です。VRTは `npm run visual:test` で比較し、baseline更新は明示指示時だけ `npm run visual:update` を使います。
 
 ## 別端末からCodexセッションへ接続する
 

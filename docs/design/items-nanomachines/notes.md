@@ -1,5 +1,16 @@
 # items-nanomachines
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT items-nanomachines default <viewport>`
+- route: `/data/items/nanomachines/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `items-nanomachines-default-desktop.png`
+  - tablet `820x1180`: `items-nanomachines-default-tablet.png`
+  - mobile `390x900`: `items-nanomachines-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -43,18 +54,6 @@
 - desktop／mobileとも横overflowやカードの重なりを生まない。
 
 ## Generation source
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- items-nanomachines --route /data/items/nanomachines/`
-- source branch: `34-2-items-pages`
-- source commit: `6b6ea46b4d099e2d843bfae8c3454089edc14852`
-- route: `/data/items/nanomachines/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

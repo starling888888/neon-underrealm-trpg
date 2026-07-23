@@ -166,6 +166,9 @@ script名は、作業者が目的を判断しやすい名前にする。
 - `npm run check`: Astro型検査とlint / format確認を実行する
 - `npm run test`: Node.jsテストを実行する
 - `npm run visual:capture`: Visual Review用のPlaywright captureを実行する
+- `npm run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
+- `npm run visual:test`: Playwright標準VRT baselineを比較する
+- `npm run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
 
 Excel変換、検索index生成、データ検証などのscriptは、該当機能が実装されるtaskで追加する。
 

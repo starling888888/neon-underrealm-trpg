@@ -1,5 +1,15 @@
 # search-modal
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT search-modal <state> <viewport>`
+- route: `/data/common-skills/`
+- states / snapshots:
+  - open: `search-modal-search-open-desktop.png`, `search-modal-search-open-tablet.png`, `search-modal-search-open-mobile.png`
+  - results: `search-modal-search-results-desktop.png`, `search-modal-search-results-tablet.png`, `search-modal-search-results-mobile.png`
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
+- baseline update: 通常実行では比較のみ行う。ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -68,19 +78,6 @@
   - `docs/design/search-modal/design-mobile.png`
   - `docs/design/search-modal/design-desktop-results.png`
   - `docs/design/search-modal/design-mobile-results.png`
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- search-modal --route /data/common-skills/ --state results`
-- source branch: `45-search-pagefind-integration`
-- source commit: `e6867f8662471b6741e0232b49679e2b431592c3`
-- route: `/data/common-skills/`
-- state: `results`
-- also canonicalized: default state from the same capture manifest
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

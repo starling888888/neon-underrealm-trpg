@@ -43,6 +43,8 @@ export const visualRoutes = {
   dataCards: "-local/data-cards/",
   pageNavigation: "-local/page-navigation/",
   dataItemsWeapons: "data/items/weapons/",
+  headerFooter: "-local/header-footer/",
+  styleTiles: "-local/style-tiles/",
 } as const;
 
 export const visualViewports = {

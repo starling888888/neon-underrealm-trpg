@@ -1,5 +1,16 @@
 # character-making
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT character-making default <viewport>`
+- route: `/character-making/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `character-making-default-desktop.png`
+  - tablet `820x1180`: `character-making-default-tablet.png`
+  - mobile `390x900`: `character-making-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix

@@ -1,5 +1,16 @@
 # ikizama-index
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT ikizama-index default <viewport>`
+- route: `/data/ikizama/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `ikizama-index-default-desktop.png`
+  - tablet `820x1180`: `ikizama-index-default-tablet.png`
+  - mobile `390x900`: `ikizama-index-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -68,18 +79,6 @@
 ## Generation source
 
 - canonicalization source: ユーザー承認済みの`/data/ikizama/`実装を、公式visual capture workflowでdesktop / mobileともにfull-page captureする。初期draftとの差分は、実装済みの検索Header、SiteMenuの生き様第3階層、専用アイテム種別リンク、実データによる本文密度とFooterであり、いずれも現行のlayoutおよびcurrent issueと整合する。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- ikizama-index --route /data/ikizama/`
-- source branch: `31-2-ikizama-index-page`
-- source commit: `40757f1a0d9d8fedbf5fa4c7eab28bc50af19832`
-- route: `/data/ikizama/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Differences from previous design references
 

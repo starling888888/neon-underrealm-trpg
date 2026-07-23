@@ -1,5 +1,16 @@
 # common-skills
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT common-skills default <viewport>`
+- route: `/data/common-skills/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `common-skills-default-desktop.png`
+  - tablet `820x1180`: `common-skills-default-tablet.png`
+  - mobile `390x900`: `common-skills-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -66,18 +77,6 @@
 ## Generation source
 
 - canonicalization source: ユーザーレビュー済みの`/data/common-skills/`実装を、approved visual capture workflowでdesktop・mobileともにfull-page captureする。tabletは同じcaptureで確認するが、canonical imageはdesktop／mobileの2枚に限定する。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- common-skills --route /data/common-skills/`
-- source branch: `30-2-ryugi-detail-page`
-- source commit: `8327e058a44b8e780240afda778d832d6ad75867`
-- route: `/data/common-skills/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 - implementation state: `8327e05`後の未コミット変更。summaryを非表示にする共有`SkillCard`の表示方針を含む。
 

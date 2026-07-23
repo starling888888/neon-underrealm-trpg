@@ -35,16 +35,19 @@ If the user asks to review, inspect, validate, or discuss a design direction, pr
 
 Design images must follow project SSoT.
 
-For design fix mode, use only the repository canonicalization workflow:
+For design fix mode, use only the repository VRT workflow:
 
 ```sh
-npm run visual:capture -- --grep "@<design-target>"
-npm run visual:canonicalize -- <design-target> --route /target-route/
+npm run visual:build
+npm run preview
+npm run visual:test
 ```
 
-`visual:canonicalize` verifies the current HEAD, the capture manifest, and the
-matching desktop / mobile Playwright artifacts before it updates design images
-and provenance in `notes.md`.
+The canonical baseline is the Playwright standard `toHaveScreenshot()` snapshot.
+`docs/design/<design-target>/` is notes-only and records the target route,
+states, viewports, VRT test name, snapshot names, and comparison rationale.
+Run `npm run visual:update` only when the user explicitly approves baseline
+creation or update after reviewing the differences.
 
 Do not create or run `.tmp/*.mjs`, `node -e`, ad hoc Playwright commands, or
 other capture scripts for design fix mode. If this workflow cannot run, stop and
@@ -342,8 +345,8 @@ Rules:
 6. Determine viewport and state coverage.
 7. Create a standalone HTML/CSS prototype in `.tmp/design/<design-target>/`. Do not alter application source files.
 8. Use Playwright to capture the prototype at every required viewport and state.
-9. Inspect the captures and place the selected design draft images in `docs/design/<design-target>/`.
-10. Create or update `notes.md` with design intent, prototype path, capture source, and viewport references.
+9. Inspect the captures and create VRT snapshots only after explicit user approval.
+10. Create or update `notes.md` with design intent, prototype path, route, state, viewport, VRT test, and snapshot references.
 11. If a bitmap asset is still needed, use image generation only for that asset and record its source in `notes.md`.
 12. Stop for human review.
 
@@ -357,15 +360,13 @@ If `notes.md` is being created or updated as a review checkpoint before image ge
 
 1. Confirm the user asked to canonicalize from implementation.
 2. Identify source branch, commit, route, and viewport.
-3. Capture or inspect actual implementation screenshots through
-   `npm run visual:capture`.
+3. Capture or inspect actual implementation screenshots through the VRT test.
 4. Compare actual screenshots against existing design references.
 5. Explain the differences.
 6. Confirm the differences are compatible with requirements, out-of-scope constraints, global styles, and layout direction.
-7. Ask for explicit approval before replacing canonical design images.
-8. After approval, run `npm run visual:canonicalize -- <design-target> --route /target-route/`.
-   Do not copy artifacts directly into `docs/design/`.
-9. Stop and report the updated design artifacts.
+7. Ask for explicit approval before creating or updating the VRT baseline.
+8. After approval, run `npm run visual:update`. Do not copy artifacts directly into `docs/design/`.
+9. Update `notes.md` and report the snapshot baseline change.
 
 Do not canonicalize implementation screenshots just because they exist.
 

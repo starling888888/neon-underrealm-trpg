@@ -1,5 +1,16 @@
 # items
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT items default <viewport>`
+- route: `/data/items/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `items-default-desktop.png`
+  - tablet `820x1180`: `items-default-tablet.png`
+  - mobile `390x900`: `items-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft

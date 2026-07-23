@@ -1,5 +1,16 @@
 # advancement
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT advancement default <viewport>`
+- route: `/advancement/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `advancement-default-desktop.png`
+  - tablet `820x1180`: `advancement-default-tablet.png`
+  - mobile `390x900`: `advancement-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -52,17 +63,6 @@
 - 表の横スクロールが必要な場合は、ページ全体ではなく本文コンテナ内に限定する。
 
 ## Generation source
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- advancement --route /advancement/`
-- source branch: `26-2-advancement-page`
-- source commit: `fcc2fefe7201f30c08275279d5c23937ed05f835`
-- route: `/advancement/`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

@@ -1,5 +1,16 @@
 # 404
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT 404 default <viewport>`
+- route: `/not-found/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `404-default-desktop.png`
+  - tablet `820x1180`: `404-default-tablet.png`
+  - mobile `390x900`: `404-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -78,18 +89,6 @@
 - route: `/not-found/`
 - viewport: desktop `1440x1200`、mobile `390x900`
 - capture notes: ユーザーが2026-07-23に、Visual Review済みの404 actualをdesign正本化することを明示承認した。Visual Reviewの不備を隠すためではなく、ユーザー指定の簡潔な404画面を後続比較の基準にするためにcanonicalizeする。PR #63のレビュー指摘を受け、実装を含む固定済みcommitから再生成する。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- 404 --route /not-found/`
-- source branch: `40-2-404-page`
-- source commit: `c415aaa908cf964a4177c6cde6177968da235c63`
-- route: `/not-found/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open Questions
 

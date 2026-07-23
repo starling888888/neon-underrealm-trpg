@@ -1,5 +1,16 @@
 # world
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT world default <viewport>`
+- route: `/world/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `world-default-desktop.png`
+  - tablet `820x1180`: `world-default-tablet.png`
+  - mobile `390x900`: `world-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -75,18 +86,6 @@
 
 - build後のpreviewでPageTocを含めて確認済みのactualを採用し、個別NPC画像、セリフ、左右交互を含むpage-level正本を作る。
 - Visual Reviewの不備を隠すためではなく、ユーザーが明示承認した現行実装の状態を比較基準にするための正本化である。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- world --route /world/`
-- source branch: `42-0-npc-data-normalization`
-- source commit: `f28b6984623e89b05b0329466de4468d7bc882bb`
-- route: `/world/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

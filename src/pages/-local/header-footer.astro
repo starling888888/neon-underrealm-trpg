@@ -1,0 +1,23 @@
+---
+import AppContainer from "../../layouts/AppContainer.astro";
+---
+
+<AppContainer
+  title="Header / Footer確認"
+  description="共通HeaderとFooterのVRT確認用ローカルページです。"
+  noindex
+  showPageToc={false}
+>
+  <article class="header-footer-fixture prose">
+    <h1>Header / Footer確認</h1>
+    <p>
+      共通Headerのロゴ、検索導線、モバイル操作領域と、Footerの外部リンクを同じ実装で確認します。
+    </p>
+  </article>
+</AppContainer>
+
+<style>
+  .header-footer-fixture {
+    min-height: 42rem;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import Callout from "../../components/_common/Callout.astro";
+import AppContainer from "../../layouts/AppContainer.astro";
+---
+
+<AppContainer
+  title="Global styles確認"
+  description="global styleのVRT確認用ローカルページです。"
+  noindex
+  showPageToc={true}
+>
+  <article class="style-tile prose">
+    <h1>Global styles確認</h1>
+    <p>
+      本文、リンク、表、引用、code、Calloutの共通styleを実装と同じCSSで確認します。
+    </p>
+
+    <h2>本文とリンク</h2>
+    <p>
+      <a href="#comparison">本文リンク</a> と <code>inline code</code>、<strong>強調</strong>、<em>補足</em>を並べます。
+    </p>
+    <blockquote>
+      参照性を優先し、強すぎない色と余白で本文の読みやすさを保ちます。
+    </blockquote>
+
+    <h2 id="comparison">表とCallout</h2>
+    <table>
+      <thead>
+        <tr><th>項目</th><th>確認内容</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>surface</td><td>白寄りの本文面</td></tr>
+        <tr><td>accent</td><td>控えめな青緑</td></tr>
+      </tbody>
+    </table>
+    <Callout type="note" title="確認用注記">
+      共通styleが使われないまま変化しても、このfixtureのVRTで検出します。
+    </Callout>
+  </article>
+</AppContainer>

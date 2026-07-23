@@ -1,5 +1,16 @@
 # callout
 
++## VRT baseline
+
+- test: `tests/visual/vrt.spec.ts` の `VRT callout default <viewport>`
+- route: `/-local/callouts/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `callout-default-desktop.png`
+  - tablet `820x1180`: `callout-default-tablet.png`
+  - mobile `390x900`: `callout-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
