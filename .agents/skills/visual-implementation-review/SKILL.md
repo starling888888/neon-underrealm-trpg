@@ -127,6 +127,17 @@ npm run visual:capture
 
 Do not use `.tmp/*.mjs`, `node -e`, or another ad hoc Playwright command.
 
+## VRT execution policy
+
+Do not run VRT for Markdown-only work or after each development edit. When the
+approved implementation changes UI, CSS, layout, a page, or a Component, run
+VRT immediately before PR review and limit it to the changed screen targets.
+
+Do not include a full local VRT run in the normal workflow. Run the full suite
+locally only when the user explicitly asks for it or when investigating the VRT
+infrastructure. The full-suite regression check belongs to a future scheduled
+or post-deploy GitHub Actions workflow.
+
 ## Preview server selection
 
 Use the existing 4321 preview. Do not set a target URL, host, port, or path

@@ -32,6 +32,18 @@ npm run visual:test
 
 capture先は常に `http://127.0.0.1:4321/neon-underrealm-trpg/` です。別portや別URLを指定してcaptureしません。
 
+## 実行ポリシー
+
+VRTは高コストなため、Markdownのみの変更や画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。
+
+たとえば`site-layout`だけを確認する場合は次を使う。
+
+```sh
+npm run visual:test -- --grep '@vrt.*@site-layout'
+```
+
+ローカルで`npm run visual:test`による全件VRTを通常の開発手順に含めない。全件比較は、GitHub Actionsの定期実行または公開直後の実行を整備した後にCIで行う。ローカル全件実行は、ユーザーが明示した場合や比較基盤の調査時だけにする。
+
 ## 成果物
 
 Playwrightの標準出力先を使います。

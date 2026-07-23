@@ -41,6 +41,7 @@
 - `docs/plan.md` のチェックボックスは、人間レビュー後のユーザー指示なしに完了扱いしない。
 - UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign参照を確認する。必要なdesign画像がない場合は `design-image-generation` に切り出す。
 - Visual Review screenshotは実装結果であり、design正本ではない。actual screenshotを直接 `docs/design/` にコピーしない。
+- VRTは高コストな比較である。Markdownのみの変更、または画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。ローカルで全件VRTを通常実行しない。全件VRTはGitHub Actionsの定期実行または公開直後の実行として別taskで整備する。
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
 - Google Drive上のユーザー編集正本をローカル作業入力として使う場合は、`raw-google-drive.url` と `<repo-root>/.raw/` の扱いを `.agents/skills/drive-to-raw-sync/SKILL.md` と `.agents/rules/data-management.md` で確認する。

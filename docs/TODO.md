@@ -93,11 +93,11 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` のdesign / Visual Review / UI実装関連タスクに紐づける。適切な一括design更新タスクを定めてから実施する
   - handling plan: `ルール`を`データ`の上に置く現行メニュー順序を、関連する既存design画像・notesへまとめて反映する。個別ページ作成中に部分的なdesign更新は行わない。
 
-- [ ] VRT実装時に、mobile layout / MobilePageToc のCSS回帰検知を追加する
-  - source: `.tmp/16-review.md` / PR #21 review
-  - classification: follow-up
-  - plan: `docs/plan.md` の `50-1-vrt-css-regression-guards`
-  - handling plan: 現在の `tests/visual/*` はdesign正本化用スクリーンショット取得として扱い、このIssueではCSS回帰検知を実装しない。将来VRTを導入する際、少なくとも390px mobile幅での意図しない横スクロール、MobilePageToc sticky headingの背景透過、TOC非表示対象ページでのPageToc / MobilePageToc非表示を自動検知する。
+- [ ] GitHub Actionsで全件VRTを定期実行または公開直後に実行する
+  - source: 2026-07-23のユーザー指示
+  - classification: CI / visual regression follow-up
+  - plan: なし。CIと公開workflowの責務を整理するtaskを追加してから紐付ける。
+  - handling plan: buildとPagefind index作成後に全`@vrt` targetを比較できるGitHub Actions workflowを整備する。定期実行と公開直後実行のどちらか、または両方を選び、GitHub Pages公開時の実行順序、失敗時の通知、snapshot更新の扱いを定義する。PR前のローカル確認は、UI変更時だけ変更targetに限定する。
 
 - [ ] ゲーム画像生成のbase promptを改訂し、利用方針を決定する
   - source: `21-2-world-page` のPR #35 reviewとユーザー指示
