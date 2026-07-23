@@ -183,6 +183,6 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - [x] target別VRT test fileとtagを追加する。
 - [x] canonical snapshotをtarget名のroot directoryへ移す。
 - [x] `@vrt`、target、viewport、stateの組合せでPlaywright実行を確認する。
-- [ ] style-tileへcode blockとcolor paletteを追加し、VRT baselineを更新する（後回し）。
+- [x] style-tileへcode blockとcolor paletteを追加し、VRT baselineを更新する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
