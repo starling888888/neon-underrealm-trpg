@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Misread the PageToc confirmation page heading instruction
+
+#### 2026-07-23
+
+- source: user
+- 発生箇所: `ex-01-page-navigation-links` の `/-local/page-navigation` 確認ページ
+- 観測した失敗: ユーザーの「見出しなくて良い」を、本文の`h1`も不要という意味に誤解した。本来は、PageTocに表示される`h2`以下の見出しを置かないという意図だった。
+- 一次対応: `h1`を復元し、確認ページは`h1`のみ、PageToc項目となる`h2`以下なしの構成へ修正した。
+
 ### Visual capture rerun exposed unrelated Pagefind search failures
 
 #### 2026-07-23

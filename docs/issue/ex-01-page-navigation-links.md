@@ -28,6 +28,10 @@
   - ナビゲーションは各ページ本文の直後、Footerの前に表示する。
 - MDXページでは、frontmatterの `prevPath` / `nextPath` から `AppContainer` へ値を渡す。
 - Astroページでは、各ページが `AppContainer` へ `prevPath` / `nextPath` を明示して渡す。
+- ユーザー指示により、長い両リンクラベルを同時に確認する公開対象外の `/-local/page-navigation` を追加する。
+  - `prevPath` は `/character-making`、`nextPath` は `/advancement` とする。
+  - PageTocありのlayoutを使い、確認用本文は`h1`だけを置く。目次項目となる`h2`以下は置かない。
+  - `build:public` では既存の `-local` 除外処理により公開しない。
 - 対象ページごとの前後関係は、共通configへ集約せず、各ページで愚直に設定する。
 - 流儀詳細と生き様詳細だけは、それぞれの一覧データから前後関係を生成する。
   - `getRyugiList()` と `getIkizamaList()` の順序を使う。
@@ -110,6 +114,7 @@
 - 対象となる `src/pages/**/*.mdx` と `src/pages/**/*.astro`
 - `src/pages/data/ryugi/[ryugiId].astro`
 - `src/pages/data/ikizama/[ikizamaId].astro`
+- `src/pages/-local/page-navigation.astro`
 - 前後関係を検証するtest
 - `docs/design/page-navigation-links/`
 - `docs/issue/ex-01-page-navigation-links.md`
