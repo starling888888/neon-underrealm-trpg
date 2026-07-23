@@ -19,6 +19,8 @@
     "convert:ikizama-data": "run-s convert:ikizama convert:ikizama-skills",
     "convert:data": "run-p convert:npcs convert:items convert:common-skills convert:release-notes convert:ryugi-data convert:ikizama-data",
     "test": "run-s test:node test:page-navigation-contract",
+    "test:e2e": "run-s visual:build test:e2e:run",
+    "test:e2e:run": "playwright test --config playwright.e2e.config.ts --workers=1",
     "test:node": "mkdir -p test-results && node --import tsx --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=tap --test-reporter-destination=test-results/node-tests.tap tests/node/**/*.test.ts",
     "test:page-navigation-contract": "npm run build:public && node --import tsx --test tests/contract/page-navigation-build.test.ts",
     "check": "astro check && biome check . && npm run check:md",

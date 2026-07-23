@@ -30,6 +30,14 @@ npm run preview
 npm run visual:test
 ```
 
+VRTでは確認しない操作・ARIA・scrollの回帰は、次の一コマンドで実行する。`test:e2e`は毎回buildとPagefind index生成を行い、4321のpreviewを起動してからtestを実行する。test終了時にはPlaywrightがpreviewを停止する。
+
+```sh
+npm run test:e2e
+```
+
+実行前に4321が空いていることを確認する。`test:e2e`は既存の4321 serverを再利用しない。`test:e2e`はローカル実行専用で、CIの常時実行には含めない。
+
 capture先は常に `http://127.0.0.1:4321/neon-underrealm-trpg/` です。別portや別URLを指定してcaptureしません。
 
 Visual Reviewまたはcontents reviewへ一時snapshotを渡すときは、対象targetだけをcaptureする。
@@ -43,6 +51,8 @@ npm run visual:capture -- --grep '@vrt.*@home(?:\s|$)'
 ## 実行ポリシー
 
 VRTは高コストなため、Markdownのみの変更や画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。
+
+`test:e2e`はVRTと別のbrowser behavior testである。Header、SiteMenu、MobilePageToc、layout、検索、画像load前後の契約を変更した場合は、PRレビュー前に実行する。buildとPagefind index生成を含むため、開発中の反復実行には使わない。
 
 たとえば`site-layout`だけを確認する場合は次を使う。
 
@@ -71,7 +81,7 @@ Playwrightの標準出力先を使います。
 
 VRTは、画面の基本構造、responsive layout、横overflow、ナビゲーションの静的状態を確認する。各ページのlegacy screenshot取得や、固定文言・値・件数の確認は置かない。
 
-VRTだけでは確認できない境界width、scroll、overlay排他、検索、画像load前後のlayout shiftは、`site-layout.spec.ts`、`search-modal.spec.ts`、`hero-layout-stability.spec.ts`だけで確認する。
+VRTだけでは確認できない境界width、scroll、overlay排他、検索、画像load前後のlayout shiftは、`site-layout.spec.ts`、`header.spec.ts`、`mobile-page-toc.spec.ts`、`site-menu.spec.ts`、`search-modal.spec.ts`、`hero-layout-stability.spec.ts`で確認する。これらは`npm run test:e2e`でまとめて実行する。
 
 Card Componentが固定propsを受けたときの文言、値、fallback、タグ、属性は、将来のComponent contract testで確認する。release notesなど外部データの内容、並び順、変換結果は、Nodeのデータ変換・schema・取得層テストで確認する。
 

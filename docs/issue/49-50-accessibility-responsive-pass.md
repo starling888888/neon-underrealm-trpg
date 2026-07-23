@@ -256,3 +256,30 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - [x] desktop SiteMenuとmobile drawerの`aria-current="page"`を代表routeで確認する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 5
+
+レビュー元: local PR technical review（PR #68、`40fc0f72b3211066d142a767de42d55aa733469d..048999f`）
+
+### 指摘事項
+
+- `tests/visual/header.spec.ts`、`mobile-page-toc.spec.ts`、`site-menu.spec.ts`へ分割したbehavior testが、`npm test`、`visual:test`、`visual:update`、`visual:capture`のいずれからも実行されない。READMEも分割前の3 specだけをbehavior testとして記述している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `package.json`の`npm test`はNode testとpage navigation contractだけを実行し、visual scriptは`tests/visual/vrt`だけを対象とする。新しい3 specを含む20件は、今回の明示的な`npx playwright test`でのみ実行された。`tests/visual/README.md`もbehavior確認を`site-layout.spec.ts`、`search-modal.spec.ts`、`hero-layout-stability.spec.ts`だけと記述している。
+
+### 対応方針
+
+- VRTと区別したbehavior testの実行対象を一か所に定義し、単一のpackage scriptで実行できるようにする。`test:e2e`は毎回buildとPagefind index生成を行い、4321のpreviewを起動してから全behavior testを実行する。4321の空き確認は実行前に行い、test終了時にはPlaywrightがpreviewを停止する。PR前の必要な検証経路へ組み込み、READMEの責務と実行手順を分割後の構成へ更新する。
+
+### 対応完了チェックリスト
+
+- [x] behavior testを単一のpackage scriptで実行できるようにする。
+- [x] PR前の必要な検証経路へbehavior testを組み込む。
+- [x] `tests/visual/README.md`を分割後の構成へ更新する。
+- [x] behavior test全件が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
