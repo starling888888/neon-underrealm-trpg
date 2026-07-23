@@ -2,7 +2,7 @@
 
 ## 目的
 
-`.raw/data/ryugi-skills.xlsx` の流儀別シートを、流儀詳細ページと将来のキャラクターシートが
+`.raw/data/ryugi-skills.xlsx` の流儀別シートを、流儀詳細ページとWebキャラクターシートが
 流儀IDで参照できる1つのJSONへ変換する。
 
 Excel列、カテゴリ、タイミング、ID、生成JSON、Schema、Warningの共通契約は
