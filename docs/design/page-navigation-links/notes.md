@@ -19,7 +19,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/ex-01-page-navigation-links.md`
+- historical issue (provenance only): `docs/issue/done/cross-phase/ex-01-page-navigation-links.md`
 - `docs/requirements.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/non-functional.md`
