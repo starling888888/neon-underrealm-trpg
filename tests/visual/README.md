@@ -32,6 +32,14 @@ npm run visual:test
 
 capture先は常に `http://127.0.0.1:4321/neon-underrealm-trpg/` です。別portや別URLを指定してcaptureしません。
 
+Visual Reviewまたはcontents reviewへ一時snapshotを渡すときは、対象targetだけをcaptureする。
+
+```sh
+npm run visual:capture -- --grep '@vrt.*@home'
+```
+
+`visual:capture`は`playwright.capture.config.ts`を使い、`test-results/visual/`へsnapshotを書き出す。canonical baselineは更新せず、視覚差分では失敗しない。route遷移、状態準備、表示のassertionが失敗した場合はcaptureも失敗する。snapshotは次のPlaywright実行で削除され得る一時artifactであり、Git管理しない。
+
 ## 実行ポリシー
 
 VRTは高コストなため、Markdownのみの変更や画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。
@@ -43,6 +51,8 @@ npm run visual:test -- --grep '@vrt.*@site-layout'
 ```
 
 ローカルで`npm run visual:test`による全件VRTを通常の開発手順に含めない。全件比較は、GitHub Actionsの定期実行または公開直後の実行を整備した後にCIで行う。ローカル全件実行は、ユーザーが明示した場合や比較基盤の調査時だけにする。
+
+`visual:capture`も、Visual Reviewまたはcontents reviewでユーザーが求める画面を渡す場合だけ、target限定で実行する。
 
 ## 成果物
 

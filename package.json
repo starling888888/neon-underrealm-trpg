@@ -32,6 +32,7 @@
     "visual:build": "npm run build && pagefind --site dist",
     "visual:test": "playwright test tests/visual/vrt --workers=1",
     "visual:update": "playwright test tests/visual/vrt --workers=1 --update-snapshots",
+    "visual:capture": "playwright test tests/visual/vrt --config playwright.capture.config.ts --workers=1 --update-snapshots",
     "visual:install": "playwright install chromium"
   },
   "dependencies": {

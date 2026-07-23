@@ -30,8 +30,8 @@ normal review step.
 
 `docs/design/<design-target>/` is notes-only. The canonical visual baseline is
 the matching Playwright snapshot under `canonical-snapshots/visual/`. Do not
-run `visual:capture`, create screenshots for `docs/design/`, or copy an actual
-artifact into a design document.
+copy a temporary `visual:capture` snapshot into a design document. Use
+`visual:capture` only to hand changed-target snapshots to human review.
 
 ## Preconditions
 
@@ -53,21 +53,25 @@ already approved that work in the current issue.
 2. Identify each changed VRT target from the changed UI and its design notes.
 3. Read the referenced SSoT and note the target tags, states, and viewports.
 4. Build the VRT fixture and use the existing 4321 preview server.
-5. Run only the changed target with `npm run visual:test -- --grep`.
-6. Inspect Playwright's diff artifact only when the target comparison fails.
-7. Fix only clear, local mismatches that are inside the approved issue scope.
-8. Repeat the changed target comparison after each accepted fix.
-9. Update `## ビジュアルレビュー N` in the current issue with the target,
-   tags, comparison result, fixes, and unresolved human judgments.
-10. Run `npm run check` and `npm run build` when source, style, test, or
+5. Run `npm run visual:capture -- --grep` for each changed target and use its
+   temporary snapshots for human review.
+6. Run only the changed target with `npm run visual:test -- --grep`.
+7. Inspect Playwright's diff artifact only when the target comparison fails.
+8. Fix only clear, local mismatches that are inside the approved issue scope.
+9. Repeat the target capture and comparison after each accepted fix.
+10. Update `## ビジュアルレビュー N` in the current issue with the target,
+    tags, comparison result, fixes, and unresolved human judgments.
+11. Run `npm run check` and `npm run build` when source, style, test, or
     configuration files changed.
-11. Stop and report. Do not commit or push.
+12. Stop and report. Do not commit or push.
 
 Use the target tags from the matching VRT spec. For example:
 
 ```sh
 npm run visual:test -- --grep '@vrt.*@site-layout'
 ```
+
+Use the same tag with `npm run visual:capture` to produce temporary snapshots.
 
 Do not run a full local VRT suite unless the user explicitly asks or the work is
 to investigate VRT infrastructure.
@@ -116,6 +120,7 @@ Use `## ビジュアルレビュー N`.
 ### 対応完了チェックリスト
 
 - [ ] 変更targetだけをVRT比較した
+- [ ] 変更targetだけの一時snapshotを取得した
 - [ ] VRT差分を修正した、または修正不要と判断した
 - [ ] baseline更新が必要な差分を人間判断として記録した
 - [ ] `npm run check` が通る（該当する場合）

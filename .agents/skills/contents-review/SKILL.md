@@ -58,7 +58,7 @@ For a preview review, use the target route only.
 - beginner reviewer: mobile screenshot at 390px wide
 - expert reviewer: desktop screenshot at 1440px wide
 
-Use the approved project visual-test workflow or supplied screenshots. Do not create ad hoc browser automation. Keep screenshots out of Git-managed content and design paths.
+Use the approved project visual-test workflow or supplied screenshots. When the user asks to capture a VRT-covered target for this review, run `npm run visual:capture -- --grep` only for that target and pass its `test-results/visual/` snapshots to the reviewers. Do not create ad hoc browser automation. Keep screenshots out of Git-managed content and design paths.
 
 ## Workflow
 

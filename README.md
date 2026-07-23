@@ -36,6 +36,7 @@ npm run format
 npm run format:md
 npm run check:md
 npm run preview
+npm run visual:capture
 npm run visual:build
 npm run visual:test
 npm run visual:install
@@ -50,6 +51,7 @@ npm run visual:install
 - `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
 - `npm run check:md`: Markdown `.md` のformat / 最小style ruleを確認する
 - `npm run preview`: ビルド済みサイトをローカルで確認する
+- `npm run visual:capture`: Visual Review / contents review向けに、指定VRT targetの一時snapshotを取得する。canonical baselineは更新しない
 - `npm run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
 - `npm run visual:test`: Playwright標準VRT baselineを比較する
 - `npm run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する

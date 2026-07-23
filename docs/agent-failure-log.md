@@ -918,3 +918,12 @@ source種別は以下を使う。
 - 発生箇所: `49-50-accessibility-responsive-pass` の`tests/visual/search-modal.spec.ts`
 - 観測した失敗: local data-card fixtureのPagefind resultが追加され、skill ID末尾だけで検索結果linkを選ぶselectorが2件に一致した。最初の修正で3箇所のうちretry caseを見落とし、同じVisual Testの再実行でも1件が同じstrict-mode violationで失敗した。
 - 一次対応: すべての検索結果期待を`/data/common-skills/` pathとskill IDで限定する共通selectorへ統一した。複数箇所に同じselectorがあるtestを修正する場合は、再実行前に旧selectorの残存を検索する。
+
+### Repeated formatter failure while restoring temporary VRT capture
+
+#### 2026-07-23
+
+- source: agent self-report
+- 発生箇所: `49-50-accessibility-responsive-pass` の`.agents/skills/visual-implementation-review/SKILL.md`
+- 観測した失敗: `npm run format:md`が対象skillへの書き戻し時にread-only file systemエラーで停止した。その後の`npm run check`で、2桁の番号付き手順の継続行に必要なindentが1文字不足している同じMarkdown整形不一致を検出した。
+- 一次対応: formatterが示した4文字indentを`apply_patch`で反映した。formatterが書き戻せない場合は、同じformatter出力を再実行する前に、対象行の差分を読み取り`apply_patch`で修正してから`npm run check`を実行する。
