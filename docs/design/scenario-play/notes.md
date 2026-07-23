@@ -85,7 +85,7 @@
 - viewport:
   - `design-desktop.png`: `1440x1200`、full-page
   - `design-mobile.png`: `390x900`、full-page
-- capture source: `tests/visual/scenario-play.spec.ts` のPlaywright capture。ユーザーがdesign正本化を明示承認した現行実装を採用した。
+- current VRT: `tests/visual/vrt/scenario-play.spec.ts` の`@vrt @scenario-play`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

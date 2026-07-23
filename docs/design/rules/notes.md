@@ -81,7 +81,7 @@
 - viewport:
   - `design-desktop.png`: `1440x1200`、full-page
   - `design-mobile.png`: `390x900`、full-page
-- capture source: `tests/visual/rules.spec.ts` のPlaywright capture。actual screenshotをユーザー承認済みのdesign fixとして採用した。
+- current VRT: `tests/visual/vrt/rules.spec.ts` の`@vrt @rules`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

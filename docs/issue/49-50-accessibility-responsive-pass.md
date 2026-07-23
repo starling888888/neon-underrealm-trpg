@@ -186,3 +186,31 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - [x] style-tileへcode blockとcolor paletteを追加し、VRT baselineを更新する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- VRT導入後も、`tests/visual/*.spec.ts`に各ページのdesktop / mobile screenshot取得、要素表示、MobilePageToc開閉、固定文言・件数の確認が残っている。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `npm run visual:test`は`tests/visual/vrt/`だけを実行し、`npm test`もlegacy Visual specを実行しない。各ページの表示・3 viewport・静的なMobilePageToc表示はVRTが比較する一方、legacy specにはVisual Testの責務外である固定文言・値・件数のexpectがある。
+
+### 対応方針
+
+- ページ別legacy Visual spec、共通`capture.spec.ts`、PageToc helperを削除する。actual screenshotの取得・保存は再導入しない。
+- `site-layout.spec.ts`は、VRTと重複するscreenshot取得・静的表示確認を削除し、境界width、横overflow、Header / sticky heading / scroll、menu・TOCの操作状態、共通レールscroll、TOC anchor移動を残す。
+- `search-modal.spec.ts`は、VRTと重複するscreenshot取得を削除し、検索・Esc・focus・overlay排他・Pagefind result・query validation・retryを残す。
+- `hero-layout-stability.spec.ts`は、diagnostic screenshotを削除し、画像寸法、遅延画像ロード中のlayout shift、asset responseを残す。
+- 現行のdesign notesでlegacy specを実行手順として記述する箇所は、VRT実行手順へ更新する。過去のcapture provenanceは履歴として残す。
+
+### 対応完了チェックリスト
+
+- [x] legacy page Visual specとPageToc helperを削除する。
+- [x] site-layoutへ共通レールscrollとTOC anchorの操作確認を統合する。
+- [x] search-modalとhero-layout-stabilityからdiagnostic screenshotを削除する。
+- [x] legacy specを参照する現行design notesをVRTへ更新する。
+- [x] `npm run check`、`npm test`、VRTの対象比較が通る。

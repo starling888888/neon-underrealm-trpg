@@ -103,7 +103,7 @@
   - desktop `1440x1200` viewport capture: `test-results/visual/introduction-desktop.png` から `docs/design/introduction/design-desktop.png` へ正本化
   - mobile `390x900` viewport capture: `test-results/visual/introduction-mobile.png` から `docs/design/introduction/design-mobile.png` へ正本化
 - prototype path / prompt summary / capture notes:
-  - `tests/visual/introduction.spec.ts` がbuild後previewの`/introduction`をcaptureしたactual screenshotを使用した。
+  - current VRT: `tests/visual/vrt/introduction.spec.ts` の`@vrt @introduction`で、desktop / tablet / mobileを比較する。
   - 初期prototypeとの差分は、実装済みproseの正確な行送り、用語説明の折り返し、Callout Componentの実際のpaddingと本文量である。いずれもrequirements、global styles、site-layout、calloutの方向と整合する。
   - 可視titleはCallout内の単一H2であり、PageTocとMobilePageTocから到達できる。既定Callout titleはspanのままで、既存CalloutのPageToc非混入は維持する。
   - user approval: `デザイン正本化`（2026-07-11）。Visual Reviewの差分を隠す目的ではなく、レビュー済み実装を導入ページの比較基準として採用する。

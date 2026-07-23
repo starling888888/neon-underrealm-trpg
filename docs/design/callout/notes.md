@@ -46,7 +46,7 @@
 - `src/styles/prose.css`
 - `src/components/_common/Callout.astro`
 - `src/pages/-local/callouts.mdx`
-- `tests/visual/callout.spec.ts`
+- `tests/visual/vrt/callout.spec.ts`
 
 ## Canonicalization Note
 
@@ -106,7 +106,7 @@
 
 ## Generation Source
 
-- generator or capture source: `tests/visual/callout.spec.ts` のPlaywright captureを確認し、ユーザー承認済みのdesign fix modeで現行実装を正本化した。
+- current VRT: `tests/visual/vrt/callout.spec.ts` の`@vrt @callout`で、desktop / tablet / mobileを比較する。
 - source branch / commit when applicable: `20-1-common-callout-component` / `51f58d4`
 - route when applicable: `/-local/callouts/`
 - viewport:

@@ -96,10 +96,7 @@
 - prototype or generator source: build後の`/-local/npc-cards/`のactual implementation screenshot。
 - route when applicable: `/-local/npc-cards/`
 - viewport: desktop `1440x1200`、mobile `390x900`。いずれもviewport captureでありfull-pageではない。
-- prototype path / prompt summary / capture notes:
-  - `tests/visual/npc-card.spec.ts` が、`/-local/npc-cards/` のactual screenshotを以下へ出力する。
-    - `test-results/visual/npc-card-desktop.png`
-    - `test-results/visual/npc-card-mobile.png`
+- current VRT: `tests/visual/vrt/npc-card.spec.ts` の`@vrt @npc-card`で、desktop / tablet / mobileを比較する。
 
 ## Canonicalization rationale
 

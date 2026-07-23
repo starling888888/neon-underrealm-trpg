@@ -77,7 +77,7 @@
 - initial draft source:
   - mobile: `.tmp/design/page-navigation-links/prototype.html`
   - desktop: `.tmp/design/page-navigation-links/prototype-desktop.html`
-- canonicalization capture: `tests/visual/page-navigation.spec.ts` の `@page-navigation-links`
+- current VRT: `tests/visual/vrt/page-navigation-links.spec.ts` の`@vrt @page-navigation-links`
 
 ## Open questions
 

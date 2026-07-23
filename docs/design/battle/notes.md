@@ -78,7 +78,7 @@
 - viewport:
   - `design-desktop.png`: `1440x1200`、full-page
   - `design-mobile.png`: `390x900`、full-page
-- capture source: `tests/visual/battle.spec.ts` のPlaywright capture。`test-results/visual/battle-desktop.png` と `battle-mobile.png` を、Visual Reviewの差分を隠すためではなく、レビュー済み実装を後続比較の正本として採用した。
+- current VRT: `tests/visual/vrt/battle.spec.ts` の`@vrt @battle`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

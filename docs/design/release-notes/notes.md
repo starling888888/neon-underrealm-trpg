@@ -15,7 +15,7 @@
 
 - design fix
 - 19-2-release-notes-page の実装後Visual Review結果を正本化する。
-- `tests/visual/release-notes.spec.ts` が出力したactual screenshotを、desktop / mobileのcanonical design imageとして反映済み。
+- current VRTは`tests/visual/vrt/release-notes.spec.ts`の`@vrt @release-notes`で、desktop / tablet / mobileを比較する。
 
 ## Target
 
@@ -31,10 +31,10 @@
 - planned design images:
   - `docs/design/release-notes/design-desktop.png`
     - desktop `1440x1224`
-    - `tests/visual/release-notes.spec.ts` のdesktop full-page screenshot。
+    - `@vrt @release-notes @desktop` のfull-page snapshot。
   - `docs/design/release-notes/design-mobile.png`
     - mobile `390x900`
-    - `tests/visual/release-notes.spec.ts` のmobile full-page screenshot。
+    - `@vrt @release-notes @mobile` のfull-page snapshot。
 
 ## Referenced SSoT
 
@@ -161,7 +161,7 @@
 
 ## Generation Source
 
-- generator or capture source: `tests/visual/release-notes.spec.ts` のPlaywright screenshot。
+- current VRT: `tests/visual/vrt/release-notes.spec.ts` の`@vrt @release-notes`。
 - source branch / commit when applicable: `19-2-release-notes-page` / `a9997b0`
 - historical issue: `docs/issue/done/phase-3/19-2-release-notes-page.md`
 - route when applicable: `/release-notes`

@@ -80,7 +80,7 @@
 
 - source branch: `22-2-character-making-page`
 - source route: `/character-making/`
-- capture: `tests/visual/character-making.spec.ts`を`npm run build`後の`npm run preview -- --host 127.0.0.1`に対して実行した。
+- current VRT: `tests/visual/vrt/character-making.spec.ts` の`@vrt @character-making`で、desktop / tablet / mobileを比較する。
 - source artifacts:
   - `test-results/visual/character-making-desktop.png`
   - `test-results/visual/character-making-tablet.png`

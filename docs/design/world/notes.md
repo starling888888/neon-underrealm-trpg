@@ -76,7 +76,7 @@
 ## Generation source
 
 - route: `/world/`
-- capture: `tests/visual/world.spec.ts`をbuild後の`npm run preview`に対して実行する。
+- current VRT: `tests/visual/vrt/world.spec.ts` の`@vrt @world`で、desktop / tablet / mobileを比較する。
 - source artifacts:
   - `test-results/visual/world-desktop.png`
   - `test-results/visual/world-mobile.png`

@@ -1,10 +1,5 @@
 import { expect, type Locator, test } from "@playwright/test";
-import {
-  visualBaseUrl,
-  visualOutputDir,
-  visualRoutes,
-  visualViewports,
-} from "./config";
+import { visualBaseUrl, visualRoutes, visualViewports } from "./config";
 
 const staticHeroRoutes = [
   visualRoutes.world,
@@ -155,13 +150,6 @@ for (const scenario of layoutShiftScenarios) {
 
         const yAfterImageLoad = await getY(following);
         expect(yAfterImageLoad).toBe(yBeforeImageLoad);
-
-        if (scenario.name === "top logo") {
-          await page.screenshot({
-            fullPage: true,
-            path: `${visualOutputDir}/hero-layout-stability-${viewportName}.png`,
-          });
-        }
       } finally {
         releaseAsset.resolve();
         await page.unroute(assetPattern);

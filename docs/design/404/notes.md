@@ -83,7 +83,7 @@
 
 ## Generation Source
 
-- generator or capture source: `tests/visual/not-found.spec.ts` が、存在しない `/not-found/` を開いて出力するPlaywright actual screenshot。
+- current VRT: `tests/visual/vrt/404.spec.ts` の`@vrt @404`で、desktop / tablet / mobileを比較する。
 - source branch: `40-2-404-page`
 - source commit: `c415aaa908cf964a4177c6cde6177968da235c63`。404実装、Visual Test、検索除外を含む固定済みcommitからcanonicalizeする。
 - route: `/not-found/`

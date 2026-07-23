@@ -170,7 +170,7 @@
 
 ## Generation Source
 
-- generator or capture source: `tests/visual/home.spec.ts` のPlaywright actual screenshotをdesign fixとして正本化した。
+- current VRT: `tests/visual/vrt/home.spec.ts` の`@vrt @home`で、desktop / tablet / mobileのdefaultとviewport stateを比較する。
 - source actual artifacts:
   - `test-results/visual/home-desktop.png`
   - `test-results/visual/home-desktop-full.png`

@@ -61,5 +61,3 @@ export const visualViewports = {
     height: 900,
   },
 } as const;
-
-export const visualOutputDir = "test-results/visual";

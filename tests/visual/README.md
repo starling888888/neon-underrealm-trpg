@@ -1,6 +1,6 @@
-# Visual Review Tests
+# Visual Regression Tests
 
-このディレクトリは、Visual Review 用のPlaywrightテストを置く場所です。
+このディレクトリは、VRTと、VRTだけでは確認できないUI操作を確認するPlaywrightテストを置く場所です。
 
 Visual Reviewは、承認済みUI実装後に `visual-implementation-review` skill から実行します。branch作成、issue作成、`docs/plan.md` 更新、commit、pushは行いません。
 
@@ -45,7 +45,9 @@ Playwrightの標準出力先を使います。
 
 ## テスト責務
 
-Visual Testは、画面の基本構造、responsive layout、横overflow、ナビゲーション状態、スクリーンショット取得を確認する。ローカルカタログのfixtureや外部データの、固有の文言、値、件数、本文の内容を期待値に含めない。
+VRTは、画面の基本構造、responsive layout、横overflow、ナビゲーションの静的状態を確認する。各ページのlegacy screenshot取得や、固定文言・値・件数の確認は置かない。
+
+VRTだけでは確認できない境界width、scroll、overlay排他、検索、画像load前後のlayout shiftは、`site-layout.spec.ts`、`search-modal.spec.ts`、`hero-layout-stability.spec.ts`だけで確認する。
 
 Card Componentが固定propsを受けたときの文言、値、fallback、タグ、属性は、将来のComponent contract testで確認する。release notesなど外部データの内容、並び順、変換結果は、Nodeのデータ変換・schema・取得層テストで確認する。
 
