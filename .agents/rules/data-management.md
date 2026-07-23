@@ -145,9 +145,9 @@ Do not commit Visual Review output directories.
 
 Keep canonical VRT baselines in Playwright standard snapshot directories. `docs/design/<design-target>/` is notes-only. Do not copy actual screenshots into `docs/design/`; baseline creation and updates require the user's explicit instruction.
 
-For initial page, layout, UI, CSS, and component design work, record the intended route, states, viewports, constraints, and comparison points in `docs/design/<design-target>/notes.md`. Do not create standalone screenshot prototypes or store design images under `docs/design/`.
+For initial page, layout, UI, CSS, and component design work, record the intended route, states, viewports, constraints, and comparison points in `docs/design/<design-target>/notes.md`. When the user explicitly asks to create a design draft, put its standalone HTML/CSS prototype, capture script, and temporary capture under `.tmp/design/<design-target>/`. Do not store design images under `docs/design/`.
 
-Use the local application route only through the matching VRT target. `test-results/` and `playwright-report/` remain transient diagnostic output and are never a design source of truth.
+Do not use a draft prototype as an application implementation or a canonical VRT baseline. Use the local application route only through the matching VRT target. `test-results/` and `playwright-report/` remain transient diagnostic output and are never a design source of truth.
 
 ## Required Ignore Policy
 

@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Used raster image generation instead of the requested HTML design draft
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-web-character-sheet`のdesktop初期画面design draft作成
+- 観測した失敗: ユーザーが画面draftの作成を指示した際、対話用にHTMLを作成してローカルcaptureで確認する既存の作業方法を確認せず、raster画像生成を実行した。生成画像をGit管理・design正本・VRT baselineにはしていないが、ユーザーが期待した確認可能なHTML draftではなかった。
+- 一次対応: 生成画像はpreview扱いとして採用せず、`.tmp/design/character-sheet/index.html`とcapture scriptを作成し、desktop `1440x1200`のlocal captureへ切り替えた。今後、対話用の画面draftでは、画像生成を先行させず、ユーザーが指定するHTML / local captureの方法を確認する。
+
 ### Repeated direct Playwright listing bypassed the VRT script
 
 #### 2026-07-23

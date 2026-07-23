@@ -14,9 +14,9 @@ For scope, requirements, or contents-only instructions, perform only the request
 
 ### `design-image-generation`
 
-Use when creating or updating design intent and VRT reference notes under `docs/design/<design-target>/`, or when updating an approved VRT baseline.
+Use when creating an HTML and Playwright-captured design draft, creating or updating design intent and VRT reference notes under `docs/design/<design-target>/`, or updating an approved VRT baseline.
 
-This skill maintains design notes and VRT baselines only. It does not implement UI or perform Visual Review.
+This skill keeps temporary design drafts under `.tmp/design/`, design documentation under `docs/design/`, and implemented UI baselines under Playwright VRT snapshots. It does not implement UI or perform Visual Review.
 
 ### `visual-implementation-review`
 
