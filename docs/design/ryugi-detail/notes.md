@@ -1,5 +1,16 @@
 # ryugi-detail
 
+## VRT baseline
+
+- test: `tests/visual/vrt/ryugi-detail.spec.ts` の `@vrt @ryugi-detail @<ryugiId> @<viewport>`
+- route: `/data/ryugi/kenkaya/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: 全流儀詳細の`<ryugiId>-default-desktop.png`
+  - tablet `820x1180`: Calloutを持つ`kenkaya-default-tablet.png`
+  - mobile `390x900`: Calloutを持つ`kenkaya-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -10,8 +21,8 @@
 - page / component: 流儀詳細ページ。`src/pages/data/ryugi/[ryugiId].astro` で共通テンプレートから静的生成する。
 - route: `/data/ryugi/[ryugiId]`
 - viewport:
-  - desktop: `1440x1200`
-  - mobile: `390x900`
+  - desktop: 全流儀詳細を`1440x1200`で比較する。
+  - tablet / mobile: Calloutを持つケンカヤだけをそれぞれ`820x1180` / `390x900`で比較する。
 - states:
   - desktop: Header、左SiteMenu、中央本文、右PageTocを含む通常状態
   - mobile: Header、中央本文、H1横のMobilePageToc triggerを含む通常状態
@@ -83,20 +94,8 @@
     - `data/generated/ryugi-list.json` のケンカヤの説明、補足、基礎能力値、副能力増加値、共通スキルボーナスを表示した。
     - `data/generated/ryugi-skills.json` のケンカヤのプライマリボーナス `気合十分` を表示した。
     - `public/images/data/ryugi/kenkaya_hero.webp` をprototypeへ埋め込んでcaptureした。
-    - `design-desktop.png` と `design-mobile.png` は、流儀スキル一覧の前で終えるfull-page screenshotである。
-- canonicalization: reviewed implementation screenshotをdesign fixとして正本化する。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- ryugi-detail --route /data/ryugi/kenkaya/`
-- source branch: `30-2-ryugi-detail-page`
-- source commit: `8327e058a44b8e780240afda778d832d6ad75867`
-- route: `/data/ryugi/kenkaya/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
+    - VRT baselineは、流儀スキル一覧の前で終える状態を比較する。
+- baseline update: reviewed implementationとの差分を確認し、ユーザーが明示指示した場合だけ更新する。
 
 - implementation state: `8327e05`後の未コミット変更。summaryを非表示にする共有`SkillCard`の表示方針を含む。
 

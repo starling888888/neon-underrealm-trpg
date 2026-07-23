@@ -1,5 +1,17 @@
 # home
 
+## VRT baseline
+
+- test: `tests/visual/vrt/home.spec.ts` の `@vrt @home @<state> @<viewport>`
+- route: `/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `home-default-desktop.png`
+  - tablet `820x1180`: `home-default-tablet.png`
+  - mobile `390x900`: `home-default-mobile.png`
+- viewport state: `home-home-viewport-desktop.png`, `home-home-viewport-tablet.png`, `home-home-viewport-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -18,19 +30,7 @@
   - desktop上から下までのfull-page
   - mobile標準画面に写り切る範囲
   - mobile上から下までのfull-page
-- canonical images:
-  - `docs/design/home/design-desktop.png`
-    - desktop `1440x1200`
-    - 標準画面に写り切る範囲。full-pageではない。
-  - `docs/design/home/design-desktop-full.png`
-    - desktop `1440x1200`
-    - 上から下までのfull-page画像。
-  - `docs/design/home/design-mobile.png`
-    - mobile `390x900`
-    - 標準画面に写り切る範囲。full-pageではない。
-  - `docs/design/home/design-mobile-full.png`
-    - mobile `390x900`
-    - 上から下までのfull-page画像。
+- VRT coverage: `tests/visual/vrt/home.spec.ts`のdefaultとviewport stateをdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`で比較する。
 
 ## Referenced SSoT
 
@@ -134,14 +134,7 @@
 
 ## Comparison Points For Implementation
 
-- 標準画面画像:
-  - `design-desktop.png` はdesktop `1440x1200` の標準画面に写り切る範囲を示す。
-  - `design-mobile.png` はmobile `390x900` の標準画面に写り切る範囲を示す。
-  - これらの画像では、first viewport構成、タイトルロゴの大きさ、リリースノートとの距離、mobile余白を確認する。
-- full-page画像:
-  - `design-desktop-full.png` はdesktopのページ全体をHeaderからFooterまで示す。
-  - `design-mobile-full.png` はmobileのページ全体をHeaderからFooterまで示す。
-  - これらの画像では、全section、credit / usageの配置、縦方向のリズム、横overflowがないことを確認する。
+- VRTでは、first viewport構成、タイトルロゴの大きさ、リリースノートとの距離、mobile余白、全section、credit / usageの配置、縦方向のリズム、横overflowがないことを確認する。
 - content orderはissueとrequirementsに一致していること。
 - PageToc / MobilePageTocが表示されていないこと。
 - `.raw/contents/home.md` のMarkdown H1が通常の可視見出しとして表示されていないこと。
@@ -158,25 +151,15 @@
 
 ## Generation Source
 
-- generator or capture source: `tests/visual/home.spec.ts` のPlaywright actual screenshotをdesign fixとして正本化した。
-- source actual artifacts:
-  - `test-results/visual/home-desktop.png`
-  - `test-results/visual/home-desktop-full.png`
-  - `test-results/visual/home-mobile.png`
-  - `test-results/visual/home-mobile-full.png`
+- current VRT: `tests/visual/vrt/home.spec.ts` の`@vrt @home`で、desktop / tablet / mobileのdefaultとviewport stateを比較する。
 - source branch / commit when applicable: `18-2-home-page` / `f521a11`
 - route when applicable: `/`
-- route URL during capture: `http://localhost:4321/neon-underrealm-trpg/`
-- viewport / output:
-  - `/`, desktop `1440x1200`, viewport screenshot: `design-desktop.png`
-  - `/`, desktop `1440x1200`, fullPage screenshot: `design-desktop-full.png`
-  - `/`, mobile `390x900`, viewport screenshot: `design-mobile.png`
-  - `/`, mobile `390x900`, fullPage screenshot: `design-mobile-full.png`
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
 - prompt summary or capture notes:
   - `18-2-home-page` の実装結果を、人間レビュー後のdesign正本として採用した。
-  - desktop / mobileそれぞれで、標準画面に写り切る範囲の画像と、上から下までのfull-page画像を作成した。
+  - desktop / tablet / mobileのVRT baselineで、標準状態とviewport stateを比較する。
   - 初期スコープ外UIや新しいアプリ機能は描いていない。
-  - `test-results/visual/home-*.png` のactual artifactをユーザー承認後にdesign正本へ反映した。
+  - baseline更新は、差分を確認したうえでユーザーが明示指示した場合だけ行う。
 
 ## Differences From Initial Draft
 

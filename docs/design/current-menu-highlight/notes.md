@@ -1,5 +1,16 @@
 # current-menu-highlight
 
+## VRT baseline
+
+- test: `tests/visual/vrt/current-menu-highlight.spec.ts` の `@vrt @current-menu-highlight @<state> @<viewport>`
+- route: `/world/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `current-menu-highlight-default-desktop.png`
+  - tablet `820x1180`: `current-menu-highlight-default-tablet.png`
+  - mobile `390x900`: `current-menu-highlight-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft
@@ -75,12 +86,10 @@
 
 ## Generation source
 
-- generator or capture source: SVGモックをImageMagick `convert` でPNGへ変換した。元SVGは `.tmp/current-menu-highlight-design-desktop.svg` と `.tmp/current-menu-highlight-design-mobile.svg` に置く。
 - source branch / commit when applicable: `15-current-menu-highlight`
 - route when applicable: `/data/items/weapons`
 - viewport: desktop `1440x1200`, mobile `390x900`
-- output images: `design-desktop.png`, `design-mobile.png`
-- prompt summary or capture notes: 既存SiteMenuとmobile drawerの構造を維持し、`/data/items/weapons` を代表例として `DATA` と `ITEMS` をancestor、`WEAPONS` をactive current pageとして描いた。画像内の英字ラベルは構造確認用の短い代表ラベルであり、実装時の日本語文言を固定しない。ページ内目次の現在位置ハイライト、検索、パンくず、前後ナビゲーション、生成JSON由来の追加子項目は描いていない。
+- comparison notes: 既存SiteMenuとmobile drawerの構造を維持し、`/data/items/weapons` を代表例として `DATA` と `ITEMS` をancestor、`WEAPONS` をactive current pageとして扱う。ページ内目次の現在位置ハイライト、検索、パンくず、前後ナビゲーション、生成JSON由来の追加子項目は対象外である。
 
 ## Open questions
 

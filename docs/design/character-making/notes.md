@@ -1,5 +1,16 @@
 # character-making
 
+## VRT baseline
+
+- test: `tests/visual/vrt/character-making.spec.ts` の `@vrt @character-making @<state> @<viewport>`
+- route: `/character-making/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `character-making-default-desktop.png`
+  - tablet `820x1180`: `character-making-default-tablet.png`
+  - mobile `390x900`: `character-making-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -69,11 +80,8 @@
 
 - source branch: `22-2-character-making-page`
 - source route: `/character-making/`
-- capture: `tests/visual/character-making.spec.ts`を`npm run build`後の`npm run preview -- --host 127.0.0.1`に対して実行した。
-- source artifacts:
-  - `test-results/visual/character-making-desktop.png`
-  - `test-results/visual/character-making-tablet.png`
-  - `test-results/visual/character-making-mobile.png`
+- current VRT: `tests/visual/vrt/character-making.spec.ts` の`@vrt @character-making`で、desktop / tablet / mobileを比較する。
+- snapshots: `canonical-snapshots/visual/character-making/` のdesktop / tablet / mobile baseline
 - hero asset: `public/images/character-making/hero.webp`
 - hero prompt: `.tmp/hero-prompt.md`
 - canonicalization: ユーザーは2026-07-12に、contents review後のdesktop / mobile Visual Review actualをdesign正本へ反映することを明示承認した。ページ固有のinitial draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign正本として採用する。

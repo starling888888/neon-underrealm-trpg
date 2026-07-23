@@ -1,5 +1,15 @@
 # mobile-page-toc
 
+## VRT baseline
+
+- test: `tests/visual/vrt/mobile-page-toc.spec.ts` の `@vrt @mobile-page-toc @<state> @<viewport>`
+- route: `/-local/mdx-test/`
+- states / snapshots:
+  - closed, mobile `390x900`: `mobile-page-toc-default-mobile.png`
+  - open, mobile `390x900`: `mobile-page-toc-mobile-page-toc-open-mobile.png`
+- desktop / tablet: mobile-only Componentのため対象外。
+- baseline update: 通常実行では比較のみ行う。ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft
@@ -11,8 +21,8 @@
 - viewport:
   - mobile: `390x900`
 - states:
-  - `design-mobile-closed.png`: 本文内H1要素の右側に、ボタン感を弱めた目次triggerを表示する状態
-  - `design-mobile-open.png`: H1直下に、軽いoverlayとしてページ内見出しリンク一覧を表示する状態
+  - closed: 本文内H1要素の右側に、ボタン感を弱めた目次triggerを表示する状態
+  - open: H1直下に、軽いoverlayとしてページ内見出しリンク一覧を表示する状態
 
 ## Referenced SSoT
 
@@ -25,10 +35,7 @@
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/page-toc/notes.md`
-- `docs/design/page-toc/design-desktop-visible.png`
 - `docs/design/mobile-menu/notes.md`
-- `docs/design/mobile-menu/design-mobile-closed.png`
-- `docs/design/mobile-menu/design-mobile-open.png`
 
 ## Historical source issues
 
@@ -98,7 +105,6 @@
 
 ## Generation source
 
-- generator or capture source: SVGモックを `.tmp/mobile-page-toc-designs/` に生成し、ImageMagick `convert` でPNGへ変換した。元SVGと生成スクリプトはdesign正本ではない。
 - source branch / commit when applicable: branch `14-mobile-page-toc`, issue commit `1d2adae`
 - route when applicable: first draft should use a representative long-form content page with page TOC enabled; non-display checks should include `/`, `/release-notes`, and `/404`
 - viewport: mobile `390x900`
@@ -115,6 +121,6 @@
 
 - `mobile-page-toc` はスマホ / タブレット幅向けページ内目次UI単体のdesign targetとして維持する。
 - 可視triggerラベルは、現行実装および `docs/design/site-layout/` に合わせて `目次` とする。
-- `docs/design/site-layout/design-mobile-page-toc-open.png` は、`/mdx-test/` を代表routeとしてMobilePageToc open stateを確認する横断正本である。
-- `docs/design/site-layout/design-tablet.png` と `docs/design/site-layout/design-mobile.png` は、PC右PageTocが常設表示されず、MobilePageToc triggerが本文H1横に出る状態を確認する正本である。
+- `site-layout`のmobile page toc open VRT stateは、`/-local/mdx-test/`を代表routeとしてMobilePageToc open stateを確認する。
+- `site-layout`のtablet / mobile VRT baselineは、PC右PageTocが常設表示されず、MobilePageToc triggerが本文H1横に出る状態を確認する。
 - `docs/design/site-layout/` では、H1とMobilePageToc triggerがスクロール後も上部にsticky表示される状態を現行正本として扱う。

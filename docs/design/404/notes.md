@@ -1,5 +1,16 @@
 # 404
 
+## VRT baseline
+
+- test: `tests/visual/vrt/404.spec.ts` の `@vrt @404 @<state> @<viewport>`
+- route: `/not-found/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `404-default-desktop.png`
+  - tablet `820x1180`: `404-default-tablet.png`
+  - mobile `390x900`: `404-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -17,9 +28,7 @@
 - states:
   - desktop full-page screenshot
   - mobile full-page screenshot
-- design images:
-  - `docs/design/404/design-desktop.png`
-  - `docs/design/404/design-mobile.png`
+- VRT coverage: `tests/visual/vrt/404.spec.ts` の default state をdesktop / tablet / mobileで比較する。
 
 ## Referenced SSoT
 
@@ -72,24 +81,12 @@
 
 ## Generation Source
 
-- generator or capture source: `tests/visual/not-found.spec.ts` が、存在しない `/not-found/` を開いて出力するPlaywright actual screenshot。
+- current VRT: `tests/visual/vrt/404.spec.ts` の`@vrt @404`で、desktop / tablet / mobileを比較する。
 - source branch: `40-2-404-page`
 - source commit: `c415aaa908cf964a4177c6cde6177968da235c63`。404実装、Visual Test、検索除外を含む固定済みcommitからcanonicalizeする。
 - route: `/not-found/`
 - viewport: desktop `1440x1200`、mobile `390x900`
 - capture notes: ユーザーが2026-07-23に、Visual Review済みの404 actualをdesign正本化することを明示承認した。Visual Reviewの不備を隠すためではなく、ユーザー指定の簡潔な404画面を後続比較の基準にするためにcanonicalizeする。PR #63のレビュー指摘を受け、実装を含む固定済みcommitから再生成する。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- 404 --route /not-found/`
-- source branch: `40-2-404-page`
-- source commit: `c415aaa908cf964a4177c6cde6177968da235c63`
-- route: `/not-found/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open Questions
 

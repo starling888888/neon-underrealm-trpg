@@ -5,7 +5,6 @@ import SearchButton from "../search/SearchButton.astro";
 
 const homePath = withBase("/");
 const logoWebpPath = withBase(siteMeta.titleLogo.webp);
-const logoPngPath = withBase(siteMeta.titleLogo.png);
 ---
 
 <header class="site-header" data-site-header>
@@ -23,18 +22,14 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
   </div>
 
   <a class="site-logo-link" href={homePath} aria-label={`${siteMeta.title} トップページへ`}>
-    <picture>
-      <source srcset={logoWebpPath} type="image/webp" />
-      <img
-        class="site-logo"
-        src={logoPngPath}
-        width={siteMeta.titleLogo.width}
-        height={siteMeta.titleLogo.height}
-        alt={siteMeta.title}
-        decoding="async"
-      />
-    </picture>
-    <span class="site-title-fallback">{siteMeta.title}</span>
+    <img
+      class="site-logo"
+      src={logoWebpPath}
+      width={siteMeta.titleLogo.width}
+      height={siteMeta.titleLogo.height}
+      alt={siteMeta.title}
+      decoding="async"
+    />
   </a>
 
   <div class="header-actions">
@@ -83,15 +78,6 @@ const logoPngPath = withBase(siteMeta.titleLogo.png);
   .site-logo {
     width: auto;
     height: 3rem;
-  }
-
-  .site-title-fallback {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
   }
 
   .header-actions {

@@ -74,10 +74,14 @@ const basePath = import.meta.env.BASE_URL;
 
   .site-menu :global(.site-menu-row) {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 1.5rem;
+    grid-template-columns: minmax(0, 1fr) 2rem;
     align-items: center;
     column-gap: var(--space-2);
     min-height: 2rem;
+  }
+
+  .site-menu :global(.site-menu-item:not(.has-children) .site-menu-row) {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .site-menu :global(.level-2 > .site-menu-row .site-menu-link) {
@@ -89,8 +93,8 @@ const basePath = import.meta.env.BASE_URL;
   }
 
   .site-menu :global(.site-menu-toggle) {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2rem;
+    height: 2rem;
     display: inline-grid;
     justify-self: end;
     place-items: center;

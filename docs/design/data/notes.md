@@ -1,5 +1,16 @@
 # data
 
+## VRT baseline
+
+- test: `tests/visual/vrt/data.spec.ts` の `@vrt @data @<state> @<viewport>`
+- route: `/data/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `data-default-desktop.png`
+  - tablet `820x1180`: `data-default-tablet.png`
+  - mobile `390x900`: `data-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix（reviewed implementationからcanonicalize）
@@ -65,17 +76,6 @@
 
 - initial draft source: standalone HTML/CSS prototype。`.tmp/design/data/prototype.html` と `.tmp/design/data/capture.mjs`を使い、既存Headerとlayout文脈を含むviewport screenshotで初期画像を生成した。
 - canonicalization source: reviewed implementationの`/data`を、approved visual capture workflowでdesktop・mobileともにcaptureする。heroを含むページ全体はcaptureしない。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- data --route /data/`
-- source branch: `27-2-data-index-page`
-- source commit: `209e19d72609da899cca95516d64814a6d688497`
-- route: `/data/`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

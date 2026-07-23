@@ -1,5 +1,16 @@
 # data-cards
 
+## VRT baseline
+
+- test: `tests/visual/vrt/data-cards.spec.ts` の `@vrt @data-cards @<state> @<viewport>`
+- route: `/-local/data-cards/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `data-cards-default-desktop.png`
+  - tablet `820x1180`: `data-cards-default-tablet.png`
+  - mobile `390x900`: `data-cards-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix; reviewed implementation images are canonicalized
@@ -88,15 +99,3 @@
 ## Generation source
 
 - previous design targets: `skill-card`と`item-card`のnotesを統合した。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- data-cards --route /-local/data-cards/`
-- source branch: `main`
-- source commit: `cd27f0650a93a15e4e952edd91a3312e39392b7b`
-- route: `/-local/data-cards/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->

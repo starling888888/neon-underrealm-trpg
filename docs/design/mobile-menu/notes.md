@@ -1,5 +1,15 @@
 # mobile-menu
 
+## VRT baseline
+
+- test: `tests/visual/vrt/mobile-menu.spec.ts` の `@vrt @mobile-menu @<state> @<viewport>`
+- route: `/data/items/weapons/`
+- states / snapshots:
+  - closed, mobile `390x900`: `mobile-menu-default-mobile.png`
+  - open, mobile `390x900`: `mobile-menu-mobile-menu-open-mobile.png`
+- desktop / tablet: mobile-only Componentのため対象外。
+- baseline update: 通常実行では比較のみ行う。ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft
@@ -22,9 +32,7 @@
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/notes.md`
-- `docs/design/header-footer/design-mobile.png`
 - `docs/design/site-menu/notes.md`
-- `docs/design/site-menu/design-desktop.png`
 
 ## Historical source issues
 
@@ -87,12 +95,10 @@
 
 ## Generation source
 
-- generator or capture source: SVGモックをImageMagick `convert` でPNGへ変換した。元SVGは `.tmp/mobile-menu-design-closed.svg` と `.tmp/mobile-menu-design-open.svg` に置く。
 - source branch / commit when applicable: initial version `12-mobile-menu`; updated for `12-1-site-menu-layout-copy`
 - route when applicable: `/`
 - viewport: mobile `390x900`
-- output images: `design-mobile-closed.png`, `design-mobile-open.png`
-- prompt summary or capture notes: closed stateでは既存mobile Headerと本文1カラムを表示した。open stateでは左menu buttonから開いたサイトメニューdrawer、閉じる操作、既存SiteMenuを再利用した階層リンク、背景本文の操作抑止、drawer内スクロール可能性を示した。`12-1-site-menu-layout-copy` 向けに、drawerヘッダーの可視テキストを `メニュー` にし、drawer内SiteMenu本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、disclosure indicatorを階層レベルに関係なく同じ右端ラインへ移動した。検索dialog、ページ内目次、現在ページハイライト、パンくず、前後ナビゲーション、データ駆動の流儀・生き様子項目は描いていない。`design-mobile-open.png` はSVGをPNG化した後、ImageMagick annotateで日本語ラベル `メニュー` を合成した。
+- comparison notes: closed stateでは既存mobile Headerと本文1カラムを表示した。open stateでは左menu buttonから開いたサイトメニューdrawer、閉じる操作、既存SiteMenuを再利用した階層リンク、背景本文の操作抑止、drawer内スクロール可能性を示した。`12-1-site-menu-layout-copy` 向けに、drawerヘッダーの可視テキストを `メニュー` にし、drawer内SiteMenu本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、disclosure indicatorを階層レベルに関係なく同じ右端ラインへ移動した。検索dialog、ページ内目次、現在ページハイライト、パンくず、前後ナビゲーション、データ駆動の流儀・生き様子項目は対象外である。
 
 ## Open questions
 
@@ -105,5 +111,5 @@
 
 - `mobile-menu` はスマホ版サイトメニューdrawer単体の初期draftとして維持する。
 - 現在ページハイライト、ancestor表示、親カテゴリ自動展開を含む現行実装状態は、`docs/design/current-menu-highlight/` と `docs/design/site-layout/` を参照する。
-- `docs/design/site-layout/design-mobile-menu-open.png` は、`/data/items/weapons/` を代表routeとして、現在ページハイライトを含むMobileMenu open stateを確認する正本である。
+- `site-layout`のmobile menu open VRT stateは、`/-local/data-cards/`を代表routeとして、現在ページハイライトを含むMobileMenu open stateを確認する。
 - `mobile-menu` のout of scopeにある現在ページハイライトは、`12-mobile-menu` 時点の初期draft範囲を示すものであり、後続 `15-current-menu-highlight` と `16-layout-screenshot-design-refresh` の正本化を否定しない。

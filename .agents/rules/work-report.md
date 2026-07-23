@@ -12,7 +12,7 @@ Report in this shape:
 - 実行したコマンド
 - 成功した確認
 - 失敗または未確認の項目
-- `docs/agent-failure-log.md` で3回以上積み重なっている同種失敗の有無
+- `docs/agent-failure-log.md` で3回以上積み重なっている同種failure（formatter / linterのみの記録を除く）の有無
 - レビューしてほしい点
 
 ## Git操作
@@ -32,7 +32,7 @@ npm run build
 
 If a command is not run, say why.
 
-If a command fails, report the failing command and the relevant failure summary.
+If a command fails, report the failing command and the relevant failure summary. A formatter or linter finding that is corrected and followed by a successful final check is a normal development loop; do not report the intermediate finding as a failure.
 
 For TypeScript, JavaScript, Astro, or test file changes, use a targeted Biome check before repeating full validation when import order, formatting, or lint feedback is involved:
 
@@ -44,4 +44,4 @@ npx biome check --write <changed-code-files>
 
 If `.md` files were created or edited, run the Markdown formatter before reporting, unless the current issue explicitly says not to. If Markdown-only changes were made, `npm run build` may be skipped when no `.mdx`, Astro, TypeScript, CSS, config, package, generated data, image, or workflow files changed.
 
-After work, inspect `docs/agent-failure-log.md` for categories with 3 or more active entries and report whether such categories exist.
+After work, inspect `docs/agent-failure-log.md` for categories with 3 or more active entries, excluding formatter- or linter-only entries, and report whether such categories exist.

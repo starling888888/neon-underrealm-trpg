@@ -1,5 +1,17 @@
 # page-toc
 
+## VRT baseline
+
+- test: `tests/visual/vrt/page-toc.spec.ts` の `@vrt @page-toc @<state> @<viewport>`
+- route: `/-local/mdx-test/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `page-toc-default-desktop.png`
+  - tablet `820x1180`: `page-toc-default-tablet.png`
+  - mobile `390x900`: `page-toc-default-mobile.png`
+- hidden state snapshots: `page-toc-no-toc-home-desktop.png`, `page-toc-no-toc-not-found-desktop.png`, `page-toc-no-toc-release-notes-desktop.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft
@@ -10,10 +22,10 @@
 - route: 本文ページ / 対象データページで表示。`/`、`/release-notes`、`/404` では非表示
 - viewport: desktop `1440x1200`
 - states:
-  - `design-desktop-visible.png`: 本文ページでPC右サイドにページ内目次を表示する標準状態
-  - `design-desktop-hidden-home.png`: トップページ `/` でページ内目次を表示しない状態
-  - `design-desktop-hidden-release-notes.png`: 更新履歴ページ `/release-notes` でページ内目次を表示しない状態
-  - `design-desktop-hidden-404.png`: 404ページ `/404` でページ内目次を表示しない状態
+  - visible: 本文ページでPC右サイドにページ内目次を表示する標準状態
+  - hidden home: トップページ `/` でページ内目次を表示しない状態
+  - hidden release notes: 更新履歴ページ `/release-notes` でページ内目次を表示しない状態
+  - hidden 404: 404ページ `/404` でページ内目次を表示しない状態
 
 ## Referenced SSoT
 
@@ -93,19 +105,14 @@
 
 ## Generation source
 
-- generator or capture source: SVGモックを `.tmp/page-toc-designs/` に生成し、ImageMagick `convert` でPNGへ変換した。元SVGと生成スクリプトはdesign正本ではない。
 - source branch / commit when applicable: `13-page-toc` / `03f3dd0`
-- route when applicable:
-  - `design-desktop-visible.png`: 本文ページまたは検証用本文ページ
-  - `design-desktop-hidden-home.png`: `/`
-  - `design-desktop-hidden-release-notes.png`: `/release-notes`
-  - `design-desktop-hidden-404.png`: `/404`
+- route: 本文ページまたは検証用本文ページ、`/`、`/release-notes`、`/404`
 - viewport: desktop `1440x1200`
-- prompt summary or capture notes: PC右サイドページ内目次のinitial draft。`base-layout` の右補助レールをPageTocへ置き換え、SiteMenuとの役割差を保つ。表示状態ではH2 / H3のページ内リンク階層が分かることを優先した。非表示状態ではトップページ、更新履歴ページ、404ページにPageToc枠や空状態メッセージを出していない。スマホ用TOC、現在位置ハイライト、検索、パンくず、前後ナビゲーションは描き込んでいない。
+- comparison notes: PC右サイドページ内目次では、SiteMenuとの役割差を保つ。表示状態ではH2 / H3のページ内リンク階層が分かることを優先した。非表示状態ではトップページ、更新履歴ページ、404ページにPageToc枠や空状態メッセージを出していない。スマホ用TOC、現在位置ハイライト、検索、パンくず、前後ナビゲーションは対象外である。
 
 ## Open questions
 
-- 非表示状態の画像は `/`、`/release-notes`、`/404` の3枚を作成済み。見出し1件だけの本文ページも `design-desktop-hidden-short-content.png` として追加する必要があるか。
+- 見出し1件だけの本文ページを、VRT targetへ追加する必要があるか。
 - PageTocの可視見出しは `目次` とする。
 - 右レール内でPageTocをstickyに見せる位置と、Header下の開始位置をどの程度揃えるか。
 - TOC項目が長い場合の折り返しを、2行まで許容するか、行数制限を設けず自然に折り返すか。
@@ -113,6 +120,6 @@
 ## site-layout正本化後の扱い
 
 - `page-toc` はPC右サイドページ内目次単体の初期draftとして維持する。
-- `16-layout-screenshot-design-refresh` 時点では `/release-notes` と `/404` は未実装routeであり、`site-layout` では新規作成も新規正本画像化もしない。現在の `/release-notes` の非表示確認は `docs/design/release-notes/` で扱う。
-- `docs/design/site-layout/design-desktop.png` は、実装済み本文ページ `/mdx-test/` でPC右PageTocが表示される状態を確認する横断正本である。
+- `16-layout-screenshot-design-refresh` 時点では `/release-notes` と `/404` は未実装routeであり、`site-layout` では扱わない。現在の `/release-notes` の非表示確認は `docs/design/release-notes/` で扱う。
+- `site-layout`のdesktop VRT baselineは、実装済み本文ページ `/-local/mdx-test/` でPC右PageTocが表示される横断状態を確認する。
 - `docs/design/site-layout/` では、非表示確認は実装済みの `/` を対象とする。現在の `/release-notes` の非表示確認は `docs/design/release-notes/` で扱い、`/404` は該当ページ実装後に必要に応じて扱う。

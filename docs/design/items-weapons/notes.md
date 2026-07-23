@@ -1,5 +1,16 @@
 # items-weapons
 
+## VRT baseline
+
+- test: `tests/visual/vrt/items-weapons.spec.ts` の `@vrt @items-weapons @<state> @<viewport>`
+- route: `/data/items/weapons/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `items-weapons-default-desktop.png`
+  - tablet `820x1180`: `items-weapons-default-tablet.png`
+  - mobile `390x900`: `items-weapons-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -43,18 +54,6 @@
 - desktop／mobileとも横overflowやカードの重なりを生まない。
 
 ## Generation source
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- items-weapons --route /data/items/weapons/`
-- source branch: `34-2-items-pages`
-- source commit: `6b6ea46b4d099e2d843bfae8c3454089edc14852`
-- route: `/data/items/weapons/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

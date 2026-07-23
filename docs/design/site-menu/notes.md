@@ -1,5 +1,16 @@
 # site-menu
 
+## VRT baseline
+
+- test: `tests/visual/vrt/site-menu.spec.ts` の `@vrt @site-menu @<state> @<viewport>`
+- route: `/world/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `site-menu-default-desktop.png`
+  - tablet `820x1180`: `site-menu-default-tablet.png`
+  - mobile `390x900`: `site-menu-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - initial draft
@@ -94,20 +105,19 @@
 
 ## Generation source
 
-- generator or capture source: SVGモックをImageMagick `convert` でPNGへ変換した。元SVGは `.tmp/site-menu-design-desktop.svg` に置く。hover / focusの見た目が異なる場合のみ、`design-desktop-hover.png` / `design-desktop-focus.png` のようなstate-specific imageを別途作成する。
 - source branch / commit when applicable: initial version `11-site-menu`; updated for `12-1-site-menu-layout-copy`
 - route when applicable: `/`
 - viewport: desktop `1440x1200`
-- prompt summary or capture notes: PC左サイド常設サイトメニューのinitial draft画像を `12-1-site-menu-layout-copy` 向けに更新した。`base-layout` の左レールをSiteMenuへ置き換える前提で、global stylesとHeader / Footerの方向性を維持する。サイドバー本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、メニュー項目を上に詰めた。親カテゴリもリンクとして扱い、最大3階層の親子階層が分かることを優先する。階層を持つ項目には、折りたたみ可能であることが分かる disclosure indicator を階層レベルに関係なく同じ右端ラインへ表示する。項目表示の正確性はdesign画像では固定しないため、画像内ラベルはASCIIの短い代表ラベルにしている。サイドメニュー幅は3階層表示の読みやすさを見て判断する。mobile drawer、現在地ハイライト、PageToc、検索、パンくず、前後ナビゲーションなど、このdesignの対象外である後続taskの機能は描き込まない。
+- comparison notes: PC左サイド常設サイトメニューでは、`base-layout` の左レールをSiteMenuへ置き換える前提で、global stylesとHeader / Footerの方向性を維持する。サイドバー本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、メニュー項目を上に詰めた。親カテゴリもリンクとして扱い、最大3階層の親子階層が分かることを優先する。階層を持つ項目には、折りたたみ可能であることが分かる disclosure indicator を階層レベルに関係なく同じ右端ラインへ表示する。サイドメニュー幅は3階層表示の読みやすさを見て判断する。mobile drawer、現在地ハイライト、PageToc、検索、パンくず、前後ナビゲーションなど、このdesignの対象外である後続taskの機能は含めない。
 
 ## Open questions
 
-- PC左サイドメニューの幅は、最大3階層が読めるdesign画像を見てから判断する。
-- hover / focusの見た目が異なる場合はstate画像を分ける。見た目が同じ場合は標準画像とnotesの記述で扱う。
+- PC左サイドメニューの幅は、最大3階層が読めるVRT baselineを確認して判断する。
+- hover / focusの見た目が異なる場合はstate tagを分ける。見た目が同じ場合はnotesで扱う。
 
 ## site-layout正本化後の扱い
 
 - `site-menu` はPC左サイトメニュー単体の初期draftとして維持する。
 - 現在ページハイライトを含む完成状態は、`docs/design/current-menu-highlight/` と `docs/design/site-layout/` を参照する。
-- `docs/design/site-layout/design-desktop.png` は、Header / Footer / SiteMenu / PageTocを含む横断layout内でのPC左サイトメニューを確認する正本である。
-- `docs/design/site-layout/design-mobile-menu-open.png` は、スマホdrawer内SiteMenuで現在ページとancestor表示を含む状態を確認する正本である。
+- `site-layout`のdesktop VRT baselineは、Header / Footer / SiteMenu / PageTocを含む横断layout内でのPC左サイトメニューを確認する。
+- `site-layout`のmobile menu open VRT stateは、スマホdrawer内SiteMenuで現在ページとancestor表示を含む状態を確認する。

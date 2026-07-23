@@ -1,5 +1,16 @@
 # scenario-play
 
+## VRT baseline
+
+- test: `tests/visual/vrt/scenario-play.spec.ts` の `@vrt @scenario-play @<state> @<viewport>`
+- route: `/rules/scenario-play/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `scenario-play-default-desktop.png`
+  - tablet `820x1180`: `scenario-play-default-tablet.png`
+  - mobile `390x900`: `scenario-play-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -71,10 +82,8 @@
 - prototype or generator source: ユーザー承認済みの現行実装をdesign fix modeで正本化した。
 - source branch / commit when applicable: `24-2-scenario-play-page` / `e190558`
 - route: `/rules/scenario-play/`
-- viewport:
-  - `design-desktop.png`: `1440x1200`、full-page
-  - `design-mobile.png`: `390x900`、full-page
-- capture source: `tests/visual/scenario-play.spec.ts` のPlaywright capture。ユーザーがdesign正本化を明示承認した現行実装を採用した。
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
+- current VRT: `tests/visual/vrt/scenario-play.spec.ts` の`@vrt @scenario-play`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

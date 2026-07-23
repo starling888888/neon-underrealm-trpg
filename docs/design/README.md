@@ -1,31 +1,25 @@
 # デザイン正本
 
-このディレクトリは、Visual Reviewで参照するデザイン正本を置く場所です。
+このディレクトリは、画面、レイアウト、Componentごとのデザイン意図とVRT参照情報を置く場所です。
 
 デザイン正本はissue単位ではなく、画面、レイアウト、Component単位で管理します。
 
-UI、CSS、layout、page、Componentを実装するタスクでは、実装開始前に対象のdesign画像を生成し、このディレクトリ配下の該当design targetに配置します。
+UI、CSS、layout、page、Componentを実装するタスクでは、実装開始前に対象のdesign intentとVRT対象をこのディレクトリ配下の該当design targetへ記録する。
 
-UI実装のissueファイルには、参照するdesign targetと主要なdesign画像を記載します。design画像が未生成の場合は、実装より先にdesign生成を行います。
+比較画像の正本はPlaywright標準の `toHaveScreenshot()` snapshotで管理する。baselineはrepository rootの `canonical-snapshots/visual/<target>/` に置く。`docs/design/<design-target>/` には `notes.md` だけを置き、route、状態、viewport、VRT test名、tag、snapshot名、差分判断の根拠を記録する。
 
 例:
 
 ```txt
 docs/design/
   site-layout/
-    desktop.png
-    mobile.png
     notes.md
   home/
-    desktop.png
-    mobile.png
     notes.md
-  components/
-    header.png
-    footer.png
-    skill-card.png
+  header-footer/
+    notes.md
 ```
 
 同じデザイン正本は、複数のissueから参照して構いません。
 
-Visual Reviewで取得した実装スクリーンショットやレポートは、Playwrightの `test-results/` や `playwright-report/` に出力し、Git管理しません。
+通常のVRT実行はsnapshotを比較するだけで更新しない。baselineの初回作成・更新は、差分を確認したうえでユーザーが明示指示した場合だけ `--update-snapshots` を付けて実行する。Visual Reviewのactual artifactは `test-results/` や `playwright-report/` に出力し、Git管理しない。

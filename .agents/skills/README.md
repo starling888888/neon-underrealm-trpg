@@ -14,15 +14,15 @@ For scope, requirements, or contents-only instructions, perform only the request
 
 ### `design-image-generation`
 
-Use when creating, updating, or canonicalizing design images under `docs/design/<design-target>/`.
+Use when creating or updating design intent and VRT reference notes under `docs/design/<design-target>/`, or when updating an approved VRT baseline.
 
-This skill creates design artifacts only. It does not implement UI and does not perform Visual Review.
+This skill maintains design notes and VRT baselines only. It does not implement UI or perform Visual Review.
 
 ### `visual-implementation-review`
 
-Use after an approved UI, CSS, layout, page, or Component implementation when screenshots must be compared with canonical design references.
+Use after an approved UI, CSS, layout, page, or Component implementation when changed VRT targets must be compared with their canonical baselines.
 
-This skill reviews implementation screenshots. It must not update canonical design images.
+This skill reviews VRT results. It must not update VRT baselines.
 
 ### `review-to-issue`
 

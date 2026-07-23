@@ -1,5 +1,16 @@
 # callout
 
+## VRT baseline
+
+- test: `tests/visual/vrt/callout.spec.ts` の `@vrt @callout @<state> @<viewport>`
+- route: `/-local/callouts/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `callout-default-desktop.png`
+  - tablet `820x1180`: `callout-default-tablet.png`
+  - mobile `390x900`: `callout-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -35,7 +46,7 @@
 - `src/styles/prose.css`
 - `src/components/_common/Callout.astro`
 - `src/pages/-local/callouts.mdx`
-- `tests/visual/callout.spec.ts`
+- `tests/visual/vrt/callout.spec.ts`
 
 ## Canonicalization Note
 
@@ -95,13 +106,11 @@
 
 ## Generation Source
 
-- generator or capture source: `tests/visual/callout.spec.ts` のPlaywright captureを確認し、ユーザー承認済みのdesign fix modeで現行実装を正本化した。
+- current VRT: `tests/visual/vrt/callout.spec.ts` の`@vrt @callout`で、desktop / tablet / mobileを比較する。
 - source branch / commit when applicable: `20-1-common-callout-component` / `51f58d4`
 - route when applicable: `/-local/callouts/`
-- viewport:
-  - `design-desktop.png`: `1440x1200` viewport, full-page capture
-  - `design-mobile.png`: `390x900` viewport, full-page capture
-- prompt summary or capture notes: 6種のCalloutとtitle指定例を実ページの本文カラム条件で比較する。global stylesの白寄り背景、低彩度border、neutral / teal / warning / danger token方向を守り、色だけに依存しないラベルと記号マーカーを配置した。`titleHeadingLevel`の追加はHTML構造だけを変え、H2とH3の指定時だけ既存PageToc階層へ反映する。Calloutの視覚的なtitle密度は変えないため、design画像の更新は不要と判断した。
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
+- comparison notes: 6種のCalloutとtitle指定例を実ページの本文カラム条件で比較する。global stylesの白寄り背景、低彩度border、neutral / teal / warning / danger token方向を守り、色だけに依存しないラベルと記号マーカーを配置した。`titleHeadingLevel`の追加はHTML構造だけを変え、H2とH3の指定時だけ既存PageToc階層へ反映する。Calloutの視覚的なtitle密度はVRT baselineで維持する。
 
 ## Open Questions
 

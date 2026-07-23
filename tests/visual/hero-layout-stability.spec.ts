@@ -1,10 +1,5 @@
 import { expect, type Locator, test } from "@playwright/test";
-import {
-  visualBaseUrl,
-  visualOutputDir,
-  visualRoutes,
-  visualViewports,
-} from "./config";
+import { visualBaseUrl, visualRoutes, visualViewports } from "./config";
 
 const staticHeroRoutes = [
   visualRoutes.world,
@@ -26,8 +21,8 @@ const staticHeroRoutes = [
 ] as const;
 
 const dynamicHeroRoutes = [
-  visualRoutes.dataRyugiKenkaya,
-  visualRoutes.dataIkizamaBurai,
+  visualRoutes.dataRyugiDetail("kenkaya"),
+  visualRoutes.dataIkizamaDetail("burai"),
 ] as const;
 
 const imageBasePath = new URL(visualBaseUrl).pathname.replace(/\/$/u, "");
@@ -56,7 +51,7 @@ const layoutShiftScenarios = [
   },
   {
     name: "dynamic hero",
-    route: visualRoutes.dataRyugiKenkaya,
+    route: visualRoutes.dataRyugiDetail("kenkaya"),
     imageSelector: "article img.ryugi-hero",
     followingSelector: "article > p",
     imagePath: "/images/data/ryugi/kenkaya_hero.webp",
@@ -155,13 +150,6 @@ for (const scenario of layoutShiftScenarios) {
 
         const yAfterImageLoad = await getY(following);
         expect(yAfterImageLoad).toBe(yBeforeImageLoad);
-
-        if (scenario.name === "top logo") {
-          await page.screenshot({
-            fullPage: true,
-            path: `${visualOutputDir}/hero-layout-stability-${viewportName}.png`,
-          });
-        }
       } finally {
         releaseAsset.resolve();
         await page.unroute(assetPattern);

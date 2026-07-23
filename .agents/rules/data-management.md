@@ -128,7 +128,7 @@ After merge, `post-merge-plan-update` removes only `.tmp/review/<merged-branch>/
 
 ## Design Artifacts
 
-Put canonical design references under:
+Put design intent and VRT reference notes under:
 
 ```text
 docs/design/<design-target>/
@@ -143,11 +143,11 @@ playwright-report/
 
 Do not commit Visual Review output directories.
 
-Do not replace canonical design images with actual screenshots unless the design-image-generation design fix workflow is approved.
+Keep canonical VRT baselines in Playwright standard snapshot directories. `docs/design/<design-target>/` is notes-only. Do not copy actual screenshots into `docs/design/`; baseline creation and updates require the user's explicit instruction.
 
-For initial page, layout, UI, CSS, and component design drafts, put standalone HTML/CSS prototypes and Playwright capture scripts under `.tmp/design/<design-target>/`. These prototypes are temporary design work, not implementation source. Capture them at the documented viewports and move only the selected design reference images to `docs/design/<design-target>/`.
+For initial page, layout, UI, CSS, and component design work, record the intended route, states, viewports, constraints, and comparison points in `docs/design/<design-target>/notes.md`. Do not create standalone screenshot prototypes or store design images under `docs/design/`.
 
-Do not use the local application route, `test-results/`, or `playwright-report/` as the source of an initial design prototype image. Those are actual implementation screenshots and remain subject to the design fix approval workflow.
+Use the local application route only through the matching VRT target. `test-results/` and `playwright-report/` remain transient diagnostic output and are never a design source of truth.
 
 ## Required Ignore Policy
 

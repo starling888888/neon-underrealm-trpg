@@ -1,5 +1,16 @@
 # support
 
+## VRT baseline
+
+- test: `tests/visual/vrt/support.spec.ts` の `@vrt @support @<state> @<viewport>`
+- route: `/support/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `support-default-desktop.png`
+  - tablet `820x1180`: `support-default-tablet.png`
+  - mobile `390x900`: `support-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -69,18 +80,6 @@
 ## Generation Source
 
 実装済み `/support/` のPlaywright Visual Reviewを、ユーザー承認済みのdesign fixとして正本化する。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- support --route /support/`
-- source branch: `41-2-support-page`
-- source commit: `06ba3ba363f6ec6370d80fedf1b7686a267abfdf`
-- route: `/support/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open Questions
 

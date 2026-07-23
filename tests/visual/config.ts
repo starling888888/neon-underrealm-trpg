@@ -26,9 +26,9 @@ export const visualRoutes = {
   data: "data/",
   commonSkills: "data/common-skills/",
   dataRyugi: "data/ryugi/",
-  dataRyugiKenkaya: "data/ryugi/kenkaya/",
+  dataRyugiDetail: (ryugiId: string) => `data/ryugi/${ryugiId}/`,
   dataIkizama: "data/ikizama/",
-  dataIkizamaBurai: "data/ikizama/burai/",
+  dataIkizamaDetail: (ikizamaId: string) => `data/ikizama/${ikizamaId}/`,
   dataItems: "data/items/",
   releaseNotes: "release-notes/",
   dataItemsArmors: "data/items/armors/",
@@ -43,6 +43,8 @@ export const visualRoutes = {
   dataCards: "-local/data-cards/",
   pageNavigation: "-local/page-navigation/",
   dataItemsWeapons: "data/items/weapons/",
+  headerFooter: "-local/header-footer/",
+  styleTiles: "-local/style-tiles/",
 } as const;
 
 export const visualViewports = {
@@ -59,5 +61,3 @@ export const visualViewports = {
     height: 900,
   },
 } as const;
-
-export const visualOutputDir = "test-results/visual";

@@ -1,5 +1,16 @@
 # battle
 
+## VRT baseline
+
+- test: `tests/visual/vrt/battle.spec.ts` の `@vrt @battle @<state> @<viewport>`
+- route: `/rules/battle/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `battle-default-desktop.png`
+  - tablet `820x1180`: `battle-default-tablet.png`
+  - mobile `390x900`: `battle-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -64,10 +75,8 @@
 - prototype or generator source: ユーザーが明示承認した現行実装をdesign fixとして正本化した。
 - source branch / commit: `25-2-battle-page` / `594448a5b3a0fd8bc3b228505f325b49e00ce544`
 - route: `/rules/battle/`
-- viewport:
-  - `design-desktop.png`: `1440x1200`、full-page
-  - `design-mobile.png`: `390x900`、full-page
-- capture source: `tests/visual/battle.spec.ts` のPlaywright capture。`test-results/visual/battle-desktop.png` と `battle-mobile.png` を、Visual Reviewの差分を隠すためではなく、レビュー済み実装を後続比較の正本として採用した。
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
+- current VRT: `tests/visual/vrt/battle.spec.ts` の`@vrt @battle`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

@@ -1,13 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { createHash } from "../../src/lib/utils/hash";
-import {
-  visualBaseUrl,
-  visualOutputDir,
-  visualRoutes,
-  visualViewports,
-} from "./config";
+import { visualBaseUrl, visualRoutes, visualViewports } from "./config";
 
 const basicAttackId = `skill-common-bonus-a-${createHash("基本の一撃")}`;
+const basicAttackResultSelector = `.search-result-link[href*="/data/common-skills/"][href$="#${basicAttackId}"]`;
 
 test("search panel desktop @search-modal-desktop", async ({ page }) => {
   await page.setViewportSize(visualViewports.desktop);
@@ -25,11 +21,6 @@ test("search panel desktop @search-modal-desktop", async ({ page }) => {
   await expect(page.locator("[data-search-scrim]")).toBeVisible();
   await expect(searchInput).toHaveAttribute("aria-expanded", "true");
   await expect(page.locator("body")).toHaveClass(/search-open/);
-  await page.screenshot({
-    fullPage: false,
-    path: `${visualOutputDir}/search-modal-desktop.png`,
-  });
-
   await page.locator("[data-search-scrim]").click({ position: { x: 8, y: 8 } });
   await expect(panel).toBeHidden();
   await expect(searchInput).not.toBeFocused();
@@ -37,9 +28,7 @@ test("search panel desktop @search-modal-desktop", async ({ page }) => {
 
   await searchInput.fill("基本の一撃");
   await expect(panel).toBeVisible();
-  await expect(
-    page.locator(`.search-result-link[href$="#${basicAttackId}"]`),
-  ).toBeVisible();
+  await expect(page.locator(basicAttackResultSelector)).toBeVisible();
   await expect
     .poll(async () => {
       const box = await panel.boundingBox();
@@ -53,11 +42,6 @@ test("search panel desktop @search-modal-desktop", async ({ page }) => {
       }),
     )
     .toBe(true);
-  await page.screenshot({
-    fullPage: false,
-    path: `${visualOutputDir}/search-modal-results-desktop.png`,
-  });
-
   await page.keyboard.press("Escape");
   await expect(panel).toBeHidden();
   await expect(searchInput).not.toBeFocused();
@@ -76,11 +60,6 @@ test("search panel mobile @search-modal-mobile", async ({ page }) => {
   await expect(page.locator("body")).toHaveClass(/search-open/);
   await expect(page.locator("[data-search-mobile-input]")).toBeFocused();
   await expect(page.locator("[data-search-mobile-form]")).toBeVisible();
-  await page.screenshot({
-    fullPage: false,
-    path: `${visualOutputDir}/search-modal-mobile.png`,
-  });
-
   await page.keyboard.press("Escape");
   await expect(panel).toBeHidden();
   await expect(toggle).toHaveAttribute("aria-label", "検索を開く");
@@ -128,7 +107,7 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
   const searchInput = page.locator("[data-search-desktop-input]");
   await searchInput.fill("基本の一撃");
 
-  const result = page.locator(`.search-result-link[href$="#${basicAttackId}"]`);
+  const result = page.locator(basicAttackResultSelector);
   await expect(page.locator("[data-search-results-list]")).toBeVisible();
   await expect(result).toHaveAttribute(
     "href",
@@ -170,13 +149,7 @@ test("search panel displays a Pagefind data-card anchor result @search-modal-res
   await page.locator("[data-search-mobile-toggle]").click();
   await page.locator("[data-search-mobile-input]").fill("基本の一撃");
   await page.locator(".mobile-search-submit").click();
-  await expect(
-    page.locator(`.search-result-link[href$="#${basicAttackId}"]`),
-  ).toBeVisible();
-  await page.screenshot({
-    fullPage: false,
-    path: `${visualOutputDir}/search-modal-results-mobile.png`,
-  });
+  await expect(page.locator(basicAttackResultSelector)).toBeVisible();
 });
 
 test("search panel guides one-character kana and ASCII searches @search-modal-query-validation", async ({
@@ -236,8 +209,6 @@ test("search panel retries Pagefind after an initial load failure @search-modal-
   );
 
   await searchInput.fill("基本の一撃 ");
-  await expect(
-    page.locator(`.search-result-link[href$="#${basicAttackId}"]`),
-  ).toBeVisible();
+  await expect(page.locator(basicAttackResultSelector)).toBeVisible();
   await expect.poll(() => pagefindRequestCount).toBeGreaterThanOrEqual(2);
 });

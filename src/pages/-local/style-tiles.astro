@@ -1,0 +1,133 @@
+---
+import Callout from "../../components/_common/Callout.astro";
+import AppContainer from "../../layouts/AppContainer.astro";
+
+const codeSample = `const styleTile = {
+  accent: "var(--color-accent)",
+  readable: true,
+};`;
+---
+
+<AppContainer
+  title="Global styles確認"
+  description="global styleのVRT確認用ローカルページです。"
+  noindex
+  showPageToc={true}
+>
+  <article class="style-tile prose">
+    <h1>Global styles確認</h1>
+    <p>
+      本文、リンク、表、引用、code block、color palette、Calloutの共通styleを実装と同じCSSで確認します。
+    </p>
+
+    <h2>Color palette</h2>
+    <p>共通color tokenが意図した役割で表示されることを確認します。</p>
+    <ul class="style-tile-palette" aria-label="共通color token">
+      <li style="--tile-color: var(--color-page)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-page</code>
+      </li>
+      <li style="--tile-color: var(--color-surface-inverse)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-surface-inverse</code>
+      </li>
+      <li style="--tile-color: var(--color-surface)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-surface</code>
+      </li>
+      <li style="--tile-color: var(--color-surface-muted)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-surface-muted</code>
+      </li>
+      <li style="--tile-color: var(--color-border)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-border</code>
+      </li>
+      <li style="--tile-color: var(--color-text)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-text</code>
+      </li>
+      <li style="--tile-color: var(--color-text-muted)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-text-muted</code>
+      </li>
+      <li style="--tile-color: var(--color-link)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-link</code>
+      </li>
+      <li style="--tile-color: var(--color-accent)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-accent</code>
+      </li>
+      <li style="--tile-color: var(--color-prose-accent)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-prose-accent</code>
+      </li>
+      <li style="--tile-color: var(--color-warning)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-warning</code>
+      </li>
+      <li style="--tile-color: var(--color-danger)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-danger</code>
+      </li>
+      <li style="--tile-color: var(--color-focus)">
+        <span class="style-tile-swatch" aria-hidden="true"></span>
+        <code>--color-focus</code>
+      </li>
+    </ul>
+
+    <h2>本文とリンク</h2>
+    <p>
+      <a href="#comparison">本文リンク</a> と <code>inline code</code>、<strong>強調</strong>、<em>補足</em>を並べます。
+    </p>
+    <blockquote>
+      参照性を優先し、強すぎない色と余白で本文の読みやすさを保ちます。
+    </blockquote>
+
+    <h2>Code block</h2>
+    <pre><code>{codeSample}</code></pre>
+
+    <h2 id="comparison">表とCallout</h2>
+    <table>
+      <thead>
+        <tr><th>項目</th><th>確認内容</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>surface</td><td>白寄りの本文面</td></tr>
+        <tr><td>accent</td><td>控えめな青緑</td></tr>
+      </tbody>
+    </table>
+    <Callout type="note" title="確認用注記">
+      共通styleが使われないまま変化しても、このfixtureのVRTで検出します。
+    </Callout>
+  </article>
+</AppContainer>
+
+<style>
+  .style-tile-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  .style-tile-palette li {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .style-tile-swatch {
+    display: block;
+    min-height: 3rem;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--tile-color);
+  }
+
+  .style-tile-palette code {
+    width: fit-content;
+  }
+</style>

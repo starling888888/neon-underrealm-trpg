@@ -1,5 +1,16 @@
 # world
 
+## VRT baseline
+
+- test: `tests/visual/vrt/world.spec.ts` の `@vrt @world @<state> @<viewport>`
+- route: `/world/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `world-default-desktop.png`
+  - tablet `820x1180`: `world-default-tablet.png`
+  - mobile `390x900`: `world-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -15,9 +26,7 @@
 - states:
   - desktop: SiteMenu、PageToc、本文、hero、NpcCard
   - mobile: Header、MobilePageToc trigger、本文、hero、NpcCard
-- design images:
-  - `design-desktop.png`
-  - `design-mobile.png`
+- VRT coverage: `tests/visual/vrt/world.spec.ts` のdesktop / tablet / mobile baseline
 
 ## Referenced SSoT
 
@@ -65,28 +74,14 @@
 ## Generation source
 
 - route: `/world/`
-- capture: `tests/visual/world.spec.ts`をbuild後の`npm run preview`に対して実行する。
-- source artifacts:
-  - `test-results/visual/world-desktop.png`
-  - `test-results/visual/world-mobile.png`
+- current VRT: `tests/visual/vrt/world.spec.ts` の`@vrt @world`で、desktop / tablet / mobileを比較する。
+- snapshots: `canonical-snapshots/visual/world/` のdesktop / tablet / mobile baseline
 - user approval: `デザイン正本化。ワールドガイドとローカル用のNPCカード用ページ。`（2026-07-22）。
 
 ## Canonicalization rationale
 
 - build後のpreviewでPageTocを含めて確認済みのactualを採用し、個別NPC画像、セリフ、左右交互を含むpage-level正本を作る。
 - Visual Reviewの不備を隠すためではなく、ユーザーが明示承認した現行実装の状態を比較基準にするための正本化である。
-
-<!-- visual-canonicalization:start -->
-
-- command: `npm run visual:canonicalize -- world --route /world/`
-- source branch: `42-0-npc-data-normalization`
-- source commit: `f28b6984623e89b05b0329466de4468d7bc882bb`
-- route: `/world/`
-- state: `default`
-- viewport: desktop 1440x1200, mobile 390x900
-- capture manifest: `test-results/visual/capture-manifest.json`
-
-<!-- visual-canonicalization:end -->
 
 ## Open questions
 

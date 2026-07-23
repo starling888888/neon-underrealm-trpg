@@ -1,5 +1,16 @@
 # introduction
 
+## VRT baseline
+
+- test: `tests/visual/vrt/introduction.spec.ts` の `@vrt @introduction @<state> @<viewport>`
+- route: `/introduction/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `introduction-default-desktop.png`
+  - tablet `820x1180`: `introduction-default-tablet.png`
+  - mobile `390x900`: `introduction-default-mobile.png`
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## Mode
 
 - design fix
@@ -88,11 +99,8 @@
 - prototype or generator source: Playwright actual screenshotを、ユーザー承認済みのdesign fix modeで正本化した。
 - source branch / commit when applicable: `20-2-introduction-page` / `5eead14`
 - route when applicable: `/introduction`
-- viewport:
-  - desktop `1440x1200` viewport capture: `test-results/visual/introduction-desktop.png` から `docs/design/introduction/design-desktop.png` へ正本化
-  - mobile `390x900` viewport capture: `test-results/visual/introduction-mobile.png` から `docs/design/introduction/design-mobile.png` へ正本化
-- prototype path / prompt summary / capture notes:
-  - `tests/visual/introduction.spec.ts` がbuild後previewの`/introduction`をcaptureしたactual screenshotを使用した。
+- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
+- current VRT: `tests/visual/vrt/introduction.spec.ts` の`@vrt @introduction`で、desktop / tablet / mobileを比較する。
   - 初期prototypeとの差分は、実装済みproseの正確な行送り、用語説明の折り返し、Callout Componentの実際のpaddingと本文量である。いずれもrequirements、global styles、site-layout、calloutの方向と整合する。
   - 可視titleはCallout内の単一H2であり、PageTocとMobilePageTocから到達できる。既定Callout titleはspanのままで、既存CalloutのPageToc非混入は維持する。
   - user approval: `デザイン正本化`（2026-07-11）。Visual Reviewの差分を隠す目的ではなく、レビュー済み実装を導入ページの比較基準として採用する。

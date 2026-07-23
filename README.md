@@ -37,6 +37,8 @@ npm run format:md
 npm run check:md
 npm run preview
 npm run visual:capture
+npm run visual:build
+npm run visual:test
 npm run visual:install
 ```
 
@@ -49,10 +51,13 @@ npm run visual:install
 - `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
 - `npm run check:md`: Markdown `.md` のformat / 最小style ruleを確認する
 - `npm run preview`: ビルド済みサイトをローカルで確認する
-- `npm run visual:capture`: PlaywrightでVisual Review用スクリーンショットを取得する
+- `npm run visual:capture`: Visual Review / contents review向けに、指定VRT targetの一時snapshotを取得する。canonical baselineは更新しない
+- `npm run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
+- `npm run visual:test`: Playwright標準VRT baselineを比較する
+- `npm run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
 - `npm run visual:install`: Visual Review用のChromiumをインストールする
 
-`npm test` はロジックと公開HTMLのcontract検証用です。Visual Review用スクリーンショット取得は `npm run visual:capture` を使います。
+`npm test` はロジックと公開HTMLのcontract検証用です。VRTは `npm run visual:test` で比較し、baseline更新は明示指示時だけ `npm run visual:update` を使います。
 
 ## 別端末からCodexセッションへ接続する
 
@@ -182,11 +187,11 @@ V1.5で処理順を明確化しました。
 - `src/pages/-local/`: dev serverで確認するローカル確認ページの本文ソース
 - `public/`: 静的アセット
 - `docs/`: 要件、計画、運用ドキュメント
-- `docs/design/`: Visual Reviewで参照するデザイン正本とdesign notes
+- `docs/design/`: design intentとVRT参照情報のnotes
 - `docs/issue/`: タスクごとの作業定義
 - `docs/TODO.md`: 現在のissueでは対応しないが、将来対応すべきレビュー指摘・改善候補
 - `.agents/skills/`: 生成AIエージェント用の定型workflow
-- `tests/visual/`: Visual Review用のPlaywright capture
+- `tests/visual/`: Playwright VRTと、VRTでは確認できないUI操作のテスト
 - `data/generated/`: Excelから変換した公開用JSONの配置先
 - `.raw/`: Google Drive由来ファイルを同期するローカル作業入力。Git管理しない
 - `raw-google-drive.url`: Google Drive同期対象フォルダURLを置くローカル設定ファイル。Git管理しない
@@ -216,8 +221,8 @@ V1.5で処理順を明確化しました。
 - `contents-markdown-authoring`: `.raw/contents/*.md` 用のMarkdownソース草案を作成または確認する
 - `review-to-issue`: `.tmp/*.md` のレビュー指摘をローカルSSoTで検証し、current issue / `docs/TODO.md` / `docs/plan.md` へ振り分ける
 - `pr-review-draft`: GitHub PR snapshotから、ローカル検証前のPRレビュー草案を作る
-- `design-image-generation`: `docs/design/<design-target>/` のdesign画像・notesを作成または正本化する
-- `visual-implementation-review`: 実装スクリーンショットをdesign正本と比較し、issue内にVisual Review結果を記録する
+- `design-image-generation`: `docs/design/<design-target>/` のdesign intent・VRT参照情報を作成または更新し、明示承認時だけbaselineを更新する
+- `visual-implementation-review`: 変更targetのVRTをbaselineと比較し、issue内にVisual Review結果を記録する
 - `post-merge-plan-update`: merge後にplan / TODO / issueのtrackingを更新し、完了済み項目をdone側へ退避する
 
 remote snapshot draftやPRレビュー草案は、ローカルrepoで検証されるまで正式な作業記録ではありません。
@@ -267,32 +272,32 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づけます
 
 merge済みPRでTODO項目まで対応した場合は、`post-merge-plan-update` workflowでそのTODOを完了済みに移動します。
 
-## Design Images
+## Design References
 
-デザイン正本は `docs/design/<design-target>/` に置きます。
+`docs/design/<design-target>/` はnotes-onlyです。各design targetの意図、対象route、状態、viewport、参照SSoT、out-of-scope、比較観点、VRT testとsnapshot名を`notes.md`へ記録します。
 
-各design targetには、画像だけでなく `notes.md` を併置し、対象route / viewport / 参照SSoT / out-of-scope / Visual Review比較観点を記録します。
+視覚比較の正本は、Playwright標準の`toHaveScreenshot()` snapshotを`canonical-snapshots/visual/<target>/`で管理します。
 
-デザイン画像の作成・更新は `design-image-generation` skill に従います。
+design intentの作成・更新と、明示承認済みVRT baselineの更新は `design-image-generation` skill に従います。
 
-- initial draft: 実装前に要件、out-of-scope、既存global design、layout designに基づいてdesign案を作る
-- design fix: レビュー済み実装スクリーンショットを、明示承認後にdesign正本へ昇格する
+- design notes: 実装前に要件、out-of-scope、既存global design、layout designに基づく意図と比較条件を記録する
+- baseline update: レビュー済み実装との差分を確認し、明示承認後に該当targetのVRT baselineだけを更新する
 
-未承認のinitial draftを最終的なdesign正本として扱ってはいけません。
+`docs/design/`へ画像を作成・コピーしてはいけません。VRT baselineを明示承認なく更新してはいけません。
 
-out-of-scopeの機能は、実装だけでなくdesign画像にも描き込まない方針です。
+out-of-scopeの機能は、実装だけでなくdesign notesやVRT対象にも含めない方針です。
 
 ## Visual Review
 
-Visual Reviewは、承認済みUI実装後にデザイン正本と実装スクリーンショットを比較するための確認フローです。
+Visual Reviewは、承認済みUI実装後に変更targetのVRTをbaselineと比較する確認フローです。
 
-デザイン正本は `docs/design/<design-target>/` に置きます。Visual Reviewで取得したスクリーンショットやレポートはPlaywrightの `test-results/` / `playwright-report/` に出力し、Git管理しません。
+通常のローカル開発では全件VRTを実行しません。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更targetへ限定して比較します。
 
-Playwrightで取得したスクリーンショットは actual artifact であり、design正本ではありません。
+Playwrightの`test-results/` / `playwright-report/`に出力されるartifactは診断用であり、Git管理しません。
 
-実装スクリーンショットを新しいdesign正本として採用する場合は、`design-image-generation` skill の design fix mode で、既存designとの差分と正本化理由を記録し、明示承認後に `docs/design/<design-target>/` へ反映します。
+baseline更新が必要な場合は、`design-image-generation` skillで既存baselineとの差分と更新理由を記録し、明示承認後に該当targetだけを更新します。
 
-Visual Reviewの失敗を隠す目的で、actual screenshotを直接 `docs/design/` にコピーしてはいけません。
+Visual Reviewの失敗を隠す目的でbaselineを更新してはいけません。
 
 ## 初期スコープ外
 

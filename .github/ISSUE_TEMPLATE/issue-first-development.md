@@ -15,7 +15,7 @@
 - `docs/plan.md`
 - `docs/TODO.md` に関連項目がある場合は該当TODO
 - UI、CSS、layout、page、Componentタスクで該当する場合は `docs/design/<design-target>/`
-- design画像作成が必要な場合は `.agents/skills/design-image-generation/SKILL.md`
+- design intent / VRT参照情報の作成が必要な場合は `.agents/skills/design-image-generation/SKILL.md`
 
 ## 対象範囲
 
@@ -47,8 +47,8 @@
 - [ ] 条件2
 - [ ] 条件3
 - [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
-- [ ] UI系タスクの場合は、参照するdesign targetとdesign画像の扱いが記録されている
-- [ ] design画像作成が必要な場合は、`design-image-generation` の実行を前提条件として記録している
+- [ ] UI系タスクの場合は、参照するdesign targetとVRT baselineの扱いが記録されている
+- [ ] design notesの作成またはVRT baseline更新が必要な場合は、`design-image-generation` の実行を前提条件として記録している
 - [ ] `npm run build` が通る
 - [ ] 必要に応じて `npm run check` が通る
 
@@ -75,7 +75,7 @@ UI、CSS、layout、page、Componentタスクでは、該当する `docs/design/
 
 関連TODOを扱う場合は、TODOをこのissueで回収してよいか確認してほしい観点を書く。
 
-デザイン画像作成が必要な場合は、`design-image-generation` に切り出す前提条件が正しいか確認してほしい観点を書く。
+design notesの作成またはVRT baseline更新が必要な場合は、`design-image-generation` に切り出す前提条件が正しいか確認してほしい観点を書く。
 
 ## 備考
 

@@ -1,5 +1,17 @@
 # Global Styles Design Notes
 
+## VRT baseline
+
+- test: `tests/visual/vrt/global-styles.spec.ts` の `@vrt @global-styles @<state> @<viewport>`
+- route: `/-local/style-tiles/`
+- state: default
+- snapshots:
+  - desktop `1440x1200`: `canonical-snapshots/visual/global-styles/default-desktop.png`
+  - tablet `820x1180`: `canonical-snapshots/visual/global-styles/default-tablet.png`
+  - mobile `390x900`: `canonical-snapshots/visual/global-styles/default-mobile.png`
+- fixture coverage: 共通color tokenのpalette、本文、リンク、inline code、`pre > code`、引用、表、Callout
+- baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+
 ## 目的
 
 07-global-styles で実装するCSS基盤のデザイン方針を定義する。
@@ -123,29 +135,13 @@
 
 高度なComponent見た目は後続タスクで扱う。
 
-## 生成する画像
+## VRT fixtureに含める内容
 
-07実装前に、CSS基盤のスタイルタイル画像を生成する。
+`/-local/style-tiles/` は実装と同じCSSを適用するVRT専用fixtureである。比較画像は`canonical-snapshots/visual/global-styles/`のPlaywright snapshotで管理し、`docs/design/`には置かない。
 
-想定ファイル:
+fixture内の文言、表、コード、数値、説明文は、すべて見た目確認用のダミーである。実際のネオン・アンダーレルムTRPGのゲームルール、データ、用語定義、処理手順とは関係しない。
 
-```txt
-docs/design/global-styles/style-tile.png
-```
-
-必要なら、モバイル幅の確認用として以下も追加する。
-
-```txt
-docs/design/global-styles/style-tile-mobile.png
-```
-
-この画像はキービジュアルではない。07のCSS実装時に、色、文字、余白、本文密度を確認するための参照資料とする。
-
-画像内に表示されるルール本文、用語、表、コード、数値、説明文は、すべて見た目確認用のダミーである。実際のネオン・アンダーレルムTRPGのゲームルール、データ、用語定義、処理手順とは関係しない。
-
-## 画像に含めるべき内容
-
-`style-tile.png` には、以下が出力されているべきである。
+fixtureには以下を含める。
 
 - page background、header background、surface、surface muted、borderの色見本
 - text、text muted、link、accent、warning、danger、focusの色見本
@@ -164,8 +160,6 @@ docs/design/global-styles/style-tile-mobile.png
 - 見出し罫線、引用罫線、リストmarkerが濃いグレー寄りで、長文閲覧時に目へ強く当たりすぎないこと
 - マゼンタを基本アクセントとして使っていないこと
 
-`style-tile-mobile.png` を作る場合は、以下が分かるべきである。
-
 - モバイル幅での本文余白
 - 見出しと本文のサイズ感
 - 箇条書き、コールアウト、コード、表が画面幅で破綻しないこと
@@ -173,7 +167,7 @@ docs/design/global-styles/style-tile-mobile.png
 
 ## 07実装で使う判断基準
 
-07-global-styles では、このメモとスタイルタイル画像をもとに、以下を実装する。
+07-global-styles では、このメモとstyle-tile VRT fixtureをもとに、以下を実装する。
 
 - `src/styles/tokens.css`
 - `src/styles/global.css`
@@ -199,4 +193,4 @@ docs/design/global-styles/style-tile-mobile.png
 - マゼンタを使わない方針でよいか
 - 本文サイズ、見出しサイズ、行間の方向性
 - 表やコードの密度
-- スタイルタイル画像に追加したい表示要素
+- style-tile VRT fixtureに追加したい表示要素

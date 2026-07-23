@@ -24,6 +24,7 @@ const isExpanded = getSiteMenuItemInitialExpanded(item, currentPath, basePath);
 const itemClasses = [
   "site-menu-item",
   `level-${level}`,
+  hasChildren ? "has-children" : null,
   isCurrent ? "is-current" : null,
   isAncestor ? "is-ancestor" : null,
 ]
