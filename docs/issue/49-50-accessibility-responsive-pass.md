@@ -136,6 +136,13 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - Phase A の完了報告は本 issue の実装承認ではない。Phase B の修正計画を確認した後、ユーザーが「修正開始」と明示した場合にだけ Phase C へ進む。
 - ユーザー指示により、Phase Cの完了・レビュー後にはPhase Dで全design正本をPlaywright標準VRT baselineへ移行する。Phase DはVisual Reviewのactual screenshotをそのまま正本化する工程ではなく、既存正本との差分とSSoT整合を確認した上で、ユーザーの明示指示時だけbaselineを更新する。
 
+## Phase D 追加: 流儀・生き様詳細のデグレ検知
+
+- 流儀詳細10ページ、生き様詳細4ページは、desktop `1440x1200` のdefault VRT baselineを各IDごとに取得する。
+- tablet `820x1180` とmobile `390x900` は、Calloutを含む代表詳細だけを対象とする。流儀は`kenkaya`、生き様は`sumi`を使う。
+- `docs/design/ryugi-detail/notes.md` と`docs/design/ikizama-detail/notes.md`は、代表ページのroute・viewport・snapshot規約だけを記録し、全IDの同内容を列挙しない。
+- [x] 全14詳細ページのdesktop VRT baselineと、`kenkaya` / `sumi`のtablet・mobile baselineを作成し、同じtarget限定比較を通す。
+
 ## レビュー指摘 1
 
 レビュー元: local PR review（PR #68、`2b594125c0d8281d4646232048ba3d1fc611d461..414ef05443e10f0ced1466ca41bc8036f87b0967`）

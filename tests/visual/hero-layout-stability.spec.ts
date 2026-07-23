@@ -21,8 +21,8 @@ const staticHeroRoutes = [
 ] as const;
 
 const dynamicHeroRoutes = [
-  visualRoutes.dataRyugiKenkaya,
-  visualRoutes.dataIkizamaBurai,
+  visualRoutes.dataRyugiDetail("kenkaya"),
+  visualRoutes.dataIkizamaDetail("burai"),
 ] as const;
 
 const imageBasePath = new URL(visualBaseUrl).pathname.replace(/\/$/u, "");
@@ -51,7 +51,7 @@ const layoutShiftScenarios = [
   },
   {
     name: "dynamic hero",
-    route: visualRoutes.dataRyugiKenkaya,
+    route: visualRoutes.dataRyugiDetail("kenkaya"),
     imageSelector: "article img.ryugi-hero",
     followingSelector: "article > p",
     imagePath: "/images/data/ryugi/kenkaya_hero.webp",

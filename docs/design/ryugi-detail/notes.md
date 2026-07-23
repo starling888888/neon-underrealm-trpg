@@ -2,13 +2,13 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/ryugi-detail.spec.ts` の `@vrt @ryugi-detail @<state> @<viewport>`
+- test: `tests/visual/vrt/ryugi-detail.spec.ts` の `@vrt @ryugi-detail @<ryugiId> @<viewport>`
 - route: `/data/ryugi/kenkaya/`
 - state: default
 - snapshots:
-  - desktop `1440x1200`: `ryugi-detail-default-desktop.png`
-  - tablet `820x1180`: `ryugi-detail-default-tablet.png`
-  - mobile `390x900`: `ryugi-detail-default-mobile.png`
+  - desktop `1440x1200`: 全流儀詳細の`<ryugiId>-default-desktop.png`
+  - tablet `820x1180`: Calloutを持つ`kenkaya-default-tablet.png`
+  - mobile `390x900`: Calloutを持つ`kenkaya-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
 ## Mode
@@ -21,8 +21,8 @@
 - page / component: 流儀詳細ページ。`src/pages/data/ryugi/[ryugiId].astro` で共通テンプレートから静的生成する。
 - route: `/data/ryugi/[ryugiId]`
 - viewport:
-  - desktop: `1440x1200`
-  - mobile: `390x900`
+  - desktop: 全流儀詳細を`1440x1200`で比較する。
+  - tablet / mobile: Calloutを持つケンカヤだけをそれぞれ`820x1180` / `390x900`で比較する。
 - states:
   - desktop: Header、左SiteMenu、中央本文、右PageTocを含む通常状態
   - mobile: Header、中央本文、H1横のMobilePageToc triggerを含む通常状態

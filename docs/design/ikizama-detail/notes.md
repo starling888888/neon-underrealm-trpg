@@ -2,13 +2,13 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail @<state> @<viewport>`
-- route: `/data/ikizama/burai/`
+- test: `tests/visual/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail @<ikizamaId> @<viewport>`
+- route: `/data/ikizama/sumi/`
 - state: default
 - snapshots:
-  - desktop `1440x1200`: `ikizama-detail-default-desktop.png`
-  - tablet `820x1180`: `ikizama-detail-default-tablet.png`
-  - mobile `390x900`: `ikizama-detail-default-mobile.png`
+  - desktop `1440x1200`: 全生き様詳細の`<ikizamaId>-default-desktop.png`
+  - tablet `820x1180`: Calloutを持つ`sumi-default-tablet.png`
+  - mobile `390x900`: Calloutを持つ`sumi-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
 ## Mode
@@ -19,8 +19,8 @@
 
 - page / component: 生き様詳細ページ / 生き様データComponent
 - route: `/data/ikizama/[ikizamaId]`
-- viewport: desktop `1440x1200`、mobile `390x900`
-- states: default。スミのデータと、存在する`note`のCalloutを表示する。
+- viewport: desktopは全生き様詳細を`1440x1200`で比較する。tablet / mobileはCalloutを持つスミだけを`820x1180` / `390x900`で比較する。
+- states: default。代表のスミは、存在する`note`のCalloutを表示する。
 
 ## Referenced SSoT
 

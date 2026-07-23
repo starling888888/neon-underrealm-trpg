@@ -15,6 +15,7 @@ export type VrtState =
 
 export type VrtScenario = {
   fullPage?: boolean;
+  id?: string;
   route: string;
   state?: VrtState;
   viewports?: readonly ViewportName[];
@@ -30,8 +31,11 @@ export function registerVrtScenarios(
   for (const scenario of scenarios) {
     for (const viewportName of scenario.viewports ?? allVrtViewports) {
       const state = scenario.state ?? "default";
+      const scenarioId = scenario.id === undefined ? "" : `${scenario.id} `;
+      const scenarioTag = scenario.id === undefined ? "" : ` @${scenario.id}`;
+      const snapshotPrefix = scenario.id === undefined ? "" : `${scenario.id}-`;
 
-      test(`${target} ${state} @vrt @${target} @${viewportName} @${state}`, async ({
+      test(`${target} ${scenarioId}${state} @vrt @${target} @${viewportName} @${state}${scenarioTag}`, async ({
         page,
       }) => {
         await page.setViewportSize(visualViewports[viewportName]);
@@ -40,7 +44,7 @@ export function registerVrtScenarios(
         await prepareVrtState(page, state);
 
         await expect(page).toHaveScreenshot(
-          [target, `${state}-${viewportName}.png`],
+          [target, `${snapshotPrefix}${state}-${viewportName}.png`],
           {
             animations: "disabled",
             fullPage: scenario.fullPage ?? true,
