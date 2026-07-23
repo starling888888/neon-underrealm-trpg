@@ -207,3 +207,29 @@
 
 - `npm run visual:capture -- --grep @hero-layout-stability` は9件すべて通過した。
 - actual screenshotはVisual Review成果物として`test-results/visual/`にのみ置き、design正本は更新していない。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 遅延testのviewport基準Y座標比較はscroll anchoringでdocument上のレイアウトシフトを見逃し得る。
+- 遅延testが流儀detail heroだけを対象にし、生き様detail heroを含めていない。
+- `[width][height]`属性selectorで共通`ImageBlock`を全幅表示にすると、将来の非hero画像まで表示幅契約を変え得る。これに伴い、現行issueの`width: auto`を維持するという備考も実装と不一致である。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: 現行testは`Locator.boundingBox().y`を使い、遅延scenarioの動的heroは`dataRyugiKenkaya`だけである。現行`ImageBlock`は属性の有無だけで`width: 100%`を適用しており、issue備考と一致しない。
+
+### 対応方針
+
+- ユーザー判断により却下する。第2回レビューの3提案は、実際の不具合を再発防止する最小testと既存の全表示箇所の属性確認に対して、検証価値より複雑性が大きいオーバーテストと判断された。
+- 既存の`@hero-layout-stability` testと`ImageBlock`の領域予約CSSを維持し、document基準Y座標、生き様detailの重複scenario、全幅予約propの分離は実装しない。
+
+### 対応完了チェックリスト
+
+- [x] ユーザー却下: document基準の後続要素Y座標への変更は実装しない
+- [x] ユーザー却下: 生き様detail heroの遅延scenario追加は実装しない
+- [x] ユーザー却下: hero用途だけの全幅予約prop分離は実装しない
+- [x] ユーザー却下: 第2回レビューに起因するissue備考変更は実装しない

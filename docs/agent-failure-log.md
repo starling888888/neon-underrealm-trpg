@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Over-scoped hero layout test follow-up after PR review
+
+#### 2026-07-23
+
+- source: user
+- 発生箇所: `ex-03-hero-layout-stability` のPR #66 第2回レビュー取り込み
+- 観測した失敗: 画像request保留を使う回帰testが実際の`ImageBlock`領域予約不備を検出した後に、document座標比較、生き様detailの重複scenario、全幅表示prop分離までを同じcurrent issueの必須対応として扱った。全表示箇所の寸法属性確認と代表的な回帰testがすでにあるため、後続の提案は検証価値より複雑性が大きい可能性を十分に評価していなかった。
+- 一次対応: 第2回レビュー指摘は実装せず、ユーザーの方針確認を待つ。テスト追加時は、実際に発見した不具合を再発防止する最小ケースと、全箇所を網羅する静的契約確認を分け、同一契約の複数scenarioをデフォルトで増やさない。
+
 ### Hero layout visual capture retained unrelated Pagefind failures
 
 #### 2026-07-23
