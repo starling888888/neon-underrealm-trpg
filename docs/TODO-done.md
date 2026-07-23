@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] 1024px以上1360px未満で3レールlayoutの横overflowを解消する
+  - completed: 2026-07-23 via PR #68 / `49-50-accessibility-responsive-pass`
+  - source: `30-2-ryugi-detail-page` のレビュー指摘 1
+  - classification: follow-up
+  - plan: `docs/plan-done.md` の `49-50-accessibility-responsive-pass`
+  - handling plan: 3レールを1280px以上に限定し、768px以上1280px未満では左SiteMenuとMobilePageTocを使う2レールへ切り替えた。代表routeの境界幅で横overflowとナビゲーション表示を回帰確認した。
+
 - [x] `/support` のオンラインセッションサポートページを作成する
   - completed: 2026-07-23 via PR #67 / `41-2-support-page`
   - source: `20-2-introduction-page` のコンテンツ検討時のユーザー指示

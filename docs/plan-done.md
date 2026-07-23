@@ -613,6 +613,24 @@
 
 ## Phase 5: 仕上げ・公開
 
+- [x] `49-50-accessibility-responsive-pass` — アクセシビリティとレスポンシブの確認・調整を行う
+  - completed: 2026-07-23 via PR #68 / `5d4900c`
+
+  - [x] 画像altを確認
+  - [x] アイコンリンクのaria-labelを確認
+  - [x] メニュー・検索・目次のEsc挙動を確認
+  - [x] 見出し階層を確認
+  - [x] 色だけに依存した表現がないか確認
+  - [x] タップ領域が極端に小さくないか確認
+  - [x] 1280px以上の3レールPCレイアウトを確認
+  - [x] 768px以上1280px未満のtablet / 狭幅PC表示を確認
+  - [x] 768px未満のスマホレイアウトを確認
+  - [x] スマホヘッダーの下スクロール非表示・上スクロール表示を確認
+  - [x] サイトメニュー、ページ内目次、検索UIがスマホで混同されないことを確認
+  - [x] Playwright標準VRTの対象route・状態・desktop / tablet / mobile baselineを整備する
+  - [x] VRTでmobile layoutの横スクロール、MobilePageToc sticky headingの背景、TOC非表示対象ページを回帰検知する
+  - [x] `docs/design/<target>/` をnotes専用に移行し、baseline更新をユーザー明示指示時だけにする
+
 - [x] `ex-03-hero-layout-stability` — ヒーロー画像の表示遅延によるコンテンツ位置ずれを防ぐ
   - completed: 2026-07-23 via PR #66 / `f0e83af`
 
