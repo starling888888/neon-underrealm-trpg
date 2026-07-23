@@ -142,7 +142,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] Phase DのVRT baseline移行でdesign正本化済み
 
 ### 対応完了チェックリスト
 
@@ -180,6 +180,6 @@
 
 - [x] PageTocのH3表示方針を決定し、designと実装を整合する
 - [x] 流儀一覧Visual Testを生成データに依存しない構造検証へ更新する
-- [ ] contentsの旧HTMLコメントを現在の表示方針へ更新する
+- [x] contentsの旧HTMLコメントは当時の表示方針を記録する役割を果たしたため、ユーザー確認により更新しない
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
