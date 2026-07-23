@@ -6,14 +6,23 @@ interface Props {
   alt: string;
   caption?: string;
   loading?: "eager" | "lazy";
+  width?: number;
+  height?: number;
 }
 
-const { src, alt, caption, loading = "lazy" } = Astro.props;
+const { src, alt, caption, loading = "lazy", width, height } = Astro.props;
 const hasCaption = typeof caption === "string" && caption.length > 0;
 ---
 
 <figure class="image-block">
-  <img src={withBase(src)} alt={alt} loading={loading} decoding="async" />
+  <img
+    src={withBase(src)}
+    alt={alt}
+    loading={loading}
+    decoding="async"
+    width={width}
+    height={height}
+  />
   {hasCaption && <figcaption>{caption}</figcaption>}
 </figure>
 

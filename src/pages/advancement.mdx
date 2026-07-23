@@ -13,6 +13,7 @@ import IkizamaCoefficientTable from "../components/data/IkizamaCoefficientTable.
 import RyugiCommonSkillBonusTable from "../components/data/RyugiCommonSkillBonusTable.astro";
 import { getIkizamaList } from "../lib/data/ikizama";
 import { getRyugiList } from "../lib/data/ryugi-list";
+import { heroImageDimensions } from "../lib/site/imageDimensions";
 import { createHeadingId } from "../lib/utils/heading-id";
 
 export const ikizamaList = getIkizamaList();
@@ -29,6 +30,8 @@ export const goldenRuleHeadingId = createHeadingId(2, "ゴールデンルール"
   src="/images/advancement/hero.webp"
   alt="サイバネ工房で義肢を確かめる女性、銃を整備する男性、静かな部屋で本を読む人物を三分割で描いたイラスト。"
   loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
 />
 
 シナリオを終えた仕事人は、得た経験点と信用を使って次の仕事に備えます。キャラクターロストの確認と縁の清算は、<InternalLink href="/rules/scenario-play">シナリオ進行ルール</InternalLink>を確認してください。

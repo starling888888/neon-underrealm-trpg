@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Hero layout visual capture retained unrelated Pagefind failures
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: `ex-03-hero-layout-stability` の `npm run visual:capture`
+- 観測した失敗: 初回はPagefind index未生成のため検索modal 2件が失敗した。index生成後の再実行では、`-local/data-cards`の検索結果も含まれ、既存search modal test 3件がstrict locator重複で失敗した。一方、追加したhero layout test 2件は通過した。
+- 一次対応: index生成後の結果で対象testの成功を確認し、同じcaptureを再実行しなかった。Pagefindの`-local`除外または既存search testのlocator絞り込みはcurrent issue外として別途扱う。
+
 ### Page navigation contract test ran before and then misread the 404 output path
 
 #### 2026-07-23

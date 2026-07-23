@@ -10,6 +10,7 @@ nextPath: /data
 import Callout from "../../components/_common/Callout.astro";
 import ImageBlock from "../../components/_common/ImageBlock.astro";
 import InternalLink from "../../components/_common/InternalLink.astro";
+import { heroImageDimensions } from "../../lib/site/imageDimensions";
 import { createHeadingId } from "../../lib/utils/heading-id";
 
 export const skillTimingHeadingId = createHeadingId(3, "タイミング");
@@ -21,6 +22,8 @@ export const counterHeadingId = createHeadingId(3, "カウンター");
   src="/images/battle/hero.webp"
   alt="長柄刀を振るう傷だらけの女性と、巨大なサイバネ義手で受け止める影の男が、火花を散らして対峙するイラスト。"
   loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
 />
 
 戦闘では、マス目でキャラクターの位置と距離を管理します。攻撃とリアクションを繰り返し、敵対するキャラクターを戦闘不能にするか、設定された戦闘終了条件を満たすことを目指します。攻撃を続けるほど次の一撃へつながる**コンボ**と、それをどのリアクションで受けるかの選択が、戦闘の中心です。

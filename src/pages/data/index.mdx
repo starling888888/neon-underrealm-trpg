@@ -12,6 +12,7 @@ import ImageBlock from "../../components/_common/ImageBlock.astro";
 import InternalLink from "../../components/_common/InternalLink.astro";
 import LegendContainer from "../../components/data/LegendContainer.astro";
 import SkillCard from "../../components/data/SkillCard.astro";
+import { heroImageDimensions } from "../../lib/site/imageDimensions";
 import { createHeadingId } from "../../lib/utils/heading-id";
 
 export const kakugoHeadingId = createHeadingId(2, "覚悟");
@@ -22,6 +23,8 @@ export const kakugoHeadingId = createHeadingId(2, "覚悟");
   src="/images/data/hero.webp"
   alt="裏社会の作業場で、義手を持つ女性と顔に刺青のある男性が机上の武器・装備データシートを読み比べている場面。"
   loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
 />
 
 仕事人の戦い方、使えるスキル、装備を確認するためのデータをまとめています。キャラクターを作るときは、まず流儀と生き様を選び、必要に応じて共通スキルとアイテムを参照してください。

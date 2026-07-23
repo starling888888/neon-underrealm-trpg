@@ -12,7 +12,7 @@
 
 現在、TOPロゴは直接 `<img>` で表示しており、`ImageBlock` を経由していない。また、共通 `ImageBlock` と流儀・生き様詳細の直接 `<img>` は `width` / `height` 属性を出力せず、画像取得前に正確な高さを予約できない。
 
-ユーザーの決定により、通常hero画像はすべて `1672x941` に統一し、TOPロゴだけに専用寸法 `1015x762` を使う。これにより、ID別の画像寸法管理は不要とする。
+ユーザーの決定により、通常hero画像はすべて `1672x941` に統一し、TOPロゴだけに専用寸法 `1015x762` を使う。これらの寸法は専用の定数ファイルへ集約し、各ページへ数値をベタ書きしない。
 
 関連する参照先:
 
@@ -30,8 +30,9 @@
 ## 対象範囲
 
 - `ImageBlock` に任意の `width` / `height` propsを追加し、`<img>` 属性へ出力すること
+- `src/lib/site/imageDimensions.ts` に通常heroとTOPロゴの寸法定数を定義すること
 - TOPロゴを `ImageBlock` に変更し、専用寸法 `1015x762` を渡すこと
-- 通常hero画像を表示する全箇所に、固定の `width="1672"` / `height="941"` を渡すこと
+- 通常hero画像を表示する全箇所に、寸法定数を使って `width="1672"` / `height="941"` を渡すこと
   - `/world`、`/advancement`、`/character-making`
   - `/rules`、`/rules/battle`、`/rules/scenario-play`
   - `/data`、`/data/ryugi`、`/data/ikizama`
@@ -54,9 +55,10 @@
 
 ## 選定済み実装方針: 案A
 
+- `src/lib/site/imageDimensions.ts` に `heroImageDimensions` と `topLogoImageDimensions` を定義する。
 - `ImageBlock` に任意の `width` / `height` propsを追加する。
-- 固定ページheroと動的detail heroを含む通常heroには、すべて `1672x941` を渡す。
-- TOPロゴには `1015x762` を渡す。
+- 固定ページheroと動的detail heroを含む通常heroには、`heroImageDimensions` を渡す。
+- TOPロゴには `topLogoImageDimensions` を渡す。
 - TOPロゴも同じ `ImageBlock` のpropsを使い、現行の `.home-logo` CSSを維持する。
 - ブラウザ標準のアスペクト比予約を使うため、クライアントJS、skeleton、画像読み込み状態の管理を追加しない。
 
@@ -76,31 +78,32 @@
 
 ## 完了条件
 
-- [ ] 通常hero素材がすべて `1672x941` であることを確認する
-- [ ] TOPロゴが `ImageBlock` を用いて表示され、`width="1015"` / `height="762"` 属性を持つ
-- [ ] 通常heroの全表示箇所が `width="1672"` / `height="941"` 属性を持つ
-- [ ] 画像取得・復号前から、TOPと各種heroの表示後と同じ高さの領域が確保される
-- [ ] TOPロゴのdesktop / mobileの表示幅・余白、および各heroの既存レスポンシブ表示を変えない
-- [ ] desktop / mobileでTOPと代表的な通常hero、アイテムhero、流儀詳細hero、生き様詳細heroの読み込み前後に後続コンテンツの位置ずれがないことを確認する
-- [ ] `public/` 直下のタイトルロゴ・TOPロゴ4ファイルが `public/images/` 配下へ移動し、現行コード・現行design文書に旧パス参照が残らない
-- [ ] HeaderロゴとTOPロゴが新パスで表示・解決される
-- [ ] faviconと共通OGP画像が `public/` 直下に維持され、参照コードを変更しない
-- [ ] 関連design noteのassetパスが新配置と一致する
-- [ ] GitHub Pagesのサブパス配下でタイトルロゴ・TOPロゴ・hero画像URLが壊れない
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] 通常hero素材がすべて `1672x941` であることを確認する
+- [x] 寸法定数が `src/lib/site/imageDimensions.ts` に集約され、各ページに数値がベタ書きされていない
+- [x] TOPロゴが `ImageBlock` を用いて表示され、`topLogoImageDimensions` 由来の `width="1015"` / `height="762"` 属性を持つ
+- [x] 通常heroの全表示箇所が `heroImageDimensions` 由来の `width="1672"` / `height="941"` 属性を持つ
+- [x] 画像取得・復号前から、TOPと各種heroの表示後と同じ高さの領域が確保される
+- [x] TOPロゴのdesktop / mobileの表示幅・余白、および各heroの既存レスポンシブ表示を変えない
+- [x] desktop / mobileでTOPと代表的な通常hero、アイテムhero、流儀詳細hero、生き様詳細heroの読み込み前後に後続コンテンツの位置ずれがないことを確認する
+- [x] `public/` 直下のタイトルロゴ・TOPロゴ4ファイルが `public/images/` 配下へ移動し、現行コード・現行design文書に旧パス参照が残らない
+- [x] HeaderロゴとTOPロゴが新パスで表示・解決される
+- [x] faviconと共通OGP画像が `public/` 直下に維持され、参照コードを変更しない
+- [x] 関連design noteのassetパスが新配置と一致する
+- [x] GitHub Pagesのサブパス配下でタイトルロゴ・TOPロゴ・hero画像URLが壊れない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない
-- [ ] GitHub Pagesのサブパス公開に影響しない
-- [ ] 不要な依存関係を追加していない
-- [ ] 不要なクライアントJSを追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-- [ ] `docs/design/home/`、`docs/design/header-footer/` と矛盾していない
-- [ ] 実装結果のVisual Review screenshotをdesign正本として直接コピーしていない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] 既存ルートが壊れていない
+- [x] GitHub Pagesのサブパス公開に影響しない
+- [x] 不要な依存関係を追加していない
+- [x] 不要なクライアントJSを追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] `docs/design/home/`、`docs/design/header-footer/` と矛盾していない
+- [x] 実装結果のVisual Review screenshotをdesign正本として直接コピーしていない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -108,6 +111,7 @@
 - `docs/design/home/notes.md`
 - `docs/design/header-footer/notes.md`
 - `src/components/_common/ImageBlock.astro`
+- `src/lib/site/imageDimensions.ts`
 - `src/lib/site/siteMeta.ts`
 - `src/pages/index.astro`
 - `src/pages/-local/mdx-test.mdx`
@@ -133,7 +137,7 @@
 
 ## レビュー観点
 
-- 通常heroを `1672x941` 固定、TOPロゴのみ `1015x762` とし、ID別寸法helperを導入しない構成でよいか。
+- 通常heroを `heroImageDimensions`、TOPロゴのみ `topLogoImageDimensions` として、寸法定数を1ファイルへ集約する構成でよいか。
 - `width` / `height` 属性はCSS上の表示幅を固定せず、既存mobileレイアウトを維持する理解でよいか。
 - TOPロゴと各種heroをまとめて、読み込み前の領域確保対象とする範囲でよいか。
 - faviconと共通OGP画像を `public/` 直下に維持し、新規design targetを作らない範囲でよいか。
@@ -145,3 +149,20 @@
 - 新規design targetとdesign画像は作成しない。既存 `docs/design/home/` はTOPロゴの表示幅・余白を確認する参照として使う。
 - faviconと共通OGP画像は `public/` 直下に維持し、`src/layouts/AppContainer.astro`、`src/lib/site/seo.ts`、`docs/deployment.md` を変更しない。
 - 「旧パス参照が残らない」は移動対象であるタイトルロゴ・TOPロゴについての現行コードと現行design文書を対象とする。完了済みissueとdesignの `Historical source issue`、`Generation Source` にある履歴上の旧パスは書き換えない。
+
+## ビジュアルレビュー 1
+
+- 実施日: 2026-07-23
+- 対象: トップページのTOPロゴ（desktop / mobile）
+- 参照: `docs/design/home/design-desktop.png`、`docs/design/home/design-mobile.png`
+- actual screenshot: `test-results/visual/hero-layout-stability-desktop.png`、`test-results/visual/hero-layout-stability-mobile.png`
+
+| 観点     | 結果                                                                                                                                                                        |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| desktop  | TOPロゴの幅・中央配置・最新リリースノートとの余白は参照designと一致し、`ImageBlock` のfigure余白は追加されていない。                                                        |
+| mobile   | 本文幅に収まるTOPロゴの幅・中央配置・後続セクションまでの余白は参照designと一致する。                                                                                       |
+| hero領域 | `@hero-layout-stability` testが固定ページhero全箇所と流儀・生き様詳細hero、TOPロゴの属性と表示を確認した。`width` / `height` 属性により画像復号前のアスペクト比予約を行う。 |
+
+- `npm run visual:capture` は追加したhero testを含む83件が通過した。検索modalの3件は`-local/data-cards`を含む既存Pagefind indexによるstrict locator重複で失敗し、本issueの変更対象外とした。
+- `npm run check` と `npm run build` は通過した。
+- actual screenshotはVisual Review成果物として`test-results/visual/`にのみ置き、design正本は更新していない。

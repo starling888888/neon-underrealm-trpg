@@ -12,12 +12,19 @@ import ImageBlock from "../../../components/_common/ImageBlock.astro";
 import ArmorCard from "../../../components/data/ArmorCard.astro";
 import LegendContainer from "../../../components/data/LegendContainer.astro";
 import { getItemsData } from "../../../lib/data/items";
+import { heroImageDimensions } from "../../../lib/site/imageDimensions";
 
 export const armors = getItemsData().armors;
 
 # 防具
 
-<ImageBlock src="/images/data/items/armors_hero.webp" alt="" loading="eager" />
+<ImageBlock
+  src="/images/data/items/armors_hero.webp"
+  alt=""
+  loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
+/>
 
 戦闘中、受けるダメージを減らすアイテムのことを「防具」と呼びます。1つだけ所持、装備でき、その防具が戦闘中効果を発揮します。\
 一部の防具は能力値が一定以上でないと使用できません。

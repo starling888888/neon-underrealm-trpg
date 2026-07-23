@@ -9,10 +9,17 @@ nextPath: /data/items/weapons
 
 import ImageBlock from "../../../components/_common/ImageBlock.astro";
 import InternalLink from "../../../components/_common/InternalLink.astro";
+import { heroImageDimensions } from "../../../lib/site/imageDimensions";
 
 # アイテム
 
-<ImageBlock src="/images/data/items_hero.webp" alt="" loading="eager" />
+<ImageBlock
+  src="/images/data/items_hero.webp"
+  alt=""
+  loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
+/>
 
 アイテムをシナリオ中使用するには、「信用」が必要となります。具体的には、使いたいアイテムそれぞれに設定された信用の合計が、キャラクターの持つ信用以下でなければなりません。
 

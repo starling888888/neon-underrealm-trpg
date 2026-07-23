@@ -1,13 +1,13 @@
 ---
+import ImageBlock from "../components/_common/ImageBlock.astro";
 import InternalLink from "../components/_common/InternalLink.astro";
 import AppContainer from "../layouts/AppContainer.astro";
 import { getLatestReleaseNotes } from "../lib/data/release-notes";
+import { topLogoImageDimensions } from "../lib/site/imageDimensions";
 import { defaultSeo } from "../lib/site/seo";
-import { withBase } from "../lib/utils/paths";
 
 const title = defaultSeo.title;
 const latestReleaseNotes = getLatestReleaseNotes(5);
-const topLogoPath = withBase("/top_logo.webp");
 ---
 
 <AppContainer>
@@ -30,11 +30,12 @@ const topLogoPath = withBase("/top_logo.webp");
     </section>
 
     <div class="home-logo">
-      <img
-        src={topLogoPath}
+      <ImageBlock
+        src="/images/top_logo.webp"
         alt={title}
         loading="eager"
-        decoding="async"
+        width={topLogoImageDimensions.width}
+        height={topLogoImageDimensions.height}
       />
     </div>
 
@@ -152,7 +153,11 @@ const topLogoPath = withBase("/top_logo.webp");
     margin: var(--space-8) auto var(--space-10);
   }
 
-  .home-logo img {
+  .home-logo :global(.image-block) {
+    margin: 0;
+  }
+
+  .home-logo :global(.image-block img) {
     display: block;
     width: 100%;
     height: auto;

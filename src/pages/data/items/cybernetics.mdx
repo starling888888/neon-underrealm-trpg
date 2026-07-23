@@ -15,6 +15,7 @@ import CyberneticCard from "../../../components/data/CyberneticCard.astro";
 import LegendContainer from "../../../components/data/LegendContainer.astro";
 import WeaponCard from "../../../components/data/WeaponCard.astro";
 import { getCybernetics, getItemsData } from "../../../lib/data/items";
+import { heroImageDimensions } from "../../../lib/site/imageDimensions";
 
 export const headCybernetics = getCybernetics("head") ?? [];
 export const torsoCybernetics = getCybernetics("torso") ?? [];
@@ -27,7 +28,13 @@ export const cyberneticWeapons = Object.values(
 
 # サイバネ
 
-<ImageBlock src="/images/data/items/cybernetics_hero.webp" alt="" loading="eager" />
+<ImageBlock
+  src="/images/data/items/cybernetics_hero.webp"
+  alt=""
+  loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
+/>
 
 「ケジメ」の生き様を選んだキャラクターのみが使用できる特別なアイテムです。どの体の部位を置換して使えるようになるかがサイバネごとに決まっており、「頭」「胴体」「腕」「足」それぞれ1つ使えるのに加え、「その他」として、そのサイバネの部位を問わず1つ追加で使用できます。\
 効果欄に「サイバネ武器」と書かれている場合は、同名の武器が使用できます。サイバネ武器は通常の装備する武器とは別に、いくつでも戦闘中使用可能です。\

@@ -4,6 +4,7 @@ import RyugiDataSection from "../../../components/data/RyugiDataSection.astro";
 import AppContainer from "../../../layouts/AppContainer.astro";
 import { getRyugiDetail, type RyugiDetail } from "../../../lib/data/ryugi-detail";
 import { getRyugiList } from "../../../lib/data/ryugi-list";
+import { heroImageDimensions } from "../../../lib/site/imageDimensions";
 import { withBase } from "../../../lib/utils/paths";
 
 const ryugiList = getRyugiList();
@@ -37,6 +38,8 @@ const detailsByRyugiId: Record<string, RyugiDetail> = {
       src="/images/data/ryugi_hero.webp"
       alt="刀、短剣、格闘、銃、特殊能力を使って戦う5人の仕事人。"
       loading="eager"
+      width={heroImageDimensions.width}
+      height={heroImageDimensions.height}
     />
 
     <p>
