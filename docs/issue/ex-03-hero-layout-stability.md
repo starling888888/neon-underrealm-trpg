@@ -157,12 +157,53 @@
 - 参照: `docs/design/home/design-desktop.png`、`docs/design/home/design-mobile.png`
 - actual screenshot: `test-results/visual/hero-layout-stability-desktop.png`、`test-results/visual/hero-layout-stability-mobile.png`
 
-| 観点     | 結果                                                                                                                                                                        |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| desktop  | TOPロゴの幅・中央配置・最新リリースノートとの余白は参照designと一致し、`ImageBlock` のfigure余白は追加されていない。                                                        |
-| mobile   | 本文幅に収まるTOPロゴの幅・中央配置・後続セクションまでの余白は参照designと一致する。                                                                                       |
-| hero領域 | `@hero-layout-stability` testが固定ページhero全箇所と流儀・生き様詳細hero、TOPロゴの属性と表示を確認した。`width` / `height` 属性により画像復号前のアスペクト比予約を行う。 |
+| 観点     | 結果                                                                                                                                                                                                  |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| desktop  | TOPロゴの幅・中央配置・最新リリースノートとの余白は参照designと一致し、`ImageBlock` のfigure余白は追加されていない。                                                                                  |
+| mobile   | 本文幅に収まるTOPロゴの幅・中央配置・後続セクションまでの余白は参照designと一致する。                                                                                                                 |
+| hero領域 | `@hero-layout-stability` testが固定ページhero全箇所と流儀・生き様詳細hero、TOPロゴの属性を確認する。代表4ケースは画像request保留中と取得後の後続要素Y座標、response成功、subpath付き`src`も確認する。 |
 
 - `npm run visual:capture` は追加したhero testを含む83件が通過した。検索modalの3件は`-local/data-cards`を含む既存Pagefind indexによるstrict locator重複で失敗し、本issueの変更対象外とした。
 - `npm run check` と `npm run build` は通過した。
+- actual screenshotはVisual Review成果物として`test-results/visual/`にのみ置き、design正本は更新していない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `hero-layout-stability` Visual Testは寸法属性を確認するが、画像requestを遅延した読み込み前状態と復号後で後続要素の位置が不変であること、移動後assetが実際に取得できることまでは確認していない。
+- Pagefindが`-local/data-cards`をindex化した場合の既存検索Visual Test失敗は、本issue外のfollow-upとして`docs/TODO.md`へ追跡する。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid（画像読み込み前後の位置不変とasset取得を回帰テストする不足） / follow-up（既存Pagefind検索Visual Testの安定化）
+- local validation: `tests/visual/hero-layout-stability.spec.ts`は`width` / `height`と表示可否を確認するのみで、遅延request中の後続要素位置、`naturalWidth`、response成功をassertしていない。`docs/plan.md`の`53-content-smoke-test`には検索確認があるため、検索Visual Testの安定化を同taskへ紐付けた。
+
+### 対応方針
+
+- current issueでは、代表的なTOPロゴ、通常hero、アイテムhero、動的heroについて、画像request遅延中と読み込み完了後の後続要素Y座標が一致すること、GitHub Pagesサブパス付きの画像URLと正常取得を確認するtestへ強化する。
+- `-local`ページのindex除外または既存検索Visual Testのlocator調整は、`53-content-smoke-test`で扱う。
+
+### 対応完了チェックリスト
+
+- [x] 読み込み前後の後続要素位置と移動後asset取得を確認するVisual Testへ強化する
+- [x] GitHub Pagesサブパス付き画像URLをtestで確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+- 実施日: 2026-07-23
+- 対象: `ImageBlock`に寸法propsがある画像の領域予約
+- 参照: `docs/design/home/design-desktop.png`、`docs/design/home/design-mobile.png`
+- actual screenshot: `test-results/visual/hero-layout-stability-desktop.png`、`test-results/visual/hero-layout-stability-mobile.png`
+
+| 観点     | 結果                                                                                                                                                        |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| desktop  | TOPロゴの幅・中央配置・後続の最新リリースノートまでの余白はdesign正本と一致する。                                                                           |
+| mobile   | TOPロゴの本文幅・中央配置・後続セクションまでの余白はdesign正本と一致する。                                                                                 |
+| hero領域 | `width` / `height` を持つ`ImageBlock`画像はコンテナ幅を取得前から確保し、代表4ケース×desktop / mobileで画像request保留中と取得後の後続要素Y座標が一致した。 |
+
+- `npm run visual:capture -- --grep @hero-layout-stability` は9件すべて通過した。
 - actual screenshotはVisual Review成果物として`test-results/visual/`にのみ置き、design正本は更新していない。

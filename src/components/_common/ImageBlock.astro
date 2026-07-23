@@ -39,6 +39,10 @@ const hasCaption = typeof caption === "string" && caption.length > 0;
     height: auto;
   }
 
+  .image-block img[width][height] {
+    width: 100%;
+  }
+
   .image-block figcaption {
     margin-block-start: var(--space-2);
     color: var(--color-text-muted);
