@@ -1,8 +1,8 @@
 # items-drugs
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT items-drugs default <viewport>`
+- test: `tests/visual/vrt/items-drugs.spec.ts` の `@vrt @items-drugs @<state> @<viewport>`
 - route: `/data/items/drugs/`
 - state: default
 - snapshots:

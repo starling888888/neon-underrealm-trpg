@@ -1,8 +1,8 @@
 # release-notes
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT release-notes default <viewport>`
+- test: `tests/visual/vrt/release-notes.spec.ts` の `@vrt @release-notes @<state> @<viewport>`
 - route: `/release-notes/`
 - state: default
 - snapshots:

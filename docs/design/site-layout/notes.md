@@ -1,8 +1,8 @@
 # site-layout
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT site-layout default <viewport>`
+- test: `tests/visual/vrt/site-layout.spec.ts` の `@vrt @site-layout @<state> @<viewport>`
 - route: `/-local/mdx-test/`
 - state: default
 - snapshots:

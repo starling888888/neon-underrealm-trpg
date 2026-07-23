@@ -158,3 +158,31 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - [x] Phase Dと50-1の責務分担をユーザー確認のうえで明文化する。
 - [x] `header-footer` のnotesを現行WebP実装と整合させる、またはPhase Dのnotes-only移行で置き換える。
 - [x] 対応後に必要なVRT・`npm run check`・`npm run build`を実行する。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `/-local/style-tiles/` が旧style-tileのcode blockとcolor paletteを含まないため、`pre > code`と共通color tokenのVRT回帰を検知できない。
+- VRTが単一の`tests/visual/vrt.spec.ts`へ集約されており、page / layout単位の担当specやPlaywrightの`--grep`による絞り込みに適さない。baselineもtest file横ではなく、target名で整理した専用rootへ置くほうが追跡しやすい。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `src/pages/-local/style-tiles.astro`はinline code、表、引用、Calloutだけを含み、code blockとcolor paletteがない。`tests/visual/vrt.spec.ts`は全target・stateを単一scenario配列で登録し、`playwright.config.ts`はsnapshot path templateを定義していない。
+
+### 対応方針
+
+- style-tileの補完はユーザー指示どおり後回しにする。
+- 先にVRTをtarget別のtest fileへ分割する。各caseに`@vrt`、`@<target>`、`@desktop` / `@tablet` / `@mobile`、必要なstate tagを付け、`--grep`でroute・layout・viewport単位の比較または明示更新を可能にする。
+- `toHaveScreenshot()`のpath templateを設定し、Git管理するbaselineを`canonical-snapshots/visual/<target>/`へ置く。actual artifactはGit管理しない`test-results/`と`playwright-report/`を使い続ける。
+
+### 対応完了チェックリスト
+
+- [x] target別VRT test fileとtagを追加する。
+- [x] canonical snapshotをtarget名のroot directoryへ移す。
+- [x] `@vrt`、target、viewport、stateの組合せでPlaywright実行を確認する。
+- [ ] style-tileへcode blockとcolor paletteを追加し、VRT baselineを更新する（後回し）。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

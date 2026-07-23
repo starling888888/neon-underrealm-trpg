@@ -1,8 +1,8 @@
 # scenario-play
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT scenario-play default <viewport>`
+- test: `tests/visual/vrt/scenario-play.spec.ts` の `@vrt @scenario-play @<state> @<viewport>`
 - route: `/rules/scenario-play/`
 - state: default
 - snapshots:

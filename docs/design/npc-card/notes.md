@@ -1,8 +1,8 @@
 # npc-card
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT npc-card default <viewport>`
+- test: `tests/visual/vrt/npc-card.spec.ts` の `@vrt @npc-card @<state> @<viewport>`
 - route: `/-local/npc-cards/`
 - state: default
 - snapshots:

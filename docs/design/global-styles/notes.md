@@ -1,8 +1,8 @@
 # Global Styles Design Notes
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT global-styles default <viewport>`
+- test: `tests/visual/vrt/global-styles.spec.ts` の `@vrt @global-styles @<state> @<viewport>`
 - route: `/-local/style-tiles/`
 - state: default
 - snapshots:

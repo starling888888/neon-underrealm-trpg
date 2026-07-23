@@ -1,8 +1,8 @@
 # ikizama-detail
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT ikizama-detail default <viewport>`
+- test: `tests/visual/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail @<state> @<viewport>`
 - route: `/data/ikizama/burai/`
 - state: default
 - snapshots:

@@ -1,8 +1,8 @@
 # data
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT data default <viewport>`
+- test: `tests/visual/vrt/data.spec.ts` の `@vrt @data @<state> @<viewport>`
 - route: `/data/`
 - state: default
 - snapshots:

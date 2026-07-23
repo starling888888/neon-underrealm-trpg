@@ -1,8 +1,8 @@
 # callout
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT callout default <viewport>`
+- test: `tests/visual/vrt/callout.spec.ts` の `@vrt @callout @<state> @<viewport>`
 - route: `/-local/callouts/`
 - state: default
 - snapshots:

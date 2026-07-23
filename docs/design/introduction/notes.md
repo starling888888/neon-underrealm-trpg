@@ -1,8 +1,8 @@
 # introduction
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT introduction default <viewport>`
+- test: `tests/visual/vrt/introduction.spec.ts` の `@vrt @introduction @<state> @<viewport>`
 - route: `/introduction/`
 - state: default
 - snapshots:

@@ -900,3 +900,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-03-hero-layout-stability` のissueレビュー
 - 観測した失敗: hero画像の寸法を固定する案を提示する前に、全hero素材の実寸一覧を確認・報告しなかった。そのため、アイテムheroの統一後に流儀hero 3枚が`1671x941`のまま残ることを後から伝え、ユーザーに画像サイズの差異を先に報告すべきだったと指摘された。
 - 一次対応: 通常heroを`1672x941`へ統一することをissueの入力契約に明記した。以後、画像寸法・データ形式・asset配置を設計判断の根拠に使う前に、対象全件を一覧化し、差異を先に報告する。
+
+### VRT comparison ran after a non-Pagefind build
+
+#### 2026-07-23
+
+- source: agent self-report
+- 発生箇所: `49-50-accessibility-responsive-pass` のVRT構成移行後の`npm run visual:test`
+- 観測した失敗: `npm run visual:build`で作成したPagefind indexを含む出力に対してVRTを準備した後、通常の`npm run build`を実行した。同じpreviewで全件VRTを再実行したため、検索結果stateの3 viewportがPagefind indexを読めず失敗した。
+- 一次対応: VRT実行の直前には、通常buildではなく`npm run visual:build`を最後に実行する。検索結果stateが失敗した場合は、UIやselectorを修正する前に`dist/pagefind/`の有無とbuild手順を確認する。

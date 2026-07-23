@@ -1,8 +1,8 @@
 # page-toc
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT page-toc default <viewport>`
+- test: `tests/visual/vrt/page-toc.spec.ts` の `@vrt @page-toc @<state> @<viewport>`
 - route: `/-local/mdx-test/`
 - state: default
 - snapshots:

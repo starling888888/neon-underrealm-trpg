@@ -1,8 +1,8 @@
 # items-nanomachines
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT items-nanomachines default <viewport>`
+- test: `tests/visual/vrt/items-nanomachines.spec.ts` の `@vrt @items-nanomachines @<state> @<viewport>`
 - route: `/data/items/nanomachines/`
 - state: default
 - snapshots:

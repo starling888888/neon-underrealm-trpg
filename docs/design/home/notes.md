@@ -1,8 +1,8 @@
 # home
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT home default <viewport>`
+- test: `tests/visual/vrt/home.spec.ts` の `@vrt @home @<state> @<viewport>`
 - route: `/`
 - state: default
 - snapshots:

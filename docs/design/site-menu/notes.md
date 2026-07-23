@@ -1,8 +1,8 @@
 # site-menu
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT site-menu default <viewport>`
+- test: `tests/visual/vrt/site-menu.spec.ts` の `@vrt @site-menu @<state> @<viewport>`
 - route: `/world/`
 - state: default
 - snapshots:

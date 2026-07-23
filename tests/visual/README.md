@@ -41,7 +41,7 @@ Playwrightの標準出力先を使います。
 
 これらはGit管理しません。
 
-比較用baselineは `tests/visual/vrt.spec.ts-snapshots/` のPlaywright snapshotでGit管理する。通常実行は比較のみで更新しない。baselineの初回作成・更新は、ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+比較用baselineは、repository rootの `canonical-snapshots/visual/<target>/` に置くPlaywright snapshotでGit管理する。targetごとのVRT testは `tests/visual/vrt/<target>.spec.ts` に置き、各caseへ `@vrt`、`@<target>`、`@desktop` / `@tablet` / `@mobile`、必要なstate tagを付ける。通常実行は比較のみで更新しない。baselineの初回作成・更新は、ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
 ## テスト責務
 

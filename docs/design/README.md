@@ -6,7 +6,7 @@
 
 UI、CSS、layout、page、Componentを実装するタスクでは、実装開始前に対象のdesign intentとVRT対象をこのディレクトリ配下の該当design targetへ記録する。
 
-比較画像の正本はPlaywright標準の `toHaveScreenshot()` snapshotで管理する。`docs/design/<design-target>/` には `notes.md` だけを置き、route、状態、viewport、VRT test名、snapshot名、差分判断の根拠を記録する。
+比較画像の正本はPlaywright標準の `toHaveScreenshot()` snapshotで管理する。baselineはrepository rootの `canonical-snapshots/visual/<target>/` に置く。`docs/design/<design-target>/` には `notes.md` だけを置き、route、状態、viewport、VRT test名、tag、snapshot名、差分判断の根拠を記録する。
 
 例:
 

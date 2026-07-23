@@ -1,8 +1,8 @@
 # items-weapons
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT items-weapons default <viewport>`
+- test: `tests/visual/vrt/items-weapons.spec.ts` の `@vrt @items-weapons @<state> @<viewport>`
 - route: `/data/items/weapons/`
 - state: default
 - snapshots:

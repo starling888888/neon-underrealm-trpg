@@ -1,8 +1,8 @@
 # battle
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT battle default <viewport>`
+- test: `tests/visual/vrt/battle.spec.ts` の `@vrt @battle @<state> @<viewport>`
 - route: `/rules/battle/`
 - state: default
 - snapshots:

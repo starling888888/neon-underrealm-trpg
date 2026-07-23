@@ -1,8 +1,8 @@
 # data-cards
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT data-cards default <viewport>`
+- test: `tests/visual/vrt/data-cards.spec.ts` の `@vrt @data-cards @<state> @<viewport>`
 - route: `/-local/data-cards/`
 - state: default
 - snapshots:

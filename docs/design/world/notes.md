@@ -1,8 +1,8 @@
 # world
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT world default <viewport>`
+- test: `tests/visual/vrt/world.spec.ts` の `@vrt @world @<state> @<viewport>`
 - route: `/world/`
 - state: default
 - snapshots:

@@ -31,8 +31,8 @@
     "format:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint fmt && markdownlint-cli2 --fix",
     "visual:capture": "node --import tsx scripts/visual-capture/main.ts",
     "visual:build": "npm run build && pagefind --site dist",
-    "visual:test": "playwright test tests/visual/vrt.spec.ts",
-    "visual:update": "playwright test tests/visual/vrt.spec.ts --update-snapshots",
+    "visual:test": "playwright test tests/visual/vrt --workers=1",
+    "visual:update": "playwright test tests/visual/vrt --workers=1 --update-snapshots",
     "visual:install": "playwright install chromium"
   },
   "dependencies": {

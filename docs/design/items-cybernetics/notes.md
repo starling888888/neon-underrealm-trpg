@@ -1,8 +1,8 @@
 # items-cybernetics
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT items-cybernetics default <viewport>`
+- test: `tests/visual/vrt/items-cybernetics.spec.ts` の `@vrt @items-cybernetics @<state> @<viewport>`
 - route: `/data/items/cybernetics/`
 - state: default
 - snapshots:

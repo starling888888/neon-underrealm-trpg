@@ -1,8 +1,8 @@
 # page-navigation-links
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT page-navigation-links default <viewport>`
+- test: `tests/visual/vrt/page-navigation-links.spec.ts` の `@vrt @page-navigation-links @<state> @<viewport>`
 - route: `/-local/page-navigation/`
 - state: default
 - snapshots:

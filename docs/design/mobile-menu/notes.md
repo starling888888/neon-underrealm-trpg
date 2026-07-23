@@ -1,8 +1,8 @@
 # mobile-menu
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT mobile-menu <state> mobile`
+- test: `tests/visual/vrt/mobile-menu.spec.ts` の `@vrt @mobile-menu @<state> @<viewport>`
 - route: `/data/items/weapons/`
 - states / snapshots:
   - closed, mobile `390x900`: `mobile-menu-default-mobile.png`

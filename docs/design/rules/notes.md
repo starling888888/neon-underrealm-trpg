@@ -1,8 +1,8 @@
 # rules
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT rules default <viewport>`
+- test: `tests/visual/vrt/rules.spec.ts` の `@vrt @rules @<state> @<viewport>`
 - route: `/rules/`
 - state: default
 - snapshots:

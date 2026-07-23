@@ -1,8 +1,8 @@
 # current-menu-highlight
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT current-menu-highlight default <viewport>`
+- test: `tests/visual/vrt/current-menu-highlight.spec.ts` の `@vrt @current-menu-highlight @<state> @<viewport>`
 - route: `/world/`
 - state: default
 - snapshots:

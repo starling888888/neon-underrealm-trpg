@@ -1,8 +1,8 @@
 # 404
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT 404 default <viewport>`
+- test: `tests/visual/vrt/404.spec.ts` の `@vrt @404 @<state> @<viewport>`
 - route: `/not-found/`
 - state: default
 - snapshots:

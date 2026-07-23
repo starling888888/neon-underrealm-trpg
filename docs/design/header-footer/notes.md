@@ -1,8 +1,8 @@
 # header-footer
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT header-footer default <viewport>`
+- test: `tests/visual/vrt/header-footer.spec.ts` の `@vrt @header-footer @<state> @<viewport>`
 - route: `/-local/header-footer/`
 - state: default
 - snapshots:

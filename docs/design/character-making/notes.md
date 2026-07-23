@@ -1,8 +1,8 @@
 # character-making
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT character-making default <viewport>`
+- test: `tests/visual/vrt/character-making.spec.ts` の `@vrt @character-making @<state> @<viewport>`
 - route: `/character-making/`
 - state: default
 - snapshots:

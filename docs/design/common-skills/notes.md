@@ -1,8 +1,8 @@
 # common-skills
 
-+## VRT baseline
+## VRT baseline
 
-- test: `tests/visual/vrt.spec.ts` の `VRT common-skills default <viewport>`
+- test: `tests/visual/vrt/common-skills.spec.ts` の `@vrt @common-skills @<state> @<viewport>`
 - route: `/data/common-skills/`
 - state: default
 - snapshots:
