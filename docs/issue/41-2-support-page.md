@@ -43,31 +43,31 @@
 
 ## 完了条件
 
-- [ ] `src/pages/support.mdx` が静的な `/support` ページとして生成され、title、description、`showPageToc: true`を設定している。
-- [ ] `src/lib/site/menu.ts` の「キャラクター成長」の直後かつ「更新履歴」の直前に「サポート」項目があり、desktop・mobileのSiteMenuから `/support` へ到達でき、現在地表示が機能する。
-- [ ] `.raw/contents/support.md` のfrontmatter、Markdown本文、HTMLコメント指示を、公開URLのbase path対応を除いて漏れなく反映している。
-- [ ] 多数のダイスを使うためオンラインセッションを推奨し、行動値、体力、精神力、気合、縁、使用済み覚悟数、バッドトリップ、毒、出血の9項目をキャラクター登録項目として表示している。
-- [ ] 判定の`nB10<=m`とダメージロールの`nd6+m`について、各記号の意味、CCFOLIAのコマンド・出力例、達成値・効果値・気合獲得・ダメージの説明を表示している。
-- [ ] CCFOLIAを設定例として扱い、特定ツールの利用を必須化していない。
-- [ ] 9×9戦闘マップの前景設定、縦横40、コマサイズ3を表示し、`public/images/battle-map.png` がGitHub Pagesのサブパス公開でも別タブで正しく開く。
-- [ ] ルール質問・プレイ希望・今後の展開と、サイトのバグ報告・機能要望の各問い合わせ用途に対応したDiscord、公式X、作者X、GitHubの導線を表示し、外部リンクの安全な別タブ表示を維持している。
-- [ ] ダイスローラー、戦闘支援、マップ操作、キャラクター登録フォームを実装していない。
-- [ ] support用Visual Review testを追加し、desktop・mobileのactual screenshotを取得して既存共通designと比較し、結果をcurrent issueへ記録している。
-- [ ] Visual Reviewの結果を、ユーザー承認なしにdesign正本へコピーしていない。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `src/pages/support.mdx` が静的な `/support` ページとして生成され、title、description、`showPageToc: true`を設定している。
+- [x] `src/lib/site/menu.ts` の「キャラクター成長」の直後かつ「更新履歴」の直前に「サポート」項目があり、desktop・mobileのSiteMenuから `/support` へ到達でき、現在地表示が機能する。
+- [x] `.raw/contents/support.md` のfrontmatter、Markdown本文、HTMLコメント指示を、公開URLのbase path対応を除いて漏れなく反映している。
+- [x] 多数のダイスを使うためオンラインセッションを推奨し、行動値、体力、精神力、気合、縁、使用済み覚悟数、バッドトリップ、毒、出血の9項目をキャラクター登録項目として表示している。
+- [x] 判定の`nB10<=m`とダメージロールの`nd6+m`について、各記号の意味、CCFOLIAのコマンド・出力例、達成値・効果値・気合獲得・ダメージの説明を表示している。
+- [x] CCFOLIAを設定例として扱い、特定ツールの利用を必須化していない。
+- [x] 9×9戦闘マップの前景設定、縦横40、コマサイズ3を表示し、`public/images/battle-map.png` がGitHub Pagesのサブパス公開でも別タブで正しく開く。
+- [x] ルール質問・プレイ希望・今後の展開と、サイトのバグ報告・機能要望の各問い合わせ用途に対応したDiscord、公式X、作者X、GitHubの導線を表示し、外部リンクの安全な別タブ表示を維持している。
+- [x] ダイスローラー、戦闘支援、マップ操作、キャラクター登録フォームを実装していない。
+- [x] support用Visual Review testを追加し、desktop・mobileのactual screenshotを取得して既存共通designと比較し、結果をcurrent issueへ記録している。
+- [x] Visual Reviewの結果を、ユーザー承認なしにdesign正本へコピーしていない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、SiteMenu、PageToc、MobilePageToc、Footer、共通Calloutを壊していない。
-- [ ] desktop・mobileのSiteMenuで「サポート」が「キャラクター成長」の下かつ「更新履歴」の上に表示され、現在地表示を維持している。
-- [ ] 内部assetリンクがGitHub Pagesのサブパス公開で壊れず、`/public/images/...` を公開URLとして使用していない。
-- [ ] PageTocとMobilePageTocに不要なCallout titleを見出しとして含めていない。
-- [ ] desktop / mobileで本文、コード例、Callout、マップリンクに横overflowや可読性の低下がない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 関連TODOをこのissueで回収し、TODOの「特定ツールを必須にしない」「ダイスローラー・戦闘支援を作らない」方針と矛盾していない。
-- [ ] `docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/mobile-page-toc/`、`docs/design/callout/`、`docs/design/page-navigation-links/`の既存制約と矛盾していない。
-- [ ] ユーザーの未コミット変更である `public/images/battle-map.png` を破壊していない。
+- [x] 既存ルート、SiteMenu、PageToc、MobilePageToc、Footer、共通Calloutを壊していない。
+- [x] desktop・mobileのSiteMenuで「サポート」が「キャラクター成長」の下かつ「更新履歴」の上に表示され、現在地表示を維持している。
+- [x] 内部assetリンクがGitHub Pagesのサブパス公開で壊れず、`/public/images/...` を公開URLとして使用していない。
+- [x] PageTocとMobilePageTocに不要なCallout titleを見出しとして含めていない。
+- [x] desktop / mobileで本文、コード例、Callout、マップリンクに横overflowや可読性の低下がない。
+- [x] 不要な依存関係を追加していない。
+- [x] 関連TODOをこのissueで回収し、TODOの「特定ツールを必須にしない」「ダイスローラー・戦闘支援を作らない」方針と矛盾していない。
+- [x] `docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/mobile-page-toc/`、`docs/design/callout/`、`docs/design/page-navigation-links/`の既存制約と矛盾していない。
+- [x] ユーザーの未コミット変更である `public/images/battle-map.png` を破壊していない。
 
 ## 想定変更ファイル
 
@@ -95,3 +95,55 @@
 `public/images/battle-map.png` はissue準備開始時点で存在したユーザー提供の未追跡assetである。issue準備では追加・変更・削除せず、実装後にユーザーがcommitを明示指示した場合だけ対象差分を確認してGitへ追加する。
 
 ユーザー指示により、`design-image-generation` のinitial draftは不要とする。Visual Review screenshotは実装結果であり、ユーザー確認なしに `docs/design/` の正本へ転記しない。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/mobile-page-toc/`、`docs/design/callout/`、`docs/design/page-navigation-links/`
+- reference desktop: `docs/design/site-layout/design-desktop.png`、`docs/design/page-toc/design-desktop-visible.png`
+- reference mobile: `docs/design/site-layout/design-mobile.png`、`docs/design/mobile-page-toc/design-mobile-closed.png`
+- notes: ユーザー指示により、ページ固有のinitial design draftは作成していない。既存の本文レイアウト、SiteMenu、PageToc、MobilePageToc、Calloutを比較対象とした。
+
+### 成果物
+
+- actual desktop: `test-results/visual/support-desktop.png`
+- actual mobile: `test-results/visual/support-mobile.png`
+- report: `test-results/visual/capture-manifest.json`、`tests/visual/support.spec.ts`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                                                      | 対応 |
+| --------------------- | ---- | ----------------------------------------------------------------------------------------- | ---- |
+| レイアウト            | OK   | 既存の3カラム本文layout内に収まり、desktopでは左右のSiteMenuとPageTocが本文を圧迫しない。 | 不要 |
+| 余白                  | OK   | 見出し、リスト、Callout、問い合わせの間隔は既存本文ページと整合する。                     | 不要 |
+| タイポグラフィ        | OK   | H2からH4、コード例、リンクの読み順を維持する。                                            | 不要 |
+| 色                    | OK   | 既存の青緑リンクとexample Calloutを利用し、追加の強い装飾を加えていない。                 | 不要 |
+| 配置・整列            | OK   | SiteMenuの「サポート」は「キャラクター成長」の下・「更新履歴」の上に表示される。          | 不要 |
+| レスポンシブ          | OK   | 390px mobileでMobilePageToc、本文、Callout、Footerが成立する。                            | 不要 |
+| overflow / scroll     | OK   | ページ全体の横overflowはない。長いコマンドは既存のコードブロック内で横スクロールできる。  | 不要 |
+| 既存デザインとの整合  | OK   | 既存共通designの本文ページ制約と矛盾しない。                                              | 不要 |
+| 既存Componentとの整合 | OK   | `Callout`、SiteMenu、PageToc、MobilePageTocを既存仕様のまま利用する。                     | 不要 |
+| accessibility basics  | OK   | 外部リンクの別タブ・`rel`、SiteMenuの現在地表示、MobilePageTocの開閉を確認した。          | 不要 |
+
+### 自己修正した項目
+
+- [x] mobile SiteMenuがドロワー内にあるため、Visual testをドロワーを開いて現在地表示を確認する手順へ修正した。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
