@@ -1,0 +1,60 @@
+---
+interface Props {
+  ariaLabel?: string;
+}
+
+const { ariaLabel } = Astro.props;
+---
+
+<div class="legend-container" data-legend-container aria-label={ariaLabel}>
+  <div class="legend-container-card">
+    <slot name="card" />
+  </div>
+  <div class="legend-container-guide">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .legend-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+  }
+
+  .legend-container-card,
+  .legend-container-guide {
+    min-width: 0;
+  }
+
+  .legend-container-guide {
+    grid-column: span 2;
+  }
+
+  .legend-container-card :global(.data-card),
+  .legend-container-guide > :global(ol) {
+    margin: 0;
+  }
+
+  .legend-container-guide > :global(ol > li) {
+    line-height: var(--line-height-base);
+  }
+
+  @media (max-width: 48rem) {
+    .legend-container {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+    }
+
+    .legend-container-guide {
+      grid-column: span 1;
+    }
+
+    .legend-container-guide > :global(ol) {
+      font-size: var(--text-xs);
+    }
+  }
+</style>

@@ -1,0 +1,101 @@
+---
+layout: ../../../layouts/MDXLayout.astro
+title: サイバネ
+description: ケジメの仕事人が使用できるサイバネを一覧で確認するページです。
+showPageToc: true
+---
+
+import Callout from "../../../components/_common/Callout.astro";
+import CardContainer from "../../../components/_common/CardContainer.astro";
+import ImageBlock from "../../../components/_common/ImageBlock.astro";
+import InternalLink from "../../../components/_common/InternalLink.astro";
+import CyberneticCard from "../../../components/data/CyberneticCard.astro";
+import LegendContainer from "../../../components/data/LegendContainer.astro";
+import WeaponCard from "../../../components/data/WeaponCard.astro";
+import { getCybernetics, getItemsData } from "../../../lib/data/items";
+
+export const headCybernetics = getCybernetics("head") ?? [];
+export const torsoCybernetics = getCybernetics("torso") ?? [];
+export const armCybernetics = getCybernetics("arm") ?? [];
+export const legCybernetics = getCybernetics("leg") ?? [];
+export const anyCybernetics = getCybernetics("any") ?? [];
+export const cyberneticWeapons = Object.values(
+  getItemsData().weapons.cybernetics ?? {},
+).flatMap((weapons) => weapons ?? []);
+
+# サイバネ
+
+<ImageBlock src="/images/data/items/cybernetics_hero.webp" alt="" loading="eager" />
+
+「ケジメ」の生き様を選んだキャラクターのみが使用できる特別なアイテムです。どの体の部位を置換して使えるようになるかがサイバネごとに決まっており、「頭」「胴体」「腕」「足」それぞれ1つ使えるのに加え、「その他」として、そのサイバネの部位を問わず1つ追加で使用できます。\
+効果欄に「サイバネ武器」と書かれている場合は、同名の武器が使用できます。サイバネ武器は通常の装備する武器とは別に、いくつでも戦闘中使用可能です。\
+サイバネの使用は精神に負担がかかるため、**サイバネごとに設定された「埋め込み点数」の合計が「精神」以下でなければなりません。**
+
+<Callout type="warning">
+サイバネは埋め込めば埋め込むほど人間性が失われていきます。使用しているサイバネの埋め込み点数の合計に応じて非戦闘技能による判定の判定数が減少します。
+
+- 5点以下：判定数は減少しません。
+- 6点以上、10点以下：判定数が3減少します。
+- 11点以上：判定数が6減少します。
+</Callout>
+
+## サイバネの破壊
+
+サイバネはサイバネ自身やスキルの効果で破壊されることがあります。破壊されたサイバネは、そのシナリオ中効果を発揮しなくなります。<InternalLink href="/rules/scenario-play#休息シーン">休息シーン</InternalLink>において、破壊されたサイバネ1つにつき、精神力を5点支払うことでそのサイバネを修理して、再度効果を使用できるようになります。ただし、ここで消費した精神力はその休息シーンで回復しません。
+
+## データの見方
+
+<LegendContainer ariaLabel="サイバネデータの見方">
+  <CyberneticCard
+    slot="card"
+    name="①サイバーアイ"
+    credit="②3"
+    part="③頭"
+    implantPoints="④2"
+    effect="⑤感覚を用いる判定+1d。"
+  />
+
+1. **名称**：そのサイバネの名称です。
+2. **信用**：そのサイバネを埋め込むのに必要な信用の数値です。
+3. **部位**：そのサイバネを埋め込むことのできる部位です。この部位によらず、「その他」にそのサイバネを埋め込むことができます。
+4. **埋め込み点数**：そのサイバネが精神に与える負荷です。埋め込んでいるサイバネのこの値の合計が精神以下でなければなりません。
+5. **効果**：そのサイバネの持つ特殊な効果です。
+</LegendContainer>
+
+## サイバネ一覧
+
+### 頭部に埋め込むサイバネ
+
+<CardContainer ariaLabel="頭部に埋め込むサイバネ">
+  {headCybernetics.map((item) => <CyberneticCard {...item} anchorId={item.id} />)}
+</CardContainer>
+
+### 胴体に埋め込むサイバネ
+
+<CardContainer ariaLabel="胴体に埋め込むサイバネ">
+  {torsoCybernetics.map((item) => <CyberneticCard {...item} anchorId={item.id} />)}
+</CardContainer>
+
+### 腕に埋め込むサイバネ
+
+<CardContainer ariaLabel="腕に埋め込むサイバネ">
+  {armCybernetics.map((item) => <CyberneticCard {...item} anchorId={item.id} />)}
+</CardContainer>
+
+### 足に埋め込むサイバネ
+
+<CardContainer ariaLabel="足に埋め込むサイバネ">
+  {legCybernetics.map((item) => <CyberneticCard {...item} anchorId={item.id} />)}
+</CardContainer>
+
+### どの部位にも埋め込めるサイバネ
+
+<CardContainer ariaLabel="どの部位にも埋め込めるサイバネ">
+  {anyCybernetics.map((item) => <CyberneticCard {...item} anchorId={item.id} />)}
+</CardContainer>
+
+## サイバネ武器
+
+<CardContainer ariaLabel="サイバネ武器">
+  {cyberneticWeapons.map((weapon) => <WeaponCard {...weapon} anchorId={weapon.id} />)}
+</CardContainer>

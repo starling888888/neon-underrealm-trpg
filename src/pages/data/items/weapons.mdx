@@ -1,11 +1,104 @@
 ---
 layout: ../../../layouts/MDXLayout.astro
 title: 武器
-description: サイトメニュー現在地ハイライトの目視確認用ダミーページです。
+description: 仕事人が使用する武器を一覧で確認するページです。
+showPageToc: true
 ---
+
+import CardContainer from "../../../components/_common/CardContainer.astro";
+import ImageBlock from "../../../components/_common/ImageBlock.astro";
+import InternalLink from "../../../components/_common/InternalLink.astro";
+import LegendContainer from "../../../components/data/LegendContainer.astro";
+import WeaponCard from "../../../components/data/WeaponCard.astro";
+import { getWeapons } from "../../../lib/data/items";
+import { createHeadingId } from "../../../lib/utils/heading-id";
+
+export const battleAttackHeadingId = createHeadingId(3, "攻撃");
+export const battleWeaponHeadingId = createHeadingId(3, "戦闘に使える武器");
+export const battleConcealedWeaponHeadingId = createHeadingId(3, "暗器");
+export const battleReloadHeadingId = createHeadingId(3, "発砲武器の装填");
+export const cyberneticWeaponHeadingId = createHeadingId(2, "サイバネ武器");
+export const nanomachineWeaponHeadingId = createHeadingId(2, "武器化ナノマシン");
+
+export const kenkaWeapons = getWeapons("normal", "kenka") ?? [];
+export const ansatsuWeapons = getWeapons("normal", "ansatsu") ?? [];
+export const happouWeapons = getWeapons("normal", "happou") ?? [];
+export const kakutouWeapons = getWeapons("normal", "kakutou") ?? [];
+export const kanshouWeapons = getWeapons("normal", "kanshou") ?? [];
 
 # 武器
 
-このページは、サイトメニュー現在地ハイライトの目視確認用ダミーページです。
+<ImageBlock src="/images/data/items/weapons_hero.webp" alt="" loading="eager" />
 
-後続の武器ページ実装時に削除または本実装へ置き換えます。
+攻撃に使うアイテムのことを「武器」と呼びます。複数所持することができますが、特別な場合を除き戦闘中に使用できるのは1つだけです。（特別な場合は<InternalLink href={`/rules/battle#${battleWeaponHeadingId}`}>戦闘ルールの「戦闘に使える武器」</InternalLink>で説明されます。）\
+スキルやアイテムによって得られる特殊な攻撃方法もデータ上は武器として扱われます。\
+サイバネやナノマシンなどの専用アイテムの効果で得られる武器は、<InternalLink href={`/data/items/cybernetics#${cyberneticWeaponHeadingId}`}>サイバネ武器</InternalLink>と<InternalLink href={`/data/items/nanomachines#${nanomachineWeaponHeadingId}`}>武器化ナノマシン</InternalLink>で確認してください。
+
+## データの見方
+
+<LegendContainer ariaLabel="武器データの見方">
+  <WeaponCard
+    slot="card"
+    name="①拳銃"
+    credit="②2"
+    kind="③射撃"
+    check="④発砲"
+    attack="⑤10"
+    guard="⑥-"
+    range="⑦1"
+    ammo="⑧6"
+    effect="⑨"
+  />
+
+1. **名称**：その武器の名称です。
+2. **信用**：その武器を使用するのに必要な信用の数値です。「-」と書かれている場合には、他のアイテムやスキルの効果によってのみ使用できるようになります。
+3. **武器種別**：その武器で行われる攻撃の種類です。「近接」「射撃」「特殊」のいずれかです。それぞれの種別の説明は<InternalLink href={`/rules/battle#${battleAttackHeadingId}`}>戦闘ルールの攻撃</InternalLink>を確認してください。
+4. **技能**：能動技能のいずれかとなります。対応する技能を用いた判定での攻撃にしかその武器は使用できません。
+5. **攻撃力**：その武器で与えられるダメージの基礎値です。ここにスキルやアイテム、判定結果を加算してダメージを決定します。「-」と書かれている場合はその武器の攻撃ではダメージを与えられません。
+6. **ガード値**：その武器を用いて防御判定を行ったときに減らせるダメージ減少の値です。「-」と書かれている場合、その武器では防御判定を行えません。
+7. **射程**：その武器で自分から何マス離れたキャラを攻撃できるかを表します。
+8. **装弾数**：射撃武器だけが持ちます。この回数だけ攻撃を行うと<InternalLink href={`/rules/battle#${battleReloadHeadingId}`}>装填</InternalLink>を行わないとその武器では攻撃ができなくなります。
+9. **効果**：その武器が持つ特別な効果です。
+</LegendContainer>
+
+## 武器一覧
+
+### 喧嘩武器
+
+筋力による喧嘩判定で攻撃する武器です。攻撃力、ガード値に優れた武器が多いです。
+
+<CardContainer ariaLabel="喧嘩武器">
+  {kenkaWeapons.map((weapon) => <WeaponCard {...weapon} anchorId={weapon.id} />)}
+</CardContainer>
+
+### 暗殺武器
+
+敏捷による暗殺判定で攻撃する武器です。攻撃力、ガード値は控えめなもの、複数所持できる<InternalLink href={`/rules/battle#${battleConcealedWeaponHeadingId}`}>暗器</InternalLink>を含む武器です。
+
+<CardContainer ariaLabel="暗殺武器">
+  {ansatsuWeapons.map((weapon) => <WeaponCard {...weapon} anchorId={weapon.id} />)}
+</CardContainer>
+
+### 発砲武器
+
+感覚による発砲判定で攻撃する武器です。いずれも射撃武器で、装弾数を持ちます。装弾数と射程により、様々な攻撃力のバラエティがあります。
+
+<CardContainer ariaLabel="発砲武器">
+  {happouWeapons.map((weapon) => <WeaponCard {...weapon} anchorId={weapon.id} />)}
+</CardContainer>
+
+### 格闘武器
+
+肉体による格闘判定で攻撃する武器です。<InternalLink href="/data/ryugi/sutegoro">ステゴロ</InternalLink>の主戦力である素手と素足を含みます。全体に攻防のバランスに優れます。
+
+<CardContainer ariaLabel="格闘武器">
+  {kakutouWeapons.map((weapon) => <WeaponCard {...weapon} anchorId={weapon.id} />)}
+</CardContainer>
+
+### 干渉武器
+
+精神による干渉判定で攻撃する<strong>攻撃手段</strong>です。アイテム、スキルの効果で使用できるようになります。データ上は、<strong>武器として扱います。</strong>いずれも特殊武器で、防御力を無視したダメージを与えます。
+
+<CardContainer ariaLabel="干渉武器">
+  {kanshouWeapons.map((weapon) => <WeaponCard {...weapon} anchorId={weapon.id} />)}
+</CardContainer>

@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Visual capture repeated without the required Pagefind index
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: `34-2-items-pages` の `npm run visual:capture`
+- 観測した失敗: `npm run build`後のpreviewに対してVisual Captureを2回実行したが、Pagefind indexを生成していなかった。そのため、武器ページのdesktop / mobile Visual Testは成功した一方、既存の`data.spec.ts`と`search-modal.spec.ts`の検索結果を期待する4件が同じ理由で失敗した。
+- 一次対応: 実装対象の武器Visual Testは成功し、`test-results/visual/items-weapons-desktop.png`と`test-results/visual/items-weapons-mobile.png`を取得した。検索を含むVisual Captureを再実行する前に、Pagefind indexを生成する手順を確認する。
+
 ### Repeated PR reviews discovered one documentation dependency at a time
 
 #### 2026-07-22
@@ -828,3 +837,12 @@ source種別は以下を使う。
 - 発生箇所: `40-2-404-page` の`docs/design/404/` canonicalization
 - 観測した失敗: 404実装を未コミットworktreeに置いたままcanonicalizeを実行し、`notes.md`のsource commitには実装前の`e71bbb1`を記録した。そのcommitには404ページ、Visual Test、design artifactがなく、正本画像を固定済み実装から再現できない。
 - 一次対応: PR #63のローカルレビューでcurrent issueへ記録した。以後、canonicalizeは対象実装を含むcommitをHEADにしてから実行し、source commitが画面状態を再現できることを確認する。今回の再captureとprovenance更新はユーザー承認後に行う。
+
+### Data visual test retained an assertion for an unrendered property
+
+#### 2026-07-23
+
+- source: agent self-report
+- 発生箇所: `34-2-items-pages` の`tests/visual/data.spec.ts`
+- 観測した失敗: SkillLegendの共通Component移行後にVisual Testを実行したところ、desktopとmobileの両testが、`SkillCard`が表示していない`summary` propの文言を期待して失敗した。既存の`SkillCard`実装は移行前から`summary`を描画しておらず、testだけが実際の表示契約とずれていた。
+- 一次対応: `summary`の期待を削除し、実際に表示する`effect`、カード項目、3→2カラム構成と横overflowを検証する。Visual Test実行前に、ComponentのpropがDOMへ描画されるかを対象Componentで確認する。
