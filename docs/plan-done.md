@@ -599,3 +599,15 @@
   - [x] Pagefind生成物がGitHub Pagesへdeployされる成果物に含まれることを確認する
   - [x] 公開環境で検索UIがPagefind indexを参照できることを確認する
   - [x] GitHub Pagesサブパス配下で検索indexのパスが壊れないことを確認する
+
+## Phase 5: 仕上げ・公開
+
+- [x] `ex-03-hero-layout-stability` — ヒーロー画像の表示遅延によるコンテンツ位置ずれを防ぐ
+  - completed: 2026-07-23 via PR #66 / `f0e83af`
+
+  - [x] 既存designを参照してVisual Reviewを行う（ユーザー決定: 新規design生成なし）
+  - [x] ヒーロー画像の表示前から表示領域を確保する
+  - [x] skeleton表示を検討する（ユーザー決定: 不要）
+  - [x] 画像の表示完了前後で本文コンテンツの位置がずれないことを確認する
+  - [x] 不要なクライアントJSを追加しない
+  - [x] 完成画面のスクリーンショットを取得する（ユーザー決定: design正本は更新しない）

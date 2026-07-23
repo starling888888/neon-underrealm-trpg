@@ -58,7 +58,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - handling plan: GitHub Pages deploy workflowとは分離し、main以外のbranch / pull requestで `npm ci`、`npm run check`、`npm run build`、必要なtestを実行するCIを整備する。deployは行わず、GitHub Pages環境を更新しない。docs-only更新、AGENTS / SKILL更新のみの場合の扱いもCI方針として明確化する。
 
 - [ ] Pagefindが`-local`確認ページをindex化した場合も、検索Visual Testを安定して実行できるようにする
-  - source: `.tmp/review/ex-03-hero-layout-stability/document-review-1.md` / PR #66
+  - source: PR #66 のdocument review
   - classification: follow-up
   - plan: `docs/plan.md` の `53-content-smoke-test`
   - handling plan: `-local/data-cards`をPagefind indexから除外するか、検索Visual Testのlocatorを公開対象の検索結果へ限定する。GitHub Pagesのsubpath検索と公開ページの検索結果が壊れないことを確認してから、Visual Capture全体をgreenにする。
