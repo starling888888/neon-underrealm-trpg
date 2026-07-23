@@ -68,7 +68,7 @@ already approved that work in the current issue.
 Use the target tags from the matching VRT spec. For example:
 
 ```sh
-npm run visual:test -- --grep '@vrt.*@site-layout'
+npm run visual:test -- --grep '@vrt.*@site-layout(?:\s|$)'
 ```
 
 Use the same tag with `npm run visual:capture` to produce temporary snapshots.

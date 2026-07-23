@@ -20,7 +20,7 @@
 - `docs/issue/done/phase-5/50-2-layout-scroll-behavior.md`。そこで完了した Header と各レールのスクロール挙動は変更対象に決め打ちせず、回帰確認の対象とする。
 - `docs/design/site-layout/`、`docs/design/header-footer/`、`docs/design/site-menu/`、`docs/design/mobile-menu/`、`docs/design/page-toc/`、`docs/design/mobile-page-toc/`、`docs/design/search-modal/`、各ページの既存 design target
 
-上記の横断 layout / navigation に必要な design 画像は存在する。検証中に既存 design で判断できない UI 変更が必要と判明した場合は、実装へ進まず `design-image-generation` を別の前段作業として扱う。
+上記の横断 layout / navigation に必要なdesign intent、VRT参照情報、canonical baselineは存在する。検証中に既存designで判断できないUI変更が必要と判明した場合は、実装へ進まず `design-image-generation` を別の前段作業として扱う。
 
 ## 対象範囲
 
@@ -154,11 +154,10 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - 影響: 後続のdesign作業・レビューが、実在しないassetまたは実装されないfallbackを制約として誤認する。
 - 対応方針: Phase Dのnotes-only移行で、現存するWebPロゴだけを現行stateとして記録し、比較assetの記述は削除理由または代替の比較根拠へ置き換える。Phase D開始前にこの一点だけを更新する場合は、別途ユーザーの明示指示を得る。
 
-### 判断保留: Phase D と `50-1-vrt-css-regression-guards` の責務境界
+### 解決済み: Phase D と `50-1-vrt-css-regression-guards` の責務境界
 
-- 判定: doubtful（ユーザー判断待ち）
-- 根拠: `docs/plan.md` の50-1にもVRT導入・viewport/route定義・CSS回帰検知がある。一方、ユーザーは本issueのPhase Dで全design正本をPlaywright標準VRTへ移行する方針を明示している。
-- 方針: ユーザー指示を優先して自動的なrouting変更は行わない。Phase D開始前に、49-50にPhase Dを残して50-1を再定義するか、50-1へ移して49-50から参照するかを決定する。
+- 判定: 解決済み
+- 結果: ユーザー指示により、`50-1-vrt-css-regression-guards`は本issueのPhase Dへ統合した。`docs/plan.md`から独立taskを削除し、VRTのroute・状態・3 viewport baseline・CSS回帰検知をPhase Dで扱った。
 
 ### 対応完了チェックリスト
 
@@ -221,3 +220,39 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - [x] search-modalとhero-layout-stabilityからdiagnostic screenshotを削除する。
 - [x] legacy specを参照する現行design notesをVRTへ更新する。
 - [x] `npm run check`、`npm test`、VRTの対象比較が通る。
+
+## レビュー指摘 4
+
+レビュー元: local PR review（PR #68、`414ef05443e10f0ced1466ca41bc8036f87b0967..40fc0f72b3211066d142a767de42d55aa733469d`）
+
+### 指摘事項
+
+- `docs/plan.md` の49-50確認幅が、現在の`1280px` 3レール基準でなく、`1024px`をPC境界としている。
+- planの「完成画面スクリーンショットによるdesign更新」と本issueの「design画像」表現が、VRT baselineを正本とし、更新をユーザー明示指示に限定するPhase D後の運用と矛盾する。
+- レビュー指摘1のPhase Dと50-1の責務境界が「判断保留」のままで、解決済みの統合決定を未解決に見せている。
+- `--grep '@vrt.*@<target>'`はtarget名を前方一致させる。`@items`が`items-*`も含むため、`visual:update`で承認外baselineを更新し得る。
+- legacy Visual specの削除により、MobilePageTocを同一triggerの再クリックで閉じる操作と、`aria-expanded`の契約を確認するtestが残っていない。
+- legacy Visual specの削除により、desktop SiteMenuとmobile drawerの現在地リンクに`aria-current="page"`が付くDOM契約を確認するtestが残っていない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/requirements/non-functional.md`と`docs/requirements/layout-navigation.md`は`1280px`を3レール／右サイド目次の境界とする一方、`docs/plan.md`の49-50確認項目は旧`1024px`基準のままである。`docs/design/README.md`と`tests/visual/README.md`はcanonical baseline・actual artifact・明示更新の境界を定義済みであり、planとissueの旧表現は追従が必要である。`npm run visual:test -- --list --grep '@vrt.*@items'`は`items`と全`items-*`の21件を列挙した。現行testにはMobilePageTocの再クリック閉鎖、または`aria-current`のDOM assertionがない。
+
+### 対応方針
+
+- planの49-50確認幅を`1280px`基準へ修正し、VRTのdesign intent・比較・明示baseline更新方針をスクリーンショット正本手順に置き換える。current issueのPhase A参照もnotesとcanonical baselineを前提とする表現へ更新する。
+- レビュー指摘1へ解決注記を追加し、50-1をPhase Dへ統合済みであることを明確化する。
+- target名を完全一致で絞り込める共通VRT filterを用意し、比較・capture・updateの全手順と文書で共用する。
+- ページ別legacy testを復活させず、共通の残存behavior testへMobilePageToc再クリック閉鎖と代表desktop / mobileの`aria-current` contractを追加する。
+
+### 対応完了チェックリスト
+
+- [x] plan、current issue、VRT運用文書を1280px基準とcanonical baselineの明示更新方針へ整合させる。
+- [x] レビュー指摘1のPhase Dと50-1統合を解決済みとして記録する。
+- [ ] VRT target filterを完全一致にし、対象外baselineを更新できないことを確認する。
+- [ ] MobilePageTocの再クリック閉鎖と`aria-expanded`を共通testで確認する。
+- [ ] desktop SiteMenuとmobile drawerの`aria-current="page"`を代表routeで確認する。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。

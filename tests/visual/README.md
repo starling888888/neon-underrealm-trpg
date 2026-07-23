@@ -35,7 +35,7 @@ capture先は常に `http://127.0.0.1:4321/neon-underrealm-trpg/` です。別po
 Visual Reviewまたはcontents reviewへ一時snapshotを渡すときは、対象targetだけをcaptureする。
 
 ```sh
-npm run visual:capture -- --grep '@vrt.*@home'
+npm run visual:capture -- --grep '@vrt.*@home(?:\s|$)'
 ```
 
 `visual:capture`は`playwright.capture.config.ts`を使い、`test-results/visual/`へsnapshotを書き出す。canonical baselineは更新せず、視覚差分では失敗しない。route遷移、状態準備、表示のassertionが失敗した場合はcaptureも失敗する。snapshotは次のPlaywright実行で削除され得る一時artifactであり、Git管理しない。
@@ -47,10 +47,12 @@ VRTは高コストなため、Markdownのみの変更や画面に影響しない
 たとえば`site-layout`だけを確認する場合は次を使う。
 
 ```sh
-npm run visual:test -- --grep '@vrt.*@site-layout'
+npm run visual:test -- --grep '@vrt.*@site-layout(?:\s|$)'
 ```
 
 ローカルで`npm run visual:test`による全件VRTを通常の開発手順に含めない。全件比較は、GitHub Actionsの定期実行または公開直後の実行を整備した後にCIで行う。ローカル全件実行は、ユーザーが明示した場合や比較基盤の調査時だけにする。
+
+targetで絞り込む`--grep`では、tag直後の空白または末尾を`(?:\s|$)`で必ず指定する。たとえば`@items`だけを対象にする場合、`@items-*`を含めない`@vrt.*@items(?:\s|$)`を使う。
 
 `visual:capture`も、Visual Reviewまたはcontents reviewでユーザーが求める画面を渡す場合だけ、target限定で実行する。
 

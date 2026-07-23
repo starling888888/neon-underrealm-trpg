@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeated direct Playwright listing bypassed the VRT script
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: PR #68 第2回Technical Reviewのtarget filter検証
+- 観測した失敗: `npx playwright test --config playwright.config.ts --list`を2回実行し、VRT専用の`tests/visual/vrt`指定を持つ`npm run visual:test`を経由しなかった。そのため無関係なtest fileも読み込み、Node ESMのJSON import attribute errorでtest listを作れなかった。
+- 一次対応: `npm run visual:test -- --list --grep ...`へ切り替え、`@items`が`items-*`を含む21件に一致することを確認した。VRT scriptの対象directoryと既定configを手作業で再現せず、package scriptから検証する。
+
 ### Over-scoped hero layout test follow-up after PR review
 
 #### 2026-07-23
