@@ -495,6 +495,38 @@
   - [x] `SkillCard` を含む凡例用Props定義を整理する
   - [x] 各Cardに個別アンカーIDを付与する
 
+- [x] `27-2-data-index-page` — データトップページを作成する
+  - completed: 2026-07-23 via PR #64 / `1a1b5e2` (final dependent subtask)
+
+  - [x] designを生成する
+  - [x] `/data/index.mdx` を作成する
+  - [x] `.raw/contents/data.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
+  - [x] スキルの見方、データ項目、タイミング、コスト、制限などを配置する
+  - [x] SkillCardに凡例用データを渡す形でスキル凡例を表示する
+  - [x] アイテム凡例は`34-2-items-pages`で、各Item系Cardに凡例用データを渡して表示する
+  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
+
+- [x] `34-2-items-pages` — 6種別のアイテムページをまとめて作成する
+  - completed: 2026-07-23 via PR #64 / `1a1b5e2`
+
+  - [x] 6ページを同一issue・branch・PRで実装し、共通するページ構造とデータ取得をまとめて扱う
+  - [x] `WeaponCard`、`ArmorCard`、`OmamoriCard`、`CyberneticCard`、`NanomachineCard`、`DrugCard`の既存表示契約と整合させる
+  - [x] 次の6 routeを作成し、各種別の一覧と対応するCardの凡例を表示する
+    - [x] `/data/items/weapons.astro` — 武器 / `WeaponCard`
+    - [x] `/data/items/armors.astro` — 防具 / `ArmorCard`
+    - [x] `/data/items/omamori.astro` — お守り / `OmamoriCard`
+    - [x] `/data/items/cybernetics.astro` — サイバネ / `CyberneticCard`
+    - [x] `/data/items/nanomachines.astro` — ナノマシン / `NanomachineCard`
+    - [x] `/data/items/drugs.astro` — ドラッグ / `DrugCard`
+  - [x] 各ページで対応するcontents inputのfrontmatter、Markdown本文、HTMLコメント指示を表示構成の正本として使う
+    - [x] `.raw/contents/items-weapons.md`
+    - [x] `.raw/contents/items-armors.md`
+    - [x] `.raw/contents/items-omamori.md`
+    - [x] `.raw/contents/items-cybernetics.md`
+    - [x] `.raw/contents/items-nanomachines.md`
+    - [x] `.raw/contents/items-drugs.md`
+  - [x] 各ページのVisual Test用スクリーンショットを取得し、種別ごとのdesign targetをcanonicalizeする
+
 - [x] `42-0-npc-data-normalization` — NPCデータと画像を正規化する
   - completed: 2026-07-22 via PR #59 / `42-0-npc-data-normalization`
 

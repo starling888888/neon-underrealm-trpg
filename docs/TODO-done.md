@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] 現在地ハイライト目視確認用のダミーMDXページ`/data/items`と`/data/items/weapons`を、本実装時に削除または置き換える
+  - completed: 2026-07-23 via PR #64 / `34-2-items-pages`
+  - source: `15-current-menu-highlight` 実装中の目視確認用追加
+  - classification: follow-up
+  - plan: `docs/plan-done.md` の `34-2-items-pages`
+  - handling plan: `src/pages/data/items/index.mdx`と`src/pages/data/items/weapons.mdx`を、アイテムトップページと武器一覧ページの正式実装へ置き換えた。
+
 - [x] NPC画像をpublic assetsへ配置し、個別画像がないIDはfallback表示する
   - completed: 2026-07-22 via PR #59 / `42-0-npc-data-normalization`
   - source: `21-2-world-page` のcontents作成時のユーザー指示
@@ -69,7 +76,7 @@
   - completed: 2026-07-13 via PR #42 / `27-2-data-index-page`
   - source: `15-current-menu-highlight` 実装中の目視確認用追加
   - classification: follow-up
-  - plan: `docs/plan.md` の `27-2-data-index-page`
+  - plan: `docs/plan-done.md` の `27-2-data-index-page`
   - handling: `src/pages/data/index.mdx`をデータトップページの本実装へ置き換えた。
 
 - [x] 戦闘ルール実装後、シナリオ終了後処理から死亡・覚悟の詳細へフラグメントリンクを置く
