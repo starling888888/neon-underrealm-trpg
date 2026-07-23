@@ -47,7 +47,7 @@
 - Google Drive上のユーザー編集正本をローカル作業入力として使う場合は、`raw-google-drive.url` と `<repo-root>/.raw/` の扱いを `.agents/skills/drive-to-raw-sync/SKILL.md` と `.agents/rules/data-management.md` で確認する。
 - ローカル`.raw/`からGoogle Driveへ書き込んでよいのは、ユーザーが `$raw-to-drive-sync` または `raw-to-drive-sync を実行して` と明示した場合に限る。このとき `.agents/skills/raw-to-drive-sync/SKILL.md` に従い、`.raw/data/` と `.raw/v1.0/` は明示指示があっても拒否する。
 - 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由をissueまたは作業報告に書く。
-- ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、または同種のcheck/build/test/formatter失敗を1回の作業中に2回以上繰り返した場合は `docs/agent-failure-log.md` に記録する。
+- ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、または同種のbuild、test、型検査などの失敗を1回の作業中に2回以上繰り返した場合は `docs/agent-failure-log.md` に記録する。formatterまたはlinterの指摘は、同一作業中に修正して最終確認できれば通常の開発ループとして扱い、failure logへ記録・報告しない。
 
 理由と背景は `.agents/rules/core-rules-rationale.md` を参照する。
 

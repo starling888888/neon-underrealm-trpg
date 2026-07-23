@@ -14,6 +14,7 @@ Use when the user asks to:
 - identify repeated agent failures
 - propose permanent rule, SKILL, checklist, or docs updates for repeated failures
 - move handled failure entries to `docs/agent-failure-log-done.md` after approved countermeasures are complete
+- move entries the user judges to need no permanent countermeasure to `docs/agent-failure-log-no-action.md`
 
 Do not use for:
 
@@ -99,6 +100,16 @@ When moving an entry:
 - do not move partially handled categories
 
 Use the format in `docs/agent-failure-log-done.md`.
+
+## User-No-Action Movement
+
+When the user explicitly judges an entry to need no permanent countermeasure, move it from `docs/agent-failure-log.md` to `docs/agent-failure-log-no-action.md`.
+
+- preserve the original occurrence details
+- record the user-no-action disposition and move date
+- exclude the moved entry from active audit counts
+- do not require a permanent countermeasure or post-fix observation
+- do not move an entry automatically merely because it is self-reported or has one occurrence; wait for the user's judgment
 
 ## Required Report
 
