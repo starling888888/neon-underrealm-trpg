@@ -18,7 +18,6 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `docs/issue/41-2-support-page.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/assets-seo.md`
@@ -32,6 +31,10 @@
 - `docs/design/mobile-page-toc/notes.md`
 - `docs/design/callout/notes.md`
 - `docs/design/page-navigation-links/notes.md`
+
+## Historical Source Issue
+
+- `docs/issue/done/phase-3/41-2-support-page.md`
 
 ## Design Direction
 

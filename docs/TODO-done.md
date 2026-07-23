@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] `/support` のオンラインセッションサポートページを作成する
+  - completed: 2026-07-23 via PR #67 / `41-2-support-page`
+  - source: `20-2-introduction-page` のコンテンツ検討時のユーザー指示
+  - classification: follow-up
+  - plan: `docs/plan-done.md` の `41-2-support-page`
+  - handling plan: 本作で多数のダイスを使用することからオンラインセッションを推奨し、オンラインセッションの準備と進め方を説明する。特定ツールを必須にせず、サポートページ内にダイスローラー、戦闘支援機能は作らない。
+
 - [x] 現在地ハイライト目視確認用のダミーMDXページ`/data/items`と`/data/items/weapons`を、本実装時に削除または置き換える
   - completed: 2026-07-23 via PR #64 / `34-2-items-pages`
   - source: `15-current-menu-highlight` 実装中の目視確認用追加

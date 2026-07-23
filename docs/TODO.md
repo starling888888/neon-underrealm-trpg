@@ -45,12 +45,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `50-responsive-pass`
   - handling plan: `TocPageLayout`の左右レールと中央本文の最小幅・breakpointを確認し、PC 3レール表示とtablet 2レール表示の切替幅を調整する。既存ページの横overflowとナビゲーション表示をVisual Testで確認する。
 
-- [ ] `/support` のオンラインセッションサポートページを作成する
-  - source: `20-2-introduction-page` のコンテンツ検討時のユーザー指示
-  - classification: follow-up
-  - plan: `docs/plan.md` の `41-2-support-page`
-  - handling plan: 本作で多数のダイスを使用することからオンラインセッションを推奨し、オンラインセッションの準備と進め方を説明する。特定ツールを必須にせず、サポートページ内にダイスローラー、戦闘支援機能は作らない。
-
 - [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
   - source: `17-github-actions-deploy-basic` issue review
   - classification: follow-up
