@@ -17,6 +17,7 @@ import KenkayaHealthExample from "../components/character-making/KenkayaHealthEx
 import RyugiCommonSkillBonusTable from "../components/data/RyugiCommonSkillBonusTable.astro";
 import { getIkizamaList } from "../lib/data/ikizama";
 import { getRyugiList } from "../lib/data/ryugi-list";
+import { heroImageDimensions } from "../lib/site/imageDimensions";
 
 export const ikizamaList = getIkizamaList();
 export const ryugiList = getRyugiList();
@@ -27,6 +28,8 @@ export const ryugiList = getRyugiList();
   src="/images/character-making/hero.webp"
   alt="港沿いの作業場で、4人の仕事人が義手、刺青、ドラッグ、戦闘装備を整えている。窓の外に通天閣を思わせる塔が見える。"
   loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
 />
 
 このページでは、セッションで使う仕事人を作るための基本要素と手順を説明します。キャラクターシートを用意し、GMや他のPLと相談しながら作成してください。

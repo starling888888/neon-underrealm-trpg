@@ -10,6 +10,7 @@ nextPath: /rules/battle
 import Callout from "../../components/_common/Callout.astro";
 import ImageBlock from "../../components/_common/ImageBlock.astro";
 import InternalLink from "../../components/_common/InternalLink.astro";
+import { heroImageDimensions } from "../../lib/site/imageDimensions";
 import { createHeadingId } from "../../lib/utils/heading-id";
 
 export const deathHeadingId = createHeadingId(2, "気絶と死亡");
@@ -22,6 +23,8 @@ export const gedouHeadingId = createHeadingId(3, "外道");
   src="/images/scenario-play/hero.webp"
   alt="路地裏で交渉する銀髪の女性とスーツ姿の男性、古い建物から跳び降りるナノマシンで脚を変形させた男性を斜めに分けたイラスト。"
   loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
 />
 
 シナリオは、いくつかの**シーン**を順に進めて遊びます。GMはシーンごとに登場するPCを指定する場合があります。物語をどう始め、調べ、戦い、終えるかをシーンごとに分けて扱うことで、PCは自分の役割や選択に集中できます。

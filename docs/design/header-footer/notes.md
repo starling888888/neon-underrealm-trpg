@@ -21,8 +21,8 @@
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/title_logo_black.png`
 - `docs/design/header-footer/title_logo_black.webp`
-- `public/title_logo.png`
-- `public/title_logo.webp`
+- `public/images/title_logo.png`
+- `public/images/title_logo.webp`
 
 ## Historical source issues
 
@@ -44,8 +44,8 @@
 - `global-styles` の方向性を維持する。白寄りの本文面、暗めグレーHeader、控えめな青緑accent、ルール参照に耐える実務的な密度を守る。
 - `base-layout` の前提を維持する。Header / Footerは共通Layout領域であり、Componentへ置き換えやすい単純な構造にする。
 - Headerの本番表示では、ユーザー提供の白文字ロゴを使う。
-  - primary: `public/title_logo.webp`
-  - fallback: `public/title_logo.png`
+  - primary: `public/images/title_logo.webp`
+  - fallback: `public/images/title_logo.png`
 - 元画像寸法は `1091x198`。このタスクでは縮小版画像を追加生成しない。表示サイズはCSSで制御する。
 - 本番ロゴは暗めHeader上で読める必要がある。ただしHeaderをhero風の大きな帯にしない。
 - `docs/design/header-footer/` 配下の黒文字ロゴは比較用であり、本番Header用assetではない。
@@ -99,7 +99,7 @@
 
 ## 生成元
 
-- generator or capture source: ImageMagickで一時PNGを合成し、`public/title_logo.webp` を配置した。
+- generator or capture source: ImageMagickで一時PNGを合成し、`public/images/title_logo.webp` を配置した。
 - source branch / commit when applicable: `10-header-footer`
 - route when applicable: `/` を含む共通Layout route
 - viewport: desktop `1440x1200`, mobile `390x900`

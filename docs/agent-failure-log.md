@@ -86,6 +86,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Over-scoped hero layout test follow-up after PR review
+
+#### 2026-07-23
+
+- source: user
+- 発生箇所: `ex-03-hero-layout-stability` のPR #66 第2回レビュー取り込み
+- 観測した失敗: 画像request保留を使う回帰testが実際の`ImageBlock`領域予約不備を検出した後に、document座標比較、生き様detailの重複scenario、全幅表示prop分離までを同じcurrent issueの必須対応として扱った。全表示箇所の寸法属性確認と代表的な回帰testがすでにあるため、後続の提案は検証価値より複雑性が大きい可能性を十分に評価していなかった。
+- 一次対応: 第2回レビュー指摘は実装せず、ユーザーの方針確認を待つ。テスト追加時は、実際に発見した不具合を再発防止する最小ケースと、全箇所を網羅する静的契約確認を分け、同一契約の複数scenarioをデフォルトで増やさない。
+
+### Hero layout visual capture retained unrelated Pagefind failures
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: `ex-03-hero-layout-stability` の `npm run visual:capture`
+- 観測した失敗: 初回はPagefind index未生成のため検索modal 2件が失敗した。index生成後の再実行では、`-local/data-cards`の検索結果も含まれ、既存search modal test 3件がstrict locator重複で失敗した。一方、追加したhero layout test 2件は通過した。
+- 一次対応: index生成後の結果で対象testの成功を確認し、同じcaptureを再実行しなかった。Pagefindの`-local`除外または既存search testのlocator絞り込みはcurrent issue外として別途扱う。
+
 ### Page navigation contract test ran before and then misread the 404 output path
 
 #### 2026-07-23
@@ -873,3 +891,12 @@ source種別は以下を使う。
 - 発生箇所: `34-2-items-pages` の`tests/visual/data.spec.ts`
 - 観測した失敗: SkillLegendの共通Component移行後にVisual Testを実行したところ、desktopとmobileの両testが、`SkillCard`が表示していない`summary` propの文言を期待して失敗した。既存の`SkillCard`実装は移行前から`summary`を描画しておらず、testだけが実際の表示契約とずれていた。
 - 一次対応: `summary`の期待を削除し、実際に表示する`effect`、カード項目、3→2カラム構成と横overflowを検証する。Visual Test実行前に、ComponentのpropがDOMへ描画されるかを対象Componentで確認する。
+
+### Hero image dimension inventory was reported too late
+
+#### 2026-07-23
+
+- source: user
+- 発生箇所: `ex-03-hero-layout-stability` のissueレビュー
+- 観測した失敗: hero画像の寸法を固定する案を提示する前に、全hero素材の実寸一覧を確認・報告しなかった。そのため、アイテムheroの統一後に流儀hero 3枚が`1671x941`のまま残ることを後から伝え、ユーザーに画像サイズの差異を先に報告すべきだったと指摘された。
+- 一次対応: 通常heroを`1672x941`へ統一することをissueの入力契約に明記した。以後、画像寸法・データ形式・asset配置を設計判断の根拠に使う前に、対象全件を一覧化し、差異を先に報告する。

@@ -10,6 +10,7 @@ nextPath: /character-making
 import ImageBlock from "../components/_common/ImageBlock.astro";
 import NpcCard from "../components/_common/NpcCard.astro";
 import { getNpcGroups, getNpcPortraitPath } from "../lib/data/npcs";
+import { heroImageDimensions } from "../lib/site/imageDimensions";
 
 # ワールドガイド
 
@@ -17,6 +18,8 @@ import { getNpcGroups, getNpcPortraitPath } from "../lib/data/npcs";
   src="/images/world/hero.webp"
   alt="雨の夜のオオサカ副都の路地。遠景に通天閣を思わせる塔が見える。"
   loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
 />
 
 このページは、仕事人たちが生きるオオサカ副都と、その光の裏側を紹介する。細部を覚えていなくても遊べる。けれど、誰がこの街を動かし、どんな力が人を変えるのかを知れば、仕事の手触りはきっと変わる。

@@ -7,6 +7,7 @@ import SkillCard from "../../../components/data/SkillCard.astro";
 import AppContainer from "../../../layouts/AppContainer.astro";
 import { getIkizamaDetail } from "../../../lib/data/ikizama-detail";
 import { getIkizamaList } from "../../../lib/data/ikizama";
+import { heroImageDimensions } from "../../../lib/site/imageDimensions";
 import {
   IKIZAMA_EXCLUSIVE_ITEM_TYPES,
   type IkizamaExclusiveItemType,
@@ -81,6 +82,8 @@ const skillCategories = [
       src={withBase(`/images/data/ikizama/${ikizamaId}_hero.webp`)}
       alt={heroAlt}
       loading="eager"
+      width={heroImageDimensions.width}
+      height={heroImageDimensions.height}
     />
 
     <p>{ikizama.description}</p>

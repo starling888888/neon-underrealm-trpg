@@ -10,6 +10,7 @@ nextPath: /rules/scenario-play
 import Callout from "../../components/_common/Callout.astro";
 import ImageBlock from "../../components/_common/ImageBlock.astro";
 import InternalLink from "../../components/_common/InternalLink.astro";
+import { heroImageDimensions } from "../../lib/site/imageDimensions";
 import { createHeadingId } from "../../lib/utils/heading-id";
 
 export const goldenRuleHeadingId = createHeadingId(2, "ゴールデンルール");
@@ -20,6 +21,8 @@ export const goldenRuleHeadingId = createHeadingId(2, "ゴールデンルール"
   src="/images/rules/hero.webp"
   alt="机上を転がる2個の10面体ダイスを見つめる、オオサカの裏社会の3人。窓の外に通天閣を思わせる塔が見える。"
   loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
 />
 
 このページでは、行為の成否や結果の大きさを決める基本判定を説明します。戦闘中の詳しい攻撃やリアクションの処理は、戦闘ルールで扱います。

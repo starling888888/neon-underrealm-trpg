@@ -14,6 +14,7 @@ import InternalLink from "../../../components/_common/InternalLink.astro";
 import DrugCard from "../../../components/data/DrugCard.astro";
 import LegendContainer from "../../../components/data/LegendContainer.astro";
 import { getItemsData } from "../../../lib/data/items";
+import { heroImageDimensions } from "../../../lib/site/imageDimensions";
 import { createHeadingId } from "../../../lib/utils/heading-id";
 
 export const drugs = getItemsData().drugs;
@@ -22,7 +23,13 @@ export const badStatusHeadingId = createHeadingId(2, "バッドステータス")
 
 # ドラッグ
 
-<ImageBlock src="/images/data/items/drugs_hero.webp" alt="" loading="eager" />
+<ImageBlock
+  src="/images/data/items/drugs_hero.webp"
+  alt=""
+  loading="eager"
+  width={heroImageDimensions.width}
+  height={heroImageDimensions.height}
+/>
 
 「ヤク」の生き様を選んだキャラクターのみが使用できる特別なアイテムです。ドラッグを使用すると、<InternalLink href={`/rules/battle#${badStatusHeadingId}`}>バッドステータス</InternalLink>の「バッドトリップ」という、体力と精神力を失わせる状態異常が発生します。\
 ドラッグは一度に複数使用することができますが、その分だけバッドトリップの影響が強くなってしまいます。バッドトリップは**BT**と省略して記載されることがあります。\

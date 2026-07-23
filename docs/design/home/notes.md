@@ -87,7 +87,7 @@
 - `<!-- release-notes-list:auto latest=5 -->` は可視テキストではなく、最新リリースノート枠として表現する。
 - 最新リリースノート枠は、実装では生成済みリリースノートデータ由来の最大5件を表示する。
 - canonical image上では、現行 `data/generated/release-notes.json` 由来の件数と文言をそのまま表示する。
-- タイトルロゴは `public/top_logo.webp` を使い、altは `光都暗域〈ネオン・アンダーレルム〉TRPG` とする。
+- タイトルロゴは `public/images/top_logo.webp` を使い、altは `光都暗域〈ネオン・アンダーレルム〉TRPG` とする。
 - 以下のリンクを含める。
   - `/release-notes`
   - `/introduction`
