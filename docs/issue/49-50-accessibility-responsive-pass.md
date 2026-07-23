@@ -134,3 +134,26 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - 検証・修正計画・修正実装の各段階で、未確認事項とユーザー判断が必要な項目を混在させずに報告する。
 - Phase A の完了報告は本 issue の実装承認ではない。Phase B の修正計画を確認した後、ユーザーが「修正開始」と明示した場合にだけ Phase C へ進む。
 - ユーザー指示により、Phase Cの完了・レビュー後にはPhase Dで全design正本をPlaywright標準VRT baselineへ移行する。Phase DはVisual Reviewのactual screenshotをそのまま正本化する工程ではなく、既存正本との差分とSSoT整合を確認した上で、ユーザーの明示指示時だけbaselineを更新する。
+
+## レビュー指摘 1
+
+レビュー元: local PR review（PR #68、`2b594125c0d8281d4646232048ba3d1fc611d461..414ef05443e10f0ced1466ca41bc8036f87b0967`）
+
+### [中] Header/Footer design notes が現行実装と一致しない
+
+- 判定: valid
+- 根拠: `docs/design/header-footer/notes.md` は、廃止済みのタイトルロゴ用テキストfallbackと、削除済みの黒文字比較ロゴassetを現行stateとして記録している。
+- 影響: 後続のdesign作業・レビューが、実在しないassetまたは実装されないfallbackを制約として誤認する。
+- 対応方針: Phase Dのnotes-only移行で、現存するWebPロゴだけを現行stateとして記録し、比較assetの記述は削除理由または代替の比較根拠へ置き換える。Phase D開始前にこの一点だけを更新する場合は、別途ユーザーの明示指示を得る。
+
+### 判断保留: Phase D と `50-1-vrt-css-regression-guards` の責務境界
+
+- 判定: doubtful（ユーザー判断待ち）
+- 根拠: `docs/plan.md` の50-1にもVRT導入・viewport/route定義・CSS回帰検知がある。一方、ユーザーは本issueのPhase Dで全design正本をPlaywright標準VRTへ移行する方針を明示している。
+- 方針: ユーザー指示を優先して自動的なrouting変更は行わない。Phase D開始前に、49-50にPhase Dを残して50-1を再定義するか、50-1へ移して49-50から参照するかを決定する。
+
+### 対応完了チェックリスト
+
+- [ ] Phase Dと50-1の責務分担をユーザー確認のうえで明文化する。
+- [x] `header-footer` のnotesを現行WebP実装と整合させる、またはPhase Dのnotes-only移行で置き換える。
+- [ ] 対応後に必要なVRT・`npm run check`・`npm run build`を実行する。

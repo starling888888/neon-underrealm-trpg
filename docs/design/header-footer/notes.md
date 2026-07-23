@@ -9,7 +9,7 @@
 - page / component: `Header.astro` / `Footer.astro`
 - route: 共通Layout Component。最初の適用先は `BaseLayout.astro`
 - viewport: desktop `1440x1200`, mobile `390x900`
-- states: Header標準状態、Desktop Headerの検索入力欄mock配置、タイトルロゴ未使用時のテキストfallback、mobile Headerの左右アイコン枠配置、Footer標準状態、Footer外部リンクfocus / hover。
+- states: Header標準状態、Desktop Headerの検索入力欄mock配置、mobile Headerの左右アイコン枠配置、Footer標準状態、Footer外部リンクfocus / hover。
 
 ## 参照したSSoT
 
@@ -44,7 +44,7 @@
   - primary: `public/images/title_logo.webp`
 - 元画像寸法は `1091x198`。このタスクでは縮小版画像を追加生成しない。表示サイズはCSSで制御する。
 - 本番ロゴは暗めHeader上で読める必要がある。ただしHeaderをhero風の大きな帯にしない。
-- `docs/design/header-footer/` 配下の黒文字ロゴは比較用であり、本番Header用assetではない。
+- 黒文字比較ロゴassetは削除済みであり、本design targetの現行比較対象には含めない。
 - Headerのトップページリンクは、支援技術とキーボード操作で意味が伝わる必要がある。見た目は画像ロゴでもよいが、`alt` または同等のaccessible textでサイト名を保持する。
 - Desktop Header画像では、右側に検索入力欄mockがある状態を示す。現在の実装責務は `docs/requirements/layout-navigation.md`、このdesign note、承認済みcurrent issueに従う。
 - Mobile Header画像では、左右に後続導線用のアイコン枠がある状態を示す。現在の実装責務は `docs/requirements/layout-navigation.md`、このdesign note、承認済みcurrent issueに従う。
