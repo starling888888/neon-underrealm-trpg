@@ -188,27 +188,6 @@
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
-## レビュー指摘 2
-
-### 指摘事項
-
-- `npm test` が公開buildとHTML contract testを含むようになったが、READMEはunit testだけを実行し、結果を`test-results/`へ出すと説明している。
-
-### 判定
-
-- source: local-agent
-- classification: valid
-- local validation: `package.json` の `test` は `test:node` と `test:page-navigation-contract` を順に実行する。後者は`npm run build:public`を実行するため`dist/`を再生成し、`dist/-local/`を除外する。READMEの既存説明にはこの副作用と標準出力へ出るcontract test結果がない。
-
-### 対応方針
-
-- READMEの`npm test`説明を、Node unit testに加えて公開buildとHTML contract testを実行すること、`dist/-local/`が除外されることへ更新する。
-
-### 対応完了チェックリスト
-
-- [ ] READMEの`npm test`説明を更新する
-- [ ] `npm run check` が通る
-
 ## レビュー指摘 1
 
 ### 指摘事項
@@ -234,3 +213,24 @@
 - [x] `npm test` が通る
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `npm test` が公開buildとHTML contract testを含むようになったが、READMEはunit testだけを実行し、結果を`test-results/`へ出すと説明している。
+
+### 判定
+
+- source: local-agent
+- classification: valid
+- local validation: `package.json` の `test` は `test:node` と `test:page-navigation-contract` を順に実行する。後者は`npm run build:public`を実行するため`dist/`を再生成し、`dist/-local/`を除外する。READMEの既存説明にはこの副作用と標準出力へ出るcontract test結果がない。
+
+### 対応方針
+
+- READMEの`npm test`説明を、Node unit testに加えて公開buildとHTML contract testを実行すること、`dist/-local/`が除外されることへ更新する。
+
+### 対応完了チェックリスト
+
+- [x] READMEの`npm test`説明を更新する
+- [x] `npm run check` が通る

@@ -44,7 +44,7 @@ npm run visual:install
 - `npm run check`: Astro / TypeScript / Biome の確認を実行する
 - `npm run build`: 静的サイトをビルドする
 - `npm run build:public`: GitHub Pages公開用にビルドし、`-local` 配下のローカル確認用routeを `dist/` から除外する
-- `npm test`: Node.js test runnerでユニットテストを実行し、結果を `test-results/` に出力する
+- `npm test`: Node.js unit testに加え、GitHub Pages公開用buildと公開HTMLのcontract testを実行する。buildにより `dist/` を再生成し、`dist/-local/` を除外する。unit test結果は `test-results/` に、contract test結果は標準出力に出力する
 - `npm run format`: BiomeとMarkdown formatterを実行する
 - `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
 - `npm run check:md`: Markdown `.md` のformat / 最小style ruleを確認する
@@ -52,7 +52,7 @@ npm run visual:install
 - `npm run visual:capture`: PlaywrightでVisual Review用スクリーンショットを取得する
 - `npm run visual:install`: Visual Review用のChromiumをインストールする
 
-`npm test` はロジック検証用です。Visual Review用スクリーンショット取得は `npm run visual:capture` を使います。
+`npm test` はロジックと公開HTMLのcontract検証用です。Visual Review用スクリーンショット取得は `npm run visual:capture` を使います。
 
 ## 別端末からCodexセッションへ接続する
 
