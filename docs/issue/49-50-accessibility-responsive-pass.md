@@ -252,7 +252,7 @@ Phase Dでは、全 `docs/design/<design-target>/` の既存正本画像をPlayw
 - [x] plan、current issue、VRT運用文書を1280px基準とcanonical baselineの明示更新方針へ整合させる。
 - [x] レビュー指摘1のPhase Dと50-1統合を解決済みとして記録する。
 - [ ] VRT target filterを完全一致にし、対象外baselineを更新できないことを確認する。
-- [ ] MobilePageTocの再クリック閉鎖と`aria-expanded`を共通testで確認する。
-- [ ] desktop SiteMenuとmobile drawerの`aria-current="page"`を代表routeで確認する。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] MobilePageTocの再クリック閉鎖と`aria-expanded`を共通testで確認する。
+- [x] desktop SiteMenuとmobile drawerの`aria-current="page"`を代表routeで確認する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
