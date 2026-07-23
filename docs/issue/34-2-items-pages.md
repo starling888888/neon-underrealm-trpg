@@ -129,7 +129,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] なし
+- [x] なし
 
 ### 対応完了チェックリスト
 
@@ -176,7 +176,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign fix modeで正本化した
 
 ### 対応完了チェックリスト
 
@@ -222,7 +222,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] なし
+- [x] なし
 
 ### 対応完了チェックリスト
 
@@ -269,7 +269,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] なし
+- [x] なし
 
 ### 対応完了チェックリスト
 
@@ -366,7 +366,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign fix modeで正本化した
 
 ### 対応完了チェックリスト
 
@@ -412,7 +412,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign fix modeで正本化した
 
 ### 対応完了チェックリスト
 
@@ -450,7 +450,7 @@
 
 ### 自己修正した項目
 
-- [ ]
+- [x] なし
 
 ### 人間判断が必要な差分
 
@@ -458,7 +458,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+- [x] 実装スクリーンショットをdesign fix modeで正本化した
 
 ### 対応完了チェックリスト
 
