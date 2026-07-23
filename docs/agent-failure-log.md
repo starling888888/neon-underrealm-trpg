@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Generated a requirements-driven design draft before updating the requirements source of truth
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-web-character-sheet`のdesktop design draft再作成
+- 観測した失敗: ユーザーが、Git管理外の要件ドラフトにある画面項目・初期枠数・操作規則を、現行要件と矛盾しない範囲で要求正本へ先に取り込むよう求めていたにもかかわらず、agentは正本を更新せずに一時HTMLとcaptureを作り直した。そのため、要求正本を唯一の入力にするべき後続のdesign作業の順序を再び逸脱した。
+- 一次対応: 一時draftの更新を停止し、`.tmp/character-sheet-requirements.md`を項目カタログとして照合して、`docs/requirements/character-sheet.md`へ不足する表示項目・初期枠数・可変行・操作規則を正本優先で追加する。正本のユーザー確認後にだけ、その文書を入力にdesign draftを再作成する。
+
 ### Used raster image generation instead of the requested HTML design draft
 
 #### 2026-07-24
