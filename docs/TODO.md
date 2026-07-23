@@ -53,9 +53,9 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 - [ ] 流儀の共通スキルボーナスを構造化データへ変換する
   - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
-  - classification: out-of-scope follow-up
-  - plan: なし。共通スキルボーナスを条件や効果種別で検索・集計・比較する要件が明確になった時点で計画する。
-  - handling plan: 現行の`ryugi-list.json`では、2／5／9レベルごとのボーナスを改行を含む表示文字列として保持する。将来、効果種別、対象、増減値などを構造化する必要が生じた場合に、Excel入力列、JSON形状、既存表示との互換性、検索・表示要件、migration方針を定義してから別タスクで変換する。
+  - classification: current issue prerequisite
+  - plan: `docs/plan.md` の `ex-02-web-character-sheet`、`docs/issue/ex-02-web-character-sheet.md` の Gate 0
+  - handling plan: 現行の`ryugi-list.json`では、2／5／9レベルごとのボーナスを改行を含む表示文字列として維持する。Gate 0で、文字列を解析せず、キャラクターシートの算出に使う専用の構造化データを追加する。詳細な変換元、JSON形状、既存表示との互換性、migration方針はGate 0の実装着手直前に定義する。
 
 - [ ] React Islandの導入を検討する
   - source: ユーザー指示
