@@ -136,7 +136,7 @@
 
 ### design-image-generation への引き継ぎ候補
 
-- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ。
+- [x] ユーザー承認により、実装スクリーンショットを `docs/design/support/` へdesign fix modeで正本化した。
 
 ### 対応完了チェックリスト
 
