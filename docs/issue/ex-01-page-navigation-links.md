@@ -1,0 +1,126 @@
+# ex-01-page-navigation-links
+
+## 目的
+
+スマホでルールサイトを読み進めるPLが、サイトメニューを開き直さずに次のページまたは前のページへ移動できるようにする。
+
+1st stepの目的である「初回告知を見た人がなるべく長くサイトを読み、遊んでみたいと思えること」に対し、ルール本文とデータをサイトメニュー順に連続して読める導線を追加する。
+
+## 背景
+
+`docs/plan.md` の `ex-01-page-navigation-links` は、ページ下部に前ページ・次ページへのナビゲーションリンクを追加するtaskである。
+
+対象ページは、サイトメニューの順序で `/introduction` から `/advancement` までとする。親ページ、子ページ、孫ページを、親ページの直後にその子孫をたどる順序で扱う。
+
+`docs/requirements/layout-navigation.md` の FR-01-07 は、読書順を定義するページの本文末尾に前ページ・次ページへのリンクを表示し、スマホでも十分なタップ領域と視認性を確保することを定める。
+
+`.raw/contents/data.md` と `.raw/contents/items.md` には、ページ末尾の前後ナビゲーションを置かない旧指示がある。今回のユーザー最新指示は両ページを対象に含めるため、この機能に限りその旧指示を上書きする。`.raw/` のユーザー編集正本はこのissueでは変更しない。
+
+関連TODOはない。
+
+## 対象範囲
+
+- `AppContainer` に任意の `prevPage` / `nextPage` propsを追加する。
+  - propsの値は `path` と `label` を持つobjectとする。`label` は対応するサイトメニュー項目の表示名を使う。
+  - propsが渡されなかった場合は、該当するリンクを表示しない。
+  - ナビゲーションは各ページ本文の直後、Footerの前に表示する。
+- MDXページでは、frontmatterの `prevPage` / `nextPage` から `AppContainer` へ値を渡す。
+- Astroページでは、各ページが `AppContainer` へ `prevPage` / `nextPage` を明示して渡す。
+- 対象ページごとの前後関係は、共通configへ集約せず、各ページで愚直に設定する。
+- 流儀詳細と生き様詳細だけは、それぞれの一覧データから前後関係を生成する。
+  - `getRyugiList()` と `getIkizamaList()` の順序を使う。
+  - 一覧ページ自身と各詳細ページは、サイトメニューの親・子・孫の順に接続する。
+- 読書順の始端と終端は以下とする。
+  - `/introduction` は `prevPage` を持たず、`nextPage` を `/world` とする。
+  - `/advancement` は `prevPage` を `/data/items/drugs` とし、`nextPage` を持たない。
+  - 読書順の外側にあるページへの前後リンクを作らない。
+- 対象ページは以下とする。
+  - `/introduction`
+  - `/world`
+  - `/character-making`
+  - `/rules`
+  - `/rules/scenario-play`
+  - `/rules/battle`
+  - `/data`
+  - `/data/ryugi` と各 `/data/ryugi/[ryugiId]`
+  - `/data/ikizama` と各 `/data/ikizama/[ikizamaId]`
+  - `/data/common-skills`
+  - `/data/items`
+  - `/data/items/weapons`
+  - `/data/items/armors`
+  - `/data/items/omamori`
+  - `/data/items/cybernetics`
+  - `/data/items/nanomachines`
+  - `/data/items/drugs`
+  - `/advancement`
+- 実装前に `design-image-generation` のinitial draft modeで、以下を作成する。
+  - `docs/design/page-navigation-links/notes.md`
+  - `docs/design/page-navigation-links/design-desktop.png`
+  - `docs/design/page-navigation-links/design-mobile.png`
+
+## 初期スコープ外
+
+- トップページ `/`、更新履歴 `/release-notes`、サポート `/support`、Webキャラクターシート `/character-sheet`、404ページ `/404` に前後ナビゲーションを追加しない。
+- `siteMenuItems` または別の共通configから、対象ページ全体の前後関係を生成しない。
+- 流儀詳細と生き様詳細以外で、前後関係の自動生成処理を作らない。
+- サイトメニュー、ページ内目次、パンくずリスト、検索UIの機能や並び順を変更しない。
+- ダイスローラー、キャラクター作成ウィザード、永続保存、DB、認証、SSR、CMSを追加しない。
+- 初期スコープ外の項目は `docs/out-of-scope.md` に従う。
+
+## 完了条件
+
+- [ ] `AppContainer` が `prevPage` / `nextPage` を任意propsとして受け取り、未指定のリンクを表示しない。
+- [ ] ナビゲーションが対象ページの本文直後かつFooterの前に表示される。
+- [ ] MDXページがfrontmatterの `prevPage` / `nextPage` を使う。
+- [ ] Astroページが各ページで前後関係を明示して渡す。
+- [ ] 流儀詳細と生き様詳細が、それぞれの一覧データ順で前後ページを生成する。
+- [ ] 対象ページが、サイトメニューの親・子・孫を含む深さ優先順で連続する。
+- [ ] `/introduction` は前ページを表示せず、`/world` への次ページリンクだけを表示する。
+- [ ] `/advancement` は `/data/items/drugs` への前ページリンクだけを表示し、次ページを表示しない。
+- [ ] 対象外ページには前後ナビゲーションを表示しない。
+- [ ] GitHub Pagesのサブパス配下でもリンク先へ遷移できる。
+- [ ] `docs/design/page-navigation-links/` のdesign正本を参照し、desktop・mobileの見た目を確認する。
+- [ ] 実装後のdesktop・mobile actual screenshotを取得し、initial designと比較する。
+- [ ] actual screenshotを自動でdesign正本として扱わず、正本化が必要な場合はユーザーの明示承認後に `design-image-generation` のdesign fix modeへ引き継ぐ。
+- [ ] `npm test` が通る。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。
+
+## チェックポイント
+
+- [ ] 既存ルート、サイトメニュー、ページ内目次、検索UIが壊れていない。
+- [ ] 前後ナビゲーションがスマホで十分なタップ領域と視認性を持ち、サイトメニュー・ページ内目次と役割が混同されない。
+- [ ] `withBase` 等の既存path utilityを使い、GitHub Pagesのサブパス公開に影響しない。
+- [ ] 不要な依存関係とクライアントJSを追加していない。
+- [ ] 初期スコープ外の機能を実装していない。
+- [ ] 関連する `docs/TODO.md` 項目と矛盾していない。
+- [ ] `docs/design/page-navigation-links/` をinitial draftのまま実装正本として扱わず、ユーザー承認後に使用する。
+- [ ] planの「完成画面のスクリーンショットを取得し、design正本を更新する」は、Visual Reviewとユーザー承認を経て確認する。承認待ちの場合は未チェックのまま残す。
+- [ ] ユーザーの未コミット変更を破壊していない。
+
+## 想定変更ファイル
+
+- `src/layouts/AppContainer.astro`
+- `src/layouts/MDXLayout.astro`
+- `src/components/layout/` 配下の前後ナビゲーションComponent
+- 対象となる `src/pages/**/*.mdx` と `src/pages/**/*.astro`
+- `src/pages/data/ryugi/[ryugiId].astro`
+- `src/pages/data/ikizama/[ikizamaId].astro`
+- 前後関係を検証するtest
+- `docs/design/page-navigation-links/`
+- `docs/issue/ex-01-page-navigation-links.md`
+
+## レビュー観点
+
+- 対象ページと対象外ページの境界が、サイトメニュー順およびユーザー指定どおりか。
+- 親・子・孫を含む深さ優先順が、実際のサイトメニューと一致するか。
+- 各ページに設定を明示する方針と、流儀詳細・生き様詳細だけを一覧データから生成する例外が守られているか。
+- `label` が対応するサイトメニュー項目の表示名と一致し、`path`、`prevPage`、`nextPage` のprops名が既存の型・コンポーネントと整合するか。
+- design image generationを実装前の独立した前提作業として扱う範囲が適切か。
+
+## 備考
+
+- `docs/design/base-layout/`、`docs/design/site-layout/`、`docs/design/page-toc/`、`docs/design/mobile-page-toc/`、`docs/design/site-menu/` は、既存のlayout・ナビゲーションとの役割差を確認する参考資料とする。前後ナビゲーション専用のdesign targetとdesign画像は未作成である。
+- `docs/requirements/architecture.md` のAC-01に従い、静的ホスティングで成立する実装にする。
+- 前後関係testは、静的ページの順序、流儀・生き様の一覧データ順、両データ群の境界接続、`/introduction` と `/advancement` の片側リンク非表示を確認する。
+- `label` は対応するサイトメニュー項目の表示名を使う。流儀・生き様詳細も、対応するサイトメニュー項目の表示名を使う。
