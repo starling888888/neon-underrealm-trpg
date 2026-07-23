@@ -30,13 +30,13 @@
 - ドラッグcontentsに従い、`/data/items/drugs` でhero、warning、`DrugCard`凡例、ドラッグ一覧を表示する。
 - 3種別の凡例は既存の`LegendContainer`を用い、対応Cardへcontents指定の静的Propsを渡して右カラムの説明を表示する。
 - サイバネ破壊の休息シーンへの内部リンク先は、実装時に現在の見出しIDを確認して決定する。
-- 6種別すべてについて、対応するCardの凡例と一覧を実装し、種別ごとのVisual Reviewを行う。designの新規作成・canonicalizeはユーザー指示により行わない。
+- 6種別すべてについて、対応するCardの凡例と一覧を実装し、種別ごとのVisual Reviewを行う。初期designの新規作成は行わず、後続の明示ユーザー指示により6ページの実装スクリーンショットをdesign fix modeで正本化する。
 
 ## 初期スコープ外
 
 - 検索、絞り込み、ソート、ページネーション、比較・計算、詳細ページ遷移
 - `WeaponCard` の表示契約の変更、データ変換仕様の変更、新規依存関係の追加
-- 新規design画像の作成。既存の共通layoutと `docs/design/items/` の方向性を維持する。
+- 新規の初期design画像の作成。既存の共通layoutと `docs/design/items/` の方向性を維持する。実装スクリーンショットをdesign fix modeで正本化する作業は、後続の明示ユーザー指示により対象内とする。
 
 ## 完了条件
 
@@ -57,9 +57,34 @@
 - [x] 既存SkillLegendも`LegendContainer`を使用し、凡例専用CSSを持たない
 - [x] SkillLegendに「カードの項目」見出し・ラベル・目次項目がない
 - [x] 6種別すべてについて、確定したcontentsに従うページ、対応Cardの凡例と一覧を実装している
-- [x] 6種別それぞれのVisual Reviewを行い、design正本の更新は不要と判断している
+- [x] 6種別それぞれのVisual Reviewを行い、実装スクリーンショットをdesign fix modeで正本化している
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 明示ユーザー指示による6ページのdesign正本化が、issueの「canonicalizeしない」「新規design画像はスコープ外」「更新不要」と矛盾している。
+- `docs/design/site-layout/notes.md` が `/data/items/weapons/` を未実装ダミーとしている。
+
+### 判定
+
+- source: local PR review（PR #64、`document-review-1.md` / `technical-review-1.md`）
+- classification: valid（2件）
+- local validation: ユーザーの明示指示により `docs/design/items-{weapons,armor,omamori,cybernetics,nanomachines,drugs}/` がdesign fix modeで作成済み。current issueの旧記述は追従していない。武器MDXは正式実装だが、site-layout noteは旧状態のまま。
+- technical review: validな技術指摘なし。remote comments / reviews / unresolved threadsは0件。remote checksは未確認。
+
+### 対応方針
+
+- issueの対象範囲、初期スコープ外、完了条件、Visual Reviewのdesign正本化に関する記録を、明示ユーザー指示と現在のartifactへ整合させる。
+- site-layout noteを、武器ページが正式実装済みである現状へ更新する。TODOの移動はmerge後workflowに委ねる。
+
+### 対応完了チェックリスト
+
+- [x] issueのdesign正本化に関する記録を更新する
+- [x] `docs/design/site-layout/notes.md` の武器ページの旧ダミー記述を更新する
+- [x] `npm run format:md` が通る
 
 ## レビュー指摘 1
 
@@ -137,7 +162,7 @@
 - [x] mobile screenshot を取得した
 - [x] reference と actual を比較した
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
-- [x] design正本の更新は不要と判断した
+- [x] 後続の明示ユーザー指示により、実装スクリーンショットをdesign fix modeで正本化した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -172,7 +197,7 @@
 
 ### 人間判断が必要な差分
 
-- アイテム個別ページの初期designは作成しない。実装後のdesign canonicalizeの要否は、6種別の実装完了時に判断する。
+- 初期designは作成しない。後続の明示ユーザー指示により、6種別の実装スクリーンショットをdesign fix modeで正本化した。
 
 ### design-image-generation への引き継ぎ候補
 
@@ -230,7 +255,7 @@
 - [x] mobile screenshot を取得した
 - [x] reference と actual を比較した
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
-- [x] design正本の更新は不要と判断した
+- [x] 後続の明示ユーザー指示により、実装スクリーンショットをdesign fix modeで正本化した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -277,7 +302,7 @@
 - [x] mobile screenshot を取得した
 - [x] reference と actual を比較した
 - [x] 明らかな visual mismatch を修正した、または修正不要と判断した
-- [x] design正本の更新は不要と判断した
+- [x] 後続の明示ユーザー指示により、実装スクリーンショットをdesign fix modeで正本化した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -321,16 +346,16 @@
 - ドラッグcontentsのwarning、凡例、一覧がそのまま表示構成へ反映されているか
 - 武器・防具・お守りの凡例が共通レイアウトを使い、desktopと768px以下で指定のカラム構成になるか
 - サイバネ破壊の休息シーンへの内部リンクが現在の見出しIDを参照するか
-- 6種別の実装後に、種別ごとのVisual Reviewを行い、design正本の更新を不要と判断したことを確認する
+- 6種別の実装後に、種別ごとのVisual Reviewを行い、実装スクリーンショットをdesign fix modeで正本化したことを確認する
 
 ## 備考
 
-- design参照: `docs/design/items/` はアイテムトップページの既存designであり、武器個別ページには適用しない。初期designの新規作成はユーザー指示により行わないが、`docs/plan.md` に従い各種別の実装後にVisual Review・design canonicalizeを行う。
+- design参照: `docs/design/items/` はアイテムトップページの既存designであり、武器個別ページには適用しない。初期designの新規作成は行わず、各種別のVisual Review後に明示ユーザー指示でdesign fix modeの正本化を行った。
 - Previewサーバーは、実装開始後の作業中は起動を維持する。作業後には `npm run build` を実行する。
 - 武器実装開始前に、contentsの `#ハッシュ` のリンク先、重複した説明番号、`normal.ansatu` と実データキー `ansatsu` の対応、武器種別の凡例表示を確定した。
 - 防具contentsは、既存の`ArmorCard`契約（`信用`、`防御力`、`ダメージ軽減`、`装備制限`、`効果`）と整合することを確認した。`armors_hero.webp` も配置済みである。
 - お守りcontentsは、既存の`OmamoriCard`契約（`信用`、`効果`）と整合することを確認した。`omamori_hero.webp` と21件の生成済みデータも配置済みである。warning内の神仏の加護リンク先は、`/data/ikizama/burai#skill-ikizama-burai-basic-pv-570c394fe082` とする。
-- サイバネ・ナノマシン・ドラッグのcontents指示に従い、3ページを実装した。初期designの新規作成はユーザー指示により行わず、Visual Reviewで既存共通layoutとの整合を確認した。
+- サイバネ・ナノマシン・ドラッグのcontents指示に従い、3ページを実装した。初期designの新規作成は行わず、Visual Reviewで既存共通layoutとの整合を確認した後、明示ユーザー指示でdesign fix modeの正本化を行った。
 
 ## ビジュアルレビュー 1
 
@@ -362,7 +387,7 @@
 
 ### 人間判断が必要な差分
 
-- 武器個別ページの初期designは作成しない。実装後のdesign canonicalizeの要否は、6種別の実装完了時に判断する。
+- 初期designは作成しない。後続の明示ユーザー指示により、6種別の実装スクリーンショットをdesign fix modeで正本化した。
 
 ### design-image-generation への引き継ぎ候補
 
@@ -408,7 +433,7 @@
 
 ### 人間判断が必要な差分
 
-- お守り個別ページの初期designは作成しない。実装後のdesign canonicalizeの要否は、6種別の実装完了時に判断する。
+- 初期designは作成しない。後続の明示ユーザー指示により、6種別の実装スクリーンショットをdesign fix modeで正本化した。
 
 ### design-image-generation への引き継ぎ候補
 
@@ -454,7 +479,7 @@
 
 ### 人間判断が必要な差分
 
-- 防具個別ページの初期designは作成しない。実装後のdesign canonicalizeの要否は、6種別の実装完了時に判断する。
+- 初期designは作成しない。後続の明示ユーザー指示により、6種別の実装スクリーンショットをdesign fix modeで正本化した。
 
 ### design-image-generation への引き継ぎ候補
 

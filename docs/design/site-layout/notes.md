@@ -60,7 +60,7 @@
 - `mobile-menu` と `mobile-page-toc` は役割差を維持する。MobileMenuはサイト全体のdrawer、MobilePageTocはH1付近から開く現在ページ内目次である。
 - `current-menu-highlight` の方針に従い、現在ページそのものとancestor表示は見分けられるが、hover / focusやページ内目次の現在位置ハイライトとは混同しない。
 - このdesign targetの正本化時点では `/release-notes` と `/404` は未実装routeだった。現在の `/release-notes` は `docs/design/release-notes/` を正本として扱い、このdesign targetでは横断layout状態の代表routeには含めない。
-- `/data/items/weapons/` は現在地ハイライト目視確認用ダミーMDXページを含む。該当ページの本実装時に置き換える前提は `docs/TODO.md` で追跡する。
+- `/data/items/weapons/` は正式実装済みの武器一覧ページである。`design-mobile-menu-open.png` は、このルートで取得したMobileMenu open stateの横断layout参照として維持する。
 
 ## Out of scope
 
@@ -122,5 +122,5 @@
 ## Open questions
 
 - `/404` 実装後に、site-layout正本へ非表示状態画像を追加するか。
-- `/data/items/weapons/` が本実装へ置き換わった後、mobile menu open stateの代表routeを維持するか。
+- `/data/items/weapons/` のMobileMenu open stateを、横断layoutの代表routeとして維持するか。
 - fullPageとviewport cropの両方を将来のVisual Reviewで扱う必要があるか。
