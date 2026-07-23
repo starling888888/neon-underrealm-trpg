@@ -109,6 +109,10 @@ export const siteMenuItems: SiteMenuItem[] = [
     href: "/advancement",
   },
   {
+    label: "サポート",
+    href: "/support",
+  },
+  {
     label: "更新履歴",
     href: "/release-notes",
   },

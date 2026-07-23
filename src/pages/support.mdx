@@ -1,0 +1,74 @@
+---
+layout: ../layouts/MDXLayout.astro
+title: サポート
+description: ネオン・アンダーレルムTRPGのオンラインセッション準備とお問い合わせ先を案内します。
+showPageToc: true
+---
+
+import Callout from "../components/_common/Callout.astro";
+import { siteLinks } from "../lib/site/links";
+import { withBase } from "../lib/utils/paths";
+
+# サポート
+
+## オンラインツールでの運用（CCFOLIA）
+
+本ゲームは振るダイスの数が多いので、オンラインセッションを推奨します。ここでは、CCFOLIAを使う場合のキャラクター登録と判定時の参考情報を記載します。
+
+### キャラクター登録
+
+以下のパラメータを登録するとよいでしょう。
+
+- 行動値
+- 体力
+- 精神力
+- 気合
+- 結んでいる縁
+- すでに使用した覚悟の数
+- 受けているバッドトリップの強度
+- 受けている毒の強度
+- 受けている出血の強度
+
+### ダイスロールコマンド
+
+#### 判定
+
+**nB10&lt;=m**で行います。nが判定数、mが基準値です。（例：10B10&lt;=5）ダイスの出目と成功数（達成値）が出力されます。効果値は判定数から達成値を引いてください。
+
+<Callout type="example" title="判定コマンドの例">
+
+CCFOLIAで判定数10、基準値7で攻撃判定を行う場合のコマンドと出力例です。
+
+```txt
+10b10<=7 (10B10<=7) ＞ 8,5,9,4,10,2,1,7,5,1 ＞ 成功数7
+```
+
+この場合、成功数の7が**達成値**、振ったダイスが10個なので**効果値**は3です。気合獲得値1ならば、1の出目が2つあるため、**気合を2点獲得**します。
+
+</Callout>
+
+#### ダメージロール、防御判定成功時ロール
+
+**nd6+m**で行います。nが効果値、mが攻撃力やガード値です。最終的な合計値が出力されます。
+
+<Callout type="example" title="ダメージロールの例">
+
+CCFOLIAで効果値3、攻撃力10でダメージを出す場合のコマンドと出力例です。
+
+```txt
+3d6+10 (3D6+10) ＞ 9[3,4,2]+10 ＞ 19
+```
+
+結果の19点が**ダメージ**となります。
+
+</Callout>
+
+### マップ
+
+戦闘時は9×9のマップを使用することを推奨します。<a href={withBase("/images/battle-map.png")} target="_blank" rel="noopener noreferrer">こちら</a>を「前景」として縦横40に設定して、戦闘用マップとしてお使いください。キャラクターコマのサイズは「3」が推奨です。
+
+## お問い合わせ
+
+ゲームのルール質問、プレイ希望、今後の展開などについては、<a href={siteLinks.discord} target="_blank" rel="noopener noreferrer">Discord</a>、<a href={siteLinks.x} target="_blank" rel="noopener noreferrer">公式Xアカウント</a>、<a href="https://x.com/mukudori528" target="_blank" rel="noopener noreferrer">作者Xアカウント（mukudori528）</a>へお寄せください。実プレイ希望は大歓迎です！GMやらせていただきます！
+
+サイトのバグ報告、機能要望は<a href={siteLinks.github} target="_blank" rel="noopener noreferrer">GitHub</a>までお寄せください。もちろん上記のリンクからご連絡いただいても大丈夫です。
