@@ -40,6 +40,7 @@ export const visualRoutes = {
   callouts: "-local/callouts/",
   npcCards: "-local/npc-cards/",
   dataCards: "-local/data-cards/",
+  pageNavigation: "-local/page-navigation/",
   dataItemsWeapons: "data/items/weapons/",
 } as const;
 

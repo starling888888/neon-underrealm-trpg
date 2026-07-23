@@ -2,12 +2,12 @@
 
 ## Mode
 
-- initial draft
+- design fix
 
 ## Target
 
 - page / component: `AppContainer` がページ本文末尾に表示する前後ページナビゲーション
-- route: `/introduction` から `/advancement` までの対象ページ。初回draftでは、長いサイトメニュー名を併記するmobileの代表状態を描く。
+- route: `/-local/page-navigation/`。キャラクターメイキングとキャラクター成長を同時に表示する公開対象外の確認routeを、design正本化のcaptureに使う。
 - viewport:
   - mobile: `390x900`
   - desktop: `1440x1200`
@@ -34,7 +34,7 @@
 
 - visual direction: 白寄りの本文面、暗めのHeader / Footer、控えめな青緑の操作accentを維持する。ページ下部の導線であり、heroや大きなCTAにはしない。ナビゲーション領域だけの背景色や区切り線は使わず、本文と同じ白から余白でつなげる。
 - layout direction: 本文直後かつFooter前に、見出しを置かず前ページと次ページを横並びで置く。片側しかない始端・終端では、存在するリンクだけを表示できる構造とする。
-- typography direction: `label` はサイトメニューの表示名を使う。`キャラクターメイキング` と `キャラクター成長` を390px幅で併記しても折り返し・省略表示を起こさないよう、11.5pxの太字と単一行を使う。
+- typography direction: `label` はサイトメニューの表示名を使う。本文フォントサイズの太字と単一行を使い、`キャラクターメイキング` と `キャラクター成長` を390px幅で併記しても折り返し・省略表示を起こさないようにする。
 - color / accent usage: リンク文字列と横向き三角iconは青緑にする。下線はlabelだけに付け、iconには付けない。枠、button surface、過剰な発光、マゼンタは使わない。
 
 ## Existing design constraints
@@ -63,16 +63,22 @@
 
 ## Generation source
 
-- prototype or generator source:
+- initial draft source:
   - mobile: `.tmp/design/page-navigation-links/prototype.html`
   - desktop: `.tmp/design/page-navigation-links/prototype-desktop.html`
-- capture source:
-  - mobile: `.tmp/design/page-navigation-links/capture.mjs`
-  - desktop: `.tmp/design/page-navigation-links/capture-desktop.mjs`
-- source branch / commit when applicable: `ex-01-page-navigation-links` / `3222fef`
-- route when applicable: standalone mobile layout prototype。実装routeは使用しない。
-- viewport: mobile `390x900`、desktop `1440x1200`
-- prototype path / prompt summary / capture notes: ユーザー指定の表示3種とicon2種を組み合わせた6案を比較し、枠なしテキストリンク + 横向き三角を採用した。`キャラクターメイキング` と `キャラクター成長` は同時に表示して確認した。
+- canonicalization capture: `tests/visual/page-navigation.spec.ts` の `@page-navigation-links`
+
+<!-- visual-canonicalization:start -->
+
+- command: `npm run visual:canonicalize -- page-navigation-links --route /-local/page-navigation/`
+- source branch: `ex-01-page-navigation-links`
+- source commit: `88856c1f1bdd1f64f2a9acb282d7151c44034ebd`
+- route: `/-local/page-navigation/`
+- state: `default`
+- viewport: desktop 1440x1200, mobile 390x900
+- capture manifest: `test-results/visual/capture-manifest.json`
+
+<!-- visual-canonicalization:end -->
 
 ## Open questions
 

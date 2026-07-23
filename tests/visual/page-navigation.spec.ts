@@ -55,3 +55,44 @@ test("page navigation mobile @page-navigation-mobile", async ({ page }) => {
     path: `${visualOutputDir}/page-navigation-mobile.png`,
   });
 });
+
+test("page navigation canonical desktop @page-navigation-links", async ({
+  page,
+}) => {
+  await page.setViewportSize(visualViewports.desktop);
+  await page.goto(visualRoutes.pageNavigation);
+  await expectPageNavigationPreview(page);
+  await page.screenshot({
+    fullPage: false,
+    path: `${visualOutputDir}/page-navigation-links-desktop.png`,
+  });
+});
+
+test("page navigation canonical mobile @page-navigation-links", async ({
+  page,
+}) => {
+  await page.setViewportSize(visualViewports.mobile);
+  await page.goto(visualRoutes.pageNavigation);
+  await expectPageNavigationPreview(page);
+  await page.screenshot({
+    fullPage: false,
+    path: `${visualOutputDir}/page-navigation-links-mobile.png`,
+  });
+});
+
+async function expectPageNavigationPreview(page: Page) {
+  const navigation = page.getByRole("navigation", {
+    name: "ページ間ナビゲーション",
+  });
+
+  await expect(navigation).toBeVisible();
+  await expect(navigation.getByRole("link")).toHaveCount(2);
+  await expect(
+    navigation.getByRole("link", { name: "キャラクターメイキング" }),
+  ).toHaveAttribute("href", /\/character-making$/);
+  await expect(
+    navigation.getByRole("link", { name: "キャラクター成長" }),
+  ).toHaveAttribute("href", /\/advancement$/);
+  await navigation.scrollIntoViewIfNeeded();
+  await hideAstroDevToolbar(page);
+}
