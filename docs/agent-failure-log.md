@@ -86,6 +86,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Visual capture rerun exposed unrelated Pagefind search failures
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: `ex-01-page-navigation-links` の `npm run visual:capture`
+- 観測した失敗: Pagefind indexなしの初回captureでは検索UIの2件が失敗した。index生成後の再実行では、`-local/data-cards`もindex化されたため、既存の検索結果testが同一アンカーを2件見つけ、search modalの3件がstrict locatorで失敗した。
+- 一次対応: 前後ナビゲーションのVisual Reviewは、対象componentだけを実行するcaptureで継続する。`-local`ページのindex除外またはsearch testの対象絞り込みはcurrent issue外として扱い、恒久対応を別途検討する。
+
 ### Visual capture repeated without the required Pagefind index
 
 #### 2026-07-23

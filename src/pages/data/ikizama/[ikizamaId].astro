@@ -21,9 +21,17 @@ export function getStaticPaths() {
 
 const { ikizamaId = "" } = Astro.params;
 const detail = getIkizamaDetail(ikizamaId);
+const ikizamaList = getIkizamaList();
+const ikizamaIndex = ikizamaList.findIndex(
+  (ikizama) => ikizama.id === ikizamaId,
+);
 
 if (!detail) {
   throw new Error(`Unknown ikizamaId "${ikizamaId}".`);
+}
+
+if (ikizamaIndex < 0) {
+  throw new Error(`Missing ikizama list data for "${ikizamaId}".`);
 }
 
 const { ikizama, skills } = detail;
@@ -44,6 +52,14 @@ const dataByIkizamaId = {
   },
 };
 const heroAlt = `${ikizama.name}のイメージ`;
+const prevPath =
+  ikizamaIndex === 0
+    ? "/data/ikizama"
+    : `/data/ikizama/${ikizamaList[ikizamaIndex - 1].id}`;
+const nextPath =
+  ikizamaIndex === ikizamaList.length - 1
+    ? "/data/common-skills"
+    : `/data/ikizama/${ikizamaList[ikizamaIndex + 1].id}`;
 const skillCategories = [
   ["初期作成から取得できるスキル", skills.basic],
   ["生き様レベル4以上から取得できるスキル", skills.advanced],
@@ -54,6 +70,8 @@ const skillCategories = [
   title={`生き様：${ikizama.name}`}
   description={ikizama.shortDescription}
   showPageToc={true}
+  prevPath={prevPath}
+  nextPath={nextPath}
 >
   <article class="mdx-layout prose ikizama-detail">
     <h1>生き様：{ikizama.name}</h1>

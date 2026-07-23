@@ -71,36 +71,36 @@
 
 ## 完了条件
 
-- [ ] `AppContainer` が `prevPath` / `nextPath` を任意propsとして受け取り、未指定のリンクを表示しない。
-- [ ] サイトメニューを親・子・孫の順に平坦化した `href` と `label` の配列から、各pathのリンク表示名を解決する。
-- [ ] 存在しないpathまたは重複する `href` が指定・検出された場合、build時にエラーとなる。
-- [ ] ナビゲーションが対象ページの本文直後かつFooterの前に表示される。
-- [ ] MDXページがfrontmatterの `prevPath` / `nextPath` を使う。
-- [ ] Astroページが各ページで前後関係を明示して渡す。
-- [ ] 流儀詳細と生き様詳細が、それぞれの一覧データ順で前後ページを生成する。
-- [ ] 対象ページが、サイトメニューの親・子・孫を含む深さ優先順で連続する。
-- [ ] `/introduction` は前ページを表示せず、`/world` への次ページリンクだけを表示する。
-- [ ] `/advancement` は `/data/items/drugs` への前ページリンクだけを表示し、次ページを表示しない。
-- [ ] 対象外ページには前後ナビゲーションを表示しない。
-- [ ] GitHub Pagesのサブパス配下でもリンク先へ遷移できる。
-- [ ] `docs/design/page-navigation-links/` のdesign正本を参照し、desktop・mobileの見た目を確認する。
-- [ ] 実装後のdesktop・mobile actual screenshotを取得し、initial designと比較する。
-- [ ] actual screenshotを自動でdesign正本として扱わず、正本化が必要な場合はユーザーの明示承認後に `design-image-generation` のdesign fix modeへ引き継ぐ。
-- [ ] `npm test` が通る。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `AppContainer` が `prevPath` / `nextPath` を任意propsとして受け取り、未指定のリンクを表示しない。
+- [x] サイトメニューを親・子・孫の順に平坦化した `href` と `label` の配列から、各pathのリンク表示名を解決する。
+- [x] 存在しないpathまたは重複する `href` が指定・検出された場合、build時にエラーとなる。
+- [x] ナビゲーションが対象ページの本文直後かつFooterの前に表示される。
+- [x] MDXページがfrontmatterの `prevPath` / `nextPath` を使う。
+- [x] Astroページが各ページで前後関係を明示して渡す。
+- [x] 流儀詳細と生き様詳細が、それぞれの一覧データ順で前後ページを生成する。
+- [x] 対象ページが、サイトメニューの親・子・孫を含む深さ優先順で連続する。
+- [x] `/introduction` は前ページを表示せず、`/world` への次ページリンクだけを表示する。
+- [x] `/advancement` は `/data/items/drugs` への前ページリンクだけを表示し、次ページを表示しない。
+- [x] 対象外ページには前後ナビゲーションを表示しない。
+- [x] GitHub Pagesのサブパス配下でもリンク先へ遷移できる。
+- [x] `docs/design/page-navigation-links/` のdesign正本を参照し、desktop・mobileの見た目を確認する。
+- [x] 実装後のdesktop・mobile actual screenshotを取得し、initial designと比較する。
+- [x] actual screenshotを自動でdesign正本として扱わず、正本化が必要な場合はユーザーの明示承認後に `design-image-generation` のdesign fix modeへ引き継ぐ。
+- [x] `npm test` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、サイトメニュー、ページ内目次、検索UIが壊れていない。
-- [ ] 前後ナビゲーションがスマホで十分なタップ領域と視認性を持ち、サイトメニュー・ページ内目次と役割が混同されない。
-- [ ] `withBase` 等の既存path utilityを使い、GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係とクライアントJSを追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない。
-- [ ] `docs/design/page-navigation-links/` をinitial draftのまま実装正本として扱わず、ユーザー承認後に使用する。
+- [x] 既存ルート、サイトメニュー、ページ内目次、検索UIが壊れていない。
+- [x] 前後ナビゲーションがスマホで十分なタップ領域と視認性を持ち、サイトメニュー・ページ内目次と役割が混同されない。
+- [x] `withBase` 等の既存path utilityを使い、GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係とクライアントJSを追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない。
+- [x] `docs/design/page-navigation-links/` をinitial draftのまま実装正本として扱わず、ユーザー承認後に使用する。
 - [ ] planの「完成画面のスクリーンショットを取得し、design正本を更新する」は、Visual Reviewとユーザー承認を経て確認する。承認待ちの場合は未チェックのまま残す。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -129,3 +129,55 @@
 - `docs/requirements/architecture.md` のAC-01に従い、静的ホスティングで成立する実装にする。
 - 前後関係testは、静的ページの順序、流儀・生き様の一覧データ順、両データ群の境界接続、`/introduction` と `/advancement` の片側リンク非表示を確認する。
 - リンクラベルは、平坦化したサイトメニューから対応する表示名を解決する。流儀・生き様詳細も同じ解決処理を使う。
+
+## ビジュアルレビュー 1
+
+### デザイン参照
+
+- design target: `docs/design/page-navigation-links/`
+- reference desktop: `docs/design/page-navigation-links/design-desktop.png`
+- reference mobile: `docs/design/page-navigation-links/design-mobile.png`
+- notes: 枠なしのリンク文字列と横向き三角を使い、リンク文字列だけに下線を付ける。本文と同じ白い背景に、区切り線・見出しを置かない。
+
+### 成果物
+
+- actual desktop: `test-results/visual/page-navigation-desktop.png`
+- actual mobile: `test-results/visual/page-navigation-mobile.png`
+- report: `test-results/visual/capture-manifest.json`
+
+### レビュー結果
+
+| 領域                  | 判定 | 差分                                                           | 対応 |
+| --------------------- | ---- | -------------------------------------------------------------- | ---- |
+| レイアウト            | OK   | 本文直後・Footer前に配置                                       | -    |
+| 余白                  | OK   | 本文面を余白で接続                                             | -    |
+| タイポグラフィ        | OK   | 11.5px相当で長いラベルも単一行                                 | -    |
+| 色                    | OK   | 青緑のリンク・icon                                             | -    |
+| 配置・整列            | OK   | 前リンクを左、次リンクを右へ配置                               | -    |
+| レスポンシブ          | OK   | 390px幅で両リンクを表示                                        | -    |
+| overflow / scroll     | OK   | horizontal overflowなし                                        | -    |
+| 既存デザインとの整合  | OK   | Header、Footer、本文面を変更しない                             | -    |
+| 既存Componentとの整合 | OK   | `AppContainer`と既存path utilityを使用                         | -    |
+| accessibility basics  | OK   | `nav`のaria-label、リンクテキスト、装飾iconのaria-hiddenを設定 | -    |
+
+### 自己修正した項目
+
+- [x] mobile / desktopの画面幅で横overflowが起きないよう、単一行の小さなリンク文字列と最小幅0を適用した。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### design-image-generation への引き継ぎ候補
+
+- [ ] 実装スクリーンショットをdesign正本化する必要がある場合は、design fix modeへ引き継ぐ
+
+### 対応完了チェックリスト
+
+- [x] desktop screenshot を取得した
+- [x] mobile screenshot を取得した
+- [x] reference と actual を比較した
+- [x] 明らかな visual mismatch を修正した、または修正不要と判断した
+- [x] design正本の更新が必要な場合は、人間判断項目として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

@@ -4,6 +4,7 @@ import IkizamaDataSection from "../../../components/data/IkizamaDataSection.astr
 import AppContainer from "../../../layouts/AppContainer.astro";
 import { getIkizamaDetail } from "../../../lib/data/ikizama-detail";
 import { getIkizamaList } from "../../../lib/data/ikizama";
+import { getRyugiList } from "../../../lib/data/ryugi-list";
 import {
   IKIZAMA_EXCLUSIVE_ITEM_TYPES,
   type IkizamaExclusiveItemType,
@@ -11,7 +12,13 @@ import {
 import { withBase } from "../../../lib/utils/paths";
 
 const ikizamaList = getIkizamaList();
+const firstIkizama = ikizamaList[0];
+const lastRyugi = getRyugiList().at(-1);
 const buraiDetail = getIkizamaDetail("burai");
+
+if (!firstIkizama || !lastRyugi) {
+  throw new Error("Missing page navigation list data.");
+}
 
 if (!buraiDetail) {
   throw new Error('Missing ikizama detail data for "burai".');
@@ -31,6 +38,8 @@ const dataByIkizamaId = {
   title="生き様"
   description="仕事人が選ぶ生き様を一覧で確認するページです。"
   showPageToc={true}
+  prevPath={`/data/ryugi/${lastRyugi.id}`}
+  nextPath={`/data/ikizama/${firstIkizama.id}`}
 >
   <article class="mdx-layout prose ikizama-index">
     <h1>生き様</h1>
