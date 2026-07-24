@@ -89,6 +89,51 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Misinterpreted an icon-alignment correction as container-spacing work
+
+#### 2026-07-25
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の設定トグル
+- 観測した失敗: ユーザーが指摘したのは`設定`文字列に対するトグルアイコンの縦ずれだったが、agentはトグル全体のmarginとpaddingを詰める修正を行った。対象要素を画面上で分離して確認せず、アイコンの光学位置とコンテナ余白を混同した。
+- 一次対応: トグルのmargin・paddingを元へ戻し、矢印アイコン自体へ相対位置の上方向補正を加えた。
+
+### Left the setting toggle vertically detached from its profile fields
+
+#### 2026-07-25
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の基本情報レイアウト
+- 観測した失敗: profile gridの直後に配置する設定トグルへ不要な上marginと大きい縦paddingを残し、直前の入力行から下へずれた表示にした。
+- 一次対応: 設定コンテナの上marginを除き、トグルの縦paddingを`--space-1`へ縮めて入力群直後の操作として揃えた。
+
+### Applied derived-value background to its label despite the requested boundary
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の信用表示スタイル調整
+- 観測した失敗: ユーザーが自動算出「数値」の見た目だけを入力欄から区別するよう求めたのに、agentはラベルを含む算出セル全体へ白背景を適用した。表示上の対象範囲を要素単位で確認せず、ラベルまで入力欄のように見せた。
+- 一次対応: 背景・角丸・余白を`.metricValue`だけへ移し、ラベルは入力欄と同じ信用カード背景へ戻した。
+
+### Misread the approved profile field arrangement during G4 adjustment
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の基本情報レイアウト調整
+- 観測した失敗: ユーザーが指定した「PC名・PL名を1行目、二つ名を2行目左半分、年齢・性別を2行目右半分の内側」という構成を、年齢・性別を独立した下段として実装した。ユーザーの文言とdesign draftの構成を実装前に正確に照合しなかった。
+- 一次対応: profile gridを2列とし、年齢・性別を右半分の入れ子gridへ移した。UI配置の修正時も、指定された行・列・入れ子をそのままDOM構造へ対応付けてから実装する。
+
+### Ignored the approved character-sheet design draft during G4 implementation
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の`ProfileSection`実装
+- 観測した失敗: 実装前に確認済みで、ユーザーが最終の列幅・余白調整の基準として指定していたcharacter-sheet design draftを実装入力として扱わなかった。その結果、draftの基本情報内のカラム構成・信用の横並び・枠・既存の表示形式を再現せず、独自の3列grid、読み取り専用`input`、要件・draftにない計算式表示を追加した。designを最終調整用の正本として尊重せず、実装都合で簡略化した。
+- 一次対応: この指摘をfailure logへ記録し、修正はユーザーの明示指示を待つ。以後、UI実装ではdesign draftのDOM構成、列幅、余白、枠、表示形式を先に照合し、差異を実装判断で補完しない。
+
 ### Did not keep the requested implementation in the background
 
 #### 2026-07-24

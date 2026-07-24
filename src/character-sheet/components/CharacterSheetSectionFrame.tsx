@@ -1,11 +1,19 @@
 import { type ReactNode, useState } from "react";
 import styles from "./CharacterSheetSectionFrame.module.css";
 
-type SectionFrameHeading = "span" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+export type CharacterSheetSectionHeading =
+  | "span"
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6";
 
 type CharacterSheetSectionFrameProps = {
   children: ReactNode;
-  headingAs?: SectionFrameHeading;
+  expandable?: boolean;
+  headingAs?: CharacterSheetSectionHeading;
   id: string;
   title: string;
 };
@@ -18,6 +26,7 @@ type CharacterSheetSectionFrameProps = {
  */
 export default function CharacterSheetSectionFrame({
   children,
+  expandable = false,
   headingAs,
   id,
   title,
@@ -30,23 +39,29 @@ export default function CharacterSheetSectionFrame({
   return (
     <section className={styles.frame} aria-labelledby={headingId}>
       <Heading className={styles.heading}>
-        <button
-          aria-controls={contentId}
-          aria-expanded={isExpanded}
-          className={styles.toggle}
-          id={headingId}
-          onClick={() => setIsExpanded((expanded) => !expanded)}
-          type="button"
-        >
-          <span>{title}</span>
-          <span aria-hidden="true" className={styles.chevron} />
-        </button>
+        {expandable ? (
+          <button
+            aria-controls={contentId}
+            aria-expanded={isExpanded}
+            className={styles.toggle}
+            id={headingId}
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+            type="button"
+          >
+            <span>{title}</span>
+            <span aria-hidden="true" className={styles.chevron} />
+          </button>
+        ) : (
+          <span className={styles.staticTitle} id={headingId}>
+            {title}
+          </span>
+        )}
       </Heading>
       <section
         aria-labelledby={headingId}
         className={styles.content}
-        hidden={!isExpanded}
-        id={contentId}
+        hidden={expandable ? !isExpanded : undefined}
+        id={expandable ? contentId : undefined}
       >
         {children}
       </section>

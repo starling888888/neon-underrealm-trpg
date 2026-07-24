@@ -33,7 +33,6 @@ type CreditFieldProps = {
 };
 
 type ReadOnlyCreditFieldProps = {
-  formula?: string;
   label: string;
   value: number;
 };
@@ -101,29 +100,15 @@ function CreditField({
   );
 }
 
-function ReadOnlyCreditField({
-  formula,
-  label,
-  value,
-}: ReadOnlyCreditFieldProps) {
+function ReadOnlyCreditField({ label, value }: ReadOnlyCreditFieldProps) {
   const id = `character-sheet-${label}`;
 
   return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={id}>
-        {label}
-        {formula === undefined ? null : (
-          <span className={styles.formula}>{formula}</span>
-        )}
-      </label>
-      <input
-        aria-readonly="true"
-        className={styles.numberInput}
-        id={id}
-        readOnly
-        type="number"
-        value={value}
-      />
+    <div className={styles.metric}>
+      <span className={styles.metricLabel}>{label}</span>
+      <output className={styles.metricValue} id={id}>
+        {value}
+      </output>
     </div>
   );
 }
@@ -141,42 +126,46 @@ export default function ProfileSection({
   const settingContentId = "character-sheet-setting-content";
 
   return (
-    <section
-      aria-labelledby="character-sheet-profile-heading"
-      className={styles.section}
-    >
-      <h2 id="character-sheet-profile-heading">基本情報</h2>
+    <div className={styles.section}>
       <div className={styles.profileGrid}>
-        <TextField
-          label="PC名"
-          name="pcName"
-          onChange={onProfileChange}
-          value={profile.pcName}
-        />
-        <TextField
-          label="PL名"
-          name="playerName"
-          onChange={onProfileChange}
-          value={profile.playerName}
-        />
-        <TextField
-          label="二つ名"
-          name="nickname"
-          onChange={onProfileChange}
-          value={profile.nickname}
-        />
-        <TextField
-          label="年齢"
-          name="age"
-          onChange={onProfileChange}
-          value={profile.age}
-        />
-        <TextField
-          label="性別"
-          name="gender"
-          onChange={onProfileChange}
-          value={profile.gender}
-        />
+        <div className={styles.profileField}>
+          <TextField
+            label="PC名"
+            name="pcName"
+            onChange={onProfileChange}
+            value={profile.pcName}
+          />
+        </div>
+        <div className={styles.profileField}>
+          <TextField
+            label="PL名"
+            name="playerName"
+            onChange={onProfileChange}
+            value={profile.playerName}
+          />
+        </div>
+        <div className={styles.profileField}>
+          <TextField
+            label="二つ名"
+            name="nickname"
+            onChange={onProfileChange}
+            value={profile.nickname}
+          />
+        </div>
+        <div className={styles.ageAndGender}>
+          <TextField
+            label="年齢"
+            name="age"
+            onChange={onProfileChange}
+            value={profile.age}
+          />
+          <TextField
+            label="性別"
+            name="gender"
+            onChange={onProfileChange}
+            value={profile.gender}
+          />
+        </div>
       </div>
       <div className={styles.setting}>
         <button
@@ -201,11 +190,7 @@ export default function ProfileSection({
           />
         </div>
       </div>
-      <section
-        aria-labelledby="character-sheet-credit-heading"
-        className={styles.credit}
-      >
-        <h3 id="character-sheet-credit-heading">信用</h3>
+      <section aria-label="信用" className={styles.credit}>
         <div className={styles.creditGrid}>
           <CreditField
             label="取得信用"
@@ -229,7 +214,6 @@ export default function ProfileSection({
             value={credit.received}
           />
           <ReadOnlyCreditField
-            formula="取得信用 + 融通された - 融通した"
             label="合計信用"
             value={creditSummary.totalCredit}
           />
@@ -242,13 +226,9 @@ export default function ProfileSection({
             onChange={onCreditChange}
             value={credit.changeAdjustment}
           />
-          <ReadOnlyCreditField
-            formula="合計信用 - 消費信用 + 小銭修正"
-            label="小銭"
-            value={creditSummary.change}
-          />
+          <ReadOnlyCreditField label="小銭" value={creditSummary.change} />
         </div>
       </section>
-    </section>
+    </div>
   );
 }
