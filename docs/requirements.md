@@ -46,6 +46,7 @@ contentsと下位文書が矛盾する場合は、ユーザー承認のもとで
 | `docs/requirements/release-notes.md`     | リリースノートのデータ構造と表示                          | 更新情報ページ、変換仕様           |
 | `docs/requirements/assets-seo.md`        | 画像、OGP、SEO                                            | asset、metadata、SEO Component     |
 | `docs/requirements/components.md`        | コールアウトComponent                                     | MDX本文Component                   |
+| `docs/requirements/character-sheet.md`   | Webキャラクターシートの機能、保存、出力、検証             | `ex-02`の要件正本化・実装          |
 
 ## 作業種別ごとの参照先
 
@@ -57,6 +58,7 @@ contentsと下位文書が矛盾する場合は、ユーザー承認のもとで
 - Excel変換・schema実装: `architecture.md`、`data-id-policy.md`、`release-notes.md`、作成後の `docs/conversion/*`
 - 検索実装: `search.md`、`architecture.md`
 - SEO / OGP / asset対応: `assets-seo.md`、`non-functional.md`
+- Webキャラクターシート: `character-sheet.md`、`non-functional.md`、`architecture.md`
 - 開発構造整理: `docs/development-structure.md`
 
 ## 分割方針

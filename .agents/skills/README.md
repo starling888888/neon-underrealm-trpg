@@ -8,15 +8,15 @@ Use this file as an index only. Do not read every skill by default. Read the ski
 
 ### `issue-first-development`
 
-Use when starting a development task, creating a task branch, creating or validating `docs/issue/*.md`, or drafting an issue from a remote snapshot. Creating or validating an issue requires explicit user authorization; task numbers, skill invocation, and branch preparation do not grant it.
+Use when starting a development task, creating a task branch, creating or validating `docs/issue/*.md`, preparing a per-parent Gate plan, creating a Gate child issue, or drafting an issue from a remote snapshot. Each parent issue has `docs/issue/<parent-issue>/plan.md`; it lists Gates and is the compact handoff source for independent Gate sessions. Creating or validating an issue requires explicit user authorization; task numbers, skill invocation, and branch preparation do not grant it.
 
 For scope, requirements, or contents-only instructions, perform only the requested work and do not create an issue or run the issue reviewer. In local repository mode, run the issue reviewer only after creating a user-authorized local issue. Implementation requires explicit user approval.
 
 ### `design-image-generation`
 
-Use when creating or updating design intent and VRT reference notes under `docs/design/<design-target>/`, or when updating an approved VRT baseline.
+Use when creating an HTML and Playwright-captured design draft, creating or updating design intent and VRT reference notes under `docs/design/<design-target>/`, or updating an approved VRT baseline.
 
-This skill maintains design notes and VRT baselines only. It does not implement UI or perform Visual Review.
+This skill keeps temporary design drafts under `.tmp/design/`, design documentation under `docs/design/`, and implemented UI baselines under Playwright VRT snapshots. It does not implement UI or perform Visual Review.
 
 ### `visual-implementation-review`
 

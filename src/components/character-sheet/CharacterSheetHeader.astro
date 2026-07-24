@@ -1,0 +1,192 @@
+---
+import { siteMeta } from "../../lib/site/siteMeta";
+import { withBase } from "../../lib/utils/paths";
+import SearchButton from "../search/SearchButton.astro";
+
+const homePath = withBase("/");
+const logoWebpPath = withBase(siteMeta.titleLogo.webp);
+---
+
+<header class="character-sheet-header" data-site-header>
+  <div class="character-sheet-menu-control">
+    <button
+      class="character-sheet-menu-button"
+      type="button"
+      data-character-sheet-menu-open
+      aria-label="サイトメニューを開く"
+      aria-expanded="false"
+      aria-controls="character-sheet-site-menu-drawer"
+    >
+      <span class="character-sheet-menu-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <a class="character-sheet-logo-link" href={homePath} aria-label={`${siteMeta.title} トップページへ`}>
+    <img
+      class="character-sheet-logo"
+      src={logoWebpPath}
+      width={siteMeta.titleLogo.width}
+      height={siteMeta.titleLogo.height}
+      alt={siteMeta.title}
+      decoding="async"
+    />
+  </a>
+
+  <div class="character-sheet-header-actions">
+    <SearchButton variant="desktop" />
+  </div>
+
+  <div class="character-sheet-mobile-search">
+    <SearchButton variant="mobile" />
+  </div>
+</header>
+
+<style>
+  .character-sheet-header {
+    position: fixed;
+    z-index: 5;
+    inset-block-start: 0;
+    inset-inline: 0;
+    width: 100%;
+    min-height: 5.5rem;
+    display: grid;
+    grid-template-columns: 2.5rem auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--space-3);
+    background: var(--color-surface-inverse);
+    color: var(--color-text-inverse);
+    padding-inline: var(--space-8);
+    transition: transform 180ms ease;
+  }
+
+  .character-sheet-header.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  .character-sheet-logo-link {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-inverse);
+    text-decoration: none;
+  }
+
+  .character-sheet-logo-link:hover {
+    color: var(--color-text-inverse);
+  }
+
+  .character-sheet-logo {
+    width: auto;
+    height: 3rem;
+  }
+
+  .character-sheet-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+  }
+
+  .character-sheet-menu-control {
+    display: block;
+  }
+
+  .character-sheet-mobile-search {
+    display: none;
+  }
+
+  .character-sheet-menu-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: inline-grid;
+    place-items: center;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    color: var(--color-text-inverse);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .character-sheet-menu-button:hover {
+    background: rgb(248 250 249 / 0.1);
+  }
+
+  .character-sheet-menu-button:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .character-sheet-menu-icon,
+  .character-sheet-menu-icon::before,
+  .character-sheet-menu-icon::after {
+    width: 1.125rem;
+    height: 0.125rem;
+    display: block;
+    border-radius: var(--radius-sm);
+    background: currentColor;
+  }
+
+  .character-sheet-menu-icon {
+    position: relative;
+  }
+
+  .character-sheet-menu-icon::before,
+  .character-sheet-menu-icon::after {
+    position: absolute;
+    inset-inline-start: 0;
+    content: "";
+  }
+
+  .character-sheet-menu-icon::before {
+    inset-block-start: -0.44rem;
+  }
+
+  .character-sheet-menu-icon::after {
+    inset-block-start: 0.44rem;
+  }
+
+  @media (width >= 48rem) and (width < 80rem) {
+    .character-sheet-header {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .character-sheet-menu-control {
+      display: none;
+    }
+
+  }
+
+  @media (width >= 48rem) {
+    .character-sheet-header.is-hidden {
+      transform: none;
+    }
+  }
+
+  @media (width < 48rem) {
+    .character-sheet-header {
+      inline-size: 100vw;
+      min-height: 4rem;
+      grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
+      gap: var(--space-3);
+      padding-inline: var(--space-3);
+    }
+
+    .character-sheet-menu-control,
+    .character-sheet-mobile-search {
+      display: block;
+    }
+
+    .character-sheet-logo-link {
+      justify-self: center;
+    }
+
+    .character-sheet-logo {
+      height: 1.875rem;
+    }
+
+    .character-sheet-header-actions {
+      display: none;
+    }
+  }
+</style>

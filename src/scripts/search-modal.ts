@@ -59,7 +59,7 @@ type SearchResultItem = {
 };
 
 type OverlayChangeDetail = {
-  source: "mobile-menu" | "mobile-page-toc" | "search";
+  source: "character-sheet-menu" | "mobile-menu" | "mobile-page-toc" | "search";
   isOpen: boolean;
 };
 

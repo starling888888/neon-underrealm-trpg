@@ -21,6 +21,18 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [ ] 覚悟から縁へ戻す効果の表現を整理する
+  - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
+  - classification: rule wording follow-up
+  - plan: なし。ルール文言の整理が必要になった時点で独立taskを計画する。
+  - handling plan: `src/pages/rules/battle.mdx`の「入れ替えができなくなる」と、スキル効果の「覚悟を縁に戻す」を、覚悟を解除する効果は許可する意図が明確になる表現へ整理する。生成JSONのスキル本文を変更する場合は、対応する生成元から更新する。
+
+- [ ] JSONのスキーマバージョン差異との互換性を担保する
+  - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
+  - classification: future data compatibility follow-up
+  - plan: なし。複数のJSON形式を継続して扱う必要が明確になった時点で独立taskを計画する。
+  - handling plan: 現在はスキーマバージョンを保存・比較せず、正常に処理できないJSONを一律エラーにする。将来、バージョン番号、受け入れ可能な旧形式、移行処理、エラー表示、テストfixtureを定義して互換性を担保する。
+
 - [ ] Astro Component contract testの基盤を導入する
   - source: `28-2-common-skills-page` の技術レビューにおけるユーザー指示
   - classification: test architecture follow-up
@@ -50,18 +62,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - classification: follow-up
   - plan: `docs/plan.md` の `53-content-smoke-test`
   - handling plan: `-local/data-cards`をPagefind indexから除外するか、検索Visual Testのlocatorを公開対象の検索結果へ限定する。GitHub Pagesのsubpath検索と公開ページの検索結果が壊れないことを確認してから、Visual Capture全体をgreenにする。
-
-- [ ] 流儀の共通スキルボーナスを構造化データへ変換する
-  - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
-  - classification: out-of-scope follow-up
-  - plan: なし。共通スキルボーナスを条件や効果種別で検索・集計・比較する要件が明確になった時点で計画する。
-  - handling plan: 現行の`ryugi-list.json`では、2／5／9レベルごとのボーナスを改行を含む表示文字列として保持する。将来、効果種別、対象、増減値などを構造化する必要が生じた場合に、Excel入力列、JSON形状、既存表示との互換性、検索・表示要件、migration方針を定義してから別タスクで変換する。
-
-- [ ] React Islandの導入を検討する
-  - source: ユーザー指示
-  - classification: out-of-scope follow-up
-  - plan: なし。ファーストステップ完了後に必要性と導入範囲を判断する。
-  - handling plan: vanilla JavaScriptでUIロジックとHTMLセレクタの対応を維持する負荷が高まっているため、必要な画面に限定したReact Islandの導入可否を検討する。初期スコープ外のままとし、現時点では実装・`docs/plan.md`への追加を行わない。
 
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
   - source: `28-0-common-skills-data` 実装中のユーザー指示

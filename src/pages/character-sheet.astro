@@ -1,0 +1,267 @@
+---
+import "../styles/global.css";
+import "../styles/prose.css";
+import CharacterSheetHeader from "../components/character-sheet/CharacterSheetHeader.astro";
+import Footer from "../components/layout/Footer.astro";
+import SiteMenu from "../components/layout/SiteMenu.astro";
+import SearchModal from "../components/search/SearchModal.astro";
+import Seo from "../components/seo/Seo.astro";
+import { withBase } from "../lib/utils/paths";
+
+const title = "キャラクターシート";
+const description = "ネオン・アンダーレルムTRPGのキャラクターシートです。";
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
+    <Seo title={title} description={description} />
+  </head>
+  <body data-pagefind-ignore>
+    <div class="character-sheet-shell">
+      <CharacterSheetHeader />
+
+      <SearchModal />
+
+      <aside
+        id="character-sheet-site-menu-drawer"
+        class="character-sheet-menu-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="サイトメニュー"
+        hidden
+      >
+        <div class="character-sheet-menu-panel">
+          <div class="character-sheet-menu-header">
+            <button
+              class="character-sheet-menu-close"
+              type="button"
+              data-character-sheet-menu-close
+              aria-label="サイトメニューを閉じる"
+            >
+              <span
+                class="character-sheet-menu-close-icon"
+                aria-hidden="true"
+              ></span>
+            </button>
+            <p class="character-sheet-menu-heading">メニュー</p>
+          </div>
+          <div class="character-sheet-menu-scroll">
+            <SiteMenu idPrefix="character-sheet-menu" variant="drawer" />
+          </div>
+        </div>
+        <button
+          class="character-sheet-menu-scrim"
+          type="button"
+          data-character-sheet-menu-close
+          tabindex="-1"
+          aria-label="サイトメニューを閉じる"
+        ></button>
+      </aside>
+
+      <div class="character-sheet-layout">
+        <aside class="character-sheet-menu-rail">
+          <SiteMenu />
+        </aside>
+
+        <main class="character-sheet-main" data-page-content>
+          <article class="character-sheet-page" data-character-sheet-page>
+            <h1>キャラクターシート</h1>
+          </article>
+        </main>
+      </div>
+
+      <Footer />
+    </div>
+  </body>
+</html>
+
+<script>
+  import { setupCharacterSheetMenu } from "../scripts/character-sheet-menu";
+  import { setupMobileHeader } from "../scripts/mobile-header";
+  import { setupSearchHighlight, setupSearchModal } from "../scripts/search-modal";
+
+  setupMobileHeader();
+  setupCharacterSheetMenu();
+  setupSearchModal();
+  setupSearchHighlight();
+</script>
+
+<style>
+  .character-sheet-shell {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    padding-block-start: var(--site-header-height);
+  }
+
+  .character-sheet-layout {
+    min-width: 0;
+    min-height: 0;
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .character-sheet-menu-rail {
+    min-height: 0;
+    display: none;
+    border-right: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-muted);
+    padding-block: var(--space-8);
+    padding-inline: var(--space-3) var(--space-2);
+  }
+
+  .character-sheet-main {
+    min-width: 0;
+    padding: var(--space-10) var(--space-8);
+  }
+
+  .character-sheet-page {
+    min-height: 24rem;
+  }
+
+  :global(body.character-sheet-menu-open) {
+    overflow: hidden;
+  }
+
+  .character-sheet-menu-drawer {
+    display: none;
+  }
+
+  .character-sheet-menu-drawer[hidden] {
+    display: none;
+  }
+
+  .character-sheet-menu-drawer:not([hidden]) {
+    position: fixed;
+    z-index: 10;
+    inset: 0;
+    display: grid;
+    grid-template-columns: minmax(0, min(24rem, 30vw)) 1fr;
+    min-height: 100dvh;
+  }
+
+  .character-sheet-menu-panel {
+    min-width: 0;
+    max-height: 100dvh;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    background: var(--color-surface-muted);
+    box-shadow: 0.8rem 0 1.8rem rgb(17 24 32 / 0.24);
+  }
+
+  .character-sheet-menu-header {
+    min-height: 5.5rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    background: var(--color-surface-inverse);
+    color: var(--color-text-inverse);
+    padding-inline: var(--space-8);
+  }
+
+  .character-sheet-menu-close {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: inline-grid;
+    flex: 0 0 auto;
+    place-items: center;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    color: var(--color-text-inverse);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .character-sheet-menu-close:hover {
+    background: rgb(248 250 249 / 0.1);
+  }
+
+  .character-sheet-menu-close:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .character-sheet-menu-close-icon,
+  .character-sheet-menu-close-icon::after {
+    width: 1.25rem;
+    height: 0.125rem;
+    display: block;
+    border-radius: var(--radius-sm);
+    background: currentColor;
+  }
+
+  .character-sheet-menu-close-icon {
+    position: relative;
+    transform: rotate(45deg);
+  }
+
+  .character-sheet-menu-close-icon::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    transform: rotate(90deg);
+  }
+
+  .character-sheet-menu-heading {
+    margin: 0;
+    color: var(--color-text-inverse);
+    font-size: var(--text-sm);
+    font-weight: 800;
+    line-height: var(--line-height-tight);
+  }
+
+  .character-sheet-menu-scroll {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-6);
+  }
+
+  .character-sheet-menu-scrim {
+    border: 0;
+    background: rgb(17 24 32 / 0.62);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  @media (width >= 48rem) and (width < 80rem) {
+    .character-sheet-layout {
+      grid-template-columns: 15rem minmax(0, 1fr);
+    }
+
+    .character-sheet-menu-rail {
+      display: block;
+    }
+
+    .character-sheet-menu-drawer:not([hidden]) {
+      display: none;
+    }
+  }
+
+  @media (width < 48rem) {
+    .character-sheet-layout {
+      display: block;
+    }
+
+    .character-sheet-main {
+      padding: var(--space-6) var(--space-5);
+    }
+
+    .character-sheet-menu-drawer:not([hidden]) {
+      grid-template-columns: minmax(0, min(83vw, 20.5rem)) 1fr;
+    }
+
+    .character-sheet-menu-header {
+      min-height: 4rem;
+      padding-inline: var(--space-3) var(--space-5);
+    }
+  }
+</style>

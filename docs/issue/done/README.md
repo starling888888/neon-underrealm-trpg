@@ -19,6 +19,8 @@ activeな `docs/issue/` 直下には、現在作業中または未完了のissue
 - 移動先分類が判断できる
 - 移動後に必要な内部リンク更新または過去記録注記を行う
 
+Gate専用の子issueは、移動前に親issueの `docs/issue/<parent-issue>/plan.md` へ、後続Gateに必要な詳細要件・確定判断・引継ぎだけを戻す。子issueのarchive pathとGateの `done` 状態も同じplanへ記録する。
+
 未完了issue、現在作業中issue、完了条件・チェックポイントが未確認のissueは移動しない。
 
 ## チェック更新

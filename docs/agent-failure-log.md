@@ -89,6 +89,42 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Character-sheet Headerのbreakpoint表示条件を誤った
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-0-sheet-page-header`の`CharacterSheetHeader.astro`
+- 観測した失敗: desktop・mobileのサイトメニューボタンを追加する際、mobile専用検索操作もdesktop・tabletで表示するCSSにしてHeader gridの暗黙行を発生させ、内部要素が上へずれるデグレを作った。あわせて、Headerの大きなgrid gapでメニューボタンとタイトルロゴの間隔を広げすぎた。
+- 一次対応: mobile検索操作をmobile breakpointだけに限定し、Header gridの暗黙行を解消した。desktop・tabletのタイトルロゴを2.5remへ縮め、メニューボタンとの間隔を`--space-3`へ縮めた。
+
+### Character-sheetのサイトメニュー表示範囲を誤って拡大した
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-0-sheet-page-header`のcharacter-sheet専用layout
+- 観測した失敗: tabletのみで表示する指定だったサイトメニューを、desktopにも表示する実装・検証として扱った。
+- 一次対応: 専用layoutのmenu railをtabletのmedia query内だけで表示するようにし、desktop・tablet・mobileの表示条件をbrowser testとcaptureで確認した。
+
+### Generated a requirements-driven design draft before updating the requirements source of truth
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-web-character-sheet`のdesktop design draft再作成
+- 観測した失敗: ユーザーが、Git管理外の要件ドラフトにある画面項目・初期枠数・操作規則を、現行要件と矛盾しない範囲で要求正本へ先に取り込むよう求めていたにもかかわらず、agentは正本を更新せずに一時HTMLとcaptureを作り直した。そのため、要求正本を唯一の入力にするべき後続のdesign作業の順序を再び逸脱した。
+- 一次対応: 一時draftの更新を停止し、`.tmp/character-sheet-requirements.md`を項目カタログとして照合して、`docs/requirements/character-sheet.md`へ不足する表示項目・初期枠数・可変行・操作規則を正本優先で追加する。正本のユーザー確認後にだけ、その文書を入力にdesign draftを再作成する。
+
+### Used raster image generation instead of the requested HTML design draft
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-web-character-sheet`のdesktop初期画面design draft作成
+- 観測した失敗: ユーザーが画面draftの作成を指示した際、対話用にHTMLを作成してローカルcaptureで確認する既存の作業方法を確認せず、raster画像生成を実行した。生成画像をGit管理・design正本・VRT baselineにはしていないが、ユーザーが期待した確認可能なHTML draftではなかった。
+- 一次対応: 生成画像はpreview扱いとして採用せず、`.tmp/design/character-sheet/index.html`とcapture scriptを作成し、desktop `1440x1200`のlocal captureへ切り替えた。今後、対話用の画面draftでは、画像生成を先行させず、ユーザーが指定するHTML / local captureの方法を確認する。
+
 ### Repeated direct Playwright listing bypassed the VRT script
 
 #### 2026-07-23
@@ -489,3 +525,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-03-hero-layout-stability` のissueレビュー
 - 観測した失敗: hero画像の寸法を固定する案を提示する前に、全hero素材の実寸一覧を確認・報告しなかった。そのため、アイテムheroの統一後に流儀hero 3枚が`1671x941`のまま残ることを後から伝え、ユーザーに画像サイズの差異を先に報告すべきだったと指摘された。
 - 一次対応: 通常heroを`1672x941`へ統一することをissueの入力契約に明記した。以後、画像寸法・データ形式・asset配置を設計判断の根拠に使う前に、対象全件を一覧化し、差異を先に報告する。
+
+### Repeated Playwright Chromium sandbox launch failure
+
+#### 2026-07-24
+
+- source: agent self-report
+- 発生箇所: `ex-02-web-character-sheet` の全VRT実行とdesktop/tablet baseline更新
+- 観測した失敗: `npm run visual:test`、`npm run visual:update`、targetを分割した`npx playwright test`で、Chromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動に失敗した。同一作業で複数回再現し、更新後のVRT比較を完了できなかった。
+- 一次対応: baseline更新と比較を区別して記録し、Chromiumが起動できた時点で書き込まれたdesktop/tablet snapshotは未コミットのまま保持した。以後、このsandbox条件ではPlaywrightの成功を前提にせず、実行可否と未検証範囲を明示して報告する。

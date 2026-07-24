@@ -17,6 +17,8 @@ Use when the user asks to:
 - begin work using the project's issue-first workflow
 - create `docs/issue/X-hogehoge.md`
 - split a planned task into a child task
+- prepare a per-parent Gate plan
+- create or validate a Gate child issue
 
 Do not use for:
 
@@ -29,6 +31,14 @@ Do not use for:
 
 Create, draft, or validate an issue contract only when the user explicitly authorizes issue work. Then stop for human review.
 
+Every parent issue uses a dedicated Gate plan. Create it at:
+
+```txt
+docs/issue/<parent-issue-slug>/plan.md
+```
+
+The Gate plan is the only place that enumerates Gates. It is the compact handoff source for starting one Gate in a new session. Do not duplicate the Gate list in the parent issue body.
+
 ---
 
 ## Core rule
@@ -40,6 +50,8 @@ Follow the latest user instruction exactly. A task number, `$issue-first-develop
 Create or validate `docs/issue/*.md` only when the user explicitly asks to create, draft, or validate that issue. A clear negative instruction such as `issueを作成しない` overrides a generic issue-first invocation.
 
 When the user asks only for scope adjustment, requirements adjustment, or contents work, do only that requested work. Use the matching workflow when needed. Do not create an issue. Do not run `issue_reviewer`. Stop after the requested work and report the result and any decisions required from the user.
+
+When the user explicitly asks to implement a named Gate, create or validate only that Gate's dedicated child issue after reading the parent Gate plan. The child issue must not require the parent conversation, previous Gate issue bodies, or temporary review files to be understood. Do not begin implementation until the user explicitly approves that child issue.
 
 Run `issue_reviewer` only after this workflow has created a user-authorized local issue file.
 
@@ -54,9 +66,11 @@ After explicit local issue creation authorization, the local workflow is:
 7. If required design intent or VRT reference notes are missing, route the notes work to `design-image-generation` instead of implementing UI.
 8. Create `.tmp/review/<branch-name>/` after creating the branch.
 9. Create or validate `docs/issue/NN-slug.md`.
-10. Write the task goal, scope, completion criteria, checkpoints, design references, TODO references, design-generation prerequisites when relevant, and review points.
-11. Run the local issue review workflow.
-12. Stop and wait for user review.
+10. Create or validate `docs/issue/NN-slug/plan.md` from the Gate plan template.
+11. Write the parent task goal, scope, completion criteria, checkpoints, design references, TODO references, design-generation prerequisites when relevant, and review points.
+12. Enumerate the parent task's Gates only in the dedicated Gate plan.
+13. Run the local issue review workflow.
+14. Stop and wait for user review.
 
 Implementation may begin only after the user explicitly approves the issue file.
 
@@ -76,6 +90,7 @@ In this mode, the agent may:
 - create a dedicated branch
 - create `.tmp/review/<branch-name>/`
 - create `docs/issue/NN-slug.md` only with explicit user authorization
+- create `docs/issue/NN-slug/plan.md` only with the same explicit parent-issue authorization
 - validate an existing local issue only when the user explicitly asks to validate it
 - check `docs/TODO.md` for related future-work items
 - check local design references under `docs/design/`
@@ -237,6 +252,53 @@ In remote snapshot draft mode, do not claim the issue file was written.
 
 ---
 
+## Gate plan and child issues
+
+Use a dedicated Gate plan for every parent issue.
+
+### Gate plan location and ownership
+
+The parent issue and Gate plan paths are:
+
+```txt
+docs/issue/<parent-issue-slug>.md
+docs/issue/<parent-issue-slug>/plan.md
+```
+
+Use `.github/ISSUE_TEMPLATE/issue-gate-plan.md` as the Gate plan template. Read it before creating or changing a Gate plan. If it cannot be read, stop rather than reconstructing it from memory.
+
+The plan must contain:
+
+- a compact parent-issue reference
+- a Gate list with a stable Gate ID, title, status, dependency, and expected child issue path
+- one self-contained Gate brief per Gate: goal, allowed scope, source-of-truth paths, prerequisites, completion boundary, and handoff required after completion
+- only the durable requirements, decisions, and follow-up handoff returned from completed child issues
+
+Do not put implementation logs, duplicated parent background, temporary review output, or session-specific reasoning in the Gate plan.
+
+### Child issue lifecycle
+
+Create a child issue only when the user explicitly asks to implement that Gate. Its filename and branch name must use the child form:
+
+```txt
+NN-M-gate-slug
+```
+
+The child issue must identify its parent issue and Gate plan path, then copy only the selected Gate's self-contained brief into its own goal, scope, completion criteria, checkpoints, source-of-truth paths, and review points. It must be usable in a new session without relying on conversation context or other child issue files.
+
+Do not create child issues for every planned Gate in advance. Do not implement more than one Gate from the same child issue.
+
+After the child work is complete and the normal archive conditions are met:
+
+1. Return only durable detailed requirements, confirmed decisions, and follow-up handoff to the selected Gate entry in the parent Gate plan.
+2. Record the child issue's archive path in that Gate entry.
+3. Update the Gate status to `done`.
+4. Move the child issue to the appropriate `docs/issue/done/` directory.
+
+Do not archive a child issue before the parent Gate plan has received this compact handoff. Do not retain the child issue as the active source of truth for later Gates.
+
+---
+
 ## Existing issue handling
 
 If `docs/issue/NN-slug.md` already exists, do not recreate it.
@@ -258,6 +320,10 @@ Check:
 - related `docs/TODO.md` items are referenced or deliberately left for later
 - existing code paths mentioned in the issue exist or are clearly marked as planned
 - the issue does not contradict `AGENTS.md`, this skill, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, `docs/plan.md`, or relevant `docs/design/` files
+
+For a parent issue, also check that `docs/issue/NN-slug/plan.md` exists, uses the Gate plan template, is the only Gate enumeration, and gives each planned Gate enough self-contained information for a new session.
+
+For a child issue, also check that it maps to exactly one parent Gate and includes all information needed to implement that Gate without previous conversation or other child issue bodies.
 
 If the issue is valid, report that it can be used and stop for user approval.
 
@@ -331,6 +397,7 @@ In local repository mode:
 - read `.github/ISSUE_TEMPLATE/issue-first-development.md`
 - create `docs/issue/<issue-slug>.md` as a local repository file
 - fill the template with the current task's goal, scope, completion criteria, checkpoints, TODO references, design references, and review points
+- for a parent issue, also create or update `docs/issue/<issue-slug>/plan.md` with the Gate plan template
 
 In ChatGPT / remote snapshot draft mode:
 
@@ -413,7 +480,7 @@ Run this section only when this workflow created a user-authorized local issue i
 
 1. Create `.tmp/review/<branch-name>/` with `mkdir -p`.
 2. Spawn the `issue_reviewer` custom agent from `.codex/agents/issue-reviewer.toml`.
-3. Give the agent the current issue path and the relevant SSoT paths.
+3. Give the agent the current issue path, the parent Gate plan path when applicable, and the relevant SSoT paths.
 4. Write the agent's Japanese response to `.tmp/review/<branch-name>/issue-review-1.md`.
 5. If the first review has no findings or user-confirmation items, continue to the required stopping point.
 6. If the first review has valid findings, update only the issue file to resolve them, then run `issue_reviewer` once more.
@@ -456,6 +523,7 @@ Report the following to the user:
 
 - branch: `NN-slug`
 - issue: `docs/issue/NN-slug.md`
+- Gate plan: `docs/issue/NN-slug/plan.md` for a parent issue, or the parent Gate plan path for a child issue
 - mode: local repository mode / remote snapshot draft mode
 
 ## このissueで定義した内容
@@ -464,6 +532,7 @@ Report the following to the user:
 - 対象範囲
 - 完了条件
 - チェックポイント
+- Gate一覧または対象Gateの独立作業条件
 - 関連TODO
 - 関連design target
 - design-image-generation前提条件
@@ -545,14 +614,15 @@ Follow this priority order:
 1. Latest user instruction
 2. `AGENTS.md`
 3. This skill
-4. `docs/issue/NN-slug.md` when validating an existing issue
-5. `docs/requirements.md`
-6. `docs/out-of-scope.md`
-7. `docs/plan.md`
-8. `docs/TODO.md`
-9. `.agents/skills/design-image-generation/SKILL.md` when design notes or a VRT baseline update are required
-10. Relevant `docs/design/<design-target>/`
-11. Existing code
+4. The selected child issue, or the parent issue when preparing a parent
+5. The parent Gate plan when preparing or implementing a Gate
+6. `docs/requirements.md`
+7. `docs/out-of-scope.md`
+8. `docs/plan.md`
+9. `docs/TODO.md`
+10. `.agents/skills/design-image-generation/SKILL.md` when design notes or a VRT baseline update are required
+11. Relevant `docs/design/<design-target>/`
+12. Existing code
 
 If these conflict, stop and ask the user.
 
