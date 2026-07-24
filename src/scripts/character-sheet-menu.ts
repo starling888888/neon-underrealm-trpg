@@ -9,6 +9,11 @@ type CharacterSheetMenuElements = {
 const tabletMediaQuery = "(width >= 48rem) and (width < 80rem)";
 const layoutOverlayChangeEvent = "layout-overlay-change";
 
+type OverlayChangeDetail = {
+  source: "character-sheet-menu";
+  isOpen: boolean;
+};
+
 const focusableSelector = [
   "a[href]",
   "button:not([disabled])",
@@ -54,6 +59,11 @@ function setOpen(elements: CharacterSheetMenuElements, isOpen: boolean): void {
     button.setAttribute("aria-expanded", String(isOpen));
   });
   document.body.classList.toggle("character-sheet-menu-open", isOpen);
+  window.dispatchEvent(
+    new CustomEvent<OverlayChangeDetail>(layoutOverlayChangeEvent, {
+      detail: { source: "character-sheet-menu", isOpen },
+    }),
+  );
 
   if (isOpen) {
     const [firstFocusable] = elements.focusableElements();

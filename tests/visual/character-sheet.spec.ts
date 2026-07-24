@@ -12,10 +12,13 @@ test.describe("character sheet page", () => {
     await expect(
       page.locator("[data-character-sheet-menu-open]:visible"),
     ).toHaveCount(1);
+    await page.locator("[data-search-desktop-input]").focus();
+    await expect(page.locator("[data-search-panel]")).toBeVisible();
     await page.locator("[data-character-sheet-menu-open]:visible").click();
     await expect(
       page.locator("#character-sheet-site-menu-drawer"),
     ).toBeVisible();
+    await expect(page.locator("[data-search-panel]")).toBeHidden();
     await page.locator("[data-character-sheet-menu-close]").first().click();
     await expect(
       page.locator("#character-sheet-site-menu-drawer"),

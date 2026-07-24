@@ -184,4 +184,29 @@
 - [x] mobileのサイトメニューrail非表示を検証する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
-- [ ] 必要なtarget testが通る。
+- [x] 必要なtarget testが通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- 検索を開いたまま専用サイトメニューdrawerを開くと、両方のoverlayが同時に開く。専用drawerが共通の`layout-overlay-change`通知を発行していない。
+
+### 判定
+
+- source: local-agent
+- classification: valid
+- local validation: 検索を開いた状態でdesktopの専用サイトメニューdrawerを開くと、検索panelとdrawerがともに表示され、`body`に`search-open`と`character-sheet-menu-open`が残ることを確認した。
+
+### 対応方針
+
+- 専用drawerの開閉時にも`layout-overlay-change`を発行し、既存の検索overlay契約に従って検索panelを閉じる。
+- 新規caseは作らず、既存のdesktop drawer testへ検索open時の排他確認を追加する。
+
+### 対応完了チェックリスト
+
+- [x] 検索と専用drawerが同時に開かないようにする。
+- [x] 既存drawer testで検索overlayとの排他を確認する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+- [x] 必要なtarget testが通る。
