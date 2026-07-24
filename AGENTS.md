@@ -31,7 +31,7 @@
 - agentが直接発行するshell commandで、`XXX=hogehoge command` のように環境変数をコマンド行で指定する形式は実行してはならない。環境変数の設定が必要なツールは、対象の`.env`ファイルで指定する。package script内部の固定設定はこの規則の対象外とする。
 - 実装タスクは、実装前に `.agents/skills/issue-first-development/SKILL.md` を使い、ユーザーが明示的に許可した `docs/issue/*.md` 作成または検証で停止する。task番号、`$issue-first-development` の呼び出し、branch作成指示、開発開始指示だけではissue作成を許可しない。
 - ユーザーがscope調整、requirements調整、contents作成だけを指示した場合は、issueを作成せずに該当skillまたは作業だけを行い、その完了時に判断・未確定事項を返して停止する。ユーザーがissueを作成しないと明示した場合は、その指定を優先する。
-- `issue-first-development` のlocal repository modeで `issue_reviewer` を実行してよいのは、このworkflowでユーザー許可済みのローカルissueを作成した後だけである。issueを作成していないbranch準備、scope調整、requirements調整、contents作成ではreviewerを実行しない。remote snapshot draft modeではreviewerを実行しない。
+- `issue-first-development` のlocal repository modeでissue review agent（`issue_reviewer`または`gate_issue_reviewer`）を実行してよいのは、このworkflowでユーザー許可済みのローカルissueを作成した後だけである。issueを作成していないbranch準備、scope調整、requirements調整、contents作成ではreviewerを実行しない。remote snapshot draft modeではreviewerを実行しない。
 - 実装を開始してよいのは、ユーザーがissue内容を明示承認した後だけである。
 - 開発タスクは専用branchで行う。branch名は原則 `NN-slug` または `NN-M-slug` とする。承認済みissueが別名を明示する場合はそれに従う。
 - 各親issueは `docs/issue/<親issue名>/plan.md` を専用Gate planとして持つ。Gateの列挙、実行順、子issueへの入口、Gate完了後に残す確定事項はこのplanにのみ書く。親issue本文へGate一覧を重複して書かない。
@@ -89,7 +89,7 @@ Git / GitHub CLI / PR作成 / 破壊的操作の詳細は `.agents/rules/git-ope
 
 `issueを作って` は、GitHub Issueではなくローカルの `docs/issue/*.md` 作成を意味する。GitHub Issueを作成してよいのは、ユーザーが明示的に「GitHub Issueを作って」「GitHub上にissueを発行して」「gh issue createして」などと指示した場合だけである。
 
-`docs/plan.md` のタスク番号指定、`$issue-first-development` の呼び出し、task開始、branch作成は、該当skillを参照してユーザー指示を安全に実行する契機であり、ローカルissue作成の許可ではない。issueを作成しないと明示された場合、またはscope、requirements、contentsだけが指示された場合は、issue作成とissue reviewerを行わない。
+`docs/plan.md` のタスク番号指定、`$issue-first-development` の呼び出し、task開始、branch作成は、該当skillを参照してユーザー指示を安全に実行する契機であり、ローカルissue作成の許可ではない。issueを作成しないと明示された場合、またはscope、requirements、contentsだけが指示された場合は、issue作成とissue review agentを行わない。
 
 PRを作成してよいのは、ユーザーが明示的にPR作成を指示した場合だけである。PR作成時は `.agents/skills/create-pr/SKILL.md` と `.github/pull_request_template.md` を使い、GitHub connector経由でPRを作成する。
 
