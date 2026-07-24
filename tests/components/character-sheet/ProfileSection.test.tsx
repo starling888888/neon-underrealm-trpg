@@ -74,4 +74,36 @@ describe("ProfileSection", () => {
 
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
+
+  it("keeps a signed number field editable through its minus intermediate state", async () => {
+    const user = userEvent.setup();
+    const props = createProps();
+
+    render(<ProfileSection {...props} />);
+
+    const changeAdjustment = screen.getByRole("spinbutton", {
+      name: "小銭修正",
+    });
+
+    await user.clear(changeAdjustment);
+
+    expect(props.onCreditChange).toHaveBeenCalledWith(
+      "changeAdjustment",
+      "",
+      false,
+    );
+
+    await user.type(changeAdjustment, "-1");
+
+    expect((changeAdjustment as HTMLInputElement).value).toBe("-1");
+    expect(props.onCreditChange).toHaveBeenLastCalledWith(
+      "changeAdjustment",
+      "-1",
+      false,
+    );
+
+    await user.tab();
+
+    expect(props.onCreditBlur).toHaveBeenCalledWith("changeAdjustment", "-1");
+  });
 });

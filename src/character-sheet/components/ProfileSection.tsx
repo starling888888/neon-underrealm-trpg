@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type {
   CreditFieldName,
@@ -80,6 +80,14 @@ function CreditField({
   value,
 }: CreditFieldProps) {
   const id = `character-sheet-credit-${name}`;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (!isFocused && inputRef.current !== null) {
+      inputRef.current.value = String(value);
+    }
+  }, [isFocused, value]);
 
   return (
     <div className={styles.field}>
@@ -88,15 +96,24 @@ function CreditField({
       </label>
       <input
         className={styles.numberInput}
+        defaultValue={value}
         id={id}
         min={allowNegative ? undefined : 0}
-        onBlur={(event) => onBlur(name, event.target.value)}
-        onChange={(event) =>
-          onChange(name, event.target.value, event.target.validity.badInput)
-        }
+        onBlur={(event) => {
+          setIsFocused(false);
+          onBlur(name, event.target.value);
+        }}
+        onChange={(event) => {
+          if (event.target.validity.badInput) {
+            return;
+          }
+
+          onChange(name, event.target.value, false);
+        }}
+        onFocus={() => setIsFocused(true)}
+        ref={inputRef}
         step="1"
         type="number"
-        value={value}
       />
     </div>
   );
