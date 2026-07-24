@@ -15,7 +15,6 @@
 - desktop、tablet、mobileを初期scopeに含める。各viewportの具体的なlayoutとVRT状態は、対応するGateで定める。
 - 現在のVRT対象: `tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`。routeは`/character-sheet/`、stateはdefaultである。
 - ユーザー承認により、desktopとtabletのcanonical snapshotをローカル更新した。mobile snapshotは作成・更新していない。
-- 親issueの最終Gate G31のレビュー完了まで、character-sheet用VRTのtest spec、canonical snapshot、比較artifactはコミットしない。
 - 承認済みドラフトから決定する将来のVRT状態:
   - 必須の初期値を持つ直接編集の初期状態
   - 可変のスキル、縁、アイテム行を含む入力済み状態
