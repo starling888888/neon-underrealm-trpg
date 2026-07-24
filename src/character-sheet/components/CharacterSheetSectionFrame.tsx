@@ -1,9 +1,11 @@
-import { type ElementType, type ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import styles from "./CharacterSheetSectionFrame.module.css";
+
+type SectionFrameHeading = "span" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
 type CharacterSheetSectionFrameProps = {
   children: ReactNode;
-  heading?: ElementType;
+  headingAs?: SectionFrameHeading;
   id: string;
   title: string;
 };
@@ -16,12 +18,12 @@ type CharacterSheetSectionFrameProps = {
  */
 export default function CharacterSheetSectionFrame({
   children,
-  heading,
+  headingAs,
   id,
   title,
 }: CharacterSheetSectionFrameProps) {
   const [isExpanded, setIsExpanded] = useState(true);
-  const Heading = heading ?? "span";
+  const Heading = headingAs ?? "span";
   const headingId = `${id}-heading`;
   const contentId = `${id}-content`;
 
