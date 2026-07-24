@@ -21,6 +21,8 @@
 
 `src/pages/character-sheet.astro`は、専用Header、静的な周辺コンテンツ、ページ固有layout、React Islandの配置を直接担う。再利用しないContainer、Layout、または単なるimport用Componentには分割しない。キャラクターシート本体は`client:load`のReact Islandとし、サイト全体をSPA化しない。
 
+キャラクターシート固有のresponsive表示、Header drawer、menu初期化はページ側へ閉じ込める。共通`AppContainer`、共通Header、共通layoutへキャラクターシート用の条件分岐を追加しない。
+
 React Islandの責務は、入力、画面内の開閉、確認・通知dialog、ブラウザAPI、端末内保存に限定する。サイト共通のHeader、Footer、ナビゲーションはAstro側の既存実装を維持する。
 
 ### Feature境界
