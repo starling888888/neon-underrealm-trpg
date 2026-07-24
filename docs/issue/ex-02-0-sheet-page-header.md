@@ -75,8 +75,12 @@
 
 - `src/pages/character-sheet.astro`
 - `src/lib/site/menu.ts`
-- `src/layouts/`配下のキャラクターシート専用layoutまたは最小限の既存layout拡張
-- `tests/visual/config.ts`、`tests/visual/vrt/character-sheet.spec.ts`（限定VRTを追加する必要がある場合）
+- `src/components/character-sheet/CharacterSheetHeader.astro`
+- `src/layouts/CharacterSheetAppContainer.astro`
+- `src/layouts/CharacterSheetPageLayout.astro`
+- `tests/visual/config.ts`
+- `tests/visual/character-sheet.spec.ts`
+- `tests/visual/vrt/character-sheet.spec.ts`
 
 ## レビュー観点
 
@@ -97,7 +101,7 @@
 ### VRT対象
 
 - design target: `docs/design/character-sheet/notes.md`
-- VRT test / tags: 未作成。canonical baselineも未作成のため、比較・更新は行わない。
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` の `@vrt @character-sheet`。canonical baselineは未作成のため、比較・更新は行わない。
 - route / states / viewports: `/character-sheet/` のdefault状態。desktop `1440x1200`、tablet `820x1180`、mobile `390x900`。
 
 ### レビュー結果
@@ -124,3 +128,27 @@
 - [x] baseline更新が必要な差分を人間判断として記録した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `/character-sheet/`のページ固有のresponsive契約（desktop・tabletの常設サイトメニュー、mobileのメニューボタン・drawer非表示、ToC非表示、現在ページの`aria-current`）を自動テストしていない。
+
+### 判定
+
+- source: local-agent
+- classification: valid
+- local validation: `CharacterSheetAppContainer`・`CharacterSheetHeader`・`CharacterSheetPageLayout`、サイトメニュー定義、追加したbrowser behavior testを確認した。現在のG0実装は、共通`AppContainer`へキャラクターシート固有の分岐を追加せず、当該routeのresponsiveな表示条件をCIで検知する。
+
+### 対応方針
+
+- canonical VRT baselineを作らず、`tests/visual/character-sheet.spec.ts`へ`/character-sheet/`を対象にしたbrowser behavior testを追加する。
+- desktop・tablet・mobileのサイトメニュー表示条件、ToC非表示、`aria-current`、subpath付きリンクを必要最小限で検証する。
+
+### 対応完了チェックリスト
+
+- [x] ページ固有のresponsive契約を検証するtestを追加する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+- [x] 必要なtarget testが通る。

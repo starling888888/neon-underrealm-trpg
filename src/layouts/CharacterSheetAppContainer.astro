@@ -2,25 +2,18 @@
 import "../styles/global.css";
 import "../styles/prose.css";
 import Footer from "../components/layout/Footer.astro";
-import Header from "../components/layout/Header.astro";
-import MobileSiteMenuDrawer from "../components/layout/MobileSiteMenuDrawer.astro";
-import PageNavigation from "../components/layout/PageNavigation.astro";
 import SearchModal from "../components/search/SearchModal.astro";
 import Seo from "../components/seo/Seo.astro";
-import { getSiteMenuLink } from "../lib/site/menu";
-import type { SeoProps } from "../lib/site/seo";
 import { defaultSeo } from "../lib/site/seo";
+import type { SeoProps } from "../lib/site/seo";
 import { getSearchTypeLabel } from "../lib/search/page-metadata";
 import { withBase } from "../lib/utils/paths";
-import TocPageLayout from "./TocPageLayout.astro";
-import NoTocPageLayout from "./NoTocPageLayout.astro";
+import CharacterSheetHeader from "../components/character-sheet/CharacterSheetHeader.astro";
+import CharacterSheetPageLayout from "./CharacterSheetPageLayout.astro";
 
 export interface Props extends SeoProps {
   title?: string;
   description?: string;
-  showPageToc?: boolean;
-  prevPath?: string;
-  nextPath?: string;
 }
 
 const {
@@ -33,14 +26,7 @@ const {
   ogUrl,
   twitterCard,
   noindex,
-  showPageToc = false,
-  prevPath,
-  nextPath,
 } = Astro.props;
-
-const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
-const prevPage = prevPath ? getSiteMenuLink(prevPath) : undefined;
-const nextPage = nextPath ? getSiteMenuLink(nextPath) : undefined;
 
 const searchTypeLabel = getSearchTypeLabel(
   Astro.url.pathname,
@@ -68,17 +54,14 @@ const searchTypeLabel = getSearchTypeLabel(
     />
   </head>
   <body>
-    <div class="site-shell">
-      <Header />
+    <div class="character-sheet-shell">
+      <CharacterSheetHeader />
 
       <SearchModal />
 
-      <MobileSiteMenuDrawer />
-
-      <PageLayout>
+      <CharacterSheetPageLayout>
         <slot />
-        <PageNavigation prevPage={prevPage} nextPage={nextPage} />
-      </PageLayout>
+      </CharacterSheetPageLayout>
 
       <Footer />
     </div>
@@ -87,20 +70,18 @@ const searchTypeLabel = getSearchTypeLabel(
 
 <script>
   import { setupMobileHeader } from "../scripts/mobile-header";
-  import { setupMobileMenu } from "../scripts/mobile-menu";
   import {
     setupSearchHighlight,
     setupSearchModal,
   } from "../scripts/search-modal";
 
   setupMobileHeader();
-  setupMobileMenu();
   setupSearchModal();
   setupSearchHighlight();
 </script>
 
 <style>
-  .site-shell {
+  .character-sheet-shell {
     width: 100%;
     min-height: 100vh;
     display: grid;
@@ -115,5 +96,4 @@ const searchTypeLabel = getSearchTypeLabel(
     color: var(--color-text);
     padding-inline: 0.0625em;
   }
-
 </style>

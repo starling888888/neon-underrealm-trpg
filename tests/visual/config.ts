@@ -23,6 +23,7 @@ export const visualRoutes = {
   support: "support/",
   world: "world/",
   characterMaking: "character-making/",
+  characterSheet: "character-sheet/",
   data: "data/",
   commonSkills: "data/common-skills/",
   dataRyugi: "data/ryugi/",

@@ -1,7 +1,58 @@
 ---
-import NoTocPageLayout from "./NoTocPageLayout.astro";
+import SiteMenu from "../components/layout/SiteMenu.astro";
 ---
 
-<NoTocPageLayout variant="character-sheet">
-  <slot />
-</NoTocPageLayout>
+<div class="character-sheet-layout">
+  <aside class="character-sheet-menu-rail">
+    <SiteMenu />
+  </aside>
+
+  <main class="character-sheet-main" data-page-content data-pagefind-body>
+    <slot />
+  </main>
+</div>
+
+<style>
+  .character-sheet-layout {
+    min-width: 0;
+    min-height: calc(100vh - 9rem);
+    display: grid;
+    grid-template-columns: 15rem minmax(46rem, 1fr);
+  }
+
+  .character-sheet-menu-rail {
+    min-height: 0;
+    padding-block: var(--space-8);
+    padding-inline: var(--space-3) var(--space-2);
+    border-right: var(--border-width) solid var(--color-border);
+    background: var(--color-surface-muted);
+  }
+
+  .character-sheet-main {
+    width: min(100% - (var(--page-gutter) * 2), var(--content-wide-width));
+    min-width: 0;
+    margin-inline: auto;
+    padding: var(--space-5) var(--space-6);
+  }
+
+  @media (width < 48rem) {
+    .character-sheet-layout {
+      display: block;
+      min-height: 0;
+    }
+
+    .character-sheet-menu-rail {
+      display: none;
+    }
+
+    .character-sheet-main {
+      padding: var(--space-6) var(--space-5);
+    }
+  }
+
+  @media (width >= 48rem) and (width < 80rem) {
+    .character-sheet-layout {
+      grid-template-columns: 15rem minmax(0, 1fr);
+    }
+  }
+</style>

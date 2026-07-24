@@ -3,34 +3,23 @@ import { siteMeta } from "../../lib/site/siteMeta";
 import { withBase } from "../../lib/utils/paths";
 import SearchButton from "../search/SearchButton.astro";
 
-export interface Props {
-  showMobileSiteMenu?: boolean;
-}
-
-const { showMobileSiteMenu = true } = Astro.props;
 const homePath = withBase("/");
 const logoWebpPath = withBase(siteMeta.titleLogo.webp);
 ---
 
 <header class="site-header" data-site-header>
-  {
-    showMobileSiteMenu ? (
-      <div class="mobile-header-control">
-        <button
-          class="icon-button"
-          type="button"
-          data-mobile-menu-open
-          aria-label="サイトメニューを開く"
-          aria-expanded="false"
-          aria-controls="mobile-site-menu-drawer"
-        >
-          <span class="menu-icon" aria-hidden="true"></span>
-        </button>
-      </div>
-    ) : (
-      <div class="mobile-header-control" aria-hidden="true"></div>
-    )
-  }
+  <div class="mobile-header-control">
+    <button
+      class="icon-button"
+      type="button"
+      data-mobile-menu-open
+      aria-label="サイトメニューを開く"
+      aria-expanded="false"
+      aria-controls="mobile-site-menu-drawer"
+    >
+      <span class="menu-icon" aria-hidden="true"></span>
+    </button>
+  </div>
 
   <a class="site-logo-link" href={homePath} aria-label={`${siteMeta.title} トップページへ`}>
     <img
