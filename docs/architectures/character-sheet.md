@@ -135,7 +135,7 @@ tests/
 - `tests/visual/character-sheet.spec.ts`: Playwrightで、route、responsiveなページ固有UI、実際の入力・選択・dialog・保存復元など、そのGateで追加したユーザー観測可能なbrowser behaviorだけを確認する。ドメイン計算の全組合せ、内部state、hydrate、固定データ全件をここへ置かない。
 - `tests/visual/vrt/character-sheet.spec.ts`: `docs/design/character-sheet/notes.md`で確定したroute、viewport、fixture、表示状態だけをsnapshot比較する。VRTは文言・データ件数・計算式の正しさを担わない。
 
-既存のReact Component / Hook専用test runnerは採用していない。ComponentまたはHookをbrowser E2Eより小さい単位で検証する必要が初めて生じたGateでは、必要性、代替案、既存のNode / Playwrightとの役割分担を子issueへ記録してから、追加するtest toolingをユーザー承認のもとで選定する。test-onlyのproduction Componentや状態をその代替にしない。
+React Component / Hook単体testは、Vitest、jsdom、React Testing Library、user-eventを使う。ComponentまたはHookをbrowser E2Eより小さい単位で検証する必要が生じたGateでは、必要性、代替案、既存のNode / Playwrightとの役割分担を子issueへ記録し、ユーザー承認のもとで採用する。test-onlyのproduction Componentや状態をその代替にしない。
 
 ### 責務ごとの検証
 
@@ -155,13 +155,13 @@ tests/
 
 ### テスト用依存の選定境界
 
-| 用途                       | 現在の方式              | 採否           |
-| -------------------------- | ----------------------- | -------------- |
-| 純粋logic・schema・adapter | Node `node:test`と`tsx` | 既存採用       |
-| browser behavior・VRT      | `@playwright/test`      | 既存採用       |
-| React Component / Hook単体 | 専用runnerは未選定      | 必要時に再検討 |
+| 用途                       | 現在の方式                                                          | 採否     |
+| -------------------------- | ------------------------------------------------------------------- | -------- |
+| 純粋logic・schema・adapter | Node `node:test`と`tsx`                                             | 既存採用 |
+| browser behavior・VRT      | `@playwright/test`                                                  | 既存採用 |
+| React Component / Hook単体 | Vitest、jsdom、React Testing Library、user-event、React Vite plugin | 採用     |
 
-React Component / Hook単体test用の新規依存は、現時点では導入しない。必要になったGateで、Node / Playwrightでは不十分な具体例、候補、保守性、bundleへ影響しないdev dependencyであることを子issueへ記録し、ユーザー承認後に追加する。
+純粋logic・schema・adapterの既存Node testは直ちに置き換えない。Vitestへ統一するかは、`docs/TODO.md`の後続taskで決める。
 
 ## 依存ライブラリ
 
@@ -177,15 +177,17 @@ React Component / Hook単体test用の新規依存は、現時点では導入し
 
 ### 採用する依存
 
-| 用途                            | 推奨                                   | 理由                                                                  | 採否   |
-| ------------------------------- | -------------------------------------- | --------------------------------------------------------------------- | ------ |
-| AstroでReact Islandを動かす     | `@astrojs/react`、`react`、`react-dom` | Islandを限定し、Astroサイト全体をSPA化しない                          | 採用   |
-| 編集フォーム                    | `react-hook-form`                      | 可変行を含む巨大formの編集値を一箇所に保持し、素のReact inputを扱える | 採用   |
-| 画像BlobのIndexedDB保存         | `idb-keyval`                           | WebP Blob 1件のkey-value保存に必要な範囲へ絞れる                      | 採用   |
-| 実行時検証                      | 既存の`zod`                            | 既に依存に含まれる。具体的なschemaは各Gateで追加する                  | 採用   |
-| 純粋logic・schema・adapter test | 既存のNode `node:test`と`tsx`          | 追加test runnerなしで実行できる                                       | 採用   |
-| browser behavior・VRT test      | 既存の`@playwright/test`               | ユーザー観測可能な操作とvisual regressionを分けて扱える               | 採用   |
-| React Component / Hook単体test  | 専用runnerは未選定                     | 必要なGateで既存方式との費用対効果を比較して決める                    | 未採用 |
+| 用途                            | 推奨                                             | 理由                                                                  | 採否 |
+| ------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------- | ---- |
+| AstroでReact Islandを動かす     | `@astrojs/react`、`react`、`react-dom`           | Islandを限定し、Astroサイト全体をSPA化しない                          | 採用 |
+| 編集フォーム                    | `react-hook-form`                                | 可変行を含む巨大formの編集値を一箇所に保持し、素のReact inputを扱える | 採用 |
+| 画像BlobのIndexedDB保存         | `idb-keyval`                                     | WebP Blob 1件のkey-value保存に必要な範囲へ絞れる                      | 採用 |
+| 実行時検証                      | 既存の`zod`                                      | 既に依存に含まれる。具体的なschemaは各Gateで追加する                  | 採用 |
+| ZodとRHFの接続                  | `@hookform/resolvers`                            | `zodResolver`でRHF errorとschema validationを標準contractで接続する   | 採用 |
+| 純粋logic・schema・adapter test | 既存のNode `node:test`と`tsx`                    | 追加test runnerなしで実行できる                                       | 採用 |
+| browser behavior・VRT test      | 既存の`@playwright/test`                         | ユーザー観測可能な操作とvisual regressionを分けて扱える               | 採用 |
+| React Component / Hook単体test  | Vitest、jsdom、React Testing Library、user-event | Props、局所UI state、RHF adapter hookをE2Eへ置かず検証する            | 採用 |
+| React TSX変換                   | `@vitejs/plugin-react`                           | Astroとは別にVitestへReact JSX transformを接続する                    | 採用 |
 
 `localStorage`はブラウザ標準APIを使い、画像を除くserializableな最新1件の下書きを保存する。`idb-keyval`はBlobを含むstructured-clone可能な値を保存できるため、WebP画像recordの保存要件に適する。RHFの編集値同期は`subscribe`、`reset`、小さな自前hookで完結させる。
 

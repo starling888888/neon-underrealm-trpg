@@ -5,7 +5,8 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "../form-values";
-import { calculateCredit, normalizeCreditInput } from "../logic/credit";
+import { calculateCredit } from "../logic/credit";
+import { normalizeCreditInput } from "../schemas/character-sheet-form";
 
 /**
  * Composes the props consumed by the form presenter.
@@ -41,20 +42,18 @@ export default function useCharacterSheetFormPresenterProps({
       credit,
       creditSummary,
       onCreditBlur: (field, value) => {
-        setValue(
-          `credit.${field}`,
-          normalizeCreditInput(value, field === "changeAdjustment"),
-        );
+        setValue(`credit.${field}`, normalizeCreditInput(field, value), {
+          shouldValidate: true,
+        });
       },
       onCreditChange: (field, value, isInvalidNumber) => {
         if (isInvalidNumber) {
           return;
         }
 
-        setValue(
-          `credit.${field}`,
-          normalizeCreditInput(value, field === "changeAdjustment"),
-        );
+        setValue(`credit.${field}`, normalizeCreditInput(field, value), {
+          shouldValidate: true,
+        });
       },
       onProfileChange: (field, value) => {
         setValue(`profile.${field}`, value);

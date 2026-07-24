@@ -56,7 +56,7 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 
 - G4 E2Eを、領域表示と2〜3個の代表的なユーザー操作だけを確認する最終smokeへ縮小する。入力制約・計算式・DOM属性の網羅は置かない。
 - `schemas/`に現在のcharacter sheet form用Zod schemaを置き、`null`非許容、信用の整数・範囲、空欄を`0`へ戻す入力境界を正本化する。純粋logicとschemaの境界値はNode testで確認する。
-- Component / hook test toolingは、`vitest`、`jsdom`、`@testing-library/react`、`@testing-library/user-event`をdev dependencyとして採用する。既存Node / Playwrightとの役割、RHF adapter hookの検証方法をこのsectionへ明記し、PresenterをRHFなしのprops test、adapter hookをRHF接続testとして検証する。
+- Component / hook test toolingは、`vitest`、`jsdom`、`@testing-library/react`、`@testing-library/user-event`、`@vitejs/plugin-react`をdev dependencyとして採用する。既存Node / Playwrightとの役割、RHF adapter hookの検証方法をこのsectionへ明記し、PresenterをRHFなしのprops test、adapter hookをRHF接続testとして検証する。
 - `@hookform/resolvers`をruntime dependencyとして採用し、Zod schemaを`zodResolver`経由でRHFへ接続する。
 - このreview sectionの承認までは、source codeとtest fileを変更しない。
 
@@ -71,21 +71,21 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
    - `tests/node/character-sheet/credit.test.ts`から、入力正規化の境界値をZod schema testへ移す。`calculateCredit`は派生式だけを純粋logicとして残す。
    - `tests/node/character-sheet/schemas/character-sheet-form.test.ts`を追加し、profileの`null`拒否、信用の整数・非負制約、小銭修正の負数、空欄を`0`へ戻す変換を表形式で確認する。
 3. Component / hook test基盤を追加する。導入ライブラリは以下で確定する。
-   - dev dependency: `vitest`をComponent / hook test runner、`jsdom`をDOM環境、`@testing-library/react`をComponent render / `renderHook`、`@testing-library/user-event`をユーザー操作の再現に使う。PlaywrightなしでPresenterとadapter hookを局所検証するために必要であり、既存Node `node:test`による純粋logic / schema testは置き換えない。`@testing-library/jest-dom`は標準`expect`で十分なため導入しない。
+   - dev dependency: `vitest`をComponent / hook test runner、`jsdom`をDOM環境、`@testing-library/react`をComponent render / `renderHook`、`@testing-library/user-event`をユーザー操作の再現、`@vitejs/plugin-react`をVitestでのReact TSX変換に使う。PlaywrightなしでPresenterとadapter hookを局所検証するために必要であり、既存Node `node:test`による純粋logic / schema testは置き換えない。`@testing-library/jest-dom`は標準`expect`で十分なため導入しない。
    - runtime dependency: `@hookform/resolvers`をZod schemaとRHFを結ぶ`zodResolver`に使う。手書きの`safeParse` adapterはRHF errorとの同期を独自実装することになり、React Hook Formのresolver contractを重複させるため採用しない。
-   - 不採用: Playwrightの追加利用はE2Eの境界を広げるため、React Hook Testing Library単体は`@testing-library/react`の`renderHook`へ統合済みのため、手製JSDOM + `node:test`はTSX変換・DOM cleanup・hook lifecycleをプロジェクト固有に持ち込むため採用しない。
+   - 不採用: Playwrightの追加利用はE2Eの境界を広げるため、React Hook Testing Library単体は`@testing-library/react`の`renderHook`へ統合済みのため、手製JSDOM + `node:test`はTSX変換・DOM cleanup・hook lifecycleをプロジェクト固有に持ち込むため採用しない。Vitest 4のOXC変換ではAstroのTypeScript設定だけでTSXを変換できないため、Astro配下のtransitive packageには依存せず`@vitejs/plugin-react`を明示dependencyにする。
    - `tests/components/character-sheet/ProfileSection.test.tsx`を追加し、props表示、設定の局所開閉、FormulaTooltipのtrigger / dismiss、callback通知だけを確認する。計算式・RHF・Zodを置かない。
    - `tests/hooks/character-sheet/useCharacterSheetFormPresenterProps.test.tsx`を追加し、RHF formとZod resolverを使ったcredit入力境界、ViewModelへの派生値接続、`setValue`後の表示用propsを確認する。Presenter DOMやbrowser viewportは置かない。
 4. packageごとの理由・代替案・初期スコープに必要な理由は上記のとおり記録済みである。レビュー対応の承認後に依存を追加し、既存のNode test、Component / hook test、最小E2Eを別scriptで実行できるようにする。
 
 ### 対応完了チェックリスト
 
-- [ ] E2Eを領域表示と2〜3個の代表browser behaviorへ縮小する
-- [ ] character sheet form用Zod schemaとNodeの境界値testを追加する
-- [ ] 確定したComponent / hook test toolingを追加し、PresenterとRHF adapter hookのtestを追加する
+- [x] E2Eを領域表示と2〜3個の代表browser behaviorへ縮小する
+- [x] character sheet form用Zod schemaとNodeの境界値testを追加する
+- [x] 確定したComponent / hook test toolingを追加し、PresenterとRHF adapter hookのtestを追加する
 - [x] dependency追加理由・代替案・初期スコープ上の必要性をこのissueへ記録する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## 初期スコープ外
 
@@ -94,7 +94,7 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - アイテム選択、消費信用の集計、信用超過エラー表示を実装しない（G17以降およびG25）。G4では消費信用を`0`の読み取り専用値として扱う。
 - ブラウザ内保存・復元、JSON import/export、schema version、全消去、CCFOLIA出力を実装しない。
 - 認証、サーバー・DB・クラウド保存、共有URL、PDF出力、作成ウィザード、ルールエンジンを実装しない。
-- React Component / Hook専用test runner、状態管理ライブラリ、その他の新規依存を追加しない。
+- 状態管理ライブラリ、その他の新規依存を追加しない。
 - canonical VRT baselineを更新しない。更新が必要な場合は別途ユーザー承認を得る。
 
 ## 完了条件
@@ -107,9 +107,9 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - [x] 信用を、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭の順に表示する。信用の4入力が空欄になる操作では`0`へ戻り、合計信用と小銭をその値で表示する。数値入力を右揃えで表示する。
 - [x] G4時点の消費信用は`0`と表示し、アイテム由来の集計や信用超過エラーを先行実装していない。
 - [x] 合計信用、消費信用、小銭の計算式を、子要素のhover / focus / tapで開くTooltipから確認でき、タップ端末ではコンポーネント外タップとEscで閉じられる。
-- [ ] Node testとPlaywrightで、取得信用の初期値`10`、信用の`0`以上制約、空欄操作後の`0`、小銭修正の負数、合計信用と小銭の派生表示、数値入力の右揃え、設定の改行・開閉、label / keyboard操作を確認している。
+- [x] Node schema / logic test、Component / hook test、最小Playwright smokeで、信用の入力境界、派生式、設定の局所開閉、代表的な自由入力・数値入力を責務境界ごとに確認している。
 - [ ] design targetとVRT baselineの扱いを記録し、PRレビュー直前にG4で確定したtargetだけをVisual Reviewする。
-- [x] 不要な依存を追加せず、`npm run check` と `npm run build` が通る。
+- [x] 必要な依存だけを追加し、`npm run check` と `npm run build` が通る。
 
 ## チェックポイント
 
@@ -129,9 +129,14 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - `src/character-sheet/components/CharacterSheetFormPresenter.module.css`
 - `src/character-sheet/components/`配下のprofile用ComponentとCSS Module
 - `src/character-sheet/`配下のG4で必要なform value型・純粋な信用算出logic
-- `tests/node/character-sheet/`配下のG4の入力値・信用算出test
+- `src/character-sheet/schemas/character-sheet-form.ts`
+- `tests/node/character-sheet/`配下のG4のschema・信用算出test
+- `tests/components/character-sheet/ProfileSection.test.tsx`
+- `tests/hooks/character-sheet/useCharacterSheetFormPresenterProps.test.tsx`
 - `tests/visual/character-sheet.spec.ts`
 - `tests/visual/vrt/character-sheet.spec.ts`（G4のVRT targetを確定する場合のみ）
+- `vitest.config.ts`
+- `package.json`
 
 ## レビュー観点
 

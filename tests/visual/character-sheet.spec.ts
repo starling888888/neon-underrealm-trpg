@@ -172,28 +172,26 @@ test.describe("character sheet page", () => {
     await expect(checksToggle).toHaveAttribute("aria-expanded", "true");
     await expect(bondsContent).toBeVisible();
 
-    await bondsToggle.focus();
-    await page.keyboard.press("Enter");
+    await bondsToggle.click();
 
-    await expect(bondsToggle).toBeFocused();
     await expect(bondsToggle).toHaveAttribute("aria-expanded", "false");
     await expect(bondsContent).toBeHidden();
     await expect(checksToggle).toHaveAttribute("aria-expanded", "true");
 
-    await page.keyboard.press("Space");
+    await bondsToggle.click();
 
-    await expect(bondsToggle).toBeFocused();
     await expect(bondsToggle).toHaveAttribute("aria-expanded", "true");
     await expect(bondsContent).toBeVisible();
   });
 
-  test("edits profile fields and toggles the multiline setting", async ({
+  test("edits representative profile and numeric fields and toggles setting", async ({
     page,
   }) => {
     await page.setViewportSize(visualViewports.desktop);
     await page.goto("character-sheet/");
 
     const pcName = page.getByLabel("PC名", { exact: true });
+    const acquiredCredit = page.getByLabel("取得信用", { exact: true });
     const settingToggle = page.getByRole("button", {
       name: "設定",
       exact: true,
@@ -202,52 +200,16 @@ test.describe("character sheet page", () => {
     await pcName.focus();
     await page.keyboard.type("ネオン");
     await expect(pcName).toHaveValue("ネオン");
+    await acquiredCredit.fill("12");
+    await expect(acquiredCredit).toHaveValue("12");
     await expect(settingToggle).toHaveAttribute("aria-expanded", "false");
     await expect(page.getByLabel("設定", { exact: true })).toBeHidden();
 
-    await settingToggle.focus();
-    await page.keyboard.press("Enter");
+    await settingToggle.click();
 
     const setting = page.getByLabel("設定", { exact: true });
-    await expect(settingToggle).toBeFocused();
     await expect(settingToggle).toHaveAttribute("aria-expanded", "true");
     await setting.fill("ネオンの街\n雨の夜");
     await expect(setting).toHaveValue("ネオンの街\n雨の夜");
-  });
-
-  test("normalizes editable credit and presents derived values", async ({
-    page,
-  }) => {
-    await page.setViewportSize(visualViewports.desktop);
-    await page.goto("character-sheet/");
-
-    const acquiredCredit = page.getByLabel("取得信用", { exact: true });
-    const providedCredit = page.getByLabel("融通した", { exact: true });
-    const receivedCredit = page.getByLabel("融通された", { exact: true });
-    const changeAdjustment = page.getByLabel("小銭修正", { exact: true });
-
-    await expect(acquiredCredit).toHaveValue("10");
-    await expect(page.locator("#character-sheet-合計信用")).toHaveValue("10");
-    await expect(page.locator("#character-sheet-消費信用")).toHaveValue("0");
-    await expect(page.locator("#character-sheet-小銭")).toHaveValue("10");
-    await expect(acquiredCredit).toHaveCSS("text-align", "right");
-    await expect(page.locator("#character-sheet-合計信用")).toHaveAttribute(
-      "readonly",
-      "",
-    );
-
-    await acquiredCredit.fill("");
-    await providedCredit.fill("-3");
-    await receivedCredit.fill("4");
-    await changeAdjustment.focus();
-    await changeAdjustment.press("ControlOrMeta+A");
-    await changeAdjustment.pressSequentially("-2");
-    await changeAdjustment.blur();
-
-    await expect(acquiredCredit).toHaveValue("0");
-    await expect(providedCredit).toHaveValue("0");
-    await expect(changeAdjustment).toHaveValue("-2");
-    await expect(page.locator("#character-sheet-合計信用")).toHaveValue("4");
-    await expect(page.locator("#character-sheet-小銭")).toHaveValue("2");
   });
 });

@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
@@ -6,6 +7,7 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "./form-values";
+import { characterSheetFormSchema } from "./schemas/character-sheet-form";
 
 /**
  * React Island root and orchestration boundary for the character sheet.
@@ -17,6 +19,8 @@ import {
 export default function CharacterSheetContainer() {
   const form = useForm<CharacterSheetFormValues>({
     defaultValues: characterSheetDefaultValues,
+    mode: "onChange",
+    resolver: zodResolver(characterSheetFormSchema),
   });
   const presenterProps = useCharacterSheetFormPresenterProps(form);
 

@@ -89,6 +89,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Configured Vitest without the React TSX transform
+
+#### 2026-07-25
+
+- source: validation
+- 発生箇所: `ex-02-4-sheet-profile`の`tests/components/character-sheet/ProfileSection.test.tsx`
+- 観測した失敗: Vitest 4へAstroの既存TypeScript設定だけを渡し、TSXを変換できなかった。`esbuild.jsx`を後から設定してもVitest 4のOXC変換に無視され、同じ`Unexpected JSX expression`で再失敗した。
+- 一次対応: React Vite pluginを明示dependencyとして追加し、Vitest configから接続する。Component / hook testを実行してから設定を確定する。
+
+### Used keyboard event injection for button activation in E2E
+
+#### 2026-07-25
+
+- source: validation
+- 発生箇所: `ex-02-4-sheet-profile`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: focused buttonへの`page.keyboard.press()`で開閉を確認しており、実行環境でbutton clickへ結び付かず、2件のE2Eがtimeoutした。G4 E2Eの最終smokeに不要なkeyboard操作の詳細を持ち込んでいた。
+- 一次対応: E2Eはbutton clickによる代表操作だけに縮小し、キーボードと局所stateの詳細はComponent testの責務へ戻した。
+
 ### Expanded G4 E2E beyond its smoke-test boundary and ignored the test-free instruction
 
 #### 2026-07-25
