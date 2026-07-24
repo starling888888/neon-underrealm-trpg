@@ -1,3 +1,20 @@
 .form {
   margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+}
+
+.primaryColumn,
+.secondaryColumn {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: var(--space-8);
+}
+
+@media (width >= 80rem) {
+  .form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 }

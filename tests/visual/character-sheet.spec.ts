@@ -1,5 +1,17 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import { visualBaseUrl, visualViewports } from "./config";
+
+const layoutSelector = "[data-character-sheet-layout]";
+
+async function expectLayoutColumnCount(page: Page, count: number) {
+  const gridTemplateColumns = await page
+    .locator(layoutSelector)
+    .evaluate((element) =>
+      getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/),
+    );
+
+  expect(gridTemplateColumns).toHaveLength(count);
+}
 
 test.describe("character sheet page", () => {
   test("uses a header menu on desktop and a persistent menu on tablet", async ({
@@ -77,5 +89,36 @@ test.describe("character sheet page", () => {
       "data-pagefind-ignore",
       "",
     );
+  });
+
+  test("uses two editing columns only from the desktop breakpoint", async ({
+    page,
+  }) => {
+    await page.goto("character-sheet/");
+
+    await expect(
+      page.locator('[data-character-sheet-layout-region="primary"]'),
+    ).toHaveCount(1);
+    await expect(
+      page.locator('[data-character-sheet-layout-region="secondary"]'),
+    ).toHaveCount(1);
+    await expect(
+      page.locator("[data-character-sheet-section-slot]"),
+    ).toHaveCount(8);
+
+    await page.setViewportSize(visualViewports.desktop);
+    await expectLayoutColumnCount(page, 2);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expectLayoutColumnCount(page, 2);
+
+    await page.setViewportSize({ width: 1279, height: 900 });
+    await expectLayoutColumnCount(page, 1);
+
+    await page.setViewportSize(visualViewports.tablet);
+    await expectLayoutColumnCount(page, 1);
+
+    await page.setViewportSize(visualViewports.mobile);
+    await expectLayoutColumnCount(page, 1);
   });
 });

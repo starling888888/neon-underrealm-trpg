@@ -56,27 +56,27 @@ G0で `/character-sheet/` の静的ページ、G1でReact IslandとRHFの実行�
 
 ## 完了条件
 
-- [ ] React Islandの編集領域に、後続section用の左右layout regionがある。
-- [ ] desktop（`80rem`以上）で、編集領域が`minmax(0, 1fr)`を使う等分2列になる。
-- [ ] tablet（`48rem`以上かつ`80rem`未満）とmobile（`48rem`未満）で、編集領域が一列になる。
-- [ ] DOM順とtablet/mobileの表示順が、基本情報、ビルド・能力値、副能力値、縁、判定、武器・防具、スキル、専用アイテムの順を受け入れられる構造である。
-- [ ] 画像入力の配置を追加・固定せず、G6が独立して決められる余地を残している。
-- [ ] 既存Playwright browser testでdesktop / tablet / mobileの列数を確認できる。
-- [ ] 既存Playwright browser testで、`1279px`では一列、`1280px`では2列となる`80rem`境界を確認できる。
-- [ ] componentまたはhook用test libraryを導入しない。必要性が判明した場合は、導入前に具体的候補・理由・代替案をissueへ追記し、ユーザーの再承認を得る。
-- [ ] 参照するdesign targetとVRT baselineの扱いを記録している。
-- [ ] `npm run check` と `npm run build` が通る。
+- [x] React Islandの編集領域に、後続section用の左右layout regionがある。
+- [x] desktop（`80rem`以上）で、編集領域が`minmax(0, 1fr)`を使う等分2列になる。
+- [x] tablet（`48rem`以上かつ`80rem`未満）とmobile（`48rem`未満）で、編集領域が一列になる。
+- [x] DOM順とtablet/mobileの表示順が、基本情報、ビルド・能力値、副能力値、縁、判定、武器・防具、スキル、専用アイテムの順を受け入れられる構造である。
+- [x] 画像入力の配置を追加・固定せず、G6が独立して決められる余地を残している。
+- [x] 既存Playwright browser testでdesktop / tablet / mobileの列数を確認できる。
+- [x] 既存Playwright browser testで、`1279px`では一列、`1280px`では2列となる`80rem`境界を確認できる。
+- [x] componentまたはhook用test libraryを導入しない。必要性が判明した場合は、導入前に具体的候補・理由・代替案をissueへ追記し、ユーザーの再承認を得る。
+- [x] 参照するdesign targetとVRT baselineの扱いを記録している。
+- [x] `npm run check` と `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、既存のHeader、Footer、ページ固有のサイトメニューが壊れていない。
-- [ ] GitHub Pagesのサブパス公開と静的ホスティングに影響しない。
-- [ ] Island以外をSPA化せず、不要な依存関係を追加していない。
-- [ ] Pagefind検索index対象外を維持している。
-- [ ] section、入力、画像、操作、保存、出力を後続Gateから前倒ししていない。
-- [ ] `docs/TODO.md`の永続スキル参照ID変更検出は、永続保存を扱う将来taskのままとし、このGateでは扱っていない。
-- [ ] design targetのdesktop / tablet / mobile viewportとVRT扱いに矛盾していない。
-- [ ] ユーザーの未追跡`canonical-snapshots/visual/character-sheet/`を変更していない。
+- [x] 既存ルート、既存のHeader、Footer、ページ固有のサイトメニューが壊れていない。
+- [x] GitHub Pagesのサブパス公開と静的ホスティングに影響しない。
+- [x] Island以外をSPA化せず、不要な依存関係を追加していない。
+- [x] Pagefind検索index対象外を維持している。
+- [x] section、入力、画像、操作、保存、出力を後続Gateから前倒ししていない。
+- [x] `docs/TODO.md`の永続スキル参照ID変更検出は、永続保存を扱う将来taskのままとし、このGateでは扱っていない。
+- [x] design targetのdesktop / tablet / mobile viewportとVRT扱いに矛盾していない。
+- [x] ユーザーの未追跡`canonical-snapshots/visual/character-sheet/`を変更していない。
 
 ## 想定変更ファイル
 
@@ -91,7 +91,7 @@ G0で `/character-sheet/` の静的ページ、G1でReact IslandとRHFの実行�
 - desktopの左列から右列へ続くDOM順が、tablet/mobileで要件の縦積み順を保てるか。
 - 画像入力の配置をG2で固定せずG6へ残す境界が明確か。
 - staticなresponsive layout確認に既存Playwrightを使い、component/hook test libraryを現時点で導入しない判断が妥当か。
-- design targetの既存VRT baselineを更新せず、G31までの運用制約を守れているか。
+- design targetの既存VRT baselineを更新せず、G2の範囲に限定できているか。
 
 ## 備考
 
