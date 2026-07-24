@@ -52,7 +52,7 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
    - 対話用draftの作成手段、作業artifactの保存場所、Git管理対象、承認点、desktop/tablet/mobileの具体的viewport値をユーザーと決める。draft画像の作成は、ユーザーが明示的に指示した場合に限り、`design-image-generation`で`.tmp/design/character-sheet/`のHTML prototypeとlocal captureを使う。draftはGit管理・`docs/design/`・VRT baselineの正本にしない。
    - 対話で承認されたdesign intentを、`design-image-generation`の手順で`docs/design/character-sheet/notes.md`へ記録する。VRT target、viewport、状態、比較観点を記録する。実装後のcanonical visual baselineはPlaywright VRT snapshotだけとする。
 3. アーキテクチャと依存ライブラリの決定
-   - 承認済み機能要件とデザインを入力に、Astroとの接続、React Islandの範囲、状態・副作用・純粋ロジック・表示の分離、保存方式、データ参照、依存ライブラリを決める。JSON入出力形式、CCFOLIA出力形式、実行時schemaの具体形、テスト範囲は対応する実装Gateの着手直前に決める。
+   - 承認済み機能要件とデザインを入力に、Astroとの接続、React Islandの範囲、状態・副作用・純粋ロジック・表示の分離、保存方式、データ参照、テスト責務、依存ライブラリを決める。JSON入出力形式、CCFOLIA出力形式、実行時schemaの具体形と、追加test toolingの選定は対応する実装Gateの着手直前に決める。
    - `docs/architectures/character-sheet.md`を新設する案を第一候補とし、サイト全体の`docs/requirements/architecture.md`とは重複させず、キャラクターシート固有の決定と根拠を記録する。
    - 依存ライブラリは必要性、代替案、静的公開・容量・保守性への影響を比較してから決める。新規追加は承認済み要件・アーキテクチャに根拠を記録する。
 4. 実装ゲートの列挙

@@ -8,7 +8,7 @@
 
 - このplanはGateの列挙と着手候補の範囲を管理する。表の1行だけでは実装を開始しない。
 - 各Gateは、着手時に現行の要件・アーキテクチャ・designなどの参照正本を読み、表に記載した子issueを作成してから実装する。子issueで完了境界、確認方法、実装判断、追加の参照正本を定義し、以後の実装中のSSoTとする。
-- Gate完了時は、子issueの確定事項をdesign notes、architecture、requirementsへそれぞれの正本として差し戻し、後続Gateに必要な前提だけをこのplanへ記録する。その後、完了条件、チェックポイント、レビュー記録を子issueから除き、`docs/issue/done/`へ移す。
+- Gate完了時は、子issueの確定事項をdesign notes、architecture、requirementsへそれぞれの正本として差し戻し、後続Gateに必要な前提だけをこのplanへ記録する。完了条件、チェックポイント、レビュー記録は子issueに保持し、親planやほかの正本へ差し戻さない。その後、子issueを`docs/issue/done/`へ移す。
 - 共通スキルボーナスは表示用データを参照するだけとし、構造化、文字列解析、自動算出を追加しない。
 - 全Gateの参照正本は親issueと同じ`docs/requirements/character-sheet.md`、`docs/architectures/character-sheet.md`、`docs/design/character-sheet/notes.md`とする。必要なゲームデータは、子issueで追加して指定する。
 - ユーザー指示により、最終GateであるG31のレビュー完了まで、character-sheet用VRTの追加・更新（test spec、canonical snapshot、比較artifact）をコミットしない。VRTのローカル実行とcanonical baselineのローカル作成・更新は、ユーザーの明示承認時だけ行う。
@@ -18,7 +18,7 @@
 | Gate | 状態    | 依存Gate                                                                                                                                        | 子issue                                                                  | 範囲                                                                                 |
 | ---- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
 | G0   | done    | なし                                                                                                                                            | `docs/issue/done/ex-02-web-character-sheet/ex-02-0-sheet-page-header.md` | Astro pageとページ固有のサイトメニュー表示を作成する。HeaderとFooterは再設計しない。 |
-| G1   | planned | G0                                                                                                                                              | `docs/issue/ex-02-1-sheet-runtime.md`                                    | React Islandなどの実行基盤を整備する。                                               |
+| G1   | done    | G0                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-1-sheet-runtime.md`     | React Islandなどの実行基盤を整備する。                                               |
 | G2   | planned | G0, G1                                                                                                                                          | `docs/issue/ex-02-2-sheet-layout.md`                                     | desktop、tablet、mobileの基本レイアウトを作成する。                                  |
 | G3   | planned | G2                                                                                                                                              | `docs/issue/ex-02-3-sheet-section-frame.md`                              | 編集セクションの共通枠と開閉操作を作成する。                                         |
 | G4   | planned | G1, G2, G3                                                                                                                                      | `docs/issue/ex-02-4-sheet-profile.md`                                    | 基本情報、キャラクター設定、信用を扱う。                                             |
