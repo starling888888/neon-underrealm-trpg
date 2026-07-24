@@ -42,15 +42,15 @@ export default function useCharacterSheetFormPresenterProps({
       credit,
       creditSummary,
       onCreditBlur: (field, value) => {
-        setValue(`credit.${field}`, normalizeCreditInput(field, value), {
+        const normalizedValue = normalizeCreditInput(field, value);
+
+        setValue(`credit.${field}`, normalizedValue, {
           shouldValidate: true,
         });
-      },
-      onCreditChange: (field, value, isInvalidNumber) => {
-        if (isInvalidNumber) {
-          return;
-        }
 
+        return normalizedValue;
+      },
+      onCreditChange: (field, value) => {
         setValue(`credit.${field}`, normalizeCreditInput(field, value), {
           shouldValidate: true,
         });

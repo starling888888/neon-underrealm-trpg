@@ -87,6 +87,32 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 2
+
+### 指摘事項
+
+- `CreditField`がfocus中の親`value`更新をすべて無視するため、後続Gateのreset・復元がfocus中に発生した場合、blur時に古いDOM値で上書きする可能性がある。
+
+### 判定
+
+- source: local-agent / cross-cutting technical review
+- classification: valid
+- local validation: `ProfileSection`は`useEffect`で`isFocused`中のすべての`value`同期を抑止し、blur callbackでDOM値をRHFへ再投入する。現G4にはreset・復元がないが、入力途中の`-`を保つための局所状態としては同期対象を先取りしすぎている。
+
+### 対応方針
+
+- `CreditField`の`useEffect`、`useRef`、`isFocused`を削除する。`type="number"`はuncontrolledのまま維持し、onChangeでは`badInput`の`-`途中状態をRHFへ送らず、それ以外の値をRHFへ通知する。
+- `onCreditBlur`はZodで正規化してRHFへ保存した`number`を返す。`CreditField`はblur時にその返り値を自身のDOM valueへ設定し、空欄を`0`、通常信用の負数を`0`、小銭修正の負数を整数として確定表示する。
+- 親からのreset・復元値をuncontrolled inputへ同期する要件はG4で先行実装しない。該当Gateでreset / restoreの明示的なinput同期契約を追加する。
+- Tooltipのfocus表示はユーザー指示によりG4対象外であり、本review sectionでは対応しない。
+
+### 対応完了チェックリスト
+
+- [x] CreditFieldのfocus依存同期を削除し、blur確定へ置き換える
+- [x] Component testで`-1`の途中入力、空欄の`0`確定、blur後の表示値を確認する
+- [x] `npm run test:component` が通る
+- [x] `npm run check` が通る
+
 ## 初期スコープ外
 
 - キャラクター画像の選択・変換・保存・失敗dialogを実装しない（G6）。
@@ -106,7 +132,7 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - [x] 取得信用、融通した信用、融通された信用は`0`以上の整数だけを受け付け、小銭修正は負数を許可する整数として編集できる。
 - [x] 信用を、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭の順に表示する。信用の4入力が空欄になる操作では`0`へ戻り、合計信用と小銭をその値で表示する。数値入力を右揃えで表示する。
 - [x] G4時点の消費信用は`0`と表示し、アイテム由来の集計や信用超過エラーを先行実装していない。
-- [x] 合計信用、消費信用、小銭の計算式を、子要素のhover / focus / tapで開くTooltipから確認でき、タップ端末ではコンポーネント外タップとEscで閉じられる。
+- [x] 合計信用、消費信用、小銭の計算式を、子要素のhover / tapで開くTooltipから確認でき、タップ端末ではコンポーネント外タップとEscで閉じられる。
 - [x] Node schema / logic test、Component / hook test、最小Playwright smokeで、信用の入力境界、派生式、設定の局所開閉、代表的な自由入力・数値入力を責務境界ごとに確認している。
 - [ ] design targetとVRT baselineの扱いを記録し、PRレビュー直前にG4で確定したtargetだけをVisual Reviewする。
 - [x] 必要な依存だけを追加し、`npm run check` と `npm run build` が通る。

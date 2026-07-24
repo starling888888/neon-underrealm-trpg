@@ -29,10 +29,10 @@ describe("useCharacterSheetFormPresenterProps", () => {
     const { profileSection } = result.current.presenterProps;
 
     act(() => {
-      profileSection.onCreditChange("acquired", "15", false);
-      profileSection.onCreditChange("provided", "-3", false);
-      profileSection.onCreditChange("received", "4", false);
-      profileSection.onCreditChange("changeAdjustment", "-2", false);
+      profileSection.onCreditChange("acquired", "15");
+      profileSection.onCreditChange("provided", "-3");
+      profileSection.onCreditChange("received", "4");
+      profileSection.onCreditChange("changeAdjustment", "-2");
     });
 
     expect(result.current.form.getValues("credit")).toEqual({

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import type {
   CreditFieldName,
@@ -24,12 +24,8 @@ type CreditFieldProps = {
   allowNegative?: boolean;
   label: string;
   name: CreditFieldName;
-  onBlur: (field: CreditFieldName, value: string) => void;
-  onChange: (
-    field: CreditFieldName,
-    value: string,
-    isInvalidNumber: boolean,
-  ) => void;
+  onBlur: (field: CreditFieldName, value: string) => number;
+  onChange: (field: CreditFieldName, value: string) => void;
   value: number;
 };
 
@@ -42,12 +38,8 @@ type ReadOnlyCreditFieldProps = {
 export type ProfileSectionProps = {
   credit: CreditValues;
   creditSummary: CreditSummary;
-  onCreditBlur: (field: CreditFieldName, value: string) => void;
-  onCreditChange: (
-    field: CreditFieldName,
-    value: string,
-    isInvalidNumber: boolean,
-  ) => void;
+  onCreditBlur: (field: CreditFieldName, value: string) => number;
+  onCreditChange: (field: CreditFieldName, value: string) => void;
   onProfileChange: (field: ProfileFieldName, value: string) => void;
   profile: ProfileValues;
 };
@@ -80,14 +72,6 @@ function CreditField({
   value,
 }: CreditFieldProps) {
   const id = `character-sheet-credit-${name}`;
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
-
-  useEffect(() => {
-    if (!isFocused && inputRef.current !== null) {
-      inputRef.current.value = String(value);
-    }
-  }, [isFocused, value]);
 
   return (
     <div className={styles.field}>
@@ -100,18 +84,17 @@ function CreditField({
         id={id}
         min={allowNegative ? undefined : 0}
         onBlur={(event) => {
-          setIsFocused(false);
-          onBlur(name, event.target.value);
+          event.currentTarget.value = String(
+            onBlur(name, event.currentTarget.value),
+          );
         }}
         onChange={(event) => {
           if (event.target.validity.badInput) {
             return;
           }
 
-          onChange(name, event.target.value, false);
+          onChange(name, event.target.value);
         }}
-        onFocus={() => setIsFocused(true)}
-        ref={inputRef}
         step="1"
         type="number"
       />

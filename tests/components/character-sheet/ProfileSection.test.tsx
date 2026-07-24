@@ -13,7 +13,7 @@ function createProps(): ProfileSectionProps {
   return {
     credit: characterSheetDefaultValues.credit,
     creditSummary: { change: 10, totalCredit: 10 },
-    onCreditBlur: vi.fn(),
+    onCreditBlur: vi.fn((_, value: string) => Number(value)),
     onCreditChange: vi.fn(),
     onProfileChange: vi.fn(),
     profile: characterSheetDefaultValues.profile,
@@ -87,11 +87,7 @@ describe("ProfileSection", () => {
 
     await user.clear(changeAdjustment);
 
-    expect(props.onCreditChange).toHaveBeenCalledWith(
-      "changeAdjustment",
-      "",
-      false,
-    );
+    expect(props.onCreditChange).toHaveBeenCalledWith("changeAdjustment", "");
 
     await user.type(changeAdjustment, "-1");
 
@@ -99,11 +95,28 @@ describe("ProfileSection", () => {
     expect(props.onCreditChange).toHaveBeenLastCalledWith(
       "changeAdjustment",
       "-1",
-      false,
     );
 
     await user.tab();
 
     expect(props.onCreditBlur).toHaveBeenCalledWith("changeAdjustment", "-1");
+    expect((changeAdjustment as HTMLInputElement).value).toBe("-1");
+  });
+
+  it("commits an emptied credit field as zero on blur", async () => {
+    const user = userEvent.setup();
+    const props = createProps();
+
+    render(<ProfileSection {...props} />);
+
+    const acquiredCredit = screen.getByRole("spinbutton", {
+      name: "取得信用",
+    });
+
+    await user.clear(acquiredCredit);
+    await user.tab();
+
+    expect(props.onCreditBlur).toHaveBeenCalledWith("acquired", "");
+    expect((acquiredCredit as HTMLInputElement).value).toBe("0");
   });
 });
