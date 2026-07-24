@@ -89,6 +89,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Character-sheet Headerのbreakpoint表示条件を誤った
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-0-sheet-page-header`の`CharacterSheetHeader.astro`
+- 観測した失敗: desktop・mobileのサイトメニューボタンを追加する際、mobile専用検索操作もdesktop・tabletで表示するCSSにしてHeader gridの暗黙行を発生させ、内部要素が上へずれるデグレを作った。あわせて、Headerの大きなgrid gapでメニューボタンとタイトルロゴの間隔を広げすぎた。
+- 一次対応: mobile検索操作をmobile breakpointだけに限定し、Header gridの暗黙行を解消した。desktop・tabletのタイトルロゴを2.5remへ縮め、メニューボタンとの間隔を`--space-3`へ縮めた。
+
+### Character-sheetのサイトメニュー表示範囲を誤って拡大した
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-0-sheet-page-header`のcharacter-sheet専用layout
+- 観測した失敗: tabletのみで表示する指定だったサイトメニューを、desktopにも表示する実装・検証として扱った。
+- 一次対応: 専用layoutのmenu railをtabletのmedia query内だけで表示するようにし、desktop・tablet・mobileの表示条件をbrowser testとcaptureで確認した。
+
 ### Generated a requirements-driven design draft before updating the requirements source of truth
 
 #### 2026-07-24

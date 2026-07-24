@@ -55,7 +55,9 @@
 
 - このページにはPageToc / MobilePageTocを表示しない。
 - キャラクターシート固有のsection navigationは設けない。
-- character-sheetでは、既存ページのサイトメニュー表示をそのまま適用しない。tabletではサイトメニューを表示し、キャラクターシート領域はスキル以降のセクションを下へ移す配置とする。mobileではサイトメニューを表示しない。
+- character-sheetでは、既存ページのサイトメニュー表示をそのまま適用しない。tabletでは常設のサイトメニューrailを表示し、キャラクターシート領域はスキル以降のセクションを下へ移す配置とする。desktopとmobileでは、ロゴの左に置くHeaderのサイトメニューボタンからdrawerを開く。
+- desktopとtabletのHeaderは、タイトルロゴを高さ3remのままとし、メニューボタンとロゴの間を`--space-3`にする。mobileでは既存の小さいタイトルロゴと左右のHeader操作を維持する。
+- キャラクターシートのmain領域は、desktopとtabletで本文用の最大幅に制限した中央寄せにしない。利用可能な横幅を使い、main自身の左右paddingは均等にする。tabletでは15remのサイトメニューrailの右側の残り幅をmainに使う。
 - tabletとmobileの基本レイアウトでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
 
 ### 編集画面の情報architecture

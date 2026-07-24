@@ -35,15 +35,17 @@
 - `/character-sheet/`を公開routeとするAstroページを追加する。
 - ページtitleを「キャラクターシート」に設定する。
 - サイトナビゲーションへ「キャラクターシート」を追加し、「キャラクター成長」の下かつ「サポート」の上へ配置する。
-- `PageToc`と`MobilePageToc`を表示しない、キャラクターシート専用のページlayoutまたは既存layoutの最小限の拡張を追加する。
-- desktopとtabletではサイトメニューを表示し、mobileではサイトメニューを表示しないページ固有の表示条件を実装する。
+- `PageToc`と`MobilePageToc`を表示しない、キャラクターシート固有の静的構造を`src/pages/character-sheet.astro`へ直接追加する。
+- tabletでは常設のサイトメニューrailを表示し、desktopとmobileではロゴの左に置くHeaderのボタンからサイトメニューdrawerを開くページ固有の表示条件を実装する。
+- キャラクターシートのpage固有構造は`src/pages/character-sheet.astro`へ直接置き、desktopとtabletのmain領域を最大幅で中央寄せしない。
+- キャラクターシートをPagefind検索indexから除外する。
 - 後続GateでReact Islandを配置できる静的なmain領域を用意する。ただし、このGateでは入力UIを置かない。
 
 ## 初期スコープ外
 
 - React、React Island、form state、schema、マスタデータ参照、入力欄、派生値計算、検証を実装しない。
 - キャラクターシートのdesktop、tablet、mobileの編集画面layout、section navigation、floating操作、dialogを実装しない。
-- Header、Footer、検索、共通サイトメニューの意匠または挙動を再設計しない。
+- Header、Footer、検索、共通サイトメニューの意匠または挙動を、desktopとmobileのサイトメニューdrawer操作を除いて再設計しない。
 - PageToc、MobilePageToc、キャラクターシート固有のsection navigationを追加しない。
 - 保存・復元、画像、JSON入出力、CCFOLIA出力、認証、サーバー・DB・クラウド保存を実装しない。
 - 新しいnpm packageを追加しない。
@@ -54,7 +56,9 @@
 - [x] ページtitleが「キャラクターシート」である。
 - [x] サイトメニューに「キャラクターシート」が「キャラクター成長」と「サポート」の間で表示され、現在ページ状態を正しく示す。
 - [x] `PageToc`と`MobilePageToc`を表示しない。
-- [x] desktopおよびtabletではサイトメニューを表示し、mobileでは表示しない。
+- [x] tabletでは常設のサイトメニューrailを表示し、desktopとmobileではロゴの左に置くHeaderのボタンからサイトメニューdrawerを開く。
+- [x] `src/pages/character-sheet.astro`へpage固有構造を直接置き、desktopとtabletのmain領域を最大幅で中央寄せしていない。
+- [x] キャラクターシートがPagefind検索indexの対象外である。
 - [x] HeaderとFooterの既存意匠・挙動を変更していない。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -76,8 +80,7 @@
 - `src/pages/character-sheet.astro`
 - `src/lib/site/menu.ts`
 - `src/components/character-sheet/CharacterSheetHeader.astro`
-- `src/layouts/CharacterSheetAppContainer.astro`
-- `src/layouts/CharacterSheetPageLayout.astro`
+- `src/scripts/character-sheet-menu.ts`
 - `tests/visual/config.ts`
 - `tests/visual/character-sheet.spec.ts`
 - `tests/visual/vrt/character-sheet.spec.ts`
@@ -106,15 +109,17 @@
 
 ### レビュー結果
 
-| 対象    | 判定 | 差分 | 対応                                                     |
-| ------- | ---- | ---- | -------------------------------------------------------- |
-| desktop | OK   | なし | サイトメニュー、current状態、ToC非表示を確認した。       |
-| tablet  | OK   | なし | 常設サイトメニューとToC非表示を確認した。                |
-| mobile  | OK   | なし | サイトメニューの操作・drawerを表示しないことを確認した。 |
+| 対象    | 判定     | 差分         | 対応                                                        |
+| ------- | -------- | ------------ | ----------------------------------------------------------- |
+| desktop | 要再確認 | 表示条件変更 | Headerのボタンからサイトメニューdrawerを開く。              |
+| tablet  | OK       | なし         | 常設サイトメニュー、ToC非表示、残り幅を使うmainを確認した。 |
+| mobile  | 要再確認 | 表示条件変更 | Headerのボタンからサイトメニューdrawerを開く。              |
 
 ### 自己修正した項目
 
-- [x] mobile Headerのサイトメニュー操作とdrawerを、character-sheetページでは表示しないようにした。
+- [x] desktopとmobile Headerのサイトメニュー操作とdrawerを、character-sheetページで表示する。
+- [x] page固有のContainer／Layoutと単なるimport用Componentを廃止し、`src/pages/character-sheet.astro`へ直接置いた。desktopとtabletのmainから最大幅・中央寄せを外した。
+- [x] `data-pagefind-body`を置かず、`data-pagefind-ignore`を付与してPagefind検索indexから除外した。
 
 ### 人間判断が必要な差分
 
@@ -127,24 +132,24 @@
 - [x] 目視で確認した差分を修正した。
 - [x] baseline更新が必要な差分を人間判断として記録した。
 - [x] `npm run check` が通る。
-- [x] `npm run build` が通る。
+- [x] `npm run build` とPagefind index生成が通る。
 
 ## レビュー指摘 1
 
 ### 指摘事項
 
-- `/character-sheet/`のページ固有のresponsive契約（desktop・tabletの常設サイトメニュー、mobileのメニューボタン・drawer非表示、ToC非表示、現在ページの`aria-current`）を自動テストしていない。
+- `/character-sheet/`のページ固有のresponsive契約（tabletの常設サイトメニュー、desktop・mobileのHeaderサイトメニューdrawer、ToC非表示、現在ページの`aria-current`）を自動テストしていない。
 
 ### 判定
 
 - source: local-agent
 - classification: valid
-- local validation: `CharacterSheetAppContainer`・`CharacterSheetHeader`・`CharacterSheetPageLayout`、サイトメニュー定義、追加したbrowser behavior testを確認した。現在のG0実装は、共通`AppContainer`へキャラクターシート固有の分岐を追加せず、当該routeのresponsiveな表示条件をCIで検知する。
+- local validation: `src/pages/character-sheet.astro`・`CharacterSheetHeader`、サイトメニュー定義、追加したbrowser behavior testを確認した。現在のG0実装は、共通`AppContainer`へキャラクターシート固有の分岐を追加せず、当該routeのresponsiveな表示条件とPagefind除外をCIで検知する。
 
 ### 対応方針
 
 - canonical VRT baselineを作らず、`tests/visual/character-sheet.spec.ts`へ`/character-sheet/`を対象にしたbrowser behavior testを追加する。
-- desktop・tablet・mobileのサイトメニュー表示条件、ToC非表示、`aria-current`、subpath付きリンクを必要最小限で検証する。
+- desktop・tablet・mobileのサイトメニュー表示条件と開閉、ToC非表示、`aria-current`、subpath付きリンクを必要最小限で検証する。
 
 ### 対応完了チェックリスト
 
@@ -152,3 +157,31 @@
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 - [x] 必要なtarget testが通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 専用Headerにmobile scroll時の退避用CSSがなく、`setupMobileHeader()`が付与する`is-hidden`が画面上の非表示へ反映されない。
+- mobileのbrowser behavior testが、CSSで隠すサイトメニューrailの非表示を検証していない。
+
+### 判定
+
+- source: local-agent
+- classification: valid
+- local validation: `src/pages/character-sheet.astro`が`setupMobileHeader()`を実行し、`CharacterSheetHeader`が`data-site-header`を持つことを確認した。専用Headerには`is-hidden`に対するtransformがない。mobile testにはメニューボタンとdrawerの不在確認だけがあり、`.character-sheet-menu-rail`の非表示確認がない。
+
+### 対応方針
+
+- 専用Headerへ共通Headerと同じscroll退避のtransform／transitionを追加する。
+- mobile testへ`.character-sheet-menu-rail`の非表示確認を追加する。
+
+ユーザー指示により、個別のscroll挙動testは追加しない。既存のページ固有responsive契約testを維持し、退避CSSは実装と通常の静的検証で確認する。
+
+### 対応完了チェックリスト
+
+- [x] mobile scroll時のHeader退避と復帰を実装・静的確認する。
+- [x] mobileのサイトメニューrail非表示を検証する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+- [ ] 必要なtarget testが通る。
