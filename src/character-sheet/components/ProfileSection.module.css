@@ -1,0 +1,125 @@
+.section {
+  min-width: 0;
+}
+
+.section h2,
+.credit h3 {
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.section h2 {
+  font-size: var(--text-base);
+}
+
+.credit h3 {
+  font-size: var(--text-sm);
+}
+
+.profileGrid,
+.creditGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.field {
+  min-width: 0;
+}
+
+.label {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+}
+
+.textInput,
+.numberInput,
+.settingInput {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.25rem;
+  margin-top: var(--space-1);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: var(--space-2);
+  line-height: var(--line-height-tight);
+}
+
+.numberInput {
+  max-width: 8rem;
+  text-align: right;
+}
+
+.numberInput[readonly] {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.setting {
+  margin-top: var(--space-3);
+}
+
+.settingToggle {
+  display: flex;
+  min-height: var(--sheet-section-toggle-height, 2.25rem);
+  align-items: center;
+  gap: var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 800;
+  padding: var(--space-2) 0;
+}
+
+.chevron {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 0.125rem solid var(--color-link);
+  border-bottom: 0.125rem solid var(--color-link);
+  transform: rotate(45deg) translateY(-0.125rem);
+  transition: transform 120ms ease-out;
+}
+
+.settingToggle[aria-expanded="false"] .chevron {
+  transform: rotate(-45deg) translate(-0.125rem, 0.125rem);
+}
+
+.settingInput {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.credit {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.formula {
+  display: block;
+  margin-top: 0.125rem;
+  color: var(--color-text-muted);
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+@media (width < 48rem) {
+  .profileGrid,
+  .creditGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .numberInput {
+    max-width: none;
+  }
+}

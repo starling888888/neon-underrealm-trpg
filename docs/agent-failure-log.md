@@ -89,6 +89,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Did not keep the requested implementation in the background
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の実装開始後の進行報告
+- 観測した失敗: ユーザーがデザイン修正と並行して会話を続けられるよう、実装・Techレビュー・preview起動をバックグラウンドで進めるよう依頼していたが、agentは作業の完了を待つ形で会話を阻害した。ユーザーから、バックグラウンド実行の意味を理解しているかと指摘を受けた。
+- 一次対応: 実装をworkerへ移し、以後のレビュー・preview起動・検証を独立して進め、結果だけを前景へ報告した。
+
+### Repeated an E2E invocation while the preview server occupied its port
+
+#### 2026-07-24
+
+- source: self
+- 発生箇所: `ex-02-4-sheet-profile`のPlaywright最終確認
+- 観測した失敗: `playwright.e2e.config.ts`が`reuseExistingServer: false`で自身のpreview serverを起動する契約を確認せず、すでに4321でpreviewを起動した状態で同じE2Eを実行した。workerの同種失敗に続き、port使用中でE2Eが開始できない失敗を繰り返した。
+- 一次対応: Techレビュー完了後に自分で起動したpreviewだけを停止し、`npm run build`後にE2E configへserver起動を任せて再実行した。以後、Playwright configの`webServer`と既存previewの共存可否を確認してから実行する。
+
 ### Used a custom Playwright capture instead of the visual capture workflow
 
 #### 2026-07-24

@@ -1,6 +1,10 @@
 import { FormProvider, useForm } from "react-hook-form";
 
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+} from "./form-values";
 
 /**
  * React Island root and orchestration boundary for the character sheet.
@@ -10,7 +14,9 @@ import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresente
  * siblings of that presenter in later Gates.
  */
 export default function CharacterSheetContainer() {
-  const form = useForm();
+  const form = useForm<CharacterSheetFormValues>({
+    defaultValues: characterSheetDefaultValues,
+  });
 
   return (
     <FormProvider {...form}>

@@ -1,5 +1,6 @@
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
+import ProfileSection from "./ProfileSection";
 
 /**
  * Presentational form shell for the character sheet.
@@ -14,7 +15,9 @@ export default function CharacterSheetFormPresenter() {
         className={styles.primaryColumn}
         data-character-sheet-layout-region="primary"
       >
-        <div data-character-sheet-section-slot="profile" />
+        <div data-character-sheet-section-slot="profile">
+          <ProfileSection />
+        </div>
         <div data-character-sheet-section-slot="build" />
         <div data-character-sheet-section-slot="secondary" />
         <CharacterSheetSectionFrame headingAs="h2" id="bonds" title="縁">
