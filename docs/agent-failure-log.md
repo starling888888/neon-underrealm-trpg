@@ -525,3 +525,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-03-hero-layout-stability` のissueレビュー
 - 観測した失敗: hero画像の寸法を固定する案を提示する前に、全hero素材の実寸一覧を確認・報告しなかった。そのため、アイテムheroの統一後に流儀hero 3枚が`1671x941`のまま残ることを後から伝え、ユーザーに画像サイズの差異を先に報告すべきだったと指摘された。
 - 一次対応: 通常heroを`1672x941`へ統一することをissueの入力契約に明記した。以後、画像寸法・データ形式・asset配置を設計判断の根拠に使う前に、対象全件を一覧化し、差異を先に報告する。
+
+### Repeated Playwright Chromium sandbox launch failure
+
+#### 2026-07-24
+
+- source: agent self-report
+- 発生箇所: `ex-02-web-character-sheet` の全VRT実行とdesktop/tablet baseline更新
+- 観測した失敗: `npm run visual:test`、`npm run visual:update`、targetを分割した`npx playwright test`で、Chromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動に失敗した。同一作業で複数回再現し、更新後のVRT比較を完了できなかった。
+- 一次対応: baseline更新と比較を区別して記録し、Chromiumが起動できた時点で書き込まれたdesktop/tablet snapshotは未コミットのまま保持した。以後、このsandbox条件ではPlaywrightの成功を前提にせず、実行可否と未検証範囲を明示して報告する。

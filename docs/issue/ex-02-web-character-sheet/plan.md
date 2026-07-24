@@ -11,6 +11,7 @@
 - Gate完了後は、後続Gateに必要な確定事項と詳細要件だけをこのplanへ差し戻し、子issueをdoneへ移す。
 - 共通スキルボーナスは表示用データを参照するだけとし、構造化、文字列解析、自動算出を追加しない。
 - 全Gateの参照正本は親issueと同じ`docs/requirements/character-sheet.md`、`docs/architectures/character-sheet.md`、`docs/design/character-sheet/notes.md`とする。必要なゲームデータは、子issueで追加して指定する。
+- ユーザー指示により、最終GateであるG31のレビュー完了まで、character-sheet用VRTの追加・更新（test spec、canonical snapshot、比較artifact）をコミットしない。VRTは必要時にローカル実行だけとし、canonical baselineの作成・更新も行わない。
 
 ## Gate一覧
 

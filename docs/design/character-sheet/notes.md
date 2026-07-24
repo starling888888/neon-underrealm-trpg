@@ -13,8 +13,9 @@
   - tablet: `820x1180`
   - mobile: `390x900`
 - desktop、tablet、mobileを初期scopeに含める。各viewportの具体的なlayoutとVRT状態は、対応するGateで定める。
-- 現在のVRT対象: なし。character-sheet用のルート、テスト、カノニカルスナップショットはいずれも未作成。
-- 実装時の対応: 承認済みの操作デザインを決定した後、専用の`tests/visual/vrt/character-sheet.spec.ts`対象を追加し、`@vrt @character-sheet`タグを使う。シナリオ名とスナップショットpathは実装Gateで決め、事前の仮置きbaselineは作成しない。
+- 現在のVRT対象: `tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`。routeは`/character-sheet/`、stateはdefaultである。
+- ユーザー承認により、desktopとtabletのcanonical snapshotをローカル更新した。mobile snapshotは作成・更新していない。
+- 親issueの最終Gate G31のレビュー完了まで、character-sheet用VRTのtest spec、canonical snapshot、比較artifactはコミットしない。
 - 承認済みドラフトから決定する将来のVRT状態:
   - 必須の初期値を持つ直接編集の初期状態
   - 可変のスキル、縁、アイテム行を含む入力済み状態
@@ -22,7 +23,7 @@
   - JSON importと全消去の破壊的操作に対する確認状態
   - CCFOLIAコピー成功の通知ダイアログ状態
   - 画像選択の失敗ダイアログ状態
-- このノートではカノニカルbaselineを作成・更新しない。
+- canonical baselineの更新は、以後もユーザーの明示承認を必要とする。
 
 ## 確定したデザイン要件
 

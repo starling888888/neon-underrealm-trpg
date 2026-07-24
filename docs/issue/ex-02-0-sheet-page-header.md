@@ -104,16 +104,16 @@
 ### VRT対象
 
 - design target: `docs/design/character-sheet/notes.md`
-- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` の `@vrt @character-sheet`。canonical baselineは未作成のため、比較・更新は行わない。
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` の `@vrt @character-sheet`。ユーザー承認によりdesktopとtabletのcanonical baselineをローカル更新した。mobile baselineは未作成である。
 - route / states / viewports: `/character-sheet/` のdefault状態。desktop `1440x1200`、tablet `820x1180`、mobile `390x900`。
 
 ### レビュー結果
 
-| 対象    | 判定     | 差分         | 対応                                                        |
-| ------- | -------- | ------------ | ----------------------------------------------------------- |
-| desktop | 要再確認 | 表示条件変更 | Headerのボタンからサイトメニューdrawerを開く。              |
-| tablet  | OK       | なし         | 常設サイトメニュー、ToC非表示、残り幅を使うmainを確認した。 |
-| mobile  | 要再確認 | 表示条件変更 | Headerのボタンからサイトメニューdrawerを開く。              |
+| 対象    | 判定     | 差分         | 対応                                                 |
+| ------- | -------- | ------------ | ---------------------------------------------------- |
+| desktop | 要再確認 | baseline更新 | 更新後の比較はChromium sandbox起動失敗により未実施。 |
+| tablet  | 要再確認 | baseline更新 | 更新後の比較はChromium sandbox起動失敗により未実施。 |
+| mobile  | 要再確認 | 未更新       | Headerのボタンからサイトメニューdrawerを開く。       |
 
 ### 自己修正した項目
 
@@ -123,7 +123,15 @@
 
 ### 人間判断が必要な差分
 
-- character-sheet用のcanonical VRT baselineは未作成である。baselineの初回作成はユーザー指示が必要である。
+- character-sheet用desktop/tablet canonical baselineはローカル更新済みだが、親issueの最終Gate G31のレビュー完了までコミットしない。mobile baselineは未作成である。
+
+### 全VRT実行結果（ユーザー指示）
+
+- 実行コマンド: `npm run visual:test -- --max-failures=0 --reporter=dot`
+- 138件のVRTを開始した。desktopとtabletの既存targetは、サイトメニューへ「キャラクターシート」を追加した差分でscreenshot比較に失敗した。一方、同じtargetのmobileは通過した。
+- artifactで確認した404 pageのdesktop/tablet差分は、左railへ追加された「キャラクターシート」行と、それにより下へ移動した「サポート」「更新履歴」である。本文、Header、Footerの差分はない。
+- 実行環境では10件目のdesktop/tablet failure後にPlaywright processが終了し、138件すべての最終集計は取得できなかった。
+- ユーザー承認により、desktopとtabletの93 targetを`npm run visual:update -- --grep '@vrt.*@(desktop|tablet)(?:\\s|$)'`で更新した。character-sheetのdesktop/tablet snapshotを含め、mobile snapshotは更新していない。更新後比較はChromium sandbox起動失敗により未実施である。
 
 ### 対応完了チェックリスト
 
