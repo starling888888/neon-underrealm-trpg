@@ -189,10 +189,8 @@ export default function ProfileSection({
           <span aria-hidden="true" className={styles.chevron} />
         </button>
         <div hidden={!isSettingExpanded} id={settingContentId}>
-          <label className={styles.label} htmlFor="character-sheet-setting">
-            設定
-          </label>
           <textarea
+            aria-label="設定"
             className={styles.settingInput}
             id="character-sheet-setting"
             onChange={(event) => onProfileChange("setting", event.target.value)}
