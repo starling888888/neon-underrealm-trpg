@@ -38,12 +38,12 @@
 ## 対象範囲
 
 - `@astrojs/react`、`react`、`react-dom`、`react-hook-form`と、型検査で実際に必要なReact型定義を追加し、AstroのReact integrationを設定する。
-- `src/character-sheet/CharacterSheetForm.tsx`を、`client:load`でhydrateするIslandのフォーム根として追加する。
+- `src/character-sheet/CharacterSheetContainer.tsx`を、`client:load`でhydrateするIslandのRoot / Containerとして追加する。formのDOM配置は`components/CharacterSheetFormPresenter.tsx`へ分離する。
 - IslandはRHFの`useForm`と`FormProvider`を持てる構成にする。ただし、具体的な入力値の型、初期値、schema、可変行、マスタデータ、派生値、検証、保存・復元、ブラウザAPIは実装しない。
 - `src/pages/character-sheet.astro`へIslandを直接配置し、既存の静的Header、Footer、サイトメニュー、Pagefind除外を維持する。
 - React ComponentにはCSS Modules（`*.module.css`、追加依存なし）を適用する。
-- `CharacterSheetForm`は実際にRHFの`useForm`でform instanceを生成し、`FormProvider`でIsland配下を構成する。
-- hydration完了後に検証専用の非表示状態を示し、`tests/visual/character-sheet.spec.ts`などのブラウザsmoke testで`client:load`のIslandがhydrateされたことを確認する。視覚表現とVRT対象は変更しない。
+- `CharacterSheetContainer`は実際にRHFの`useForm`でform instanceを生成し、`FormProvider`でIsland配下を構成する。Container直下にはFormPresenterと、Rootで扱う必要があるdialog Componentだけを置く。
+- G1はユーザーが操作できる入力をまだ持たないため、hydrate状態を示す検証専用のDOM・state・E2E testを追加しない。実際の操作によるIslandの動作確認は、入力を追加する後続Gateで行う。視覚表現とVRT対象は変更しない。
 
 ## 初期スコープ外
 
@@ -57,26 +57,27 @@
 
 ## 完了条件
 
-- [ ] `@astrojs/react`、React、React DOM、RHFが、選定済みアーキテクチャに沿って必要最小限の依存として追加されている。
-- [ ] `/character-sheet/`の`src/pages/character-sheet.astro`が、`client:load`の`CharacterSheetForm`を直接配置している。
-- [ ] `CharacterSheetForm`が、実際の`useForm`と`FormProvider`を持つ、後続Gateで入力セクションを接続できるRHFのフォーム根になっている。
-- [ ] Island固有の実装が`src/character-sheet/`配下に閉じ込められ、既存の共通layout、Header、Footer、ナビゲーションへ固有分岐を追加していない。
-- [ ] React ComponentのスタイルにCSS Modulesを使い、CSS Modules用の追加依存を導入していない。
-- [ ] `/character-sheet/`が静的公開routeかつPagefind検索index対象外のままである。
-- [ ] ブラウザsmoke testで、`client:load`のIslandがhydrateされることを確認している。
-- [ ] character-sheet用VRTのtest spec、canonical snapshot、比較artifactを変更していない。
-- [ ] `npm run check`、`npm run build`、対象browser smoke testが通る。
+- [x] `@astrojs/react`、React、React DOM、RHFが、選定済みアーキテクチャに沿って必要最小限の依存として追加されている。
+- [x] `/character-sheet/`の`src/pages/character-sheet.astro`が、`client:load`の`CharacterSheetContainer`を直接配置している。
+- [x] `CharacterSheetContainer`が、実際の`useForm`と`FormProvider`を持つ、後続Gateで入力セクションを接続できるRHFのフォームRoot / Containerになっている。
+- [x] `CharacterSheetFormPresenter`がformのDOM配置を担い、Containerが画面配置を持たないContainer / Presenter境界を確認した。
+- [x] Island固有の実装が`src/character-sheet/`配下に閉じ込められ、既存の共通layout、Header、Footer、ナビゲーションへ固有分岐を追加していない。
+- [x] React ComponentのスタイルにCSS Modulesを使い、CSS Modules用の追加依存を導入していない。
+- [x] `/character-sheet/`が静的公開routeかつPagefind検索index対象外のままである。
+- [x] hydrate状態を示す検証専用のDOM・state・E2E testを追加していない。実際のユーザー操作による動作確認は、入力を追加する後続Gateへ委ねている。
+- [x] character-sheet用VRTのtest spec、canonical snapshot、比較artifactを変更していない。
+- [x] `npm run check`、`npm run build`、既存の対象browser testが通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、既存のHeader、Footer、ページ固有のサイトメニューが壊れていない。
-- [ ] GitHub Pagesのサブパス公開と静的ホスティングに影響しない。
-- [ ] Island以外をSPA化せず、不要な依存関係を追加していない。
-- [ ] RHF以外に編集値を複製するstate storeを追加していない。
-- [ ] `idb-keyval`、保存同期、画像・JSON・CCFOLIAの実装を後続Gateから前倒ししていない。
-- [ ] `docs/TODO.md`の「永続スキル参照でID変更を検出してエラーにする」は、キャラクターシートの永続保存を追加する将来taskのままとし、このGateで扱っていない。
-- [ ] design targetのviewport・VRT扱いと矛盾していない。
-- [ ] ユーザーの未追跡`canonical-snapshots/visual/character-sheet/`を変更していない。
+- [x] 既存ルート、既存のHeader、Footer、ページ固有のサイトメニューが壊れていない。
+- [x] GitHub Pagesのサブパス公開と静的ホスティングに影響しない。
+- [x] Island以外をSPA化せず、不要な依存関係を追加していない。
+- [x] RHF以外に編集値を複製するstate storeを追加していない。
+- [x] `idb-keyval`、保存同期、画像・JSON・CCFOLIAの実装を後続Gateから前倒ししていない。
+- [x] `docs/TODO.md`の「永続スキル参照でID変更を検出してエラーにする」は、キャラクターシートの永続保存を追加する将来taskのままとし、このGateで扱っていない。
+- [x] design targetのviewport・VRT扱いと矛盾していない。
+- [x] ユーザーの未追跡`canonical-snapshots/visual/character-sheet/`を変更していない。
 
 ## 想定変更ファイル
 
@@ -84,7 +85,8 @@
 - `package-lock.json`
 - `astro.config.mjs`
 - `src/pages/character-sheet.astro`
-- `src/character-sheet/CharacterSheetForm.tsx`
+- `src/character-sheet/CharacterSheetContainer.tsx`
+- `src/character-sheet/components/CharacterSheetFormPresenter.tsx`
 - `docs/architectures/character-sheet.md`
 - 必要最小限のテストファイル
 - `docs/issue/ex-02-web-character-sheet/plan.md`（G1完了後の耐久的な引継ぎのみ）
@@ -95,7 +97,7 @@
 - G1を実行基盤に限定し、layout・入力・保存・画像・出力を後続Gateに残せているか。
 - `idb-keyval`をG6まで導入しない分割が、画像保存の採用方針と矛盾しないか。
 - CSS Modulesを追加依存なしで使い、既存Astro scoped CSSと共存できているか。
-- `useForm`、`FormProvider`、ブラウザsmoke testにより、実行基盤の実装・確認境界をレビュー可能にできているか。
+- `useForm`と`FormProvider`により、実行基盤を後続Gateの実際のユーザー操作へ接続できる状態にしつつ、内部hydrateを観測する検証専用実装を置いていないか。
 - `docs/design/character-sheet/notes.md`のVRT運用（G31までコミットしない）を守れているか。
 
 ## 備考

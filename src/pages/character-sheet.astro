@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import "../styles/prose.css";
 import CharacterSheetHeader from "../components/character-sheet/CharacterSheetHeader.astro";
+import CharacterSheetContainer from "../character-sheet/CharacterSheetContainer";
 import Footer from "../components/layout/Footer.astro";
 import SiteMenu from "../components/layout/SiteMenu.astro";
 import SearchModal from "../components/search/SearchModal.astro";
@@ -70,6 +71,7 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
         <main class="character-sheet-main" data-page-content>
           <article class="character-sheet-page" data-character-sheet-page>
             <h1>キャラクターシート</h1>
+            <CharacterSheetContainer client:load />
           </article>
         </main>
       </div>

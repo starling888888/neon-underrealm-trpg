@@ -89,6 +89,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Test-only hydration state was added to production code
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-1-sheet-runtime`の`CharacterSheetContainer`と`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: `client:load`のhydrateをE2Eで観測するためだけに、画面機能に不要な`isHydrated` stateと非表示DOM属性を製品コードへ追加した。G1にはユーザーが操作できる機能がなく、内部実装を露出する検証は適切でないにもかかわらず、完了条件もそのテストに依存させた。
+- 一次対応: `isHydrated`、属性、専用E2E testを削除し、G1の完了条件を検証専用実装を追加しないことへ修正した。以後、E2Eはユーザーが観測・操作できる振る舞いだけを対象にし、内部のhydrateやstateを観測するための製品コードは追加しない。
+
+### Parallel Playwright capture exhausted the Chromium sandbox
+
+#### 2026-07-24
+
+- source: self
+- 発生箇所: `character-sheet` design draftの既存capture一括更新
+- 観測した失敗: 独立したPlaywright Chromium起動を9本並列実行し、2本がsandbox hostの`Operation not permitted`で起動直後に終了した。直後のsandbox内逐次再試行も同じ制約で失敗した。prototypeまたはcapture scriptの失敗として扱うべきではない実行競合・sandbox制約を作った。
+- 一次対応: 失敗したcaptureは並列実行を避け、sandbox外の承認済み逐次実行で再生成した。複数のローカルcaptureを更新する際は、Chromiumを同時起動せず、必要時は最初から承認済みのcapture commandを使う。
+
 ### Character-sheet Headerのbreakpoint表示条件を誤った
 
 #### 2026-07-24

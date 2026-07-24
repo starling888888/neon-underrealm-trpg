@@ -37,8 +37,10 @@ src/
 ├── pages/
 │   └── character-sheet.astro
 └── character-sheet/
-    ├── CharacterSheetForm.tsx
+    ├── CharacterSheetContainer.tsx
     ├── components/
+    │   ├── CharacterSheetFormPresenter.tsx
+    │   └── dialogs/
     ├── form/
     ├── logic/
     ├── master-data/
@@ -47,8 +49,9 @@ src/
     └── browser/
 ```
 
-- `CharacterSheetForm.tsx`: React Hook Form（RHF）の`useForm`と`FormProvider`を持つIslandのフォーム根とする。保存済み下書きの復元、各入力セクションの登録、可変行の追加・削除、マスタデータ・純粋logic・ブラウザ副作用の接続をこの画面固有の根で行う。
-- `components/`: JSXと表示を担う。入力に関わるComponentはRHFのform contextを利用してよい。マスタ検索、派生値計算、検証、永続化、ブラウザAPIへの直接アクセスは置かない。
+- `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`と`FormProvider`、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の接続、行選択とdialogの開閉・適用を担う。DOMの画面配置を持たず、直下には`CharacterSheetFormPresenter`と、Rootで扱うほうが適切なdialog Componentだけを置く。
+- `CharacterSheetFormPresenter.tsx`: formのDOM配置、sectionの並び、表示用propsの受け渡しを担う。RHF formの生成、マスタ検索、派生値算出、検証、永続化、ブラウザAPI、dialogの開閉状態を持たない。各section・行ComponentはこのPresenter配下の表示Componentとして組み立てる。
+- `components/`: Presenterとその配下のJSX・表示Component、およびRoot直下へ配置するdialog Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。
 - `form/`: 編集値の型、初期値、RHFの可変配列操作、保存・復元hookを置く。RHF以外の編集state storeは置かない。
 - `logic/`: React、RHF、DOM、Storage、IndexedDBに依存しない派生値算出と検証を置く。
 - `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかは実装Gateで決める。
@@ -62,15 +65,16 @@ src/
 
 RHFを、このIsland内でユーザーが直接編集する値の唯一の保持先とする。可変行は`useFieldArray`で扱い、流儀の変更、スキル行の追加、能力値修正、縁のクリア、アイテム選択の変更をRHFの操作として行う。RHFの値を別のstate storeへ複製しない。
 
-| 種別                                          | 置き場所                       | 永続化先     |
-| --------------------------------------------- | ------------------------------ | ------------ |
-| ユーザーが直接編集するキャラクター値          | RHF                            | localStorage |
-| 可変行の順序、選択マスタID、明示的な空欄・`0` | RHF                            | localStorage |
-| WebP画像の参照情報                            | RHF                            | localStorage |
-| WebP画像のバイナリ                            | IndexedDBの画像用record        | IndexedDB    |
-| マスタデータ                                  | `master-data/`                 | 保存しない   |
-| 派生値、ViewModel、エラー・警告結果           | `logic/`と`CharacterSheetForm` | 保存しない   |
-| dialog、メニュー、折りたたみの開閉状態        | Component内のReact `useState`  | 保存しない   |
+| 種別                                          | 置き場所                            | 永続化先     |
+| --------------------------------------------- | ----------------------------------- | ------------ |
+| ユーザーが直接編集するキャラクター値          | RHF                                 | localStorage |
+| 可変行の順序、選択マスタID、明示的な空欄・`0` | RHF                                 | localStorage |
+| WebP画像の参照情報                            | RHF                                 | localStorage |
+| WebP画像のバイナリ                            | IndexedDBの画像用record             | IndexedDB    |
+| マスタデータ                                  | `master-data/`                      | 保存しない   |
+| 派生値、ViewModel、エラー・警告結果           | `logic/`と`CharacterSheetContainer` | 保存しない   |
+| 候補選択・確認・通知dialogの開閉と選択対象    | `CharacterSheetContainer`           | 保存しない   |
+| section・行の効果表示など局所的な表示状態     | 対応するPresenter Component         | 保存しない   |
 
 画像バイナリはlocalStorageのJSONへ混ぜない。画像用recordへ分離し、RHFには対応する参照だけを保持する。両保存先の書込み順、旧Blobの削除、全消去時の削除、画像record不整合時の復旧は実装Gateで定める。JSON入出力で画像をどう表すかも、該当Gateで定める。
 
