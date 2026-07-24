@@ -8,6 +8,7 @@
 
 - このplanはGateの列挙と着手候補の範囲を管理する。表の1行だけでは実装を開始しない。
 - 各Gateは、着手時に現行の要件・アーキテクチャ・designなどの参照正本を読み、表に記載した子issueを作成してから実装する。子issueで完了境界、確認方法、実装判断、追加の参照正本を定義し、以後の実装中のSSoTとする。
+- UIを含むGateの子issue作成時は、design draftと実装指針を確認してからUI実装の詳細を決定する。不明点は実装都合で補完せず、子issueへユーザレビューまたは決定事項として保留し、明示的な決定を得るまで実装しない。
 - Gate完了時は、子issueの確定事項をdesign notes、architecture、requirementsへそれぞれの正本として差し戻し、後続Gateに必要な前提だけをこのplanへ記録する。完了条件、チェックポイント、レビュー記録は子issueに保持し、親planやほかの正本へ差し戻さない。その後、子issueを`docs/issue/done/`へ移す。
 - 共通スキルボーナスは表示用データを参照するだけとし、構造化、文字列解析、自動算出を追加しない。
 - 全Gateの参照正本は親issueと同じ`docs/requirements/character-sheet.md`、`docs/architectures/character-sheet.md`、`docs/design/character-sheet/notes.md`とする。必要なゲームデータは、子issueで追加して指定する。
@@ -20,7 +21,7 @@
 | G1   | done    | G0                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-1-sheet-runtime.md`       | React Islandなどの実行基盤を整備する。                                                                                                   |
 | G2   | done    | G0, G1                                                                                                                                          | `docs/issue/done/ex-02-web-character-sheet/ex-02-2-sheet-layout.md`        | desktopでは`80rem`以上で等分2列、tablet/mobileでは一列の基本レイアウトを提供する。                                                       |
 | G3   | done    | G2                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-3-sheet-section-frame.md` | 編集セクションの共通枠と開閉操作を作成する。                                                                                             |
-| G4   | planned | G1, G2, G3                                                                                                                                      | `docs/issue/ex-02-4-sheet-profile.md`                                      | 基本情報、キャラクター設定、信用を扱う。                                                                                                 |
+| G4   | done    | G1, G2, G3                                                                                                                                      | `docs/issue/done/ex-02-web-character-sheet/ex-02-4-sheet-profile.md`       | 基本情報、キャラクター設定、信用を扱う。                                                                                                 |
 | G5   | planned | G1, G2, G3                                                                                                                                      | `docs/issue/ex-02-5-sheet-dialogs.md`                                      | ダイアログの共通基盤を整備する。                                                                                                         |
 | G6   | planned | G4, G5                                                                                                                                          | `docs/issue/ex-02-6-sheet-image.md`                                        | キャラクター画像を扱う。                                                                                                                 |
 | G7   | planned | G1, G2, G3                                                                                                                                      | `docs/issue/ex-02-7-sheet-build.md`                                        | 流儀、生き様、能力値、経験点を扱う。                                                                                                     |
@@ -71,5 +72,13 @@
 - `headingAs`は`span`または`h1`〜`h6`だけを受け、既定は`span`である。G3の5 top-level frameは`h2`を指定し、後続の入れ子sectionは適切なheading levelを指定する。
 - `CharacterSheetFormPresenter`のIsland scopeは、compact density用のsection gap、content padding、toggle heightを提供する。後続Gateはこのscopeを使い、site全体のglobal type scaleを変更しない。
 - canonical VRT baselineは更新していない。PRレビュー直前には、`@character-sheet` targetだけをVisual Reviewし、baseline更新はユーザーの明示承認時だけとする。
+
+### G4
+
+- `CharacterSheetContainer`は`profile`と`credit`を意味単位でまとめたRHF valueとして持つ。profileの文字列defaultは`""`、creditは取得信用`10`、融通した・融通された・小銭修正`0`で、`null`は持ち込まない。
+- `characterSheetFormSchema`を`zodResolver`でRHFへ接続する。信用の数値制約とブラウザの生入力値の正規化はschema / RHF adapterの責務であり、Presenter以下のComponentはpropsとcallbackだけを扱う。
+- 信用のnative number inputはuncontrolledとして、focus中の`-`など未確定な入力をDOMに保持する。確定可能な値だけをRHFへ渡し、blur時には正規化された値をDOMへ戻す。G24の復元、G29の全クリアなど外部更新をinputへ同期する契約は、各Gateで明示する。
+- G4時点の消費信用は`0`である。G22ではアイテム値の合計をRHF adapter hookから入力し、Presenterで算出・保持しない。
+- Playwrightは領域表示と代表操作だけの最終smokeとし、入力境界、算出式、Tooltip、表示Componentの局所挙動はNode / Component / hook testで扱う。canonical VRT baselineは更新していないため、PRレビュー直前に必要なcharacter-sheet targetだけをVisual Reviewする。
 
 状態は `planned`、`in progress`、`done` を使う。
