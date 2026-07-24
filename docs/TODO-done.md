@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] 流儀の共通スキルボーナスを構造化データへ変換する
+  - completed: 2026-07-24 via user direction / not adopted
+  - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
+  - classification: canceled current issue prerequisite
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md`
+  - handling plan: 表示用データを維持し、構造化データ、文字列解析、自動算出を追加しない方針へ変更した。
+
 - [x] 1024px以上1360px未満で3レールlayoutの横overflowを解消する
   - completed: 2026-07-23 via PR #68 / `49-50-accessibility-responsive-pass`
   - source: `30-2-ryugi-detail-page` のレビュー指摘 1

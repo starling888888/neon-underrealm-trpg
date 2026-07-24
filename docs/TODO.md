@@ -63,12 +63,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `53-content-smoke-test`
   - handling plan: `-local/data-cards`をPagefind indexから除外するか、検索Visual Testのlocatorを公開対象の検索結果へ限定する。GitHub Pagesのsubpath検索と公開ページの検索結果が壊れないことを確認してから、Visual Capture全体をgreenにする。
 
-- [ ] 流儀の共通スキルボーナスを構造化データへ変換する
-  - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
-  - classification: current issue prerequisite
-  - plan: `docs/plan.md` の `ex-02-web-character-sheet`、`docs/issue/ex-02-web-character-sheet.md` の Gate 0
-  - handling plan: 現行の`ryugi-list.json`では、2／5／9レベルごとのボーナスを改行を含む表示文字列として維持する。Gate 0で、文字列を解析せず、キャラクターシートの算出に使う専用の構造化データを追加する。詳細な変換元、JSON形状、既存表示との互換性、migration方針はGate 0の実装着手直前に定義する。
-
 - [ ] React Islandの導入を検討する
   - source: ユーザー指示
   - classification: out-of-scope follow-up
