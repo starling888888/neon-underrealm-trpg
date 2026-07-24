@@ -37,7 +37,7 @@ Every parent issue uses a dedicated Gate plan. Create it at:
 docs/issue/<parent-issue-slug>/plan.md
 ```
 
-The Gate plan is the only place that enumerates Gates. It is the compact handoff source for starting one Gate in a new session. Do not duplicate the Gate list in the parent issue body.
+The Gate plan is the only place that enumerates Gates. It keeps the parent task split into implementable Gates and records their progress. Do not duplicate the Gate list in the parent issue body.
 
 ---
 
@@ -271,10 +271,9 @@ The plan must contain:
 
 - a compact parent-issue reference
 - a Gate list with a stable Gate ID, title, status, dependency, and expected child issue path
-- one self-contained Gate brief per Gate: goal, allowed scope, source-of-truth paths, prerequisites, completion boundary, and handoff required after completion
 - only the durable requirements, decisions, and follow-up handoff returned from completed child issues
 
-Do not put implementation logs, duplicated parent background, temporary review output, or session-specific reasoning in the Gate plan.
+Do not add a detailed brief, implementation plan, or source-of-truth inventory for a planned Gate to the Gate plan. The dedicated child issue is the only implementation contract. Do not put implementation logs, duplicated parent background, temporary review output, or session-specific reasoning in the Gate plan.
 
 ### Child issue lifecycle
 
@@ -284,7 +283,7 @@ Create a child issue only when the user explicitly asks to implement that Gate. 
 NN-M-gate-slug
 ```
 
-The child issue must identify its parent issue and Gate plan path, then copy only the selected Gate's self-contained brief into its own goal, scope, completion criteria, checkpoints, source-of-truth paths, and review points. It must be usable in a new session without relying on conversation context or other child issue files.
+The child issue must identify its parent issue, Gate plan path, and selected Gate. Use the Gate list entry as the scope boundary. Determine the child issue's goal, scope, completion criteria, checkpoints, source-of-truth paths, and review points from the current SSoT and user instructions. The child issue must be usable in a new session without relying on parent conversation, previous Gate issue bodies, or temporary review files.
 
 Do not create child issues for every planned Gate in advance. Do not implement more than one Gate from the same child issue.
 
@@ -321,7 +320,7 @@ Check:
 - existing code paths mentioned in the issue exist or are clearly marked as planned
 - the issue does not contradict `AGENTS.md`, this skill, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, `docs/plan.md`, or relevant `docs/design/` files
 
-For a parent issue, also check that `docs/issue/NN-slug/plan.md` exists, uses the Gate plan template, is the only Gate enumeration, and gives each planned Gate enough self-contained information for a new session.
+For a parent issue, also check that `docs/issue/NN-slug/plan.md` exists, uses the Gate plan template, is the only Gate enumeration, has an implementable Gate split, and records durable handoffs only after a Gate completes.
 
 For a child issue, also check that it maps to exactly one parent Gate and includes all information needed to implement that Gate without previous conversation or other child issue bodies.
 
