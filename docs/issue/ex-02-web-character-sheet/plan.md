@@ -22,7 +22,7 @@
 | G2   | done    | G0, G1                                                                                                                                          | `docs/issue/done/ex-02-web-character-sheet/ex-02-2-sheet-layout.md`        | desktopでは`80rem`以上で等分2列、tablet/mobileでは一列の基本レイアウトを提供する。                                                       |
 | G3   | done    | G2                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-3-sheet-section-frame.md` | 編集セクションの共通枠と開閉操作を作成する。                                                                                             |
 | G4   | done    | G1, G2, G3                                                                                                                                      | `docs/issue/done/ex-02-web-character-sheet/ex-02-4-sheet-profile.md`       | 基本情報、キャラクター設定、信用を扱う。                                                                                                 |
-| G5   | planned | G1, G2, G3                                                                                                                                      | `docs/issue/ex-02-5-sheet-dialogs.md`                                      | ダイアログの共通基盤を整備する。                                                                                                         |
+| G5   | done    | G1, G2, G3                                                                                                                                      | `docs/issue/done/ex-02-web-character-sheet/ex-02-5-sheet-dialogs.md`       | ダイアログの共通基盤を整備する。                                                                                                         |
 | G6   | planned | G4, G5                                                                                                                                          | `docs/issue/ex-02-6-sheet-image.md`                                        | キャラクター画像を扱う。                                                                                                                 |
 | G7   | planned | G1, G2, G3                                                                                                                                      | `docs/issue/ex-02-7-sheet-build.md`                                        | 流儀、生き様、能力値、経験点を扱う。                                                                                                     |
 | G8   | planned | G7                                                                                                                                              | `docs/issue/ex-02-8-sheet-secondary.md`                                    | 副能力値を扱う。                                                                                                                         |
@@ -80,5 +80,13 @@
 - 信用のnative number inputはuncontrolledとして、focus中の`-`など未確定な入力をDOMに保持する。確定可能な値だけをRHFへ渡し、blur時には正規化された値をDOMへ戻す。G24の復元、G29の全クリアなど外部更新をinputへ同期する契約は、各Gateで明示する。
 - G4時点の消費信用は`0`である。G22ではアイテム値の合計をRHF adapter hookから入力し、Presenterで算出・保持しない。
 - Playwrightは領域表示と代表操作だけの最終smokeとし、入力境界、算出式、Tooltip、表示Componentの局所挙動はNode / Component / hook testで扱う。canonical VRT baselineは更新していないため、PRレビュー直前に必要なcharacter-sheet targetだけをVisual Reviewする。
+
+### G5
+
+- `CharacterSheetDialog`はnative modalの開閉、Escape、操作元へのfocus復帰、accessible nameを担う制御式shellである。呼出し側は`aria-labelledby`または`aria-label`のどちらかと、用途に合う初期focus対象を必ず指定する。
+- `CharacterSheetDialogHeader`、`CharacterSheetDialogContent`、`CharacterSheetDialogActions`を必要なものだけ組み合わせる。全用途を`variant`、必須`title`、必須`description`で表さない。短い主文だけを`aria-describedby`で関連付け、複数段落、リスト、表を含む本文には指定しない。
+- 確認とエラーは専用Component候補であり、ヘルプと候補選択は専用Componentまたはshellの合成で実装する。固有の構造、幅、色、icon、業務副作用は各後続Gateの責務である。
+- G5の可視ダミー確認buttonは、G23以降で実操作buttonへ置換または削除する。dialogの開閉状態・選択対象はContainerが持ち、RHF、保存、JSONへ含めない。
+- canonical VRT baselineは更新していない。PRレビュー直前に、G5の`@character-sheet` targetだけをVisual Reviewし、baseline更新はユーザーの明示承認時だけ行う。
 
 状態は `planned`、`in progress`、`done` を使う。
