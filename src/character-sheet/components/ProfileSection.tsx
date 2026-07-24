@@ -10,17 +10,22 @@ import styles from "./ProfileSection.module.css";
 
 type TextFieldProps = {
   label: string;
-  name: "pcName" | "playerName" | "nickname" | "age" | "gender";
+  name:
+    | "profile.pcName"
+    | "profile.playerName"
+    | "profile.nickname"
+    | "profile.age"
+    | "profile.gender";
 };
 
 type CreditFieldProps = {
   allowNegative?: boolean;
   label: string;
   name:
-    | "acquiredCredit"
-    | "creditProvided"
-    | "creditReceived"
-    | "changeAdjustment";
+    | "credit.acquired"
+    | "credit.provided"
+    | "credit.received"
+    | "credit.changeAdjustment";
 };
 
 type ReadOnlyCreditFieldProps = {
@@ -127,23 +132,23 @@ export default function ProfileSection() {
   const [isSettingExpanded, setIsSettingExpanded] = useState(false);
   const acquiredCredit = useWatch({
     control,
-    defaultValue: characterSheetDefaultValues.acquiredCredit,
-    name: "acquiredCredit",
+    defaultValue: characterSheetDefaultValues.credit.acquired,
+    name: "credit.acquired",
   });
   const creditProvided = useWatch({
     control,
-    defaultValue: characterSheetDefaultValues.creditProvided,
-    name: "creditProvided",
+    defaultValue: characterSheetDefaultValues.credit.provided,
+    name: "credit.provided",
   });
   const creditReceived = useWatch({
     control,
-    defaultValue: characterSheetDefaultValues.creditReceived,
-    name: "creditReceived",
+    defaultValue: characterSheetDefaultValues.credit.received,
+    name: "credit.received",
   });
   const changeAdjustment = useWatch({
     control,
-    defaultValue: characterSheetDefaultValues.changeAdjustment,
-    name: "changeAdjustment",
+    defaultValue: characterSheetDefaultValues.credit.changeAdjustment,
+    name: "credit.changeAdjustment",
   });
   const credit = calculateCredit({
     acquiredCredit,
@@ -161,11 +166,11 @@ export default function ProfileSection() {
     >
       <h2 id="character-sheet-profile-heading">基本情報</h2>
       <div className={styles.profileGrid}>
-        <TextField label="PC名" name="pcName" />
-        <TextField label="PL名" name="playerName" />
-        <TextField label="二つ名" name="nickname" />
-        <TextField label="年齢" name="age" />
-        <TextField label="性別" name="gender" />
+        <TextField label="PC名" name="profile.pcName" />
+        <TextField label="PL名" name="profile.playerName" />
+        <TextField label="二つ名" name="profile.nickname" />
+        <TextField label="年齢" name="profile.age" />
+        <TextField label="性別" name="profile.gender" />
       </div>
       <div className={styles.setting}>
         <button
@@ -185,7 +190,7 @@ export default function ProfileSection() {
           <textarea
             className={styles.settingInput}
             id="character-sheet-setting"
-            {...register("characterSetting")}
+            {...register("profile.setting")}
           />
         </div>
       </div>
@@ -195,16 +200,20 @@ export default function ProfileSection() {
       >
         <h3 id="character-sheet-credit-heading">信用</h3>
         <div className={styles.creditGrid}>
-          <CreditField label="取得信用" name="acquiredCredit" />
-          <CreditField label="融通した" name="creditProvided" />
-          <CreditField label="融通された" name="creditReceived" />
+          <CreditField label="取得信用" name="credit.acquired" />
+          <CreditField label="融通した" name="credit.provided" />
+          <CreditField label="融通された" name="credit.received" />
           <ReadOnlyCreditField
             formula="取得信用 + 融通された - 融通した"
             label="合計信用"
             value={credit.totalCredit}
           />
           <ReadOnlyCreditField label="消費信用" value={0} />
-          <CreditField allowNegative label="小銭修正" name="changeAdjustment" />
+          <CreditField
+            allowNegative
+            label="小銭修正"
+            name="credit.changeAdjustment"
+          />
           <ReadOnlyCreditField
             formula="合計信用 - 消費信用 + 小銭修正"
             label="小銭"

@@ -5,27 +5,35 @@
  * form without introducing a second edit-state store.
  */
 export type CharacterSheetFormValues = {
-  characterSetting: string;
-  nickname: string;
-  pcName: string;
-  playerName: string;
-  age: string;
-  gender: string;
-  acquiredCredit: number;
-  creditProvided: number;
-  creditReceived: number;
-  changeAdjustment: number;
+  credit: {
+    acquired: number;
+    changeAdjustment: number;
+    provided: number;
+    received: number;
+  };
+  profile: {
+    age: string;
+    gender: string;
+    nickname: string;
+    pcName: string;
+    playerName: string;
+    setting: string;
+  };
 };
 
 export const characterSheetDefaultValues: CharacterSheetFormValues = {
-  characterSetting: "",
-  nickname: "",
-  pcName: "",
-  playerName: "",
-  age: "",
-  gender: "",
-  acquiredCredit: 10,
-  creditProvided: 0,
-  creditReceived: 0,
-  changeAdjustment: 0,
+  credit: {
+    acquired: 10,
+    changeAdjustment: 0,
+    provided: 0,
+    received: 0,
+  },
+  profile: {
+    age: "",
+    gender: "",
+    nickname: "",
+    pcName: "",
+    playerName: "",
+    setting: "",
+  },
 };

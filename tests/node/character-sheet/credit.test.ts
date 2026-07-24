@@ -1,11 +1,31 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import {
   calculateCredit,
   normalizeCreditInput,
 } from "../../../src/character-sheet/logic/credit";
 
 describe("character sheet credit", () => {
+  it("groups non-null defaults by profile and credit", () => {
+    assert.deepEqual(characterSheetDefaultValues, {
+      credit: {
+        acquired: 10,
+        changeAdjustment: 0,
+        provided: 0,
+        received: 0,
+      },
+      profile: {
+        age: "",
+        gender: "",
+        nickname: "",
+        pcName: "",
+        playerName: "",
+        setting: "",
+      },
+    });
+  });
+
   it("normalizes empty and invalid credit controls to zero", () => {
     assert.equal(normalizeCreditInput("", false), 0);
     assert.equal(normalizeCreditInput("invalid", false), 0);
