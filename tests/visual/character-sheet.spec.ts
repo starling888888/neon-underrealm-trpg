@@ -122,6 +122,32 @@ test.describe("character sheet page", () => {
     await expectLayoutColumnCount(page, 1);
   });
 
+  test("caps and centers the sheet at the desktop content width", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.ultrawide);
+    await page.goto("character-sheet/");
+
+    const pageBox = await page
+      .locator("[data-character-sheet-page]")
+      .boundingBox();
+
+    if (pageBox === null) {
+      throw new Error("キャラクターシート本文の幅を確認できません。");
+    }
+
+    expect(pageBox.width).toBe(1440);
+    expect(pageBox.x).toBeCloseTo((1920 - pageBox.width) / 2, 0);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCSS(
+      "margin-top",
+      "0px",
+    );
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCSS(
+      "margin-bottom",
+      "12px",
+    );
+  });
+
   test("opens editing section frames independently", async ({ page }) => {
     await page.setViewportSize(visualViewports.desktop);
     await page.goto("character-sheet/");

@@ -121,11 +121,18 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
 
   .character-sheet-main {
     min-width: 0;
-    padding: var(--space-10) var(--space-8);
+    padding: var(--space-3) var(--space-8) var(--space-10);
   }
 
   .character-sheet-page {
+    width: min(100%, 90rem);
     min-height: 24rem;
+    margin-inline: auto;
+  }
+
+  .character-sheet-page > h1 {
+    margin: 0 0 var(--space-3);
+    line-height: var(--line-height-tight);
   }
 
   :global(body.character-sheet-menu-open) {
@@ -254,7 +261,7 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
     }
 
     .character-sheet-main {
-      padding: var(--space-6) var(--space-5);
+      padding: var(--space-3) var(--space-5) var(--space-8);
     }
 
     .character-sheet-menu-drawer:not([hidden]) {

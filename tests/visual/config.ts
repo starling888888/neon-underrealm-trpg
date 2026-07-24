@@ -53,6 +53,10 @@ export const visualViewports = {
     width: 1440,
     height: 1200,
   },
+  ultrawide: {
+    width: 1920,
+    height: 1200,
+  },
   tablet: {
     width: 820,
     height: 1180,
