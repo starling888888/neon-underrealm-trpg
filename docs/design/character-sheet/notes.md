@@ -33,6 +33,18 @@
 - viewports: desktop、tablet、mobile。G3では3 viewportのactual snapshotを`visual:capture`で出力する。canonical baselineは更新しない。
 - comparison points: 見出しbutton、展開icon、枠線、visible focus、開閉後の内容領域、desktop 2列とtablet/mobile 1列における横overflow
 
+### G4 profile and credit comparison
+
+- target: `profile` slotの基本情報、開閉式の`設定`、信用表示。
+- route: `/character-sheet/`。
+- default state: PC名、PL名、二つ名、年齢、性別、設定は空欄。`設定`は閉じる。取得信用は`10`、融通した・融通された・小銭修正は`0`、合計信用・小銭は`10`、消費信用は`0`と表示する。
+- viewports: desktop（`1440x1200`）、tablet（`820x1180`）、mobile（`390x900`）。ultrawideは既存の本文幅確認だけに使い、G4のcanonical比較対象に含めない。
+- profile layout: profile slotはG3のsection frameを使わない。PC名、PL名、二つ名、年齢、性別は、それぞれlabelを上に置く独立したinputとする。desktopとtabletは3列のgridで、入力のDOM順と視覚順をPC名、PL名、二つ名、年齢、性別に一致させる。mobileでは1列に積む。
+- setting layout: profile入力群の直下に`設定`とchevronだけを置く。展開時は、同じ位置にlabel付きtextareaを表示する。開閉状態はフォーム値、保存、JSONの対象に含めない。
+- credit layout: 信用は、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭のDOM順を維持する。desktopとtabletでは3列のgrid、mobileでは1列に積む。編集可能な4入力は短い幅で右揃え、派生値は同じ視覚形式の読み取り専用値として表示する。
+- comparison points: profile slotのG3 frame非適用、5入力のlabel対応と順序、設定の初期非表示と展開後のtextarea、信用の順序・初期値・右揃え、desktop / tablet / mobileでの横overflowなし。
+- VRT: 既存の`tests/visual/vrt/character-sheet.spec.ts`にある`@vrt @character-sheet`のdefault routeを使い、G4ではdesktop、tablet、mobileだけをactual / 比較対象とする。設定の展開、信用の値変更、空欄からの`0`復帰はbrowser behavior testで確認する。canonical baselineの更新には別途ユーザー承認が必要である。
+
 ## 確定したデザイン要件
 
 ### 操作領域
