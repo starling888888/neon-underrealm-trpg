@@ -13,7 +13,7 @@
 - 実装の契約とゲート管理: `docs/issue/ex-02-web-character-sheet.md`
 - ゲーム仕様と選択肢: `src/pages/`配下のゲーム仕様と`data/generated/`配下の生成JSON
 - 初期対象viewportはdesktop、tablet、mobileである。
-- 画面はフルスクラッチのReact Componentで実装する。UIライブラリ、デザインシステム、Component固定型のフォームライブラリは導入しない。React Componentに適用するscoped CSSの方式と追加依存の要否は、既存CSSとの共存を確認してから決める。
+- 画面はフルスクラッチのReact Componentで実装する。UIライブラリ、デザインシステム、Component固定型のフォームライブラリは導入しない。React ComponentのスタイルはCSS Modulesを使い、追加依存は導入しない。
 
 ## 推奨構成
 
@@ -90,7 +90,7 @@ AstroのSSRとhydrationにおける表示差分を避けるため、初回復元
 
 ### スタイル境界
 
-React Componentのスタイルは、Component外へ漏れないscoped CSSを使う。具体方式は、既存Astro scoped CSSとの共存、React TSXでの適用範囲、追加依存の要否を比較してから確定する。追加ライブラリが不要な方式を優先するが、方式の決定と導入は実装Gateに先立つ判断とする。
+React Componentのスタイルは、Component外へ漏れないCSS Modules（`*.module.css`）を使う。既存Astro scoped CSSと共存させ、React TSXからclass nameを参照する。CSS Modulesのための追加依存は導入しない。
 
 ## 依存ライブラリ
 
@@ -150,7 +150,7 @@ UIは全てフルスクラッチとし、画像変換、Clipboard、downloadはb
 | 永続化の詳細       | 保存先間の整合性とキー名前空間は実装Gateで定める                        | localStorageとIndexedDBの書込み順、削除、key / DB / store名は現時点で固定しない。                |
 | 実行時schema       | `zod`は既存依存を使う                                                   | 現在の入力値用とIndexedDB record・JSON入力用の2系統を作る。具体的なschemaは各実装Gateで定める。  |
 | WebP圧縮品質       | 未決定                                                                  | 5 MiB入力・長辺約500px・WebP変換は要件で確定済み。品質値は要件へ確定値を反映する前に判断が必要。 |
-| scoped CSS         | 方針と依存ライブラリを比較して決定する                                  | 既存Astro CSSとの共存とReact Componentへの限定適用を確認する。                                   |
+| scoped CSS         | CSS Modules（`*.module.css`）、追加依存なし                             | 既存Astro scoped CSSと共存させ、React ComponentのスタイルをComponent単位へ限定する。             |
 | 型定義依存         | devDependenciesへ先行して明記しない                                     | React関連以外を含む必要な型定義を、実装時の実際の依存と型検査から判断する。                      |
 
 JSON入出力形式、CCFOLIA出力テキスト形式、実行時schemaの詳細は、いずれもユーザー判断を含む各実装Gateで定める。本書では固定しない。
