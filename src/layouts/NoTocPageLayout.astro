@@ -1,8 +1,14 @@
 ---
 import SiteMenu from "../components/layout/SiteMenu.astro";
+
+export interface Props {
+  variant?: "default" | "character-sheet";
+}
+
+const { variant = "default" } = Astro.props;
 ---
 
-<div class="desktop-layout-no-toc">
+<div class={`desktop-layout-no-toc layout-variant-${variant}`}>
   <aside class="layout-rail layout-rail-left">
     <SiteMenu />
   </aside>

@@ -50,26 +50,26 @@
 
 ## 完了条件
 
-- [ ] `/character-sheet/`が静的Astroページとしてビルドされる。
-- [ ] ページtitleが「キャラクターシート」である。
-- [ ] サイトメニューに「キャラクターシート」が「キャラクター成長」と「サポート」の間で表示され、現在ページ状態を正しく示す。
-- [ ] `PageToc`と`MobilePageToc`を表示しない。
-- [ ] desktopおよびtabletではサイトメニューを表示し、mobileでは表示しない。
-- [ ] HeaderとFooterの既存意匠・挙動を変更していない。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
-- [ ] 実装後、`docs/design/character-sheet/notes.md`に定めたdesktop（1440x1200）、tablet（820x1180）、mobile（390x900）の表示条件を限定VRTまたは同等の目視確認で確認する。canonical baselineの作成・更新は、差分を確認したうえでユーザーが明示指示した場合だけ行う。
+- [x] `/character-sheet/`が静的Astroページとしてビルドされる。
+- [x] ページtitleが「キャラクターシート」である。
+- [x] サイトメニューに「キャラクターシート」が「キャラクター成長」と「サポート」の間で表示され、現在ページ状態を正しく示す。
+- [x] `PageToc`と`MobilePageToc`を表示しない。
+- [x] desktopおよびtabletではサイトメニューを表示し、mobileでは表示しない。
+- [x] HeaderとFooterの既存意匠・挙動を変更していない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+- [x] 実装後、`docs/design/character-sheet/notes.md`に定めたdesktop（1440x1200）、tablet（820x1180）、mobile（390x900）の表示条件を限定VRTまたは同等の目視確認で確認する。canonical baselineの作成・更新は、差分を確認したうえでユーザーが明示指示した場合だけ行う。
 
 ## チェックポイント
 
-- [ ] 既存ルートと既存のサイトメニュー表示が壊れていない。
-- [ ] GitHub Pagesのサブパス公開で、`/character-sheet/`とサイトメニューのリンクが壊れない。
-- [ ] `docs/design/character-sheet/notes.md`のページとナビゲーション要件、およびページlayoutとサイトメニュー要件と矛盾していない。
-- [ ] `docs/requirements/non-functional.md`のアクセシビリティ・レスポンシブ基準と矛盾していない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する `docs/TODO.md` 項目をこのGateへ重複して取り込んでいない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートと既存のサイトメニュー表示が壊れていない。
+- [x] GitHub Pagesのサブパス公開で、`/character-sheet/`とサイトメニューのリンクが壊れない。
+- [x] `docs/design/character-sheet/notes.md`のページとナビゲーション要件、およびページlayoutとサイトメニュー要件と矛盾していない。
+- [x] `docs/requirements/non-functional.md`のアクセシビリティ・レスポンシブ基準と矛盾していない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する `docs/TODO.md` 項目をこのGateへ重複して取り込んでいない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -91,3 +91,36 @@
 - issue reviewerは、ユーザー指示により実行しない。
 - design targetは `docs/design/character-sheet/notes.md`。design-image-generationの実行は、このGateのissue準備では不要とする。必要なroute、viewport、ナビゲーション、ToC非表示のdesign intentは同ファイルに存在する。編集画面固有のlayoutと操作デザインは後続Gateで扱う。
 - 現在、character-sheet用VRT route・テスト・canonical snapshotはいずれも未作成である。VRTの対象追加やbaseline更新は実装後の限定Visual Reviewで判断し、baseline更新はユーザーの明示指示が必要である。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: 未作成。canonical baselineも未作成のため、比較・更新は行わない。
+- route / states / viewports: `/character-sheet/` のdefault状態。desktop `1440x1200`、tablet `820x1180`、mobile `390x900`。
+
+### レビュー結果
+
+| 対象    | 判定 | 差分 | 対応                                                     |
+| ------- | ---- | ---- | -------------------------------------------------------- |
+| desktop | OK   | なし | サイトメニュー、current状態、ToC非表示を確認した。       |
+| tablet  | OK   | なし | 常設サイトメニューとToC非表示を確認した。                |
+| mobile  | OK   | なし | サイトメニューの操作・drawerを表示しないことを確認した。 |
+
+### 自己修正した項目
+
+- [x] mobile Headerのサイトメニュー操作とdrawerを、character-sheetページでは表示しないようにした。
+
+### 人間判断が必要な差分
+
+- character-sheet用のcanonical VRT baselineは未作成である。baselineの初回作成はユーザー指示が必要である。
+
+### 対応完了チェックリスト
+
+- [ ] 変更targetだけをVRT比較した（canonical baselineが未作成のため未実施）。
+- [x] desktop、tablet、mobileの一時screenshotを取得した。
+- [x] 目視で確認した差分を修正した。
+- [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

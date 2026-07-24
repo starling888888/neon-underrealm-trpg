@@ -1,0 +1,20 @@
+---
+import AppContainer from "../layouts/AppContainer.astro";
+---
+
+<AppContainer
+  title="キャラクターシート"
+  description="ネオン・アンダーレルムTRPGのキャラクターシートです。"
+  pageLayout="character-sheet"
+  showMobileSiteMenu={false}
+>
+  <article class="character-sheet-page" data-character-sheet-page>
+    <h1>キャラクターシート</h1>
+  </article>
+</AppContainer>
+
+<style>
+  .character-sheet-page {
+    min-height: 24rem;
+  }
+</style>

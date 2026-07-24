@@ -12,6 +12,7 @@ import type { SeoProps } from "../lib/site/seo";
 import { defaultSeo } from "../lib/site/seo";
 import { getSearchTypeLabel } from "../lib/search/page-metadata";
 import { withBase } from "../lib/utils/paths";
+import CharacterSheetPageLayout from "./CharacterSheetPageLayout.astro";
 import TocPageLayout from "./TocPageLayout.astro";
 import NoTocPageLayout from "./NoTocPageLayout.astro";
 
@@ -19,6 +20,8 @@ export interface Props extends SeoProps {
   title?: string;
   description?: string;
   showPageToc?: boolean;
+  showMobileSiteMenu?: boolean;
+  pageLayout?: "default" | "character-sheet";
   prevPath?: string;
   nextPath?: string;
 }
@@ -34,11 +37,18 @@ const {
   twitterCard,
   noindex,
   showPageToc = false,
+  showMobileSiteMenu = true,
+  pageLayout = "default",
   prevPath,
   nextPath,
 } = Astro.props;
 
-const PageLayout = showPageToc ? TocPageLayout : NoTocPageLayout;
+const PageLayout =
+  pageLayout === "character-sheet"
+    ? CharacterSheetPageLayout
+    : showPageToc
+      ? TocPageLayout
+      : NoTocPageLayout;
 const prevPage = prevPath ? getSiteMenuLink(prevPath) : undefined;
 const nextPage = nextPath ? getSiteMenuLink(nextPath) : undefined;
 
@@ -69,11 +79,11 @@ const searchTypeLabel = getSearchTypeLabel(
   </head>
   <body>
     <div class="site-shell">
-      <Header />
+      <Header showMobileSiteMenu={showMobileSiteMenu} />
 
       <SearchModal />
 
-      <MobileSiteMenuDrawer />
+      {showMobileSiteMenu && <MobileSiteMenuDrawer />}
 
       <PageLayout>
         <slot />
