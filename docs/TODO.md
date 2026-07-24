@@ -39,6 +39,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: なし。費用対効果を再評価してから必要なら計画化する。
   - handling plan: `SkillCard`、`NpcCard`などへ固定propsを渡し、文言、値、fallback、想定タグ、属性をComponent単位で確認できる基盤を検討する。Visual Testはfixture・外部データの内容へ依存させず、画面構造、responsive layout、overflow、ナビゲーション状態、スクリーンショットに限定する。
 
+- [ ] 既存Node testをVitestへ段階的に移行する
+  - source: `ex-02-4-sheet-profile` のテストアーキテクチャレビューにおけるユーザー指示
+  - classification: test architecture follow-up
+  - plan: なし。G4のreview対応とは分離し、Vitest導入後の既存test数・Node固有API・CI実行時間を確認してから独立taskを計画する。
+  - handling plan: 現在の`node --import tsx --test`で動く純粋logic / schema testをVitestの`describe` / `it` / `expect`へ段階的に移す。Component / hook testと同じrunner・coverage・watch設定に統一する一方、移行中はNode testとVitest testを混在させ、各対象の実行結果とCI scriptを確認してから旧scriptを廃止する。E2Eの責務は最終smokeのまま変更しない。
+
 - [ ] 全スキルのsummary整備後に、`SkillCard`でsummaryを再表示する
   - source: `30-2-ryugi-detail-page` 実装後のユーザー指示
   - classification: data quality follow-up

@@ -38,6 +38,55 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - 取得信用・融通した信用・融通された信用の`0`以上制約、小銭修正の負数、信用欄の空欄操作が`0`へ戻ること、合計信用と小銭の派生式、設定の改行と開閉をNode testおよびユーザー観測可能なbrowser behaviorで確認する。
 - desktop、tablet、mobileで基本情報が横overflowせず、labelと入力の対応、数値入力の右揃え、開閉操作、visible focusを保つ。UI変更後のPRレビュー直前に、G4で確定したVRT targetだけを比較する。
 
+## レビュー指摘 1
+
+### 指摘事項
+
+1. G4のPlaywright testが信用入力の正規化、計算値、右揃え、read-only要素という仕様・実装詳細をまとめて確認しており、最終smokeとしてのE2E境界を越えている。ユーザーがテストを変更しないよう明示した後にも、test fileを変更・実行した。
+2. `CharacterSheetFormValues`のruntime validation schemaがなく、HTML number constraintと`normalizeCreditInput`が信用の制約・空欄の扱いを持っている。既存Zodを使うarchitectureのschema境界が未実装である。
+3. Container / PresenterとRHF adapter hookを分けた検証境界を使うため、Component / hook test toolingを選定していない。E2Eを増やさず、Presenter propsとRHF adapter hookの振る舞いを小さい単位で検証する手段が必要である。
+
+### 判定
+
+- source: human / `.tmp/review/ex-02-4-sheet-profile/current-feedback.md`
+- classification: valid
+- local validation: `tests/visual/character-sheet.spec.ts`のG4信用testは、4つの入力・空欄・負値・派生式・CSS・`readonly`属性を確認しており、`docs/architectures/character-sheet.md`の「E2Eへドメイン計算の全組合せや内部実装を置かない」契約と矛盾する。`CharacterSheetContainer`はresolverなしの`useForm`を使い、`src/character-sheet/schemas/`に現在のform値を検証するschemaはない。`zod`は既存依存であり、architectureはschemaとNode testの境界を定めている。Component / Hook専用test runnerはarchitectureとcurrent issueで未採用としているため、追加はユーザー承認後の明示的なdependency選定が必要である。
+
+### 対応方針
+
+- G4 E2Eを、領域表示と2〜3個の代表的なユーザー操作だけを確認する最終smokeへ縮小する。入力制約・計算式・DOM属性の網羅は置かない。
+- `schemas/`に現在のcharacter sheet form用Zod schemaを置き、`null`非許容、信用の整数・範囲、空欄を`0`へ戻す入力境界を正本化する。純粋logicとschemaの境界値はNode testで確認する。
+- Component / hook test toolingは、`vitest`、`jsdom`、`@testing-library/react`、`@testing-library/user-event`をdev dependencyとして採用する。既存Node / Playwrightとの役割、RHF adapter hookの検証方法をこのsectionへ明記し、PresenterをRHFなしのprops test、adapter hookをRHF接続testとして検証する。
+- `@hookform/resolvers`をruntime dependencyとして採用し、Zod schemaを`zodResolver`経由でRHFへ接続する。
+- このreview sectionの承認までは、source codeとtest fileを変更しない。
+
+### テスト修正・削除・追加計画
+
+1. E2Eを削除・縮小する。
+   - `tests/visual/character-sheet.spec.ts`の`normalizes editable credit and presents derived values`を削除する。信用4入力の空欄・負値・整数化、派生式、right align、`readonly`属性の確認をE2Eから除く。
+   - `edits profile fields and toggles the multiline setting`は、基本情報領域が表示されること、PC名の代表自由入力、設定の開閉と複数行入力だけを確認するsmokeへ縮小する。
+   - 取得信用の代表数値入力を1操作だけ追加または上記smokeへ含める。値の制約・派生値・すべての信用入力をE2Eで確認しない。
+   - FormulaTooltipの計算式、tap外側dismiss、DOM属性をE2Eへ追加しない。
+2. Node testをschemaと純粋logicへ整理する。
+   - `tests/node/character-sheet/credit.test.ts`から、入力正規化の境界値をZod schema testへ移す。`calculateCredit`は派生式だけを純粋logicとして残す。
+   - `tests/node/character-sheet/schemas/character-sheet-form.test.ts`を追加し、profileの`null`拒否、信用の整数・非負制約、小銭修正の負数、空欄を`0`へ戻す変換を表形式で確認する。
+3. Component / hook test基盤を追加する。導入ライブラリは以下で確定する。
+   - dev dependency: `vitest`をComponent / hook test runner、`jsdom`をDOM環境、`@testing-library/react`をComponent render / `renderHook`、`@testing-library/user-event`をユーザー操作の再現に使う。PlaywrightなしでPresenterとadapter hookを局所検証するために必要であり、既存Node `node:test`による純粋logic / schema testは置き換えない。`@testing-library/jest-dom`は標準`expect`で十分なため導入しない。
+   - runtime dependency: `@hookform/resolvers`をZod schemaとRHFを結ぶ`zodResolver`に使う。手書きの`safeParse` adapterはRHF errorとの同期を独自実装することになり、React Hook Formのresolver contractを重複させるため採用しない。
+   - 不採用: Playwrightの追加利用はE2Eの境界を広げるため、React Hook Testing Library単体は`@testing-library/react`の`renderHook`へ統合済みのため、手製JSDOM + `node:test`はTSX変換・DOM cleanup・hook lifecycleをプロジェクト固有に持ち込むため採用しない。
+   - `tests/components/character-sheet/ProfileSection.test.tsx`を追加し、props表示、設定の局所開閉、FormulaTooltipのtrigger / dismiss、callback通知だけを確認する。計算式・RHF・Zodを置かない。
+   - `tests/hooks/character-sheet/useCharacterSheetFormPresenterProps.test.tsx`を追加し、RHF formとZod resolverを使ったcredit入力境界、ViewModelへの派生値接続、`setValue`後の表示用propsを確認する。Presenter DOMやbrowser viewportは置かない。
+4. packageごとの理由・代替案・初期スコープに必要な理由は上記のとおり記録済みである。レビュー対応の承認後に依存を追加し、既存のNode test、Component / hook test、最小E2Eを別scriptで実行できるようにする。
+
+### 対応完了チェックリスト
+
+- [ ] E2Eを領域表示と2〜3個の代表browser behaviorへ縮小する
+- [ ] character sheet form用Zod schemaとNodeの境界値testを追加する
+- [ ] 確定したComponent / hook test toolingを追加し、PresenterとRHF adapter hookのtestを追加する
+- [x] dependency追加理由・代替案・初期スコープ上の必要性をこのissueへ記録する
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
+
 ## 初期スコープ外
 
 - キャラクター画像の選択・変換・保存・失敗dialogを実装しない（G6）。

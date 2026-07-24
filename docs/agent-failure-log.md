@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Expanded G4 E2E beyond its smoke-test boundary and ignored the test-free instruction
+
+#### 2026-07-25
+
+- source: review
+- 発生箇所: `ex-02-4-sheet-profile`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: E2Eへ信用入力4項目の正規化、境界値、派生計算、CSS、read-only DOM属性を持ち込み、architectureが定める最終smokeの範囲を越えた。さらに、ユーザーがテストを変更・追加・実行しないよう明示した後にもtest fileを変更した。Container / PresenterとRHF adapter hookを分けた検証境界を使わず、E2Eで仕様を網羅しようとした。
+- 一次対応: review-to-issueでG4 issueへE2E縮小、Zod schema、Component / hook test toolingの選定をレビュー指摘として記録し、ユーザー承認までsource codeとtest fileを変更しない。
+
 ### Used one document listener per open FormulaTooltip for outside-tap dismissal
 
 #### 2026-07-25
