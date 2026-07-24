@@ -34,7 +34,10 @@
 - `issue-first-development` のlocal repository modeで `issue_reviewer` を実行してよいのは、このworkflowでユーザー許可済みのローカルissueを作成した後だけである。issueを作成していないbranch準備、scope調整、requirements調整、contents作成ではreviewerを実行しない。remote snapshot draft modeではreviewerを実行しない。
 - 実装を開始してよいのは、ユーザーがissue内容を明示承認した後だけである。
 - 開発タスクは専用branchで行う。branch名は原則 `NN-slug` または `NN-M-slug` とする。承認済みissueが別名を明示する場合はそれに従う。
-- 実装範囲は現在の `docs/issue/*.md` に従う。範囲外作業は勝手に混ぜない。
+- 各親issueは `docs/issue/<親issue名>/plan.md` を専用Gate planとして持つ。Gateの列挙、実行順、子issueへの入口、Gate完了後に残す確定事項はこのplanにのみ書く。親issue本文へGate一覧を重複して書かない。
+- Gateを実装する時は、対象Gate専用の子issueを作成し、その子issueを実装契約とする。子issueは、親issue全体の会話や履歴を前提にせず、新しいsessionだけで作業を開始できる最小限で自己完結した情報を持つ。
+- Gate完了後は、継続して必要な詳細要件・確定判断・後続Gateへの引継ぎだけを親issueの専用Gate planへ戻してから、子issueを `docs/issue/done/` へ移す。実装中の経緯、重複した背景、会話依存の情報は親planへ戻さない。
+- 実装範囲は、現在のGateの子issueと親issueの専用Gate planに従う。範囲外作業は勝手に混ぜない。
 - ユーザーが「検討して」「確認して」「妥当性を見て」「どうかな」「レビューして」など、判断や意見を求めている場合は実装承認ではない。判断、選択肢、推奨方針を返して停止し、実装、生成、ファイル編集は「修正開始」「実装して」「反映して」などの明示指示を待つ。
 - ユーザーの明示指示によりcurrent issue外のGit管理ファイルを変更する場合は、`.tmp/review/<branch-name>/user-directed-changes.md` に指示、分類、変更対象、変更前後、issueとの関係、関連commitまたはPRを記録する。要求または初期スコープ外SSoTを変更する場合は、変更元SSoTとcurrent issueも同じtaskで更新する。通常のcurrent issue内作業とGit操作は記録しない。
 - 実装中は、完了条件・チェックポイントを実際にローカル確認した時点で現在のissueへチェックを入れる。未確認項目や人間確認が必要な項目は未チェックのまま残す。
@@ -176,14 +179,15 @@ project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照す
 2. この `AGENTS.md`
 3. 対応する`.raw/contents/<slug>.md`の本文とHTMLコメント（ページ本文・可視の表示構成に限る）
 4. 該当する `.agents/skills/*/SKILL.md` と `.agents/rules/*.md` の安全・workflow規約
-5. `docs/issue/<current-branch>.md`
-6. `docs/requirements.md`
-7. `docs/out-of-scope.md`
-8. `docs/plan.md`
-9. `docs/TODO.md`
-10. 関連する `docs/design/<design-target>/`
-11. その他のドキュメント
-12. 既存コード
+5. 現在のissue（Gate実装時は `docs/issue/<child-issue>.md`）
+6. Gate実装時は親issueの `docs/issue/<parent-issue>/plan.md`
+7. `docs/requirements.md`
+8. `docs/out-of-scope.md`
+9. `docs/plan.md`
+10. `docs/TODO.md`
+11. 関連する `docs/design/<design-target>/`
+12. その他のドキュメント
+13. 既存コード
 
 contentsがページ本文・可視の表示構成について下位文書と矛盾する場合は、contentsを採用し、関連するGit管理文書を同じtaskで更新する。ユーザー指示または本ファイルの安全・workflow規約と矛盾する場合は、実装せずユーザーに確認する。
 
@@ -191,8 +195,9 @@ contentsがページ本文・可視の表示構成について下位文書と矛
 
 ## 作業種別ごとの参照方針
 
-- 開発タスク開始時: `issue-first-development`、`docs/plan.md`、`docs/TODO.md`、該当するrequirements/designを読む。
-- 実装中: 対応するcontentsがあるページでは、contentsをページ本文・可視の表示構成の正本とし、issue、requirements、out-of-scope、design、既存コードをそれに整合させる。それ以外の実装では現在のissueを正本とし、必要なrequirements、out-of-scope、design、既存コードを読む。
+- 開発タスク開始時: `issue-first-development`、`docs/plan.md`、`docs/TODO.md`、該当するrequirements/designを読む。親issueを作成する場合は、同時に `docs/issue/<親issue名>/plan.md` を作成し、Gateを列挙する。
+- Gate実装開始時: 親issueの専用Gate planから対象Gateだけを読み、専用子issueを作成または検証する。子issueは新しいsessionで独立して作業できることを確認してから、ユーザー承認を待つ。
+- 実装中: 対応するcontentsがあるページでは、contentsをページ本文・可視の表示構成の正本とし、子issue、親issueの専用Gate plan、requirements、out-of-scope、design、既存コードをそれに整合させる。それ以外の実装では現在の子issueを正本とし、必要な親issueの専用Gate plan、requirements、out-of-scope、design、既存コードを読む。
 - UI系作業: issueで指定された `docs/design/<design-target>/` を確認する。design不足時は実装せずdesign作成へ切り出す。
 - レビュー指摘取り込み: `review-to-issue` を使い、`.tmp/*.md` をローカルSSoTと照合する。`.tmp/` は共有成果物ではないため、必要な情報だけ正式docsまたは報告へ反映する。
 - PRレビュー草案作成: `pr-review-draft` を使う。リモートPRを対象にlocal reviewerを起動し、`review-to-issue`への取り込み後に停止する。
