@@ -12,7 +12,7 @@
 - 画面design: `docs/design/character-sheet/notes.md`
 - 実装の契約とゲート管理: `docs/issue/ex-02-web-character-sheet.md`
 - ゲーム仕様と選択肢: `src/pages/`配下のゲーム仕様と`data/generated/`配下の生成JSON
-- 初期対象viewportはtabletとmobileである。広幅desktop専用レイアウトは初期scope外である。
+- 初期対象viewportはdesktop、tablet、mobileである。
 - 画面はフルスクラッチのReact Componentで実装する。UIライブラリ、デザインシステム、Component固定型のフォームライブラリは導入しない。React Componentに適用するscoped CSSの方式と追加依存の要否は、既存CSSとの共存を確認してから決める。
 
 ## 推奨構成

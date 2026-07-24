@@ -6,7 +6,9 @@
 
 ## 共通の境界
 
-- 各Gateは表に記載した子issueを作成してから実装する。完了境界、確認方法、実装判断はGate詳細化時に子issueへ定義する。
+- このplanはGateの列挙と着手候補の範囲を管理する。表の1行だけでは実装を開始しない。
+- 各Gateは、着手時に現行の要件・アーキテクチャ・designなどの参照正本を読み、表に記載した子issueを作成してから実装する。子issueで完了境界、確認方法、実装判断、追加の参照正本を定義し、以後の実装中のSSoTとする。
+- Gate完了後は、後続Gateに必要な確定事項と詳細要件だけをこのplanへ差し戻し、子issueをdoneへ移す。
 - 共通スキルボーナスは表示用データを参照するだけとし、構造化、文字列解析、自動算出を追加しない。
 - 全Gateの参照正本は親issueと同じ`docs/requirements/character-sheet.md`、`docs/architectures/character-sheet.md`、`docs/design/character-sheet/notes.md`とする。必要なゲームデータは、子issueで追加して指定する。
 

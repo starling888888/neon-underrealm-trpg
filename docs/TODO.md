@@ -63,12 +63,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `53-content-smoke-test`
   - handling plan: `-local/data-cards`をPagefind indexから除外するか、検索Visual Testのlocatorを公開対象の検索結果へ限定する。GitHub Pagesのsubpath検索と公開ページの検索結果が壊れないことを確認してから、Visual Capture全体をgreenにする。
 
-- [ ] React Islandの導入を検討する
-  - source: ユーザー指示
-  - classification: out-of-scope follow-up
-  - plan: なし。ファーストステップ完了後に必要性と導入範囲を判断する。
-  - handling plan: vanilla JavaScriptでUIロジックとHTMLセレクタの対応を維持する負荷が高まっているため、必要な画面に限定したReact Islandの導入可否を検討する。初期スコープ外のままとし、現時点では実装・`docs/plan.md`への追加を行わない。
-
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
   - source: `28-0-common-skills-data` 実装中のユーザー指示
   - classification: future data compatibility follow-up

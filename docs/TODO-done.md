@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] React Islandの導入を検討する
+  - completed: 2026-07-24 via user direction / adopted for `ex-02-web-character-sheet`
+  - source: ユーザー指示
+  - classification: resolved architecture decision
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG1
+  - handling plan: キャラクターシートに限定したReact Islandを採用し、サイト全体をSPA化しない。導入と実装の詳細はG1の子issueで扱う。
+
 - [x] 流儀の共通スキルボーナスを構造化データへ変換する
   - completed: 2026-07-24 via user direction / not adopted
   - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示

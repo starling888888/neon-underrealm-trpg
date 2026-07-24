@@ -391,11 +391,3 @@ CI/CDではExcel変換を必須工程にしない。
 - Webキャラクターシートでのキャラクター作成・編集
 
 これらは `docs/plan.md` および `docs/requirements.md` に従って初期実装対象として扱う。
-
----
-
-## 34. Webキャラクターシートの広幅desktop専用レイアウト
-
-Webキャラクターシートにおける広幅desktop専用の二カラムレイアウト、右上操作領域、専用VRTは初期スコープ外とする。
-
-初期実装の対象viewportはtabletとmobileとし、広幅desktopの最適化は後続taskで扱う。
