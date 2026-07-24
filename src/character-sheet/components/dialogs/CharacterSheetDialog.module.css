@@ -1,0 +1,130 @@
+.dialog {
+  width: min(32rem, calc(100vw - (var(--page-gutter) * 2)));
+  max-width: none;
+  max-height: min(36rem, calc(100dvh - (var(--space-8) * 2)));
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  color: var(--color-text);
+  padding: 0;
+}
+
+.dialog::backdrop {
+  background: rgb(30 33 37 / 0.5);
+}
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border-bottom: var(--border-width) solid var(--color-border);
+  padding: var(--space-4) var(--space-5);
+}
+
+.header h2 {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: var(--line-height-tight);
+}
+
+.closeButton {
+  width: 2.25rem;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: var(--text-2xl);
+  line-height: 1;
+}
+
+.closeButton:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+.content {
+  display: grid;
+  gap: var(--space-4);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-5);
+}
+
+.content > * {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-4) var(--space-5);
+}
+
+.actions > button {
+  min-height: 2.25rem;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  padding: var(--space-2) var(--space-4);
+  font-weight: 750;
+}
+
+.actions > button[data-tone="primary"] {
+  border-color: var(--color-link);
+  background: var(--color-link);
+  color: var(--color-text-inverse);
+}
+
+.actions > button[data-tone="primary"]:hover {
+  border-color: var(--color-link-hover);
+  background: var(--color-link-hover);
+}
+
+.actions > button:not([data-tone="primary"]) {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.actions > button:not([data-tone="primary"]):hover {
+  background: var(--color-surface-muted);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (width < 48rem) {
+  .header,
+  .content,
+  .actions {
+    padding: var(--space-4);
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .actions button {
+    flex: 1 1 8rem;
+  }
+}

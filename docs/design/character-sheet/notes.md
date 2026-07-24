@@ -142,6 +142,17 @@
 - ヘルプダイアログは青緑のアクセントカラーの枠線、薄いグレーの背景、青緑の丸い`?`アイコンと「ヘルプ」のタイトル行を使う。最大高さを定め、本文だけを独立してscrollできるようにする。
 - それ以外のダイアログのbutton配置、dismiss操作、focus処理、Clipboard API失敗時の扱いは、後続のdesign対話で決める。
 
+### G5 dialog common foundation
+
+- target: `CharacterSheetDialog`と、共通基盤を確認する可視のダミー確認button。routeは`/character-sheet/`で、defaultではdialogを閉じる。
+- open state: ダミーbutton「確認ダイアログを開く」を操作すると、`確認`の見出し、「この操作は確認用です。キャラクターシートの内容は変更されません。」の本文、`キャンセル`と`OK`のactionを持つ確認dialogを開く。どちらのactionもdialogを閉じるだけで、副作用を起こさない。
+- placement: ダミーbuttonはReact Islandのformの直前に独立して置く。desktopとtabletでは右寄せのコンパクトなbutton、mobileでは読みやすい幅を保つ。G23以降で実操作を接続するときに置換または削除し、最終公開UIには残さない。
+- dialog surface: native `dialog`のmodal表示を使い、白いsurfaceに通常のborder、`--radius-lg`、`--shadow-soft`を適用する。標準幅は`min(32rem, calc(100vw - 2 * var(--page-gutter)))`、block-sizeはviewport内に収める。候補選択など幅が必要なdialogは専用Componentで幅を定義し、長い本文・表はcontent領域だけを独立scrollにする。
+- composition: `CharacterSheetDialog`は開閉、modal、Escape、focus復帰、accessible nameを担うshellとする。`CharacterSheetDialogHeader`、`CharacterSheetDialogContent`、`CharacterSheetDialogActions`は必要なものだけを組み合わせる。`variant`で全dialogの構造や配色を切り替えない。確認、エラー、通知、ヘルプ、候補選択は、各Gateで専用Componentまたは専用内容を作る。
+- dismiss and focus: Escapeと、各dialogに置く少なくとも一つの可視の閉じる操作で閉じる。右上の閉じる`×`は必要なdialogだけ`Header`に置き、全dialogへ強制しない。dialog外側clickでは閉じない。開くと各dialogが明示する初期focus対象へfocusし、破壊的確認では非破壊action（`キャンセル`）を選ぶ。見出し、複数段落、リスト、表を読む必要があるdialogでは、本文先頭の静的要素へfocusできるようにする。閉じた後は原則としてdialogを開いたbuttonへfocusを戻す。native `alert` / `confirm`は使わない。
+- semantics: dialogは可視見出しへの`aria-labelledby`、または`aria-label`のいずれかでaccessible nameを必須にする。短く構造を持たない主文だけは`aria-describedby`で関連付け、複数段落、リスト、表を含む本文には指定しない。`title`と`description`を全用途で必須のstring propsにはしない。標準headerの可視見出しはページの`h1`に続く`h2`とする。開閉状態・選択対象はContainerが持ち、RHF、保存、JSONへ含めない。
+- viewports and comparison points: desktop（`1440x1200`）、tablet（`820x1180`）、mobile（`390x900`）で、button、dialogの幅、actionの到達性、visible focus、Escape、操作元へのfocus復帰、ページ全体の横overflowなしを確認する。G5のVRTはcanonical baselineを更新せず、PRレビュー直前の`@character-sheet` targetだけを比較する。
+
 ## 参照正本と制約
 
 - `docs/requirements/character-sheet.md`は、キャラクターシートの入力、表示、算出、検証、保存、出力要件の正本である。

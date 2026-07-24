@@ -2,7 +2,7 @@
 
 ## 目的
 
-後続Gateで使うキャラクターシート固有のダイアログ共通基盤を整備する。確認、通知、エラー、ヘルプ、候補選択の各ダイアログが、同じアクセシビリティと閉じる操作の契約を共有できる状態にする。
+後続Gateで使うキャラクターシート固有のダイアログ共通基盤を整備する。確認、通知、エラー、ヘルプ、候補選択の各ダイアログが、同じmodal・アクセシビリティ・閉じる操作の契約を共有しつつ、用途固有の構造と見た目を個別に定義できる状態にする。
 
 ## 背景
 
@@ -33,8 +33,8 @@ G5の依存GateであるG1、G2、G3は完了済みである。後続のG6、G23
   - 閉じる`×`、キャンセル、Escape、dialog外側click、確認actionの扱い
   - 開いた直後のfocus、modal内のkeyboard focus、閉じた後の操作元へのfocus復帰、支援技術へ伝えるrole・label・description
   - G5単体でcanonical VRTを追加・更新しないこと、後続Gateで実際のdialog stateを追加する際のVRT state / comparison point
-- 承認済みdesignに従い、`src/character-sheet/components/dialogs/`へ制御式の共通dialog ComponentとCSS Moduleを追加する。
-- 共通Componentのpropsを、開閉状態、variant、見出し、本文、action、閉じる要求、操作元へのfocus復帰に必要な情報だけに限定する。開閉状態、選択対象、業務上の確定・取消の判断は呼出し側の`CharacterSheetContainer`に残す。
+- 承認済みdesignに従い、`src/character-sheet/components/dialogs/`へ制御式の共通dialog shell、header / content / actionsの合成部品、CSS Moduleを追加する。shellは`variant`で全用途の構造・配色を切り替えず、各dialogの固有構造と配色は後続Gateの専用Componentまたは専用内容に委ねる。
+- 共通shellのpropsを、開閉状態、accessible name、任意のdescription、初期focus、閉じる要求、操作元へのfocus復帰に必要な情報だけに限定する。開閉状態、選択対象、業務上の確定・取消の判断は呼出し側の`CharacterSheetContainer`に残す。
 - `CharacterSheetContainer`のroot直下に、確認dialogだけを開く可視のダミーbuttonを置く。buttonのlabel、配置、dialogの見出し・本文・actionは承認済みdesignに従う。確認・取消のどちらもdialogを閉じるだけとし、RHF値、保存、画像、JSON、Clipboardなどの業務状態を変更しない。
 - このダミーbuttonはtest専用の非表示DOMや内部stateではなく、G5の共通dialogを確認する一時的な画面上の導線とする。G23以降で実際の操作buttonを接続するときに置換または削除し、最終公開UIへ残さない。
 - Component testで、表示・非表示、accessible name / modal semantics、設計で確定した閉じる操作、focus復帰、確認・取消callbackをユーザー観測可能な契約として確認する。
@@ -52,27 +52,28 @@ G5の依存GateであるG1、G2、G3は完了済みである。後続のG6、G23
 
 ## 完了条件
 
-- [ ] `design-image-generation`でG5に必要なdialog共通のdesign intent、アクセシビリティ、VRT参照方針を`docs/design/character-sheet/notes.md`へ記録し、ユーザー承認を受けている。
-- [ ] 確認、通知、エラー、ヘルプ、候補選択が利用できる、制御式の共通dialog Componentを追加している。ただし各用途の業務処理と、G5のダミー確認button以外の個別の呼出しUIは追加していない。
-- [ ] dialogの開閉・選択対象は`CharacterSheetContainer`が所有でき、Presenter以下の表示Componentはpropsとcallbackだけで利用できる。
-- [ ] designで確定したrole、accessible name / description、Escape、閉じる操作、focus処理、操作元へのfocus復帰を満たしている。
-- [ ] 可視のダミー確認buttonから確認dialogを開け、確認・取消のどちらもdialogを閉じるだけで、フォーム値・保存・ブラウザAPIの副作用を起こさない。
-- [ ] ダミーbuttonをG23以降の実操作buttonへ置換または削除する引継ぎを記録している。
-- [ ] `alert` / `confirm`を追加しておらず、dialog開閉状態をRHF、保存、JSONへ含めていない。
-- [ ] Component testで、代表variantの表示、閉じる操作、確認・取消callback、focusのユーザー観測可能な契約を確認している。
-- [ ] G5単体でcanonical VRT baselineを追加・更新せず、ダミー確認dialogのdesktop / tablet / mobileでの表示、横overflow、dialog内scrollをbrowser behaviorで確認している。Visual ReviewはPRレビュー直前にG5のcharacter-sheet targetへ限定し、baseline更新には別途ユーザー承認を得る。
-- [ ] `npm run check` と `npm run build` が通る。
+- [x] `design-image-generation`でG5に必要なdialog共通のdesign intent、アクセシビリティ、VRT参照方針を`docs/design/character-sheet/notes.md`へ記録し、ユーザー承認を受けている。
+- [x] 確認、通知、エラー、ヘルプ、候補選択が利用できる、制御式の共通dialog shellとheader / content / actionsの合成部品を追加している。shellは全用途を`variant`で表さず、各用途の業務処理、固有構造、固有配色と、G5のダミー確認button以外の個別の呼出しUIは追加していない。
+- [x] dialogの開閉・選択対象は`CharacterSheetContainer`が所有でき、Presenter以下の表示Componentはpropsとcallbackだけで利用できる。
+- [x] designで確定したrole、accessible name、必要な場合だけのdescription、Escape、各dialogの可視の閉じる操作、focus処理、操作元へのfocus復帰を満たしている。
+- [x] 可視のダミー確認buttonから確認dialogを開け、確認・取消のどちらもdialogを閉じるだけで、フォーム値・保存・ブラウザAPIの副作用を起こさない。
+- [x] ダミーbuttonをG23以降の実操作buttonへ置換または削除する引継ぎを記録している。
+- [x] `alert` / `confirm`を追加しておらず、dialog開閉状態をRHF、保存、JSONへ含めていない。
+- [x] Component testで、見出しを持つ確認dialogと`aria-label`だけを持つ通知dialogの表示、閉じる操作、確認・取消callback、focusのユーザー観測可能な契約を確認している。
+- [x] G5単体でcanonical VRT baselineを追加・更新せず、ダミー確認dialogのdesktop / tablet / mobileでの表示、横overflow、dialog内scrollをbrowser behaviorで確認している。
+- [ ] PRレビュー直前に、G5のcharacter-sheet targetだけをVisual Reviewする。canonical baselineを更新する場合は別途ユーザー承認を得る。
+- [x] `npm run check` と `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存の`/character-sheet/` route、G0〜G4のlayout、profile入力、section frame操作を壊していない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] ダミーbuttonと確認dialogをdesktop、tablet、mobileで開け、ページ全体の横overflowを生じさせず、designで定めたdialog内scrollだけを許容している。
-- [ ] ダミーbuttonをtest専用の隠しUIや内部実装の観測手段にせず、G23以降で実操作buttonへ置換または削除する範囲に限定している。
-- [ ] 不要な依存関係、global CSS、サイト共通Header / Footer / layoutへのcharacter-sheet固有分岐を追加していない。
-- [ ] `docs/requirements/character-sheet.md`、`docs/architectures/character-sheet.md`、`docs/design/character-sheet/notes.md`、`docs/TODO.md`と矛盾していない。
-- [ ] 既存Node testのVitest移行とPresenter propsのmemo化を、このGateへ取り込んでいない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存の`/character-sheet/` route、G0〜G4のlayout、profile入力、section frame操作を壊していない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] ダミーbuttonと確認dialogをdesktop、tablet、mobileで開け、ページ全体の横overflowを生じさせず、designで定めたdialog内scrollだけを許容している。
+- [x] ダミーbuttonをtest専用の隠しUIや内部実装の観測手段にせず、G23以降で実操作buttonへ置換または削除する範囲に限定している。
+- [x] 不要な依存関係、global CSS、サイト共通Header / Footer / layoutへのcharacter-sheet固有分岐を追加していない。
+- [x] `docs/requirements/character-sheet.md`、`docs/architectures/character-sheet.md`、`docs/design/character-sheet/notes.md`、`docs/TODO.md`と矛盾していない。
+- [x] 既存Node testのVitest移行とPresenter propsのmemo化を、このGateへ取り込んでいない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -94,6 +95,6 @@ G5の依存GateであるG1、G2、G3は完了済みである。後続のG6、G23
 
 ## 備考
 
-このissueはG5の実装契約である。実装開始前に、design notesの不足を`design-image-generation`で補い、ユーザー承認を得る必要がある。ダミー確認buttonはG5で共通dialogの表示・操作を確認するためだけの可視導線であり、確認・取消のいずれも副作用を持たない。G23以降で実際の操作buttonを追加するときに、このbuttonを置換または削除する。現行notesで文言まで確定しているのは、CCFOLIAコピー成功、初期化確認、エラー確認、ヘルプの一部であり、これらの個別dialog内容・trigger・副作用はG6、G23、G27〜G30などの後続Gateで接続する。
+このissueはG5の実装契約である。実装開始前に、design notesの不足を`design-image-generation`で補い、ユーザー承認を得る必要がある。ダミー確認buttonはG5で共通dialogの表示・操作を確認するためだけの可視導線であり、確認・取消のいずれも副作用を持たない。G23以降で実際の操作buttonを追加するときに、このbuttonを置換または削除する。現行notesで文言まで確定しているのは、CCFOLIAコピー成功、初期化確認、エラー確認、ヘルプの一部であり、これらの個別dialog内容・trigger・副作用はG6、G23、G27〜G30などの後続Gateで接続する。確認とエラーは専用Component候補であり、ヘルプと候補選択はrich contentを持つ専用Componentまたはshellの合成で扱う。全用途へ一律のtitle / description / `×`を強制しない。
 
 G5完了後は、後続Gateへ必要な公開props、アクセシビリティ契約、VRTの扱いだけを親Gate planのG5行へ引き継ぐ。実装経緯や一時的なreview記録は親planへ戻さない。

@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Retried a browser interaction before Astro client hydration completed
+
+#### 2026-07-25
+
+- source: self
+- 発生箇所: `ex-02-5-sheet-dialogs`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: `page.goto()`直後にReact Island内の確認dialog openerをclickしたため、client hydration前のclickがstate更新へ届かず、dialogが見つからないPlaywright失敗を繰り返した。入力値の保持確認もhydration前の入力では安定しなかった。
+- 一次対応: dialogを開くユーザー操作を短い`expect(...).toPass()`で再試行し、client側の操作が有効になった後に確認を開始するようtestを修正した。test-onlyのhydration stateやDOM属性は追加していない。
+
 ### Configured Vitest without the React TSX transform
 
 #### 2026-07-25

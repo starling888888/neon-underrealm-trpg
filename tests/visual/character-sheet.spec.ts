@@ -212,4 +212,65 @@ test.describe("character sheet page", () => {
     await setting.fill("ネオンの街\n雨の夜");
     await expect(setting).toHaveValue("ネオンの街\n雨の夜");
   });
+
+  test("opens and dismisses the confirmation dialog without changing the form", async ({
+    page,
+  }) => {
+    for (const viewport of [
+      visualViewports.desktop,
+      visualViewports.tablet,
+      visualViewports.mobile,
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto("character-sheet/");
+
+      const trigger = page.getByRole("button", {
+        name: "確認ダイアログを開く",
+      });
+      const dialog = page.getByRole("dialog", { name: "確認" });
+      await expect(async () => {
+        await trigger.click();
+        await expect(dialog).toBeVisible({ timeout: 250 });
+      }).toPass();
+      await page.keyboard.press("Escape");
+      await expect(dialog).toBeHidden();
+
+      const pcName = page.getByLabel("PC名", { exact: true });
+      await pcName.fill("ネオン");
+      await expect(async () => {
+        await trigger.click();
+        await expect(dialog).toBeVisible({ timeout: 250 });
+      }).toPass();
+      await expect(
+        dialog.getByText(
+          "この操作は確認用です。キャラクターシートの内容は変更されません。",
+        ),
+      ).toBeVisible();
+      await expect(
+        dialog.getByRole("button", { name: "キャンセル" }),
+      ).toBeFocused();
+      await page.mouse.click(0, 0);
+      await expect(dialog).toBeVisible();
+      const dialogBody = dialog.locator("p").locator("..");
+      await dialog.locator("p").evaluate((element) => {
+        element.textContent = "確認用の本文です。".repeat(300);
+      });
+      expect(
+        await dialogBody.evaluate(
+          (element) => element.scrollHeight > element.clientHeight,
+        ),
+      ).toBe(true);
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= window.innerWidth,
+        ),
+      ).toBe(true);
+
+      await page.keyboard.press("Escape");
+
+      await expect(dialog).toBeHidden();
+      await expect(trigger).toBeFocused();
+      await expect(pcName).toHaveValue("ネオン");
+    }
+  });
 });
