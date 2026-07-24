@@ -7,6 +7,7 @@ import type {
   ProfileValues,
 } from "../form-values";
 import type { CreditSummary } from "../logic/credit";
+import FormulaTooltip from "./FormulaTooltip";
 import styles from "./ProfileSection.module.css";
 
 type TextFieldProps = {
@@ -33,6 +34,7 @@ type CreditFieldProps = {
 };
 
 type ReadOnlyCreditFieldProps = {
+  formula: string;
   label: string;
   value: number;
 };
@@ -100,15 +102,23 @@ function CreditField({
   );
 }
 
-function ReadOnlyCreditField({ label, value }: ReadOnlyCreditFieldProps) {
+function ReadOnlyCreditField({
+  formula,
+  label,
+  value,
+}: ReadOnlyCreditFieldProps) {
   const id = `character-sheet-${label}`;
 
   return (
     <div className={styles.metric}>
-      <span className={styles.metricLabel}>{label}</span>
-      <output className={styles.metricValue} id={id}>
-        {value}
-      </output>
+      <FormulaTooltip formula={formula}>
+        <span>
+          <span className={styles.metricLabel}>{label}</span>
+          <output className={styles.metricValue} id={id}>
+            {value}
+          </output>
+        </span>
+      </FormulaTooltip>
     </div>
   );
 }
@@ -214,10 +224,15 @@ export default function ProfileSection({
             value={credit.received}
           />
           <ReadOnlyCreditField
+            formula="取得信用 + 融通された信用 - 融通した信用"
             label="合計信用"
             value={creditSummary.totalCredit}
           />
-          <ReadOnlyCreditField label="消費信用" value={0} />
+          <ReadOnlyCreditField
+            formula="選択した全アイテムの信用の合計（ドラッグは信用 × 所持セット数）"
+            label="消費信用"
+            value={0}
+          />
           <CreditField
             allowNegative
             label="小銭修正"
@@ -226,7 +241,11 @@ export default function ProfileSection({
             onChange={onCreditChange}
             value={credit.changeAdjustment}
           />
-          <ReadOnlyCreditField label="小銭" value={creditSummary.change} />
+          <ReadOnlyCreditField
+            formula="合計信用 - 消費信用 + 小銭修正"
+            label="小銭"
+            value={creditSummary.change}
+          />
         </div>
       </section>
     </div>

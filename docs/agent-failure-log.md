@@ -89,6 +89,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Used one document listener per open FormulaTooltip for outside-tap dismissal
+
+#### 2026-07-25
+
+- source: user
+- 発生箇所: `FormulaTooltip`のmobile閉鎖処理
+- 観測した失敗: mobileの外側タップを検出するため、開いている各Tooltipが`document.addEventListener`を登録する設計にした。Tooltipが複数あれば同じdocumentへlistenerが増え、局所UI状態に対して広すぎるイベント境界だった。
+- 一次対応: document listenerを削除し、touch環境でだけ表示する透明なdismiss layerをTooltip自身の外側に置いた。数値に近いabsolute配置を維持し、layerのタップで閉じる。
+
+### Repeated an accessibility lint failure while wiring FormulaTooltip hover behavior
+
+#### 2026-07-25
+
+- source: self
+- 発生箇所: `FormulaTooltip`のhover領域
+- 観測した失敗: hoverを維持するためのstatic要素へevent handlerを置き、a11y lintを実行後にARIA roleだけを足して同じlint失敗を2回繰り返した。要素の入れ子とpointer移動を先に整理せず、lint出力への局所的な対応を試みた。
+- 一次対応: Tooltipをtrigger buttonの子要素へ移し、hover handlerもbuttonへ限定した。これによりTooltip上へのpointer移動もbuttonの領域内に保ち、static要素へのhandlerを不要にした。
+
 ### Misinterpreted an icon-alignment correction as container-spacing work
 
 #### 2026-07-25

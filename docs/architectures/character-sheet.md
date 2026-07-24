@@ -52,7 +52,7 @@ src/
 
 - `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`、RHF adapter hookの接続、処理順序、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の統合、行選択とdialogの開閉・適用を担う。DOMの画面配置を持たず、直下には`CharacterSheetFormPresenter`と、Rootで扱うほうが適切なdialog Componentだけを置く。
 - `CharacterSheetFormPresenter.tsx`: formのDOM配置、sectionの並び、表示用propsの受け渡しを担う。RHF formの生成・参照、マスタ検索、派生値算出、検証、永続化、ブラウザAPI、dialogの開閉状態を持たない。各section・行ComponentはこのPresenter配下の表示Componentとして組み立て、RHFを参照せず必要な表示値と操作callbackをPropsで受け取る。Component内のstateは、自身に閉じた開閉状態などに限定する。
-- `components/`: Presenterとその配下のJSX・表示Component、およびRoot直下へ配置するdialog Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。`CharacterSheetSectionFrame`は`expandable?: boolean`（default: `false`）で静的・折りたたみを共通化し、同じframe・mutedなタイトル領域・分割線を使う。title要素は`span`または`h1`〜`h6`を指定できる。
+- `components/`: Presenterとその配下のJSX・表示Component、およびRoot直下へ配置するdialog Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。`CharacterSheetSectionFrame`は`expandable?: boolean`（default: `false`）で静的・折りたたみを共通化し、同じframe・mutedなタイトル領域・分割線を使う。title要素は`span`または`h1`〜`h6`を指定できる。`FormulaTooltip`は派生値の子要素を操作対象にして局所的な開閉状態だけを持ち、タップ端末ではコンポーネント外タップで閉じる。
 - `form/`: 編集値の型、初期値、RHFの可変配列操作、保存・復元を接続するform Hookを置く。RHF以外の編集state storeは置かない。
 - `logic/`: React、RHF、DOM、Storage、IndexedDBに依存しない派生値算出、選択可能性判定、構造化検証、ViewModel組み立てを置く。
 - `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかは実装Gateで決める。
