@@ -121,4 +121,43 @@ test.describe("character sheet page", () => {
     await page.setViewportSize(visualViewports.mobile);
     await expectLayoutColumnCount(page, 1);
   });
+
+  test("opens editing section frames independently", async ({ page }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const bondsToggle = page.getByRole("button", { name: "縁", exact: true });
+    const checksToggle = page.getByRole("button", {
+      name: "判定",
+      exact: true,
+    });
+    const bondsContentId = await bondsToggle.getAttribute("aria-controls");
+
+    if (bondsContentId === null) {
+      throw new Error("縁の開閉buttonが内容領域を参照していません。");
+    }
+
+    const bondsContent = page.locator(`#${bondsContentId}`);
+
+    await expect(
+      page.getByRole("heading", { level: 2, name: "縁", exact: true }),
+    ).toBeVisible();
+    await expect(bondsToggle).toHaveAttribute("aria-expanded", "true");
+    await expect(checksToggle).toHaveAttribute("aria-expanded", "true");
+    await expect(bondsContent).toBeVisible();
+
+    await bondsToggle.focus();
+    await page.keyboard.press("Enter");
+
+    await expect(bondsToggle).toBeFocused();
+    await expect(bondsToggle).toHaveAttribute("aria-expanded", "false");
+    await expect(bondsContent).toBeHidden();
+    await expect(checksToggle).toHaveAttribute("aria-expanded", "true");
+
+    await page.keyboard.press("Space");
+
+    await expect(bondsToggle).toBeFocused();
+    await expect(bondsToggle).toHaveAttribute("aria-expanded", "true");
+    await expect(bondsContent).toBeVisible();
+  });
 });

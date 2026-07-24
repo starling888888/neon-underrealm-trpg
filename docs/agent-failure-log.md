@@ -89,6 +89,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Used a custom Playwright capture instead of the visual capture workflow
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-3-sheet-section-frame`の実装後画面確認
+- 観測した失敗: 既存の`visual:capture`で対象viewportのactual snapshotを取得すべきところ、一時HTML用の個別Playwright capture scriptを先に作成・実行した。実装結果のactual screenshotを既存workflowで扱うべき位置づけを誤った。
+- 一次対応: 個別captureは中止し、`npm run visual:capture -- --grep '@vrt.*@character-sheet(?:\\s|$)'`でdesktop、tablet、mobileのactual snapshotを取得した。以後、実装結果の画面確認は、対象を絞った既存`visual:capture`を使う。
+
+### Repeated a focus-style assertion with an unstable focus-visible setup
+
+#### 2026-07-24
+
+- source: self
+- 発生箇所: `ex-02-3-sheet-section-frame`のPlaywright focus確認
+- 観測した失敗: Techレビュー後に追加したfocus ringのbrowser testで、programmatic focusの後に`:focus-visible`が適用されると仮定し、同じ`box-shadow: none`失敗を2回繰り返した。Playwrightのfocus modalityとCSS selectorの関係を確認せず、keyboard操作の検証方法を十分に切り分けていなかった。
+- 一次対応: frame内で切れないfocus ringを`:focus`で明示し、ユーザー操作としてのEnter / Space・focus保持を既存browser testで確認する。focusの見た目を自動検証する場合は、最初にselectorが実際のbrowser focus modalityで適用されることを確認する。
+
 ### Test-only hydration state was added to production code
 
 #### 2026-07-24

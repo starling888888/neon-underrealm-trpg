@@ -24,6 +24,14 @@
   - 画像選択の失敗ダイアログ状態
 - canonical baselineの更新は、以後もユーザーの明示承認を必要とする。
 
+### G3 section frame comparison
+
+- target: `縁`、`判定`、`武器・防具`、`スキル`、`専用アイテム`の5 section frame
+- route: `/character-sheet/`
+- state: 初期展開。開閉状態は保存しない。折りたたみ時は内容領域だけを`hidden`にし、childrenをunmountしない。
+- viewports: desktop、tablet、mobile。G3では3 viewportのactual snapshotを`visual:capture`で出力する。canonical baselineは更新しない。
+- comparison points: 見出しbutton、展開icon、枠線、visible focus、開閉後の内容領域、desktop 2列とtablet/mobile 1列における横overflow
+
 ## 確定したデザイン要件
 
 ### 操作領域
@@ -75,6 +83,17 @@
 - 折りたたみの開閉状態はブラウザ内保存、JSON export、JSON importの対象に含めない。
 - 算出値を別領域へ再掲するsummaryは設けない。要件で定める算出値は、それぞれの該当領域で表示する。
 - 計算式の文字列は、該当する算出値のlabel周辺に薄グレーで表示する。
+
+### G3 編集section frame
+
+- G3で共通frameを適用するのは、`縁`、`判定`、`武器・防具`、`スキル`、`専用アイテム`だけとする。基本情報、ビルド、副能力値は後続Gateで表示構成を定める。
+- frameは既存tokenのsurface、border、radiusを使い、見出しbuttonは薄いmuted surfaceに置く。見出しの右端にはCSSで描く青緑のchevronを置く。外部icon assetやsection navigationは追加しない。
+- 見出しbuttonはsection titleをそのままaccessible nameに含め、`aria-expanded`と`aria-controls`で内容領域との関係を伝える。既存global styleのfocus colorを使い、frameの角丸内に収まるinset focus ringをvisible focusとして使う。
+- すべてのframeは初期状態で開く。複数frameを独立して開閉でき、開閉は見出しbuttonの標準keyboard操作で行う。折りたたんだ内容は表示しないが、後続Gateの入力値と局所表示状態を維持する。
+- 内容領域は見出しとborderで区切り、後続Gateの入力を追加できる内側余白を持つ。G3では個別の入力、説明文、算出値、summaryを追加しない。
+- character-sheetのReact Islandは情報密度を優先する。scopeをIsland内へ限定して、見出しは`h2`を`16px`、`h3`を`14px`、`h4`を`13px`とする。site全体のglobal headingやproseのtype scaleは変えない。
+- section frameの見出しbuttonは、操作targetを36px以上に保ちながら、上下padding、section間gap、内容余白を通常ページより小さくする。空の内容領域には最小高を設けず、後続Gateの実際の入力が必要な高さを決める。desktopではsection間20px・内容余白12px、mobileでは16px・8pxを基準にする。
+- chevronは8pxの視覚要素とし、操作targetの大きさとは分けて扱う。小さいiconでもbutton全体を操作対象にし、keyboard操作とvisible focusを維持する。
 
 ### mobileの情報密度
 
