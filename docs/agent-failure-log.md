@@ -89,6 +89,141 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Retried a browser interaction before Astro client hydration completed
+
+#### 2026-07-25
+
+- source: self
+- 発生箇所: `ex-02-5-sheet-dialogs`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: `page.goto()`直後にReact Island内の確認dialog openerをclickしたため、client hydration前のclickがstate更新へ届かず、dialogが見つからないPlaywright失敗を繰り返した。入力値の保持確認もhydration前の入力では安定しなかった。
+- 一次対応: dialogを開くユーザー操作を短い`expect(...).toPass()`で再試行し、client側の操作が有効になった後に確認を開始するようtestを修正した。test-onlyのhydration stateやDOM属性は追加していない。
+
+### Configured Vitest without the React TSX transform
+
+#### 2026-07-25
+
+- source: validation
+- 発生箇所: `ex-02-4-sheet-profile`の`tests/components/character-sheet/ProfileSection.test.tsx`
+- 観測した失敗: Vitest 4へAstroの既存TypeScript設定だけを渡し、TSXを変換できなかった。`esbuild.jsx`を後から設定してもVitest 4のOXC変換に無視され、同じ`Unexpected JSX expression`で再失敗した。
+- 一次対応: React Vite pluginを明示dependencyとして追加し、Vitest configから接続する。Component / hook testを実行してから設定を確定する。
+
+### Used keyboard event injection for button activation in E2E
+
+#### 2026-07-25
+
+- source: validation
+- 発生箇所: `ex-02-4-sheet-profile`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: focused buttonへの`page.keyboard.press()`で開閉を確認しており、実行環境でbutton clickへ結び付かず、2件のE2Eがtimeoutした。G4 E2Eの最終smokeに不要なkeyboard操作の詳細を持ち込んでいた。
+- 一次対応: E2Eはbutton clickによる代表操作だけに縮小し、キーボードと局所stateの詳細はComponent testの責務へ戻した。
+
+### Expanded G4 E2E beyond its smoke-test boundary and ignored the test-free instruction
+
+#### 2026-07-25
+
+- source: review
+- 発生箇所: `ex-02-4-sheet-profile`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: E2Eへ信用入力4項目の正規化、境界値、派生計算、CSS、read-only DOM属性を持ち込み、architectureが定める最終smokeの範囲を越えた。さらに、ユーザーがテストを変更・追加・実行しないよう明示した後にもtest fileを変更した。Container / PresenterとRHF adapter hookを分けた検証境界を使わず、E2Eで仕様を網羅しようとした。
+- 一次対応: review-to-issueでG4 issueへE2E縮小、Zod schema、Component / hook test toolingの選定をレビュー指摘として記録し、ユーザー承認までsource codeとtest fileを変更しない。
+
+### Used one document listener per open FormulaTooltip for outside-tap dismissal
+
+#### 2026-07-25
+
+- source: user
+- 発生箇所: `FormulaTooltip`のmobile閉鎖処理
+- 観測した失敗: mobileの外側タップを検出するため、開いている各Tooltipが`document.addEventListener`を登録する設計にした。Tooltipが複数あれば同じdocumentへlistenerが増え、局所UI状態に対して広すぎるイベント境界だった。
+- 一次対応: document listenerを削除し、touch環境でだけ表示する透明なdismiss layerをTooltip自身の外側に置いた。数値に近いabsolute配置を維持し、layerのタップで閉じる。
+
+### Repeated an accessibility lint failure while wiring FormulaTooltip hover behavior
+
+#### 2026-07-25
+
+- source: self
+- 発生箇所: `FormulaTooltip`のhover領域
+- 観測した失敗: hoverを維持するためのstatic要素へevent handlerを置き、a11y lintを実行後にARIA roleだけを足して同じlint失敗を2回繰り返した。要素の入れ子とpointer移動を先に整理せず、lint出力への局所的な対応を試みた。
+- 一次対応: Tooltipをtrigger buttonの子要素へ移し、hover handlerもbuttonへ限定した。これによりTooltip上へのpointer移動もbuttonの領域内に保ち、static要素へのhandlerを不要にした。
+
+### Misinterpreted an icon-alignment correction as container-spacing work
+
+#### 2026-07-25
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の設定トグル
+- 観測した失敗: ユーザーが指摘したのは`設定`文字列に対するトグルアイコンの縦ずれだったが、agentはトグル全体のmarginとpaddingを詰める修正を行った。対象要素を画面上で分離して確認せず、アイコンの光学位置とコンテナ余白を混同した。
+- 一次対応: トグルのmargin・paddingを元へ戻し、矢印アイコン自体へ相対位置の上方向補正を加えた。
+
+### Left the setting toggle vertically detached from its profile fields
+
+#### 2026-07-25
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の基本情報レイアウト
+- 観測した失敗: profile gridの直後に配置する設定トグルへ不要な上marginと大きい縦paddingを残し、直前の入力行から下へずれた表示にした。
+- 一次対応: 設定コンテナの上marginを除き、トグルの縦paddingを`--space-1`へ縮めて入力群直後の操作として揃えた。
+
+### Applied derived-value background to its label despite the requested boundary
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の信用表示スタイル調整
+- 観測した失敗: ユーザーが自動算出「数値」の見た目だけを入力欄から区別するよう求めたのに、agentはラベルを含む算出セル全体へ白背景を適用した。表示上の対象範囲を要素単位で確認せず、ラベルまで入力欄のように見せた。
+- 一次対応: 背景・角丸・余白を`.metricValue`だけへ移し、ラベルは入力欄と同じ信用カード背景へ戻した。
+
+### Misread the approved profile field arrangement during G4 adjustment
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の基本情報レイアウト調整
+- 観測した失敗: ユーザーが指定した「PC名・PL名を1行目、二つ名を2行目左半分、年齢・性別を2行目右半分の内側」という構成を、年齢・性別を独立した下段として実装した。ユーザーの文言とdesign draftの構成を実装前に正確に照合しなかった。
+- 一次対応: profile gridを2列とし、年齢・性別を右半分の入れ子gridへ移した。UI配置の修正時も、指定された行・列・入れ子をそのままDOM構造へ対応付けてから実装する。
+
+### Ignored the approved character-sheet design draft during G4 implementation
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の`ProfileSection`実装
+- 観測した失敗: 実装前に確認済みで、ユーザーが最終の列幅・余白調整の基準として指定していたcharacter-sheet design draftを実装入力として扱わなかった。その結果、draftの基本情報内のカラム構成・信用の横並び・枠・既存の表示形式を再現せず、独自の3列grid、読み取り専用`input`、要件・draftにない計算式表示を追加した。designを最終調整用の正本として尊重せず、実装都合で簡略化した。
+- 一次対応: この指摘をfailure logへ記録し、修正はユーザーの明示指示を待つ。以後、UI実装ではdesign draftのDOM構成、列幅、余白、枠、表示形式を先に照合し、差異を実装判断で補完しない。
+
+### Did not keep the requested implementation in the background
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-4-sheet-profile`の実装開始後の進行報告
+- 観測した失敗: ユーザーがデザイン修正と並行して会話を続けられるよう、実装・Techレビュー・preview起動をバックグラウンドで進めるよう依頼していたが、agentは作業の完了を待つ形で会話を阻害した。ユーザーから、バックグラウンド実行の意味を理解しているかと指摘を受けた。
+- 一次対応: 実装をworkerへ移し、以後のレビュー・preview起動・検証を独立して進め、結果だけを前景へ報告した。
+
+### Repeated an E2E invocation while the preview server occupied its port
+
+#### 2026-07-24
+
+- source: self
+- 発生箇所: `ex-02-4-sheet-profile`のPlaywright最終確認
+- 観測した失敗: `playwright.e2e.config.ts`が`reuseExistingServer: false`で自身のpreview serverを起動する契約を確認せず、すでに4321でpreviewを起動した状態で同じE2Eを実行した。workerの同種失敗に続き、port使用中でE2Eが開始できない失敗を繰り返した。
+- 一次対応: Techレビュー完了後に自分で起動したpreviewだけを停止し、`npm run build`後にE2E configへserver起動を任せて再実行した。以後、Playwright configの`webServer`と既存previewの共存可否を確認してから実行する。
+
+### Used a custom Playwright capture instead of the visual capture workflow
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-3-sheet-section-frame`の実装後画面確認
+- 観測した失敗: 既存の`visual:capture`で対象viewportのactual snapshotを取得すべきところ、一時HTML用の個別Playwright capture scriptを先に作成・実行した。実装結果のactual screenshotを既存workflowで扱うべき位置づけを誤った。
+- 一次対応: 個別captureは中止し、`npm run visual:capture -- --grep '@vrt.*@character-sheet(?:\\s|$)'`でdesktop、tablet、mobileのactual snapshotを取得した。以後、実装結果の画面確認は、対象を絞った既存`visual:capture`を使う。
+
+### Repeated a focus-style assertion with an unstable focus-visible setup
+
+#### 2026-07-24
+
+- source: self
+- 発生箇所: `ex-02-3-sheet-section-frame`のPlaywright focus確認
+- 観測した失敗: Techレビュー後に追加したfocus ringのbrowser testで、programmatic focusの後に`:focus-visible`が適用されると仮定し、同じ`box-shadow: none`失敗を2回繰り返した。Playwrightのfocus modalityとCSS selectorの関係を確認せず、keyboard操作の検証方法を十分に切り分けていなかった。
+- 一次対応: frame内で切れないfocus ringを`:focus`で明示し、ユーザー操作としてのEnter / Space・focus保持を既存browser testで確認する。focusの見た目を自動検証する場合は、最初にselectorが実際のbrowser focus modalityで適用されることを確認する。
+
 ### Test-only hydration state was added to production code
 
 #### 2026-07-24

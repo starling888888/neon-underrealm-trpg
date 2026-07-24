@@ -37,7 +37,7 @@ Every parent issue uses a dedicated Gate plan. Create it at:
 docs/issue/<parent-issue-slug>/plan.md
 ```
 
-The Gate plan is the only place that enumerates Gates. It is the compact handoff source for starting one Gate in a new session. Do not duplicate the Gate list in the parent issue body.
+The Gate plan is the only place that enumerates Gates. It keeps the parent task split into implementable Gates and records their progress. Do not duplicate the Gate list in the parent issue body.
 
 ---
 
@@ -49,11 +49,11 @@ Follow the latest user instruction exactly. A task number, `$issue-first-develop
 
 Create or validate `docs/issue/*.md` only when the user explicitly asks to create, draft, or validate that issue. A clear negative instruction such as `issueを作成しない` overrides a generic issue-first invocation.
 
-When the user asks only for scope adjustment, requirements adjustment, or contents work, do only that requested work. Use the matching workflow when needed. Do not create an issue. Do not run `issue_reviewer`. Stop after the requested work and report the result and any decisions required from the user.
+When the user asks only for scope adjustment, requirements adjustment, or contents work, do only that requested work. Use the matching workflow when needed. Do not create an issue. Do not run an issue review agent. Stop after the requested work and report the result and any decisions required from the user.
 
 When the user explicitly asks to implement a named Gate, create or validate only that Gate's dedicated child issue after reading the parent Gate plan. The child issue must not require the parent conversation, previous Gate issue bodies, or temporary review files to be understood. Do not begin implementation until the user explicitly approves that child issue.
 
-Run `issue_reviewer` only after this workflow has created a user-authorized local issue file.
+Run an issue review agent only after this workflow has created a user-authorized local issue file. Select the agent in Local issue review.
 
 After explicit local issue creation authorization, the local workflow is:
 
@@ -99,7 +99,7 @@ In this mode, the agent must not:
 
 - implement before issue approval
 - create, draft, validate, or review an issue without explicit user authorization
-- run `issue_reviewer` before this workflow creates a user-authorized local issue
+- run an issue review agent before this workflow creates a user-authorized local issue
 - overwrite user changes
 - update `docs/plan.md` checkboxes
 - treat a remote draft as final before local validation
@@ -271,10 +271,9 @@ The plan must contain:
 
 - a compact parent-issue reference
 - a Gate list with a stable Gate ID, title, status, dependency, and expected child issue path
-- one self-contained Gate brief per Gate: goal, allowed scope, source-of-truth paths, prerequisites, completion boundary, and handoff required after completion
 - only the durable requirements, decisions, and follow-up handoff returned from completed child issues
 
-Do not put implementation logs, duplicated parent background, temporary review output, or session-specific reasoning in the Gate plan.
+Do not add a detailed brief, implementation plan, or source-of-truth inventory for a planned Gate to the Gate plan. The dedicated child issue is the only implementation contract. Do not put implementation logs, duplicated parent background, temporary review output, or session-specific reasoning in the Gate plan.
 
 ### Child issue lifecycle
 
@@ -284,7 +283,7 @@ Create a child issue only when the user explicitly asks to implement that Gate. 
 NN-M-gate-slug
 ```
 
-The child issue must identify its parent issue and Gate plan path, then copy only the selected Gate's self-contained brief into its own goal, scope, completion criteria, checkpoints, source-of-truth paths, and review points. It must be usable in a new session without relying on conversation context or other child issue files.
+The child issue must identify its parent issue, Gate plan path, and selected Gate. Use the Gate list entry as the scope boundary. Determine the child issue's goal, scope, completion criteria, checkpoints, source-of-truth paths, and review points from the current SSoT and user instructions. The child issue must be usable in a new session without relying on parent conversation, previous Gate issue bodies, or temporary review files.
 
 Do not create child issues for every planned Gate in advance. Do not implement more than one Gate from the same child issue.
 
@@ -321,7 +320,7 @@ Check:
 - existing code paths mentioned in the issue exist or are clearly marked as planned
 - the issue does not contradict `AGENTS.md`, this skill, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, `docs/plan.md`, or relevant `docs/design/` files
 
-For a parent issue, also check that `docs/issue/NN-slug/plan.md` exists, uses the Gate plan template, is the only Gate enumeration, and gives each planned Gate enough self-contained information for a new session.
+For a parent issue, also check that `docs/issue/NN-slug/plan.md` exists, uses the Gate plan template, is the only Gate enumeration, has an implementable Gate split, and records durable handoffs only after a Gate completes.
 
 For a child issue, also check that it maps to exactly one parent Gate and includes all information needed to implement that Gate without previous conversation or other child issue bodies.
 
@@ -479,17 +478,16 @@ The issue should not simultaneously claim that local validation is required and 
 Run this section only when this workflow created a user-authorized local issue in local repository mode. Do not run it for branch preparation, scope adjustment, requirements adjustment, contents work, or issue validation without creation.
 
 1. Create `.tmp/review/<branch-name>/` with `mkdir -p`.
-2. Spawn the `issue_reviewer` custom agent from `.codex/agents/issue-reviewer.toml`.
+2. Select the review agent.
+   - Parent issue: use `issue_reviewer` from `.codex/agents/issue-reviewer.toml`.
+   - Gate child issue: use `gate_issue_reviewer` from `.codex/agents/gate-issue-reviewer.toml`.
 3. Give the agent the current issue path, the parent Gate plan path when applicable, and the relevant SSoT paths.
-4. Write the agent's Japanese response to `.tmp/review/<branch-name>/issue-review-1.md`.
-5. If the first review has no findings or user-confirmation items, continue to the required stopping point.
-6. If the first review has valid findings, update only the issue file to resolve them, then run `issue_reviewer` once more.
-7. Write the second response to `.tmp/review/<branch-name>/issue-review-2.md`.
-8. After the second review, continue to the required stopping point even when findings remain. Report remaining findings or user-confirmation items clearly.
+4. For a parent issue, write the first response to `.tmp/review/<branch-name>/issue-review-1.md`. If it has valid findings, update only the issue file, then run `issue_reviewer` once more and write `.tmp/review/<branch-name>/issue-review-2.md`. Stop after the second review even when findings remain.
+5. For a Gate child issue, write the one response to `.tmp/review/<branch-name>/gate-issue-review-1.md`. If it has valid findings, update only the issue file. Do not run a second Gate issue review. Report the completed update and any remaining user-confirmation item at the required stopping point.
 
 Do not copy resolved issue-review findings into the issue as historical review sections.
 
-After the user starts reviewing the issue, do not rerun `issue_reviewer`. Update the issue through the user conversation instead.
+After the user starts reviewing the issue, do not rerun an issue review agent. Update the issue through the user conversation instead.
 
 ### User-directed changes outside the current issue
 
@@ -536,7 +534,7 @@ Report the following to the user:
 - 関連TODO
 - 関連design target
 - design-image-generation前提条件
-- issue reviewerの実行回数と結果
+- issue review agentの種類、実行回数、結果
 - 残る判断不能事項
 
 ## レビューしてほしい点
@@ -554,7 +552,7 @@ Git commit / push は未実行です。
 
 In remote snapshot draft mode, also state that the draft is not a final local issue until local validation is complete.
 
-When the user did not authorize issue creation, stop after the requested branch preparation, scope adjustment, requirements adjustment, or contents work. Report only the requested work, source conflicts, and decisions required from the user. Do not report an issue as prepared. Do not run `issue_reviewer`.
+When the user did not authorize issue creation, stop after the requested branch preparation, scope adjustment, requirements adjustment, or contents work. Report only the requested work, source conflicts, and decisions required from the user. Do not report an issue as prepared. Do not run an issue review agent.
 
 ---
 

@@ -10,12 +10,12 @@
 - ページ / コンポーネント: `/character-sheet/`で動作するWebキャラクターシート。コンポーネント境界は未決定。
 - デザイン確認用ビューポート:
   - desktop: `1440x1200`
+  - ultrawide: `1920x1200`。desktop本文の最大幅と中央寄せを確認するactual capture用であり、canonical baselineは作成しない。
   - tablet: `820x1180`
   - mobile: `390x900`
 - desktop、tablet、mobileを初期scopeに含める。各viewportの具体的なlayoutとVRT状態は、対応するGateで定める。
 - 現在のVRT対象: `tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`。routeは`/character-sheet/`、stateはdefaultである。
 - ユーザー承認により、desktopとtabletのcanonical snapshotをローカル更新した。mobile snapshotは作成・更新していない。
-- 親issueの最終Gate G31のレビュー完了まで、character-sheet用VRTのtest spec、canonical snapshot、比較artifactはコミットしない。
 - 承認済みドラフトから決定する将来のVRT状態:
   - 必須の初期値を持つ直接編集の初期状態
   - 可変のスキル、縁、アイテム行を含む入力済み状態
@@ -24,6 +24,26 @@
   - CCFOLIAコピー成功の通知ダイアログ状態
   - 画像選択の失敗ダイアログ状態
 - canonical baselineの更新は、以後もユーザーの明示承認を必要とする。
+
+### G3 section frame comparison
+
+- target: `縁`、`判定`、`武器・防具`、`スキル`、`専用アイテム`の5 section frame
+- route: `/character-sheet/`
+- state: 初期展開。開閉状態は保存しない。折りたたみ時は内容領域だけを`hidden`にし、childrenをunmountしない。
+- viewports: desktop、tablet、mobile。G3では3 viewportのactual snapshotを`visual:capture`で出力する。canonical baselineは更新しない。
+- comparison points: 見出しbutton、展開icon、枠線、visible focus、開閉後の内容領域、desktop 2列とtablet/mobile 1列における横overflow
+
+### G4 profile and credit comparison
+
+- target: `profile` slotの基本情報、開閉式の`設定`、信用表示。
+- route: `/character-sheet/`。
+- default state: PC名、PL名、二つ名、年齢、性別、設定は空欄。`設定`は閉じる。取得信用は`10`、融通した・融通された・小銭修正は`0`、合計信用・小銭は`10`、消費信用は`0`と表示する。
+- viewports: desktop（`1440x1200`）、tablet（`820x1180`）、mobile（`390x900`）。ultrawideは既存の本文幅確認だけに使い、G4のcanonical比較対象に含めない。
+- profile layout: profile slotはG3のsection frameを使わない。PC名、PL名、二つ名、年齢、性別は、それぞれlabelを上に置く独立したinputとする。desktopとtabletは3列のgridで、入力のDOM順と視覚順をPC名、PL名、二つ名、年齢、性別に一致させる。mobileでは1列に積む。
+- setting layout: profile入力群の直下に`設定`とchevronだけを置く。展開時は、同じ位置にlabel付きtextareaを表示する。開閉状態はフォーム値、保存、JSONの対象に含めない。
+- credit layout: 信用は、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭のDOM順を維持する。desktopとtabletでは3列のgrid、mobileでは1列に積む。編集可能な4入力は短い幅で右揃え、派生値は同じ視覚形式の読み取り専用値として表示する。
+- comparison points: profile slotのG3 frame非適用、5入力のlabel対応と順序、設定の初期非表示と展開後のtextarea、信用の順序・初期値・右揃え、desktop / tablet / mobileでの横overflowなし。
+- VRT: 既存の`tests/visual/vrt/character-sheet.spec.ts`にある`@vrt @character-sheet`のdefault routeを使い、G4ではdesktop、tablet、mobileだけをactual / 比較対象とする。設定の展開、信用の値変更、空欄からの`0`復帰はbrowser behavior testで確認する。canonical baselineの更新には別途ユーザー承認が必要である。
 
 ## 確定したデザイン要件
 
@@ -58,29 +78,41 @@
 - キャラクターシート固有のsection navigationは設けない。
 - character-sheetでは、既存ページのサイトメニュー表示をそのまま適用しない。tabletでは常設のサイトメニューrailを表示し、キャラクターシート領域はスキル以降のセクションを下へ移す配置とする。desktopとmobileでは、ロゴの左に置くHeaderのサイトメニューボタンからdrawerを開く。
 - desktopとtabletのHeaderは、タイトルロゴを高さ3remのままとし、メニューボタンとロゴの間を`--space-3`にする。mobileでは既存の小さいタイトルロゴと左右のHeader操作を維持する。
-- キャラクターシートのmain領域は、desktopとtabletで本文用の最大幅に制限した中央寄せにしない。利用可能な横幅を使い、main自身の左右paddingは均等にする。tabletでは15remのサイトメニューrailの右側の残り幅をmainに使う。
+- キャラクターシートのmain領域は利用可能な横幅を使い、main自身の左右paddingは均等にする。desktopではsheet本文を最大`90rem`（1440px）に制限し、それを超える横幅では中央寄せにする。tabletでは15remのサイトメニューrailの右側の残り幅をmainに使う。
+- sheet本文の`h1`はbrowser既定marginを使わない。main上端から直接置き、下余白だけを`12px`にする。page固有のheading余白はAstro page側で扱い、React Islandへglobal heading styleを追加しない。
 - tabletとmobileの基本レイアウトでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
 
 ### 編集画面の情報architecture
 
 - tabletは、基本情報（経験点・信用を含む）、流儀・生き様と能力値、副能力値、縁、判定、武器・防具、スキル、専用アイテムの順に縦積みする。
-- 信用は経験点と近接して配置する。消費信用と使用可能信用超過のエラーはキャラクター情報側で確認できるようにする。
+- 信用は経験点と近接して配置する。消費信用と合計信用超過のエラーはキャラクター情報側で確認できるようにする。
 - 信用の入力・派生値は、流儀・生き様の下へ置かず、基本情報内で取得経験点の隣または直下にまとめる。
 - 流儀・生き様と能力値は、左カラム内で最も重要な入力群として、副能力値と縁より大きく、目立つ密度・視覚的強さで扱う。副能力値と縁は必要な情報を保ちながらコンパクトにする。
 - tabletの副能力値は、体力系と精神力系、移動力系と行動値系、行動回数と縁最大数（それぞれの補正入力を含む）の3行に圧縮する。行動回数と縁最大数の補正は独立枠にせず、それぞれの表示枠内に置く。算出式と一時修正の適用checkboxは対象ラベルの横に置き、行を増やさない。各行の余白、入力高を抑え、流儀・生き様と能力値より目立たない密度にする。
 - 縁は、対象と関係の列ヘッダーを置き、短い対象入力と長い関係入力を各行に並べる。覚悟の効果は縁の下に移す。
 - 縁、判定、武器・防具、スキル、専用アイテムは個別セクションとして折りたたんで隠せるようにする。全ての折りたたみ領域は初期状態で開く。複数セクションを同時に開ける。
 - キャラクター設定は基本情報のプロフィール入力群の下に、`設定`と展開アイコンだけを初期表示する。操作すると自由入力欄を表示する。
-- 数値入力欄は必要以上に横へ広げず、値に見合う短い幅にする。空いた横幅は、算出値、ラベル、マスタ由来の読み取り専用情報へ配分する。
+- 数値入力欄は右揃えとし、必要以上に横へ広げず、値に見合う短い幅にする。空いた横幅は、算出値、ラベル、マスタ由来の読み取り専用情報へ配分する。
 - 全ての折りたたみ領域は初期状態で開く。複数セクションを同時に開ける。
 - 折りたたみの開閉状態はブラウザ内保存、JSON export、JSON importの対象に含めない。
 - 算出値を別領域へ再掲するsummaryは設けない。要件で定める算出値は、それぞれの該当領域で表示する。
 - 計算式の文字列は、該当する算出値のlabel周辺に薄グレーで表示する。
 
+### G3 編集section frame
+
+- G3で共通frameを適用するのは、`縁`、`判定`、`武器・防具`、`スキル`、`専用アイテム`だけとする。基本情報、ビルド、副能力値は後続Gateで表示構成を定める。
+- frameは既存tokenのsurface、border、radiusを使い、見出しbuttonは薄いmuted surfaceに置く。見出しの右端にはCSSで描く青緑のchevronを置く。外部icon assetやsection navigationは追加しない。
+- 見出しbuttonはsection titleをそのままaccessible nameに含め、`aria-expanded`と`aria-controls`で内容領域との関係を伝える。既存global styleのfocus colorを使い、frameの角丸内に収まるinset focus ringをvisible focusとして使う。
+- すべてのframeは初期状態で開く。複数frameを独立して開閉でき、開閉は見出しbuttonの標準keyboard操作で行う。折りたたんだ内容は表示しないが、後続Gateの入力値と局所表示状態を維持する。
+- 内容領域は見出しとborderで区切り、後続Gateの入力を追加できる内側余白を持つ。G3では個別の入力、説明文、算出値、summaryを追加しない。
+- character-sheetのReact Islandは情報密度を優先する。scopeをIsland内へ限定して、見出しは`h2`を`16px`、`h3`を`14px`、`h4`を`13px`とする。site全体のglobal headingやproseのtype scaleは変えない。
+- section frameの見出しbuttonは、操作targetを36px以上に保ちながら、上下padding、section間gap、内容余白を通常ページより小さくする。空の内容領域には最小高を設けず、後続Gateの実際の入力が必要な高さを決める。desktopではsection間20px・内容余白12px、mobileでは16px・8pxを基準にする。
+- chevronは8pxの視覚要素とし、操作targetの大きさとは分けて扱う。小さいiconでもbutton全体を操作対象にし、keyboard操作とvisible focusを維持する。
+
 ### mobileの情報密度
 
 - mobileはシート全体を縦一列にする。基本情報では、画像領域を`設定`の下へ置く。
-- 経験点は取得・消費・残経験点を1行、格と共通スキル上限を次行へ置く。信用は取得・融通した・融通されたを上段、使用可能信用以降を下段に置く。
+- 経験点は取得・消費・残経験点を1行、格と共通スキル上限を次行へ置く。信用は、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭の順に置く。
 - 流儀、生き様、その他流儀の入力の下に能力値入力を置く。流儀増加値、生き様係数、共通スキルボーナスは、読める範囲で横方向へ圧縮する。
 - 副能力値は縦積みにし、縁は行間と余白を縮める。縁の覚悟効果は、上段を能動判定・リアクション、下段を体力回復・気合の順に並べる。
 - 判定では攻撃判定の下にリアクションを置き、非戦闘技能は2列にする。武器・防具は列幅・余白を圧縮して表示する。入力欄と表の最終的な細部は実装時に再検討する。
@@ -110,6 +142,17 @@
 - ヘルプダイアログは青緑のアクセントカラーの枠線、薄いグレーの背景、青緑の丸い`?`アイコンと「ヘルプ」のタイトル行を使う。最大高さを定め、本文だけを独立してscrollできるようにする。
 - それ以外のダイアログのbutton配置、dismiss操作、focus処理、Clipboard API失敗時の扱いは、後続のdesign対話で決める。
 
+### G5 dialog common foundation
+
+- target: `CharacterSheetDialog`と、共通基盤を確認する可視のダミー確認button。routeは`/character-sheet/`で、defaultではdialogを閉じる。
+- open state: ダミーbutton「確認ダイアログを開く」を操作すると、`確認`の見出し、「この操作は確認用です。キャラクターシートの内容は変更されません。」の本文、`キャンセル`と`OK`のactionを持つ確認dialogを開く。どちらのactionもdialogを閉じるだけで、副作用を起こさない。
+- placement: ダミーbuttonはReact Islandのformの直前に独立して置く。desktopとtabletでは右寄せのコンパクトなbutton、mobileでは読みやすい幅を保つ。G23以降で実操作を接続するときに置換または削除し、最終公開UIには残さない。
+- dialog surface: native `dialog`のmodal表示を使い、白いsurfaceに通常のborder、`--radius-lg`、`--shadow-soft`を適用する。標準幅は`min(32rem, calc(100vw - 2 * var(--page-gutter)))`、block-sizeはviewport内に収める。候補選択など幅が必要なdialogは専用Componentで幅を定義し、長い本文・表はcontent領域だけを独立scrollにする。
+- composition: `CharacterSheetDialog`は開閉、modal、Escape、focus復帰、accessible nameを担うshellとする。`CharacterSheetDialogHeader`、`CharacterSheetDialogContent`、`CharacterSheetDialogActions`は必要なものだけを組み合わせる。`variant`で全dialogの構造や配色を切り替えない。確認、エラー、通知、ヘルプ、候補選択は、各Gateで専用Componentまたは専用内容を作る。
+- dismiss and focus: Escapeと、各dialogに置く少なくとも一つの可視の閉じる操作で閉じる。右上の閉じる`×`は必要なdialogだけ`Header`に置き、全dialogへ強制しない。dialog外側clickでは閉じない。開くと各dialogが明示する初期focus対象へfocusし、破壊的確認では非破壊action（`キャンセル`）を選ぶ。見出し、複数段落、リスト、表を読む必要があるdialogでは、本文先頭の静的要素へfocusできるようにする。閉じた後は原則としてdialogを開いたbuttonへfocusを戻す。native `alert` / `confirm`は使わない。
+- semantics: dialogは可視見出しへの`aria-labelledby`、または`aria-label`のいずれかでaccessible nameを必須にする。短く構造を持たない主文だけは`aria-describedby`で関連付け、複数段落、リスト、表を含む本文には指定しない。`title`と`description`を全用途で必須のstring propsにはしない。標準headerの可視見出しはページの`h1`に続く`h2`とする。開閉状態・選択対象はContainerが持ち、RHF、保存、JSONへ含めない。
+- viewports and comparison points: desktop（`1440x1200`）、tablet（`820x1180`）、mobile（`390x900`）で、button、dialogの幅、actionの到達性、visible focus、Escape、操作元へのfocus復帰、ページ全体の横overflowなしを確認する。G5のVRTはcanonical baselineを更新せず、PRレビュー直前の`@character-sheet` targetだけを比較する。
+
 ## 参照正本と制約
 
 - `docs/requirements/character-sheet.md`は、キャラクターシートの入力、表示、算出、検証、保存、出力要件の正本である。
@@ -126,7 +169,7 @@
 
 ### プロフィールとキャラクター設定
 
-- PC名、二つ名、年齢、性別、PL名の1行自由入力
+- PC名、PL名、二つ名、年齢、性別を、それぞれ独立した1行の自由入力
 - 改行を保持する複数行のプレーンテキストによるキャラクター設定。基本情報内の開閉式`設定`から表示する。
 - キャラクター画像の選択、および形式・decode・5 MiB上限に対する失敗ダイアログ
 - 既存のキャラクターメイキング解説への見える導線。シート自体にはコンストラクションまたはフルスクラッチの作成方式選択を設けない。
@@ -138,7 +181,7 @@
 - 格、成長点、筋力・敏捷・感覚・肉体・精神の5能力値
 - 能力値表の右側領域の上に通常サイズで置く`{生き様名}：能力値ポイント X, X, X, X, X`と成長点、および各能力値ポイントの入力欄、成長、常時修正、一時修正、算出された常時・一時能力値。能力値ポイントは生き様名ではなく列ヘッダーとして表し、5つの入力値は生き様由来の4値と`0`の組み合わせを検証する。
 - 取得経験点、消費経験点、残経験点、検証状態。初期値は取得経験点70、関連レベルはすべて0。
-- 取得信用、融通した信用、融通された信用、使用可能信用、消費信用、小銭最大値、小銭最大値修正。消費信用はキャラクター情報側で経験点に近接して表示する。
+- 取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭。消費信用はキャラクター情報側で経験点に近接して表示する。
 
 ### 副能力値、縁、判定
 
@@ -165,7 +208,7 @@
 - mobileでは、武器候補の攻撃力とガード値を1セルへ圧縮して表示し、候補表がページ全体の横overflowを生じさせないようにする。
 - お守り、防具、サイバネ、ナノマシン、ドラッグ、各スキル区分の候補ダイアログは、候補の列と効果行の詳細を個別に決める。武器の表をそのまま流用することは決定しない。
 - キャンセルの常設導線はダイアログ右上の閉じる`×`アイコンとする。キーボードのEscapeでも閉じ、閉じた後は操作元の選択アイコンへfocusを戻す。ダイアログ外側clickで閉じる操作は設けない。
-- この選択UIは、流儀、生き様、能力値の直接入力・選択方式を変更しない。自動習得スキルは選択アイコンを表示せず、既存の読み取り専用行として扱う。
+- この選択UIは、流儀、生き様、能力値の編集・選択方式を変更しない。自動習得スキルは選択アイコンを表示せず、既存の読み取り専用行として扱う。
 
 ### アイテムと信用消費
 

@@ -50,13 +50,13 @@ src/
     └── utils/
 ```
 
-- `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`と`FormProvider`、Hookとadapterの接続、処理順序、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の統合、行選択とdialogの開閉・適用を担う。DOMの画面配置を持たず、直下には`CharacterSheetFormPresenter`と、Rootで扱うほうが適切なdialog Componentだけを置く。
-- `CharacterSheetFormPresenter.tsx`: formのDOM配置、sectionの並び、表示用propsの受け渡しを担う。RHF formの生成、マスタ検索、派生値算出、検証、永続化、ブラウザAPI、dialogの開閉状態を持たない。各section・行ComponentはこのPresenter配下の表示Componentとして組み立てる。
-- `components/`: Presenterとその配下のJSX・表示Component、およびRoot直下へ配置するdialog Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。
-- `form/`: 編集値の型、初期値、RHFの可変配列操作、保存・復元を接続するform Hookを置く。RHF以外の編集state storeは置かない。
+- `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`、RHF adapter hookの接続、処理順序、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の統合、行選択とdialogの開閉・適用を担う。DOMの画面配置を持たず、直下には`CharacterSheetFormPresenter`と、Rootで扱うほうが適切なdialog Componentだけを置く。
+- `CharacterSheetFormPresenter.tsx`: formのDOM配置、sectionの並び、表示用propsの受け渡しを担う。RHF formの生成・参照、マスタ検索、派生値算出、検証、永続化、ブラウザAPI、dialogの開閉状態を持たない。各section・行ComponentはこのPresenter配下の表示Componentとして組み立て、RHFを参照せず必要な表示値と操作callbackをPropsで受け取る。Component内のstateは、自身に閉じた開閉状態などに限定する。
+- `components/`: Presenterとその配下のJSX・表示Component、およびRoot直下へ配置するdialog Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。`CharacterSheetSectionFrame`は`expandable?: boolean`（default: `false`）で静的・折りたたみを共通化し、同じframe・mutedなタイトル領域・分割線を使う。title要素は`span`または`h1`〜`h6`を指定できる。`FormulaTooltip`は派生値の子要素を操作対象にして、hoverまたはtapで開く局所的な状態だけを持ち、タップ端末ではコンポーネント外タップとEscで閉じる。focus表示は現在の対象外とする。
+- `form/`: 編集値の型、初期値、RHFの可変配列操作、`zodResolver`を接続するform Hook、保存・復元の接続を置く。RHF以外の編集state storeは置かない。
 - `logic/`: React、RHF、DOM、Storage、IndexedDBに依存しない派生値算出、選択可能性判定、構造化検証、ViewModel組み立てを置く。
 - `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかは実装Gateで決める。
-- `schemas/`: 現在の入力値を検証するschemaと、IndexedDB record・JSON入力を検証するschemaを置く。schema失敗時は、現在の編集stateへの部分反映を行わない。具体的な形、JSON形式、CCFOLIA出力形式は各実装Gateで定める。
+- `schemas/`: 現在のform入力を検証・正規化するschemaと、IndexedDB record・JSON入力を検証するschemaを置く。ブラウザから渡る生の入力値の正規化とドメイン上の入力制約はここへ置き、ComponentやHTML constraintだけへ委ねない。schema失敗時は、現在の編集stateへの部分反映を行わない。具体的な形、JSON形式、CCFOLIA出力形式は各実装Gateで定める。
 - `persistence/`: serializableな下書きのlocalStorage adapterと画像BlobのIndexedDB永続化を置く。保存データの読み書き、旧Blob削除、全消去を担い、React stateやJSXを持たない。
 - `browser/`: Clipboard、ファイルdownload、画像decode・WebP変換などのブラウザAPIを置く。呼出し側から差し替え可能な小さなadapterとし、ゲームルールとRHFへ依存しない。
 - `utils/`: ID生成、数値変換など、ゲームルール・React・ブラウザAPIを含まない補助処理だけを置く。feature固有の判断は`logic/`、ブラウザAPIは`browser/`へ置き、将来の再利用だけを理由に作らない。
@@ -76,6 +76,8 @@ Presenterとその配下の表示Componentは、渡されたpropsの表示、配
 ### 状態と派生値の境界
 
 RHFを、このIsland内でユーザーが直接編集する値の唯一の保持先とする。可変行は`useFieldArray`で扱い、流儀の変更、スキル行の追加、能力値修正、縁のクリア、アイテム選択の変更をRHFの操作として行う。RHFの値を別のstate storeへ複製しない。
+
+native number inputがfocus中に保持する`-`など、数値として未確定なブラウザ固有の途中入力はRHF valueではない。Componentはその途中値をローカルstateへ複製せずDOMに一時保持させ、確定可能な値だけをRHF adapterへ通知する。blur時はschemaで正規化済みのnumberをinputへ戻す。reset・復元など外部更新をuncontrolled inputへ同期する契約は、その機能を導入するGateで明示的に定める。
 
 | 種別                                          | 置き場所                            | 永続化先     |
 | --------------------------------------------- | ----------------------------------- | ------------ |
@@ -125,6 +127,10 @@ tests/
 │       ├── master-data/
 │       ├── persistence/
 │       └── browser/
+├── components/
+│   └── character-sheet/
+├── hooks/
+│   └── character-sheet/
 └── visual/
     ├── character-sheet.spec.ts
     └── vrt/
@@ -132,18 +138,20 @@ tests/
 ```
 
 - `tests/node/character-sheet/`: 既存のNode `node:test`と`tsx`で、`logic/`、`schemas/`、`master-data/`、serializableな`persistence/`、test doubleへ差し替えた`browser/` adapterの契約を表形式中心で確認する。正常値、上限前後、負値、`null`、空欄、明示的な`0`、重複、未知のマスタIDを必要範囲で含める。
-- `tests/visual/character-sheet.spec.ts`: Playwrightで、route、responsiveなページ固有UI、実際の入力・選択・dialog・保存復元など、そのGateで追加したユーザー観測可能なbrowser behaviorだけを確認する。ドメイン計算の全組合せ、内部state、hydrate、固定データ全件をここへ置かない。
+- `tests/components/character-sheet/`: Vitest、jsdom、React Testing Library、user-eventで、Presenter / 表示Componentのprops表示、局所UI state、callback通知、Tooltipなどを確認する。RHF、ドメイン計算、browser viewportは持ち込まない。
+- `tests/hooks/character-sheet/`: VitestとReact Testing Libraryの`renderHook`で、RHF adapter hookのschema接続、RHF valueからViewModel / Actionsへの変換、入力境界を確認する。Presenter DOMやPlaywrightを持ち込まない。
+- `tests/visual/character-sheet.spec.ts`: Playwrightで各Gateの最終smokeだけを確認する。領域表示と2〜3個の代表的なbrowser操作に限定し、routeまたはresponsiveなページ固有UIを必要最小限で確認する。入力制約・派生式・Tooltip・read-only表現・DOM属性・固定データ全件の網羅はここへ置かない。
 - `tests/visual/vrt/character-sheet.spec.ts`: `docs/design/character-sheet/notes.md`で確定したroute、viewport、fixture、表示状態だけをsnapshot比較する。VRTは文言・データ件数・計算式の正しさを担わない。
 
-既存のReact Component / Hook専用test runnerは採用していない。ComponentまたはHookをbrowser E2Eより小さい単位で検証する必要が初めて生じたGateでは、必要性、代替案、既存のNode / Playwrightとの役割分担を子issueへ記録してから、追加するtest toolingをユーザー承認のもとで選定する。test-onlyのproduction Componentや状態をその代替にしない。
+React Component / Hook単体testは、Vitest、jsdom、React Testing Library、user-eventを使う。`@vitejs/plugin-react`はVitestのReact TSX変換だけを担い、production bundleへ機能を追加しない。ComponentまたはHookをbrowser E2Eより小さい単位で検証する必要が生じたGateでは、必要性、代替案、既存のNode / Playwrightとの役割分担を子issueへ記録し、ユーザー承認のもとで採用する。test-onlyのproduction Componentや状態をその代替にしない。
 
 ### 責務ごとの検証
 
 - `logic/`: 派生値、取得条件、重複、上限、警告・エラー識別子、CCFOLIA用の構造化出力を純粋関数として検証する。
-- `schemas/`: 正常な保存・importデータの受理、破損JSON・必須構造欠落・不正型の拒否、失敗時に現在の編集stateを変更しないことを検証する。将来のschema versionは、互換要件が確定したGateだけでfixtureを追加する。
+- `schemas/`: 現在のform入力の正規化、正常な保存・importデータの受理、破損JSON・必須構造欠落・不正型の拒否、失敗時に現在の編集stateを変更しないことを検証する。将来のschema versionは、互換要件が確定したGateだけでfixtureを追加する。
 - `master-data/`: IDからの候補・表示情報の取得と、存在しないIDの扱いを検証する。生成JSONの内容や並び順の正しさは既存のデータ変換テストへ置き、キャラクターシートのVRTへ複製しない。
 - `persistence/`と`browser/`: Storage、IndexedDB、画像、Clipboard、downloadを直接テスト環境へ要求しない。小さなadapterまたはtest doubleへ差し替え、復元前保存の抑止、書込み失敗、既存画像の保持、browser API失敗を検証する。
-- Containerの結線: 初期stateからのViewModel、主要な操作からRHF更新・派生値・dialog・副作用adapterへの接続を、必要最小限の統合テストまたは実際のbrowser behaviorで確認する。全機能の組合せを網羅しない。
+- Containerの結線: 初期stateからのViewModel、主要な操作からRHF更新・派生値・dialog・副作用adapterへの接続を、hook testまたは必要最小限の統合testで確認する。全機能の組合せを網羅しない。
 - Presenter / 表示Component: propsに応じた表示、read-only / disabled、エラー・警告、可変行、渡されたcallbackの通知を確認する。計算式とマスタ検索は検証しない。
 
 ### Fixtureと検証の規律
@@ -155,13 +163,13 @@ tests/
 
 ### テスト用依存の選定境界
 
-| 用途                       | 現在の方式              | 採否           |
-| -------------------------- | ----------------------- | -------------- |
-| 純粋logic・schema・adapter | Node `node:test`と`tsx` | 既存採用       |
-| browser behavior・VRT      | `@playwright/test`      | 既存採用       |
-| React Component / Hook単体 | 専用runnerは未選定      | 必要時に再検討 |
+| 用途                       | 現在の方式                                                          | 採否     |
+| -------------------------- | ------------------------------------------------------------------- | -------- |
+| 純粋logic・schema・adapter | Node `node:test`と`tsx`                                             | 既存採用 |
+| browser behavior・VRT      | `@playwright/test`                                                  | 既存採用 |
+| React Component / Hook単体 | Vitest、jsdom、React Testing Library、user-event、React Vite plugin | 採用     |
 
-React Component / Hook単体test用の新規依存は、現時点では導入しない。必要になったGateで、Node / Playwrightでは不十分な具体例、候補、保守性、bundleへ影響しないdev dependencyであることを子issueへ記録し、ユーザー承認後に追加する。
+純粋logic・schema・adapterの既存Node testは直ちに置き換えない。Vitestへ統一するかは、`docs/TODO.md`の後続taskで決める。
 
 ## 依存ライブラリ
 
@@ -177,15 +185,17 @@ React Component / Hook単体test用の新規依存は、現時点では導入し
 
 ### 採用する依存
 
-| 用途                            | 推奨                                   | 理由                                                                  | 採否   |
-| ------------------------------- | -------------------------------------- | --------------------------------------------------------------------- | ------ |
-| AstroでReact Islandを動かす     | `@astrojs/react`、`react`、`react-dom` | Islandを限定し、Astroサイト全体をSPA化しない                          | 採用   |
-| 編集フォーム                    | `react-hook-form`                      | 可変行を含む巨大formの編集値を一箇所に保持し、素のReact inputを扱える | 採用   |
-| 画像BlobのIndexedDB保存         | `idb-keyval`                           | WebP Blob 1件のkey-value保存に必要な範囲へ絞れる                      | 採用   |
-| 実行時検証                      | 既存の`zod`                            | 既に依存に含まれる。具体的なschemaは各Gateで追加する                  | 採用   |
-| 純粋logic・schema・adapter test | 既存のNode `node:test`と`tsx`          | 追加test runnerなしで実行できる                                       | 採用   |
-| browser behavior・VRT test      | 既存の`@playwright/test`               | ユーザー観測可能な操作とvisual regressionを分けて扱える               | 採用   |
-| React Component / Hook単体test  | 専用runnerは未選定                     | 必要なGateで既存方式との費用対効果を比較して決める                    | 未採用 |
+| 用途                            | 推奨                                             | 理由                                                                  | 採否 |
+| ------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------- | ---- |
+| AstroでReact Islandを動かす     | `@astrojs/react`、`react`、`react-dom`           | Islandを限定し、Astroサイト全体をSPA化しない                          | 採用 |
+| 編集フォーム                    | `react-hook-form`                                | 可変行を含む巨大formの編集値を一箇所に保持し、素のReact inputを扱える | 採用 |
+| 画像BlobのIndexedDB保存         | `idb-keyval`                                     | WebP Blob 1件のkey-value保存に必要な範囲へ絞れる                      | 採用 |
+| 実行時検証                      | 既存の`zod`                                      | 既に依存に含まれる。具体的なschemaは各Gateで追加する                  | 採用 |
+| ZodとRHFの接続                  | `@hookform/resolvers`                            | `zodResolver`でRHF errorとschema validationを標準contractで接続する   | 採用 |
+| 純粋logic・schema・adapter test | 既存のNode `node:test`と`tsx`                    | 追加test runnerなしで実行できる                                       | 採用 |
+| browser behavior・VRT test      | 既存の`@playwright/test`                         | ユーザー観測可能な操作とvisual regressionを分けて扱える               | 採用 |
+| React Component / Hook単体test  | Vitest、jsdom、React Testing Library、user-event | Props、局所UI state、RHF adapter hookをE2Eへ置かず検証する            | 採用 |
+| React TSX変換                   | `@vitejs/plugin-react`                           | Astroとは別にVitestへReact JSX transformを接続する                    | 採用 |
 
 `localStorage`はブラウザ標準APIを使い、画像を除くserializableな最新1件の下書きを保存する。`idb-keyval`はBlobを含むstructured-clone可能な値を保存できるため、WebP画像recordの保存要件に適する。RHFの編集値同期は`subscribe`、`reset`、小さな自前hookで完結させる。
 

@@ -1,3 +1,48 @@
 .form {
+  --sheet-section-content-padding: var(--space-3);
+  --sheet-section-gap: var(--space-5);
+  --sheet-section-toggle-height: 2.25rem;
+
   margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sheet-section-gap);
+}
+
+.form :where(h2, h3, h4) {
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.form h2 {
+  font-size: var(--text-base);
+}
+
+.form h3 {
+  font-size: var(--text-sm);
+}
+
+.form h4 {
+  font-size: var(--text-xs);
+}
+
+.primaryColumn,
+.secondaryColumn {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: var(--sheet-section-gap);
+}
+
+@media (width >= 80rem) {
+  .form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (width < 48rem) {
+  .form {
+    --sheet-section-content-padding: var(--space-2);
+    --sheet-section-gap: var(--space-4);
+  }
 }
