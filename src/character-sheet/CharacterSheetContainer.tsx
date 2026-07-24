@@ -1,6 +1,7 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
+import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
@@ -17,10 +18,7 @@ export default function CharacterSheetContainer() {
   const form = useForm<CharacterSheetFormValues>({
     defaultValues: characterSheetDefaultValues,
   });
+  const presenterProps = useCharacterSheetFormPresenterProps(form);
 
-  return (
-    <FormProvider {...form}>
-      <CharacterSheetFormPresenter />
-    </FormProvider>
-  );
+  return <CharacterSheetFormPresenter {...presenterProps} />;
 }

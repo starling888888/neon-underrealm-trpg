@@ -34,7 +34,7 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - 基本情報内のプロフィール入力群の直下に、初期状態で閉じた`設定`操作と、改行を保持するプレーンテキスト入力を追加する。設定の開閉状態はRHF値・保存・JSONの対象に含めない。
 - 信用は、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭の順に表示する。取得信用、融通した信用、融通された信用は`0`以上の整数、小銭修正は負数を許可する整数として編集できる。合計信用、消費信用、小銭は読み取り専用である。取得信用は`10`、融通した信用・融通された信用・小銭修正は`0`をdefault valueとし、信用の4入力が空欄になる操作では`0`へ戻す。G4時点の消費信用は後続のアイテム入力がないため`0`として表示し、合計信用と小銭は要件の式で算出する。
 - G4で追加するform value、default value、Component props、算出入力へ`null`を持ち込まない。文字列は`""`をdefaultにして空欄を許可し、信用の4入力は`number`のまま扱う。
-- `CharacterSheetContainer`のRHF default valuesと型、profile用Presenter / CSS Module、既存form shellのslot接続を必要範囲で追加する。form値は`profile`と`credit`の意味単位でobjectにまとめ、RHFを唯一の編集stateとし、別storeへ複製しない。
+- `CharacterSheetContainer`のRHF default valuesと型、RHF adapterであるcustom hook、profile用Presenter / CSS Module、既存form shellのslot接続を必要範囲で追加する。form値は`profile`と`credit`の意味単位でobjectにまとめ、RHFを唯一の編集stateとし、別storeへ複製しない。Presenter以下のComponentはRHFや派生算出へ依存せず、必要な表示値と操作callbackをPropsで受け取る。Component内のstateは設定の開閉など閉じたUI状態に限定する。
 - 取得信用・融通した信用・融通された信用の`0`以上制約、小銭修正の負数、信用欄の空欄操作が`0`へ戻ること、合計信用と小銭の派生式、設定の改行と開閉をNode testおよびユーザー観測可能なbrowser behaviorで確認する。
 - desktop、tablet、mobileで基本情報が横overflowせず、labelと入力の対応、数値入力の右揃え、開閉操作、visible focusを保つ。UI変更後のPRレビュー直前に、G4で確定したVRT targetだけを比較する。
 
@@ -57,7 +57,7 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - [x] 取得信用、融通した信用、融通された信用は`0`以上の整数だけを受け付け、小銭修正は負数を許可する整数として編集できる。
 - [x] 信用を、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭の順に表示する。信用の4入力が空欄になる操作では`0`へ戻り、合計信用と小銭をその値で表示する。数値入力を右揃えで表示する。
 - [x] G4時点の消費信用は`0`と表示し、アイテム由来の集計や信用超過エラーを先行実装していない。
-- [x] Node testとPlaywrightで、取得信用の初期値`10`、信用の`0`以上制約、空欄操作後の`0`、小銭修正の負数、合計信用と小銭の派生表示、数値入力の右揃え、設定の改行・開閉、label / keyboard操作を確認している。
+- [ ] Node testとPlaywrightで、取得信用の初期値`10`、信用の`0`以上制約、空欄操作後の`0`、小銭修正の負数、合計信用と小銭の派生表示、数値入力の右揃え、設定の改行・開閉、label / keyboard操作を確認している。
 - [ ] design targetとVRT baselineの扱いを記録し、PRレビュー直前にG4で確定したtargetだけをVisual Reviewする。
 - [x] 不要な依存を追加せず、`npm run check` と `npm run build` が通る。
 

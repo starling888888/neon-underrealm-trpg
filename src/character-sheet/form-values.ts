@@ -4,21 +4,29 @@
  * Every field remains serializable and non-null so later Gates can extend this
  * form without introducing a second edit-state store.
  */
+export type CreditValues = {
+  acquired: number;
+  changeAdjustment: number;
+  provided: number;
+  received: number;
+};
+
+export type CreditFieldName = keyof CreditValues;
+
+export type ProfileValues = {
+  age: string;
+  gender: string;
+  nickname: string;
+  pcName: string;
+  playerName: string;
+  setting: string;
+};
+
+export type ProfileFieldName = keyof ProfileValues;
+
 export type CharacterSheetFormValues = {
-  credit: {
-    acquired: number;
-    changeAdjustment: number;
-    provided: number;
-    received: number;
-  };
-  profile: {
-    age: string;
-    gender: string;
-    nickname: string;
-    pcName: string;
-    playerName: string;
-    setting: string;
-  };
+  credit: CreditValues;
+  profile: ProfileValues;
 };
 
 export const characterSheetDefaultValues: CharacterSheetFormValues = {

@@ -1,6 +1,6 @@
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
-import ProfileSection from "./ProfileSection";
+import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
 
 /**
  * Presentational form shell for the character sheet.
@@ -8,7 +8,13 @@ import ProfileSection from "./ProfileSection";
  * Later Gates compose field and section presenters here. State creation,
  * master lookup, browser APIs, and dialog coordination stay in the container.
  */
-export default function CharacterSheetFormPresenter() {
+export type CharacterSheetFormPresenterProps = {
+  profileSection: ProfileSectionProps;
+};
+
+export default function CharacterSheetFormPresenter({
+  profileSection,
+}: CharacterSheetFormPresenterProps) {
   return (
     <form className={styles.form} data-character-sheet-layout>
       <div
@@ -16,7 +22,7 @@ export default function CharacterSheetFormPresenter() {
         data-character-sheet-layout-region="primary"
       >
         <div data-character-sheet-section-slot="profile">
-          <ProfileSection />
+          <ProfileSection {...profileSection} />
         </div>
         <div data-character-sheet-section-slot="build" />
         <div data-character-sheet-section-slot="secondary" />

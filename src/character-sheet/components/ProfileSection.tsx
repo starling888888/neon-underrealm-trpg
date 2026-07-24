@@ -1,31 +1,35 @@
 import { useState } from "react";
-import { useController, useFormContext, useWatch } from "react-hook-form";
 
-import {
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
+import type {
+  CreditFieldName,
+  CreditValues,
+  ProfileFieldName,
+  ProfileValues,
 } from "../form-values";
-import { calculateCredit, normalizeCreditInput } from "../logic/credit";
+import type { CreditSummary } from "../logic/credit";
 import styles from "./ProfileSection.module.css";
 
 type TextFieldProps = {
   label: string;
-  name:
-    | "profile.pcName"
-    | "profile.playerName"
-    | "profile.nickname"
-    | "profile.age"
-    | "profile.gender";
+  name: Exclude<ProfileFieldName, "setting">;
+  onChange: (
+    field: Exclude<ProfileFieldName, "setting">,
+    value: string,
+  ) => void;
+  value: string;
 };
 
 type CreditFieldProps = {
   allowNegative?: boolean;
   label: string;
-  name:
-    | "credit.acquired"
-    | "credit.provided"
-    | "credit.received"
-    | "credit.changeAdjustment";
+  name: CreditFieldName;
+  onBlur: (field: CreditFieldName, value: string) => void;
+  onChange: (
+    field: CreditFieldName,
+    value: string,
+    isInvalidNumber: boolean,
+  ) => void;
+  value: number;
 };
 
 type ReadOnlyCreditFieldProps = {
@@ -34,9 +38,21 @@ type ReadOnlyCreditFieldProps = {
   value: number;
 };
 
-function TextField({ label, name }: TextFieldProps) {
-  const { register } = useFormContext<CharacterSheetFormValues>();
-  const id = `character-sheet-${name}`;
+export type ProfileSectionProps = {
+  credit: CreditValues;
+  creditSummary: CreditSummary;
+  onCreditBlur: (field: CreditFieldName, value: string) => void;
+  onCreditChange: (
+    field: CreditFieldName,
+    value: string,
+    isInvalidNumber: boolean,
+  ) => void;
+  onProfileChange: (field: ProfileFieldName, value: string) => void;
+  profile: ProfileValues;
+};
+
+function TextField({ label, name, onChange, value }: TextFieldProps) {
+  const id = `character-sheet-profile-${name}`;
 
   return (
     <div className={styles.field}>
@@ -46,24 +62,23 @@ function TextField({ label, name }: TextFieldProps) {
       <input
         className={styles.textInput}
         id={id}
+        onChange={(event) => onChange(name, event.target.value)}
         type="text"
-        {...register(name)}
+        value={value}
       />
     </div>
   );
 }
 
-function CreditField({ allowNegative = false, label, name }: CreditFieldProps) {
-  const { control } = useFormContext<CharacterSheetFormValues>();
-  const { field } = useController({ control, name });
-  const id = `character-sheet-${name}`;
-
-  const normalizeFieldValue = (value: string) => {
-    const normalizedValue = normalizeCreditInput(value, allowNegative);
-
-    field.onChange(normalizedValue);
-    return normalizedValue;
-  };
+function CreditField({
+  allowNegative = false,
+  label,
+  name,
+  onBlur,
+  onChange,
+  value,
+}: CreditFieldProps) {
+  const id = `character-sheet-credit-${name}`;
 
   return (
     <div className={styles.field}>
@@ -72,28 +87,15 @@ function CreditField({ allowNegative = false, label, name }: CreditFieldProps) {
       </label>
       <input
         className={styles.numberInput}
-        defaultValue={field.value}
         id={id}
         min={allowNegative ? undefined : 0}
-        name={field.name}
-        onBlur={(event) => {
-          const normalizedValue = normalizeFieldValue(event.target.value);
-
-          event.target.value = String(normalizedValue);
-          field.onBlur();
-        }}
-        onChange={(event) => {
-          if (allowNegative && event.target.validity.badInput) {
-            return;
-          }
-
-          const normalizedValue = normalizeFieldValue(event.target.value);
-
-          event.target.value = String(normalizedValue);
-        }}
-        ref={field.ref}
+        onBlur={(event) => onBlur(name, event.target.value)}
+        onChange={(event) =>
+          onChange(name, event.target.value, event.target.validity.badInput)
+        }
         step="1"
         type="number"
+        value={value}
       />
     </div>
   );
@@ -126,37 +128,16 @@ function ReadOnlyCreditField({
   );
 }
 
-/** Basic profile and credit fields owned by the character-sheet RHF form. */
-export default function ProfileSection() {
-  const { control, register } = useFormContext<CharacterSheetFormValues>();
+/** Basic profile and credit fields controlled by the containing presenter. */
+export default function ProfileSection({
+  credit,
+  creditSummary,
+  onCreditBlur,
+  onCreditChange,
+  onProfileChange,
+  profile,
+}: ProfileSectionProps) {
   const [isSettingExpanded, setIsSettingExpanded] = useState(false);
-  const acquiredCredit = useWatch({
-    control,
-    defaultValue: characterSheetDefaultValues.credit.acquired,
-    name: "credit.acquired",
-  });
-  const creditProvided = useWatch({
-    control,
-    defaultValue: characterSheetDefaultValues.credit.provided,
-    name: "credit.provided",
-  });
-  const creditReceived = useWatch({
-    control,
-    defaultValue: characterSheetDefaultValues.credit.received,
-    name: "credit.received",
-  });
-  const changeAdjustment = useWatch({
-    control,
-    defaultValue: characterSheetDefaultValues.credit.changeAdjustment,
-    name: "credit.changeAdjustment",
-  });
-  const credit = calculateCredit({
-    acquiredCredit,
-    changeAdjustment,
-    creditProvided,
-    creditReceived,
-    spentCredit: 0,
-  });
   const settingContentId = "character-sheet-setting-content";
 
   return (
@@ -166,11 +147,36 @@ export default function ProfileSection() {
     >
       <h2 id="character-sheet-profile-heading">基本情報</h2>
       <div className={styles.profileGrid}>
-        <TextField label="PC名" name="profile.pcName" />
-        <TextField label="PL名" name="profile.playerName" />
-        <TextField label="二つ名" name="profile.nickname" />
-        <TextField label="年齢" name="profile.age" />
-        <TextField label="性別" name="profile.gender" />
+        <TextField
+          label="PC名"
+          name="pcName"
+          onChange={onProfileChange}
+          value={profile.pcName}
+        />
+        <TextField
+          label="PL名"
+          name="playerName"
+          onChange={onProfileChange}
+          value={profile.playerName}
+        />
+        <TextField
+          label="二つ名"
+          name="nickname"
+          onChange={onProfileChange}
+          value={profile.nickname}
+        />
+        <TextField
+          label="年齢"
+          name="age"
+          onChange={onProfileChange}
+          value={profile.age}
+        />
+        <TextField
+          label="性別"
+          name="gender"
+          onChange={onProfileChange}
+          value={profile.gender}
+        />
       </div>
       <div className={styles.setting}>
         <button
@@ -190,7 +196,8 @@ export default function ProfileSection() {
           <textarea
             className={styles.settingInput}
             id="character-sheet-setting"
-            {...register("profile.setting")}
+            onChange={(event) => onProfileChange("setting", event.target.value)}
+            value={profile.setting}
           />
         </div>
       </div>
@@ -200,24 +207,45 @@ export default function ProfileSection() {
       >
         <h3 id="character-sheet-credit-heading">信用</h3>
         <div className={styles.creditGrid}>
-          <CreditField label="取得信用" name="credit.acquired" />
-          <CreditField label="融通した" name="credit.provided" />
-          <CreditField label="融通された" name="credit.received" />
+          <CreditField
+            label="取得信用"
+            name="acquired"
+            onBlur={onCreditBlur}
+            onChange={onCreditChange}
+            value={credit.acquired}
+          />
+          <CreditField
+            label="融通した"
+            name="provided"
+            onBlur={onCreditBlur}
+            onChange={onCreditChange}
+            value={credit.provided}
+          />
+          <CreditField
+            label="融通された"
+            name="received"
+            onBlur={onCreditBlur}
+            onChange={onCreditChange}
+            value={credit.received}
+          />
           <ReadOnlyCreditField
             formula="取得信用 + 融通された - 融通した"
             label="合計信用"
-            value={credit.totalCredit}
+            value={creditSummary.totalCredit}
           />
           <ReadOnlyCreditField label="消費信用" value={0} />
           <CreditField
             allowNegative
             label="小銭修正"
-            name="credit.changeAdjustment"
+            name="changeAdjustment"
+            onBlur={onCreditBlur}
+            onChange={onCreditChange}
+            value={credit.changeAdjustment}
           />
           <ReadOnlyCreditField
             formula="合計信用 - 消費信用 + 小銭修正"
             label="小銭"
-            value={credit.change}
+            value={creditSummary.change}
           />
         </div>
       </section>
