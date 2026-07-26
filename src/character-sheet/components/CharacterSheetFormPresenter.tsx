@@ -1,3 +1,4 @@
+import { characterSheetDictionary } from "../dictionary";
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
@@ -15,6 +16,8 @@ export type CharacterSheetFormPresenterProps = {
 export default function CharacterSheetFormPresenter({
   profileSection,
 }: CharacterSheetFormPresenterProps) {
+  const { characterSheet, gameDomain } = characterSheetDictionary;
+
   return (
     <form className={styles.form} data-character-sheet-layout>
       <div
@@ -25,7 +28,7 @@ export default function CharacterSheetFormPresenter({
           <CharacterSheetSectionFrame
             headingAs="h2"
             id="profile"
-            title="基本情報"
+            title={characterSheet.sections.basicInformation}
           >
             <ProfileSection {...profileSection} />
           </CharacterSheetSectionFrame>
@@ -36,7 +39,7 @@ export default function CharacterSheetFormPresenter({
           expandable
           headingAs="h2"
           id="bonds"
-          title="縁"
+          title={gameDomain.terms.bonds}
         >
           <div data-character-sheet-section-slot="bonds" />
         </CharacterSheetSectionFrame>
@@ -49,7 +52,7 @@ export default function CharacterSheetFormPresenter({
           expandable
           headingAs="h2"
           id="checks"
-          title="判定"
+          title={gameDomain.terms.checks}
         >
           <div data-character-sheet-section-slot="checks" />
         </CharacterSheetSectionFrame>
@@ -57,7 +60,7 @@ export default function CharacterSheetFormPresenter({
           expandable
           headingAs="h2"
           id="weapons-and-armor"
-          title="武器・防具"
+          title={characterSheet.sections.weaponsAndArmor}
         >
           <div data-character-sheet-section-slot="weapons-and-armor" />
         </CharacterSheetSectionFrame>
@@ -65,7 +68,7 @@ export default function CharacterSheetFormPresenter({
           expandable
           headingAs="h2"
           id="skills"
-          title="スキル"
+          title={gameDomain.terms.skills}
         >
           <div data-character-sheet-section-slot="skills" />
         </CharacterSheetSectionFrame>
@@ -73,7 +76,7 @@ export default function CharacterSheetFormPresenter({
           expandable
           headingAs="h2"
           id="special-items"
-          title="専用アイテム"
+          title={gameDomain.terms.ikizamaSpecialItems}
         >
           <div data-character-sheet-section-slot="special-items" />
         </CharacterSheetSectionFrame>

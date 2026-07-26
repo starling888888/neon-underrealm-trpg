@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { characterSheetDictionary } from "../dictionary";
 import type {
   CreditFieldName,
   CreditValues,
@@ -134,13 +135,15 @@ export default function ProfileSection({
 }: ProfileSectionProps) {
   const [isSettingExpanded, setIsSettingExpanded] = useState(false);
   const settingContentId = "character-sheet-setting-content";
+  const { characterSheet, gameDomain } = characterSheetDictionary;
+  const { credit: creditTerms } = gameDomain.terms;
 
   return (
     <div className={styles.section}>
       <div className={styles.profileGrid}>
         <div className={styles.profileField}>
           <TextField
-            label="PC名"
+            label={gameDomain.terms.pcName}
             name="pcName"
             onChange={onProfileChange}
             value={profile.pcName}
@@ -148,7 +151,7 @@ export default function ProfileSection({
         </div>
         <div className={styles.profileField}>
           <TextField
-            label="PL名"
+            label={gameDomain.terms.playerName}
             name="playerName"
             onChange={onProfileChange}
             value={profile.playerName}
@@ -156,7 +159,7 @@ export default function ProfileSection({
         </div>
         <div className={styles.profileField}>
           <TextField
-            label="二つ名"
+            label={characterSheet.profile.nickname}
             name="nickname"
             onChange={onProfileChange}
             value={profile.nickname}
@@ -164,13 +167,13 @@ export default function ProfileSection({
         </div>
         <div className={styles.ageAndGender}>
           <TextField
-            label="年齢"
+            label={characterSheet.profile.age}
             name="age"
             onChange={onProfileChange}
             value={profile.age}
           />
           <TextField
-            label="性別"
+            label={characterSheet.profile.gender}
             name="gender"
             onChange={onProfileChange}
             value={profile.gender}
@@ -185,12 +188,12 @@ export default function ProfileSection({
           onClick={() => setIsSettingExpanded((expanded) => !expanded)}
           type="button"
         >
-          <span>設定</span>
+          <span>{characterSheet.profile.setting}</span>
           <span aria-hidden="true" className={styles.chevron} />
         </button>
         <div hidden={!isSettingExpanded} id={settingContentId}>
           <textarea
-            aria-label="設定"
+            aria-label={characterSheet.profile.setting}
             className={styles.settingInput}
             id="character-sheet-setting"
             onChange={(event) => onProfileChange("setting", event.target.value)}
@@ -198,50 +201,50 @@ export default function ProfileSection({
           />
         </div>
       </div>
-      <section aria-label="信用" className={styles.credit}>
+      <section aria-label={creditTerms.name} className={styles.credit}>
         <div className={styles.creditGrid}>
           <CreditField
-            label="取得信用"
+            label={creditTerms.acquired}
             name="acquired"
             onBlur={onCreditBlur}
             onChange={onCreditChange}
             value={credit.acquired}
           />
           <CreditField
-            label="融通した"
+            label={creditTerms.provided}
             name="provided"
             onBlur={onCreditBlur}
             onChange={onCreditChange}
             value={credit.provided}
           />
           <CreditField
-            label="融通された"
+            label={creditTerms.received}
             name="received"
             onBlur={onCreditBlur}
             onChange={onCreditChange}
             value={credit.received}
           />
           <ReadOnlyCreditField
-            formula="取得信用 + 融通された信用 - 融通した信用"
-            label="合計信用"
+            formula={creditTerms.formulas.total}
+            label={creditTerms.total}
             value={creditSummary.totalCredit}
           />
           <ReadOnlyCreditField
-            formula="選択した全アイテムの信用の合計（ドラッグは信用 × 所持セット数）"
-            label="消費信用"
+            formula={creditTerms.formulas.consumed}
+            label={creditTerms.consumed}
             value={0}
           />
           <CreditField
             allowNegative
-            label="小銭修正"
+            label={creditTerms.changeAdjustment}
             name="changeAdjustment"
             onBlur={onCreditBlur}
             onChange={onCreditChange}
             value={credit.changeAdjustment}
           />
           <ReadOnlyCreditField
-            formula="合計信用 - 消費信用 + 小銭修正"
-            label="小銭"
+            formula={creditTerms.formulas.change}
+            label={creditTerms.change}
             value={creditSummary.change}
           />
         </div>

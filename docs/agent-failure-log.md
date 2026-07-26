@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeated a TypeScript check failure while renaming dictionary keys
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `src/character-sheet/dictionary.ts`と`src/character-sheet/components/ProfileSection.tsx`
+- 観測した失敗: `sections`から`terms`への辞書構造のリネーム時に、最初は同名キーのうち誤った側を変更し、次は辞書の`credit`とフォーム値の`credit`を同一scopeで衝突させた。同一作業中のTypeScript checkが2回失敗した。
+- 一次対応: リネーム対象を`gameDomain`配下へ限定し、辞書由来の参照は`creditTerms`としてフォーム値と明確に区別する。変更後に型検査、build、関連Component testを実行する。
+
 ### Retried a browser interaction before Astro client hydration completed
 
 #### 2026-07-25

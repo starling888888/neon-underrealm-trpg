@@ -1,5 +1,6 @@
 import { type ReactNode, useId, useState } from "react";
 
+import { characterSheetDictionary } from "../dictionary";
 import styles from "./FormulaTooltip.module.css";
 
 type FormulaTooltipProps = {
@@ -24,7 +25,7 @@ export default function FormulaTooltip({
     <span className={styles.root}>
       {isOpen ? (
         <button
-          aria-label="計算式の説明を閉じる"
+          aria-label={characterSheetDictionary.general.closeFormulaTooltip}
           className={styles.dismissLayer}
           onClick={() => setIsOpen(false)}
           tabIndex={-1}

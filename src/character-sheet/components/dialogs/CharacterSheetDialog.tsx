@@ -1,5 +1,6 @@
 import { type ReactNode, type RefObject, useEffect, useRef } from "react";
 
+import { characterSheetDictionary } from "../../dictionary";
 import styles from "./CharacterSheetDialog.module.css";
 
 type DialogAccessibleName =
@@ -114,7 +115,9 @@ export function CharacterSheetDialogHeader({
           type="button"
         >
           <span aria-hidden="true">×</span>
-          <span className={styles.visuallyHidden}>閉じる</span>
+          <span className={styles.visuallyHidden}>
+            {characterSheetDictionary.general.close}
+          </span>
         </button>
       ) : null}
     </header>
