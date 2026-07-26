@@ -45,6 +45,15 @@
 - comparison points: profile slotのG3 frame非適用、5入力のlabel対応と順序、設定の初期非表示と展開後のtextarea、信用の順序・初期値・右揃え、desktop / tablet / mobileでの横overflowなし。
 - VRT: 既存の`tests/visual/vrt/character-sheet.spec.ts`にある`@vrt @character-sheet`のdefault routeを使い、G4ではdesktop、tablet、mobileだけをactual / 比較対象とする。設定の展開、信用の値変更、空欄からの`0`復帰はbrowser behavior testで確認する。canonical baselineの更新には別途ユーザー承認が必要である。
 
+### G6 character image comparison
+
+- target: 基本情報内のプロフィール入力群、`設定`、画像入力、経験点・信用の位置関係。
+- desktop: 基本情報の左カラムで、プロフィール入力群と`設定`を左、画像入力を右に置く。画像入力はプロフィール入力群と`設定`の高さを跨ぎ、経験点・信用はこのprofile / image行の下に置く。
+- tablet: site menu railの右にある基本情報内でdesktopと同じprofile / imageの横組みを保つ。画像入力の横幅だけを縮め、プロフィール・画像・信用の関係を崩さない。
+- mobile: プロフィール入力、`設定`、画像入力、経験点・信用の順に1列で積む。desktop / tabletの右側画像を縮小して残さない。
+- image state: 未選択時は既存draftと同じコンパクトな破線の画像領域、D&Dの案内、容量表示、直下のファイル選択操作を示す。選択済み画像は同じ領域に表示し、同じ導線で差し替える。画像専用のdialog、確認用preview、画像編集UIは追加しない。
+- comparison: desktop（`1440x1200`）、tablet（`820x1180`）、mobile（`390x900`）で、画像だけでなくprofile、設定、信用との位置関係、画像表示位置、操作位置を確認する。実装結果は既存target限定の`visual:capture`でactualを確認し、個別Playwright screenshot commandを代替にしない。canonical VRT baselineは更新しない。
+
 ## 確定したデザイン要件
 
 ### 操作領域
@@ -69,8 +78,9 @@
 ### 画像選択
 
 - 画像表示領域をdrag and dropの対象とする。画像表示領域の下にあるボタンからも画像を選択できるようにする。
+- 画像は基本情報のprofile / setting / creditとの位置関係に従って置き、独立したcardまたは別sectionにしない。
 - 画像選択のためのアプリ内ダイアログは開かない。選択後に確認用プレビューも表示しない。
-- 画像の形式、容量、decode、変換で失敗した場合は、エラー一覧へ積まずに失敗ダイアログを表示する。
+- 画像の形式、容量、decode、変換、IndexedDB書込みで失敗した場合は、エラー一覧へ積まずに失敗ダイアログを表示する。画像の変換・保存中はIsland全体を操作不可にするloading overlayを表示し、reduced motionではindicatorを回転させない。
 
 ### ページlayoutとサイトメニュー
 
@@ -242,7 +252,6 @@
 
 ## 未決定事項
 
-- 画像選択・プレビューの詳細表現
 - 必須状態を表す入力済みfixtureデータと、正確なVRTシナリオ
 
 ## design承認の境界

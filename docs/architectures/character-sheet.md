@@ -50,14 +50,14 @@ src/
     └── utils/
 ```
 
-- `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`、RHF adapter hookの接続、処理順序、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の統合、行選択とdialogの開閉・適用を担う。DOMの画面配置を持たず、直下には`CharacterSheetFormPresenter`と、Rootで扱うほうが適切なdialog Componentだけを置く。
-- `CharacterSheetFormPresenter.tsx`: formのDOM配置、sectionの並び、表示用propsの受け渡しを担う。RHF formの生成・参照、マスタ検索、派生値算出、検証、永続化、ブラウザAPI、dialogの開閉状態を持たない。各section・行ComponentはこのPresenter配下の表示Componentとして組み立て、RHFを参照せず必要な表示値と操作callbackをPropsで受け取る。Component内のstateは、自身に閉じた開閉状態などに限定する。
+- `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`、RHF adapter hookの接続、処理順序、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の統合を担う。form、dialog、focus ref、loadingなどRoot横断の状態はroot-state custom hookへ置く。DOMの画面配置を持たず、直下には`CharacterSheetFormPresenter`と、Rootで扱うほうが適切なdialog Componentだけを置く。
+- `CharacterSheetFormPresenter.tsx`: formのDOM配置、sectionの並び、表示用propsの受け渡しを担う。RHF formの生成・参照、マスタ検索、派生値算出、検証、永続化、ブラウザAPI、dialogの開閉状態を持たない。各section・行ComponentはこのPresenter配下の表示Componentとして組み立て、RHFを参照せず必要な表示値と操作callbackをPresenter hook経由のPropsで受け取る。Component内のstateは、自身に閉じた開閉状態などに限定する。
 - `components/`: Presenterとその配下のJSX・表示Component、およびRoot直下へ配置するdialog Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。`CharacterSheetSectionFrame`は`expandable?: boolean`（default: `false`）で静的・折りたたみを共通化し、同じframe・mutedなタイトル領域・分割線を使う。title要素は`span`または`h1`〜`h6`を指定できる。`FormulaTooltip`は派生値の子要素を操作対象にして、hoverまたはtapで開く局所的な状態だけを持ち、タップ端末ではコンポーネント外タップとEscで閉じる。focus表示は現在の対象外とする。
 - `form/`: 編集値の型、初期値、RHFの可変配列操作、`zodResolver`を接続するform Hook、保存・復元の接続を置く。RHF以外の編集state storeは置かない。
 - `logic/`: React、RHF、DOM、Storage、IndexedDBに依存しない派生値算出、選択可能性判定、構造化検証、ViewModel組み立てを置く。
 - `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかは実装Gateで決める。
 - `schemas/`: 現在のform入力を検証・正規化するschemaと、IndexedDB record・JSON入力を検証するschemaを置く。ブラウザから渡る生の入力値の正規化とドメイン上の入力制約はここへ置き、ComponentやHTML constraintだけへ委ねない。schema失敗時は、現在の編集stateへの部分反映を行わない。具体的な形、JSON形式、CCFOLIA出力形式は各実装Gateで定める。
-- `persistence/`: serializableな下書きのlocalStorage adapterと画像BlobのIndexedDB永続化を置く。保存データの読み書き、旧Blob削除、全消去を担い、React stateやJSXを持たない。
+- `persistence/`: serializableな下書きのlocalStorage adapterと、画像recordのIndexedDB adapterを置く。G6の画像adapterは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへWebPのMIME typeとbase64エンコード文字列を保存・読取りする。React stateやJSXを持たない。画像recordの削除はG29で扱う。
 - `browser/`: Clipboard、ファイルdownload、画像decode・WebP変換などのブラウザAPIを置く。呼出し側から差し替え可能な小さなadapterとし、ゲームルールとRHFへ依存しない。
 - `utils/`: ID生成、数値変換など、ゲームルール・React・ブラウザAPIを含まない補助処理だけを置く。feature固有の判断は`logic/`、ブラウザAPIは`browser/`へ置き、将来の再利用だけを理由に作らない。
 
@@ -83,22 +83,22 @@ native number inputがfocus中に保持する`-`など、数値として未確�
 | --------------------------------------------- | ----------------------------------- | ------------ |
 | ユーザーが直接編集するキャラクター値          | RHF                                 | localStorage |
 | 可変行の順序、選択マスタID、明示的な空欄・`0` | RHF                                 | localStorage |
-| WebP画像の参照情報                            | RHF                                 | localStorage |
-| WebP画像のバイナリ                            | IndexedDBの画像用record             | IndexedDB    |
+| 選択済み画像の表示用record                    | root-state custom hook              | IndexedDB    |
+| WebP画像のMIME typeとbase64エンコード文字列   | IndexedDBの画像用record             | IndexedDB    |
 | マスタデータ                                  | `master-data/`                      | 保存しない   |
 | 派生値、ViewModel、エラー・警告結果           | `logic/`と`CharacterSheetContainer` | 保存しない   |
 | 候補選択・確認・通知dialogの開閉と選択対象    | `CharacterSheetContainer`           | 保存しない   |
 | section・行の効果表示など局所的な表示状態     | 対応するPresenter Component         | 保存しない   |
 
-画像バイナリはlocalStorageのJSONへ混ぜない。画像用recordへ分離し、RHFには対応する参照だけを保持する。両保存先の書込み順、旧Blobの削除、全消去時の削除、画像record不整合時の復旧は実装Gateで定める。JSON入出力で画像をどう表すかも、該当Gateで定める。
+画像のbase64文字列と画像recordの参照は、RHF、localStorage、URL query、ログ、Git管理ファイルへ混ぜない。画像処理のRoot横断stateはroot-state custom hookに置き、必要なloading値とcallbackをPresenter hook経由で明示的に渡す。Contextは先行導入しない。`logic/`はroot stateやContextへ依存しない。G6では成功後にだけ表示用recordを切り替え、変換またはIndexedDB書込みの失敗時は既存画像を保持する。JSON入出力での画像表現はG26/G27で定め、全消去時の画像record削除はG29で扱う。
 
 ### 自動保存と復元
 
 フォームのserializableな最新1件だけをlocalStorageへ保存する。RHFの`subscribe`で値を監視し、短時間の連続入力をまとめて保存する。保存用にフォーム全体を`useWatch`して入力ごとに再描画させない。同期処理のためだけの追加ライブラリは導入しない。
 
-AstroのSSRとhydrationにおける表示差分を避けるため、初回復元はマウント後に行う。localStorageから読み出した値は、現在の入力値を対象にした構造・型検証を通った場合だけRHFの`reset`で一括反映する。現在のマスタIDに対応しない選択値または可変行は復元対象から除外する。除外後に必須構造を満たせず完全な互換性を保てない場合は、復元せずエラーを表示する。復元完了まで自動保存を開始せず、初期値で既存下書きを上書きしない。ページ離脱時には、保留中の保存があれば直近値を保存する。
+AstroのSSRとhydrationにおける表示差分を避けるため、初回復元はマウント後に行う。localStorageから読み出した値は、現在の入力値を対象にした構造・型検証を通った場合だけRHFの`reset`で一括反映する。現在のマスタIDに対応しない選択値または可変行は復元対象から除外する。除外後に必須構造を満たせず完全な互換性を保てない場合は、復元せずエラーを表示する。復元完了まで自動保存を開始せず、初期値で既存下書きを上書きしない。ページ離脱時には、保留中の保存があれば直近値を保存する。画像recordはフォーム値とは独立して読む。正常なrecordだけを表示へ復元し、recordがない場合は未選択状態にする。画像recordの読取り・復元失敗はlocalStorageのフォーム値復元を停止・失敗させない。
 
-復元状態は少なくとも未開始、復元中、利用可能、復元失敗を区別する。保存データが読み込めない場合、現在の編集stateへ部分反映しない。localStorageの利用不可、容量超過、書込み失敗は編集を止めず、警告として通知する。画像recordの読み込み失敗または画像変換の失敗では、既存の画像を上書き・削除せず、失敗をダイアログで通知する。
+復元状態は少なくとも未開始、復元中、利用可能、復元失敗を区別する。保存データが読み込めない場合、現在の編集stateへ部分反映しない。localStorageの利用不可、容量超過、書込み失敗は編集を止めず、警告として通知する。画像recordの読み込み、画像変換、IndexedDB書込みの失敗では、既存の画像を上書き・削除せず、失敗をダイアログで通知する。
 
 ## データ境界
 
@@ -189,7 +189,7 @@ React Component / Hook単体testは、Vitest、jsdom、React Testing Library、u
 | ------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------- | ---- |
 | AstroでReact Islandを動かす     | `@astrojs/react`、`react`、`react-dom`           | Islandを限定し、Astroサイト全体をSPA化しない                          | 採用 |
 | 編集フォーム                    | `react-hook-form`                                | 可変行を含む巨大formの編集値を一箇所に保持し、素のReact inputを扱える | 採用 |
-| 画像BlobのIndexedDB保存         | `idb-keyval`                                     | WebP Blob 1件のkey-value保存に必要な範囲へ絞れる                      | 採用 |
+| 画像recordのIndexedDB保存       | `idb-keyval`                                     | WebP画像record 1件のkey-value保存に必要な範囲へ絞れる                 | 採用 |
 | 実行時検証                      | 既存の`zod`                                      | 既に依存に含まれる。具体的なschemaは各Gateで追加する                  | 採用 |
 | ZodとRHFの接続                  | `@hookform/resolvers`                            | `zodResolver`でRHF errorとschema validationを標準contractで接続する   | 採用 |
 | 純粋logic・schema・adapter test | 既存のNode `node:test`と`tsx`                    | 追加test runnerなしで実行できる                                       | 採用 |
@@ -197,7 +197,7 @@ React Component / Hook単体testは、Vitest、jsdom、React Testing Library、u
 | React Component / Hook単体test  | Vitest、jsdom、React Testing Library、user-event | Props、局所UI state、RHF adapter hookをE2Eへ置かず検証する            | 採用 |
 | React TSX変換                   | `@vitejs/plugin-react`                           | Astroとは別にVitestへReact JSX transformを接続する                    | 採用 |
 
-`localStorage`はブラウザ標準APIを使い、画像を除くserializableな最新1件の下書きを保存する。`idb-keyval`はBlobを含むstructured-clone可能な値を保存できるため、WebP画像recordの保存要件に適する。RHFの編集値同期は`subscribe`、`reset`、小さな自前hookで完結させる。
+`localStorage`はブラウザ標準APIを使い、画像を除くserializableな最新1件の下書きを保存する。`idb-keyval`はstructured-clone可能な値を保存できるため、WebP画像recordの保存要件に適する。RHFの編集値同期は`subscribe`、`reset`、小さな自前hookで完結させる。
 
 ### 比較した候補
 
@@ -208,7 +208,7 @@ React Component / Hook単体testは、Vitest、jsdom、React Testing Library、u
 | form      | `@tanstack/react-form`             | npm週次ダウンロード約192万                  | 追加依存あり                     | 不採用推奨。RHFより採用実績が少なく、初期要件に必要な優位性がない           |
 | 保存      | localStorage＋自前RHF同期hook      | ブラウザ標準                                | 追加bundleなし                   | 採用推奨。画像を除く最新1件の同期保存は`subscribe`と`reset`で完結する       |
 | 保存      | 保存同期ライブラリ                 | 候補ごとに異なる                            | 追加依存                         | 不採用推奨。保存対象の除外、復元順、失敗通知をこの要件どおりに制御しにくい  |
-| IndexedDB | `idb-keyval`                       | 小さなkey-value用途として長期利用されている | get/set中心ではbrotli約295 bytes | 採用推奨。画像Blob 1件には十分                                              |
+| IndexedDB | `idb-keyval`                       | 小さなkey-value用途として長期利用されている | get/set中心ではbrotli約295 bytes | 採用推奨。画像record 1件には十分                                            |
 | IndexedDB | `idb`                              | IndexedDB API全体を扱える                   | brotli約1.19 kB                  | 将来候補。複数画像、索引、複雑なtransactionが必要になった場合だけ再比較する |
 
 ダウンロード数の参照日は2026-07-24とする。サイズは各プロジェクトの公式READMEまたはnpm表示の公表値であり、実装時には実際のproduction buildで確認する。
@@ -225,16 +225,16 @@ UIは全てフルスクラッチとし、画像変換、Clipboard、downloadはb
 
 ## ユーザー判断が必要な項目
 
-| 項目               | 決定                                                                    | 判断の内容                                                                                       |
-| ------------------ | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| 基盤依存           | `@astrojs/react`、`react`、`react-dom`、`react-hook-form`、`idb-keyval` | React IslandとRHFを導入する。`localStorage`はブラウザ標準APIを使う。                             |
-| 編集値の保持先     | RHFを唯一の編集stateとする                                              | Zustandなどの別storeへ編集値を複製しない。UIの一時状態だけはComponent内のReact stateで扱う。     |
-| 下書きの端末内保存 | 画像以外はlocalStorageへ最新1件を自動保存する                           | RHFの`subscribe`、`reset`、デバウンスを使う自前hookで同期する。保存同期ライブラリは導入しない。  |
-| 画像の端末内保存   | 編集stateとは別のIndexedDB画像recordへWebP Blobを保存する               | JSON化する下書きとBlobを混在させない。変換・画像recordの失敗では既存画像を上書き・削除しない。   |
-| 永続化の詳細       | 保存先間の整合性とキー名前空間は実装Gateで定める                        | localStorageとIndexedDBの書込み順、削除、key / DB / store名は現時点で固定しない。                |
-| 実行時schema       | `zod`は既存依存を使う                                                   | 現在の入力値用とIndexedDB record・JSON入力用の2系統を作る。具体的なschemaは各実装Gateで定める。  |
-| WebP圧縮品質       | 未決定                                                                  | 5 MiB入力・長辺約500px・WebP変換は要件で確定済み。品質値は要件へ確定値を反映する前に判断が必要。 |
-| scoped CSS         | CSS Modules（`*.module.css`）、追加依存なし                             | 既存Astro scoped CSSと共存させ、React ComponentのスタイルをComponent単位へ限定する。             |
-| 型定義依存         | devDependenciesへ先行して明記しない                                     | React関連以外を含む必要な型定義を、実装時の実際の依存と型検査から判断する。                      |
+| 項目               | 決定                                                                    | 判断の内容                                                                                                     |
+| ------------------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 基盤依存           | `@astrojs/react`、`react`、`react-dom`、`react-hook-form`、`idb-keyval` | React IslandとRHFを導入する。`localStorage`はブラウザ標準APIを使う。                                           |
+| 編集値の保持先     | RHFを唯一の編集stateとする                                              | Zustandなどの別storeへ編集値を複製しない。UIの一時状態だけはComponent内のReact stateで扱う。                   |
+| 下書きの端末内保存 | 画像以外はlocalStorageへ最新1件を自動保存する                           | RHFの`subscribe`、`reset`、デバウンスを使う自前hookで同期する。保存同期ライブラリは導入しない。                |
+| 画像の端末内保存   | 編集stateとは別のIndexedDB画像recordへWebPのMIME typeとbase64を保存する | JSON化する下書きと画像recordを混在させず、変換・画像recordの失敗では既存画像を上書き・削除しない。             |
+| 永続化の詳細       | G6の画像recordのkey名前空間を固定する                                   | databaseは`neon-underrealm-character-sheet`、storeは`character-images`、keyは`current-character-image`とする。 |
+| 実行時schema       | `zod`は既存依存を使う                                                   | 現在の入力値用とIndexedDB record・JSON入力用の2系統を作る。具体的なschemaは各実装Gateで定める。                |
+| WebP圧縮品質       | `0.8`                                                                   | 5 MiB入力・長辺約500px・非拡大・WebP変換を1回だけ行う。                                                        |
+| scoped CSS         | CSS Modules（`*.module.css`）、追加依存なし                             | 既存Astro scoped CSSと共存させ、React ComponentのスタイルをComponent単位へ限定する。                           |
+| 型定義依存         | devDependenciesへ先行して明記しない                                     | React関連以外を含む必要な型定義を、実装時の実際の依存と型検査から判断する。                                    |
 
 JSON入出力形式、CCFOLIA出力テキスト形式、実行時schemaの詳細は、いずれもユーザー判断を含む各実装Gateで定める。本書では固定しない。
