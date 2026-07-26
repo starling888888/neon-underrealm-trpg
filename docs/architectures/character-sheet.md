@@ -38,6 +38,7 @@ src/
 │   └── character-sheet.astro
 └── character-sheet/
     ├── CharacterSheetContainer.tsx
+    ├── dictionary.ts
     ├── components/
     │   ├── CharacterSheetFormPresenter.tsx
     │   └── dialogs/
@@ -51,6 +52,7 @@ src/
 ```
 
 - `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`、RHF adapter hookの接続、処理順序、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の統合を担う。form、dialog、focus ref、loadingなどRoot横断の状態はroot-state custom hookへ置く。DOMの画面配置を持たず、直下には`CharacterSheetFormPresenter`と、Rootで扱うほうが適切なdialog Componentだけを置く。
+- `dictionary.ts`: キャラクターシートで固定表示する画面文言の唯一の参照先とする。section見出し、label、button、補足、定型の式などは`characterSheetDictionary`から参照し、Componentへ同じ文言を重複してベタ書きしない。これはi18n catalogではない。ゲームデータ由来の名称・効果文は`master-data/`の読み取り結果を使い、実行時に組み立てる値・文言はこのdictionaryへ無理に入れない。
 - `CharacterSheetFormPresenter.tsx`: formのDOM配置、sectionの並び、表示用propsの受け渡しを担う。RHF formの生成・参照、マスタ検索、派生値算出、検証、永続化、ブラウザAPI、dialogの開閉状態を持たない。各section・行ComponentはこのPresenter配下の表示Componentとして組み立て、RHFを参照せず必要な表示値と操作callbackをPresenter hook経由のPropsで受け取る。Component内のstateは、自身に閉じた開閉状態などに限定する。
 - `components/`: Presenterとその配下のJSX・表示Component、およびRoot直下へ配置するdialog Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。`CharacterSheetSectionFrame`は`expandable?: boolean`（default: `false`）で静的・折りたたみを共通化し、同じframe・mutedなタイトル領域・分割線を使う。title要素は`span`または`h1`〜`h6`を指定できる。`FormulaTooltip`は派生値の子要素を操作対象にして、hoverまたはtapで開く局所的な状態だけを持ち、タップ端末ではコンポーネント外タップとEscで閉じる。focus表示は現在の対象外とする。
 - `form/`: 編集値の型、初期値、RHFの可変配列操作、`zodResolver`を接続するform Hook、保存・復元の接続を置く。RHF以外の編集state storeは置かない。
