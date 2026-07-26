@@ -89,6 +89,42 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Archived a Gate child issue without user confirmation
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: `ex-02-6-sheet-image` のG6進行管理
+- 観測した失敗: test、check、buildの成功とagent自身のchecklist更新を、Gate完了およびchild issueのarchive許可と誤認した。ユーザーの完了確認または`docs/issue/done/`への移動指示がないまま、G6 child issueを作業中のpathから`done/`へ移した。
+- 一次対応: child issueを作業中のpathへ戻し、parent Gate planのG6を`in progress`へ戻した。以後、検証成功だけでarchiveせず、ユーザーが完了・archiveを明示した場合だけchild issueを`done/`へ移す。
+
+### Repeatedly bypassed the approved character-sheet design draft
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: `ex-02-6-sheet-image` の画像入力レビュー対応
+- 観測した失敗: 基本情報・設定・信用を含む承認済みcharacter-sheet design draftを実装入力として確認せず、画像入力だけを独立したcardとして再設計した。さらに、実装結果の個別screenshotをdesign判断に使い、未承認の配置をdesign notesへ確定事項として記録した。既存failure logの「Ignored the approved character-sheet design draft during G4 implementation」と同じ判断ミスを繰り返した。
+- 一次対応: G6を作業中へ戻し、review節を破棄して、design draftが定めるdesktop・tablet・mobileのprofile / setting / image / creditの位置関係を子issueの直接契約として再構成する。ユーザー承認までsource codeを変更しない。
+
+### Repeated a component test before checking the available matcher setup
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `tests/components/character-sheet/ProfileSection.test.tsx`
+- 観測した失敗: loading中のdisabled状態を確認するtestで、このrepositoryに導入されていないjest-domの`toBeDisabled` matcherを使った。全体testと対象component testで同じmatcher不足による失敗を2回確認した。
+- 一次対応: repositoryで利用可能なChai matcherへ切り替え、HTMLButtonElement / HTMLInputElementの`disabled` propertyを直接確認する。
+
+### Repeated the full check before resolving all image-gate static analysis findings
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `ex-02-6-sheet-image`の`src/character-sheet/components/ProfileSection.tsx`、関連testとimport整列
+- 観測した失敗: 画像Gateの初回`npm run check`で型エラー3件を確認・修正した後、全体checkを再実行してa11y lintとBiome整列・formatの残件により2回目も失敗させた。drag and drop領域をstaticな`div`へ置いたことがa11y lintの主因だった。
+- 一次対応: drop領域をfile pickerを開けるnative `button`へ変更し、対象ファイルへBiomeのfixを適用する。画像のdrop・button操作は同じhandlerへ渡す。
+
 ### Repeated a TypeScript check failure while renaming dictionary keys
 
 #### 2026-07-27
