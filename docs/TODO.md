@@ -81,6 +81,18 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `ex-02-web-character-sheet` の後続Gateで`React.memo`するPresenter / section Componentを導入する場合に、同じtaskで扱う。
   - handling plan: `useCharacterSheetFormPresenterProps`の派生ViewModelを入力primitiveに基づく`useMemo`で安定化し、event callbackも`useCallback`で安定化する。`creditSummary`だけを局所的にmemo化せず、memo化対象Componentのprops境界全体で参照等価性が有効になることを確認する。現時点の軽量な派生計算と非memo化Presenterには先行適用しない。
 
+- [ ] キャラクターシートの派生logicからマスタID解決を分離する
+  - source: ChatGPT review draft (`.tmp/chatgpt-review.md`) のG7 review
+  - classification: architecture follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24着手前に、独立した設計・実装taskとして扱う。
+  - handling plan: `logic/`はマスタIDではなく、`master-data/`またはPresenter adapterが解決した選択中流儀・生き様のview modelを入力として受ける。未知IDの検出・復元時の除外・エラーはpersistence / import境界で明示し、未選択と同じ`undefined`として派生logicへ渡さない。fixtureを使うlogic testへ更新してからG24の自動復元を実装する。
+
+- [ ] CharacterSheet Presenter props hookのsection別分割を必要な時点で検討する
+  - source: ChatGPT review draft (`.tmp/chatgpt-review.md`) のG7 review
+  - classification: architecture follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31で統合時の保守性を確認し、必要なら独立taskとして先行して扱う。
+  - handling plan: profile、build、副能力値などが独立したstate lifecycleまたはtest setupを必要とする時だけsection別selector / action hookへ分け、最上位hookは合成に留める。行数だけを理由に機械的な分割はしない。既存の参照安定化TODOは、`React.memo`導入時に同じ境界で扱う。
+
 - [ ] Footerからクレジット導線を出すか将来検討する
   - source: `phase-2-prep-doc-agent-ops` Group 12
   - classification: low-priority follow-up

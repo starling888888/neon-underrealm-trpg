@@ -47,6 +47,8 @@ export type OtherRyugiValues = {
   ryugiId: string | null;
 };
 
+export type OtherRyugiEditableFieldName = "level" | "ryugiId";
+
 export type BuildValues = {
   attributes: Record<AttributeName, AttributeValues>;
   ikizamaId: string | null;

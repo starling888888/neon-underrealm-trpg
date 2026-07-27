@@ -245,3 +245,37 @@
 - [x] `characterSheet`側には入力・操作・tooltipなどのUI固有文言だけを残す。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- マスタ未選択時でも常に表示する成長可能点に対し、成長点の超過・同一能力値への2点以上の成長を、マスタ選択の有無で抑止している。
+- 能力値の表示順が`attributes` objectの挿入順に依存しており、canonicalな能力値順を表す`attributeNames`を使っていない。
+- その他流儀の更新APIが、編集不可の`rowId`を含む`keyof OtherRyugiValues`を受け入れるため、誤ったfield指定が`level`更新として処理され得る。
+- 常に数値を返す`rank`、`growthPoints`、`spentExperience`、`remainingExperience`が`number | null`になっており、未算出値との型上の区別が不正確である。
+
+### 判定
+
+- source: ChatGPT review draft (`.tmp/chatgpt-review.md`)
+- classification: valid
+- local validation: 要件は、流儀・生き様の未選択状態でも格と成長可能点を常に表示すると定めている。したがって成長入力の検証も選択状態へ依存させず、レベルから算出した成長可能点だけで判定する必要がある。
+- local validation: `attributeNames`は能力値のcanonicalな順序として既に定義されている。復元・importで再構築されたobjectのキー順にUIを依存させないため、表示側はこの配列を用いる。
+- local validation: `rowId`は可変行の識別子であり、選択・レベル変更の入力APIに含めない。派生logicの4値は現実装で常にnumberを返しているため、型を狭めることが実装契約と一致する。
+
+### 対応方針
+
+- `calculateBuild`の成長エラー判定からマスタ選択の条件を外し、未選択状態での成長超過をNode testで固定する。
+- `BuildSection`は`attributeNames`の順で能力値行を描画し、異なるobjectキー順でもcanonical順を保つComponent testを追加する。
+- その他流儀の更新fieldを`"ryugiId" | "level"`へ狭め、`rowId`を更新APIの型から除外する。
+- 常時算出する4つの派生値を`number`へ狭め、不要なnull fallbackを除く。
+
+### 対応完了チェックリスト
+
+- [x] マスタ未選択時の成長超過をエラーとして扱い、Node testで確認する。
+- [x] 能力値の表示順を`attributeNames`に固定し、再構築したobjectでも順序を保つComponent testを追加する。
+- [x] その他流儀の更新fieldから`rowId`を除外する。
+- [x] 常時算出する派生値4件を`number`型へ狭める。
+- [x] `npm run test:component` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

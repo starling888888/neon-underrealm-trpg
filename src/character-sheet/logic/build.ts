@@ -29,7 +29,7 @@ export type BuildReferenceValues = {
 
 export type BuildDerivedValues = {
   attributes: Record<AttributeName, AttributeDerivedValues>;
-  growthPoints: number | null;
+  growthPoints: number;
   hasAttributeError: boolean;
   hasBuildError: boolean;
   hasExperienceError: boolean;
@@ -43,10 +43,10 @@ export type BuildDerivedValues = {
   primaryRyugiDuplicate: boolean;
   primaryRyugiLevelInvalid: boolean;
   primaryRyugiLevel: number;
-  rank: number | null;
+  rank: number;
   reference: BuildReferenceValues;
-  remainingExperience: number | null;
-  spentExperience: number | null;
+  remainingExperience: number;
+  spentExperience: number;
 };
 
 function getSources(build: BuildValues): BuildSources {
@@ -90,7 +90,6 @@ function getIkizamaCoefficients(ikizama: Ikizama, level: number) {
 /** Derives G7-only build values without depending on React or form state. */
 export function calculateBuild(build: BuildValues): BuildDerivedValues {
   const { ikizama, primaryRyugi } = getSources(build);
-  const hasSelectedBuild = ikizama !== undefined && primaryRyugi !== undefined;
   const primaryLevelInvalid = build.primaryRyugiLevel < 1;
   const ikizamaLevelInvalid = build.ikizamaLevel < 1;
   const otherRyugiIds = build.otherRyugi.flatMap((otherRyugi) =>
@@ -140,11 +139,8 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
         (attribute) => build.attributes[attribute].points < 0,
       ));
   const hasGrowthError =
-    hasSelectedBuild &&
-    (usedGrowthPoints > (growthPoints ?? 0) ||
-      attributeNames.some(
-        (attribute) => build.attributes[attribute].growth < 0,
-      ));
+    usedGrowthPoints > growthPoints ||
+    attributeNames.some((attribute) => build.attributes[attribute].growth < 0);
   const hasAttributeError = hasPointAllocationError || hasGrowthError;
   const spentExperience =
     (primaryRyugi === undefined

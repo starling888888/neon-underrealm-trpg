@@ -93,4 +93,36 @@ describe("BuildSection", () => {
 
     expect(props.onOtherRyugiRemove).toHaveBeenCalledWith(0);
   });
+
+  it("keeps attribute rows in canonical order after values are reconstructed", () => {
+    const props = createProps();
+    props.build = {
+      ...props.build,
+      attributes: {
+        mind: props.build.attributes.mind,
+        body: props.build.attributes.body,
+        perception: props.build.attributes.perception,
+        agility: props.build.attributes.agility,
+        strength: props.build.attributes.strength,
+      },
+    };
+    props.derived = calculateBuild(props.build);
+
+    render(<BuildSection {...props} />);
+
+    const pointInputs = ["筋力", "敏捷", "感覚", "肉体", "精神"].map(
+      (attributeName) =>
+        screen.getByLabelText(`${attributeName}能力値ポイント`),
+    );
+
+    expect(
+      pointInputs.every(
+        (input, index) =>
+          index === 0 ||
+          (pointInputs[index - 1].compareDocumentPosition(input) &
+            Node.DOCUMENT_POSITION_FOLLOWING) !==
+            0,
+      ),
+    ).toBe(true);
+  });
 });

@@ -8,7 +8,7 @@ import {
   type BuildValues,
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-  type OtherRyugiValues,
+  type OtherRyugiEditableFieldName,
   type SecondaryAttributeFieldName,
 } from "../form-values";
 import { calculateBuild } from "../logic/build";
@@ -105,7 +105,7 @@ export default function useCharacterSheetFormPresenterProps(
 
   function setOtherRyugiValue(
     index: number,
-    field: keyof OtherRyugiValues,
+    field: OtherRyugiEditableFieldName,
     value: string,
   ): number | undefined {
     const otherRyugi = getValues("build").otherRyugi.map(

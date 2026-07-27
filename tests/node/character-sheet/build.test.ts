@@ -48,6 +48,26 @@ describe("character sheet build", () => {
     assert.equal(derived.hasAttributeError, false);
   });
 
+  it("reports growth overages before master data is selected", () => {
+    const build = {
+      ...characterSheetDefaultValues.build,
+      attributes: {
+        ...characterSheetDefaultValues.build.attributes,
+        strength: {
+          ...characterSheetDefaultValues.build.attributes.strength,
+          growth: 1,
+        },
+      },
+    };
+
+    const derived = calculateBuild(build);
+
+    assert.equal(derived.growthPoints, 0);
+    assert.equal(derived.hasGrowthError, true);
+    assert.equal(derived.hasAttributeError, true);
+    assert.equal(derived.hasBuildError, true);
+  });
+
   it("derives independent primary and ikizama values before both are selected", () => {
     const primaryOnly = {
       ...characterSheetDefaultValues.build,

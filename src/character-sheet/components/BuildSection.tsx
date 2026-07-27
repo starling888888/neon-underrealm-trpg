@@ -3,8 +3,9 @@ import type {
   AttributeName,
   AttributeValues,
   BuildValues,
-  OtherRyugiValues,
+  OtherRyugiEditableFieldName,
 } from "../form-values";
+import { attributeNames } from "../form-values";
 import { formatDisplayValue } from "../format-display-value";
 import type { BuildDerivedValues } from "../logic/build";
 import type { CharacterSheetSelectOption } from "../master-data/build";
@@ -43,7 +44,7 @@ export type BuildSectionProps = {
   onOtherRyugiAdd: () => void;
   onOtherRyugiChange: (
     index: number,
-    field: keyof OtherRyugiValues,
+    field: OtherRyugiEditableFieldName,
     value: string,
   ) => void;
   onOtherRyugiCommit: (index: number, value: string) => number;
@@ -285,8 +286,8 @@ export default function BuildSection({
             {buildCopy.temporaryModifier}
           </span>
           <span className={styles.attributeHeader}>{buildCopy.temporary}</span>
-          {Object.entries(build.attributes).map(([attribute, values]) => {
-            const attributeName = attribute as AttributeName;
+          {attributeNames.map((attributeName) => {
+            const values = build.attributes[attributeName];
             const derivedValues = derived.attributes[attributeName];
 
             return (
