@@ -1,12 +1,13 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import BuildSection, {
   type BuildSectionProps,
 } from "../../../src/character-sheet/components/BuildSection";
+import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { calculateBuild } from "../../../src/character-sheet/logic/build";
 
@@ -44,6 +45,18 @@ describe("BuildSection", () => {
     expect(screen.getAllByText("-").length).toBeGreaterThan(0);
     expect(screen.getByText("能力値ポイント: -")).not.toBeNull();
     expect(screen.getByText("Lv 2で獲得")).not.toBeNull();
+    expect(
+      (screen.getByLabelText("プライマリ流儀Lv") as HTMLInputElement).value,
+    ).toBe("1");
+    expect((screen.getByLabelText("生き様Lv") as HTMLInputElement).value).toBe(
+      "1",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /成長点/ }));
+
+    expect(screen.getByRole("tooltip").textContent).toBe(
+      characterSheetDictionary.characterSheet.build.formulas.growthPoints,
+    );
 
     await user.selectOptions(
       screen.getByLabelText("プライマリ流儀"),

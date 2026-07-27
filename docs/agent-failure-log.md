@@ -786,3 +786,21 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-7-sheet-build` の成長点Tooltip browser test
 - 観測した失敗: FormulaTooltipはpointer hoverで開くため、Playwrightのclickがhover直後の開状態を再度toggleして閉じることを確認せず、tooltipを待つtestを失敗させた。続くkeyboard操作の試行でもbrowser実行条件でtooltipを開けず、同じ確認を2回失敗させた。
 - 一次対応: mouseの実際の表示契約に合わせ、target buttonへ`hover()`した後のtooltip可視性と位置を確認するtestへ置き換えた。Tooltipのkeyboard開閉を確認する場合は、hoverと独立した操作状態を先に設計・検証する。
+
+### Repeated unavailable DOM matcher in Component test
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` の `BuildSection` Component test
+- 観測した失敗: Vitest設定に`@testing-library/jest-dom` matcherがないことを確認せず、`toHaveValue`と`toHaveTextContent`を続けて使用してComponent testを2回失敗させた。
+- 一次対応: このリポジトリのComponent testで利用済みの標準Chai assertionだけを使用し、inputは`.value`、Tooltipは`.textContent`で比較する。新しいDOM matcherを使う前にtest setupの導入状況を確認する。
+
+### Repeated manual formatter mismatch in Component test
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` の `ProfileSection` Component test
+- 観測した失敗: `npm run check`が示したインデント差分を手動で反映した際、対象行をさらに深くインデントして同じformatter errorを再発させた。
+- 一次対応: formatter出力の空白数をそのまま適用し、修正後は再実行前に対象行だけを読み返す。formatterが対象fileを検出しない場合に別の整形コマンドで代替せず、`npm run check`の差分を正本として扱う。

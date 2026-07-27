@@ -96,6 +96,9 @@ describe("ProfileSection", () => {
         }) as HTMLInputElement
       ).value,
     ).toBe("50");
+    expect(
+      screen.getByText("2", { exact: true, selector: "output" }),
+    ).not.toBeNull();
     expect(screen.queryByRole("button", { name: "消費経験点" })).toBeNull();
     expect(screen.queryByRole("button", { name: "残経験点" })).toBeNull();
 
