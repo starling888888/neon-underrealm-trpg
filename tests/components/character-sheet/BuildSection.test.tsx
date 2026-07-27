@@ -44,6 +44,7 @@ describe("BuildSection", () => {
 
     expect(screen.getAllByText("-").length).toBeGreaterThan(0);
     expect(screen.getByText("能力値ポイント: -")).not.toBeNull();
+    expect(screen.getByText("成長点: 0")).not.toBeNull();
     expect(screen.getByText("Lv 2で獲得")).not.toBeNull();
     expect(
       (screen.getByLabelText("プライマリ流儀Lv") as HTMLInputElement).value,
@@ -68,5 +69,28 @@ describe("BuildSection", () => {
 
     expect(props.onPrimaryRyugiChange).toHaveBeenCalledWith("kenkaya");
     expect(props.onOtherRyugiAdd).toHaveBeenCalledOnce();
+  });
+
+  it("uses headers for other ryugi rows and keeps removal accessible", () => {
+    const props = createProps();
+    props.build = {
+      ...props.build,
+      otherRyugi: [{ level: 1, rowId: "other-ryugi-1", ryugiId: null }],
+    };
+    props.derived = calculateBuild(props.build);
+
+    render(<BuildSection {...props} />);
+
+    expect(
+      screen.getByText("その他流儀", { exact: true }).parentElement
+        ?.textContent,
+    ).toBe("その他流儀Lv");
+    expect(screen.getByText("その他流儀1").className).toContain(
+      "visuallyHidden",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "その他流儀1を削除" }));
+
+    expect(props.onOtherRyugiRemove).toHaveBeenCalledWith(0);
   });
 });

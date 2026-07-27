@@ -804,3 +804,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-7-sheet-build` の `ProfileSection` Component test
 - 観測した失敗: `npm run check`が示したインデント差分を手動で反映した際、対象行をさらに深くインデントして同じformatter errorを再発させた。
 - 一次対応: formatter出力の空白数をそのまま適用し、修正後は再実行前に対象行だけを読み返す。formatterが対象fileを検出しない場合に別の整形コマンドで代替せず、`npm run check`の差分を正本として扱う。
+
+### Repeated flaky section-frame browser test during Review 4
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` のレビュー指摘4後の `tests/visual/character-sheet.spec.ts`
+- 観測した失敗: 変更対象外の縁section frame開閉testが全体実行と単独再実行で連続して失敗し、click後も`aria-expanded`が`true`のままとなった。プロフィール入力testは単独再実行で通過した。
+- 一次対応: Review 4のBuildSection・number input変更を原因とみなしてframe実装を変更せず、browser smokeの当該1件を未確認として報告する。frameの操作同期は別scopeで扱う。

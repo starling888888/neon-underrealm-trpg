@@ -25,7 +25,8 @@
 }
 
 .choiceRow,
-.otherRow {
+.otherRow,
+.otherHeader {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 2.75rem;
   gap: var(--space-1);
@@ -33,19 +34,29 @@
 }
 
 .choiceRow + .choiceRow,
-.otherRow {
+.otherHeader {
   margin-top: var(--space-2);
 }
 
-.otherRow {
+.otherRow,
+.otherHeader {
   grid-template-columns: minmax(0, 1fr) 2.75rem 1.75rem;
+}
+
+.otherRow {
+  margin-top: var(--space-1);
+}
+
+.otherRow + .otherRow {
+  margin-top: var(--space-2);
 }
 
 .label,
 .metricLabel,
 .attributeHeader,
 .pointsHeader,
-.attributeRow > span {
+.attributeRow > span,
+.otherHeader > span {
   display: block;
   color: var(--color-text-muted);
   font-size: 0.5625rem;
@@ -56,6 +67,15 @@
 .selectField,
 .levelField {
   min-width: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .select,
@@ -72,17 +92,6 @@
   padding: 0.1875rem 0.375rem;
   font-size: var(--text-xs);
   line-height: var(--line-height-tight);
-}
-
-.numberInput {
-  appearance: textfield;
-  text-align: right;
-}
-
-.numberInput::-webkit-inner-spin-button,
-.numberInput::-webkit-outer-spin-button {
-  appearance: none;
-  margin: 0;
 }
 
 .numberInput[aria-invalid="true"],
@@ -108,14 +117,19 @@
 }
 
 .removeButton {
-  min-height: 1.75rem;
-  border: var(--border-width) solid var(--color-danger);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-danger);
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  color: var(--color-surface);
   cursor: pointer;
-  font-size: var(--text-xs);
+  font-size: 1rem;
   font-weight: 750;
+  line-height: 1;
+  padding: 0;
 }
 
 .attributeMeta {

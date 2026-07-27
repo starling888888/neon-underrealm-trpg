@@ -26,6 +26,10 @@
   font-size: var(--text-xs);
 }
 
+.form input[type="number"] {
+  text-align: right;
+}
+
 .primaryColumn,
 .secondaryColumn {
   min-width: 0;

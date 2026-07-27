@@ -127,9 +127,7 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
     otherRyugiLevelInvalidRowIds.length > 0;
   const hasInvalidAcquiredExperience = build.acquiredExperience < 0;
   const rank = build.primaryRyugiLevel + build.ikizamaLevel;
-  const growthPoints = hasSelectedBuild
-    ? Math.max(0, Math.floor(rank / 15))
-    : null;
+  const growthPoints = Math.max(0, Math.floor(rank / 15));
   const usedGrowthPoints = attributeNames.reduce(
     (total, attribute) => total + build.attributes[attribute].growth,
     0,

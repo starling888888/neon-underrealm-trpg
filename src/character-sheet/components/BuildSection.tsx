@@ -98,16 +98,22 @@ function SelectField({
   onChange,
   options,
   value,
+  visuallyHiddenLabel = false,
 }: {
   ariaInvalid?: boolean;
   label: string;
   onChange: (value: string | null) => void;
   options: readonly CharacterSheetSelectOption[];
   value: string | null;
+  visuallyHiddenLabel?: boolean;
 }) {
   return (
     <label className={styles.selectField}>
-      <span className={styles.label}>{label}</span>
+      <span
+        className={visuallyHiddenLabel ? styles.visuallyHidden : styles.label}
+      >
+        {label}
+      </span>
       <select
         aria-invalid={ariaInvalid || undefined}
         className={styles.select}
@@ -193,6 +199,12 @@ export default function BuildSection({
             />
           </div>
         </div>
+        {build.otherRyugi.length > 0 ? (
+          <div aria-hidden="true" className={styles.otherHeader}>
+            <span>{buildCopy.otherRyugi}</span>
+            <span>{buildCopy.level}</span>
+          </div>
+        ) : null}
         {build.otherRyugi.map((otherRyugi, index) => (
           <div className={styles.otherRow} key={otherRyugi.rowId}>
             <SelectField
@@ -205,9 +217,10 @@ export default function BuildSection({
               }
               options={ryugiOptions}
               value={otherRyugi.ryugiId}
+              visuallyHiddenLabel
             />
             <div className={styles.levelField}>
-              <span className={styles.label}>{buildCopy.level}</span>
+              <span className={styles.visuallyHidden}>{buildCopy.level}</span>
               <BuildNumberInput
                 ariaInvalid={derived.otherRyugiLevelInvalidRowIds.includes(
                   otherRyugi.rowId,

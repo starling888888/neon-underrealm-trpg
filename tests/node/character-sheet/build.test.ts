@@ -39,6 +39,7 @@ describe("character sheet build", () => {
     const derived = calculateBuild(characterSheetDefaultValues.build);
 
     assert.equal(derived.rank, 2);
+    assert.equal(derived.growthPoints, 0);
     assert.equal(derived.spentExperience, 0);
     assert.equal(derived.remainingExperience, 50);
     assert.equal(derived.attributes.strength.permanent, null);
