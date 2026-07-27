@@ -71,16 +71,16 @@
 
 ## 完了条件
 
-- [ ] 非戦闘技能が指定の15行・固定順・固定対応能力値で存在し、技能名と対応能力値は編集できない。
-- [ ] 見出しが `非戦闘技能` のみであり、列ヘッダーと各行の対応能力値を表示せず、対応能力値ごとの `対応能力：${能力}` 小見出しを表示する。
-- [ ] `非戦闘技能` 見出しのtooltipが、指定の得意技能・修正・常時／一時の判定数の本文を表示する。
-- [ ] 各行で得意技能と修正を変更でき、常時／一時の判定数が、得意技能時には能力値のみを2倍にして更新される。計算式型の行表示を含まない。
-- [ ] 得意技能チェック済み行がアクセントカラー背景になり、未選択行と区別できる。
-- [ ] 非戦闘技能が初期状態で折りたたまれ、展開時は15行、折りたたみ時は得意技能チェック済みの行だけを表示する。判定 section 全体の既存開閉とは独立して操作できる。
-- [ ] 非戦闘技能がdesktop / tabletで2列、mobileで1列のcard gridとして、技能名を折り返さず、常時／一時と2桁以上の修正値をclip・overflowさせない。
+- [x] 非戦闘技能が指定の15行・固定順・固定対応能力値で存在し、技能名と対応能力値は編集できない。
+- [x] 見出しが `非戦闘技能` のみであり、列ヘッダーと各行の対応能力値を表示せず、対応能力値ごとの `対応能力：${能力}` 小見出しを表示する。
+- [x] `非戦闘技能` 見出しのtooltipが、指定の得意技能・修正・常時／一時の判定数の本文を表示する。
+- [x] 各行で得意技能と修正を変更でき、常時／一時の判定数が、得意技能時には能力値のみを2倍にして更新される。計算式型の行表示を含まない。
+- [x] 得意技能チェック済み行がアクセントカラー背景になり、未選択行と区別できる。
+- [x] 非戦闘技能が初期状態で折りたたまれ、展開時は15行、折りたたみ時は得意技能チェック済みの行だけを表示する。判定 section 全体の既存開閉とは独立して操作できる。
+- [x] 非戦闘技能がdesktop / tabletで2列、mobileで1列のcard gridとして、技能名を折り返さず、常時／一時と2桁以上の修正値をclip・overflowさせない。
 - [x] 判定数の pure logic、form / schema入力境界、Componentのtooltip・開閉・アクセント表示、代表的browser操作を適切なテスト層で確認している。
-- [ ] `/character-sheet/` の default、得意技能選択、修正変更、非戦闘技能展開、各ヘッダー tooltip open を desktop / tablet / mobile でVisual Review対象として列挙し、変更targetだけを比較してcanonical VRT baselineを更新していない。
-- [ ] `visual:capture`がscenarioで指定したowner locatorのoriginal-pixel-resolution screenshotを一時artifactとして出力し、`visual:test`のcanonical VRT比較とbaselineを変更しない。
+- [x] `/character-sheet/` の default、得意技能選択、修正変更、非戦闘技能展開、各ヘッダー tooltip open を desktop / tablet / mobileでVisual Review対象として列挙した。canonical VRT baselineを管理せず、正式な比較はG31のコンテンツレビューへ延期する。
+- [x] `visual:capture`がscenarioで指定したowner locatorのoriginal-pixel-resolution screenshotを一時artifactとして出力し、`visual:test`のcanonical VRT比較とbaselineを変更しない。
 - [x] 関連TODOを扱わない理由が記録されている。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -182,13 +182,13 @@
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない。
-- [ ] `docs/design/character-sheet/notes.md` と画像designを、最新ユーザー指定で上書きされる範囲以外では維持している。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない。
+- [x] `docs/design/character-sheet/notes.md` と画像designを、最新ユーザー指定で上書きされる範囲以外では維持している。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -288,12 +288,12 @@
 
 ### 対応完了チェックリスト
 
-- [ ] 変更targetだけをVRT比較した（noncombat stateのcanonical baselineが未作成のため）。
+- [x] canonical VRT baselineを管理しない方針を確定し、正式な比較をG31へ延期した。
 - [x] 変更targetだけの一時snapshotを取得した。
 - [x] current issueの受入条件と最終diffから対象stateを列挙した。
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（dev server由来のtemporary artifactは正式なVisual Reviewの根拠にしない）。
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
-- [ ] VRT差分を修正した、または修正不要と判断した（canonical baselineが未作成のため）。
+- [x] canonical VRT baselineの差分判定は管理対象にせず、G31のコンテンツレビューへ延期した。
 - [x] baseline更新が必要な差分を人間判断として記録した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -327,7 +327,7 @@
 - [x] `onRowDelete`が上限外かつ未覚悟の行だけを削除し、直接callbackを呼んでも通常行・覚悟済み行を削除しない。
 - [x] 縁、攻撃、リアクションの編集行がarchitectureの`fieldset` / `legend`契約を満たし、既存のaccessible nameと表示契約を維持する。
 - [x] G9 / G10の受入stateをscenario owner locatorでdesktop / tablet / mobileに列挙し、`visual:capture`のoriginal-pixel-resolution actualを開いて確認する。
-- [ ] 変更targetだけを`visual:test`で比較し、canonical VRT baselineを更新しない。
+- [x] canonical VRT baselineを管理しない方針を確定し、変更targetの正式なVisual ReviewをG31のコンテンツレビューへ延期する。
 - [x] 関連するNode / hook / Component / browser behavior testが通る。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -353,7 +353,7 @@
 
 - [x] 指定されたtooltip triggerをsection単位でdesktop / tablet / mobileにcaptureし、ずれの条件をactual screenshotで確認する。
 - [x] 共通`FormulaTooltip`に適用する統一styleでindicatorの配置規約を揃える。
-- [ ] ユーザーのpreview確認で残った微小な上下ずれを、G31のコンテンツレビューで違和感が指摘された場合に共通`FormulaTooltip`で再調整する。
+- [x] ユーザーのpreview確認で残った微小な上下ずれを、G31のコンテンツレビューで違和感が指摘された場合に共通`FormulaTooltip`で再調整するTODOへ記録した。
 - [x] tooltipのtrigger・open state・既存labelのwrap / clipをComponent testとVisual Reviewで確認する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -375,4 +375,11 @@
 ### canonical VRT比較
 
 - `npm run visual:test -- --grep '@character-sheet'`を実行した。既存のcanonical `default-*`を更新していない。
-- 今回追加した状態scenarioはcanonical baselineを持たないため、比較はmissing snapshotで失敗する。このため、新規stateのcanonical差分は未判定のままとし、baselineの作成・更新は行わない。実画面の確認根拠は上記のoriginal-pixel-resolution locator screenshotである。
+- canonical VRT baselineは管理対象にしない。新規stateの正式なVisual Reviewは、G31のコンテンツレビューでoriginal-pixel-resolution locator screenshotをrequirements・design・ユーザー指示へ照合して行う。実画面の確認根拠は上記のlocator screenshotである。
+
+## Gate Tech Review
+
+- review range: `dd6f0e0..74ef1ec`
+- result: 15技能、得意技能の計算、schema / form / dictionary / master-data境界、縁削除制約、`fieldset` / `legend`、mobileの縁クリア、共通tooltip配置、既存testの結果にactionable findingはなかった。
+- review finding: canonical snapshotがGit管理されず、新規stateはfresh checkoutで`visual:test`比較できないため、G11をそのまま完了扱いにできない。
+- user decision: canonical VRT baselineは管理対象にしない。比較はG31のコンテンツレビューへ正式に延期し、必要なactual screenshotを正本と照合する。対応TODOは`docs/TODO.md`で管理する。
