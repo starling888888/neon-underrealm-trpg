@@ -27,7 +27,7 @@
 | G6   | done    | G4, G5                                                                                                                                          | `docs/issue/done/ex-02-web-character-sheet/ex-02-6-sheet-image.md`         | 承認済みdraftのprofile / setting / image / credit配置を保ち、キャラクター画像を扱う。                                                    |
 | G7   | done    | G1, G2, G3                                                                                                                                      | `docs/issue/done/ex-02-web-character-sheet/ex-02-7-sheet-build.md`         | 流儀、生き様、能力値、経験点を扱う。                                                                                                     |
 | G8   | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-8-sheet-secondary.md`     | 副能力値を扱う。                                                                                                                         |
-| G9   | planned | G7, G8                                                                                                                                          | `docs/issue/ex-02-9-sheet-bonds.md`                                        | 縁と覚悟を扱う。                                                                                                                         |
+| G9   | done    | G7, G8                                                                                                                                          | `docs/issue/done/ex-02-web-character-sheet/ex-02-9-sheet-bonds.md`         | 縁と覚悟を扱う。                                                                                                                         |
 | G10  | planned | G7                                                                                                                                              | `docs/issue/ex-02-10-sheet-attack-reaction.md`                             | 攻撃とリアクションを扱う。                                                                                                               |
 | G11  | planned | G7                                                                                                                                              | `docs/issue/ex-02-11-sheet-noncombat.md`                                   | 非戦闘技能を扱う。                                                                                                                       |
 | G12  | planned | G7                                                                                                                                              | `docs/issue/ex-02-12-sheet-primary-skills.md`                              | プライマリ流儀のスキルを扱う。                                                                                                           |
@@ -109,5 +109,12 @@
 - 副能力値は`secondary` layout regionの`CharacterSheetSectionFrame`内に置く。最大体力、最大精神力、移動力、行動値、行動回数、結べる縁は、`自動算出値 + 修正 = 最終値`として表示し、手動修正はRHFの`secondaryAttributes`にだけ保持する。移動力・行動値は一時修正適用で一時能力値の導出を選ぶ。
 - `FormulaTooltip`はtriggerとtooltip本文を分離し、viewport gutter内へfixed配置する共有Componentである。Component外tap用dismiss layerはComponent固有classで扱い、section CSSから内部buttonを広く選択しない。tooltipの局所操作と配置はComponent test、実画面のopen stateはtarget限定VRT、最終browser E2Eは代表的な入力・checkbox操作だけを扱う。
 - `character-sheet`のcanonical VRT baselineはG8後のdefault・tooltip open stateをまだ採用していない。後続のVisual Reviewでもtarget限定actual確認は行うが、baseline更新はユーザーの明示承認時だけ行う。
+
+### G9
+
+- 縁は`bonds` slotに置き、対象、関係、覚悟checkbox、通常行の透過背景の円形`×`クリア操作を持つ。覚悟済み行は編集・clear・deleteをできず、解除後に再編集できる。
+- 縁最大数の増減では入力済み・覚悟済み行を順序どおり保持し、空行だけを増減する。上限外の未覚悟行はerror colorと共有solid circle `×` delete buttonで示し、section内warningを表示する。
+- 覚悟効果は、気絶からの回復、気合獲得、能動判定、受動判定の順で、`通常の縁／今生の縁 + 修正値 = 最終値`を示す。気絶からの回復、能動判定、受動判定は固定ダイス式のダイス数へ修正値を加え、気合獲得は通常の縁の数値へ加え、今生の縁の`1d6`へ符号付き修正値を付記する。自由文・任意ダイス式は解析しない。
+- 覚悟効果はdesktop / tabletで2行2列、mobileで4行1列とし、元値・最終値はread-only backgroundで表示する。canonical VRT baselineは更新していない。
 
 状態は `planned`、`in progress`、`done` を使う。
