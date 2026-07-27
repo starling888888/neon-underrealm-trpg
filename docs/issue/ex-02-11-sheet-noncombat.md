@@ -352,7 +352,8 @@
 ### 対応完了チェックリスト
 
 - [x] 指定されたtooltip triggerをsection単位でdesktop / tablet / mobileにcaptureし、ずれの条件をactual screenshotで確認する。
-- [x] 共通`FormulaTooltip`または全tooltip labelに適用する統一styleでindicatorの上下中央を揃える。
+- [x] 共通`FormulaTooltip`に適用する統一styleでindicatorの配置規約を揃える。
+- [ ] ユーザーのpreview確認で残った微小な上下ずれを、G31のコンテンツレビューで違和感が指摘された場合に共通`FormulaTooltip`で再調整する。
 - [x] tooltipのtrigger・open state・既存labelのwrap / clipをComponent testとVisual Reviewで確認する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -369,7 +370,7 @@
 
 - G11: 非戦闘技能を展開し、desktop / tabletで2列、mobileで1列となること、`-12`修正値、得意技能選択時のアクセント背景、折りたたみ時に得意技能だけを表示することを、各viewportのnoncombat section locator screenshotで確認した。見出しtooltipも3 viewportで開き、指定4文の改行を含む全文にclipがないことをtooltip locator screenshotで確認した。
 - レビュー指摘 5: 縁のdefault、覚悟済み、上限超過、攻撃のdefault・行追加・対応能力変更、判定数tooltip openを各viewportのsection / tooltip locator screenshotで確認した。縁の効果式はdesktop / tabletで2行2列、mobileで4行1列で表示され、mobileの`クリア`buttonは行内に収まる。上限超過時だけ削除buttonが表示される。
-- レビュー指摘 6: 能力値ポイント、格、常時修正、一時修正、覚悟を含むprofile / build / bonds section locator screenshotをdesktop / tablet / mobileで確認した。`FormulaTooltip`のindicatorをabsolute配置からtrigger content内のflex itemへ統一した後、各対象で文言の中央に揃い、既存labelのwrap・clipはない。
+- レビュー指摘 6: 能力値ポイント、格、常時修正、一時修正、覚悟を含むprofile / build / bonds section locator screenshotをdesktop / tablet / mobileで確認した。`FormulaTooltip`のindicatorをabsolute配置からtrigger content内のflex itemへ統一し、既存labelのwrap・clipはない。ユーザーのpreview確認ではなお微小な上下ずれが見えるため、G31のコンテンツレビューで違和感が指摘された場合だけ、共通Component側で再調整する。
 
 ### canonical VRT比較
 

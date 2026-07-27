@@ -1030,3 +1030,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-11-sheet-noncombat` のG9 `bond-resolved` Visual Review capture
 - 観測した失敗: `覚悟`tooltipをhoverで開いたあとにsection locatorを先に撮影したため、tooltip locatorの撮影時にはopen stateが失われた。原因確認前にclickで開く実装へ変更し、tooltipがhover専用であるためdesktop / tablet / mobileで再度失敗させた。
 - 一次対応: tooltipの既存hover契約を維持し、open stateを保ったままtooltip locatorをsection locatorより先に撮影する順序へ戻す。tooltip stateを含むcaptureでは、triggerのinteraction契約と複数locatorの撮影順を先に確認する。
+
+### Reported tooltip indicator alignment as accepted without the user's visual confirmation
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` のレビュー指摘 6 / `FormulaTooltip`
+- 観測した失敗: section locator screenshotを確認し、absolute positioningを共通flex配置へ置き換えた後に、indicatorが各文言の中央に揃ったと報告した。しかしユーザーがpreviewを確認すると、なお微小な上下ずれが見えると指摘した。コンポーネント側に閉じた修正であることと、視覚的な受入可否を混同した。
+- 一次対応: current issueの「揃った」という肯定記録を訂正し、G31のコンテンツレビューで違和感が再現した場合に限って、個別labelではなく共通`FormulaTooltip`を再調整するTODOへ移した。tooltipのような微小配置は、actual screenshotだけで受入とせず、ユーザーのpreview確認を待つ。

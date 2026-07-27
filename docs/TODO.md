@@ -27,6 +27,18 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24
   - handling plan: 縁と攻撃を含む可変行について、配列全体の`setValue`による更新とarchitectureの`useFieldArray`契約を比較し、復元・JSON入力時のuncontrolled input同期、row ID、削除・追加の責務を定義してから移行する。`onRowChange`のfieldとvalueの型対応も同じ設計で見直す。
 
+- [ ] G31のコンテンツレビューでtooltip indicatorの上下揃えに違和感があれば、共通`FormulaTooltip`の配置を再調整する
+  - source: `ex-02-11-sheet-noncombat` のレビュー指摘 6に対するユーザーのpreview確認
+  - classification: visual usability follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
+  - handling plan: 個別sectionのlabel styleで補正せず、能力値ポイント、格、常時修正、一時修正、覚悟のactual screenshotとコンテンツレビューの指摘を照合する。違和感が再現する場合だけ、`FormulaTooltip`の共通box / line-height / flex alignmentを調整し、desktop / tablet / mobileで再確認する。
+
+- [ ] G31でキャラクターシート全体のVisual Reviewを完了する
+  - source: G11 Gate Tech Reviewに対するユーザー判断
+  - classification: visual review follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
+  - handling plan: canonical VRT baselineはGit管理・比較対象にしない。G31のコンテンツレビューで各Gateの表示に違和感がないか確認し、必要なroute / state / viewportのoriginal-pixel-resolution locator screenshotを、requirements・design・ユーザー指示と照合する。G11の非戦闘技能、G9 / G10の縁・判定、tooltip indicatorを含む未完了のVisual Reviewは、この手順で正式に判断する。
+
 - [ ] 覚悟から縁へ戻す効果の表現を整理する
   - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
   - classification: rule wording follow-up
