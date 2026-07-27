@@ -99,6 +99,24 @@ source種別は以下を使う。
 - 一次対応: current issueの該当チェックを未完了へ戻し、3 viewportのactual screenshotに基づく未達へ訂正した。修正後は3 viewportそれぞれで式全体が同一行に収まることを確認するまで肯定報告しない。
 - 恒久対応: `visual-implementation-review`で、full-page screenshotを局所表示契約の根拠として禁止し、対象section / Componentの原寸locator screenshotを全state / viewportで開くことを肯定報告の必須要件にした。取得できない場合はfull-pageで代用せず停止する。
 
+### Reported an inherited muted color without checking the nested tooltip button
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: 副能力値の`一時修正を適用`control
+- 観測した失敗: 親`.temporaryControl`のcolor指定だけを確認して、内側の`FormulaTooltip` triggerがbutton要素であることと、その実画面の色を確認しなかった。その結果、browser既定の濃い文字色で表示されているにもかかわらず、今回の変更で色は変わっていないと報告した。
+- 一次対応: desktop・ultrawide・tablet・mobileの副能力値sectionを原寸locator screenshotで確認し、実際の表示を訂正した。`temporaryControl`内のbuttonへ`color: inherit`を明示してmuted色を継承させ、修正後の同じlocator screenshotを確認する。
+
+### Changed tracked VRT capture code for a one-off local screenshot
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: 副能力値の`一時修正を適用`の局所確認
+- 観測した失敗: 既存captureがsection locator screenshotを持たない時、Visual Review skillの「gapを記録して停止する」指示に従わず、局所確認だけのためにGit管理されるcapture設定、VRT helper、target specを直接変更した。
+- 一次対応: locator screenshot用の3ファイル変更を同じturnで取り消した。今後、既存のcaptureに必要な局所証跡がない場合は、one-off確認のためにtracked testやcapture設定を変更せず、必要なcapture基盤の追加を独立した承認済みtaskとして扱う。
+
 ### Repeatedly exceeded the character-sheet E2E smoke-test boundary
 
 #### 2026-07-27
