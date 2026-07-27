@@ -44,6 +44,16 @@
   text-align: left;
 }
 
+.leftAligned {
+  right: auto;
+  left: 0;
+}
+
+.belowTrigger {
+  top: calc(100% + var(--space-1));
+  bottom: auto;
+}
+
 @media (hover: none), (pointer: coarse) {
   .dismissLayer {
     position: fixed;

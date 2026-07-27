@@ -243,7 +243,10 @@ function ReadOnlyCreditField({
   const field = (
     <span>
       <span className={styles.metricLabel}>{label}</span>
-      <output className={styles.metricValue} id={id}>
+      <output
+        className={`${styles.metricValue} character-sheet-number-value`}
+        id={id}
+      >
         {value}
       </output>
     </span>

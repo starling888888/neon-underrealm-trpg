@@ -152,8 +152,7 @@
 }
 
 .attributeHeader,
-.pointsHeader,
-.attributeRow > output {
+.pointsHeader {
   white-space: nowrap;
 }
 
@@ -163,18 +162,6 @@
 
 .attributeRow {
   display: contents;
-}
-
-.attributeRow > output {
-  min-height: 1.5rem;
-  display: grid;
-  place-items: center;
-  border: var(--border-width) solid var(--color-example-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-example-soft);
-  color: var(--color-text);
-  font-size: var(--text-xs);
-  font-weight: 750;
 }
 
 .attributeRow .numberInput {
@@ -210,18 +197,7 @@
 }
 
 .referenceValue {
-  display: block;
-  min-height: 1.5rem;
   margin-top: 0.125rem;
-  border: var(--border-width) solid var(--color-example-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-example-soft);
-  padding: 0.1875rem 0.375rem;
-  color: var(--color-text);
-  font-size: var(--text-xs);
-  font-weight: 750;
-  line-height: var(--line-height-tight);
-  text-align: right;
 }
 
 .commonSkillBonuses {

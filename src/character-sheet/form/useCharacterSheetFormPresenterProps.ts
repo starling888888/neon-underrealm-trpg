@@ -9,11 +9,11 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
   type OtherRyugiValues,
-  type SecondaryFieldName,
+  type SecondaryAttributeFieldName,
 } from "../form-values";
 import { calculateBuild } from "../logic/build";
 import { calculateCredit } from "../logic/credit";
-import { calculateSecondary } from "../logic/secondary";
+import { calculateSecondaryAttributes } from "../logic/secondary-attributes";
 import {
   getCharacterSheetIkizamaOptions,
   getCharacterSheetRyugiOptions,
@@ -62,10 +62,10 @@ export default function useCharacterSheetFormPresenterProps(
     defaultValue: characterSheetDefaultValues.build,
     name: "build",
   });
-  const secondary = useWatch({
+  const secondaryAttributes = useWatch({
     control,
-    defaultValue: characterSheetDefaultValues.secondary,
-    name: "secondary",
+    defaultValue: characterSheetDefaultValues.secondaryAttributes,
+    name: "secondaryAttributes",
   });
   const creditSummary = calculateCredit({
     acquiredCredit: credit.acquired,
@@ -75,7 +75,10 @@ export default function useCharacterSheetFormPresenterProps(
     spentCredit: 0,
   });
   const derivedBuild = calculateBuild(build);
-  const derivedSecondary = calculateSecondary(derivedBuild, secondary);
+  const derivedSecondaryAttributes = calculateSecondaryAttributes(
+    derivedBuild,
+    secondaryAttributes,
+  );
 
   function setBuildValue<K extends keyof BuildValues>(
     field: K,
@@ -132,16 +135,18 @@ export default function useCharacterSheetFormPresenterProps(
     return normalizedValue;
   }
 
-  function setSecondaryValue(
+  function setSecondaryAttributeValue(
     field: Exclude<
-      SecondaryFieldName,
+      SecondaryAttributeFieldName,
       "applyTemporaryAction" | "applyTemporaryMovement"
     >,
     value: string,
   ): number {
     const normalizedValue = normalizeBuildInput(value);
 
-    setValue(`secondary.${field}`, normalizedValue, { shouldValidate: true });
+    setValue(`secondaryAttributes.${field}`, normalizedValue, {
+      shouldValidate: true,
+    });
 
     return normalizedValue;
   }
@@ -227,13 +232,15 @@ export default function useCharacterSheetFormPresenterProps(
       onCharacterImageOperationStarted,
       profile,
     },
-    secondarySection: {
-      derived: derivedSecondary,
-      onNumberChange: setSecondaryValue,
+    secondaryAttributesSection: {
+      derived: derivedSecondaryAttributes,
+      onNumberChange: setSecondaryAttributeValue,
       onTemporaryAppliedChange: (field, checked) => {
-        setValue(`secondary.${field}`, checked, { shouldValidate: true });
+        setValue(`secondaryAttributes.${field}`, checked, {
+          shouldValidate: true,
+        });
       },
-      secondary,
+      secondaryAttributes,
     },
   };
 }

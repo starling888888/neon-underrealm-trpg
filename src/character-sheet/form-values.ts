@@ -57,7 +57,7 @@ export type BuildValues = {
   acquiredExperience: number;
 };
 
-export type SecondaryValues = {
+export type SecondaryAttributeValues = {
   actionCountModifier: number;
   actionModifier: number;
   applyTemporaryAction: boolean;
@@ -68,13 +68,13 @@ export type SecondaryValues = {
   movementModifier: number;
 };
 
-export type SecondaryFieldName = keyof SecondaryValues;
+export type SecondaryAttributeFieldName = keyof SecondaryAttributeValues;
 
 export type CharacterSheetFormValues = {
   build: BuildValues;
   credit: CreditValues;
   profile: ProfileValues;
-  secondary: SecondaryValues;
+  secondaryAttributes: SecondaryAttributeValues;
 };
 
 export const characterSheetDefaultValues: CharacterSheetFormValues = {
@@ -132,7 +132,7 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     playerName: "",
     setting: "",
   },
-  secondary: {
+  secondaryAttributes: {
     actionCountModifier: 0,
     actionModifier: 0,
     applyTemporaryAction: false,

@@ -1,7 +1,7 @@
-import type { SecondaryValues } from "../form-values";
+import type { SecondaryAttributeValues } from "../form-values";
 import type { BuildDerivedValues } from "./build";
 
-export type SecondaryDerivedValues = {
+export type SecondaryAttributeDerivedValues = {
   actionCount: number;
   actionValue: number | null;
   baseActionCount: number;
@@ -21,16 +21,16 @@ function addModifier(value: number | null, modifier: number): number | null {
 }
 
 /**
- * Derives G8 secondary values from G7's selected build and manual modifiers.
+ * Derives G8 secondary attributes from G7's selected build and manual modifiers.
  *
  * A future Gate may pass the selected Sumi nanomachine bonus through the third
  * parameter. G8 deliberately uses zero because it does not own that choice.
  */
-export function calculateSecondary(
+export function calculateSecondaryAttributes(
   build: BuildDerivedValues,
-  secondary: SecondaryValues,
+  secondaryAttributes: SecondaryAttributeValues,
   maximumHealthBonus = 0,
-): SecondaryDerivedValues {
+): SecondaryAttributeDerivedValues {
   const healthCoefficient = build.reference.ikizamaHealthCoefficient;
   const healthIncrease = build.reference.primaryHealthIncrease;
   const mindCoefficient = build.reference.ikizamaMindCoefficient;
@@ -38,13 +38,13 @@ export function calculateSecondary(
   const primaryRyugiLevel = build.primaryRyugiLevel;
   const permanentBody = build.attributes.body.permanent;
   const permanentMind = build.attributes.mind.permanent;
-  const movementAgility = secondary.applyTemporaryMovement
+  const movementAgility = secondaryAttributes.applyTemporaryMovement
     ? build.attributes.agility.temporary
     : build.attributes.agility.permanent;
-  const actionAgility = secondary.applyTemporaryAction
+  const actionAgility = secondaryAttributes.applyTemporaryAction
     ? build.attributes.agility.temporary
     : build.attributes.agility.permanent;
-  const actionPerception = secondary.applyTemporaryAction
+  const actionPerception = secondaryAttributes.applyTemporaryAction
     ? build.attributes.perception.temporary
     : build.attributes.perception.permanent;
   const baseHealth =
@@ -65,20 +65,23 @@ export function calculateSecondary(
       : actionAgility + actionPerception * 2;
 
   return {
-    actionCount: 2 + secondary.actionCountModifier,
-    actionValue: addModifier(baseActionValue, secondary.actionModifier),
+    actionCount: 2 + secondaryAttributes.actionCountModifier,
+    actionValue: addModifier(
+      baseActionValue,
+      secondaryAttributes.actionModifier,
+    ),
     baseActionCount: 2,
     baseActionValue,
     baseBondLimit: 4,
     baseHealth,
     baseMental,
     baseMovement,
-    bondLimit: 4 + secondary.bondLimitModifier,
+    bondLimit: 4 + secondaryAttributes.bondLimitModifier,
     health:
       baseHealth === null
         ? null
-        : baseHealth + secondary.healthModifier + maximumHealthBonus,
-    mental: addModifier(baseMental, secondary.mentalModifier),
-    movement: addModifier(baseMovement, secondary.movementModifier),
+        : baseHealth + secondaryAttributes.healthModifier + maximumHealthBonus,
+    mental: addModifier(baseMental, secondaryAttributes.mentalModifier),
+    movement: addModifier(baseMovement, secondaryAttributes.movementModifier),
   };
 }

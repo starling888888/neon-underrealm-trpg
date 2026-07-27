@@ -89,6 +89,24 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeatedly exceeded the character-sheet E2E smoke-test boundary
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: `ex-02-8-sheet-secondary` の `tests/visual/character-sheet.spec.ts`
+- 観測した失敗: G8で、FormulaTooltipの開閉属性・本文・viewport内の配置までをcharacter-sheetの最終smoke E2Eへ追加した。tooltipの局所状態と文言はComponent test、視覚配置はVRTへ置くという既存のテストアーキテクチャを守らず、G4の「Expanded G4 E2E beyond its smoke-test boundary」、G7の「Repeated FormulaTooltip browser interaction assertion」に続く3回目のE2E責務境界の逸脱となった。さらに、tooltip本文の期待値を`移動力修正`のまま残し、現在の`修正`という文言変更に追随できていなかった。
+- 一次対応: E2Eからtooltipの詳細assertionと配置testを削除し、代表的な修正入力・checkbox操作だけへ縮小した。上端で下方向へ開くplacement選択は`FormulaTooltip` Component testへ移し、実画面の位置関係はtooltipを開いたstateを含むtarget限定VRTの未確認項目として残す。
+
+### Repeated component-test failures while revising G8 accessibility names
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `tests/components/character-sheet/SecondaryAttributesSection.test.tsx`
+- 観測した失敗: G8レビュー対応でtooltip triggerとcheckboxのaccessible nameを変更した際、最初はtooltip buttonのaccessible nameに最終値が加わることをtestへ反映し忘れた。続く修正では同じ`一時修正を適用`をcheckboxとtooltip buttonの両方へ付けたため、単一要素を前提にしたlabel queryを再度失敗させた。
+- 一次対応: tooltip buttonには明示的な`aria-label`を渡し、checkboxの操作確認はroleを`checkbox`へ限定する。tooltip triggerはbutton roleで別に確認し、Component testとbrowser E2Eのselectorを同じ責務境界へ揃える。
+
 ### Repeated test failures while adding G6 root orchestration coverage
 
 #### 2026-07-27

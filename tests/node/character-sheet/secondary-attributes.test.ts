@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { calculateBuild } from "../../../src/character-sheet/logic/build";
-import { calculateSecondary } from "../../../src/character-sheet/logic/secondary";
+import { calculateSecondaryAttributes } from "../../../src/character-sheet/logic/secondary-attributes";
 
 function selectedBuild() {
   return {
@@ -35,11 +35,11 @@ function selectedBuild() {
   };
 }
 
-describe("character sheet secondary values", () => {
+describe("character sheet secondary attributes", () => {
   it("keeps build-dependent values unavailable while preserving independent values", () => {
-    const derived = calculateSecondary(
+    const derived = calculateSecondaryAttributes(
       calculateBuild(characterSheetDefaultValues.build),
-      characterSheetDefaultValues.secondary,
+      characterSheetDefaultValues.secondaryAttributes,
     );
 
     assert.equal(derived.baseHealth, null);
@@ -53,7 +53,7 @@ describe("character sheet secondary values", () => {
   });
 
   it("derives the specified values with signed manual modifiers", () => {
-    const secondary = {
+    const secondaryAttributes = {
       actionCountModifier: -1,
       actionModifier: -2,
       applyTemporaryAction: false,
@@ -63,9 +63,9 @@ describe("character sheet secondary values", () => {
       mentalModifier: -3,
       movementModifier: 1,
     };
-    const derived = calculateSecondary(
+    const derived = calculateSecondaryAttributes(
       calculateBuild(selectedBuild()),
-      secondary,
+      secondaryAttributes,
     );
 
     assert.equal(derived.baseHealth, 60);
@@ -86,13 +86,13 @@ describe("character sheet secondary values", () => {
     build.attributes.perception.temporaryModifier = 1;
     const derivedBuild = calculateBuild(build);
 
-    const permanent = calculateSecondary(derivedBuild, {
-      ...characterSheetDefaultValues.secondary,
+    const permanent = calculateSecondaryAttributes(derivedBuild, {
+      ...characterSheetDefaultValues.secondaryAttributes,
       applyTemporaryAction: false,
       applyTemporaryMovement: false,
     });
-    const temporary = calculateSecondary(derivedBuild, {
-      ...characterSheetDefaultValues.secondary,
+    const temporary = calculateSecondaryAttributes(derivedBuild, {
+      ...characterSheetDefaultValues.secondaryAttributes,
       applyTemporaryAction: true,
       applyTemporaryMovement: true,
     });
@@ -104,9 +104,9 @@ describe("character sheet secondary values", () => {
   });
 
   it("accepts a future nanomachine bonus without making G8 select one", () => {
-    const derived = calculateSecondary(
+    const derived = calculateSecondaryAttributes(
       calculateBuild(selectedBuild()),
-      characterSheetDefaultValues.secondary,
+      characterSheetDefaultValues.secondaryAttributes,
       4,
     );
 

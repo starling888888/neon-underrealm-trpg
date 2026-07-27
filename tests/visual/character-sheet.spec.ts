@@ -213,32 +213,21 @@ test.describe("character sheet page", () => {
     await expect(setting).toHaveValue("ネオンの街\n雨の夜");
   });
 
-  test("shows secondary formulas and accepts temporary-value choices", async ({
-    page,
-  }) => {
+  test("edits representative secondary fields", async ({ page }) => {
     await page.setViewportSize(visualViewports.desktop);
     await page.goto("character-sheet/");
 
-    const movementFormula = page.getByRole("button", {
-      name: "最終移動力",
-    });
     const movementModifier = page.getByLabel("移動力修正", { exact: true });
-    const temporaryChoices = page.getByLabel("一時修正を適用", {
+    const temporaryChoice = page.getByRole("checkbox", {
       exact: true,
+      name: "一時修正を適用",
     });
 
-    await expect(movementFormula).toHaveAttribute("aria-expanded", "false");
-    await expect(async () => {
-      await movementFormula.click();
-      await expect(page.getByRole("tooltip")).toContainText("移動力修正", {
-        timeout: 250,
-      });
-    }).toPass();
     await movementModifier.fill("-2");
     await movementModifier.blur();
     await expect(movementModifier).toHaveValue("-2");
-    await temporaryChoices.first().check();
-    await expect(temporaryChoices.first()).toBeChecked();
+    await temporaryChoice.check();
+    await expect(temporaryChoice).toBeChecked();
   });
 
   test("opens and dismisses the confirmation dialog without changing the form", async ({

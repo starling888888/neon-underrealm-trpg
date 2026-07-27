@@ -85,7 +85,9 @@ function ReferenceMetric({ label, value }: ReferenceMetricProps) {
   return (
     <div className={styles.referenceMetric}>
       <span className={styles.referenceLabel}>{label}</span>
-      <output className={styles.referenceValue}>
+      <output
+        className={`${styles.referenceValue} character-sheet-number-value character-sheet-number-value--compact`}
+      >
         {formatDisplayValue(value)}
       </output>
     </div>
@@ -290,7 +292,9 @@ export default function BuildSection({
             return (
               <div className={styles.attributeRow} key={attributeName}>
                 <span>{buildCopy.attributeNames[attributeName]}</span>
-                <output>{formatDisplayValue(derivedValues.base)}</output>
+                <output className="character-sheet-number-value character-sheet-number-value--compact">
+                  {formatDisplayValue(derivedValues.base)}
+                </output>
                 <BuildNumberInput
                   ariaInvalid={derived.hasPointAllocationError}
                   label={`${buildCopy.attributeNames[attributeName]}${buildCopy.points}`}
@@ -323,7 +327,9 @@ export default function BuildSection({
                   }
                   value={values.permanentModifier}
                 />
-                <output>{formatDisplayValue(derivedValues.permanent)}</output>
+                <output className="character-sheet-number-value character-sheet-number-value--compact">
+                  {formatDisplayValue(derivedValues.permanent)}
+                </output>
                 <BuildNumberInput
                   label={`${buildCopy.attributeNames[attributeName]}${buildCopy.temporaryModifier}`}
                   onChange={(value) =>
@@ -334,7 +340,9 @@ export default function BuildSection({
                   }
                   value={values.temporaryModifier}
                 />
-                <output>{formatDisplayValue(derivedValues.temporary)}</output>
+                <output className="character-sheet-number-value character-sheet-number-value--compact">
+                  {formatDisplayValue(derivedValues.temporary)}
+                </output>
               </div>
             );
           })}

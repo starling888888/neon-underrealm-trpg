@@ -3,9 +3,9 @@ import BuildSection, { type BuildSectionProps } from "./BuildSection";
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
-import SecondarySection, {
-  type SecondarySectionProps,
-} from "./SecondarySection";
+import SecondaryAttributesSection, {
+  type SecondaryAttributesSectionProps,
+} from "./SecondaryAttributesSection";
 
 /**
  * Presentational form shell for the character sheet.
@@ -16,13 +16,13 @@ import SecondarySection, {
 export type CharacterSheetFormPresenterProps = {
   buildSection: BuildSectionProps;
   profileSection: ProfileSectionProps;
-  secondarySection: SecondarySectionProps;
+  secondaryAttributesSection: SecondaryAttributesSectionProps;
 };
 
 export default function CharacterSheetFormPresenter({
   buildSection,
   profileSection,
-  secondarySection,
+  secondaryAttributesSection,
 }: CharacterSheetFormPresenterProps) {
   const { characterSheet, gameDomain } = characterSheetDictionary;
 
@@ -52,7 +52,14 @@ export default function CharacterSheetFormPresenter({
           </CharacterSheetSectionFrame>
         </div>
         <div data-character-sheet-section-slot="secondary">
-          <SecondarySection {...secondarySection} />
+          <CharacterSheetSectionFrame
+            allowOverflow
+            headingAs="h2"
+            id="secondary-attributes"
+            title={gameDomain.terms.secondaryAttributes}
+          >
+            <SecondaryAttributesSection {...secondaryAttributesSection} />
+          </CharacterSheetSectionFrame>
         </div>
         <CharacterSheetSectionFrame
           expandable

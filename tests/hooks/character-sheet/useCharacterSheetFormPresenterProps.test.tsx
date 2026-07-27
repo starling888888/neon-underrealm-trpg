@@ -109,21 +109,23 @@ describe("useCharacterSheetFormPresenterProps", () => {
     const { result } = renderHook(() => usePresenterHarness());
 
     act(() => {
-      result.current.presenterProps.secondarySection.onNumberChange(
+      result.current.presenterProps.secondaryAttributesSection.onNumberChange(
         "movementModifier",
         "-2",
       );
-      result.current.presenterProps.secondarySection.onTemporaryAppliedChange(
+      result.current.presenterProps.secondaryAttributesSection.onTemporaryAppliedChange(
         "applyTemporaryMovement",
         true,
       );
     });
 
-    expect(result.current.form.getValues("secondary.movementModifier")).toBe(
-      -2,
-    );
     expect(
-      result.current.form.getValues("secondary.applyTemporaryMovement"),
+      result.current.form.getValues("secondaryAttributes.movementModifier"),
+    ).toBe(-2);
+    expect(
+      result.current.form.getValues(
+        "secondaryAttributes.applyTemporaryMovement",
+      ),
     ).toBe(true);
   });
 });

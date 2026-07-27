@@ -67,7 +67,7 @@ export const characterSheetFormSchema = z.object({
     playerName: z.string(),
     setting: z.string(),
   }),
-  secondary: z.object({
+  secondaryAttributes: z.object({
     actionCountModifier: z.number().int(),
     actionModifier: z.number().int(),
     applyTemporaryAction: z.boolean(),
