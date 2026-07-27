@@ -71,7 +71,7 @@ describe("ChecksSection", () => {
     fireEvent.click(screen.getByRole("button", { name: "攻撃の判定数の説明" }));
 
     expect(screen.getByRole("tooltip").textContent).toBe(
-      "判定数 = 対応能力 + 修正\n\n修正はサイバネなど能力値ではなく判定数に影響を与えるスキル、アイテムの効果の数値を入力します。",
+      "判定数=対応能力 + 修正。\n\n修正はサイバネなど能力値ではなく判定数に影響を与えるスキル、アイテムの効果の数値を入力します。",
     );
   });
 
