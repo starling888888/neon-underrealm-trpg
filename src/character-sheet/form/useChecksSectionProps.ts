@@ -35,6 +35,10 @@ export default function useChecksSectionProps(
   return {
     attacks: derived.attacks,
     onAttackAdd: () => {
+      if (getValues("checks.attacks").length >= 5) {
+        return;
+      }
+
       const attackNumber = getValues("checks.attacks").length + 1;
 
       setValue(

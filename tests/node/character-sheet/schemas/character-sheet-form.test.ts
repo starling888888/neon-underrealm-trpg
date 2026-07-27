@@ -46,6 +46,44 @@ describe("character sheet form schema", () => {
     );
   });
 
+  it("requires one to five attack rows while allowing repeated reactions", () => {
+    assert.equal(
+      characterSheetFormSchema.safeParse({
+        ...characterSheetDefaultValues,
+        checks: {
+          ...characterSheetDefaultValues.checks,
+          attacks: [],
+        },
+      }).success,
+      false,
+    );
+    assert.equal(
+      characterSheetFormSchema.safeParse({
+        ...characterSheetDefaultValues,
+        checks: {
+          ...characterSheetDefaultValues.checks,
+          attacks: Array.from({ length: 6 }, (_, index) => ({
+            ...characterSheetDefaultValues.checks.attacks[0],
+            rowId: `attack-${index + 1}`,
+          })),
+        },
+      }).success,
+      false,
+    );
+    assert.equal(
+      characterSheetFormSchema.safeParse({
+        ...characterSheetDefaultValues,
+        checks: {
+          ...characterSheetDefaultValues.checks,
+          reactions: Array.from({ length: 4 }, () => ({
+            ...characterSheetDefaultValues.checks.reactions[0],
+          })),
+        },
+      }).success,
+      true,
+    );
+  });
+
   it("normalizes browser inputs through their field schemas", () => {
     const cases = [
       { field: "acquired" as const, input: "", expected: 0 },

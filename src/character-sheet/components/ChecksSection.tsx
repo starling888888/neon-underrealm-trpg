@@ -206,6 +206,7 @@ export default function ChecksSection({
         </div>
         <button
           className={styles.addButton}
+          disabled={attacks.length >= 5}
           onClick={onAttackAdd}
           type="button"
         >

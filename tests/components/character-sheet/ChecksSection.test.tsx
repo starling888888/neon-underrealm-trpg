@@ -105,4 +105,18 @@ describe("ChecksSection", () => {
     );
     expect(props.onAttackModifierChange).toHaveBeenCalledWith("attack-1", "2");
   });
+
+  it("disables attack addition at five rows", () => {
+    const props = createProps();
+    props.attacks = Array.from({ length: 5 }, (_, index) => ({
+      ...props.attacks[0],
+      rowId: `attack-${index + 1}`,
+    }));
+
+    render(<ChecksSection {...props} />);
+
+    expect(
+      screen.getByRole("button", { name: "＋ 攻撃を追加" }),
+    ).toHaveProperty("disabled", true);
+  });
 });

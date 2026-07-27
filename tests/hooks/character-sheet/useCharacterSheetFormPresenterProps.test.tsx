@@ -263,4 +263,16 @@ describe("useCharacterSheetFormPresenterProps", () => {
 
     expect(result.current.form.getValues("checks.attacks")).toHaveLength(1);
   });
+
+  it("keeps attack rows at five or fewer", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      for (let index = 0; index < 5; index += 1) {
+        result.current.presenterProps.checksSection.onAttackAdd();
+      }
+    });
+
+    expect(result.current.form.getValues("checks.attacks")).toHaveLength(5);
+  });
 });

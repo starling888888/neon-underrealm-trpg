@@ -70,26 +70,29 @@ export const characterSheetFormSchema = z.object({
     primaryRyugiLevel: z.number().int(),
   }),
   checks: z.object({
-    attacks: z.array(
-      z.object({
-        attribute: z.enum([
-          "strength",
-          "agility",
-          "perception",
-          "body",
-          "mind",
-        ]),
-        modifier: z.number().int(),
-        rowId: z.string(),
-        skill: z.enum([
-          "brawl",
-          "assassination",
-          "shooting",
-          "combat",
-          "interference",
-        ]),
-      }),
-    ),
+    attacks: z
+      .array(
+        z.object({
+          attribute: z.enum([
+            "strength",
+            "agility",
+            "perception",
+            "body",
+            "mind",
+          ]),
+          modifier: z.number().int(),
+          rowId: z.string(),
+          skill: z.enum([
+            "brawl",
+            "assassination",
+            "shooting",
+            "combat",
+            "interference",
+          ]),
+        }),
+      )
+      .min(1)
+      .max(5),
     reactions: z
       .array(
         z.object({
