@@ -149,6 +149,57 @@ function CheckHeaders({ sectionName }: { sectionName: string }) {
   );
 }
 
+function NoncombatCheckRow({
+  onFavoriteChange,
+  onModifierChange,
+  row,
+}: {
+  onFavoriteChange: (name: NoncombatSkillName, isFavorite: boolean) => void;
+  onModifierChange: (name: NoncombatSkillName, value: string) => number;
+  row: ChecksDerivedValues["noncombat"][number];
+}) {
+  return (
+    <div
+      className={styles.noncombatRow}
+      data-favorite={row.isFavorite || undefined}
+    >
+      <input
+        aria-label={`${row.name}を得意技能にする`}
+        checked={row.isFavorite}
+        onChange={(event) =>
+          onFavoriteChange(row.id, event.currentTarget.checked)
+        }
+        type="checkbox"
+      />
+      <span className={styles.noncombatName}>{row.name}</span>
+      <input
+        aria-label={`${row.name}の判定修正`}
+        className={styles.noncombatModifier}
+        defaultValue={row.modifier}
+        onBlur={(event) => {
+          event.currentTarget.value = String(
+            onModifierChange(row.id, event.currentTarget.value),
+          );
+        }}
+        onChange={(event) => {
+          if (!event.currentTarget.validity.badInput) {
+            onModifierChange(row.id, event.currentTarget.value);
+          }
+        }}
+        step="1"
+        type="number"
+      />
+      <output
+        aria-label={`${row.name}の常時判定数／一時判定数`}
+        className="character-sheet-number-value character-sheet-number-value--compact"
+      >
+        {formatDisplayValue(row.permanentCheck)}／
+        {formatDisplayValue(row.temporaryCheck)}
+      </output>
+    </div>
+  );
+}
+
 function NoncombatChecks({
   onFavoriteChange,
   onModifierChange,
@@ -169,8 +220,17 @@ function NoncombatChecks({
       aria-labelledby="noncombat-checks-heading"
       className={styles.group}
     >
-      <h3 id="noncombat-checks-heading">
+      <h3 className={styles.noncombatHeading} id="noncombat-checks-heading">
+        <FormulaTooltip
+          ariaLabel={`${labels.noncombat.title}の説明`}
+          className={styles.noncombatTitleTooltip}
+          formula={labels.noncombat.tooltip}
+          multiline
+        >
+          <span>{labels.noncombat.title}</span>
+        </FormulaTooltip>
         <button
+          aria-label={`${labels.noncombat.title}を開閉`}
           aria-controls={contentId}
           aria-expanded={isExpanded}
           className={styles.noncombatToggle}
@@ -180,74 +240,49 @@ function NoncombatChecks({
           <span aria-hidden="true" className={styles.noncombatCaret}>
             ▸
           </span>
-          {labels.noncombat.title}
         </button>
       </h3>
-      <div className={styles.noncombatHeaders}>
-        <FormulaTooltip
-          ariaLabel={`${labels.noncombat.favoriteSkill}の説明`}
-          className={styles.noncombatTooltip}
-          formula={labels.noncombat.favoriteTooltip}
-        >
-          <span>{labels.noncombat.favoriteSkill}</span>
-        </FormulaTooltip>
-        <span>{labels.headers.skill}</span>
-        <span>{labels.headers.attribute}</span>
-        <FormulaTooltip
-          ariaLabel={`${labels.noncombat.modifier}の説明`}
-          className={styles.noncombatTooltip}
-          formula={labels.noncombat.modifierTooltip}
-        >
-          <span>{labels.noncombat.modifier}</span>
-        </FormulaTooltip>
-        <span>{labels.headers.temporary}</span>
-      </div>
-      <div className={styles.noncombatRows} id={contentId}>
-        {rows.map((row) => (
-          <div
-            className={styles.noncombatRow}
-            data-favorite={row.isFavorite || undefined}
-            hidden={!isExpanded && !row.isFavorite}
-            key={row.id}
-          >
-            <input
-              aria-label={`${row.name}を得意技能にする`}
-              checked={row.isFavorite}
-              onChange={(event) =>
-                onFavoriteChange(row.id, event.currentTarget.checked)
-              }
-              type="checkbox"
-            />
-            <span className={styles.noncombatName}>{row.name}</span>
-            <span className={styles.noncombatAttribute}>
-              {attributeNamesById[row.attribute]}
-            </span>
-            <input
-              aria-label={`${row.name}の判定修正`}
-              defaultValue={row.modifier}
-              onBlur={(event) => {
-                event.currentTarget.value = String(
-                  onModifierChange(row.id, event.currentTarget.value),
-                );
-              }}
-              onChange={(event) => {
-                if (!event.currentTarget.validity.badInput) {
-                  onModifierChange(row.id, event.currentTarget.value);
-                }
-              }}
-              step="1"
-              type="number"
-            />
-            <output
-              aria-label={`${row.name}の常時判定数／一時判定数`}
-              className="character-sheet-number-value character-sheet-number-value--compact"
-            >
-              {formatDisplayValue(row.permanentCheck)} ／{" "}
-              {formatDisplayValue(row.temporaryCheck)}
-            </output>
-          </div>
-        ))}
-      </div>
+      {isExpanded ? (
+        <div className={styles.noncombatGroups} id={contentId}>
+          {attributeNames.map((attribute) => {
+            const attributeRows = rows.filter(
+              (row) => row.attribute === attribute,
+            );
+
+            return (
+              <section
+                className={styles.noncombatAttributeGroup}
+                key={attribute}
+              >
+                <h4>対応能力：{attributeNamesById[attribute]}</h4>
+                <div className={styles.noncombatRows}>
+                  {attributeRows.map((row) => (
+                    <NoncombatCheckRow
+                      key={row.id}
+                      onFavoriteChange={onFavoriteChange}
+                      onModifierChange={onModifierChange}
+                      row={row}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      ) : (
+        <div className={styles.noncombatCollapsedRows} id={contentId}>
+          {rows
+            .filter((row) => row.isFavorite)
+            .map((row) => (
+              <NoncombatCheckRow
+                key={row.id}
+                onFavoriteChange={onFavoriteChange}
+                onModifierChange={onModifierChange}
+                row={row}
+              />
+            ))}
+        </div>
+      )}
     </section>
   );
 }

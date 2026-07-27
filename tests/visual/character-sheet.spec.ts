@@ -287,7 +287,9 @@ test.describe("character sheet page", () => {
     });
     const modifier = page.getByLabel("脅迫の判定修正", { exact: true });
 
-    await page.getByRole("button", { exact: true, name: "非戦闘技能" }).click();
+    await page
+      .getByRole("button", { exact: true, name: "非戦闘技能を開閉" })
+      .click();
     await favorite.check();
     await expect(favorite).toBeChecked();
     await modifier.fill("-2");

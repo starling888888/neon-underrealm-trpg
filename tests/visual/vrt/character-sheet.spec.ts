@@ -29,7 +29,7 @@ async function openNoncombatChecks(page: Page): Promise<void> {
   await expect(async () => {
     if (!(await favorite.isVisible())) {
       await page
-        .getByRole("button", { exact: true, name: "非戦闘技能" })
+        .getByRole("button", { exact: true, name: "非戦闘技能を開閉" })
         .click();
     }
     await expect(favorite).toBeVisible();
@@ -39,6 +39,9 @@ async function openNoncombatChecks(page: Page): Promise<void> {
 async function selectNoncombatFavorite(page: Page): Promise<void> {
   await openNoncombatChecks(page);
   await page.getByLabel("脅迫を得意技能にする").check();
+  await page
+    .getByRole("button", { exact: true, name: "非戦闘技能を開閉" })
+    .click();
 }
 
 const noncombatChecksLocator = {
@@ -72,29 +75,17 @@ registerVrtScenarios("character-sheet", [
     locators: [noncombatChecksLocator],
     prepare: async (page) => {
       await openNoncombatChecks(page);
-      await page.getByLabel("脅迫の判定修正").fill("-2");
+      await page.getByLabel("脅迫の判定修正").fill("-12");
     },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
   },
   {
-    id: "noncombat-favorite-tooltip-open",
+    id: "noncombat-tooltip-open",
     locators: [noncombatChecksLocator, tooltipLocator],
     prepare: async (page) => {
       await expect(async () => {
-        await page.getByRole("button", { name: "得意技能の説明" }).click();
-        await expect(page.getByRole("tooltip")).toBeVisible();
-      }).toPass();
-    },
-    route: visualRoutes.characterSheet,
-    viewports: ["desktop", "tablet", "mobile"],
-  },
-  {
-    id: "noncombat-modifier-tooltip-open",
-    locators: [noncombatChecksLocator, tooltipLocator],
-    prepare: async (page) => {
-      await expect(async () => {
-        await page.getByRole("button", { name: "修正の説明" }).click();
+        await page.getByRole("button", { name: "非戦闘技能の説明" }).click();
         await expect(page.getByRole("tooltip")).toBeVisible();
       }).toPass();
     },

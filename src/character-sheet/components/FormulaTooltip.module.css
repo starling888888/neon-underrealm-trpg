@@ -78,6 +78,10 @@
   white-space: normal;
 }
 
+.multiline {
+  white-space: pre-line;
+}
+
 @media (hover: none), (pointer: coarse) {
   .dismissLayer {
     position: fixed;

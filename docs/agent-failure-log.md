@@ -958,3 +958,57 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/vrt/character-sheet.spec.ts`
 - 観測した失敗: locator screenshot captureの初回実行で、非戦闘技能を開くclickとheader tooltipのhoverをclient hydration完了前に一度だけ実行した。tablet / mobileを中心に同じ状態準備が6件失敗し、`脅迫を得意技能にする`がhiddenのまま、またはtooltipが存在しない状態でtimeoutした。
 - 一次対応: open stateは可視になるまでの短い`expect(...).toPass()`内で、閉じている場合だけclickする。tooltip stateもhoverとvisible確認を同じ再試行境界へ置く。VRTのstate準備はこの範囲に留め、最終smoke E2Eへ局所UIの再試行を持ち込まない。
+
+### Used a fixed-width noncombat row after the layout no longer had room
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` の非戦闘技能3列／2列responsive表示
+- 観測した失敗: desktop / tabletを3列、mobileを2列へ変更した後も、得意技能、技能、対応能力、修正、常時／一時を一つの横行へ保持した。その結果、技能名の大きな折り返し、常時／一時のoverflow、2桁の修正値のclipを残した。各cardの利用可能幅と内容の最小幅を設計段階で見積もらず、列数だけを正本へ合わせた。
+- 一次対応: 列ヘッダーと行内の対応能力値を削除し、対応能力別の小見出しと二段cardへ組み替える。各viewportの実画面で技能名、判定数、符号付き2桁修正を確認するまで完了報告しない。
+
+### Reported noncombat tooltip line breaks without verifying CSS whitespace handling
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` の`非戦闘技能` tooltip
+- 観測した失敗: tooltip文字列へ改行文字を追加しただけで、`.content`の`white-space: normal`が改行を空白として処理することを見落とした。temporary captureを開いたにもかかわらず、改行表示を確認したとissueへ誤って記録した。
+- 一次対応: `FormulaTooltip`へ必要なtooltipだけ`white-space: pre-line`で改行を保持するoptionを追加し、非戦闘技能tooltipへ適用した。改行の有無を表示契約とするtooltipでは、text contentではなくactual screenshotで段落境界を確認してから報告する。
+
+### Let card-local checkbox styling diverge from the character sheet standard
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` の得意技能checkbox
+- 観測した失敗: 非戦闘技能card用にcheckboxの寸法を個別指定した一方、縁sectionは別の`accent-color`指定を持つ状態を見落とした。そのため同じcharacter sheet内のcheckboxが異なる色・寸法で描画された。
+- 一次対応: checkboxの基本寸法、accent color、marginを`CharacterSheetFormPresenter`のform scopeへ移し、section CSSには個別のgrid配置だけを残した。checkboxを新設するUIでは、component CSSへ基本styleを複製せずform scopeの共通styleを使う。
+
+### Replaced a native number-input control without design authority
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` の修正number input
+- 観測した失敗: 符号付き2桁を狭いinputに収めようとして、既存character sheetのnumber inputにはないspinner非表示styleを追加した。ユーザーは既存実装と異なるデザインを許可しておらず、この変更は要求された幅調整の代替になっていなかった。
+- 一次対応: spinner非表示styleを撤去し、既存inputの見た目とpaddingを維持した。サイズ要件とmobile 2列／1行の物理的な幅不足は、別デザインを仮定せずissueへ未決定として記録する。
+
+### Claimed to compact the check-count output without accounting for the shared style selector
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` の非戦闘技能判定数output
+- 観測した失敗: 非戦闘技能CSSへ判定数の高さ・padding・文字サイズを記述したが、`CharacterSheetFormPresenter`のform共通`character-sheet-number-value` selectorのspecificityに負けていた。mobile captureで判定数だけ標準サイズのまま残ったにもかかわらず、card全体を縮小したかのように作業を進めた。
+- 一次対応: `noncombatRows`／`noncombatCollapsedRows`を含むselectorで判定数outputへcompactな幅、高さ、padding、文字サイズを明示し、共通styleより優先させる。共有styleを局所overrideする場合は、capture前にcomputed styleまたはactual screenshotで各値が適用済みか確認する。
+
+### Changed check-count padding based on inference instead of an actual clip result
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` のmobile判定数output
+- 観測した失敗: 左右paddingと枠幅のトレードオフを実画面で確認しないまま変更し、判定数がclipする状態をユーザーが先に発見した。数値の最小幅を推定しただけで、実際のfont metrics、padding、spinnerとの組み合わせを確認していなかった。
+- 一次対応: 既存paddingのclipを実画面で確認した後にだけ、左右paddingを縮める変更を行った。寸法を変更する反復では、各変更後のactual screenshotを開き、次の変更はその結果が得られてから行う。

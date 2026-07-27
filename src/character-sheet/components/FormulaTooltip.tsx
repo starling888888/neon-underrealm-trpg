@@ -17,6 +17,7 @@ type FormulaTooltipProps = {
   className?: string;
   children: ReactNode;
   formula: string;
+  multiline?: boolean;
 };
 
 type TooltipPosition = {
@@ -35,6 +36,7 @@ export default function FormulaTooltip({
   className,
   children,
   formula,
+  multiline = false,
 }: FormulaTooltipProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState<TooltipPosition | null>(null);
@@ -137,7 +139,7 @@ export default function FormulaTooltip({
       </button>
       {isOpen ? (
         <span
-          className={styles.content}
+          className={`${styles.content} ${multiline ? styles.multiline : ""}`}
           id={tooltipId}
           ref={tooltipRef}
           role="tooltip"

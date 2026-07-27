@@ -58,11 +58,7 @@
 }
 
 .row input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  accent-color: var(--color-link);
   justify-self: center;
-  margin: 0;
 }
 
 .clearButton {
