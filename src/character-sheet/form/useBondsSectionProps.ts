@@ -106,16 +106,20 @@ export default function useBondsSectionProps(
       setValue("bonds.rows", rows, { shouldValidate: true });
     },
     onRowDelete: (rowId) => {
-      const rows = getValues("bonds.rows");
-      const row = rows.find((entry) => entry.rowId === rowId);
+      const bonds = getValues("bonds");
+      const row = bonds.rows.find((entry) => entry.rowId === rowId);
+      const currentDerived = calculateBonds(
+        bonds,
+        derivedSecondaryAttributes.bondLimit,
+      );
 
-      if (row?.isResolved) {
+      if (row?.isResolved || !currentDerived.overflowRowIds.includes(rowId)) {
         return;
       }
 
       setValue(
         "bonds.rows",
-        rows.filter((entry) => entry.rowId !== rowId),
+        bonds.rows.filter((entry) => entry.rowId !== rowId),
         { shouldValidate: true },
       );
     },

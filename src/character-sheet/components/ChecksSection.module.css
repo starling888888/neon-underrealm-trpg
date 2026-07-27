@@ -21,6 +21,17 @@
   gap: var(--space-1);
 }
 
+fieldset.row,
+fieldset.noncombatRow {
+  border: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+fieldset.row {
+  padding: 0;
+}
+
 .headers {
   color: var(--color-text-muted);
   font-size: var(--text-xs);
@@ -220,6 +231,15 @@
   color: var(--color-text-muted);
   font-size: var(--text-xs);
   font-weight: 750;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .attackRow {

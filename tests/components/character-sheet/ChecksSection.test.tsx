@@ -68,8 +68,9 @@ describe("ChecksSection", () => {
         (option) => option.text,
       ),
     ).toEqual(["筋力", "敏捷", "感覚", "肉体", "精神"]);
-    expect(screen.getByText("防御")).not.toBeNull();
-    expect(screen.getByText("抵抗")).not.toBeNull();
+    expect(screen.getByRole("group", { name: "攻撃1" })).not.toBeNull();
+    expect(screen.getByRole("group", { name: "防御" })).not.toBeNull();
+    expect(screen.getByRole("group", { name: "抵抗" })).not.toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "攻撃の判定数の説明" }));
 
@@ -145,6 +146,7 @@ describe("ChecksSection", () => {
     expect(screen.getAllByRole("checkbox")).toHaveLength(15);
     expect(screen.getByLabelText("脅迫を得意技能にする")).not.toBeNull();
     expect(screen.getByLabelText("ハッキングの判定修正")).not.toBeNull();
+    expect(screen.getByRole("group", { name: "脅迫" })).not.toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "非戦闘技能の説明" }));
     expect(screen.getByRole("tooltip").textContent).toBe(

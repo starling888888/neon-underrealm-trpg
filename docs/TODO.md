@@ -21,18 +21,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
-- [ ] G9の未検証受入条件と縁削除制約を統合確認で整理する
-  - source: `.tmp/chatgpt-review.md` / `レビュー指摘 1`
-  - classification: out-of-scope
-  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
-  - handling plan: G9 child issueの初期完了条件、後続レビューで更新された覚悟効果の表示契約、親Gate planの`done`状態を照合する。宣言済みviewport / stateのVisual Reviewを実施するか、未実施をユーザー承認で明示的に保留する。縁の`onRowDelete`はoverflow外の行をcallback直接呼出しでも削除できないよう検証・修正する。
-
-- [ ] 縁の入力クリアiconを行削除と形状で区別する
-  - source: human / `ex-02-10-sheet-attack-reaction` の`レビュー指摘 2`
-  - classification: follow-up
-  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
-  - handling plan: 行削除は既存の`×` iconを維持し、入力クリアは消しゴム形状のSVG iconへ変更する。色だけで区別せず、accessible nameとhover / focus時の補助表示を保ち、desktop / tablet / mobileで見分けられることを確認する。
-
 - [ ] G24着手前にキャラクターシート可変行のRHF操作境界を`useFieldArray`契約へ整合する
   - source: `.tmp/chatgpt-review.md` / `レビュー指摘 1`
   - classification: follow-up

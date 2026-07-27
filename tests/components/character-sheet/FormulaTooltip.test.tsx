@@ -70,6 +70,10 @@ describe("FormulaTooltip", () => {
 
     expect(indicator?.textContent).toBe("?");
     expect(indicator?.getAttribute("aria-hidden")).toBe("true");
+    expect(indicator?.parentElement).toHaveProperty(
+      "className",
+      styles.triggerContent,
+    );
 
     fireEvent.click(trigger);
 

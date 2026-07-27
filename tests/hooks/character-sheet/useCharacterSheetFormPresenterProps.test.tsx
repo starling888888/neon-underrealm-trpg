@@ -222,6 +222,52 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(result.current.form.getValues("bonds.rows")).toHaveLength(1);
   });
 
+  it("only deletes unresolved bond rows that are currently over the limit", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const firstRowId = result.current.form.getValues("bonds.rows.0.rowId");
+    const secondRowId = result.current.form.getValues("bonds.rows.1.rowId");
+
+    act(() => {
+      result.current.presenterProps.bondsSection.onRowDelete(firstRowId);
+    });
+
+    expect(result.current.form.getValues("bonds.rows")).toHaveLength(4);
+
+    act(() => {
+      result.current.presenterProps.bondsSection.onRowChange(
+        firstRowId,
+        "target",
+        "アキラ",
+      );
+      result.current.presenterProps.bondsSection.onRowChange(
+        firstRowId,
+        "isResolved",
+        true,
+      );
+      result.current.presenterProps.bondsSection.onRowChange(
+        secondRowId,
+        "target",
+        "ベラ",
+      );
+      result.current.presenterProps.secondaryAttributesSection.onNumberChange(
+        "bondLimitModifier",
+        "-3",
+      );
+    });
+
+    act(() => {
+      result.current.presenterProps.bondsSection.onRowDelete(firstRowId);
+    });
+
+    expect(result.current.form.getValues("bonds.rows")).toHaveLength(2);
+
+    act(() => {
+      result.current.presenterProps.bondsSection.onRowDelete(secondRowId);
+    });
+
+    expect(result.current.form.getValues("bonds.rows")).toHaveLength(1);
+  });
+
   it("keeps attack rows, reaction rows, and their derived counts in the RHF boundary", () => {
     const { result } = renderHook(() => usePresenterHarness());
     const checks = result.current.presenterProps.checksSection;

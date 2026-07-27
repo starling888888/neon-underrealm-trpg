@@ -63,7 +63,7 @@
 
 ## 初期スコープ外
 
-- G10の攻撃・リアクションの表示、対応能力の選択、判定数 tooltip、追加・削除の契約を変更しない。
+- G10の攻撃・リアクションの表示、対応能力の選択、判定数 tooltip、追加・削除の契約を再設計しない。ただし、ユーザーが明示した `レビュー指摘 5` の範囲で、G9 / G10に残った受入確認、縁の削除制約、編集行のHTML意味構造、mobileのクリア操作overflowを限定して扱う。
 - サイバネの埋め込み点数に応じた非戦闘技能修正の再設定、アイテム・スキル・共通スキルボーナスの文字列解析または自動加算を実装しない。ユーザーが必要な効果値を各行の修正へ手入力する。
 - 非戦闘技能の追加・削除、技能名・対応能力値の編集、任意技能の登録、ダイスローラー、戦闘シミュレーションを実装しない。
 - G12以降のスキル、G17以降の武器・防具・専用アイテム、localStorage、IndexedDB、JSON、CCFOLIA、サーバー、DB、追加ライブラリ、キャラクター作成ウィザード、Header、Footer、サイトメニューを追加・変更しない。
@@ -77,7 +77,7 @@
 - [ ] 各行で得意技能と修正を変更でき、常時／一時の判定数が、得意技能時には能力値のみを2倍にして更新される。計算式型の行表示を含まない。
 - [ ] 得意技能チェック済み行がアクセントカラー背景になり、未選択行と区別できる。
 - [ ] 非戦闘技能が初期状態で折りたたまれ、展開時は15行、折りたたみ時は得意技能チェック済みの行だけを表示する。判定 section 全体の既存開閉とは独立して操作できる。
-- [ ] 非戦闘技能がdesktop / tabletで3列、mobileで2列のcard gridとして、技能名を折り返さず、常時／一時と2桁以上の修正値をclip・overflowさせない。
+- [ ] 非戦闘技能がdesktop / tabletで2列、mobileで1列のcard gridとして、技能名を折り返さず、常時／一時と2桁以上の修正値をclip・overflowさせない。
 - [x] 判定数の pure logic、form / schema入力境界、Componentのtooltip・開閉・アクセント表示、代表的browser操作を適切なテスト層で確認している。
 - [ ] `/character-sheet/` の default、得意技能選択、修正変更、非戦闘技能展開、各ヘッダー tooltip open を desktop / tablet / mobile でVisual Review対象として列挙し、変更targetだけを比較してcanonical VRT baselineを更新していない。
 - [ ] `visual:capture`がscenarioで指定したowner locatorのoriginal-pixel-resolution screenshotを一時artifactとして出力し、`visual:test`のcanonical VRT比較とbaselineを変更しない。
@@ -297,3 +297,81 @@
 - [x] baseline更新が必要な差分を人間判断として記録した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- `.tmp/chatgpt-review.md`は、G9を未検証の受入条件を残したまま完了扱いにしたこと、縁の削除callbackが上限外行だけに制限されていないこと、編集行のHTML意味構造がarchitectureの`fieldset` / `legend`契約と一致しないことを指摘した。
+- G9 / G10のarchived issueには、現在利用可能な要素単位のVisual Review基盤で確認できる受入条件が未完了のまま残る。
+- ユーザーはmobileの縁の`クリア`buttonが横overflowすると指摘した。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）/ human
+- classification: valid
+- local validation: G9 archived issueの初期完了条件には古い`desktop / tablet 4列、mobile 2行2列`契約が残るが、後続の`docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`の正本は`desktop / tablet 2行2列、mobile 4行1列`である。現行の`BondsSection.module.css`はこの後続契約に一致するため、古い列数へ戻さず後続契約を受入基準にする。G9 / G10のVisual Reviewチェックは未完了であり、現在の`visual:capture`はscenario owner locatorをdesktop / tablet / mobileで取得できる。mobileの`.row`はクリア列を`1.5rem`に縮める一方、`.clearButton`は`min-width: 3rem`であるため、ユーザー観測どおりoverflowする。`onRowDelete`は覚悟済みだけを拒否し、現在の上限外状態を再確認しない。`BondsSection`と`ChecksSection`の編集行は`div`であり、architectureの`fieldset` / `legend`契約と一致しない。
+- review内のPresenter adapter肥大化はsection別hook分割後のためstaleである。`useFieldArray`への移行とfield/value型対応はG24の既存TODOに従うfollow-upであり、この指摘では先取りしない。
+
+### 対応方針
+
+- archived issueと親Gate planの過去記録は書き換えず、G11のこのレビュー節でG9 / G10の再受入を管理する。G9の覚悟効果は後続正本どおりdesktop / tablet 2行2列、mobile 4行1列として確認する。
+- mobileの縁行は`クリア`text buttonと既存のcheckbox・input表現を維持したまま、buttonの最小幅とgrid列を整合させて横overflowをなくす。上限外の未覚悟行だけを削除できる業務制約はcallbackにも置き、直接呼出しのhook testを追加する。
+- 縁、攻撃、リアクションの編集行を`fieldset` / `legend`で意味付け、現在の列ヘッダー、accessible name、layoutを保つ。
+- G9はdefault、覚悟済み、上限超過 / 削除可能、G10はdefault、攻撃追加、対応能力変更、判定数tooltip openを、section / tooltip owner locatorでdesktop / tablet / mobileにてcapture・actual確認する。`visual:test`は変更targetだけを比較し、canonical baselineは更新しない。
+
+### 対応完了チェックリスト
+
+- [x] G9の覚悟効果が後続正本どおりdesktop / tablet 2行2列、mobile 4行1列で、式を折り返さず表示される。
+- [x] mobileの縁の`クリア`buttonと各行が横overflowせず、覚悟済みのdisabled状態と上限外行の削除buttonを既存契約どおり表示する。
+- [x] `onRowDelete`が上限外かつ未覚悟の行だけを削除し、直接callbackを呼んでも通常行・覚悟済み行を削除しない。
+- [x] 縁、攻撃、リアクションの編集行がarchitectureの`fieldset` / `legend`契約を満たし、既存のaccessible nameと表示契約を維持する。
+- [x] G9 / G10の受入stateをscenario owner locatorでdesktop / tablet / mobileに列挙し、`visual:capture`のoriginal-pixel-resolution actualを開いて確認する。
+- [ ] 変更targetだけを`visual:test`で比較し、canonical VRT baselineを更新しない。
+- [x] 関連するNode / hook / Component / browser behavior testが通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 6
+
+### 指摘事項
+
+- ユーザーは、`FormulaTooltip`の`?` indicatorが対象文言によって上下中央からずれると指摘した。能力値ポイントと覚悟で顕著である一方、格、常時修正、一時修正では中央に揃って見える。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: 共通`FormulaTooltip`はindicatorを`triggerContent`に対するabsolute positioningで`top: 50%`に置き、rootとtriggerはinline-blockの`vertical-align: middle`を使う。能力値ポイントはinline-flexのmeta表示、覚悟はgrid header、格はblockのmetric label、常時／一時修正はgrid header内のstacked labelで使われ、親の表示形式が異なる。sectionごとのactual screenshotとcomputed layoutを照合し、共通Componentまたは全ラベルに適用できる規約以外で修正しない。
+
+### 対応方針
+
+- 能力値ポイント、格、常時修正、一時修正、覚悟を含むsection owner locator screenshotをdesktop / tablet / mobileで比較する。必要に応じてtooltip triggerの原寸locatorも追加する。
+- indicatorの上下中央揃えは`FormulaTooltip`側のbox / line-height / alignment契約として統一し、個別sectionのlabel styleを上書きして位置を合わせない。既存のtooltip操作、indicatorの右端配置、open stateの表示契約を維持する。
+
+### 対応完了チェックリスト
+
+- [x] 指定されたtooltip triggerをsection単位でdesktop / tablet / mobileにcaptureし、ずれの条件をactual screenshotで確認する。
+- [x] 共通`FormulaTooltip`または全tooltip labelに適用する統一styleでindicatorの上下中央を揃える。
+- [x] tooltipのtrigger・open state・既存labelのwrap / clipをComponent testとVisual Reviewで確認する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 4
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@character-sheet`。G11は`@noncombat-expanded`、`@noncombat-favorite-selected`、`@noncombat-modifier-changed`、`@noncombat-tooltip-open`、レビュー指摘 5は`@checks-bonds-default`、`@bond-resolved`、`@bond-over-limit`、`@attack-row-added`、`@attack-attribute-changed`、`@checks-tooltip-open`、レビュー指摘 6は`@tooltip-alignment-default`。
+- route / states / viewports: `/character-sheet/`の各対象stateをdesktop、tablet、mobileで確認した。`@checks-bonds-default`はultrawideも取得した。
+
+### 実画面確認
+
+- G11: 非戦闘技能を展開し、desktop / tabletで2列、mobileで1列となること、`-12`修正値、得意技能選択時のアクセント背景、折りたたみ時に得意技能だけを表示することを、各viewportのnoncombat section locator screenshotで確認した。見出しtooltipも3 viewportで開き、指定4文の改行を含む全文にclipがないことをtooltip locator screenshotで確認した。
+- レビュー指摘 5: 縁のdefault、覚悟済み、上限超過、攻撃のdefault・行追加・対応能力変更、判定数tooltip openを各viewportのsection / tooltip locator screenshotで確認した。縁の効果式はdesktop / tabletで2行2列、mobileで4行1列で表示され、mobileの`クリア`buttonは行内に収まる。上限超過時だけ削除buttonが表示される。
+- レビュー指摘 6: 能力値ポイント、格、常時修正、一時修正、覚悟を含むprofile / build / bonds section locator screenshotをdesktop / tablet / mobileで確認した。`FormulaTooltip`のindicatorをabsolute配置からtrigger content内のflex itemへ統一した後、各対象で文言の中央に揃い、既存labelのwrap・clipはない。
+
+### canonical VRT比較
+
+- `npm run visual:test -- --grep '@character-sheet'`を実行した。既存のcanonical `default-*`を更新していない。
+- 今回追加した状態scenarioはcanonical baselineを持たないため、比較はmissing snapshotで失敗する。このため、新規stateのcanonical差分は未判定のままとし、baselineの作成・更新は行わない。実画面の確認根拠は上記のoriginal-pixel-resolution locator screenshotである。

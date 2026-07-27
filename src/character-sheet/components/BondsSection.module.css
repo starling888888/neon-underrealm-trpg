@@ -17,6 +17,17 @@
   gap: var(--space-1);
 }
 
+fieldset.row,
+fieldset.effectFormula {
+  margin: 0;
+  min-inline-size: 0;
+}
+
+fieldset.row {
+  border: 0;
+  padding: 0;
+}
+
 .headers {
   color: var(--color-text-muted);
   font-size: var(--text-xs);
@@ -194,7 +205,7 @@
 @media (width < 48rem) {
   .headers,
   .row {
-    grid-template-columns: minmax(3.5rem, 0.5fr) minmax(0, 1.5fr) 3rem 1.5rem;
+    grid-template-columns: minmax(3.5rem, 0.5fr) minmax(0, 1.5fr) 3rem 3rem;
   }
 
   .effectsGrid {

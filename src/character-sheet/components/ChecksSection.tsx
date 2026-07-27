@@ -79,7 +79,8 @@ function CheckRow({
   skillControl,
 }: CheckRowProps) {
   return (
-    <div className={styles.row}>
+    <fieldset className={styles.row}>
+      <legend className={styles.visuallyHidden}>{label}</legend>
       {skillControl}
       <AttributeSelect
         label={label}
@@ -124,7 +125,7 @@ function CheckRow({
           {formatDisplayValue(row.temporaryCheck)}
         </output>
       </div>
-    </div>
+    </fieldset>
   );
 }
 
@@ -162,10 +163,11 @@ function NoncombatCheckRow({
     characterSheetDictionary.gameDomain.terms.noncombatSkillNames[row.id];
 
   return (
-    <div
+    <fieldset
       className={styles.noncombatRow}
       data-favorite={row.isFavorite || undefined}
     >
+      <legend className={styles.visuallyHidden}>{name}</legend>
       <input
         aria-label={`${name}を得意技能にする`}
         checked={row.isFavorite}
@@ -199,7 +201,7 @@ function NoncombatCheckRow({
         {formatDisplayValue(row.permanentCheck)}／
         {formatDisplayValue(row.temporaryCheck)}
       </output>
-    </div>
+    </fieldset>
   );
 }
 

@@ -50,6 +50,30 @@ const noncombatChecksLocator = {
     page.locator('section[aria-labelledby="noncombat-checks-heading"]'),
 };
 
+const bondsSectionLocator = {
+  name: "bonds-section",
+  resolve: (page: Page) =>
+    page.locator('[data-character-sheet-section-slot="bonds"]'),
+};
+
+const checksSectionLocator = {
+  name: "checks-section",
+  resolve: (page: Page) =>
+    page.locator('[data-character-sheet-section-slot="checks"]'),
+};
+
+const profileSectionLocator = {
+  name: "profile-section",
+  resolve: (page: Page) =>
+    page.locator('[data-character-sheet-section-slot="profile"]'),
+};
+
+const buildSectionLocator = {
+  name: "build-section",
+  resolve: (page: Page) =>
+    page.locator('[data-character-sheet-section-slot="build"]'),
+};
+
 const tooltipLocator = {
   name: "tooltip",
   resolve: (page: Page) => page.getByRole("tooltip"),
@@ -94,12 +118,14 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "attack-row-added",
+    locators: [checksSectionLocator],
     prepare: addAttack,
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
   },
   {
     id: "attack-attribute-changed",
+    locators: [checksSectionLocator],
     prepare: async (page) => {
       await page
         .getByLabel("攻撃1の対応能力", { exact: true })
@@ -110,22 +136,33 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "checks-tooltip-open",
+    locators: [checksSectionLocator, tooltipLocator],
     prepare: openChecksTooltip,
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
   },
   {
+    id: "checks-bonds-default",
+    locators: [bondsSectionLocator, checksSectionLocator],
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "ultrawide", "tablet", "mobile"],
   },
   {
+    id: "tooltip-alignment-default",
+    locators: [profileSectionLocator, buildSectionLocator, bondsSectionLocator],
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
     id: "profile-tooltip-open",
+    locators: [tooltipLocator, profileSectionLocator],
     prepare: (page) => openTooltip(page, "合計信用"),
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
   },
   {
     id: "build-tooltip-open",
+    locators: [tooltipLocator, buildSectionLocator],
     prepare: (page) => openTooltip(page, "常時修正"),
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
@@ -138,6 +175,7 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "bond-resolved",
+    locators: [tooltipLocator, bondsSectionLocator],
     prepare: async (page) => {
       await fillBond(page, 1, "アキラ");
       await page.getByLabel("縁1の覚悟", { exact: true }).check();
@@ -148,6 +186,7 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "bond-over-limit",
+    locators: [bondsSectionLocator],
     prepare: async (page) => {
       await fillBond(page, 1, "アキラ");
       await fillBond(page, 2, "ベラ");
@@ -155,5 +194,9 @@ registerVrtScenarios("character-sheet", [
     },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "ultrawide", "tablet", "mobile"],
   },
 ]);

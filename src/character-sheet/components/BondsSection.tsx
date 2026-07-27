@@ -35,7 +35,8 @@ function EffectFormula({
   const accessibleName = `${label}の覚悟効果修正`;
 
   return (
-    <div className={styles.effectFormula}>
+    <fieldset className={styles.effectFormula}>
+      <legend className={styles.visuallyHidden}>{label}</legend>
       <h4>{label}</h4>
       <div className={styles.effectExpression}>
         <output
@@ -72,7 +73,7 @@ function EffectFormula({
           {finalValues.join(" ／ ")}
         </output>
       </div>
-    </div>
+    </fieldset>
   );
 }
 
@@ -109,11 +110,12 @@ export default function BondsSection({
           const isDeletableOverflow = isOverflow && !bond.isResolved;
 
           return (
-            <div
+            <fieldset
               className={styles.row}
               data-over-limit={isOverflow || undefined}
               key={bond.rowId}
             >
+              <legend className={styles.visuallyHidden}>{rowName}</legend>
               <input
                 aria-label={`${rowName}の${labels.headers.target}`}
                 disabled={bond.isResolved}
@@ -164,7 +166,7 @@ export default function BondsSection({
                   クリア
                 </button>
               )}
-            </div>
+            </fieldset>
           );
         })}
       </div>

@@ -1021,3 +1021,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-10-sheet-attack-reaction` と `ex-02-11-sheet-noncombat` の技能名・リアクション名のowner
 - 観測した失敗: GameDomainへゲーム用語を集約する方針があるにもかかわらず、攻撃技能名・リアクション名を`characterSheet.checks`へ、非戦闘技能名をmaster dataへ追加した。前の2 Gateで表示名とID・対応能力・順序を分離して棚卸ししなかった。
 - 一次対応: 可視の攻撃技能、リアクション、非戦闘技能名を`gameDomain.terms`へ移し、master dataとformにはID・順序・対応能力だけを残す。新しいゲーム用語を追加するGateでは、表示名、識別子、ゲーム計算データのownerをissue review時に分けて確認する。
+
+### Repeated G9 tooltip capture failures
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-11-sheet-noncombat` のG9 `bond-resolved` Visual Review capture
+- 観測した失敗: `覚悟`tooltipをhoverで開いたあとにsection locatorを先に撮影したため、tooltip locatorの撮影時にはopen stateが失われた。原因確認前にclickで開く実装へ変更し、tooltipがhover専用であるためdesktop / tablet / mobileで再度失敗させた。
+- 一次対応: tooltipの既存hover契約を維持し、open stateを保ったままtooltip locatorをsection locatorより先に撮影する順序へ戻す。tooltip stateを含むcaptureでは、triggerのinteraction契約と複数locatorの撮影順を先に確認する。

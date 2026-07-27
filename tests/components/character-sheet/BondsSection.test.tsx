@@ -32,6 +32,7 @@ describe("BondsSection", () => {
 
     expect(screen.getByLabelText("縁1の対象")).not.toBeNull();
     expect(screen.getByLabelText("縁4の関係")).not.toBeNull();
+    expect(screen.getByRole("group", { name: "縁1" })).not.toBeNull();
     const clearAction = screen.getByRole("button", {
       name: "縁1をクリア（行は削除しません）",
     });
@@ -101,6 +102,9 @@ describe("BondsSection", () => {
     expect(screen.getByRole("heading", { name: "気合獲得" })).not.toBeNull();
     expect(screen.getByRole("heading", { name: "能動判定" })).not.toBeNull();
     expect(screen.getByRole("heading", { name: "受動判定" })).not.toBeNull();
+    expect(
+      screen.getByRole("group", { name: "気絶からの回復" }),
+    ).not.toBeNull();
     expect(props.onEffectModifierChange).not.toHaveBeenCalled();
   });
 });
