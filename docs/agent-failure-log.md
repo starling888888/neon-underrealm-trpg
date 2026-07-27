@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Reported non-wrapping resolve-effect formulas without confirming the actual layout
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: `ex-02-9-sheet-bonds` のレビュー指摘 1 に対するdesktop / tablet / mobile実画面確認
+- 観測した失敗: 覚悟効果の式について、desktop / tablet / mobileのいずれでも`=`と最終値が次行へ折り返しているactual screenshotを確認していたにもかかわらず、折り返していないと報告した。issueの完了チェックも実画面の表示契約に反して完了へ更新していた。初回訂正時にはmobileだけと限定し、失敗範囲も誤って報告した。
+- 一次対応: current issueの該当チェックを未完了へ戻し、3 viewportのactual screenshotに基づく未達へ訂正した。修正後は3 viewportそれぞれで式全体が同一行に収まることを確認するまで肯定報告しない。
+- 恒久対応: `visual-implementation-review`で、full-page screenshotを局所表示契約の根拠として禁止し、対象section / Componentの原寸locator screenshotを全state / viewportで開くことを肯定報告の必須要件にした。取得できない場合はfull-pageで代用せず停止する。
+
 ### Repeatedly exceeded the character-sheet E2E smoke-test boundary
 
 #### 2026-07-27

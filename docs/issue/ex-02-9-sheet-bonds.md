@@ -38,7 +38,7 @@
 - 各行は短い対象input、長い関係input、覚悟checkbox、クリアicon buttonを持つ。覚悟済みでは対象と関係を編集不可にし、checkboxを解除すると再編集できる。クリアは行を削除せず、対象、関係、覚悟を初期値へ戻す。透過背景の円形`×` icon buttonは、削除buttonと誤認しないaccessible nameと説明を持つ。
 - 覚悟checkboxのlabelへ既存`FormulaTooltip`を付ける。tooltip文言は「シナリオ中、覚悟にした縁にチェックを入れます。チェックが入っている限り、変更もクリアもできません」とする。tooltip triggerは既存の`?`indicatorを含め、覚悟checkboxの操作targetとは分ける。
 - 縁入力の下に`覚悟の効果`見出しと灰色の`通常の縁／今生の縁`説明を横並びで置く。各効果は、通常の縁使用時の元値と今生の縁使用時の元値をスラッシュで併記し、同じ修正値inputの後に`=`と、両方へ修正値を反映した最終値をスラッシュで併記する。つまり表示順は`通常の縁使用時の元値 / 今生の縁使用時の元値 + 修正値 = 通常の縁使用時の最終値 / 今生の縁使用時の最終値`とする。効果別の通常値・今生値・最終値へ可視labelを追加しない。
-- 覚悟効果は、`気絶からの回復`（`10d6 / 15d6`）、`気合獲得`（`1 / 1d6`）、`能動判定`（`2d / 3d`）、`受動判定`（`4d / 6d`）の順に表示する。修正値は数値として保持するが、ダイス表記を数値化・自動計算・ルール解析しない。ダイス表記の最終値は、元のダイス式と修正値を組み合わせた表示式とする。
+- 覚悟効果は、`気絶からの回復`（`10d6 ／ 15d6`）、`気合獲得`（`1 ／ 1d6`）、`能動判定`（`2d ／ 3d`）、`受動判定`（`4d ／ 6d`）の順に表示する。修正値は数値として保持するが、ダイス表記を数値化・自動計算・ルール解析しない。ダイス表記の最終値は、元のダイス式と修正値を組み合わせた表示式とする。
 - desktopとtabletでは4効果を横4列にし、mobileでは同じ順序のまま2行2列にする。各効果内の修正inputは1桁より少し広い短い幅とし、ページ全体の横overflowを生じさせない。
 - 固定文言、初期元値、表示用の式は`src/character-sheet/dictionary.ts`へ置く。G9に必要な純粋logic、form adapter、Component、CSS Moduleと、適切なNode / hook / Component / browser / Visual testだけを追加・更新する。
 
@@ -101,3 +101,43 @@
 - VRT targetは`tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`、routeは`/character-sheet/`とする。stateはdefault、覚悟済み行、上限超過警告、viewportはdesktop、tablet、mobileとする。G9では変更targetだけを比較し、baselineの更新はユーザーの明示承認がある場合だけ行う。
 - ユーザーの最新指示に合わせて、`docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`の覚悟効果の名称、順序、mobile配置、クリアicon、式表示を更新済みである。
 - ユーザーUIレビューを先に行う指示により、Visual ReviewとGate Tech Reviewは未実施のまま保留する。`npm run check`はAstro checkとBiome checkを通過したが、変更対象外の`docs/issue/ex-02-web-character-sheet/plan.md`が既存のMarkdown formatter違反であるため、全体commandとしては未通過である。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 縁のクリアbuttonは、その他流儀の削除buttonと同じsize・appearanceへ揃える。character-sheetで頻出する削除操作の共有styleを用意し、その他流儀と縁で再利用する。
+- 覚悟checkboxはbrowser既定の青を使わず、既存site designに合うaccent colorへ揃える。
+- 結べる縁の減少で上限超過した時は、section内warningに加えて、上限外の縁行をerror colorで示す。
+- 上限を下げた時は、入力済み・覚悟済みの行を保持し、空行だけを自動的に減らす。
+- 上限外の未覚悟行の操作はクリアbuttonでなく、その他流儀と同じdelete buttonに切り替える。確認dialogは出さない。覚悟済み行はdelete不可のままにする。
+- 覚悟効果はdesktop / tabletで2行2列、mobileで4行1列とする。元値と修正後の値は、既存計算値と同じread-only backgroundで示す。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: 現行の`BondsSection`は1.75remの透明circle clear buttonで、`BuildSection`の1.5remのsolid delete buttonとsize・appearanceが異なる。現行の上限超過はsection内warningだけで、上限外の行の視覚feedbackとdelete操作を持たない。上限低下時にも固定4行を保持する。checkboxはbrowser既定appearance、覚悟効果はdesktop / tabletの4列・mobileの2列であり、いずれも今回の指摘と不一致である。
+- local validation: `docs/requirements/character-sheet.md`とこのissueの固定4行・削除なし・効果gridの旧契約は、ユーザーの最新指示により置換対象である。G9の縁・覚悟UI、form行の保持規則、error feedbackだけを扱うため、全項目はcurrent issue内で対応できる。確認dialog、G25の全体error集約、canonical VRT baseline更新は導入しない。
+
+### 対応方針
+
+- character-sheetの共有styleとして、その他流儀で使う1.5remのsolid circle `×` delete buttonを定義し、既存のその他流儀と、上限外かつ未覚悟の縁行で共用する。通常の縁行は現在のclear操作を維持する。
+- 行の表示数は、入力済み・覚悟済み行を元の順序で残したうえで、現在の縁最大数を満たす最小の空行だけを補う。上限低下時は空行を除き、入力済み行が上限を超える時だけ、順序上限外の未覚悟行をdelete可能にする。
+- pure logicで行ごとのoverflow stateを算出し、Componentはerror color、clear / delete操作、disabled状態を表示する。覚悟済み行はoverflowでもdelete不可とする。
+- 覚悟checkboxのaccent、read-only値、効果gridは既存character-sheetのtoken・共有classを再利用する。効果順は維持する。
+
+### 対応完了チェックリスト
+
+- [x] 削除buttonをcharacter-sheet共有styleへ集約し、その他流儀と上限外の未覚悟縁行が同じsize・appearanceになる。
+- [x] 覚悟checkboxがsite designのaccent colorで表示される。
+- [x] 上限低下時に空行だけを減らし、入力済み・覚悟済み行を保持する。
+- [x] 上限外の縁行をerror colorで示し、未覚悟行だけ確認なしで削除できる。
+- [x] 通常の縁行は行を消さないclear操作を維持し、覚悟済み行はclear・deleteの両方をできない。
+- [ ] 覚悟効果がdesktop / tabletで2行2列、mobileで4行1列となり、元値・最終値はread-only backgroundで表示される。
+- [x] Node / hook / Component / browser behavior testを責務に応じて更新する。
+- [ ] `@character-sheet` targetのdefault・上限超過・削除可能状態をVisual Reviewし、canonical VRT baselineを更新していない。
+- [ ] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+実画面確認で、desktop / tablet / mobileの各効果において、`=`と最終値が元値・修正値の行から次行へ折り返していることを確認した。非折返しの表示契約は未達であり、修正後に3 viewportを再確認する。

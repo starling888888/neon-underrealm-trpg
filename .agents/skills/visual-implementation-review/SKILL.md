@@ -33,6 +33,20 @@ not visual confirmation. Do not report a visual result as confirmed until you
 open and inspect the actual snapshot for every declared route, state, and
 viewport against the current issue acceptance criteria.
 
+A full-page screenshot is an overview artifact only. Never use it as evidence
+that a local acceptance condition is satisfied, including text wrapping,
+control size or bounds, field alignment, clipping, or overflow. For every
+changed section or Component state with a local display contract, capture and
+open an original-pixel-resolution locator screenshot of its smallest owner
+section or Component for every declared state and viewport. A positive visual
+report requires those locator screenshots; a full-page screenshot cannot
+substitute for them.
+
+Use the project's test-owned capture path for locator screenshots. If the
+current capture cannot provide a required locator screenshot, record the gap
+in the current issue and stop for direction. Do not substitute a full-page
+screenshot or create an ad hoc browser script.
+
 If a positive visual report is later shown to be false, treat it as a material
 reporting failure. Record the failure in `docs/agent-failure-log.md`, correct
 the current issue review record, keep the issue active, and repeat actual
@@ -73,10 +87,13 @@ already approved that work in the current issue.
    has default scenarios. Record the complete state list before capture.
 4. Build the VRT fixture and use the existing 4321 preview server.
 5. Run `npm run visual:capture -- --grep` for each changed target.
-6. Open every captured actual snapshot. Inspect each declared route, state,
-   and viewport against the current issue acceptance criteria. Check at least
-   alignment, wrapping, clipping, overflow, and interactive control bounds
-   when they are relevant to the change.
+6. Capture and open every required original-pixel-resolution locator
+   screenshot for the smallest owner section or Component. For each declared
+   route, state, and viewport, inspect the locator screenshot against the
+   current issue acceptance criteria. Use a full-page screenshot only for
+   page-level relationships; never use it to satisfy a local acceptance
+   condition. Check at least alignment, wrapping, clipping, overflow, and
+   interactive control bounds when they are relevant to the change.
 7. Run only the changed target with `npm run visual:test -- --grep`.
 8. Inspect Playwright's diff artifact when the target comparison fails.
 9. Fix only clear, local mismatches that are inside the approved issue scope.
@@ -136,7 +153,8 @@ Use `## ビジュアルレビュー N`.
 ### 実画面確認
 
 - route / state / viewport:
-  - actual snapshot:
+  - full-page overview (page-level確認のみ):
+  - locator screenshot（owner selector / original pixel resolution）:
   - checked acceptance criteria:
   - result:
 
@@ -153,7 +171,8 @@ Use `## ビジュアルレビュー N`.
 - [ ] 変更targetだけをVRT比較した
 - [ ] 変更targetだけの一時snapshotを取得した
 - [ ] current issueの受入条件と最終diffから対象stateを列挙した
-- [ ] 宣言したすべてのroute / state / viewportのactual snapshotを開いて確認した
+- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [ ] full-page screenshotを局所表示契約の確認根拠に使っていない
 - [ ] VRT差分を修正した、または修正不要と判断した
 - [ ] baseline更新が必要な差分を人間判断として記録した
 - [ ] `npm run check` が通る（該当する場合）
@@ -168,7 +187,10 @@ Report:
 
 - target and executed tags
 - VRT comparison result
-- actual snapshot inspection result for every declared route, state, and viewport
+- locator screenshot inspection result for every declared route, state, and
+  viewport, including the owner and checked local acceptance criteria
+- any full-page overview result, clearly separated from local acceptance
+  evidence
 - self-fixes and unresolved human judgments
 - commands and validation results
 - checks skipped and why

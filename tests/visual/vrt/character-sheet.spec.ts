@@ -47,9 +47,9 @@ registerVrtScenarios("character-sheet", [
   {
     id: "bond-over-limit",
     prepare: async (page) => {
-      await page.getByLabel("縁最大数修正", { exact: true }).fill("-3");
       await fillBond(page, 1, "アキラ");
       await fillBond(page, 2, "ベラ");
+      await page.getByLabel("縁最大数修正", { exact: true }).fill("-3");
     },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],

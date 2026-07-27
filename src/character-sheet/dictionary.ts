@@ -32,6 +32,7 @@ export const characterSheetDictionary = {
     },
     bonds: {
       clear: "クリア（行は削除しません）",
+      delete: "削除",
       headers: {
         relationship: "関係",
         resolve: "覚悟",

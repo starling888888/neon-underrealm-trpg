@@ -15,7 +15,7 @@ import {
   type ResolveEffectName,
   type SecondaryAttributeFieldName,
 } from "../form-values";
-import { calculateBonds } from "../logic/bonds";
+import { calculateBonds, retainBondRows } from "../logic/bonds";
 import { calculateBuild } from "../logic/build";
 import { calculateCredit } from "../logic/credit";
 import { calculateSecondaryAttributes } from "../logic/secondary-attributes";
@@ -97,25 +97,47 @@ export default function useCharacterSheetFormPresenterProps(
 
   useEffect(() => {
     const currentRows = getValues("bonds.rows");
+    const retainedRows = retainBondRows(
+      currentRows,
+      derivedBonds.effectiveLimit,
+    );
+    const nextRowNumber =
+      Math.max(
+        0,
+        ...currentRows.map((row) => {
+          const match = /^bond-(\d+)$/.exec(row.rowId);
+          return match === null ? 0 : Number(match[1]);
+        }),
+      ) + 1;
+    const nextRows = [
+      ...retainedRows,
+      ...Array.from(
+        { length: derivedBonds.requiredRowCount - retainedRows.length },
+        (_, index): BondValues => ({
+          isResolved: false,
+          relation: "",
+          rowId: `bond-${nextRowNumber + index}`,
+          target: "",
+        }),
+      ),
+    ];
 
-    if (currentRows.length >= derivedBonds.requiredRowCount) {
+    if (
+      currentRows.length === nextRows.length &&
+      currentRows.every((row, index) => row.rowId === nextRows[index]?.rowId)
+    ) {
       return;
     }
 
-    const nextRows = Array.from(
-      { length: derivedBonds.requiredRowCount - currentRows.length },
-      (_, index): BondValues => ({
-        isResolved: false,
-        relation: "",
-        rowId: `bond-${currentRows.length + index + 1}`,
-        target: "",
-      }),
-    );
-
-    setValue("bonds.rows", [...currentRows, ...nextRows], {
+    setValue("bonds.rows", nextRows, {
       shouldValidate: true,
     });
-  }, [derivedBonds.requiredRowCount, getValues, setValue]);
+  }, [
+    derivedBonds.effectiveLimit,
+    derivedBonds.requiredRowCount,
+    getValues,
+    setValue,
+  ]);
 
   function setBuildValue<K extends keyof BuildValues>(
     field: K,
@@ -264,12 +286,26 @@ export default function useCharacterSheetFormPresenterProps(
       onRowChange: setBondRowValue,
       onRowClear: (rowId) => {
         const rows = getValues("bonds.rows").map((row) =>
-          row.rowId === rowId
+          row.rowId === rowId && !row.isResolved
             ? { ...row, isResolved: false, relation: "", target: "" }
             : row,
         );
 
         setValue("bonds.rows", rows, { shouldValidate: true });
+      },
+      onRowDelete: (rowId) => {
+        const rows = getValues("bonds.rows");
+        const row = rows.find((entry) => entry.rowId === rowId);
+
+        if (row?.isResolved) {
+          return;
+        }
+
+        setValue(
+          "bonds.rows",
+          rows.filter((entry) => entry.rowId !== rowId),
+          { shouldValidate: true },
+        );
       },
     },
     profileSection: {

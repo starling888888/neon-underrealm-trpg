@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
-import { calculateBonds } from "../../../src/character-sheet/logic/bonds";
+import {
+  calculateBonds,
+  retainBondRows,
+} from "../../../src/character-sheet/logic/bonds";
 
 test("calculateBonds keeps four initial rows and orders resolve effects", () => {
   const result = calculateBonds(characterSheetDefaultValues.bonds, 4);
@@ -28,7 +31,21 @@ test("calculateBonds counts resolved rows and clamps a negative limit to zero", 
   assert.equal(result.effectiveLimit, 0);
   assert.equal(result.occupiedCount, 2);
   assert.equal(result.isOverLimit, true);
-  assert.equal(result.requiredRowCount, 4);
+  assert.equal(result.requiredRowCount, 2);
+  assert.deepEqual(result.overflowRowIds, ["bond-1", "bond-2"]);
+});
+
+test("retainBondRows removes only empty placeholders after a limit decrease", () => {
+  const rows = structuredClone(characterSheetDefaultValues.bonds.rows);
+  rows[1] = { ...rows[1], target: "アキラ" };
+  rows[3] = { ...rows[3], isResolved: true };
+
+  const retainedRows = retainBondRows(rows, 1);
+
+  assert.deepEqual(
+    retainedRows.map((row) => row.rowId),
+    ["bond-2", "bond-4"],
+  );
 });
 
 test("calculateBonds applies modifiers to dice counts except for morale gain", () => {

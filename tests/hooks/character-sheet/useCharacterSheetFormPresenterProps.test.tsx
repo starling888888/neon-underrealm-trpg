@@ -129,7 +129,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
     ).toBe(true);
   });
 
-  it("keeps resolved bonds locked and clears a row without deleting it", () => {
+  it("keeps resolved bonds locked until the resolve checkbox is removed", () => {
     const { result } = renderHook(() => usePresenterHarness());
     const firstRowId = result.current.form.getValues("bonds.rows.0.rowId");
 
@@ -155,7 +155,21 @@ describe("useCharacterSheetFormPresenterProps", () => {
       result.current.presenterProps.bondsSection.onRowClear(firstRowId);
     });
 
-    expect(result.current.form.getValues("bonds.rows")).toHaveLength(4);
+    expect(result.current.form.getValues("bonds.rows.0")).toMatchObject({
+      isResolved: true,
+      rowId: firstRowId,
+      target: "アキラ",
+    });
+
+    act(() => {
+      result.current.presenterProps.bondsSection.onRowChange(
+        firstRowId,
+        "isResolved",
+        false,
+      );
+      result.current.presenterProps.bondsSection.onRowClear(firstRowId);
+    });
+
     expect(result.current.form.getValues("bonds.rows.0")).toMatchObject({
       isResolved: false,
       relation: "",
@@ -164,7 +178,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
     });
   });
 
-  it("adds fixed bond rows for an increased bond limit and warns when occupied rows exceed it", () => {
+  it("removes empty bond rows after a limit decrease and preserves overflow rows", () => {
     const { result } = renderHook(() => usePresenterHarness());
 
     act(() => {
@@ -174,13 +188,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
       );
     });
 
-    expect(result.current.form.getValues("bonds.rows")).toHaveLength(6);
-
     act(() => {
-      result.current.presenterProps.secondaryAttributesSection.onNumberChange(
-        "bondLimitModifier",
-        "-3",
-      );
       result.current.presenterProps.bondsSection.onRowChange(
         result.current.form.getValues("bonds.rows.0.rowId"),
         "target",
@@ -191,10 +199,26 @@ describe("useCharacterSheetFormPresenterProps", () => {
         "target",
         "ベラ",
       );
+      result.current.presenterProps.secondaryAttributesSection.onNumberChange(
+        "bondLimitModifier",
+        "-3",
+      );
     });
 
+    expect(result.current.form.getValues("bonds.rows")).toHaveLength(2);
     expect(result.current.presenterProps.bondsSection.derived.isOverLimit).toBe(
       true,
     );
+    expect(
+      result.current.presenterProps.bondsSection.derived.overflowRowIds,
+    ).toEqual([result.current.form.getValues("bonds.rows.1.rowId")]);
+
+    act(() => {
+      result.current.presenterProps.bondsSection.onRowDelete(
+        result.current.form.getValues("bonds.rows.1.rowId"),
+      );
+    });
+
+    expect(result.current.form.getValues("bonds.rows")).toHaveLength(1);
   });
 });

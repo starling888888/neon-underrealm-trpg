@@ -18,6 +18,7 @@ export type BondsSectionProps = {
     value: boolean | string,
   ) => void;
   onRowClear: (rowId: string) => void;
+  onRowDelete: (rowId: string) => void;
 };
 
 function EffectFormula({
@@ -37,7 +38,11 @@ function EffectFormula({
     <div className={styles.effectFormula}>
       <h4>{label}</h4>
       <div className={styles.effectExpression}>
-        <span className={styles.effectValues}>{baseValues.join(" / ")}</span>
+        <output
+          className={`character-sheet-number-value character-sheet-number-value--compact ${styles.effectValue}`}
+        >
+          {baseValues.join(" ／ ")}
+        </output>
         <span aria-hidden="true" className={styles.effectOperator}>
           +
         </span>
@@ -58,13 +63,14 @@ function EffectFormula({
           step="1"
           type="number"
         />
-        <span
-          aria-hidden="true"
-          className={`${styles.effectOperator} ${styles.effectEquals}`}
-        >
+        <span aria-hidden="true" className={styles.effectOperator}>
           =
         </span>
-        <span className={styles.effectValues}>{finalValues.join(" / ")}</span>
+        <output
+          className={`character-sheet-number-value character-sheet-number-value--compact ${styles.effectValue}`}
+        >
+          {finalValues.join(" ／ ")}
+        </output>
       </div>
     </div>
   );
@@ -76,6 +82,7 @@ export default function BondsSection({
   onEffectModifierChange,
   onRowChange,
   onRowClear,
+  onRowDelete,
 }: BondsSectionProps) {
   const { bonds: labels } = characterSheetDictionary.characterSheet;
 
@@ -98,9 +105,15 @@ export default function BondsSection({
         </div>
         {bonds.map((bond, index) => {
           const rowName = `縁${index + 1}`;
+          const isOverflow = derived.overflowRowIds.includes(bond.rowId);
+          const isDeletableOverflow = isOverflow && !bond.isResolved;
 
           return (
-            <div className={styles.row} key={bond.rowId}>
+            <div
+              className={styles.row}
+              data-over-limit={isOverflow || undefined}
+              key={bond.rowId}
+            >
               <input
                 aria-label={`${rowName}の${labels.headers.target}`}
                 disabled={bond.isResolved}
@@ -131,15 +144,26 @@ export default function BondsSection({
                 }
                 type="checkbox"
               />
-              <button
-                aria-label={`${rowName}を${labels.clear}`}
-                className={styles.clearButton}
-                disabled={bond.isResolved}
-                onClick={() => onRowClear(bond.rowId)}
-                type="button"
-              >
-                <span aria-hidden="true">×</span>
-              </button>
+              {isDeletableOverflow ? (
+                <button
+                  aria-label={`${rowName}を${labels.delete}`}
+                  className="character-sheet-remove-button"
+                  onClick={() => onRowDelete(bond.rowId)}
+                  type="button"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              ) : (
+                <button
+                  aria-label={`${rowName}を${labels.clear}`}
+                  className={styles.clearButton}
+                  disabled={bond.isResolved}
+                  onClick={() => onRowClear(bond.rowId)}
+                  type="button"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              )}
             </div>
           );
         })}

@@ -35,15 +35,31 @@ export type BondsDerivedValues = {
   effects: ResolveEffectDisplay[];
   isOverLimit: boolean;
   occupiedCount: number;
+  overflowRowIds: string[];
   requiredRowCount: number;
 };
 
-function isOccupied({
+export function isBondOccupied({
   isResolved,
   relation,
   target,
 }: BondsValues["rows"][number]) {
   return isResolved || relation !== "" || target !== "";
+}
+
+/** Retains entered rows and only keeps empty placeholders needed by the limit. */
+export function retainBondRows(
+  rows: BondsValues["rows"],
+  bondLimit: number | null,
+): BondsValues["rows"] {
+  const effectiveLimit = Math.max(0, bondLimit ?? 0);
+  const occupiedRows = rows.filter(isBondOccupied);
+  const emptyRows = rows.filter((row) => !isBondOccupied(row));
+
+  return [
+    ...occupiedRows,
+    ...emptyRows.slice(0, Math.max(0, effectiveLimit - occupiedRows.length)),
+  ];
 }
 
 function formatSignedModifier(modifier: number): string {
@@ -77,7 +93,11 @@ export function calculateBonds(
   bondLimit: number | null,
 ): BondsDerivedValues {
   const effectiveLimit = Math.max(0, bondLimit ?? 0);
-  const occupiedCount = bonds.rows.filter(isOccupied).length;
+  const occupiedRows = bonds.rows.filter(isBondOccupied);
+  const occupiedCount = occupiedRows.length;
+  const overflowRowIds = occupiedRows
+    .slice(effectiveLimit)
+    .map((row) => row.rowId);
 
   return {
     effectiveLimit,
@@ -103,6 +123,7 @@ export function calculateBonds(
     }),
     isOverLimit: occupiedCount > effectiveLimit,
     occupiedCount,
-    requiredRowCount: Math.max(4, effectiveLimit),
+    overflowRowIds,
+    requiredRowCount: Math.max(effectiveLimit, occupiedCount),
   };
 }

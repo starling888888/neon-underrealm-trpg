@@ -60,14 +60,15 @@
 .row input[type="checkbox"] {
   width: 1rem;
   height: 1rem;
+  accent-color: var(--color-link);
   justify-self: center;
   margin: 0;
 }
 
 .clearButton {
   display: grid;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 1.5rem;
+  height: 1.5rem;
   place-items: center;
   justify-self: center;
   border: var(--border-width) solid var(--color-border-strong);
@@ -90,10 +91,15 @@
   opacity: 0.45;
 }
 
+.row[data-over-limit="true"] input[type="text"] {
+  border-color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
 .warning {
   margin: 0;
-  border-left: 0.1875rem solid var(--color-warning-border);
-  color: var(--color-warning-text);
+  border-left: 0.1875rem solid var(--color-danger);
+  color: var(--color-danger);
   font-size: var(--text-xs);
   font-weight: 700;
   line-height: var(--line-height-tight);
@@ -127,7 +133,7 @@
 
 .effectsGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-2);
 }
 
@@ -150,23 +156,24 @@
 
 .effectExpression {
   display: grid;
+  grid-template-columns: minmax(0, 1.1fr) auto minmax(0, 0.8fr) auto minmax(
+      0,
+      1.1fr
+    );
   min-width: 0;
-  grid-template-columns: minmax(0, 1fr) auto 2.5rem;
   align-items: center;
   gap: 0.1875rem;
 }
 
-.effectValues {
+.effectValue {
   min-width: 0;
-  color: var(--color-text);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  line-height: var(--line-height-tight);
-  overflow-wrap: anywhere;
+  width: 100%;
+  padding-inline: 0.375rem;
+  white-space: nowrap;
 }
 
 .effectModifier {
-  width: 2.5rem;
+  width: 100%;
   text-align: right;
 }
 
@@ -174,14 +181,6 @@
   color: var(--color-text-muted);
   font-size: var(--text-xs);
   font-weight: 750;
-}
-
-.effectEquals {
-  grid-column: 1;
-}
-
-.effectExpression > .effectValues:last-child {
-  grid-column: 2 / -1;
 }
 
 .visuallyHidden {
@@ -199,20 +198,11 @@
     grid-template-columns: minmax(3.5rem, 0.5fr) minmax(0, 1.5fr) 3rem 1.5rem;
   }
 
-  .clearButton {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
   .effectsGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .effectExpression {
-    grid-template-columns: minmax(0, 1fr) auto 2.25rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .effectModifier {
-    width: 2.25rem;
+    width: 100%;
   }
 }

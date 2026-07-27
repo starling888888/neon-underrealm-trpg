@@ -266,12 +266,16 @@ test.describe("character sheet page", () => {
     const bondLimitModifier = page.getByLabel("縁最大数修正", {
       exact: true,
     });
-    await bondLimitModifier.fill("-3");
     await page.getByLabel("縁1の対象", { exact: true }).fill("アキラ");
     await page.getByLabel("縁2の対象", { exact: true }).fill("ベラ");
+    await bondLimitModifier.fill("-3");
     await expect(
       page.getByText("入力済みの縁が結べる縁の上限を超えています。"),
     ).toBeVisible();
+    await page.getByRole("button", { name: "縁2を削除" }).click();
+    await expect(
+      page.getByText("入力済みの縁が結べる縁の上限を超えています。"),
+    ).toBeHidden();
   });
 
   test("opens and dismisses the confirmation dialog without changing the form", async ({

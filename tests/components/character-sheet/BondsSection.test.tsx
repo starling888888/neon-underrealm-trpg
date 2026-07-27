@@ -18,6 +18,7 @@ function createProps(): BondsSectionProps {
     onEffectModifierChange: vi.fn((_, value: string) => Number(value)),
     onRowChange: vi.fn(),
     onRowClear: vi.fn(),
+    onRowDelete: vi.fn(),
   };
 }
 
@@ -58,6 +59,27 @@ describe("BondsSection", () => {
     ).toHaveProperty("disabled", true);
   });
 
+  it("uses a delete action only for an unresolved row over the bond limit", () => {
+    const props = createProps();
+    props.bonds[0] = { ...props.bonds[0], target: "アキラ" };
+    props.bonds[1] = { ...props.bonds[1], target: "ベラ" };
+    props.derived = calculateBonds(
+      { ...characterSheetDefaultValues.bonds, rows: props.bonds },
+      1,
+    );
+
+    render(<BondsSection {...props} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "縁2を削除" }));
+
+    expect(props.onRowDelete).toHaveBeenCalledWith("bond-2");
+    expect(
+      screen.queryByRole("button", {
+        name: "縁2をクリア（行は削除しません）",
+      }),
+    ).toBeNull();
+  });
+
   it("groups the four modifier expressions under their effect names", () => {
     const props = createProps();
 
@@ -65,8 +87,8 @@ describe("BondsSection", () => {
 
     expect(screen.getByText("覚悟の効果")).not.toBeNull();
     expect(screen.getByText("通常の縁／今生の縁")).not.toBeNull();
-    expect(screen.getAllByText("10d6 / 15d6")).toHaveLength(2);
-    expect(screen.getAllByText("2d / 3d")).toHaveLength(2);
+    expect(screen.getAllByText("10d6 ／ 15d6")).toHaveLength(2);
+    expect(screen.getAllByText("2d ／ 3d")).toHaveLength(2);
     expect(
       screen.getByRole("heading", { name: "気絶からの回復" }),
     ).not.toBeNull();
