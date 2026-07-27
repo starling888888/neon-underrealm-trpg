@@ -1,0 +1,221 @@
+.section {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.section h3 {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.section[data-invalid] {
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 var(--border-width) var(--color-danger);
+}
+
+.toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  padding: 0;
+  text-align: left;
+}
+
+.chevron {
+  flex: 0 0 auto;
+  color: var(--color-link);
+  font-size: var(--text-base);
+  line-height: 1;
+}
+
+.row {
+  margin: 0;
+  display: grid;
+  min-width: 0;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.row[data-primary-skill-kind="bonus"] {
+  border-color: var(--color-example-border);
+  background: var(--color-example-soft);
+}
+
+.row[data-invalid] {
+  border-color: var(--color-danger);
+  box-shadow: inset 0 0 0 var(--border-width) var(--color-danger);
+}
+
+.firstLine {
+  display: grid;
+  min-width: max-content;
+  grid-template-columns:
+    1.5rem var(--primary-skill-name-width) 4rem repeat(
+      7,
+      minmax(3.5rem, max-content)
+    )
+    1.5rem;
+  align-items: stretch;
+}
+
+.firstLine > * {
+  min-width: 0;
+  border-right: var(--border-width) solid var(--color-border);
+}
+
+.firstLine > :last-child {
+  border-right: 0;
+}
+
+.dragHandle,
+.handlePlaceholder {
+  display: grid;
+  width: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 2.25rem;
+  place-items: center;
+}
+
+.dragHandle {
+  border: 0;
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  cursor: grab;
+  font-size: var(--text-lg);
+  line-height: 1;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.skillName,
+.skillPicker {
+  display: flex;
+  min-width: var(--primary-skill-name-width);
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.skillPicker {
+  border: 0;
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.skillPicker:hover {
+  background: var(--color-surface-muted);
+}
+
+.chooseIcon {
+  color: var(--color-link);
+}
+
+.levelInput,
+.levelValue,
+.metadata {
+  display: grid;
+  align-content: center;
+  gap: 0.125rem;
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--line-height-tight);
+}
+
+.levelInput input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 2.5rem;
+  border: var(--border-width) solid var(--color-example-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 750;
+  text-align: right;
+}
+
+.levelInput input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.metadata strong,
+.levelValue strong {
+  color: var(--color-text);
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.effect {
+  contain: inline-size;
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: var(--space-2);
+  margin: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  line-height: var(--line-height-normal);
+  white-space: pre-wrap;
+}
+
+.effect > span {
+  color: var(--color-text-muted);
+  font-weight: 750;
+}
+
+.addButton {
+  justify-self: start;
+  min-height: 2rem;
+  border: var(--border-width) solid var(--color-link);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-link);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 750;
+}
+
+.addButton:hover {
+  background: var(--color-example-soft);
+}
+
+.unselected {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}

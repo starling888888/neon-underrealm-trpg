@@ -6,15 +6,32 @@ import type { CharacterImagePresenterState } from "./presenter-state";
 import useBondsSectionProps from "./useBondsSectionProps";
 import useBuildSectionProps from "./useBuildSectionProps";
 import useChecksSectionProps from "./useChecksSectionProps";
+import usePrimarySkillsSectionProps from "./usePrimarySkillsSectionProps";
 import useProfileSectionProps from "./useProfileSectionProps";
 import useSecondaryAttributesSectionProps from "./useSecondaryAttributesSectionProps";
+
+type CharacterSheetPresenterOptions = {
+  onPrimaryRyugiChangeRequested: (
+    primaryRyugiId: string | null,
+    trigger: HTMLSelectElement,
+    applyChange: () => void,
+  ) => void;
+  onPrimarySkillPickerRequested: (
+    rowId: string,
+    trigger: HTMLButtonElement,
+  ) => void;
+};
 
 /** Composes independently-owned section props for the form presenter. */
 export default function useCharacterSheetFormPresenterProps(
   form: UseFormReturn<CharacterSheetFormValues>,
   imageState: CharacterImagePresenterState,
+  {
+    onPrimaryRyugiChangeRequested,
+    onPrimarySkillPickerRequested,
+  }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetFormPresenterProps {
-  const build = useBuildSectionProps(form);
+  const build = useBuildSectionProps(form, { onPrimaryRyugiChangeRequested });
   const secondaryAttributes = useSecondaryAttributesSectionProps(
     form,
     build.derivedBuild,
@@ -30,11 +47,19 @@ export default function useCharacterSheetFormPresenterProps(
     build.derivedBuild,
     build.onAcquiredExperienceChange,
   );
+  const primarySkills = usePrimarySkillsSectionProps(form, {
+    onPickerRequest: onPrimarySkillPickerRequested ?? (() => {}),
+  });
 
   return {
     bondsSection,
-    buildSection: build.sectionProps,
+    buildSection: {
+      ...build.sectionProps,
+      hasPrimarySkillLevelError:
+        primarySkills.sectionProps.hasPrimarySkillLevelTotalError,
+    },
     checksSection,
+    primarySkillsSection: primarySkills.sectionProps,
     profileSection,
     secondaryAttributesSection: secondaryAttributes.sectionProps,
   };

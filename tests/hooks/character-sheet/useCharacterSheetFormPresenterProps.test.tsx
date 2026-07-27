@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 import useCharacterSheetFormPresenterProps from "../../../src/character-sheet/form/useCharacterSheetFormPresenterProps";
 import type { CharacterSheetFormValues } from "../../../src/character-sheet/form-values";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
 function usePresenterHarness() {
@@ -103,6 +104,51 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(
       result.current.presenterProps.profileSection.experience.acquired,
     ).toBe(70);
+  });
+
+  it("keeps primary skill rows in RHF and normalizes selection levels", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.buildSection.onPrimaryRyugiChange(
+        "kenkaya",
+      );
+    });
+
+    const firstRowId = result.current.form.getValues(
+      "primarySkills.rows.0.rowId",
+    );
+    const [skill] = getPrimarySkillGroups("kenkaya", 1).basic;
+    if (skill === undefined) {
+      throw new Error("プライマリスキル候補を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.primarySkillsSection.onSelect(
+        firstRowId,
+        skill.id,
+      );
+      result.current.presenterProps.primarySkillsSection.onLevelChange(
+        firstRowId,
+        "999",
+      );
+      result.current.presenterProps.primarySkillsSection.onAdd();
+    });
+
+    expect(result.current.form.getValues("primarySkills.rows.0")).toMatchObject(
+      {
+        level: skill.maxLevel,
+        skillId: skill.id,
+      },
+    );
+    expect(result.current.form.getValues("primarySkills.rows")).toHaveLength(5);
+    expect(
+      result.current.presenterProps.primarySkillsSection.bonusSkills.length,
+    ).toBe(1);
+    expect(
+      result.current.presenterProps.primarySkillsSection
+        .hasPrimarySkillLevelTotalError,
+    ).toBe(false);
   });
 
   it("connects secondary corrections and temporary-value choices through RHF", () => {

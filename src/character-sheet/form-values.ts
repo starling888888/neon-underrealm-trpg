@@ -64,6 +64,16 @@ export type BuildValues = {
   acquiredExperience: number;
 };
 
+export type PrimarySkillValues = {
+  level: number;
+  rowId: string;
+  skillId: string | null;
+};
+
+export type PrimarySkillsValues = {
+  rows: PrimarySkillValues[];
+};
+
 export const attackSkillNames = [
   "brawl",
   "assassination",
@@ -161,11 +171,20 @@ function createInitialNoncombatChecks(): NoncombatCheckValues {
   ) as NoncombatCheckValues;
 }
 
+function createInitialPrimarySkillRows(): PrimarySkillValues[] {
+  return Array.from({ length: 4 }, (_, index) => ({
+    level: 1,
+    rowId: `primary-skill-${index + 1}`,
+    skillId: null,
+  }));
+}
+
 export type CharacterSheetFormValues = {
   bonds: BondsValues;
   build: BuildValues;
   checks: ChecksValues;
   credit: CreditValues;
+  primarySkills: PrimarySkillsValues;
   profile: ProfileValues;
   secondaryAttributes: SecondaryAttributeValues;
 };
@@ -242,6 +261,9 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     changeAdjustment: 0,
     provided: 0,
     received: 0,
+  },
+  primarySkills: {
+    rows: createInitialPrimarySkillRows(),
   },
   profile: {
     age: "",

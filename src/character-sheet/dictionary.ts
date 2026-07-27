@@ -7,6 +7,9 @@
  */
 export const characterSheetDictionary = {
   general: {
+    automatic: "自動",
+    cancel: "キャンセル",
+    change: "変更する",
     close: "閉じる",
     closeFormulaTooltip: "計算式の説明を閉じる",
     unavailableValue: "-",
@@ -103,6 +106,16 @@ export const characterSheetDictionary = {
       gender: "性別",
       nickname: "二つ名",
       setting: "設定",
+    },
+    skills: {
+      add: "＋ スキルを追加",
+      choose: "スキルを選択",
+      primary: "プライマリ流儀",
+      reorderPrefix: "並べ替え: ",
+      remove: "を削除",
+      selectPrimaryRyugi: "プライマリ流儀を選択してください。",
+      label: "プライマリ流儀スキル",
+      unselected: "スキルを選択",
     },
     sections: {
       basicInformation: "基本情報",
@@ -225,6 +238,17 @@ export const characterSheetDictionary = {
       temporary: "一時",
       temporaryModifier: "一時修正",
       secondaryAttributes: "副能力値",
+      skill: {
+        acquisitionRestriction: "取得制限",
+        cost: "コスト",
+        effect: "効果",
+        level: "Lv",
+        maximumLevel: "最大Lv",
+        proficiency: "技能",
+        range: "射程",
+        target: "対象",
+        usageRestriction: "使用制限",
+      },
     },
   },
 } as const;

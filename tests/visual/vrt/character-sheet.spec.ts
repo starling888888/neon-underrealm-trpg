@@ -44,6 +44,28 @@ async function selectNoncombatFavorite(page: Page): Promise<void> {
     .click();
 }
 
+async function selectPrimaryRyugi(page: Page): Promise<void> {
+  const primaryRyugi = page.getByLabel("プライマリ流儀", { exact: true });
+
+  await expect(async () => {
+    await primaryRyugi.selectOption("kenkaya");
+    await expect(page.getByText("気合十分", { exact: true })).toBeVisible();
+  }).toPass();
+}
+
+async function selectPrimarySkill(page: Page): Promise<void> {
+  await selectPrimaryRyugi(page);
+  await page
+    .locator("[data-primary-skills-section]")
+    .getByRole("button", { exact: true, name: "スキルを選択" })
+    .first()
+    .click();
+  const picker = page.getByRole("dialog", { name: "スキルを選択" });
+  await expect(picker).toBeVisible();
+  await picker.getByRole("button", { name: /旋風/ }).click();
+  await expect(picker).toBeHidden();
+}
+
 const noncombatChecksLocator = {
   name: "noncombat-checks",
   resolve: (page: Page) =>
@@ -74,12 +96,64 @@ const buildSectionLocator = {
     page.locator('[data-character-sheet-section-slot="build"]'),
 };
 
+const primarySkillsLocator = {
+  name: "primary-skills-section",
+  resolve: (page: Page) => page.locator("[data-primary-skills-section]"),
+};
+
+const primarySkillPickerLocator = {
+  name: "primary-skill-picker",
+  resolve: (page: Page) => page.getByRole("dialog", { name: "スキルを選択" }),
+};
+
+const primaryRyugiChangeConfirmLocator = {
+  name: "primary-ryugi-change-confirm",
+  resolve: (page: Page) => page.getByRole("dialog", { name: "確認" }),
+};
+
 const tooltipLocator = {
   name: "tooltip",
   resolve: (page: Page) => page.getByRole("tooltip"),
 };
 
 registerVrtScenarios("character-sheet", [
+  {
+    id: "primary-skills-selected",
+    locators: [primarySkillsLocator],
+    prepare: selectPrimaryRyugi,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "primary-skill-picker-open",
+    locators: [primarySkillsLocator, primarySkillPickerLocator],
+    prepare: async (page) => {
+      await selectPrimaryRyugi(page);
+      await page
+        .locator("[data-primary-skills-section]")
+        .getByRole("button", { exact: true, name: "スキルを選択" })
+        .first()
+        .click();
+      await expect(
+        page.getByRole("dialog", { name: "スキルを選択" }),
+      ).toBeVisible();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "primary-ryugi-change-confirm",
+    locators: [primarySkillsLocator, primaryRyugiChangeConfirmLocator],
+    prepare: async (page) => {
+      await selectPrimarySkill(page);
+      await page
+        .getByLabel("プライマリ流儀", { exact: true })
+        .selectOption("emono");
+      await expect(page.getByRole("dialog", { name: "確認" })).toBeVisible();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
   {
     id: "noncombat-expanded",
     locators: [noncombatChecksLocator],

@@ -14,6 +14,58 @@ async function expectLayoutColumnCount(page: Page, count: number) {
 }
 
 test.describe("character sheet page", () => {
+  test("edits a primary skill and confirms before clearing it for a ryugi change", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const primaryRyugi = page.getByLabel("プライマリ流儀", { exact: true });
+    const skillPickers = page
+      .locator("[data-primary-skills-section]")
+      .getByRole("button", {
+        name: "スキルを選択",
+        exact: true,
+      });
+    const skillPicker = skillPickers.first();
+
+    await expect(async () => {
+      await primaryRyugi.selectOption("kenkaya");
+      await expect(page.getByText("気合十分", { exact: true })).toBeVisible();
+      await expect(skillPicker).toBeVisible();
+    }).toPass();
+
+    await skillPicker.click();
+    const pickerDialog = page.getByRole("dialog", { name: "スキルを選択" });
+    await expect(pickerDialog).toBeVisible();
+    await expect(
+      pickerDialog.getByRole("heading", { name: "初期作成" }),
+    ).toBeVisible();
+    await pickerDialog.getByRole("button", { name: /旋風/ }).click();
+    await expect(pickerDialog).toBeHidden();
+    await expect(
+      page.getByRole("button", { name: "旋風", exact: true }),
+    ).toBeVisible();
+
+    await primaryRyugi.selectOption("emono");
+    const confirmationDialog = page.getByRole("dialog", { name: "確認" });
+    await expect(confirmationDialog).toBeVisible();
+    await expect(
+      confirmationDialog.getByText(
+        "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
+      ),
+    ).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(confirmationDialog).toBeHidden();
+    await expect(primaryRyugi).toHaveValue("kenkaya");
+
+    await primaryRyugi.selectOption("emono");
+    await confirmationDialog.getByRole("button", { name: "変更する" }).click();
+    await expect(confirmationDialog).toBeHidden();
+    await expect(primaryRyugi).toHaveValue("emono");
+    await expect(skillPickers).toHaveCount(4);
+  });
+
   test("uses a menu rail only when the one-column sheet has enough width", async ({
     page,
   }) => {

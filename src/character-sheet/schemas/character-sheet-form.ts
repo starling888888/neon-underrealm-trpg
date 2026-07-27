@@ -174,6 +174,17 @@ export const characterSheetFormSchema = z.object({
     provided: nonNegativeIntegerSchema,
     received: nonNegativeIntegerSchema,
   }),
+  primarySkills: z.object({
+    rows: z
+      .array(
+        z.object({
+          level: z.number().int().min(1),
+          rowId: z.string(),
+          skillId: z.string().nullable(),
+        }),
+      )
+      .min(1),
+  }),
   profile: z.object({
     age: z.string(),
     gender: z.string(),

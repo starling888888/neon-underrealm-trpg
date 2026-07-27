@@ -22,11 +22,18 @@ export type BuildSectionPresenterState = {
   sectionProps: BuildSectionProps;
 };
 
-export default function useBuildSectionProps({
-  control,
-  getValues,
-  setValue,
-}: UseFormReturn<CharacterSheetFormValues>): BuildSectionPresenterState {
+type UseBuildSectionPropsOptions = {
+  onPrimaryRyugiChangeRequested?: (
+    primaryRyugiId: string | null,
+    trigger: HTMLSelectElement,
+    applyChange: () => void,
+  ) => void;
+};
+
+export default function useBuildSectionProps(
+  { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
+  { onPrimaryRyugiChangeRequested }: UseBuildSectionPropsOptions = {},
+): BuildSectionPresenterState {
   const build = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.build,
@@ -95,6 +102,7 @@ export default function useBuildSectionProps({
     sectionProps: {
       build,
       derived: derivedBuild,
+      hasPrimarySkillLevelError: false,
       ikizamaOptions: getCharacterSheetIkizamaOptions(),
       onAttributeChange: setAttributeValue,
       onAttributeCommit: setAttributeValue,
@@ -125,8 +133,20 @@ export default function useBuildSectionProps({
           ),
         );
       },
-      onPrimaryRyugiChange: (primaryRyugiId) => {
-        setBuildValue("primaryRyugiId", primaryRyugiId);
+      onPrimaryRyugiChange: (primaryRyugiId, trigger) => {
+        const applyChange = () => {
+          setBuildValue("primaryRyugiId", primaryRyugiId);
+        };
+
+        if (
+          trigger !== undefined &&
+          onPrimaryRyugiChangeRequested !== undefined
+        ) {
+          onPrimaryRyugiChangeRequested(primaryRyugiId, trigger, applyChange);
+          return;
+        }
+
+        applyChange();
       },
       onPrimaryRyugiLevelChange: (value) => {
         const normalizedValue = normalizeIntegerInput(value);

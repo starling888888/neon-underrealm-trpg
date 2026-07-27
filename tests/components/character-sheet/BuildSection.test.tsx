@@ -17,6 +17,7 @@ function createProps(): BuildSectionProps {
   return {
     build,
     derived: calculateBuild(build),
+    hasPrimarySkillLevelError: false,
     ikizamaOptions: [{ id: "burai", name: "ブライ" }],
     onAttributeChange: vi.fn(),
     onAttributeCommit: vi.fn((_, __, value: string) => Number(value)),
@@ -89,8 +90,22 @@ describe("BuildSection", () => {
       screen.getByRole("button", { name: "＋ その他流儀を追加" }),
     );
 
-    expect(props.onPrimaryRyugiChange).toHaveBeenCalledWith("kenkaya");
+    expect(props.onPrimaryRyugiChange).toHaveBeenCalledWith(
+      "kenkaya",
+      expect.any(HTMLSelectElement),
+    );
     expect(props.onOtherRyugiAdd).toHaveBeenCalledOnce();
+  });
+
+  it("marks the ryugi pane invalid when primary skill levels are insufficient", () => {
+    const props = createProps();
+    render(<BuildSection {...props} hasPrimarySkillLevelError />);
+
+    expect(
+      screen
+        .getByRole("region", { name: "流儀・生き様" })
+        .getAttribute("aria-invalid"),
+    ).toBe("true");
   });
 
   it("uses headers for other ryugi rows and keeps removal accessible", () => {

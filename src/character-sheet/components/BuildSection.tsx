@@ -28,6 +28,7 @@ type ReferenceMetricProps = {
 export type BuildSectionProps = {
   build: BuildValues;
   derived: BuildDerivedValues;
+  hasPrimarySkillLevelError: boolean;
   ikizamaOptions: readonly CharacterSheetSelectOption[];
   onAttributeChange: (
     attribute: AttributeName,
@@ -49,7 +50,10 @@ export type BuildSectionProps = {
   ) => void;
   onOtherRyugiCommit: (index: number, value: string) => number;
   onOtherRyugiRemove: (index: number) => void;
-  onPrimaryRyugiChange: (id: string | null) => void;
+  onPrimaryRyugiChange: (
+    id: string | null,
+    trigger?: HTMLSelectElement,
+  ) => void;
   onPrimaryRyugiLevelChange: (value: string) => void;
   onPrimaryRyugiLevelCommit: (value: string) => number;
   ryugiOptions: readonly CharacterSheetSelectOption[];
@@ -105,7 +109,7 @@ function SelectField({
 }: {
   ariaInvalid?: boolean;
   label: string;
-  onChange: (value: string | null) => void;
+  onChange: (value: string | null, trigger: HTMLSelectElement) => void;
   options: readonly CharacterSheetSelectOption[];
   value: string | null;
   visuallyHiddenLabel?: boolean;
@@ -120,7 +124,9 @@ function SelectField({
       <select
         aria-invalid={ariaInvalid || undefined}
         className={styles.select}
-        onChange={(event) => onChange(event.target.value || null)}
+        onChange={(event) =>
+          onChange(event.target.value || null, event.currentTarget)
+        }
         value={value ?? ""}
       >
         <option value="">
@@ -140,6 +146,7 @@ function SelectField({
 export default function BuildSection({
   build,
   derived,
+  hasPrimarySkillLevelError,
   ikizamaOptions,
   onAttributeChange,
   onAttributeCommit,
@@ -161,9 +168,14 @@ export default function BuildSection({
   return (
     <div className={styles.section} data-build-section>
       <section
+        aria-invalid={
+          derived.hasRyugiError || hasPrimarySkillLevelError || undefined
+        }
         aria-label={buildUiCopy.ryugiAndIkizama}
         className={styles.buildPane}
-        data-invalid={derived.hasRyugiError || undefined}
+        data-invalid={
+          derived.hasRyugiError || hasPrimarySkillLevelError || undefined
+        }
       >
         <div className={styles.choiceRow}>
           <SelectField
@@ -187,7 +199,7 @@ export default function BuildSection({
         <div className={styles.choiceRow}>
           <SelectField
             label={buildCopy.ikizama}
-            onChange={onIkizamaChange}
+            onChange={(id) => onIkizamaChange(id)}
             options={ikizamaOptions}
             value={build.ikizamaId}
           />

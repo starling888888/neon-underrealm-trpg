@@ -4,6 +4,9 @@ import BuildSection, { type BuildSectionProps } from "./BuildSection";
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ChecksSection, { type ChecksSectionProps } from "./ChecksSection";
+import PrimarySkillsSection, {
+  type PrimarySkillsSectionProps,
+} from "./PrimarySkillsSection";
 import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
 import SecondaryAttributesSection, {
   type SecondaryAttributesSectionProps,
@@ -19,6 +22,7 @@ export type CharacterSheetFormPresenterProps = {
   bondsSection: BondsSectionProps;
   buildSection: BuildSectionProps;
   checksSection: ChecksSectionProps;
+  primarySkillsSection: PrimarySkillsSectionProps;
   profileSection: ProfileSectionProps;
   secondaryAttributesSection: SecondaryAttributesSectionProps;
 };
@@ -27,6 +31,7 @@ export default function CharacterSheetFormPresenter({
   bondsSection,
   buildSection,
   checksSection,
+  primarySkillsSection,
   profileSection,
   secondaryAttributesSection,
 }: CharacterSheetFormPresenterProps) {
@@ -93,18 +98,20 @@ export default function CharacterSheetFormPresenter({
         <CharacterSheetSectionFrame
           expandable
           headingAs="h2"
-          id="weapons-and-armor"
-          title={characterSheet.sections.weaponsAndArmor}
+          id="skills"
+          title={gameDomain.terms.skills}
         >
-          <div data-character-sheet-section-slot="weapons-and-armor" />
+          <div data-character-sheet-section-slot="skills">
+            <PrimarySkillsSection {...primarySkillsSection} />
+          </div>
         </CharacterSheetSectionFrame>
         <CharacterSheetSectionFrame
           expandable
           headingAs="h2"
-          id="skills"
-          title={gameDomain.terms.skills}
+          id="weapons-and-armor"
+          title={characterSheet.sections.weaponsAndArmor}
         >
-          <div data-character-sheet-section-slot="skills" />
+          <div data-character-sheet-section-slot="weapons-and-armor" />
         </CharacterSheetSectionFrame>
         <CharacterSheetSectionFrame
           expandable

@@ -1,0 +1,76 @@
+.dialog {
+  width: min(70rem, calc(100vw - (var(--page-gutter) * 2)));
+}
+
+.content,
+.group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.group h3 {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.candidate {
+  display: grid;
+  min-width: max-content;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.candidate:hover {
+  border-color: var(--color-link);
+  background: var(--color-example-soft);
+}
+
+.firstLine {
+  display: grid;
+  grid-template-columns: var(--primary-skill-name-width) repeat(
+      7,
+      minmax(3.5rem, max-content)
+    );
+}
+
+.firstLine > span {
+  min-width: 0;
+  border-right: var(--border-width) solid var(--color-border);
+  padding: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--line-height-tight);
+  white-space: nowrap;
+}
+
+.firstLine > :last-child {
+  border-right: 0;
+}
+
+.firstLine .name {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 750;
+}
+
+.effect {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-2);
+  font-size: var(--text-xs);
+  line-height: var(--line-height-normal);
+  white-space: pre-wrap;
+}
+
+.effect strong {
+  color: var(--color-text-muted);
+}
