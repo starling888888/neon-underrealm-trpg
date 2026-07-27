@@ -38,6 +38,7 @@ export default function CharacterSheetFormPresenter({
         </div>
         <div data-character-sheet-section-slot="build">
           <CharacterSheetSectionFrame
+            allowOverflow
             headingAs="h2"
             id="build"
             title={characterSheet.sections.build}

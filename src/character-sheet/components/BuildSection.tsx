@@ -145,7 +145,7 @@ export default function BuildSection({
   const { build: buildCopy } = characterSheetDictionary.characterSheet;
 
   return (
-    <div className={styles.section}>
+    <div className={styles.section} data-build-section>
       <section
         aria-label={buildCopy.ryugiAndIkizama}
         className={styles.buildPane}
@@ -350,21 +350,32 @@ export default function BuildSection({
           <span className={styles.commonSkillTitle}>
             {buildCopy.commonSkillBonuses}
           </span>
-          <span
-            className={styles.commonSkillLevel}
-          >{`${buildCopy.commonSkillLevel}: ${derived.reference.commonSkillLevel} / ${buildCopy.commonSkillLevelLimit}: ${derived.reference.commonSkillLevelLimit ?? "—"}`}</span>
-          {(
-            [
-              [buildCopy.level2, derived.reference.commonSkillBonuses?.level2],
-              [buildCopy.level5, derived.reference.commonSkillBonuses?.level5],
-              [buildCopy.level9, derived.reference.commonSkillBonuses?.level9],
-            ] as const
-          ).map(([level, content]) => (
-            <div className={styles.commonSkillBonus} key={level}>
-              <span>{level}</span>
-              <span>{content ?? "—"}</span>
-            </div>
-          ))}
+          <div
+            className={styles.commonSkillBonusGrid}
+            data-common-skill-bonus-grid
+          >
+            {(
+              [
+                [
+                  buildCopy.level2,
+                  derived.reference.commonSkillBonuses?.level2,
+                ],
+                [
+                  buildCopy.level5,
+                  derived.reference.commonSkillBonuses?.level5,
+                ],
+                [
+                  buildCopy.level9,
+                  derived.reference.commonSkillBonuses?.level9,
+                ],
+              ] as const
+            ).map(([level, content]) => (
+              <div className={styles.commonSkillBonus} key={level}>
+                <span>{level}</span>
+                <span>{content ?? "—"}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>

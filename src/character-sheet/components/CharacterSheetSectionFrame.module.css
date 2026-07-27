@@ -7,6 +7,10 @@
   box-shadow: var(--shadow-soft);
 }
 
+.allowOverflow {
+  overflow: visible;
+}
+
 .heading {
   display: block;
   margin: 0;

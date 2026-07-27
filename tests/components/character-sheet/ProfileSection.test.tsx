@@ -96,6 +96,8 @@ describe("ProfileSection", () => {
         }) as HTMLInputElement
       ).value,
     ).toBe("50");
+    expect(screen.queryByRole("button", { name: "消費経験点" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "残経験点" })).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: /格/ }));
 

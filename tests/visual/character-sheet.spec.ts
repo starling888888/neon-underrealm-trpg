@@ -269,6 +269,65 @@ test.describe("character sheet page", () => {
     await expect(pointsHeader).toHaveText("能力値ポイント");
   });
 
+  test("keeps build choices and attributes side by side on tablet", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.tablet);
+    await page.goto("character-sheet/");
+
+    const buildSection = page.locator("[data-build-section]");
+
+    expect(
+      await buildSection.evaluate((element) =>
+        getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/),
+      ),
+    ).toHaveLength(2);
+    expect(
+      await buildSection.evaluate(
+        (element) => element.scrollWidth <= element.clientWidth,
+      ),
+    ).toBe(true);
+  });
+
+  test("keeps common-skill bonus cards in one row at every viewport", async ({
+    page,
+  }) => {
+    const bonusGrid = page.locator("[data-common-skill-bonus-grid]");
+
+    for (const viewport of [
+      visualViewports.desktop,
+      visualViewports.tablet,
+      visualViewports.mobile,
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto("character-sheet/");
+
+      expect(
+        await bonusGrid.evaluate((element) =>
+          getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/),
+        ),
+      ).toHaveLength(3);
+    }
+  });
+
+  test("keeps the growth formula tooltip visible beyond the build frame", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.tablet);
+    await page.goto("character-sheet/");
+
+    const trigger = page.getByRole("button", { name: /成長点/ });
+    const tooltip = page.getByRole("tooltip");
+
+    await expect(async () => {
+      await trigger.hover();
+      await expect(tooltip).toBeVisible({ timeout: 250 });
+    }).toPass();
+    const box = await tooltip.boundingBox();
+    expect(box).not.toBeNull();
+    expect((box?.y ?? 0) > 0).toBe(true);
+  });
+
   test("opens and dismisses the confirmation dialog without changing the form", async ({
     page,
   }) => {

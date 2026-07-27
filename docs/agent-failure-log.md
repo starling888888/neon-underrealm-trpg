@@ -777,3 +777,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-7-sheet-build` の対象限定Visual Review
 - 観測した失敗: `character-sheet` VRTにtagがないことを確認せずtag grepを渡して`No tests found`にし、その後も`visual:capture` script内の`--update-snapshots`との引数順を確認せずspec pathを渡してPlaywright option parse errorにした。同一Visual Reviewでcapture commandを2回失敗させた。
 - 一次対応: `tests/visual/vrt/character-sheet.spec.ts`のscenario名をgrep対象として、既存`visual:capture` scriptへ`--grep character-sheet`だけを渡す。package scriptの固定引数がある場合は、追加引数がどのoptionに結び付くかを先に確認する。
+
+### Repeated FormulaTooltip browser interaction assertion
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` の成長点Tooltip browser test
+- 観測した失敗: FormulaTooltipはpointer hoverで開くため、Playwrightのclickがhover直後の開状態を再度toggleして閉じることを確認せず、tooltipを待つtestを失敗させた。続くkeyboard操作の試行でもbrowser実行条件でtooltipを開けず、同じ確認を2回失敗させた。
+- 一次対応: mouseの実際の表示契約に合わせ、target buttonへ`hover()`した後のtooltip可視性と位置を確認するtestへ置き換えた。Tooltipのkeyboard開閉を確認する場合は、hoverと独立した操作状態を先に設計・検証する。

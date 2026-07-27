@@ -11,6 +11,7 @@ export type CharacterSheetSectionHeading =
   | "h6";
 
 type CharacterSheetSectionFrameProps = {
+  allowOverflow?: boolean;
   children: ReactNode;
   expandable?: boolean;
   headingAs?: CharacterSheetSectionHeading;
@@ -25,6 +26,7 @@ type CharacterSheetSectionFrameProps = {
  * form values and local display state.
  */
 export default function CharacterSheetSectionFrame({
+  allowOverflow = false,
   children,
   expandable = false,
   headingAs,
@@ -37,7 +39,10 @@ export default function CharacterSheetSectionFrame({
   const contentId = `${id}-content`;
 
   return (
-    <section className={styles.frame} aria-labelledby={headingId}>
+    <section
+      aria-labelledby={headingId}
+      className={`${styles.frame} ${allowOverflow ? styles.allowOverflow : ""}`}
+    >
       <Heading className={styles.heading}>
         {expandable ? (
           <button

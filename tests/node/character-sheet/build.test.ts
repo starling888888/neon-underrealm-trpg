@@ -60,8 +60,6 @@ describe("character sheet build", () => {
         level5: "行動回数+1",
         level9: "攻撃判定数+1\nリアクション判定数+1",
       },
-      commonSkillLevel: 0,
-      commonSkillLevelLimit: 1,
       ikizamaHealthCoefficient: 11,
       ikizamaMindCoefficient: 7,
       primaryHealthIncrease: 5,

@@ -21,8 +21,6 @@ export type AttributeDerivedValues = {
 
 export type BuildReferenceValues = {
   commonSkillBonuses: Ryugi["commonSkillBonuses"] | null;
-  commonSkillLevel: number;
-  commonSkillLevelLimit: number | null;
   ikizamaHealthCoefficient: number | null;
   ikizamaMindCoefficient: number | null;
   primaryHealthIncrease: number | null;
@@ -69,8 +67,6 @@ function getSources(build: BuildValues): BuildSources {
 
 const emptyReferenceValues: BuildReferenceValues = {
   commonSkillBonuses: null,
-  commonSkillLevel: 0,
-  commonSkillLevelLimit: null,
   ikizamaHealthCoefficient: null,
   ikizamaMindCoefficient: null,
   primaryHealthIncrease: null,
@@ -242,8 +238,6 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
     rank,
     reference: {
       commonSkillBonuses: primaryRyugi.commonSkillBonuses,
-      commonSkillLevel: 0,
-      commonSkillLevelLimit: Math.ceil(rank / 2),
       ikizamaHealthCoefficient: ikizamaCoefficients.health,
       ikizamaMindCoefficient: ikizamaCoefficients.mind,
       primaryHealthIncrease: primaryRyugi.healthIncrease,

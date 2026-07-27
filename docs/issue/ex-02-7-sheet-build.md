@@ -216,10 +216,34 @@
 
 ### 対応完了チェックリスト
 
-- [ ] 消費経験点・残経験点のTooltipを外し、格のTooltipを維持する
-- [ ] tabletで流儀・生き様と能力値をdraftどおり横並びにし、横overflowをなくす
-- [ ] 共通スキルボーナスをLv別のcard表示に直し、共通スキルLv・上限をG7から外す
-- [ ] 成長点を含むFormulaTooltipをframe外でも全文表示できるようにする
-- [ ] `@character-sheet` targetのVisual Reviewを実行する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] 消費経験点・残経験点のTooltipを外し、格のTooltipを維持する
+- [x] tabletで流儀・生き様と能力値をdraftどおり横並びにし、横overflowをなくす
+- [x] 共通スキルボーナスをLv別のcard表示に直し、共通スキルLv・上限をG7から外す
+- [x] 成長点を含むFormulaTooltipをframe外でも全文表示できるようにする
+- [x] `@character-sheet` targetのVisual Reviewを実行する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 3
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@character-sheet`
+- route / states / viewports: `/character-sheet/` / default / desktop、ultrawide、tablet、mobile
+
+### レビュー結果
+
+| 対象              | 判定       | 差分                                                                                                                   | 対応                                                                                                 |
+| ----------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `character-sheet` | 要人間判断 | 4 viewportともG7の入力・参照表示の追加でcanonical baselineと不一致。tabletは横並びへ戻り、共通スキル表示も変更された。 | 4 viewportのactualを取得し、tabletの横overflowなし、mobileの縦積みを確認した。baselineは更新しない。 |
+
+### 確認済み
+
+- [x] 820px tabletで流儀・生き様と能力値が横並びであり、`BuildSection`に横overflowがない。
+- [x] 成長点Tooltipをhoverで開き、frame外へ表示されてもviewport内で確認できる。
+- [x] 変更targetだけをcanonical VRT baselineと比較した。
+
+### 人間判断が必要な差分
+
+- G7の表示範囲変更によるcanonical VRT baseline更新の要否。ユーザーの明示承認なしに更新していない。

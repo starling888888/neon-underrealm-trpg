@@ -42,7 +42,7 @@ type CreditFieldProps = {
 };
 
 type ReadOnlyCreditFieldProps = {
-  formula: string;
+  formula?: string;
   label: string;
   value: number | string;
 };
@@ -239,17 +239,22 @@ function ReadOnlyCreditField({
   value,
 }: ReadOnlyCreditFieldProps) {
   const id = `character-sheet-${label}`;
+  const field = (
+    <span>
+      <span className={styles.metricLabel}>{label}</span>
+      <output className={styles.metricValue} id={id}>
+        {value}
+      </output>
+    </span>
+  );
 
   return (
     <div className={styles.metric}>
-      <FormulaTooltip formula={formula}>
-        <span>
-          <span className={styles.metricLabel}>{label}</span>
-          <output className={styles.metricValue} id={id}>
-            {value}
-          </output>
-        </span>
-      </FormulaTooltip>
+      {formula === undefined ? (
+        field
+      ) : (
+        <FormulaTooltip formula={formula}>{field}</FormulaTooltip>
+      )}
     </div>
   );
 }
@@ -292,12 +297,10 @@ function ExperienceField({
           />
         </div>
         <ReadOnlyCreditField
-          formula="流儀と生き様のレベルに応じたG7の消費経験点"
           label={buildCopy.spentExperience}
           value={derived.spentExperience ?? "—"}
         />
         <ReadOnlyCreditField
-          formula="取得経験点 - 消費経験点"
           label={buildCopy.remainingExperience}
           value={derived.remainingExperience ?? "—"}
         />
