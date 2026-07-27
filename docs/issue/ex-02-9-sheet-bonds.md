@@ -38,7 +38,7 @@
 - 各行は短い対象input、長い関係input、覚悟checkbox、クリアicon buttonを持つ。覚悟済みでは対象と関係を編集不可にし、checkboxを解除すると再編集できる。クリアは行を削除せず、対象、関係、覚悟を初期値へ戻す。透過背景の円形`×` icon buttonは、削除buttonと誤認しないaccessible nameと説明を持つ。
 - 覚悟checkboxのlabelへ既存`FormulaTooltip`を付ける。tooltip文言は「シナリオ中、覚悟にした縁にチェックを入れます。チェックが入っている限り、変更もクリアもできません」とする。tooltip triggerは既存の`?`indicatorを含め、覚悟checkboxの操作targetとは分ける。
 - 縁入力の下に`覚悟の効果`見出しと灰色の`通常の縁／今生の縁`説明を横並びで置く。各効果は、通常の縁使用時の元値と今生の縁使用時の元値をスラッシュで併記し、同じ修正値inputの後に`=`と、両方へ修正値を反映した最終値をスラッシュで併記する。つまり表示順は`通常の縁使用時の元値 / 今生の縁使用時の元値 + 修正値 = 通常の縁使用時の最終値 / 今生の縁使用時の最終値`とする。効果別の通常値・今生値・最終値へ可視labelを追加しない。
-- 覚悟効果は、`気絶からの回復`（`10d6 ／ 15d6`）、`気合獲得`（`1 ／ 1d6`）、`能動判定`（`2d ／ 3d`）、`受動判定`（`4d ／ 6d`）の順に表示する。修正値は数値として保持するが、ダイス表記を数値化・自動計算・ルール解析しない。ダイス表記の最終値は、元のダイス式と修正値を組み合わせた表示式とする。
+- 覚悟効果は、`気絶からの回復`（`10d6 ／ 15d6`）、`気合獲得`（`1 ／ 1d6`）、`能動判定`（`2d ／ 3d`）、`受動判定`（`4d ／ 6d`）の順に表示する。修正値は整数として保持する。気絶からの回復、能動判定、受動判定は固定のダイス式のダイス数へ修正値を加え、気合獲得は通常の縁の数値へ修正値を加え、今生の縁の`1d6`へは符号付きの修正値を付記する。たとえば修正値`2`では、気絶からの回復を`12d6 ／ 17d6`、気合獲得を`3 ／ 1d6+2`と示す。自由文や任意のダイス式を解析しない。
 - desktopとtabletでは4効果を横4列にし、mobileでは同じ順序のまま2行2列にする。各効果内の修正inputは1桁より少し広い短い幅とし、ページ全体の横overflowを生じさせない。
 - 固定文言、初期元値、表示用の式は`src/character-sheet/dictionary.ts`へ置く。G9に必要な純粋logic、form adapter、Component、CSS Moduleと、適切なNode / hook / Component / browser / Visual testだけを追加・更新する。
 
@@ -47,7 +47,7 @@
 - 縁行の追加・削除操作、ポジティブ／ネガティブ種別、縁の詳細な関係ルールを実装しない。
 - 覚悟を縁へ戻すスキル効果のルール本文・生成JSONの表現を変更しない。関連TODOは未対応のまま維持する。
 - 攻撃、リアクション、非戦闘技能、スキル、武器・防具、専用アイテム、保存・復元、JSON、CCFOLIA、全体エラー集約を実装しない。
-- 覚悟効果のダイス式を数値化、自動算出、文章解析しない。共通スキルボーナスを自動加算しない。
+- 固定4効果以外の任意ダイス式・自由文を解析せず、共通スキルボーナスを自動加算しない。
 - localStorage、IndexedDB、サーバー、DB、追加ライブラリ、キャラクター作成ウィザード、Header、Footer、サイトメニュー、section frame、canonical VRT baselineを追加・再設計・更新しない。
 
 ## 完了条件
@@ -63,7 +63,7 @@
 - [ ] 覚悟効果の元値、正負の修正、縁のclear・覚悟lock・上限超過、desktop / tablet / mobileの表示を、純粋logic、schema / hook、Component、browser behavior testの適切な層で確認している。
 - [ ] `@character-sheet` targetのdefaultと、少なくとも覚悟済み行・上限超過警告を表示するstateをVisual Reviewし、canonical VRT baselineを更新していない。
 - [x] 関連TODOを扱わず、未対応理由が記録されている。
-- [ ] `npm run check` が通る。
+- [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
 ## チェックポイント
@@ -100,7 +100,7 @@
 
 - VRT targetは`tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`、routeは`/character-sheet/`とする。stateはdefault、覚悟済み行、上限超過警告、viewportはdesktop、tablet、mobileとする。G9では変更targetだけを比較し、baselineの更新はユーザーの明示承認がある場合だけ行う。
 - ユーザーの最新指示に合わせて、`docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`の覚悟効果の名称、順序、mobile配置、クリアicon、式表示を更新済みである。
-- ユーザーUIレビューを先に行う指示により、Visual ReviewとGate Tech Reviewは未実施のまま保留する。`npm run check`はAstro checkとBiome checkを通過したが、変更対象外の`docs/issue/ex-02-web-character-sheet/plan.md`が既存のMarkdown formatter違反であるため、全体commandとしては未通過である。
+- ユーザーUIレビューを先に行う指示により、Visual Reviewは未実施のまま保留する。Gate Tech Reviewは2026-07-27に実施し、固定ダイス式の修正値適用はユーザーの明示仕様に合わせて正本を訂正した。親Gate planのMarkdown formatter違反を整形で解消し、`npm run check`を通過した。
 
 ## レビュー指摘 1
 
@@ -137,7 +137,22 @@
 - [ ] 覚悟効果がdesktop / tabletで2行2列、mobileで4行1列となり、元値・最終値はread-only backgroundで表示される。
 - [x] Node / hook / Component / browser behavior testを責務に応じて更新する。
 - [ ] `@character-sheet` targetのdefault・上限超過・削除可能状態をVisual Reviewし、canonical VRT baselineを更新していない。
-- [ ] `npm run check` が通る。
+- [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
 実画面確認で、desktop / tablet / mobileの各効果において、`=`と最終値が元値・修正値の行から次行へ折り返していることを確認した。非折返しの表示契約は未達であり、修正後に3 viewportを再確認する。
+
+## Gate Tech Review 1
+
+- reviewed range: `0ef8fb8..2aed1e5`
+- reviewer: `gate_technical_reviewer`
+- result: important 2件
+
+### 対応済み指摘
+
+- [x] 固定の気絶からの回復、能動判定、受動判定ではダイス数へ修正値を加え、気合獲得では通常の縁の数値への加算と今生の縁の`1d6`への符号付き付記を行う仕様へ、current issue・requirements・designを訂正した。自由文・任意ダイス式の解析は対象外のままとする。
+- [x] 親Gate planのMarkdown formatter違反を内容変更なしで整形し、`npm run check`を通過した。
+
+### 未実施の確認
+
+- [ ] Visual Reviewは本reviewの対象外であり、default・覚悟済み行・上限超過warningの全viewport / stateをactual screenshotで確認していない。
