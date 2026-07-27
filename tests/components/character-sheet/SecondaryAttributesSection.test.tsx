@@ -71,7 +71,7 @@ describe("SecondaryAttributesSection", () => {
       target: { value: "-2" },
     });
     fireEvent.click(
-      screen.getAllByRole("checkbox", { name: "一時修正を適用" })[0],
+      screen.getByRole("checkbox", { name: "移動力の一時修正を適用" }),
     );
 
     expect(props.onNumberChange).toHaveBeenCalledWith("movementModifier", "-2");
@@ -81,11 +81,31 @@ describe("SecondaryAttributesSection", () => {
     );
 
     fireEvent.click(
-      screen.getAllByRole("button", { name: "一時修正を適用" })[0],
+      screen.getByRole("button", {
+        name: "移動力の一時修正を適用の説明",
+      }),
     );
 
     expect(screen.getByRole("tooltip").textContent).toBe(
       "チェックを入れると一時能力値で移動力を表示します",
     );
+  });
+
+  it("gives each secondary row a distinct accessible name", () => {
+    const props = createProps();
+
+    render(<SecondaryAttributesSection {...props} />);
+
+    expect(screen.getByRole("group", { name: "最大体力" })).not.toBeNull();
+    expect(screen.getByLabelText("最大体力の自動算出値")).not.toBeNull();
+    expect(screen.getByLabelText("最大体力の修正")).not.toBeNull();
+    expect(screen.getByLabelText("最大精神力の自動算出値")).not.toBeNull();
+    expect(screen.getByLabelText("最大精神力の修正")).not.toBeNull();
+    expect(
+      screen.getByRole("checkbox", { name: "移動力の一時修正を適用" }),
+    ).not.toBeNull();
+    expect(
+      screen.getByRole("checkbox", { name: "行動値の一時修正を適用" }),
+    ).not.toBeNull();
   });
 });

@@ -9,11 +9,19 @@ import {
 import { characterSheetDictionary } from "../dictionary";
 import styles from "./FormulaTooltip.module.css";
 
+const tooltipGap = 4;
+const viewportGutter = 16;
+
 type FormulaTooltipProps = {
   ariaLabel?: string;
   className?: string;
   children: ReactNode;
   formula: string;
+};
+
+type TooltipPosition = {
+  left: number;
+  top: number;
 };
 
 /**
@@ -29,16 +37,14 @@ export default function FormulaTooltip({
   formula,
 }: FormulaTooltipProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isBelowTrigger, setIsBelowTrigger] = useState(false);
-  const [isLeftAligned, setIsLeftAligned] = useState(false);
+  const [position, setPosition] = useState<TooltipPosition | null>(null);
   const tooltipId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const tooltipRef = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
     if (!isOpen) {
-      setIsBelowTrigger(false);
-      setIsLeftAligned(false);
+      setPosition(null);
       return;
     }
 
@@ -49,9 +55,25 @@ export default function FormulaTooltip({
       if (tooltip !== null && trigger !== null) {
         const tooltipRect = tooltip.getBoundingClientRect();
         const triggerRect = trigger.getBoundingClientRect();
+        const maxLeft = Math.max(
+          viewportGutter,
+          window.innerWidth - tooltipRect.width - viewportGutter,
+        );
+        const maxTop = Math.max(
+          viewportGutter,
+          window.innerHeight - tooltipRect.height - viewportGutter,
+        );
+        const preferredLeft = triggerRect.right - tooltipRect.width;
+        const preferredTop = triggerRect.top - tooltipRect.height - tooltipGap;
+        const preferredBottom = triggerRect.bottom + tooltipGap;
 
-        setIsBelowTrigger(triggerRect.top - tooltipRect.height < 16);
-        setIsLeftAligned(triggerRect.right - tooltipRect.width < 16);
+        setPosition({
+          left: Math.min(Math.max(preferredLeft, viewportGutter), maxLeft),
+          top:
+            preferredTop >= viewportGutter
+              ? Math.min(preferredTop, maxTop)
+              : Math.min(Math.max(preferredBottom, viewportGutter), maxTop),
+        });
       }
     }
 
@@ -104,19 +126,22 @@ export default function FormulaTooltip({
             ?
           </span>
         </span>
-        {isOpen ? (
-          <span
-            className={`${styles.content} ${
-              isBelowTrigger ? styles.belowTrigger : ""
-            } ${isLeftAligned ? styles.leftAligned : ""}`}
-            id={tooltipId}
-            ref={tooltipRef}
-            role="tooltip"
-          >
-            {formula}
-          </span>
-        ) : null}
       </button>
+      {isOpen ? (
+        <span
+          className={styles.content}
+          id={tooltipId}
+          ref={tooltipRef}
+          role="tooltip"
+          style={
+            position === null
+              ? { visibility: "hidden" }
+              : { left: position.left, top: position.top }
+          }
+        >
+          {formula}
+        </span>
+      ) : null}
     </span>
   );
 }

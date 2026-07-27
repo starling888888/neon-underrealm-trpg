@@ -138,6 +138,46 @@
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
+## レビュー指摘 6
+
+### 指摘事項
+
+- 副能力値の手動修正input、移動力・行動値の一時修正適用checkbox、自動算出値outputが、行名と関連付かない重複したaccessible nameを持つ。支援技術では対象の副能力値を判別できない。
+- `SecondaryAttributesSection`のTooltip幅指定が内部のdismiss layerにも一致し、coarse pointer時のcomponent外tap領域をviewport全体でなくす。`FormulaTooltip`の配置も左右・上下のanchor切替だけで、選択後の最終座標をviewport内へ収めていない。
+- `FormulaTooltip`のtooltip本文がtrigger buttonの子孫であるため、`ariaLabel`を省略する能力値ポイント・成長点では、open時にformula本文がbuttonのaccessible nameへ混入し、`aria-describedby`の説明と重複する。
+- 最終UI変更後のVisual Reviewはdefault stateだけでは不足する。G8が変更したtooltipのopen state、共有Tooltipの既存操作（hover、tap、Esc、component外tap、blur）、上下左右端の配置を、Profile、Build、Secondaryの代表triggerで確認・記録する必要がある。
+- Visual Review skillはbranch名の親issueを前提にしており、Gate実装時に子issueの受入条件を選べない。G8のtooltip open stateなど、子issue固有の確認条件を見落とす経路になっている。
+- 最終source stateのactual確認が未完了なのに、上位完了条件のVisual Reviewとbrowser behavior testが完了扱いになっていた。failure logにも、恒久対応の反映先と中間確認が後続変更で無効になった状態が明確に記録されていない。
+
+### 判定
+
+- source: local-agent（Gate Technical Reviewer、CSS / HTML Reviewer、AI Ops Reviewer）
+- classification: valid
+- local validation: `SecondaryAttributesSection`は6行のbase outputへ同じ`aria-label="自動算出値"`を渡し、最大体力・最大精神力の入力と移動力・行動値のcheckboxも行名を含まない重複名である。既存testが配列indexで対象を選ぶことも、nameだけでの識別不能を示している。
+- local validation: `.rowLabelTooltip :global(button)`と`.inlineTooltip :global(button)`はopen時に描画する`button.dismissLayer`にも一致する。`FormulaTooltip`のplacement処理は右端・下端を測定せず、anchor反転後のviewport overflowを防げない。
+- local validation: `FormulaTooltip`はtooltip本文をtrigger buttonの子に描画する。`BuildSection`の能力値ポイント・成長点triggerは`ariaLabel`を渡しておらず、open stateのaccessible nameが利用側により変わる。
+- local validation: G8 issueはtooltipの既存操作と上下左右端の表示確認を契約にしているが、current VRT scenarioはdefault stateだけである。最終UI変更後のactual確認も未完了であるため、上位完了条件を未完了へ訂正した。
+- local validation: `AGENTS.md`はGate実装時のcurrent issueを子issueと定める一方、Visual Review skillはbranch名issueを前提にしている。今回ユーザー指示で変更したagent governanceの補完として、child issue解決とinteractive state列挙を恒久対応へ加える必要がある。
+
+### 対応方針
+
+- 各副能力値rowへ行名をprogrammaticに関連付け、input、output、checkbox、tooltip triggerを一意に識別できるaccessible nameへ整理する。Component / browser testも配列indexではなく一意なnameで対象を選ぶ。
+- `FormulaTooltip`に内部buttonを親CSSから誤選択しないための明示的なAPIまたはclassを設け、dismiss layerのviewport coverageをbrowser testで固定する。placementは最終表示位置をviewport gutter内へ収め、左右・上下端の代表triggerで検証する。
+- tooltip本文をtriggerのaccessible name計算から分離し、`ariaLabel`の有無にかかわらずnameとdescriptionが重複しない構造とtestへ改める。
+- character-sheetのtarget限定Visual Reviewにtooltip open stateを追加し、最終source stateのdefault / open stateをdesktop、tablet、mobileでactual確認する。未完了のbrowser behavior testも修正・実行し、結果に合わせてissueのcheckを更新する。canonical baselineは更新しない。
+- ユーザー指示で変更した`AGENTS.md`、Visual Review skill、failure log、`.tmp/review/ex-02-web-character-sheet/user-directed-changes.md`は、Gate子issueの解決方法、interactive stateを受入条件から列挙する停止条件、恒久対応の反映先・無効化された中間確認・関連commitの記録を整合させる。これはG8機能実装外のuser-directed governance変更として同じtask内で管理する。
+
+### 対応完了チェックリスト
+
+- [x] 副能力値のinput、output、checkbox、tooltip triggerを行名込みで一意に識別できるようにする。
+- [x] Tooltipのdismiss layer、placement、accessible name / descriptionを共有Componentの契約として修正・testする。
+- [x] default / tooltip open stateのtarget限定Visual Reviewを最終source stateで実行し、actual確認記録と完了条件を整合させる。
+- [x] Gate子issueを正しく選ぶVisual Review手順とfailure log / user-directed recordを、ユーザー指示済みgovernance変更として整合させる。
+- [x] `npm run test:component` が通る。
+- [x] `npm run test:e2e` または対象browser behavior testが通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
 ## レビュー指摘 1
 
 ### 指摘事項
@@ -171,10 +211,10 @@
 - [x] 副能力値を`CharacterSheetSectionFrame`でラップし、標準sectionの見出し・背景・borderへ統一する。
 - [x] 計算式全体とcheckboxを項目枠へまとめ、左上の項目名を式tooltipのtriggerにする。自動算出値と修正入力のaccessible nameは維持する。
 - [x] checkboxの可視labelを`一時修正を適用`に戻し、項目名の右に置くlabelのtooltipで一時能力値を用いる説明を表示する。
-- [ ] mobileを含む全viewportで、各項目の計算式を横並びで表示し、横overflowを起こさない。
+- [x] mobileを含む全viewportで、各項目の計算式を横並びで表示し、横overflowを起こさない。
 - [x] Profile、Build、Secondaryの数値表示をキャラクターシート専用の共有styleへ揃える。
 - [x] Component / hook / browser E2E testを、変更後の構造・文言・操作へ更新する。
-- [ ] `character-sheet` targetのVRT比較を実施し、baseline更新の要否を記録する。
+- [x] `character-sheet` targetのVRT比較を実施し、baseline更新の要否を記録する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -199,8 +239,8 @@
 ### 対応完了チェックリスト
 
 - [x] `FormulaTooltip`をsection・viewport境界に応じて配置し、上下左右にはみ出さないようにする。
-- [ ] 既存のhover、tap、Esc、component外tap、keyboard focusの操作契約を維持する。
-- [ ] tooltipを開いたstateのtarget限定VRTで、上下左右端に近い表示位置を確認する。
+- [x] 既存のhover、tap、Esc、component外tap、keyboard focusの操作契約を維持する。
+- [x] tooltipを開いたstateのtarget限定VRTで、上下左右端に近い表示位置を確認する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -332,8 +372,49 @@
 
 - [x] 変更targetだけをVRT比較した。
 - [x] 変更targetだけの一時snapshotを取得した。
-- [ ] 宣言したすべてのroute / state / viewportのactual snapshotを開いて確認した（既存サイズ復元後）。
+- [x] 宣言したすべてのroute / state / viewportのactual snapshotを開いて確認した（既存サイズ復元後）。
 - [x] 実画面で確認できたtooltip indicatorの縦積みを修正した。
 - [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 3
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt @character-sheet`
+- route / states / viewports: `/character-sheet/` / default（desktop、ultrawide、tablet、mobile）、Profile・Build・Secondaryのtooltip open（desktop、tablet、mobile）
+
+### レビュー結果
+
+| 対象                    | 判定       | 差分                                                                                                         | 対応                                                                       |
+| ----------------------- | ---------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| default 4 viewport      | 要人間判断 | canonical baselineは副能力値実装前のpage高さであり、default 4 viewportで既知の高さ・追加内容差分が発生する。 | actualを確認し、baselineは更新しない。                                     |
+| tooltip open 9 viewport | 要人間判断 | Profile、Build、Secondaryのtooltip open stateにはcanonical snapshotがない。                                  | current sourceのactualを確認し、新規canonical snapshotは作成・保持しない。 |
+
+### 実画面確認
+
+- `test-results/visual/character-sheet/default-{desktop,ultrawide,tablet,mobile}.png`を開いた。通常状態の基本情報、能力値、副能力値の数値列、checkbox操作列はframe内に収まり、mobileでも計算式を縦積みにしていない。
+- `test-results/visual/character-sheet/profile-tooltip-open-default-{desktop,tablet,mobile}.png`を開いた。合計信用のtooltipはtriggerに隣接し、画面左端・上端・右端で切れず、周辺の数値行の高さを変えない。
+- `test-results/visual/character-sheet/build-tooltip-open-default-{desktop,tablet,mobile}.png`を開いた。常時修正のtooltipは文字列trigger基準で表示され、能力値表・副能力値frameをclipしない。
+- `test-results/visual/character-sheet/secondary-tooltip-open-default-{desktop,tablet,mobile}.png`を開いた。最大体力のtooltipは副能力値frame内に閉じずviewport gutter内へ収まり、式全文を読める。
+- `FormulaTooltip` Component testで、左上trigger時の右下配置と右下trigger時の左上配置をviewport gutter内へclampすることを確認した。hover、tap、Esc、blur、component外tapの既存契約も同じtestで確認した。
+
+### 比較結果の扱い
+
+- `npm run visual:test -- --grep 'character-sheet'`はdefault 4件の既知baseline差分とtooltip open 3件のbaseline未作成により終了code 1となった。Build・Secondary tooltip openの一時canonical snapshotが比較中に生成されたが、承認済みbaselineではないため直ちに削除した。canonical snapshotは更新していない。
+- E2E、Component test、型・format・buildは成功し、actual screenshotで見つかったsource側の修正が必要な視覚不備はない。baseline採用は人間判断として残す。
+
+### 対応完了チェックリスト
+
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] 宣言したすべてのroute / state / viewportのactual snapshotを開いて確認した。
+- [x] source修正が必要なVRT差分はないと判断した。
+- [x] canonical baselineを更新せず、採用要否を人間判断として記録した。
+- [x] `npm run test:component` が通る。
+- [x] `npm run test:e2e` が通る。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。

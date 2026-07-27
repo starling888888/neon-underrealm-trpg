@@ -103,8 +103,18 @@ function SecondaryRow({
   onNumberChange,
   temporary,
 }: SecondaryRowProps) {
+  const baseValueLabel = `${finalLabel}の自動算出値`;
+  const modifierInputLabel =
+    modifierLabel === "修正"
+      ? `${finalLabel}の${modifierLabel}`
+      : modifierLabel;
+  const temporaryCheckboxLabel = temporary
+    ? `${finalLabel}の一時修正を適用`
+    : undefined;
+
   return (
-    <div className={styles.row}>
+    <fieldset className={styles.row}>
+      <legend className={styles.visuallyHidden}>{finalLabel}</legend>
       <div className={styles.rowHeading}>
         <FormulaTooltip
           ariaLabel={finalLabel}
@@ -116,7 +126,7 @@ function SecondaryRow({
         {temporary === undefined ? null : (
           <span className={styles.temporaryControl}>
             <input
-              aria-label="一時修正を適用"
+              aria-label={temporaryCheckboxLabel}
               checked={temporary.checked}
               onChange={(event) =>
                 temporary.onChange(temporary.field, event.currentTarget.checked)
@@ -124,7 +134,7 @@ function SecondaryRow({
               type="checkbox"
             />
             <FormulaTooltip
-              ariaLabel="一時修正を適用"
+              ariaLabel={`${temporaryCheckboxLabel}の説明`}
               className={styles.inlineTooltip}
               formula={temporary.label}
             >
@@ -135,7 +145,7 @@ function SecondaryRow({
       </div>
       <div className={styles.rowContent}>
         <output
-          aria-label="自動算出値"
+          aria-label={baseValueLabel}
           className="character-sheet-number-value character-sheet-number-value--compact"
         >
           {formatDisplayValue(baseValue)}
@@ -144,7 +154,7 @@ function SecondaryRow({
           +
         </span>
         <NumberInput
-          label={modifierLabel}
+          label={modifierInputLabel}
           onChange={(value) => onNumberChange(modifierField, value)}
           value={modifierValue}
         />
@@ -153,7 +163,7 @@ function SecondaryRow({
         </span>
         <FinalMetric label={finalLabel} value={finalValue} />
       </div>
-    </div>
+    </fieldset>
   );
 }
 

@@ -857,7 +857,7 @@ source種別は以下を使う。
 - source: user
 - 発生箇所: `ex-02-8-sheet-secondary` のtooltip indicatorレビュー報告
 - 観測した失敗: actual screenshotには、基本情報の数値行の縦不揃い、副能力値ラベル下の余白、成長点・一時修正の操作列とmobile能力値gridのframe外表示が残っていた。にもかかわらず、agentは「画面を確認し、問題は解消した」と肯定報告した。これはtooltip実装の不備とは別に、可視の失敗を検出せず確認済みと虚偽の検証結果をユーザーへ伝えた重大な報告失敗である。
-- 一次対応: `AGENTS.md`と`visual-implementation-review` skillへ、capture成功やsnapshot生成を確認の根拠にせず、宣言した全route・state・viewportのactual snapshotを開き、issueの受入条件ごとに確認する停止条件を追加した。誤った肯定報告が判明した場合は、failure logとcurrent issueを訂正し、issueをdoneへ移さず、capture・実画面確認・VRT比較をやり直す。
+- 一次対応: `AGENTS.md`と`visual-implementation-review` skillへ、capture成功やsnapshot生成を確認の根拠にせず、宣言した全route・state・viewportのactual snapshotを開き、issueの受入条件ごとに確認する停止条件を追加した。後続reviewで、Gate子issueではbranch名からcurrent issueを推測できず、interactive UIのopen stateを既存VRT specだけから列挙すると漏れることも確認した。skillはparent Gate planからchild issueを解決し、current issueの受入条件と最終diffからstateを列挙するよう補完する。誤った肯定報告が判明した場合は、failure logとcurrent issueを訂正し、issueをdoneへ移さず、capture・実画面確認・VRT比較をやり直す。
 
 ### Inherited no-wrap style clipped a formula tooltip
 

@@ -16,6 +16,7 @@ export type VrtState =
 export type VrtScenario = {
   fullPage?: boolean;
   id?: string;
+  prepare?: (page: Page) => Promise<void>;
   route: string;
   state?: VrtState;
   viewports?: readonly ViewportName[];
@@ -42,6 +43,7 @@ export function registerVrtScenarios(
         await page.goto(scenario.route);
         await expect(page.locator("body")).toBeVisible();
         await prepareVrtState(page, state);
+        await scenario.prepare?.(page);
 
         await expect(page).toHaveScreenshot(
           [target, `${snapshotPrefix}${state}-${viewportName}.png`],

@@ -45,10 +45,14 @@ copy a temporary `visual:capture` snapshot into a design document. Use
 
 ## Preconditions
 
-Before doing anything, verify:
+Before doing anything, resolve the current implementation contract and verify:
 
-1. A dedicated task branch and `docs/issue/<current-branch>.md` exist.
-2. The user has approved implementation for the current issue.
+1. A dedicated task branch exists. Use its issue only for a non-Gate task. For
+   a Gate, identify the active `docs/issue/<child-issue>.md` from the parent
+   Gate plan and read the corresponding `docs/issue/<parent-issue>/plan.md`.
+   Do not infer the current issue from the branch name when a Gate child issue
+   is active.
+2. The user has approved implementation for that current issue.
 3. The change is inside issue scope and affects a VRT-covered UI target.
 4. The target's `docs/design/<design-target>/notes.md` and
    `tests/visual/vrt/<target>.spec.ts` exist.
@@ -61,7 +65,12 @@ already approved that work in the current issue.
 
 1. Inspect the working tree and read the current issue.
 2. Identify each changed VRT target from the changed UI and its design notes.
-3. Read the referenced SSoT and note the target tags, states, and viewports.
+3. Read the referenced SSoT and derive the target tags, states, and viewports.
+   Start with the VRT spec, then add every visible interactive state required
+   by the current issue acceptance criteria or introduced by the final diff.
+   For example, a tooltip change requires a representative open state as well
+   as default state; do not silently omit it because the existing spec only
+   has default scenarios. Record the complete state list before capture.
 4. Build the VRT fixture and use the existing 4321 preview server.
 5. Run `npm run visual:capture -- --grep` for each changed target.
 6. Open every captured actual snapshot. Inspect each declared route, state,
@@ -73,8 +82,9 @@ already approved that work in the current issue.
 9. Fix only clear, local mismatches that are inside the approved issue scope.
 10. Repeat capture, actual snapshot inspection, and comparison after each
     accepted fix. Do not reuse a previous inspection result.
-11. Update `## ビジュアルレビュー N` in the current issue with the target,
-    tags, comparison result, fixes, and unresolved human judgments.
+11. Update `## ビジュアルレビュー N` in the resolved current issue with the
+    target, tags, complete declared states and viewports, comparison result,
+    actual-inspection record, fixes, and unresolved human judgments.
 12. Run `npm run check` and `npm run build` when source, style, test, or
     configuration files changed.
 13. Stop and report. Do not commit or push.
@@ -142,6 +152,7 @@ Use `## ビジュアルレビュー N`.
 
 - [ ] 変更targetだけをVRT比較した
 - [ ] 変更targetだけの一時snapshotを取得した
+- [ ] current issueの受入条件と最終diffから対象stateを列挙した
 - [ ] 宣言したすべてのroute / state / viewportのactual snapshotを開いて確認した
 - [ ] VRT差分を修正した、または修正不要と判断した
 - [ ] baseline更新が必要な差分を人間判断として記録した

@@ -232,7 +232,7 @@ test.describe("character sheet page", () => {
     const movementModifier = page.getByLabel("移動力修正", { exact: true });
     const temporaryChoice = page.getByRole("checkbox", {
       exact: true,
-      name: "一時修正を適用",
+      name: "移動力の一時修正を適用",
     });
 
     await movementModifier.fill("-2");

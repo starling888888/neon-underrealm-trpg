@@ -26,7 +26,7 @@
 | G5   | done        | G1, G2, G3                                                                                                                                      | `docs/issue/done/ex-02-web-character-sheet/ex-02-5-sheet-dialogs.md`       | ダイアログの共通基盤を整備する。                                                                                                         |
 | G6   | done        | G4, G5                                                                                                                                          | `docs/issue/done/ex-02-web-character-sheet/ex-02-6-sheet-image.md`         | 承認済みdraftのprofile / setting / image / credit配置を保ち、キャラクター画像を扱う。                                                    |
 | G7   | done        | G1, G2, G3                                                                                                                                      | `docs/issue/done/ex-02-web-character-sheet/ex-02-7-sheet-build.md`         | 流儀、生き様、能力値、経験点を扱う。                                                                                                     |
-| G8   | in progress | G7                                                                                                                                              | `docs/issue/ex-02-8-sheet-secondary.md`                                    | 副能力値を扱う。                                                                                                                         |
+| G8   | done        | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-8-sheet-secondary.md`     | 副能力値を扱う。                                                                                                                         |
 | G9   | planned     | G7, G8                                                                                                                                          | `docs/issue/ex-02-9-sheet-bonds.md`                                        | 縁と覚悟を扱う。                                                                                                                         |
 | G10  | planned     | G7                                                                                                                                              | `docs/issue/ex-02-10-sheet-attack-reaction.md`                             | 攻撃とリアクションを扱う。                                                                                                               |
 | G11  | planned     | G7                                                                                                                                              | `docs/issue/ex-02-11-sheet-noncombat.md`                                   | 非戦闘技能を扱う。                                                                                                                       |
@@ -103,5 +103,11 @@
 - 未算出の`-`は辞書と表示format関数へ集約した。後続Gateはcomponentごとのfallbackを追加せず、この契約を再利用する。
 - 共通スキルボーナスはG7では選択中プライマリ流儀の表示用データをLv別cardとして参照するだけである。共通スキルLv・上限・実際の取得状態との接続はG14で扱う。
 - canonical VRT baselineは更新していない。後続GateのVisual Reviewでも既存baselineとの差分をbaseline更新の根拠にせず、更新はユーザーの明示承認時だけ行う。
+
+### G8
+
+- 副能力値は`secondary` layout regionの`CharacterSheetSectionFrame`内に置く。最大体力、最大精神力、移動力、行動値、行動回数、結べる縁は、`自動算出値 + 修正 = 最終値`として表示し、手動修正はRHFの`secondaryAttributes`にだけ保持する。移動力・行動値は一時修正適用で一時能力値の導出を選ぶ。
+- `FormulaTooltip`はtriggerとtooltip本文を分離し、viewport gutter内へfixed配置する共有Componentである。Component外tap用dismiss layerはComponent固有classで扱い、section CSSから内部buttonを広く選択しない。tooltipの局所操作と配置はComponent test、実画面のopen stateはtarget限定VRT、最終browser E2Eは代表的な入力・checkbox操作だけを扱う。
+- `character-sheet`のcanonical VRT baselineはG8後のdefault・tooltip open stateをまだ採用していない。後続のVisual Reviewでもtarget限定actual確認は行うが、baseline更新はユーザーの明示承認時だけ行う。
 
 状態は `planned`、`in progress`、`done` を使う。
