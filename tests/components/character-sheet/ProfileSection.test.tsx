@@ -8,12 +8,18 @@ import ProfileSection, {
   type ProfileSectionProps,
 } from "../../../src/character-sheet/components/ProfileSection";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { calculateBuild } from "../../../src/character-sheet/logic/build";
 
 function createProps(): ProfileSectionProps {
   return {
     characterImage: null,
     credit: characterSheetDefaultValues.credit,
     creditSummary: { change: 10, totalCredit: 10 },
+    experience: {
+      acquired: characterSheetDefaultValues.build.acquiredExperience,
+      derived: calculateBuild(characterSheetDefaultValues.build),
+      onAcquiredChange: vi.fn((value: string) => Number(value)),
+    },
     isRootOperationInProgress: false,
     onCharacterImageCleared: vi.fn(),
     onCharacterImageSelected: vi.fn(),
@@ -78,6 +84,24 @@ describe("ProfileSection", () => {
     );
 
     expect(screen.queryByRole("tooltip")).toBeNull();
+  });
+
+  it("shows experience near credit and explains the rank formula", () => {
+    render(<ProfileSection {...createProps()} />);
+
+    expect(
+      (
+        screen.getByRole("spinbutton", {
+          name: "取得経験点",
+        }) as HTMLInputElement
+      ).value,
+    ).toBe("50");
+
+    fireEvent.click(screen.getByRole("button", { name: /格/ }));
+
+    expect(screen.getByRole("tooltip").textContent).toBe(
+      "プライマリ流儀レベル + 生き様レベル",
+    );
   });
 
   it("keeps a signed number field editable through its minus intermediate state", async () => {

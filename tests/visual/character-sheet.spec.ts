@@ -222,6 +222,9 @@ test.describe("character sheet page", () => {
     const buildSlot = page.locator(
       '[data-character-sheet-section-slot="build"]',
     );
+    const profileSlot = page.locator(
+      '[data-character-sheet-section-slot="profile"]',
+    );
 
     await expect(
       buildSlot.getByRole("combobox", {
@@ -234,10 +237,36 @@ test.describe("character sheet page", () => {
       buildSlot.getByRole("combobox", { name: "生き様", exact: true }),
     ).toHaveValue("");
     await expect(buildSlot.getByLabel("生き様Lv")).toHaveValue("1");
-    await expect(buildSlot.getByLabel("取得経験点")).toHaveValue("50");
+    await expect(profileSlot.getByLabel("取得経験点")).toHaveValue("50");
     await expect(
-      buildSlot.getByText("生き様：能力値ポイント: 0, 0, 0, 0"),
+      buildSlot.getByText("能力値ポイント: 0, 0, 0, 0"),
     ).toBeVisible();
+  });
+
+  test("keeps the narrow desktop attribute headers on one line except points", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("character-sheet/");
+
+    const attributePane = page.locator('[class*="attributePane"]');
+    const attributeHeaders = page.locator('[class*="attributeHeader"]');
+    const pointsHeader = page.locator('[class*="pointsHeader"]');
+
+    await expect(attributePane).toBeVisible();
+    expect(
+      await attributePane.evaluate(
+        (element) => element.scrollWidth <= element.clientWidth,
+      ),
+    ).toBe(true);
+    expect(
+      await attributeHeaders.evaluateAll((headers) =>
+        headers.every(
+          (header) => getComputedStyle(header).whiteSpace === "nowrap",
+        ),
+      ),
+    ).toBe(true);
+    await expect(pointsHeader).toHaveText("能力値ポイント");
   });
 
   test("opens and dismisses the confirmation dialog without changing the form", async ({

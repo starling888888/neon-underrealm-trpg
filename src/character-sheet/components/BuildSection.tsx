@@ -8,6 +8,7 @@ import type {
 import type { BuildDerivedValues } from "../logic/build";
 import type { CharacterSheetSelectOption } from "../master-data/build";
 import styles from "./BuildSection.module.css";
+import FormulaTooltip from "./FormulaTooltip";
 
 type BuildNumberInputProps = {
   ariaInvalid?: boolean;
@@ -17,7 +18,7 @@ type BuildNumberInputProps = {
   value: number;
 };
 
-type ReadOnlyMetricProps = {
+type ReferenceMetricProps = {
   label: string;
   value: number | null;
 };
@@ -26,7 +27,6 @@ export type BuildSectionProps = {
   build: BuildValues;
   derived: BuildDerivedValues;
   ikizamaOptions: readonly CharacterSheetSelectOption[];
-  onAcquiredExperienceChange: (value: string) => number;
   onAttributeChange: (
     attribute: AttributeName,
     field: keyof AttributeValues,
@@ -80,11 +80,11 @@ function BuildNumberInput({
   );
 }
 
-function ReadOnlyMetric({ label, value }: ReadOnlyMetricProps) {
+function ReferenceMetric({ label, value }: ReferenceMetricProps) {
   return (
-    <div className={styles.metric}>
-      <span className={styles.metricLabel}>{label}</span>
-      <output className={styles.metricValue}>{value ?? "—"}</output>
+    <div className={styles.referenceMetric}>
+      <span className={styles.referenceLabel}>{label}</span>
+      <output className={styles.referenceValue}>{value ?? "—"}</output>
     </div>
   );
 }
@@ -124,12 +124,11 @@ function SelectField({
   );
 }
 
-/** G7 direct-edit section for build, attributes, and experience. */
+/** G7 direct-edit section for build choices, attributes, and references. */
 export default function BuildSection({
   build,
   derived,
   ikizamaOptions,
-  onAcquiredExperienceChange,
   onAttributeChange,
   onAttributeCommit,
   onIkizamaChange,
@@ -239,21 +238,35 @@ export default function BuildSection({
         data-invalid={derived.hasAttributeError || undefined}
       >
         <div className={styles.attributeMeta}>
-          <span>{`${derived.ikizamaName ?? buildCopy.ikizama}：${buildCopy.points}: ${[
-            ...derived.ikizamaAttributePoints,
-            ...(derived.ikizamaName === null ? [] : [0]),
-          ].join(", ")}`}</span>
-          <span>{`${buildCopy.growthPoints}: ${derived.growthPoints ?? "—"}`}</span>
+          <FormulaTooltip formula="生き様の4値と0を、5つの能力値へ一度ずつ割り振ります。">
+            <span>{`${buildCopy.points}: ${[
+              ...derived.ikizamaAttributePoints,
+              ...(derived.ikizamaAttributePoints.length === 4 &&
+              derived.reference.ikizamaHealthCoefficient !== null
+                ? [0]
+                : []),
+            ].join(", ")}`}</span>
+          </FormulaTooltip>
+          <FormulaTooltip formula="格が15の倍数になるたびに格÷15点獲得します。（格が15で1点、格が30で2点）２点以上獲得した場合は1点ずつ別の能力に割り振る必要があります。">
+            <span>{`${buildCopy.growthPoints}: ${derived.growthPoints ?? "—"}`}</span>
+          </FormulaTooltip>
         </div>
         <div className={styles.attributeGrid}>
-          <span>{buildCopy.attribute}</span>
-          <span>{buildCopy.base}</span>
-          <span>{buildCopy.points}</span>
-          <span>{buildCopy.growth}</span>
-          <span>{buildCopy.permanentModifier}</span>
-          <span>{buildCopy.permanent}</span>
-          <span>{buildCopy.temporaryModifier}</span>
-          <span>{buildCopy.temporary}</span>
+          <span className={styles.attributeHeader}>{buildCopy.attribute}</span>
+          <span className={styles.attributeHeader}>{buildCopy.base}</span>
+          <span className={styles.pointsHeader}>
+            <span>能力値</span>
+            <span>ポイント</span>
+          </span>
+          <span className={styles.attributeHeader}>{buildCopy.growth}</span>
+          <span className={styles.attributeHeader}>
+            {buildCopy.permanentModifier}
+          </span>
+          <span className={styles.attributeHeader}>{buildCopy.permanent}</span>
+          <span className={styles.attributeHeader}>
+            {buildCopy.temporaryModifier}
+          </span>
+          <span className={styles.attributeHeader}>{buildCopy.temporary}</span>
           {Object.entries(build.attributes).map(([attribute, values]) => {
             const attributeName = attribute as AttributeName;
             const derivedValues = derived.attributes[attributeName];
@@ -263,7 +276,7 @@ export default function BuildSection({
                 <span>{buildCopy.attributeNames[attributeName]}</span>
                 <output>{derivedValues.base ?? "—"}</output>
                 <BuildNumberInput
-                  ariaInvalid={derived.hasAttributeError}
+                  ariaInvalid={derived.hasPointAllocationError}
                   label={`${buildCopy.attributeNames[attributeName]}${buildCopy.points}`}
                   onChange={(value) =>
                     onAttributeChange(attributeName, "points", value)
@@ -274,7 +287,7 @@ export default function BuildSection({
                   value={values.points}
                 />
                 <BuildNumberInput
-                  ariaInvalid={derived.hasAttributeError}
+                  ariaInvalid={derived.hasGrowthError}
                   label={`${buildCopy.attributeNames[attributeName]}${buildCopy.growth}`}
                   onChange={(value) =>
                     onAttributeChange(attributeName, "growth", value)
@@ -311,31 +324,48 @@ export default function BuildSection({
           })}
         </div>
       </section>
-
       <section
-        aria-label={buildCopy.experience}
-        className={styles.experience}
-        data-invalid={derived.hasExperienceError || undefined}
+        aria-label={buildCopy.commonSkillBonuses}
+        className={styles.referencePane}
       >
-        <div className={styles.experienceInput}>
-          <span className={styles.label}>{buildCopy.acquiredExperience}</span>
-          <BuildNumberInput
-            ariaInvalid={derived.hasExperienceError}
-            label={buildCopy.acquiredExperience}
-            onChange={onAcquiredExperienceChange}
-            onCommit={onAcquiredExperienceChange}
-            value={build.acquiredExperience}
+        <div className={styles.referenceGrid}>
+          <ReferenceMetric
+            label={buildCopy.healthIncrease}
+            value={derived.reference.primaryHealthIncrease}
+          />
+          <ReferenceMetric
+            label={buildCopy.mindIncrease}
+            value={derived.reference.primaryMindIncrease}
+          />
+          <ReferenceMetric
+            label={buildCopy.healthCoefficient}
+            value={derived.reference.ikizamaHealthCoefficient}
+          />
+          <ReferenceMetric
+            label={buildCopy.mindCoefficient}
+            value={derived.reference.ikizamaMindCoefficient}
           />
         </div>
-        <ReadOnlyMetric
-          label={buildCopy.spentExperience}
-          value={derived.spentExperience}
-        />
-        <ReadOnlyMetric
-          label={buildCopy.remainingExperience}
-          value={derived.remainingExperience}
-        />
-        <ReadOnlyMetric label={buildCopy.rank} value={derived.rank} />
+        <div className={styles.commonSkillBonuses}>
+          <span className={styles.commonSkillTitle}>
+            {buildCopy.commonSkillBonuses}
+          </span>
+          <span
+            className={styles.commonSkillLevel}
+          >{`${buildCopy.commonSkillLevel}: ${derived.reference.commonSkillLevel} / ${buildCopy.commonSkillLevelLimit}: ${derived.reference.commonSkillLevelLimit ?? "—"}`}</span>
+          {(
+            [
+              [buildCopy.level2, derived.reference.commonSkillBonuses?.level2],
+              [buildCopy.level5, derived.reference.commonSkillBonuses?.level5],
+              [buildCopy.level9, derived.reference.commonSkillBonuses?.level9],
+            ] as const
+          ).map(([level, content]) => (
+            <div className={styles.commonSkillBonus} key={level}>
+              <span>{level}</span>
+              <span>{content ?? "—"}</span>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );

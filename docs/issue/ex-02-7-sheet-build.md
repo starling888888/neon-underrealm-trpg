@@ -158,10 +158,68 @@
 
 ### 対応完了チェックリスト
 
-- [ ] 経験点を基本情報側の信用近傍へ移動し、G7の局所エラー状態を保持する
-- [ ] 流儀増加値、生き様係数、共通スキルボーナスの参照表示を追加する
-- [ ] 削除button、能力値ポイント・成長点・格Tooltip、desktop能力値表とmobile経験点の密度を調整する
-- [ ] 能力値ポイントと成長の局所エラー状態を分離する
+- [x] 経験点を基本情報側の信用近傍へ移動し、G7の局所エラー状態を保持する
+- [x] 流儀増加値、生き様係数、共通スキルボーナスの参照表示を追加する
+- [x] 削除button、能力値ポイント・成長点・格Tooltip、desktop能力値表とmobile経験点の密度を調整する
+- [x] 能力値ポイントと成長の局所エラー状態を分離する
+- [x] `@character-sheet` targetのVisual Reviewを実行する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@character-sheet`
+- route / states / viewports: `/character-sheet/` / default / desktop、ultrawide、tablet、mobile
+
+### レビュー結果
+
+| 対象              | 判定       | 差分                                                                                                               | 対応                                                                                                                      |
+| ----------------- | ---------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `character-sheet` | 要人間判断 | 4 viewportとも経験点の基本情報側への移動、参照表示、tablet以下の能力値領域の縦積みによりcanonical baselineと不一致 | actualを目視し、mobileの経験点が3項目 + 格の2行、tabletで能力値表に横overflowがないことを確認した。baselineは更新しない。 |
+
+### 確認済み
+
+- [x] desktop最小幅の1280pxで、能力値ポイント以外の列見出しが折り返さず、能力値領域に横overflowがない。
+- [x] desktop、ultrawide、tablet、mobileの一時actualを取得し、既存の基本情報・信用入力と同種のUIを維持している。
+- [x] canonical baselineとの差分を`npm run visual:test -- --grep character-sheet`で確認した。
+
+### 人間判断が必要な差分
+
+- G7の表示範囲変更によるcanonical VRT baseline更新の要否。ユーザーの明示承認なしに更新していない。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 消費経験点と残経験点のread-only表示に計算式Tooltipは不要である。格のTooltipは残す。
+- tabletでは流儀・生き様入力と能力値表を横並びにする承認済みdraftと異なり、現在は縦積みになっている。
+- 共通スキルボーナスは、titleとLv 2 / Lv 5 / Lv 9の獲得内容をカード状に並べるdraftと異なり、現在は2列のテキスト行になっている。
+- 共通スキルLvと上限は最終的に基本情報側へ置くため、G7のビルド領域には表示しない。
+- 成長点Tooltipが`CharacterSheetSectionFrame`のclip領域に収まり、全文を読めない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: 現行`ProfileSection`は消費経験点・残経験点・格のすべてへ`FormulaTooltip`を付与している。`.tmp/design/character-sheet/tablet.png`はtablet（820px）で流儀・生き様入力を左、能力値を右に横並びとし、`BuildSection.module.css`の`width < 80rem`は現在これを縦積みにしている。draftの共通スキルボーナスはLv 2、Lv 5、Lv 9の獲得内容を個別cardとして示し、現在の`共通スキルLv / 上限`行はない。`CharacterSheetSectionFrame.module.css`の`overflow: clip`により、内側の絶対配置Tooltipがframe外へ出られない。`docs/issue/ex-02-web-character-sheet/plan.md`のG14は共通スキルを扱うGateであり、共通スキルLvと上限の基本情報側への最終配置をそこで接続できる。
+
+### 対応方針
+
+- 消費経験点と残経験点は通常のread-only表示へ戻し、格だけに「プライマリ流儀レベル + 生き様レベル」のTooltipを残す。
+- tablet（820px）では、draftどおり流儀・生き様を左、能力値を右に置く。能力値表の列幅・入力幅をtablet用に圧縮し、ページとsectionの横overflowを生じさせない。mobileだけは縦積みを維持する。
+- 共通スキルボーナスは選択中プライマリ流儀の文字列を解析せず、Lv 2、Lv 5、Lv 9のlabelと内容を個別cardとして表示する。G7では共通スキルLv・上限を表示しない。
+- `FormulaTooltip`はsection frameのclipに影響されず、viewport内で全文を読める位置に表示する。既存の基本情報側Tooltipを壊さず、Tooltipの開閉・Escape・touch時のdismiss操作を保持する。
+- 共通スキルLvと上限の基本情報側への最終配置・入力との接続はG14で扱う。G7で基本情報の表示項目を先取りしない。
+
+### 対応完了チェックリスト
+
+- [ ] 消費経験点・残経験点のTooltipを外し、格のTooltipを維持する
+- [ ] tabletで流儀・生き様と能力値をdraftどおり横並びにし、横overflowをなくす
+- [ ] 共通スキルボーナスをLv別のcard表示に直し、共通スキルLv・上限をG7から外す
+- [ ] 成長点を含むFormulaTooltipをframe外でも全文表示できるようにする
 - [ ] `@character-sheet` targetのVisual Reviewを実行する
 - [ ] `npm run check` が通る
 - [ ] `npm run build` が通る

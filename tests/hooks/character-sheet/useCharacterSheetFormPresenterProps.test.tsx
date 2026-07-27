@@ -84,8 +84,24 @@ describe("useCharacterSheetFormPresenterProps", () => {
       "kenkaya",
     );
     expect(result.current.form.getValues("build.ikizamaId")).toBe("burai");
-    expect(result.current.presenterProps.buildSection.derived.ikizamaName).toBe(
-      "ブライ",
-    );
+    expect(
+      result.current.presenterProps.buildSection.derived.reference
+        .ikizamaHealthCoefficient,
+    ).toBe(11);
+  });
+
+  it("connects acquired experience through the basic-information props", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.profileSection.experience.onAcquiredChange(
+        "70",
+      );
+    });
+
+    expect(result.current.form.getValues("build.acquiredExperience")).toBe(70);
+    expect(
+      result.current.presenterProps.profileSection.experience.acquired,
+    ).toBe(70);
   });
 });

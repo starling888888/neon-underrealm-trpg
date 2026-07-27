@@ -116,16 +116,19 @@ export default function useCharacterSheetFormPresenterProps(
     return field === "level" ? normalizeBuildInput(value) : undefined;
   }
 
+  function setAcquiredExperience(value: string): number {
+    const normalizedValue = normalizeBuildInput(value);
+
+    setBuildValue("acquiredExperience", normalizedValue);
+
+    return normalizedValue;
+  }
+
   return {
     buildSection: {
       build,
       derived: derivedBuild,
       ikizamaOptions: getCharacterSheetIkizamaOptions(),
-      onAcquiredExperienceChange: (value) => {
-        const normalizedValue = normalizeBuildInput(value);
-        setBuildValue("acquiredExperience", normalizedValue);
-        return normalizedValue;
-      },
       onAttributeChange: setAttributeValue,
       onAttributeCommit: setAttributeValue,
       onIkizamaChange: (ikizamaId) => {
@@ -174,6 +177,11 @@ export default function useCharacterSheetFormPresenterProps(
       characterImage,
       credit,
       creditSummary,
+      experience: {
+        acquired: build.acquiredExperience,
+        derived: derivedBuild,
+        onAcquiredChange: setAcquiredExperience,
+      },
       onCreditBlur: (field, value) => {
         const normalizedValue = normalizeCreditInput(field, value);
 

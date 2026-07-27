@@ -42,7 +42,7 @@ describe("character sheet build", () => {
     assert.equal(derived.spentExperience, null);
     assert.equal(derived.attributes.strength.permanent, null);
     assert.deepEqual(derived.ikizamaAttributePoints, [0, 0, 0, 0]);
-    assert.equal(derived.ikizamaName, null);
+    assert.equal(derived.reference.primaryHealthIncrease, null);
     assert.equal(derived.hasAttributeError, false);
   });
 
@@ -54,7 +54,19 @@ describe("character sheet build", () => {
     assert.equal(derived.spentExperience, 0);
     assert.equal(derived.remainingExperience, 50);
     assert.deepEqual(derived.ikizamaAttributePoints, [5, 4, 3, 2]);
-    assert.equal(derived.ikizamaName, "ブライ");
+    assert.deepEqual(derived.reference, {
+      commonSkillBonuses: {
+        level2: "攻撃判定数+1\n攻撃力+3",
+        level5: "行動回数+1",
+        level9: "攻撃判定数+1\nリアクション判定数+1",
+      },
+      commonSkillLevel: 0,
+      commonSkillLevelLimit: 1,
+      ikizamaHealthCoefficient: 11,
+      ikizamaMindCoefficient: 7,
+      primaryHealthIncrease: 5,
+      primaryMindIncrease: 2,
+    });
     assert.equal(derived.attributes.strength.base, 5);
     assert.equal(derived.attributes.strength.permanent, 10);
     assert.equal(derived.attributes.strength.temporary, 10);
@@ -72,6 +84,24 @@ describe("character sheet build", () => {
     assert.equal(derived.hasAttributeError, true);
     assert.equal(derived.hasExperienceError, true);
     assert.equal(derived.hasBuildError, true);
+  });
+
+  it("keeps point allocation and growth errors local to their own inputs", () => {
+    const pointMismatch = selectedBuild();
+    pointMismatch.attributes.strength.points = 4;
+
+    const pointDerived = calculateBuild(pointMismatch);
+
+    assert.equal(pointDerived.hasPointAllocationError, true);
+    assert.equal(pointDerived.hasGrowthError, false);
+
+    const excessGrowth = selectedBuild();
+    excessGrowth.attributes.strength.growth = 1;
+
+    const growthDerived = calculateBuild(excessGrowth);
+
+    assert.equal(growthDerived.hasPointAllocationError, false);
+    assert.equal(growthDerived.hasGrowthError, true);
   });
 
   it("keeps an invalid acquired experience value visible before both selections", () => {

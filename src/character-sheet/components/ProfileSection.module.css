@@ -200,6 +200,29 @@
   background: var(--color-surface-muted);
 }
 
+.experience {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.experience[data-invalid] {
+  border-color: var(--color-danger);
+  box-shadow: inset 0 0 0 var(--border-width) var(--color-danger);
+}
+
+.experienceGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.experience .numberInput[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
 .creditGrid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -240,5 +263,13 @@
 
   .profileGrid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .experienceGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .experienceGrid > :last-child {
+    grid-column: 1;
   }
 }

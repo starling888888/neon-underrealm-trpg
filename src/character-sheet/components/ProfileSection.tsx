@@ -17,6 +17,7 @@ import type {
   ProfileFieldName,
   ProfileValues,
 } from "../form-values";
+import type { BuildDerivedValues } from "../logic/build";
 import type { CreditSummary } from "../logic/credit";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./ProfileSection.module.css";
@@ -43,13 +44,23 @@ type CreditFieldProps = {
 type ReadOnlyCreditFieldProps = {
   formula: string;
   label: string;
-  value: number;
+  value: number | string;
+};
+
+type ExperienceProps = {
+  acquired: number;
+  derived: Pick<
+    BuildDerivedValues,
+    "hasExperienceError" | "rank" | "remainingExperience" | "spentExperience"
+  >;
+  onAcquiredChange: (value: string) => number;
 };
 
 export type ProfileSectionProps = {
   characterImage: CharacterImageRecord | null;
   credit: CreditValues;
   creditSummary: CreditSummary;
+  experience: ExperienceProps;
   isRootOperationInProgress: boolean;
   onCharacterImageCleared: () => Promise<void>;
   onCharacterImageSelected: (file: File) => Promise<void>;
@@ -243,11 +254,69 @@ function ReadOnlyCreditField({
   );
 }
 
+function ExperienceField({
+  acquired,
+  derived,
+  onAcquiredChange,
+}: ExperienceProps) {
+  const { build: buildCopy } = characterSheetDictionary.characterSheet;
+
+  return (
+    <section
+      aria-label={buildCopy.experience}
+      className={styles.experience}
+      data-invalid={derived.hasExperienceError || undefined}
+    >
+      <div className={styles.experienceGrid}>
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="character-sheet-experience">
+            {buildCopy.acquiredExperience}
+          </label>
+          <input
+            aria-invalid={derived.hasExperienceError || undefined}
+            className={styles.numberInput}
+            defaultValue={acquired}
+            id="character-sheet-experience"
+            onBlur={(event) => {
+              event.currentTarget.value = String(
+                onAcquiredChange(event.currentTarget.value),
+              );
+            }}
+            onChange={(event) => {
+              if (!event.currentTarget.validity.badInput) {
+                onAcquiredChange(event.currentTarget.value);
+              }
+            }}
+            step="1"
+            type="number"
+          />
+        </div>
+        <ReadOnlyCreditField
+          formula="流儀と生き様のレベルに応じたG7の消費経験点"
+          label={buildCopy.spentExperience}
+          value={derived.spentExperience ?? "—"}
+        />
+        <ReadOnlyCreditField
+          formula="取得経験点 - 消費経験点"
+          label={buildCopy.remainingExperience}
+          value={derived.remainingExperience ?? "—"}
+        />
+        <ReadOnlyCreditField
+          formula="プライマリ流儀レベル + 生き様レベル"
+          label={buildCopy.rank}
+          value={derived.rank ?? "—"}
+        />
+      </div>
+    </section>
+  );
+}
+
 /** Basic profile and credit fields controlled by the containing presenter. */
 export default function ProfileSection({
   characterImage,
   credit,
   creditSummary,
+  experience,
   isRootOperationInProgress,
   onCharacterImageCleared,
   onCharacterImageSelected,
@@ -386,6 +455,7 @@ export default function ProfileSection({
           />
         </div>
       </section>
+      <ExperienceField {...experience} />
     </div>
   );
 }

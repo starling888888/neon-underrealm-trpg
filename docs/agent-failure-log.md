@@ -759,3 +759,21 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-7-sheet-build` のissue作成・完了確認
 - 観測した失敗: 要件とdesign notesにある取得経験点の基本情報側配置、流儀増加値、生き様係数、共通スキルボーナス表示をG7契約へ取り込まず、実装後に完了条件とチェックポイントを完了扱いにした。
 - 一次対応: レビュー指摘 1としてG7 issueへ不足事項と修正契約を追加した。以後、Gate issueの範囲と完了条件を確定する際は、関連要件の表示配置・派生表示まで照合する。
+
+### Repeated flaky character-sheet section-frame browser test
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` の `tests/visual/character-sheet.spec.ts`（縁のsection frame開閉確認）
+- 観測した失敗: 同じcharacter-sheet browser testで、`縁`の開閉buttonをclickした直後も`aria-expanded`が`true`のままとなる失敗を再度観測した。今回のG7変更はframe実装を変更しておらず、同一commandの他8件は成功したため、既存のclient hydrationまたは操作同期の不安定さとして切り分ける。
+- 一次対応: G7のDOM変更を原因とみなしてframe実装へ変更を加えず、対象testを単独で再実行して再現性を確認する。frameを変更する必要がある場合は、別scopeで操作同期の契約を明確にして対応する。
+
+### Repeated VRT capture invocation error
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` の対象限定Visual Review
+- 観測した失敗: `character-sheet` VRTにtagがないことを確認せずtag grepを渡して`No tests found`にし、その後も`visual:capture` script内の`--update-snapshots`との引数順を確認せずspec pathを渡してPlaywright option parse errorにした。同一Visual Reviewでcapture commandを2回失敗させた。
+- 一次対応: `tests/visual/vrt/character-sheet.spec.ts`のscenario名をgrep対象として、既存`visual:capture` scriptへ`--grep character-sheet`だけを渡す。package scriptの固定引数がある場合は、追加引数がどのoptionに結び付くかを先に確認する。

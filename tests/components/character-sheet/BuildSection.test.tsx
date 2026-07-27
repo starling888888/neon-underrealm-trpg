@@ -17,7 +17,6 @@ function createProps(): BuildSectionProps {
     build,
     derived: calculateBuild(build),
     ikizamaOptions: [{ id: "burai", name: "ブライ" }],
-    onAcquiredExperienceChange: vi.fn((value: string) => Number(value)),
     onAttributeChange: vi.fn(),
     onAttributeCommit: vi.fn((_, __, value: string) => Number(value)),
     onIkizamaChange: vi.fn(),
@@ -43,16 +42,7 @@ describe("BuildSection", () => {
     render(<BuildSection {...props} />);
 
     expect(screen.getAllByText("—").length).toBeGreaterThan(0);
-    expect(
-      screen.getByText("生き様：能力値ポイント: 0, 0, 0, 0"),
-    ).not.toBeNull();
-    expect(
-      (
-        screen.getByRole("spinbutton", {
-          name: "取得経験点",
-        }) as HTMLInputElement
-      ).value,
-    ).toBe("50");
+    expect(screen.getByText("能力値ポイント: 0, 0, 0, 0")).not.toBeNull();
 
     await user.selectOptions(
       screen.getByLabelText("プライマリ流儀"),

@@ -19,21 +19,33 @@ export type AttributeDerivedValues = {
   temporary: number | null;
 };
 
+export type BuildReferenceValues = {
+  commonSkillBonuses: Ryugi["commonSkillBonuses"] | null;
+  commonSkillLevel: number;
+  commonSkillLevelLimit: number | null;
+  ikizamaHealthCoefficient: number | null;
+  ikizamaMindCoefficient: number | null;
+  primaryHealthIncrease: number | null;
+  primaryMindIncrease: number | null;
+};
+
 export type BuildDerivedValues = {
   attributes: Record<AttributeName, AttributeDerivedValues>;
   growthPoints: number | null;
   hasAttributeError: boolean;
   hasBuildError: boolean;
   hasExperienceError: boolean;
+  hasGrowthError: boolean;
+  hasPointAllocationError: boolean;
   hasRyugiError: boolean;
   ikizamaAttributePoints: readonly number[];
   ikizamaLevelInvalid: boolean;
-  ikizamaName: string | null;
   otherRyugiDuplicateRowIds: readonly string[];
   otherRyugiLevelInvalidRowIds: readonly string[];
   primaryRyugiDuplicate: boolean;
   primaryRyugiLevelInvalid: boolean;
   rank: number | null;
+  reference: BuildReferenceValues;
   remainingExperience: number | null;
   spentExperience: number | null;
 };
@@ -55,6 +67,16 @@ function getSources(build: BuildValues): BuildSources {
   };
 }
 
+const emptyReferenceValues: BuildReferenceValues = {
+  commonSkillBonuses: null,
+  commonSkillLevel: 0,
+  commonSkillLevelLimit: null,
+  ikizamaHealthCoefficient: null,
+  ikizamaMindCoefficient: null,
+  primaryHealthIncrease: null,
+  primaryMindIncrease: null,
+};
+
 function isSamePointAllocation(build: BuildValues, ikizama: Ikizama): boolean {
   const actual = attributeNames
     .map((attribute) => build.attributes[attribute].points)
@@ -73,6 +95,22 @@ function createEmptyAttributes(): Record<
   return Object.fromEntries(
     attributeNames.map((attribute) => [attribute, emptyAttributeValues]),
   ) as Record<AttributeName, AttributeDerivedValues>;
+}
+
+function getIkizamaCoefficients(ikizama: Ikizama, level: number) {
+  if (level < 1) {
+    return { health: 0, mind: 0 };
+  }
+
+  if (level < 4) {
+    return ikizama.secondaryAttributeCoefficients.level1;
+  }
+
+  if (level < 10) {
+    return ikizama.secondaryAttributeCoefficients.level4;
+  }
+
+  return ikizama.secondaryAttributeCoefficients.level10;
 }
 
 /** Derives G7-only build values without depending on React or form state. */
@@ -123,15 +161,17 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
       hasAttributeError: false,
       hasBuildError: hasRyugiError || hasInvalidAcquiredExperience,
       hasExperienceError: hasInvalidAcquiredExperience,
+      hasGrowthError: false,
+      hasPointAllocationError: false,
       hasRyugiError,
       ikizamaAttributePoints: [0, 0, 0, 0],
       ikizamaLevelInvalid,
-      ikizamaName: null,
       otherRyugiDuplicateRowIds,
       otherRyugiLevelInvalidRowIds,
       primaryRyugiDuplicate: hasPrimaryDuplicate,
       primaryRyugiLevelInvalid: primaryLevelInvalid,
       rank: null,
+      reference: emptyReferenceValues,
       remainingExperience: null,
       spentExperience: null,
     };
@@ -143,14 +183,13 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
     (total, attribute) => total + build.attributes[attribute].growth,
     0,
   );
-  const hasNegativeAttributeValue = attributeNames.some((attribute) => {
-    const values = build.attributes[attribute];
-    return values.points < 0 || values.growth < 0;
-  });
-  const hasAttributeError =
+  const hasPointAllocationError =
     !isSamePointAllocation(build, ikizama) ||
+    attributeNames.some((attribute) => build.attributes[attribute].points < 0);
+  const hasGrowthError =
     usedGrowthPoints > growthPoints ||
-    hasNegativeAttributeValue;
+    attributeNames.some((attribute) => build.attributes[attribute].growth < 0);
+  const hasAttributeError = hasPointAllocationError || hasGrowthError;
   const spentExperience =
     Math.max(0, build.primaryRyugiLevel - 1) * 10 +
     Math.max(0, build.ikizamaLevel - 1) * 10 +
@@ -180,6 +219,10 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
       ];
     }),
   ) as Record<AttributeName, AttributeDerivedValues>;
+  const ikizamaCoefficients = getIkizamaCoefficients(
+    ikizama,
+    build.ikizamaLevel,
+  );
 
   return {
     attributes,
@@ -187,15 +230,25 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
     hasAttributeError,
     hasBuildError: hasRyugiError || hasAttributeError || hasExperienceError,
     hasExperienceError,
+    hasGrowthError,
+    hasPointAllocationError,
     hasRyugiError,
     ikizamaAttributePoints: [...ikizama.attributePoints],
     ikizamaLevelInvalid,
-    ikizamaName: ikizama.name,
     otherRyugiDuplicateRowIds,
     otherRyugiLevelInvalidRowIds,
     primaryRyugiDuplicate: hasPrimaryDuplicate,
     primaryRyugiLevelInvalid: primaryLevelInvalid,
     rank,
+    reference: {
+      commonSkillBonuses: primaryRyugi.commonSkillBonuses,
+      commonSkillLevel: 0,
+      commonSkillLevelLimit: Math.ceil(rank / 2),
+      ikizamaHealthCoefficient: ikizamaCoefficients.health,
+      ikizamaMindCoefficient: ikizamaCoefficients.mind,
+      primaryHealthIncrease: primaryRyugi.healthIncrease,
+      primaryMindIncrease: primaryRyugi.mindIncrease,
+    },
     remainingExperience,
     spentExperience,
   };
