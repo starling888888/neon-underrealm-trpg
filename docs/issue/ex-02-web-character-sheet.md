@@ -128,6 +128,54 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - `docs/architectures/character-sheet.md`を新設して、サイト全体アーキテクチャ要件とキャラクターシート固有の決定を分ける方針が妥当か。
 - 対話用design draftの作成手段、保存場所、Git管理範囲、desktop/tablet/mobileの具体的viewport値が妥当か。`design-image-generation`は、ユーザー明示指示時の`.tmp/` HTML draft / local capture、承認済みintentのnotes化、VRT参照記録を担い、実装・Visual Review・canonical VRT更新を混同しない。
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- `normalizeBuildInput` が副能力値を含む共通の整数入力正規化に使われている一方、名称とコメントが G7 のビルド専用に見える。
+- `FormulaTooltip` は fixed 配置だが、開いた後に scroll しても閉じず、trigger と位置が離れうる。
+- 副能力値の logic test が、生き様レベルの係数境界とプライマリ流儀レベル 2 以上を確認していない。
+- `calculateSecondaryAttributes` が利用しない G7 の派生値まで含む `BuildDerivedValues` に型上依存している。
+- `useCharacterSheetFormPresenterProps` が profile、build、副能力値、縁とそれぞれの派生値・操作を一つの hook に保持しており、後続 section を追加すると adapter の責務境界が不明瞭になる。
+
+### 判定
+
+- source: unknown（`.tmp/chatgpt-review.md` の ChatGPT review draft）
+- classification: valid
+- local validation:
+  - `src/character-sheet/schemas/character-sheet-form.ts` の `normalizeBuildInput` は `useCharacterSheetFormPresenterProps` でビルド入力と副能力値入力の両方に使用されている。
+  - `src/character-sheet/components/FormulaTooltip.tsx` は open 中に `resize` だけを監視し、scroll 時の位置更新・dismiss を行わない。
+  - `tests/node/character-sheet/secondary-attributes.test.ts` は選択済みビルドのレベル 1 を中心に確認している。係数境界は `docs/requirements/character-sheet.md` と `calculateBuild` で 1–3、4–9、10 以上として定義されている。
+  - `calculateSecondaryAttributes` が実際に参照するのは、能力値、プライマリ流儀レベル、体力・精神力の参照値だけである。
+  - `useCharacterSheetFormPresenterProps` は profile、build、副能力値、縁の watch、派生値算出、section 操作、縁の行同期を同居させている。各 section は独立した state lifecycle と test setup を持つため、後続 Gate の追加前に section 別 hook へ分ける合理性がある。
+  - review draft が指摘する visual review の手順逸脱は `docs/agent-failure-log.md` に既に記録済みであり、新規 failure entry は追加しない。
+
+### 対応方針
+
+- Gate を追加・再開せず、この親 issue の Gate 外レビュー修正として扱う。作業 branch は現在の `ex-02-web-character-sheet` を継続使用する。
+- 共通の整数入力正規化を用途に即した名称へ改め、ビルド・副能力値・既存の利用箇所を同じ契約へ接続する。数値の fallback、整数化、ゲーム制約を課さない既存の挙動は変更しない。
+- `FormulaTooltip` は open 中の scroll で閉じる。scroll に追従して再配置する機能は追加しない。Component test で dismiss を確認する。
+- 副能力値 logic は必要最小限の入力型へ狭める。係数境界（生き様レベル 1、4、10）とプライマリ流儀レベル 2 の table-driven Node test を追加する。
+- `useCharacterSheetFormPresenterProps` は section props hook の合成だけを担うようにし、profile、build、副能力値、縁はそれぞれ専用 hook へ移す。各 hook は対応 section の watch、派生値、更新 callback、縁の行同期を所有する。RHF と Presenter の props 契約、画面挙動、ゲーム算出式は変更しない。
+- 分割前後で既存の hook test を維持し、section hook の責務を局所テストで確認する。`useMemo`、`useCallback`、`React.memo` による参照安定化は、既存 TODO の条件が満たされるまで追加しない。
+- UI の見た目・レイアウト、VRT baseline、ゲーム算出式、依存パッケージは変更しない。
+
+### 対応完了チェックリスト
+
+- [ ] 共通の整数入力正規化を用途に即した名称へ変更し、既存の入力挙動を保つ
+- [ ] open 中の `FormulaTooltip` が scroll で閉じる
+- [ ] `FormulaTooltip` の scroll dismiss を Component test で確認する
+- [ ] `calculateSecondaryAttributes` の入力型を必要最小限へ狭める
+- [ ] 副能力値の係数境界とプライマリ流儀レベルを Node test で確認する
+- [ ] `useCharacterSheetFormPresenterProps` を section props hook の合成へ分割する
+- [ ] 分割した section hook の派生値と更新 callback を hook test で確認する
+- [ ] 既存ルートが壊れていない
+- [ ] GitHub Pages のサブパス公開に影響しない
+- [ ] 不要な依存関係を追加していない
+- [ ] 初期スコープ外の機能を実装していない
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。
