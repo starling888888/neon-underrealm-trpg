@@ -1012,3 +1012,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-11-sheet-noncombat` のmobile判定数output
 - 観測した失敗: 左右paddingと枠幅のトレードオフを実画面で確認しないまま変更し、判定数がclipする状態をユーザーが先に発見した。数値の最小幅を推定しただけで、実際のfont metrics、padding、spinnerとの組み合わせを確認していなかった。
 - 一次対応: 既存paddingのclipを実画面で確認した後にだけ、左右paddingを縮める変更を行った。寸法を変更する反復では、各変更後のactual screenshotを開き、次の変更はその結果が得られてから行う。
+
+### Left visible skill names outside GameDomain across G10 and G11
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-10-sheet-attack-reaction` と `ex-02-11-sheet-noncombat` の技能名・リアクション名のowner
+- 観測した失敗: GameDomainへゲーム用語を集約する方針があるにもかかわらず、攻撃技能名・リアクション名を`characterSheet.checks`へ、非戦闘技能名をmaster dataへ追加した。前の2 Gateで表示名とID・対応能力・順序を分離して棚卸ししなかった。
+- 一次対応: 可視の攻撃技能、リアクション、非戦闘技能名を`gameDomain.terms`へ移し、master dataとformにはID・順序・対応能力だけを残す。新しいゲーム用語を追加するGateでは、表示名、識別子、ゲーム計算データのownerをissue review時に分けて確認する。

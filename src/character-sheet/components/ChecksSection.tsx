@@ -158,22 +158,25 @@ function NoncombatCheckRow({
   onModifierChange: (name: NoncombatSkillName, value: string) => number;
   row: ChecksDerivedValues["noncombat"][number];
 }) {
+  const name =
+    characterSheetDictionary.gameDomain.terms.noncombatSkillNames[row.id];
+
   return (
     <div
       className={styles.noncombatRow}
       data-favorite={row.isFavorite || undefined}
     >
       <input
-        aria-label={`${row.name}を得意技能にする`}
+        aria-label={`${name}を得意技能にする`}
         checked={row.isFavorite}
         onChange={(event) =>
           onFavoriteChange(row.id, event.currentTarget.checked)
         }
         type="checkbox"
       />
-      <span className={styles.noncombatName}>{row.name}</span>
+      <span className={styles.noncombatName}>{name}</span>
       <input
-        aria-label={`${row.name}の判定修正`}
+        aria-label={`${name}の判定修正`}
         className={styles.noncombatModifier}
         defaultValue={row.modifier}
         onBlur={(event) => {
@@ -190,7 +193,7 @@ function NoncombatCheckRow({
         type="number"
       />
       <output
-        aria-label={`${row.name}の常時判定数／一時判定数`}
+        aria-label={`${name}の常時判定数／一時判定数`}
         className="character-sheet-number-value character-sheet-number-value--compact"
       >
         {formatDisplayValue(row.permanentCheck)}／
@@ -302,6 +305,7 @@ export default function ChecksSection({
   reactions,
 }: ChecksSectionProps) {
   const { checks: labels } = characterSheetDictionary.characterSheet;
+  const terms = characterSheetDictionary.gameDomain.terms;
 
   return (
     <div className={styles.root}>
@@ -336,7 +340,7 @@ export default function ChecksSection({
                     >
                       {attackSkillNames.map((skill) => (
                         <option key={skill} value={skill}>
-                          {labels.skills[skill]}
+                          {terms.attackSkillNames[skill]}
                         </option>
                       ))}
                     </select>
@@ -373,7 +377,7 @@ export default function ChecksSection({
         <CheckHeaders sectionName={labels.reactions} />
         <div className={styles.rows}>
           {reactions.map((reaction) => {
-            const label = labels.reactionsByName[reaction.name];
+            const label = terms.reactionCheckNames[reaction.name];
 
             return (
               <CheckRow
