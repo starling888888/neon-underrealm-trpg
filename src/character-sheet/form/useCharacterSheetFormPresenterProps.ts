@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
 import type { CharacterImageRecord } from "../character-image";
@@ -5,12 +6,16 @@ import type { CharacterSheetFormPresenterProps } from "../components/CharacterSh
 import {
   type AttributeName,
   type AttributeValues,
+  type BondEditableFieldName,
+  type BondValues,
   type BuildValues,
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
   type OtherRyugiEditableFieldName,
+  type ResolveEffectName,
   type SecondaryAttributeFieldName,
 } from "../form-values";
+import { calculateBonds } from "../logic/bonds";
 import { calculateBuild } from "../logic/build";
 import { calculateCredit } from "../logic/credit";
 import { calculateSecondaryAttributes } from "../logic/secondary-attributes";
@@ -21,6 +26,7 @@ import {
 import {
   normalizeBuildInput,
   normalizeCreditInput,
+  normalizeResolveEffectInput,
 } from "../schemas/character-sheet-form";
 
 /**
@@ -67,6 +73,11 @@ export default function useCharacterSheetFormPresenterProps(
     defaultValue: characterSheetDefaultValues.secondaryAttributes,
     name: "secondaryAttributes",
   });
+  const bonds = useWatch({
+    control,
+    defaultValue: characterSheetDefaultValues.bonds,
+    name: "bonds",
+  });
   const creditSummary = calculateCredit({
     acquiredCredit: credit.acquired,
     changeAdjustment: credit.changeAdjustment,
@@ -79,6 +90,32 @@ export default function useCharacterSheetFormPresenterProps(
     derivedBuild,
     secondaryAttributes,
   );
+  const derivedBonds = calculateBonds(
+    bonds,
+    derivedSecondaryAttributes.bondLimit,
+  );
+
+  useEffect(() => {
+    const currentRows = getValues("bonds.rows");
+
+    if (currentRows.length >= derivedBonds.requiredRowCount) {
+      return;
+    }
+
+    const nextRows = Array.from(
+      { length: derivedBonds.requiredRowCount - currentRows.length },
+      (_, index): BondValues => ({
+        isResolved: false,
+        relation: "",
+        rowId: `bond-${currentRows.length + index + 1}`,
+        target: "",
+      }),
+    );
+
+    setValue("bonds.rows", [...currentRows, ...nextRows], {
+      shouldValidate: true,
+    });
+  }, [derivedBonds.requiredRowCount, getValues, setValue]);
 
   function setBuildValue<K extends keyof BuildValues>(
     field: K,
@@ -151,6 +188,18 @@ export default function useCharacterSheetFormPresenterProps(
     return normalizedValue;
   }
 
+  function setBondRowValue(
+    rowId: string,
+    field: BondEditableFieldName,
+    value: boolean | string,
+  ): void {
+    const rows = getValues("bonds.rows").map((row) =>
+      row.rowId === rowId ? { ...row, [field]: value } : row,
+    );
+
+    setValue("bonds.rows", rows, { shouldValidate: true });
+  }
+
   return {
     buildSection: {
       build,
@@ -199,6 +248,29 @@ export default function useCharacterSheetFormPresenterProps(
         return normalizedValue;
       },
       ryugiOptions: getCharacterSheetRyugiOptions(),
+    },
+    bondsSection: {
+      bonds: bonds.rows,
+      derived: derivedBonds,
+      onEffectModifierChange: (field: ResolveEffectName, value: string) => {
+        const normalizedValue = normalizeResolveEffectInput(field, value);
+
+        setValue(`bonds.resolveEffectModifiers.${field}`, normalizedValue, {
+          shouldValidate: true,
+        });
+
+        return normalizedValue;
+      },
+      onRowChange: setBondRowValue,
+      onRowClear: (rowId) => {
+        const rows = getValues("bonds.rows").map((row) =>
+          row.rowId === rowId
+            ? { ...row, isResolved: false, relation: "", target: "" }
+            : row,
+        );
+
+        setValue("bonds.rows", rows, { shouldValidate: true });
+      },
     },
     profileSection: {
       characterImage,

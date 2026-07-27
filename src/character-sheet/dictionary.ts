@@ -30,6 +30,25 @@ export const characterSheetDictionary = {
       ryugiAndIkizama: "流儀・生き様",
       unselected: "未選択",
     },
+    bonds: {
+      clear: "クリア（行は削除しません）",
+      headers: {
+        relationship: "関係",
+        resolve: "覚悟",
+        target: "対象",
+      },
+      overLimit: "入力済みの縁が結べる縁の上限を超えています。",
+      resolveEffectDescription: "通常の縁／今生の縁",
+      resolveEffectHeading: "覚悟の効果",
+      resolveEffects: {
+        activeCheck: "能動判定",
+        morale: "気合獲得",
+        passiveCheck: "受動判定",
+        recovery: "気絶からの回復",
+      },
+      resolveTooltip:
+        "シナリオ中、覚悟にした縁にチェックを入れます。チェックが入っている限り、変更もクリアもできません",
+    },
     credit: {
       formulas: {
         change: "合計信用 - 消費信用 + 小銭修正",

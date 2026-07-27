@@ -128,4 +128,73 @@ describe("useCharacterSheetFormPresenterProps", () => {
       ),
     ).toBe(true);
   });
+
+  it("keeps resolved bonds locked and clears a row without deleting it", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const firstRowId = result.current.form.getValues("bonds.rows.0.rowId");
+
+    act(() => {
+      result.current.presenterProps.bondsSection.onRowChange(
+        firstRowId,
+        "target",
+        "アキラ",
+      );
+      result.current.presenterProps.bondsSection.onRowChange(
+        firstRowId,
+        "isResolved",
+        true,
+      );
+    });
+
+    expect(result.current.form.getValues("bonds.rows.0")).toMatchObject({
+      isResolved: true,
+      target: "アキラ",
+    });
+
+    act(() => {
+      result.current.presenterProps.bondsSection.onRowClear(firstRowId);
+    });
+
+    expect(result.current.form.getValues("bonds.rows")).toHaveLength(4);
+    expect(result.current.form.getValues("bonds.rows.0")).toMatchObject({
+      isResolved: false,
+      relation: "",
+      rowId: firstRowId,
+      target: "",
+    });
+  });
+
+  it("adds fixed bond rows for an increased bond limit and warns when occupied rows exceed it", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.secondaryAttributesSection.onNumberChange(
+        "bondLimitModifier",
+        "2",
+      );
+    });
+
+    expect(result.current.form.getValues("bonds.rows")).toHaveLength(6);
+
+    act(() => {
+      result.current.presenterProps.secondaryAttributesSection.onNumberChange(
+        "bondLimitModifier",
+        "-3",
+      );
+      result.current.presenterProps.bondsSection.onRowChange(
+        result.current.form.getValues("bonds.rows.0.rowId"),
+        "target",
+        "アキラ",
+      );
+      result.current.presenterProps.bondsSection.onRowChange(
+        result.current.form.getValues("bonds.rows.1.rowId"),
+        "target",
+        "ベラ",
+      );
+    });
+
+    expect(result.current.presenterProps.bondsSection.derived.isOverLimit).toBe(
+      true,
+    );
+  });
 });

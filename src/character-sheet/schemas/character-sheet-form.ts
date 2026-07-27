@@ -1,12 +1,28 @@
 import { z } from "zod";
 
-import type { CreditFieldName } from "../form-values";
+import type { CreditFieldName, ResolveEffectName } from "../form-values";
 
 const nonNegativeIntegerSchema = z.number().int().nonnegative();
 const signedIntegerSchema = z.number().int();
 
 /** Validates the values kept in React Hook Form. */
 export const characterSheetFormSchema = z.object({
+  bonds: z.object({
+    resolveEffectModifiers: z.object({
+      activeCheck: z.number().int(),
+      morale: z.number().int(),
+      passiveCheck: z.number().int(),
+      recovery: z.number().int(),
+    }),
+    rows: z.array(
+      z.object({
+        isResolved: z.boolean(),
+        relation: z.string(),
+        rowId: z.string(),
+        target: z.string(),
+      }),
+    ),
+  }),
   build: z.object({
     acquiredExperience: z.number().int(),
     attributes: z.object({
@@ -125,5 +141,12 @@ export function normalizeCreditInput(
 
 /** Normalizes a G7 numeric browser input without enforcing game constraints. */
 export function normalizeBuildInput(value: number | string): number {
+  return normalizeIntegerInput(value);
+}
+
+export function normalizeResolveEffectInput(
+  _field: ResolveEffectName,
+  value: number | string,
+): number {
   return normalizeIntegerInput(value);
 }

@@ -1,4 +1,5 @@
 import { characterSheetDictionary } from "../dictionary";
+import BondsSection, { type BondsSectionProps } from "./BondsSection";
 import BuildSection, { type BuildSectionProps } from "./BuildSection";
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
@@ -14,12 +15,14 @@ import SecondaryAttributesSection, {
  * master lookup, browser APIs, and dialog coordination stay in the container.
  */
 export type CharacterSheetFormPresenterProps = {
+  bondsSection: BondsSectionProps;
   buildSection: BuildSectionProps;
   profileSection: ProfileSectionProps;
   secondaryAttributesSection: SecondaryAttributesSectionProps;
 };
 
 export default function CharacterSheetFormPresenter({
+  bondsSection,
   buildSection,
   profileSection,
   secondaryAttributesSection,
@@ -65,7 +68,9 @@ export default function CharacterSheetFormPresenter({
           id="bonds"
           title={gameDomain.terms.bonds}
         >
-          <div data-character-sheet-section-slot="bonds" />
+          <div data-character-sheet-section-slot="bonds">
+            <BondsSection {...bondsSection} />
+          </div>
         </CharacterSheetSectionFrame>
       </div>
       <div

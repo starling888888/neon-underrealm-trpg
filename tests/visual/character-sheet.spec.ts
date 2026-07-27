@@ -242,6 +242,38 @@ test.describe("character sheet page", () => {
     await expect(temporaryChoice).toBeChecked();
   });
 
+  test("locks resolved bonds, clears only unlocked rows, and warns when over the limit", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.mobile);
+    await page.goto("character-sheet/");
+
+    const firstTarget = page.getByLabel("縁1の対象", { exact: true });
+    const firstResolve = page.getByLabel("縁1の覚悟", { exact: true });
+    const firstClear = page.getByRole("button", {
+      name: "縁1をクリア（行は削除しません）",
+    });
+
+    await firstTarget.fill("アキラ");
+    await firstResolve.check();
+    await expect(firstTarget).toBeDisabled();
+    await expect(firstClear).toBeDisabled();
+    await firstResolve.uncheck();
+    await expect(firstTarget).toBeEnabled();
+    await firstClear.click();
+    await expect(firstTarget).toHaveValue("");
+
+    const bondLimitModifier = page.getByLabel("縁最大数修正", {
+      exact: true,
+    });
+    await bondLimitModifier.fill("-3");
+    await page.getByLabel("縁1の対象", { exact: true }).fill("アキラ");
+    await page.getByLabel("縁2の対象", { exact: true }).fill("ベラ");
+    await expect(
+      page.getByText("入力済みの縁が結べる縁の上限を超えています。"),
+    ).toBeVisible();
+  });
+
   test("opens and dismisses the confirmation dialog without changing the form", async ({
     page,
   }) => {

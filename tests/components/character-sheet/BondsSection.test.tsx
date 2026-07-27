@@ -1,0 +1,78 @@
+// @vitest-environment jsdom
+
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+import BondsSection, {
+  type BondsSectionProps,
+} from "../../../src/character-sheet/components/BondsSection";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { calculateBonds } from "../../../src/character-sheet/logic/bonds";
+
+function createProps(): BondsSectionProps {
+  const bonds = structuredClone(characterSheetDefaultValues.bonds);
+
+  return {
+    bonds: bonds.rows,
+    derived: calculateBonds(bonds, 4),
+    onEffectModifierChange: vi.fn((_, value: string) => Number(value)),
+    onRowChange: vi.fn(),
+    onRowClear: vi.fn(),
+  };
+}
+
+afterEach(cleanup);
+
+describe("BondsSection", () => {
+  it("keeps fixed rows, a resolve tooltip, and a non-delete clear action", () => {
+    const props = createProps();
+
+    render(<BondsSection {...props} />);
+
+    expect(screen.getByLabelText("縁1の対象")).not.toBeNull();
+    expect(screen.getByLabelText("縁4の関係")).not.toBeNull();
+    expect(
+      screen.getByRole("button", {
+        name: "縁1をクリア（行は削除しません）",
+      }),
+    ).not.toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "覚悟の説明" }));
+
+    expect(screen.getByRole("tooltip").textContent).toBe(
+      "シナリオ中、覚悟にした縁にチェックを入れます。チェックが入っている限り、変更もクリアもできません",
+    );
+  });
+
+  it("locks a resolved row and keeps its clear action unavailable", () => {
+    const props = createProps();
+    props.bonds[0] = { ...props.bonds[0], isResolved: true };
+
+    render(<BondsSection {...props} />);
+
+    expect(screen.getByLabelText("縁1の対象")).toHaveProperty("disabled", true);
+    expect(
+      screen.getByRole("button", {
+        name: "縁1をクリア（行は削除しません）",
+      }),
+    ).toHaveProperty("disabled", true);
+  });
+
+  it("groups the four modifier expressions under their effect names", () => {
+    const props = createProps();
+
+    render(<BondsSection {...props} />);
+
+    expect(screen.getByText("覚悟の効果")).not.toBeNull();
+    expect(screen.getByText("通常の縁／今生の縁")).not.toBeNull();
+    expect(screen.getAllByText("10d6 / 15d6")).toHaveLength(2);
+    expect(screen.getAllByText("2d / 3d")).toHaveLength(2);
+    expect(
+      screen.getByRole("heading", { name: "気絶からの回復" }),
+    ).not.toBeNull();
+    expect(screen.getByRole("heading", { name: "気合獲得" })).not.toBeNull();
+    expect(screen.getByRole("heading", { name: "能動判定" })).not.toBeNull();
+    expect(screen.getByRole("heading", { name: "受動判定" })).not.toBeNull();
+    expect(props.onEffectModifierChange).not.toHaveBeenCalled();
+  });
+});

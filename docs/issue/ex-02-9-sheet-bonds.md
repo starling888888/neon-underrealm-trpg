@@ -52,29 +52,29 @@
 
 ## 完了条件
 
-- [ ] `bonds` slotに、初期4行と縁最大数に対応する固定縁入力行を表示できる。
-- [ ] 各行に対象、関係、覚悟checkbox、行削除と誤認しない透過背景の円形`×`クリアicon buttonがあり、クリアで対象・関係・覚悟だけを初期値へ戻せる。
-- [ ] 覚悟済みの対象・関係は編集不可で、覚悟解除後に再編集できる。
-- [ ] 覚悟checkboxのlabelから、指定文言のtooltipを確認できる。覚悟checkboxの操作とtooltip triggerはそれぞれ独立して操作できる。
-- [ ] 上限増減で既存入力を失わず、上限超過時には縁section内で警告を表示できる。
-- [ ] 縁入力の下に`覚悟の効果`見出しと灰色の`通常の縁／今生の縁`説明を横並びで表示できる。
-- [ ] 各覚悟効果が、個別labelなしに`通常の縁使用時の元値 / 今生の縁使用時の元値 + 修正値 = 通常の縁使用時の最終値 / 今生の縁使用時の最終値`をスラッシュ区切りで示す。
+- [x] `bonds` slotに、初期4行と縁最大数に対応する固定縁入力行を表示できる。
+- [x] 各行に対象、関係、覚悟checkbox、行削除と誤認しない透過背景の円形`×`クリアicon buttonがあり、クリアで対象・関係・覚悟だけを初期値へ戻せる。
+- [x] 覚悟済みの対象・関係は編集不可で、覚悟解除後に再編集できる。
+- [x] 覚悟checkboxのlabelから、指定文言のtooltipを確認できる。覚悟checkboxの操作とtooltip triggerはそれぞれ独立して操作できる。
+- [x] 上限増減で既存入力を失わず、上限超過時には縁section内で警告を表示できる。
+- [x] 縁入力の下に`覚悟の効果`見出しと灰色の`通常の縁／今生の縁`説明を横並びで表示できる。
+- [x] 各覚悟効果が、個別labelなしに`通常の縁使用時の元値 / 今生の縁使用時の元値 + 修正値 = 通常の縁使用時の最終値 / 今生の縁使用時の最終値`をスラッシュ区切りで示す。
 - [ ] 覚悟効果が`気絶からの回復`、`気合獲得`、`能動判定`、`受動判定`の順で、desktop / tabletは4列、mobileは同じ順序の2行2列で表示され、横overflowしない。
 - [ ] 覚悟効果の元値、正負の修正、縁のclear・覚悟lock・上限超過、desktop / tablet / mobileの表示を、純粋logic、schema / hook、Component、browser behavior testの適切な層で確認している。
 - [ ] `@character-sheet` targetのdefaultと、少なくとも覚悟済み行・上限超過警告を表示するstateをVisual Reviewし、canonical VRT baselineを更新していない。
-- [ ] 関連TODOを扱わず、未対応理由が記録されている。
+- [x] 関連TODOを扱わず、未対応理由が記録されている。
 - [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する`docs/TODO.md`項目と矛盾していない。
-- [ ] `docs/design/character-sheet/notes.md`と、ユーザー指示で更新した縁・覚悟の表示契約に矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する`docs/TODO.md`項目と矛盾していない。
+- [x] `docs/design/character-sheet/notes.md`と、ユーザー指示で更新した縁・覚悟の表示契約に矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -100,3 +100,4 @@
 
 - VRT targetは`tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`、routeは`/character-sheet/`とする。stateはdefault、覚悟済み行、上限超過警告、viewportはdesktop、tablet、mobileとする。G9では変更targetだけを比較し、baselineの更新はユーザーの明示承認がある場合だけ行う。
 - ユーザーの最新指示に合わせて、`docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`の覚悟効果の名称、順序、mobile配置、クリアicon、式表示を更新済みである。
+- ユーザーUIレビューを先に行う指示により、Visual ReviewとGate Tech Reviewは未実施のまま保留する。`npm run check`はAstro checkとBiome checkを通過したが、変更対象外の`docs/issue/ex-02-web-character-sheet/plan.md`が既存のMarkdown formatter違反であるため、全体commandとしては未通過である。

@@ -72,7 +72,40 @@ export type SecondaryAttributeValues = {
 
 export type SecondaryAttributeFieldName = keyof SecondaryAttributeValues;
 
+export type BondValues = {
+  isResolved: boolean;
+  relation: string;
+  rowId: string;
+  target: string;
+};
+
+export type BondEditableFieldName = Exclude<keyof BondValues, "rowId">;
+
+export const resolveEffectNames = [
+  "recovery",
+  "morale",
+  "activeCheck",
+  "passiveCheck",
+] as const;
+
+export type ResolveEffectName = (typeof resolveEffectNames)[number];
+
+export type BondsValues = {
+  resolveEffectModifiers: Record<ResolveEffectName, number>;
+  rows: BondValues[];
+};
+
+function createInitialBondRows(): BondValues[] {
+  return Array.from({ length: 4 }, (_, index) => ({
+    isResolved: false,
+    relation: "",
+    rowId: `bond-${index + 1}`,
+    target: "",
+  }));
+}
+
 export type CharacterSheetFormValues = {
+  bonds: BondsValues;
   build: BuildValues;
   credit: CreditValues;
   profile: ProfileValues;
@@ -80,6 +113,15 @@ export type CharacterSheetFormValues = {
 };
 
 export const characterSheetDefaultValues: CharacterSheetFormValues = {
+  bonds: {
+    resolveEffectModifiers: {
+      activeCheck: 0,
+      morale: 0,
+      passiveCheck: 0,
+      recovery: 0,
+    },
+    rows: createInitialBondRows(),
+  },
   build: {
     acquiredExperience: 50,
     attributes: {
