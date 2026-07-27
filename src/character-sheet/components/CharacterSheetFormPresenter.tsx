@@ -1,4 +1,5 @@
 import { characterSheetDictionary } from "../dictionary";
+import BuildSection, { type BuildSectionProps } from "./BuildSection";
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
@@ -10,10 +11,12 @@ import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
  * master lookup, browser APIs, and dialog coordination stay in the container.
  */
 export type CharacterSheetFormPresenterProps = {
+  buildSection: BuildSectionProps;
   profileSection: ProfileSectionProps;
 };
 
 export default function CharacterSheetFormPresenter({
+  buildSection,
   profileSection,
 }: CharacterSheetFormPresenterProps) {
   const { characterSheet, gameDomain } = characterSheetDictionary;
@@ -33,7 +36,15 @@ export default function CharacterSheetFormPresenter({
             <ProfileSection {...profileSection} />
           </CharacterSheetSectionFrame>
         </div>
-        <div data-character-sheet-section-slot="build" />
+        <div data-character-sheet-section-slot="build">
+          <CharacterSheetSectionFrame
+            headingAs="h2"
+            id="build"
+            title={characterSheet.sections.build}
+          >
+            <BuildSection {...buildSection} />
+          </CharacterSheetSectionFrame>
+        </div>
         <div data-character-sheet-section-slot="secondary" />
         <CharacterSheetSectionFrame
           expandable

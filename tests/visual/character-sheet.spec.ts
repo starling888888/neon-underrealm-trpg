@@ -213,6 +213,33 @@ test.describe("character sheet page", () => {
     await expect(setting).toHaveValue("ネオンの街\n雨の夜");
   });
 
+  test("renders the G7 build inputs with the specified default state", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const buildSlot = page.locator(
+      '[data-character-sheet-section-slot="build"]',
+    );
+
+    await expect(
+      buildSlot.getByRole("combobox", {
+        name: "プライマリ流儀",
+        exact: true,
+      }),
+    ).toHaveValue("");
+    await expect(buildSlot.getByLabel("プライマリ流儀Lv")).toHaveValue("1");
+    await expect(
+      buildSlot.getByRole("combobox", { name: "生き様", exact: true }),
+    ).toHaveValue("");
+    await expect(buildSlot.getByLabel("生き様Lv")).toHaveValue("1");
+    await expect(buildSlot.getByLabel("取得経験点")).toHaveValue("50");
+    await expect(
+      buildSlot.getByText("生き様：能力値ポイント: 0, 0, 0, 0"),
+    ).toBeVisible();
+  });
+
   test("opens and dismisses the confirmation dialog without changing the form", async ({
     page,
   }) => {

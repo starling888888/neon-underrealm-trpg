@@ -24,12 +24,86 @@ export type ProfileValues = {
 
 export type ProfileFieldName = keyof ProfileValues;
 
+export const attributeNames = [
+  "strength",
+  "agility",
+  "perception",
+  "body",
+  "mind",
+] as const;
+
+export type AttributeName = (typeof attributeNames)[number];
+
+export type AttributeValues = {
+  growth: number;
+  permanentModifier: number;
+  points: number;
+  temporaryModifier: number;
+};
+
+export type OtherRyugiValues = {
+  level: number;
+  rowId: string;
+  ryugiId: string | null;
+};
+
+export type BuildValues = {
+  attributes: Record<AttributeName, AttributeValues>;
+  ikizamaId: string | null;
+  ikizamaLevel: number;
+  otherRyugi: OtherRyugiValues[];
+  primaryRyugiId: string | null;
+  primaryRyugiLevel: number;
+  acquiredExperience: number;
+};
+
 export type CharacterSheetFormValues = {
+  build: BuildValues;
   credit: CreditValues;
   profile: ProfileValues;
 };
 
 export const characterSheetDefaultValues: CharacterSheetFormValues = {
+  build: {
+    acquiredExperience: 50,
+    attributes: {
+      strength: {
+        growth: 0,
+        permanentModifier: 0,
+        points: 0,
+        temporaryModifier: 0,
+      },
+      agility: {
+        growth: 0,
+        permanentModifier: 0,
+        points: 0,
+        temporaryModifier: 0,
+      },
+      perception: {
+        growth: 0,
+        permanentModifier: 0,
+        points: 0,
+        temporaryModifier: 0,
+      },
+      body: {
+        growth: 0,
+        permanentModifier: 0,
+        points: 0,
+        temporaryModifier: 0,
+      },
+      mind: {
+        growth: 0,
+        permanentModifier: 0,
+        points: 0,
+        temporaryModifier: 0,
+      },
+    },
+    ikizamaId: null,
+    ikizamaLevel: 1,
+    otherRyugi: [],
+    primaryRyugiId: null,
+    primaryRyugiLevel: 1,
+  },
   credit: {
     acquired: 10,
     changeAdjustment: 0,

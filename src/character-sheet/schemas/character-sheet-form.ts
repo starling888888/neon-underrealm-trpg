@@ -7,6 +7,52 @@ const signedIntegerSchema = z.number().int();
 
 /** Validates the values kept in React Hook Form. */
 export const characterSheetFormSchema = z.object({
+  build: z.object({
+    acquiredExperience: z.number().int(),
+    attributes: z.object({
+      agility: z.object({
+        growth: z.number().int(),
+        permanentModifier: z.number().int(),
+        points: z.number().int(),
+        temporaryModifier: z.number().int(),
+      }),
+      body: z.object({
+        growth: z.number().int(),
+        permanentModifier: z.number().int(),
+        points: z.number().int(),
+        temporaryModifier: z.number().int(),
+      }),
+      mind: z.object({
+        growth: z.number().int(),
+        permanentModifier: z.number().int(),
+        points: z.number().int(),
+        temporaryModifier: z.number().int(),
+      }),
+      perception: z.object({
+        growth: z.number().int(),
+        permanentModifier: z.number().int(),
+        points: z.number().int(),
+        temporaryModifier: z.number().int(),
+      }),
+      strength: z.object({
+        growth: z.number().int(),
+        permanentModifier: z.number().int(),
+        points: z.number().int(),
+        temporaryModifier: z.number().int(),
+      }),
+    }),
+    ikizamaId: z.string().nullable(),
+    ikizamaLevel: z.number().int(),
+    otherRyugi: z.array(
+      z.object({
+        level: z.number().int(),
+        rowId: z.string(),
+        ryugiId: z.string().nullable(),
+      }),
+    ),
+    primaryRyugiId: z.string().nullable(),
+    primaryRyugiLevel: z.number().int(),
+  }),
   credit: z.object({
     acquired: nonNegativeIntegerSchema,
     changeAdjustment: signedIntegerSchema,
@@ -65,4 +111,9 @@ export function normalizeCreditInput(
   value: number | string,
 ): number {
   return creditInputSchemas[field].parse(value);
+}
+
+/** Normalizes a G7 numeric browser input without enforcing game constraints. */
+export function normalizeBuildInput(value: number | string): number {
+  return normalizeIntegerInput(value);
 }

@@ -49,25 +49,25 @@
 
 ## 完了条件
 
-- [ ] プライマリ流儀・生き様は各1レベルを初期値・最低値とし、取得経験点は50点を初期値として表示する。
-- [ ] その他流儀は初期0行で追加・削除でき、重複状態を局所エラーで示せる。
-- [ ] 選択中のgenerated dataを使い、5能力値の編集可能値とread-only派生値を表示する。
-- [ ] 生き様の`attributePoints`と能力値ポイントの不一致、成長可能点超過、経験点超過を、入力を保持したまま局所エラーで示せる。
-- [ ] エラー文言のレビュー・全体エラー集約を追加せず、対象入力のUIだけを扱っている。
-- [ ] desktop / tablet / mobileで既存の基本情報・画像・信用との配置を保ち、横overflowがない。
-- [ ] `tests/visual/vrt/character-sheet.spec.ts`の`@character-sheet`に限定してVisual Reviewを行い、canonical VRT baselineはユーザーの明示承認なしに更新しない。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] プライマリ流儀・生き様は各1レベルを初期値・最低値とし、取得経験点は50点を初期値として表示する。
+- [x] その他流儀は初期0行で追加・削除でき、重複状態を局所エラーで示せる。
+- [x] 選択中のgenerated dataを使い、5能力値の編集可能値とread-only派生値を表示する。
+- [x] 生き様の`attributePoints`と能力値ポイントの不一致、成長可能点超過、経験点超過を、入力を保持したまま局所エラーで示せる。
+- [x] エラー文言のレビュー・全体エラー集約を追加せず、対象入力のUIだけを扱っている。
+- [x] desktop / tablet / mobileで既存の基本情報・画像・信用との配置を保ち、横overflowがない。
+- [x] `tests/visual/vrt/character-sheet.spec.ts`の`@character-sheet`に限定してVisual Reviewを行い、canonical VRT baselineはユーザーの明示承認なしに更新しない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存の`ProfileSection`と同種の入力UIを優先し、基本情報・画像・信用のDOM順、配置、既存操作を壊していない。
-- [ ] 既存のdesktop 2列、tablet/mobile 1列のlayout regionと、GitHub Pagesのサブパス公開を壊していない。
-- [ ] 数値の中間入力と不整合値を保持し、HTMLの`min`やschemaだけで入力を拒否していない。
-- [ ] G7の費用責務と、後続Gate/G16が加える費用責務を混同していない。
-- [ ] 既存generated JSONのaccessorを利用し、不要なデータ変換・依存関係を追加していない。
-- [ ] `docs/TODO.md` のmemo化保留と、`docs/out-of-scope.md` の直接編集式・非ウィザード方針に矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存の`ProfileSection`と同種の入力UIを優先し、基本情報・画像・信用のDOM順、配置、既存操作を壊していない。
+- [x] 既存のdesktop 2列、tablet/mobile 1列のlayout regionと、GitHub Pagesのサブパス公開を壊していない。
+- [x] 数値の中間入力と不整合値を保持し、HTMLの`min`やschemaだけで入力を拒否していない。
+- [x] G7の費用責務と、後続Gate/G16が加える費用責務を混同していない。
+- [x] 既存generated JSONのaccessorを利用し、不要なデータ変換・依存関係を追加していない。
+- [x] `docs/TODO.md` のmemo化保留と、`docs/out-of-scope.md` の直接編集式・非ウィザード方針に矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -93,3 +93,34 @@
 - 直接編集形式では過去の「1回の成長」操作履歴を保持しないため、G7で自動検証できる能力値成長は現在値から判定できる成長可能点の合計までとする。履歴を必要とする規則を自動検証へ拡張する場合は、状態モデルと要件を別途レビューする。
 - 初期状態はプライマリ流儀・生き様を未選択にし、draft画像の例示を任意のdefaultとして実装しない。未選択時の派生値と能力値ポイントは対象範囲に定めた表示を使う。
 - このissue準備ではsource code、draft画像、canonical VRT baselineを変更しない。実装開始にはユーザーの明示承認が必要である。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt.*@character-sheet`
+- route / states / viewports: `/character-sheet/` / default / desktop、ultrawide、tablet、mobile
+
+### レビュー結果
+
+| 対象              | 判定       | 差分                                                                                                                   | 対応                                                                                                     |
+| ----------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `character-sheet` | 要人間判断 | 4 viewportともビルド領域の追加により既存canonical baselineと不一致（desktop 3%、ultrawide 1%、tablet 14%、mobile 16%） | 一時snapshotを目視し、既存基本情報・画像・信用の配置を維持していることを確認した。baselineは更新しない。 |
+
+### 自己修正した項目
+
+- [x] tabletの短い数値入力からブラウザ標準のspinnerを除き、既存の数値入力と同じ可読性にそろえた。
+
+### 人間判断が必要な差分
+
+- ビルド領域追加によるcanonical VRT baseline更新の要否。ユーザーの明示承認なしに更新していない。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [ ] VRT差分を修正した、または修正不要と判断した（baseline更新の人間判断待ち）
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（該当する場合）

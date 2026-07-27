@@ -741,3 +741,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-web-character-sheet` の全VRT実行とdesktop/tablet baseline更新
 - 観測した失敗: `npm run visual:test`、`npm run visual:update`、targetを分割した`npx playwright test`で、Chromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動に失敗した。同一作業で複数回再現し、更新後のVRT比較を完了できなかった。
 - 一次対応: baseline更新と比較を区別して記録し、Chromiumが起動できた時点で書き込まれたdesktop/tablet snapshotは未コミットのまま保持した。以後、このsandbox条件ではPlaywrightの成功を前提にせず、実行可否と未検証範囲を明示して報告する。
+
+### Repeated Playwright locator ambiguity
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` の `tests/visual/character-sheet.spec.ts`
+- 観測した失敗: `getByLabel("プライマリ流儀")`がselectだけでなく`プライマリ流儀Lv`のnumber inputにも部分一致し、strict mode violationで対象Visual testを複数回失敗させた。実行出力が完了行を省略する条件を成功と誤認し、失敗artifactを先に確認しなかった。
+- 一次対応: selectのlocatorを`{ exact: true }`へ変更し、Visual test後は終了出力だけでなく`test-results/.last-run.json`も確認する。

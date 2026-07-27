@@ -1,0 +1,110 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { calculateBuild } from "../../../src/character-sheet/logic/build";
+
+function selectedBuild() {
+  return {
+    ...characterSheetDefaultValues.build,
+    attributes: {
+      agility: {
+        ...characterSheetDefaultValues.build.attributes.agility,
+        points: 4,
+      },
+      body: {
+        ...characterSheetDefaultValues.build.attributes.body,
+        points: 2,
+      },
+      mind: {
+        ...characterSheetDefaultValues.build.attributes.mind,
+        points: 0,
+      },
+      perception: {
+        ...characterSheetDefaultValues.build.attributes.perception,
+        points: 3,
+      },
+      strength: {
+        ...characterSheetDefaultValues.build.attributes.strength,
+        points: 5,
+      },
+    },
+    ikizamaId: "burai",
+    primaryRyugiId: "kenkaya",
+  };
+}
+
+describe("character sheet build", () => {
+  it("keeps derived values unavailable until both required selections exist", () => {
+    const derived = calculateBuild(characterSheetDefaultValues.build);
+
+    assert.equal(derived.rank, null);
+    assert.equal(derived.spentExperience, null);
+    assert.equal(derived.attributes.strength.permanent, null);
+    assert.deepEqual(derived.ikizamaAttributePoints, [0, 0, 0, 0]);
+    assert.equal(derived.ikizamaName, null);
+    assert.equal(derived.hasAttributeError, false);
+  });
+
+  it("derives rank, experience, and attributes from selected data", () => {
+    const derived = calculateBuild(selectedBuild());
+
+    assert.equal(derived.rank, 2);
+    assert.equal(derived.growthPoints, 0);
+    assert.equal(derived.spentExperience, 0);
+    assert.equal(derived.remainingExperience, 50);
+    assert.deepEqual(derived.ikizamaAttributePoints, [5, 4, 3, 2]);
+    assert.equal(derived.ikizamaName, "ブライ");
+    assert.equal(derived.attributes.strength.base, 5);
+    assert.equal(derived.attributes.strength.permanent, 10);
+    assert.equal(derived.attributes.strength.temporary, 10);
+    assert.equal(derived.hasBuildError, false);
+  });
+
+  it("preserves mismatches and over-budget values as local error states", () => {
+    const build = selectedBuild();
+    build.attributes.strength.points = 4;
+    build.acquiredExperience = 0;
+    build.primaryRyugiLevel = 2;
+
+    const derived = calculateBuild(build);
+
+    assert.equal(derived.hasAttributeError, true);
+    assert.equal(derived.hasExperienceError, true);
+    assert.equal(derived.hasBuildError, true);
+  });
+
+  it("keeps an invalid acquired experience value visible before both selections", () => {
+    const build = {
+      ...characterSheetDefaultValues.build,
+      acquiredExperience: -1,
+    };
+
+    const derived = calculateBuild(build);
+
+    assert.equal(derived.hasExperienceError, true);
+    assert.equal(derived.hasBuildError, true);
+    assert.equal(derived.remainingExperience, null);
+  });
+
+  it("locates duplicate ryugi selections separately from level errors", () => {
+    const build = {
+      ...selectedBuild(),
+      otherRyugi: [
+        { level: 1, rowId: "first", ryugiId: "kenkaya" },
+        { level: -1, rowId: "second", ryugiId: "emono" },
+        { level: 1, rowId: "third", ryugiId: "emono" },
+      ],
+    };
+
+    const derived = calculateBuild(build);
+
+    assert.equal(derived.primaryRyugiDuplicate, true);
+    assert.deepEqual(derived.otherRyugiDuplicateRowIds, [
+      "first",
+      "second",
+      "third",
+    ]);
+    assert.deepEqual(derived.otherRyugiLevelInvalidRowIds, ["second"]);
+  });
+});

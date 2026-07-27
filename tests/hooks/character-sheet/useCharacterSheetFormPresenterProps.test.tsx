@@ -69,4 +69,23 @@ describe("useCharacterSheetFormPresenterProps", () => {
       "ネオン",
     );
   });
+
+  it("keeps consecutive build selections instead of overwriting the first one", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.buildSection.onPrimaryRyugiChange(
+        "kenkaya",
+      );
+      result.current.presenterProps.buildSection.onIkizamaChange("burai");
+    });
+
+    expect(result.current.form.getValues("build.primaryRyugiId")).toBe(
+      "kenkaya",
+    );
+    expect(result.current.form.getValues("build.ikizamaId")).toBe("burai");
+    expect(result.current.presenterProps.buildSection.derived.ikizamaName).toBe(
+      "ブライ",
+    );
+  });
 });
