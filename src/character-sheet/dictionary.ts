@@ -21,12 +21,12 @@ export const characterSheetDictionary = {
       errors: {
         decode:
           "画像を読み込めませんでした。別の画像ファイルを選択してください。",
-        fileTooLarge: "画像ファイルは5 MiB以下にしてください。",
+        fileTooLarge: "画像ファイルは最大5MBまでです。",
         invalidType: "画像ファイルを選択してください。",
         restore: "保存済みの画像を復元できませんでした。",
         storage: "画像を保存できませんでした。もう一度お試しください。",
       },
-      limit: "WebP / 5 MiB",
+      limit: "最大5MBまで",
       loading: "画像を処理しています",
       preview: "選択したキャラクター画像",
       replaceFile: "画像を差し替え",
