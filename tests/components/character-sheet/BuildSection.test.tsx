@@ -41,8 +41,8 @@ describe("BuildSection", () => {
 
     render(<BuildSection {...props} />);
 
-    expect(screen.getAllByText("—").length).toBeGreaterThan(0);
-    expect(screen.getByText("能力値ポイント: 0, 0, 0, 0")).not.toBeNull();
+    expect(screen.getAllByText("-").length).toBeGreaterThan(0);
+    expect(screen.getByText("能力値ポイント: -")).not.toBeNull();
     expect(screen.getByText("Lv 2で獲得")).not.toBeNull();
 
     await user.selectOptions(

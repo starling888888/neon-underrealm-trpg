@@ -35,15 +35,43 @@ function selectedBuild() {
 }
 
 describe("character sheet build", () => {
-  it("keeps derived values unavailable until both required selections exist", () => {
+  it("keeps only master-dependent values unavailable until selections exist", () => {
     const derived = calculateBuild(characterSheetDefaultValues.build);
 
-    assert.equal(derived.rank, null);
-    assert.equal(derived.spentExperience, null);
+    assert.equal(derived.rank, 2);
+    assert.equal(derived.spentExperience, 0);
+    assert.equal(derived.remainingExperience, 50);
     assert.equal(derived.attributes.strength.permanent, null);
-    assert.deepEqual(derived.ikizamaAttributePoints, [0, 0, 0, 0]);
+    assert.equal(derived.ikizamaAttributePoints, null);
     assert.equal(derived.reference.primaryHealthIncrease, null);
     assert.equal(derived.hasAttributeError, false);
+  });
+
+  it("derives independent primary and ikizama values before both are selected", () => {
+    const primaryOnly = {
+      ...characterSheetDefaultValues.build,
+      primaryRyugiId: "kenkaya",
+    };
+    const primaryDerived = calculateBuild(primaryOnly);
+
+    assert.equal(primaryDerived.attributes.strength.base, 5);
+    assert.equal(primaryDerived.attributes.strength.permanent, null);
+    assert.equal(primaryDerived.reference.primaryHealthIncrease, 5);
+    assert.equal(
+      primaryDerived.reference.commonSkillBonuses?.level2,
+      "攻撃判定数+1\n攻撃力+3",
+    );
+    assert.equal(primaryDerived.ikizamaAttributePoints, null);
+
+    const ikizamaOnly = {
+      ...characterSheetDefaultValues.build,
+      ikizamaId: "burai",
+    };
+    const ikizamaDerived = calculateBuild(ikizamaOnly);
+
+    assert.deepEqual(ikizamaDerived.ikizamaAttributePoints, [5, 4, 3, 2]);
+    assert.equal(ikizamaDerived.reference.ikizamaHealthCoefficient, 11);
+    assert.equal(ikizamaDerived.attributes.strength.base, null);
   });
 
   it("derives rank, experience, and attributes from selected data", () => {
@@ -112,7 +140,7 @@ describe("character sheet build", () => {
 
     assert.equal(derived.hasExperienceError, true);
     assert.equal(derived.hasBuildError, true);
-    assert.equal(derived.remainingExperience, null);
+    assert.equal(derived.remainingExperience, -1);
   });
 
   it("locates duplicate ryugi selections separately from level errors", () => {

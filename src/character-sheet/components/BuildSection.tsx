@@ -5,6 +5,7 @@ import type {
   BuildValues,
   OtherRyugiValues,
 } from "../form-values";
+import { formatDisplayValue } from "../format-display-value";
 import type { BuildDerivedValues } from "../logic/build";
 import type { CharacterSheetSelectOption } from "../master-data/build";
 import styles from "./BuildSection.module.css";
@@ -84,7 +85,9 @@ function ReferenceMetric({ label, value }: ReferenceMetricProps) {
   return (
     <div className={styles.referenceMetric}>
       <span className={styles.referenceLabel}>{label}</span>
-      <output className={styles.referenceValue}>{value ?? "—"}</output>
+      <output className={styles.referenceValue}>
+        {formatDisplayValue(value)}
+      </output>
     </div>
   );
 }
@@ -142,12 +145,14 @@ export default function BuildSection({
   onPrimaryRyugiLevelCommit,
   ryugiOptions,
 }: BuildSectionProps) {
-  const { build: buildCopy } = characterSheetDictionary.characterSheet;
+  const { characterSheet, gameDomain } = characterSheetDictionary;
+  const buildCopy = gameDomain.terms;
+  const buildUiCopy = characterSheet.build;
 
   return (
     <div className={styles.section} data-build-section>
       <section
-        aria-label={buildCopy.ryugiAndIkizama}
+        aria-label={buildUiCopy.ryugiAndIkizama}
         className={styles.buildPane}
         data-invalid={derived.hasRyugiError || undefined}
       >
@@ -214,7 +219,7 @@ export default function BuildSection({
               />
             </div>
             <button
-              aria-label={`${buildCopy.otherRyugi}${index + 1}${buildCopy.remove}`}
+              aria-label={`${buildCopy.otherRyugi}${index + 1}${buildUiCopy.remove}`}
               className={styles.removeButton}
               onClick={() => onOtherRyugiRemove(index)}
               type="button"
@@ -228,7 +233,7 @@ export default function BuildSection({
           onClick={onOtherRyugiAdd}
           type="button"
         >
-          {buildCopy.addOtherRyugi}
+          {buildUiCopy.addOtherRyugi}
         </button>
       </section>
 
@@ -238,25 +243,23 @@ export default function BuildSection({
         data-invalid={derived.hasAttributeError || undefined}
       >
         <div className={styles.attributeMeta}>
-          <FormulaTooltip formula="生き様の4値と0を、5つの能力値へ一度ずつ割り振ります。">
-            <span>{`${buildCopy.points}: ${[
-              ...derived.ikizamaAttributePoints,
-              ...(derived.ikizamaAttributePoints.length === 4 &&
-              derived.reference.ikizamaHealthCoefficient !== null
-                ? [0]
-                : []),
-            ].join(", ")}`}</span>
+          <FormulaTooltip formula={buildUiCopy.formulas.points}>
+            <span>{`${buildCopy.points}: ${formatDisplayValue(
+              derived.ikizamaAttributePoints === null
+                ? null
+                : [...derived.ikizamaAttributePoints, 0].join(", "),
+            )}`}</span>
           </FormulaTooltip>
-          <FormulaTooltip formula="格が15の倍数になるたびに格÷15点獲得します。（格が15で1点、格が30で2点）２点以上獲得した場合は1点ずつ別の能力に割り振る必要があります。">
-            <span>{`${buildCopy.growthPoints}: ${derived.growthPoints ?? "—"}`}</span>
+          <FormulaTooltip formula={buildUiCopy.formulas.growthPoints}>
+            <span>{`${buildCopy.growthPoints}: ${formatDisplayValue(derived.growthPoints)}`}</span>
           </FormulaTooltip>
         </div>
         <div className={styles.attributeGrid}>
           <span className={styles.attributeHeader}>{buildCopy.attribute}</span>
           <span className={styles.attributeHeader}>{buildCopy.base}</span>
           <span className={styles.pointsHeader}>
-            <span>能力値</span>
-            <span>ポイント</span>
+            <span>{buildCopy.attributes}</span>
+            <span>{buildCopy.point}</span>
           </span>
           <span className={styles.attributeHeader}>{buildCopy.growth}</span>
           <span className={styles.attributeHeader}>
@@ -274,7 +277,7 @@ export default function BuildSection({
             return (
               <div className={styles.attributeRow} key={attributeName}>
                 <span>{buildCopy.attributeNames[attributeName]}</span>
-                <output>{derivedValues.base ?? "—"}</output>
+                <output>{formatDisplayValue(derivedValues.base)}</output>
                 <BuildNumberInput
                   ariaInvalid={derived.hasPointAllocationError}
                   label={`${buildCopy.attributeNames[attributeName]}${buildCopy.points}`}
@@ -307,7 +310,7 @@ export default function BuildSection({
                   }
                   value={values.permanentModifier}
                 />
-                <output>{derivedValues.permanent ?? "—"}</output>
+                <output>{formatDisplayValue(derivedValues.permanent)}</output>
                 <BuildNumberInput
                   label={`${buildCopy.attributeNames[attributeName]}${buildCopy.temporaryModifier}`}
                   onChange={(value) =>
@@ -318,7 +321,7 @@ export default function BuildSection({
                   }
                   value={values.temporaryModifier}
                 />
-                <output>{derivedValues.temporary ?? "—"}</output>
+                <output>{formatDisplayValue(derivedValues.temporary)}</output>
               </div>
             );
           })}
@@ -357,22 +360,22 @@ export default function BuildSection({
             {(
               [
                 [
-                  buildCopy.level2,
+                  buildCopy.level2CommonSkillBonus,
                   derived.reference.commonSkillBonuses?.level2,
                 ],
                 [
-                  buildCopy.level5,
+                  buildCopy.level5CommonSkillBonus,
                   derived.reference.commonSkillBonuses?.level5,
                 ],
                 [
-                  buildCopy.level9,
+                  buildCopy.level9CommonSkillBonus,
                   derived.reference.commonSkillBonuses?.level9,
                 ],
               ] as const
             ).map(([level, content]) => (
               <div className={styles.commonSkillBonus} key={level}>
                 <span>{level}</span>
-                <span>{content ?? "—"}</span>
+                <span>{formatDisplayValue(content)}</span>
               </div>
             ))}
           </div>

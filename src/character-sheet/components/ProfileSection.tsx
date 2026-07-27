@@ -17,6 +17,7 @@ import type {
   ProfileFieldName,
   ProfileValues,
 } from "../form-values";
+import { formatDisplayValue } from "../format-display-value";
 import type { BuildDerivedValues } from "../logic/build";
 import type { CreditSummary } from "../logic/credit";
 import FormulaTooltip from "./FormulaTooltip";
@@ -264,7 +265,8 @@ function ExperienceField({
   derived,
   onAcquiredChange,
 }: ExperienceProps) {
-  const { build: buildCopy } = characterSheetDictionary.characterSheet;
+  const { characterSheet, gameDomain } = characterSheetDictionary;
+  const buildCopy = gameDomain.terms;
 
   return (
     <section
@@ -298,16 +300,16 @@ function ExperienceField({
         </div>
         <ReadOnlyCreditField
           label={buildCopy.spentExperience}
-          value={derived.spentExperience ?? "—"}
+          value={formatDisplayValue(derived.spentExperience)}
         />
         <ReadOnlyCreditField
           label={buildCopy.remainingExperience}
-          value={derived.remainingExperience ?? "—"}
+          value={formatDisplayValue(derived.remainingExperience)}
         />
         <ReadOnlyCreditField
-          formula="プライマリ流儀レベル + 生き様レベル"
+          formula={characterSheet.build.formulas.rank}
           label={buildCopy.rank}
-          value={derived.rank ?? "—"}
+          value={formatDisplayValue(derived.rank)}
         />
       </div>
     </section>
@@ -434,12 +436,12 @@ export default function ProfileSection({
             value={credit.received}
           />
           <ReadOnlyCreditField
-            formula={creditTerms.formulas.total}
+            formula={characterSheet.credit.formulas.total}
             label={creditTerms.total}
             value={creditSummary.totalCredit}
           />
           <ReadOnlyCreditField
-            formula={creditTerms.formulas.consumed}
+            formula={characterSheet.credit.formulas.consumed}
             label={creditTerms.consumed}
             value={0}
           />
@@ -452,7 +454,7 @@ export default function ProfileSection({
             value={credit.changeAdjustment}
           />
           <ReadOnlyCreditField
-            formula={creditTerms.formulas.change}
+            formula={characterSheet.credit.formulas.change}
             label={creditTerms.change}
             value={creditSummary.change}
           />

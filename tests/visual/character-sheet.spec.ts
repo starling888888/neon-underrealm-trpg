@@ -238,9 +238,8 @@ test.describe("character sheet page", () => {
     ).toHaveValue("");
     await expect(buildSlot.getByLabel("生き様Lv")).toHaveValue("1");
     await expect(profileSlot.getByLabel("取得経験点")).toHaveValue("50");
-    await expect(
-      buildSlot.getByText("能力値ポイント: 0, 0, 0, 0"),
-    ).toBeVisible();
+    await expect(buildSlot.getByText("能力値ポイント: -")).toBeVisible();
+    await expect(profileSlot.getByText("2", { exact: true })).toBeVisible();
   });
 
   test("keeps the narrow desktop attribute headers on one line except points", async ({
@@ -307,6 +306,27 @@ test.describe("character sheet page", () => {
           getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/),
         ),
       ).toHaveLength(3);
+    }
+  });
+
+  test("keeps build reference metrics in one row at every viewport", async ({
+    page,
+  }) => {
+    const referenceGrid = page.locator('[class*="referenceGrid"]');
+
+    for (const viewport of [
+      visualViewports.desktop,
+      visualViewports.tablet,
+      visualViewports.mobile,
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto("character-sheet/");
+
+      expect(
+        await referenceGrid.evaluate((element) =>
+          getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/),
+        ),
+      ).toHaveLength(4);
     }
   });
 

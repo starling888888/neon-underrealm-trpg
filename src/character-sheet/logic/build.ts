@@ -36,7 +36,7 @@ export type BuildDerivedValues = {
   hasGrowthError: boolean;
   hasPointAllocationError: boolean;
   hasRyugiError: boolean;
-  ikizamaAttributePoints: readonly number[];
+  ikizamaAttributePoints: readonly number[] | null;
   ikizamaLevelInvalid: boolean;
   otherRyugiDuplicateRowIds: readonly string[];
   otherRyugiLevelInvalidRowIds: readonly string[];
@@ -46,12 +46,6 @@ export type BuildDerivedValues = {
   reference: BuildReferenceValues;
   remainingExperience: number | null;
   spentExperience: number | null;
-};
-
-const emptyAttributeValues: AttributeDerivedValues = {
-  base: null,
-  permanent: null,
-  temporary: null,
 };
 
 function getSources(build: BuildValues): BuildSources {
@@ -65,14 +59,6 @@ function getSources(build: BuildValues): BuildSources {
   };
 }
 
-const emptyReferenceValues: BuildReferenceValues = {
-  commonSkillBonuses: null,
-  ikizamaHealthCoefficient: null,
-  ikizamaMindCoefficient: null,
-  primaryHealthIncrease: null,
-  primaryMindIncrease: null,
-};
-
 function isSamePointAllocation(build: BuildValues, ikizama: Ikizama): boolean {
   const actual = attributeNames
     .map((attribute) => build.attributes[attribute].points)
@@ -82,15 +68,6 @@ function isSamePointAllocation(build: BuildValues, ikizama: Ikizama): boolean {
   );
 
   return actual.every((value, index) => value === expected[index]);
-}
-
-function createEmptyAttributes(): Record<
-  AttributeName,
-  AttributeDerivedValues
-> {
-  return Object.fromEntries(
-    attributeNames.map((attribute) => [attribute, emptyAttributeValues]),
-  ) as Record<AttributeName, AttributeDerivedValues>;
 }
 
 function getIkizamaCoefficients(ikizama: Ikizama, level: number) {
@@ -149,46 +126,32 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
     otherRyugiDuplicateRowIds.length > 0 ||
     otherRyugiLevelInvalidRowIds.length > 0;
   const hasInvalidAcquiredExperience = build.acquiredExperience < 0;
-
-  if (!hasSelectedBuild) {
-    return {
-      attributes: createEmptyAttributes(),
-      growthPoints: null,
-      hasAttributeError: false,
-      hasBuildError: hasRyugiError || hasInvalidAcquiredExperience,
-      hasExperienceError: hasInvalidAcquiredExperience,
-      hasGrowthError: false,
-      hasPointAllocationError: false,
-      hasRyugiError,
-      ikizamaAttributePoints: [0, 0, 0, 0],
-      ikizamaLevelInvalid,
-      otherRyugiDuplicateRowIds,
-      otherRyugiLevelInvalidRowIds,
-      primaryRyugiDuplicate: hasPrimaryDuplicate,
-      primaryRyugiLevelInvalid: primaryLevelInvalid,
-      rank: null,
-      reference: emptyReferenceValues,
-      remainingExperience: null,
-      spentExperience: null,
-    };
-  }
-
   const rank = build.primaryRyugiLevel + build.ikizamaLevel;
-  const growthPoints = Math.max(0, Math.floor(rank / 15));
+  const growthPoints = hasSelectedBuild
+    ? Math.max(0, Math.floor(rank / 15))
+    : null;
   const usedGrowthPoints = attributeNames.reduce(
     (total, attribute) => total + build.attributes[attribute].growth,
     0,
   );
   const hasPointAllocationError =
-    !isSamePointAllocation(build, ikizama) ||
-    attributeNames.some((attribute) => build.attributes[attribute].points < 0);
+    ikizama !== undefined &&
+    (!isSamePointAllocation(build, ikizama) ||
+      attributeNames.some(
+        (attribute) => build.attributes[attribute].points < 0,
+      ));
   const hasGrowthError =
-    usedGrowthPoints > growthPoints ||
-    attributeNames.some((attribute) => build.attributes[attribute].growth < 0);
+    hasSelectedBuild &&
+    (usedGrowthPoints > (growthPoints ?? 0) ||
+      attributeNames.some(
+        (attribute) => build.attributes[attribute].growth < 0,
+      ));
   const hasAttributeError = hasPointAllocationError || hasGrowthError;
   const spentExperience =
-    Math.max(0, build.primaryRyugiLevel - 1) * 10 +
-    Math.max(0, build.ikizamaLevel - 1) * 10 +
+    (primaryRyugi === undefined
+      ? 0
+      : Math.max(0, build.primaryRyugiLevel - 1) * 10) +
+    (ikizama === undefined ? 0 : Math.max(0, build.ikizamaLevel - 1) * 10) +
     build.otherRyugi.reduce(
       (total, otherRyugi) =>
         total +
@@ -201,24 +164,27 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
   const attributes = Object.fromEntries(
     attributeNames.map((attribute) => {
       const values = build.attributes[attribute];
-      const base = primaryRyugi.baseAttributes[attribute];
+      const base = primaryRyugi?.baseAttributes[attribute] ?? null;
       const permanent =
-        base + values.points + values.growth + values.permanentModifier;
+        base === null || ikizama === undefined
+          ? null
+          : base + values.points + values.growth + values.permanentModifier;
 
       return [
         attribute,
         {
           base,
           permanent,
-          temporary: permanent + values.temporaryModifier,
+          temporary:
+            permanent === null ? null : permanent + values.temporaryModifier,
         },
       ];
     }),
   ) as Record<AttributeName, AttributeDerivedValues>;
-  const ikizamaCoefficients = getIkizamaCoefficients(
-    ikizama,
-    build.ikizamaLevel,
-  );
+  const ikizamaCoefficients =
+    ikizama === undefined
+      ? null
+      : getIkizamaCoefficients(ikizama, build.ikizamaLevel);
 
   return {
     attributes,
@@ -229,7 +195,8 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
     hasGrowthError,
     hasPointAllocationError,
     hasRyugiError,
-    ikizamaAttributePoints: [...ikizama.attributePoints],
+    ikizamaAttributePoints:
+      ikizama === undefined ? null : [...ikizama.attributePoints],
     ikizamaLevelInvalid,
     otherRyugiDuplicateRowIds,
     otherRyugiLevelInvalidRowIds,
@@ -237,11 +204,11 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
     primaryRyugiLevelInvalid: primaryLevelInvalid,
     rank,
     reference: {
-      commonSkillBonuses: primaryRyugi.commonSkillBonuses,
-      ikizamaHealthCoefficient: ikizamaCoefficients.health,
-      ikizamaMindCoefficient: ikizamaCoefficients.mind,
-      primaryHealthIncrease: primaryRyugi.healthIncrease,
-      primaryMindIncrease: primaryRyugi.mindIncrease,
+      commonSkillBonuses: primaryRyugi?.commonSkillBonuses ?? null,
+      ikizamaHealthCoefficient: ikizamaCoefficients?.health ?? null,
+      ikizamaMindCoefficient: ikizamaCoefficients?.mind ?? null,
+      primaryHealthIncrease: primaryRyugi?.healthIncrease ?? null,
+      primaryMindIncrease: primaryRyugi?.mindIncrease ?? null,
     },
     remainingExperience,
     spentExperience,
