@@ -32,11 +32,12 @@ describe("BondsSection", () => {
 
     expect(screen.getByLabelText("縁1の対象")).not.toBeNull();
     expect(screen.getByLabelText("縁4の関係")).not.toBeNull();
-    expect(
-      screen.getByRole("button", {
-        name: "縁1をクリア（行は削除しません）",
-      }),
-    ).not.toBeNull();
+    const clearAction = screen.getByRole("button", {
+      name: "縁1をクリア（行は削除しません）",
+    });
+
+    expect(clearAction.textContent).toBe("クリア");
+    expect(clearAction.querySelector("svg")).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "覚悟の説明" }));
 
@@ -70,7 +71,12 @@ describe("BondsSection", () => {
 
     render(<BondsSection {...props} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "縁2を削除" }));
+    const deleteAction = screen.getByRole("button", { name: "縁2を削除" });
+
+    expect(deleteAction.textContent).toBe("×");
+    expect(deleteAction.querySelector("svg")).toBeNull();
+
+    fireEvent.click(deleteAction);
 
     expect(props.onRowDelete).toHaveBeenCalledWith("bond-2");
     expect(

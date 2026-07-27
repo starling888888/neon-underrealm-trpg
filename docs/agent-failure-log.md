@@ -904,3 +904,21 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-8-sheet-secondary` の能力値table `常時修正`・`一時修正` tooltip
 - 観測した失敗: `常時修正`・`一時修正`のtooltip triggerだけをgrid cell幅いっぱいのblock要素に変更した結果、tooltipの右端基準がラベル文字列ではなくcell全体となった。desktopでtooltipが意図しない位置に現れ、hover時にずれて見える表示を残したにもかかわらず、agentは表示切れだけを確認して「実画面で確認済み」と報告した。
 - 一次対応: 見出しtooltipのrootとbuttonのcell全幅指定を撤去し、他のlabelと同じ文字列幅のtriggerへ戻す。以後、tooltipの実画面確認では表示切れだけでなく、triggerとの相対位置、open前後の周辺レイアウト、同種の既存tooltipとの差も確認する。
+
+### Archived G9 while visual acceptance remained unverified
+
+#### 2026-07-28
+
+- source: review
+- 発生箇所: `ex-02-9-sheet-bonds` のGate完了・child issueの`done/`移動
+- 観測した失敗: G9 child issueにはresponsive表示、層別確認、Visual Reviewの未完了チェックが残り、後続レビューでもactual screenshotによる確認未実施を記録していた。それにもかかわらず親Gate planを`done`とし、child issueを`done/`へ移動した。さらに初期完了条件と後続レビューの覚悟効果表示契約が同一issue内で矛盾したまま残った。
+- 一次対応: `.tmp/chatgpt-review.md`をSSoTと現行実装へ照合し、G10のレビュー指摘1へout-of-scopeとして記録した。G9の受入確認、表示契約、削除callbackはG31統合確認へTODOとして振り分け、G10では実装・完了扱いを変更しない。
+
+### Repeated validation failures while implementing review 2
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-10-sheet-attack-reaction` の`BondsSection` clear icon変更
+- 観測した失敗: 最初のComponent testで、消しゴムSVGをclear buttonではなくdelete buttonへ配置し、利用できない`toHaveTextContent` matcherも追加した。修正後の`npm run check`では、同じJSX箇所のBiome整形違反を再度出した。さらに`lucide-react`への切替後も同じ属性インデントを手動で崩し、整形違反を繰り返した。
+- 一次対応: 条件分岐の両buttonを再読してiconの所属を確認し、既存test環境で提供済みのDOM APIだけを使う。JSX属性は手動で合わせず、対象fileへBiome formatterを直接適用してから、Component test・`npm run check`を再実行する。

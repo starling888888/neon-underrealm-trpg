@@ -144,3 +144,92 @@
 - [ ] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `.tmp/chatgpt-review.md`はG9完了commit `03fab8e`を対象に、G9 child issueを未検証の受入条件を残したまま`done/`へ移動したこと、初期契約と後続レビューで覚悟効果のresponsive表示契約が矛盾することを指摘した。
+- 同reviewは、可変行を`useFieldArray`で扱うarchitecture契約と、配列全体を`setValue`する実装の乖離、上限外であることを確認せずに縁行を削除できるcallback、`onRowChange`のfieldとvalue型が対応付かないことも指摘した。
+- `useCharacterSheetFormPresenterProps`の肥大化は、review snapshot後の`91e214f`でsection別hookへ分割済みである。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）
+- classification: out-of-scope / stale / follow-up
+- local validation: review対象のG9 child issueは現在も`done/`配下にあり、responsive表示・層別確認・Visual Reviewの未完了チェックと、後続レビューの未完了Visual Reviewチェックを残す。親Gate planはG9を`done`としているため、G10内で状態を変更しない。`useCharacterSheetFormPresenterProps`は現在41行で、Presenter adapter肥大化の指摘はstaleである。一方、`useBondsSectionProps`とG10の`useChecksSectionProps`は、architectureの`useFieldArray`契約ではなく配列全体の`setValue`を使用している。縁の`onRowDelete`も覚悟済みだけを拒否し、overflow状態を再確認していない。
+
+### 対応方針
+
+- G10のsource codeは変更しない。G9の受入確認・表示契約の整合と縁削除callbackはG31の統合確認で扱い、可変行のRHF操作境界はG24の永続化着手前に設計・対応する。
+- reviewにより判明した未検証のGate完了報告はagent failureとして記録し、TODOへ後続作業を振り分ける。
+
+### 対応完了チェックリスト
+
+- [ ] G9の未検証受入条件と表示契約を統合確認で整理する。
+- [ ] 縁の削除callbackがoverflow外の行を削除しないことを保証する。
+- [ ] G24着手前に可変行の`useFieldArray`契約と復元時の行identityを設計・適用する。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 縁行の削除操作と入力クリア操作は、色と枠線が異なるだけで同じ`×` iconを使っているため、アイコンだけでは操作結果を区別しにくい。
+
+### 判定
+
+- source: human
+- classification: follow-up
+- local validation: `BondsSection`はoverflow行の削除に共有`character-sheet-remove-button`と`×`を、通常行の入力クリアに`clearButton`と同じ`×`を使用する。accessible nameは区別するが、視覚的なsymbolは同一である。
+
+### 対応方針
+
+- 削除は既存のdanger colorの`×` iconを維持する。入力クリアは、対象・関係・覚悟を空の初期状態へ戻すことを示す、角丸の横長text button `クリア`へ置き換える。色だけで意味を分けず、visible textと`aria-label`の「クリア」を維持する。icon libraryは導入しない。
+- `↺`のような循環矢印は、直前の入力を復元するundoと解釈されやすく、空の初期状態へ戻す現在の操作には採用しない。
+
+### 対応完了チェックリスト
+
+- [x] 入力クリアを角丸の横長text button `クリア`へ変更し、削除の`×`と形状・文言で区別できる。文字は`0.625rem`かつ折り返さない。
+- [ ] desktop / tablet / mobileでicon、hover / focus表示、disabled状態をVisual Reviewする。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt @character-sheet`、対象stateはdefault、`@bond-resolved`、`@bond-over-limit`
+- route / states / viewports: `/character-sheet/` / 通常のclear icon、覚悟済みによるdisabled clear icon、overflow行のdelete icon / desktop、tablet、mobile
+
+### レビュー結果
+
+| 対象                   | 判定       | 差分                                                                               | 対応                                                                              |
+| ---------------------- | ---------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `character-sheet`のVRT | 要人間判断 | 現行captureはfull-page screenshotだけで、clear / delete iconの形状を確認できない。 | locator screenshotを出力できるtest-owned capture pathの承認済み整備後に実施する。 |
+
+### 実画面確認
+
+- 未実施。既存`visual:capture`は`BondsSection`の原寸locator screenshotを出力できないため、default、disabled、overflowの各stateでiconの形状、hover / focus表示、boundsを確認できない。full-page screenshotを局所表示契約の確認根拠に使わない。
+
+### 自己修正した項目
+
+- [x] 通常の縁行の入力クリアを、`0.625rem`で折り返さない角丸の横長text button `クリア`へ変更し、overflow行削除の`×` iconと視覚的に区別した。
+
+### 人間判断が必要な差分
+
+- VRTの肯定判定には、desktop / tablet / mobileのdefault、覚悟済み、overflow stateごとに`BondsSection`を原寸で出力するtest-owned locator screenshotが必要である。
+
+### 対応完了チェックリスト
+
+- [ ] 変更targetだけをVRT比較した
+- [ ] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [ ] VRT差分を修正した、または修正不要と判断した
+- [ ] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

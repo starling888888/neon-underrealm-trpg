@@ -161,7 +161,7 @@ export default function BondsSection({
                   onClick={() => onRowClear(bond.rowId)}
                   type="button"
                 >
-                  <span aria-hidden="true">×</span>
+                  クリア
                 </button>
               )}
             </div>
