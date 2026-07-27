@@ -162,19 +162,19 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 
 ### 対応完了チェックリスト
 
-- [ ] 共通の整数入力正規化を用途に即した名称へ変更し、既存の入力挙動を保つ
-- [ ] open 中の `FormulaTooltip` が scroll で閉じる
-- [ ] `FormulaTooltip` の scroll dismiss を Component test で確認する
-- [ ] `calculateSecondaryAttributes` の入力型を必要最小限へ狭める
-- [ ] 副能力値の係数境界とプライマリ流儀レベルを Node test で確認する
-- [ ] `useCharacterSheetFormPresenterProps` を section props hook の合成へ分割する
-- [ ] 分割した section hook の派生値と更新 callback を hook test で確認する
-- [ ] 既存ルートが壊れていない
-- [ ] GitHub Pages のサブパス公開に影響しない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] 共通の整数入力正規化を用途に即した名称へ変更し、既存の入力挙動を保つ
+- [x] open 中の `FormulaTooltip` が scroll で閉じる
+- [x] `FormulaTooltip` の scroll dismiss を Component test で確認する
+- [x] `calculateSecondaryAttributes` の入力型を必要最小限へ狭める
+- [x] 副能力値の係数境界とプライマリ流儀レベルを Node test で確認する
+- [x] `useCharacterSheetFormPresenterProps` を section props hook の合成へ分割する
+- [x] 分割した section hook の派生値と更新 callback を hook test で確認する
+- [x] 既存ルートが壊れていない
+- [x] GitHub Pages のサブパス公開に影響しない
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## 備考
 

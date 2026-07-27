@@ -80,6 +80,54 @@ describe("character sheet secondary attributes", () => {
     assert.equal(derived.bondLimit, 6);
   });
 
+  it("uses the specified ikizama coefficient boundaries and primary level", () => {
+    const cases = [
+      {
+        expectedHealth: 60,
+        expectedMental: 16,
+        ikizamaLevel: 1,
+        primaryLevel: 1,
+      },
+      {
+        expectedHealth: 65,
+        expectedMental: 20,
+        ikizamaLevel: 4,
+        primaryLevel: 1,
+      },
+      {
+        expectedHealth: 75,
+        expectedMental: 22,
+        ikizamaLevel: 10,
+        primaryLevel: 1,
+      },
+      {
+        expectedHealth: 65,
+        expectedMental: 18,
+        ikizamaLevel: 1,
+        primaryLevel: 2,
+      },
+    ];
+
+    for (const {
+      expectedHealth,
+      expectedMental,
+      ikizamaLevel,
+      primaryLevel,
+    } of cases) {
+      const derived = calculateSecondaryAttributes(
+        calculateBuild({
+          ...selectedBuild(),
+          ikizamaLevel,
+          primaryRyugiLevel: primaryLevel,
+        }),
+        characterSheetDefaultValues.secondaryAttributes,
+      );
+
+      assert.equal(derived.baseHealth, expectedHealth);
+      assert.equal(derived.baseMental, expectedMental);
+    }
+  });
+
   it("uses temporary agility and perception only when each checkbox is applied", () => {
     const build = selectedBuild();
     build.attributes.agility.temporaryModifier = 4;

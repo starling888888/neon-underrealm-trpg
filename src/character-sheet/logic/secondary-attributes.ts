@@ -1,5 +1,5 @@
 import type { SecondaryAttributeValues } from "../form-values";
-import type { BuildDerivedValues } from "./build";
+import type { AttributeDerivedValues, BuildReferenceValues } from "./build";
 
 export type SecondaryAttributeDerivedValues = {
   actionCount: number;
@@ -16,6 +16,21 @@ export type SecondaryAttributeDerivedValues = {
   movement: number | null;
 };
 
+export type SecondaryAttributeBuildSource = {
+  attributes: Record<
+    "agility" | "body" | "mind" | "perception",
+    AttributeDerivedValues
+  >;
+  primaryRyugiLevel: number;
+  reference: Pick<
+    BuildReferenceValues,
+    | "ikizamaHealthCoefficient"
+    | "ikizamaMindCoefficient"
+    | "primaryHealthIncrease"
+    | "primaryMindIncrease"
+  >;
+};
+
 function addModifier(value: number | null, modifier: number): number | null {
   return value === null ? null : value + modifier;
 }
@@ -27,7 +42,7 @@ function addModifier(value: number | null, modifier: number): number | null {
  * parameter. G8 deliberately uses zero because it does not own that choice.
  */
 export function calculateSecondaryAttributes(
-  build: BuildDerivedValues,
+  build: SecondaryAttributeBuildSource,
   secondaryAttributes: SecondaryAttributeValues,
   maximumHealthBonus = 0,
 ): SecondaryAttributeDerivedValues {

@@ -79,8 +79,16 @@ export default function FormulaTooltip({
 
     alignTooltip();
     window.addEventListener("resize", alignTooltip);
+    window.addEventListener("scroll", dismissTooltip, true);
 
-    return () => window.removeEventListener("resize", alignTooltip);
+    function dismissTooltip(): void {
+      setIsOpen(false);
+    }
+
+    return () => {
+      window.removeEventListener("resize", alignTooltip);
+      window.removeEventListener("scroll", dismissTooltip, true);
+    };
   }, [isOpen]);
 
   return (

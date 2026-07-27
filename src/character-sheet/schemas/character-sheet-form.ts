@@ -95,7 +95,11 @@ export const characterSheetFormSchema = z.object({
   }),
 });
 
-function normalizeIntegerInput(value: number | string): number {
+/**
+ * Converts a browser numeric value into the integer stored by RHF without
+ * applying field-specific game constraints.
+ */
+export function normalizeIntegerInput(value: number | string): number {
   if (value === "") {
     return 0;
   }
@@ -137,11 +141,6 @@ export function normalizeCreditInput(
   value: number | string,
 ): number {
   return creditInputSchemas[field].parse(value);
-}
-
-/** Normalizes a G7 numeric browser input without enforcing game constraints. */
-export function normalizeBuildInput(value: number | string): number {
-  return normalizeIntegerInput(value);
 }
 
 export function normalizeResolveEffectInput(

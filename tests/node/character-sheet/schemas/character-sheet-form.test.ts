@@ -5,6 +5,7 @@ import { characterSheetDefaultValues } from "../../../../src/character-sheet/for
 import {
   characterSheetFormSchema,
   normalizeCreditInput,
+  normalizeIntegerInput,
 } from "../../../../src/character-sheet/schemas/character-sheet-form";
 
 describe("character sheet form schema", () => {
@@ -57,5 +58,11 @@ describe("character sheet form schema", () => {
     for (const { expected, field, input } of cases) {
       assert.equal(normalizeCreditInput(field, input), expected);
     }
+  });
+
+  it("normalizes shared integer inputs without applying field constraints", () => {
+    assert.equal(normalizeIntegerInput(""), 0);
+    assert.equal(normalizeIntegerInput("-3.8"), -3);
+    assert.equal(normalizeIntegerInput("invalid"), 0);
   });
 });

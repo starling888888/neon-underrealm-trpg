@@ -115,7 +115,7 @@ describe("FormulaTooltip", () => {
     expect(tooltip.style.top).toBe("48px");
   });
 
-  it("keeps the trigger name stable and supports hover, Escape, blur, and outside tap", () => {
+  it("keeps the trigger name stable and supports hover, Escape, blur, outside tap, and scroll dismissal", () => {
     render(
       <FormulaTooltip formula="能力値ポイントの算出式">
         <span>能力値ポイント</span>
@@ -147,6 +147,10 @@ describe("FormulaTooltip", () => {
         name: characterSheetDictionary.general.closeFormulaTooltip,
       }),
     );
+    expect(screen.queryByRole("tooltip")).toBeNull();
+
+    fireEvent.click(trigger);
+    fireEvent.scroll(window);
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
 });
