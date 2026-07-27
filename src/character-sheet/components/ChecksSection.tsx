@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { characterSheetDictionary } from "../dictionary";
 import type {
   AttackSkillName,
@@ -8,6 +8,7 @@ import type {
 import { attackSkillNames, attributeNames } from "../form-values";
 import { formatDisplayValue } from "../format-display-value";
 import type { ChecksDerivedValues, DerivedCheckRow } from "../logic/checks";
+import type { NoncombatSkillName } from "../master-data/noncombat-skills";
 import styles from "./ChecksSection.module.css";
 import FormulaTooltip from "./FormulaTooltip";
 
@@ -18,11 +19,20 @@ export type ChecksSectionProps = {
   onAttackModifierChange: (rowId: string, value: string) => number;
   onAttackRemove: (rowId: string) => void;
   onAttackSkillChange: (rowId: string, skill: AttackSkillName) => void;
+  onNoncombatFavoriteChange: (
+    name: NoncombatSkillName,
+    isFavorite: boolean,
+  ) => void;
+  onNoncombatModifierChange: (
+    name: NoncombatSkillName,
+    value: string,
+  ) => number;
   onReactionAttributeChange: (
     name: ReactionCheckName,
     attribute: AttributeName,
   ) => void;
   onReactionModifierChange: (name: ReactionCheckName, value: string) => number;
+  noncombat: ChecksDerivedValues["noncombat"];
   reactions: ChecksDerivedValues["reactions"];
 };
 
@@ -139,6 +149,109 @@ function CheckHeaders({ sectionName }: { sectionName: string }) {
   );
 }
 
+function NoncombatChecks({
+  onFavoriteChange,
+  onModifierChange,
+  rows,
+}: {
+  onFavoriteChange: (name: NoncombatSkillName, isFavorite: boolean) => void;
+  onModifierChange: (name: NoncombatSkillName, value: string) => number;
+  rows: ChecksDerivedValues["noncombat"];
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { checks: labels } = characterSheetDictionary.characterSheet;
+  const attributeNamesById =
+    characterSheetDictionary.gameDomain.terms.attributeNames;
+  const contentId = "noncombat-checks-content";
+
+  return (
+    <section
+      aria-labelledby="noncombat-checks-heading"
+      className={styles.group}
+    >
+      <h3 id="noncombat-checks-heading">
+        <button
+          aria-controls={contentId}
+          aria-expanded={isExpanded}
+          className={styles.noncombatToggle}
+          onClick={() => setIsExpanded((value) => !value)}
+          type="button"
+        >
+          <span aria-hidden="true" className={styles.noncombatCaret}>
+            ▸
+          </span>
+          {labels.noncombat.title}
+        </button>
+      </h3>
+      <div className={styles.noncombatHeaders}>
+        <FormulaTooltip
+          ariaLabel={`${labels.noncombat.favoriteSkill}の説明`}
+          className={styles.noncombatTooltip}
+          formula={labels.noncombat.favoriteTooltip}
+        >
+          <span>{labels.noncombat.favoriteSkill}</span>
+        </FormulaTooltip>
+        <span>{labels.headers.skill}</span>
+        <span>{labels.headers.attribute}</span>
+        <FormulaTooltip
+          ariaLabel={`${labels.noncombat.modifier}の説明`}
+          className={styles.noncombatTooltip}
+          formula={labels.noncombat.modifierTooltip}
+        >
+          <span>{labels.noncombat.modifier}</span>
+        </FormulaTooltip>
+        <span>{labels.headers.temporary}</span>
+      </div>
+      <div className={styles.noncombatRows} id={contentId}>
+        {rows.map((row) => (
+          <div
+            className={styles.noncombatRow}
+            data-favorite={row.isFavorite || undefined}
+            hidden={!isExpanded && !row.isFavorite}
+            key={row.id}
+          >
+            <input
+              aria-label={`${row.name}を得意技能にする`}
+              checked={row.isFavorite}
+              onChange={(event) =>
+                onFavoriteChange(row.id, event.currentTarget.checked)
+              }
+              type="checkbox"
+            />
+            <span className={styles.noncombatName}>{row.name}</span>
+            <span className={styles.noncombatAttribute}>
+              {attributeNamesById[row.attribute]}
+            </span>
+            <input
+              aria-label={`${row.name}の判定修正`}
+              defaultValue={row.modifier}
+              onBlur={(event) => {
+                event.currentTarget.value = String(
+                  onModifierChange(row.id, event.currentTarget.value),
+                );
+              }}
+              onChange={(event) => {
+                if (!event.currentTarget.validity.badInput) {
+                  onModifierChange(row.id, event.currentTarget.value);
+                }
+              }}
+              step="1"
+              type="number"
+            />
+            <output
+              aria-label={`${row.name}の常時判定数／一時判定数`}
+              className="character-sheet-number-value character-sheet-number-value--compact"
+            >
+              {formatDisplayValue(row.permanentCheck)} ／{" "}
+              {formatDisplayValue(row.temporaryCheck)}
+            </output>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function ChecksSection({
   attacks,
   onAttackAdd,
@@ -146,8 +259,11 @@ export default function ChecksSection({
   onAttackModifierChange,
   onAttackRemove,
   onAttackSkillChange,
+  onNoncombatFavoriteChange,
+  onNoncombatModifierChange,
   onReactionAttributeChange,
   onReactionModifierChange,
+  noncombat,
   reactions,
 }: ChecksSectionProps) {
   const { checks: labels } = characterSheetDictionary.characterSheet;
@@ -243,6 +359,11 @@ export default function ChecksSection({
           })}
         </div>
       </section>
+      <NoncombatChecks
+        onFavoriteChange={onNoncombatFavoriteChange}
+        onModifierChange={onNoncombatModifierChange}
+        rows={noncombat}
+      />
     </div>
   );
 }

@@ -922,3 +922,39 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-10-sheet-attack-reaction` の`BondsSection` clear icon変更
 - 観測した失敗: 最初のComponent testで、消しゴムSVGをclear buttonではなくdelete buttonへ配置し、利用できない`toHaveTextContent` matcherも追加した。修正後の`npm run check`では、同じJSX箇所のBiome整形違反を再度出した。さらに`lucide-react`への切替後も同じ属性インデントを手動で崩し、整形違反を繰り返した。
 - 一次対応: 条件分岐の両buttonを再読してiconの所属を確認し、既存test環境で提供済みのDOM APIだけを使う。JSX属性は手動で合わせず、対象fileへBiome formatterを直接適用してから、Component test・`npm run check`を再実行する。
+
+### Repeated G11 noncombat browser-test failures
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/character-sheet.spec.ts`
+- 観測した失敗: 非戦闘技能の初期折りたたみbrowser testを、1回目はCSS generated contentがbuttonのaccessible nameへ混ざることを見落として失敗させ、2回目は`.noncombatRow`の`display: grid`がHTMLの`hidden`属性を上書きすることを見落として失敗させた。
+- 一次対応: 折りたたみ記号を`aria-hidden`の実DOM要素へ移し、`.noncombatRow[hidden] { display: none; }`を明示した。以後、CSS generated contentを操作名へ使わず、`hidden`を使う表示状態ではcomponent CSSとのdisplay競合をbrowser testで先に確認する。
+
+### Ignored the approved noncombat responsive layout
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` の`ChecksSection`実装
+- 観測した失敗: `.tmp/design/character-sheet/desktop.png`、`tablet.png`、`mobile.png`を実装入力として確認していたにもかかわらず、非戦闘技能を全viewport共通の5列gridとして実装した。design画像が指定するdesktop / tabletの3列とmobileの2列の情報密度を守らず、Visual Review前に未達を検出できなかった。
+- 一次対応: current issueへ3列／2列の表示契約と未達を記録した。修正ではdesign画像を直接比較し、各viewportの非戦闘技能を要素単位のactual screenshotで確認するまで完了報告しない。
+
+### Exceeded the G11 character-sheet final-smoke E2E boundary
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/character-sheet.spec.ts`
+- 観測した失敗: G11の最終smoke E2Eへ、開閉の`aria-expanded`属性とhidden状態の確認を追加した。これは領域表示と2〜3個の代表操作だけに限定する`docs/architectures/character-sheet.md`の責務境界を越え、Component testと重複する局所UI・DOM属性の検証である。
+- 一次対応: current issueへE2Eの縮小方針を記録した。開閉状態・hidden・tooltipはComponent testへ、計算はNode testへ置き、E2Eは代表的なbrowser操作だけに戻す。
+
+### Repeated VRT state-preparation failures before client hydration
+
+#### 2026-07-28
+
+- source: self
+- 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/vrt/character-sheet.spec.ts`
+- 観測した失敗: locator screenshot captureの初回実行で、非戦闘技能を開くclickとheader tooltipのhoverをclient hydration完了前に一度だけ実行した。tablet / mobileを中心に同じ状態準備が6件失敗し、`脅迫を得意技能にする`がhiddenのまま、またはtooltipが存在しない状態でtimeoutした。
+- 一次対応: open stateは可視になるまでの短い`expect(...).toPass()`内で、閉じている場合だけclickする。tooltip stateもhoverとvisible確認を同じ再試行境界へ置く。VRTのstate準備はこの範囲に留め、最終smoke E2Eへ局所UIの再試行を持ち込まない。

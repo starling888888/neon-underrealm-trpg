@@ -28,8 +28,11 @@ function createProps(): ChecksSectionProps {
     onAttackModifierChange: vi.fn((_, value: string) => Number(value)),
     onAttackRemove: vi.fn(),
     onAttackSkillChange: vi.fn(),
+    onNoncombatFavoriteChange: vi.fn(),
+    onNoncombatModifierChange: vi.fn((_, value: string) => Number(value)),
     onReactionAttributeChange: vi.fn(),
     onReactionModifierChange: vi.fn((_, value: string) => Number(value)),
+    noncombat: derived.noncombat,
     reactions: derived.reactions,
   };
 }
@@ -42,9 +45,9 @@ describe("ChecksSection", () => {
 
     render(<ChecksSection {...props} />);
 
-    expect(screen.getAllByText("技能")).toHaveLength(2);
-    expect(screen.getAllByText("対応能力")).toHaveLength(2);
-    expect(screen.getAllByText("常時／一時")).toHaveLength(2);
+    expect(screen.getAllByText("技能")).toHaveLength(3);
+    expect(screen.getAllByText("対応能力")).toHaveLength(3);
+    expect(screen.getAllByText("常時／一時")).toHaveLength(3);
     expect(screen.getByLabelText("攻撃1の技能")).toHaveProperty(
       "value",
       "brawl",
@@ -118,5 +121,63 @@ describe("ChecksSection", () => {
     expect(
       screen.getByRole("button", { name: "＋ 攻撃を追加" }),
     ).toHaveProperty("disabled", true);
+  });
+
+  it("shows noncombat skills as a collapsed fixed table with the requested tooltips", () => {
+    const props = createProps();
+
+    render(<ChecksSection {...props} />);
+
+    const toggle = screen.getByRole("button", { name: "非戦闘技能" });
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(screen.getByText("得意技能")).not.toBeNull();
+    expect(screen.getAllByText("技能")).toHaveLength(3);
+    expect(screen.getAllByText("対応能力")).toHaveLength(3);
+    expect(screen.getAllByText("常時／一時")).toHaveLength(3);
+    expect(screen.queryByRole("checkbox")).toBeNull();
+
+    fireEvent.click(toggle);
+
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    expect(screen.getAllByRole("checkbox")).toHaveLength(15);
+    expect(screen.getByLabelText("脅迫を得意技能にする")).not.toBeNull();
+    expect(screen.getByLabelText("ハッキングの判定修正")).not.toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "得意技能の説明" }));
+    expect(screen.getByRole("tooltip").textContent).toBe(
+      "得意技能にチェックを入れると能力値を2倍にして判定数を算出します。修正値は2倍になりません。",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "修正の説明" }));
+    expect(screen.getAllByRole("tooltip").at(-1)?.textContent).toBe(
+      "修正はサイバネなど能力値ではなく判定数に影響を与えるスキル、アイテムの効果の数値を入力します。",
+    );
+  });
+
+  it("reports noncombat favorite and modifier changes and keeps favorites visible when collapsed", () => {
+    const props = createProps();
+
+    const { rerender } = render(<ChecksSection {...props} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "非戦闘技能" }));
+    fireEvent.click(screen.getByLabelText("脅迫を得意技能にする"));
+    fireEvent.change(screen.getByLabelText("脅迫の判定修正"), {
+      target: { value: "-2" },
+    });
+    props.noncombat = props.noncombat.map((row) =>
+      row.id === "intimidation" ? { ...row, isFavorite: true } : row,
+    );
+    rerender(<ChecksSection {...props} />);
+    fireEvent.click(screen.getByRole("button", { name: "非戦闘技能" }));
+
+    expect(props.onNoncombatFavoriteChange).toHaveBeenCalledWith(
+      "intimidation",
+      true,
+    );
+    expect(props.onNoncombatModifierChange).toHaveBeenCalledWith(
+      "intimidation",
+      "-2",
+    );
+    expect(screen.getByRole("checkbox")).not.toBeNull();
   });
 });

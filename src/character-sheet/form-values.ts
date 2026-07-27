@@ -1,3 +1,8 @@
+import {
+  type NoncombatSkillName,
+  noncombatSkills,
+} from "./master-data/noncombat-skills";
+
 /**
  * Values owned by react-hook-form for the character sheet.
  *
@@ -91,8 +96,14 @@ export type ReactionCheckValues = {
   name: ReactionCheckName;
 };
 
+export type NoncombatCheckValues = Record<
+  NoncombatSkillName,
+  { isFavorite: boolean; modifier: number }
+>;
+
 export type ChecksValues = {
   attacks: AttackCheckValues[];
+  noncombat: NoncombatCheckValues;
   reactions: ReactionCheckValues[];
 };
 
@@ -139,6 +150,15 @@ function createInitialBondRows(): BondValues[] {
     rowId: `bond-${index + 1}`,
     target: "",
   }));
+}
+
+function createInitialNoncombatChecks(): NoncombatCheckValues {
+  return Object.fromEntries(
+    noncombatSkills.map((skill) => [
+      skill.id,
+      { isFavorite: false, modifier: 0 },
+    ]),
+  ) as NoncombatCheckValues;
 }
 
 export type CharacterSheetFormValues = {
@@ -215,6 +235,7 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
       { attribute: "body", modifier: 0, name: "endurance" },
       { attribute: "mind", modifier: 0, name: "resistance" },
     ],
+    noncombat: createInitialNoncombatChecks(),
   },
   credit: {
     acquired: 10,

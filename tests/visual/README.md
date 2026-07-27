@@ -48,6 +48,8 @@ npm run visual:capture -- --grep '@vrt.*@home(?:\s|$)'
 
 `visual:capture`は`playwright.capture.config.ts`を使い、`test-results/visual/`へsnapshotを書き出す。canonical baselineは更新せず、視覚差分では失敗しない。route遷移、状態準備、表示のassertionが失敗した場合はcaptureも失敗する。snapshotは次のPlaywright実行で削除され得る一時artifactであり、Git管理しない。
 
+scenarioが`locators`を宣言した場合、`visual:capture`だけは同じroute / state / viewportで各owner locatorのoriginal-pixel-resolution screenshotも`test-results/visual/<target>/locators/`へ出力する。固定配置のtooltipなどsection境界外へ表示されるComponent stateでは、sectionとtooltip本体を別々のlocatorとして宣言する。`visual:test`はlocator screenshotを比較・生成せず、既存のfull-page canonical VRTだけを比較する。locatorは製品コードへtest-only属性を追加せず、既存のaccessible name、role、label、または実際のsection構造から解決する。
+
 ## 実行ポリシー
 
 VRTは高コストなため、Markdownのみの変更や画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。

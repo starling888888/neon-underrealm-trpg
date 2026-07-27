@@ -276,6 +276,24 @@ test.describe("character sheet page", () => {
     ).toHaveValue("agility");
   });
 
+  test("edits a noncombat check from its initially collapsed section", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const favorite = page.getByLabel("脅迫を得意技能にする", {
+      exact: true,
+    });
+    const modifier = page.getByLabel("脅迫の判定修正", { exact: true });
+
+    await page.getByRole("button", { exact: true, name: "非戦闘技能" }).click();
+    await favorite.check();
+    await expect(favorite).toBeChecked();
+    await modifier.fill("-2");
+    await expect(modifier).toHaveValue("-2");
+  });
+
   test("locks resolved bonds, clears only unlocked rows, and warns when over the limit", async ({
     page,
   }) => {

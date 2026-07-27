@@ -53,3 +53,55 @@ test("check defaults map every attack skill and reaction type to the specified a
     resistance: "mind",
   });
 });
+
+test("calculateChecks derives all noncombat checks from fixed attributes and doubles only favorite attributes", () => {
+  const checks = structuredClone(characterSheetDefaultValues.checks);
+  checks.noncombat.intimidation = { isFavorite: true, modifier: -2 };
+  checks.noncombat.hacking = { isFavorite: false, modifier: 3 };
+
+  const result = calculateChecks(checks, attributes);
+
+  assert.deepEqual(
+    result.noncombat.map(({ attribute, id, name }) => ({
+      attribute,
+      id,
+      name,
+    })),
+    [
+      { attribute: "strength", id: "intimidation", name: "脅迫" },
+      { attribute: "strength", id: "strengthContest", name: "力比べ" },
+      { attribute: "strength", id: "willpower", name: "根性" },
+      { attribute: "agility", id: "reconnaissance", name: "偵察" },
+      { attribute: "agility", id: "acrobatics", name: "軽業" },
+      { attribute: "agility", id: "sleightOfHand", name: "手業" },
+      { attribute: "perception", id: "cheating", name: "イカサマ" },
+      { attribute: "perception", id: "dangerSense", name: "危険察知" },
+      { attribute: "perception", id: "analysis", name: "分析" },
+      { attribute: "body", id: "driving", name: "運転" },
+      { attribute: "body", id: "survival", name: "生存" },
+      { attribute: "body", id: "jingi", name: "仁義" },
+      { attribute: "mind", id: "gambling", name: "賭博" },
+      { attribute: "mind", id: "negotiation", name: "交渉" },
+      { attribute: "mind", id: "hacking", name: "ハッキング" },
+    ],
+  );
+  assert.deepEqual(result.noncombat[0], {
+    attribute: "strength",
+    id: "intimidation",
+    isFavorite: true,
+    modifier: -2,
+    name: "脅迫",
+    permanentCheck: 18,
+    temporaryCheck: 20,
+  });
+  assert.deepEqual(result.noncombat.at(-1), {
+    attribute: "mind",
+    id: "hacking",
+    isFavorite: false,
+    modifier: 3,
+    name: "ハッキング",
+    permanentCheck: 9,
+    temporaryCheck: 10,
+  });
+  assert.equal("permanentCheck" in checks.noncombat.intimidation, false);
+});

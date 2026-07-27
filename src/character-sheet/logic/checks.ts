@@ -3,6 +3,7 @@ import type {
   ChecksValues,
   ReactionCheckName,
 } from "../form-values";
+import { noncombatSkills } from "../master-data/noncombat-skills";
 
 export const defaultAttributeByAttackSkill = {
   assassination: "agility",
@@ -38,6 +39,14 @@ export type DerivedCheckRow = {
 
 export type ChecksDerivedValues = {
   attacks: Array<ChecksValues["attacks"][number] & DerivedCheckRow>;
+  noncombat: Array<
+    (typeof noncombatSkills)[number] & {
+      isFavorite: boolean;
+      modifier: number;
+      permanentCheck: number | null;
+      temporaryCheck: number | null;
+    }
+  >;
   reactions: Array<ChecksValues["reactions"][number] & DerivedCheckRow>;
 };
 
@@ -71,6 +80,25 @@ export function calculateChecks(
       ...row,
       ...calculateCheckRow(row, attributes),
     })),
+    noncombat: noncombatSkills.map((skill) => {
+      const row = checks.noncombat[skill.id];
+      const selectedAttribute = attributes[skill.attribute];
+      const multiplier = row.isFavorite ? 2 : 1;
+
+      return {
+        ...skill,
+        isFavorite: row.isFavorite,
+        modifier: row.modifier,
+        permanentCheck:
+          selectedAttribute.permanent === null
+            ? null
+            : selectedAttribute.permanent * multiplier + row.modifier,
+        temporaryCheck:
+          selectedAttribute.temporary === null
+            ? null
+            : selectedAttribute.temporary * multiplier + row.modifier,
+      };
+    }),
     reactions: checks.reactions.map((row) => ({
       ...row,
       ...calculateCheckRow(row, attributes),

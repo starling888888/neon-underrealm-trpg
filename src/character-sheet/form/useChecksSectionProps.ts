@@ -105,6 +105,20 @@ export default function useChecksSectionProps(
       );
       return normalizedValue;
     },
+    onNoncombatFavoriteChange: (name, isFavorite) => {
+      setValue(`checks.noncombat.${name}.isFavorite`, isFavorite, {
+        shouldValidate: true,
+      });
+    },
+    onNoncombatModifierChange: (name, value) => {
+      const normalizedValue = normalizeIntegerInput(value);
+
+      setValue(`checks.noncombat.${name}.modifier`, normalizedValue, {
+        shouldValidate: true,
+      });
+      return normalizedValue;
+    },
+    noncombat: derived.noncombat,
     reactions: derived.reactions,
   };
 }

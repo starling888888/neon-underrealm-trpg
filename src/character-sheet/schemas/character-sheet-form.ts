@@ -108,6 +108,65 @@ export const characterSheetFormSchema = z.object({
         }),
       )
       .length(4),
+    noncombat: z.object({
+      acrobatics: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      analysis: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      cheating: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      dangerSense: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      driving: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      gambling: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      hacking: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      intimidation: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      jingi: z.object({ isFavorite: z.boolean(), modifier: z.number().int() }),
+      negotiation: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      reconnaissance: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      sleightOfHand: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      strengthContest: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      survival: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+      willpower: z.object({
+        isFavorite: z.boolean(),
+        modifier: z.number().int(),
+      }),
+    }),
   }),
   credit: z.object({
     acquired: nonNegativeIntegerSchema,

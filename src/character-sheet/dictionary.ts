@@ -41,6 +41,15 @@ export const characterSheetDictionary = {
         skill: "技能",
         temporary: "常時／一時",
       },
+      noncombat: {
+        favoriteSkill: "得意技能",
+        favoriteTooltip:
+          "得意技能にチェックを入れると能力値を2倍にして判定数を算出します。修正値は2倍になりません。",
+        modifier: "修正",
+        modifierTooltip:
+          "修正はサイバネなど能力値ではなく判定数に影響を与えるスキル、アイテムの効果の数値を入力します。",
+        title: "非戦闘技能",
+      },
       reactions: "リアクション",
       removeAttack: "を削除",
       skills: {
