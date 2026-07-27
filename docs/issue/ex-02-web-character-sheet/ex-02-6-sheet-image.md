@@ -44,7 +44,7 @@ WebPへ変換した画像のbase64エンコード文字列をIndexedDBへ保存�
 - Gate: `G6: キャラクター画像を扱う`
 - 依存Gate: `G4`（基本情報・キャラクター設定）、`G5`（ダイアログの共通基盤）
 
-このissueはG6だけを実装するための自己完結した契約である。G24の画像以外のフォーム値のlocalStorage復元、G26/G27のJSON入出力、G29の画像削除は扱わない。
+このissueはG6だけを実装するための自己完結した契約である。G24の画像以外のフォーム値のlocalStorage復元、G26/G27のJSON入出力、G29の全クリアに伴う画像削除は扱わない。
 
 ## デザイン配置契約
 
@@ -62,7 +62,7 @@ WebPへ変換した画像のbase64エンコード文字列をIndexedDBへ保存�
 - `image/*`かつ5 MiB（5,242,880 bytes）以下のファイルを、ブラウザでdecodeできた場合だけ処理する。長辺を約500pxまで縮小し、拡大せず、WebP品質`0.8`で1回だけ変換する。
 - WebP画像のMIME typeとbase64エンコード文字列を、`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyのIndexedDB recordへ保存する。
 - base64文字列と画像recordの参照をRHF、localStorage、URL query、ログ、Git管理ファイルへ混ぜない。画像成功後だけ表示を切り替え、失敗時は既存画像を保持する。
-- 初期化時にIndexedDB画像recordを独立して読み、正常なrecordだけを画像表示へ復元する。画像recordがない場合は未選択状態のままにし、読取り・復元失敗時もlocalStorageのキャラクターシート値の復元を停止・失敗させない。画像recordの削除やlocalStorageのフォーム値への混在は行わない。
+- 初期化時にIndexedDB画像recordを独立して読み、正常なrecordだけを画像表示へ復元する。画像recordがない場合は未選択状態のままにし、読取り・復元失敗時もlocalStorageのキャラクターシート値の復元を停止・失敗させない。全クリアに伴う画像recordの削除やlocalStorageのフォーム値への混在は行わない。
 - 形式、容量、decode、変換、IndexedDB書込みの失敗は、G5のdialog shellで通知する。エラー一覧へ積まず、browser native `alert`を使わない。
 - 画像の変換・保存中は、キャラクターシートIsland全体を操作不可にする、回転indicatorを持つ汎用loading overlayを表示する。`prefers-reduced-motion`ではindicatorの回転を停止する。
 - Root横断のform、dialog、focus ref、loading状態はroot-state custom hookへ置く。Contextは先行導入せず、必要なloading値とcallbackをPresenter hook経由で明示的に渡す。`logic/`はroot stateやContextへ依存させない。
@@ -149,6 +149,38 @@ WebPへ変換した画像のbase64エンコード文字列をIndexedDBへ保存�
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 6
+
+### 指摘事項
+
+- 現在IndexedDBへ保存されているキャラクター画像を、このGate内でユーザーがクリアできるようにする。
+- `CharacterSheetContainer`にある画像error codeから表示文言を選ぶ多段conditionalを、Containerの責務として残さない。
+- Root loading overlayが画像処理専用の状態・文言へ依存しているため、後続GateのRoot操作にも再利用できる設計へ改める。
+
+### 判定
+
+- source: human（ユーザー対話）
+- classification: valid
+- local validation: 現在のG6実装は画像recordの読取り・書込みだけを持ち、選択済み画像をunsetに戻す操作とIndexedDB key削除adapterを持たない。`CharacterSheetContainer`には画像error codeから文言を選ぶ多段conditionalがあり、Rootの構成とdialogの表示責務を混在させている。`CharacterSheetLoadingOverlay`は画像用dictionaryのloading文言を直接参照し、Rootの操作ロック状態も画像処理名で公開している。
+- scope: ユーザーの最新指示により、G29の全クリアとは別に、選択済みキャラクター画像だけをクリアする操作をG6へ追加する。既存の「G29で画像recordを削除する」は全クリア時の削除に限定して後続Gateへ残す。
+
+### 対応方針
+
+- 選択済み画像のときだけ、既存の差し替え導線に続けて`画像をクリア`操作を表示する。画像recordのkeyだけをIndexedDBから削除し、削除成功後に表示を未選択へ切り替える。削除中は既存のRoot loading overlayでIsland全体を操作不可にし、削除失敗時は既存画像を保持してG5の失敗dialogを表示する。RHF、localStorage、URL、JSONへの画像混在は追加しない。
+- 画像error dialogを専用のRoot直下表示Componentへ分離し、error codeと辞書の文言対応をそのComponentまたはdictionary側へ閉じ込める。`CharacterSheetContainer`はRoot stateとdialog Componentの構成だけを担い、error文言を選ぶconditionalを持たない。
+- loading overlayは画像用dictionaryや画像処理stateを直接参照しない汎用表示Componentとし、表示文言をPropsで受け取る。Rootには画像処理に限定しない単一の操作ロック状態と開始・終了境界を置き、画像の変換・保存・削除はその利用者にする。後続Gateの保存、出力、入力なども、同じoverlay、Island操作ロック、reduced motion表示を共有できるようにする。Contextは導入しない。
+- 実装時に、G6 issueとarchitectureの「画像record削除はG29」記述を、上記の個別クリアとG29の全クリアへ区別して更新する。
+
+### 対応完了チェックリスト
+
+- [x] 選択済み画像だけに`画像をクリア`操作を表示し、成功時にIndexedDB recordと表示を未選択へ戻す。
+- [x] クリア中はIsland全体を操作不可にし、削除失敗時は既存画像を保持して失敗dialogを表示する。
+- [x] `CharacterSheetContainer`から画像error文言選択のconditionalを除き、dialog表示責務を専用Componentへ分離する。
+- [x] loading overlayとRoot操作ロックを画像専用から分離し、後続Gateが文言を渡して再利用できる。
+- [x] 画像クリアの成功・失敗とerror dialog表示の局所テストを追加または更新する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## 備考
 

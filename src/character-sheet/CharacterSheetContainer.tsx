@@ -2,13 +2,13 @@ import { useId } from "react";
 
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
+import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./components/dialogs/CharacterSheetDialog";
 import DialogDemoTrigger from "./components/dialogs/DialogDemoTrigger";
-import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
 
@@ -23,34 +23,19 @@ export default function CharacterSheetContainer() {
   const rootState = useCharacterSheetRootState();
   const confirmationTitleId = useId();
   const confirmationDescriptionId = useId();
-  const imageErrorTitleId = useId();
-  const imageErrorDescriptionId = useId();
   const presenterProps = useCharacterSheetFormPresenterProps(rootState.form, {
     characterImage: rootState.characterImage,
-    isImageProcessing: rootState.isImageProcessing,
+    isRootOperationInProgress: rootState.isRootOperationInProgress,
+    onCharacterImageCleared: rootState.onCharacterImageCleared,
     onCharacterImageSelected: rootState.onCharacterImageSelected,
-    onCharacterImageSelectionStarted:
-      rootState.onCharacterImageSelectionStarted,
+    onCharacterImageOperationStarted:
+      rootState.onCharacterImageOperationStarted,
   });
-  const { image: imageCopy } = characterSheetDictionary.characterSheet;
-  const imageErrorMessage =
-    rootState.imageError === null
-      ? ""
-      : rootState.imageError.code === "invalid-type"
-        ? imageCopy.errors.invalidType
-        : rootState.imageError.code === "file-too-large"
-          ? imageCopy.errors.fileTooLarge
-          : rootState.imageError.code === "decode"
-            ? imageCopy.errors.decode
-            : rootState.imageError.code === "restore"
-              ? imageCopy.errors.restore
-              : imageCopy.errors.storage;
-
   return (
     <>
       <div
-        aria-busy={rootState.isImageProcessing}
-        inert={rootState.isImageProcessing || undefined}
+        aria-busy={rootState.isRootOperationInProgress}
+        inert={rootState.isRootOperationInProgress || undefined}
       >
         <DialogDemoTrigger
           onOpen={() => rootState.setIsConfirmationOpen(true)}
@@ -90,33 +75,17 @@ export default function CharacterSheetContainer() {
             </button>
           </CharacterSheetDialogActions>
         </CharacterSheetDialog>
-        <CharacterSheetDialog
-          ariaDescribedBy={imageErrorDescriptionId}
-          ariaLabelledBy={imageErrorTitleId}
-          initialFocusRef={rootState.imageErrorCloseButtonRef}
-          isOpen={rootState.imageError !== null}
+        <CharacterImageErrorDialog
+          closeButtonRef={rootState.imageErrorCloseButtonRef}
+          errorCode={rootState.imageError?.code ?? null}
           onRequestClose={() => rootState.setImageError(null)}
           returnFocusRef={rootState.imageReturnFocusRef}
-        >
-          <CharacterSheetDialogHeader headingId={imageErrorTitleId}>
-            {imageCopy.errorTitle}
-          </CharacterSheetDialogHeader>
-          <CharacterSheetDialogContent>
-            <p id={imageErrorDescriptionId}>{imageErrorMessage}</p>
-          </CharacterSheetDialogContent>
-          <CharacterSheetDialogActions>
-            <button
-              data-tone="primary"
-              onClick={() => rootState.setImageError(null)}
-              ref={rootState.imageErrorCloseButtonRef}
-              type="button"
-            >
-              {characterSheetDictionary.general.close}
-            </button>
-          </CharacterSheetDialogActions>
-        </CharacterSheetDialog>
+        />
       </div>
-      <CharacterSheetLoadingOverlay isOpen={rootState.isImageProcessing} />
+      <CharacterSheetLoadingOverlay
+        isOpen={rootState.isRootOperationInProgress}
+        label={rootState.rootOperation?.label ?? ""}
+      />
     </>
   );
 }

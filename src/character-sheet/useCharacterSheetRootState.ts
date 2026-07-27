@@ -9,11 +9,13 @@ import type {
   CharacterImageErrorCode,
   CharacterImageRecord,
 } from "./character-image";
+import { characterSheetDictionary } from "./dictionary";
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "./form-values";
 import {
+  deleteCharacterImage,
   readCharacterImage,
   writeCharacterImage,
 } from "./persistence/character-image";
@@ -23,16 +25,24 @@ export type CharacterImageErrorState = {
   code: CharacterImageErrorCode | "restore";
 };
 
-type CharacterSheetRootDependencies = {
+type CharacterSheetRootOperations = {
   convertCharacterImage: typeof convertCharacterImage;
+  deleteCharacterImage: typeof deleteCharacterImage;
   readCharacterImage: typeof readCharacterImage;
   writeCharacterImage: typeof writeCharacterImage;
 };
 
-const defaultDependencies: CharacterSheetRootDependencies = {
+type CharacterSheetRootDependencies = Partial<CharacterSheetRootOperations>;
+
+const defaultOperations: CharacterSheetRootOperations = {
   convertCharacterImage,
+  deleteCharacterImage,
   readCharacterImage,
   writeCharacterImage,
+};
+
+type RootOperation = {
+  label: string;
 };
 
 function toImageErrorState(error: unknown): CharacterImageErrorState {
@@ -45,10 +55,10 @@ function toImageErrorState(error: unknown): CharacterImageErrorState {
 
 /** Owns form state and cross-cutting character-sheet UI state. */
 export default function useCharacterSheetRootState(
-  dependencies: CharacterSheetRootDependencies = defaultDependencies,
+  dependencies: CharacterSheetRootDependencies = {},
 ) {
-  const dependenciesRef = useRef(dependencies);
-  const operations = dependenciesRef.current;
+  const operationsRef = useRef({ ...defaultOperations, ...dependencies });
+  const operations = operationsRef.current;
   const form = useForm<CharacterSheetFormValues>({
     defaultValues: characterSheetDefaultValues,
     mode: "onChange",
@@ -56,7 +66,9 @@ export default function useCharacterSheetRootState(
   });
   const [characterImage, setCharacterImage] =
     useState<CharacterImageRecord | null>(null);
-  const [isImageProcessing, setIsImageProcessing] = useState(false);
+  const [rootOperation, setRootOperation] = useState<RootOperation | null>(
+    null,
+  );
   const [imageError, setImageError] = useState<CharacterImageErrorState | null>(
     null,
   );
@@ -88,23 +100,52 @@ export default function useCharacterSheetRootState(
     };
   }, [operations]);
 
-  function onCharacterImageSelectionStarted(trigger: HTMLButtonElement): void {
+  function onCharacterImageOperationStarted(trigger: HTMLButtonElement): void {
     imageReturnFocusRef.current = trigger;
   }
 
-  async function onCharacterImageSelected(file: File): Promise<void> {
-    setIsImageProcessing(true);
+  async function runRootOperation<T>(
+    label: string,
+    operation: () => Promise<T>,
+  ): Promise<T> {
+    setRootOperation({ label });
 
     try {
-      const record = await operations.convertCharacterImage(file);
+      return await operation();
+    } finally {
+      setRootOperation(null);
+    }
+  }
 
-      await operations.writeCharacterImage(record);
-      hasCommittedImageRef.current = true;
-      setCharacterImage(record);
+  async function onCharacterImageSelected(file: File): Promise<void> {
+    try {
+      await runRootOperation(
+        characterSheetDictionary.characterSheet.image.loading,
+        async () => {
+          const record = await operations.convertCharacterImage(file);
+
+          await operations.writeCharacterImage(record);
+          hasCommittedImageRef.current = true;
+          setCharacterImage(record);
+        },
+      );
     } catch (error) {
       setImageError(toImageErrorState(error));
-    } finally {
-      setIsImageProcessing(false);
+    }
+  }
+
+  async function onCharacterImageCleared(): Promise<void> {
+    try {
+      await runRootOperation(
+        characterSheetDictionary.characterSheet.image.clearing,
+        async () => {
+          await operations.deleteCharacterImage();
+          hasCommittedImageRef.current = true;
+          setCharacterImage(null);
+        },
+      );
+    } catch (error) {
+      setImageError(toImageErrorState(error));
     }
   }
 
@@ -117,10 +158,12 @@ export default function useCharacterSheetRootState(
     imageErrorCloseButtonRef,
     imageReturnFocusRef,
     isConfirmationOpen,
-    isImageProcessing,
+    isRootOperationInProgress: rootOperation !== null,
     onCharacterImageSelected,
-    onCharacterImageSelectionStarted,
+    onCharacterImageCleared,
+    onCharacterImageOperationStarted,
     setImageError,
     setIsConfirmationOpen,
+    rootOperation,
   };
 }

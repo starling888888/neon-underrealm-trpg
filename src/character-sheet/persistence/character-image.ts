@@ -1,4 +1,4 @@
-import { createStore, get, set } from "idb-keyval";
+import { createStore, del, get, set } from "idb-keyval";
 import { decodeCharacterImageRecord } from "../browser/character-image";
 import {
   CharacterImageError,
@@ -13,6 +13,7 @@ const characterImageStore = createStore(
 const characterImageKey = "current-character-image";
 
 export type CharacterImagePersistence = {
+  delete: () => Promise<void>;
   read: () => Promise<unknown>;
   write: (record: CharacterImageRecord) => Promise<void>;
 };
@@ -22,6 +23,7 @@ export type CharacterImageDecoder = (
 ) => Promise<void>;
 
 const indexedDbCharacterImagePersistence: CharacterImagePersistence = {
+  delete: () => del(characterImageKey, characterImageStore),
   read: () => get(characterImageKey, characterImageStore),
   write: (record) => set(characterImageKey, record, characterImageStore),
 };
@@ -61,6 +63,16 @@ export async function writeCharacterImage(
 ): Promise<void> {
   try {
     await persistence.write(record);
+  } catch {
+    throw new CharacterImageError("storage");
+  }
+}
+
+export async function deleteCharacterImage(
+  persistence: CharacterImagePersistence = indexedDbCharacterImagePersistence,
+): Promise<void> {
+  try {
+    await persistence.delete();
   } catch {
     throw new CharacterImageError("storage");
   }

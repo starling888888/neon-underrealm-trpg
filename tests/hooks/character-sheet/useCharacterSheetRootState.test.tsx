@@ -45,7 +45,8 @@ describe("useCharacterSheetRootState", () => {
       operation = result.current.onCharacterImageSelected(createFile());
     });
 
-    expect(result.current.isImageProcessing).toBe(true);
+    expect(result.current.isRootOperationInProgress).toBe(true);
+    expect(result.current.rootOperation?.label).toBe("画像を処理しています");
     expect(result.current.characterImage).toEqual(storedImage);
     await waitFor(() =>
       expect(writeCharacterImage).toHaveBeenCalledWith(replacementImage),
@@ -56,7 +57,7 @@ describe("useCharacterSheetRootState", () => {
       await operation;
     });
 
-    expect(result.current.isImageProcessing).toBe(false);
+    expect(result.current.isRootOperationInProgress).toBe(false);
     expect(result.current.characterImage).toEqual(replacementImage);
   });
 
@@ -81,7 +82,7 @@ describe("useCharacterSheetRootState", () => {
 
     expect(result.current.characterImage).toEqual(storedImage);
     expect(result.current.imageError).toEqual({ code: "decode" });
-    expect(result.current.isImageProcessing).toBe(false);
+    expect(result.current.isRootOperationInProgress).toBe(false);
   });
 
   it("keeps the prior image when IndexedDB writing fails", async () => {
@@ -232,5 +233,89 @@ describe("useCharacterSheetRootState", () => {
 
     expect(result.current.characterImage).toEqual(replacementImage);
     expect(result.current.imageError).toBeNull();
+  });
+
+  it("clears the saved image only after IndexedDB deletion succeeds", async () => {
+    let resolveDelete: (() => void) | undefined;
+    const deleteCharacterImage = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveDelete = resolve;
+        }),
+    );
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        deleteCharacterImage,
+        readCharacterImage: vi.fn(async () => storedImage),
+      }),
+    );
+
+    await waitFor(() =>
+      expect(result.current.characterImage).toEqual(storedImage),
+    );
+
+    let operation: Promise<void> = Promise.resolve();
+    act(() => {
+      operation = result.current.onCharacterImageCleared();
+    });
+
+    expect(result.current.isRootOperationInProgress).toBe(true);
+    expect(result.current.rootOperation?.label).toBe("画像をクリアしています");
+    expect(result.current.characterImage).toEqual(storedImage);
+    await waitFor(() => expect(deleteCharacterImage).toHaveBeenCalledOnce());
+
+    await act(async () => {
+      resolveDelete?.();
+      await operation;
+    });
+
+    expect(result.current.characterImage).toBeNull();
+    expect(result.current.isRootOperationInProgress).toBe(false);
+  });
+
+  it("keeps the saved image when IndexedDB deletion fails", async () => {
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        deleteCharacterImage: vi.fn(async () => {
+          throw new CharacterImageError("storage");
+        }),
+        readCharacterImage: vi.fn(async () => storedImage),
+      }),
+    );
+
+    await waitFor(() =>
+      expect(result.current.characterImage).toEqual(storedImage),
+    );
+
+    await act(async () => {
+      await result.current.onCharacterImageCleared();
+    });
+
+    expect(result.current.characterImage).toEqual(storedImage);
+    expect(result.current.imageError).toEqual({ code: "storage" });
+  });
+
+  it("does not let a late restore restore an image after it was cleared", async () => {
+    let resolveRead: ((record: CharacterImageRecord) => void) | undefined;
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        deleteCharacterImage: vi.fn(async () => {}),
+        readCharacterImage: vi.fn(
+          () =>
+            new Promise<CharacterImageRecord>((resolve) => {
+              resolveRead = resolve;
+            }),
+        ),
+      }),
+    );
+
+    await act(async () => {
+      await result.current.onCharacterImageCleared();
+    });
+    await act(async () => {
+      resolveRead?.(storedImage);
+    });
+
+    expect(result.current.characterImage).toBeNull();
   });
 });

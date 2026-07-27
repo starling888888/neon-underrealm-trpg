@@ -21,9 +21,10 @@ function usePresenterHarness() {
     form,
     presenterProps: useCharacterSheetFormPresenterProps(form, {
       characterImage: null,
-      isImageProcessing: false,
+      isRootOperationInProgress: false,
+      onCharacterImageCleared: async () => {},
       onCharacterImageSelected: async () => {},
-      onCharacterImageSelectionStarted: () => {},
+      onCharacterImageOperationStarted: () => {},
     }),
   };
 }

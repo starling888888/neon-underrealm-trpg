@@ -14,9 +14,10 @@ function createProps(): ProfileSectionProps {
     characterImage: null,
     credit: characterSheetDefaultValues.credit,
     creditSummary: { change: 10, totalCredit: 10 },
-    isImageProcessing: false,
+    isRootOperationInProgress: false,
+    onCharacterImageCleared: vi.fn(),
     onCharacterImageSelected: vi.fn(),
-    onCharacterImageSelectionStarted: vi.fn(),
+    onCharacterImageOperationStarted: vi.fn(),
     onCreditBlur: vi.fn((_, value: string) => Number(value)),
     onCreditChange: vi.fn(),
     onProfileChange: vi.fn(),
@@ -145,7 +146,7 @@ describe("ProfileSection", () => {
 
     expect(props.onCharacterImageSelected).toHaveBeenCalledTimes(2);
     expect(props.onCharacterImageSelected).toHaveBeenLastCalledWith(file);
-    expect(props.onCharacterImageSelectionStarted).toHaveBeenCalledWith(
+    expect(props.onCharacterImageOperationStarted).toHaveBeenCalledWith(
       screen.getByRole("button", { name: "画像を選択またはドロップ" }),
     );
   });
@@ -168,5 +169,12 @@ describe("ProfileSection", () => {
     expect(
       screen.getByRole("button", { name: "画像を差し替えまたはドロップ" }),
     ).not.toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "画像をクリア" }));
+
+    expect(props.onCharacterImageCleared).toHaveBeenCalledOnce();
+    expect(props.onCharacterImageOperationStarted).toHaveBeenCalledWith(
+      screen.getByRole("button", { name: "画像をクリア" }),
+    );
   });
 });

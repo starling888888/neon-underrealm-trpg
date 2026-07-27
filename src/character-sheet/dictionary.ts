@@ -14,6 +14,8 @@ export const characterSheetDictionary = {
     image: {
       chooseFile: "画像を選択",
       chooseFileOrDrop: "画像を選択またはドロップ",
+      clearFile: "画像をクリア",
+      clearing: "画像をクリアしています",
       description: "画像をここへドラッグ＆ドロップ",
       errorTitle: "画像を処理できませんでした",
       errors: {

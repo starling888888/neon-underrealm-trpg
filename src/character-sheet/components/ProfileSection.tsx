@@ -50,9 +50,10 @@ export type ProfileSectionProps = {
   characterImage: CharacterImageRecord | null;
   credit: CreditValues;
   creditSummary: CreditSummary;
-  isImageProcessing: boolean;
+  isRootOperationInProgress: boolean;
+  onCharacterImageCleared: () => Promise<void>;
   onCharacterImageSelected: (file: File) => Promise<void>;
-  onCharacterImageSelectionStarted: (trigger: HTMLButtonElement) => void;
+  onCharacterImageOperationStarted: (trigger: HTMLButtonElement) => void;
   onCreditBlur: (field: CreditFieldName, value: string) => number;
   onCreditChange: (field: CreditFieldName, value: string) => void;
   onProfileChange: (field: ProfileFieldName, value: string) => void;
@@ -61,22 +62,24 @@ export type ProfileSectionProps = {
 
 type CharacterImageFieldProps = {
   image: CharacterImageRecord | null;
-  isProcessing: boolean;
+  isRootOperationInProgress: boolean;
+  onImageCleared: () => Promise<void>;
   onImageSelected: (file: File) => Promise<void>;
-  onImageSelectionStarted: (trigger: HTMLButtonElement) => void;
+  onImageOperationStarted: (trigger: HTMLButtonElement) => void;
 };
 
 function CharacterImageField({
   image,
-  isProcessing,
+  isRootOperationInProgress,
+  onImageCleared,
   onImageSelected,
-  onImageSelectionStarted,
+  onImageOperationStarted,
 }: CharacterImageFieldProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { image: imageCopy } = characterSheetDictionary.characterSheet;
 
   function selectFile(event: MouseEvent<HTMLButtonElement>): void {
-    onImageSelectionStarted(event.currentTarget);
+    onImageOperationStarted(event.currentTarget);
     fileInputRef.current?.click();
   }
 
@@ -93,7 +96,7 @@ function CharacterImageField({
 
   function onDrop(event: DragEvent<HTMLButtonElement>): void {
     event.preventDefault();
-    onImageSelectionStarted(event.currentTarget);
+    onImageOperationStarted(event.currentTarget);
     receiveFile(event.dataTransfer.files[0]);
   }
 
@@ -106,7 +109,7 @@ function CharacterImageField({
             : imageCopy.replaceFileOrDrop
         }
         className={styles.imageDropZone}
-        disabled={isProcessing}
+        disabled={isRootOperationInProgress}
         onClick={selectFile}
         onDragOver={(event) => event.preventDefault()}
         onDrop={onDrop}
@@ -138,12 +141,25 @@ function CharacterImageField({
       />
       <button
         className={styles.imageSelectButton}
-        disabled={isProcessing}
+        disabled={isRootOperationInProgress}
         onClick={selectFile}
         type="button"
       >
         {image === null ? imageCopy.chooseFile : imageCopy.replaceFile}
       </button>
+      {image !== null ? (
+        <button
+          className={styles.imageClearButton}
+          disabled={isRootOperationInProgress}
+          onClick={(event) => {
+            onImageOperationStarted(event.currentTarget);
+            void onImageCleared();
+          }}
+          type="button"
+        >
+          {imageCopy.clearFile}
+        </button>
+      ) : null}
     </div>
   );
 }
@@ -232,9 +248,10 @@ export default function ProfileSection({
   characterImage,
   credit,
   creditSummary,
-  isImageProcessing,
+  isRootOperationInProgress,
+  onCharacterImageCleared,
   onCharacterImageSelected,
-  onCharacterImageSelectionStarted,
+  onCharacterImageOperationStarted,
   onCreditBlur,
   onCreditChange,
   onProfileChange,
@@ -315,9 +332,10 @@ export default function ProfileSection({
         </div>
         <CharacterImageField
           image={characterImage}
-          isProcessing={isImageProcessing}
+          isRootOperationInProgress={isRootOperationInProgress}
+          onImageCleared={onCharacterImageCleared}
           onImageSelected={onCharacterImageSelected}
-          onImageSelectionStarted={onCharacterImageSelectionStarted}
+          onImageOperationStarted={onCharacterImageOperationStarted}
         />
       </div>
       <section aria-label={creditTerms.name} className={styles.credit}>

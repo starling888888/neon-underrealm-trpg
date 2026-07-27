@@ -18,18 +18,20 @@ import { normalizeCreditInput } from "../schemas/character-sheet-form";
  */
 type CharacterImagePresenterState = {
   characterImage: CharacterImageRecord | null;
-  isImageProcessing: boolean;
+  isRootOperationInProgress: boolean;
+  onCharacterImageCleared: () => Promise<void>;
   onCharacterImageSelected: (file: File) => Promise<void>;
-  onCharacterImageSelectionStarted: (trigger: HTMLButtonElement) => void;
+  onCharacterImageOperationStarted: (trigger: HTMLButtonElement) => void;
 };
 
 export default function useCharacterSheetFormPresenterProps(
   { control, setValue }: UseFormReturn<CharacterSheetFormValues>,
   {
     characterImage,
-    isImageProcessing,
+    isRootOperationInProgress,
+    onCharacterImageCleared,
     onCharacterImageSelected,
-    onCharacterImageSelectionStarted,
+    onCharacterImageOperationStarted,
   }: CharacterImagePresenterState,
 ): CharacterSheetFormPresenterProps {
   const profile = useWatch({
@@ -72,9 +74,10 @@ export default function useCharacterSheetFormPresenterProps(
       onProfileChange: (field, value) => {
         setValue(`profile.${field}`, value);
       },
-      isImageProcessing,
+      isRootOperationInProgress,
+      onCharacterImageCleared,
       onCharacterImageSelected,
-      onCharacterImageSelectionStarted,
+      onCharacterImageOperationStarted,
       profile,
     },
   };

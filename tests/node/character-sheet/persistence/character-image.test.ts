@@ -4,6 +4,7 @@ import test from "node:test";
 import { CharacterImageError } from "../../../../src/character-sheet/character-image";
 import {
   type CharacterImagePersistence,
+  deleteCharacterImage,
   readCharacterImage,
   writeCharacterImage,
 } from "../../../../src/character-sheet/persistence/character-image";
@@ -16,6 +17,9 @@ const record = {
 test("writes and reads one valid character image record", async () => {
   let stored: unknown = null;
   const persistence: CharacterImagePersistence = {
+    delete: async () => {
+      stored = null;
+    },
     read: async () => stored,
     write: async (nextRecord) => {
       stored = nextRecord;
@@ -32,10 +36,12 @@ test("writes and reads one valid character image record", async () => {
 
 test("leaves a missing record unselected and rejects a malformed record", async () => {
   const missing: CharacterImagePersistence = {
+    delete: async () => {},
     read: async () => null,
     write: async () => {},
   };
   const malformed: CharacterImagePersistence = {
+    delete: async () => {},
     read: async () => ({ base64: "not-an-image", mimeType: "image/png" }),
     write: async () => {},
   };
@@ -46,6 +52,7 @@ test("leaves a missing record unselected and rejects a malformed record", async 
 
 test("rejects a structurally valid record when the browser cannot decode it", async () => {
   const persistence: CharacterImagePersistence = {
+    delete: async () => {},
     read: async () => record,
     write: async () => {},
   };
@@ -57,5 +64,32 @@ test("rejects a structurally valid record when the browser cannot decode it", as
       }),
     (error: unknown) =>
       error instanceof CharacterImageError && error.code === "decode",
+  );
+});
+
+test("deletes the current image record and reports a storage failure", async () => {
+  let stored: unknown = record;
+  const persistence: CharacterImagePersistence = {
+    delete: async () => {
+      stored = null;
+    },
+    read: async () => stored,
+    write: async () => {},
+  };
+
+  await deleteCharacterImage(persistence);
+  assert.equal(await persistence.read(), null);
+
+  await assert.rejects(
+    () =>
+      deleteCharacterImage({
+        delete: async () => {
+          throw new Error("IndexedDB unavailable");
+        },
+        read: async () => null,
+        write: async () => {},
+      }),
+    (error: unknown) =>
+      error instanceof CharacterImageError && error.code === "storage",
   );
 });
