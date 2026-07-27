@@ -51,11 +51,20 @@ describe("FormulaTooltip", () => {
       },
     );
 
-    render(
+    const { container } = render(
       <FormulaTooltip ariaLabel="計算式" formula="確認用の計算式">
         <span>計算式</span>
       </FormulaTooltip>,
     );
+
+    const indicator = container.querySelector(`.${styles.indicator}`);
+    const triggerContent = container.querySelector(`.${styles.triggerContent}`);
+
+    expect(indicator?.textContent).toBe("?");
+    expect(indicator?.getAttribute("aria-hidden")).toBe("true");
+    expect(triggerContent?.firstElementChild?.textContent).toBe("計算式");
+    expect(indicator?.parentElement).toBe(triggerContent);
+    expect(indicator?.className).toContain(styles.indicator);
 
     fireEvent.click(screen.getByRole("button", { name: "計算式" }));
 

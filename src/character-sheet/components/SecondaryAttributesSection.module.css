@@ -59,6 +59,11 @@
 .inlineTooltip {
   width: fit-content;
   flex: 0 1 auto;
+  line-height: var(--line-height-tight);
+}
+
+.rowLabelTooltip {
+  font-size: var(--text-sm);
 }
 
 .rowLabelTooltip :global(button),

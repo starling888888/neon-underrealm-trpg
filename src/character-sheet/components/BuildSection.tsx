@@ -259,33 +259,70 @@ export default function BuildSection({
         data-invalid={derived.hasAttributeError || undefined}
       >
         <div className={styles.attributeMeta}>
-          <FormulaTooltip formula={buildUiCopy.formulas.points}>
-            <span>{`${buildCopy.points}: ${formatDisplayValue(
+          <span className={styles.attributeMetaItem}>
+            <FormulaTooltip formula={buildUiCopy.formulas.points}>
+              <span>{buildCopy.points}</span>
+            </FormulaTooltip>
+            <span>{`: ${formatDisplayValue(
               derived.ikizamaAttributePoints === null
                 ? null
                 : [...derived.ikizamaAttributePoints, 0].join(", "),
             )}`}</span>
-          </FormulaTooltip>
-          <FormulaTooltip formula={buildUiCopy.formulas.growthPoints}>
-            <span>{`${buildCopy.growthPoints}: ${formatDisplayValue(derived.growthPoints)}`}</span>
-          </FormulaTooltip>
+          </span>
+          <span className={styles.attributeMetaItem}>
+            <FormulaTooltip formula={buildUiCopy.formulas.growthPoints}>
+              <span>{buildCopy.growthPoints}</span>
+            </FormulaTooltip>
+            <span>{`: ${formatDisplayValue(derived.growthPoints)}`}</span>
+          </span>
         </div>
         <div className={styles.attributeGrid}>
           <span className={styles.attributeHeader}>{buildCopy.attribute}</span>
-          <span className={styles.attributeHeader}>{buildCopy.base}</span>
+          <span
+            className={`${styles.attributeHeader} ${styles.stackedAttributeHeader}`}
+          >
+            <span>{buildCopy.base}</span>
+            <span>{buildCopy.attributes}</span>
+          </span>
           <span className={styles.pointsHeader}>
             <span>{buildCopy.attributes}</span>
             <span>{buildCopy.point}</span>
           </span>
           <span className={styles.attributeHeader}>{buildCopy.growth}</span>
-          <span className={styles.attributeHeader}>
-            {buildCopy.permanentModifier}
+          <FormulaTooltip
+            ariaLabel={buildCopy.permanentModifier}
+            formula={buildUiCopy.tooltips.permanentModifier}
+          >
+            <span
+              className={`${styles.attributeHeader} ${styles.stackedAttributeHeader}`}
+            >
+              <span>{buildCopy.permanent}</span>
+              <span>{buildCopy.modifier}</span>
+            </span>
+          </FormulaTooltip>
+          <span
+            className={`${styles.attributeHeader} ${styles.stackedAttributeHeader}`}
+          >
+            <span>{buildCopy.permanent}</span>
+            <span>{buildCopy.attributes}</span>
           </span>
-          <span className={styles.attributeHeader}>{buildCopy.permanent}</span>
-          <span className={styles.attributeHeader}>
-            {buildCopy.temporaryModifier}
+          <FormulaTooltip
+            ariaLabel={buildCopy.temporaryModifier}
+            formula={buildUiCopy.tooltips.temporaryModifier}
+          >
+            <span
+              className={`${styles.attributeHeader} ${styles.stackedAttributeHeader}`}
+            >
+              <span>{buildCopy.temporary}</span>
+              <span>{buildCopy.modifier}</span>
+            </span>
+          </FormulaTooltip>
+          <span
+            className={`${styles.attributeHeader} ${styles.stackedAttributeHeader}`}
+          >
+            <span>{buildCopy.temporary}</span>
+            <span>{buildCopy.attributes}</span>
           </span>
-          <span className={styles.attributeHeader}>{buildCopy.temporary}</span>
           {attributeNames.map((attributeName) => {
             const values = build.attributes[attributeName];
             const derivedValues = derived.attributes[attributeName];

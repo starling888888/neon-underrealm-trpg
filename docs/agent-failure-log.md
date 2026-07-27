@@ -831,3 +831,48 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-7-sheet-build` のレビュー指摘4後の `tests/visual/character-sheet.spec.ts`
 - 観測した失敗: 変更対象外の縁section frame開閉testが全体実行と単独再実行で連続して失敗し、click後も`aria-expanded`が`true`のままとなった。プロフィール入力testは単独再実行で通過した。
 - 一次対応: Review 4のBuildSection・number input変更を原因とみなしてframe実装を変更せず、browser smokeの当該1件を未確認として報告する。frameの操作同期は別scopeで扱う。
+
+### Tooltip indicator alignment was changed without visual confirmation
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: `ex-02-8-sheet-secondary` の`FormulaTooltip` indicator追加
+- 観測した失敗: tooltip文字列の直後へ`?`indicatorを追加するCSSを、Component testと型検査だけで完了報告し、desktop・tablet・mobileの実画面を確認しなかった。実際にはblock表示のラベルの後でindicatorが次行へ送られ、基本情報と副能力値の両方で縦にずれた。続く修正後も、actual screenshotで基本情報の数値行、能力値grid、一時修正の操作列が崩れていることを見落として完了報告した。
+- 一次対応: `FormulaTooltip`の文字列wrapperにindicator分の幅だけを確保し、indicator本体は行高へ影響しない絶対配置にした。基本情報のtooltip rootはblock配置、狭い7列のlabelは単一行・compact indicatorにし、mobileの能力値gridは利用可能幅へ収めた。target限定のPlaywright captureでdesktop・ultrawide・tablet・mobileを再度目視確認した。以後、既存のinline文字列へ装飾要素を追加するUI変更では、報告前に少なくとも影響する代表viewportのactual screenshotを確認する。
+
+### Repeated Playwright sandbox launch failures during G8 layout inspection
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-8-sheet-secondary` の実画面寸法確認用Playwright script
+- 観測した失敗: layoutの実寸を取得するために通常sandboxでChromiumを起動したところ、`sandbox_host_linux.cc`の終了権限エラーで起動に失敗した。同じG8作業中の先行captureでも同種のsandbox起動失敗があり、browser計測を通常sandboxで再試行して同じ環境制約を繰り返した。
+- 一次対応: 実画面のスクリーンショットはtarget限定captureで確認し、要素寸法の取得が必要なときだけ承認済みのsandbox外実行へ切り替えた。以後、この環境で同じChromium sandbox failureを確認した後は通常sandboxで再試行せず、必要性を明示して一度だけsandbox外実行を依頼する。
+
+### Reported visual confirmation while visible defects remained
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: `ex-02-8-sheet-secondary` のtooltip indicatorレビュー報告
+- 観測した失敗: actual screenshotには、基本情報の数値行の縦不揃い、副能力値ラベル下の余白、成長点・一時修正の操作列とmobile能力値gridのframe外表示が残っていた。にもかかわらず、agentは「画面を確認し、問題は解消した」と肯定報告した。これはtooltip実装の不備とは別に、可視の失敗を検出せず確認済みと虚偽の検証結果をユーザーへ伝えた重大な報告失敗である。
+- 一次対応: `AGENTS.md`と`visual-implementation-review` skillへ、capture成功やsnapshot生成を確認の根拠にせず、宣言した全route・state・viewportのactual snapshotを開き、issueの受入条件ごとに確認する停止条件を追加した。誤った肯定報告が判明した場合は、failure logとcurrent issueを訂正し、issueをdoneへ移さず、capture・実画面確認・VRT比較をやり直す。
+
+### Inherited no-wrap style clipped a formula tooltip
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: `ex-02-8-sheet-secondary` の能力値ポイント・成長点tooltip
+- 観測した失敗: labelと算出値を一まとまりとして折り返さないために`attributeMetaItem`へ`white-space: nowrap`を追加したが、tooltip本文がその子孫であることを確認しなかった。その結果、長いformula本文もnowrapとなり、tooltip背景の幅を超えて全文を読めなくなった。
+- 一次対応: `FormulaTooltip`のtooltip本文へ`white-space: normal`を明示し、trigger周辺のnowrapを継承しないようにした。tooltip本文は既存の`overflow-wrap: anywhere`で幅内に折り返す。
+
+### Reported desktop tooltip review without checking trigger anchoring
+
+#### 2026-07-27
+
+- source: user
+- 発生箇所: `ex-02-8-sheet-secondary` の能力値table `常時修正`・`一時修正` tooltip
+- 観測した失敗: `常時修正`・`一時修正`のtooltip triggerだけをgrid cell幅いっぱいのblock要素に変更した結果、tooltipの右端基準がラベル文字列ではなくcell全体となった。desktopでtooltipが意図しない位置に現れ、hover時にずれて見える表示を残したにもかかわらず、agentは表示切れだけを確認して「実画面で確認済み」と報告した。
+- 一次対応: 見出しtooltipのrootとbuttonのcell全幅指定を撤去し、他のlabelと同じ文字列幅のtriggerへ戻す。以後、tooltipの実画面確認では表示切れだけでなく、triggerとの相対位置、open前後の周辺レイアウト、同種の既存tooltipとの差も確認する。

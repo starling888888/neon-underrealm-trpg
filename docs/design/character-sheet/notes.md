@@ -41,7 +41,7 @@
 - viewports: desktop（`1440x1200`）、tablet（`820x1180`）、mobile（`390x900`）。ultrawideは既存の本文幅確認だけに使い、G4のcanonical比較対象に含めない。
 - profile layout: profile slotはG3のsection frameを使わない。PC名、PL名、二つ名、年齢、性別は、それぞれlabelを上に置く独立したinputとする。desktopとtabletは3列のgridで、入力のDOM順と視覚順をPC名、PL名、二つ名、年齢、性別に一致させる。mobileでは1列に積む。
 - setting layout: profile入力群の直下に`設定`とchevronだけを置く。展開時は、同じ位置にlabel付きtextareaを表示する。開閉状態はフォーム値、保存、JSONの対象に含めない。
-- credit layout: 信用は、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭のDOM順を維持する。desktopとtabletでは3列のgrid、mobileでは1列に積む。編集可能な4入力は短い幅で右揃え、派生値は同じ視覚形式の読み取り専用値として表示する。
+- credit layout: 信用は、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭のDOM順を維持する。desktopとtabletでは7列のgrid、mobileでは1行目に取得信用・融通した・融通された、2行目に合計信用・消費信用・小銭修正・小銭を置くresponsive gridとする。編集可能な4入力は短い幅で右揃え、派生値は同じ視覚形式の読み取り専用値として表示する。
 - comparison points: profile slotのG3 frame非適用、5入力のlabel対応と順序、設定の初期非表示と展開後のtextarea、信用の順序・初期値・右揃え、desktop / tablet / mobileでの横overflowなし。
 - VRT: 既存の`tests/visual/vrt/character-sheet.spec.ts`にある`@vrt @character-sheet`のdefault routeを使い、G4ではdesktop、tablet、mobileだけをactual / 比較対象とする。設定の展開、信用の値変更、空欄からの`0`復帰はbrowser behavior testで確認する。canonical baselineの更新には別途ユーザー承認が必要である。
 
@@ -107,7 +107,7 @@
 - 折りたたみの開閉状態はブラウザ内保存、JSON export、JSON importの対象に含めない。
 - 算出値を別領域へ再掲するsummaryは設けない。要件で定める算出値は、それぞれの該当領域で表示する。
 - 計算式の文字列は、該当する自動算出値または最終値のlabelを操作すると開くtooltipで表示する。通常表示に固定の算出式文字列は置かない。
-- formula tooltipはsectionまたはviewportの上端に近いtriggerで下方向へ開き、上下左右とも読める範囲に表示する。副能力値だけの局所配置にはしない。
+- formula tooltipはsectionまたはviewportの上端に近いtriggerで下方向へ開き、上下左右とも読める範囲に表示する。副能力値だけの局所配置にはしない。すべてのtooltip triggerは対象文字列の直後に、薄いアクセントカラーの小さな丸い`?`indicatorを表示する。indicatorはtriggerの操作領域へ含め、支援技術へ重複して読ませない。
 
 ### G3 編集section frame
 
@@ -123,7 +123,7 @@
 ### mobileの情報密度
 
 - mobileはシート全体を縦一列にする。基本情報では、画像領域を`設定`の下へ置く。
-- 経験点は取得・消費・残経験点を1行、格と共通スキル上限を次行へ置く。信用は、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭の順に置く。
+- 経験点は取得・消費・残経験点を1行、格と共通スキル上限を次行へ置く。信用は、取得信用、融通した、融通されたを1行目、合計信用、消費信用、小銭修正、小銭を2行目に置く。
 - 流儀、生き様、その他流儀の入力の下に能力値入力を置く。流儀増加値、生き様係数、共通スキルボーナスは、読める範囲で横方向へ圧縮する。
 - 副能力値は1項目ずつ縦に並べるが、各項目内の`自動算出値 + 修正入力 = 最終値`は横並びを維持する。縁は行間と余白を縮める。縁の覚悟効果は、上段を能動判定・リアクション、下段を体力回復・気合の順に並べる。
 - 判定では攻撃判定の下にリアクションを置き、非戦闘技能は2列にする。武器・防具は列幅・余白を圧縮して表示する。入力欄と表の最終的な細部は実装時に再検討する。

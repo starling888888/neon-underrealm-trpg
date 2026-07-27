@@ -73,7 +73,13 @@ describe("ProfileSection", () => {
   it("opens and dismisses the formula tooltip without involving form state", () => {
     render(<ProfileSection {...createProps()} />);
 
-    fireEvent.click(screen.getByRole("button", { name: /合計信用/ }));
+    const totalCreditButton = screen.getByRole("button", {
+      name: "合計信用",
+    });
+
+    expect(totalCreditButton.querySelector("output")).toBeNull();
+
+    fireEvent.click(totalCreditButton);
 
     expect(screen.getByRole("tooltip").textContent).toBe(
       "取得信用 + 融通された信用 - 融通した信用",
@@ -102,7 +108,14 @@ describe("ProfileSection", () => {
     expect(screen.queryByRole("button", { name: "消費経験点" })).toBeNull();
     expect(screen.queryByRole("button", { name: "残経験点" })).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: /格/ }));
+    for (const label of ["合計信用", "消費信用", "小銭", "格"]) {
+      expect(screen.getByRole("button", { name: label })).not.toBeNull();
+      expect(
+        screen.getByRole("button", { name: label }).querySelector("output"),
+      ).toBeNull();
+    }
+
+    fireEvent.click(screen.getByRole("button", { name: "格" }));
 
     expect(screen.getByRole("tooltip").textContent).toBe(
       "プライマリ流儀レベル + 生き様レベル",

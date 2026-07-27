@@ -20,6 +20,12 @@ export const characterSheetDictionary = {
         points: "生き様の4値と0を、5つの能力値へ一度ずつ割り振ります。",
         rank: "プライマリ流儀レベル + 生き様レベル",
       },
+      tooltips: {
+        permanentModifier:
+          "ブライの「卓越能力」のように常に能力値を補正するスキル、アイテムの効果の値を入力します",
+        temporaryModifier:
+          "ナノマシンやドラッグのように一時的に能力値を変化させるスキル、アイテムの効果の値を入力します",
+      },
       remove: "を削除",
       ryugiAndIkizama: "流儀・生き様",
       unselected: "未選択",
@@ -141,6 +147,7 @@ export const characterSheetDictionary = {
       permanentModifier: "常時修正",
       point: "ポイント",
       points: "能力値ポイント",
+      modifier: "修正",
       primaryRyugi: "プライマリ流儀",
       rank: "格",
       remainingExperience: "残経験点",

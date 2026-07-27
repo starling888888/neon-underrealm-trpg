@@ -240,25 +240,27 @@ function ReadOnlyCreditField({
   value,
 }: ReadOnlyCreditFieldProps) {
   const id = `character-sheet-${label}`;
-  const field = (
-    <span>
-      <span className={styles.metricLabel}>{label}</span>
+  const labelContent = <span className={styles.metricLabel}>{label}</span>;
+
+  return (
+    <div className={styles.metric}>
+      {formula === undefined ? (
+        labelContent
+      ) : (
+        <FormulaTooltip
+          ariaLabel={label}
+          className={styles.metricTooltip}
+          formula={formula}
+        >
+          {labelContent}
+        </FormulaTooltip>
+      )}
       <output
         className={`${styles.metricValue} character-sheet-number-value`}
         id={id}
       >
         {value}
       </output>
-    </span>
-  );
-
-  return (
-    <div className={styles.metric}>
-      {formula === undefined ? (
-        field
-      ) : (
-        <FormulaTooltip formula={formula}>{field}</FormulaTooltip>
-      )}
     </div>
   );
 }

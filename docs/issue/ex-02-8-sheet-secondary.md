@@ -35,11 +35,16 @@
 - 純粋logicへ、G7のプライマリ流儀、生き様、常時能力値・一時能力値とユーザー入力から副能力値を導出する責務を追加する。プライマリ流儀または生き様が未選択で基礎式を確定できない値は`-`と表示し、手動修正値は保持する。
 - `基本体力 + 修正 = 最大体力`、`基本精神力 + 修正 = 最大精神力`、`基本移動力 + 移動力修正 = 最終移動力`、`基本行動値 + 行動値修正 = 最終行動値`、`基本行動回数 + 行動回数修正 = 行動回数`、`基本縁最大数 + 縁最大数修正 = 縁最大数`を、各項目内の左から右の順に表示する。体力・精神力の最終値ラベルは必ず`最大体力`、`最大精神力`にする。
 - 基本体力、基本精神力、基本移動力、基本行動値、各最終値のラベルへ既存`FormulaTooltip`を付け、固定式だけを表示する。tooltipはhover、tap、Esc、component外tapの既存操作契約を保ち、数値を代入した計算過程は表示しない。手動修正ラベルに計算式tooltipを追加しない。
+- ユーザーの追加指示により、基本情報の合計信用、消費信用、小銭、格は、数値表示をtooltip triggerに含めずラベルだけをwrapする。副能力値の`最大体力`から`結べる縁`までのtooltip triggerは、表示文字列と`?`indicatorを同じ行に維持して折り返さない。
+- ユーザーの追加指示により、mobileの信用欄は取得信用、融通した、融通されたを1行目、合計信用、消費信用、小銭修正、小銭を2行目に置くresponsive layoutとする。既存labelと`?`indicatorのfont-sizeは変更しない。
+- ユーザーの追加指示により、能力値ポイントと成長点はlabelだけをformula tooltip triggerにし、`:`以降の算出値はtooltipの外へ置く。labelと算出値は一まとまりとして折り返さない。
+- ユーザーの追加指示により、能力値tableの見出しは常に`基礎` / `能力値`、`能力値` / `ポイント`、`常時` / `修正`、`常時` / `能力値`、`一時` / `修正`、`一時` / `能力値`の2行表示にする。
+- ユーザーの追加指示により、能力値tableの`常時` / `修正`と`一時` / `修正`は各2行見出し全体をtooltip triggerにする。tooltip本文はそれぞれ「ブライの「卓越能力」のように常に能力値を補正するスキル、アイテムの効果の値を入力します」「ナノマシンやドラッグのように一時的に能力値を変化させるスキル、アイテムの効果の値を入力します」とする。
 - 移動力・行動値では、項目名の右に一時修正適用checkboxを置く。未チェック時は常時能力値、チェック時は一時能力値を基礎式へ用いる。checkboxの変更で、同じ行の基本値と最終値を再計算する。
 - 最大体力は、G8で利用可能な`基本体力 + 修正`を表示し、スミの選択中ナノマシン由来の`activationMentalCost`最大値はG20が選択状態を接続するまで`0`とする。G20が既存の副能力値logicへこの加算値を渡して最終的な要件式を完成させられる、局所的で明示的な拡張点を残す。
 - 行動回数の基本値は`2`、縁最大数の基本値は`4`とする。共通スキルボーナスを自動加算しない。
 - tabletは、体力系と精神力系、移動力系と行動値系、行動回数と結べる縁の3行へ圧縮する。mobileは各項目を縦に並べるが、各項目の計算式は横並びに保ち、desktop、tablet、mobileのいずれでも全行が横overflowなく操作・閲覧できるようにする。
-- 固定文言と固定式は`src/character-sheet/dictionary.ts`へ置く。既存の`FormulaTooltip`を用途に適合させる必要がある場合は、そのComponentとComponent testを最小範囲で更新する。
+- 固定文言と固定式は`src/character-sheet/dictionary.ts`へ置く。既存の`FormulaTooltip`を用途に適合させる必要がある場合は、そのComponentとComponent testを最小範囲で更新する。ユーザーの追加指示により、すべてのFormulaTooltip triggerは対象文字列の直後に、薄いアクセントカラーの小さな丸い`?`indicatorを表示する。indicatorはtooltipの操作対象ではなく、既存triggerの一部として扱い、accessible nameへ重複して含めない。
 
 ## 初期スコープ外
 
@@ -57,6 +62,8 @@
 - [x] 体力と精神力の最終値ラベルが`最大体力`、`最大精神力`である。
 - [x] 移動力と行動値の一時修正適用checkboxが項目名の右にあり、常時・一時能力値の選択を正しく反映する。
 - [x] 自動算出値と最終値のラベルから固定算出式をtooltipで確認でき、数値を代入した式を通常表示していない。
+- [x] すべてのFormulaTooltip triggerが、対象文字列の直後に小さな丸い`?`indicatorを表示し、accessible nameへ重複して含めない。
+- [x] 合計信用、消費信用、小銭、格はラベルだけをtooltip triggerにし、副能力値の項目ラベルと`?`indicatorを折り返さず表示する。
 - [x] 未選択状態、正負の手動修正、checkboxの切替、tablet / mobileでの表示を純粋logic、schema / hook、Component、browser behavior testの適切な層で確認している。
 - [x] `@character-sheet` targetだけをVisual Reviewし、canonical VRT baselineを更新していない。
 - [x] 関連TODOを扱わず、未対応理由をこのissueに記録している。
@@ -277,5 +284,55 @@
 - [x] その他流儀の更新fieldから`rowId`を除外する。
 - [x] 常時算出する派生値4件を`number`型へ狭める。
 - [x] `npm run test:component` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt.*@character-sheet`
+- route / states / viewports: `/character-sheet/` / default / desktop、ultrawide、tablet、mobile
+
+### レビュー結果
+
+| 対象              | 判定       | 差分                                                                                                   | 対応                                                                                                                   |
+| ----------------- | ---------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `character-sheet` | 要人間判断 | canonical baselineは副能力値追加前のpage高さであり、4 viewportすべてで高さ・追加内容の差分が発生する。 | 基本情報labelとindicatorの既存サイズを復元したため、復元後の表示はユーザーによる確認待ちとする。baselineは更新しない。 |
+
+### 実画面確認
+
+- `/character-sheet/` / default / desktop: 基本情報の7列のlabelと数値欄、副能力値の2列配置、移動力・行動値のcheckbox操作列がframe内に収まることを確認した。
+- `/character-sheet/` / default / ultrawide: desktopと同じ配置契約で横overflowやtooltip indicatorによる行高の変化がないことを確認した。
+- `/character-sheet/` / default / tablet: 基本情報の数値行、能力値ポイント／成長点、副能力値の3行圧縮とcheckbox操作列がframe内に収まることを確認した。
+- `/character-sheet/` / default / mobile: 基本情報の7列の数値行、副能力値のラベルと計算式、能力値gridの最終列がframe内に収まることを確認した。
+- 基本情報labelとindicatorの既存サイズを復元した後のactual screenshotは、上記の確認結果として再利用しない。ユーザーによる表示確認待ちとする。
+
+### 自己修正した項目
+
+- [x] `FormulaTooltip`の文字列wrapperにindicator分の幅を確保し、`?`indicatorは行高へ影響しない絶対配置にした。
+- [x] 基本情報の合計信用、消費信用、小銭、格はラベルだけをtooltip triggerにし、数値を操作対象から分離した。
+- [x] 基本情報tooltipのrootをblock配置して、既存labelと同じ開始位置へ置いた。
+- [x] ユーザー指示に従い、基本情報labelの既存font-sizeと`?`indicatorの既存サイズを復元した。
+- [x] mobileの能力値gridは利用可能幅に収まる最小幅へ修正し、成長点と各能力値欄がsection frame外へ出ないようにした。
+
+### 確認報告の訂正
+
+- tooltip indicatorの初回修正後、actual screenshotに基本情報の数値行の不揃い、副能力値の余白、操作列と能力値gridの枠外表示が残っていたにもかかわらず、確認済みとして報告した。この肯定報告は無効とする。
+- `常時修正`・`一時修正`tooltip追加後のdesktop確認は、表示切れの有無だけを見てtrigger基準位置とhover時の見え方を確認しなかったため無効とする。cell全幅をtriggerにする実装が原因で、tooltipの基準位置が文字列ではなくcell右端になっていた。
+- 上記を修正した後、desktop、ultrawide、tablet、mobileのactual snapshotを個別に開いた。ただし、その後に基本情報labelとindicatorの既存サイズを復元したため、復元後の表示確認は未完了である。
+
+### 人間判断が必要な差分
+
+- 副能力値追加とtooltip indicatorを含む現在の`character-sheet`表示をcanonical baselineへ採用するか。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [ ] 宣言したすべてのroute / state / viewportのactual snapshotを開いて確認した（既存サイズ復元後）。
+- [x] 実画面で確認できたtooltip indicatorの縦積みを修正した。
+- [x] baseline更新が必要な差分を人間判断として記録した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。

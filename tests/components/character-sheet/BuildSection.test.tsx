@@ -43,8 +43,12 @@ describe("BuildSection", () => {
     render(<BuildSection {...props} />);
 
     expect(screen.getAllByText("-").length).toBeGreaterThan(0);
-    expect(screen.getByText("能力値ポイント: -")).not.toBeNull();
-    expect(screen.getByText("成長点: 0")).not.toBeNull();
+    expect(
+      screen.getByRole("button", { name: "能力値ポイント" }),
+    ).not.toBeNull();
+    expect(screen.getByText(": -")).not.toBeNull();
+    expect(screen.getByRole("button", { name: "成長点" })).not.toBeNull();
+    expect(screen.getByText(": 0")).not.toBeNull();
     expect(screen.getByText("Lv 2で獲得")).not.toBeNull();
     expect(
       (screen.getByLabelText("プライマリ流儀Lv") as HTMLInputElement).value,
@@ -58,6 +62,24 @@ describe("BuildSection", () => {
     expect(screen.getByRole("tooltip").textContent).toBe(
       characterSheetDictionary.characterSheet.build.formulas.growthPoints,
     );
+
+    fireEvent.click(screen.getByRole("button", { name: "常時修正" }));
+
+    expect(
+      screen.getByText(
+        characterSheetDictionary.characterSheet.build.tooltips
+          .permanentModifier,
+      ),
+    ).not.toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "一時修正" }));
+
+    expect(
+      screen.getByText(
+        characterSheetDictionary.characterSheet.build.tooltips
+          .temporaryModifier,
+      ),
+    ).not.toBeNull();
 
     await user.selectOptions(
       screen.getByLabelText("プライマリ流儀"),

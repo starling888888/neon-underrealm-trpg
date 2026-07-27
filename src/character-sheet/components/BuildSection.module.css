@@ -143,6 +143,13 @@
   line-height: var(--line-height-tight);
 }
 
+.attributeMetaItem {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+
 .attributeGrid {
   display: grid;
   grid-template-columns: minmax(2.25rem, 1fr) repeat(7, minmax(2.4rem, 0.8fr));
@@ -156,8 +163,15 @@
   white-space: nowrap;
 }
 
-.pointsHeader > span + span::before {
-  content: " ";
+.pointsHeader,
+.stackedAttributeHeader {
+  display: grid;
+  line-height: var(--line-height-tight);
+}
+
+.pointsHeader > span,
+.stackedAttributeHeader > span {
+  display: block;
 }
 
 .attributeRow {
@@ -250,15 +264,10 @@
   .referencePane {
     grid-column: auto;
   }
-}
 
-@media (width < 90rem) {
-  .pointsHeader > span {
-    display: block;
-  }
-
-  .pointsHeader > span + span::before {
-    content: none;
+  .attributeGrid {
+    grid-template-columns: minmax(2rem, 1fr) repeat(7, minmax(0, 0.8fr));
+    gap: 0.1875rem;
   }
 }
 

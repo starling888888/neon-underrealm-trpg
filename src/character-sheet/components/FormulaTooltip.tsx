@@ -98,7 +98,12 @@ export default function FormulaTooltip({
         }}
         type="button"
       >
-        {children}
+        <span className={styles.triggerContent}>
+          {children}
+          <span aria-hidden="true" className={styles.indicator}>
+            ?
+          </span>
+        </span>
         {isOpen ? (
           <span
             className={`${styles.content} ${
