@@ -129,3 +129,118 @@
 - [x] baseline更新が必要な差分を人間判断として記録した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 副能力値を既存の`CharacterSheetSectionFrame`でラップし、基本情報・ビルドと同じsection見出し、背景、border、内側余白の階層に揃える。独自のsection見出しと外枠は残さない。
+- 各演算子の左右に`基本体力`、`体力追加値`などの可視labelを反復表示しない。各項目は`自動算出値 + 修正入力 = 最終値`を保ちつつ、枠内で少し大きく表示する最終値の名前だけを可視にする。対象は`最大体力`、`最大精神力`、`移動力`、`行動値`、`行動回数`、`結べる縁`とする。
+- 上記の最終値名をformula tooltipのtriggerにする。自動算出値と修正入力は、accessible nameを保ちながら可視labelを省略する。
+- 一時修正のcheckbox文言を、移動力では`チェックを入れると一時能力値で移動力を表示します`、行動値では`チェックを入れると一時能力値で行動値を表示します`にする。tooltipの式は選択状態を説明せず、たとえば行動値は`敏捷 + 感覚 × 2 + 修正`のように簡潔に表示する。
+- mobileでも各項目の`自動算出値 + 修正入力 = 最終値`を横方向に保つ。幅不足は余白、入力幅、文字サイズ、grid列の調整で解消し、演算子と値を1列の縦積みにしない。
+- プロフィールの自動算出値、流儀・生き様／能力値の自動算出値・数値表示、副能力値の数値表示を、キャラクターシートに閉じた共有styleで揃える。右揃え、入力欄に対する見た目の幅、read-only値のborder/background/typographyを共通化し、各section CSSでの重複を減らす。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `SecondarySection`だけが`CharacterSheetSectionFrame`を使わず、独自のmuted backgroundとborderを持つ。既存の`ProfileSection`と`BuildSection`には数値表示の幅・padding・font-sizeがそれぞれ重複定義され、副能力値のread-only値はプロフィールの自動算出値と揃っていない。共通frameとキャラクターシート専用の共有styleを導入する判断は、G8の表示構成を整える範囲で妥当である。
+- local validation: mobileの縦積みは、現在のissue、requirements、design notesの既存契約だが、今回の人間レビューで明示的に変更された。対応時に3文書の副能力値表示契約を横並び維持へ揃える。
+- local validation: 追加したbrowser E2Eは、page上でのtooltip起動、修正入力、checkbox反映というIsland結線のsmoke testだけを扱う。詳細な行構造・callback・tooltip単体操作はComponent testにあるため、キャラクターシートE2Eの責務を超えていない。E2Eは保持し、レビュー後の表示文言と最終値triggerへselectorを更新する。
+- local validation: 副能力値の独自見出しは小さく、共通frameの見出し階層から外れているため、`副能力値`だけでは主要sectionとして把握しにくい。frameの標準見出しへ統一して解消する。
+
+### 対応方針
+
+- `CharacterSheetFormPresenter`で副能力値を共通frameへ入れ、`SecondarySection`はframe contentだけを描画するComponentへ縮小する。
+- 副能力値の行を、最終値名と値を含むread-only表示枠、無labelの自動算出値、修正入力、演算子で再構成する。最終値名をtooltip triggerとし、式とcheckbox copyをdictionaryで更新する。
+- mobileを含む全viewportで横並びを維持できる列定義へ直し、最終値枠とcheckboxの関係を保つ。
+- `data-character-sheet-layout`のスコープ内に、入力とread-only数値表示の共有classまたは共有selectorを定義する。Profile、Build、Secondaryの既存数値表示を移行し、section間の見た目を合わせる。
+- `docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`は、レビュー承認後の実装と同じtaskで更新する。VRTは修正後に`character-sheet` targetへ限定して再確認し、baseline更新は別途人間判断として残す。
+
+### 対応完了チェックリスト
+
+- [ ] 副能力値を`CharacterSheetSectionFrame`でラップし、標準sectionの見出し・背景・borderへ統一する。
+- [ ] 最終値名だけを大きく可視表示し、tooltipを最終値名へ移す。自動算出値と修正入力のaccessible nameは維持する。
+- [ ] checkbox copyとformula tooltipをレビュー指定の簡潔な表現へ更新する。
+- [ ] mobileを含む全viewportで、各項目の計算式を横並びで表示し、横overflowを起こさない。
+- [ ] Profile、Build、Secondaryの数値表示をキャラクターシート専用の共有styleへ揃える。
+- [ ] Component / hook / browser E2E testを、変更後の構造・文言・操作へ更新する。
+- [ ] `character-sheet` targetのVRT比較を実施し、baseline更新の要否を記録する。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `FormulaTooltip`がviewportの左右端を越えず、全てのtrigger位置で全文を読めるようにする。特に画面左端に近い項目では、現在の右端基準配置によりtooltipが左側へはみ出す。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: tooltip contentは`right: 0`でtriggerの右端に固定され、max-widthだけをviewport幅で制限している。左端に近い短いtriggerではcontentの左端をviewport内へ戻す配置処理がなく、tooltipが画面外へ出る。`FormulaTooltip`はProfile、Build、Secondaryで共有されるため、局所CSSではなくComponentの配置責務として扱う。
+
+### 対応方針
+
+- open時にtriggerとtooltipのbounding rectを測定し、viewport内に収まる左右alignmentを選ぶ。既存のhover、tap、Esc、外側tap、focus操作を維持し、tooltipを読めない位置へ出さない。
+- desktop / tablet / mobileの左右端に近いtriggerで、tooltipのbounding boxがviewport内に収まることをbrowser E2Eで確認する。副能力値だけでなくProfileまたはBuildの既存triggerも対象に含め、共有Componentの回帰を防ぐ。
+
+### 対応完了チェックリスト
+
+- [ ] `FormulaTooltip`をviewport境界に応じて配置し、左右にはみ出さないようにする。
+- [ ] 既存のhover、tap、Esc、component外tap、keyboard focusの操作契約を維持する。
+- [ ] 左右端に近いtooltipの表示位置をbrowser E2Eで確認する。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- ドメイン上の「副能力値」を`secondary`単独で命名しない。`SecondarySection`、`secondarySection`、form値の`secondary`などは意味が曖昧なため、`secondaryAttributes`を用いる。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: UIの表示文言は`副能力値`であり変更不要だが、実装では副能力値を表すComponent、Presenter props、form値、schema、logic、dictionary keyが`secondary`で統一されている。`secondary`は配置上の第2領域や一般的な二次要素にも読め、ゲームの副能力値を表すドメイン名として不十分である。
+- local validation: `secondaryColumn`およびlayout regionの`secondary`は、primary / secondaryの画面配置を表す既存のlayout用語であり、副能力値の訳ではないためrename対象に含めない。
+
+### 対応方針
+
+- 副能力値を表すComponent、props、form値、schema、logic、dictionary key、test名・selectorを`secondaryAttributes`へrenameする。UI表示の`副能力値`と、primary / secondary layoutの既存名称は維持する。
+
+### 対応完了チェックリスト
+
+- [ ] 副能力値を表す実装上の`secondary`命名を`secondaryAttributes`へ統一し、layout用語と区別する。
+- [ ] Component / hook / logic / schema / browser E2Eをrename後の契約へ更新する。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- `副能力値`、`最大体力`、`最大精神力`、`移動力`、`行動値`、`行動回数`、`結べる縁`を、キャラクターシート固有UIの文言ではなくゲーム用語として扱う。`characterSheet.secondary`および`characterSheet.sections`から取り除き、`gameDomain.terms`を唯一の参照先にする。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `dictionary.ts`の冒頭コメントは、固定文言を用語の所有者に合わせて分類する方針を明記している。既に`縁`、能力値名などは`gameDomain.terms`にある一方、今回の副能力値と各最終値名は`characterSheet.secondary.labels`および`characterSheet.sections`に重複して置かれている。これらはキャラクターシート外でも成立するゲーム概念であり、ゲーム用語として集約するのが方針に一致する。
+- local validation: `体力追加値`、`精神力追加値`、各修正値、checkboxの説明文、計算式tooltipの文面は、入力・操作・表示に関するキャラクターシート固有UI文言として`characterSheet`側に残す。
+
+### 対応方針
+
+- `gameDomain.terms`へ副能力値と6つの値の名称を移し、`SecondaryAttributesSection`を含む参照側はそこから取得する。レビュー指摘1で最終値名を`移動力`、`行動値`、`結べる縁`へ整理する変更にも同じ用語を使う。
+- 移管後に`characterSheet`配下へ同じゲーム用語を残さず、UI固有文言とゲーム用語の境界をtestとdictionaryの構造で明確にする。
+
+### 対応完了チェックリスト
+
+- [ ] 副能力値、最大体力、最大精神力、移動力、行動値、行動回数、結べる縁を`gameDomain.terms`へ移す。
+- [ ] 副能力値のComponent・Presenter・testから、移管後のゲーム用語を参照する。
+- [ ] `characterSheet`側には入力・操作・tooltipなどのUI固有文言だけを残す。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。
