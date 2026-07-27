@@ -52,26 +52,26 @@
 
 ## 完了条件
 
-- [ ] `secondary` slotに副能力値を表示し、G7のビルド入力から体力、精神力、移動力、行動値を導出できる。
-- [ ] 6項目すべてが`自動算出値 + ユーザー入力欄 = 最終値`の構造で、各入力と最終値を同一項目内に表示する。
-- [ ] 体力と精神力の最終値ラベルが`最大体力`、`最大精神力`である。
-- [ ] 移動力と行動値の一時修正適用checkboxが各最終値の右側にあり、常時・一時能力値の選択を正しく反映する。
-- [ ] 自動算出値と最終値のラベルから固定算出式をtooltipで確認でき、数値を代入した式を通常表示していない。
-- [ ] 未選択状態、正負の手動修正、checkboxの切替、tablet / mobileでの表示を純粋logic、schema / hook、Component、browser behavior testの適切な層で確認している。
-- [ ] `@character-sheet` targetだけをVisual Reviewし、canonical VRT baselineを更新していない。
-- [ ] 関連TODOを扱わず、未対応理由をこのissueに記録している。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `secondary` slotに副能力値を表示し、G7のビルド入力から体力、精神力、移動力、行動値を導出できる。
+- [x] 6項目すべてが`自動算出値 + ユーザー入力欄 = 最終値`の構造で、各入力と最終値を同一項目内に表示する。
+- [x] 体力と精神力の最終値ラベルが`最大体力`、`最大精神力`である。
+- [x] 移動力と行動値の一時修正適用checkboxが各最終値の右側にあり、常時・一時能力値の選択を正しく反映する。
+- [x] 自動算出値と最終値のラベルから固定算出式をtooltipで確認でき、数値を代入した式を通常表示していない。
+- [x] 未選択状態、正負の手動修正、checkboxの切替、tablet / mobileでの表示を純粋logic、schema / hook、Component、browser behavior testの適切な層で確認している。
+- [x] `@character-sheet` targetだけをVisual Reviewし、canonical VRT baselineを更新していない。
+- [x] 関連TODOを扱わず、未対応理由をこのissueに記録している。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない。
-- [ ] `docs/design/character-sheet/notes.md`と、ユーザー指示で更新した副能力値の表示契約に矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない。
+- [x] `docs/design/character-sheet/notes.md`と、ユーザー指示で更新した副能力値の表示契約に矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -98,3 +98,34 @@
 - VRT targetは`tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`、routeは`/character-sheet/`、stateはdefault、viewportはdesktop、ultrawide、tablet、mobileとする。G8では変更targetだけを比較し、baselineの更新はユーザーの明示承認がある場合だけ行う。
 - `FormulaTooltip`の既存の局所open stateと、hover、tap、Esc、component外tapの契約は`docs/architectures/character-sheet.md`を正本とする。後続Gateのためにtooltip以外のグローバルなヘルプUIを追加しない。
 - ユーザーの最新指示に基づき、`docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`の副能力値表示契約を同時に更新した。G8の実装ではこのissueをSSoTとし、後続Gateでは同じ契約を維持する。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt @character-sheet`
+- route / states / viewports: `/character-sheet/` / default / desktop、ultrawide、tablet、mobile
+
+### レビュー結果
+
+| 対象              | 判定       | 差分                                                                                          | 対応                                                                               |
+| ----------------- | ---------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `character-sheet` | 要人間判断 | 副能力値追加により4 viewportのpage screenshot高さと内容が既存canonical baselineから変わった。 | 一時snapshotとactualを確認した。baselineは更新せず、既存UIへの追加だけと判断した。 |
+
+### 自己修正した項目
+
+- なし。副能力値の追加による差分はG8の承認済み範囲であり、UIの追加削除またはglobal style修正は不要と判断した。
+
+### 人間判断が必要な差分
+
+- G8の副能力値追加を反映するcanonical VRT baseline更新の要否。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] VRT差分は承認済みの副能力値追加によるもので、source code修正は不要と判断した。
+- [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

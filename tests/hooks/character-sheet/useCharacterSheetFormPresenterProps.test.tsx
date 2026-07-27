@@ -104,4 +104,26 @@ describe("useCharacterSheetFormPresenterProps", () => {
       result.current.presenterProps.profileSection.experience.acquired,
     ).toBe(70);
   });
+
+  it("connects secondary corrections and temporary-value choices through RHF", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.secondarySection.onNumberChange(
+        "movementModifier",
+        "-2",
+      );
+      result.current.presenterProps.secondarySection.onTemporaryAppliedChange(
+        "applyTemporaryMovement",
+        true,
+      );
+    });
+
+    expect(result.current.form.getValues("secondary.movementModifier")).toBe(
+      -2,
+    );
+    expect(
+      result.current.form.getValues("secondary.applyTemporaryMovement"),
+    ).toBe(true);
+  });
 });

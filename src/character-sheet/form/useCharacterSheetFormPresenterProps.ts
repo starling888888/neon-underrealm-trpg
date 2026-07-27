@@ -9,9 +9,11 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
   type OtherRyugiValues,
+  type SecondaryFieldName,
 } from "../form-values";
 import { calculateBuild } from "../logic/build";
 import { calculateCredit } from "../logic/credit";
+import { calculateSecondary } from "../logic/secondary";
 import {
   getCharacterSheetIkizamaOptions,
   getCharacterSheetRyugiOptions,
@@ -60,6 +62,11 @@ export default function useCharacterSheetFormPresenterProps(
     defaultValue: characterSheetDefaultValues.build,
     name: "build",
   });
+  const secondary = useWatch({
+    control,
+    defaultValue: characterSheetDefaultValues.secondary,
+    name: "secondary",
+  });
   const creditSummary = calculateCredit({
     acquiredCredit: credit.acquired,
     changeAdjustment: credit.changeAdjustment,
@@ -68,6 +75,7 @@ export default function useCharacterSheetFormPresenterProps(
     spentCredit: 0,
   });
   const derivedBuild = calculateBuild(build);
+  const derivedSecondary = calculateSecondary(derivedBuild, secondary);
 
   function setBuildValue<K extends keyof BuildValues>(
     field: K,
@@ -120,6 +128,20 @@ export default function useCharacterSheetFormPresenterProps(
     const normalizedValue = normalizeBuildInput(value);
 
     setBuildValue("acquiredExperience", normalizedValue);
+
+    return normalizedValue;
+  }
+
+  function setSecondaryValue(
+    field: Exclude<
+      SecondaryFieldName,
+      "applyTemporaryAction" | "applyTemporaryMovement"
+    >,
+    value: string,
+  ): number {
+    const normalizedValue = normalizeBuildInput(value);
+
+    setValue(`secondary.${field}`, normalizedValue, { shouldValidate: true });
 
     return normalizedValue;
   }
@@ -204,6 +226,14 @@ export default function useCharacterSheetFormPresenterProps(
       onCharacterImageSelected,
       onCharacterImageOperationStarted,
       profile,
+    },
+    secondarySection: {
+      derived: derivedSecondary,
+      onNumberChange: setSecondaryValue,
+      onTemporaryAppliedChange: (field, checked) => {
+        setValue(`secondary.${field}`, checked, { shouldValidate: true });
+      },
+      secondary,
     },
   };
 }

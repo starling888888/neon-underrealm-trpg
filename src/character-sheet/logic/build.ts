@@ -42,6 +42,7 @@ export type BuildDerivedValues = {
   otherRyugiLevelInvalidRowIds: readonly string[];
   primaryRyugiDuplicate: boolean;
   primaryRyugiLevelInvalid: boolean;
+  primaryRyugiLevel: number;
   rank: number | null;
   reference: BuildReferenceValues;
   remainingExperience: number | null;
@@ -199,6 +200,7 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
     otherRyugiDuplicateRowIds,
     otherRyugiLevelInvalidRowIds,
     primaryRyugiDuplicate: hasPrimaryDuplicate,
+    primaryRyugiLevel: build.primaryRyugiLevel,
     primaryRyugiLevelInvalid: primaryLevelInvalid,
     rank,
     reference: {

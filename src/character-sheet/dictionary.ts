@@ -62,7 +62,49 @@ export const characterSheetDictionary = {
     sections: {
       basicInformation: "基本情報",
       build: "流儀・生き様 / 能力値",
+      secondary: "副能力値",
       weaponsAndArmor: "武器・防具",
+    },
+    secondary: {
+      formulas: {
+        baseActionCount: "基本2回",
+        baseActionValue: "選択中の敏捷 + 選択中の感覚 × 2",
+        baseBondLimit: "基本4つ",
+        baseHealth:
+          "プライマリ流儀の体力増加 × プライマリ流儀レベル + 生き様の体力係数 × 常時肉体",
+        baseMental:
+          "プライマリ流儀の精神力増加 × プライマリ流儀レベル + 生き様の精神力係数 × 常時精神",
+        baseMovement: "4 + 選択中の敏捷 ÷ 5（端数切り上げ）",
+        actionCount: "基本2回 + 行動回数修正",
+        actionValue: "選択中の敏捷 + 選択中の感覚 × 2 + 行動値修正",
+        bondLimit: "基本4つ + 縁最大数修正",
+        health:
+          "プライマリ流儀の体力増加 × プライマリ流儀レベル + 生き様の体力係数 × 常時肉体 + 体力追加値",
+        mental:
+          "プライマリ流儀の精神力増加 × プライマリ流儀レベル + 生き様の精神力係数 × 常時精神 + 精神力追加値",
+        movement: "4 + 選択中の敏捷 ÷ 5（端数切り上げ）+ 移動力修正",
+      },
+      labels: {
+        actionCount: "行動回数",
+        actionCountModifier: "行動回数修正",
+        actionModifier: "行動値修正",
+        actionValue: "最終行動値",
+        applyTemporary: "一時修正を適用",
+        baseActionCount: "基本行動回数",
+        baseActionValue: "基本行動値",
+        baseBondLimit: "基本縁最大数",
+        baseHealth: "基本体力",
+        baseMental: "基本精神力",
+        baseMovement: "基本移動力",
+        bondLimit: "縁最大数",
+        bondLimitModifier: "縁最大数修正",
+        health: "最大体力",
+        healthModifier: "体力追加値",
+        mental: "最大精神力",
+        mentalModifier: "精神力追加値",
+        movement: "最終移動力",
+        movementModifier: "移動力修正",
+      },
     },
   },
   gameDomain: {

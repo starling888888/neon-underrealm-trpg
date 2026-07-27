@@ -67,6 +67,16 @@ export const characterSheetFormSchema = z.object({
     playerName: z.string(),
     setting: z.string(),
   }),
+  secondary: z.object({
+    actionCountModifier: z.number().int(),
+    actionModifier: z.number().int(),
+    applyTemporaryAction: z.boolean(),
+    applyTemporaryMovement: z.boolean(),
+    bondLimitModifier: z.number().int(),
+    healthModifier: z.number().int(),
+    mentalModifier: z.number().int(),
+    movementModifier: z.number().int(),
+  }),
 });
 
 function normalizeIntegerInput(value: number | string): number {

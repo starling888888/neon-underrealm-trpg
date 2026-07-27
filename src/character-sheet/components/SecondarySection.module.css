@@ -1,0 +1,120 @@
+.section {
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.heading {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.row {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto minmax(3.25rem, 0.6fr) auto minmax(
+      0,
+      1fr
+    ) auto;
+  align-items: end;
+  gap: 0.1875rem;
+  padding: var(--space-1);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.metric,
+.modifier {
+  min-width: 0;
+}
+
+.metricLabel,
+.modifierLabel {
+  display: block;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: 0.5625rem;
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metricValue,
+.numberInput {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 1.5rem;
+  margin-top: 0.125rem;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  line-height: var(--line-height-tight);
+  text-align: right;
+}
+
+.metricValue {
+  background: var(--color-example-soft);
+  padding: 0.1875rem 0.375rem;
+  font-weight: 750;
+}
+
+.numberInput {
+  background: var(--color-surface);
+  padding: 0.1875rem 0.25rem;
+}
+
+.operator {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 750;
+  line-height: 1.5rem;
+}
+
+.temporaryControl {
+  display: flex;
+  min-height: 1.5rem;
+  align-items: center;
+  gap: 0.125rem;
+  color: var(--color-text-muted);
+  font-size: 0.5625rem;
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+  white-space: nowrap;
+}
+
+.temporaryControl input {
+  margin: 0;
+}
+
+@media (width < 48rem) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: var(--space-1);
+  }
+
+  .operator {
+    line-height: 1;
+    text-align: center;
+  }
+
+  .temporaryControl {
+    justify-self: start;
+  }
+}

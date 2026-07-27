@@ -57,10 +57,24 @@ export type BuildValues = {
   acquiredExperience: number;
 };
 
+export type SecondaryValues = {
+  actionCountModifier: number;
+  actionModifier: number;
+  applyTemporaryAction: boolean;
+  applyTemporaryMovement: boolean;
+  bondLimitModifier: number;
+  healthModifier: number;
+  mentalModifier: number;
+  movementModifier: number;
+};
+
+export type SecondaryFieldName = keyof SecondaryValues;
+
 export type CharacterSheetFormValues = {
   build: BuildValues;
   credit: CreditValues;
   profile: ProfileValues;
+  secondary: SecondaryValues;
 };
 
 export const characterSheetDefaultValues: CharacterSheetFormValues = {
@@ -117,5 +131,15 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     pcName: "",
     playerName: "",
     setting: "",
+  },
+  secondary: {
+    actionCountModifier: 0,
+    actionModifier: 0,
+    applyTemporaryAction: false,
+    applyTemporaryMovement: false,
+    bondLimitModifier: 0,
+    healthModifier: 0,
+    mentalModifier: 0,
+    movementModifier: 0,
   },
 };
