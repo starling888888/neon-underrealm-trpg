@@ -114,6 +114,39 @@ AstroのSSRとhydrationにおける表示差分を避けるため、初回復元
 
 React Componentのスタイルは、Component外へ漏れないCSS Modules（`*.module.css`）を使う。既存Astro scoped CSSと共存させ、React TSXからclass nameを参照する。CSS Modulesのための追加依存は導入しない。
 
+### HTML / CSSの構造と責務
+
+HTMLは見た目のgridより先に、画面上の意味単位を表す。sectionは既存の
+`CharacterSheetSectionFrame`を使い、section内で完結する編集行は`fieldset`と
+`legend`、label、input、outputを対応付ける。可視labelを省略する数値欄でも、
+行名を含む一意のaccessible nameを持たせる。見た目だけの`div`とARIA roleで
+form群の意味を代用しない。
+
+ComponentのCSS Moduleは、そのComponentが所有するclassだけを対象にする。親の
+section CSSから`:global(button)`、要素名、または孫要素へ広く一致するselectorで、
+子Componentの内部構造を変更しない。たとえばTooltipのdismiss layer、trigger、
+contentのstackingとpointer eventは`FormulaTooltip`自身の責務とし、利用側はroot
+classを渡すだけにする。共有Componentの内部buttonを親CSSが意図せず選択する設計は、
+将来のoverlay操作を壊すため禁止する。
+
+数値inputとread-only outputは`data-character-sheet-layout`配下の共有classで揃え、
+sectionごとにborder、background、padding、右揃え、幅を再定義しない。section固有の
+grid列、余白、見出しだけを各CSS Moduleへ置く。同じ視覚パターンが複数sectionに
+現れた場合は、最初にこの共有styleへ寄せられるかを判断する。将来の汎用Component化を
+理由に、入力欄単位へ機械的にComponentを分割しない。
+
+responsive contractはlayout regionを所有する`CharacterSheetFormPresenter`とそのCSSを
+正本にする。2列から1列への切替、sheetの最小inline size、menu railの表示条件のように
+CSSとページscriptの両方が参照するbreakpointは、同じ契約として明示し、境界値をbrowser
+testで固定する。部分sectionは親regionのmin-widthやoverflowを上書きして全体layoutを
+変えない。必要な最小幅は親regionで持ち、mobileだけがその契約を解除する。
+
+viewportをまたぐoverlayはsectionのoverflowに依存せず、表示時にtriggerとviewportを
+測定してgutter内へ配置する。Tooltip本文はtrigger buttonの子にせず、accessible nameと
+`aria-describedby`の説明が重複しないDOM構造にする。open stateを導入・変更した場合は、
+Component testで操作と端部配置を確認し、Visual Reviewではdefaultに加えて代表的なopen
+stateをdesktop、tablet、mobileでactual screenshotとして確認する。
+
 ## テストアーキテクチャ
 
 テストは、内部実装の露出ではなく、責務境界とユーザーが観測できる振る舞いを検証する。hydrate確認だけを目的とするDOM、state、data属性、E2E testを製品コードへ追加しない。
