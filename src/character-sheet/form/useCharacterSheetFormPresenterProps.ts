@@ -1,5 +1,6 @@
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
+import type { CharacterImageRecord } from "../character-image";
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
 import {
   type CharacterSheetFormValues,
@@ -15,10 +16,22 @@ import { normalizeCreditInput } from "../schemas/character-sheet-form";
  * selectors for cross-section derived values here without exposing RHF below
  * the presenter boundary.
  */
-export default function useCharacterSheetFormPresenterProps({
-  control,
-  setValue,
-}: UseFormReturn<CharacterSheetFormValues>): CharacterSheetFormPresenterProps {
+type CharacterImagePresenterState = {
+  characterImage: CharacterImageRecord | null;
+  isImageProcessing: boolean;
+  onCharacterImageSelected: (file: File) => Promise<void>;
+  onCharacterImageSelectionStarted: (trigger: HTMLButtonElement) => void;
+};
+
+export default function useCharacterSheetFormPresenterProps(
+  { control, setValue }: UseFormReturn<CharacterSheetFormValues>,
+  {
+    characterImage,
+    isImageProcessing,
+    onCharacterImageSelected,
+    onCharacterImageSelectionStarted,
+  }: CharacterImagePresenterState,
+): CharacterSheetFormPresenterProps {
   const profile = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.profile,
@@ -39,6 +52,7 @@ export default function useCharacterSheetFormPresenterProps({
 
   return {
     profileSection: {
+      characterImage,
       credit,
       creditSummary,
       onCreditBlur: (field, value) => {
@@ -58,6 +72,9 @@ export default function useCharacterSheetFormPresenterProps({
       onProfileChange: (field, value) => {
         setValue(`profile.${field}`, value);
       },
+      isImageProcessing,
+      onCharacterImageSelected,
+      onCharacterImageSelectionStarted,
       profile,
     },
   };

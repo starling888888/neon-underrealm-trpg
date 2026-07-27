@@ -1,5 +1,15 @@
-import { useState } from "react";
+import {
+  type ChangeEvent,
+  type DragEvent,
+  type MouseEvent,
+  useRef,
+  useState,
+} from "react";
 
+import {
+  type CharacterImageRecord,
+  characterImageDataUrl,
+} from "../character-image";
 import { characterSheetDictionary } from "../dictionary";
 import type {
   CreditFieldName,
@@ -37,13 +47,106 @@ type ReadOnlyCreditFieldProps = {
 };
 
 export type ProfileSectionProps = {
+  characterImage: CharacterImageRecord | null;
   credit: CreditValues;
   creditSummary: CreditSummary;
+  isImageProcessing: boolean;
+  onCharacterImageSelected: (file: File) => Promise<void>;
+  onCharacterImageSelectionStarted: (trigger: HTMLButtonElement) => void;
   onCreditBlur: (field: CreditFieldName, value: string) => number;
   onCreditChange: (field: CreditFieldName, value: string) => void;
   onProfileChange: (field: ProfileFieldName, value: string) => void;
   profile: ProfileValues;
 };
+
+type CharacterImageFieldProps = {
+  image: CharacterImageRecord | null;
+  isProcessing: boolean;
+  onImageSelected: (file: File) => Promise<void>;
+  onImageSelectionStarted: (trigger: HTMLButtonElement) => void;
+};
+
+function CharacterImageField({
+  image,
+  isProcessing,
+  onImageSelected,
+  onImageSelectionStarted,
+}: CharacterImageFieldProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { image: imageCopy } = characterSheetDictionary.characterSheet;
+
+  function selectFile(event: MouseEvent<HTMLButtonElement>): void {
+    onImageSelectionStarted(event.currentTarget);
+    fileInputRef.current?.click();
+  }
+
+  function receiveFile(file: File | undefined): void {
+    if (file !== undefined) {
+      void onImageSelected(file);
+    }
+  }
+
+  function onFileInputChange(event: ChangeEvent<HTMLInputElement>): void {
+    receiveFile(event.currentTarget.files?.[0]);
+    event.currentTarget.value = "";
+  }
+
+  function onDrop(event: DragEvent<HTMLButtonElement>): void {
+    event.preventDefault();
+    onImageSelectionStarted(event.currentTarget);
+    receiveFile(event.dataTransfer.files[0]);
+  }
+
+  return (
+    <div className={styles.imageField}>
+      <button
+        aria-label={
+          image === null
+            ? imageCopy.chooseFileOrDrop
+            : imageCopy.replaceFileOrDrop
+        }
+        className={styles.imageDropZone}
+        disabled={isProcessing}
+        onClick={selectFile}
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={onDrop}
+        type="button"
+      >
+        {image === null ? (
+          <span className={styles.imageEmptyState}>
+            <span aria-hidden="true" className={styles.imagePlus}>
+              +
+            </span>
+            <span>{imageCopy.description}</span>
+            <span className={styles.imageLimit}>{imageCopy.limit}</span>
+          </span>
+        ) : (
+          <img
+            alt={imageCopy.preview}
+            className={styles.imagePreview}
+            src={characterImageDataUrl(image)}
+          />
+        )}
+      </button>
+      <input
+        accept="image/*"
+        className={styles.fileInput}
+        onChange={onFileInputChange}
+        ref={fileInputRef}
+        tabIndex={-1}
+        type="file"
+      />
+      <button
+        className={styles.imageSelectButton}
+        disabled={isProcessing}
+        onClick={selectFile}
+        type="button"
+      >
+        {image === null ? imageCopy.chooseFile : imageCopy.replaceFile}
+      </button>
+    </div>
+  );
+}
 
 function TextField({ label, name, onChange, value }: TextFieldProps) {
   const id = `character-sheet-profile-${name}`;
@@ -126,8 +229,12 @@ function ReadOnlyCreditField({
 
 /** Basic profile and credit fields controlled by the containing presenter. */
 export default function ProfileSection({
+  characterImage,
   credit,
   creditSummary,
+  isImageProcessing,
+  onCharacterImageSelected,
+  onCharacterImageSelectionStarted,
   onCreditBlur,
   onCreditChange,
   onProfileChange,
@@ -140,66 +247,78 @@ export default function ProfileSection({
 
   return (
     <div className={styles.section}>
-      <div className={styles.profileGrid}>
-        <div className={styles.profileField}>
-          <TextField
-            label={gameDomain.terms.pcName}
-            name="pcName"
-            onChange={onProfileChange}
-            value={profile.pcName}
-          />
+      <div className={styles.profileAndImage}>
+        <div className={styles.profileDetails}>
+          <div className={styles.profileGrid}>
+            <div className={styles.profileField}>
+              <TextField
+                label={gameDomain.terms.pcName}
+                name="pcName"
+                onChange={onProfileChange}
+                value={profile.pcName}
+              />
+            </div>
+            <div className={styles.profileField}>
+              <TextField
+                label={gameDomain.terms.playerName}
+                name="playerName"
+                onChange={onProfileChange}
+                value={profile.playerName}
+              />
+            </div>
+            <div className={styles.profileField}>
+              <TextField
+                label={characterSheet.profile.nickname}
+                name="nickname"
+                onChange={onProfileChange}
+                value={profile.nickname}
+              />
+            </div>
+            <div className={styles.ageAndGender}>
+              <TextField
+                label={characterSheet.profile.age}
+                name="age"
+                onChange={onProfileChange}
+                value={profile.age}
+              />
+              <TextField
+                label={characterSheet.profile.gender}
+                name="gender"
+                onChange={onProfileChange}
+                value={profile.gender}
+              />
+            </div>
+          </div>
+          <div className={styles.setting}>
+            <button
+              aria-controls={settingContentId}
+              aria-expanded={isSettingExpanded}
+              className={styles.settingToggle}
+              onClick={() => setIsSettingExpanded((expanded) => !expanded)}
+              type="button"
+            >
+              <span>{characterSheet.profile.setting}</span>
+              <span aria-hidden="true" className={styles.chevron} />
+            </button>
+            <div hidden={!isSettingExpanded} id={settingContentId}>
+              <textarea
+                aria-label={characterSheet.profile.setting}
+                className={styles.settingInput}
+                id="character-sheet-setting"
+                onChange={(event) =>
+                  onProfileChange("setting", event.target.value)
+                }
+                value={profile.setting}
+              />
+            </div>
+          </div>
         </div>
-        <div className={styles.profileField}>
-          <TextField
-            label={gameDomain.terms.playerName}
-            name="playerName"
-            onChange={onProfileChange}
-            value={profile.playerName}
-          />
-        </div>
-        <div className={styles.profileField}>
-          <TextField
-            label={characterSheet.profile.nickname}
-            name="nickname"
-            onChange={onProfileChange}
-            value={profile.nickname}
-          />
-        </div>
-        <div className={styles.ageAndGender}>
-          <TextField
-            label={characterSheet.profile.age}
-            name="age"
-            onChange={onProfileChange}
-            value={profile.age}
-          />
-          <TextField
-            label={characterSheet.profile.gender}
-            name="gender"
-            onChange={onProfileChange}
-            value={profile.gender}
-          />
-        </div>
-      </div>
-      <div className={styles.setting}>
-        <button
-          aria-controls={settingContentId}
-          aria-expanded={isSettingExpanded}
-          className={styles.settingToggle}
-          onClick={() => setIsSettingExpanded((expanded) => !expanded)}
-          type="button"
-        >
-          <span>{characterSheet.profile.setting}</span>
-          <span aria-hidden="true" className={styles.chevron} />
-        </button>
-        <div hidden={!isSettingExpanded} id={settingContentId}>
-          <textarea
-            aria-label={characterSheet.profile.setting}
-            className={styles.settingInput}
-            id="character-sheet-setting"
-            onChange={(event) => onProfileChange("setting", event.target.value)}
-            value={profile.setting}
-          />
-        </div>
+        <CharacterImageField
+          image={characterImage}
+          isProcessing={isImageProcessing}
+          onImageSelected={onCharacterImageSelected}
+          onImageSelectionStarted={onCharacterImageSelectionStarted}
+        />
       </div>
       <section aria-label={creditTerms.name} className={styles.credit}>
         <div className={styles.creditGrid}>

@@ -11,8 +11,12 @@ import { characterSheetDefaultValues } from "../../../src/character-sheet/form-v
 
 function createProps(): ProfileSectionProps {
   return {
+    characterImage: null,
     credit: characterSheetDefaultValues.credit,
     creditSummary: { change: 10, totalCredit: 10 },
+    isImageProcessing: false,
+    onCharacterImageSelected: vi.fn(),
+    onCharacterImageSelectionStarted: vi.fn(),
     onCreditBlur: vi.fn((_, value: string) => Number(value)),
     onCreditChange: vi.fn(),
     onProfileChange: vi.fn(),
@@ -118,5 +122,51 @@ describe("ProfileSection", () => {
 
     expect(props.onCreditBlur).toHaveBeenCalledWith("acquired", "");
     expect((acquiredCredit as HTMLInputElement).value).toBe("0");
+  });
+
+  it("reports files selected by the input and the drop area", () => {
+    const props = createProps();
+    const { container } = render(<ProfileSection {...props} />);
+    const file = new File(["image"], "character.png", { type: "image/png" });
+    const fileInput =
+      container.querySelector<HTMLInputElement>('input[type="file"]');
+
+    if (fileInput === null) {
+      throw new Error("画像入力を取得できません。");
+    }
+
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    fireEvent.drop(
+      screen.getByRole("button", { name: "画像を選択またはドロップ" }),
+      {
+        dataTransfer: { files: [file] },
+      },
+    );
+
+    expect(props.onCharacterImageSelected).toHaveBeenCalledTimes(2);
+    expect(props.onCharacterImageSelected).toHaveBeenLastCalledWith(file);
+    expect(props.onCharacterImageSelectionStarted).toHaveBeenCalledWith(
+      screen.getByRole("button", { name: "画像を選択またはドロップ" }),
+    );
+  });
+
+  it("shows a saved image in the same input area", () => {
+    const props = createProps();
+
+    render(
+      <ProfileSection
+        {...props}
+        characterImage={{ base64: "cHJldmlldw==", mimeType: "image/webp" }}
+      />,
+    );
+
+    expect(
+      screen
+        .getByRole("img", { name: "選択したキャラクター画像" })
+        .getAttribute("src"),
+    ).toBe("data:image/webp;base64,cHJldmlldw==");
+    expect(
+      screen.getByRole("button", { name: "画像を差し替えまたはドロップ" }),
+    ).not.toBeNull();
   });
 });

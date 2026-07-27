@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeated test failures while adding G6 root orchestration coverage
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `tests/hooks/character-sheet/useCharacterSheetRootState.test.tsx`、`tests/node/character-sheet/persistence/character-image.test.ts`
+- 観測した失敗: G6のTechReview指摘に対するRoot結線test追加で、非同期変換完了前にwrite呼出を検証する待機不足によりcomponent testを失敗させた。修正後のnode testでも、`CharacterImageError`を移動後の共有moduleではなくpersistence moduleからimportして2回目のtest失敗を起こした。さらに、競合testへ毎renderで新しい依存objectを渡してrestore effectを再始動させ、timeoutを起こした。最後に共有契約へ移した`CharacterImageErrorCode`のimport元をRootで取り残し、全体type checkを失敗させた。
+- 一次対応: 非同期write呼出は`waitFor`で開始を待ってから検証し、例外型とcode型は`character-image.ts`の共有契約からimportするよう訂正した。Rootは起動時の依存をrefで固定してeffectの再始動を防いだ。対象component test、node test、全体checkを再実行して成功を確認する。
+
 ### Archived a Gate child issue without user confirmation
 
 #### 2026-07-27

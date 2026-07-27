@@ -79,27 +79,27 @@ WebPへ変換した画像のbase64エンコード文字列をIndexedDBへ保存�
 
 ## 完了条件
 
-- [ ] desktop、tablet、mobileで、承認済みdesign draftどおりのprofile、設定、画像、信用の位置関係を再現する。
-- [ ] 画像表示領域へのdrag and dropと、その直下のファイル選択buttonから画像を選択できる。
-- [ ] `image/*`、5 MiB上限、decode可否、長辺約500px・非拡大、WebP品質`0.8`・1回の変換を満たす。
-- [ ] WebP画像のMIME typeとbase64エンコード文字列を含む画像recordをIndexedDBへ保存し、RHFとlocalStorageには保持しない。
-- [ ] 起動時にIndexedDB画像recordを復元し、画像recordの不在・失敗がlocalStorageのフォーム値復元を止めない。
-- [ ] 保存成功後に新画像を表示し、変換またはIndexedDB書込みの失敗時は既存画像を保持したまま失敗dialogを表示する。
-- [ ] 画像処理中の全画面loading overlay、操作ブロック、reduced motionを満たす。
-- [ ] 対象viewportの既存`visual:capture`でactualを確認し、canonical VRT baselineを更新していない。
-- [ ] 必要な既存test、`npm run check`、`npm run build`が通る。
+- [x] desktop、tablet、mobileで、承認済みdesign draftどおりのprofile、設定、画像、信用の位置関係を再現する。
+- [x] 画像表示領域へのdrag and dropと、その直下のファイル選択buttonから画像を選択できる。
+- [x] `image/*`、5 MiB上限、decode可否、長辺約500px・非拡大、WebP品質`0.8`・1回の変換を満たす。
+- [x] WebP画像のMIME typeとbase64エンコード文字列を含む画像recordをIndexedDBへ保存し、RHFとlocalStorageには保持しない。
+- [x] 起動時にIndexedDB画像recordを復元し、画像recordの不在・失敗がlocalStorageのフォーム値復元を止めない。
+- [x] 保存成功後に新画像を表示し、変換またはIndexedDB書込みの失敗時は既存画像を保持したまま失敗dialogを表示する。
+- [x] 画像処理中の全画面loading overlay、操作ブロック、reduced motionを満たす。
+- [x] 対象viewportの既存`visual:capture`でactualを確認し、canonical VRT baselineを更新していない。
+- [x] 必要な既存test、`npm run check`、`npm run build`が通る。
 
 ## チェックポイント
 
-- [ ] G4のプロフィール・信用入力、G5のdialog、既存`/character-sheet/`のdesktop / tablet / mobile layoutを壊していない。
-- [ ] 画像入力を、承認済みdraftのprofile / setting / creditとの位置関係から切り離していない。
-- [ ] GitHub Pagesのサブパス公開と静的ホスティングに影響しない。
-- [ ] 成功前に既存画像recordを削除・置換せず、失敗時は既存画像を保持する。
-- [ ] 画像復元とフォーム値のlocalStorage復元を別経路として扱い、片方の失敗で他方を停止させない。
-- [ ] 実ユーザー画像のbase64文字列をlocalStorage、URL query、ログ、test fixture、Git管理ファイルへ含めていない。
-- [ ] 不要なdependency、UI library、global CSS、共通layout / Header / Footerへのcharacter-sheet固有分岐を追加していない。
-- [ ] `docs/TODO.md`の永続スキル参照に関するID変更検出を、このGateへ取り込んでいない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] G4のプロフィール・信用入力、G5のdialog、既存`/character-sheet/`のdesktop / tablet / mobile layoutを壊していない。
+- [x] 画像入力を、承認済みdraftのprofile / setting / creditとの位置関係から切り離していない。
+- [x] GitHub Pagesのサブパス公開と静的ホスティングに影響しない。
+- [x] 成功前に既存画像recordを削除・置換せず、失敗時は既存画像を保持する。
+- [x] 画像復元とフォーム値のlocalStorage復元を別経路として扱い、片方の失敗で他方を停止させない。
+- [x] 実ユーザー画像のbase64文字列をlocalStorage、URL query、ログ、test fixture、Git管理ファイルへ含めていない。
+- [x] 不要なdependency、UI library、global CSS、共通layout / Header / Footerへのcharacter-sheet固有分岐を追加していない。
+- [x] `docs/TODO.md`の永続スキル参照に関するID変更検出を、このGateへ取り込んでいない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -125,6 +125,30 @@ WebPへ変換した画像のbase64エンコード文字列をIndexedDBへ保存�
 - 画像base64のIndexedDB保存境界と、RHF / localStorageからの除外が保たれているか。
 - 全画面loadingが画像固有の失敗表示ではなく、後続Gateにも再利用できるRoot操作ブロックになっているか。
 - actual captureとdesign draftを混同せず、canonical VRT baselineを更新していないか。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`、`@vrt @character-sheet`
+- route / states / viewports: `/character-sheet/`、default、desktop / tablet / mobile（既存targetはultrawideも含む）
+
+### レビュー結果
+
+| 対象                           | 判定       | 差分                                                                                 | 対応                           |
+| ------------------------------ | ---------- | ------------------------------------------------------------------------------------ | ------------------------------ |
+| desktop / tablet / mobile      | actual確認 | profile / setting / image / creditの位置関係を`.tmp/design/character-sheet/`と照合   | `visual:capture`でactualを確認 |
+| canonical VRT baselineとの比較 | 要人間判断 | desktop / tabletは画像領域追加による差分。ultrawide / mobileにはbaselineが存在しない | baselineは更新していない       |
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## 備考
 

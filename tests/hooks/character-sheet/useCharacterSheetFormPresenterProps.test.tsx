@@ -19,7 +19,12 @@ function usePresenterHarness() {
 
   return {
     form,
-    presenterProps: useCharacterSheetFormPresenterProps(form),
+    presenterProps: useCharacterSheetFormPresenterProps(form, {
+      characterImage: null,
+      isImageProcessing: false,
+      onCharacterImageSelected: async () => {},
+      onCharacterImageSelectionStarted: () => {},
+    }),
   };
 }
 

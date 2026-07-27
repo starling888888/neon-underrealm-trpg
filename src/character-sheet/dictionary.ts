@@ -11,6 +11,25 @@ export const characterSheetDictionary = {
     closeFormulaTooltip: "計算式の説明を閉じる",
   },
   characterSheet: {
+    image: {
+      chooseFile: "画像を選択",
+      chooseFileOrDrop: "画像を選択またはドロップ",
+      description: "画像をここへドラッグ＆ドロップ",
+      errorTitle: "画像を処理できませんでした",
+      errors: {
+        decode:
+          "画像を読み込めませんでした。別の画像ファイルを選択してください。",
+        fileTooLarge: "画像ファイルは5 MiB以下にしてください。",
+        invalidType: "画像ファイルを選択してください。",
+        restore: "保存済みの画像を復元できませんでした。",
+        storage: "画像を保存できませんでした。もう一度お試しください。",
+      },
+      limit: "WebP / 5 MiB",
+      loading: "画像を処理しています",
+      preview: "選択したキャラクター画像",
+      replaceFile: "画像を差し替え",
+      replaceFileOrDrop: "画像を差し替えまたはドロップ",
+    },
     profile: {
       age: "年齢",
       gender: "性別",
