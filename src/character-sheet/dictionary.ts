@@ -30,6 +30,33 @@ export const characterSheetDictionary = {
       ryugiAndIkizama: "流儀・生き様",
       unselected: "未選択",
     },
+    checks: {
+      addAttack: "＋ 攻撃を追加",
+      attacks: "攻撃",
+      formula:
+        "判定数 = 対応能力 + 修正\n\n修正はサイバネなど能力値ではなく判定数に影響を与えるスキル、アイテムの効果の数値を入力します。",
+      headers: {
+        attribute: "対応能力",
+        checkCount: "判定数",
+        skill: "技能",
+        temporary: "常時／一時",
+      },
+      reactions: "リアクション",
+      removeAttack: "を削除",
+      skills: {
+        assassination: "暗殺",
+        brawl: "喧嘩",
+        combat: "格闘",
+        interference: "干渉",
+        shooting: "発砲",
+      },
+      reactionsByName: {
+        defense: "防御",
+        endurance: "耐え",
+        evasion: "回避",
+        resistance: "抵抗",
+      },
+    },
     bonds: {
       clear: "クリア（行は削除しません）",
       delete: "削除",

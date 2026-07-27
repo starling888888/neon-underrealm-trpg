@@ -59,6 +59,43 @@ export type BuildValues = {
   acquiredExperience: number;
 };
 
+export const attackSkillNames = [
+  "brawl",
+  "assassination",
+  "shooting",
+  "combat",
+  "interference",
+] as const;
+
+export type AttackSkillName = (typeof attackSkillNames)[number];
+
+export const reactionCheckNames = [
+  "defense",
+  "evasion",
+  "endurance",
+  "resistance",
+] as const;
+
+export type ReactionCheckName = (typeof reactionCheckNames)[number];
+
+export type AttackCheckValues = {
+  attribute: AttributeName;
+  modifier: number;
+  rowId: string;
+  skill: AttackSkillName;
+};
+
+export type ReactionCheckValues = {
+  attribute: AttributeName;
+  modifier: number;
+  name: ReactionCheckName;
+};
+
+export type ChecksValues = {
+  attacks: AttackCheckValues[];
+  reactions: ReactionCheckValues[];
+};
+
 export type SecondaryAttributeValues = {
   actionCountModifier: number;
   actionModifier: number;
@@ -107,6 +144,7 @@ function createInitialBondRows(): BondValues[] {
 export type CharacterSheetFormValues = {
   bonds: BondsValues;
   build: BuildValues;
+  checks: ChecksValues;
   credit: CreditValues;
   profile: ProfileValues;
   secondaryAttributes: SecondaryAttributeValues;
@@ -161,6 +199,22 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     otherRyugi: [],
     primaryRyugiId: null,
     primaryRyugiLevel: 1,
+  },
+  checks: {
+    attacks: [
+      {
+        attribute: "strength",
+        modifier: 0,
+        rowId: "attack-1",
+        skill: "brawl",
+      },
+    ],
+    reactions: [
+      { attribute: "strength", modifier: 0, name: "defense" },
+      { attribute: "strength", modifier: 0, name: "evasion" },
+      { attribute: "body", modifier: 0, name: "endurance" },
+      { attribute: "mind", modifier: 0, name: "resistance" },
+    ],
   },
   credit: {
     acquired: 10,

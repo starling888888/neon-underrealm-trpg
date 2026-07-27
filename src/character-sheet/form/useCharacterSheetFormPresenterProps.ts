@@ -5,6 +5,7 @@ import type { CharacterSheetFormValues } from "../form-values";
 import type { CharacterImagePresenterState } from "./presenter-state";
 import useBondsSectionProps from "./useBondsSectionProps";
 import useBuildSectionProps from "./useBuildSectionProps";
+import useChecksSectionProps from "./useChecksSectionProps";
 import useProfileSectionProps from "./useProfileSectionProps";
 import useSecondaryAttributesSectionProps from "./useSecondaryAttributesSectionProps";
 
@@ -22,6 +23,7 @@ export default function useCharacterSheetFormPresenterProps(
     form,
     secondaryAttributes.derivedSecondaryAttributes,
   );
+  const checksSection = useChecksSectionProps(form, build.derivedBuild);
   const profileSection = useProfileSectionProps(
     form,
     imageState,
@@ -32,6 +34,7 @@ export default function useCharacterSheetFormPresenterProps(
   return {
     bondsSection,
     buildSection: build.sectionProps,
+    checksSection,
     profileSection,
     secondaryAttributesSection: secondaryAttributes.sectionProps,
   };

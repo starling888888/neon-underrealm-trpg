@@ -3,6 +3,7 @@ import BondsSection, { type BondsSectionProps } from "./BondsSection";
 import BuildSection, { type BuildSectionProps } from "./BuildSection";
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
+import ChecksSection, { type ChecksSectionProps } from "./ChecksSection";
 import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
 import SecondaryAttributesSection, {
   type SecondaryAttributesSectionProps,
@@ -17,6 +18,7 @@ import SecondaryAttributesSection, {
 export type CharacterSheetFormPresenterProps = {
   bondsSection: BondsSectionProps;
   buildSection: BuildSectionProps;
+  checksSection: ChecksSectionProps;
   profileSection: ProfileSectionProps;
   secondaryAttributesSection: SecondaryAttributesSectionProps;
 };
@@ -24,6 +26,7 @@ export type CharacterSheetFormPresenterProps = {
 export default function CharacterSheetFormPresenter({
   bondsSection,
   buildSection,
+  checksSection,
   profileSection,
   secondaryAttributesSection,
 }: CharacterSheetFormPresenterProps) {
@@ -83,7 +86,9 @@ export default function CharacterSheetFormPresenter({
           id="checks"
           title={gameDomain.terms.checks}
         >
-          <div data-character-sheet-section-slot="checks" />
+          <div data-character-sheet-section-slot="checks">
+            <ChecksSection {...checksSection} />
+          </div>
         </CharacterSheetSectionFrame>
         <CharacterSheetSectionFrame
           expandable

@@ -221,4 +221,46 @@ describe("useCharacterSheetFormPresenterProps", () => {
 
     expect(result.current.form.getValues("bonds.rows")).toHaveLength(1);
   });
+
+  it("keeps attack rows, reaction rows, and their derived counts in the RHF boundary", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const checks = result.current.presenterProps.checksSection;
+
+    act(() => {
+      checks.onAttackAdd();
+      checks.onAttackSkillChange("attack-1", "shooting");
+      checks.onAttackModifierChange("attack-1", "-2");
+      checks.onReactionAttributeChange("defense", "agility");
+      checks.onReactionModifierChange("defense", "3");
+    });
+
+    expect(result.current.form.getValues("checks.attacks")).toHaveLength(2);
+    expect(result.current.form.getValues("checks.attacks.0")).toMatchObject({
+      attribute: "perception",
+      modifier: -2,
+      skill: "shooting",
+    });
+    expect(result.current.form.getValues("checks.reactions.0")).toEqual({
+      attribute: "agility",
+      modifier: 3,
+      name: "defense",
+    });
+    expect(
+      result.current.presenterProps.checksSection.attacks[0],
+    ).toMatchObject({
+      permanentAttribute: null,
+      permanentCheck: null,
+      temporaryAttribute: null,
+      temporaryCheck: null,
+    });
+
+    act(() => {
+      result.current.presenterProps.checksSection.onAttackRemove("attack-1");
+      result.current.presenterProps.checksSection.onAttackRemove(
+        result.current.form.getValues("checks.attacks.0.rowId"),
+      );
+    });
+
+    expect(result.current.form.getValues("checks.attacks")).toHaveLength(1);
+  });
 });

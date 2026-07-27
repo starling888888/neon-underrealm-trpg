@@ -242,6 +242,40 @@ test.describe("character sheet page", () => {
     await expect(temporaryChoice).toBeChecked();
   });
 
+  test("edits attack and reaction checks while keeping one attack row", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const attackSkill = page.getByLabel("攻撃1の技能", { exact: true });
+    const attackAttribute = page.getByLabel("攻撃1の対応能力", {
+      exact: true,
+    });
+    const attackModifier = page.getByLabel("攻撃1の判定修正", {
+      exact: true,
+    });
+    const finalRemove = page.getByRole("button", { name: "攻撃1を削除" });
+
+    await expect(finalRemove).toBeDisabled();
+    await attackSkill.selectOption("shooting");
+    await expect(attackAttribute).toHaveValue("perception");
+    await attackAttribute.selectOption("mind");
+    await attackModifier.fill("-2");
+    await expect(attackModifier).toHaveValue("-2");
+    await page.getByRole("button", { name: "＋ 攻撃を追加" }).click();
+    await expect(page.getByLabel("攻撃2の技能", { exact: true })).toHaveValue(
+      "brawl",
+    );
+    await expect(finalRemove).toBeEnabled();
+    await page
+      .getByLabel("防御の対応能力", { exact: true })
+      .selectOption("agility");
+    await expect(
+      page.getByLabel("防御の対応能力", { exact: true }),
+    ).toHaveValue("agility");
+  });
+
   test("locks resolved bonds, clears only unlocked rows, and warns when over the limit", async ({
     page,
   }) => {

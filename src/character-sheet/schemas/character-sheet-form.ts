@@ -69,6 +69,43 @@ export const characterSheetFormSchema = z.object({
     primaryRyugiId: z.string().nullable(),
     primaryRyugiLevel: z.number().int(),
   }),
+  checks: z.object({
+    attacks: z.array(
+      z.object({
+        attribute: z.enum([
+          "strength",
+          "agility",
+          "perception",
+          "body",
+          "mind",
+        ]),
+        modifier: z.number().int(),
+        rowId: z.string(),
+        skill: z.enum([
+          "brawl",
+          "assassination",
+          "shooting",
+          "combat",
+          "interference",
+        ]),
+      }),
+    ),
+    reactions: z
+      .array(
+        z.object({
+          attribute: z.enum([
+            "strength",
+            "agility",
+            "perception",
+            "body",
+            "mind",
+          ]),
+          modifier: z.number().int(),
+          name: z.enum(["defense", "evasion", "endurance", "resistance"]),
+        }),
+      )
+      .length(4),
+  }),
   credit: z.object({
     acquired: nonNegativeIntegerSchema,
     changeAdjustment: signedIntegerSchema,
