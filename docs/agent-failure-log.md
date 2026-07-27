@@ -750,3 +750,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-7-sheet-build` の `tests/visual/character-sheet.spec.ts`
 - 観測した失敗: `getByLabel("プライマリ流儀")`がselectだけでなく`プライマリ流儀Lv`のnumber inputにも部分一致し、strict mode violationで対象Visual testを複数回失敗させた。実行出力が完了行を省略する条件を成功と誤認し、失敗artifactを先に確認しなかった。
 - 一次対応: selectのlocatorを`{ exact: true }`へ変更し、Visual test後は終了出力だけでなく`test-results/.last-run.json`も確認する。
+
+### Character-sheet requirement omission marked complete
+
+#### 2026-07-27
+
+- source: review
+- 発生箇所: `ex-02-7-sheet-build` のissue作成・完了確認
+- 観測した失敗: 要件とdesign notesにある取得経験点の基本情報側配置、流儀増加値、生き様係数、共通スキルボーナス表示をG7契約へ取り込まず、実装後に完了条件とチェックポイントを完了扱いにした。
+- 一次対応: レビュー指摘 1としてG7 issueへ不足事項と修正契約を追加した。以後、Gate issueの範囲と完了条件を確定する際は、関連要件の表示配置・派生表示まで照合する。
