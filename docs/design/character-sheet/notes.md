@@ -86,9 +86,9 @@
 
 - このページにはPageToc / MobilePageTocを表示しない。
 - キャラクターシート固有のsection navigationは設けない。
-- character-sheetでは、既存ページのサイトメニュー表示をそのまま適用しない。tabletでは常設のサイトメニューrailを表示し、キャラクターシート領域はスキル以降のセクションを下へ移す配置とする。desktopとmobileでは、ロゴの左に置くHeaderのサイトメニューボタンからdrawerを開く。
+- character-sheetでは、既存ページのサイトメニュー表示をそのまま適用しない。`64rem`以上`80rem`未満では常設のサイトメニューrailを表示し、キャラクターシート領域はスキル以降のセクションを下へ移す配置とする。desktop、`48rem`以上`64rem`未満、mobileでは、ロゴの左に置くHeaderのサイトメニューボタンからdrawerを開く。
 - desktopとtabletのHeaderは、タイトルロゴを高さ3remのままとし、メニューボタンとロゴの間を`--space-3`にする。mobileでは既存の小さいタイトルロゴと左右のHeader操作を維持する。
-- キャラクターシートのmain領域は利用可能な横幅を使い、main自身の左右paddingは均等にする。desktopではsheet本文を最大`90rem`（1440px）に制限し、それを超える横幅では中央寄せにする。tabletでは15remのサイトメニューrailの右側の残り幅をmainに使う。
+- キャラクターシートのmain領域は利用可能な横幅を使い、main自身の左右paddingは均等にする。desktopではsheet本文を最大`90rem`（1440px）に制限し、それを超える横幅では中央寄せにする。縦1列のsheet formの最小幅は`44rem`とし、`64rem`以上`80rem`未満では15remのサイトメニューrailの右側の残り幅をmainに使う。`48rem`以上`64rem`未満ではmobile用のレイアウトへ切り替えず、site menu railだけを隠す。
 - sheet本文の`h1`はbrowser既定marginを使わない。main上端から直接置き、下余白だけを`12px`にする。page固有のheading余白はAstro page側で扱い、React Islandへglobal heading styleを追加しない。
 - tabletとmobileの基本レイアウトでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
 

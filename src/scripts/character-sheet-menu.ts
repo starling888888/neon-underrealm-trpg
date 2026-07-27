@@ -6,7 +6,7 @@ type CharacterSheetMenuElements = {
   focusableElements: () => HTMLElement[];
 };
 
-const tabletMediaQuery = "(width >= 48rem) and (width < 80rem)";
+const menuRailMediaQuery = "(width >= 64rem) and (width < 80rem)";
 const layoutOverlayChangeEvent = "layout-overlay-change";
 
 type OverlayChangeDetail = {
@@ -142,7 +142,7 @@ export function setupCharacterSheetMenu(): void {
     handleTabKey(event, elements);
   });
 
-  window.matchMedia(tabletMediaQuery).addEventListener("change", (event) => {
+  window.matchMedia(menuRailMediaQuery).addEventListener("change", (event) => {
     if (event.matches && !elements.drawer.hidden) {
       setOpen(elements, false);
     }

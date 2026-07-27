@@ -14,7 +14,7 @@ async function expectLayoutColumnCount(page: Page, count: number) {
 }
 
 test.describe("character sheet page", () => {
-  test("uses a header menu on desktop and a persistent menu on tablet", async ({
+  test("uses a menu rail only when the one-column sheet has enough width", async ({
     page,
   }) => {
     await page.setViewportSize(visualViewports.desktop);
@@ -39,6 +39,18 @@ test.describe("character sheet page", () => {
     await expect(page.locator("[data-mobile-page-toc-trigger]")).toHaveCount(0);
 
     await page.setViewportSize(visualViewports.tablet);
+
+    await expect(page.locator(".character-sheet-menu-rail")).toBeHidden();
+    await expect(
+      page.locator("[data-character-sheet-menu-open]:visible"),
+    ).toHaveCount(1);
+    await page.locator("[data-character-sheet-menu-open]:visible").click();
+    await expect(
+      page.locator("#character-sheet-site-menu-drawer"),
+    ).toBeVisible();
+    await page.keyboard.press("Escape");
+
+    await page.setViewportSize({ width: 1024, height: 1180 });
 
     await expect(page.locator(".character-sheet-menu-rail")).toBeVisible();
     await expect(

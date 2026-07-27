@@ -4,6 +4,7 @@
   --sheet-section-toggle-height: 2.25rem;
 
   margin: 0;
+  min-inline-size: var(--character-sheet-single-column-min-width);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--sheet-section-gap);
@@ -68,5 +69,6 @@
   .form {
     --sheet-section-content-padding: var(--space-2);
     --sheet-section-gap: var(--space-4);
+    min-inline-size: 0;
   }
 }
