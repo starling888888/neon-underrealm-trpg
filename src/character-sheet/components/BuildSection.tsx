@@ -28,6 +28,7 @@ type ReferenceMetricProps = {
 export type BuildSectionProps = {
   build: BuildValues;
   derived: BuildDerivedValues;
+  hasIkizamaSkillLevelError: boolean;
   hasPrimarySkillLevelError: boolean;
   ikizamaOptions: readonly CharacterSheetSelectOption[];
   onAttributeChange: (
@@ -146,6 +147,7 @@ function SelectField({
 export default function BuildSection({
   build,
   derived,
+  hasIkizamaSkillLevelError,
   hasPrimarySkillLevelError,
   ikizamaOptions,
   onAttributeChange,
@@ -169,12 +171,18 @@ export default function BuildSection({
     <div className={styles.section} data-build-section>
       <section
         aria-invalid={
-          derived.hasRyugiError || hasPrimarySkillLevelError || undefined
+          derived.hasRyugiError ||
+          hasPrimarySkillLevelError ||
+          hasIkizamaSkillLevelError ||
+          undefined
         }
         aria-label={buildUiCopy.ryugiAndIkizama}
         className={styles.buildPane}
         data-invalid={
-          derived.hasRyugiError || hasPrimarySkillLevelError || undefined
+          derived.hasRyugiError ||
+          hasPrimarySkillLevelError ||
+          hasIkizamaSkillLevelError ||
+          undefined
         }
       >
         <div className={styles.choiceRow}>

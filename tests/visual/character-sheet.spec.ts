@@ -52,6 +52,31 @@ test.describe("character sheet page", () => {
     await expect(primaryRyugi).toHaveValue("emono");
   });
 
+  test("selects an ikizama skill", async ({ page }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const ikizama = page.locator("[data-build-section] select").nth(1);
+    const ikizamaSkills = page.getByRole("region", { name: "生き様スキル" });
+    const skillPicker = ikizamaSkills.getByRole("button", {
+      name: "未選択スキル1",
+      exact: true,
+    });
+
+    await expect(async () => {
+      await ikizama.selectOption("burai");
+      await expect(skillPicker).toBeVisible();
+    }).toPass();
+
+    await skillPicker.click();
+    const pickerDialog = page.getByRole("dialog", {
+      name: "生き様スキルを選択",
+    });
+    await expect(pickerDialog).toBeVisible();
+    await pickerDialog.getByRole("button").first().click();
+    await expect(pickerDialog).toBeHidden();
+  });
+
   test("uses a menu rail only when the one-column sheet has enough width", async ({
     page,
   }) => {

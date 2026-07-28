@@ -174,6 +174,18 @@ export const characterSheetFormSchema = z.object({
     provided: nonNegativeIntegerSchema,
     received: nonNegativeIntegerSchema,
   }),
+  ikizamaSkills: z.object({
+    bonusLevel: z.number().int().min(1),
+    rows: z
+      .array(
+        z.object({
+          level: z.number().int().min(1),
+          rowId: z.string(),
+          skillId: z.string().nullable(),
+        }),
+      )
+      .min(1),
+  }),
   primarySkills: z.object({
     rows: z
       .array(

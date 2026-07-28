@@ -89,6 +89,51 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Put Ikizama local contracts into character-sheet VRT/E2E scenarios
+
+#### 2026-07-28
+
+- source: user feedback
+- failure category: test-architecture boundary
+- 観測した失敗: 生き様の候補group、長い名称、Lv境界、error算出の局所契約を、`tests/visual/vrt/character-sheet.spec.ts`へ複数stateとして追加した。アーキテクチャはbrowser E2Eを2〜3個の代表操作だけの最終smokeに限定し、入力境界・固定データ・派生式をNode / Component / hook testへ置くと定めている。
+- 一次対応: 追加した生き様VRT scenario・locator・state setupを削除した。browser E2Eは生き様選択、候補dialog、1候補選択の代表操作だけを残し、bonus Lv・合計errorはNode / hook testで検証する。削除したVRT結果をissueの完了根拠から外した。
+
+### Added an Ikizama-specific callback path to the shared SkillSection
+
+#### 2026-07-28
+
+- source: user feedback
+- failure category: scope and shared-component change control
+- 観測した失敗: 生き様bonus Lvの更新のために、他区分も使う`SkillSection.tsx`へ`onAutomaticLevelChange`を追加し、自動習得行だけを分岐させた。G13で必要なのは生き様adapterの値更新だけであり、共通Componentに変更リスクを持ち込む理由がなかった。
+- 一次対応: `onAutomaticLevelChange`と共通Component内の分岐を削除する。bonus行の`rowId`を既存`onLevelChange(rowId, value)`へ渡し、生き様adapterがbonus行だけをフォーム値へ書き戻す。
+
+### Responded before inspecting the actual shared-component diff
+
+#### 2026-07-28
+
+- source: user feedback
+- failure category: evidence discipline
+- 観測した失敗: ユーザーが`onAutomaticLevelChange`追加を問題にしている場面で、実際のdiffを確認せずにbonus合計validationの話として返答した。
+- 一次対応: 実ファイルとdiffを確認してから、共通Componentの追加APIと分岐を削除する対応へ切り替えた。レビュー指摘への応答では、対象ファイルを確認した事実と確認対象を先に揃える。
+
+### Misread the free bonus-skill level rule and tested a non-error state
+
+#### 2026-07-28
+
+- source: user feedback
+- failure category: requirement interpretation and visual-state setup
+- 観測した失敗: 生き様bonusスキルを合計対象外と誤認し、ユーザーから「Lv1だけが無料」と指摘された後も、ブライLv1・bonus Lv2を超過状態としてテストした。これは無料分を除く取得Lvが1で、生き様Lv1を超えない状態だった。
+- 一次対応: 合計を`通常スキルLv合計 + max(0, bonus Lv - 1)`へ訂正した。Visual ReviewはブライLv1・bonus Lv3を超過stateとし、生き様スキル区分の赤枠を実画面で確認する。スキルLvの無料分がある検証では、境界値と超過値を先に算出してからtest stateを作る。
+
+### Reported no clipping without selecting a longest-name skill state
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-13-sheet-ikizama-skills` のビジュアルレビュー1
+- 観測した失敗: 生き様スキルのdefault、候補dialog、bonus詳細だけを原寸locator screenshotで確認し、`帰還不能地点`のようなデータ内改行を持つ長い通常スキル名を選択したstateを確認しないまま、名称のclippingがないと報告した。ユーザーの実画面レビューで長い名称がclipしていると指摘された。
+- 一次対応: current issueへレビュー指摘1を取り込み、長い名称選択state、Lv合計超過state、区分間余白を対象にしたビジュアルレビュー2を追加する。修正後は全viewportの原寸locator screenshotで名称全体を確認する。
+
 ### Reported non-wrapping resolve-effect formulas without confirming the actual layout
 
 #### 2026-07-27

@@ -74,6 +74,11 @@ export type PrimarySkillsValues = {
   rows: PrimarySkillValues[];
 };
 
+export type IkizamaSkillsValues = {
+  bonusLevel: number;
+  rows: PrimarySkillValues[];
+};
+
 export const attackSkillNames = [
   "brawl",
   "assassination",
@@ -179,11 +184,20 @@ function createInitialPrimarySkillRows(): PrimarySkillValues[] {
   }));
 }
 
+function createInitialIkizamaSkillRows(): PrimarySkillValues[] {
+  return Array.from({ length: 2 }, (_, index) => ({
+    level: 1,
+    rowId: `ikizama-skill-${index + 1}`,
+    skillId: null,
+  }));
+}
+
 export type CharacterSheetFormValues = {
   bonds: BondsValues;
   build: BuildValues;
   checks: ChecksValues;
   credit: CreditValues;
+  ikizamaSkills: IkizamaSkillsValues;
   primarySkills: PrimarySkillsValues;
   profile: ProfileValues;
   secondaryAttributes: SecondaryAttributeValues;
@@ -261,6 +275,10 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     changeAdjustment: 0,
     provided: 0,
     received: 0,
+  },
+  ikizamaSkills: {
+    bonusLevel: 1,
+    rows: createInitialIkizamaSkillRows(),
   },
   primarySkills: {
     rows: createInitialPrimarySkillRows(),

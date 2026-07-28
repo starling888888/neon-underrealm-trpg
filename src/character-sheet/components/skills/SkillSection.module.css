@@ -2,7 +2,7 @@
   display: grid;
   max-width: 100%;
   min-width: 0;
-  overflow: clip;
+  overflow: visible;
   border: var(--border-width) solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
@@ -177,7 +177,8 @@
   font-weight: 750;
   line-height: var(--line-height-tight);
   text-align: left;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .skillPicker {
@@ -354,7 +355,7 @@
     align-items: center;
     padding: var(--space-1);
     font-size: 0.6875rem;
-    white-space: pre-line;
+    white-space: pre-wrap;
   }
 
   .chooseIcon {

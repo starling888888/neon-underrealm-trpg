@@ -6,6 +6,7 @@ import type { CharacterImagePresenterState } from "./presenter-state";
 import useBondsSectionProps from "./useBondsSectionProps";
 import useBuildSectionProps from "./useBuildSectionProps";
 import useChecksSectionProps from "./useChecksSectionProps";
+import useIkizamaSkillsSectionProps from "./useIkizamaSkillsSectionProps";
 import usePrimarySkillsSectionProps from "./usePrimarySkillsSectionProps";
 import useProfileSectionProps from "./useProfileSectionProps";
 import useSecondaryAttributesSectionProps from "./useSecondaryAttributesSectionProps";
@@ -20,6 +21,10 @@ type CharacterSheetPresenterOptions = {
     rowId: string,
     trigger: HTMLButtonElement,
   ) => void;
+  onIkizamaSkillPickerRequested: (
+    rowId: string,
+    trigger: HTMLButtonElement,
+  ) => void;
 };
 
 /** Composes independently-owned section props for the form presenter. */
@@ -27,6 +32,7 @@ export default function useCharacterSheetFormPresenterProps(
   form: UseFormReturn<CharacterSheetFormValues>,
   imageState: CharacterImagePresenterState,
   {
+    onIkizamaSkillPickerRequested,
     onPrimaryRyugiChangeRequested,
     onPrimarySkillPickerRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
@@ -50,15 +56,21 @@ export default function useCharacterSheetFormPresenterProps(
   const primarySkills = usePrimarySkillsSectionProps(form, {
     onPickerRequest: onPrimarySkillPickerRequested ?? (() => {}),
   });
+  const ikizamaSkills = useIkizamaSkillsSectionProps(form, {
+    onPickerRequest: onIkizamaSkillPickerRequested ?? (() => {}),
+  });
 
   return {
     bondsSection,
     buildSection: {
       ...build.sectionProps,
+      hasIkizamaSkillLevelError:
+        ikizamaSkills.sectionProps.hasIkizamaSkillLevelTotalError,
       hasPrimarySkillLevelError:
         primarySkills.sectionProps.hasPrimarySkillLevelTotalError,
     },
     checksSection,
+    ikizamaSkillsSection: ikizamaSkills.sectionProps,
     primarySkillsSection: primarySkills.sectionProps,
     profileSection,
     secondaryAttributesSection: secondaryAttributes.sectionProps,

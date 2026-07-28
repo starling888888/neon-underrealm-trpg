@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 import useCharacterSheetFormPresenterProps from "../../../src/character-sheet/form/useCharacterSheetFormPresenterProps";
 import type { CharacterSheetFormValues } from "../../../src/character-sheet/form-values";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
@@ -190,6 +191,168 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(result.current.form.getValues("primarySkills.rows.1.rowId")).toBe(
       firstRow.rowId,
     );
+  });
+
+  it("keeps ikizama rows in RHF, resets bonus on an ikizama change, and preserves it across level changes", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.buildSection.onIkizamaChange("burai");
+    });
+
+    const [skill] = getIkizamaSkillGroups("burai", 1).basic;
+    if (skill === undefined) {
+      throw new Error("生き様スキル候補を取得できません。");
+    }
+    const firstRowId = result.current.form.getValues(
+      "ikizamaSkills.rows.0.rowId",
+    );
+    const bonusSkillId =
+      result.current.presenterProps.ikizamaSkillsSection.bonusSkill?.id;
+    if (bonusSkillId === undefined) {
+      throw new Error("生き様bonusスキルを取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.ikizamaSkillsSection.onLevelChange(
+        `ikizama-bonus-${bonusSkillId}`,
+        "3",
+      );
+      result.current.presenterProps.ikizamaSkillsSection.onSelect(
+        firstRowId,
+        skill.id,
+      );
+      result.current.presenterProps.ikizamaSkillsSection.onLevelChange(
+        firstRowId,
+        "999",
+      );
+      result.current.presenterProps.ikizamaSkillsSection.onAdd();
+      result.current.presenterProps.buildSection.onIkizamaLevelChange("4");
+    });
+
+    expect(result.current.form.getValues("ikizamaSkills.bonusLevel")).toBe(3);
+    expect(result.current.form.getValues("ikizamaSkills.rows.0")).toMatchObject(
+      {
+        level: skill.maxLevel,
+        skillId: skill.id,
+      },
+    );
+    expect(result.current.form.getValues("ikizamaSkills.rows")).toHaveLength(3);
+    expect(
+      result.current.presenterProps.ikizamaSkillsSection.candidateGroups
+        .advanced.length,
+    ).toBeGreaterThan(0);
+    expect(
+      result.current.presenterProps.ikizamaSkillsSection
+        .hasIkizamaSkillLevelTotalError,
+    ).toBe(false);
+
+    act(() => {
+      result.current.presenterProps.buildSection.onIkizamaChange("kage");
+    });
+
+    expect(result.current.form.getValues("ikizamaSkills.bonusLevel")).toBe(1);
+  });
+
+  it("uses field-array operations for ikizama rows while keeping one row", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [firstRow, secondRow] =
+      result.current.form.getValues("ikizamaSkills.rows");
+    if (firstRow === undefined || secondRow === undefined) {
+      throw new Error("生き様スキル行を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.ikizamaSkillsSection.onMove(
+        firstRow.rowId,
+        "down",
+      );
+      result.current.presenterProps.ikizamaSkillsSection.onRemove(
+        secondRow.rowId,
+      );
+      result.current.presenterProps.ikizamaSkillsSection.onRemove(
+        firstRow.rowId,
+      );
+    });
+
+    expect(result.current.form.getValues("ikizamaSkills.rows")).toHaveLength(1);
+    expect(result.current.form.getValues("ikizamaSkills.rows.0.rowId")).toBe(
+      firstRow.rowId,
+    );
+  });
+
+  it("marks only the ikizama build and skill section invalid when selected levels exceed its level", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [firstRow, secondRow] =
+      result.current.form.getValues("ikizamaSkills.rows");
+    const [skill] = getIkizamaSkillGroups("burai", 1).basic;
+    if (
+      firstRow === undefined ||
+      secondRow === undefined ||
+      skill === undefined
+    ) {
+      throw new Error("生き様スキル行または候補を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.buildSection.onIkizamaChange("burai");
+      result.current.presenterProps.ikizamaSkillsSection.onSelect(
+        firstRow.rowId,
+        skill.id,
+      );
+      result.current.presenterProps.ikizamaSkillsSection.onSelect(
+        secondRow.rowId,
+        skill.id,
+      );
+    });
+
+    expect(
+      result.current.presenterProps.ikizamaSkillsSection
+        .hasIkizamaSkillLevelTotalError,
+    ).toBe(true);
+    expect(
+      result.current.presenterProps.buildSection.hasIkizamaSkillLevelError,
+    ).toBe(true);
+    expect(
+      result.current.presenterProps.buildSection.hasPrimarySkillLevelError,
+    ).toBe(false);
+  });
+
+  it("counts bonus levels above the free first level toward the ikizama total", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.buildSection.onIkizamaChange("burai");
+      result.current.presenterProps.buildSection.onIkizamaLevelChange("1");
+    });
+    const bonusSkillId =
+      result.current.presenterProps.ikizamaSkillsSection.bonusSkill?.id;
+    if (bonusSkillId === undefined) {
+      throw new Error("生き様bonusスキルを取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.ikizamaSkillsSection.onLevelChange(
+        `ikizama-bonus-${bonusSkillId}`,
+        "3",
+      );
+    });
+
+    expect(result.current.form.getValues("build.ikizamaLevel")).toBe(1);
+    expect(result.current.form.getValues("ikizamaSkills.bonusLevel")).toBe(3);
+    expect(result.current.presenterProps.buildSection.build.ikizamaLevel).toBe(
+      1,
+    );
+    expect(result.current.presenterProps.ikizamaSkillsSection.bonusLevel).toBe(
+      3,
+    );
+    expect(
+      result.current.presenterProps.ikizamaSkillsSection
+        .hasIkizamaSkillLevelTotalError,
+    ).toBe(true);
+    expect(
+      result.current.presenterProps.buildSection.hasIkizamaSkillLevelError,
+    ).toBe(true);
   });
 
   it("connects secondary corrections and temporary-value choices through RHF", () => {

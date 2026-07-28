@@ -102,6 +102,7 @@ export default function useBuildSectionProps(
     sectionProps: {
       build,
       derived: derivedBuild,
+      hasIkizamaSkillLevelError: false,
       hasPrimarySkillLevelError: false,
       ikizamaOptions: getCharacterSheetIkizamaOptions(),
       onAttributeChange: setAttributeValue,

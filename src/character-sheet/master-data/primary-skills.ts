@@ -57,6 +57,8 @@ export function getMaximumSkillNameLength(): number {
 
   return Math.max(
     1,
-    ...allSkills.map((skill) => Array.from(skill.name).length),
+    ...allSkills.flatMap((skill) =>
+      skill.name.split("\n").map((line) => Array.from(line).length),
+    ),
   );
 }

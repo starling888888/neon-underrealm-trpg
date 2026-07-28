@@ -4,6 +4,9 @@ import BuildSection, { type BuildSectionProps } from "./BuildSection";
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ChecksSection, { type ChecksSectionProps } from "./ChecksSection";
+import IkizamaSkillsSection, {
+  type IkizamaSkillsSectionProps,
+} from "./IkizamaSkillsSection";
 import PrimarySkillsSection, {
   type PrimarySkillsSectionProps,
 } from "./PrimarySkillsSection";
@@ -22,6 +25,7 @@ export type CharacterSheetFormPresenterProps = {
   bondsSection: BondsSectionProps;
   buildSection: BuildSectionProps;
   checksSection: ChecksSectionProps;
+  ikizamaSkillsSection: IkizamaSkillsSectionProps;
   primarySkillsSection: PrimarySkillsSectionProps;
   profileSection: ProfileSectionProps;
   secondaryAttributesSection: SecondaryAttributesSectionProps;
@@ -31,6 +35,7 @@ export default function CharacterSheetFormPresenter({
   bondsSection,
   buildSection,
   checksSection,
+  ikizamaSkillsSection,
   primarySkillsSection,
   profileSection,
   secondaryAttributesSection,
@@ -101,8 +106,12 @@ export default function CharacterSheetFormPresenter({
           id="skills"
           title={gameDomain.terms.skills}
         >
-          <div data-character-sheet-section-slot="skills">
+          <div
+            className={styles.skillsSections}
+            data-character-sheet-section-slot="skills"
+          >
             <PrimarySkillsSection {...primarySkillsSection} />
+            <IkizamaSkillsSection {...ikizamaSkillsSection} />
           </div>
         </CharacterSheetSectionFrame>
         <CharacterSheetSectionFrame

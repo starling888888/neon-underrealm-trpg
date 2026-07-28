@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
+import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
 import PrimaryRyugiChangeConfirmDialog from "./components/dialogs/PrimaryRyugiChangeConfirmDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
@@ -20,9 +21,13 @@ export default function CharacterSheetContainer() {
   const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
     string | null
   >(null);
+  const [ikizamaSkillPickerRowId, setIkizamaSkillPickerRowId] = useState<
+    string | null
+  >(null);
   const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
     useState(false);
   const primarySkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const ikizamaSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const presenterProps = useCharacterSheetFormPresenterProps(
@@ -57,11 +62,19 @@ export default function CharacterSheetContainer() {
         primarySkillPickerTriggerRef.current = trigger;
         setPrimarySkillPickerRowId(rowId);
       },
+      onIkizamaSkillPickerRequested: (rowId, trigger) => {
+        ikizamaSkillPickerTriggerRef.current = trigger;
+        setIkizamaSkillPickerRowId(rowId);
+      },
     },
   );
 
   function closePrimarySkillPicker(): void {
     setPrimarySkillPickerRowId(null);
+  }
+
+  function closeIkizamaSkillPicker(): void {
+    setIkizamaSkillPickerRowId(null);
   }
 
   function confirmPrimaryRyugiChange(): void {
@@ -105,6 +118,21 @@ export default function CharacterSheetContainer() {
           selectedSkillIds={presenterProps.primarySkillsSection.rows.flatMap(
             (row) => (row.skillId === null ? [] : [row.skillId]),
           )}
+        />
+        <IkizamaSkillPickerDialog
+          groups={presenterProps.ikizamaSkillsSection.candidateGroups}
+          isOpen={ikizamaSkillPickerRowId !== null}
+          onRequestClose={closeIkizamaSkillPicker}
+          onSelect={(skillId) => {
+            if (ikizamaSkillPickerRowId !== null) {
+              presenterProps.ikizamaSkillsSection.onSelect(
+                ikizamaSkillPickerRowId,
+                skillId,
+              );
+            }
+            closeIkizamaSkillPicker();
+          }}
+          returnFocusRef={ikizamaSkillPickerTriggerRef}
         />
         <PrimaryRyugiChangeConfirmDialog
           isOpen={isPrimaryRyugiChangeConfirmOpen}

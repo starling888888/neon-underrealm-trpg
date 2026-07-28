@@ -32,37 +32,41 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 ## 対象範囲
 
 - RHFへ、生き様通常スキル2行（最低1行）の`rowId`、skill ID、取得Lvと、生き様bonusの取得Lvを追加する。選択時と別スキルへの変更時はLvを`1`へ戻し、空行は合計へ含めない。通常行の追加・削除・上下移動は`useFieldArray`で行い、既存可変行の移行はG24前TODOへ残す。
-- `ikizama-skills.json`から選択中生き様の`bonus`を先頭へ導出する。bonusは候補に含めず、名称・マスタ由来の内容は編集不可、取得Lvだけを初期値・最低値`1`で編集可能にする。生き様IDが変更・解除されたときはbonus Lvを`1`へ戻し、同じ生き様のLv変更では値を保持する。bonus Lvは通常行の取得合計へ含めない。
+- `ikizama-skills.json`から選択中生き様の`bonus`を先頭へ導出する。bonusは候補に含めず、名称・マスタ由来の内容は編集不可、取得Lvだけを初期値・最低値`1`で編集可能にする。生き様IDが変更・解除されたときはbonus Lvを`1`へ戻し、同じ生き様のLv変更では値を保持する。bonus Lv1は無料とし、Lv2以上の超過分を取得合計へ含める。
 - 生き様レベル4未満では`basic`、4以上では`basic`と`advanced`を候補dialogのgroupとして表示する。通常行は追加・削除・上下移動でき、先頭・末尾以外へ移動できない方向のbuttonは表示しない。
 - `SkillSection`と`SkillPickerDialog`を再利用し、生き様専用の重複した行Component、候補dialog、CSS Moduleを追加しない。生き様adapterが、行ViewModel、候補group、bonusのLv編集可否、候補条件、validation結果、callbackへ正規化する。
-- 通常行の最大Lv、重複、advanced条件、生き様レベルとの合計整合は、G16の全スキル一貫validationへ先送りする。このGateはマスタ候補の絞り込みと行の選択・編集状態だけを扱う。
+- 生き様通常スキルの選択済み取得Lvとbonus Lv2以上の超過分の合計が生き様Lvを超えるときは、流儀・生き様入力側と生き様スキル区分の両方をerror状態にする。bonusの無料Lv1と空行は合計に含めない。通常行の最大Lv、重複、advanced条件はG16の全スキル一貫validationへ先送りする。
 - 固定文言を追加・移動する場合は、ゲーム用語・スキル属性名を`characterSheetDictionary.gameDomain.terms`へ、section名、操作、button、dialog説明、未選択messageを`characterSheetDictionary.characterSheet`へ分類する。生成JSON由来の名称・制限・効果をdictionaryへ複製しない。
 - browser E2Eは、領域表示と候補dialogを開いて1候補を選ぶなど2〜3個の代表操作だけを最終smokeとして確認する。固定データ全件、Lv境界、候補group、disabled、callback、dialog copy、行順はNode / Component / hook testへ置き、test-onlyのDOM・state・data属性を製品コードへ追加しない。
+- shared skill表示は、desktop / tabletで`帰還不能地点`を含む最長のスキル名をclipせずに名称列へ表示する。mobileを含む幅制約時は、生成データに含まれる改行を保持して自然な改行を許可し、clipやellipsisで文字を隠さない。各スキル区分の間には、section frame内で一貫した縦余白を置く。
 
 ## 初期スコープ外
 
-- プライマリ、共通、その他流儀スキルのフォーム値・adapter・候補を変更しない。
-- G14の共通スキル経験点、G15のその他流儀削除確認、G16の全区分横断validationを実装しない。G24前TODOで扱う既存可変行の`useFieldArray`移行は実装しない。
+- プライマリ、共通、その他流儀スキルのフォーム値・adapter・候補を変更しない。ただし、生き様スキルの表示修正に必要なshared `SkillSection`の名称表示と区分間余白は、既存区分へ共通適用してよい。
+- G14の共通スキル経験点、G15のその他流儀削除確認、G16の全区分横断validationを実装しない。生き様スキル合計と生き様Lvの局所validationだけは本Gateで扱う。bonusスキルの無料分はLv1とする。G24前TODOで扱う既存可変行の`useFieldArray`移行は実装しない。
 - スキル効果、取得制限、前提、排他、能力値・アイテム条件を解析・自動算出しない。
 - 保存・復元、JSON入出力、canonical VRT baseline更新、追加依存の導入を行わない。
 
 ## 完了条件
 
-- [ ] 選択中生き様のbonusと通常2行を、既存shared Componentで表示・編集できる。
-- [ ] bonusは生き様IDの変更・解除時にLv`1`へ戻り、同じ生き様のLv変更時は値を保持する。通常行は`useFieldArray`で選択、Lv編集、追加・削除・上下移動をできる。
-- [ ] 生き様Lv4で候補が`advanced`を含むよう切り替わる。
-- [ ] dictionaryのゲーム用語とキャラクターシートUI文言を指定の所有者へ分類し、生成データ文言を複製していない。
-- [ ] E2Eが最終smokeの責務を越えず、局所契約をNode / Component / hook testへ分離している。
-- [ ] `@character-sheet` targetのdefault、候補dialog、詳細展開をdesktop、tablet、mobileでVisual Reviewする。canonical VRT baselineは更新しない。
-- [ ] `npm run check`、`npm run build`、関連テストが通る。
+- [x] 選択中生き様のbonusと通常2行を、既存shared Componentで表示・編集できる。
+- [x] bonusは生き様IDの変更・解除時にLv`1`へ戻り、同じ生き様のLv変更時は値を保持する。通常行は`useFieldArray`で選択、Lv編集、追加・削除・上下移動をできる。
+- [x] 生き様Lv4で候補が`advanced`を含むよう切り替わる。
+- [x] 生き様スキルの取得Lv合計が生き様Lvを超えると、流儀・生き様入力側と生き様スキル区分がerror状態になる。bonusスキルはLv1だけを無料とし、Lv2以上の超過分と通常スキルを合計し、空行は含めない。
+- [x] dictionaryのゲーム用語とキャラクターシートUI文言を指定の所有者へ分類し、生成データ文言を複製していない。
+- [ ] desktop / tabletの名称列で`帰還不能地点`をclipせずに表示し、mobileを含む狭い幅ではデータ内改行を保持して文字をclip / ellipsisしない。各スキル区分の間に一貫した縦余白がある。
+- [x] E2Eが最終smokeの責務を越えず、局所契約をNode / Component / hook testへ分離している。追加したVRT状態を削除し、最終smokeを再確認した。
+- [x] `@character-sheet` targetのdefault、候補dialog、詳細展開をdesktop、tablet、mobileでVisual Reviewする。canonical VRT baselineは更新しない。
+- [x] `npm run check`、`npm run build`、関連テストが通る。
 
 ## チェックポイント
 
-- [ ] `docs/requirements/character-sheet.md`、architecture、design targetと矛盾していない。
-- [ ] GitHub Pagesのsubpath公開と既存routeに影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 新設する生き様通常行だけを`useFieldArray`で操作し、既存可変行の移行はG24前TODOへ残している。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] `docs/requirements/character-sheet.md`、architecture、design targetと矛盾していない。
+- [x] GitHub Pagesのsubpath公開と既存routeに影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 新設する生き様通常行だけを`useFieldArray`で操作し、既存可変行の移行はG24前TODOへ残している。
+- [x] 生き様スキルの合計errorを、プライマリ・共通・その他流儀やG16の横断validationへ拡張していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -85,3 +89,133 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 ## 備考
 
 - G12のshared表示契約とrequirementsのdesktop / tablet列契約に差異がある場合は、実装前にrequirementsの正本を同期してから進める。
+
+## ビジュアルレビュー 1（記録訂正）
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: なし。生き様の候補・詳細stateをVRTへ追加していたが、テストアーキテクチャ外のため削除した。
+- route / states / viewports: `/character-sheet/`の生き様選択済み、候補dialog表示、bonus詳細展開をdesktop（1440x1200）、tablet（820x1180）、mobile（390x900）で確認。
+
+### レビュー結果
+
+| 対象                                    | 判定 | 差分                                                        | 対応                                                         |
+| --------------------------------------- | ---- | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| 生き様スキル領域、候補dialog、bonus詳細 | 訂正 | 長い名称の選択stateを含めておらず、clipなしの報告は確認不足 | レビュー指摘1で追加入力し、ビジュアルレビュー2で再確認する。 |
+
+### 実画面確認
+
+- `/character-sheet/` / 生き様選択済み / desktop, tablet, mobile:
+  - locator screenshot: `[data-ikizama-skills-section]`（original pixel resolution）
+  - checked acceptance criteria: bonus先頭表示とLv編集、通常2行、追加・削除・移動button、行内overflowなし
+  - result: OK
+- `/character-sheet/` / 候補dialog表示 / desktop, tablet, mobile:
+  - locator screenshot: `[data-ikizama-skills-section]`、`[role="dialog"][aria-label="生き様スキルを選択"]`（original pixel resolution）
+  - checked acceptance criteria: basic候補の表示、dialog内scroll、mobileを含む横overflowなし
+  - result: OK
+- `/character-sheet/` / bonus詳細展開 / desktop, tablet, mobile:
+  - locator screenshot: `[data-ikizama-skills-section]`（original pixel resolution）
+  - checked acceptance criteria: 自動習得の内容は読み取り専用、bonus Lvだけ編集可能、詳細の折り返し
+  - result: OK。長い通常スキル名のclipはこのstateで確認しておらず、レビュー指摘1で未達と判明した。
+
+### 自己修正した項目
+
+- [x] 生き様領域のaccessible nameを`生き様スキル`へ明確化し、E2Eの領域選択を通した。
+
+### 人間判断が必要な差分
+
+- VRT対象として追加した生き様stateはテストアーキテクチャ外だったため、baselineを作成・更新しない。
+
+### 対応完了チェックリスト
+
+- [ ] 変更targetだけをVRT比較した（baseline未作成のため9件とも比較不能）
+- [ ] 変更targetだけの一時snapshotを取得した（追加targetを削除したため、完了根拠に使わない）
+- [ ] current issueの受入条件と最終diffから対象stateを列挙した（VRT外の局所契約を混在させたため訂正）
+- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（削除したtargetの結果は完了根拠に使わない）
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [ ] VRT差分を修正した、または修正不要と判断した（長い名称の未確認をレビュー指摘1で訂正）
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（該当する場合）
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- ブライLvを生き様通常スキルの取得Lv合計が超えても、error表示にならない。
+- `帰還不能地点`のような長い名称が、改行されない表示でclipする。必要な名称列幅を確保し、幅制約時は生成データ内の改行を尊重して文字を隠さない。
+- スキル区分どうしが連続しており、区分間の縦余白がない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `docs/requirements/character-sheet.md`は生き様を含むスキル合計超過を検証対象とする。現行G13 issueは生き様合計整合をG16へ先送りしており、ユーザー指示により本Gateの局所validationへ戻す。現行shared `SkillSection`は名称に`white-space: nowrap`を指定し、sectionを`overflow: clip`しているため、長い名称を隠しうる。スキル区分は同一コンテナで縦に連続している。
+
+### 対応方針
+
+- 生き様通常スキルの選択済みLvとbonusスキルのLv2以上の超過分を合計し、生き様Lv超過をBuildと生き様スキル区分へ伝える局所validationを追加する。bonusの無料Lv1、空行、他区分は計算へ含めない。
+- shared skill表示の名称列はdesktop / tabletで最長名を表示できる幅を確保し、狭幅ではデータ内改行を保持して折り返す。clip / ellipsisでの隠蔽は行わない。
+- shared skill区分を積む親コンテナに縦gapを追加し、既存のプライマリ流儀スキルとの間にも適用する。
+
+### 対応完了チェックリスト
+
+- [x] 生き様スキルの合計Lv超過をBuildと生き様スキル区分へerror表示する
+- [x] `帰還不能地点`を含む長い名称とデータ内改行を各viewportでclipせずに表示する
+- [x] スキル区分間の縦余白をdesktop、tablet、mobileで確認する
+- [x] Node / hook / Component testとE2E smokeの責務境界を保つ
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2（記録訂正）
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: なし。名称、余白、Lv超過の局所契約をVRTへ追加していたが、テストアーキテクチャ外のため削除した。
+- route / states / viewports: `/character-sheet/`のスキル区分表示、生き様の`帰還不能地点`選択済み、生き様通常スキルLv合計超過をdesktop（1440x1200）、tablet（820x1180）、mobile（390x900）で確認。
+
+### レビュー結果
+
+| 対象                       | 判定 | 差分 | 対応                                                                          |
+| -------------------------- | ---- | ---- | ----------------------------------------------------------------------------- |
+| 長い名称と区分間余白       | OK   | なし | desktop / tabletで名称を2行表示し、mobileでもデータ内改行を保持してclipなし。 |
+| 生き様通常スキルLv合計超過 | OK   | なし | Buildと生き様スキル区分の双方をerror状態にした。                              |
+
+### 実画面確認
+
+- `/character-sheet/` / スキル区分表示 / desktop, tablet, mobile:
+  - locator screenshot: `[data-character-sheet-section-slot="skills"]`（original pixel resolution）
+  - checked acceptance criteria: プライマリ流儀と生き様スキル区分の縦余白、横overflowなし
+  - result: OK
+- `/character-sheet/` / 生き様の`帰還不能地点`選択済み / desktop, tablet, mobile:
+  - locator screenshot: `[data-ikizama-skills-section]`（original pixel resolution）
+  - checked acceptance criteria: データ内改行の保持、名称のclip / ellipsisなし、各cellの整列
+  - result: OK
+- `/character-sheet/` / 生き様Lv1・bonus Lv3による合計超過 / desktop, tablet, mobile:
+  - locator screenshot: `[data-character-sheet-section-slot="build"]`、`[data-ikizama-skills-section]`（original pixel resolution）
+  - checked acceptance criteria: Buildと生き様スキル区分のerror表示、行内overflowなし
+  - result: OK
+
+### 自己修正した項目
+
+- [x] 通常スキルの選択済みLvとbonusスキルのLv2以上の超過分を生き様Lvと比較する局所validationを追加した。
+- [x] shared skill名称の改行を保持し、sectionのclipを解除した。
+- [x] スキル区分を積む親コンテナへ縦gapを追加した。
+
+### 人間判断が必要な差分
+
+- VRT対象として追加した局所stateはテストアーキテクチャ外だったため、baselineを作成・更新しない。
+
+### 対応完了チェックリスト
+
+- [ ] 変更targetだけをVRT比較した（baseline未作成のため比較不能）
+- [ ] 変更targetだけの一時snapshotを取得した（追加targetを削除したため、完了根拠に使わない）
+- [ ] current issueの受入条件と最終diffから対象stateを列挙した（VRT外の局所契約を混在させたため訂正）
+- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（削除したtargetの結果は完了根拠に使わない）
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [ ] VRT差分を修正した、または修正不要と判断した（対象自体を削除したため、完了根拠に使わない）
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（該当する場合）

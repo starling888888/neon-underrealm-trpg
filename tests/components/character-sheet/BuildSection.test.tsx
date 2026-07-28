@@ -17,6 +17,7 @@ function createProps(): BuildSectionProps {
   return {
     build,
     derived: calculateBuild(build),
+    hasIkizamaSkillLevelError: false,
     hasPrimarySkillLevelError: false,
     ikizamaOptions: [{ id: "burai", name: "ブライ" }],
     onAttributeChange: vi.fn(),
@@ -100,6 +101,17 @@ describe("BuildSection", () => {
   it("marks the ryugi pane invalid when primary skill levels are insufficient", () => {
     const props = createProps();
     render(<BuildSection {...props} hasPrimarySkillLevelError />);
+
+    expect(
+      screen
+        .getByRole("region", { name: "流儀・生き様" })
+        .getAttribute("aria-invalid"),
+    ).toBe("true");
+  });
+
+  it("marks the ryugi pane invalid when ikizama skill levels exceed its level", () => {
+    const props = createProps();
+    render(<BuildSection {...props} hasIkizamaSkillLevelError />);
 
     expect(
       screen

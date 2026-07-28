@@ -99,6 +99,11 @@
   gap: var(--sheet-section-gap);
 }
 
+.skillsSections {
+  display: grid;
+  gap: var(--space-3);
+}
+
 @media (width >= 80rem) {
   .form {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

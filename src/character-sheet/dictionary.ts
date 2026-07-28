@@ -110,8 +110,12 @@ export const characterSheetDictionary = {
     skills: {
       add: "＋ スキルを追加",
       choose: "プライマリ流儀スキルを選択",
+      chooseIkizama: "生き様スキルを選択",
       initialCreation: "初期作成",
+      ikizama: "生き様",
+      ikizamaLabel: "生き様スキル",
       level6OrAbove: "Lv6以上",
+      level4OrAbove: "Lv4以上",
       moveDown: "下へ移動",
       moveUp: "上へ移動",
       primaryRyugiChangeConfirmation:
@@ -120,6 +124,7 @@ export const characterSheetDictionary = {
       primary: "プライマリ流儀",
       remove: "を削除",
       selectPrimaryRyugi: "プライマリ流儀を選択してください。",
+      selectIkizama: "生き様を選択してください。",
       nameTooltip: "名称欄をクリックするとスキル選択ダイアログが開きます。",
       selectionGuide:
         "スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。",
