@@ -237,6 +237,7 @@ export default function useBuildSectionProps(
         return normalizedValue;
       },
       ryugiOptions: getCharacterSheetRyugiOptions(),
+      unlockedCommonSkillBonusLevels: [],
     },
   };
 }

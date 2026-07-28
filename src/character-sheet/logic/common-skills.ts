@@ -1,5 +1,9 @@
 import type { Skill } from "../../lib/types/skill";
 
+export const commonSkillBonusLevels = [2, 5, 9] as const;
+
+export type CommonSkillBonusLevel = (typeof commonSkillBonusLevels)[number];
+
 export type CommonSkillsValidationRow = {
   level: number;
   rowId: string;
@@ -11,6 +15,13 @@ export type CommonSkillsValidation = {
   levelLimit: number;
   selectedLevelTotal: number;
 };
+
+/** Returns the common-skill bonus thresholds reached by the selected rows. */
+export function getUnlockedCommonSkillBonusLevels(
+  selectedLevelTotal: number,
+): readonly CommonSkillBonusLevel[] {
+  return commonSkillBonusLevels.filter((level) => selectedLevelTotal >= level);
+}
 
 /** Calculates the G14-local common-skill total and rank-derived limit. */
 export function calculateCommonSkillsValidation(

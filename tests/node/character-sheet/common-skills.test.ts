@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { calculateCommonSkillsValidation } from "../../../src/character-sheet/logic/common-skills";
+import {
+  calculateCommonSkillsValidation,
+  getUnlockedCommonSkillBonusLevels,
+} from "../../../src/character-sheet/logic/common-skills";
 import {
   getBasicAttackSkill,
   getCommonSkillCandidates,
@@ -45,5 +48,12 @@ describe("character sheet common skills", () => {
       ]).hasCommonSkillLevelError,
       true,
     );
+  });
+
+  it("unlocks bonus highlights at common-skill levels 2, 5, and 9", () => {
+    assert.deepEqual(getUnlockedCommonSkillBonusLevels(1), []);
+    assert.deepEqual(getUnlockedCommonSkillBonusLevels(2), [2]);
+    assert.deepEqual(getUnlockedCommonSkillBonusLevels(5), [2, 5]);
+    assert.deepEqual(getUnlockedCommonSkillBonusLevels(9), [2, 5, 9]);
   });
 });

@@ -10,6 +10,7 @@ import type {
 import { attributeNames } from "../form-values";
 import { formatDisplayValue } from "../format-display-value";
 import type { BuildDerivedValues } from "../logic/build";
+import type { CommonSkillBonusLevel } from "../logic/common-skills";
 import type { CharacterSheetSelectOption } from "../master-data/build";
 import styles from "./BuildSection.module.css";
 import FormulaTooltip from "./FormulaTooltip";
@@ -63,6 +64,7 @@ export type BuildSectionProps = {
   onPrimaryRyugiLevelChange: (value: string) => void;
   onPrimaryRyugiLevelCommit: (value: string) => number;
   ryugiOptions: readonly CharacterSheetSelectOption[];
+  unlockedCommonSkillBonusLevels: readonly CommonSkillBonusLevel[];
 };
 
 function BuildNumberInput({
@@ -169,6 +171,7 @@ export default function BuildSection({
   onPrimaryRyugiLevelChange,
   onPrimaryRyugiLevelCommit,
   ryugiOptions,
+  unlockedCommonSkillBonusLevels,
 }: BuildSectionProps) {
   const { characterSheet, gameDomain } = characterSheetDictionary;
   const buildCopy = gameDomain.terms;
@@ -453,21 +456,31 @@ export default function BuildSection({
             {(
               [
                 [
+                  2,
                   buildCopy.level2CommonSkillBonus,
                   derived.reference.commonSkillBonuses?.level2,
                 ],
                 [
+                  5,
                   buildCopy.level5CommonSkillBonus,
                   derived.reference.commonSkillBonuses?.level5,
                 ],
                 [
+                  9,
                   buildCopy.level9CommonSkillBonus,
                   derived.reference.commonSkillBonuses?.level9,
                 ],
               ] as const
-            ).map(([level, content]) => (
-              <div className={styles.commonSkillBonus} key={level}>
-                <span>{level}</span>
+            ).map(([requiredLevel, label, content]) => (
+              <div
+                className={`${styles.commonSkillBonus} ${
+                  unlockedCommonSkillBonusLevels.includes(requiredLevel)
+                    ? styles.commonSkillBonusUnlocked
+                    : ""
+                }`}
+                key={label}
+              >
+                <span>{label}</span>
                 <span>{formatDisplayValue(content)}</span>
               </div>
             ))}

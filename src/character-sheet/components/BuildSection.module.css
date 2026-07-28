@@ -229,6 +229,11 @@
   line-height: var(--line-height-tight);
 }
 
+.commonSkillBonusUnlocked {
+  border-color: var(--color-accent);
+  border-width: calc(var(--border-width) * 2);
+}
+
 .commonSkillBonus > span {
   display: block;
 }
@@ -236,8 +241,12 @@
 .commonSkillBonus > span:last-child {
   margin-top: 0.125rem;
   color: var(--color-text);
-  font-weight: 600;
+  font-weight: normal;
   white-space: pre-line;
+}
+
+.commonSkillBonusUnlocked > span:last-child {
+  font-weight: 600;
 }
 
 @media (width < 48rem) {

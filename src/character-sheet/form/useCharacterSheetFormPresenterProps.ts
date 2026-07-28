@@ -153,6 +153,7 @@ export default function useCharacterSheetFormPresenterProps(
         ),
       hasPrimarySkillLevelError:
         primarySkills.sectionProps.hasPrimarySkillLevelTotalError,
+      unlockedCommonSkillBonusLevels: commonSkills.unlockedBonusLevels,
     },
     checksSection,
     commonSkillPicker: {

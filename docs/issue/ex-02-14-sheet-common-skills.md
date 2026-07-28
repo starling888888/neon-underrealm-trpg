@@ -48,6 +48,7 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 - 基本の一撃を除く通常行の取得Lv合計を`N`、格の半分を端数切り上げた上限を`M`として、基本情報のdesign画像にある既存の共通スキル上限枠を置き換える。`FormulaTooltip`のlabelは`共通スキルレベル合計／共通スキル上限`とし、desktop / tabletでは2行、mobileでは1行で表示する。値は読み取り専用の`N／M`とする。tooltipの文言は`合計レベル上限 = 格 ÷ 2（端数切り上げ）`とする。desktop / tabletでは既存5枠の経験点行の右端、mobileでは格を左1列、`N／M`を右2列に置く。`ProfileSection`はこの読み取り専用ViewModelを表示するだけとする。
 - `SkillSection`の追加操作領域には、optionalな`actionDescription`とそのerror状態を持たせる。共通スキルadapterだけが`取得合計レベル：N／合計レベル上限：M`を渡し、desktop / tabletでは追加buttonと下揃えの横並び、mobileでは追加buttonの下に表示する。他のスキル区分はこのoptional Propsを渡さず、既存表示を変えない。
 - `N * 5`を共通スキルの消費経験点として既存の`spentExperience`へ加算し、残経験点・経験点エラーへ反映する。計算はpure logicへ置き、form adapterが共通スキル通常行の合計を明示的に渡す。G16の全スキル横断整合を待たず、G14で扱う共通スキル分だけを正しく合算する。
+- 共通スキル取得合計Lvが`2`、`5`、`9`に到達した場合、流儀・生き様 / 能力値領域の対応する共通スキルボーナス枠をゲームのaccent色の太い枠線で強調する。背景色と文字色は既存表示を維持する。未到達枠のボーナス本文は通常ウェイト、アンロック済み枠の本文ウェイトは既存表示とする。判定はpure logicからadapter経由でBuild sectionの表示ViewModelへ渡す。ボーナス効果の自動算出、Build領域のerror feedback、未到達枠の表示変更は行わない。
 - `N > M`では、基本情報の`N／M`枠と共通スキル領域だけをerror状態にする。流儀・生き様 / 能力値領域へ共通スキル上限の表示・feedbackを追加しない。通常行の最大Lvと重複、他区分の合計上限、advanced条件の統合validationはG16で扱う。
 - 固定文言を追加・移動する場合は、ゲーム用語・スキル属性名・経験点の用語を`characterSheetDictionary.gameDomain.terms`へ、section名、操作、button、dialog説明、上限表示用copyを`characterSheetDictionary.characterSheet`へ分類する。生成JSON由来の名称・制限・効果をdictionaryへ複製しない。
 - browser E2Eは、領域表示、候補dialogでの1候補選択、経験点または合計Lv表示の反映など2〜3個の代表操作だけを最終smokeとして確認する。費用式、上限境界、固定候補の順序、disabled、callback、dialog copy、行順はNode / Component / hook testへ置き、test-onlyのDOM・state・data属性を製品コードへ追加しない。
@@ -73,6 +74,7 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 - [x] 基本情報のdesign画像にある既存共通スキル上限枠へ、`FormulaTooltip`のlabel `共通スキルレベル合計／共通スキル上限`をdesktop / tabletでは2行、mobileでは1行で表示し、読み取り専用値`N／M`を置く。tooltip文言は`合計レベル上限 = 格 ÷ 2（端数切り上げ）`とする。
 - [x] `SkillSection`のoptionalな追加操作説明を使い、通常行の取得Lv合計`N`と上限`M`を指定文言で表示する。desktop / tabletでは追加buttonと下揃えにし、他のスキル区分の表示は変えない。
 - [x] `N * 5`が消費経験点・残経験点・経験点エラーへ反映される。
+- [x] 共通スキル取得合計Lvが`2`、`5`、`9`に到達したボーナス枠だけ、流儀・生き様 / 能力値領域でゲームのaccent色の枠線になる。
 - [x] `N > M`で基本情報の`N／M`枠と共通スキル領域だけがerror状態になり、流儀・生き様 / 能力値領域へ共通スキル上限の表示・feedbackを追加しない。
 - [x] dictionaryのゲーム用語とキャラクターシートUI文言を指定の所有者へ分類し、生成データ文言を複製していない。
 - [x] E2Eが最終smokeの責務を越えず、局所契約をNode / Component / hook testへ分離している。

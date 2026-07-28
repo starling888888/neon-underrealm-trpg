@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import BuildSection, {
   type BuildSectionProps,
 } from "../../../src/character-sheet/components/BuildSection";
+import styles from "../../../src/character-sheet/components/BuildSection.module.css";
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { calculateBuild } from "../../../src/character-sheet/logic/build";
@@ -33,6 +34,7 @@ function createProps(): BuildSectionProps {
     onPrimaryRyugiLevelChange: vi.fn((value: string) => Number(value)),
     onPrimaryRyugiLevelCommit: vi.fn((value: string) => Number(value)),
     ryugiOptions: [{ id: "kenkaya", name: "ケンカヤ" }],
+    unlockedCommonSkillBonusLevels: [],
   };
 }
 
@@ -124,6 +126,25 @@ describe("BuildSection", () => {
         .getByRole("region", { name: "流儀・生き様" })
         .getAttribute("aria-invalid"),
     ).toBe("true");
+  });
+
+  it("highlights only the common-skill bonuses whose thresholds are reached", () => {
+    const props = createProps();
+    render(<BuildSection {...props} unlockedCommonSkillBonusLevels={[2, 5]} />);
+
+    const level2 = screen.getByText("Lv 2で獲得").parentElement;
+    const level5 = screen.getByText("Lv 5で獲得").parentElement;
+    const level9 = screen.getByText("Lv 9で獲得").parentElement;
+
+    expect(level2?.classList.contains(styles.commonSkillBonusUnlocked)).toBe(
+      true,
+    );
+    expect(level5?.classList.contains(styles.commonSkillBonusUnlocked)).toBe(
+      true,
+    );
+    expect(level9?.classList.contains(styles.commonSkillBonusUnlocked)).toBe(
+      false,
+    );
   });
 
   it("uses headers for other ryugi rows and keeps removal accessible", () => {

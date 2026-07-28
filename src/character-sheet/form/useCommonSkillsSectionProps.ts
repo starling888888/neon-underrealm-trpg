@@ -6,7 +6,10 @@ import {
   characterSheetDefaultValues,
   type SkillSelectionRowValues,
 } from "../form-values";
-import { calculateCommonSkillsValidation } from "../logic/common-skills";
+import {
+  calculateCommonSkillsValidation,
+  getUnlockedCommonSkillBonusLevels,
+} from "../logic/common-skills";
 import {
   getBasicAttackSkill,
   getCommonSkillById,
@@ -23,6 +26,7 @@ export type CommonSkillsSectionPresenterState = {
   candidates: ReturnType<typeof getCommonSkillCandidates>;
   onSelect: (rowId: string, skillId: string) => void;
   sectionProps: CommonSkillsSectionProps;
+  unlockedBonusLevels: ReturnType<typeof getUnlockedCommonSkillBonusLevels>;
 };
 
 const maximumSkillNameLength = getMaximumSkillNameLength();
@@ -113,5 +117,8 @@ export default function useCommonSkillsSectionProps(
       rows,
       selectedLevelTotal: validation.selectedLevelTotal,
     },
+    unlockedBonusLevels: getUnlockedCommonSkillBonusLevels(
+      validation.selectedLevelTotal,
+    ),
   };
 }
