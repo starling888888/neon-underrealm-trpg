@@ -142,19 +142,11 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 
 - VRT対象として追加した生き様stateはテストアーキテクチャ外だったため、baselineを作成・更新しない。
 
-### 対応完了チェックリスト
+### 訂正履歴
 
-- [ ] 変更targetだけをVRT比較した（baseline未作成のため9件とも比較不能）
-- [ ] 変更targetだけの一時snapshotを取得した（追加targetを削除したため、完了根拠に使わない）
-- [ ] current issueの受入条件と最終diffから対象stateを列挙した（VRT外の局所契約を混在させたため訂正）
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（削除したtargetの結果は完了根拠に使わない）
-- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
-- [ ] VRT差分を修正した、または修正不要と判断した（長い名称の未確認をレビュー指摘1で訂正）
-- [x] baseline更新が必要な差分を人間判断として記録した
-- [x] `npm run check` が通る（該当する場合）
-- [x] `npm run build` が通る（該当する場合）
-
-- 状態: この記録の未チェック項目は、削除済みVRT targetを完了根拠に使わないという訂正履歴である。現行の受入結果はビジュアルレビュー3へ集約した。
+- 削除済みVRT targetはbaseline未作成で比較・snapshot取得ができず、受入条件と最終diffのstate列挙、原寸locator screenshot、差分判断にも使わない。
+- full-page screenshotは局所表示契約の確認根拠に使わず、baseline更新要否は人間判断として記録した。
+- 長い名称の未確認はレビュー指摘1で訂正した。現行の受入結果と`npm run check` / `npm run build`の結果はビジュアルレビュー3へ集約した。
 
 ## ビジュアルレビュー 3（preview最終確認）
 
@@ -301,16 +293,8 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 
 - VRT対象として追加した局所stateはテストアーキテクチャ外だったため、baselineを作成・更新しない。
 
-### 対応完了チェックリスト
+### 訂正履歴
 
-- [ ] 変更targetだけをVRT比較した（baseline未作成のため比較不能）
-- [ ] 変更targetだけの一時snapshotを取得した（追加targetを削除したため、完了根拠に使わない）
-- [ ] current issueの受入条件と最終diffから対象stateを列挙した（VRT外の局所契約を混在させたため訂正）
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（削除したtargetの結果は完了根拠に使わない）
-- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
-- [ ] VRT差分を修正した、または修正不要と判断した（対象自体を削除したため、完了根拠に使わない）
-- [x] baseline更新が必要な差分を人間判断として記録した
-- [x] `npm run check` が通る（該当する場合）
-- [x] `npm run build` が通る（該当する場合）
-
-- 状態: この記録の未チェック項目は、削除済みVRT targetを完了根拠に使わないという訂正履歴である。現行の受入結果はビジュアルレビュー3へ集約した。
+- 削除済みVRT targetはbaseline未作成で比較・snapshot取得ができず、受入条件と最終diffのstate列挙、原寸locator screenshot、差分判断にも使わない。
+- full-page screenshotは局所表示契約の確認根拠に使わず、baseline更新要否は人間判断として記録した。
+- 現行の受入結果と`npm run check` / `npm run build`の結果はビジュアルレビュー3へ集約した。

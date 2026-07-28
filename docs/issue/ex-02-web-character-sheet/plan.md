@@ -32,7 +32,7 @@
 | G10  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-10-sheet-attack-reaction.md` | 攻撃とリアクションを扱う。                                                            |
 | G11  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-11-sheet-noncombat.md`       | 非戦闘技能を扱う。                                                                    |
 | G12  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-12-sheet-primary-skills.md`  | プライマリ流儀のスキルを扱う。                                                        |
-| G13  | planned | G7                                                                                                                                              | `docs/issue/ex-02-13-sheet-ikizama-skills.md`                                 | 生き様のスキルを扱う。                                                                |
+| G13  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-13-sheet-ikizama-skills.md`  | 生き様のスキルを扱う。                                                                |
 | G14  | planned | G7                                                                                                                                              | `docs/issue/ex-02-14-sheet-common-skills.md`                                  | 共通スキルを扱う。                                                                    |
 | G15  | planned | G7, G12                                                                                                                                         | `docs/issue/ex-02-15-sheet-other-ryugi-skills.md`                             | その他流儀のスキルを扱う。                                                            |
 | G16  | planned | G7, G12, G13, G14, G15                                                                                                                          | `docs/issue/ex-02-16-sheet-experience-consistency.md`                         | 消費経験点の算出整合性を確認する。                                                    |
@@ -140,5 +140,13 @@
 - 通常行の未選択表示は可視文言を維持しつつ、操作用accessible nameを行番号で一意にする。候補dialogの選択済み行はdisabled表示とし、読み取り専用metadataにも非視覚ラベルを持たせる。
 - desktop / tabletは名称、Lv、最大Lv、タイミング、コスト、使用制限、展開を要約行に置き、技能・取得制限・効果を展開詳細に置く。mobileは名称、Lv、最大Lv、タイミング、展開、削除だけを要約行とし、コスト・使用制限・技能・取得制限・効果を展開詳細へ置く。
 - 4状態（選択済み、候補dialog、行詳細展開、流儀変更確認）のdesktop / tablet / mobile actual locator screenshotを確認済み。12状態のcanonical VRT baselineは未作成のため比較不能であり、baseline更新は行わない。
+
+### G13
+
+- 生き様のbonus skillと通常skillを、G12のshared表示Componentとcategory固有adapterで編集する。通常skillは初期2行・最低0行とし、選択、Lv編集、追加・削除・並べ替えを扱う。
+- bonus skillはLv1だけを無料とする。通常skillの取得LvとbonusのLv2以上を合計し、生き様Lv超過をBuildと生き様skill sectionの局所error状態へ伝える。G16の全区分validationは前倒ししない。
+- 生き様通常skillが選択済みの流儀変更は、G12の確認dialog UIを再利用してconfirm時だけ選択を解除する。cancel / Escapeでは入力を保持し、操作元selectへfocusを戻す。
+- `SkillSection`のautomatic input groupと詳細toggleの関連付けを補い、長い名称はdesktop / tabletの列幅と狭幅の改行保持でclip / ellipsisさせない。各skill section間に縦gapを設ける。
+- `@character-sheet`の対象stateをpreviewで確認し、desktop / tablet / mobileのactual locator screenshotを開いた。canonical VRT baselineは更新していない。skill Lvの入力自動補正・復元・JSON入力時の契約はG24 / G27のTODOで扱う。
 
 状態は `planned`、`in progress`、`done` を使う。
