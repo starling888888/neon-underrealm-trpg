@@ -50,12 +50,38 @@ describe("character sheet other ryugi skills", () => {
         { level: 2, rowId: "other-b" },
       ],
       [
-        { level: 2, ryugiRowId: "other-a", skill },
-        { level: 2, ryugiRowId: "other-b", skill },
-        { level: 99, ryugiRowId: "other-b", skill: null },
+        { level: 2, rowId: "other-a-skill", ryugiRowId: "other-a", skill },
+        { level: 2, rowId: "other-b-skill", ryugiRowId: "other-b", skill },
+        {
+          level: 99,
+          rowId: "other-b-unselected",
+          ryugiRowId: "other-b",
+          skill: null,
+        },
       ],
     );
 
     assert.deepEqual(validation.invalidRyugiRowIds, ["other-a"]);
+  });
+
+  it("reports an other-ryugi skill above its maximum level", () => {
+    const [skill] = getOtherRyugiSkillGroups("kenkaya", 1).basic;
+    if (skill === undefined) {
+      throw new Error("その他流儀スキル候補を取得できません。");
+    }
+
+    const validation = calculateOtherRyugiSkillsValidation(
+      [{ level: skill.maxLevel + 1, rowId: "other-a" }],
+      [
+        {
+          level: skill.maxLevel + 1,
+          rowId: "other-a-skill",
+          ryugiRowId: "other-a",
+          skill,
+        },
+      ],
+    );
+
+    assert.deepEqual(validation.invalidMaximumLevelRowIds, ["other-a-skill"]);
   });
 });

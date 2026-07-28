@@ -21,7 +21,9 @@ export function calculatePrimarySkillsValidation(
 ): PrimarySkillsValidation {
   const selectedRows = rows.filter((row) => row.skill !== null);
   const invalidMaximumLevelRowIds = selectedRows.flatMap((row) =>
-    row.skill !== null && row.level > row.skill.maxLevel ? [row.rowId] : [],
+    row.skill !== null && (row.level < 1 || row.level > row.skill.maxLevel)
+      ? [row.rowId]
+      : [],
   );
   const selectedSkillCounts = new Map<string, number>();
   for (const row of selectedRows) {

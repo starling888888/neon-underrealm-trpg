@@ -74,6 +74,7 @@ export default function useIkizamaSkillsSectionProps(
   const validation = calculateIkizamaSkillsValidation(
     build.ikizamaLevel,
     ikizamaSkills.bonusLevel,
+    bonusSkill,
     rows,
   );
 
@@ -104,6 +105,7 @@ export default function useIkizamaSkillsSectionProps(
       bonusLevel: ikizamaSkills.bonusLevel,
       bonusSkill,
       hasIkizamaSkillLevelTotalError: validation.hasIkizamaSkillLevelTotalError,
+      invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
       ikizamaName:
         build.ikizamaId === null
           ? null
@@ -113,7 +115,7 @@ export default function useIkizamaSkillsSectionProps(
       onAdd: () => append(createIkizamaSkillRow()),
       onLevelChange: (rowId, value) => {
         if (rowId === `ikizama-bonus-${bonusSkill?.id}`) {
-          const level = Math.max(1, normalizeIntegerInput(value));
+          const level = normalizeIntegerInput(value);
           setValue("ikizamaSkills.bonusLevel", level, {
             shouldValidate: true,
           });
@@ -123,14 +125,7 @@ export default function useIkizamaSkillsSectionProps(
         const current = getValues("ikizamaSkills.rows").find(
           (row) => row.rowId === rowId,
         );
-        const skill = getIkizamaSkillById(
-          build.ikizamaId,
-          current?.skillId ?? null,
-        );
-        const level = Math.min(
-          skill?.maxLevel ?? Number.POSITIVE_INFINITY,
-          Math.max(1, normalizeIntegerInput(value)),
-        );
+        const level = normalizeIntegerInput(value);
         if (current !== undefined) setRow(rowId, { ...current, level });
         return level;
       },

@@ -37,10 +37,10 @@ describe("character sheet ikizama skills", () => {
     if (skill === undefined)
       throw new Error("ブライの基本スキルがありません。");
 
-    const validation = calculateIkizamaSkillsValidation(3, 3, [
-      { level: 1, skill },
-      { level: 1, skill },
-      { level: 99, skill: null },
+    const validation = calculateIkizamaSkillsValidation(3, 3, null, [
+      { level: 1, rowId: "first", skill },
+      { level: 1, rowId: "second", skill },
+      { level: 99, rowId: "unselected", skill: null },
     ]);
 
     assert.equal(validation.selectedLevelTotal, 4);
@@ -48,9 +48,36 @@ describe("character sheet ikizama skills", () => {
   });
 
   it("does not count the free first bonus level", () => {
-    const validation = calculateIkizamaSkillsValidation(1, 1, []);
+    const validation = calculateIkizamaSkillsValidation(1, 1, null, []);
 
     assert.equal(validation.selectedLevelTotal, 0);
     assert.equal(validation.hasIkizamaSkillLevelTotalError, false);
+  });
+
+  it("keeps maximum-level violations for normal and bonus skills", () => {
+    const groups = getIkizamaSkillGroups("burai", 1);
+    const bonusSkill = groups.bonus[0];
+    const normalSkill = groups.basic[0];
+    if (bonusSkill === undefined || normalSkill === undefined) {
+      throw new Error("生き様スキル候補を取得できません。");
+    }
+
+    const validation = calculateIkizamaSkillsValidation(
+      1,
+      bonusSkill.maxLevel + 1,
+      bonusSkill,
+      [
+        {
+          level: normalSkill.maxLevel + 1,
+          rowId: "normal-over-limit",
+          skill: normalSkill,
+        },
+      ],
+    );
+
+    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+      `ikizama-bonus-${bonusSkill.id}`,
+      "normal-over-limit",
+    ]);
   });
 });

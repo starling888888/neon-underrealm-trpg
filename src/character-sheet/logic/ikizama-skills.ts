@@ -2,11 +2,13 @@ import type { Skill } from "../../lib/types/skill";
 
 export type IkizamaSkillsValidationRow = {
   level: number;
+  rowId: string;
   skill: Skill | null;
 };
 
 export type IkizamaSkillsValidation = {
   hasIkizamaSkillLevelTotalError: boolean;
+  invalidMaximumLevelRowIds: readonly string[];
   selectedLevelTotal: number;
 };
 
@@ -14,6 +16,7 @@ export type IkizamaSkillsValidation = {
 export function calculateIkizamaSkillsValidation(
   ikizamaLevel: number,
   bonusLevel: number,
+  bonusSkill: Skill | null,
   rows: readonly IkizamaSkillsValidationRow[],
 ): IkizamaSkillsValidation {
   const selectedLevelTotal =
@@ -25,6 +28,17 @@ export function calculateIkizamaSkillsValidation(
 
   return {
     hasIkizamaSkillLevelTotalError: selectedLevelTotal > ikizamaLevel,
+    invalidMaximumLevelRowIds: [
+      ...(bonusSkill !== null &&
+      (bonusLevel < 1 || bonusLevel > bonusSkill.maxLevel)
+        ? [`ikizama-bonus-${bonusSkill.id}`]
+        : []),
+      ...rows.flatMap((row) =>
+        row.skill !== null && (row.level < 1 || row.level > row.skill.maxLevel)
+          ? [row.rowId]
+          : [],
+      ),
+    ],
     selectedLevelTotal,
   };
 }

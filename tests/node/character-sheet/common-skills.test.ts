@@ -56,4 +56,20 @@ describe("character sheet common skills", () => {
     assert.deepEqual(getUnlockedCommonSkillBonusLevels(5), [2, 5]);
     assert.deepEqual(getUnlockedCommonSkillBonusLevels(9), [2, 5, 9]);
   });
+
+  it("reports selected rows below one or above their maximum level", () => {
+    const [skill] = getCommonSkillCandidates();
+    if (skill === undefined)
+      throw new Error("共通スキル候補を取得できません。");
+
+    const validation = calculateCommonSkillsValidation(10, [
+      { level: 0, rowId: "below-minimum", skill },
+      { level: skill.maxLevel + 1, rowId: "above-maximum", skill },
+    ]);
+
+    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+      "below-minimum",
+      "above-maximum",
+    ]);
+  });
 });

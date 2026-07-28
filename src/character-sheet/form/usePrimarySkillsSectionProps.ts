@@ -1,11 +1,10 @@
-import { type UseFormReturn, useWatch } from "react-hook-form";
+import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import { getRyugiById } from "../../lib/data/ryugi-list";
 import type { PrimarySkillsSectionProps } from "../components/PrimarySkillsSection";
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-  type PrimarySkillsValues,
   type SkillSelectionRowValues,
 } from "../form-values";
 import { calculatePrimarySkillsValidation } from "../logic/primary-skills";
@@ -35,9 +34,14 @@ function createPrimarySkillRow(): SkillSelectionRowValues {
 }
 
 export default function usePrimarySkillsSectionProps(
-  { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
+  { control, getValues }: UseFormReturn<CharacterSheetFormValues>,
   { onPickerRequest }: PrimarySkillsSectionOptions,
 ): PrimarySkillsSectionPresenterState {
+  const { append, move, remove, replace, update } = useFieldArray({
+    control,
+    keyName: "fieldKey",
+    name: "primarySkills.rows",
+  });
   const build = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.build,
@@ -52,11 +56,6 @@ export default function usePrimarySkillsSectionProps(
     build.primaryRyugiId,
     build.primaryRyugiLevel,
   );
-
-  function setRows(rows: SkillSelectionRowValues[]): void {
-    const next: PrimarySkillsValues = { rows };
-    setValue("primarySkills", next, { shouldValidate: true });
-  }
 
   function getRows(): SkillSelectionRowValues[] {
     return getValues("primarySkills").rows;
@@ -74,14 +73,12 @@ export default function usePrimarySkillsSectionProps(
   return {
     candidateGroups: groups,
     clearSelection: () => {
-      setRows(getRows().map((row) => ({ ...row, level: 1, skillId: null })));
+      replace(getRows().map((row) => ({ ...row, level: 1, skillId: null })));
     },
     onSelect: (rowId, skillId) => {
-      setRows(
-        getRows().map((row) =>
-          row.rowId === rowId ? { ...row, level: 1, skillId } : row,
-        ),
-      );
+      const index = getRows().findIndex((row) => row.rowId === rowId);
+      const row = getRows()[index];
+      if (row !== undefined) update(index, { ...row, level: 1, skillId });
     },
     sectionProps: {
       bonusSkills: groups.bonus,
@@ -89,41 +86,30 @@ export default function usePrimarySkillsSectionProps(
       invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
       invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
       maximumSkillNameLength,
-      onAdd: () => setRows([...getRows(), createPrimarySkillRow()]),
+      onAdd: () => append(createPrimarySkillRow()),
       onLevelChange: (rowId, value) => {
         const selectedRow = getRows().find((row) => row.rowId === rowId);
-        const selectedSkill = getPrimarySkillById(
-          getValues("build.primaryRyugiId"),
-          selectedRow?.skillId ?? null,
-        );
-        const level = Math.min(
-          selectedSkill?.maxLevel ?? Number.POSITIVE_INFINITY,
-          Math.max(1, normalizeIntegerInput(value)),
-        );
-        setRows(
-          getRows().map((row) =>
-            row.rowId === rowId ? { ...row, level } : row,
-          ),
-        );
+        const level = normalizeIntegerInput(value);
+        const index = getRows().findIndex((row) => row.rowId === rowId);
+        if (selectedRow !== undefined && index >= 0) {
+          update(index, { ...selectedRow, level });
+        }
         return level;
       },
       onPickerRequest,
       onRemove: (rowId) => {
         const rows = getRows();
-        if (rows.length <= 1) return;
-        setRows(rows.filter((row) => row.rowId !== rowId));
+        const index = rows.findIndex((row) => row.rowId === rowId);
+        if (rows.length > 1 && index >= 0) remove(index);
       },
       onMove: (rowId, direction) => {
-        const rows = [...getRows()];
+        const rows = getRows();
         const currentIndex = rows.findIndex((row) => row.rowId === rowId);
         const targetIndex = currentIndex + (direction === "up" ? -1 : 1);
         if (currentIndex < 0 || targetIndex < 0 || targetIndex >= rows.length) {
           return;
         }
-        const [moved] = rows.splice(currentIndex, 1);
-        if (moved === undefined) return;
-        rows.splice(targetIndex, 0, moved);
-        setRows(rows);
+        move(currentIndex, targetIndex);
       },
       primaryRyugiName:
         build.primaryRyugiId === null

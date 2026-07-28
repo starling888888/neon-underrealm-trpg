@@ -1222,3 +1222,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-13-sheet-ikizama-skills` のレビュー指摘3取り込み後
 - 観測した失敗: ユーザーがdictionary修正をレビュー指摘へ先に反映するよう求めたにもかかわらず、その記録更新を完了・報告する前に確認dialogのrename作業へ進もうとした。レビュー取り込みと実装の順序を混同した。
 - 一次対応: レビュー指摘3へdictionary共通文言、`SkillSelectionRowValues`、`SkillSelectionChangeConfirmDialog`の対応方針と未完了チェックを追記してから実装を再開した。review-to-issue中の追記要求は、追記結果を確認してから次段階へ移る。
+
+### Repeated test failure from obsolete skill-level clamp expectations
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-16-sheet-experience-consistency` の最大Lv超過を保持するRHF hook / Component test
+- 観測した失敗: 最大Lv超過値をclampする旧契約を前提にしたexpectationを残したまま、full testとcomponent testで同じ失敗を連続して確認した。さらに、レベルを1桁前提へそろえる際にexpectationだけを`9`へ更新し、テスト操作値`999`を残して同じhook testを再度失敗させた。
+- 一次対応: expectationとテスト操作値をともに「1桁の超過値を保持し、行・sectionの局所errorを示す」契約へ更新し、修正後にfull testを通した。入力規則を変更するGateでは、実装より先に既存の正規化期待とtest操作値を検索して同じ変更で更新する。

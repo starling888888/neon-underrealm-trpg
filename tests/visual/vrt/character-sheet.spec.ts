@@ -322,6 +322,21 @@ registerVrtScenarios("character-sheet", [
     viewports: ["desktop", "tablet", "mobile"],
   },
   {
+    id: "common-skill-maximum-level-error",
+    locatorOnly: true,
+    locators: [profileSectionLocator, buildSectionLocator, commonSkillsLocator],
+    prepare: async (page) => {
+      await selectCommonSkill(page);
+      await page.getByLabel("基本の連撃Lv", { exact: true }).fill("9");
+      await expect(commonSkillsLocator.resolve(page)).toHaveAttribute(
+        "aria-invalid",
+        "true",
+      );
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
     id: "common-skill-bonus-level-2",
     locatorOnly: true,
     locators: [buildSectionLocator],
@@ -403,6 +418,24 @@ registerVrtScenarios("character-sheet", [
     viewports: ["desktop", "tablet", "mobile"],
   },
   {
+    id: "other-ryugi-skill-maximum-level-error",
+    locatorOnly: true,
+    locators: [buildSectionLocator, otherRyugiSkillsLocator],
+    prepare: async (page) => {
+      await selectOtherRyugiSkill(page);
+      await page
+        .getByRole("region", { name: "その他流儀スキル1" })
+        .getByLabel("旋風Lv", { exact: true })
+        .fill("9");
+      await expect(otherRyugiSkillsLocator.resolve(page)).toHaveAttribute(
+        "aria-invalid",
+        "true",
+      );
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
     id: "other-ryugi-remove-confirm",
     locatorOnly: true,
     locators: [
@@ -429,9 +462,41 @@ registerVrtScenarios("character-sheet", [
     viewports: ["desktop", "tablet", "mobile"],
   },
   {
+    id: "ikizama-skill-maximum-level-error",
+    locatorOnly: true,
+    locators: [ikizamaSkillsLocator],
+    prepare: async (page) => {
+      await selectLongIkizamaSkill(page);
+      const levels = ikizamaSkillsLocator
+        .resolve(page)
+        .locator("input[type=number]");
+      await levels.nth(0).fill("9");
+      await levels.nth(1).fill("9");
+      await expect(levels.nth(0)).toHaveAttribute("aria-invalid", "true");
+      await expect(levels.nth(1)).toHaveAttribute("aria-invalid", "true");
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
     id: "primary-skills-selected",
     locators: [primarySkillsLocator],
     prepare: selectPrimaryRyugi,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "primary-skill-maximum-level-error",
+    locatorOnly: true,
+    locators: [primarySkillsLocator],
+    prepare: async (page) => {
+      await selectPrimarySkill(page);
+      await page.getByLabel("旋風Lv", { exact: true }).fill("9");
+      await expect(page.getByLabel("旋風Lv", { exact: true })).toHaveAttribute(
+        "aria-invalid",
+        "true",
+      );
+    },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
   },

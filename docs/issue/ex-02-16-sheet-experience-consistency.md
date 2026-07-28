@@ -63,24 +63,24 @@
 
 ## 完了条件
 
-- [ ] 全ての消費経験点が、流儀・生き様・その他流儀・共通スキルの入力値から一度だけ導出され、無料の初期 / 自動取得Lvを二重計上しない。
-- [ ] 生き様bonusを含む全スキルの最大Lv超過、重複、区分ごとの合計上限、経験点不足が、値を自動補正せず既存の局所error状態として一貫して示される。
-- [ ] browser入力、blur、schema、後続の復元・JSON入力における未確定値・最大Lv超過・uncontrolled input同期の契約がrequirementsとschema / form adapterへ明記され、G24 / G27と矛盾しない。
-- [ ] 現在存在する可変行を`useFieldArray`で追加・削除・移動・置換し、配列全体の`setValue`更新を残さない。row ID、最小・派生行数、確認dialog、focus復帰を維持する。
-- [ ] 変更したlogic、schema、hook、Componentのテストが、経験点境界、最大Lv前後、未選択、bonus、重複、可変行の追加・削除・並べ替え・外部更新を確認する。
-- [ ] 関連TODO 3件をこのissueで扱った根拠と、G24 / G27へ残す実装境界が記録されている。
-- [ ] UI変更がある場合、必要な`/character-sheet/`状態をactual screenshotで確認し、canonical VRT baselineを更新しない理由を記録する。
-- [ ] `npm run check`、`npm run build`、関連Node / Vitest / Playwright testが通る。
+- [x] 全ての消費経験点が、流儀・生き様・その他流儀・共通スキルの入力値から一度だけ導出され、無料の初期 / 自動取得Lvを二重計上しない。
+- [x] 生き様bonusを含む全スキルの最大Lv超過、重複、区分ごとの合計上限、経験点不足が、値を自動補正せず既存の局所error状態として一貫して示される。
+- [x] browser入力、blur、schema、後続の復元・JSON入力における未確定値・最大Lv超過・uncontrolled input同期の契約がrequirementsとschema / form adapterへ明記され、G24 / G27と矛盾しない。
+- [x] 現在存在する可変行を`useFieldArray`で追加・削除・移動・置換し、配列全体の`setValue`更新を残さない。row ID、最小・派生行数、確認dialog、focus復帰を維持する。
+- [x] 変更したlogic、schema、hook、Componentのテストが、経験点境界、最大Lv前後、未選択、bonus、重複、可変行の追加・削除・並べ替え・外部更新を確認する。
+- [x] 関連TODO 3件をこのissueで扱った根拠と、G24 / G27へ残す実装境界が記録されている。
+- [x] UI変更がある場合、必要な`/character-sheet/`状態をactual screenshotで確認し、canonical VRT baselineを更新しない理由を記録する。
+- [x] `npm run check`、`npm run build`、関連Node / Vitest / Playwright testが通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、既存スキル選択dialog、確認dialog、focus復帰が壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] RHF以外へ編集値を複製せず、Presenter / shared skill Componentの責務境界を保つ。
-- [ ] エラー理由の可視文言を各入力・各行へ追加せず、errorとwarningの色を混同しない。
-- [ ] 関連する`docs/TODO.md`、`docs/design/character-sheet/`、`docs/architectures/character-sheet.md`と矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルート、既存スキル選択dialog、確認dialog、focus復帰が壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] RHF以外へ編集値を複製せず、Presenter / shared skill Componentの責務境界を保つ。
+- [x] エラー理由の可視文言を各入力・各行へ追加せず、errorとwarningの色を混同しない。
+- [x] 関連する`docs/TODO.md`、`docs/design/character-sheet/`、`docs/architectures/character-sheet.md`と矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -114,7 +114,32 @@
 - このissueでTODO 3件を回収し、保存・復元・JSON入力の実装を後続Gateへ残す境界が妥当か。
 - 既存designと同じエラー配置・情報密度を保ち、canonical VRT baseline更新を必要とする見た目の変更を増やしていないか。
 
+## ビジュアルレビュー 1
+
+### 対象と確認方法
+
+- 対象route: `/neon-underrealm-trpg/character-sheet/`
+- design input: `docs/design/character-sheet/notes.md` と既存キャラクターシートUI
+- state: 共通スキル、その他流儀スキル、生き様bonus / 通常スキル、プライマリ流儀スキルの各最大Lv超過（`9`）
+- viewport: desktop（1440px）、tablet（820px）、mobile（390px）
+- capture: `npm run visual:capture -- --grep '@(?:primary-skill-maximum-level-error|ikizama-skill-maximum-level-error|common-skill-maximum-level-error|other-ryugi-skill-maximum-level-error)(?:\\s|$)'`（12 passed）
+- VRT: 同じtargetで`npm run visual:test`を実行。全12 stateは`locatorOnly`のため意図どおりskipされ、canonical baselineとの比較・更新は行わない。
+
+### 実画面確認
+
+- 共通スキル最大Lv超過: profile / build / common skill section のdesktop・tablet・mobile計9枚を`test-results/visual/character-sheet/locators/common-skill-maximum-level-error-default-*.png`で確認。経験点、共通スキル合計、該当入力・sectionのerror境界が表示され、clip / overflowはない。
+- その他流儀スキル最大Lv超過: build / other ryugi skill section のdesktop・tablet・mobile計6枚を`test-results/visual/character-sheet/locators/other-ryugi-skill-maximum-level-error-default-*.png`で確認。既存のbuild行と該当スキル行 / sectionのerror境界が表示され、clip / overflowはない。
+- 生き様スキル最大Lv超過: bonusと通常行を含むdesktop・tablet・mobile計3枚を`test-results/visual/character-sheet/locators/ikizama-skill-maximum-level-error-default-*.png`で確認。両入力とsectionのerror境界が表示され、clip / overflowはない。
+- プライマリ流儀スキル最大Lv超過: desktop・tablet・mobile計3枚を`test-results/visual/character-sheet/locators/primary-skill-maximum-level-error-default-*.png`で確認。該当入力・行・sectionのerror境界が表示され、clip / overflowはない。
+
+### 結果
+
+- 全21枚を実際に開いて確認した。可視エラー理由は追加せず、既存の局所error表現を維持した。
+- レベル入力は1桁前提とするユーザー指示に従い、超過確認値を`999`から`9`へ変更した。CSSやレイアウトは変更していない。
+- canonical VRT baselineの更新は不要かつ未実施である。
+
 ## 備考
 
 - G16のGate plan上の範囲「消費経験点の算出整合性」を、ユーザー指示により、その算出値を正しく保つ全スキル局所エラーと可変行のRHF操作境界まで拡張する。G24 / G27の保存・JSON機能そのものは取り込まない。
 - `docs/TODO.md`の関連3件は、実装完了・人間承認・merge前まで未対応のまま残す。完了後の移動は`post-merge-plan-update`で行う。
+- 実装中に旧来のLv clamp期待が残るComponent testをfull testとcomponent testで連続して失敗させたため、`docs/agent-failure-log.md`へ記録した。期待値を「超過値を保持し局所errorにする」契約へ更新後、全testを再実行する。

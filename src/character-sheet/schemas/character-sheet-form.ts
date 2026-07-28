@@ -172,7 +172,7 @@ export const characterSheetFormSchema = z.object({
     rows: z
       .array(
         z.object({
-          level: z.number().int().min(1),
+          level: z.number().int(),
           rowId: z.string(),
           skillId: z.string().nullable(),
         }),
@@ -186,10 +186,10 @@ export const characterSheetFormSchema = z.object({
     received: nonNegativeIntegerSchema,
   }),
   ikizamaSkills: z.object({
-    bonusLevel: z.number().int().min(1),
+    bonusLevel: z.number().int(),
     rows: z.array(
       z.object({
-        level: z.number().int().min(1),
+        level: z.number().int(),
         rowId: z.string(),
         skillId: z.string().nullable(),
       }),
@@ -198,7 +198,7 @@ export const characterSheetFormSchema = z.object({
   otherRyugiSkills: z.object({
     rows: z.array(
       z.object({
-        level: z.number().int().min(1),
+        level: z.number().int(),
         rowId: z.string(),
         ryugiRowId: z.string(),
         skillId: z.string().nullable(),
@@ -209,7 +209,7 @@ export const characterSheetFormSchema = z.object({
     rows: z
       .array(
         z.object({
-          level: z.number().int().min(1),
+          level: z.number().int(),
           rowId: z.string(),
           skillId: z.string().nullable(),
         }),

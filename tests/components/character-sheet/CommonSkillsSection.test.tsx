@@ -18,6 +18,7 @@ describe("CommonSkillsSection", () => {
       <CommonSkillsSection
         basicAttack={basicAttack}
         hasCommonSkillLevelError={false}
+        invalidMaximumLevelRowIds={[]}
         levelLimit={1}
         maximumSkillNameLength={getMaximumSkillNameLength()}
         onAdd={vi.fn()}

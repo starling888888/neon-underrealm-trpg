@@ -7,11 +7,13 @@ export type OtherRyugiSkillValidationBuildRow = {
 
 export type OtherRyugiSkillValidationRow = {
   level: number;
+  rowId: string;
   ryugiRowId: string;
   skill: Skill | null;
 };
 
 export type OtherRyugiSkillsValidation = {
+  invalidMaximumLevelRowIds: readonly string[];
   invalidRyugiRowIds: readonly string[];
 };
 
@@ -31,6 +33,11 @@ export function calculateOtherRyugiSkillsValidation(
   }
 
   return {
+    invalidMaximumLevelRowIds: rows.flatMap((row) =>
+      row.skill !== null && (row.level < 1 || row.level > row.skill.maxLevel)
+        ? [row.rowId]
+        : [],
+    ),
     invalidRyugiRowIds: otherRyugi.flatMap((row) =>
       (selectedLevelTotals.get(row.rowId) ?? 0) > row.level ? [row.rowId] : [],
     ),

@@ -11,6 +11,7 @@ export type OtherRyugiSkillRowView = {
 
 export type OtherRyugiSkillsSectionView = {
   hasSkillLevelTotalError: boolean;
+  invalidMaximumLevelRowIds: readonly string[];
   rows: readonly OtherRyugiSkillRowView[];
   ryugiName: string | null;
   ryugiRowId: string;
@@ -46,7 +47,9 @@ export default function OtherRyugiSkillsSection({
           (row, rowIndex) => ({
             accessibilityName:
               row.skill?.name ?? `${copy.unselectedRow}${rowIndex + 1}`,
-            hasLevelError: false,
+            hasLevelError: section.invalidMaximumLevelRowIds.includes(
+              row.rowId,
+            ),
             hasRowError: false,
             kind: "normal" as const,
             level: row.level,

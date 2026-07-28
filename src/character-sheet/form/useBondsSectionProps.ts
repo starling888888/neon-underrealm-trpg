@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { type UseFormReturn, useWatch } from "react-hook-form";
+import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type { BondsSectionProps } from "../components/BondsSection";
 import {
@@ -17,6 +17,11 @@ export default function useBondsSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
   derivedSecondaryAttributes: SecondaryAttributeDerivedValues,
 ): BondsSectionProps {
+  const { remove, replace, update } = useFieldArray({
+    control,
+    keyName: "fieldKey",
+    name: "bonds.rows",
+  });
   const bonds = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.bonds,
@@ -61,14 +66,12 @@ export default function useBondsSectionProps(
       return;
     }
 
-    setValue("bonds.rows", nextRows, {
-      shouldValidate: true,
-    });
+    replace(nextRows);
   }, [
     derivedBonds.effectiveLimit,
     derivedBonds.requiredRowCount,
     getValues,
-    setValue,
+    replace,
   ]);
 
   function setBondRowValue(
@@ -76,11 +79,11 @@ export default function useBondsSectionProps(
     field: BondEditableFieldName,
     value: boolean | string,
   ): void {
-    const rows = getValues("bonds.rows").map((row) =>
-      row.rowId === rowId ? { ...row, [field]: value } : row,
-    );
-
-    setValue("bonds.rows", rows, { shouldValidate: true });
+    const rows = getValues("bonds.rows");
+    const index = rows.findIndex((row) => row.rowId === rowId);
+    const row = rows[index];
+    if (row === undefined) return;
+    update(index, { ...row, [field]: value });
   }
 
   return {
@@ -97,13 +100,11 @@ export default function useBondsSectionProps(
     },
     onRowChange: setBondRowValue,
     onRowClear: (rowId) => {
-      const rows = getValues("bonds.rows").map((row) =>
-        row.rowId === rowId && !row.isResolved
-          ? { ...row, isResolved: false, relation: "", target: "" }
-          : row,
-      );
-
-      setValue("bonds.rows", rows, { shouldValidate: true });
+      const rows = getValues("bonds.rows");
+      const index = rows.findIndex((row) => row.rowId === rowId);
+      const row = rows[index];
+      if (row === undefined || row.isResolved) return;
+      update(index, { ...row, isResolved: false, relation: "", target: "" });
     },
     onRowDelete: (rowId) => {
       const bonds = getValues("bonds");
@@ -117,11 +118,8 @@ export default function useBondsSectionProps(
         return;
       }
 
-      setValue(
-        "bonds.rows",
-        bonds.rows.filter((entry) => entry.rowId !== rowId),
-        { shouldValidate: true },
-      );
+      const index = bonds.rows.findIndex((entry) => entry.rowId === rowId);
+      if (index >= 0) remove(index);
     },
   };
 }

@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-import { type UseFormReturn, useWatch } from "react-hook-form";
+import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type { BuildSectionProps } from "../components/BuildSection";
 import {
@@ -62,6 +62,11 @@ export default function useBuildSectionProps(
     onPrimaryRyugiChangeRequested,
   }: UseBuildSectionPropsOptions = {},
 ): BuildSectionPresenterState {
+  const { append, remove, update } = useFieldArray({
+    control,
+    keyName: "fieldKey",
+    name: "build.otherRyugi",
+  });
   const build = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.build,
@@ -97,21 +102,15 @@ export default function useBuildSectionProps(
     field: OtherRyugiEditableFieldName,
     value: string,
   ): number | undefined {
-    const otherRyugi = getValues("build").otherRyugi.map(
-      (entry, entryIndex) => {
-        if (entryIndex !== index) {
-          return entry;
-        }
+    const entry = getValues("build.otherRyugi")[index];
+    if (entry === undefined) return undefined;
 
-        if (field === "ryugiId") {
-          return { ...entry, ryugiId: value || null };
-        }
-
-        return { ...entry, level: normalizeIntegerInput(value) };
-      },
+    update(
+      index,
+      field === "ryugiId"
+        ? { ...entry, ryugiId: value || null }
+        : { ...entry, level: normalizeIntegerInput(value) },
     );
-
-    setBuildValue("otherRyugi", otherRyugi);
 
     return field === "level" ? normalizeIntegerInput(value) : undefined;
   }
@@ -157,10 +156,7 @@ export default function useBuildSectionProps(
           rowId: crypto.randomUUID(),
           ryugiId: null,
         };
-        setBuildValue("otherRyugi", [
-          ...getValues("build").otherRyugi,
-          nextRow,
-        ]);
+        append(nextRow);
         onOtherRyugiAdded?.(nextRow.rowId);
       },
       otherRyugiAddButtonRef,
@@ -192,12 +188,7 @@ export default function useBuildSectionProps(
       onOtherRyugiRemove: (index, trigger) => {
         const row = getValues("build").otherRyugi[index];
         const applyChange = () => {
-          setBuildValue(
-            "otherRyugi",
-            getValues("build").otherRyugi.filter(
-              (_, entryIndex) => entryIndex !== index,
-            ),
-          );
+          remove(index);
         };
 
         if (

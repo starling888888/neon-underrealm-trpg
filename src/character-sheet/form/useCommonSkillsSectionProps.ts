@@ -86,6 +86,7 @@ export default function useCommonSkillsSectionProps(
     sectionProps: {
       basicAttack: getBasicAttackSkill(),
       hasCommonSkillLevelError: validation.hasCommonSkillLevelError,
+      invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
       levelLimit: validation.levelLimit,
       maximumSkillNameLength,
       onAdd: () => append(createCommonSkillRow()),
@@ -93,11 +94,7 @@ export default function useCommonSkillsSectionProps(
         const current = getValues("commonSkills.rows").find(
           (row) => row.rowId === rowId,
         );
-        const skill = getCommonSkillById(current?.skillId ?? null);
-        const level = Math.min(
-          skill?.maxLevel ?? Number.POSITIVE_INFINITY,
-          Math.max(1, normalizeIntegerInput(value)),
-        );
+        const level = normalizeIntegerInput(value);
         if (current !== undefined) setRow(rowId, { ...current, level });
         return level;
       },

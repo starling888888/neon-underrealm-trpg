@@ -1,4 +1,4 @@
-import { type UseFormReturn, useWatch } from "react-hook-form";
+import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type { ChecksSectionProps } from "../components/ChecksSection";
 import type {
@@ -16,6 +16,20 @@ export default function useChecksSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
   derivedBuild: BuildDerivedValues,
 ): ChecksSectionProps {
+  const {
+    append: appendAttack,
+    remove: removeAttack,
+    update: updateAttack,
+  } = useFieldArray({
+    control,
+    keyName: "fieldKey",
+    name: "checks.attacks",
+  });
+  const { update: updateReaction } = useFieldArray({
+    control,
+    keyName: "fieldKey",
+    name: "checks.reactions",
+  });
   const checks = useWatch({ control, name: "checks" });
   const derived = calculateChecks(checks, derivedBuild.attributes);
 
@@ -23,13 +37,10 @@ export default function useChecksSectionProps(
     rowId: string,
     update: (row: AttackCheckValues) => AttackCheckValues,
   ): void {
-    setValue(
-      "checks.attacks",
-      getValues("checks.attacks").map((row) =>
-        row.rowId === rowId ? update(row) : row,
-      ),
-      { shouldValidate: true },
-    );
+    const rows = getValues("checks.attacks");
+    const index = rows.findIndex((row) => row.rowId === rowId);
+    const row = rows[index];
+    if (row !== undefined) updateAttack(index, update(row));
   }
 
   return {
@@ -41,19 +52,12 @@ export default function useChecksSectionProps(
 
       const attackNumber = getValues("checks.attacks").length + 1;
 
-      setValue(
-        "checks.attacks",
-        [
-          ...getValues("checks.attacks"),
-          {
-            attribute: defaultAttributeByAttackSkill.brawl,
-            modifier: 0,
-            rowId: `attack-${attackNumber}-${crypto.randomUUID()}`,
-            skill: "brawl",
-          },
-        ],
-        { shouldValidate: true },
-      );
+      appendAttack({
+        attribute: defaultAttributeByAttackSkill.brawl,
+        modifier: 0,
+        rowId: `attack-${attackNumber}-${crypto.randomUUID()}`,
+        skill: "brawl",
+      });
     },
     onAttackAttributeChange: (rowId, attribute) => {
       setAttackRow(rowId, (row) => ({ ...row, attribute }));
@@ -71,11 +75,8 @@ export default function useChecksSectionProps(
         return;
       }
 
-      setValue(
-        "checks.attacks",
-        attacks.filter((row) => row.rowId !== rowId),
-        { shouldValidate: true },
-      );
+      const index = attacks.findIndex((row) => row.rowId === rowId);
+      if (index >= 0) removeAttack(index);
     },
     onAttackSkillChange: (rowId, skill) => {
       setAttackRow(rowId, (row) => ({
@@ -85,24 +86,20 @@ export default function useChecksSectionProps(
       }));
     },
     onReactionAttributeChange: (name, attribute) => {
-      setValue(
-        "checks.reactions",
-        getValues("checks.reactions").map((row) =>
-          row.name === name ? { ...row, attribute } : row,
-        ) as CharacterSheetFormValues["checks"]["reactions"],
-        { shouldValidate: true },
-      );
+      const rows = getValues("checks.reactions");
+      const index = rows.findIndex((row) => row.name === name);
+      const row = rows[index];
+      if (row !== undefined) updateReaction(index, { ...row, attribute });
     },
     onReactionModifierChange: (name, value) => {
       const normalizedValue = normalizeIntegerInput(value);
 
-      setValue(
-        "checks.reactions",
-        getValues("checks.reactions").map((row) =>
-          row.name === name ? { ...row, modifier: normalizedValue } : row,
-        ) as CharacterSheetFormValues["checks"]["reactions"],
-        { shouldValidate: true },
-      );
+      const rows = getValues("checks.reactions");
+      const index = rows.findIndex((row) => row.name === name);
+      const row = rows[index];
+      if (row !== undefined) {
+        updateReaction(index, { ...row, modifier: normalizedValue });
+      }
       return normalizedValue;
     },
     onNoncombatFavoriteChange: (name, isFavorite) => {

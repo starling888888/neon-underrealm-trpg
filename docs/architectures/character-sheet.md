@@ -115,7 +115,7 @@ Presenterとその配下の表示Componentは、渡されたpropsの表示、配
 
 RHFを、このIsland内でユーザーが直接編集する値の唯一の保持先とする。可変行は`useFieldArray`で扱い、流儀の変更、スキル行の追加、能力値修正、縁のクリア、アイテム選択の変更をRHFの操作として行う。RHFの値を別のstate storeへ複製しない。
 
-native number inputがfocus中に保持する`-`など、数値として未確定なブラウザ固有の途中入力はRHF valueではない。Componentはその途中値をローカルstateへ複製せずDOMに一時保持させ、確定可能な値だけをRHF adapterへ通知する。blur時はschemaで正規化済みのnumberをinputへ戻す。reset・復元など外部更新をuncontrolled inputへ同期する契約は、その機能を導入するGateで明示的に定める。
+native number inputがfocus中に保持する`-`など、数値として未確定なブラウザ固有の途中入力はRHF valueではない。Componentはその途中値をローカルstateへ複製せずDOMに一時保持させ、確定可能な値だけをRHF adapterへ通知する。blur時はschemaで正規化済みのnumberをinputへ戻す。スキルLvの下限・最大Lv超過はschemaが構造・整数値として受理し、logicが局所errorとして判定する。reset・復元・JSON入力は、受理済み値をRHFの`reset`または`useFieldArray`操作で反映し、uncontrolled inputを同期する。外部更新で値をclamp・削除しない。
 
 | 種別                                          | 置き場所                            | 永続化先     |
 | --------------------------------------------- | ----------------------------------- | ------------ |

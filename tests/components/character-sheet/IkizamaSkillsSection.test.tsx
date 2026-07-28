@@ -20,6 +20,7 @@ function createProps(): IkizamaSkillsSectionProps {
     bonusLevel: 1,
     bonusSkill: groups.bonus[0] ?? null,
     hasIkizamaSkillLevelTotalError: false,
+    invalidMaximumLevelRowIds: [],
     ikizamaName: "ブライ",
     ikizamaSelected: true,
     maximumSkillNameLength: 8,

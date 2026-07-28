@@ -12,6 +12,7 @@ export type CommonSkillRowView = {
 export type CommonSkillsSectionProps = {
   basicAttack: Skill | null;
   hasCommonSkillLevelError: boolean;
+  invalidMaximumLevelRowIds: readonly string[];
   levelLimit: number;
   maximumSkillNameLength: number;
   onAdd: () => void;
@@ -27,6 +28,7 @@ export type CommonSkillsSectionProps = {
 export default function CommonSkillsSection({
   basicAttack,
   hasCommonSkillLevelError,
+  invalidMaximumLevelRowIds,
   levelLimit,
   maximumSkillNameLength,
   onAdd,
@@ -61,7 +63,7 @@ export default function CommonSkillsSection({
     ...rows.map((row, index) => ({
       accessibilityName:
         row.skill?.name ?? `${copy.common}${copy.unselectedRow}${index + 1}`,
-      hasLevelError: false,
+      hasLevelError: invalidMaximumLevelRowIds.includes(row.rowId),
       hasRowError: false,
       kind: "normal" as const,
       level: row.level,

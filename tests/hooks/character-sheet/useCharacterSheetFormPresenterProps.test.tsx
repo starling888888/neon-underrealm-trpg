@@ -157,7 +157,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
     ).toBe(true);
   });
 
-  it("keeps primary skill rows in RHF and normalizes selection levels", () => {
+  it("keeps out-of-range primary skill levels in RHF as local errors", () => {
     const { result } = renderHook(() => usePresenterHarness());
 
     act(() => {
@@ -181,14 +181,14 @@ describe("useCharacterSheetFormPresenterProps", () => {
       );
       result.current.presenterProps.primarySkillsSection.onLevelChange(
         firstRowId,
-        "999",
+        "9",
       );
       result.current.presenterProps.primarySkillsSection.onAdd();
     });
 
     expect(result.current.form.getValues("primarySkills.rows.0")).toMatchObject(
       {
-        level: skill.maxLevel,
+        level: 9,
         skillId: skill.id,
       },
     );
@@ -199,7 +199,11 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(
       result.current.presenterProps.primarySkillsSection
         .hasPrimarySkillLevelTotalError,
-    ).toBe(false);
+    ).toBe(true);
+    expect(
+      result.current.presenterProps.primarySkillsSection
+        .invalidMaximumLevelRowIds,
+    ).toContain(firstRowId);
 
     const secondRowId = result.current.form.getValues(
       "primarySkills.rows.1.rowId",
@@ -411,7 +415,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
       );
       result.current.presenterProps.ikizamaSkillsSection.onLevelChange(
         firstRowId,
-        "999",
+        "9",
       );
       result.current.presenterProps.ikizamaSkillsSection.onAdd();
       result.current.presenterProps.buildSection.onIkizamaLevelChange("4");
@@ -420,7 +424,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(result.current.form.getValues("ikizamaSkills.bonusLevel")).toBe(3);
     expect(result.current.form.getValues("ikizamaSkills.rows.0")).toMatchObject(
       {
-        level: skill.maxLevel,
+        level: 9,
         skillId: skill.id,
       },
     );
@@ -432,7 +436,11 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(
       result.current.presenterProps.ikizamaSkillsSection
         .hasIkizamaSkillLevelTotalError,
-    ).toBe(false);
+    ).toBe(true);
+    expect(
+      result.current.presenterProps.ikizamaSkillsSection
+        .invalidMaximumLevelRowIds,
+    ).toContain(firstRowId);
 
     act(() => {
       result.current.presenterProps.buildSection.onIkizamaChange("kage");

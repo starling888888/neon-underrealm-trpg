@@ -12,6 +12,7 @@ export type CommonSkillsValidationRow = {
 
 export type CommonSkillsValidation = {
   hasCommonSkillLevelError: boolean;
+  invalidMaximumLevelRowIds: readonly string[];
   levelLimit: number;
   selectedLevelTotal: number;
 };
@@ -36,6 +37,11 @@ export function calculateCommonSkillsValidation(
 
   return {
     hasCommonSkillLevelError: selectedLevelTotal > levelLimit,
+    invalidMaximumLevelRowIds: rows.flatMap((row) =>
+      row.skill !== null && (row.level < 1 || row.level > row.skill.maxLevel)
+        ? [row.rowId]
+        : [],
+    ),
     levelLimit,
     selectedLevelTotal,
   };
