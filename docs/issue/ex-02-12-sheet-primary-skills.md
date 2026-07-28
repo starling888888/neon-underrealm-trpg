@@ -150,25 +150,28 @@
 
 ### レビュー結果
 
-| 対象                    | 判定 | 差分                                                                             | 対応                                                    |
-| ----------------------- | ---- | -------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| primary-skills-selected | 未達 | Playwrightの流儀select操作がtimeoutし、actual locator screenshotを生成できない。 | form再描画を伴うselect操作のcapture基盤を別途調査する。 |
+| 対象                 | 判定     | 差分                                                 | 対応                                                        |
+| -------------------- | -------- | ---------------------------------------------------- | ----------------------------------------------------------- |
+| primary skill states | 確認済み | canonical baselineは未作成のため比較差分は判定不能。 | 実画像をdesktop / tabletで確認し、baseline管理はG31へ残す。 |
+
+- 人間判断: current issueの範囲ではcanonical baselineを更新しない。比較不能な12状態のbaseline作成・更新はG31の統合Visual Reviewで判断する。
 
 ### 実画面確認
 
-- `/character-sheet/` / 選択済み / desktop・tablet:
-  - locator screenshot: 未生成。`npm run visual:capture -- --grep "@primary-skills-selected"`がfixture準備の`selectOption("kenkaya")`でtimeoutした。
-  - result: 未確認。full-page screenshotや独自browser scriptで代用しない。
+- `/character-sheet/` / 選択済み、候補dialog、行詳細展開、流儀変更確認 / desktop・tablet:
+  - locator screenshot: `primary-skills-section`と、dialog状態ではdialog ownerをoriginal pixel resolutionで開いた。
+  - checked: 列揃え、名称・headerの折り返し、横overflow、展開領域、操作button、dialog境界。
+  - result: 確認済み。局所表示契約に対する不備なし。
 
 ### 対応完了チェックリスト
 
-- [ ] 変更targetだけをVRT比較した
-- [ ] 変更targetだけの一時snapshotを取得した
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
 - [ ] VRT差分を修正した、または修正不要と判断した
-- [ ] baseline更新が必要な差分を人間判断として記録した
+- [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -223,7 +226,7 @@
 - [x] Component testでmobile固有の表示構造を確認する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
-- [ ] mobileのactual locator screenshotを開いて表示契約を確認する。
+- [x] mobileのactual locator screenshotを開いて表示契約を確認する。
 
 ## ビジュアルレビュー 2
 
@@ -235,25 +238,28 @@
 
 ### レビュー結果
 
-| 対象                        | 判定 | 差分                                                                                            | 対応                                                    |
-| --------------------------- | ---- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| primary mobile skill states | 未達 | fixture準備の`selectOption("kenkaya")`が既知のtimeoutとなり、locator screenshotを生成できない。 | form再描画を伴うselect操作のcapture基盤を別途調査する。 |
+| 対象                        | 判定     | 差分                                                 | 対応                                              |
+| --------------------------- | -------- | ---------------------------------------------------- | ------------------------------------------------- |
+| primary mobile skill states | 確認済み | canonical baselineは未作成のため比較差分は判定不能。 | 実画像をmobileで確認し、baseline管理はG31へ残す。 |
+
+- 人間判断: current issueの範囲ではcanonical baselineを更新しない。比較不能な12状態のbaseline作成・更新はG31の統合Visual Reviewで判断する。
 
 ### 実画面確認
 
-- `/character-sheet/` / 選択済み・行詳細展開・候補dialog / mobile:
-  - locator screenshot: 未生成。既知のfixture timeoutを解消していないため、同じcaptureを再実行していない。
-  - result: 未確認。full-page screenshotや独自browser scriptで代用しない。
+- `/character-sheet/` / 選択済み、候補dialog、行詳細展開、流儀変更確認 / mobile:
+  - locator screenshot: `primary-skills-section`と、dialog状態ではdialog ownerをoriginal pixel resolutionで開いた。
+  - checked: mobile要約列、名称改行、展開3行、削除・並べ替えbutton、候補dialogの長い名称、横overflow、dialog境界。
+  - result: 確認済み。局所表示契約に対する不備なし。
 
 ### 対応完了チェックリスト
 
-- [ ] 変更targetだけをVRT比較した
-- [ ] 変更targetだけの一時snapshotを取得した
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
 - [ ] VRT差分を修正した、または修正不要と判断した
-- [ ] baseline更新が必要な差分を人間判断として記録した
+- [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 

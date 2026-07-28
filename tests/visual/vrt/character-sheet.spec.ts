@@ -45,20 +45,18 @@ async function selectNoncombatFavorite(page: Page): Promise<void> {
 }
 
 async function selectPrimaryRyugi(page: Page): Promise<void> {
-  const primaryRyugi = page.getByLabel("プライマリ流儀", { exact: true });
+  const primaryRyugi = page.locator("[data-build-section] select").first();
 
-  await expect(async () => {
-    await primaryRyugi.selectOption("kenkaya");
-    await expect(page.getByText("気合十分", { exact: true })).toBeVisible();
-  }).toPass();
+  await primaryRyugi.selectOption("kenkaya");
+  await expect(primaryRyugi).toHaveValue("kenkaya");
+  await expect(page.getByText("気合十分", { exact: true })).toBeVisible();
 }
 
 async function selectPrimarySkill(page: Page): Promise<void> {
   await selectPrimaryRyugi(page);
   await page
     .locator("[data-primary-skills-section]")
-    .getByRole("button", { exact: true, name: "スキルを選択" })
-    .first()
+    .getByRole("button", { exact: true, name: "未選択スキル1" })
     .click();
   const picker = page.getByRole("dialog", {
     name: "プライマリ流儀スキルを選択",
@@ -126,7 +124,7 @@ registerVrtScenarios("character-sheet", [
     locators: [primarySkillsLocator],
     prepare: selectPrimaryRyugi,
     route: visualRoutes.characterSheet,
-    viewports: ["desktop", "tablet"],
+    viewports: ["desktop", "tablet", "mobile"],
   },
   {
     id: "primary-skill-picker-open",
@@ -135,15 +133,14 @@ registerVrtScenarios("character-sheet", [
       await selectPrimaryRyugi(page);
       await page
         .locator("[data-primary-skills-section]")
-        .getByRole("button", { exact: true, name: "スキルを選択" })
-        .first()
+        .getByRole("button", { exact: true, name: "未選択スキル1" })
         .click();
       await expect(
         page.getByRole("dialog", { name: "プライマリ流儀スキルを選択" }),
       ).toBeVisible();
     },
     route: visualRoutes.characterSheet,
-    viewports: ["desktop", "tablet"],
+    viewports: ["desktop", "tablet", "mobile"],
   },
   {
     id: "primary-skill-details-expanded",
@@ -153,7 +150,7 @@ registerVrtScenarios("character-sheet", [
       await page.getByRole("button", { name: "気合十分の詳細を開く" }).click();
     },
     route: visualRoutes.characterSheet,
-    viewports: ["desktop", "tablet"],
+    viewports: ["desktop", "tablet", "mobile"],
   },
   {
     id: "primary-ryugi-change-confirm",
@@ -161,14 +158,15 @@ registerVrtScenarios("character-sheet", [
     prepare: async (page) => {
       await selectPrimarySkill(page);
       await page
-        .getByLabel("プライマリ流儀", { exact: true })
+        .locator("[data-build-section] select")
+        .first()
         .selectOption("emono");
       await expect(
         page.getByRole("dialog", { name: "プライマリ流儀の変更確認" }),
       ).toBeVisible();
     },
     route: visualRoutes.characterSheet,
-    viewports: ["desktop", "tablet"],
+    viewports: ["desktop", "tablet", "mobile"],
   },
   {
     id: "noncombat-expanded",

@@ -20,12 +20,12 @@ test.describe("character sheet page", () => {
     await page.setViewportSize(visualViewports.desktop);
     await page.goto("character-sheet/");
 
-    const primaryRyugi = page.getByLabel("プライマリ流儀", { exact: true });
+    const primaryRyugi = page.locator("[data-build-section] select").first();
     const primarySkills = page.getByRole("region", {
       name: "プライマリ流儀スキル",
     });
     const skillPicker = primarySkills.getByRole("button", {
-      name: "スキルを選択",
+      name: "未選択スキル1",
       exact: true,
     });
 
