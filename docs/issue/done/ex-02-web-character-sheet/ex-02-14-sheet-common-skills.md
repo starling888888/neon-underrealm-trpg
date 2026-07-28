@@ -78,7 +78,7 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 - [x] `N > M`で基本情報の`N／M`枠と共通スキル領域だけがerror状態になり、流儀・生き様 / 能力値領域へ共通スキル上限の表示・feedbackを追加しない。
 - [x] dictionaryのゲーム用語とキャラクターシートUI文言を指定の所有者へ分類し、生成データ文言を複製していない。
 - [x] E2Eが最終smokeの責務を越えず、局所契約をNode / Component / hook testへ分離している。
-- [ ] `@character-sheet` targetのdefault、候補dialog、合計Lv / 経験点反映をdesktop、tablet、mobileでVisual Reviewする。canonical VRT baselineは更新しない。
+- [x] `@character-sheet` targetのdefault、候補dialog、合計Lv / 経験点反映をdesktop、tablet、mobileでVisual Reviewする。canonical VRT baselineは更新しない。
 - [x] `npm run check`、`npm run build`、関連テストが通る。
 
 ## チェックポイント
@@ -170,8 +170,65 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 - [x] current issueの受入条件と最終diffから対象stateを列挙した。
 - [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
-- [ ] VRT差分を修正した、または修正不要と判断した。
+- [x] Visual Review 2で対象scenarioをlocator-onlyとして再確認し、canonical baselineを更新しない判断を記録した。
 - [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る（該当する場合）。
+- [x] `npm run build` が通る（該当する場合）。
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@common-skills-default`、`@common-skill-picker-open`、`@common-skill-limit-tooltip-open`、`@common-skill-selected`、`@common-skill-level-error`、`@common-skill-bonus-level-2`、`@common-skill-bonus-level-5`、`@common-skill-bonus-level-9`
+- route / states / viewports: `/character-sheet/`のdefault、候補dialog、共通スキル上限tooltip、1候補選択後、`N > M` error、共通スキル合計Lvが`2`、`5`、`9`のアンロック状態。desktop、tablet、mobile。
+
+### レビュー結果
+
+| 対象                   | 判定   | 差分 | 対応                                                                                                                        |
+| ---------------------- | ------ | ---- | --------------------------------------------------------------------------------------------------------------------------- |
+| locator actual         | OK     | なし | 各state・viewportの原寸locator screenshotを開いて確認した。                                                                 |
+| canonical VRT baseline | 対象外 | なし | 対象scenarioは既存契約どおりlocator-onlyであり、`npm run visual:test`は24件skipした。canonical baselineは追加・更新しない。 |
+
+### 実画面確認
+
+- `/character-sheet/` / default / desktop、tablet、mobile:
+  - locator screenshot（profile、build、共通スキルsection / original pixel resolution）を確認した。
+  - 基本の一撃、通常2行、`0／1`、基本情報の2行labelと値枠の下揃え、追加buttonと合計表示、mobileの2列専有、横overflowがないことを確認した。
+- `/character-sheet/` / 候補dialog / desktop、tablet、mobile:
+  - locator screenshot（共通スキルsection、共通スキルpicker dialog / original pixel resolution）を確認した。
+  - 候補一覧、dialog内の縦scroll、mobileのviewport内表示、横overflowがないことを確認した。
+- `/character-sheet/` / 共通スキル上限tooltip / desktop、tablet、mobile:
+  - locator screenshot（profile、tooltip / original pixel resolution）を確認した。
+  - `合計レベル上限 = 格 ÷ 2（端数切り上げ）`の表示とtooltipのviewport内配置を確認した。
+- `/character-sheet/` / 1候補選択後 / desktop、tablet、mobile:
+  - locator screenshot（profile、build、共通スキルsection / original pixel resolution）を確認した。
+  - `1／1`、消費経験点`5`、残経験点`45`、追加操作領域の下揃えまたはmobile縦積みを確認した。
+- `/character-sheet/` / `N > M` error / desktop、tablet、mobile:
+  - locator screenshot（profile、build、共通スキルsection / original pixel resolution）を確認した。
+  - `2／1`、消費経験点`10`、残経験点`40`、基本情報と共通スキルsectionだけのerror状態、Build領域への上限feedback追加がないことを確認した。
+- `/character-sheet/` / 共通スキル合計Lv `2`、`5`、`9` / desktop、tablet、mobile:
+  - locator screenshot（build section / original pixel resolution）を確認した。
+  - `2`ではLv 2枠、`5`ではLv 2・5枠、`9`ではLv 2・5・9枠だけがaccent色の太い枠線になること、未到達枠の背景色・枠線・本文通常ウェイト、効果本文の折返し、横overflowがないことを確認した。
+
+### 自己修正した項目
+
+- [x] Lv 5・9のVisual Review fixtureを、個別スキルの最大Lvを超える値ではなく複数の通常スキルの合計Lvで構成した。
+- [x] Lv 9 fixtureの`＋ スキルを追加`buttonを共通スキルsection内に限定した。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
+- [x] locator-only targetのためcanonical VRT比較はskipされ、更新対象のbaselineを作成していない。
+- [x] baseline更新が必要な差分はない。
 - [x] `npm run check` が通る（該当する場合）。
 - [x] `npm run build` が通る（該当する場合）。
 

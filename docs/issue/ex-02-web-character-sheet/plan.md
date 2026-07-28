@@ -33,7 +33,7 @@
 | G11  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-11-sheet-noncombat.md`          | 非戦闘技能を扱う。                                                                    |
 | G12  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-12-sheet-primary-skills.md`     | プライマリ流儀のスキルを扱う。                                                        |
 | G13  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-13-sheet-ikizama-skills.md`     | 生き様のスキルを扱う。                                                                |
-| G14  | planned | G7, G12                                                                                                                                         | `docs/issue/ex-02-14-sheet-common-skills.md`                                     | 共通スキルを扱う。                                                                    |
+| G14  | done    | G7, G12                                                                                                                                         | `docs/issue/done/ex-02-web-character-sheet/ex-02-14-sheet-common-skills.md`      | 共通スキルを扱う。                                                                    |
 | G15  | done    | G7, G12                                                                                                                                         | `docs/issue/done/ex-02-web-character-sheet/ex-02-15-sheet-other-ryugi-skills.md` | その他流儀のスキルを扱う。                                                            |
 | G16  | planned | G7, G12, G13, G14, G15                                                                                                                          | `docs/issue/ex-02-16-sheet-experience-consistency.md`                            | 消費経験点の算出整合性を確認する。                                                    |
 | G17  | planned | G4, G7                                                                                                                                          | `docs/issue/ex-02-17-sheet-weapons-armor.md`                                     | 武器と防具を扱う。                                                                    |
@@ -148,6 +148,13 @@
 - 生き様通常skillが選択済みの流儀変更は、G12の確認dialog UIを再利用してconfirm時だけ選択を解除する。cancel / Escapeでは入力を保持し、操作元selectへfocusを戻す。
 - `SkillSection`のautomatic input groupと詳細toggleの関連付けを補い、長い名称はdesktop / tabletの列幅と狭幅の改行保持でclip / ellipsisさせない。各skill section間に縦gapを設ける。
 - `@character-sheet`の対象stateをpreviewで確認し、desktop / tablet / mobileのactual locator screenshotを開いた。canonical VRT baselineは更新していない。skill Lvの入力自動補正・復元・JSON入力時の契約はG24 / G27のTODOで扱う。
+
+### G14
+
+- 共通スキルは、生き様スキルの下、その他流儀スキルの上に置く。基本の一撃は読み取り専用で、通常スキルだけを最低1行の`useFieldArray`として追加・削除・並べ替えできる。
+- 通常スキルの取得Lv合計`N`は基本の一撃を除外し、経験点へ`N * 5`を加算する。上限`M`は`ceil(格 / 2)`であり、`N > M`のerror feedbackは基本情報の`N／M`枠と共通スキルsectionだけに置く。
+- 共通スキルの合計Lvが`2`、`5`、`9`へ到達したとき、流儀・生き様 / 能力値領域の対応する共通スキルボーナス枠だけをaccent色の太い枠線で示す。背景色・文字色は既存表示を維持し、ボーナス効果を派生値へ自動加算しない。
+- locator-only Visual Reviewで、default、候補dialog、tooltip、選択後、上限超過、Lv 2・5・9到達のdesktop / tablet / mobile actualを確認した。canonical VRT baselineは更新していない。
 
 ### G15
 

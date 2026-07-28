@@ -62,7 +62,7 @@ async function selectPrimaryRyugi(page: Page): Promise<void> {
   await primaryRyugi.selectOption("kenkaya");
   await expect(primaryRyugi).toHaveValue("kenkaya");
   await expect(
-    page.getByRole("group", { exact: true, name: "気合十分" }),
+    page.getByRole("button", { exact: true, name: "気合十分の詳細を開く" }),
   ).toBeVisible();
 }
 
@@ -98,12 +98,15 @@ async function selectLongIkizamaSkill(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
-async function openCommonSkillPicker(page: Page): Promise<void> {
+async function openCommonSkillPicker(page: Page, row = 1): Promise<void> {
   const commonSkills = page.getByRole("region", { name: "共通スキル" });
 
   await expect(async () => {
     await commonSkills
-      .getByRole("button", { exact: true, name: "共通スキル未選択スキル1" })
+      .getByRole("button", {
+        exact: true,
+        name: `共通スキル未選択スキル${row}`,
+      })
       .click();
     await expect(
       page.getByRole("dialog", { name: "共通スキルを選択" }),
@@ -111,12 +114,52 @@ async function openCommonSkillPicker(page: Page): Promise<void> {
   }).toPass();
 }
 
-async function selectCommonSkill(page: Page): Promise<void> {
-  await openCommonSkillPicker(page);
+async function selectCommonSkill(
+  page: Page,
+  row = 1,
+  skillName = "基本の連撃",
+): Promise<void> {
+  await openCommonSkillPicker(page, row);
   const picker = page.getByRole("dialog", { name: "共通スキルを選択" });
 
-  await picker.getByRole("button", { name: "基本の連撃" }).click();
+  await picker.getByRole("button", { exact: true, name: skillName }).click();
   await expect(picker).toBeHidden();
+}
+
+async function selectCommonSkillBonusLevel(
+  page: Page,
+  commonSkillLevel: 2 | 5 | 9,
+): Promise<void> {
+  await selectPrimaryRyugi(page);
+  await page.getByLabel("プライマリ流儀Lv", { exact: true }).fill("9");
+  await page.getByLabel("生き様Lv", { exact: true }).fill("9");
+  await selectCommonSkill(page, 1, "基本の連撃");
+  await page.getByLabel("基本の連撃Lv", { exact: true }).fill("3");
+
+  if (commonSkillLevel <= 3) {
+    await page
+      .getByLabel("基本の連撃Lv", { exact: true })
+      .fill(String(commonSkillLevel));
+    return;
+  }
+
+  await selectCommonSkill(page, 2, "血流操作");
+  await page
+    .getByLabel("血流操作Lv", { exact: true })
+    .fill(String(Math.min(commonSkillLevel - 3, 3)));
+
+  if (commonSkillLevel <= 6) {
+    return;
+  }
+
+  await page
+    .getByRole("region", { name: "共通スキル" })
+    .getByRole("button", { exact: true, name: "＋ スキルを追加" })
+    .click();
+  await selectCommonSkill(page, 3, "心血融合");
+  await page
+    .getByLabel("心血融合Lv", { exact: true })
+    .fill(String(commonSkillLevel - 6));
 }
 
 async function addOtherRyugi(
@@ -275,6 +318,30 @@ registerVrtScenarios("character-sheet", [
       await selectCommonSkill(page);
       await page.getByLabel("基本の連撃Lv", { exact: true }).fill("2");
     },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "common-skill-bonus-level-2",
+    locatorOnly: true,
+    locators: [buildSectionLocator],
+    prepare: async (page) => selectCommonSkillBonusLevel(page, 2),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "common-skill-bonus-level-5",
+    locatorOnly: true,
+    locators: [buildSectionLocator],
+    prepare: async (page) => selectCommonSkillBonusLevel(page, 5),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "common-skill-bonus-level-9",
+    locatorOnly: true,
+    locators: [buildSectionLocator],
+    prepare: async (page) => selectCommonSkillBonusLevel(page, 9),
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
   },
