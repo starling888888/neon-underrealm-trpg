@@ -1,5 +1,5 @@
 import { ListPlus } from "lucide-react";
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 import type { Skill } from "../../../lib/types/skill";
 import { characterSheetDictionary } from "../../dictionary";
@@ -169,10 +169,30 @@ function SkillRow({
   const copy = characterSheetDictionary.characterSheet.skills;
   const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
   const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
+  const levelInputRef = useRef<HTMLInputElement>(null);
+  const previousLevelRef = useRef(row.level);
   const hasError = row.hasRowError || row.hasLevelError;
   const name = row.skill?.name ?? copy.unselected;
   const accessibilityName = row.accessibilityName;
   const detailsId = `skill-details-${row.rowId}`;
+
+  useEffect(() => {
+    const input = levelInputRef.current;
+    if (input === null) return;
+
+    const nextValue = String(row.level);
+    const hasExternalValueUpdate = previousLevelRef.current !== row.level;
+    previousLevelRef.current = row.level;
+
+    if (
+      input.value !== nextValue &&
+      (hasExternalValueUpdate ||
+        document.activeElement !== input ||
+        !input.validity.badInput)
+    ) {
+      input.value = nextValue;
+    }
+  }, [row.level]);
 
   return (
     <fieldset
@@ -247,7 +267,8 @@ function SkillRow({
               }}
               step="1"
               type="number"
-              value={row.level}
+              defaultValue={row.level}
+              ref={levelInputRef}
             />
           </label>
         ) : (

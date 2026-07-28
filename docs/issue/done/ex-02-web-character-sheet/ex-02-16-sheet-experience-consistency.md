@@ -3,7 +3,7 @@
 ## 最優先のデザイン入力
 
 - `docs/requirements/character-sheet.md`、`src/pages/advancement.mdx`、`src/pages/character-making.mdx`の数値規則を優先し、`.tmp/design/character-sheet/`の承認済みdraft（desktop / tablet / mobile）と既存のキャラクターシートUIを照合して、経験点・スキル・可変行の既存配置を維持する。
-- このGateでは可視のエラー理由を入力直下へ追加しない。既存どおり該当入力・行・sectionのerror状態で示し、エラー集約UIはG25で扱う。
+- このGateでは可視のエラー理由を入力直下へ追加しない。最大Lv違反は該当入力・行だけ、区分合計超過など既存の区分エラーは該当sectionを含むerror状態で示し、エラー集約UIはG25で扱う。
 - design notes、実装結果のscreenshot、reviewer出力はdesign draftの代わりにしない。画面配置または状態表現に競合・不明点があれば、実装せずにユーザー判断を求める。
 
 ## 目的
@@ -44,8 +44,8 @@
 ## 対象範囲
 
 - 流儀・生き様の追加レベル、その他流儀、共通スキル通常行について、`src/pages/advancement.mdx`とフルスクラッチ規則どおりの消費経験点をpure logicで一元導出する。自動取得のプライマリbonus、基本の一撃、生き様bonusのLv 1は経験点へ加算しない。生き様bonusのLv 2以上は、生き様の成長に伴うスキルLvとして二重計上せず、生き様Lvの経験点だけで扱う。
-- 消費経験点、残経験点、経験点不足のerror状態を、全区分の入力変更で一貫して更新する。スキル区分ごとの合計上限・重複・最大Lv超過は、既存の局所表示境界（Build、該当行、該当section、共通スキルの基本情報枠）を保つ。
-- 全通常スキルと生き様bonusについて、選択中マスタの`maxLevel`を超える値をbrowser入力、schema、pure validation、行 / sectionのerror状態で同じ規則として扱う。値をclamp・拒否・自動削除せず保持し、`max`属性だけを正しさの根拠にしない。
+- 消費経験点、残経験点、経験点不足のerror状態を、全区分の入力変更で一貫して更新する。スキル区分ごとの合計上限・重複は既存の局所表示境界（Build、該当行、該当section、共通スキルの基本情報枠）を保ち、最大Lv超過は該当入力・行だけで示す。
+- 全通常スキルと生き様bonusについて、選択中マスタの`maxLevel`を超える値をbrowser入力、schema、pure validation、該当入力 / 行のerror状態で同じ規則として扱う。値をclamp・拒否・自動削除せず保持し、`max`属性だけを正しさの根拠にしない。
 - 未確定なnumber inputはfocus中のDOMだけに保持し、確定可能な値をRHFへ渡す。blur、`reset`、端末内復元、JSON入力では、schemaで受理した値をuncontrolled inputへ同期する契約をrequirements / schema / form adapterに明記する。G16では保存・復元・JSON入力のUIやadapterを実装しない。
 - `build.otherRyugi`、`bonds.rows`、`checks.attacks`、`checks.reactions`、プライマリ・生き様・共通・その他流儀スキルの可変配列を`useFieldArray`で操作する。配列全体の`setValue`による追加・削除・並べ替え・置換をなくし、各行の`rowId`、最小行数、派生行数、確認dialog、focus復帰、section固有の業務規則を保つ。
 - 可変行のfield / value callbackは、genericなパス文字列ではなく各行型の編集可能fieldと値の対応を型で表す。shared表示ComponentへRHF、field path、マスタ検索、validation計算を渡さない。
@@ -64,7 +64,7 @@
 ## 完了条件
 
 - [x] 全ての消費経験点が、流儀・生き様・その他流儀・共通スキルの入力値から一度だけ導出され、無料の初期 / 自動取得Lvを二重計上しない。
-- [x] 生き様bonusを含む全スキルの最大Lv超過、重複、区分ごとの合計上限、経験点不足が、値を自動補正せず既存の局所error状態として一貫して示される。
+- [x] 生き様bonusを含む全スキルの最大Lv超過が該当入力・行だけ、重複、区分ごとの合計上限、経験点不足が既存の局所error状態として、値を自動補正せず一貫して示される。
 - [x] browser入力、blur、schema、後続の復元・JSON入力における未確定値・最大Lv超過・uncontrolled input同期の契約がrequirementsとschema / form adapterへ明記され、G24 / G27と矛盾しない。
 - [x] 現在存在する可変行を`useFieldArray`で追加・削除・移動・置換し、配列全体の`setValue`更新を残さない。row ID、最小・派生行数、確認dialog、focus復帰を維持する。
 - [x] 変更したlogic、schema、hook、Componentのテストが、経験点境界、最大Lv前後、未選択、bonus、重複、可変行の追加・削除・並べ替え・外部更新を確認する。
@@ -114,6 +114,19 @@
 - このissueでTODO 3件を回収し、保存・復元・JSON入力の実装を後続Gateへ残す境界が妥当か。
 - 既存designと同じエラー配置・情報密度を保ち、canonical VRT baseline更新を必要とする見た目の変更を増やしていないか。
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- [x] `calculateCommonSkillsValidation`の生値と経験点算出用の有効Lvを分離した。選択済み共通スキルLv`0`・負数・最大Lv超過が消費経験点を減算または正のLvと相殺しないことをNode / hook testで確認した。`source: .tmp/review/ex-02-16-sheet-experience-consistency/gate-technical-review-1.md` / classification: valid
+- [x] ユーザー判断により、最大Lv違反は該当入力・行だけをerror状態にし、section errorへ伝播させない。`docs/requirements/character-sheet.md`とこのissueを訂正し、実装変更・追加testは不要とする。`source: .tmp/review/ex-02-16-sheet-experience-consistency/gate-technical-review-1.md` / classification: invalid after requirement correction
+- [x] `SkillSection`の技能Lv入力を、focus中の未確定number inputをDOMに保持できるuncontrolled同期境界へ直した。`reset`による外部更新で受理済み値・row IDを同期し、最大Lv超過値を保持することをhook / Component testで確認した。`source: .tmp/review/ex-02-16-sheet-experience-consistency/gate-technical-review-1.md` / classification: valid
+
+### 判定
+
+- 3件はいずれもcurrent issueの経験点導出、局所error、uncontrolled input、外部更新テストの契約に一致するため、current issueで修正する。
+- G17以降、保存・復元・JSON UI、エラー集約の先行実装は含めない。
+
 ## ビジュアルレビュー 1
 
 ### 対象と確認方法
@@ -127,16 +140,21 @@
 
 ### 実画面確認
 
-- 共通スキル最大Lv超過: profile / build / common skill section のdesktop・tablet・mobile計9枚を`test-results/visual/character-sheet/locators/common-skill-maximum-level-error-default-*.png`で確認。経験点、共通スキル合計、該当入力・sectionのerror境界が表示され、clip / overflowはない。
-- その他流儀スキル最大Lv超過: build / other ryugi skill section のdesktop・tablet・mobile計6枚を`test-results/visual/character-sheet/locators/other-ryugi-skill-maximum-level-error-default-*.png`で確認。既存のbuild行と該当スキル行 / sectionのerror境界が表示され、clip / overflowはない。
-- 生き様スキル最大Lv超過: bonusと通常行を含むdesktop・tablet・mobile計3枚を`test-results/visual/character-sheet/locators/ikizama-skill-maximum-level-error-default-*.png`で確認。両入力とsectionのerror境界が表示され、clip / overflowはない。
-- プライマリ流儀スキル最大Lv超過: desktop・tablet・mobile計3枚を`test-results/visual/character-sheet/locators/primary-skill-maximum-level-error-default-*.png`で確認。該当入力・行・sectionのerror境界が表示され、clip / overflowはない。
+- 共通スキル最大Lv超過: profile / build / common skill section のdesktop・tablet・mobile計9枚を`test-results/visual/character-sheet/locators/common-skill-maximum-level-error-default-*.png`で確認。経験点、共通スキル合計、該当入力・行のerror境界が表示され、clip / overflowはない。
+- その他流儀スキル最大Lv超過: build / other ryugi skill section のdesktop・tablet・mobile計6枚を`test-results/visual/character-sheet/locators/other-ryugi-skill-maximum-level-error-default-*.png`で確認。既存のbuild行と該当スキル行のerror境界が表示され、clip / overflowはない。
+- 生き様スキル最大Lv超過: bonusと通常行を含むdesktop・tablet・mobile計3枚を`test-results/visual/character-sheet/locators/ikizama-skill-maximum-level-error-default-*.png`で確認。両入力と該当行のerror境界が表示され、clip / overflowはない。
+- プライマリ流儀スキル最大Lv超過: desktop・tablet・mobile計3枚を`test-results/visual/character-sheet/locators/primary-skill-maximum-level-error-default-*.png`で確認。該当入力・行のerror境界が表示され、clip / overflowはない。
 
 ### 結果
 
 - 全21枚を実際に開いて確認した。可視エラー理由は追加せず、既存の局所error表現を維持した。
 - レベル入力は1桁前提とするユーザー指示に従い、超過確認値を`999`から`9`へ変更した。CSSやレイアウトは変更していない。
 - canonical VRT baselineの更新は不要かつ未実施である。
+
+### 再確認
+
+- Gate Technical Review対応後に同じ4 state・21枚を再captureして実際に開いた。uncontrolled同期への変更後も、desktop / tablet / mobileで1桁の最大Lv超過値、入力・行のerror境界、経験点表示にclip / overflowはない。
+- 同じtargetの`npm run visual:test`はlocator-onlyのため12件を意図どおりskipし、canonical VRT baselineは更新していない。
 
 ## 備考
 

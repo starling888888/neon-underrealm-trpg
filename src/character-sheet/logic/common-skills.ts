@@ -30,7 +30,7 @@ export function calculateCommonSkillsValidation(
   rows: readonly CommonSkillsValidationRow[],
 ): CommonSkillsValidation {
   const selectedLevelTotal = rows.reduce(
-    (total, row) => total + (row.skill === null ? 0 : row.level),
+    (total, row) => total + (row.skill === null ? 0 : Math.max(0, row.level)),
     0,
   );
   const levelLimit = Math.ceil(rank / 2);

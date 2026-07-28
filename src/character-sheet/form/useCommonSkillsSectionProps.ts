@@ -37,10 +37,10 @@ function createCommonSkillRow(): SkillSelectionRowValues {
 
 /** Connects common-skill RHF rows to the shared skill-section display. */
 export default function useCommonSkillsSectionProps(
-  { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
+  { control, getValues }: UseFormReturn<CharacterSheetFormValues>,
   { onPickerRequest }: CommonSkillsSectionOptions,
 ): CommonSkillsSectionPresenterState {
-  const { append, move, remove } = useFieldArray({
+  const { append, move, remove, update } = useFieldArray({
     control,
     keyName: "fieldKey",
     name: "commonSkills.rows",
@@ -70,7 +70,7 @@ export default function useCommonSkillsSectionProps(
     );
     if (index < 0) return;
 
-    setValue(`commonSkills.rows.${index}`, nextRow, { shouldValidate: true });
+    update(index, nextRow);
   }
 
   return {

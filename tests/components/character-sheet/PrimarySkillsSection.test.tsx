@@ -164,6 +164,28 @@ describe("PrimarySkillsSection", () => {
     expect(screen.queryByRole("button", { name: /へ移動$/ })).toBeNull();
   });
 
+  it("keeps a skill level input uncontrolled and synchronizes an external update", () => {
+    const props = createProps();
+    const { rerender } = render(<PrimarySkillsSection {...props} />);
+    const level = screen.getByLabelText("旋風Lv") as HTMLInputElement;
+
+    level.focus();
+    fireEvent.change(level, { target: { value: "2" } });
+    expect(props.onLevelChange).toHaveBeenCalledWith("first", "2");
+
+    rerender(
+      <PrimarySkillsSection
+        {...props}
+        rows={props.rows.map((row) =>
+          row.rowId === "first" ? { ...row, level: 9 } : row,
+        )}
+      />,
+    );
+
+    expect(level.value).toBe("9");
+    expect(document.activeElement).toBe(level);
+  });
+
   it("marks every duplicate selected skill row as invalid", () => {
     const props = createProps();
     const [firstRow, secondRow] = props.rows;

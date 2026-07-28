@@ -72,4 +72,24 @@ describe("character sheet common skills", () => {
       "above-maximum",
     ]);
   });
+
+  it("does not let below-minimum levels reduce the common-skill total", () => {
+    const [skill] = getCommonSkillCandidates();
+    if (skill === undefined)
+      throw new Error("共通スキル候補を取得できません。");
+
+    const validation = calculateCommonSkillsValidation(10, [
+      { level: 2, rowId: "valid", skill },
+      { level: 0, rowId: "zero", skill },
+      { level: -1, rowId: "negative", skill },
+      { level: skill.maxLevel + 1, rowId: "above-maximum", skill },
+    ]);
+
+    assert.equal(validation.selectedLevelTotal, 2 + skill.maxLevel + 1);
+    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+      "zero",
+      "negative",
+      "above-maximum",
+    ]);
+  });
 });

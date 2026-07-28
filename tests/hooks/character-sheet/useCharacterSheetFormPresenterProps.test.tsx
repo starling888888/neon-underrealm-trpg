@@ -157,6 +157,77 @@ describe("useCharacterSheetFormPresenterProps", () => {
     ).toBe(true);
   });
 
+  it("keeps invalid common-skill levels without reducing spent experience", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [skill] = getCommonSkillCandidates();
+    const firstRowId = result.current.form.getValues(
+      "commonSkills.rows.0.rowId",
+    );
+    if (skill === undefined) {
+      throw new Error("共通スキル候補を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.commonSkillPicker.onSelect(
+        firstRowId,
+        skill.id,
+      );
+      result.current.presenterProps.commonSkillsSection.onLevelChange(
+        firstRowId,
+        "-1",
+      );
+    });
+
+    expect(result.current.form.getValues("commonSkills.rows.0.level")).toBe(-1);
+    expect(
+      result.current.presenterProps.commonSkillsSection.selectedLevelTotal,
+    ).toBe(0);
+    expect(
+      result.current.presenterProps.profileSection.experience.derived
+        .spentExperience,
+    ).toBe(0);
+    expect(
+      result.current.presenterProps.commonSkillsSection
+        .invalidMaximumLevelRowIds,
+    ).toContain(firstRowId);
+  });
+
+  it("retains common-skill row IDs and invalid levels across an external reset", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [skill] = getCommonSkillCandidates();
+    const firstRowId = result.current.form.getValues(
+      "commonSkills.rows.0.rowId",
+    );
+    if (skill === undefined) {
+      throw new Error("共通スキル候補を取得できません。");
+    }
+
+    act(() => {
+      const values = result.current.form.getValues();
+      result.current.form.reset({
+        ...values,
+        commonSkills: {
+          rows: values.commonSkills.rows.map((row) =>
+            row.rowId === firstRowId
+              ? { ...row, level: skill.maxLevel + 1, skillId: skill.id }
+              : row,
+          ),
+        },
+      });
+    });
+
+    expect(result.current.form.getValues("commonSkills.rows.0.rowId")).toBe(
+      firstRowId,
+    );
+    expect(
+      result.current.presenterProps.commonSkillsSection.rows[0],
+    ).toMatchObject({ level: skill.maxLevel + 1, rowId: firstRowId });
+    expect(
+      result.current.presenterProps.commonSkillsSection
+        .invalidMaximumLevelRowIds,
+    ).toContain(firstRowId);
+  });
+
   it("keeps out-of-range primary skill levels in RHF as local errors", () => {
     const { result } = renderHook(() => usePresenterHarness());
 
