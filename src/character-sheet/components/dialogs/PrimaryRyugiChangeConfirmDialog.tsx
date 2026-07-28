@@ -6,6 +6,7 @@ import CharacterSheetDialog, {
 } from "./CharacterSheetDialog";
 
 type PrimaryRyugiChangeConfirmDialogProps = {
+  confirmLabel?: string;
   confirmation: string;
   dialogLabel: string;
   isOpen: boolean;
@@ -16,6 +17,7 @@ type PrimaryRyugiChangeConfirmDialogProps = {
 
 /** Confirms clearing selected primary skills before changing primary ryugi. */
 export default function PrimaryRyugiChangeConfirmDialog({
+  confirmLabel,
   confirmation,
   dialogLabel,
   isOpen,
@@ -44,7 +46,7 @@ export default function PrimaryRyugiChangeConfirmDialog({
           {general.cancel}
         </button>
         <button data-tone="primary" onClick={onConfirm} type="button">
-          {general.change}
+          {confirmLabel ?? general.change}
         </button>
       </CharacterSheetDialogActions>
     </CharacterSheetDialog>

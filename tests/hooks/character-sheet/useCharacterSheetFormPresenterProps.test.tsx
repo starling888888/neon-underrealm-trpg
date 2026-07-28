@@ -9,6 +9,7 @@ import useCharacterSheetFormPresenterProps from "../../../src/character-sheet/fo
 import type { CharacterSheetFormValues } from "../../../src/character-sheet/form-values";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
+import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-data/other-ryugi-skills";
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
@@ -191,6 +192,70 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(result.current.form.getValues("primarySkills.rows.1.rowId")).toBe(
       firstRow.rowId,
     );
+  });
+
+  it("keeps other-ryugi rows and their normal skill rows together in RHF", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.buildSection.onOtherRyugiAdd();
+    });
+
+    const [otherRyugi] = result.current.form.getValues("build.otherRyugi");
+    const [otherRyugiSkill] = result.current.form.getValues(
+      "otherRyugiSkills.rows",
+    );
+    if (otherRyugi === undefined || otherRyugiSkill === undefined) {
+      throw new Error("その他流儀またはスキル行を追加できません。");
+    }
+
+    const [skill] = getOtherRyugiSkillGroups("kenkaya", 1).basic;
+    if (skill === undefined) {
+      throw new Error("その他流儀スキル候補を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.buildSection.onOtherRyugiChange(
+        0,
+        "ryugiId",
+        "kenkaya",
+      );
+      result.current.presenterProps.buildSection.onOtherRyugiChange(
+        0,
+        "level",
+        "1",
+      );
+      result.current.presenterProps.otherRyugiSkillPicker.onSelect(
+        otherRyugiSkill.rowId,
+        skill.id,
+      );
+      result.current.presenterProps.otherRyugiSkillsSection.onLevelChange(
+        otherRyugiSkill.rowId,
+        "2",
+      );
+      result.current.presenterProps.otherRyugiSkillsSection.onAdd(
+        otherRyugi.rowId,
+      );
+    });
+
+    expect(
+      result.current.form.getValues("otherRyugiSkills.rows.0"),
+    ).toMatchObject({
+      level: 2,
+      ryugiRowId: otherRyugi.rowId,
+      skillId: skill.id,
+    });
+    expect(result.current.form.getValues("otherRyugiSkills.rows")).toHaveLength(
+      2,
+    );
+    expect(
+      result.current.presenterProps.otherRyugiSkillsSection.sections[0]
+        ?.hasSkillLevelTotalError,
+    ).toBe(true);
+    expect(
+      result.current.presenterProps.buildSection
+        .invalidOtherRyugiSkillLevelRowIds,
+    ).toEqual([otherRyugi.rowId]);
   });
 
   it("keeps ikizama rows in RHF, resets bonus on an ikizama change, and preserves it across level changes", () => {

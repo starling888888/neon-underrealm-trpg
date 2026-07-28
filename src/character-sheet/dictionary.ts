@@ -11,6 +11,7 @@ export const characterSheetDictionary = {
     cancel: "キャンセル",
     change: "変更",
     close: "閉じる",
+    delete: "削除",
     closeFormulaTooltip: "計算式の説明を閉じる",
     unavailableValue: "-",
   },
@@ -111,6 +112,7 @@ export const characterSheetDictionary = {
       add: "＋ スキルを追加",
       choose: "プライマリ流儀スキルを選択",
       chooseIkizama: "生き様スキルを選択",
+      chooseOtherRyugi: "その他流儀スキルを選択",
       initialCreation: "初期作成",
       ikizama: "生き様",
       ikizamaChangeConfirmation:
@@ -121,6 +123,14 @@ export const characterSheetDictionary = {
       level4OrAbove: "Lv4以上",
       moveDown: "下へ移動",
       moveUp: "上へ移動",
+      otherRyugi: "その他流儀",
+      otherRyugiChangeConfirmation:
+        "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
+      otherRyugiChangeConfirmationLabel: "その他流儀の変更確認",
+      otherRyugiLabel: "その他流儀スキル",
+      otherRyugiRemoveConfirmation:
+        "削除すると、現在選択中のスキルが消去されます。本当によろしいですか？",
+      otherRyugiRemoveConfirmationLabel: "その他流儀の削除確認",
       primaryRyugiChangeConfirmation:
         "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
       primaryRyugiChangeConfirmationLabel: "プライマリ流儀の変更確認",
@@ -128,6 +138,7 @@ export const characterSheetDictionary = {
       remove: "を削除",
       selectPrimaryRyugi: "プライマリ流儀を選択してください。",
       selectIkizama: "生き様を選択してください。",
+      selectOtherRyugi: "その他流儀を選択してください。",
       nameTooltip: "名称欄をクリックするとスキル選択ダイアログが開きます。",
       selectionGuide:
         "スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。",

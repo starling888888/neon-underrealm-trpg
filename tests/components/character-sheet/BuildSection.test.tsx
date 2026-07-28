@@ -18,6 +18,7 @@ function createProps(): BuildSectionProps {
     build,
     derived: calculateBuild(build),
     hasIkizamaSkillLevelError: false,
+    invalidOtherRyugiSkillLevelRowIds: [],
     hasPrimarySkillLevelError: false,
     ikizamaOptions: [{ id: "burai", name: "ブライ" }],
     onAttributeChange: vi.fn(),
@@ -145,7 +146,10 @@ describe("BuildSection", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "その他流儀1を削除" }));
 
-    expect(props.onOtherRyugiRemove).toHaveBeenCalledWith(0);
+    expect(props.onOtherRyugiRemove).toHaveBeenCalledWith(
+      0,
+      expect.any(HTMLButtonElement),
+    );
   });
 
   it("keeps attribute rows in canonical order after values are reconstructed", () => {

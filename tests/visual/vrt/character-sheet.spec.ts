@@ -86,6 +86,33 @@ async function selectLongIkizamaSkill(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
+async function addOtherRyugi(
+  page: Page,
+  index: number,
+  ryugiId: string,
+): Promise<void> {
+  await page.getByRole("button", { name: "＋ その他流儀を追加" }).click();
+  await page
+    .getByRole("combobox", { name: `その他流儀${index}`, exact: true })
+    .selectOption(ryugiId);
+  await page
+    .getByRole("spinbutton", { name: `その他流儀${index}Lv`, exact: true })
+    .fill("1");
+}
+
+async function selectOtherRyugiSkill(page: Page): Promise<void> {
+  await addOtherRyugi(page, 1, "kenkaya");
+  const section = page.getByRole("region", { name: "その他流儀スキル1" });
+
+  await section
+    .getByRole("button", { exact: true, name: "未選択スキル1" })
+    .click();
+  const picker = page.getByRole("dialog", { name: "その他流儀スキルを選択" });
+  await expect(picker).toBeVisible();
+  await picker.getByRole("button", { name: "旋風" }).click();
+  await expect(picker).toBeHidden();
+}
+
 const noncombatChecksLocator = {
   name: "noncombat-checks",
   resolve: (page: Page) =>
@@ -138,12 +165,100 @@ const ikizamaSkillsLocator = {
   resolve: (page: Page) => page.locator("[data-ikizama-skills-section]"),
 };
 
+const otherRyugiSkillsLocator = {
+  name: "other-ryugi-skills-section",
+  resolve: (page: Page) =>
+    page.getByRole("region", { name: "その他流儀スキル1" }),
+};
+
+const otherRyugiSkillPickerLocator = {
+  name: "other-ryugi-skill-picker",
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { name: "その他流儀スキルを選択" }),
+};
+
+const otherRyugiRemoveConfirmLocator = {
+  name: "other-ryugi-remove-confirm",
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { name: "その他流儀の削除確認" }),
+};
+
 const tooltipLocator = {
   name: "tooltip",
   resolve: (page: Page) => page.getByRole("tooltip"),
 };
 
 registerVrtScenarios("character-sheet", [
+  {
+    id: "other-ryugi-skill-selected",
+    locators: [otherRyugiSkillsLocator],
+    prepare: selectOtherRyugiSkill,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "other-ryugi-skills-multiple",
+    locators: [
+      otherRyugiSkillsLocator,
+      {
+        name: "other-ryugi-skills-section-2",
+        resolve: (page: Page) =>
+          page.getByRole("region", { name: "その他流儀スキル2" }),
+      },
+    ],
+    prepare: async (page) => {
+      await addOtherRyugi(page, 1, "kenkaya");
+      await addOtherRyugi(page, 2, "emono");
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "other-ryugi-skill-picker-open",
+    locators: [otherRyugiSkillsLocator, otherRyugiSkillPickerLocator],
+    prepare: async (page) => {
+      await addOtherRyugi(page, 1, "kenkaya");
+      await page
+        .getByRole("region", { name: "その他流儀スキル1" })
+        .getByRole("button", { exact: true, name: "未選択スキル1" })
+        .click();
+      await expect(
+        page.getByRole("dialog", { name: "その他流儀スキルを選択" }),
+      ).toBeVisible();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "other-ryugi-skill-total-error",
+    locators: [buildSectionLocator, otherRyugiSkillsLocator],
+    prepare: async (page) => {
+      await selectOtherRyugiSkill(page);
+      await page
+        .getByRole("region", { name: "その他流儀スキル1" })
+        .getByLabel("旋風Lv", { exact: true })
+        .fill("2");
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "other-ryugi-remove-confirm",
+    locators: [
+      buildSectionLocator,
+      otherRyugiSkillsLocator,
+      otherRyugiRemoveConfirmLocator,
+    ],
+    prepare: async (page) => {
+      await selectOtherRyugiSkill(page);
+      await page.getByRole("button", { name: "その他流儀1を削除" }).click();
+      await expect(
+        page.getByRole("dialog", { name: "その他流儀の削除確認" }),
+      ).toBeVisible();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
   {
     id: "ikizama-long-skill-selected",
     locators: [ikizamaSkillsLocator],

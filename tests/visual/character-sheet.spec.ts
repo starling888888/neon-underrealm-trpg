@@ -77,6 +77,34 @@ test.describe("character sheet page", () => {
     await expect(pickerDialog).toBeHidden();
   });
 
+  test("selects an other-ryugi skill and confirms its removal", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    await page.getByRole("button", { name: "＋ その他流儀を追加" }).click();
+    const otherRyugi = page.getByLabel("その他流儀1", { exact: true });
+    await otherRyugi.selectOption("kenkaya");
+    await page.getByLabel("その他流儀1Lv", { exact: true }).fill("1");
+
+    const section = page.getByRole("region", { name: "その他流儀スキル1" });
+    await section
+      .getByRole("button", { name: "未選択スキル1", exact: true })
+      .click();
+    const picker = page.getByRole("dialog", { name: "その他流儀スキルを選択" });
+    await expect(picker).toBeVisible();
+    await picker.getByRole("button", { name: "旋風" }).click();
+    await expect(picker).toBeHidden();
+
+    await page.getByRole("button", { name: "その他流儀1を削除" }).click();
+    const confirm = page.getByRole("dialog", { name: "その他流儀の削除確認" });
+    await expect(confirm).toBeVisible();
+    await confirm.getByRole("button", { name: "削除" }).click();
+    await expect(confirm).toBeHidden();
+    await expect(otherRyugi).toBeHidden();
+  });
+
   test("uses a menu rail only when the one-column sheet has enough width", async ({
     page,
   }) => {

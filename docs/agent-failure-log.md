@@ -1165,3 +1165,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-12-sheet-primary-skills` のGate完了・child issue archive
 - 観測した失敗: parent Gate planを`done`としchild issueを`docs/issue/done/`へ移動したが、child issue本体の完了条件、チェックポイント、Visual Reviewに未チェックが残っていた。G6での無許可archive、G9でのvisual acceptance未確認archiveに続く、完了根拠をchild issueへ反映しないままcloseする再発である。
 - 一次対応: `.tmp/chatgpt-review.md`をG13のレビュー指摘2として取り込み、G13では全未チェック項目を実確認結果へ更新するまでclose / archive / parent planの`done`へ変更しない。恒久対応はfailure-log監査でユーザー承認後に行う。
+
+### Repeated component-test failure after changing the removal callback contract
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-15-sheet-other-ryugi-skills` の`BuildSection` Component test
+- 観測した失敗: 削除確認dialogのfocus復帰のため、その他流儀削除callbackへ操作元buttonを追加したが、既存testのcallback引数期待を更新しなかった。同じ失敗をfull testとcomponent testで2回確認した。
+- 一次対応: callback契約に合わせてtest expectationを更新し、`npm run test:component`で16 files・78 testsの通過を確認した。callbackへ操作元を追加する変更では、呼び出し側とtest doubleの引数契約を同時に確認する。

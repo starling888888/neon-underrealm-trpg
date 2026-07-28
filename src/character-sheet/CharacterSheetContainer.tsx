@@ -4,6 +4,7 @@ import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresente
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
+import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
 import PrimaryRyugiChangeConfirmDialog from "./components/dialogs/PrimaryRyugiChangeConfirmDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
@@ -25,16 +26,28 @@ export default function CharacterSheetContainer() {
   const [ikizamaSkillPickerRowId, setIkizamaSkillPickerRowId] = useState<
     string | null
   >(null);
+  const [otherRyugiSkillPickerRowId, setOtherRyugiSkillPickerRowId] = useState<
+    string | null
+  >(null);
   const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
     useState(false);
   const [isIkizamaChangeConfirmOpen, setIsIkizamaChangeConfirmOpen] =
     useState(false);
+  const [isOtherRyugiChangeConfirmOpen, setIsOtherRyugiChangeConfirmOpen] =
+    useState(false);
+  const [isOtherRyugiRemoveConfirmOpen, setIsOtherRyugiRemoveConfirmOpen] =
+    useState(false);
   const primarySkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const ikizamaSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const otherRyugiSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
+  const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
+  const otherRyugiRemoveTriggerRef = useRef<HTMLButtonElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
+  const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
+  const pendingOtherRyugiRemoveRef = useRef<(() => void) | null>(null);
   const presenterProps = useCharacterSheetFormPresenterProps(
     rootState.form,
     {
@@ -86,6 +99,54 @@ export default function CharacterSheetContainer() {
         ikizamaSkillPickerTriggerRef.current = trigger;
         setIkizamaSkillPickerRowId(rowId);
       },
+      onOtherRyugiChangeRequested: (rowId, ryugiId, trigger, applyChange) => {
+        const currentRyugiId = rootState.form
+          .getValues("build.otherRyugi")
+          .find((row) => row.rowId === rowId)?.ryugiId;
+        if (ryugiId === currentRyugiId) {
+          applyChange();
+          return;
+        }
+
+        const hasSelectedSkill = rootState.form
+          .getValues("otherRyugiSkills.rows")
+          .some((row) => row.ryugiRowId === rowId && row.skillId !== null);
+        const clearAndApply = () => {
+          presenterProps.otherRyugiSkills.clearSelection(rowId);
+          applyChange();
+        };
+
+        if (!hasSelectedSkill) {
+          clearAndApply();
+          return;
+        }
+
+        otherRyugiChangeTriggerRef.current = trigger;
+        pendingOtherRyugiChangeRef.current = clearAndApply;
+        setIsOtherRyugiChangeConfirmOpen(true);
+      },
+      onOtherRyugiRemoveRequested: (rowId, trigger, applyChange) => {
+        const hasSelectedSkill = rootState.form
+          .getValues("otherRyugiSkills.rows")
+          .some((row) => row.ryugiRowId === rowId && row.skillId !== null);
+        const removeAndApply = () => {
+          presenterProps.otherRyugiSkills.removeRows(rowId);
+          applyChange();
+        };
+
+        if (!hasSelectedSkill) {
+          removeAndApply();
+          return;
+        }
+
+        otherRyugiRemoveTriggerRef.current = trigger;
+        pendingOtherRyugiRemoveRef.current = removeAndApply;
+        setIsOtherRyugiRemoveConfirmOpen(true);
+      },
+      onOtherRyugiSkillPickerRequested: (rowId, trigger) => {
+        otherRyugiSkillPickerTriggerRef.current = trigger;
+        setOtherRyugiSkillPickerRowId(rowId);
+      },
     },
   );
 
@@ -95,6 +156,10 @@ export default function CharacterSheetContainer() {
 
   function closeIkizamaSkillPicker(): void {
     setIkizamaSkillPickerRowId(null);
+  }
+
+  function closeOtherRyugiSkillPicker(): void {
+    setOtherRyugiSkillPickerRowId(null);
   }
 
   function confirmPrimaryRyugiChange(): void {
@@ -119,6 +184,28 @@ export default function CharacterSheetContainer() {
   function closeIkizamaChangeConfirm(): void {
     pendingIkizamaChangeRef.current = null;
     setIsIkizamaChangeConfirmOpen(false);
+  }
+
+  function confirmOtherRyugiChange(): void {
+    pendingOtherRyugiChangeRef.current?.();
+    pendingOtherRyugiChangeRef.current = null;
+    setIsOtherRyugiChangeConfirmOpen(false);
+  }
+
+  function closeOtherRyugiChangeConfirm(): void {
+    pendingOtherRyugiChangeRef.current = null;
+    setIsOtherRyugiChangeConfirmOpen(false);
+  }
+
+  function confirmOtherRyugiRemove(): void {
+    pendingOtherRyugiRemoveRef.current?.();
+    pendingOtherRyugiRemoveRef.current = null;
+    setIsOtherRyugiRemoveConfirmOpen(false);
+  }
+
+  function closeOtherRyugiRemoveConfirm(): void {
+    pendingOtherRyugiRemoveRef.current = null;
+    setIsOtherRyugiRemoveConfirmOpen(false);
   }
   return (
     <>
@@ -166,6 +253,40 @@ export default function CharacterSheetContainer() {
           }}
           returnFocusRef={ikizamaSkillPickerTriggerRef}
         />
+        <OtherRyugiSkillPickerDialog
+          groups={
+            otherRyugiSkillPickerRowId === null
+              ? { advanced: [], basic: [] }
+              : presenterProps.otherRyugiSkillPicker.getCandidateGroups(
+                  rootState.form
+                    .getValues("otherRyugiSkills.rows")
+                    .find((row) => row.rowId === otherRyugiSkillPickerRowId)
+                    ?.ryugiRowId ?? "",
+                )
+          }
+          isOpen={otherRyugiSkillPickerRowId !== null}
+          onRequestClose={closeOtherRyugiSkillPicker}
+          onSelect={(skillId) => {
+            if (otherRyugiSkillPickerRowId !== null) {
+              presenterProps.otherRyugiSkillPicker.onSelect(
+                otherRyugiSkillPickerRowId,
+                skillId,
+              );
+            }
+            closeOtherRyugiSkillPicker();
+          }}
+          returnFocusRef={otherRyugiSkillPickerTriggerRef}
+          selectedSkillIds={
+            otherRyugiSkillPickerRowId === null
+              ? []
+              : presenterProps.otherRyugiSkillPicker.getSelectedSkillIds(
+                  rootState.form
+                    .getValues("otherRyugiSkills.rows")
+                    .find((row) => row.rowId === otherRyugiSkillPickerRowId)
+                    ?.ryugiRowId ?? "",
+                )
+          }
+        />
         <PrimaryRyugiChangeConfirmDialog
           confirmation={
             characterSheetDictionary.characterSheet.skills
@@ -193,6 +314,35 @@ export default function CharacterSheetContainer() {
           onConfirm={confirmIkizamaChange}
           onRequestClose={closeIkizamaChangeConfirm}
           returnFocusRef={ikizamaChangeTriggerRef}
+        />
+        <PrimaryRyugiChangeConfirmDialog
+          confirmation={
+            characterSheetDictionary.characterSheet.skills
+              .otherRyugiChangeConfirmation
+          }
+          dialogLabel={
+            characterSheetDictionary.characterSheet.skills
+              .otherRyugiChangeConfirmationLabel
+          }
+          isOpen={isOtherRyugiChangeConfirmOpen}
+          onConfirm={confirmOtherRyugiChange}
+          onRequestClose={closeOtherRyugiChangeConfirm}
+          returnFocusRef={otherRyugiChangeTriggerRef}
+        />
+        <PrimaryRyugiChangeConfirmDialog
+          confirmLabel={characterSheetDictionary.general.delete}
+          confirmation={
+            characterSheetDictionary.characterSheet.skills
+              .otherRyugiRemoveConfirmation
+          }
+          dialogLabel={
+            characterSheetDictionary.characterSheet.skills
+              .otherRyugiRemoveConfirmationLabel
+          }
+          isOpen={isOtherRyugiRemoveConfirmOpen}
+          onConfirm={confirmOtherRyugiRemove}
+          onRequestClose={closeOtherRyugiRemoveConfirm}
+          returnFocusRef={otherRyugiRemoveTriggerRef}
         />
       </div>
       <CharacterSheetLoadingOverlay

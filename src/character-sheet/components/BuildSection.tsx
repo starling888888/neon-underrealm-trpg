@@ -29,6 +29,7 @@ export type BuildSectionProps = {
   build: BuildValues;
   derived: BuildDerivedValues;
   hasIkizamaSkillLevelError: boolean;
+  invalidOtherRyugiSkillLevelRowIds: readonly string[];
   hasPrimarySkillLevelError: boolean;
   ikizamaOptions: readonly CharacterSheetSelectOption[];
   onAttributeChange: (
@@ -48,9 +49,10 @@ export type BuildSectionProps = {
     index: number,
     field: OtherRyugiEditableFieldName,
     value: string,
+    trigger?: HTMLSelectElement,
   ) => void;
   onOtherRyugiCommit: (index: number, value: string) => number;
-  onOtherRyugiRemove: (index: number) => void;
+  onOtherRyugiRemove: (index: number, trigger?: HTMLButtonElement) => void;
   onPrimaryRyugiChange: (
     id: string | null,
     trigger?: HTMLSelectElement,
@@ -148,6 +150,7 @@ export default function BuildSection({
   build,
   derived,
   hasIkizamaSkillLevelError,
+  invalidOtherRyugiSkillLevelRowIds,
   hasPrimarySkillLevelError,
   ikizamaOptions,
   onAttributeChange,
@@ -231,12 +234,13 @@ export default function BuildSection({
         {build.otherRyugi.map((otherRyugi, index) => (
           <div className={styles.otherRow} key={otherRyugi.rowId}>
             <SelectField
-              ariaInvalid={derived.otherRyugiDuplicateRowIds.includes(
-                otherRyugi.rowId,
-              )}
+              ariaInvalid={
+                derived.otherRyugiDuplicateRowIds.includes(otherRyugi.rowId) ||
+                invalidOtherRyugiSkillLevelRowIds.includes(otherRyugi.rowId)
+              }
               label={`${buildCopy.otherRyugi}${index + 1}`}
-              onChange={(value) =>
-                onOtherRyugiChange(index, "ryugiId", value ?? "")
+              onChange={(value, trigger) =>
+                onOtherRyugiChange(index, "ryugiId", value ?? "", trigger)
               }
               options={ryugiOptions}
               value={otherRyugi.ryugiId}
@@ -245,9 +249,12 @@ export default function BuildSection({
             <div className={styles.levelField}>
               <span className={styles.visuallyHidden}>{buildCopy.level}</span>
               <BuildNumberInput
-                ariaInvalid={derived.otherRyugiLevelInvalidRowIds.includes(
-                  otherRyugi.rowId,
-                )}
+                ariaInvalid={
+                  derived.otherRyugiLevelInvalidRowIds.includes(
+                    otherRyugi.rowId,
+                  ) ||
+                  invalidOtherRyugiSkillLevelRowIds.includes(otherRyugi.rowId)
+                }
                 label={`${buildCopy.otherRyugi}${index + 1}${buildCopy.level}`}
                 onChange={(value) => onOtherRyugiChange(index, "level", value)}
                 onCommit={(value) => onOtherRyugiCommit(index, value)}
@@ -257,7 +264,9 @@ export default function BuildSection({
             <button
               aria-label={`${buildCopy.otherRyugi}${index + 1}${buildUiCopy.remove}`}
               className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
-              onClick={() => onOtherRyugiRemove(index)}
+              onClick={(event) =>
+                onOtherRyugiRemove(index, event.currentTarget)
+              }
               type="button"
             >
               ×

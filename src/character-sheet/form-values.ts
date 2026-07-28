@@ -79,6 +79,14 @@ export type IkizamaSkillsValues = {
   rows: PrimarySkillValues[];
 };
 
+export type OtherRyugiSkillValues = PrimarySkillValues & {
+  ryugiRowId: string;
+};
+
+export type OtherRyugiSkillsValues = {
+  rows: OtherRyugiSkillValues[];
+};
+
 export const attackSkillNames = [
   "brawl",
   "assassination",
@@ -198,6 +206,7 @@ export type CharacterSheetFormValues = {
   checks: ChecksValues;
   credit: CreditValues;
   ikizamaSkills: IkizamaSkillsValues;
+  otherRyugiSkills: OtherRyugiSkillsValues;
   primarySkills: PrimarySkillsValues;
   profile: ProfileValues;
   secondaryAttributes: SecondaryAttributeValues;
@@ -279,6 +288,9 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
   ikizamaSkills: {
     bonusLevel: 1,
     rows: createInitialIkizamaSkillRows(),
+  },
+  otherRyugiSkills: {
+    rows: [],
   },
   primarySkills: {
     rows: createInitialPrimarySkillRows(),

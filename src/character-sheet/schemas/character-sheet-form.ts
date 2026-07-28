@@ -186,6 +186,16 @@ export const characterSheetFormSchema = z.object({
       )
       .min(1),
   }),
+  otherRyugiSkills: z.object({
+    rows: z.array(
+      z.object({
+        level: z.number().int().min(1),
+        rowId: z.string(),
+        ryugiRowId: z.string(),
+        skillId: z.string().nullable(),
+      }),
+    ),
+  }),
   primarySkills: z.object({
     rows: z
       .array(

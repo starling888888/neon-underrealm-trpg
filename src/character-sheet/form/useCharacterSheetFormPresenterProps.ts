@@ -3,12 +3,14 @@ import type { UseFormReturn } from "react-hook-form";
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
 import type { CharacterSheetFormValues } from "../form-values";
 import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
+import type { OtherRyugiSkillGroups } from "../master-data/other-ryugi-skills";
 import type { PrimarySkillGroups } from "../master-data/primary-skills";
 import type { CharacterImagePresenterState } from "./presenter-state";
 import useBondsSectionProps from "./useBondsSectionProps";
 import useBuildSectionProps from "./useBuildSectionProps";
 import useChecksSectionProps from "./useChecksSectionProps";
 import useIkizamaSkillsSectionProps from "./useIkizamaSkillsSectionProps";
+import useOtherRyugiSkillsSectionProps from "./useOtherRyugiSkillsSectionProps";
 import usePrimarySkillsSectionProps from "./usePrimarySkillsSectionProps";
 import useProfileSectionProps from "./useProfileSectionProps";
 import useSecondaryAttributesSectionProps from "./useSecondaryAttributesSectionProps";
@@ -32,6 +34,21 @@ type CharacterSheetPresenterOptions = {
     rowId: string,
     trigger: HTMLButtonElement,
   ) => void;
+  onOtherRyugiChangeRequested: (
+    rowId: string,
+    ryugiId: string | null,
+    trigger: HTMLSelectElement,
+    applyChange: () => void,
+  ) => void;
+  onOtherRyugiRemoveRequested: (
+    rowId: string,
+    trigger: HTMLButtonElement,
+    applyChange: () => void,
+  ) => void;
+  onOtherRyugiSkillPickerRequested: (
+    rowId: string,
+    trigger: HTMLButtonElement,
+  ) => void;
 };
 
 export type CharacterSheetContainerPresenterState =
@@ -40,6 +57,15 @@ export type CharacterSheetContainerPresenterState =
       candidateGroups: IkizamaSkillGroups;
       clearSelection: () => void;
       onSelect: (rowId: string, skillId: string) => void;
+    };
+    otherRyugiSkillPicker: {
+      getCandidateGroups: (ryugiRowId: string) => OtherRyugiSkillGroups;
+      getSelectedSkillIds: (ryugiRowId: string) => readonly string[];
+      onSelect: (rowId: string, skillId: string) => void;
+    };
+    otherRyugiSkills: {
+      clearSelection: (ryugiRowId: string) => void;
+      removeRows: (ryugiRowId: string) => void;
     };
     primarySkillPicker: {
       candidateGroups: PrimarySkillGroups;
@@ -55,12 +81,21 @@ export default function useCharacterSheetFormPresenterProps(
   {
     onIkizamaChangeRequested,
     onIkizamaSkillPickerRequested,
+    onOtherRyugiChangeRequested,
+    onOtherRyugiRemoveRequested,
+    onOtherRyugiSkillPickerRequested,
     onPrimaryRyugiChangeRequested,
     onPrimarySkillPickerRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
+  const otherRyugiSkills = useOtherRyugiSkillsSectionProps(form, {
+    onPickerRequest: onOtherRyugiSkillPickerRequested ?? (() => {}),
+  });
   const build = useBuildSectionProps(form, {
     onIkizamaChangeRequested,
+    onOtherRyugiAdded: otherRyugiSkills.addInitialRow,
+    onOtherRyugiChangeRequested,
+    onOtherRyugiRemoveRequested,
     onPrimaryRyugiChangeRequested,
   });
   const secondaryAttributes = useSecondaryAttributesSectionProps(
@@ -91,6 +126,10 @@ export default function useCharacterSheetFormPresenterProps(
       ...build.sectionProps,
       hasIkizamaSkillLevelError:
         ikizamaSkills.sectionProps.hasIkizamaSkillLevelTotalError,
+      invalidOtherRyugiSkillLevelRowIds:
+        otherRyugiSkills.sectionProps.sections.flatMap((section) =>
+          section.hasSkillLevelTotalError ? [section.ryugiRowId] : [],
+        ),
       hasPrimarySkillLevelError:
         primarySkills.sectionProps.hasPrimarySkillLevelTotalError,
     },
@@ -101,6 +140,16 @@ export default function useCharacterSheetFormPresenterProps(
       clearSelection: ikizamaSkills.clearSelection,
       onSelect: ikizamaSkills.onSelect,
     },
+    otherRyugiSkillPicker: {
+      getCandidateGroups: otherRyugiSkills.getCandidateGroups,
+      getSelectedSkillIds: otherRyugiSkills.getSelectedSkillIds,
+      onSelect: otherRyugiSkills.onSelect,
+    },
+    otherRyugiSkills: {
+      clearSelection: otherRyugiSkills.clearSelection,
+      removeRows: otherRyugiSkills.removeRows,
+    },
+    otherRyugiSkillsSection: otherRyugiSkills.sectionProps,
     primarySkillPicker: {
       candidateGroups: primarySkills.candidateGroups,
       clearSelection: primarySkills.clearSelection,

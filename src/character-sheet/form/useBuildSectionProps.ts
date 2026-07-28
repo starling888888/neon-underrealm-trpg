@@ -33,12 +33,27 @@ type UseBuildSectionPropsOptions = {
     trigger: HTMLSelectElement,
     applyChange: () => void,
   ) => void;
+  onOtherRyugiAdded?: (rowId: string) => void;
+  onOtherRyugiChangeRequested?: (
+    rowId: string,
+    ryugiId: string | null,
+    trigger: HTMLSelectElement,
+    applyChange: () => void,
+  ) => void;
+  onOtherRyugiRemoveRequested?: (
+    rowId: string,
+    trigger: HTMLButtonElement,
+    applyChange: () => void,
+  ) => void;
 };
 
 export default function useBuildSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
   {
     onIkizamaChangeRequested,
+    onOtherRyugiAdded,
+    onOtherRyugiChangeRequested,
+    onOtherRyugiRemoveRequested,
     onPrimaryRyugiChangeRequested,
   }: UseBuildSectionPropsOptions = {},
 ): BuildSectionPresenterState {
@@ -111,6 +126,7 @@ export default function useBuildSectionProps(
       build,
       derived: derivedBuild,
       hasIkizamaSkillLevelError: false,
+      invalidOtherRyugiSkillLevelRowIds: [],
       hasPrimarySkillLevelError: false,
       ikizamaOptions: getCharacterSheetIkizamaOptions(),
       onAttributeChange: setAttributeValue,
@@ -131,23 +147,63 @@ export default function useBuildSectionProps(
         return normalizedValue;
       },
       onOtherRyugiAdd: () => {
+        const nextRow = {
+          level: 0,
+          rowId: crypto.randomUUID(),
+          ryugiId: null,
+        };
         setBuildValue("otherRyugi", [
           ...getValues("build").otherRyugi,
-          { level: 0, rowId: crypto.randomUUID(), ryugiId: null },
+          nextRow,
         ]);
+        onOtherRyugiAdded?.(nextRow.rowId);
       },
-      onOtherRyugiChange: (index, field, value) => {
-        void setOtherRyugiValue(index, field, value);
+      onOtherRyugiChange: (index, field, value, trigger) => {
+        if (field !== "ryugiId") {
+          void setOtherRyugiValue(index, field, value);
+          return;
+        }
+
+        const row = getValues("build").otherRyugi[index];
+        const ryugiId = value || null;
+        const applyChange = () => {
+          void setOtherRyugiValue(index, field, value);
+        };
+
+        if (
+          row !== undefined &&
+          trigger !== undefined &&
+          onOtherRyugiChangeRequested !== undefined
+        ) {
+          onOtherRyugiChangeRequested(row.rowId, ryugiId, trigger, applyChange);
+          return;
+        }
+
+        applyChange();
       },
       onOtherRyugiCommit: (index, value) =>
         setOtherRyugiValue(index, "level", value) ?? 0,
-      onOtherRyugiRemove: (index) => {
-        setBuildValue(
-          "otherRyugi",
-          getValues("build").otherRyugi.filter(
-            (_, entryIndex) => entryIndex !== index,
-          ),
-        );
+      onOtherRyugiRemove: (index, trigger) => {
+        const row = getValues("build").otherRyugi[index];
+        const applyChange = () => {
+          setBuildValue(
+            "otherRyugi",
+            getValues("build").otherRyugi.filter(
+              (_, entryIndex) => entryIndex !== index,
+            ),
+          );
+        };
+
+        if (
+          row !== undefined &&
+          trigger !== undefined &&
+          onOtherRyugiRemoveRequested !== undefined
+        ) {
+          onOtherRyugiRemoveRequested(row.rowId, trigger, applyChange);
+          return;
+        }
+
+        applyChange();
       },
       onPrimaryRyugiChange: (primaryRyugiId, trigger) => {
         const applyChange = () => {
