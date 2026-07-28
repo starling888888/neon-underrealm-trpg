@@ -163,3 +163,27 @@
 - [ ] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- プライマリ流儀スキル表の名称headerをtooltip化し、「名称欄をクリックするとスキル選択ダイアログが開きます。」と表示する。
+- スキル選択ダイアログのcontent先頭に、太字で「スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。」と表示する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: いずれもG12のプライマリ流儀スキル表と候補選択dialogだけの表示説明であり、現在のissue scope内である。既存の`FormulaTooltip`と`CharacterSheetDialogContent`を利用できる。
+
+### 対応方針
+
+- 通常行の名称列headerだけへ既存tooltipを適用し、候補dialogのcontent先頭へ指定文言を追加する。
+
+### 対応完了チェックリスト
+
+- [x] 名称headerのtooltipと指定文言を実装する。
+- [x] 候補選択dialogのcontent先頭に指定の太字説明文を表示する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

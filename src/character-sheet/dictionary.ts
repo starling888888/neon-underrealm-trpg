@@ -119,6 +119,9 @@ export const characterSheetDictionary = {
       reorderPrefix: "並べ替え: ",
       remove: "を削除",
       selectPrimaryRyugi: "プライマリ流儀を選択してください。",
+      nameTooltip: "名称欄をクリックするとスキル選択ダイアログが開きます。",
+      selectionGuide:
+        "スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。",
       label: "プライマリ流儀スキル",
       unselected: "スキルを選択",
     },

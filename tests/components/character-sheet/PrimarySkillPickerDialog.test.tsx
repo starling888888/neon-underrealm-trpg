@@ -45,6 +45,11 @@ describe("primary skill dialogs", () => {
 
     expect(screen.getByRole("heading", { name: "初期作成" })).not.toBeNull();
     expect(screen.getByRole("heading", { name: "Lv6以上" })).not.toBeNull();
+    expect(
+      screen.getByText(
+        "スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。",
+      ),
+    ).not.toBeNull();
     expect(screen.getByText(groups.basic[0]?.effect ?? "")).not.toBeNull();
     expect(screen.getAllByText("名称")).toHaveLength(2);
     expect(screen.getAllByText("使用制限")).toHaveLength(2);

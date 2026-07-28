@@ -61,6 +61,13 @@ describe("PrimarySkillsSection", () => {
     ).toContain("1");
     expect(screen.queryByText("取得制限")).toBeNull();
 
+    fireEvent.click(screen.getByRole("button", { name: "名称" }));
+    expect(
+      screen.getByRole("tooltip", {
+        name: "名称欄をクリックするとスキル選択ダイアログが開きます。",
+      }),
+    ).not.toBeNull();
+
     fireEvent.click(
       screen.getByRole("button", { name: props.rows[0]?.skill?.name ?? "" }),
     );

@@ -5,6 +5,7 @@ import type { Skill } from "../../lib/types/skill";
 import { characterSheetDictionary } from "../dictionary";
 import { formatDisplayValue } from "../format-display-value";
 import type { PrimarySkillGroups } from "../master-data/primary-skills";
+import FormulaTooltip from "./FormulaTooltip";
 import styles from "./PrimarySkillsSection.module.css";
 
 export type PrimarySkillRowView = {
@@ -304,9 +305,14 @@ export default function PrimarySkillsSection({
       >
         {primaryRyugiSelected ? (
           <>
-            <div aria-hidden="true" className={styles.headerRow}>
+            <div className={styles.headerRow}>
               <span />
-              <span>{skillCopy.name}</span>
+              <FormulaTooltip
+                ariaLabel={skillCopy.name}
+                formula={copy.nameTooltip}
+              >
+                <span>{skillCopy.name}</span>
+              </FormulaTooltip>
               <span>{skillCopy.level}</span>
               <span>
                 {skillCopy.maximumLevel.replace(skillCopy.level, "")}

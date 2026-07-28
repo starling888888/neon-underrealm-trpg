@@ -133,6 +133,9 @@ export default function PrimarySkillPickerDialog({
       </CharacterSheetDialogHeader>
       <CharacterSheetDialogContent>
         <div className={styles.content}>
+          <p className={styles.selectionGuide}>
+            <strong>{copy.selectionGuide}</strong>
+          </p>
           <CandidateGroup
             heading={copy.initialCreation}
             onSelect={onSelect}
