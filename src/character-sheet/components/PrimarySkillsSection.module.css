@@ -135,24 +135,35 @@
   justify-self: center;
 }
 
-.dragHandle,
+.reorderControls,
 .handlePlaceholder {
   display: grid;
   min-height: 2.25rem;
   place-items: center;
 }
 
-.dragHandle {
-  border: 0;
+.reorderControls {
+  align-content: center;
+  gap: 0.0625rem;
   background: var(--color-surface-muted);
+}
+
+.reorderButton {
+  display: grid;
+  width: 100%;
+  min-height: 0.6875rem;
+  place-items: center;
+  border: 0;
+  background: transparent;
   color: var(--color-text-muted);
-  cursor: grab;
-  font-size: var(--text-xs);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.5rem;
   line-height: 1;
 }
 
-.dragHandle:active {
-  cursor: grabbing;
+.reorderButton:hover {
+  color: var(--color-link);
 }
 
 .skillName,

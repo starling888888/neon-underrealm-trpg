@@ -20,9 +20,9 @@ function createProps(): PrimarySkillsSectionProps {
     maximumSkillNameLength: 8,
     onAdd: vi.fn(),
     onLevelChange: vi.fn((_rowId, value: string) => Number(value)),
+    onMove: vi.fn(),
     onPickerRequest: vi.fn(),
     onRemove: vi.fn(),
-    onReorder: vi.fn(),
     onSelect: vi.fn(),
     onSelectionClear: vi.fn(),
     primaryRyugiName: "ケンカヤ",
@@ -52,9 +52,7 @@ describe("PrimarySkillsSection", () => {
     render(<PrimarySkillsSection {...props} />);
 
     expect(screen.getByText(props.bonusSkills[0]?.name ?? "")).not.toBeNull();
-    expect(screen.getAllByRole("button", { name: /並べ替え:/ })).toHaveLength(
-      2,
-    );
+    expect(screen.getAllByRole("button", { name: /へ移動$/ })).toHaveLength(2);
     expect(screen.getByText("名称")).not.toBeNull();
     expect(screen.getByText("タイミング")).not.toBeNull();
     expect(
@@ -93,26 +91,29 @@ describe("PrimarySkillsSection", () => {
     ).toContain("使用制限");
   });
 
-  it("disables removal at the one-row minimum and forwards drag reorder", () => {
+  it("moves normal rows one step with only valid direction buttons", () => {
     const props = createProps();
-    const dataTransfer = {
-      effectAllowed: "",
-      getData: vi.fn(() => "first"),
-      setData: vi.fn(),
-    };
     render(<PrimarySkillsSection {...props} />);
 
-    const firstHandle = screen.getAllByRole("button", { name: /並べ替え:/ })[0];
-    const secondRow = document.querySelector(
-      '[data-primary-skill-row="second"]',
-    );
-    if (firstHandle === undefined || secondRow === null) {
-      throw new Error("スキル行を取得できません。");
-    }
+    const firstName = props.rows[0]?.skill?.name ?? "未選択";
+    const secondName = props.rows[1]?.skill?.name ?? "未選択";
+    expect(
+      screen.queryByRole("button", { name: `${firstName}上へ移動` }),
+    ).toBeNull();
+    expect(
+      screen.getByRole("button", { name: `${firstName}下へ移動` }),
+    ).not.toBeNull();
+    expect(
+      screen.getByRole("button", { name: `${secondName}上へ移動` }),
+    ).not.toBeNull();
+    expect(
+      screen.queryByRole("button", { name: `${secondName}下へ移動` }),
+    ).toBeNull();
 
-    fireEvent.dragStart(firstHandle, { dataTransfer });
-    fireEvent.drop(secondRow, { dataTransfer });
-    expect(props.onReorder).toHaveBeenCalledWith("first", "second");
+    fireEvent.click(
+      screen.getByRole("button", { name: `${firstName}下へ移動` }),
+    );
+    expect(props.onMove).toHaveBeenCalledWith("first", "down");
 
     cleanup();
     const [firstRow] = props.rows;
@@ -120,6 +121,7 @@ describe("PrimarySkillsSection", () => {
       throw new Error("先頭スキル行を取得できません。");
     }
     render(<PrimarySkillsSection {...props} rows={[firstRow]} />);
+    expect(screen.queryByRole("button", { name: /へ移動$/ })).toBeNull();
     expect(screen.getByRole("button", { name: /を削除$/ })).toHaveProperty(
       "disabled",
       true,
@@ -133,7 +135,7 @@ describe("PrimarySkillsSection", () => {
     expect(
       screen.getByText("プライマリ流儀を選択してください。"),
     ).not.toBeNull();
-    expect(screen.queryByRole("button", { name: /並べ替え:/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /へ移動$/ })).toBeNull();
   });
 
   it("folds independently and exposes maximum-level errors on the row", () => {
@@ -162,7 +164,7 @@ describe("PrimarySkillsSection", () => {
 
     fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
-    expect(screen.queryByRole("button", { name: /並べ替え:/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /へ移動$/ })).toBeNull();
   });
 
   it("marks every duplicate selected skill row as invalid", () => {

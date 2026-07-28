@@ -1,5 +1,5 @@
 import { ListPlus } from "lucide-react";
-import { type CSSProperties, type DragEvent, useState } from "react";
+import { type CSSProperties, useState } from "react";
 
 import type { Skill } from "../../lib/types/skill";
 import { characterSheetDictionary } from "../dictionary";
@@ -26,7 +26,7 @@ export type PrimarySkillsSectionProps = {
   onLevelChange: (rowId: string, value: string) => number;
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;
   onRemove: (rowId: string) => void;
-  onReorder: (draggedRowId: string, targetRowId: string) => void;
+  onMove: (rowId: string, direction: "up" | "down") => void;
   onSelect: (rowId: string, skillId: string) => void;
   onSelectionClear: () => void;
   primaryRyugiName: string | null;
@@ -151,42 +151,31 @@ function PrimaryBonusSkillRow({ skill }: { skill: Skill }) {
 
 function PrimarySkillRow({
   canRemove,
+  canMoveDown,
+  canMoveUp,
   hasDuplicateSkillError,
   hasMaximumLevelError,
   onLevelChange,
   onPickerRequest,
   onRemove,
-  onReorder,
+  onMove,
   row,
 }: {
   canRemove: boolean;
+  canMoveDown: boolean;
+  canMoveUp: boolean;
   hasDuplicateSkillError: boolean;
   hasMaximumLevelError: boolean;
   onLevelChange: (rowId: string, value: string) => number;
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;
   onRemove: (rowId: string) => void;
-  onReorder: (draggedRowId: string, targetRowId: string) => void;
+  onMove: (rowId: string, direction: "up" | "down") => void;
   row: PrimarySkillRowView;
 }) {
   const copy = characterSheetDictionary.characterSheet.skills;
   const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
-  const [draggedRowId, setDraggedRowId] = useState<string | null>(null);
   const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
   const name = row.skill?.name ?? copy.unselected;
-
-  function onDragStart(event: DragEvent<HTMLButtonElement>): void {
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", row.rowId);
-    setDraggedRowId(row.rowId);
-  }
-
-  function onDrop(event: DragEvent<HTMLFieldSetElement>): void {
-    event.preventDefault();
-    const sourceRowId =
-      event.dataTransfer.getData("text/plain") || draggedRowId;
-    if (sourceRowId !== null) onReorder(sourceRowId, row.rowId);
-    setDraggedRowId(null);
-  }
 
   return (
     <fieldset
@@ -194,21 +183,31 @@ function PrimarySkillRow({
       data-invalid={hasDuplicateSkillError || hasMaximumLevelError || undefined}
       data-primary-skill-kind="normal"
       data-primary-skill-row={row.rowId}
-      onDragOver={(event) => event.preventDefault()}
-      onDrop={onDrop}
     >
       <legend className={styles.visuallyHidden}>{name}</legend>
       <div className={styles.firstLine}>
-        <button
-          aria-label={`${copy.reorderPrefix}${name}`}
-          className={styles.dragHandle}
-          draggable
-          onDragEnd={() => setDraggedRowId(null)}
-          onDragStart={onDragStart}
-          type="button"
-        >
-          <span aria-hidden="true">≡</span>
-        </button>
+        <div className={styles.reorderControls}>
+          {canMoveUp ? (
+            <button
+              aria-label={`${name}${copy.moveUp}`}
+              className={styles.reorderButton}
+              onClick={() => onMove(row.rowId, "up")}
+              type="button"
+            >
+              <span aria-hidden="true">▲</span>
+            </button>
+          ) : null}
+          {canMoveDown ? (
+            <button
+              aria-label={`${name}${copy.moveDown}`}
+              className={styles.reorderButton}
+              onClick={() => onMove(row.rowId, "down")}
+              type="button"
+            >
+              <span aria-hidden="true">▼</span>
+            </button>
+          ) : null}
+        </div>
         <button
           className={styles.skillPicker}
           onClick={(event) => onPickerRequest(row.rowId, event.currentTarget)}
@@ -274,8 +273,8 @@ export default function PrimarySkillsSection({
   onAdd,
   onLevelChange,
   onPickerRequest,
+  onMove,
   onRemove,
-  onReorder,
   primaryRyugiName,
   primaryRyugiSelected,
   rows,
@@ -342,9 +341,11 @@ export default function PrimarySkillsSection({
             {bonusSkills.map((skill) => (
               <PrimaryBonusSkillRow key={skill.id} skill={skill} />
             ))}
-            {rows.map((row) => (
+            {rows.map((row, index) => (
               <PrimarySkillRow
                 canRemove={rows.length > 1}
+                canMoveDown={index < rows.length - 1}
+                canMoveUp={index > 0}
                 hasDuplicateSkillError={invalidDuplicateSkillRowIds.includes(
                   row.rowId,
                 )}
@@ -353,9 +354,9 @@ export default function PrimarySkillsSection({
                 )}
                 key={row.rowId}
                 onLevelChange={onLevelChange}
+                onMove={onMove}
                 onPickerRequest={onPickerRequest}
                 onRemove={onRemove}
-                onReorder={onReorder}
                 row={row}
               />
             ))}

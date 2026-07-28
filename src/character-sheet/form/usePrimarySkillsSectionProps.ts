@@ -99,15 +99,16 @@ export default function usePrimarySkillsSectionProps(
         if (rows.length <= 1) return;
         setRows(rows.filter((row) => row.rowId !== rowId));
       },
-      onReorder: (draggedRowId, targetRowId) => {
-        if (draggedRowId === targetRowId) return;
+      onMove: (rowId, direction) => {
         const rows = [...getRows()];
-        const fromIndex = rows.findIndex((row) => row.rowId === draggedRowId);
-        const targetIndex = rows.findIndex((row) => row.rowId === targetRowId);
-        if (fromIndex < 0 || targetIndex < 0) return;
-        const [dragged] = rows.splice(fromIndex, 1);
-        if (dragged === undefined) return;
-        rows.splice(targetIndex, 0, dragged);
+        const currentIndex = rows.findIndex((row) => row.rowId === rowId);
+        const targetIndex = currentIndex + (direction === "up" ? -1 : 1);
+        if (currentIndex < 0 || targetIndex < 0 || targetIndex >= rows.length) {
+          return;
+        }
+        const [moved] = rows.splice(currentIndex, 1);
+        if (moved === undefined) return;
+        rows.splice(targetIndex, 0, moved);
         setRows(rows);
       },
       onSelect: (rowId, skillId) => {

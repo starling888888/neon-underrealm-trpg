@@ -165,6 +165,33 @@ describe("useCharacterSheetFormPresenterProps", () => {
     ).toEqual([firstRowId, secondRowId]);
   });
 
+  it("moves primary skill rows one step without crossing the boundaries", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [firstRow, secondRow] =
+      result.current.form.getValues("primarySkills.rows");
+    if (firstRow === undefined || secondRow === undefined) {
+      throw new Error("並べ替え確認用のスキル行を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.primarySkillsSection.onMove(
+        firstRow.rowId,
+        "up",
+      );
+      result.current.presenterProps.primarySkillsSection.onMove(
+        firstRow.rowId,
+        "down",
+      );
+    });
+
+    expect(result.current.form.getValues("primarySkills.rows.0.rowId")).toBe(
+      secondRow.rowId,
+    );
+    expect(result.current.form.getValues("primarySkills.rows.1.rowId")).toBe(
+      firstRow.rowId,
+    );
+  });
+
   it("connects secondary corrections and temporary-value choices through RHF", () => {
     const { result } = renderHook(() => usePresenterHarness());
 

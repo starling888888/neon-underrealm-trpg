@@ -112,11 +112,12 @@ export const characterSheetDictionary = {
       choose: "プライマリ流儀スキルを選択",
       initialCreation: "初期作成",
       level6OrAbove: "Lv6以上",
+      moveDown: "下へ移動",
+      moveUp: "上へ移動",
       primaryRyugiChangeConfirmation:
         "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
       primaryRyugiChangeConfirmationLabel: "プライマリ流儀の変更確認",
       primary: "プライマリ流儀",
-      reorderPrefix: "並べ替え: ",
       remove: "を削除",
       selectPrimaryRyugi: "プライマリ流儀を選択してください。",
       nameTooltip: "名称欄をクリックするとスキル選択ダイアログが開きます。",
