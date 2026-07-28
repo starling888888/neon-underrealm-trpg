@@ -30,7 +30,7 @@
 | G9   | done    | G7, G8                                                                                                                                          | `docs/issue/done/ex-02-web-character-sheet/ex-02-9-sheet-bonds.md`            | 縁と覚悟を扱う。                                                                      |
 | G10  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-10-sheet-attack-reaction.md` | 攻撃とリアクションを扱う。                                                            |
 | G11  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-11-sheet-noncombat.md`       | 非戦闘技能を扱う。                                                                    |
-| G12  | planned | G7                                                                                                                                              | `docs/issue/ex-02-12-sheet-primary-skills.md`                                 | プライマリ流儀のスキルを扱う。                                                        |
+| G12  | done    | G7                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-12-sheet-primary-skills.md`  | プライマリ流儀のスキルを扱う。                                                        |
 | G13  | planned | G7                                                                                                                                              | `docs/issue/ex-02-13-sheet-ikizama-skills.md`                                 | 生き様のスキルを扱う。                                                                |
 | G14  | planned | G7                                                                                                                                              | `docs/issue/ex-02-14-sheet-common-skills.md`                                  | 共通スキルを扱う。                                                                    |
 | G15  | planned | G7, G12                                                                                                                                         | `docs/issue/ex-02-15-sheet-other-ryugi-skills.md`                             | その他流儀のスキルを扱う。                                                            |
@@ -131,5 +131,13 @@
 - G9 / G10の再受入として、縁の削除callbackを未覚悟かつ上限外行だけに制限し、縁・攻撃・リアクションの編集行を`fieldset` / `legend`で意味付けた。mobileの縁`クリア`buttonのgrid overflowも解消した。
 - `FormulaTooltip`のindicatorは共通flex boxへ移した。G31のコンテンツレビューで残る違和感が指摘された場合だけ、個別labelではなく共通Componentを再調整する。
 - canonical VRT baselineは管理しない。G31は各Gateのactual locator screenshotをrequirements・design・ユーザー指示へ照合して、統合Visual Reviewを行う。
+
+### G12
+
+- プライマリ流儀のbonus skillは自動表示の固定Lv1、通常skillは最低1行を保持した可変行として実装した。通常行は選択、Lv、追加・削除、上下buttonによる並べ替えを扱い、重複、最大Lv超過、通常skill合計Lvのプライマリ流儀Lv超過をsection / row / inputのerror状態へ伝える。
+- `components/skills/SkillSection`と`SkillPickerDialog`は、RHF・流儀種別・field pathを受け取らないshared表示Componentである。G13〜G15はcategory固有adapterからrow、候補group、選択済みID、callbackを渡して再利用し、同じ表・dialogを複製しない。
+- 通常行の未選択表示は可視文言を維持しつつ、操作用accessible nameを行番号で一意にする。候補dialogの選択済み行はdisabled表示とし、読み取り専用metadataにも非視覚ラベルを持たせる。
+- desktop / tabletは名称、Lv、最大Lv、タイミング、コスト、使用制限、展開を要約行に置き、技能・取得制限・効果を展開詳細に置く。mobileは名称、Lv、最大Lv、タイミング、展開、削除だけを要約行とし、コスト・使用制限・技能・取得制限・効果を展開詳細へ置く。
+- 4状態（選択済み、候補dialog、行詳細展開、流儀変更確認）のdesktop / tablet / mobile actual locator screenshotを確認済み。12状態のcanonical VRT baselineは未作成のため比較不能であり、baseline更新は行わない。
 
 状態は `planned`、`in progress`、`done` を使う。
