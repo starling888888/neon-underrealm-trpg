@@ -15,7 +15,7 @@
   - mobile: `390x900`
 - desktop、tablet、mobileを初期scopeに含める。各viewportの具体的なlayoutとVRT状態は、対応するGateで定める。
 - 現在のVRT対象: `tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`。routeは`/character-sheet/`、stateはdefaultである。
-- ユーザー承認により、desktopとtabletのcanonical snapshotをローカル更新した。mobile snapshotは作成・更新していない。
+- 2026-07-29、ユーザー承認により、G17の武器・防具sectionを含む現行画面へ`@character-sheet`のローカルcanonical snapshotを更新した。既存full-page snapshot 51件（desktop、ultrawide、tablet、mobileの既存対応分）を更新し、同じtargetの通常比較は51件成功した。G17の7 state × 3 viewportはlocator-onlyであり、full-page canonical snapshotは作成しない。
 - 承認済みドラフトから決定する将来のVRT状態:
   - 必須の初期値を持つ直接編集の初期状態
   - 可変のスキル、縁、アイテム行を含む入力済み状態

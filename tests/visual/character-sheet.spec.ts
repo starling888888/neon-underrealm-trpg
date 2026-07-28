@@ -455,4 +455,85 @@ test.describe("character sheet page", () => {
       page.getByText("入力済みの縁が結べる縁の上限を超えています。"),
     ).toBeHidden();
   });
+
+  test("selects, reorders, and removes weapons while keeping one row", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const weapons = page.getByRole("region", { exact: true, name: "武器" });
+    const weaponPicker = page.getByRole("dialog", {
+      exact: true,
+      name: "武器を選択",
+    });
+
+    await weapons
+      .getByRole("button", { exact: true, name: "武器を選択" })
+      .click();
+    await expect(weaponPicker).toBeVisible();
+    await weaponPicker.getByRole("button", { exact: true, name: "刀" }).click();
+    await expect(weaponPicker).toBeHidden();
+    await expect(
+      weapons.getByRole("button", { exact: true, name: "刀" }),
+    ).toBeVisible();
+
+    await weapons
+      .getByRole("button", { exact: true, name: "＋ 武器を追加" })
+      .click();
+    await weapons
+      .getByRole("button", { exact: true, name: "武器を選択" })
+      .click();
+    await weaponPicker
+      .getByRole("button", { exact: true, name: "バット" })
+      .click();
+    await expect(weaponPicker).toBeHidden();
+    await expect(
+      weapons.getByRole("button", { exact: true, name: "刀を削除" }),
+    ).toBeEnabled();
+    await expect(
+      weapons.getByRole("button", { exact: true, name: "刀下へ移動" }),
+    ).toBeVisible();
+
+    await weapons
+      .getByRole("button", { exact: true, name: "刀下へ移動" })
+      .click();
+    await weapons
+      .getByRole("button", { exact: true, name: "刀を削除" })
+      .click();
+    await expect(
+      weapons.getByRole("button", { exact: true, name: "バットを削除" }),
+    ).toBeDisabled();
+  });
+
+  test("selects and clears armor without a confirmation dialog", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const armor = page.getByRole("region", { exact: true, name: "防具" });
+    const armorPicker = page.getByRole("dialog", {
+      exact: true,
+      name: "防具を選択",
+    });
+
+    await armor
+      .getByRole("button", { exact: true, name: "防具を選択" })
+      .click();
+    await expect(armorPicker).toBeVisible();
+    await armorPicker
+      .getByRole("button", { exact: true, name: "チンピラ服" })
+      .click();
+    await expect(armorPicker).toBeHidden();
+    await expect(
+      armor.getByRole("button", { exact: true, name: "チンピラ服" }),
+    ).toBeVisible();
+
+    await armor.getByRole("button", { exact: true, name: "クリア" }).click();
+    await expect(
+      armor.getByRole("button", { exact: true, name: "防具を選択" }),
+    ).toBeVisible();
+    await expect(page.getByRole("dialog")).toBeHidden();
+  });
 });

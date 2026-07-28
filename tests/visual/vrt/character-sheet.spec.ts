@@ -35,6 +35,59 @@ async function openChecksTooltip(page: Page): Promise<void> {
   await expect(page.getByRole("tooltip")).toBeVisible();
 }
 
+async function openWeaponPicker(page: Page): Promise<void> {
+  const weapons = page.getByRole("region", { exact: true, name: "武器" });
+
+  await weapons
+    .getByRole("button", { exact: true, name: "武器を選択" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { exact: true, name: "武器を選択" }),
+  ).toBeVisible();
+}
+
+async function selectWeapon(page: Page, weaponName = "刀"): Promise<void> {
+  await openWeaponPicker(page);
+  const picker = page.getByRole("dialog", {
+    exact: true,
+    name: "武器を選択",
+  });
+
+  await picker.getByRole("button", { exact: true, name: weaponName }).click();
+  await expect(picker).toBeHidden();
+}
+
+async function openArmorPicker(page: Page): Promise<void> {
+  const armor = page.getByRole("region", { exact: true, name: "防具" });
+
+  await armor.getByRole("button", { exact: true, name: "防具を選択" }).click();
+  await expect(
+    page.getByRole("dialog", { exact: true, name: "防具を選択" }),
+  ).toBeVisible();
+}
+
+async function selectArmor(
+  page: Page,
+  armorName = "チンピラ服",
+): Promise<void> {
+  await openArmorPicker(page);
+  const picker = page.getByRole("dialog", {
+    exact: true,
+    name: "防具を選択",
+  });
+
+  await picker.getByRole("button", { exact: true, name: armorName }).click();
+  await expect(picker).toBeHidden();
+}
+
+async function openWeaponsTooltip(page: Page): Promise<void> {
+  await page
+    .getByRole("region", { exact: true, name: "武器" })
+    .getByRole("button", { exact: true, name: "攻撃力／ガード値" })
+    .hover();
+  await expect(page.getByRole("tooltip")).toBeVisible();
+}
+
 async function openNoncombatChecks(page: Page): Promise<void> {
   const favorite = page.getByLabel("脅迫を得意技能にする");
 
@@ -223,6 +276,23 @@ const checksSectionLocator = {
   name: "checks-section",
   resolve: (page: Page) =>
     page.locator('[data-character-sheet-section-slot="checks"]'),
+};
+
+const weaponsAndArmorSectionLocator = {
+  name: "weapons-and-armor-section",
+  resolve: (page: Page) => page.locator("[data-weapons-and-armor-section]"),
+};
+
+const weaponPickerLocator = {
+  name: "weapon-picker",
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { exact: true, name: "武器を選択" }),
+};
+
+const armorPickerLocator = {
+  name: "armor-picker",
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { exact: true, name: "防具を選択" }),
 };
 
 const profileSectionLocator = {
@@ -658,6 +728,78 @@ registerVrtScenarios("character-sheet", [
     locators: [bondsSectionLocator, checksSectionLocator],
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "ultrawide", "tablet", "mobile"],
+  },
+  {
+    id: "weapons-and-armor-default",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator],
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "weapons-and-armor-multiple-weapons",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator],
+    prepare: async (page) => {
+      await selectWeapon(page);
+      await page
+        .getByRole("region", { exact: true, name: "武器" })
+        .getByRole("button", { exact: true, name: "＋ 武器を追加" })
+        .click();
+      await selectWeapon(page, "バット");
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "weapon-picker-open",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator, weaponPickerLocator],
+    prepare: openWeaponPicker,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "weapon-details-expanded",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator],
+    prepare: async (page) => {
+      await selectWeapon(page);
+      await page
+        .getByRole("button", { exact: true, name: "刀詳細を開く" })
+        .click();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "armor-picker-open",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator, armorPickerLocator],
+    prepare: openArmorPicker,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "armor-details-expanded",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator],
+    prepare: async (page) => {
+      await selectArmor(page);
+      await page
+        .getByRole("button", { exact: true, name: "チンピラ服詳細を開く" })
+        .click();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "weapons-tooltip-open",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator, tooltipLocator],
+    prepare: openWeaponsTooltip,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
   },
   {
     id: "tooltip-alignment-default",

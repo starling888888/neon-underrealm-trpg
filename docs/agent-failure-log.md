@@ -1423,3 +1423,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-17-sheet-weapons-armor` の防具clear button
 - 観測した失敗: 右側の線が消える問題をbuttonの幅やfont-sizeとして扱い、desktopのcomputed styleとselector specificityを確認しなかった。実際には最後のgrid itemの区切り線を消すruleがbutton自身のright borderを上書きしていた。
 - 一次対応: G17のレビュー指摘20へ、desktop実寸とcomputed borderを記録した。borderの欠落では、寸法変更より前にcomputed styleとcascade上のwinning selectorを確認する。
+
+### Repeated a new visual test failure across viewports with an unverified accessible name
+
+#### 2026-07-29
+
+- source: agent
+- 発生箇所: `tests/visual/vrt/character-sheet.spec.ts` の武器・防具詳細展開capture
+- 観測した失敗: 追加したVRT scenarioで詳細buttonのaccessible nameを「刀の詳細を開く」「チンピラ服の詳細を開く」と推測した。実装は助詞を含まないため、desktop／tablet／mobileで同じlocator timeoutを繰り返した。
+- 一次対応: Componentの`aria-label`組み立てを確認し、test locatorを実際の「刀詳細を開く」「チンピラ服詳細を開く」へ修正した。新規browser testでは、操作対象のaccessible nameを実装または先行E2Eで確認してから複数viewportへ展開する。
