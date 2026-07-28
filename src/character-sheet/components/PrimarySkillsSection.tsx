@@ -74,6 +74,16 @@ function SkillDetails({ skill }: SkillMetadataProps) {
 
   return (
     <div className={styles.details}>
+      <div className={styles.mobileMetadata} data-primary-skill-mobile-metadata>
+        <p>
+          <span>{copy.cost}</span>
+          {formatDisplayValue(skill?.cost ?? null)}
+        </p>
+        <p>
+          <span>{copy.usageRestriction}</span>
+          {formatDisplayValue(skill?.usageRestriction ?? null)}
+        </p>
+      </div>
       <div className={styles.detailMeta}>
         <p>
           <span>{copy.proficiency}</span>
@@ -238,7 +248,7 @@ function PrimarySkillRow({
         />
         <button
           aria-label={`${name}${copy.remove}`}
-          className="character-sheet-remove-button"
+          className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
           disabled={!canRemove}
           onClick={() => onRemove(row.rowId)}
           type="button"

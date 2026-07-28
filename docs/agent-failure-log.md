@@ -1066,3 +1066,21 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-12-sheet-primary-skills` のプライマリ流儀スキル
 - 観測した失敗: 要件にある最大レベル超過と流儀レベル対スキル合計の赤枠フィードバック、およびプライマリ流儀スキル区分の独立した折りたたみを実装せず、ユーザーの表示確認で欠落が判明した。
 - 一次対応: 最大レベルを入力とhookの両方で上限化し、既存超過値の行、流儀枠、スキル区分に`aria-invalid`と赤枠を追加した。スキル区分も初期展開の独立開閉にし、局所Component / hook / logic testへ追加した。
+
+### Repeated multiline-name component-test matcher failures
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-12-sheet-primary-skills` の`PrimarySkillPickerDialog` Component test
+- 観測した失敗: 改行を含む候補名の表示確認で、通常text matcherと空白正規化したaccessible nameを順に使い、同じtestを2回失敗させた。Testing Libraryのbutton accessible nameが改行を保持することを先に確認していなかった。
+- 一次対応: 改行を許容する正規表現でbuttonを取得し、`textContent`で元の改行を確認するテストへ修正した。
+
+### Misread the mobile expanded-detail row order
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-12-sheet-primary-skills` のmobile展開詳細
+- 観測した失敗: ユーザーが指定した「コスト・使用制限」「技能・取得制限」「効果」の3行構成を、後続指摘の一部だけを取り違えて「コスト」「技能・使用制限」「取得制限」「効果」へ変更した。
+- 一次対応: requirementsとcurrent issueを正しい3行構成へ訂正した。実装の訂正はユーザーの明示指示を待つ。

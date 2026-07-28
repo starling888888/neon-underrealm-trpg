@@ -30,7 +30,13 @@ afterEach(cleanup);
 describe("primary skill dialogs", () => {
   it("groups only basic and unlocked advanced candidates with their effects", async () => {
     const user = userEvent.setup();
-    const groups = getPrimarySkillGroups("kenkaya", 6);
+    const sourceGroups = getPrimarySkillGroups("kenkaya", 6);
+    const groups = {
+      ...sourceGroups,
+      basic: sourceGroups.basic.map((skill, index) =>
+        index === 0 ? { ...skill, name: "長い\n候補名" } : skill,
+      ),
+    };
     const onSelect = vi.fn();
 
     render(
@@ -50,6 +56,10 @@ describe("primary skill dialogs", () => {
         "スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。",
       ),
     ).not.toBeNull();
+    const multilineNameButton = screen.getByRole("button", {
+      name: /長い\s+候補名/,
+    });
+    expect(multilineNameButton.textContent).toBe("長い\n候補名");
     expect(screen.getByText(groups.basic[0]?.effect ?? "")).not.toBeNull();
     expect(screen.getAllByText("名称")).toHaveLength(2);
     expect(screen.getAllByText("使用制限")).toHaveLength(2);
@@ -61,11 +71,7 @@ describe("primary skill dialogs", () => {
     );
     expect(screen.queryByText(groups.bonus[0]?.name ?? "")).toBeNull();
 
-    await user.click(
-      screen.getByRole("button", {
-        name: new RegExp(groups.basic[0]?.name ?? ""),
-      }),
-    );
+    await user.click(multilineNameButton);
     expect(onSelect).toHaveBeenCalledWith(groups.basic[0]?.id);
   });
 

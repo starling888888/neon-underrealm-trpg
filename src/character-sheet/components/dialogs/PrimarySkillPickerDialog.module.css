@@ -134,3 +134,43 @@
 .effect strong {
   color: var(--color-text-muted);
 }
+
+@media (width < 48rem) {
+  .content {
+    gap: var(--space-1);
+  }
+
+  .selectionGuide {
+    font-size: 0.75rem;
+  }
+
+  .headerRow,
+  .firstLine {
+    grid-template-columns: minmax(0, 1fr) 2.75rem 3.25rem 4rem;
+  }
+
+  .headerRow {
+    font-size: 0.625rem;
+  }
+
+  .headerRow > span,
+  .firstLine > * {
+    padding: 0.125rem 0.25rem;
+  }
+
+  .firstLine > * {
+    font-size: 0.6875rem;
+  }
+
+  .firstLine button {
+    font-size: 0.625rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+  }
+
+  .firstLine span > span {
+    display: inline;
+    white-space: inherit;
+  }
+}

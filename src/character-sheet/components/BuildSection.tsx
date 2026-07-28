@@ -248,7 +248,7 @@ export default function BuildSection({
             </div>
             <button
               aria-label={`${buildCopy.otherRyugi}${index + 1}${buildUiCopy.remove}`}
-              className="character-sheet-remove-button"
+              className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
               onClick={() => onOtherRyugiRemove(index)}
               type="button"
             >

@@ -258,6 +258,10 @@
   gap: var(--space-2);
 }
 
+.mobileMetadata {
+  display: none;
+}
+
 .details p {
   margin: 0;
 }
@@ -311,4 +315,70 @@
   margin: 0;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+@media (width < 48rem) {
+  .content {
+    padding: var(--space-2);
+  }
+
+  .headerRow,
+  .firstLine {
+    grid-template-columns: 1.25rem minmax(0, 1fr) 2.25rem 2rem 4rem 2rem 1.5rem;
+  }
+
+  .headerRow {
+    font-size: 0.625rem;
+  }
+
+  .headerRow > :nth-child(6),
+  .headerRow > :nth-child(7),
+  .firstLine > [data-primary-skill-metadata="cost"],
+  .firstLine > [data-primary-skill-metadata="usage"] {
+    display: none;
+  }
+
+  .skillName,
+  .skillPicker {
+    align-items: center;
+    padding: var(--space-1);
+    font-size: 0.6875rem;
+    white-space: pre-line;
+  }
+
+  .chooseIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .levelInput,
+  .levelValue,
+  .cell,
+  .detailsToggle,
+  .removePlaceholder {
+    padding-inline: 0.125rem;
+    font-size: 0.6875rem;
+  }
+
+  .details {
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+
+  .mobileMetadata {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+
+  .mobileMetadata p {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-1);
+    white-space: nowrap;
+  }
+
+  .detailMeta {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 }

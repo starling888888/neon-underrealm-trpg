@@ -83,6 +83,14 @@
   opacity: 0.45;
 }
 
+@media (width < 48rem) {
+  .form :global(.character-sheet-remove-button--mobile-compact) {
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: 0.75rem;
+  }
+}
+
 .primaryColumn,
 .secondaryColumn {
   min-width: 0;

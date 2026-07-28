@@ -79,6 +79,17 @@ describe("PrimarySkillsSection", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "旋風の詳細を開く" }));
     expect(screen.getByText("取得制限")).not.toBeNull();
+    expect(
+      document.querySelectorAll("[data-primary-skill-mobile-metadata]"),
+    ).toHaveLength(1);
+    expect(
+      document.querySelector("[data-primary-skill-mobile-metadata]")
+        ?.textContent,
+    ).toContain("コスト");
+    expect(
+      document.querySelector("[data-primary-skill-mobile-metadata]")
+        ?.textContent,
+    ).toContain("使用制限");
   });
 
   it("disables removal at the one-row minimum and forwards drag reorder", () => {
