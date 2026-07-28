@@ -9,6 +9,7 @@ import {
   type PrimarySkillValues,
 } from "../form-values";
 import { calculateIkizamaSkillsValidation } from "../logic/ikizama-skills";
+import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
 import {
   getIkizamaSkillById,
   getIkizamaSkillGroups,
@@ -21,6 +22,9 @@ type IkizamaSkillsSectionOptions = {
 };
 
 export type IkizamaSkillsSectionPresenterState = {
+  candidateGroups: IkizamaSkillGroups;
+  clearSelection: () => void;
+  onSelect: (rowId: string, skillId: string) => void;
   sectionProps: IkizamaSkillsSectionProps;
 };
 
@@ -38,7 +42,7 @@ export default function useIkizamaSkillsSectionProps(
   const previousIkizamaIdRef = useRef<string | null>(
     getValues("build.ikizamaId"),
   );
-  const { append, move, remove } = useFieldArray({
+  const { append, move, remove, replace } = useFieldArray({
     control,
     keyName: "fieldKey",
     name: "ikizamaSkills.rows",
@@ -83,10 +87,22 @@ export default function useIkizamaSkillsSectionProps(
   }
 
   return {
+    candidateGroups: groups,
+    clearSelection: () => {
+      const rows = getValues("ikizamaSkills.rows");
+      replace(rows.map((row) => ({ ...row, level: 1, skillId: null })));
+    },
+    onSelect: (rowId, skillId) => {
+      const current = getValues("ikizamaSkills.rows").find(
+        (row) => row.rowId === rowId,
+      );
+      if (current !== undefined) {
+        setRow(rowId, { ...current, level: 1, skillId });
+      }
+    },
     sectionProps: {
       bonusLevel: ikizamaSkills.bonusLevel,
       bonusSkill,
-      candidateGroups: groups,
       hasIkizamaSkillLevelTotalError: validation.hasIkizamaSkillLevelTotalError,
       ikizamaName:
         build.ikizamaId === null
@@ -130,14 +146,6 @@ export default function useIkizamaSkillsSectionProps(
         const targetIndex = index + (direction === "up" ? -1 : 1);
         if (index < 0 || targetIndex < 0 || targetIndex >= rows.length) return;
         move(index, targetIndex);
-      },
-      onSelect: (rowId, skillId) => {
-        const current = getValues("ikizamaSkills.rows").find(
-          (row) => row.rowId === rowId,
-        );
-        if (current !== undefined) {
-          setRow(rowId, { ...current, level: 1, skillId });
-        }
       },
       rows,
     },

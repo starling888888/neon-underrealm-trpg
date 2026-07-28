@@ -6,6 +6,7 @@ import { createRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import PrimaryRyugiChangeConfirmDialog from "../../../src/character-sheet/components/dialogs/PrimaryRyugiChangeConfirmDialog";
 import PrimarySkillPickerDialog from "../../../src/character-sheet/components/dialogs/PrimarySkillPickerDialog";
+import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 
 beforeEach(() => {
@@ -100,6 +101,14 @@ describe("primary skill dialogs", () => {
 
     render(
       <PrimaryRyugiChangeConfirmDialog
+        confirmation={
+          characterSheetDictionary.characterSheet.skills
+            .primaryRyugiChangeConfirmation
+        }
+        dialogLabel={
+          characterSheetDictionary.characterSheet.skills
+            .primaryRyugiChangeConfirmationLabel
+        }
         isOpen
         onConfirm={onConfirm}
         onRequestClose={onRequestClose}

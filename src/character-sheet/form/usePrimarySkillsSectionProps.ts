@@ -9,6 +9,7 @@ import {
   type PrimarySkillValues,
 } from "../form-values";
 import { calculatePrimarySkillsValidation } from "../logic/primary-skills";
+import type { PrimarySkillGroups } from "../master-data/primary-skills";
 import {
   getMaximumSkillNameLength,
   getPrimarySkillById,
@@ -21,6 +22,9 @@ type PrimarySkillsSectionOptions = {
 };
 
 export type PrimarySkillsSectionPresenterState = {
+  candidateGroups: PrimarySkillGroups;
+  clearSelection: () => void;
+  onSelect: (rowId: string, skillId: string) => void;
   sectionProps: PrimarySkillsSectionProps;
 };
 
@@ -68,9 +72,19 @@ export default function usePrimarySkillsSectionProps(
   );
 
   return {
+    candidateGroups: groups,
+    clearSelection: () => {
+      setRows(getRows().map((row) => ({ ...row, level: 1, skillId: null })));
+    },
+    onSelect: (rowId, skillId) => {
+      setRows(
+        getRows().map((row) =>
+          row.rowId === rowId ? { ...row, level: 1, skillId } : row,
+        ),
+      );
+    },
     sectionProps: {
       bonusSkills: groups.bonus,
-      candidateGroups: groups,
       hasPrimarySkillLevelTotalError: validation.hasPrimarySkillLevelTotalError,
       invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
       invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
@@ -110,16 +124,6 @@ export default function usePrimarySkillsSectionProps(
         if (moved === undefined) return;
         rows.splice(targetIndex, 0, moved);
         setRows(rows);
-      },
-      onSelect: (rowId, skillId) => {
-        setRows(
-          getRows().map((row) =>
-            row.rowId === rowId ? { ...row, level: 1, skillId } : row,
-          ),
-        );
-      },
-      onSelectionClear: () => {
-        setRows(getRows().map((row) => ({ ...row, level: 1, skillId: null })));
       },
       primaryRyugiName:
         build.primaryRyugiId === null

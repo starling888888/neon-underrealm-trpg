@@ -125,7 +125,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
     }
 
     act(() => {
-      result.current.presenterProps.primarySkillsSection.onSelect(
+      result.current.presenterProps.primarySkillPicker.onSelect(
         firstRowId,
         skill.id,
       );
@@ -155,7 +155,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
       "primarySkills.rows.1.rowId",
     );
     act(() => {
-      result.current.presenterProps.primarySkillsSection.onSelect(
+      result.current.presenterProps.primarySkillPicker.onSelect(
         secondRowId,
         skill.id,
       );
@@ -218,7 +218,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
         `ikizama-bonus-${bonusSkillId}`,
         "3",
       );
-      result.current.presenterProps.ikizamaSkillsSection.onSelect(
+      result.current.presenterProps.ikizamaSkillPicker.onSelect(
         firstRowId,
         skill.id,
       );
@@ -239,8 +239,8 @@ describe("useCharacterSheetFormPresenterProps", () => {
     );
     expect(result.current.form.getValues("ikizamaSkills.rows")).toHaveLength(3);
     expect(
-      result.current.presenterProps.ikizamaSkillsSection.candidateGroups
-        .advanced.length,
+      result.current.presenterProps.ikizamaSkillPicker.candidateGroups.advanced
+        .length,
     ).toBeGreaterThan(0);
     expect(
       result.current.presenterProps.ikizamaSkillsSection
@@ -293,11 +293,11 @@ describe("useCharacterSheetFormPresenterProps", () => {
 
     act(() => {
       result.current.presenterProps.buildSection.onIkizamaChange("burai");
-      result.current.presenterProps.ikizamaSkillsSection.onSelect(
+      result.current.presenterProps.ikizamaSkillPicker.onSelect(
         firstRow.rowId,
         skill.id,
       );
-      result.current.presenterProps.ikizamaSkillsSection.onSelect(
+      result.current.presenterProps.ikizamaSkillPicker.onSelect(
         secondRow.rowId,
         skill.id,
       );

@@ -1156,3 +1156,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-13-sheet-ikizama-skills` の生き様通常スキル最低0行確認
 - 観測した失敗: dev serverへ遷移直後に生き様selectを1回だけ変更し、React Islandのhydrate完了後にselect値が初期値へ戻る状態を、削除buttonが表示されない実装不備と誤って切り分けた。
 - 一次対応: form再描画を伴う実ブラウザ操作では、対象sectionの表示状態が更新済みになるまで同じ操作と可視確認を短い再試行境界へ置く。今回も生き様選択済みを確認してから、通常行を2行、1行、0行へ順に削除し、bonus Lvだけが残ることを確認した。
+
+### Archived or closed a Gate while its child issue remained incomplete
+
+#### 2026-07-28
+
+- source: review
+- 発生箇所: `ex-02-12-sheet-primary-skills` のGate完了・child issue archive
+- 観測した失敗: parent Gate planを`done`としchild issueを`docs/issue/done/`へ移動したが、child issue本体の完了条件、チェックポイント、Visual Reviewに未チェックが残っていた。G6での無許可archive、G9でのvisual acceptance未確認archiveに続く、完了根拠をchild issueへ反映しないままcloseする再発である。
+- 一次対応: `.tmp/chatgpt-review.md`をG13のレビュー指摘2として取り込み、G13では全未チェック項目を実確認結果へ更新するまでclose / archive / parent planの`done`へ変更しない。恒久対応はfailure-log監査でユーザー承認後に行う。

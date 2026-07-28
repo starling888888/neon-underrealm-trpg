@@ -6,6 +6,7 @@ import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorD
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
 import PrimaryRyugiChangeConfirmDialog from "./components/dialogs/PrimaryRyugiChangeConfirmDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
+import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
 
@@ -26,10 +27,14 @@ export default function CharacterSheetContainer() {
   >(null);
   const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
     useState(false);
+  const [isIkizamaChangeConfirmOpen, setIsIkizamaChangeConfirmOpen] =
+    useState(false);
   const primarySkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const ikizamaSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
+  const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
+  const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
   const presenterProps = useCharacterSheetFormPresenterProps(
     rootState.form,
     {
@@ -41,6 +46,21 @@ export default function CharacterSheetContainer() {
         rootState.onCharacterImageOperationStarted,
     },
     {
+      onIkizamaChangeRequested: (ikizamaId, trigger, applyChange) => {
+        const currentIkizamaId = rootState.form.getValues("build.ikizamaId");
+        const hasSelectedSkill = rootState.form
+          .getValues("ikizamaSkills.rows")
+          .some((row) => row.skillId !== null);
+
+        if (ikizamaId === currentIkizamaId || !hasSelectedSkill) {
+          applyChange();
+          return;
+        }
+
+        ikizamaChangeTriggerRef.current = trigger;
+        pendingIkizamaChangeRef.current = applyChange;
+        setIsIkizamaChangeConfirmOpen(true);
+      },
       onPrimaryRyugiChangeRequested: (primaryRyugiId, trigger, applyChange) => {
         const currentPrimaryRyugiId = rootState.form.getValues(
           "build.primaryRyugiId",
@@ -78,7 +98,7 @@ export default function CharacterSheetContainer() {
   }
 
   function confirmPrimaryRyugiChange(): void {
-    presenterProps.primarySkillsSection.onSelectionClear();
+    presenterProps.primarySkillPicker.clearSelection();
     pendingPrimaryRyugiChangeRef.current?.();
     pendingPrimaryRyugiChangeRef.current = null;
     setIsPrimaryRyugiChangeConfirmOpen(false);
@@ -87,6 +107,18 @@ export default function CharacterSheetContainer() {
   function closePrimaryRyugiChangeConfirm(): void {
     pendingPrimaryRyugiChangeRef.current = null;
     setIsPrimaryRyugiChangeConfirmOpen(false);
+  }
+
+  function confirmIkizamaChange(): void {
+    presenterProps.ikizamaSkillPicker.clearSelection();
+    pendingIkizamaChangeRef.current?.();
+    pendingIkizamaChangeRef.current = null;
+    setIsIkizamaChangeConfirmOpen(false);
+  }
+
+  function closeIkizamaChangeConfirm(): void {
+    pendingIkizamaChangeRef.current = null;
+    setIsIkizamaChangeConfirmOpen(false);
   }
   return (
     <>
@@ -102,12 +134,12 @@ export default function CharacterSheetContainer() {
           returnFocusRef={rootState.imageReturnFocusRef}
         />
         <PrimarySkillPickerDialog
-          groups={presenterProps.primarySkillsSection.candidateGroups}
+          groups={presenterProps.primarySkillPicker.candidateGroups}
           isOpen={primarySkillPickerRowId !== null}
           onRequestClose={closePrimarySkillPicker}
           onSelect={(skillId) => {
             if (primarySkillPickerRowId !== null) {
-              presenterProps.primarySkillsSection.onSelect(
+              presenterProps.primarySkillPicker.onSelect(
                 primarySkillPickerRowId,
                 skillId,
               );
@@ -120,12 +152,12 @@ export default function CharacterSheetContainer() {
           )}
         />
         <IkizamaSkillPickerDialog
-          groups={presenterProps.ikizamaSkillsSection.candidateGroups}
+          groups={presenterProps.ikizamaSkillPicker.candidateGroups}
           isOpen={ikizamaSkillPickerRowId !== null}
           onRequestClose={closeIkizamaSkillPicker}
           onSelect={(skillId) => {
             if (ikizamaSkillPickerRowId !== null) {
-              presenterProps.ikizamaSkillsSection.onSelect(
+              presenterProps.ikizamaSkillPicker.onSelect(
                 ikizamaSkillPickerRowId,
                 skillId,
               );
@@ -135,10 +167,32 @@ export default function CharacterSheetContainer() {
           returnFocusRef={ikizamaSkillPickerTriggerRef}
         />
         <PrimaryRyugiChangeConfirmDialog
+          confirmation={
+            characterSheetDictionary.characterSheet.skills
+              .primaryRyugiChangeConfirmation
+          }
+          dialogLabel={
+            characterSheetDictionary.characterSheet.skills
+              .primaryRyugiChangeConfirmationLabel
+          }
           isOpen={isPrimaryRyugiChangeConfirmOpen}
           onConfirm={confirmPrimaryRyugiChange}
           onRequestClose={closePrimaryRyugiChangeConfirm}
           returnFocusRef={primaryRyugiChangeTriggerRef}
+        />
+        <PrimaryRyugiChangeConfirmDialog
+          confirmation={
+            characterSheetDictionary.characterSheet.skills
+              .ikizamaChangeConfirmation
+          }
+          dialogLabel={
+            characterSheetDictionary.characterSheet.skills
+              .ikizamaChangeConfirmationLabel
+          }
+          isOpen={isIkizamaChangeConfirmOpen}
+          onConfirm={confirmIkizamaChange}
+          onRequestClose={closeIkizamaChangeConfirm}
+          returnFocusRef={ikizamaChangeTriggerRef}
         />
       </div>
       <CharacterSheetLoadingOverlay

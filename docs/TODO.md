@@ -27,6 +27,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24
   - handling plan: 縁と攻撃を含む可変行について、配列全体の`setValue`による更新とarchitectureの`useFieldArray`契約を比較し、復元・JSON入力時のuncontrolled input同期、row ID、削除・追加の責務を定義してから移行する。`onRowChange`のfieldとvalueの型対応も同じ設計で見直す。
 
+- [ ] G24 / G27着手前にスキルLvの未確定入力、最大Lv超過、復元・JSON入力値の扱いをrequirements / schema契約として確定する
+  - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 2
+  - classification: requirements and schema follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24、G27
+  - handling plan: `docs/requirements/character-sheet.md`の「不整合を自動補正しない」と、既存のbrowser入力時max Lv clampを照合する。入力中、blur、端末内復元、JSON入力のそれぞれについて、値を保持してerror表示するか、いつschemaで拒否または除外するかを先に定義し、各skill adapterへ一貫して適用する。
+
 - [ ] G31のコンテンツレビューでtooltip indicatorの上下揃えに違和感があれば、共通`FormulaTooltip`の配置を再調整する
   - source: `ex-02-11-sheet-noncombat` のレビュー指摘 6に対するユーザーのpreview確認
   - classification: visual usability follow-up

@@ -69,31 +69,31 @@
 
 ## 完了条件
 
-- [ ] プライマリ流儀を選ぶと、その流儀のbonusスキルが先頭の読み取り専用要約行と展開詳細で現れ、通常スキル4行が表示される。
-- [ ] 通常行は1行を残して追加・削除でき、左端の上下三角buttonでbonus行の下だけを1行ずつ並べ替えられる。一番上は下、一番下は上だけを表示し、drag and dropは提供しない。
-- [ ] 通常行の候補ダイアログは選択中プライマリ流儀の`bonus`以外だけを表示し、`basic`とレベル6以上の`advanced`を指定小見出しで分ける。
-- [ ] desktop / tabletのスキル区分は、名称、Lv、`最大`／`Lv`、タイミング、コスト、使用制限、展開のヘッダーを持つ。タイミングheaderは折り返さず、最大Lv列はひと桁幅で、ヘッダーと行の文字サイズは能力値作成ラベル程度へ下げる。
-- [ ] desktop / tabletの行は技能・取得制限・効果を初期非表示にし、展開トグルで表示する。展開部は1行目に`技能：XXX`と`取得制限：YYYY`を横並び、2行目に`効果：本文`を表示し、技能は`／`で折り返さない。使用制限の複数値は指定の区切り改行で表示する。上下三角の並べ替えbuttonは左端既存領域に収め、スキル選択buttonは`lucide-react`の`ListPlus`を使う。
-- [ ] desktop / tabletの候補ダイアログは、各小見出し直後に名称、最大Lv、コスト、使用制限のヘッダーを持つ表形式である。候補詳細は技能・取得制限を効果の上に表示し、`効果：本文`を常時表示する。候補数によるスクロールはdialog内容だけに発生し、文書全体の縦スクロールおよびdialog内容の横overflowを発生させない。
-- [ ] mobileのプライマリ流儀スキル要約行は、上下三角の並べ替えbutton、スキル選択iconを含む名称、Lv、最大Lv、タイミング、展開、削除iconを表示する。名称は狭い列で改行データを反映し、headerと行のcellが揃う。展開部はコストと使用制限、技能と取得制限、効果の3行で表示し、使用制限は`&`で改行しない。削除buttonはcharacter sheet共通の小型classを使い、候補dialogの長い名称は縮小した文字サイズと改行データでclipしない。
-- [ ] 通常スキルが1件以上選択済みのプライマリ流儀変更では、見出しなし、`キャンセル`／`変更`の指定文言確認dialogを出す。確認時だけ通常選択を消去して変更し、キャンセル・Escape・閉じる操作では変更しない。ダミー確認dialogは表示しない。
-- [ ] 通常スキルの取得レベルは最大レベルを超えて変更できず、既存の超過行は行単位で赤枠になる。通常スキル取得レベル合計がプライマリ流儀レベルを超える場合は、プライマリ流儀のビルド枠とプライマリ流儀スキル区分を赤枠にする。
-- [ ] 同じ通常プライマリスキルを複数行で選択した場合は各重複行を赤枠にし、候補dialogでは既に選択済みの候補をdisabledにする。
-- [ ] プライマリ流儀スキル区分は、スキル大セクションとは独立して初期展開・開閉できる。
-- [ ] プライマリ流儀未選択、bonus、削除下限、候補絞り込み、行順序、選択時のレベル`1`、dialogのfocus復帰を局所テストで確認する。
-- [ ] desktop、tablet、mobileのactual screenshotを開いて、スキル大セクション、ヘッダー、通常行、bonus行、展開状態、候補dialog、確認dialogを確認する。mobileでは要約行の表示列・header整列・名称の改行・展開部のコストと使用制限・候補名のclip不在を確認する。canonical VRT baselineは更新しない。
-- [ ] `npm run check`、関連Node / Component / hook test、対象browser testが通る。
+- [x] プライマリ流儀を選ぶと、その流儀のbonusスキルが先頭の読み取り専用要約行と展開詳細で現れ、通常スキル4行が表示される。
+- [x] 通常行は1行を残して追加・削除でき、左端の上下三角buttonでbonus行の下だけを1行ずつ並べ替えられる。一番上は下、一番下は上だけを表示し、drag and dropは提供しない。
+- [x] 通常行の候補ダイアログは選択中プライマリ流儀の`bonus`以外だけを表示し、`basic`とレベル6以上の`advanced`を指定小見出しで分ける。
+- [x] desktop / tabletのスキル区分は、名称、Lv、`最大`／`Lv`、タイミング、コスト、使用制限、展開のヘッダーを持つ。タイミングheaderは折り返さず、最大Lv列はひと桁幅で、ヘッダーと行の文字サイズは能力値作成ラベル程度へ下げる。
+- [x] desktop / tabletの行は技能・取得制限・効果を初期非表示にし、展開トグルで表示する。展開部は1行目に`技能：XXX`と`取得制限：YYYY`を横並び、2行目に`効果：本文`を表示し、技能は`／`で折り返さない。使用制限の複数値は指定の区切り改行で表示する。上下三角の並べ替えbuttonは左端既存領域に収め、スキル選択buttonは`lucide-react`の`ListPlus`を使う。
+- [x] desktop / tabletの候補ダイアログは、各小見出し直後に名称、最大Lv、コスト、使用制限のヘッダーを持つ表形式である。候補詳細は技能・取得制限を効果の上に表示し、`効果：本文`を常時表示する。候補数によるスクロールはdialog内容だけに発生し、文書全体の縦スクロールおよびdialog内容の横overflowを発生させない。
+- [x] mobileのプライマリ流儀スキル要約行は、上下三角の並べ替えbutton、スキル選択iconを含む名称、Lv、最大Lv、タイミング、展開、削除iconを表示する。名称は狭い列で改行データを反映し、headerと行のcellが揃う。展開部はコストと使用制限、技能と取得制限、効果の3行で表示し、使用制限は`&`で改行しない。削除buttonはcharacter sheet共通の小型classを使い、候補dialogの長い名称は縮小した文字サイズと改行データでclipしない。
+- [x] 通常スキルが1件以上選択済みのプライマリ流儀変更では、見出しなし、`キャンセル`／`変更`の指定文言確認dialogを出す。確認時だけ通常選択を消去して変更し、キャンセル・Escape・閉じる操作では変更しない。ダミー確認dialogは表示しない。
+- [x] 通常スキルの取得レベルは最大レベルを超えて変更できず、既存の超過行は行単位で赤枠になる。通常スキル取得レベル合計がプライマリ流儀レベルを超える場合は、プライマリ流儀のビルド枠とプライマリ流儀スキル区分を赤枠にする。
+- [x] 同じ通常プライマリスキルを複数行で選択した場合は各重複行を赤枠にし、候補dialogでは既に選択済みの候補をdisabledにする。
+- [x] プライマリ流儀スキル区分は、スキル大セクションとは独立して初期展開・開閉できる。
+- [x] プライマリ流儀未選択、bonus、削除下限、候補絞り込み、行順序、選択時のレベル`1`、dialogのfocus復帰を局所テストで確認する。
+- [x] desktop、tablet、mobileのactual screenshotを開いて、スキル大セクション、ヘッダー、通常行、bonus行、展開状態、候補dialog、確認dialogを確認する。mobileでは要約行の表示列・header整列・名称の改行・展開部のコストと使用制限・候補名のclip不在を確認する。canonical VRT baselineは更新しない。
+- [x] `npm run check`、関連Node / Component / hook test、対象browser testが通る。
 
 ## チェックポイント
 
-- [ ] `CharacterSheetContainer`がdialogの開閉、保留中のプライマリ流儀変更、focus復帰だけを持ち、Presenter / leaf ComponentへRHFやマスタ検索を混在させていない。
-- [ ] RHFのフォーム値を唯一の可変状態とし、行順を別stateへ複製していない。G24の`useFieldArray`整合TODOを先取りして回収していない。
-- [ ] `data/generated/ryugi-skills.json`のIDと配列順を読み取り専用で利用し、generated dataや変換処理を変更していない。
-- [ ] 既存の`CharacterSheetDialog`のEscape、閉じる、操作元へのfocus復帰、accessible nameを壊していない。
-- [ ] `/character-sheet/`以外の既存route、GitHub Pagesのsubpath、Pagefind除外、G7〜G11の入力を壊していない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] `docs/TODO.md`のG24前の可変行境界整合と矛盾していない。
-- [ ] user指示により更新した`docs/requirements/character-sheet.md`と矛盾していない。
+- [x] `CharacterSheetContainer`がdialogの開閉、保留中のプライマリ流儀変更、focus復帰だけを持ち、Presenter / leaf ComponentへRHFやマスタ検索を混在させていない。
+- [x] RHFのフォーム値を唯一の可変状態とし、行順を別stateへ複製していない。G24の`useFieldArray`整合TODOを先取りして回収していない。
+- [x] `data/generated/ryugi-skills.json`のIDと配列順を読み取り専用で利用し、generated dataや変換処理を変更していない。
+- [x] 既存の`CharacterSheetDialog`のEscape、閉じる、操作元へのfocus復帰、accessible nameを壊していない。
+- [x] `/character-sheet/`以外の既存route、GitHub Pagesのsubpath、Pagefind除外、G7〜G11の入力を壊していない。
+- [x] 不要な依存関係を追加していない。
+- [x] `docs/TODO.md`のG24前の可変行境界整合と矛盾していない。
+- [x] user指示により更新した`docs/requirements/character-sheet.md`と矛盾していない。
 
 ## 想定変更ファイル
 
@@ -170,7 +170,7 @@
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
 - [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
-- [ ] VRT差分を修正した、または修正不要と判断した
+- [x] VRT差分を修正した、または修正不要と判断した（G13で意図的に追加したスキル区分間gapによる現行baselineとの差分であり、baselineは更新しない）。
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
@@ -258,7 +258,7 @@
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
 - [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
-- [ ] VRT差分を修正した、または修正不要と判断した
+- [x] VRT差分を修正した、または修正不要と判断した（G13で意図的に追加したスキル区分間gapによる現行baselineとの差分であり、baselineは更新しない）。
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

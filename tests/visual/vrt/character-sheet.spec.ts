@@ -49,7 +49,9 @@ async function selectPrimaryRyugi(page: Page): Promise<void> {
 
   await primaryRyugi.selectOption("kenkaya");
   await expect(primaryRyugi).toHaveValue("kenkaya");
-  await expect(page.getByText("気合十分", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("group", { exact: true, name: "気合十分" }),
+  ).toBeVisible();
 }
 
 async function selectPrimarySkill(page: Page): Promise<void> {
@@ -63,6 +65,24 @@ async function selectPrimarySkill(page: Page): Promise<void> {
   });
   await expect(picker).toBeVisible();
   await picker.getByRole("button", { name: /旋風/ }).click();
+  await expect(picker).toBeHidden();
+}
+
+async function selectLongIkizamaSkill(page: Page): Promise<void> {
+  const ikizama = page.locator("[data-build-section] select").nth(1);
+
+  await page.getByLabel("生き様Lv", { exact: true }).fill("4");
+  await ikizama.selectOption("burai");
+  await page
+    .locator("[data-ikizama-skills-section]")
+    .getByRole("button", { exact: true, name: "未選択スキル1" })
+    .click();
+  const picker = page.getByRole("dialog", { name: "生き様スキルを選択" });
+
+  await picker
+    .getByRole("button", { name: /帰還不能地点/ })
+    .first()
+    .click();
   await expect(picker).toBeHidden();
 }
 
@@ -113,12 +133,24 @@ const primaryRyugiChangeConfirmLocator = {
     page.getByRole("dialog", { name: "プライマリ流儀の変更確認" }),
 };
 
+const ikizamaSkillsLocator = {
+  name: "ikizama-skills-section",
+  resolve: (page: Page) => page.locator("[data-ikizama-skills-section]"),
+};
+
 const tooltipLocator = {
   name: "tooltip",
   resolve: (page: Page) => page.getByRole("tooltip"),
 };
 
 registerVrtScenarios("character-sheet", [
+  {
+    id: "ikizama-long-skill-selected",
+    locators: [ikizamaSkillsLocator],
+    prepare: selectLongIkizamaSkill,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
   {
     id: "primary-skills-selected",
     locators: [primarySkillsLocator],

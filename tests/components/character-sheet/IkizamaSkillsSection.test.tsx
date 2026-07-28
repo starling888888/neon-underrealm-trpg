@@ -19,7 +19,6 @@ function createProps(): IkizamaSkillsSectionProps {
   return {
     bonusLevel: 1,
     bonusSkill: groups.bonus[0] ?? null,
-    candidateGroups: groups,
     hasIkizamaSkillLevelTotalError: false,
     ikizamaName: "ブライ",
     ikizamaSelected: true,
@@ -29,7 +28,6 @@ function createProps(): IkizamaSkillsSectionProps {
     onMove: vi.fn(),
     onPickerRequest: vi.fn(),
     onRemove: vi.fn(),
-    onSelect: vi.fn(),
     rows: [{ level: 1, rowId: "only", skill, skillId: skill.id }],
   };
 }
@@ -60,6 +58,30 @@ describe("IkizamaSkillsSection", () => {
     expect(
       screen.getByRole("button", { name: /スキルを追加$/ }),
     ).not.toBeNull();
-    expect(screen.getByText(props.bonusSkill?.name ?? "")).not.toBeNull();
+    expect(
+      screen.getByRole("group", { name: props.bonusSkill?.name ?? "" }),
+    ).not.toBeNull();
+  });
+
+  it("names the editable bonus row and links its details toggle to details", () => {
+    const props = createProps();
+    const bonusName = props.bonusSkill?.name;
+    if (bonusName === undefined) {
+      throw new Error("ボーナススキルを取得できません。");
+    }
+
+    render(<IkizamaSkillsSection {...props} />);
+
+    expect(screen.getByRole("group", { name: bonusName })).not.toBeNull();
+    expect(screen.getByLabelText(`${bonusName}Lv`)).not.toBeNull();
+
+    const detailsToggle = screen.getByRole("button", {
+      name: `${bonusName}の詳細を開く`,
+    });
+    fireEvent.click(detailsToggle);
+
+    const detailsId = detailsToggle.getAttribute("aria-controls");
+    expect(detailsId).not.toBeNull();
+    expect(document.getElementById(detailsId ?? "")).not.toBeNull();
   });
 });

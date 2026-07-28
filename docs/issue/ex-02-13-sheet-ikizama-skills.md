@@ -62,8 +62,8 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 - [x] 生き様Lv4で候補が`advanced`を含むよう切り替わる。
 - [x] 生き様スキルの取得Lv合計が生き様Lvを超えると、流儀・生き様入力側と生き様スキル区分がerror状態になる。bonusスキルはLv1だけを無料とし、Lv2以上の超過分と通常スキルを合計し、空行は含めない。
 - [x] dictionaryのゲーム用語とキャラクターシートUI文言を指定の所有者へ分類し、生成データ文言を複製していない。
-- [ ] desktop / tabletの名称列で`帰還不能地点`をclipせずに表示し、mobileを含む狭い幅ではデータ内改行を保持して文字をclip / ellipsisしない。各スキル区分の間に一貫した縦余白がある。
-- [x] E2Eが最終smokeの責務を越えず、局所契約をNode / Component / hook testへ分離している。追加したVRT状態を削除し、最終smokeを再確認した。
+- [x] desktop / tabletの名称列で`帰還不能地点`をclipせずに表示し、mobileを含む狭い幅ではデータ内改行を保持して文字をclip / ellipsisしない。各スキル区分の間に一貫した縦余白がある。
+- [x] E2Eが最終smokeの責務を越えず、局所契約をNode / Component / hook testへ分離している。局所logic用に追加したVRT状態は削除し、長い名称の表示受入だけをlocator-only VRTで確認した。最終smokeを再確認した。
 - [x] `@character-sheet` targetのdefault、候補dialog、詳細展開をdesktop、tablet、mobileでVisual Reviewする。canonical VRT baselineは更新しない。
 - [x] `npm run check`、`npm run build`、関連テストが通る。
 
@@ -154,6 +154,84 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 - [x] `npm run check` が通る（該当する場合）
 - [x] `npm run build` が通る（該当する場合）
 
+- 状態: この記録の未チェック項目は、削除済みVRT targetを完了根拠に使わないという訂正履歴である。現行の受入結果はビジュアルレビュー3へ集約した。
+
+## ビジュアルレビュー 3（preview最終確認）
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `@primary-skills-selected`、`@primary-skill-picker-open`、`@primary-skill-details-expanded`、`@primary-ryugi-change-confirm`、`@ikizama-long-skill-selected`
+- route / states / viewports: `/character-sheet/` のprimary shared skill表示、候補dialog、詳細、確認dialog、および生き様の長い名称をdesktop、tablet、mobileでcapture。
+
+### レビュー結果
+
+| 対象                             | 判定     | 差分                                                               | 対応                                                                                         |
+| -------------------------------- | -------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| shared skill表示とprimary dialog | 確認済み | canonical baselineとの差分は、G13で意図したスキル区分間gapによる。 | baselineを更新せず、actual locator screenshotを確認した。                                    |
+| 生き様の長い名称                 | 確認済み | canonical baselineは未作成のため比較不能。                         | locator-onlyの`@ikizama-long-skill-selected`で原寸画像を取得・確認し、baselineは更新しない。 |
+
+### 実画面確認
+
+- `/character-sheet/` / primary shared skill表示、候補dialog、詳細、確認dialog / desktop、tablet、mobile:
+  - locator screenshot: `primary-skills-section`とdialog ownerをoriginal pixel resolutionで開いた。
+  - checked acceptance criteria: automatic行の追加legendによる表示崩れなし、名称列・headerの揃え、詳細toggle、候補dialogと確認dialogのbounds、mobileの横overflowなし。
+  - result: OK。
+- `/character-sheet/` / 生き様の`帰還不能地点`選択済み / desktop、tablet、mobile:
+  - locator screenshot: `ikizama-skills-section`をoriginal pixel resolutionで開いた。
+  - checked acceptance criteria: desktop / tabletの名称列幅、データ内改行、mobileを含むclip / ellipsisなし、行内の横overflowなし、skill section間gap。
+  - result: OK。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した（12状態はcanonical baselineとの差分、3状態はcanonical baseline未作成）。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
+- [x] VRT差分を修正した、または修正不要と判断した（意図した区分間gapであり、baselineは更新しない）。
+- [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- G12 child issueが、完了条件・チェックポイント・Visual Reviewの未チェックを残したままparent Gate planで`done`となり、`docs/issue/done/`へ移動している。current Gateでも同じ完了記録の不整合を起こしてはならない。
+- `IkizamaSkillsSectionProps`にも、表示Componentが使わない候補groupと選択callbackが含まれ、ContainerがPresenter propsの内部を直接参照している。
+- 生き様skill pickerのキャンセル・Escape時の入力保持と、close後のtriggerへのfocus復帰は、shared dialog単体では確認されるがContainer結線として固定されていない。
+- 生き様通常skillを選択した状態で別の生き様へ変更しても、現在は即時に切り替わり確認dialogが出ない。選択済みskillを破棄する変更は、プライマリ流儀と同じ確認UIを用い、cancel / Escape時は現在の生き様とskillを保持する必要がある。
+- 生き様bonusはLv inputを持つautomatic行だが、shared `SkillSection`がautomatic行の`fieldset`に`legend`を出さない。詳細toggleも対応する詳細領域を`aria-controls`で参照しない。
+- 通常skill Lvのbrowser直接入力をmax Lvへclampする実装は、`docs/requirements/character-sheet.md`の「不整合を自動補正しない」原則と矛盾する。保存・復元・JSON入力時の扱いをG24 / G27で確定する必要がある。
+- プライマリ流儀skillの可変行を`useFieldArray`へ移行する指摘は、既存のG24前TODOで追跡済みである。
+
+### 判定
+
+- source: unknown (`.tmp/chatgpt-review.md`)
+- classification: valid（完了記録、dialog props、Container結線、生き様変更確認、bonus行の意味付け、詳細toggle）/ follow-up（入力自動補正）/ stale（既存G24 TODOの可変行移行）
+- local validation: parent Gate planのG12は`done`でchild issueは`docs/issue/done/`へ移動済みだが、review sourceが指摘する未チェック記録を持つ。G13もContainerが`presenterProps.ikizamaSkillsSection.candidateGroups`と`onSelect`を直接参照し、表示Componentはそれらを利用しない。shared dialog単体にはfocus復帰testがある一方、G13のContainer結線testはない。`useBuildSectionProps`の`onIkizamaChange`は生き様IDを即時設定し、Containerは生き様変更のpending stateも確認dialogも持たない。G13 bonusはLv inputを持つautomatic `fieldset`であり、`legend`なしは現行契約に不適合である。`useFieldArray`移行は`docs/TODO.md`のG24前TODOで既に追跡する。
+
+### 対応方針
+
+- G13をclose / archive / parent Gate planの`done`へ変更する前に、child issueの完了条件、チェックポイント、レビュー節の未チェックを実確認結果と照合する。未チェックが残る間はarchiveしない。
+- hookの返却を表示用`sectionProps`とRoot dialog用の候補・選択actionへ分離し、Containerが表示Component用propsの内部を参照しないようにする。
+- 生き様pickerのキャンセル、Escape、focus復帰と選択値保持をContainer結線testへ追加する。browser E2Eの最終smoke境界は拡張しない。
+- 生き様変更前に通常skillの選択有無を確認し、選択済みならプライマリ流儀変更と同じ確認dialogを表示する。confirm時だけ生き様通常skillの選択を解除して変更を適用し、cancel / Escape時は生き様とskillを保持する。dialogの表示構造は再利用し、生き様向けの文言が必要な場合だけdictionaryへ追加する。
+- automatic bonus行の入力groupを意味付け、詳細toggleと詳細領域を関連付ける。表示Component testで確認する。
+- 入力自動補正の優先順位と、復元・JSON入力の既存超過値の扱いは、G24 / G27の着手時にrequirementsと入力schemaの契約として確定する。このGateでは変更しない。
+
+### 対応完了チェックリスト
+
+- [x] G13をarchiveする前に、child issueの完了条件・チェックポイント・レビュー節の未チェックを実確認結果と照合する。未確認の長い名称の原寸画像は残っているため、archive / parent Gate planの`done`には進まない。
+- [x] Root dialog用の候補・選択actionを表示用section propsから分離する。
+- [x] 生き様pickerのキャンセル・Escape・focus復帰をContainer結線testで確認する。
+- [x] 選択済み生き様skillがある変更で確認dialogを表示し、confirm時だけskillを解除して生き様を変更する。cancel / Escape時の入力保持とfocus復帰をContainer結線testで確認する。
+- [x] bonus行のinput groupと詳細toggleのアクセシビリティ関連付けを表示Componentで確認する。
+- [x] G24 / G27着手時に、skill Lvの入力自動補正と既存超過値の扱いをrequirements / schema契約として確定する。`docs/TODO.md`へ追跡先を追加した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
 ## レビュー指摘 1
 
 ### 指摘事項
@@ -177,7 +255,7 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 ### 対応完了チェックリスト
 
 - [x] 生き様スキルの合計Lv超過をBuildと生き様スキル区分へerror表示する
-- [x] `帰還不能地点`を含む長い名称とデータ内改行を各viewportでclipせずに表示する
+- [x] `帰還不能地点`を含む長い名称とデータ内改行を各viewportでclipせずに表示する。
 - [x] スキル区分間の縦余白をdesktop、tablet、mobileで確認する
 - [x] Node / hook / Component testとE2E smokeの責務境界を保つ
 - [x] `npm run check` が通る
@@ -234,3 +312,5 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る（該当する場合）
 - [x] `npm run build` が通る（該当する場合）
+
+- 状態: この記録の未チェック項目は、削除済みVRT targetを完了根拠に使わないという訂正履歴である。現行の受入結果はビジュアルレビュー3へ集約した。

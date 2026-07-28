@@ -113,6 +113,9 @@ export const characterSheetDictionary = {
       chooseIkizama: "生き様スキルを選択",
       initialCreation: "初期作成",
       ikizama: "生き様",
+      ikizamaChangeConfirmation:
+        "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
+      ikizamaChangeConfirmationLabel: "生き様の変更確認",
       ikizamaLabel: "生き様スキル",
       level6OrAbove: "Lv6以上",
       level4OrAbove: "Lv4以上",

@@ -1,6 +1,5 @@
 import type { Skill } from "../../lib/types/skill";
 import { characterSheetDictionary } from "../dictionary";
-import type { PrimarySkillGroups } from "../master-data/primary-skills";
 import SkillSection, { type SkillSectionRow } from "./skills/SkillSection";
 
 export type PrimarySkillRowView = {
@@ -12,7 +11,6 @@ export type PrimarySkillRowView = {
 
 export type PrimarySkillsSectionProps = {
   bonusSkills: readonly Skill[];
-  candidateGroups: PrimarySkillGroups;
   hasPrimarySkillLevelTotalError: boolean;
   invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
@@ -22,8 +20,6 @@ export type PrimarySkillsSectionProps = {
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;
   onRemove: (rowId: string) => void;
   onMove: (rowId: string, direction: "up" | "down") => void;
-  onSelect: (rowId: string, skillId: string) => void;
-  onSelectionClear: () => void;
   primaryRyugiName: string | null;
   primaryRyugiSelected: boolean;
   rows: readonly PrimarySkillRowView[];

@@ -41,7 +41,7 @@ export type BuildSectionProps = {
     field: keyof AttributeValues,
     value: string,
   ) => number;
-  onIkizamaChange: (id: string | null) => void;
+  onIkizamaChange: (id: string | null, trigger?: HTMLSelectElement) => void;
   onIkizamaLevelChange: (value: string) => number;
   onOtherRyugiAdd: () => void;
   onOtherRyugiChange: (
@@ -207,7 +207,7 @@ export default function BuildSection({
         <div className={styles.choiceRow}>
           <SelectField
             label={buildCopy.ikizama}
-            onChange={(id) => onIkizamaChange(id)}
+            onChange={onIkizamaChange}
             options={ikizamaOptions}
             value={build.ikizamaId}
           />

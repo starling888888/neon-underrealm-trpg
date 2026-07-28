@@ -1,6 +1,5 @@
 import type { Skill } from "../../lib/types/skill";
 import { characterSheetDictionary } from "../dictionary";
-import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
 import SkillSection, { type SkillSectionRow } from "./skills/SkillSection";
 
 export type IkizamaSkillRowView = {
@@ -13,7 +12,6 @@ export type IkizamaSkillRowView = {
 export type IkizamaSkillsSectionProps = {
   bonusLevel: number;
   bonusSkill: Skill | null;
-  candidateGroups: IkizamaSkillGroups;
   hasIkizamaSkillLevelTotalError: boolean;
   ikizamaName: string | null;
   ikizamaSelected: boolean;
@@ -23,7 +21,6 @@ export type IkizamaSkillsSectionProps = {
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;
   onRemove: (rowId: string) => void;
   onMove: (rowId: string, direction: "up" | "down") => void;
-  onSelect: (rowId: string, skillId: string) => void;
   rows: readonly IkizamaSkillRowView[];
 };
 

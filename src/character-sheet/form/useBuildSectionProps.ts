@@ -23,6 +23,11 @@ export type BuildSectionPresenterState = {
 };
 
 type UseBuildSectionPropsOptions = {
+  onIkizamaChangeRequested?: (
+    ikizamaId: string | null,
+    trigger: HTMLSelectElement,
+    applyChange: () => void,
+  ) => void;
   onPrimaryRyugiChangeRequested?: (
     primaryRyugiId: string | null,
     trigger: HTMLSelectElement,
@@ -32,7 +37,10 @@ type UseBuildSectionPropsOptions = {
 
 export default function useBuildSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
-  { onPrimaryRyugiChangeRequested }: UseBuildSectionPropsOptions = {},
+  {
+    onIkizamaChangeRequested,
+    onPrimaryRyugiChangeRequested,
+  }: UseBuildSectionPropsOptions = {},
 ): BuildSectionPresenterState {
   const build = useWatch({
     control,
@@ -107,8 +115,15 @@ export default function useBuildSectionProps(
       ikizamaOptions: getCharacterSheetIkizamaOptions(),
       onAttributeChange: setAttributeValue,
       onAttributeCommit: setAttributeValue,
-      onIkizamaChange: (ikizamaId) => {
-        setBuildValue("ikizamaId", ikizamaId);
+      onIkizamaChange: (ikizamaId, trigger) => {
+        const applyChange = () => {
+          setBuildValue("ikizamaId", ikizamaId);
+        };
+        if (trigger !== undefined && onIkizamaChangeRequested !== undefined) {
+          onIkizamaChangeRequested(ikizamaId, trigger, applyChange);
+          return;
+        }
+        applyChange();
       },
       onIkizamaLevelChange: (value) => {
         const normalizedValue = normalizeIntegerInput(value);

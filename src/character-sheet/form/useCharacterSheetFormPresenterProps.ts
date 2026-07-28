@@ -2,6 +2,8 @@ import type { UseFormReturn } from "react-hook-form";
 
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
 import type { CharacterSheetFormValues } from "../form-values";
+import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
+import type { PrimarySkillGroups } from "../master-data/primary-skills";
 import type { CharacterImagePresenterState } from "./presenter-state";
 import useBondsSectionProps from "./useBondsSectionProps";
 import useBuildSectionProps from "./useBuildSectionProps";
@@ -12,6 +14,11 @@ import useProfileSectionProps from "./useProfileSectionProps";
 import useSecondaryAttributesSectionProps from "./useSecondaryAttributesSectionProps";
 
 type CharacterSheetPresenterOptions = {
+  onIkizamaChangeRequested: (
+    ikizamaId: string | null,
+    trigger: HTMLSelectElement,
+    applyChange: () => void,
+  ) => void;
   onPrimaryRyugiChangeRequested: (
     primaryRyugiId: string | null,
     trigger: HTMLSelectElement,
@@ -27,17 +34,35 @@ type CharacterSheetPresenterOptions = {
   ) => void;
 };
 
+export type CharacterSheetContainerPresenterState =
+  CharacterSheetFormPresenterProps & {
+    ikizamaSkillPicker: {
+      candidateGroups: IkizamaSkillGroups;
+      clearSelection: () => void;
+      onSelect: (rowId: string, skillId: string) => void;
+    };
+    primarySkillPicker: {
+      candidateGroups: PrimarySkillGroups;
+      clearSelection: () => void;
+      onSelect: (rowId: string, skillId: string) => void;
+    };
+  };
+
 /** Composes independently-owned section props for the form presenter. */
 export default function useCharacterSheetFormPresenterProps(
   form: UseFormReturn<CharacterSheetFormValues>,
   imageState: CharacterImagePresenterState,
   {
+    onIkizamaChangeRequested,
     onIkizamaSkillPickerRequested,
     onPrimaryRyugiChangeRequested,
     onPrimarySkillPickerRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
-): CharacterSheetFormPresenterProps {
-  const build = useBuildSectionProps(form, { onPrimaryRyugiChangeRequested });
+): CharacterSheetContainerPresenterState {
+  const build = useBuildSectionProps(form, {
+    onIkizamaChangeRequested,
+    onPrimaryRyugiChangeRequested,
+  });
   const secondaryAttributes = useSecondaryAttributesSectionProps(
     form,
     build.derivedBuild,
@@ -71,6 +96,16 @@ export default function useCharacterSheetFormPresenterProps(
     },
     checksSection,
     ikizamaSkillsSection: ikizamaSkills.sectionProps,
+    ikizamaSkillPicker: {
+      candidateGroups: ikizamaSkills.candidateGroups,
+      clearSelection: ikizamaSkills.clearSelection,
+      onSelect: ikizamaSkills.onSelect,
+    },
+    primarySkillPicker: {
+      candidateGroups: primarySkills.candidateGroups,
+      clearSelection: primarySkills.clearSelection,
+      onSelect: primarySkills.onSelect,
+    },
     primarySkillsSection: primarySkills.sectionProps,
     profileSection,
     secondaryAttributesSection: secondaryAttributes.sectionProps,

@@ -84,11 +84,14 @@ function SkillMetadata({ skill }: SkillMetadataProps) {
   );
 }
 
-function SkillDetails({ skill }: SkillMetadataProps) {
+function SkillDetails({
+  detailsId,
+  skill,
+}: SkillMetadataProps & { detailsId: string }) {
   const copy = characterSheetDictionary.gameDomain.terms.skill;
 
   return (
-    <div className={styles.details}>
+    <div className={styles.details} id={detailsId}>
       <div className={styles.mobileMetadata} data-skill-mobile-metadata>
         <p>
           <span>{copy.cost}</span>
@@ -118,10 +121,12 @@ function SkillDetails({ skill }: SkillMetadataProps) {
 }
 
 function DetailsToggle({
+  detailsId,
   isExpanded,
   name,
   onClick,
 }: {
+  detailsId: string;
   isExpanded: boolean;
   name: string;
   onClick: () => void;
@@ -130,6 +135,7 @@ function DetailsToggle({
 
   return (
     <button
+      aria-controls={detailsId}
       aria-expanded={isExpanded}
       aria-label={`${name}${isExpanded ? copy.closeDetails : copy.openDetails}`}
       className={styles.detailsToggle}
@@ -164,6 +170,7 @@ function SkillRow({
   const hasError = row.hasRowError || row.hasLevelError;
   const name = row.skill?.name ?? copy.unselected;
   const accessibilityName = row.accessibilityName;
+  const detailsId = `skill-details-${row.rowId}`;
 
   return (
     <fieldset
@@ -173,9 +180,7 @@ function SkillRow({
       data-skill-row-kind={row.kind}
       data-skill-row={row.rowId}
     >
-      {row.kind === "normal" ? (
-        <legend className={styles.visuallyHidden}>{accessibilityName}</legend>
-      ) : null}
+      <legend className={styles.visuallyHidden}>{accessibilityName}</legend>
       <div className={styles.firstLine}>
         {row.movable ? (
           <div className={styles.reorderControls}>
@@ -248,6 +253,7 @@ function SkillRow({
         )}
         <SkillMetadata skill={row.skill} />
         <DetailsToggle
+          detailsId={detailsId}
           isExpanded={isDetailsExpanded}
           name={accessibilityName}
           onClick={() => setIsDetailsExpanded((expanded) => !expanded)}
@@ -266,7 +272,9 @@ function SkillRow({
           <span aria-hidden="true" className={styles.removePlaceholder} />
         )}
       </div>
-      {isDetailsExpanded ? <SkillDetails skill={row.skill} /> : null}
+      {isDetailsExpanded ? (
+        <SkillDetails detailsId={detailsId} skill={row.skill} />
+      ) : null}
     </fieldset>
   );
 }

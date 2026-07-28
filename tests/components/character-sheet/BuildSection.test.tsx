@@ -87,12 +87,17 @@ describe("BuildSection", () => {
       screen.getByLabelText("プライマリ流儀"),
       "kenkaya",
     );
+    await user.selectOptions(screen.getByLabelText("生き様"), "burai");
     await user.click(
       screen.getByRole("button", { name: "＋ その他流儀を追加" }),
     );
 
     expect(props.onPrimaryRyugiChange).toHaveBeenCalledWith(
       "kenkaya",
+      expect.any(HTMLSelectElement),
+    );
+    expect(props.onIkizamaChange).toHaveBeenCalledWith(
+      "burai",
       expect.any(HTMLSelectElement),
     );
     expect(props.onOtherRyugiAdd).toHaveBeenCalledOnce();

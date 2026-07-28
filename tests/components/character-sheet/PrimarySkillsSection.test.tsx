@@ -13,7 +13,6 @@ function createProps(): PrimarySkillsSectionProps {
 
   return {
     bonusSkills: groups.bonus,
-    candidateGroups: groups,
     hasPrimarySkillLevelTotalError: false,
     invalidDuplicateSkillRowIds: [],
     invalidMaximumLevelRowIds: [],
@@ -23,8 +22,6 @@ function createProps(): PrimarySkillsSectionProps {
     onMove: vi.fn(),
     onPickerRequest: vi.fn(),
     onRemove: vi.fn(),
-    onSelect: vi.fn(),
-    onSelectionClear: vi.fn(),
     primaryRyugiName: "ケンカヤ",
     primaryRyugiSelected: true,
     rows: [
@@ -51,7 +48,9 @@ describe("PrimarySkillsSection", () => {
     const props = createProps();
     render(<PrimarySkillsSection {...props} />);
 
-    expect(screen.getByText(props.bonusSkills[0]?.name ?? "")).not.toBeNull();
+    expect(
+      screen.getByRole("group", { name: props.bonusSkills[0]?.name ?? "" }),
+    ).not.toBeNull();
     expect(screen.getAllByRole("button", { name: /へ移動$/ })).toHaveLength(2);
     expect(screen.getByText("名称")).not.toBeNull();
     expect(screen.getByText("タイミング")).not.toBeNull();
