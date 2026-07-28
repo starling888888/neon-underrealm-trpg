@@ -115,8 +115,6 @@ export const characterSheetDictionary = {
       chooseOtherRyugi: "その他流儀スキルを選択",
       initialCreation: "初期作成",
       ikizama: "生き様",
-      ikizamaChangeConfirmation:
-        "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
       ikizamaChangeConfirmationLabel: "生き様の変更確認",
       ikizamaLabel: "生き様スキル",
       level6OrAbove: "Lv6以上",
@@ -124,14 +122,12 @@ export const characterSheetDictionary = {
       moveDown: "下へ移動",
       moveUp: "上へ移動",
       otherRyugi: "その他流儀",
-      otherRyugiChangeConfirmation:
-        "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
       otherRyugiChangeConfirmationLabel: "その他流儀の変更確認",
       otherRyugiLabel: "その他流儀スキル",
       otherRyugiRemoveConfirmation:
         "削除すると、現在選択中のスキルが消去されます。本当によろしいですか？",
       otherRyugiRemoveConfirmationLabel: "その他流儀の削除確認",
-      primaryRyugiChangeConfirmation:
+      skillSelectionChangeConfirmation:
         "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
       primaryRyugiChangeConfirmationLabel: "プライマリ流儀の変更確認",
       primary: "プライマリ流儀",

@@ -64,22 +64,22 @@ export type BuildValues = {
   acquiredExperience: number;
 };
 
-export type PrimarySkillValues = {
+export type SkillSelectionRowValues = {
   level: number;
   rowId: string;
   skillId: string | null;
 };
 
 export type PrimarySkillsValues = {
-  rows: PrimarySkillValues[];
+  rows: SkillSelectionRowValues[];
 };
 
 export type IkizamaSkillsValues = {
   bonusLevel: number;
-  rows: PrimarySkillValues[];
+  rows: SkillSelectionRowValues[];
 };
 
-export type OtherRyugiSkillValues = PrimarySkillValues & {
+export type OtherRyugiSkillValues = SkillSelectionRowValues & {
   ryugiRowId: string;
 };
 
@@ -184,7 +184,7 @@ function createInitialNoncombatChecks(): NoncombatCheckValues {
   ) as NoncombatCheckValues;
 }
 
-function createInitialPrimarySkillRows(): PrimarySkillValues[] {
+function createInitialPrimarySkillRows(): SkillSelectionRowValues[] {
   return Array.from({ length: 4 }, (_, index) => ({
     level: 1,
     rowId: `primary-skill-${index + 1}`,
@@ -192,7 +192,7 @@ function createInitialPrimarySkillRows(): PrimarySkillValues[] {
   }));
 }
 
-function createInitialIkizamaSkillRows(): PrimarySkillValues[] {
+function createInitialIkizamaSkillRows(): SkillSelectionRowValues[] {
   return Array.from({ length: 2 }, (_, index) => ({
     level: 1,
     rowId: `ikizama-skill-${index + 1}`,

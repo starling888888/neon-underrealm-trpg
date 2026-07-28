@@ -6,7 +6,7 @@ import type { IkizamaSkillsSectionProps } from "../components/IkizamaSkillsSecti
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-  type PrimarySkillValues,
+  type SkillSelectionRowValues,
 } from "../form-values";
 import { calculateIkizamaSkillsValidation } from "../logic/ikizama-skills";
 import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
@@ -30,7 +30,7 @@ export type IkizamaSkillsSectionPresenterState = {
 
 const maximumSkillNameLength = getMaximumSkillNameLength();
 
-function createIkizamaSkillRow(): PrimarySkillValues {
+function createIkizamaSkillRow(): SkillSelectionRowValues {
   return { level: 1, rowId: crypto.randomUUID(), skillId: null };
 }
 
@@ -77,7 +77,7 @@ export default function useIkizamaSkillsSectionProps(
     rows,
   );
 
-  function setRow(rowId: string, nextRow: PrimarySkillValues): void {
+  function setRow(rowId: string, nextRow: SkillSelectionRowValues): void {
     const index = getValues("ikizamaSkills.rows").findIndex(
       (row) => row.rowId === rowId,
     );

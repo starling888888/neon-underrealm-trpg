@@ -298,3 +298,33 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 - 削除済みVRT targetはbaseline未作成で比較・snapshot取得ができず、受入条件と最終diffのstate列挙、原寸locator screenshot、差分判断にも使わない。
 - full-page screenshotは局所表示契約の確認根拠に使わず、baseline更新要否は人間判断として記録した。
 - 現行の受入結果と`npm run check` / `npm run build`の結果はビジュアルレビュー3へ集約した。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- 生き様通常スキルは最低0行の操作を許可する一方、`characterSheetFormSchema`の`ikizamaSkills.rows`は`.min(1)`であり、正規操作後のform値をinvalidにする。
+- `@ikizama-long-skill-selected`をlocator-onlyと記録しているが、`registerVrtScenarios`はlocator capture前に常にfull-page `toHaveScreenshot()`を実行するため、canonical full-page baselineなしでは通常VRTへも参加する。
+- bonus Lvの最大Lv超過と、生き様ID変更effectが保存・JSON入力の復元値をLv1へ戻しうる点は、G16およびG24 / G27の契約に含まれていない。
+- プライマリ、生き様、その他流儀で同一の変更確認文言をdictionaryへ重複して持ち、共有済みの行値型と確認dialogが`Primary`固有の名前のままになっている。
+
+### 判定
+
+- source: unknown (`.tmp/chatgpt-review.md`、remote HEAD snapshot)
+- classification: valid（0行とschema、locator-only記録、変更確認文言のdictionary集約、共有値型・確認dialogの中立名）/ follow-up（bonus最大Lv、復元時bonus reset）
+- local validation: 現行`useIkizamaSkillsSectionProps`は最後の通常行を削除できるが、`characterSheetFormSchema`は`ikizamaSkills.rows`へ`.min(1)`を指定している。現行`registerVrtScenarios`は全scenarioでfull-page screenshotを先に比較し、`ikizama-long-skill-selected`も同helperへ登録されている。bonus入力は最低値だけを正規化し、最大LvはG16へ先送りしている。永続化・JSON入力は未実装のため、ID変更effectの復元時挙動は将来契約として扱う。dictionaryには同一の変更確認本文が3キーで重複し、`PrimarySkillValues`は生き様とその他流儀でも利用され、確認dialogも3カテゴリの変更と削除確認へ利用されている。
+
+### 対応方針
+
+- 生き様通常行0件をschemaでも許容し、primaryの最低1行契約との境界をNode testへ追加する。
+- locator-onlyを必要とするscenarioはfull-page比較へ参加しないVRT helper契約または専用specへ分離し、Visual Review記録と実行経路を一致させる。
+- 変更確認の本文はdictionaryの共通キーへ集約し、カテゴリ固有のdialog labelと削除確認本文は個別キーのまま保持する。`PrimarySkillValues`と`PrimaryRyugiChangeConfirmDialog`は共有用途を表す中立名へ変更する。
+- bonus最大LvはG16の全スキルvalidation、復元時のbonus resetはG24 / G27の保存・JSON入力境界へそれぞれTODOとして送る。
+
+### 対応完了チェックリスト
+
+- [x] 生き様通常スキル0行をschemaでも許容し、primaryの最低1行との境界をNode testで確認する
+- [x] locator-only scenarioを通常のfull-page VRTから分離し、Visual Review記録と実行経路を一致させる
+- [x] 変更確認本文をdictionaryの共通キーへ集約し、共有値型と確認dialogを中立名へ変更する
+- [x] bonus最大Lvの扱いをG16へ追跡する
+- [x] 復元時のbonus resetをG24 / G27へ追跡する

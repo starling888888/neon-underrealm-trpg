@@ -4,8 +4,8 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import PrimaryRyugiChangeConfirmDialog from "../../../src/character-sheet/components/dialogs/PrimaryRyugiChangeConfirmDialog";
 import PrimarySkillPickerDialog from "../../../src/character-sheet/components/dialogs/PrimarySkillPickerDialog";
+import SkillSelectionChangeConfirmDialog from "../../../src/character-sheet/components/dialogs/SkillSelectionChangeConfirmDialog";
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 
@@ -100,10 +100,10 @@ describe("primary skill dialogs", () => {
     const onRequestClose = vi.fn();
 
     render(
-      <PrimaryRyugiChangeConfirmDialog
+      <SkillSelectionChangeConfirmDialog
         confirmation={
           characterSheetDictionary.characterSheet.skills
-            .primaryRyugiChangeConfirmation
+            .skillSelectionChangeConfirmation
         }
         dialogLabel={
           characterSheetDictionary.characterSheet.skills

@@ -6,7 +6,7 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
   type PrimarySkillsValues,
-  type PrimarySkillValues,
+  type SkillSelectionRowValues,
 } from "../form-values";
 import { calculatePrimarySkillsValidation } from "../logic/primary-skills";
 import type { PrimarySkillGroups } from "../master-data/primary-skills";
@@ -30,7 +30,7 @@ export type PrimarySkillsSectionPresenterState = {
 
 const maximumSkillNameLength = getMaximumSkillNameLength();
 
-function createPrimarySkillRow(): PrimarySkillValues {
+function createPrimarySkillRow(): SkillSelectionRowValues {
   return { level: 1, rowId: crypto.randomUUID(), skillId: null };
 }
 
@@ -53,12 +53,12 @@ export default function usePrimarySkillsSectionProps(
     build.primaryRyugiLevel,
   );
 
-  function setRows(rows: PrimarySkillValues[]): void {
+  function setRows(rows: SkillSelectionRowValues[]): void {
     const next: PrimarySkillsValues = { rows };
     setValue("primarySkills", next, { shouldValidate: true });
   }
 
-  function getRows(): PrimarySkillValues[] {
+  function getRows(): SkillSelectionRowValues[] {
     return getValues("primarySkills").rows;
   }
 

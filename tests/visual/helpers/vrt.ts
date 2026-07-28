@@ -16,6 +16,7 @@ export type VrtState =
 export type VrtScenario = {
   fullPage?: boolean;
   id?: string;
+  locatorOnly?: boolean;
   locators?: readonly {
     name: string;
     resolve: (page: Page) => Locator;
@@ -43,21 +44,32 @@ export function registerVrtScenarios(
       test(`${target} ${scenarioId}${state} @vrt @${target} @${viewportName} @${state}${scenarioTag}`, async ({
         page,
       }) => {
+        const locatorCaptureEnabled = isLocatorCaptureEnabled();
+        if (scenario.locatorOnly && !locatorCaptureEnabled) {
+          test.skip(
+            true,
+            "locator-only scenario is captured only by the visual capture configuration",
+          );
+          return;
+        }
+
         await page.setViewportSize(visualViewports[viewportName]);
         await page.goto(scenario.route);
         await expect(page.locator("body")).toBeVisible();
         await prepareVrtState(page, state);
         await scenario.prepare?.(page);
 
-        await expect(page).toHaveScreenshot(
-          [target, `${snapshotPrefix}${state}-${viewportName}.png`],
-          {
-            animations: "disabled",
-            fullPage: scenario.fullPage ?? true,
-          },
-        );
+        if (!scenario.locatorOnly) {
+          await expect(page).toHaveScreenshot(
+            [target, `${snapshotPrefix}${state}-${viewportName}.png`],
+            {
+              animations: "disabled",
+              fullPage: scenario.fullPage ?? true,
+            },
+          );
+        }
 
-        if (isLocatorCaptureEnabled()) {
+        if (locatorCaptureEnabled) {
           for (const locator of scenario.locators ?? []) {
             await expect(locator.resolve(page)).toHaveScreenshot(
               [

@@ -5,8 +5,8 @@ import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOver
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
 import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
-import PrimaryRyugiChangeConfirmDialog from "./components/dialogs/PrimaryRyugiChangeConfirmDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
+import SkillSelectionChangeConfirmDialog from "./components/dialogs/SkillSelectionChangeConfirmDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
@@ -287,10 +287,10 @@ export default function CharacterSheetContainer() {
                 )
           }
         />
-        <PrimaryRyugiChangeConfirmDialog
+        <SkillSelectionChangeConfirmDialog
           confirmation={
             characterSheetDictionary.characterSheet.skills
-              .primaryRyugiChangeConfirmation
+              .skillSelectionChangeConfirmation
           }
           dialogLabel={
             characterSheetDictionary.characterSheet.skills
@@ -301,10 +301,10 @@ export default function CharacterSheetContainer() {
           onRequestClose={closePrimaryRyugiChangeConfirm}
           returnFocusRef={primaryRyugiChangeTriggerRef}
         />
-        <PrimaryRyugiChangeConfirmDialog
+        <SkillSelectionChangeConfirmDialog
           confirmation={
             characterSheetDictionary.characterSheet.skills
-              .ikizamaChangeConfirmation
+              .skillSelectionChangeConfirmation
           }
           dialogLabel={
             characterSheetDictionary.characterSheet.skills
@@ -315,10 +315,10 @@ export default function CharacterSheetContainer() {
           onRequestClose={closeIkizamaChangeConfirm}
           returnFocusRef={ikizamaChangeTriggerRef}
         />
-        <PrimaryRyugiChangeConfirmDialog
+        <SkillSelectionChangeConfirmDialog
           confirmation={
             characterSheetDictionary.characterSheet.skills
-              .otherRyugiChangeConfirmation
+              .skillSelectionChangeConfirmation
           }
           dialogLabel={
             characterSheetDictionary.characterSheet.skills
@@ -329,7 +329,7 @@ export default function CharacterSheetContainer() {
           onRequestClose={closeOtherRyugiChangeConfirm}
           returnFocusRef={otherRyugiChangeTriggerRef}
         />
-        <PrimaryRyugiChangeConfirmDialog
+        <SkillSelectionChangeConfirmDialog
           confirmLabel={characterSheetDictionary.general.delete}
           confirmation={
             characterSheetDictionary.characterSheet.skills

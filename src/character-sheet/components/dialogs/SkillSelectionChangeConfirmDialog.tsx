@@ -5,7 +5,7 @@ import CharacterSheetDialog, {
   CharacterSheetDialogContent,
 } from "./CharacterSheetDialog";
 
-type PrimaryRyugiChangeConfirmDialogProps = {
+type SkillSelectionChangeConfirmDialogProps = {
   confirmLabel?: string;
   confirmation: string;
   dialogLabel: string;
@@ -15,8 +15,8 @@ type PrimaryRyugiChangeConfirmDialogProps = {
   returnFocusRef: React.RefObject<HTMLElement | null>;
 };
 
-/** Confirms clearing selected primary skills before changing primary ryugi. */
-export default function PrimaryRyugiChangeConfirmDialog({
+/** Confirms clearing selected skills before applying a destructive selection change. */
+export default function SkillSelectionChangeConfirmDialog({
   confirmLabel,
   confirmation,
   dialogLabel,
@@ -24,7 +24,7 @@ export default function PrimaryRyugiChangeConfirmDialog({
   onConfirm,
   onRequestClose,
   returnFocusRef,
-}: PrimaryRyugiChangeConfirmDialogProps) {
+}: SkillSelectionChangeConfirmDialogProps) {
   const { general } = characterSheetDictionary;
   const descriptionId = useId();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);

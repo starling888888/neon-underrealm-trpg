@@ -84,6 +84,26 @@ describe("character sheet form schema", () => {
     );
   });
 
+  it("allows zero ikizama rows while retaining the primary minimum row", () => {
+    assert.equal(
+      characterSheetFormSchema.safeParse({
+        ...characterSheetDefaultValues,
+        ikizamaSkills: {
+          ...characterSheetDefaultValues.ikizamaSkills,
+          rows: [],
+        },
+      }).success,
+      true,
+    );
+    assert.equal(
+      characterSheetFormSchema.safeParse({
+        ...characterSheetDefaultValues,
+        primarySkills: { rows: [] },
+      }).success,
+      false,
+    );
+  });
+
   it("normalizes browser inputs through their field schemas", () => {
     const cases = [
       { field: "acquired" as const, input: "", expected: 0 },

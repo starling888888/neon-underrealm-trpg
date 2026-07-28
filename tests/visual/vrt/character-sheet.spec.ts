@@ -191,6 +191,7 @@ const tooltipLocator = {
 registerVrtScenarios("character-sheet", [
   {
     id: "other-ryugi-skill-selected",
+    locatorOnly: true,
     locators: [otherRyugiSkillsLocator],
     prepare: selectOtherRyugiSkill,
     route: visualRoutes.characterSheet,
@@ -198,6 +199,7 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "other-ryugi-skills-multiple",
+    locatorOnly: true,
     locators: [
       otherRyugiSkillsLocator,
       {
@@ -215,6 +217,7 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "other-ryugi-skill-picker-open",
+    locatorOnly: true,
     locators: [otherRyugiSkillsLocator, otherRyugiSkillPickerLocator],
     prepare: async (page) => {
       await addOtherRyugi(page, 1, "kenkaya");
@@ -231,6 +234,7 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "other-ryugi-skill-total-error",
+    locatorOnly: true,
     locators: [buildSectionLocator, otherRyugiSkillsLocator],
     prepare: async (page) => {
       await selectOtherRyugiSkill(page);
@@ -244,6 +248,7 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "other-ryugi-remove-confirm",
+    locatorOnly: true,
     locators: [
       buildSectionLocator,
       otherRyugiSkillsLocator,
@@ -261,6 +266,7 @@ registerVrtScenarios("character-sheet", [
   },
   {
     id: "ikizama-long-skill-selected",
+    locatorOnly: true,
     locators: [ikizamaSkillsLocator],
     prepare: selectLongIkizamaSkill,
     route: visualRoutes.characterSheet,

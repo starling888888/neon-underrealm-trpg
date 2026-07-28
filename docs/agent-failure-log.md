@@ -1174,3 +1174,21 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-15-sheet-other-ryugi-skills` の`BuildSection` Component test
 - 観測した失敗: 削除確認dialogのfocus復帰のため、その他流儀削除callbackへ操作元buttonを追加したが、既存testのcallback引数期待を更新しなかった。同じ失敗をfull testとcomponent testで2回確認した。
 - 一次対応: callback契約に合わせてtest expectationを更新し、`npm run test:component`で16 files・78 testsの通過を確認した。callbackへ操作元を追加する変更では、呼び出し側とtest doubleの引数契約を同時に確認する。
+
+### Recorded a locator-only VRT state that still ran full-page comparison
+
+#### 2026-07-28
+
+- source: review
+- 発生箇所: `ex-02-13-sheet-ikizama-skills` のビジュアルレビュー3と`@ikizama-long-skill-selected`
+- 観測した失敗: Visual Review記録でscenarioをlocator-onlyと扱ったが、shared `registerVrtScenarios`はlocator capture前にfull-page `toHaveScreenshot()`を必ず実行する。canonical full-page baseline未作成のstateを通常VRTから分離できておらず、記録した実行契約と実装が一致していなかった。
+- 一次対応: G13のレビュー指摘3とG31 TODOへ、locator-only stateをfull-page VRTから分離する契約を記録した。ユーザー承認なしにVRT helperやcanonical baselineは変更しない。
+
+### Began implementation before completing the requested review-intake update
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-13-sheet-ikizama-skills` のレビュー指摘3取り込み後
+- 観測した失敗: ユーザーがdictionary修正をレビュー指摘へ先に反映するよう求めたにもかかわらず、その記録更新を完了・報告する前に確認dialogのrename作業へ進もうとした。レビュー取り込みと実装の順序を混同した。
+- 一次対応: レビュー指摘3へdictionary共通文言、`SkillSelectionRowValues`、`SkillSelectionChangeConfirmDialog`の対応方針と未完了チェックを追記してから実装を再開した。review-to-issue中の追記要求は、追記結果を確認してから次段階へ移る。
