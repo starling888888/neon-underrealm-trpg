@@ -19,6 +19,7 @@ export type PrimarySkillsSectionProps = {
   bonusSkills: readonly Skill[];
   candidateGroups: PrimarySkillGroups;
   hasPrimarySkillLevelTotalError: boolean;
+  invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   maximumSkillNameLength: number;
   onAdd: () => void;
@@ -150,6 +151,7 @@ function PrimaryBonusSkillRow({ skill }: { skill: Skill }) {
 
 function PrimarySkillRow({
   canRemove,
+  hasDuplicateSkillError,
   hasMaximumLevelError,
   onLevelChange,
   onPickerRequest,
@@ -158,6 +160,7 @@ function PrimarySkillRow({
   row,
 }: {
   canRemove: boolean;
+  hasDuplicateSkillError: boolean;
   hasMaximumLevelError: boolean;
   onLevelChange: (rowId: string, value: string) => number;
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;
@@ -188,7 +191,7 @@ function PrimarySkillRow({
   return (
     <fieldset
       className={styles.row}
-      data-invalid={hasMaximumLevelError || undefined}
+      data-invalid={hasDuplicateSkillError || hasMaximumLevelError || undefined}
       data-primary-skill-kind="normal"
       data-primary-skill-row={row.rowId}
       onDragOver={(event) => event.preventDefault()}
@@ -265,6 +268,7 @@ function PrimarySkillRow({
 export default function PrimarySkillsSection({
   bonusSkills,
   hasPrimarySkillLevelTotalError,
+  invalidDuplicateSkillRowIds,
   invalidMaximumLevelRowIds,
   maximumSkillNameLength,
   onAdd,
@@ -341,6 +345,9 @@ export default function PrimarySkillsSection({
             {rows.map((row) => (
               <PrimarySkillRow
                 canRemove={rows.length > 1}
+                hasDuplicateSkillError={invalidDuplicateSkillRowIds.includes(
+                  row.rowId,
+                )}
                 hasMaximumLevelError={invalidMaximumLevelRowIds.includes(
                   row.rowId,
                 )}

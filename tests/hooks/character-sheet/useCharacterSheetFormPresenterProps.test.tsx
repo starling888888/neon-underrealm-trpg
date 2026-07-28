@@ -149,6 +149,20 @@ describe("useCharacterSheetFormPresenterProps", () => {
       result.current.presenterProps.primarySkillsSection
         .hasPrimarySkillLevelTotalError,
     ).toBe(false);
+
+    const secondRowId = result.current.form.getValues(
+      "primarySkills.rows.1.rowId",
+    );
+    act(() => {
+      result.current.presenterProps.primarySkillsSection.onSelect(
+        secondRowId,
+        skill.id,
+      );
+    });
+    expect(
+      result.current.presenterProps.primarySkillsSection
+        .invalidDuplicateSkillRowIds,
+    ).toEqual([firstRowId, secondRowId]);
   });
 
   it("connects secondary corrections and temporary-value choices through RHF", () => {

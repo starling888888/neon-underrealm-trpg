@@ -15,6 +15,7 @@ function createProps(): PrimarySkillsSectionProps {
     bonusSkills: groups.bonus,
     candidateGroups: groups,
     hasPrimarySkillLevelTotalError: false,
+    invalidDuplicateSkillRowIds: [],
     invalidMaximumLevelRowIds: [],
     maximumSkillNameLength: 8,
     onAdd: vi.fn(),
@@ -162,6 +163,32 @@ describe("PrimarySkillsSection", () => {
     fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
     expect(screen.queryByRole("button", { name: /並べ替え:/ })).toBeNull();
+  });
+
+  it("marks every duplicate selected skill row as invalid", () => {
+    const props = createProps();
+    const [firstRow, secondRow] = props.rows;
+    if (firstRow === undefined || secondRow === undefined) {
+      throw new Error("重複確認用のスキル行を取得できません。");
+    }
+
+    render(
+      <PrimarySkillsSection
+        {...props}
+        invalidDuplicateSkillRowIds={[firstRow.rowId, secondRow.rowId]}
+      />,
+    );
+
+    expect(
+      document
+        .querySelector(`[data-primary-skill-row="${firstRow.rowId}"]`)
+        ?.getAttribute("data-invalid"),
+    ).toBe("true");
+    expect(
+      document
+        .querySelector(`[data-primary-skill-row="${secondRow.rowId}"]`)
+        ?.getAttribute("data-invalid"),
+    ).toBe("true");
   });
 
   it("updates the displayed level when a selected skill resets it", () => {

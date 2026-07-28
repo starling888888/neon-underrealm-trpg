@@ -16,6 +16,7 @@ type PrimarySkillPickerDialogProps = {
   onRequestClose: () => void;
   onSelect: (skillId: string) => void;
   returnFocusRef: React.RefObject<HTMLElement | null>;
+  selectedSkillIds: readonly string[];
 };
 
 function formatCompactValue(
@@ -33,17 +34,23 @@ function formatCompactValue(
 
 function CandidateRow({
   onSelect,
+  isSelected,
   skill,
 }: {
   onSelect: (skillId: string) => void;
+  isSelected: boolean;
   skill: Skill;
 }) {
   const copy = characterSheetDictionary.gameDomain.terms.skill;
 
   return (
-    <div className={styles.candidate}>
+    <div className={styles.candidate} data-disabled={isSelected || undefined}>
       <div className={styles.firstLine}>
-        <button onClick={() => onSelect(skill.id)} type="button">
+        <button
+          disabled={isSelected}
+          onClick={() => onSelect(skill.id)}
+          type="button"
+        >
           {skill.name}
         </button>
         <span>{skill.maxLevel}</span>
@@ -84,10 +91,12 @@ function CandidateTableHeader() {
 function CandidateGroup({
   heading,
   onSelect,
+  selectedSkillIds,
   skills,
 }: {
   heading: string;
   onSelect: (skillId: string) => void;
+  selectedSkillIds: ReadonlySet<string>;
   skills: readonly Skill[];
 }) {
   if (skills.length === 0) return null;
@@ -97,7 +106,12 @@ function CandidateGroup({
       <h3>{heading}</h3>
       <CandidateTableHeader />
       {skills.map((skill) => (
-        <CandidateRow key={skill.id} onSelect={onSelect} skill={skill} />
+        <CandidateRow
+          isSelected={selectedSkillIds.has(skill.id)}
+          key={skill.id}
+          onSelect={onSelect}
+          skill={skill}
+        />
       ))}
     </section>
   );
@@ -110,10 +124,12 @@ export default function PrimarySkillPickerDialog({
   onRequestClose,
   onSelect,
   returnFocusRef,
+  selectedSkillIds,
 }: PrimarySkillPickerDialogProps) {
   const titleId = useId();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const copy = characterSheetDictionary.characterSheet.skills;
+  const selectedSkillIdSet = new Set(selectedSkillIds);
 
   return (
     <CharacterSheetDialog
@@ -139,11 +155,13 @@ export default function PrimarySkillPickerDialog({
           <CandidateGroup
             heading={copy.initialCreation}
             onSelect={onSelect}
+            selectedSkillIds={selectedSkillIdSet}
             skills={groups.basic}
           />
           <CandidateGroup
             heading={copy.level6OrAbove}
             onSelect={onSelect}
+            selectedSkillIds={selectedSkillIdSet}
             skills={groups.advanced}
           />
         </div>

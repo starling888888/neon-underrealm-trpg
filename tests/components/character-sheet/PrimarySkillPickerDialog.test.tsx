@@ -38,6 +38,11 @@ describe("primary skill dialogs", () => {
       ),
     };
     const onSelect = vi.fn();
+    const selectedSkill = groups.basic[0];
+    const selectableSkill = groups.basic[1];
+    if (selectedSkill === undefined || selectableSkill === undefined) {
+      throw new Error("候補スキルを取得できません。");
+    }
 
     render(
       <PrimarySkillPickerDialog
@@ -46,6 +51,7 @@ describe("primary skill dialogs", () => {
         onRequestClose={vi.fn()}
         onSelect={onSelect}
         returnFocusRef={createRef<HTMLButtonElement>()}
+        selectedSkillIds={[selectedSkill.id]}
       />,
     );
 
@@ -70,9 +76,14 @@ describe("primary skill dialogs", () => {
       groups.basic.length + groups.advanced.length,
     );
     expect(screen.queryByText(groups.bonus[0]?.name ?? "")).toBeNull();
+    expect((multilineNameButton as HTMLButtonElement).disabled).toBe(true);
 
     await user.click(multilineNameButton);
-    expect(onSelect).toHaveBeenCalledWith(groups.basic[0]?.id);
+    expect(onSelect).not.toHaveBeenCalled();
+    await user.click(
+      screen.getByRole("button", { name: selectableSkill.name }),
+    );
+    expect(onSelect).toHaveBeenCalledWith(selectableSkill.id);
   });
 
   it("uses the specified confirmation copy and leaves cancellation to the caller", async () => {

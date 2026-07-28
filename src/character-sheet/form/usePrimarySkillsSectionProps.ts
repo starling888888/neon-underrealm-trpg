@@ -72,6 +72,7 @@ export default function usePrimarySkillsSectionProps(
       bonusSkills: groups.bonus,
       candidateGroups: groups,
       hasPrimarySkillLevelTotalError: validation.hasPrimarySkillLevelTotalError,
+      invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
       invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
       maximumSkillNameLength,
       onAdd: () => setRows([...getRows(), createPrimarySkillRow()]),

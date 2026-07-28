@@ -72,6 +72,15 @@
   background: var(--color-example-soft);
 }
 
+.candidate[data-disabled] {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.candidate[data-disabled]:hover {
+  background: var(--color-surface-muted);
+}
+
 .firstLine > * {
   display: grid;
   min-height: 2rem;
@@ -99,6 +108,16 @@
 
 .firstLine button:hover {
   background: var(--color-surface-muted);
+}
+
+.firstLine button:disabled {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.candidate[data-disabled] .firstLine > * {
+  color: var(--color-text-muted);
 }
 
 .firstLine span > span {
@@ -132,6 +151,11 @@
 
 .details strong,
 .effect strong {
+  color: var(--color-text-muted);
+}
+
+.candidate[data-disabled] .details strong,
+.candidate[data-disabled] .effect strong {
   color: var(--color-text-muted);
 }
 

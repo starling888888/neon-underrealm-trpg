@@ -102,6 +102,9 @@ export default function CharacterSheetContainer() {
             closePrimarySkillPicker();
           }}
           returnFocusRef={primarySkillPickerTriggerRef}
+          selectedSkillIds={presenterProps.primarySkillsSection.rows.flatMap(
+            (row) => (row.skillId === null ? [] : [row.skillId]),
+          )}
         />
         <PrimaryRyugiChangeConfirmDialog
           isOpen={isPrimaryRyugiChangeConfirmOpen}

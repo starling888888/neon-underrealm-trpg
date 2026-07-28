@@ -43,7 +43,7 @@ describe("character sheet primary skills", () => {
     assert.equal(maximumNameLength >= knownSkillLength, true);
   });
 
-  it("identifies maximum-level rows and an insufficient primary skill total", () => {
+  it("identifies duplicate and maximum-level rows and an insufficient primary skill total", () => {
     const [skill] = getPrimarySkillGroups("kenkaya", 1).basic;
     if (skill === undefined)
       throw new Error("ケンカヤの基本スキルがありません。");
@@ -55,14 +55,19 @@ describe("character sheet primary skills", () => {
         skill,
         skillId: skill.id,
       },
+      { level: 1, rowId: "duplicate", skill, skillId: skill.id },
       { level: 1, rowId: "empty", skill: null, skillId: null },
     ]);
 
     assert.deepEqual(validation.invalidMaximumLevelRowIds, ["over-limit"]);
-    assert.equal(validation.selectedLevelTotal, skill.maxLevel + 1);
+    assert.deepEqual(validation.invalidDuplicateSkillRowIds, [
+      "over-limit",
+      "duplicate",
+    ]);
+    assert.equal(validation.selectedLevelTotal, skill.maxLevel + 2);
     assert.equal(
       validation.hasPrimarySkillLevelTotalError,
-      skill.maxLevel + 1 > 1,
+      skill.maxLevel + 2 > 1,
     );
   });
 });

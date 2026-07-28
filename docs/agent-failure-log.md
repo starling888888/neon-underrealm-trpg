@@ -1084,3 +1084,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-12-sheet-primary-skills` のmobile展開詳細
 - 観測した失敗: ユーザーが指定した「コスト・使用制限」「技能・取得制限」「効果」の3行構成を、後続指摘の一部だけを取り違えて「コスト」「技能・使用制限」「取得制限」「効果」へ変更した。
 - 一次対応: requirementsとcurrent issueを正しい3行構成へ訂正した。実装の訂正はユーザーの明示指示を待つ。
+
+### Repeated G12 Component-test assertion mistakes
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-12-sheet-primary-skills` の重複スキルvalidation Component test
+- 観測した失敗: 未導入のTesting Library matcherを使い、続く修正でもReactがbooleanの`data-*`属性を`"true"`として出力することを確認せず空文字列を期待したため、同じテストを2回失敗させた。
+- 一次対応: 追加matcherに依存せず、DOMの`disabled`プロパティと属性の実際の文字列値を確認するテストへ統一した。新しいattribute assertionを書く前に、React出力の値を確認する。
