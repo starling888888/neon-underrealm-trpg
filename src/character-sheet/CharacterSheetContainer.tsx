@@ -2,14 +2,20 @@ import { useRef, useState } from "react";
 
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
+import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
 import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
 import SkillSelectionChangeConfirmDialog from "./components/dialogs/SkillSelectionChangeConfirmDialog";
+import WeaponPickerDialog from "./components/dialogs/WeaponPickerDialog";
 import SkillPickerDialog from "./components/skills/SkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
+import {
+  getArmors,
+  getWeaponCandidateGroups,
+} from "./master-data/weapons-and-armor";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
 
 /**
@@ -33,6 +39,10 @@ export default function CharacterSheetContainer() {
   const [otherRyugiSkillPickerRowId, setOtherRyugiSkillPickerRowId] = useState<
     string | null
   >(null);
+  const [weaponPickerRowId, setWeaponPickerRowId] = useState<string | null>(
+    null,
+  );
+  const [isArmorPickerOpen, setIsArmorPickerOpen] = useState(false);
   const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
     useState(false);
   const [isIkizamaChangeConfirmOpen, setIsIkizamaChangeConfirmOpen] =
@@ -45,6 +55,8 @@ export default function CharacterSheetContainer() {
   const ikizamaSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const commonSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const otherRyugiSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const weaponPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const armorPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
@@ -158,6 +170,14 @@ export default function CharacterSheetContainer() {
         otherRyugiSkillPickerTriggerRef.current = trigger;
         setOtherRyugiSkillPickerRowId(rowId);
       },
+      onArmorPickerRequested: (trigger) => {
+        armorPickerTriggerRef.current = trigger;
+        setIsArmorPickerOpen(true);
+      },
+      onWeaponPickerRequested: (rowId, trigger) => {
+        weaponPickerTriggerRef.current = trigger;
+        setWeaponPickerRowId(rowId);
+      },
     },
   );
 
@@ -175,6 +195,12 @@ export default function CharacterSheetContainer() {
 
   function closeOtherRyugiSkillPicker(): void {
     setOtherRyugiSkillPickerRowId(null);
+  }
+  function closeWeaponPicker(): void {
+    setWeaponPickerRowId(null);
+  }
+  function closeArmorPicker(): void {
+    setIsArmorPickerOpen(false);
   }
 
   function confirmPrimaryRyugiChange(): void {
@@ -329,6 +355,33 @@ export default function CharacterSheetContainer() {
                     ?.ryugiRowId ?? "",
                 )
           }
+        />
+        <WeaponPickerDialog
+          groups={getWeaponCandidateGroups(
+            rootState.form.getValues("build.ikizamaId"),
+          )}
+          isOpen={weaponPickerRowId !== null}
+          onRequestClose={closeWeaponPicker}
+          onSelect={(weaponId) => {
+            if (weaponPickerRowId !== null) {
+              presenterProps.weaponsAndArmorSection.onWeaponSelect(
+                weaponPickerRowId,
+                weaponId,
+              );
+            }
+            closeWeaponPicker();
+          }}
+          returnFocusRef={weaponPickerTriggerRef}
+        />
+        <ArmorPickerDialog
+          armors={getArmors()}
+          isOpen={isArmorPickerOpen}
+          onRequestClose={closeArmorPicker}
+          onSelect={(armorId) => {
+            presenterProps.weaponsAndArmorSection.onArmorSelect(armorId);
+            closeArmorPicker();
+          }}
+          returnFocusRef={armorPickerTriggerRef}
         />
         <SkillSelectionChangeConfirmDialog
           confirmation={

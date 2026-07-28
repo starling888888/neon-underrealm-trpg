@@ -1288,3 +1288,138 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-16-sheet-experience-consistency` の通常Doc Review / Tech Review後
 - 観測した失敗: ユーザーがG16全範囲のreviewを指示した後、review結果をcurrent issueの番号付きレビュー指摘へ取り込まず、結果報告だけで停止した。レビュー指摘の修正範囲と未完了状態が正式trackingに残らなかった。
 - 一次対応: `.tmp/review/ex-02-web-character-sheet/document-review-2.md`と`technical-review-4.md`を作成し、ローカルSSoT照合済みの6件をG16のレビュー指摘3へ取り込んだ。実装はユーザー承認まで開始しない。
+
+### Prioritized a design draft over the user-approved current issue
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の武器・防具の性能値表示
+- 観測した失敗: session分割後の実装で、ユーザー指示により作成したcurrent issueの計算式表示、mobileの`＝`以降の折り返し、算出値のaccent-muted領域という画面契約を確認せず、design draftに引きずられた値と修正inputの2列構成を実装した。
+- 一次対応: G17のレビュー指摘4へ、current issueがdesign draftより優先することと、式表示・mobile改行・算出値背景の修正要件を記録した。以後の修正では、実装対象のcurrent issueにある画面契約を先に読み、draftは競合しない参考情報だけに限定する。
+
+### Repaired the formula layout without preserving paired-value semantics
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の武器・防具の性能値表示
+- 観測した失敗: 指摘4の「計算式で表現する」を、性能列内で攻撃力・ガード値または防御力・ダメージ軽減を縦に並べた2本の式として解釈した。ユーザー指定の`元値／元値 + 修正値／修正値 = 最終値／最終値`というペアの1本の式、元値のread-only枠、未算出時の`-`表示を満たしていなかった。
+- 一次対応: G17のレビュー指摘5へ単一式・枠・`-`フォールバック・mobile改行の契約を記録した。式の構造を変更する時は、演算子の前後だけでなく、`／`で結ぶ値ペアと表示状態をComponent構造へ直接対応させる。
+
+### Applied requested table dividers to header rows and unrelated columns
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` とshared skill UIのheader・候補dialog
+- 観測した失敗: ユーザー指定の列罫線を、data行のスキル名称／Lv入力、武器・防具名称／信用という限定された境界ではなく、header行、候補dialog header、他の全列境界へ広げた。また、G17 headerの指定列の左寄せと、防具clear buttonの折り返し時の固定高・中央配置を満たしていなかった。
+- 一次対応: G17のレビュー指摘6へ罫線の対象範囲、header左寄せ、clear buttonの寸法・配置を記録した。table罫線の指示では、対象state（header / data行 / 候補行）と対象列境界をCSS selectorへ一対一で対応させる。
+
+### Removed existing data-row dividers while correcting header dividers
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` とshared skill UIのdata行
+- 観測した失敗: header行から罫線を外す訂正で、data行の既存の全列境界も削除し、名称／Lv入力と名称／信用だけを残す実装へ狭めた。ユーザー指定はheaderのみ罫線なし、data行は全列境界を維持することであった。
+- 一次対応: G17のレビュー指摘7へheaderとdata行の罫線を分離する契約を記録した。table CSSの変更では、headerとdata行のselectorが重ならないこと、既存の境界を削除していないことを差分で確認する。
+
+### Fixed only one of the two requested derived-value boxes
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の性能式の元値・最終値
+- 観測した失敗: ユーザーが「算出値」を固定幅にするよう求めた際、最終値だけを対象にし、同じread-only算出値である元値を可変幅のまま残した。
+- 一次対応: G17のレビュー指摘9へ元値・最終値の両方を同一固定幅にする契約を記録した。複数の同種表示を含む指示では、対象要素を列挙してからCSS selectorとgrid列へ対応させる。
+
+### Fixed individual widths without correcting the formula alignment
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の性能式
+- 観測した失敗: 算出値枠を固定幅へそろえる修正で、性能列全体へ伸びる計算式のlayoutを残した。ユーザーは枠内の値ではなく、計算式全体を左寄せにするよう求めていた。
+- 一次対応: G17のレビュー指摘10へ、内容幅の式全体を性能列の左端へ置く契約を記録した。個別要素の幅と親layoutのalignmentを別々に確認する。
+
+### Estimated the paired-value width too narrowly
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の性能式の元値・最終値
+- 観測した失敗: `2桁／2桁`に共通right paddingを含めて必要な表示幅を測らず、`3.75rem`を固定幅として採用したため、文字列が枠内に収まらなかった。
+- 一次対応: G17のレビュー指摘11へ必要な固定幅とmobile性能列の最小幅を記録した。固定幅のUIは、表示文字列とpaddingを合算してから寸法を定める。
+
+### Changed the mobile formula structure without rechecking its box metrics
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
+- 観測した失敗: mobileを性能ごとの2行式へ変更した後も、共通算出値枠のright padding、font-size、minimum heightを残したため、性能列で横overflowし、修正inputより高いままだった。
+- 一次対応: G17のレビュー指摘13へmobile限定のfont-size、padding、inputと同一高を記録した。responsive構造を変更した後は、共通Component由来のpaddingとminimum sizeを対象viewportごとに再確認する。
+
+### Overcorrected mobile overflow with undersized text and oversized boxes
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
+- 観測した失敗: overflowを避けるため算出値フォントを`.625rem`まで縮小した一方、right paddingを削除した後も`2.5rem`の枠幅を維持した。可読性を不必要に下げ、縮小後の文字に対して枠も過大だった。
+- 一次対応: G17のレビュー指摘14へ既存mobileセル相当のfont-sizeと二桁用最小幅を記録した。overflow修正では、font-sizeとbox widthを同時に最小化せず、既存のmobile type scaleを基準にする。
+
+### Removed all right padding and retained an overly small mobile type size
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
+- 観測した失敗: 算出値のoverflowを直す際、right paddingを0にし、文字を`.6875rem`へ下げた。枠幅を縮められたものの、数値の視認性と枠内余白を過度に犠牲にした。
+- 一次対応: G17のレビュー指摘15へ最小right padding、`.75rem`の文字、二桁を収める`2.125rem`幅を記録した。overflowの是正では、数値の可読性と余白を先に維持し、その必要寸法に枠を合わせる。
+
+### Expanded the boxes again without accounting for the formula's total mobile width
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
+- 観測した失敗: 可読性を戻す修正で各算出値枠を`2.125rem`に広げ、left paddingもright paddingより広くした。その結果、式全体が再び横overflowし、枠の余白も不自然に見えた。
+- 一次対応: G17のレビュー指摘16へ、mobile式全体の幅と左右対称のpaddingを含めた`1.875rem`固定枠を記録した。個別枠を調整する際は、mobile式の合計幅と余白の対称性を同時に確認する。
+
+### Kept a button's minimum width wider than its mobile grid column
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の防具clear button
+- 観測した失敗: mobileのclear button列を`2.75rem`にしたまま、button自身の`min-width: 3rem`を残したため、明確な横overflowを起こした。button高も性能inputより大きかった。
+- 一次対応: G17のレビュー指摘17へ、desktopとmobileのbutton寸法、mobile列幅、input高との整合を記録した。固定幅controlでは、min-widthと親grid列を同じviewportごとに照合する。
+
+### Reduced the button without accounting for its three-character label
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile防具clear button
+- 観測した失敗: overflowを直すためbuttonを縮めた後、mobile共通ruleによって「クリア」の文字を`.6875rem`へ上書きし、buttonの幅も列に明示的に合わせなかった。そのため、右端が描画されていないように見える状態になった。
+- 一次対応: G17のレビュー指摘18へ、列幅いっぱいのbutton、`min-width: 0`、既定の`.625rem`ラベルを記録した。controlを縮小する時は、実ラベルの文字数・font-size・borderを含めた内容幅と、親列への確実な収まりを確認する。
+
+### Treated a cross-viewport button defect as mobile-only
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の防具clear button
+- 観測した失敗: 右側が表示されない問題をmobileだけのものと決めつけ、`width: 100%`を追加した。desktopの同じbuttonの表示を直さず、mobileのbuttonも不要に列幅いっぱいになった。
+- 一次対応: G17のレビュー指摘19へ、desktop／mobile両方の明示button幅、最大幅、中央配置を記録した。viewport限定の修正をする前に、同じComponentの全breakpointで共通の表示契約を確認する。
+
+### Adjusted button sizing without inspecting the border cascade
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の防具clear button
+- 観測した失敗: 右側の線が消える問題をbuttonの幅やfont-sizeとして扱い、desktopのcomputed styleとselector specificityを確認しなかった。実際には最後のgrid itemの区切り線を消すruleがbutton自身のright borderを上書きしていた。
+- 一次対応: G17のレビュー指摘20へ、desktop実寸とcomputed borderを記録した。borderの欠落では、寸法変更より前にcomputed styleとcascade上のwinning selectorを確認する。

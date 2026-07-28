@@ -16,6 +16,7 @@ import useOtherRyugiSkillsSectionProps from "./useOtherRyugiSkillsSectionProps";
 import usePrimarySkillsSectionProps from "./usePrimarySkillsSectionProps";
 import useProfileSectionProps from "./useProfileSectionProps";
 import useSecondaryAttributesSectionProps from "./useSecondaryAttributesSectionProps";
+import useWeaponsAndArmorSectionProps from "./useWeaponsAndArmorSectionProps";
 
 type CharacterSheetPresenterOptions = {
   onIkizamaChangeRequested: (
@@ -56,6 +57,8 @@ type CharacterSheetPresenterOptions = {
     rowId: string,
     trigger: HTMLButtonElement,
   ) => void;
+  onArmorPickerRequested: (trigger: HTMLButtonElement) => void;
+  onWeaponPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
 };
 
 export type CharacterSheetContainerPresenterState =
@@ -99,6 +102,8 @@ export default function useCharacterSheetFormPresenterProps(
     onCommonSkillPickerRequested,
     onPrimaryRyugiChangeRequested,
     onPrimarySkillPickerRequested,
+    onArmorPickerRequested,
+    onWeaponPickerRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
   const commonSkills = useCommonSkillsSectionProps(form, {
@@ -139,6 +144,10 @@ export default function useCharacterSheetFormPresenterProps(
   });
   const ikizamaSkills = useIkizamaSkillsSectionProps(form, {
     onPickerRequest: onIkizamaSkillPickerRequested ?? (() => {}),
+  });
+  const weaponsAndArmor = useWeaponsAndArmorSectionProps(form, {
+    onArmorPickerRequest: onArmorPickerRequested ?? (() => {}),
+    onWeaponPickerRequest: onWeaponPickerRequested ?? (() => {}),
   });
 
   return {
@@ -185,5 +194,6 @@ export default function useCharacterSheetFormPresenterProps(
     primarySkillsSection: primarySkills.sectionProps,
     profileSection,
     secondaryAttributesSection: secondaryAttributes.sectionProps,
+    weaponsAndArmorSection: weaponsAndArmor,
   };
 }

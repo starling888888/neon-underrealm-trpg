@@ -2,34 +2,30 @@
   width: min(44rem, calc(100vw - (var(--page-gutter) * 2)));
   overflow: hidden;
 }
-
-.content {
+.content,
+.group {
   display: grid;
+  gap: 0;
+}
+.content {
   gap: var(--space-2);
 }
-
 .selectionGuide {
   margin: 0;
   font-size: var(--text-sm);
   line-height: var(--line-height-normal);
 }
-
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
+.group h3 {
+  margin: var(--space-2) 0 var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
 }
-
 .headerRow,
 .firstLine {
   display: grid;
-  grid-template-columns: minmax(8rem, 1fr) 3.25rem 3.6rem 4.8rem;
+  grid-template-columns: minmax(8rem, 1fr) 3rem 3.5rem 3.5rem;
   min-width: 0;
 }
-
 .headerRow {
   color: var(--color-text-muted);
   font-size: 0.75rem;
@@ -37,119 +33,72 @@
   text-align: center;
   border-bottom: var(--border-width) solid var(--color-border);
 }
-
 .headerRow > span,
 .firstLine > * {
   min-width: 0;
   padding: 0.1875rem 0.375rem;
 }
-
 .headerRow > span {
   display: grid;
   min-height: 1.75rem;
   place-items: center;
   white-space: nowrap;
 }
-
 .headerRow > :first-child {
   justify-items: start;
   text-align: left;
 }
-
-.group {
-  display: grid;
-  gap: 0;
-}
-
-.group h3 {
-  margin: var(--space-2) 0 var(--space-1);
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-}
-
 .candidate {
   display: grid;
   min-width: 0;
-  border: 0;
   border-bottom: var(--border-width) solid var(--color-border);
   border-inline: var(--border-width) solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
 }
-
 .candidate:hover {
   background: var(--color-example-soft);
 }
-
-.candidate[data-disabled] {
-  background: var(--color-surface-muted);
-  color: var(--color-text-muted);
-}
-
-.candidate[data-disabled]:hover {
-  background: var(--color-surface-muted);
-}
-
 .firstLine > * {
   display: grid;
   min-height: 2rem;
   align-content: center;
   border-right: var(--border-width) solid var(--color-border);
-  color: var(--color-text);
   font-size: 0.75rem;
   line-height: 1.25;
   text-align: center;
   white-space: nowrap;
 }
-
 .firstLine > :last-child {
   border-right: 0;
 }
-
 .firstLine button {
   border: 0;
   background: transparent;
+  color: var(--color-text);
   cursor: pointer;
   font: inherit;
   font-weight: 750;
   text-align: left;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
-
 .firstLine button:hover {
   background: var(--color-surface-muted);
 }
-
-.firstLine button:disabled {
-  background: var(--color-surface-muted);
-  color: var(--color-text-muted);
-  cursor: not-allowed;
-}
-
-.candidate[data-disabled] .firstLine > * {
-  color: var(--color-text-muted);
-}
-
-.firstLine span > span {
-  display: block;
-  white-space: nowrap;
-}
-
 .details {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-2);
   border-top: var(--border-width) solid var(--color-border);
   padding: var(--space-1) var(--space-2);
   font-size: 0.75rem;
-  line-height: var(--line-height-normal);
 }
-
-.details > span {
+.details span {
   min-width: 0;
   white-space: nowrap;
 }
-
-.effect {
+.candidate p {
   margin: 0;
   padding: var(--space-1) var(--space-2);
   font-size: 0.75rem;
@@ -157,53 +106,29 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
-
 .details strong,
-.effect strong {
+.candidate p strong {
   color: var(--color-text-muted);
 }
-
-.candidate[data-disabled] .details strong,
-.candidate[data-disabled] .effect strong {
-  color: var(--color-text-muted);
-}
-
 @media (width < 48rem) {
-  .content {
-    gap: var(--space-1);
-  }
-
   .selectionGuide {
     font-size: 0.75rem;
   }
-
   .headerRow,
   .firstLine {
-    grid-template-columns: minmax(0, 1fr) 2.75rem 3.25rem 4rem;
+    grid-template-columns: minmax(0, 1fr) 2.5rem 3rem 3rem;
   }
-
   .headerRow {
     font-size: 0.625rem;
   }
-
   .headerRow > span,
   .firstLine > * {
     padding: 0.125rem 0.25rem;
   }
-
   .firstLine > * {
     font-size: 0.6875rem;
   }
-
-  .firstLine button {
-    font-size: 0.8125rem;
-    line-height: 1.2;
-    overflow-wrap: anywhere;
-    white-space: pre-line;
-  }
-
-  .firstLine span > span {
-    display: inline;
-    white-space: inherit;
+  .details {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }

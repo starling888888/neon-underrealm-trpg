@@ -20,6 +20,9 @@ import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
 import SecondaryAttributesSection, {
   type SecondaryAttributesSectionProps,
 } from "./SecondaryAttributesSection";
+import WeaponsAndArmorSection, {
+  type WeaponsAndArmorSectionProps,
+} from "./WeaponsAndArmorSection";
 
 /**
  * Presentational form shell for the character sheet.
@@ -37,6 +40,7 @@ export type CharacterSheetFormPresenterProps = {
   primarySkillsSection: PrimarySkillsSectionProps;
   profileSection: ProfileSectionProps;
   secondaryAttributesSection: SecondaryAttributesSectionProps;
+  weaponsAndArmorSection: WeaponsAndArmorSectionProps;
 };
 
 export default function CharacterSheetFormPresenter({
@@ -49,6 +53,7 @@ export default function CharacterSheetFormPresenter({
   primarySkillsSection,
   profileSection,
   secondaryAttributesSection,
+  weaponsAndArmorSection,
 }: CharacterSheetFormPresenterProps) {
   const { characterSheet, gameDomain } = characterSheetDictionary;
 
@@ -132,7 +137,9 @@ export default function CharacterSheetFormPresenter({
           id="weapons-and-armor"
           title={characterSheet.sections.weaponsAndArmor}
         >
-          <div data-character-sheet-section-slot="weapons-and-armor" />
+          <div data-character-sheet-section-slot="weapons-and-armor">
+            <WeaponsAndArmorSection {...weaponsAndArmorSection} />
+          </div>
         </CharacterSheetSectionFrame>
         <CharacterSheetSectionFrame
           expandable

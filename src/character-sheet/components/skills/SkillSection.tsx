@@ -289,7 +289,7 @@ function SkillRow({
         {row.removable ? (
           <button
             aria-label={`${accessibilityName}${copy.remove}`}
-            className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
+            className={`${styles.removeButton} character-sheet-remove-button character-sheet-remove-button--mobile-compact`}
             disabled={!row.removalEnabled}
             onClick={() => onRemove(row.rowId)}
             type="button"
@@ -362,12 +362,14 @@ export default function SkillSection({
           <>
             <div className={styles.headerRow}>
               <span />
-              <FormulaTooltip
-                ariaLabel={skillCopy.name}
-                formula={copy.nameTooltip}
-              >
-                <span>{skillCopy.name}</span>
-              </FormulaTooltip>
+              <span className={styles.headerTooltip}>
+                <FormulaTooltip
+                  ariaLabel={skillCopy.name}
+                  formula={copy.nameTooltip}
+                >
+                  <span>{skillCopy.name}</span>
+                </FormulaTooltip>
+              </span>
               <span>{skillCopy.level}</span>
               <span>
                 {skillCopy.maximumLevel.replace(skillCopy.level, "")}

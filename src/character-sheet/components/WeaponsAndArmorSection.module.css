@@ -1,0 +1,366 @@
+.section,
+.itemSection {
+  display: grid;
+  min-width: 0;
+}
+
+.section {
+  gap: var(--space-4);
+}
+.itemSection {
+  gap: 0;
+}
+.itemSection h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.headerRow,
+.weaponLine,
+.armorLine {
+  display: grid;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.weaponLine {
+  grid-template-columns: 1.25rem minmax(7rem, 1fr) 2.5rem minmax(14rem, 2.3fr) 2rem 1.75rem;
+}
+.armorLine {
+  grid-template-columns: minmax(7rem, 1fr) 2.5rem minmax(14rem, 2.3fr) 2rem 3.5rem;
+}
+
+.headerRow {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.1;
+  text-align: center;
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.headerRow > * {
+  display: grid;
+  min-width: 0;
+  min-height: 1.75rem;
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  white-space: nowrap;
+}
+
+.weaponLine.headerRow > :nth-child(2),
+.weaponLine.headerRow > :nth-child(4),
+.armorLine.headerRow > :first-child,
+.armorLine.headerRow > :nth-child(3) {
+  justify-items: start;
+  text-align: left;
+}
+
+.row {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: var(--border-width) solid var(--color-border);
+  border-inline: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
+}
+.row > .weaponLine > *,
+.row > .armorLine > * {
+  min-width: 0;
+  border-right: var(--border-width) solid var(--color-border);
+}
+
+.row > .weaponLine > :last-child,
+.row > .armorLine > :last-child {
+  border-right: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.reorderControls {
+  display: grid;
+  align-content: center;
+  gap: 0.0625rem;
+  min-height: 2.25rem;
+  background: var(--color-surface-muted);
+}
+.reorderControls button {
+  width: 100%;
+  min-height: 0.6875rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.5rem;
+  line-height: 1;
+}
+.reorderControls button:hover {
+  color: var(--color-link);
+}
+
+.itemPicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.itemPicker:hover {
+  background: var(--color-surface-muted);
+}
+.chooseIcon {
+  flex: 0 0 auto;
+  color: var(--color-link);
+}
+.cell,
+.detailsToggle,
+.clearButton {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  color: var(--color-text);
+  font-size: 0.75rem;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.valueExpressions {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  padding: 0.1875rem 0.25rem;
+}
+
+.pairedValueExpression {
+  min-width: 0;
+}
+
+.desktopValueExpression {
+  display: grid;
+  width: max-content;
+  max-width: 100%;
+  min-width: 0;
+  grid-template-columns: 5.25rem auto minmax(4.75rem, auto) auto 5.25rem;
+  align-items: center;
+  justify-self: start;
+  justify-content: start;
+  gap: 0.125rem;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  text-align: right;
+}
+
+.pairedValueExpression .baseValue,
+.pairedValueExpression .finalValue {
+  box-sizing: border-box;
+  min-width: 0;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expressionOperator {
+  color: var(--color-text-muted);
+  font-weight: 750;
+}
+
+.modifierValues {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 2.25rem auto 2.25rem;
+  align-items: center;
+  gap: 0.125rem;
+  color: var(--color-text-muted);
+  font-weight: 750;
+}
+
+.modifierInput {
+  box-sizing: border-box;
+  width: 2.25rem;
+  min-width: 0;
+  border: var(--border-width) solid var(--color-example-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 750;
+  padding: 0.125rem;
+  text-align: center;
+}
+
+.mobileValueExpressions {
+  display: none;
+}
+
+.removeButton {
+  align-self: center;
+  justify-self: center;
+}
+.detailsToggle {
+  border: 0;
+  background: var(--color-surface-muted);
+  color: var(--color-link);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-xs);
+}
+.detailsToggle:hover {
+  background: var(--color-example-soft);
+}
+.clearButton {
+  box-sizing: border-box;
+  width: 2.5rem;
+  max-width: calc(100% - 0.125rem);
+  min-width: 0;
+  height: 1.5rem;
+  align-self: center;
+  justify-self: center;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  padding: 0.125rem 0.0625rem;
+  white-space: nowrap;
+}
+.clearButton:hover {
+  border-color: var(--color-link);
+  color: var(--color-link);
+}
+
+.details {
+  display: grid;
+  gap: var(--space-1);
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-2);
+  font-size: 0.75rem;
+  line-height: var(--line-height-normal);
+}
+.details p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.details strong {
+  color: var(--color-text-muted);
+}
+.detailMeta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+.detailMeta span {
+  min-width: 0;
+  white-space: nowrap;
+}
+.addButton {
+  justify-self: start;
+  margin-top: var(--space-3);
+  min-height: 2rem;
+  border: var(--border-width) solid var(--color-link);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-link);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 750;
+}
+.addButton:hover {
+  background: var(--color-example-soft);
+}
+
+@media (width < 48rem) {
+  .weaponLine {
+    grid-template-columns: 1.25rem minmax(0, 1fr) 2.25rem minmax(
+        7.75rem,
+        1.25fr
+      ) 1.5rem 1.25rem;
+  }
+  .armorLine {
+    grid-template-columns: minmax(0, 1fr) 2.25rem minmax(7.75rem, 1.25fr) 1.5rem 2.5rem;
+  }
+  .headerRow {
+    font-size: 0.625rem;
+  }
+  .headerRow > *,
+  .cell,
+  .detailsToggle,
+  .clearButton {
+    padding-inline: 0.125rem;
+    font-size: 0.6875rem;
+  }
+  .clearButton {
+    width: 2.25rem;
+    height: 1.375rem;
+    font-size: 0.625rem;
+  }
+  .itemPicker {
+    padding: var(--space-1);
+    font-size: 0.6875rem;
+  }
+  .chooseIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  .valueExpressions {
+    padding-inline: 0.125rem;
+  }
+  .desktopValueExpression {
+    display: none;
+  }
+  .mobileValueExpressions {
+    display: grid;
+    gap: 0.125rem;
+  }
+  .mobileValueExpression {
+    display: grid;
+    grid-template-columns: 1.875rem auto 1.75rem auto 1.875rem;
+    align-items: center;
+    gap: 0.125rem;
+    font-size: 0.75rem;
+    line-height: 1.25;
+  }
+  .mobileValueExpression .baseValue,
+  .mobileValueExpression .finalValue {
+    height: 1.5rem;
+    min-width: 0;
+    min-height: 0;
+    padding: 0.125rem;
+    font-size: 0.75rem;
+    text-align: right;
+  }
+  .mobileValueExpression .modifierInput {
+    height: 1.5rem;
+    width: 1.75rem;
+  }
+  .detailMeta {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.row > .armorLine > .clearButton {
+  border-right: var(--border-width) solid var(--color-border-strong);
+}

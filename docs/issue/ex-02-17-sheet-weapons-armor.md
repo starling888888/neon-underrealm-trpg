@@ -15,6 +15,14 @@
 - 今後のUI再実装では、今回破棄した構造を参照せず、最初に既存`SkillSection`と`SkillPickerDialog`のComponent、CSS、desktop / tablet / mobileの実画面状態を正本として確認する。武器・防具固有の列、式、候補dataだけを差分として加え、独自のcontrol / layout / dialog patternを作らない。
 - この破棄後の状態では、UIの受入条件、Component test、E2E、VRT、actual screenshot確認はすべて未完了である。ユーザーがUI再実装を明示指示するまで、UI実装とE2E / VRT実行を再開しない。
 
+## 実装進捗（ユーザーレビュー待ち）
+
+- 武器・防具のform値、master-data adapter、性能導出logic、RHF hook、section表示、候補dialog、Containerの選択とfocus復帰を実装した。候補dialogは既存`SkillPickerDialog`と同じdialog shell、候補名button、hover、二段詳細表示を用い、候補行を折り畳まない。
+- 武器削除と防具クリアは、どちらもconfirmation dialogを開かない直接操作として実装した。武器の追加、並べ替え、最低1行、重複選択をRHF field arrayで扱う。
+- 既存のpicker、confirmation dialog、pending action、focus復帰を確認した。G17で増えるのは武器と防具の候補dialogだけであり、既存Containerの状態とrefの扱いを共通hookへ移しても責務が単純化しないため、root orchestration hookは追加しない。
+- `npm run check`と`npm run build`は成功した。E2E / VRT、actual screenshot、Component / hook testの追加と実行は未実施であり、ユーザーによる画面レビュー完了後に行う。
+- review server: `http://localhost:4321/character-sheet/`。既定portのdev serverを維持し、E2E / VRTを実行せずユーザーレビューを待つ。
+
 ## 目的
 
 `武器・防具` sectionへ、読み取り専用の生成アイテムデータをIDで選択する武器可変行と単一の防具行を追加する。武器・防具の性能と手動修正による最終値、展開詳細、候補選択dialogを、desktop / tablet / mobileで指定どおり表示する。
@@ -153,6 +161,434 @@
 - 特に、独自の削除button、独自の並べ替え／選択icon、headerの縦罫線、算出値のaccent muted背景欠如、header行の不整列、独自の追加button、候補dialog全体の縦scroll、スキル選択dialogと異なるUI / hover feedbackを修正対象とする。
 - 実装開始時は、先に既存`SkillSection`と`SkillPickerDialog`のComponent・CSS・各状態の実画面を確認し、武器・防具固有の差分だけを追加する。独自のcontrol / layout / dialog patternを新設しない。
 - この指摘の実装・E2E / VRT・actual screenshot確認は、ユーザーの実装再開指示後に行う。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- 武器・防具と既存スキル行・候補dialogで、名称列の右端、候補dialogの名称／信用境界、スキルの名称／最大レベル境界を、既存のtable構造を壊さない縦罫線で明確にする。
+- 最低1行を残すスキル行は削除不可でも削除buttonを残してdisabled表示にし、可視の削除buttonを行セル内の上下左右中央へ配置する。武器行を含む削除buttonの位置も同じ基準へ合わせる。
+- `FormulaTooltip`を使うヘッダーが既存のmuted header colorから変化しないようにする。ヘッダー行自体へ外枠を追加せず、必要な列境界と行間の罫線だけを残す。
+- 武器・防具・スキルの候補dialogで、候補の要約1行と効果などの詳細領域の間に横罫線を置く。候補行を折り畳まない。
+- 防具の`クリア`は、既存の縁のクリアbuttonとフォントサイズ・色・形状を揃える。
+
+### 判定
+
+- source: ユーザー
+- classification: valid
+- local validation: 現在のG17実装と既存スキル実装では、列境界・tooltip付きヘッダーの色・削除不可時のbutton表示・候補の要約／詳細の区切りが一貫していない。G17は既存スキルUIを正本として整合させる契約であり、ユーザーがスキル側の同時修正を明示している。
+
+### 対応方針
+
+- `SkillSection` / `SkillPickerDialog`を共通の見た目の基準とし、`WeaponsAndArmorSection`と武器・防具候補dialogへ必要な列境界・区切り・control配置だけを揃えて適用する。
+- ヘッダーの外枠は追加せず、各ComponentのCSSで対象列・対象要素を限定する。`FormulaTooltip`と`CharacterSheetDialog`の内部実装へ広いselectorを越境させない。
+- 防具の`クリア`は既存の縁の実装を参照し、同じ視覚トークンで実装する。
+
+### 対応完了チェックリスト
+
+- [x] スキル行と武器・防具行の列境界、削除buttonのdisabled表示・中央配置を実装し、最低1行を残す削除制約を維持する
+- [x] 武器・防具・スキル候補dialogの列境界と要約／詳細の横罫線、tooltip付きヘッダーの色、ヘッダー外枠なしを実装する
+- [x] 防具`クリア`の視覚表現を既存の縁のclear buttonと揃える
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- 今回のsessionが分割されていても、ユーザー指示で作成したcurrent issueはdesign draftより優先する。武器の`攻撃力／ガード値`と防具の`防御力／ダメージ軽減`を、値と修正inputを分離した2列や独立した入力欄として表示しない。
+- 各性能はissue指定どおり、`マスタ値 + 修正input = 算出値`の一続きの計算式として表示する。mobileでは`＝`以降を次行へ折り返せるようにする。
+- 算出値は既存スキル行と同じaccent-muted領域へ置く。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: current `WeaponsAndArmorSection`は`ValueEditor`を武器の攻撃力・ガード値、防具の防御力・ダメージ軽減へそれぞれ独立して配置しており、issueの式表示契約から逸脱している。current issueは、design draftと競合する場合にユーザー指定を優先すること、mobileで`＝`以降を折り返すこと、既存スキルUIの算出値背景へ合わせることを既に明記している。
+
+### 対応方針
+
+- `ValueEditor`の2列構造を廃止し、各値を`マスタ値 + 修正input = 算出値`の計算式として一体表示する。desktop / tabletでは式を1行に保ち、mobileでは`＝`以降だけを許容された位置で改行する。
+- 算出値の表示領域、修正inputの幅、tooltip triggerを既存`SkillSection`の視覚仕様と揃え、design draftの古い列構成を再採用しない。
+- この指摘を優先して既存の関連レビュー指摘を実装し、対象viewportのactual screenshotを開いて確認してからE2E / VRTへ進む。
+
+### 対応完了チェックリスト
+
+- [x] 武器の`攻撃力／ガード値`と防具の`防御力／ダメージ軽減`を、2列の入力欄ではない指定の計算式表示へ修正する
+- [ ] mobileで`＝`以降を折り返せ、修正inputが2桁幅に収まり、横overflowがないことをactual screenshotで確認する
+- [x] 算出値を既存スキル行と同じaccent-muted領域へ置く
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- 武器の性能列は、攻撃力とガード値を別々の式として縦に置かず、`攻撃力／ガード値 + 攻撃修正／ガード修正 = 最終攻撃力／最終ガード値`という1本の式で表示する。防具も同様に、`防御力／ダメージ軽減 + 防御修正／ダメージ軽減修正 = 最終防御力／最終ダメージ軽減`とする。
+- 元値もread-onlyの枠で囲み、最終値が未算出の場合は空欄にせず`-`を表示する。mobileでは`＝`以降だけを次行へ折り返す。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: レビュー指摘4への対応で性能列を1列へ戻したが、攻撃力・ガード値、防御力・ダメージ軽減を縦に分けた2本の式として実装しており、指定された対になる値の並びを満たしていない。また、元値をread-only枠にせず、最終値が未算出のとき空欄にしている。
+
+### 対応方針
+
+- 武器・防具の性能列を、元値ペア、修正inputペア、最終値ペアがそれぞれ`／`で結ばれる単一の式へ置き換える。元値と最終値は既存の`character-sheet-number-value`のaccent-muted表示を使う。
+- mobileでは元値と修正inputを1行目に保ち、`＝`と最終値だけを2行目へ移す。未算出の最終値は共有の`-`表記へフォールバックする。
+
+### 対応完了チェックリスト
+
+- [x] 武器・防具の性能列を、値ペア・修正inputペア・最終値ペアの単一式へ修正する
+- [x] 元値・最終値のread-only枠と未算出時の`-`、mobileの`＝`以降の改行を実装する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 6
+
+### 指摘事項
+
+- 武器の`攻撃力／ガード値`、防具の名称と`防御力／ダメージ軽減`のheaderは左寄せにする。
+- 防具の`クリア`buttonは固定の高さにし、mobileで性能式が折り返されても高さを増やさず、行内で上下中央に置く。desktopで文字列が折り返されない状態では、枠内にわずかな上下余白を確保する。
+- スキルを含め、formと候補選択dialogのheader行には列の区切り線を置かない。区切り線を置くのはデータ行のスキル名称／Lv入力、武器・防具名称／信用の境界だけとする。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: 指摘3への対応でheader行と候補dialogのheaderにも列罫線を追加し、データ行の限定された境界という指定を取り違えた。武器・防具のdata行にも全列へ罫線を置いているため、対象境界以外の区切りが残っている。
+
+### 対応方針
+
+- header行と候補dialog headerの罫線を除去し、data行の指定された名称列の右端だけへ縦罫線を残す。候補dialogも同じ境界規則を適用する。
+- G17 headerの対象列を左寄せにし、防具`クリア`は固定高・中央配置・既存縁の視覚トークンを保つ。
+
+### 対応完了チェックリスト
+
+- [ ] G17 headerの対象列の左寄せと防具`クリア`の固定高・中央配置を実装する
+- [ ] スキル・武器・防具と候補dialogのheader罫線を除去し、data行の指定境界だけに罫線を残す
+- [ ] npm run check
+- [ ] npm run build
+
+## レビュー指摘 7
+
+### 指摘事項
+
+- header行はスキル・武器・防具および候補選択dialogのすべてで列罫線なしとする。
+- data行は、既存の全列境界を維持し、スキルでは名称／Lv入力、武器・防具では名称／信用の境界も含めて全列を区切る。既存罫線を消す指示ではない。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: 指摘6で「指定境界だけに罫線を残す」と誤記・誤実装し、data行の既存の全列境界を除去した。ユーザー指定はheader行だけから罫線を除去し、data行は全列境界を維持したうえで不足していた名称右端の罫線を追加することである。
+
+### 対応方針
+
+- formと候補dialogでheader selectorへ縦罫線を置かず、data-row selectorだけで全セルの右境界（最終セルを除く）を定義する。
+
+### 対応完了チェックリスト
+
+- [x] header行に列罫線がなく、form・候補dialogのdata行には全列境界があることを実装する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 8
+
+### 指摘事項
+
+- 武器の`攻撃力／ガード値`と防具の`防御力／ダメージ軽減`の最終値は、flexで可変にせず、`2桁／2桁`を表示できる固定幅とする。
+- 元値・最終値には、キャラクターシート共通の算出値read-only枠が持つ右側paddingを適用する。
+
+### 判定
+
+- source: ユーザー
+- classification: valid
+- local validation: 現在の性能式は最終値を可変`minmax()`列へ置き、Component CSSで共通のread-only値paddingを上書きしているため、算出値の固定幅と右側余白の契約を満たしていない。
+
+### 対応方針
+
+- 最終値のgrid列を`2桁／2桁`に必要な固定幅へ変更し、元値・最終値の局所padding上書きを除去して共通の`character-sheet-number-value`のpaddingを使う。
+
+### 対応完了チェックリスト
+
+- [x] 武器・防具の最終値を固定幅にし、元値・最終値へ共通right paddingを適用する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 9
+
+### 指摘事項
+
+- 固定幅にする対象は最終値だけでなく、元値・最終値の両方の算出値read-only枠である。どちらも`2桁／2桁`を表示できる同じ固定幅とする。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: 指摘8への対応で最終値だけを固定grid列にし、元値を可変列のまま残している。
+
+### 対応方針
+
+- 元値・最終値を同じ固定幅へ置き換える。mobileの`＝`前の行にも収まるよう、`2桁／2桁`に必要十分な幅を使う。
+
+### 対応完了チェックリスト
+
+- [x] 元値・最終値の算出値read-only枠を同一固定幅へ揃える
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 10
+
+### 指摘事項
+
+- 性能式は列全体へflexやgridで引き伸ばさず、元値・修正input・最終値を含む計算式全体を左寄せで表示する。元値・最終値の枠内文字列を左寄せする指示ではない。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: 指摘9への対応で個々の算出値枠を固定幅にしたが、式全体を性能列幅へ伸ばすgridのまま残しており、計算式全体の左寄せになっていない。
+
+### 対応方針
+
+- 性能式のgridを内容幅で配置し、性能列内の開始位置へ寄せる。fixed-widthの算出値枠とmobileの`＝`以降の改行は維持する。
+
+### 対応完了チェックリスト
+
+- [x] 性能式全体を引き伸ばさず左寄せへ修正する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 11
+
+### 指摘事項
+
+- 元値・最終値の固定幅は、`2桁／2桁`と共通right paddingを実際に収める幅にする。現在の幅では収まっていない。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: 指摘9で設定した`3.75rem`は、`2桁／2桁`と共通right paddingを含む実際の表示幅として不足している。
+
+### 対応方針
+
+- 元値・最終値をより広い固定幅へ変更し、mobileの性能列もその内容幅を受け止める最小幅へ合わせる。
+
+### 対応完了チェックリスト
+
+- [x] `2桁／2桁`とright paddingを収める元値・最終値の固定幅を実装する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 12
+
+### 指摘事項
+
+- mobileでは、`元値／元値 + 修正値／修正値 = 最終値／最終値`を1行へ収めない。武器は`攻撃力 + 修正 = 最終値`、`ガード値 + 修正 = 最終値`の2行にし、防具も`防御力 + 修正 = 最終値`、`ダメージ軽減 + 修正 = 最終値`の2行にする。
+- mobileの元値・最終値は、`2桁／2桁`ではなく単一の2桁値が入る固定幅へ縮小する。
+
+### 判定
+
+- source: ユーザー
+- classification: valid
+- local validation: mobileでペアの式を保つと、fixed-widthの元値・最終値、修正input 2つ、演算子が同一行に収まらない。
+
+### 対応方針
+
+- desktop / tabletはペアの式を維持し、mobileだけ性能ごとの単一式2行へ切り替える。mobileの元値・最終値は単一の2桁値と共通right paddingに必要な固定幅を使う。
+
+### 対応完了チェックリスト
+
+- [x] mobileの武器・防具性能式を性能ごとの2行表示へ切り替える
+- [x] mobileの元値・最終値を単一2桁用の固定幅へ縮小する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 13
+
+### 指摘事項
+
+- mobileの性能式で横overflowを起こさないよう、元値・最終値のフォントサイズを小さくし、right paddingを除去する。
+- mobileの元値・最終値の枠は修正inputと同じ高さに揃える。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: mobileの単一式でも共通read-only枠のフォントサイズ・right padding・minimum heightを維持しており、性能列で横overflowし、修正inputより高い。
+
+### 対応方針
+
+- mobile限定で元値・最終値を小さい文字、right paddingなし、修正inputと同一高へ上書きする。desktop / tabletの共通read-only枠は維持する。
+
+### 対応完了チェックリスト
+
+- [x] mobileの性能式でoverflowしない算出値のfont-size・padding・heightを実装する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 14
+
+### 指摘事項
+
+- mobileの算出値は、`.625rem`まで小さくしない。既存mobileセルと整合する読みやすいサイズへ戻す。
+- right paddingを外した後の固定幅は、小さくしたフォントで単一の2桁値が収まる最小限の幅へ縮小する。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: 指摘13でoverflow回避を優先して`.625rem`と`2.5rem`を採用し、文字を必要以上に小さくしたまま枠幅も広く残している。
+
+### 対応方針
+
+- mobileの算出値を既存mobileセル相当の`.6875rem`へ戻し、right paddingなしで単一の2桁値を収める`2rem`固定幅にする。
+
+### 対応完了チェックリスト
+
+- [x] mobileの算出値font-sizeと固定幅を読みやすい2桁用の組み合わせへ修正する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 15
+
+### 指摘事項
+
+- mobile算出値のright paddingを0にせず、最小限の余白を残す。
+- 算出値の文字はさらに大きくし、2桁が収まる範囲で固定枠を決める。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: right paddingを完全に除去した`.6875rem`の文字と`2rem`枠は、overflow回避を優先しすぎて余白と可読性を損ねている。
+
+### 対応方針
+
+- mobile算出値を`.75rem`へ上げ、左右の最小余白を含めて2桁を収める`2.125rem`固定幅にする。
+
+### 対応完了チェックリスト
+
+- [x] mobile算出値のfont-size、right padding、固定幅を読みやすい2桁用に調整する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 16
+
+### 指摘事項
+
+- mobileの性能式がまだ横overflowしている。
+- 算出値枠のleft paddingだけが大きく見え、二桁用としては枠幅も広すぎる。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: `.75rem`へ戻した時に固定枠を`2.125rem`まで広げ、left paddingをright paddingより大きくしたため、式全体がmobile性能列の幅を超え、余白も非対称になっている。
+
+### 対応方針
+
+- mobileの元値・最終値枠を`1.875rem`へ縮め、上下左右を`.125rem`の同一paddingにする。`.75rem`の二桁数値が収まる内容幅を残しながら、式全体の幅を縮める。
+
+### 対応完了チェックリスト
+
+- [x] mobile算出値枠の幅とpaddingを対称な二桁用サイズへ修正する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 17
+
+### 指摘事項
+
+- 防具の`クリア`buttonがmobileで横overflowしている。
+- buttonの縦横をもう少し縮める。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: mobileのbutton列が`2.75rem`なのに`min-width: 3rem`を維持しており、横overflowする。button高も性能inputより大きい。
+
+### 対応方針
+
+- desktopのclear buttonを`2.75rem × 1.625rem`へ縮める。mobileはbutton列を`2.5rem`、buttonを`2.375rem × 1.5rem`にして、input高と合わせつつ中央配置を維持する。
+
+### 対応完了チェックリスト
+
+- [x] 防具clear buttonの縦横とmobile列幅を縮めてoverflowを解消する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 18
+
+### 指摘事項
+
+- mobileの防具`クリア`buttonは、横overflowではなく右側が描画されていないように見える。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: mobile共通ruleがclear buttonの文字を`.6875rem`へ上書きし、3文字のラベルに対する内容幅を過度に狭めている。button自身も列幅を明示していないため、右端のborderと文字の表示を安定させられない。
+
+### 対応方針
+
+- mobile clear buttonを列幅いっぱいの`width: 100%`、`min-width: 0`にし、ラベルは既定の`.625rem`へ戻す。`2.5rem × 1.5rem`のbutton内で右端borderと3文字を確実に描画する。
+
+### 対応完了チェックリスト
+
+- [x] mobile clear buttonの幅とfont-sizeを列内描画用に調整する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 19
+
+### 指摘事項
+
+- 防具`クリア`buttonの右側が表示されない問題はmobileだけではない。
+- mobileでbuttonを列幅いっぱいにしてはならない。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: 指摘18でmobileだけに`width: 100%`を追加したが、desktopの同じbuttonには右端の描画を保証する制約がなく、mobileの見た目も列幅いっぱいになって要件から外れた。
+
+### 対応方針
+
+- desktopとmobileの両方でclear buttonを列内中央の明示幅へ統一する。desktopは`2.5rem × 1.5rem`、mobileは`2.25rem × 1.375rem`とし、`max-width: calc(100% - .125rem)`で親列内の右端を確保する。buttonのpaddingも最小化して3文字のラベルを収める。
+
+### 対応完了チェックリスト
+
+- [x] clear buttonをdesktopとmobileの両方で列幅いっぱいにせず、列内寸法へ修正する
+- [x] npm run check
+- [x] npm run build
+
+## レビュー指摘 20
+
+### 指摘事項
+
+- desktopの防具`クリア`buttonは右側に余白があってもright borderが表示されていない。原因を特定して修正する。
+
+### 判定
+
+- source: ユーザー
+- classification: valid / implementation regression
+- local validation: desktop `1280px`のbrowser computed styleでclear buttonは`40px`幅、親の最後の列は`56px`幅であり、右側に余白がある。一方、buttonの`border-right`は`0px none`だった。`.row > .armorLine > :last-child { border-right: 0; }`が`.clearButton`のborder指定より高いspecificityで、最後のgrid itemであるbuttonのright borderを消している。
+
+### 対応方針
+
+- 最後のcellの区切り線を除去する既存ruleは維持し、その後に`.row > .armorLine > .clearButton`だけのright borderを明示してbutton外枠を復元する。mobileのbutton幅・中央配置は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] computed styleで原因となるselectorのcascadeを特定する
+- [x] desktop／mobile共通でclear buttonのright borderを復元する
+- [x] npm run check
+- [x] npm run build
 
 ## 備考
 
