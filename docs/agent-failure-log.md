@@ -1093,3 +1093,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-12-sheet-primary-skills` の重複スキルvalidation Component test
 - 観測した失敗: 未導入のTesting Library matcherを使い、続く修正でもReactがbooleanの`data-*`属性を`"true"`として出力することを確認せず空文字列を期待したため、同じテストを2回失敗させた。
 - 一次対応: 追加matcherに依存せず、DOMの`disabled`プロパティと属性の実際の文字列値を確認するテストへ統一した。新しいattribute assertionを書く前に、React出力の値を確認する。
+
+### Repeated G12 shared-component refactor test failures
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-12-sheet-primary-skills` のshared `SkillSection`抽出
+- 観測した失敗: 初回はautomatic行へ不要な`legend`を追加し既存の名称表示契約を壊した。続く訂正では新設した`ariaLabel` Propsをdestructureせず、section Component test全件を失敗させた。
+- 一次対応: automatic行はform入力がないため`legend`を出さず、section見出しとaccessible nameを別Propsで明示した。shared Componentを抽出する場合は、既存Component testを最初の型検査前に通し、追加したPropsの宣言・destructure・利用を同時に確認する。

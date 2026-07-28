@@ -36,6 +36,7 @@
 ## 対象範囲
 
 - `CharacterSheetFormPresenter`のsecondary columnで、`スキル`大セクションを`判定`の直下かつ`武器・防具`の前へ配置する。
+- プライマリ流儀スキルの表示領域と候補選択dialogを、生き様・共通・その他流儀スキルでも再利用できるshared Componentへ分離する。shared Componentは正規化済みの行ViewModel、候補group、表示用のエラー状態、callbackだけを受け取り、流儀種別、RHF、マスタ検索、候補条件、個別validationを持たない。G12ではプライマリ流儀用adapterをこのshared Componentへ接続し、G13〜G15のフォーム値・表示・選択そのものは実装しない。
 - RHFのフォーム値へ、プライマリ流儀の通常スキル4行（最低1行）と、各行の`rowId`、選択済みskill ID、取得レベルを追加する。プライマリボーナススキルは生成JSONから導出し、フォーム値や通常スキルの取得レベル合計へ含めない。
 - 選択中プライマリ流儀の`bonus`を読み取り専用で先頭表示する。通常行は追加・削除できるが、最低1行を維持する。bonus行には選択、削除、並べ替えを設けない。
 - プライマリ流儀を選択中の内側スキル区分の見出しは`プライマリ流儀：${選択中のプライマリ流儀名}`とする。bonusスキルのLv表示は`自動`ではなく`1`とする。
@@ -60,7 +61,7 @@
 
 ## 初期スコープ外
 
-- 生き様スキル、共通スキル、その他流儀スキルのフォーム値・表示・選択はG13〜G15で扱う。
+- 生き様スキル、共通スキル、その他流儀スキルのフォーム値・表示・選択はG13〜G15で扱う。G12でshared Componentを分離しても、各区分のadapter接続は行わない。
 - `advanced`条件、共通スキル上限と、生き様・その他流儀のレベル整合はG16で扱う。ただし、G12ではプライマリ流儀スキルの最大レベル、流儀レベル合計、同一通常スキルの重複だけを扱い、候補表示はプライマリ流儀レベル6未満で`advanced`を候補に含めない。
 - canonical VRT baseline更新、design draft / notesの更新は扱わない。レビュー指摘2で定義したプライマリ流儀スキルと候補dialog以外のmobile向け追加設計・レイアウト解消は扱わない。
 - 文章の取得制限、前提スキル、排他、能力値・格・アイテム条件、効果の自動解析・自動算出を追加しない。
@@ -105,9 +106,11 @@
 - `src/character-sheet/form/useCharacterSheetFormPresenterProps.ts`
 - `src/character-sheet/CharacterSheetContainer.tsx`
 - `src/character-sheet/components/PrimarySkillsSection.tsx`
-- `src/character-sheet/components/PrimarySkillsSection.module.css`
 - `src/character-sheet/components/dialogs/PrimarySkillPickerDialog.tsx`
-- `src/character-sheet/components/dialogs/PrimarySkillPickerDialog.module.css`
+- `src/character-sheet/components/skills/SkillSection.tsx`
+- `src/character-sheet/components/skills/SkillSection.module.css`
+- `src/character-sheet/components/skills/SkillPickerDialog.tsx`
+- `src/character-sheet/components/skills/SkillPickerDialog.module.css`
 - `src/character-sheet/components/dialogs/PrimaryRyugiChangeConfirmDialog.tsx`
 - `src/character-sheet/components/CharacterSheetFormPresenter.tsx`
 - `src/character-sheet/components/dialogs/DialogDemoTrigger.tsx`（削除）

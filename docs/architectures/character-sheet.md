@@ -41,7 +41,8 @@ src/
     ├── dictionary.ts
     ├── components/
     │   ├── CharacterSheetFormPresenter.tsx
-    │   └── dialogs/
+    │   ├── dialogs/
+    │   └── skills/
     ├── form/
     ├── logic/
     ├── master-data/
@@ -64,6 +65,18 @@ src/
 - `utils/`: ID生成、数値変換など、ゲームルール・React・ブラウザAPIを含まない補助処理だけを置く。feature固有の判断は`logic/`、ブラウザAPIは`browser/`へ置き、将来の再利用だけを理由に作らない。
 
 入力欄単位の機械的なComponent分割、汎用パス文字列による状態更新、全機能分の先行抽象化は行わない。
+
+### スキル区分の共通表示
+
+プライマリ流儀、生き様、共通、その他流儀のスキル区分は、同じ行表示、展開詳細、追加・削除・上下移動、候補のtable表示、選択済み候補のdisabled表現を、`components/skills/`配下のshared Componentで再利用する。shared Componentは、流儀種別を示すdiscriminantやRHFのfield pathを受け取らない。
+
+shared表示Componentは、次の表示契約だけをPropsで受け取る。
+
+- section: 一意なID、見出し、利用可否と未選択時message、section全体のerror状態、全スキル中最大名称幅、行配列、追加callback。
+- row: `rowId`、選択済み`Skill | null`、取得Lv、`automatic`または`normal`の行種別、Lv編集・選択・削除・上下移動の可否、行全体とLv入力それぞれのerror状態。
+- candidate dialog: dialog見出し、任意の小見出しを持つ候補group配列、選択済みskill ID、選択・閉じるcallback、focus復帰先。`basic` / `advanced` / 全候補の区別はgroupを組み立てるadapterの責務とする。
+
+各スキル区分の`form/` hookと`logic/`、`master-data/` adapterは、RHF値、対象マスタ、レベル条件、bonusのLv編集可否、重複・上限などの個別validationを、shared Propsへ正規化する。shared Componentはマスタ検索、RHF参照、候補条件の判断、validation計算を行わない。候補dialogの開閉、選択対象row、focus復帰は複数sectionにまたがるため`CharacterSheetContainer`が保持する。shared ComponentのCSS Moduleは、行とdialogの内部構造だけを所有し、各区分固有のlayoutや業務条件を持たない。
 
 ### Container / Presenterの責務
 

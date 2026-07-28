@@ -56,7 +56,7 @@ describe("PrimarySkillsSection", () => {
     expect(screen.getByText("名称")).not.toBeNull();
     expect(screen.getByText("タイミング")).not.toBeNull();
     expect(
-      document.querySelector('[data-primary-skill-kind="bonus"]')?.textContent,
+      document.querySelector('[data-skill-row-kind="automatic"]')?.textContent,
     ).toContain("1");
     expect(screen.queryByText("取得制限")).toBeNull();
 
@@ -79,15 +79,13 @@ describe("PrimarySkillsSection", () => {
     fireEvent.click(screen.getByRole("button", { name: "旋風の詳細を開く" }));
     expect(screen.getByText("取得制限")).not.toBeNull();
     expect(
-      document.querySelectorAll("[data-primary-skill-mobile-metadata]"),
+      document.querySelectorAll("[data-skill-mobile-metadata]"),
     ).toHaveLength(1);
     expect(
-      document.querySelector("[data-primary-skill-mobile-metadata]")
-        ?.textContent,
+      document.querySelector("[data-skill-mobile-metadata]")?.textContent,
     ).toContain("コスト");
     expect(
-      document.querySelector("[data-primary-skill-mobile-metadata]")
-        ?.textContent,
+      document.querySelector("[data-skill-mobile-metadata]")?.textContent,
     ).toContain("使用制限");
   });
 
@@ -183,12 +181,12 @@ describe("PrimarySkillsSection", () => {
 
     expect(
       document
-        .querySelector(`[data-primary-skill-row="${firstRow.rowId}"]`)
+        .querySelector(`[data-skill-row="${firstRow.rowId}"]`)
         ?.getAttribute("data-invalid"),
     ).toBe("true");
     expect(
       document
-        .querySelector(`[data-primary-skill-row="${secondRow.rowId}"]`)
+        .querySelector(`[data-skill-row="${secondRow.rowId}"]`)
         ?.getAttribute("data-invalid"),
     ).toBe("true");
   });

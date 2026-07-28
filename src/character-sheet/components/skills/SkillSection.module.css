@@ -113,7 +113,7 @@
   white-space: nowrap;
 }
 
-.row[data-primary-skill-kind="bonus"] {
+.row[data-skill-row-kind="automatic"] {
   background: var(--color-example-soft);
 }
 
@@ -344,8 +344,8 @@
 
   .headerRow > :nth-child(6),
   .headerRow > :nth-child(7),
-  .firstLine > [data-primary-skill-metadata="cost"],
-  .firstLine > [data-primary-skill-metadata="usage"] {
+  .firstLine > [data-skill-metadata="cost"],
+  .firstLine > [data-skill-metadata="usage"] {
     display: none;
   }
 
