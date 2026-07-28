@@ -6,6 +6,7 @@ import {
   characterSheetFormSchema,
   normalizeCreditInput,
   normalizeIntegerInput,
+  normalizeOptionalIntegerInput,
 } from "../../../../src/character-sheet/schemas/character-sheet-form";
 
 describe("character sheet form schema", () => {
@@ -246,5 +247,10 @@ describe("character sheet form schema", () => {
     assert.equal(normalizeIntegerInput(""), 0);
     assert.equal(normalizeIntegerInput("-3.8"), -3);
     assert.equal(normalizeIntegerInput("invalid"), 0);
+  });
+
+  it("preserves an empty item modifier while normalizing explicit values", () => {
+    assert.equal(normalizeOptionalIntegerInput(""), null);
+    assert.equal(normalizeOptionalIntegerInput("-3.8"), -3);
   });
 });

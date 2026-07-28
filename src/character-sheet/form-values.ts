@@ -171,6 +171,24 @@ export type BondsValues = {
   rows: BondValues[];
 };
 
+/** A weapon may be selected more than once, so each row has stable identity. */
+export type WeaponValues = {
+  attackModifier: number | null;
+  guardModifier: number | null;
+  rowId: string;
+  weaponId: string | null;
+};
+
+export type WeaponsValues = {
+  rows: WeaponValues[];
+};
+
+export type ArmorValues = {
+  armorId: string | null;
+  damageReductionModifier: number | null;
+  defenseModifier: number | null;
+};
+
 function createInitialBondRows(): BondValues[] {
   return Array.from({ length: 4 }, (_, index) => ({
     isResolved: false,
@@ -213,7 +231,19 @@ function createInitialCommonSkillRows(): SkillSelectionRowValues[] {
   }));
 }
 
+function createInitialWeaponRows(): WeaponValues[] {
+  return [
+    {
+      attackModifier: null,
+      guardModifier: null,
+      rowId: "weapon-1",
+      weaponId: null,
+    },
+  ];
+}
+
 export type CharacterSheetFormValues = {
+  armor: ArmorValues;
   bonds: BondsValues;
   build: BuildValues;
   checks: ChecksValues;
@@ -224,9 +254,15 @@ export type CharacterSheetFormValues = {
   primarySkills: PrimarySkillsValues;
   profile: ProfileValues;
   secondaryAttributes: SecondaryAttributeValues;
+  weapons: WeaponsValues;
 };
 
 export const characterSheetDefaultValues: CharacterSheetFormValues = {
+  armor: {
+    armorId: null,
+    damageReductionModifier: null,
+    defenseModifier: null,
+  },
   bonds: {
     resolveEffectModifiers: {
       activeCheck: 0,
@@ -349,5 +385,8 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     healthModifier: 0,
     mentalModifier: 0,
     movementModifier: 0,
+  },
+  weapons: {
+    rows: createInitialWeaponRows(),
   },
 };

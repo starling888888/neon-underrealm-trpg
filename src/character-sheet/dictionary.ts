@@ -178,6 +178,43 @@ export const characterSheetDictionary = {
           "チェックを入れると一時能力値で移動力を表示します",
       },
     },
+    weaponsAndArmor: {
+      addWeapon: "＋ 武器を追加",
+      armor: "防具",
+      armorPickerGuide:
+        "防具名称をクリックするとキャラクターシートに反映されます。",
+      clearArmor: "クリア",
+      chooseArmor: "防具を選択",
+      chooseWeapon: "武器を選択",
+      effect: "効果",
+      formulaTooltips: {
+        armor:
+          "防御力やダメージ軽減が-や特殊の場合、修正を入力すると最終的な値が表示されます。",
+        weapon:
+          "攻撃力やガード値が-や特殊の場合、修正を入力すると最終的な値が表示されます。",
+      },
+      headers: {
+        ammo: "装弾数",
+        armorDefense: "防御力／ダメージ軽減",
+        attackGuard: "攻撃力／ガード値",
+        credit: "信用",
+        effect: "効果",
+        kind: "種別",
+        name: "名称",
+        range: "射程",
+        restriction: "装備制限",
+        skill: "技能",
+      },
+      moveDown: "下へ移動",
+      moveUp: "上へ移動",
+      openDetails: "詳細を開く",
+      closeDetails: "詳細を閉じる",
+      unselectedArmor: "防具を選択",
+      unselectedWeapon: "武器を選択",
+      weapon: "武器",
+      weaponPickerGuide:
+        "武器名称をクリックするとキャラクターシートに反映されます。",
+    },
   },
   gameDomain: {
     terms: {

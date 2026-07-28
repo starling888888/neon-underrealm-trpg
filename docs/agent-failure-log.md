@@ -89,6 +89,36 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Ignored the existing character-sheet UI system in G17
+
+#### 2026-07-28
+
+- source: user
+- failure category: design-system and instruction compliance
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の武器・防具一覧および候補選択dialog
+- 観測した失敗: ユーザーが指定した行の`展開`を候補選択dialogの折り畳みまで拡大解釈し、効果などを候補行の2行目へ常時表示する契約を守らなかった。さらに、既存のスキル行・スキル選択dialogを正本として確認・遵守せず、独自の削除button、並べ替えcontrol、選択icon、header罫線、算出値背景、header整列、追加button、候補dialogの全体縦scroll、hover feedbackを実装した。その結果、既存キャラクターシートの設計言語と似ても似つかないUIになった。
+- 一次対応: 実装を停止し、G17 issueへ候補dialogを折り畳まない表示契約と、既存`SkillSection` / `SkillPickerDialog`のComponent・CSS・実画面を正本にして固有差分だけを追加する修正契約を記録した。ユーザーの明示的な実装再開指示までコードを変更しない。
+
+### Started review-feedback implementation before issue intake
+
+#### 2026-07-28
+
+- source: user
+- failure category: review-workflow order
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のユーザーレビュー指摘1
+- 観測した失敗: ユーザーがレビュー指摘を伝えただけで実装修正を指示していない段階で、current issueへ指摘を取り込む前にComponentのCSS / JSX修正を開始した。
+- 一次対応: 直前の未確定コード変更を元へ戻した。レビュー指摘はcurrent issueの未実装項目として記録し、以後はユーザーの明示的な実装再開指示を受けるまでコードを変更しない。
+
+### Repeatedly ran an incomplete new component test
+
+#### 2026-07-28
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の `WeaponsAndArmorSection` component test
+- 観測した失敗: 新規Component testを追加した際、headerの`aria-hidden`、matcher設定、同名の詳細操作、重複テキストを事前に確認しないまま実行し、同一テストの失敗を複数回繰り返した。
+- 一次対応: テスト対象DOMの実際のアクセシビリティツリーを確認し、tooltip headerをアクセシブルに修正したうえで、安定した識別子と標準Vitest matcherだけを使うテストへ修正する。
+
 ### Marked G16 complete without covering its required validation and field-array contracts
 
 #### 2026-07-28

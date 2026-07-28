@@ -15,6 +15,11 @@ const reactionNames = [
 /** Validates the values kept in React Hook Form. */
 export const characterSheetFormSchema = z
   .object({
+    armor: z.object({
+      armorId: z.string().nullable(),
+      damageReductionModifier: z.number().int().nullable(),
+      defenseModifier: z.number().int().nullable(),
+    }),
     bonds: z.object({
       resolveEffectModifiers: z.object({
         activeCheck: z.number().int(),
@@ -246,6 +251,18 @@ export const characterSheetFormSchema = z
       mentalModifier: z.number().int(),
       movementModifier: z.number().int(),
     }),
+    weapons: z.object({
+      rows: z
+        .array(
+          z.object({
+            attackModifier: z.number().int().nullable(),
+            guardModifier: z.number().int().nullable(),
+            rowId: stableRowIdSchema,
+            weaponId: z.string().nullable(),
+          }),
+        )
+        .min(1),
+    }),
   })
   .superRefine((values, context) => {
     const fieldArrays = [
@@ -260,6 +277,7 @@ export const characterSheetFormSchema = z
         rows: values.otherRyugiSkills.rows,
       },
       { path: ["primarySkills", "rows"], rows: values.primarySkills.rows },
+      { path: ["weapons", "rows"], rows: values.weapons.rows },
     ] as const;
 
     for (const fieldArray of fieldArrays) {
@@ -314,6 +332,15 @@ export function normalizeIntegerInput(value: number | string): number {
   }
 
   return Math.trunc(numericValue);
+}
+
+/** Preserves an empty modifier so special item values have no derived result. */
+export function normalizeOptionalIntegerInput(
+  value: number | string,
+): number | null {
+  if (value === "") return null;
+
+  return normalizeIntegerInput(value);
 }
 
 const nonNegativeCreditInputSchema = z
