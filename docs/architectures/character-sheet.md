@@ -171,6 +171,13 @@ grid列、余白、見出しだけを各CSS Moduleへ置く。同じ視覚パタ
 現れた場合は、最初にこの共有styleへ寄せられるかを判断する。将来の汎用Component化を
 理由に、入力欄単位へ機械的にComponentを分割しない。
 
+スキル、武器・防具、生き様専用アイテムの行一覧と候補選択dialogは、
+`components/CharacterSheetFormList.module.css`の共通classを`composes`で再利用する。
+各section / dialogのCSS Moduleには、固有のgrid列、固有のresponsive情報移動、
+ゲームデータ固有の表示差分だけを置く。行の枠、header、行picker、並べ替え、展開、
+追加button、候補dialog / candidateの共通見た目を複製せず、異なる業務条件を理由に
+単一の汎用行Componentや共通grid列へ統合しない。
+
 responsive contractはlayout regionを所有する`CharacterSheetFormPresenter`とそのCSSを
 正本にする。2列から1列への切替、sheetの最小inline size、menu railの表示条件のように
 CSSとページscriptの両方が参照するbreakpointは、同じ契約として明示し、境界値をbrowser
