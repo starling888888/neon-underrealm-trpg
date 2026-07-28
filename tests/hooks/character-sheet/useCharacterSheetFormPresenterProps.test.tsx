@@ -796,8 +796,8 @@ describe("useCharacterSheetFormPresenterProps", () => {
       checks.onAttackAdd();
       checks.onAttackSkillChange("attack-1", "shooting");
       checks.onAttackModifierChange("attack-1", "-2");
-      checks.onReactionAttributeChange("defense", "agility");
-      checks.onReactionModifierChange("defense", "3");
+      checks.onReactionAttributeChange("reaction-defense", "agility");
+      checks.onReactionModifierChange("reaction-defense", "3");
     });
 
     expect(result.current.form.getValues("checks.attacks")).toHaveLength(2);
@@ -810,6 +810,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
       attribute: "agility",
       modifier: 3,
       name: "defense",
+      rowId: "reaction-defense",
     });
     expect(
       result.current.presenterProps.checksSection.attacks[0],

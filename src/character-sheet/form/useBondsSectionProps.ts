@@ -74,16 +74,16 @@ export default function useBondsSectionProps(
     replace,
   ]);
 
-  function setBondRowValue(
+  function setBondRowValue<K extends BondEditableFieldName>(
     rowId: string,
-    field: BondEditableFieldName,
-    value: boolean | string,
+    field: K,
+    value: BondValues[K],
   ): void {
     const rows = getValues("bonds.rows");
     const index = rows.findIndex((row) => row.rowId === rowId);
     const row = rows[index];
     if (row === undefined) return;
-    update(index, { ...row, [field]: value });
+    update(index, { ...row, [field]: value } as BondValues);
   }
 
   return {

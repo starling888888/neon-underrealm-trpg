@@ -72,6 +72,22 @@
 - [x] UI変更がある場合、必要な`/character-sheet/`状態をactual screenshotで確認し、canonical VRT baselineを更新しない理由を記録する。
 - [x] `npm run check`、`npm run build`、関連Node / Vitest / Playwright testが通る。
 
+## ビジュアルレビュー 2
+
+### 対象と実画面確認
+
+- 対象route: `/neon-underrealm-trpg/character-sheet/`
+- state: 共通、その他流儀、生き様、生き様bonus、プライマリの最大Lv超過。いずれも区分合計超過を同時に発生させない入力値にした。
+- viewport: desktop（1440px）、tablet（820px）、mobile（390px）
+- capture: `npm run visual:capture -- --grep '@(?:common-skill-maximum-level-error|other-ryugi-skill-maximum-level-error|ikizama-skill-maximum-level-error|primary-skill-maximum-level-error)(?:\\s|$)'`（12 passed）
+- actual: locator screenshot 21枚を実際に開いた。共通はprofile / build / skill section各3枚、その他流儀はbuild / skill section各3枚、生き様とプライマリはskill section各3枚である。
+
+### 結果
+
+- 全4区分でsection外枠はerror状態にせず、最大Lv超過の入力・行だけが赤枠になることをdesktop / tablet / mobileで確認した。生き様はbonusと通常行の両方を確認対象に含めた。
+- `advanced`・重複・区分合計は行 / sectionへ渡す別のerror識別子に分離したため、この最大Lv超過stateと混同しない。各画面でclip / overflow、可視error文言の追加、既存配置の変更は確認されなかった。
+- `npm run visual:test`はこの4 stateが`locatorOnly`であるため12件skipとなった。canonical baselineは更新せず、比較成功としては扱わない。Visual Review 1はsectionの非error状態を検証していなかったため、この確認結果で置き換える。
+
 ## チェックポイント
 
 - [x] 既存ルート、既存スキル選択dialog、確認dialog、focus復帰が壊れていない。
@@ -161,3 +177,36 @@
 - G16のGate plan上の範囲「消費経験点の算出整合性」を、ユーザー指示により、その算出値を正しく保つ全スキル局所エラーと可変行のRHF操作境界まで拡張する。G24 / G27の保存・JSON機能そのものは取り込まない。
 - `docs/TODO.md`の関連3件は、実装完了・人間承認・merge前まで未対応のまま残す。完了後の移動は`post-merge-plan-update`で行う。
 - 実装中に旧来のLv clamp期待が残るComponent testをfull testとcomponent testで連続して失敗させたため、`docs/agent-failure-log.md`へ記録した。期待値を「超過値を保持し局所errorにする」契約へ更新後、全testを再実行する。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 最大Lv違反を`hasLevelError`として行へ渡す一方、shared `SkillSection`が`hasRowError || hasLevelError`をsection errorへ集約している。そのため、要件が禁止する最大Lv違反のsection伝播が発生する。
+- `advanced`をレベル低下後も保持する要件に対し、プライマリ・生き様・その他流儀に保持済み`advanced`を識別するvalidationがない。
+- 重複skill row IDを返すvalidationはプライマリだけにあり、生き様・共通・その他流儀には外部更新時の重複検出がない。
+- 生き様skill行は`useFieldArray`を使用しているが、更新にgeneric pathの`setValue`を残す。build scalar更新は`build`親objectを丸ごと`setValue`し、縁callbackのfield / value型は対応関係を表せていない。リアクション行にはstableな`rowId`がなく、name検索で更新している。
+- 関連TODO 3件はactiveのままである。未達を確認したためactive維持は正しいが、G16の完了・回収済み記録とは矛盾している。
+
+### 判定
+
+- source: browser-draft
+- classification: valid
+- local validation: `SkillSection.tsx`、各skill logic / adapter、`useBuildSectionProps.ts`、`useIkizamaSkillsSectionProps.ts`、`useBondsSectionProps.ts`、`useChecksSectionProps.ts`、`docs/requirements/character-sheet.md`を照合した。指摘した最大Lv伝播、advanced、非プライマリ重複、可変行更新境界・リアクションidentityはいずれもG16の対象範囲・完了条件に未達として残る。経験点算出とuncontrolled input同期は現行実装・既存test根拠により維持できる。
+- TODOのactive状態そのものは、未達を踏まえると正しい。G16をdoneとし完了チェックを付けた記録だけを訂正し、`docs/TODO.md`は変更しない。
+
+### 対応方針
+
+- 最大Lv違反を行 / inputだけへ限定し、`advanced`・重複・区分合計だけをsection errorへ伝播するViewModelを定義する。
+- プライマリ、生き様、共通、その他流儀ごとのadvanced・重複validationをpure logicへ追加し、その他流儀の重複は`ryugiRowId`単位に限定する。
+- skill / build / bonds / checksの編集callbackを各行の型対応と`useFieldArray`更新へ整合し、リアクションのstable row identityを確立する。
+- Node、hook、Component testで各未達条件を固定し、UI変更後に対象状態・3 viewportのactual screenshotを再確認する。
+
+### 対応完了チェックリスト
+
+- [x] 最大Lv違反をsectionへ伝播させない。
+- [x] 保持済み`advanced`と全skill区分の重複を局所errorとして検出する。
+- [x] 可変行の更新境界、field / value型、リアクションrow identityをG16契約へ整合する。
+- [x] 追加・更新したNode、hook、Component testで未達条件を確認する。
+- [x] UI変更後の対象状態をdesktop（1440px）・tablet（820px）・mobile（390px）のactual screenshotで確認する。
+- [x] `npm run check`、`npm run build`、関連Node / Vitest / Playwright testが通る。

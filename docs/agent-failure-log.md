@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Marked G16 complete without covering its required validation and field-array contracts
+
+#### 2026-07-28
+
+- source: review
+- 発生箇所: `ex-02-16-sheet-experience-consistency` の完了判定、technical review後の確認、およびVisual Review記録
+- 観測した失敗: G16の完了条件が要求する最大Lvのsection非伝播、`advanced`条件、全skill区分の重複検出、`useFieldArray`更新境界を実装・testで確認しないまま完了扱いにした。特に最大Lv超過のactual screenshotを確認した記録があるにもかかわらず、section errorへの誤伝播を検出できていなかった。
+- 一次対応: G16をactiveへ戻し、未達の完了条件を未チェックへ戻した。`.tmp/chatgpt-review.md`をローカル実装・SSoTと照合したレビュー指摘2としてissueへ取り込み、修正はユーザー承認後に限定する。
+
 ### Ignored the approved character-sheet design images during G14 implementation
 
 #### 2026-07-28
@@ -1231,3 +1240,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-16-sheet-experience-consistency` の最大Lv超過を保持するRHF hook / Component test
 - 観測した失敗: 最大Lv超過値をclampする旧契約を前提にしたexpectationを残したまま、full testとcomponent testで同じ失敗を連続して確認した。さらに、レベルを1桁前提へそろえる際にexpectationだけを`9`へ更新し、テスト操作値`999`を残して同じhook testを再度失敗させた。
 - 一次対応: expectationとテスト操作値をともに「1桁の超過値を保持し、行・sectionの局所errorを示す」契約へ更新し、修正後にfull testを通した。入力規則を変更するGateでは、実装より先に既存の正規化期待とtest操作値を検索して同じ変更で更新する。
+
+### G16 maximum-level VRT fixture also caused a total-limit error
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-16-sheet-experience-consistency` のその他流儀スキル最大Lv超過VRT
+- 観測した失敗: 最大Lv超過だけを確認すべきfixtureで、その他流儀Lvを`1`のままスキルLvを`9`にしたため、区分合計超過も同時に発生した。section errorの否定assertionがdesktop / tablet / mobileで失敗したが、実装の最大Lv伝播不備と誤認し得る状態だった。
+- 一次対応: fixtureでその他流儀Lvを`9`へ設定し、区分合計を上限内にしてからスキルLv`9`を入力する状態へ訂正した。対象4 state・3 viewportを`visual:capture`で再実行し、12件通過後にactual screenshotを開いて確認した。

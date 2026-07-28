@@ -80,4 +80,24 @@ describe("character sheet ikizama skills", () => {
       "normal-over-limit",
     ]);
   });
+
+  it("identifies retained advanced and duplicate normal skills", () => {
+    const [advancedSkill] = getIkizamaSkillGroups("burai", 4).advanced;
+    const [basicSkill] = getIkizamaSkillGroups("burai", 1).basic;
+    if (advancedSkill === undefined || basicSkill === undefined) {
+      throw new Error("生き様スキル候補を取得できません。");
+    }
+
+    const validation = calculateIkizamaSkillsValidation(3, 1, null, [
+      { level: 1, rowId: "advanced", skill: advancedSkill },
+      { level: 1, rowId: "duplicate-a", skill: basicSkill },
+      { level: 1, rowId: "duplicate-b", skill: basicSkill },
+    ]);
+
+    assert.deepEqual(validation.invalidAdvancedSkillRowIds, ["advanced"]);
+    assert.deepEqual(validation.invalidDuplicateSkillRowIds, [
+      "duplicate-a",
+      "duplicate-b",
+    ]);
+  });
 });

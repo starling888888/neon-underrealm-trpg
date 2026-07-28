@@ -12,6 +12,7 @@ export type PrimarySkillRowView = {
 export type PrimarySkillsSectionProps = {
   bonusSkills: readonly Skill[];
   hasPrimarySkillLevelTotalError: boolean;
+  invalidAdvancedSkillRowIds: readonly string[];
   invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   maximumSkillNameLength: number;
@@ -29,6 +30,7 @@ export type PrimarySkillsSectionProps = {
 export default function PrimarySkillsSection({
   bonusSkills,
   hasPrimarySkillLevelTotalError,
+  invalidAdvancedSkillRowIds,
   invalidDuplicateSkillRowIds,
   invalidMaximumLevelRowIds,
   maximumSkillNameLength,
@@ -61,7 +63,9 @@ export default function PrimarySkillsSection({
     ...rows.map((row, index) => ({
       accessibilityName: row.skill?.name ?? `${copy.unselectedRow}${index + 1}`,
       hasLevelError: invalidMaximumLevelRowIds.includes(row.rowId),
-      hasRowError: invalidDuplicateSkillRowIds.includes(row.rowId),
+      hasRowError:
+        invalidAdvancedSkillRowIds.includes(row.rowId) ||
+        invalidDuplicateSkillRowIds.includes(row.rowId),
       kind: "normal" as const,
       level: row.level,
       levelEditable: true,

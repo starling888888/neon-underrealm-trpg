@@ -18,6 +18,7 @@ describe("CommonSkillsSection", () => {
       <CommonSkillsSection
         basicAttack={basicAttack}
         hasCommonSkillLevelError={false}
+        invalidDuplicateSkillRowIds={[]}
         invalidMaximumLevelRowIds={[]}
         levelLimit={1}
         maximumSkillNameLength={getMaximumSkillNameLength()}

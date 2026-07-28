@@ -5,7 +5,6 @@ import type { BuildSectionProps } from "../components/BuildSection";
 import {
   type AttributeName,
   type AttributeValues,
-  type BuildValues,
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
   type OtherRyugiEditableFieldName,
@@ -74,15 +73,6 @@ export default function useBuildSectionProps(
   });
   const derivedBuild = calculateBuild(build, commonSkillLevelTotal);
 
-  function setBuildValue<K extends keyof BuildValues>(
-    field: K,
-    value: BuildValues[K],
-  ): void {
-    const nextBuild: BuildValues = { ...getValues("build"), [field]: value };
-
-    setValue("build", nextBuild, { shouldValidate: true });
-  }
-
   function setAttributeValue(
     attribute: AttributeName,
     field: keyof AttributeValues,
@@ -118,7 +108,9 @@ export default function useBuildSectionProps(
   function onAcquiredExperienceChange(value: string): number {
     const normalizedValue = normalizeIntegerInput(value);
 
-    setBuildValue("acquiredExperience", normalizedValue);
+    setValue("build.acquiredExperience", normalizedValue, {
+      shouldValidate: true,
+    });
 
     return normalizedValue;
   }
@@ -137,7 +129,7 @@ export default function useBuildSectionProps(
       onAttributeCommit: setAttributeValue,
       onIkizamaChange: (ikizamaId, trigger) => {
         const applyChange = () => {
-          setBuildValue("ikizamaId", ikizamaId);
+          setValue("build.ikizamaId", ikizamaId, { shouldValidate: true });
         };
         if (trigger !== undefined && onIkizamaChangeRequested !== undefined) {
           onIkizamaChangeRequested(ikizamaId, trigger, applyChange);
@@ -147,7 +139,9 @@ export default function useBuildSectionProps(
       },
       onIkizamaLevelChange: (value) => {
         const normalizedValue = normalizeIntegerInput(value);
-        setBuildValue("ikizamaLevel", normalizedValue);
+        setValue("build.ikizamaLevel", normalizedValue, {
+          shouldValidate: true,
+        });
         return normalizedValue;
       },
       onOtherRyugiAdd: () => {
@@ -204,7 +198,9 @@ export default function useBuildSectionProps(
       },
       onPrimaryRyugiChange: (primaryRyugiId, trigger) => {
         const applyChange = () => {
-          setBuildValue("primaryRyugiId", primaryRyugiId);
+          setValue("build.primaryRyugiId", primaryRyugiId, {
+            shouldValidate: true,
+          });
         };
 
         if (
@@ -219,12 +215,16 @@ export default function useBuildSectionProps(
       },
       onPrimaryRyugiLevelChange: (value) => {
         const normalizedValue = normalizeIntegerInput(value);
-        setBuildValue("primaryRyugiLevel", normalizedValue);
+        setValue("build.primaryRyugiLevel", normalizedValue, {
+          shouldValidate: true,
+        });
         return normalizedValue;
       },
       onPrimaryRyugiLevelCommit: (value) => {
         const normalizedValue = normalizeIntegerInput(value);
-        setBuildValue("primaryRyugiLevel", normalizedValue);
+        setValue("build.primaryRyugiLevel", normalizedValue, {
+          shouldValidate: true,
+        });
         return normalizedValue;
       },
       ryugiOptions: getCharacterSheetRyugiOptions(),

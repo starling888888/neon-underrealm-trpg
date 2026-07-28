@@ -46,7 +46,7 @@ describe("character sheet form schema", () => {
     );
   });
 
-  it("requires one to five attack rows while allowing repeated reactions", () => {
+  it("requires one to five attack rows and a stable ID for each reaction row", () => {
     assert.equal(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
@@ -75,12 +75,27 @@ describe("character sheet form schema", () => {
         ...characterSheetDefaultValues,
         checks: {
           ...characterSheetDefaultValues.checks,
-          reactions: Array.from({ length: 4 }, () => ({
-            ...characterSheetDefaultValues.checks.reactions[0],
-          })),
+          reactions: characterSheetDefaultValues.checks.reactions.map(
+            (row) => ({
+              ...row,
+              name: "defense",
+            }),
+          ),
         },
       }).success,
       true,
+    );
+    assert.equal(
+      characterSheetFormSchema.safeParse({
+        ...characterSheetDefaultValues,
+        checks: {
+          ...characterSheetDefaultValues.checks,
+          reactions: characterSheetDefaultValues.checks.reactions.map(
+            ({ rowId: _rowId, ...row }) => row,
+          ),
+        },
+      }).success,
+      false,
     );
   });
 

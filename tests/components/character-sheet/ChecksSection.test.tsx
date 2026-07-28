@@ -104,7 +104,7 @@ describe("ChecksSection", () => {
       "shooting",
     );
     expect(props.onReactionAttributeChange).toHaveBeenCalledWith(
-      "defense",
+      "reaction-defense",
       "agility",
     );
     expect(props.onAttackModifierChange).toHaveBeenCalledWith("attack-1", "2");

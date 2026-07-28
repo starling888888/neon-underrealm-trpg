@@ -83,6 +83,7 @@ export default function usePrimarySkillsSectionProps(
     sectionProps: {
       bonusSkills: groups.bonus,
       hasPrimarySkillLevelTotalError: validation.hasPrimarySkillLevelTotalError,
+      invalidAdvancedSkillRowIds: validation.invalidAdvancedSkillRowIds,
       invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
       invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
       maximumSkillNameLength,

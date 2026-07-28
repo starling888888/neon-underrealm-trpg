@@ -92,4 +92,20 @@ describe("character sheet common skills", () => {
       "above-maximum",
     ]);
   });
+
+  it("identifies duplicate selected common skills", () => {
+    const [skill] = getCommonSkillCandidates();
+    if (skill === undefined)
+      throw new Error("共通スキル候補を取得できません。");
+
+    const validation = calculateCommonSkillsValidation(10, [
+      { level: 1, rowId: "duplicate-a", skill },
+      { level: 1, rowId: "duplicate-b", skill },
+    ]);
+
+    assert.deepEqual(validation.invalidDuplicateSkillRowIds, [
+      "duplicate-a",
+      "duplicate-b",
+    ]);
+  });
 });

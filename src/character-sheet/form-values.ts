@@ -121,6 +121,7 @@ export type ReactionCheckValues = {
   attribute: AttributeName;
   modifier: number;
   name: ReactionCheckName;
+  rowId: string;
 };
 
 export type NoncombatCheckValues = Record<
@@ -285,10 +286,30 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
       },
     ],
     reactions: [
-      { attribute: "strength", modifier: 0, name: "defense" },
-      { attribute: "strength", modifier: 0, name: "evasion" },
-      { attribute: "body", modifier: 0, name: "endurance" },
-      { attribute: "mind", modifier: 0, name: "resistance" },
+      {
+        attribute: "strength",
+        modifier: 0,
+        name: "defense",
+        rowId: "reaction-defense",
+      },
+      {
+        attribute: "strength",
+        modifier: 0,
+        name: "evasion",
+        rowId: "reaction-evasion",
+      },
+      {
+        attribute: "body",
+        modifier: 0,
+        name: "endurance",
+        rowId: "reaction-endurance",
+      },
+      {
+        attribute: "mind",
+        modifier: 0,
+        name: "resistance",
+        rowId: "reaction-resistance",
+      },
     ],
     noncombat: createInitialNoncombatChecks(),
   },

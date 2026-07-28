@@ -8,6 +8,8 @@ export type IkizamaSkillsValidationRow = {
 
 export type IkizamaSkillsValidation = {
   hasIkizamaSkillLevelTotalError: boolean;
+  invalidAdvancedSkillRowIds: readonly string[];
+  invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   selectedLevelTotal: number;
 };
@@ -19,6 +21,15 @@ export function calculateIkizamaSkillsValidation(
   bonusSkill: Skill | null,
   rows: readonly IkizamaSkillsValidationRow[],
 ): IkizamaSkillsValidation {
+  const selectedRows = rows.filter((row) => row.skill !== null);
+  const selectedSkillCounts = new Map<string, number>();
+  for (const row of selectedRows) {
+    if (row.skill === null) continue;
+    selectedSkillCounts.set(
+      row.skill.id,
+      (selectedSkillCounts.get(row.skill.id) ?? 0) + 1,
+    );
+  }
   const selectedLevelTotal =
     Math.max(0, bonusLevel - 1) +
     rows.reduce(
@@ -28,6 +39,17 @@ export function calculateIkizamaSkillsValidation(
 
   return {
     hasIkizamaSkillLevelTotalError: selectedLevelTotal > ikizamaLevel,
+    invalidAdvancedSkillRowIds:
+      ikizamaLevel < 4
+        ? selectedRows.flatMap((row) =>
+            row.skill?.category === "advanced" ? [row.rowId] : [],
+          )
+        : [],
+    invalidDuplicateSkillRowIds: selectedRows.flatMap((row) =>
+      row.skill !== null && (selectedSkillCounts.get(row.skill.id) ?? 0) > 1
+        ? [row.rowId]
+        : [],
+    ),
     invalidMaximumLevelRowIds: [
       ...(bonusSkill !== null &&
       (bonusLevel < 1 || bonusLevel > bonusSkill.maxLevel)

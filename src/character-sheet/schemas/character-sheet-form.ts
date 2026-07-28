@@ -105,6 +105,7 @@ export const characterSheetFormSchema = z.object({
           ]),
           modifier: z.number().int(),
           name: z.enum(["defense", "evasion", "endurance", "resistance"]),
+          rowId: z.string(),
         }),
       )
       .length(4),

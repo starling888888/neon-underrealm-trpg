@@ -178,6 +178,8 @@ export default function useOtherRyugiSkillsSectionProps(
         hasSkillLevelTotalError: validation.invalidRyugiRowIds.includes(
           ryugi.rowId,
         ),
+        invalidAdvancedSkillRowIds: validation.invalidAdvancedSkillRowIds,
+        invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
         invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
         rows: rowsWithSkills.filter((row) => row.ryugiRowId === ryugi.rowId),
         ryugiName:

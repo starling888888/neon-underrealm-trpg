@@ -9,6 +9,7 @@ export type PrimarySkillValidationRow = {
 
 export type PrimarySkillsValidation = {
   hasPrimarySkillLevelTotalError: boolean;
+  invalidAdvancedSkillRowIds: readonly string[];
   invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   selectedLevelTotal: number;
@@ -42,9 +43,16 @@ export function calculatePrimarySkillsValidation(
     (total, row) => total + row.level,
     0,
   );
+  const invalidAdvancedSkillRowIds =
+    primaryRyugiLevel < 6
+      ? selectedRows.flatMap((row) =>
+          row.skill?.category === "advanced" ? [row.rowId] : [],
+        )
+      : [];
 
   return {
     hasPrimarySkillLevelTotalError: selectedLevelTotal > primaryRyugiLevel,
+    invalidAdvancedSkillRowIds,
     invalidDuplicateSkillRowIds,
     invalidMaximumLevelRowIds,
     selectedLevelTotal,

@@ -42,7 +42,7 @@ export default function useIkizamaSkillsSectionProps(
   const previousIkizamaIdRef = useRef<string | null>(
     getValues("build.ikizamaId"),
   );
-  const { append, move, remove, replace } = useFieldArray({
+  const { append, move, remove, replace, update } = useFieldArray({
     control,
     keyName: "fieldKey",
     name: "ikizamaSkills.rows",
@@ -84,7 +84,7 @@ export default function useIkizamaSkillsSectionProps(
     );
     if (index < 0) return;
 
-    setValue(`ikizamaSkills.rows.${index}`, nextRow, { shouldValidate: true });
+    update(index, nextRow);
   }
 
   return {
@@ -105,6 +105,8 @@ export default function useIkizamaSkillsSectionProps(
       bonusLevel: ikizamaSkills.bonusLevel,
       bonusSkill,
       hasIkizamaSkillLevelTotalError: validation.hasIkizamaSkillLevelTotalError,
+      invalidAdvancedSkillRowIds: validation.invalidAdvancedSkillRowIds,
+      invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
       invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
       ikizamaName:
         build.ikizamaId === null

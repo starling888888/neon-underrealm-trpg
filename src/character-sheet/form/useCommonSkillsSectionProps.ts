@@ -86,6 +86,7 @@ export default function useCommonSkillsSectionProps(
     sectionProps: {
       basicAttack: getBasicAttackSkill(),
       hasCommonSkillLevelError: validation.hasCommonSkillLevelError,
+      invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
       invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
       levelLimit: validation.levelLimit,
       maximumSkillNameLength,

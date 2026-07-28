@@ -26,6 +26,8 @@ function createProps(): OtherRyugiSkillsSectionProps {
     sections: [
       {
         hasSkillLevelTotalError: true,
+        invalidAdvancedSkillRowIds: [],
+        invalidDuplicateSkillRowIds: [],
         invalidMaximumLevelRowIds: [],
         rows: [
           { level: 1, rowId: "first", skill: first, skillId: first.id },

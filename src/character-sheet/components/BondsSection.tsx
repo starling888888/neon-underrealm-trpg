@@ -12,10 +12,10 @@ export type BondsSectionProps = {
   bonds: BondValues[];
   derived: BondsDerivedValues;
   onEffectModifierChange: (field: ResolveEffectName, value: string) => number;
-  onRowChange: (
+  onRowChange: <K extends BondEditableFieldName>(
     rowId: string,
-    field: BondEditableFieldName,
-    value: boolean | string,
+    field: K,
+    value: BondValues[K],
   ) => void;
   onRowClear: (rowId: string) => void;
   onRowDelete: (rowId: string) => void;

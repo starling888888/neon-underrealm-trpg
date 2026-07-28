@@ -84,4 +84,51 @@ describe("character sheet other ryugi skills", () => {
 
     assert.deepEqual(validation.invalidMaximumLevelRowIds, ["other-a-skill"]);
   });
+
+  it("identifies advanced and duplicate skills within their owning ryugi row", () => {
+    const [advancedSkill] = getOtherRyugiSkillGroups("kenkaya", 6).advanced;
+    const [basicSkill] = getOtherRyugiSkillGroups("kenkaya", 1).basic;
+    if (advancedSkill === undefined || basicSkill === undefined) {
+      throw new Error("その他流儀スキル候補を取得できません。");
+    }
+
+    const validation = calculateOtherRyugiSkillsValidation(
+      [
+        { level: 5, rowId: "other-a" },
+        { level: 1, rowId: "other-b" },
+      ],
+      [
+        {
+          level: 1,
+          rowId: "advanced",
+          ryugiRowId: "other-a",
+          skill: advancedSkill,
+        },
+        {
+          level: 1,
+          rowId: "duplicate-a",
+          ryugiRowId: "other-a",
+          skill: basicSkill,
+        },
+        {
+          level: 1,
+          rowId: "duplicate-b",
+          ryugiRowId: "other-a",
+          skill: basicSkill,
+        },
+        {
+          level: 1,
+          rowId: "same-skill-different-ryugi",
+          ryugiRowId: "other-b",
+          skill: basicSkill,
+        },
+      ],
+    );
+
+    assert.deepEqual(validation.invalidAdvancedSkillRowIds, ["advanced"]);
+    assert.deepEqual(validation.invalidDuplicateSkillRowIds, [
+      "duplicate-a",
+      "duplicate-b",
+    ]);
+  });
 });

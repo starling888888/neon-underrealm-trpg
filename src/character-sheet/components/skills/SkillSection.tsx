@@ -324,8 +324,8 @@ export default function SkillSection({
   const copy = characterSheetDictionary.characterSheet.skills;
   const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
   const [isExpanded, setIsExpanded] = useState(true);
-  const hasRowError = rows.some((row) => row.hasRowError || row.hasLevelError);
-  const hasError = isInvalid || hasRowError;
+  const hasSectionRowError = rows.some((row) => row.hasRowError);
+  const hasError = isInvalid || hasSectionRowError;
   const nameWidthStyle = {
     "--primary-skill-name-width": `${nameColumnWidthCh}ch`,
   } as CSSProperties;

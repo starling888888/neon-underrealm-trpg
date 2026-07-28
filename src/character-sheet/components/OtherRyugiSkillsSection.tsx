@@ -11,6 +11,8 @@ export type OtherRyugiSkillRowView = {
 
 export type OtherRyugiSkillsSectionView = {
   hasSkillLevelTotalError: boolean;
+  invalidAdvancedSkillRowIds: readonly string[];
+  invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   rows: readonly OtherRyugiSkillRowView[];
   ryugiName: string | null;
@@ -50,7 +52,9 @@ export default function OtherRyugiSkillsSection({
             hasLevelError: section.invalidMaximumLevelRowIds.includes(
               row.rowId,
             ),
-            hasRowError: false,
+            hasRowError:
+              section.invalidAdvancedSkillRowIds.includes(row.rowId) ||
+              section.invalidDuplicateSkillRowIds.includes(row.rowId),
             kind: "normal" as const,
             level: row.level,
             levelEditable: true,

@@ -13,6 +13,8 @@ export type IkizamaSkillsSectionProps = {
   bonusLevel: number;
   bonusSkill: Skill | null;
   hasIkizamaSkillLevelTotalError: boolean;
+  invalidAdvancedSkillRowIds: readonly string[];
+  invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   ikizamaName: string | null;
   ikizamaSelected: boolean;
@@ -32,6 +34,8 @@ export default function IkizamaSkillsSection({
   ikizamaName,
   ikizamaSelected,
   hasIkizamaSkillLevelTotalError,
+  invalidAdvancedSkillRowIds,
+  invalidDuplicateSkillRowIds,
   invalidMaximumLevelRowIds,
   maximumSkillNameLength,
   onAdd,
@@ -67,7 +71,9 @@ export default function IkizamaSkillsSection({
     ...rows.map((row, index) => ({
       accessibilityName: row.skill?.name ?? `${copy.unselectedRow}${index + 1}`,
       hasLevelError: invalidMaximumLevelRowIds.includes(row.rowId),
-      hasRowError: false,
+      hasRowError:
+        invalidAdvancedSkillRowIds.includes(row.rowId) ||
+        invalidDuplicateSkillRowIds.includes(row.rowId),
       kind: "normal" as const,
       level: row.level,
       levelEditable: true,

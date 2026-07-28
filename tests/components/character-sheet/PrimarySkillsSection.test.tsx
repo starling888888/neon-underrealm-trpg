@@ -14,6 +14,7 @@ function createProps(): PrimarySkillsSectionProps {
   return {
     bonusSkills: groups.bonus,
     hasPrimarySkillLevelTotalError: false,
+    invalidAdvancedSkillRowIds: [],
     invalidDuplicateSkillRowIds: [],
     invalidMaximumLevelRowIds: [],
     maximumSkillNameLength: 8,
@@ -135,14 +136,10 @@ describe("PrimarySkillsSection", () => {
     expect(screen.queryByRole("button", { name: /へ移動$/ })).toBeNull();
   });
 
-  it("folds independently and exposes maximum-level errors on the row", () => {
+  it("keeps a maximum-level error on its input and row without invalidating the section", () => {
     const props = createProps();
     render(
-      <PrimarySkillsSection
-        {...props}
-        hasPrimarySkillLevelTotalError
-        invalidMaximumLevelRowIds={["first"]}
-      />,
+      <PrimarySkillsSection {...props} invalidMaximumLevelRowIds={["first"]} />,
     );
 
     const section = screen.getByRole("region", {
@@ -153,7 +150,7 @@ describe("PrimarySkillsSection", () => {
     });
     const level = screen.getByLabelText("旋風Lv");
 
-    expect(section.getAttribute("aria-invalid")).toBe("true");
+    expect(section.getAttribute("aria-invalid")).toBeNull();
     expect(level.getAttribute("aria-invalid")).toBe("true");
     expect(level.getAttribute("max")).toBe(
       String(props.rows[0]?.skill?.maxLevel),

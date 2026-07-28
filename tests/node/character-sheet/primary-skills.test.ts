@@ -70,4 +70,16 @@ describe("character sheet primary skills", () => {
       skill.maxLevel + 2 > 1,
     );
   });
+
+  it("retains selected advanced skills as section-level errors below level 6", () => {
+    const [skill] = getPrimarySkillGroups("kenkaya", 6).advanced;
+    if (skill === undefined)
+      throw new Error("ケンカヤのadvancedスキルを取得できません。");
+
+    const validation = calculatePrimarySkillsValidation(5, [
+      { level: 1, rowId: "advanced", skill, skillId: skill.id },
+    ]);
+
+    assert.deepEqual(validation.invalidAdvancedSkillRowIds, ["advanced"]);
+  });
 });

@@ -327,10 +327,11 @@ registerVrtScenarios("character-sheet", [
     locators: [profileSectionLocator, buildSectionLocator, commonSkillsLocator],
     prepare: async (page) => {
       await selectCommonSkill(page);
+      await page.getByLabel("プライマリ流儀Lv", { exact: true }).fill("9");
+      await page.getByLabel("生き様Lv", { exact: true }).fill("9");
       await page.getByLabel("基本の連撃Lv", { exact: true }).fill("9");
-      await expect(commonSkillsLocator.resolve(page)).toHaveAttribute(
+      await expect(commonSkillsLocator.resolve(page)).not.toHaveAttribute(
         "aria-invalid",
-        "true",
       );
     },
     route: visualRoutes.characterSheet,
@@ -409,6 +410,7 @@ registerVrtScenarios("character-sheet", [
     locators: [buildSectionLocator, otherRyugiSkillsLocator],
     prepare: async (page) => {
       await selectOtherRyugiSkill(page);
+      await page.getByLabel("その他流儀1Lv", { exact: true }).fill("9");
       await page
         .getByRole("region", { name: "その他流儀スキル1" })
         .getByLabel("旋風Lv", { exact: true })
@@ -423,13 +425,13 @@ registerVrtScenarios("character-sheet", [
     locators: [buildSectionLocator, otherRyugiSkillsLocator],
     prepare: async (page) => {
       await selectOtherRyugiSkill(page);
+      await page.getByLabel("その他流儀1Lv", { exact: true }).fill("9");
       await page
         .getByRole("region", { name: "その他流儀スキル1" })
         .getByLabel("旋風Lv", { exact: true })
         .fill("9");
-      await expect(otherRyugiSkillsLocator.resolve(page)).toHaveAttribute(
+      await expect(otherRyugiSkillsLocator.resolve(page)).not.toHaveAttribute(
         "aria-invalid",
-        "true",
       );
     },
     route: visualRoutes.characterSheet,
@@ -467,6 +469,7 @@ registerVrtScenarios("character-sheet", [
     locators: [ikizamaSkillsLocator],
     prepare: async (page) => {
       await selectLongIkizamaSkill(page);
+      await page.getByLabel("生き様Lv", { exact: true }).fill("20");
       const levels = ikizamaSkillsLocator
         .resolve(page)
         .locator("input[type=number]");
@@ -474,6 +477,9 @@ registerVrtScenarios("character-sheet", [
       await levels.nth(1).fill("9");
       await expect(levels.nth(0)).toHaveAttribute("aria-invalid", "true");
       await expect(levels.nth(1)).toHaveAttribute("aria-invalid", "true");
+      await expect(ikizamaSkillsLocator.resolve(page)).not.toHaveAttribute(
+        "aria-invalid",
+      );
     },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
@@ -491,10 +497,14 @@ registerVrtScenarios("character-sheet", [
     locators: [primarySkillsLocator],
     prepare: async (page) => {
       await selectPrimarySkill(page);
+      await page.getByLabel("プライマリ流儀Lv", { exact: true }).fill("9");
       await page.getByLabel("旋風Lv", { exact: true }).fill("9");
       await expect(page.getByLabel("旋風Lv", { exact: true })).toHaveAttribute(
         "aria-invalid",
         "true",
+      );
+      await expect(primarySkillsLocator.resolve(page)).not.toHaveAttribute(
+        "aria-invalid",
       );
     },
     route: visualRoutes.characterSheet,

@@ -12,6 +12,7 @@ export type CommonSkillsValidationRow = {
 
 export type CommonSkillsValidation = {
   hasCommonSkillLevelError: boolean;
+  invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   levelLimit: number;
   selectedLevelTotal: number;
@@ -29,6 +30,15 @@ export function calculateCommonSkillsValidation(
   rank: number,
   rows: readonly CommonSkillsValidationRow[],
 ): CommonSkillsValidation {
+  const selectedRows = rows.filter((row) => row.skill !== null);
+  const selectedSkillCounts = new Map<string, number>();
+  for (const row of selectedRows) {
+    if (row.skill === null) continue;
+    selectedSkillCounts.set(
+      row.skill.id,
+      (selectedSkillCounts.get(row.skill.id) ?? 0) + 1,
+    );
+  }
   const selectedLevelTotal = rows.reduce(
     (total, row) => total + (row.skill === null ? 0 : Math.max(0, row.level)),
     0,
@@ -37,6 +47,11 @@ export function calculateCommonSkillsValidation(
 
   return {
     hasCommonSkillLevelError: selectedLevelTotal > levelLimit,
+    invalidDuplicateSkillRowIds: selectedRows.flatMap((row) =>
+      row.skill !== null && (selectedSkillCounts.get(row.skill.id) ?? 0) > 1
+        ? [row.rowId]
+        : [],
+    ),
     invalidMaximumLevelRowIds: rows.flatMap((row) =>
       row.skill !== null && (row.level < 1 || row.level > row.skill.maxLevel)
         ? [row.rowId]

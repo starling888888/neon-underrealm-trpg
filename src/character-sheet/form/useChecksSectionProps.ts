@@ -85,17 +85,17 @@ export default function useChecksSectionProps(
         skill,
       }));
     },
-    onReactionAttributeChange: (name, attribute) => {
+    onReactionAttributeChange: (rowId, attribute) => {
       const rows = getValues("checks.reactions");
-      const index = rows.findIndex((row) => row.name === name);
+      const index = rows.findIndex((row) => row.rowId === rowId);
       const row = rows[index];
       if (row !== undefined) updateReaction(index, { ...row, attribute });
     },
-    onReactionModifierChange: (name, value) => {
+    onReactionModifierChange: (rowId, value) => {
       const normalizedValue = normalizeIntegerInput(value);
 
       const rows = getValues("checks.reactions");
-      const index = rows.findIndex((row) => row.name === name);
+      const index = rows.findIndex((row) => row.rowId === rowId);
       const row = rows[index];
       if (row !== undefined) {
         updateReaction(index, { ...row, modifier: normalizedValue });

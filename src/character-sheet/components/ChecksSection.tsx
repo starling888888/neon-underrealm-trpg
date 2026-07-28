@@ -1,10 +1,6 @@
 import { type ReactNode, useState } from "react";
 import { characterSheetDictionary } from "../dictionary";
-import type {
-  AttackSkillName,
-  AttributeName,
-  ReactionCheckName,
-} from "../form-values";
+import type { AttackSkillName, AttributeName } from "../form-values";
 import { attackSkillNames, attributeNames } from "../form-values";
 import { formatDisplayValue } from "../format-display-value";
 import type { ChecksDerivedValues, DerivedCheckRow } from "../logic/checks";
@@ -27,11 +23,8 @@ export type ChecksSectionProps = {
     name: NoncombatSkillName,
     value: string,
   ) => number;
-  onReactionAttributeChange: (
-    name: ReactionCheckName,
-    attribute: AttributeName,
-  ) => void;
-  onReactionModifierChange: (name: ReactionCheckName, value: string) => number;
+  onReactionAttributeChange: (rowId: string, attribute: AttributeName) => void;
+  onReactionModifierChange: (rowId: string, value: string) => number;
   noncombat: ChecksDerivedValues["noncombat"];
   reactions: ChecksDerivedValues["reactions"];
 };
@@ -383,13 +376,13 @@ export default function ChecksSection({
 
             return (
               <CheckRow
-                key={reaction.name}
+                key={reaction.rowId}
                 label={label}
                 onAttributeChange={(attribute) =>
-                  onReactionAttributeChange(reaction.name, attribute)
+                  onReactionAttributeChange(reaction.rowId, attribute)
                 }
                 onModifierChange={(value) =>
-                  onReactionModifierChange(reaction.name, value)
+                  onReactionModifierChange(reaction.rowId, value)
                 }
                 row={reaction}
                 skillControl={
