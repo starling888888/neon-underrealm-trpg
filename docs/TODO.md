@@ -33,12 +33,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24、G27
   - handling plan: `docs/requirements/character-sheet.md`の「不整合を自動補正しない」と、既存のbrowser入力時max Lv clampを照合する。入力中、blur、端末内復元、JSON入力のそれぞれについて、値を保持してerror表示するか、いつschemaで拒否または除外するかを先に定義し、各skill adapterへ一貫して適用する。生き様ID変更でbonus Lvを1へ戻す処理は、ユーザー変更とrestore / importを区別してから適用する。
 
-- [ ] G17着手時にCharacterSheetContainerのdialog orchestrationをhookへ分離する要否を判断する
-  - source: `.tmp/chatgpt-review.md` / G15 レビュー指摘 2
-  - classification: follow-up
-  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG17
-  - handling plan: 武器・防具の選択・削除確認を追加する前に、既存のpicker、確認dialog、pending action、focus復帰の状態を列挙する。`usePendingConfirmation`やpicker state hookへの分離が、既存のContainer / Presenter境界を単純化する場合だけ、共通のRoot orchestration hookを導入する。
-
 - [ ] G16で生き様bonusを含む全スキルの最大Lv制約を定義する
   - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
   - classification: follow-up

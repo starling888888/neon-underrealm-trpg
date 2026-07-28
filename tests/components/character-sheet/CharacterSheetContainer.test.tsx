@@ -74,6 +74,29 @@ afterEach(() => {
 });
 
 describe("CharacterSheetContainer", () => {
+  it("closes the weapon picker on Escape or selection and returns focus to its row", async () => {
+    const user = userEvent.setup();
+    render(<CharacterSheetContainer />);
+
+    const trigger = screen.getByRole("button", {
+      name: "武器1：武器を選択",
+    });
+    await user.click(trigger);
+    const dialog = screen.getByRole("dialog", { name: "武器を選択" });
+
+    act(() => {
+      fireEvent(dialog, new Event("cancel", { cancelable: true }));
+    });
+
+    expect(document.activeElement).toBe(trigger);
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "刀" }));
+
+    expect(screen.getByRole("button", { name: "武器1：刀" })).not.toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
+
   it("confirms an ikizama change only when normal ikizama skills are selected", async () => {
     const user = userEvent.setup();
     const [skill] = getIkizamaSkillGroups("burai", 1).basic;

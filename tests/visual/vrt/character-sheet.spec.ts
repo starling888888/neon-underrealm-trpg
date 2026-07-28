@@ -38,9 +38,7 @@ async function openChecksTooltip(page: Page): Promise<void> {
 async function openWeaponPicker(page: Page): Promise<void> {
   const weapons = page.getByRole("region", { exact: true, name: "武器" });
 
-  await weapons
-    .getByRole("button", { exact: true, name: "武器を選択" })
-    .click();
+  await weapons.getByRole("button", { name: /^武器\d+：武器を選択$/ }).click();
   await expect(
     page.getByRole("dialog", { exact: true, name: "武器を選択" }),
   ).toBeVisible();
@@ -766,7 +764,7 @@ registerVrtScenarios("character-sheet", [
     prepare: async (page) => {
       await selectWeapon(page);
       await page
-        .getByRole("button", { exact: true, name: "刀詳細を開く" })
+        .getByRole("button", { exact: true, name: "武器1：刀詳細を開く" })
         .click();
     },
     route: visualRoutes.characterSheet,

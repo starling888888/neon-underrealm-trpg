@@ -102,19 +102,17 @@ function PairedValueExpression({
           <input
             aria-label={`${labels[0]}の修正`}
             className={styles.modifierInput}
-            defaultValue={modifiers[0] ?? ""}
-            onBlur={(event) => onModifierChange(0, event.currentTarget.value)}
             onChange={(event) => onModifierChange(0, event.currentTarget.value)}
             type="number"
+            value={modifiers[0] ?? ""}
           />
           <span aria-hidden="true">／</span>
           <input
             aria-label={`${labels[1]}の修正`}
             className={styles.modifierInput}
-            defaultValue={modifiers[1] ?? ""}
-            onBlur={(event) => onModifierChange(1, event.currentTarget.value)}
             onChange={(event) => onModifierChange(1, event.currentTarget.value)}
             type="number"
+            value={modifiers[1] ?? ""}
           />
         </span>
         <span aria-hidden="true" className={styles.expressionOperator}>
@@ -143,14 +141,11 @@ function PairedValueExpression({
             <input
               aria-label={`${labels[index]}の修正`}
               className={styles.modifierInput}
-              defaultValue={modifiers[index] ?? ""}
-              onBlur={(event) =>
-                onModifierChange(index as 0 | 1, event.currentTarget.value)
-              }
               onChange={(event) =>
                 onModifierChange(index as 0 | 1, event.currentTarget.value)
               }
               type="number"
+              value={modifiers[index] ?? ""}
             />
             <span aria-hidden="true" className={styles.expressionOperator}>
               ＝
@@ -206,6 +201,7 @@ function WeaponFormRow({
   onRemove,
   onModifierChange,
   removalEnabled,
+  rowNumber,
   row,
 }: {
   canMoveDown: boolean;
@@ -215,23 +211,25 @@ function WeaponFormRow({
   onRemove: WeaponsAndArmorSectionProps["onRemoveWeapon"];
   onModifierChange: WeaponsAndArmorSectionProps["onWeaponModifierChange"];
   removalEnabled: boolean;
+  rowNumber: number;
   row: WeaponRow;
 }) {
   const copy = characterSheetDictionary.characterSheet.weaponsAndArmor;
   const [expanded, setExpanded] = useState(false);
   const name = row.weapon?.name ?? copy.unselectedWeapon;
+  const rowLabel = `武器${rowNumber}：${name}`;
   const detailsId = `weapon-details-${row.rowId}`;
   return (
     <fieldset
       className={styles.row}
       data-weapons-and-armor-weapon-row={row.rowId}
     >
-      <legend className={styles.visuallyHidden}>{name}</legend>
+      <legend className={styles.visuallyHidden}>{rowLabel}</legend>
       <div className={styles.weaponLine}>
         <div className={styles.reorderControls}>
           {canMoveUp ? (
             <button
-              aria-label={`${name}${copy.moveUp}`}
+              aria-label={`${rowLabel}${copy.moveUp}`}
               className={styles.reorderButton}
               onClick={() => onMove(row.rowId, "up")}
               type="button"
@@ -241,7 +239,7 @@ function WeaponFormRow({
           ) : null}
           {canMoveDown ? (
             <button
-              aria-label={`${name}${copy.moveDown}`}
+              aria-label={`${rowLabel}${copy.moveDown}`}
               className={styles.reorderButton}
               onClick={() => onMove(row.rowId, "down")}
               type="button"
@@ -251,6 +249,7 @@ function WeaponFormRow({
           ) : null}
         </div>
         <button
+          aria-label={rowLabel}
           className={styles.itemPicker}
           onClick={(event) => onPickerRequest(row.rowId, event.currentTarget)}
           type="button"
@@ -269,7 +268,7 @@ function WeaponFormRow({
           <PairedValueExpression
             baseValues={[row.weapon?.attack ?? null, row.weapon?.guard ?? null]}
             finalValues={[row.attack, row.guard]}
-            labels={[`${name}攻撃力`, `${name}ガード値`]}
+            labels={[`${rowLabel}攻撃力`, `${rowLabel}ガード値`]}
             modifiers={[row.attackModifier, row.guardModifier]}
             onModifierChange={(index, value) =>
               onModifierChange(
@@ -283,11 +282,11 @@ function WeaponFormRow({
         <DetailsToggle
           expanded={expanded}
           id={detailsId}
-          label={name}
+          label={rowLabel}
           onClick={() => setExpanded((value) => !value)}
         />
         <button
-          aria-label={`${name}を削除`}
+          aria-label={`${rowLabel}を削除`}
           className={`${styles.removeButton} character-sheet-remove-button character-sheet-remove-button--mobile-compact`}
           disabled={!removalEnabled}
           onClick={() => onRemove(row.rowId)}
@@ -412,6 +411,7 @@ export default function WeaponsAndArmorSection(
             onRemove={props.onRemoveWeapon}
             removalEnabled={props.weaponRows.length > 1}
             row={row}
+            rowNumber={index + 1}
           />
         ))}
         <button

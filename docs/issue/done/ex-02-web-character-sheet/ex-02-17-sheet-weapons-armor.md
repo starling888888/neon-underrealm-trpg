@@ -7,21 +7,22 @@
 - 名称はdesktop / tablet / mobileで折り返してよい。名称列は既存スキルの名称列より短くし、`攻撃力／ガード値`または`防御力／ダメージ軽減`の式を折り返さないことを優先する。table全体、section、ページに横overflowを発生させない。
 - 画面指定にない操作、confirmation、状態表現は実装都合で補完しない。不明点はこのissueのレビュー観点で確認し、実装開始前に決定する。
 
-## 現在の実装状態（UI全面破棄後）
+## 履歴: UI全面破棄後のsnapshot
 
-- status: UI未実装。最初の武器・防具UI実装は、既存スキルの画面デザイン、操作control、候補dialogの構造を遵守せず、ユーザーレビューで使用不能と判断されたため全面破棄した。部分修正や既存のUI / CSS / testの再利用はしない。
+- この節は再実装前の破棄時点のsnapshotであり、現在の実装状態ではない。最初の武器・防具UI実装は、既存スキルの画面デザイン、操作control、候補dialogの構造を遵守せず、ユーザーレビューで使用不能と判断されたため全面破棄した。部分修正や既存のUI / CSS / testの再利用はしない。
 - 破棄した範囲は、武器・防具section Component、候補dialog Component、既存画面へのComponent結線、Component test、G17のE2E追加シナリオ、G17のVRT追加シナリオである。既存のE2E / VRT testファイル自体は復元済みである。
 - 今回のstash復元で残す範囲は、dictionary、form values、schema、およびschema Node testである。items master-data adapter、純粋な性能計算logic、RHF form hookは現行treeに存在しないため、存在するものとして記録しない。画面上の武器・防具機能は存在しない。
 - 今後のUI再実装では、今回破棄した構造を参照せず、最初に既存`SkillSection`と`SkillPickerDialog`のComponent、CSS、desktop / tablet / mobileの実画面状態を正本として確認する。武器・防具固有の列、式、候補dataだけを差分として加え、独自のcontrol / layout / dialog patternを作らない。
 - この破棄後の状態では、UIの受入条件、Component test、E2E、VRT、actual screenshot確認はすべて未完了である。ユーザーがUI再実装を明示指示するまで、UI実装とE2E / VRT実行を再開しない。
 
-## 実装進捗（ユーザーレビュー待ち）
+## 現在の実装・検証状態
 
 - 武器・防具のform値、master-data adapter、性能導出logic、RHF hook、section表示、候補dialog、Containerの選択とfocus復帰を実装した。候補dialogは既存`SkillPickerDialog`と同じdialog shell、候補名button、hover、二段詳細表示を用い、候補行を折り畳まない。
 - 武器削除と防具クリアは、どちらもconfirmation dialogを開かない直接操作として実装した。武器の追加、並べ替え、最低1行、重複選択をRHF field arrayで扱う。
 - 既存のpicker、confirmation dialog、pending action、focus復帰を確認した。G17で増えるのは武器と防具の候補dialogだけであり、既存Containerの状態とrefの扱いを共通hookへ移しても責務が単純化しないため、root orchestration hookは追加しない。
-- `npm run check`と`npm run build`は成功した。E2E / VRT、actual screenshot、Component / hook testの追加と実行は未実施であり、ユーザーによる画面レビュー完了後に行う。
-- review server: `http://localhost:4321/character-sheet/`。既定portのdev serverを維持し、E2E / VRTを実行せずユーザーレビューを待つ。
+- `npm run check`、`npm run build`、Node 27件、Component / hook 93件、代表E2E 2件、target限定VRT（既存full-page snapshot 51件）、および7 state × 3 viewportのactual locator captureは実施済みである。詳細は「ビジュアルレビュー 1」「ビジュアルレビュー 2」と「レビュー指摘 21」を参照する。
+- review serverは停止済みである。常駐serverを前提とするレビュー待ち状態ではない。
+- レビュー指摘22・23の防具修正input同期、重複武器行のaccessible name、責務別テストを完了した。G17の未解決実装項目はない。
 
 ## 目的
 
@@ -100,26 +101,26 @@
 
 ## 完了条件
 
-- [ ] 武器が初期1行・最低1行を保ち、追加、並べ替え、削除、重複選択を行える。防具が単一行で、並べ替えと削除buttonを持たない。
-- [ ] 武器のdesktop / tablet要約行、mobile要約行、展開内容、名称と式の折り返し優先順位が指定どおりで、横overflowがない。
-- [ ] 防具のdesktop / tablet / mobile要約行、展開内容、候補dialogの装備制限までの表示と効果の展開表示、確認dialogを開かない`クリア`操作が指定どおりである。
-- [ ] 武器候補dialogが通常5 groupを指定順で表示し、スミでは武器化ナノマシン、ケジメではサイバネ武器を追加する。武器の重複候補はdisabledにしない。
-- [ ] 武器・防具の式、負数の修正input、数値以外のマスタ値と空欄 / 明示修正の最終値表示、指定tooltip文言がpure logicと表示で一致する。
-- [ ] tooltip、candidate dialog、展開、選択、確認dialogを開かない武器削除・防具クリア、Escape、閉じる操作、focus復帰がアクセシブルに動作する。
-- [ ] G17 TODOのdialog orchestration判断と、武器削除・防具クリアにconfirmationを追加しないこと、採用時のhook境界または非採用理由がissueへ記録される。
-- [ ] E2EとVRTのspecを実装し、ユーザーレビュー完了までは実行せず、dev serverを維持したレビュー待ちを記録する。
-- [ ] ユーザーレビュー完了後にUI actual screenshotを対象route・state・viewportごとに開いて確認し、対象E2Eとtarget限定VRTの結果を記録する。canonical VRT baselineはtargetの明示承認がある場合だけ更新する。
-- [ ] `npm run check`、`npm run build`、変更責務に対応するNode / Vitest testが通る。E2EとVRTはユーザーレビュー完了後に実行する。
+- [x] 武器が初期1行・最低1行を保ち、追加、並べ替え、削除、重複選択を行える。防具が単一行で、並べ替えと削除buttonを持たない。
+- [x] 武器のdesktop / tablet要約行、mobile要約行、展開内容、名称と式の折り返し優先順位が指定どおりで、横overflowがない。
+- [x] 防具のdesktop / tablet / mobile要約行、展開内容、候補dialogの装備制限までの表示と効果の展開表示、確認dialogを開かない`クリア`操作が指定どおりである。
+- [x] 武器候補dialogが通常5 groupを指定順で表示し、スミでは武器化ナノマシン、ケジメではサイバネ武器を追加する。武器の重複候補はdisabledにしない。
+- [x] 武器・防具の式、負数の修正input、数値以外のマスタ値と空欄 / 明示修正の最終値表示、指定tooltip文言がpure logicと表示で一致する。
+- [x] tooltip、candidate dialog、展開、選択、確認dialogを開かない武器削除・防具クリア、Escape、閉じる操作、focus復帰がアクセシブルに動作する。
+- [x] G17 TODOのdialog orchestration判断と、武器削除・防具クリアにconfirmationを追加しないこと、採用時のhook境界または非採用理由がissueへ記録される。
+- [x] G17の代表E2E、Node / hook / Component test、およびtarget限定VRTを、現在の実装契約に対応する範囲で実装・実行する。
+- [x] UI actual screenshotを対象route・state・viewportごとに開いて確認し、対象E2Eとtarget限定VRTの結果を記録する。canonical VRT baselineはtargetの明示承認がある場合だけ更新する。防具クリアの修正input同期を直した後、該当状態を再確認する。
+- [x] `npm run check`、`npm run build`、変更責務に対応するNode / Vitest testが通る。
 
 ## チェックポイント
 
-- [ ] `CharacterSheetContainer`、Presenter、section hook、pure logic、master-dataの責務境界を保ち、RHF以外へ編集値を複製していない。
-- [ ] GitHub Pagesのサブパス公開、既存ルート、既存skill picker / confirmation dialog / focus復帰を壊していない。
-- [ ] 不要な依存関係、グローバルstyle、generated data変更を追加していない。
-- [ ] `FormulaTooltip`と`CharacterSheetDialog`の内部CSS責務を利用側から侵害していない。
-- [ ] errorとwarningを混同せず、各入力・行へ可視のerror理由を追加していない。
-- [ ] 関連TODOとdesign targetに矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] `CharacterSheetContainer`、Presenter、section hook、pure logic、master-dataの責務境界を保ち、RHF以外へ編集値を複製していない。
+- [x] GitHub Pagesのサブパス公開、既存ルート、既存skill picker / confirmation dialog / focus復帰を壊していない。
+- [x] 不要な依存関係、グローバルstyle、generated data変更を追加していない。
+- [x] `FormulaTooltip`と`CharacterSheetDialog`の内部CSS責務を利用側から侵害していない。
+- [x] errorとwarningを混同せず、各入力・行へ可視のerror理由を追加していない。
+- [x] 関連TODOとdesign targetに矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -633,6 +634,61 @@
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 22
+
+### 指摘事項
+
+- 防具の性能修正inputは`defaultValue`を使う未制御inputであり、防具の`クリア`でRHFの`armor`値を初期化しても、可視inputの値が残る。クリア後に修正inputが空欄であるという画面契約を満たさない。
+- G17のテストアーキテクチャは、性能導出をNode、RHF操作をhook、表示・dialog・focus復帰をComponent、代表操作をPlaywrightで確認すると定める。しかし、`getModifiedItemValue`、武器・防具master-data adapter、`useWeaponsAndArmorSectionProps`、section / picker dialog / Container結線を直接確認するG17固有のNode / hook / Component testがない。
+- current issueの「UI未実装・レビュー待ち」という破棄後snapshotが、実装・Visual Review済みの現在状態と併記されていた。
+- `docs/TODO.md`のG17 dialog orchestration判断は実装済みだが、未完了TODOの退避にはmergeまたはユーザー承認が必要なため、このreview時点では移動しない。
+
+### 判定
+
+- source: PR #69の通常Document Review / Technical Review（reviewed range: `d3546333fca85d157702d4986a41abd826685e8b8..3eb21ad2020596affbe411a84c4703f2091d7063`）
+- classification: valid current-issue implementation and test gaps; valid documentation-state correction
+- local validation: `WeaponsAndArmorSection`の性能修正inputは`defaultValue={modifiers[...] ?? ""}`であり、`useWeaponsAndArmorSectionProps`の`onClearArmor`はRHF値のみを`null`へ更新する。このため外部clear時に未制御inputのDOM値を同期しない。加えて、issueが定めるテスト境界に対応するG17固有のtestファイルを確認できなかった。破棄後snapshotを履歴として明示し、現在状態を本sectionへ集約した。
+
+### 対応方針
+
+- 防具をクリアしたとき、2つの修正input表示とRHFの両方が空欄 / `null`になるよう、inputの制御方式または外部同期を修正する。修正値を入力してからクリアするComponentまたはhook testを追加する。
+- G17の境界に従い、数値・`特殊`・`null`の性能導出と候補groupをNode、武器の追加・移動・最低1行・重複選択、および防具の修正値を含むクリアをhook、式表示・詳細展開・dialogのEscape / 選択 / focus復帰をComponent / Container testで固定する。
+- 実装修正とテスト追加は、ユーザーの明示承認後に開始する。TODOの退避は、PR mergeまたはユーザーによる完了扱い承認後に`docs/TODO-done.md`へ行う。
+
+### 対応結果
+
+- 性能修正inputをcontrolled inputへ変更し、防具クリア・外部値更新・小数の整数正規化でdesktop / mobileのDOM表示をRHF値へ同期した。
+- Node、hook、Component / Container、代表E2Eを追加・更新した。TODOはユーザーのGate close指示により`docs/TODO-done.md`へ退避する。
+
+## レビュー指摘 23
+
+### 指摘事項
+
+- 防具クリア後に未制御の性能修正inputがRHFの`null`へ同期しない問題は、レビュー指摘22で記録済みである。`1.9`のような小数を整数へ正規化した後もDOM表示が旧値のまま残ること、およびdesktop / mobileの別inputで旧表示が再出現し得ることを、修正対象とテスト条件へ追加する。
+- 同じ武器IDを複数行で選択できるが、現状は`刀攻撃力の修正`、`刀詳細を開く`、`刀を削除`などが重複する。行名を含む一意のaccessible nameというarchitecture契約に反し、支援技術で対象行を識別できない。
+- G17のNode / hook / Component test不足はレビュー指摘22で記録済みである。重複武器行の一意な操作名、修正inputの外部同期・小数正規化・viewport変更を追加の確認対象とする。
+
+### 判定
+
+- source: `.tmp/chatgpt-review.md`（browser-draft。remote snapshotはローカル実装とSSoTで検証した）
+- classification: valid current-issue accessibility and test gaps; review指摘22のvalid findingを補強
+- local validation: `WeaponsAndArmorSection`は`props.weaponRows.map((row, index) => ...)`で表示順を取得できるが、`WeaponFormRow`にはindexを渡さず、`legend`、修正input、詳細・移動・削除buttonのnameを武器名だけから生成している。`docs/architectures/character-sheet.md`は可視labelを省略する数値欄にも行名を含む一意のaccessible nameを要求する。ChatGPT reviewの「issue状態の矛盾」はレビュー指摘22で既に修正済みのためstaleとして新規対応に含めない。
+
+### 対応方針
+
+- 現在の表示順に基づく行番号を武器行のlegendと各操作・inputのaccessible nameへ含め、重複武器の並べ替え後も各行を識別できるようにする。表示用の武器名と内部`rowId`を同一視しない。
+- 防具クリア、外部値更新、小数の整数正規化、desktop / mobileの表示切替後に、RHF値と各inputの表示値が同じであることを固定する。input DOMの統合か同期方式かは、既存のdesktop / mobile表示契約を保てる実装を選ぶ。
+- Node / hook / Component testの不足はレビュー指摘22と一体で対応し、このsectionの追加条件を同じテスト設計へ含める。実装はユーザーの明示承認後に開始する。
+
+### 対応完了チェックリスト
+
+- [x] 重複武器行のlegend、修正input、詳細、移動、削除を一意のaccessible nameで識別できる
+- [x] 防具クリア・外部更新・小数正規化後に、RHF値とdesktop / mobileの修正input表示が一致する
+- [x] 重複武器の並べ替えと、修正input同期をComponentまたはhook testで確認する
+- [x] レビュー指摘22のNode / hook / Component test範囲と重複なく統合する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## ビジュアルレビュー 1
 
 ### VRT対象
@@ -688,9 +744,58 @@
 - [x] `npm run check` が通る（該当する場合）
 - [x] `npm run build` が通る（該当する場合）
 
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@character-sheet`、およびG17 locator-only stateの`@weapons-and-armor-default`、`@weapons-and-armor-multiple-weapons`、`@weapon-picker-open`、`@weapon-details-expanded`、`@armor-picker-open`、`@armor-details-expanded`、`@weapons-tooltip-open`。
+- route / states / viewports: `/character-sheet/`の未選択、複数武器、武器候補dialog、武器詳細展開、防具候補dialog、防具詳細展開、武器性能tooltip open。desktop（1440px）、tablet（820px）、mobile（390px）。
+
+### レビュー結果
+
+| 対象                                 | 判定 | 差分 | 対応                                                                                                                   |
+| ------------------------------------ | ---- | ---- | ---------------------------------------------------------------------------------------------------------------------- |
+| G17 locator capture                  | OK   | なし | 7 state × 3 viewportの21 scenarioをcaptureし、section、dialog、tooltipの原寸locator screenshotをすべて開いて確認した。 |
+| 既存`@character-sheet` full-page VRT | OK   | なし | 既存baselineとの差分artifactなしで完了した。G17 locator-only stateは通常比較でskipされる。                             |
+
+### 実画面確認
+
+- `/character-sheet/` / 未選択、複数武器、武器詳細展開、防具詳細展開 / desktop・tablet・mobile:
+  - locator screenshot: `data-weapons-and-armor-section` のoriginal-pixel-resolution snapshot。
+  - checked acceptance criteria: 行番号を含む操作名の導線、修正input、性能式、展開、mobileの性能2行化、横overflow・clip、button bounds。
+  - result: 各viewportで列、式、展開内容、button、inputにclip・overflowはない。
+- `/character-sheet/` / 武器候補dialog、防具候補dialog / desktop・tablet・mobile:
+  - locator screenshot: `data-weapons-and-armor-section`と各dialog本体のoriginal-pixel-resolution snapshot。
+  - checked acceptance criteria: dialog外枠、候補行、名称／信用／性能列、mobileの折返し、横overflow・clip。
+  - result: 各dialogと候補行は表示範囲に収まり、候補名と操作導線は維持される。
+- `/character-sheet/` / 武器性能tooltip open / desktop・tablet・mobile:
+  - locator screenshot: `data-weapons-and-armor-section`と`tooltip`本体のoriginal-pixel-resolution snapshot。
+  - checked acceptance criteria: header trigger、tooltip本文、section外のtooltip本体、横overflow・clip。
+  - result: tooltip本文と外枠は全viewportで表示範囲に収まる。
+
+### 自己修正した項目
+
+- [x] VRT helperの武器picker locatorを、行番号付きaccessible nameだけへ完全一致させた。
+
+### baseline更新
+
+- baseline更新は不要。accessible nameとinput同期の変更は既存canonical full-page screenshotに差分を発生させなかった。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（該当する場合）
+
 ## 備考
 
-- このissueは、G17の実装契約としてユーザーの武器・防具画面指定を記録する。実装はユーザー承認後に開始する。
+- このissueは、G17の実装契約と完了記録としてユーザーの武器・防具画面指定を記録する。
 - 武器削除は確認dialogを開かず、最低1行を残して直接行う。防具の`クリア`も確認dialogを開かず、単一行を未選択状態へ戻す。G17 TODOのdialog orchestration確認は、これらの操作をconfirmationへ昇格させるためではなく、候補dialogの状態とfocus復帰を既存Containerで保つか判断するために行う。
-- 実装完了後は、previewを起動せず、既定portのdev serverを停止せずに維持してユーザーレビューを待つ。E2EとVRTはspecだけを実装し、ユーザーレビュー完了の明示指示があるまで実行しない。
-- Git commit / pushは、このissue作成では実行しない。
+- 初回実装時の「ユーザーレビュー完了までE2E / VRTを実行しない」指示は、後続のユーザー指示で解除済みであり、実行結果はビジュアルレビュー1・2に記録した。

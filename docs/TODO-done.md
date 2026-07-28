@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] G17着手時にCharacterSheetContainerのdialog orchestrationをhookへ分離する要否を判断する
+  - completed: 2026-07-29 via user-directed Gate close
+  - source: `.tmp/chatgpt-review.md` / G15 レビュー指摘 2
+  - classification: resolved architecture decision
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG17
+  - handling: 既存のpicker、確認dialog、pending action、focus復帰を列挙した。武器・防具で増える候補dialogは既存Containerの状態とrefで扱い、共通hookへ移しても責務が単純化しないためroot orchestration hookは導入しない。
+
 - [x] React Islandの導入を検討する
   - completed: 2026-07-24 via user direction / adopted for `ex-02-web-character-sheet`
   - source: ユーザー指示

@@ -1441,3 +1441,30 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-17-sheet-weapons-armor` のCSS共通化後の`@character-sheet` VRT
 - 観測した失敗: 共通classをCSS Modulesの`composes`で導入した際、共通moduleのdesktop向けfont sizeとpaddingが出力順により個別moduleのmobile規則を再上書きした。複数のmobile skill stateで同じ差分を発生させた。
 - 一次対応: 共通moduleへ既存と同一のmobile規則を移し、target限定VRTを再実行して既存full-page snapshot 51件の差分がないことを確認した。CSS Modulesで共通classがbreakpoint依存値を持つ場合は、個別moduleのoverride順に依存せず、共通module内に対応するmedia queryを置く。
+
+### Repeated component-test invocation and matcher failures during G17 review response
+
+#### 2026-07-29
+
+- source: agent self-report
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のレビュー指摘22・23対応中のComponent test
+- 観測した失敗: Vitestにない`--runInBand` optionを渡してComponent test commandを失敗させた後、既存test setupにない`toHaveValue` matcherを使い、同じtest確認を続けて失敗させた。
+- 一次対応: package scriptのVitest optionを変更せず実行し、Component testでは既存規約どおり`HTMLInputElement.value`と標準Chai assertionで確認する。
+
+### Repeated armor-clear E2E assertion failures during G17 review response
+
+#### 2026-07-29
+
+- source: agent self-report
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の防具クリアE2E
+- 観測した失敗: 自前previewとE2E設定のweb serverを同時に起動してport競合にした後、クリア後に名称が未選択へ変わることとdesktop / mobileで同名inputが2つ存在することを考慮せず、同じ防具修正input assertionを連続して失敗させた。
+- 一次対応: E2Eでは設定が起動するserverだけを使い、クリア後の未選択labelで2つのinput数と各値を明示して確認する。
+
+### Repeated G17 VRT picker-locator failures after accessibility-name changes
+
+#### 2026-07-29
+
+- source: agent self-report
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のtarget限定Visual Review
+- 観測した失敗: 武器pickerのaccessible nameを行番号付きへ変更した後、旧完全一致locatorを使ってcaptureを失敗させた。続く正規表現では詳細・削除buttonまで一致することを確認せず、9 stateを再び失敗させた。
+- 一次対応: picker buttonだけに一致する`/^武器\\d+：武器を選択$/`を使い、VRT再実行前にPlaywright error contextの候補一覧でlocatorの対象を確認する。

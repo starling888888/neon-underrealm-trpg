@@ -469,40 +469,40 @@ test.describe("character sheet page", () => {
     });
 
     await weapons
-      .getByRole("button", { exact: true, name: "武器を選択" })
+      .getByRole("button", { exact: true, name: "武器1：武器を選択" })
       .click();
     await expect(weaponPicker).toBeVisible();
     await weaponPicker.getByRole("button", { exact: true, name: "刀" }).click();
     await expect(weaponPicker).toBeHidden();
     await expect(
-      weapons.getByRole("button", { exact: true, name: "刀" }),
+      weapons.getByRole("button", { exact: true, name: "武器1：刀" }),
     ).toBeVisible();
 
     await weapons
       .getByRole("button", { exact: true, name: "＋ 武器を追加" })
       .click();
     await weapons
-      .getByRole("button", { exact: true, name: "武器を選択" })
+      .getByRole("button", { exact: true, name: "武器2：武器を選択" })
       .click();
     await weaponPicker
       .getByRole("button", { exact: true, name: "バット" })
       .click();
     await expect(weaponPicker).toBeHidden();
     await expect(
-      weapons.getByRole("button", { exact: true, name: "刀を削除" }),
+      weapons.getByRole("button", { exact: true, name: "武器1：刀を削除" }),
     ).toBeEnabled();
     await expect(
-      weapons.getByRole("button", { exact: true, name: "刀下へ移動" }),
+      weapons.getByRole("button", { exact: true, name: "武器1：刀下へ移動" }),
     ).toBeVisible();
 
     await weapons
-      .getByRole("button", { exact: true, name: "刀下へ移動" })
+      .getByRole("button", { exact: true, name: "武器1：刀下へ移動" })
       .click();
     await weapons
-      .getByRole("button", { exact: true, name: "刀を削除" })
+      .getByRole("button", { exact: true, name: "武器2：刀を削除" })
       .click();
     await expect(
-      weapons.getByRole("button", { exact: true, name: "バットを削除" }),
+      weapons.getByRole("button", { exact: true, name: "武器1：バットを削除" }),
     ).toBeDisabled();
   });
 
@@ -530,10 +530,21 @@ test.describe("character sheet page", () => {
       armor.getByRole("button", { exact: true, name: "チンピラ服" }),
     ).toBeVisible();
 
+    const defenseModifier = armor
+      .locator('input[aria-label="チンピラ服防御力の修正"]')
+      .first();
+    await defenseModifier.fill("3");
+    await expect(defenseModifier).toHaveValue("3");
     await armor.getByRole("button", { exact: true, name: "クリア" }).click();
     await expect(
       armor.getByRole("button", { exact: true, name: "防具を選択" }),
     ).toBeVisible();
+    const clearedDefenseModifiers = armor.locator(
+      'input[aria-label="防具を選択防御力の修正"]',
+    );
+    await expect(clearedDefenseModifiers).toHaveCount(2);
+    await expect(clearedDefenseModifiers.first()).toHaveValue("");
+    await expect(clearedDefenseModifiers.last()).toHaveValue("");
     await expect(page.getByRole("dialog")).toBeHidden();
   });
 });
