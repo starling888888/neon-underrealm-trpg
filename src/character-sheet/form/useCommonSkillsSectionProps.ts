@@ -1,4 +1,9 @@
-import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
+import {
+  type UseFormReturn,
+  useFieldArray,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 
 import type { CommonSkillsSectionProps } from "../components/CommonSkillsSection";
 import {
@@ -45,6 +50,7 @@ export default function useCommonSkillsSectionProps(
     keyName: "fieldKey",
     name: "commonSkills.rows",
   });
+  const { defaultValues } = useFormState({ control });
   const build = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.build,
@@ -114,6 +120,7 @@ export default function useCommonSkillsSectionProps(
       },
       rows,
       selectedLevelTotal: validation.selectedLevelTotal,
+      synchronizationKey: defaultValues?.commonSkills,
     },
     unlockedBonusLevels: getUnlockedCommonSkillBonusLevels(
       validation.selectedLevelTotal,

@@ -96,7 +96,7 @@ source種別は以下を使う。
 - source: review
 - 発生箇所: `ex-02-16-sheet-experience-consistency` の完了判定、technical review後の確認、およびVisual Review記録
 - 観測した失敗: G16の完了条件が要求する最大Lvのsection非伝播、`advanced`条件、全skill区分の重複検出、`useFieldArray`更新境界を実装・testで確認しないまま完了扱いにした。特に最大Lv超過のactual screenshotを確認した記録があるにもかかわらず、section errorへの誤伝播を検出できていなかった。
-- 一次対応: G16をactiveへ戻し、未達の完了条件を未チェックへ戻した。`.tmp/chatgpt-review.md`をローカル実装・SSoTと照合したレビュー指摘2としてissueへ取り込み、修正はユーザー承認後に限定する。
+- 一次対応: G16をactiveへ戻し、未達の完了条件を未チェックへ戻した。`.tmp/chatgpt-review.md`をローカル実装・SSoTと照合したレビュー指摘2としてissueへ取り込み、修正はユーザー承認後に限定する。`9b905c3`でその時点の最大Lv伝播、`advanced`・重複validation、field-array更新境界を修正・再検証したが、次の通常reviewで負数Lvの区分合計、reaction row ID、same-value reset、VRT locatorに未達が判明した。レビュー指摘3・4で、全field arrayの非空・一意なrow ID、reactionの固定identity、same-value reset同期、実section VRTを修正・再検証した。G16はユーザー指示どおりactiveを維持し、通常Doc Review / Tech Reviewと人間のGate完了判断を待つ。
 
 ### Ignored the approved character-sheet design images during G14 implementation
 
@@ -1249,3 +1249,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-16-sheet-experience-consistency` のその他流儀スキル最大Lv超過VRT
 - 観測した失敗: 最大Lv超過だけを確認すべきfixtureで、その他流儀Lvを`1`のままスキルLvを`9`にしたため、区分合計超過も同時に発生した。section errorの否定assertionがdesktop / tablet / mobileで失敗したが、実装の最大Lv伝播不備と誤認し得る状態だった。
 - 一次対応: fixtureでその他流儀Lvを`9`へ設定し、区分合計を上限内にしてからスキルLv`9`を入力する状態へ訂正した。対象4 state・3 viewportを`visual:capture`で再実行し、12件通過後にactual screenshotを開いて確認した。
+
+### Stopped after reporting review results without review-to-issue intake
+
+#### 2026-07-28
+
+- source: review
+- 発生箇所: `ex-02-16-sheet-experience-consistency` の通常Doc Review / Tech Review後
+- 観測した失敗: ユーザーがG16全範囲のreviewを指示した後、review結果をcurrent issueの番号付きレビュー指摘へ取り込まず、結果報告だけで停止した。レビュー指摘の修正範囲と未完了状態が正式trackingに残らなかった。
+- 一次対応: `.tmp/review/ex-02-web-character-sheet/document-review-2.md`と`technical-review-4.md`を作成し、ローカルSSoT照合済みの6件をG16のレビュー指摘3へ取り込んだ。実装はユーザー承認まで開始しない。

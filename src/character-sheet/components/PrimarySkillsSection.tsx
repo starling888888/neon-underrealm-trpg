@@ -24,6 +24,7 @@ export type PrimarySkillsSectionProps = {
   primaryRyugiName: string | null;
   primaryRyugiSelected: boolean;
   rows: readonly PrimarySkillRowView[];
+  synchronizationKey?: unknown;
 };
 
 /** Adapts primary-ryugi form values to the shared skill-section display. */
@@ -42,6 +43,7 @@ export default function PrimarySkillsSection({
   primaryRyugiName,
   primaryRyugiSelected,
   rows,
+  synchronizationKey,
 }: PrimarySkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
   const sectionRows: SkillSectionRow[] = [
@@ -99,6 +101,7 @@ export default function PrimarySkillsSection({
         onRemove={onRemove}
         rows={sectionRows}
         sectionId="primary-skills-content"
+        synchronizationKey={synchronizationKey}
         unavailableMessage={copy.selectPrimaryRyugi}
       />
     </div>

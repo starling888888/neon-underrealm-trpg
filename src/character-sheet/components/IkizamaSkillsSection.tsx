@@ -25,6 +25,7 @@ export type IkizamaSkillsSectionProps = {
   onRemove: (rowId: string) => void;
   onMove: (rowId: string, direction: "up" | "down") => void;
   rows: readonly IkizamaSkillRowView[];
+  synchronizationKey?: unknown;
 };
 
 /** Adapts ikizama form values to the shared skill-section display. */
@@ -44,6 +45,7 @@ export default function IkizamaSkillsSection({
   onPickerRequest,
   onRemove,
   rows,
+  synchronizationKey,
 }: IkizamaSkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
   const sectionRows: SkillSectionRow[] = [
@@ -107,6 +109,7 @@ export default function IkizamaSkillsSection({
         onRemove={onRemove}
         rows={sectionRows}
         sectionId="ikizama-skills-content"
+        synchronizationKey={synchronizationKey}
         unavailableMessage={copy.selectIkizama}
       />
     </div>

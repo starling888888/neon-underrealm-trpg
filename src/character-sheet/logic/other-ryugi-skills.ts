@@ -31,7 +31,7 @@ export function calculateOtherRyugiSkillsValidation(
     if (row.skill === null) continue;
     selectedLevelTotals.set(
       row.ryugiRowId,
-      (selectedLevelTotals.get(row.ryugiRowId) ?? 0) + row.level,
+      (selectedLevelTotals.get(row.ryugiRowId) ?? 0) + Math.max(0, row.level),
     );
     selectedSkillCounts.set(
       `${row.ryugiRowId}:${row.skill.id}`,

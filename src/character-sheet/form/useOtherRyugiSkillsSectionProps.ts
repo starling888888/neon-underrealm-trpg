@@ -1,4 +1,9 @@
-import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
+import {
+  type UseFormReturn,
+  useFieldArray,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 
 import { getRyugiById } from "../../lib/data/ryugi-list";
 import type { OtherRyugiSkillsSectionProps } from "../components/OtherRyugiSkillsSection";
@@ -51,6 +56,7 @@ export default function useOtherRyugiSkillsSectionProps(
     keyName: "fieldKey",
     name: "otherRyugiSkills.rows",
   });
+  const { defaultValues } = useFormState({ control });
   const build = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.build,
@@ -189,6 +195,7 @@ export default function useOtherRyugiSkillsSectionProps(
         ryugiRowId: ryugi.rowId,
         ryugiSelected: ryugi.ryugiId !== null,
       })),
+      synchronizationKey: defaultValues?.otherRyugiSkills,
     },
   };
 }

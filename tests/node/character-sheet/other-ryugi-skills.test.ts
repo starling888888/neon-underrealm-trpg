@@ -131,4 +131,25 @@ describe("character sheet other ryugi skills", () => {
       "duplicate-b",
     ]);
   });
+
+  it("does not let a negative selected level cancel an other-ryugi total", () => {
+    const [skill] = getOtherRyugiSkillGroups("kenkaya", 1).basic;
+    if (skill === undefined) {
+      throw new Error("その他流儀スキル候補を取得できません。");
+    }
+
+    const validation = calculateOtherRyugiSkillsValidation(
+      [{ level: 1, rowId: "other" }],
+      [
+        { level: 2, rowId: "positive", ryugiRowId: "other", skill },
+        { level: -1, rowId: "negative", ryugiRowId: "other", skill },
+      ],
+    );
+
+    assert.deepEqual(validation.invalidRyugiRowIds, ["other"]);
+    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+      "positive",
+      "negative",
+    ]);
+  });
 });

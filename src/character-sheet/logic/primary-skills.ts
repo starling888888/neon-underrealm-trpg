@@ -40,7 +40,7 @@ export function calculatePrimarySkillsValidation(
       : [],
   );
   const selectedLevelTotal = selectedRows.reduce(
-    (total, row) => total + row.level,
+    (total, row) => total + Math.max(0, row.level),
     0,
   );
   const invalidAdvancedSkillRowIds =

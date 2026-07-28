@@ -28,6 +28,7 @@ export type OtherRyugiSkillsSectionProps = {
   onRemove: (rowId: string) => void;
   onMove: (rowId: string, direction: "up" | "down") => void;
   sections: readonly OtherRyugiSkillsSectionView[];
+  synchronizationKey?: unknown;
 };
 
 /** Adapts each other-ryugi row to the shared skill-section display. */
@@ -39,6 +40,7 @@ export default function OtherRyugiSkillsSection({
   onPickerRequest,
   onRemove,
   sections,
+  synchronizationKey,
 }: OtherRyugiSkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
 
@@ -88,6 +90,7 @@ export default function OtherRyugiSkillsSection({
             onRemove={onRemove}
             rows={sectionRows}
             sectionId={`other-ryugi-skills-content-${section.ryugiRowId}`}
+            synchronizationKey={synchronizationKey}
             unavailableMessage={copy.selectOtherRyugi}
           />
         );

@@ -80,6 +80,24 @@ async function selectPrimarySkill(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
+async function selectPrimaryAdvancedSkill(page: Page): Promise<void> {
+  await selectPrimaryRyugi(page);
+  await page.getByLabel("プライマリ流儀Lv", { exact: true }).fill("6");
+  await page
+    .locator("[data-primary-skills-section]")
+    .getByRole("button", { exact: true, name: "未選択スキル1" })
+    .click();
+  const picker = page.getByRole("dialog", {
+    name: "プライマリ流儀スキルを選択",
+  });
+
+  await expect(picker).toBeVisible();
+  await picker
+    .getByRole("button", { exact: true, name: "受け流し強化" })
+    .click();
+  await expect(picker).toBeHidden();
+}
+
 async function selectLongIkizamaSkill(page: Page): Promise<void> {
   const ikizama = page.locator("[data-build-section] select").nth(1);
 
@@ -221,7 +239,8 @@ const buildSectionLocator = {
 
 const primarySkillsLocator = {
   name: "primary-skills-section",
-  resolve: (page: Page) => page.locator("[data-primary-skills-section]"),
+  resolve: (page: Page) =>
+    page.locator("[data-primary-skills-section] section[data-skill-section]"),
 };
 
 const primarySkillPickerLocator = {
@@ -238,7 +257,8 @@ const primaryRyugiChangeConfirmLocator = {
 
 const ikizamaSkillsLocator = {
   name: "ikizama-skills-section",
-  resolve: (page: Page) => page.locator("[data-ikizama-skills-section]"),
+  resolve: (page: Page) =>
+    page.locator("[data-ikizama-skills-section] section[data-skill-section]"),
 };
 
 const commonSkillsLocator = {
@@ -506,6 +526,26 @@ registerVrtScenarios("character-sheet", [
       await expect(primarySkillsLocator.resolve(page)).not.toHaveAttribute(
         "aria-invalid",
       );
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "primary-skill-advanced-error",
+    locatorOnly: true,
+    locators: [primarySkillsLocator],
+    prepare: async (page) => {
+      await selectPrimaryAdvancedSkill(page);
+      await page.getByLabel("プライマリ流儀Lv", { exact: true }).fill("1");
+      await expect(primarySkillsLocator.resolve(page)).toHaveAttribute(
+        "aria-invalid",
+        "true",
+      );
+      await expect(
+        primarySkillsLocator
+          .resolve(page)
+          .locator('[data-skill-row="primary-skill-1"]'),
+      ).toHaveAttribute("data-invalid", "true");
     },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],

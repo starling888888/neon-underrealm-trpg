@@ -23,6 +23,7 @@ export type CommonSkillsSectionProps = {
   onRemove: (rowId: string) => void;
   rows: readonly CommonSkillRowView[];
   selectedLevelTotal: number;
+  synchronizationKey?: unknown;
 };
 
 /** Adapts common-skill form values to the shared skill-section display. */
@@ -40,6 +41,7 @@ export default function CommonSkillsSection({
   onRemove,
   rows,
   selectedLevelTotal,
+  synchronizationKey,
 }: CommonSkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
   const sectionRows: SkillSectionRow[] = [
@@ -97,6 +99,7 @@ export default function CommonSkillsSection({
       onRemove={onRemove}
       rows={sectionRows}
       sectionId="common-skills-content"
+      synchronizationKey={synchronizationKey}
       unavailableMessage=""
     />
   );

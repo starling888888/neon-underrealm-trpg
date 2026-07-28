@@ -41,6 +41,7 @@ export type SkillSectionProps = {
   onMove: (rowId: string, direction: "up" | "down") => void;
   rows: readonly SkillSectionRow[];
   sectionId: string;
+  synchronizationKey?: unknown;
   unavailableMessage: string;
 };
 
@@ -157,6 +158,7 @@ function SkillRow({
   onRemove,
   onMove,
   row,
+  synchronizationKey,
 }: {
   canMoveDown: boolean;
   canMoveUp: boolean;
@@ -165,6 +167,7 @@ function SkillRow({
   onRemove: (rowId: string) => void;
   onMove: (rowId: string, direction: "up" | "down") => void;
   row: SkillSectionRow;
+  synchronizationKey: unknown;
 }) {
   const copy = characterSheetDictionary.characterSheet.skills;
   const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
@@ -177,6 +180,8 @@ function SkillRow({
   const detailsId = `skill-details-${row.rowId}`;
 
   useEffect(() => {
+    // A reset can retain the same numeric level while replacing RHF defaults.
+    void synchronizationKey;
     const input = levelInputRef.current;
     if (input === null) return;
 
@@ -192,7 +197,7 @@ function SkillRow({
     ) {
       input.value = nextValue;
     }
-  }, [row.level]);
+  }, [row.level, synchronizationKey]);
 
   return (
     <fieldset
@@ -319,6 +324,7 @@ export default function SkillSection({
   onRemove,
   rows,
   sectionId,
+  synchronizationKey,
   unavailableMessage,
 }: SkillSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
@@ -390,6 +396,7 @@ export default function SkillSection({
                 onPickerRequest={onPickerRequest}
                 onRemove={onRemove}
                 row={row}
+                synchronizationKey={synchronizationKey}
               />
             ))}
             {onAdd === undefined ? null : (

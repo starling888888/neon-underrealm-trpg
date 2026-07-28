@@ -1,4 +1,9 @@
-import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
+import {
+  type UseFormReturn,
+  useFieldArray,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 
 import { getRyugiById } from "../../lib/data/ryugi-list";
 import type { PrimarySkillsSectionProps } from "../components/PrimarySkillsSection";
@@ -42,6 +47,7 @@ export default function usePrimarySkillsSectionProps(
     keyName: "fieldKey",
     name: "primarySkills.rows",
   });
+  const { defaultValues } = useFormState({ control });
   const build = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.build,
@@ -118,6 +124,7 @@ export default function usePrimarySkillsSectionProps(
           : (getRyugiById(build.primaryRyugiId)?.name ?? null),
       primaryRyugiSelected: build.primaryRyugiId !== null,
       rows,
+      synchronizationKey: defaultValues?.primarySkills,
     },
   };
 }

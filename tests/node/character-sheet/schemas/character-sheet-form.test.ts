@@ -46,7 +46,7 @@ describe("character sheet form schema", () => {
     );
   });
 
-  it("requires one to five attack rows and a stable ID for each reaction row", () => {
+  it("requires one to five attack rows and a stable reaction identity", () => {
     assert.equal(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
@@ -76,11 +76,120 @@ describe("character sheet form schema", () => {
         checks: {
           ...characterSheetDefaultValues.checks,
           reactions: characterSheetDefaultValues.checks.reactions.map(
-            (row) => ({
-              ...row,
-              name: "defense",
-            }),
+            (row) => ({ ...row, name: "defense" }),
           ),
+        },
+      }).success,
+      false,
+    );
+    assert.equal(
+      characterSheetFormSchema.safeParse({
+        ...characterSheetDefaultValues,
+        checks: {
+          ...characterSheetDefaultValues.checks,
+          reactions: characterSheetDefaultValues.checks.reactions.map(
+            ({ rowId: _rowId, ...row }) => row,
+          ),
+        },
+      }).success,
+      false,
+    );
+  });
+
+  it("rejects empty or duplicate row IDs in every field array", () => {
+    const defaultAttack = characterSheetDefaultValues.checks.attacks[0];
+    const defaultBond = characterSheetDefaultValues.bonds.rows[0];
+    const defaultCommonSkill = characterSheetDefaultValues.commonSkills.rows[0];
+    const defaultPrimarySkill =
+      characterSheetDefaultValues.primarySkills.rows[0];
+    if (
+      defaultAttack === undefined ||
+      defaultBond === undefined ||
+      defaultCommonSkill === undefined ||
+      defaultPrimarySkill === undefined
+    ) {
+      throw new Error("初期field array rowがありません。");
+    }
+
+    const invalidValues = [
+      {
+        ...characterSheetDefaultValues,
+        bonds: {
+          ...characterSheetDefaultValues.bonds,
+          rows: [{ ...defaultBond, rowId: "" }],
+        },
+      },
+      {
+        ...characterSheetDefaultValues,
+        build: {
+          ...characterSheetDefaultValues.build,
+          otherRyugi: [
+            { level: 1, rowId: "duplicate", ryugiId: null },
+            { level: 1, rowId: "duplicate", ryugiId: null },
+          ],
+        },
+      },
+      {
+        ...characterSheetDefaultValues,
+        checks: {
+          ...characterSheetDefaultValues.checks,
+          attacks: [
+            { ...defaultAttack, rowId: "duplicate" },
+            { ...defaultAttack, rowId: "duplicate" },
+          ],
+        },
+      },
+      {
+        ...characterSheetDefaultValues,
+        commonSkills: { rows: [{ ...defaultCommonSkill, rowId: "" }] },
+      },
+      {
+        ...characterSheetDefaultValues,
+        ikizamaSkills: {
+          ...characterSheetDefaultValues.ikizamaSkills,
+          rows: [{ level: 1, rowId: "", skillId: null }],
+        },
+      },
+      {
+        ...characterSheetDefaultValues,
+        otherRyugiSkills: {
+          rows: [
+            {
+              level: 1,
+              rowId: "duplicate",
+              ryugiRowId: "owner",
+              skillId: null,
+            },
+            {
+              level: 1,
+              rowId: "duplicate",
+              ryugiRowId: "owner",
+              skillId: null,
+            },
+          ],
+        },
+      },
+      {
+        ...characterSheetDefaultValues,
+        primarySkills: { rows: [{ ...defaultPrimarySkill, rowId: "" }] },
+      },
+    ];
+
+    for (const values of invalidValues) {
+      assert.equal(characterSheetFormSchema.safeParse(values).success, false);
+    }
+  });
+
+  it("requires every reaction name once and the matching deterministic row ID", () => {
+    assert.equal(
+      characterSheetFormSchema.safeParse({
+        ...characterSheetDefaultValues,
+        checks: {
+          ...characterSheetDefaultValues.checks,
+          reactions: [
+            ...characterSheetDefaultValues.checks.reactions.slice(1),
+            characterSheetDefaultValues.checks.reactions[0],
+          ],
         },
       }).success,
       true,
@@ -91,7 +200,7 @@ describe("character sheet form schema", () => {
         checks: {
           ...characterSheetDefaultValues.checks,
           reactions: characterSheetDefaultValues.checks.reactions.map(
-            ({ rowId: _rowId, ...row }) => row,
+            (row) => ({ ...row, rowId: "reaction-defense" }),
           ),
         },
       }).success,

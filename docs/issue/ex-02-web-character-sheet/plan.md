@@ -175,4 +175,4 @@
 - 最大Lv超過4 stateをdesktop / tablet / mobileでactual locator screenshotにより再確認した。canonical VRT baselineは更新していない。
 - 2026-07-28に`.tmp/chatgpt-review.md`のローカル照合で未達を確認してactiveへ戻した。最大Lv違反のsection伝播、`advanced`条件、プライマリ以外の重複validation、可変行の`useFieldArray`更新境界とrow identityをG16で回収する。既存の経験点算出とuncontrolled input同期の達成部分は維持する。
 
-状態は `planned`、`in progress`、`done` を使う。
+状態は `planned`、`in progress`、`active`、`done` を使う。`active`は、完了済みとしていたGateをreview指摘で再openし、修正または再reviewが終わるまでの状態を表す。

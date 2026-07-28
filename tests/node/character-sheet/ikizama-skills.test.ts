@@ -100,4 +100,22 @@ describe("character sheet ikizama skills", () => {
       "duplicate-b",
     ]);
   });
+
+  it("does not let a negative selected level cancel the ikizama total", () => {
+    const [skill] = getIkizamaSkillGroups("burai", 1).basic;
+    if (skill === undefined)
+      throw new Error("ブライの基本スキルがありません。");
+
+    const validation = calculateIkizamaSkillsValidation(1, 1, null, [
+      { level: 2, rowId: "positive", skill },
+      { level: -1, rowId: "negative", skill },
+    ]);
+
+    assert.equal(validation.selectedLevelTotal, 2);
+    assert.equal(validation.hasIkizamaSkillLevelTotalError, true);
+    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+      "positive",
+      "negative",
+    ]);
+  });
 });

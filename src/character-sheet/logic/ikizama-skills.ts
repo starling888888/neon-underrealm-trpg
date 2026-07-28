@@ -33,7 +33,7 @@ export function calculateIkizamaSkillsValidation(
   const selectedLevelTotal =
     Math.max(0, bonusLevel - 1) +
     rows.reduce(
-      (total, row) => total + (row.skill === null ? 0 : row.level),
+      (total, row) => total + (row.skill === null ? 0 : Math.max(0, row.level)),
       0,
     );
 

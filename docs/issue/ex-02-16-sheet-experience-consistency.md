@@ -88,6 +88,49 @@
 - `advanced`・重複・区分合計は行 / sectionへ渡す別のerror識別子に分離したため、この最大Lv超過stateと混同しない。各画面でclip / overflow、可視error文言の追加、既存配置の変更は確認されなかった。
 - `npm run visual:test`はこの4 stateが`locatorOnly`であるため12件skipとなった。canonical baselineは更新せず、比較成功としては扱わない。Visual Review 1はsectionの非error状態を検証していなかったため、この確認結果で置き換える。
 
+## ビジュアルレビュー 3
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@common-skill-maximum-level-error`、`@other-ryugi-skill-maximum-level-error`、`@ikizama-skill-maximum-level-error`、`@primary-skill-maximum-level-error`、`@primary-skill-advanced-error`
+- route / states / viewports: `/neon-underrealm-trpg/character-sheet/`の最大Lv超過4状態と、プライマリ流儀Lvを6から1へ下げた保持済みadvanced状態。desktop（1440px）、tablet（820px）、mobile（390px）。
+
+### レビュー結果
+
+| 対象                   | 判定 | 差分                                   | 対応                                              |
+| ---------------------- | ---- | -------------------------------------- | ------------------------------------------------- |
+| 最大Lv超過4状態        | OK   | section error非伝播を実sectionへassert | 4区分とも該当行・inputだけがerrorであることを確認 |
+| プライマリadvanced保持 | OK   | 新規locator-only state                 | sectionと該当行のerrorを確認                      |
+
+### 実画面確認
+
+- `npm run visual:capture -- --grep '@(?:common-skill-maximum-level-error|other-ryugi-skill-maximum-level-error|ikizama-skill-maximum-level-error|primary-skill-maximum-level-error|primary-skill-advanced-error)(?:\\s|$)'`は15 passed。owner locator screenshot 24枚を原寸で開いた。
+- 共通スキル最大Lv超過はprofile / build / common skill sectionの各desktop / tablet / mobile計9枚、その他流儀はbuild / skill sectionの各3 viewport計6枚、生き様・プライマリ最大Lv・プライマリadvancedは各skill sectionの3 viewport計9枚を確認した。
+- 最大Lv超過ではsectionの外枠をerrorにせず、該当行・inputだけがerrorであること、advancedではsectionと該当行がerrorであること、各viewportでcontrol境界、折返し、clip / overflowがないことを確認した。full-page screenshotは局所表示契約の根拠に使っていない。
+- `npm run visual:test`は対象15 stateが`locatorOnly`のため15件skip。canonical baselineの比較成功として扱わず、baselineは更新していない。
+
+### 自己修正した項目
+
+- primary / ikizama VRT locatorをwrapperからinner `section[data-skill-section]`へ変更し、最大Lvのsection非伝播を回帰検出できるようにした。
+- プライマリadvanced保持のsection error stateを追加した。
+
+### 人間判断が必要な差分
+
+- なし。canonical VRT baselineを更新する判断は発生していない。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
+- [x] VRT差分を修正した、または修正不要と判断した。
+- [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
 ## チェックポイント
 
 - [x] 既存ルート、既存スキル選択dialog、確認dialog、focus復帰が壊れていない。
@@ -210,3 +253,64 @@
 - [x] 追加・更新したNode、hook、Component testで未達条件を確認する。
 - [x] UI変更後の対象状態をdesktop（1440px）・tablet（820px）・mobile（390px）のactual screenshotで確認する。
 - [x] `npm run check`、`npm run build`、関連Node / Vitest / Playwright testが通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- プライマリ、生き様、その他流儀の選択済み通常スキルLv合計が負数をそのまま加算するため、Lv`1`未満の局所error行が正の取得Lvを相殺し、区分合計超過を隠せる。共通スキルは非負値だけを合計する既存契約と不整合である。
+- `checks.reactions`の`rowId`は空文字・重複をschemaで受理する一方、hookはrow IDの最初の一致を更新先にする。reset / 後続の復元・JSON入力で重複IDを受理すると、別リアクション行を更新し、React keyも一意でなくなる。
+- uncontrolledな技能Lv inputの外部同期effectは`row.level`だけを依存値にする。同じ受理済みLvへの`reset`ではfocus中の未確定DOM値が残り、blurで復元値を上書きできる。
+- プライマリ・生き様の最大Lv VRTはerror属性を持たないwrapperをassertしているため、最大Lv違反のsection伝播を回帰検出できない。代表的な`advanced`または重複の行 / section error状態もVisual Reviewの対象にない。
+- failure logのG16再open記録は未達を戻した時点で止まり、`9b905c3`で回収した範囲と、今回のreviewで新たに残った未達を区別していない。親Gate planの`active`は状態値の定義外で、現在が修正待ちかレビュー待ちかを表せない。
+
+### 判定
+
+- source: local-agent
+- review: `.tmp/review/ex-02-web-character-sheet/document-review-2.md`、`.tmp/review/ex-02-web-character-sheet/technical-review-4.md`
+- classification: valid
+- local validation: `primary-skills.ts`、`ikizama-skills.ts`、`other-ryugi-skills.ts`で選択済みrowのLvを直接合計していること、reaction schemaが`z.string()`と4行長だけを検証しhookが`findIndex(rowId)`で更新すること、`SkillSection`の同期effectが`[row.level]`だけへ依存すること、primary / ikizama VRT locatorがinner `section[data-skill-section]`ではないことを確認した。architectureのuncontrolled input同期・row ID契約、G16の局所error・外部更新・`useFieldArray`完了条件にも一致する。文書2件はfailure logとparent planの現行記録を照合した。
+
+### 対応方針
+
+- 負数Lvを局所errorとして保持したまま、プライマリ・生き様・その他流儀の区分合計には非負の取得Lvだけを使う。各pure logicの境界testを追加する。
+- reaction row IDをschema境界で非空・配列内一意にし、重複復元値を拒否する。same-value resetでもuncontrolled inputを同期する境界を設け、Component / hook testで固定する。
+- VRT locatorを実際にerror属性を持つsectionへ向け、最大Lvと代表的なsection error stateをdesktop / tablet / mobileでcaptureして確認する。canonical baselineは更新しない。
+- failure logへ回収済み範囲と新しい未達を追記し、parent planでは`active`をGate修正・再review待ちの正式状態として定義する。G24 / G27の保存・復元・JSON UIは実装しない。
+
+### 対応完了チェックリスト
+
+- [x] 負数Lvがプライマリ・生き様・その他流儀の区分合計を相殺しない。
+- [x] reaction row IDの非空・一意性と、重複復元値の拒否をschema / hook testで確認する。
+- [x] same-value reset後もuncontrolled技能Lv inputが受理済み値へ同期する。
+- [x] 最大Lv VRTが実sectionを検査し、代表的なsection error stateをactual screenshotで確認する。
+- [x] failure logとparent Gate planがG16のactive状態・回収済み範囲・未達を正しく表す。
+- [x] `npm run check`、`npm run build`、関連Node / Vitest / Playwright testが通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- `.tmp/chatgpt-review.md`の負数Lvによる区分合計相殺は、レビュー指摘3の1件目と同じである。プライマリ、生き様、その他流儀の通常skill Lvを非負値で合計する対応へ統合する。
+- 同レビューのreaction `rowId`の空・重複受理は、レビュー指摘3の2件目と同じである。加えて、G16対象の`bonds.rows`、`build.otherRyugi`、`checks.attacks`、プライマリ・生き様・共通・その他流儀skill rowも、schemaが空・重複`rowId`を受理し、row IDで最初の一致を操作するhookと整合しない。
+- reaction schemaは4行長だけを検証しており、4件すべて`defense`のように固定4種が欠ける値を受理する。stableなreaction row identityの契約として、非空・一意なrow IDと`defense`、`evasion`、`endurance`、`resistance`が各1件であることをschema境界で保証する必要がある。
+
+### 判定
+
+- source: browser-draft
+- review: `.tmp/chatgpt-review.md`
+- source snapshot: base `3a0d3ec81690c57408d9320ccc2249b7cce534c2`、reviewed remote head `9b905c364f0c5c27d9ff5b270e4e69dfeb972e09`
+- classification: valid
+- local validation: 現在のHEADはreviewed headと一致し、作業treeの未commit差分はレビュー指摘3のtracking更新だけであることを確認した。3区分のLv直接合計とreaction `rowId`の`z.string()`だけの検証はレビュー指摘3と同じ現行実装で確認した。さらに、全field arrayのrow schemaが`z.string()`だけであり、reaction schema testが4件とも`defense`を受理する期待を置いていることを確認した。G16の対象範囲に全可変配列のrow IDと外部更新契約が含まれるため、追加範囲もcurrent issueに属する。
+- unchecked / not verified: browser draftはローカルtest実行、actual screenshot、実ブラウザ操作を再確認していない。この取り込みではreview draftを根拠にせず、該当コードとSSoTだけをローカル照合した。
+
+### 対応方針
+
+- レビュー指摘3の負数Lv対応とreaction identity対応へ統合する。全field arrayのrow IDを非空・配列内一意としてschemaで検証し、reactionは4種類のnameを各1件に固定する。G16で復元・JSON UIやadapterを先行実装しない。
+- schema / hook testで重複・空IDとreaction name欠落を拒否し、正常なreaction 4種の順序変更を受理するか、順序を固定するかを実装契約として明示する。
+
+### 対応完了チェックリスト
+
+- [x] 全field arrayのrow IDが非空かつ配列内一意であることをschema境界で保証する。
+- [x] reactionの4種類のnameが各1件であることと、row IDとの対応をschema / hook testで確認する。
+- [x] レビュー指摘3と統合したNode / hook / schema test、`npm run check`、`npm run build`が通る。

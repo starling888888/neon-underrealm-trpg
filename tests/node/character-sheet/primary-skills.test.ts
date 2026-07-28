@@ -82,4 +82,22 @@ describe("character sheet primary skills", () => {
 
     assert.deepEqual(validation.invalidAdvancedSkillRowIds, ["advanced"]);
   });
+
+  it("does not let a negative selected level cancel the primary total", () => {
+    const [skill] = getPrimarySkillGroups("kenkaya", 1).basic;
+    if (skill === undefined)
+      throw new Error("ケンカヤの基本スキルがありません。");
+
+    const validation = calculatePrimarySkillsValidation(1, [
+      { level: 2, rowId: "positive", skill, skillId: skill.id },
+      { level: -1, rowId: "negative", skill, skillId: skill.id },
+    ]);
+
+    assert.equal(validation.selectedLevelTotal, 2);
+    assert.equal(validation.hasPrimarySkillLevelTotalError, true);
+    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+      "positive",
+      "negative",
+    ]);
+  });
 });

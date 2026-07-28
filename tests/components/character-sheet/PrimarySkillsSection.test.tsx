@@ -183,6 +183,25 @@ describe("PrimarySkillsSection", () => {
     expect(document.activeElement).toBe(level);
   });
 
+  it("synchronizes a same-level external reset while the input is focused", () => {
+    const props = createProps();
+    const { rerender } = render(
+      <PrimarySkillsSection {...props} synchronizationKey="before-reset" />,
+    );
+    const level = screen.getByLabelText("旋風Lv") as HTMLInputElement;
+
+    level.focus();
+    fireEvent.change(level, { target: { value: "2" } });
+    expect(level.value).toBe("2");
+
+    rerender(
+      <PrimarySkillsSection {...props} synchronizationKey="after-reset" />,
+    );
+
+    expect(level.value).toBe("1");
+    expect(document.activeElement).toBe(level);
+  });
+
   it("marks every duplicate selected skill row as invalid", () => {
     const props = createProps();
     const [firstRow, secondRow] = props.rows;

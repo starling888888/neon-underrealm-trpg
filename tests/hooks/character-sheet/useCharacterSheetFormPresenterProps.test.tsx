@@ -228,6 +228,20 @@ describe("useCharacterSheetFormPresenterProps", () => {
     ).toContain(firstRowId);
   });
 
+  it("changes the skill synchronization key after a same-value external reset", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const beforeReset =
+      result.current.presenterProps.primarySkillsSection.synchronizationKey;
+
+    act(() => {
+      result.current.form.reset(result.current.form.getValues());
+    });
+
+    expect(
+      result.current.presenterProps.primarySkillsSection.synchronizationKey,
+    ).not.toBe(beforeReset);
+  });
+
   it("keeps out-of-range primary skill levels in RHF as local errors", () => {
     const { result } = renderHook(() => usePresenterHarness());
 

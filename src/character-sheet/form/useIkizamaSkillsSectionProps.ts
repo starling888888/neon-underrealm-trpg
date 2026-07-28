@@ -1,5 +1,10 @@
 import { useEffect, useRef } from "react";
-import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
+import {
+  type UseFormReturn,
+  useFieldArray,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 
 import { getIkizamaById } from "../../lib/data/ikizama";
 import type { IkizamaSkillsSectionProps } from "../components/IkizamaSkillsSection";
@@ -47,6 +52,7 @@ export default function useIkizamaSkillsSectionProps(
     keyName: "fieldKey",
     name: "ikizamaSkills.rows",
   });
+  const { defaultValues } = useFormState({ control });
   const build = useWatch({
     control,
     defaultValue: characterSheetDefaultValues.build,
@@ -145,6 +151,7 @@ export default function useIkizamaSkillsSectionProps(
         move(index, targetIndex);
       },
       rows,
+      synchronizationKey: defaultValues?.ikizamaSkills,
     },
   };
 }
