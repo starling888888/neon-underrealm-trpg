@@ -34,7 +34,7 @@
 - 要件: `docs/requirements/character-sheet.md`の「アイテム」「経験点と信用」「エラーと警告」「共通動作」
 - ゲームデータ: `data/generated/items.json`、`src/lib/types/item.ts`、`src/pages/data/items/weapons.mdx`、`src/pages/data/items/armors.mdx`
 - architecture: `docs/architectures/character-sheet.md`の「可変行のデザイン指針」「Container / Presenterの責務」「状態と派生値の境界」「データ境界」「HTML / CSSの構造と責務」「テストアーキテクチャ」
-- design target: `docs/design/character-sheet/notes.md`、`.tmp/design/character-sheet/`の承認済みdraft。G17固有の列・dialog詳細はユーザー指定で確定しているため、`design-image-generation`は前提にしない。canonical VRT baselineは更新しない。
+- design target: `docs/design/character-sheet/notes.md`、`.tmp/design/character-sheet/`の承認済みdraft。G17固有の列・dialog詳細はユーザー指定で確定しているため、`design-image-generation`は前提にしない。canonical VRT baselineの更新にはユーザーの明示承認を必要とする。
 - 関連TODO: `docs/TODO.md`の「G17着手時にCharacterSheetContainerのdialog orchestrationをhookへ分離する要否を判断する」をこのGateで扱う。既存picker、confirmation dialog、pending action、focus復帰を列挙し、責務境界を単純化できる場合だけroot orchestration hookを導入する。
 
 ## Gate関係
@@ -88,7 +88,7 @@
 
 - `CharacterSheetFormPresenter`の既存`weapons-and-armor` slotへ武器・防具section Propsを渡す。dict、form values、schema、master-data、pure logic、form hook、section / dialog Component、Container orchestration、対象testsを、上記の境界に沿って追加または更新する。
 - `docs/TODO.md`のG17 TODOに従い、既存のpicker、confirmation dialog、pending action、focus復帰を実装前に列挙する。武器削除と防具クリアにはconfirmationを追加せず、root orchestration hookを抽出するかだけを、その列挙でContainer / Presenter境界を単純化できる場合に決定する。
-- E2EとVRTのspecを実装するが、実装直後には実行しない。実装後はpreviewを起動せず、既定portのdev serverを維持してユーザーレビューを待つ。ユーザーがレビュー完了を明示した後にだけ、`/character-sheet/`の武器未選択・複数武器・武器候補dialog・武器詳細展開・防具候補dialog・防具詳細展開・tooltip openをdesktop（1440px）、tablet（820px）、mobile（390px）でactual screenshotとして開き、対象E2Eとtarget限定VRTを実行する。canonical VRT baselineは更新しない。
+- E2EとVRTのspecを実装するが、実装直後には実行しない。実装後はpreviewを起動せず、既定portのdev serverを維持してユーザーレビューを待つ。ユーザーがレビュー完了を明示した後にだけ、`/character-sheet/`の武器未選択・複数武器・武器候補dialog・武器詳細展開・防具候補dialog・防具詳細展開・tooltip openをdesktop（1440px）、tablet（820px）、mobile（390px）でactual screenshotとして開き、対象E2Eとtarget限定VRTを実行する。canonical VRT baselineの更新は、targetの明示承認がある場合だけ行う。
 
 ## 初期スコープ外
 
@@ -108,7 +108,7 @@
 - [ ] tooltip、candidate dialog、展開、選択、確認dialogを開かない武器削除・防具クリア、Escape、閉じる操作、focus復帰がアクセシブルに動作する。
 - [ ] G17 TODOのdialog orchestration判断と、武器削除・防具クリアにconfirmationを追加しないこと、採用時のhook境界または非採用理由がissueへ記録される。
 - [ ] E2EとVRTのspecを実装し、ユーザーレビュー完了までは実行せず、dev serverを維持したレビュー待ちを記録する。
-- [ ] ユーザーレビュー完了後にUI actual screenshotを対象route・state・viewportごとに開いて確認し、対象E2Eとtarget限定VRTの結果を記録する。canonical VRT baselineは更新しない。
+- [ ] ユーザーレビュー完了後にUI actual screenshotを対象route・state・viewportごとに開いて確認し、対象E2Eとtarget限定VRTの結果を記録する。canonical VRT baselineはtargetの明示承認がある場合だけ更新する。
 - [ ] `npm run check`、`npm run build`、変更責務に対応するNode / Vitest testが通る。E2EとVRTはユーザーレビュー完了後に実行する。
 
 ## チェックポイント
@@ -589,6 +589,104 @@
 - [x] desktop／mobile共通でclear buttonのright borderを復元する
 - [x] npm run check
 - [x] npm run build
+
+## レビュー指摘 21
+
+### 指摘事項
+
+- 今後追加する専用アイテムも、スキル・武器・防具で確定したheader、列表示、並べ替え、button、展開、追加button、折り返し、選択dialogのデザイン指針を踏襲する。
+- `SkillSection`と武器・防具の個別CSSから、共通の見た目を共通CSSと共通classへ分離し、個別CSSは固有の列とデータ差分だけにする。
+- 専用アイテム実装時にデザイン踏襲を破りにくくする。
+
+### 判定
+
+- source: ユーザー
+- classification: valid
+- local validation: 現在は`SkillSection`、`WeaponsAndArmorSection`、各候補dialogが個別CSSで同じ種別のheader、行、control、候補表示を持つ。G17のarchitectureは固有行Component・固有列の統合を禁止する一方、`docs/out-of-scope.md`は共通CSSの再利用を許容している。したがって、振る舞い・列定義を汎用Componentへ統合せず、視覚トークンとclassだけを共通化する方針は現行scopeと整合する。
+
+### 対応方針
+
+- character-sheet内に共通form design CSSを設け、header、データ行、列境界、並べ替え／削除／clear／追加button、展開領域、responsive折り返し、候補dialogの共通classを定義する。
+- スキル・武器・防具はそれぞれのComponentと個別CSSを維持し、固有のgrid列、性能式、候補データ、操作制約だけを個別CSSへ残す。新しい汎用Item行Component、固有列の共通grid、業務ロジックの統合は行わない。
+- 後続の専用アイテムGateでは、この共通CSSをdesignの出発点にし、固有差分を明示してから追加する。
+
+### 対応結果
+
+- `CharacterSheetFormList.module.css`へ、table header、行枠、並べ替えcontrol、選択button、展開button、追加button、候補dialogの外枠・候補行を共通classとして置いた。
+- `SkillSection`、武器・防具section、スキル・武器・防具の候補dialogは共通classをCSS Modulesの`composes`で利用する。個別moduleには、固有のgrid列、性能式、候補の補足行だけを残した。
+- 共通classはmobile規則も所有し、CSS Modulesの出力順が個別moduleのmobile上書きを壊さないようにした。行Component、form値、候補data、dialog orchestrationは統合していない。
+
+### デグレ確認ループ
+
+| 回数 | 確認                             | 結果                          | 対応                                                                                                            |
+| ---- | -------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| 1    | `@character-sheet` target限定VRT | mobileの既存スキルstateに差分 | 共通classの読み込み順でmobile font size / paddingが再上書きされていたため、同じmobile規則を共通moduleへ移した。 |
+| 2    | `@character-sheet` target限定VRT | 成功                          | existing full-page snapshot 51件が成功。G17 locator-only state 86件は比較対象外としてskip。                     |
+
+- `@weapons-and-armor-*`、`@weapon-picker-open`、`@weapon-details-expanded`、`@armor-picker-open`、`@armor-details-expanded`、`@weapons-tooltip-open`のactual locator captureは、desktop / tablet / mobileの21 scenarioで成功した。
+
+### 対応完了チェックリスト
+
+- [x] 共通form design CSSとclassの責務・対象を定義する
+- [x] スキル・武器・防具の共通デザインを共通classへ移し、個別CSSを固有差分へ限定する
+- [x] 後続専用アイテムが参照するデザイン踏襲契約をissueへ記録する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@character-sheet`。G17追加stateは`@weapons-and-armor-default`、`@weapons-and-armor-multiple-weapons`、`@weapon-picker-open`、`@weapon-details-expanded`、`@armor-picker-open`、`@armor-details-expanded`、`@weapons-tooltip-open`。
+- route / states / viewports: `/character-sheet/`の未選択、複数武器、武器候補dialog、武器詳細展開、防具候補dialog、防具詳細展開、武器性能tooltip open。desktop（1440px）、tablet（820px）、mobile（390px）。
+
+### レビュー結果
+
+| 対象                            | 判定 | 差分                                              | 対応                                                                                                                                      |
+| ------------------------------- | ---- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| 武器・防具のlocator capture     | OK   | なし                                              | 7 state × 3 viewportのactual snapshotを取得し、局所画面を開いて確認した。                                                                 |
+| 既存character-sheet default VRT | OK   | 初回比較でdesktop、ultrawide、tablet、mobileの4件 | ユーザー承認後、G17前のページ高を持つbaselineを、武器・防具sectionを含む現行画面へ更新した。                                              |
+| 既存character-sheet全target VRT | OK   | 初回比較で既存baselineとの差分21件                | `@character-sheet`の既存full-page snapshot 51件を更新し、更新後の同一target比較は51件成功した。G17追加stateはlocator-onlyのまま維持した。 |
+
+### 実画面確認
+
+- `/character-sheet/` / 未選択・複数武器・武器詳細展開・防具詳細展開 / desktop・tablet・mobile:
+  - full-page overview: 取得しない。局所表示契約の根拠には用いない。
+  - locator screenshot: `data-weapons-and-armor-section` のoriginal-pixel-resolution snapshot。
+  - checked acceptance criteria: header、列境界、read-only値と修正input、性能式、追加／並べ替え／削除／clear button、mobileの性能2行化、展開詳細、横overflow・clip。
+  - result: 各viewportで確認した局所要素に横overflow・clipはない。
+- `/character-sheet/` / 武器候補dialog・防具候補dialog / desktop・tablet・mobile:
+  - full-page overview: 取得しない。
+  - locator screenshot: `data-weapons-and-armor-section`と各dialog本体のoriginal-pixel-resolution snapshot。
+  - checked acceptance criteria: dialog外枠、header、候補の名称／信用境界、候補要約／詳細の横罫線、mobileの行内折返し、横overflow・clip。
+  - result: 各viewportでdialog本体と候補行が表示範囲に収まり、対象の罫線と折返しを確認した。
+- `/character-sheet/` / 武器性能tooltip open / desktop・tablet・mobile:
+  - full-page overview: 取得しない。
+  - locator screenshot: `data-weapons-and-armor-section`と`tooltip`本体のoriginal-pixel-resolution snapshot。
+  - checked acceptance criteria: header色、tooltip本文、section外へ表示されるtooltip本体、横overflow・clip。
+  - result: tooltip本体をsectionとは別に確認し、本文と外枠が表示範囲に収まる。
+
+### 自己修正した項目
+
+- [x] VRT scenarioの詳細button locatorを、実装のaccessible name（`刀詳細を開く`、`チンピラ服詳細を開く`）へ修正した。
+
+### baseline更新
+
+- ユーザーの明示指示により、`npm run visual:update -- --grep '@vrt.*@character-sheet(?:\\s|$)'`で既存full-page snapshot 51件をローカル更新した。
+- 更新後に同じgrepで通常比較し、full-page snapshot 51件は成功した。G17追加の7 state × 3 viewportはlocator-onlyであり、canonical full-page baselineを作成しない。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（該当する場合）
 
 ## 備考
 

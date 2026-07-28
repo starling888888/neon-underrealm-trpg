@@ -1432,3 +1432,12 @@ source種別は以下を使う。
 - 発生箇所: `tests/visual/vrt/character-sheet.spec.ts` の武器・防具詳細展開capture
 - 観測した失敗: 追加したVRT scenarioで詳細buttonのaccessible nameを「刀の詳細を開く」「チンピラ服の詳細を開く」と推測した。実装は助詞を含まないため、desktop／tablet／mobileで同じlocator timeoutを繰り返した。
 - 一次対応: Componentの`aria-label`組み立てを確認し、test locatorを実際の「刀詳細を開く」「チンピラ服詳細を開く」へ修正した。新規browser testでは、操作対象のaccessible nameを実装または先行E2Eで確認してから複数viewportへ展開する。
+
+### Let a shared CSS Module override mobile-specific rules
+
+#### 2026-07-29
+
+- source: agent
+- 発生箇所: `ex-02-17-sheet-weapons-armor` のCSS共通化後の`@character-sheet` VRT
+- 観測した失敗: 共通classをCSS Modulesの`composes`で導入した際、共通moduleのdesktop向けfont sizeとpaddingが出力順により個別moduleのmobile規則を再上書きした。複数のmobile skill stateで同じ差分を発生させた。
+- 一次対応: 共通moduleへ既存と同一のmobile規則を移し、target限定VRTを再実行して既存full-page snapshot 51件の差分がないことを確認した。CSS Modulesで共通classがbreakpoint依存値を持つ場合は、個別moduleのoverride順に依存せず、共通module内に対応するmedia queryを置く。

@@ -1,19 +1,17 @@
 .dialog {
-  width: min(44rem, calc(100vw - (var(--page-gutter) * 2)));
-  overflow: hidden;
+  composes: pickerDialog from "../CharacterSheetFormList.module.css";
 }
-.content,
-.group {
+.content {
   display: grid;
-  gap: 0;
 }
 .content {
   gap: var(--space-2);
 }
+.group {
+  composes: candidateGroup from "../CharacterSheetFormList.module.css";
+}
 .selectionGuide {
-  margin: 0;
-  font-size: var(--text-sm);
-  line-height: var(--line-height-normal);
+  composes: selectionGuide from "../CharacterSheetFormList.module.css";
 }
 .group h3 {
   margin: var(--space-2) 0 var(--space-1);
@@ -27,11 +25,7 @@
   min-width: 0;
 }
 .headerRow {
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  line-height: 1.1;
-  text-align: center;
-  border-bottom: var(--border-width) solid var(--color-border);
+  composes: tableHeader from "../CharacterSheetFormList.module.css";
 }
 .headerRow > span,
 .firstLine > * {
@@ -49,15 +43,7 @@
   text-align: left;
 }
 .candidate {
-  display: grid;
-  min-width: 0;
-  border-bottom: var(--border-width) solid var(--color-border);
-  border-inline: var(--border-width) solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-.candidate:hover {
-  background: var(--color-example-soft);
+  composes: candidate from "../CharacterSheetFormList.module.css";
 }
 .firstLine > * {
   display: grid;

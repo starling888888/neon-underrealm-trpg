@@ -232,6 +232,7 @@ function WeaponFormRow({
           {canMoveUp ? (
             <button
               aria-label={`${name}${copy.moveUp}`}
+              className={styles.reorderButton}
               onClick={() => onMove(row.rowId, "up")}
               type="button"
             >
@@ -241,6 +242,7 @@ function WeaponFormRow({
           {canMoveDown ? (
             <button
               aria-label={`${name}${copy.moveDown}`}
+              className={styles.reorderButton}
               onClick={() => onMove(row.rowId, "down")}
               type="button"
             >

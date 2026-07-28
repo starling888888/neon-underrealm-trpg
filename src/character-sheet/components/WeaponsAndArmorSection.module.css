@@ -31,11 +31,7 @@
 }
 
 .headerRow {
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  line-height: 1.1;
-  text-align: center;
-  border-bottom: var(--border-width) solid var(--color-border);
+  composes: tableHeader from "./CharacterSheetFormList.module.css";
 }
 .headerRow > * {
   display: grid;
@@ -55,13 +51,7 @@
 }
 
 .row {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-bottom: var(--border-width) solid var(--color-border);
-  border-inline: var(--border-width) solid var(--color-border);
-  background: var(--color-surface);
+  composes: listRow from "./CharacterSheetFormList.module.css";
 }
 .row > .weaponLine > *,
 .row > .armorLine > * {
@@ -84,49 +74,18 @@
   white-space: nowrap;
 }
 .reorderControls {
-  display: grid;
-  align-content: center;
-  gap: 0.0625rem;
-  min-height: 2.25rem;
-  background: var(--color-surface-muted);
+  composes: reorderControls from "./CharacterSheetFormList.module.css";
 }
-.reorderControls button {
-  width: 100%;
-  min-height: 0.6875rem;
-  border: 0;
-  background: transparent;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  padding: 0;
-  font-size: 0.5rem;
-  line-height: 1;
-}
-.reorderControls button:hover {
-  color: var(--color-link);
+
+.reorderButton {
+  composes: reorderButton from "./CharacterSheetFormList.module.css";
 }
 
 .itemPicker {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  border: 0;
-  background: var(--color-surface);
-  color: var(--color-text);
-  cursor: pointer;
-  padding: var(--space-1) var(--space-2);
-  font: inherit;
-  font-size: 0.75rem;
-  font-weight: 750;
-  line-height: var(--line-height-tight);
-  text-align: left;
-  overflow-wrap: anywhere;
-}
-.itemPicker:hover {
-  background: var(--color-surface-muted);
+  composes: rowPicker from "./CharacterSheetFormList.module.css";
 }
 .chooseIcon {
-  flex: 0 0 auto;
-  color: var(--color-link);
+  composes: pickerIcon from "./CharacterSheetFormList.module.css";
 }
 .cell,
 .detailsToggle,
@@ -215,15 +174,7 @@
   justify-self: center;
 }
 .detailsToggle {
-  border: 0;
-  background: var(--color-surface-muted);
-  color: var(--color-link);
-  cursor: pointer;
-  font: inherit;
-  font-size: var(--text-xs);
-}
-.detailsToggle:hover {
-  background: var(--color-example-soft);
+  composes: detailsToggle from "./CharacterSheetFormList.module.css";
 }
 .clearButton {
   box-sizing: border-box;
@@ -276,20 +227,12 @@
   white-space: nowrap;
 }
 .addButton {
+  composes: addButton from "./CharacterSheetFormList.module.css";
   justify-self: start;
   margin-top: var(--space-3);
   min-height: 2rem;
-  border: var(--border-width) solid var(--color-link);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-link);
-  cursor: pointer;
   padding: var(--space-1) var(--space-3);
   font-size: var(--text-sm);
-  font-weight: 750;
-}
-.addButton:hover {
-  background: var(--color-example-soft);
 }
 
 @media (width < 48rem) {
