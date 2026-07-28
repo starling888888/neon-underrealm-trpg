@@ -29,9 +29,17 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 
 このissueは、生き様スキルのフォーム値、表示用adapter、候補選択、局所validation、テストを新しいsessionから実装できる契約とする。
 
+## アーキテクチャ適用
+
+| 節                   | 許可する変更                                                                                                | 禁止する変更                                                                              | 確認するテスト層 |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------- |
+| スキル区分の共通表示 | shared `SkillSection`はadapterが渡す行ViewModelの削除可否を表示するだけとし、生き様の最低行数を判断しない。 | `SkillSection`へ生き様ID、RHF field path、bonus固有処理、最低行数の業務条件を追加しない。 | Component        |
+| 状態と派生値の境界   | `ikizamaSkills.rows`の追加・削除・並べ替えをRHFの`useFieldArray`へ閉じる。                                  | RHF外の編集state、0行を補うUI stateを追加しない。                                         | hook             |
+| テストアーキテクチャ | 0行への削除、bonusのみの合計validation、削除buttonと追加buttonをhook / Component testで確認する。           | この局所境界をbrowser E2EやVRTへ追加しない。                                              | hook / Component |
+
 ## 対象範囲
 
-- RHFへ、生き様通常スキル2行（最低1行）の`rowId`、skill ID、取得Lvと、生き様bonusの取得Lvを追加する。選択時と別スキルへの変更時はLvを`1`へ戻し、空行は合計へ含めない。通常行の追加・削除・上下移動は`useFieldArray`で行い、既存可変行の移行はG24前TODOへ残す。
+- RHFへ、生き様通常スキル初期2行（最低0行）の`rowId`、skill ID、取得Lvと、生き様bonusの取得Lvを追加する。選択時と別スキルへの変更時はLvを`1`へ戻し、空行は合計へ含めない。通常行の追加・削除・上下移動は`useFieldArray`で行い、既存可変行の移行はG24前TODOへ残す。
 - `ikizama-skills.json`から選択中生き様の`bonus`を先頭へ導出する。bonusは候補に含めず、名称・マスタ由来の内容は編集不可、取得Lvだけを初期値・最低値`1`で編集可能にする。生き様IDが変更・解除されたときはbonus Lvを`1`へ戻し、同じ生き様のLv変更では値を保持する。bonus Lv1は無料とし、Lv2以上の超過分を取得合計へ含める。
 - 生き様レベル4未満では`basic`、4以上では`basic`と`advanced`を候補dialogのgroupとして表示する。通常行は追加・削除・上下移動でき、先頭・末尾以外へ移動できない方向のbuttonは表示しない。
 - `SkillSection`と`SkillPickerDialog`を再利用し、生き様専用の重複した行Component、候補dialog、CSS Moduleを追加しない。生き様adapterが、行ViewModel、候補group、bonusのLv編集可否、候補条件、validation結果、callbackへ正規化する。
@@ -49,7 +57,7 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 
 ## 完了条件
 
-- [x] 選択中生き様のbonusと通常2行を、既存shared Componentで表示・編集できる。
+- [x] 選択中生き様のbonusと通常初期2行を、既存shared Componentで表示・編集できる。通常行は0行まで削除できる。
 - [x] bonusは生き様IDの変更・解除時にLv`1`へ戻り、同じ生き様のLv変更時は値を保持する。通常行は`useFieldArray`で選択、Lv編集、追加・削除・上下移動をできる。
 - [x] 生き様Lv4で候補が`advanced`を含むよう切り替わる。
 - [x] 生き様スキルの取得Lv合計が生き様Lvを超えると、流儀・生き様入力側と生き様スキル区分がerror状態になる。bonusスキルはLv1だけを無料とし、Lv2以上の超過分と通常スキルを合計し、空行は含めない。
@@ -67,6 +75,13 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 - [x] 新設する生き様通常行だけを`useFieldArray`で操作し、既存可変行の移行はG24前TODOへ残している。
 - [x] 生き様スキルの合計errorを、プライマリ・共通・その他流儀やG16の横断validationへ拡張していない。
 - [x] ユーザーの未コミット変更を破壊していない。
+
+## 仕様変更 1
+
+- source: user
+- 生き様通常スキルは初期2行とするが、最低行数は0行へ変更する。bonusスキルだけを成長させ、通常スキルを取得しない状態を許容する。
+- 影響: form初期値は2行のまま、削除操作の最低行数、0行時の追加・候補dialog操作、bonus Lvだけの合計validationを実装・hook・Component testで確認する。browser E2Eはこの局所境界を追加せず、最終smokeのままとする。
+- status: requirementsと本子issueへ反映済み。通常行はRHFの`useFieldArray`で2行から0行まで削除でき、bonus Lvだけが残る状態を許容する。hook / Component testと実ブラウザ操作で確認済み。
 
 ## 想定変更ファイル
 

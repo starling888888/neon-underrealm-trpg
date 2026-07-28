@@ -18,6 +18,7 @@ export type SkillSectionRow = {
   levelEditable: boolean;
   movable: boolean;
   removable: boolean;
+  removalEnabled: boolean;
   rowId: string;
   selectable: boolean;
   skill: Skill | null;
@@ -141,7 +142,6 @@ function DetailsToggle({
 }
 
 function SkillRow({
-  canRemove,
   canMoveDown,
   canMoveUp,
   onLevelChange,
@@ -150,7 +150,6 @@ function SkillRow({
   onMove,
   row,
 }: {
-  canRemove: boolean;
   canMoveDown: boolean;
   canMoveUp: boolean;
   onLevelChange: (rowId: string, value: string) => number;
@@ -257,7 +256,7 @@ function SkillRow({
           <button
             aria-label={`${accessibilityName}${copy.remove}`}
             className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
-            disabled={!canRemove}
+            disabled={!row.removalEnabled}
             onClick={() => onRemove(row.rowId)}
             type="button"
           >
@@ -344,7 +343,6 @@ export default function SkillSection({
             </div>
             {rows.map((row, index) => (
               <SkillRow
-                canRemove={rows.filter((item) => item.removable).length > 1}
                 canMoveDown={
                   row.movable &&
                   rows.slice(index + 1).some((item) => item.movable)

@@ -254,7 +254,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(result.current.form.getValues("ikizamaSkills.bonusLevel")).toBe(1);
   });
 
-  it("uses field-array operations for ikizama rows while keeping one row", () => {
+  it("uses field-array operations to remove every ikizama normal row", () => {
     const { result } = renderHook(() => usePresenterHarness());
     const [firstRow, secondRow] =
       result.current.form.getValues("ikizamaSkills.rows");
@@ -275,10 +275,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
       );
     });
 
-    expect(result.current.form.getValues("ikizamaSkills.rows")).toHaveLength(1);
-    expect(result.current.form.getValues("ikizamaSkills.rows.0.rowId")).toBe(
-      firstRow.rowId,
-    );
+    expect(result.current.form.getValues("ikizamaSkills.rows")).toHaveLength(0);
   });
 
   it("marks only the ikizama build and skill section invalid when selected levels exceed its level", () => {
@@ -324,6 +321,12 @@ describe("useCharacterSheetFormPresenterProps", () => {
     act(() => {
       result.current.presenterProps.buildSection.onIkizamaChange("burai");
       result.current.presenterProps.buildSection.onIkizamaLevelChange("1");
+      result.current.presenterProps.ikizamaSkillsSection.onRemove(
+        result.current.form.getValues("ikizamaSkills.rows.0.rowId"),
+      );
+      result.current.presenterProps.ikizamaSkillsSection.onRemove(
+        result.current.form.getValues("ikizamaSkills.rows.0.rowId"),
+      );
     });
     const bonusSkillId =
       result.current.presenterProps.ikizamaSkillsSection.bonusSkill?.id;
@@ -340,6 +343,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
 
     expect(result.current.form.getValues("build.ikizamaLevel")).toBe(1);
     expect(result.current.form.getValues("ikizamaSkills.bonusLevel")).toBe(3);
+    expect(result.current.form.getValues("ikizamaSkills.rows")).toHaveLength(0);
     expect(result.current.presenterProps.buildSection.build.ikizamaLevel).toBe(
       1,
     );

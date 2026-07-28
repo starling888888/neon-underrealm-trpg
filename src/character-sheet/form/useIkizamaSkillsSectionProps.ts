@@ -121,7 +121,6 @@ export default function useIkizamaSkillsSectionProps(
       onPickerRequest,
       onRemove: (rowId) => {
         const rows = getValues("ikizamaSkills.rows");
-        if (rows.length <= 1) return;
         const index = rows.findIndex((row) => row.rowId === rowId);
         if (index >= 0) remove(index);
       },

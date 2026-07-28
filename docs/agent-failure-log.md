@@ -1147,3 +1147,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-12-sheet-primary-skills` のshared `SkillSection`抽出
 - 観測した失敗: 初回はautomatic行へ不要な`legend`を追加し既存の名称表示契約を壊した。続く訂正では新設した`ariaLabel` Propsをdestructureせず、section Component test全件を失敗させた。
 - 一次対応: automatic行はform入力がないため`legend`を出さず、section見出しとaccessible nameを別Propsで明示した。shared Componentを抽出する場合は、既存Component testを最初の型検査前に通し、追加したPropsの宣言・destructure・利用を同時に確認する。
+
+### Started a character-sheet browser check before client hydration
+
+#### 2026-07-28
+
+- source: agent self-report
+- 発生箇所: `ex-02-13-sheet-ikizama-skills` の生き様通常スキル最低0行確認
+- 観測した失敗: dev serverへ遷移直後に生き様selectを1回だけ変更し、React Islandのhydrate完了後にselect値が初期値へ戻る状態を、削除buttonが表示されない実装不備と誤って切り分けた。
+- 一次対応: form再描画を伴う実ブラウザ操作では、対象sectionの表示状態が更新済みになるまで同じ操作と可視確認を短い再試行境界へ置く。今回も生き様選択済みを確認してから、通常行を2行、1行、0行へ順に削除し、bonus Lvだけが残ることを確認した。
