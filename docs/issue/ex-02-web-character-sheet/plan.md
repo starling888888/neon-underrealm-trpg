@@ -11,6 +11,7 @@
 - 各Gate子issueは、`docs/architectures/character-sheet.md`の`実装時のアーキテクチャ遵守`に従い、適用するarchitecture節と、許可する変更・禁止する変更・確認するテスト層を実装契約として明記する。この対応付けがない変更は実装しない。
 - UIを含む各Gate子issueは、titleの直後に`## 最優先のデザイン入力`節を置く。この節で、requirements・ルール・対象`.tmp/design/<design-target>/`配下の承認済みdraft画像を照合し、このGateで扱う設計範囲を自己完結して明記する。draft画像は高優先の設計入力として遵守するが、同じ目的の既存実装UIがある場合はそちらをさらに優先し、draft画像を既存UIに整合するよう解釈する。ユーザーの最新指示はこれらのデザイン入力を上書きする。design notes、実装結果のscreenshot、reviewer出力をdraft画像または既存実装UIの代わりに使わず、不明点・競合は実装で補完せずに停止してユーザー判断を求める。
 - UIを含むGateの子issue作成時は、design draftと実装指針を確認してからUI実装の詳細を決定する。不明点は実装都合で補完せず、子issueへユーザレビューまたは決定事項として保留し、明示的な決定を得るまで実装しない。
+- UI Gateは、実装後にE2EとVRTのspecを追加・更新しても、ユーザーレビューが完了するまで実行しない。実装後のレビュー待ちではpreview serverを起動せず、既定portのdev serverを維持してユーザーが対象routeを確認できる状態にする。ユーザーレビュー完了の明示指示後にだけ、対象E2E、target限定VRT、actual screenshot確認を実行する。
 - Gate完了時は、子issueの確定事項をdesign notes、architecture、requirementsへそれぞれの正本として差し戻し、後続Gateに必要な前提だけをこのplanへ記録する。完了条件、チェックポイント、レビュー記録は子issueに保持し、親planやほかの正本へ差し戻さない。その後、子issueを`docs/issue/done/`へ移す。
 - 共通スキルボーナスは表示用データを参照するだけとし、構造化、文字列解析、自動算出を追加しない。
 - 全Gateの参照正本は親issueと同じ`docs/requirements/character-sheet.md`、`docs/architectures/character-sheet.md`、`docs/design/character-sheet/notes.md`とする。必要なゲームデータは、子issueで追加して指定する。
