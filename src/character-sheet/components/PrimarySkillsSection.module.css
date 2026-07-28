@@ -65,7 +65,7 @@
 .headerRow,
 .firstLine {
   display: grid;
-  grid-template-columns: 1.25rem minmax(var(--primary-skill-name-width), 1fr) 3.25rem 2.35rem 3.4rem 3.9rem 4.4rem 2rem 1.75rem;
+  grid-template-columns: 1.25rem minmax(var(--primary-skill-name-width), 1fr) 3.25rem 2.35rem 4.5rem 3.4rem 4.4rem 2rem 1.75rem;
   align-items: stretch;
 }
 
@@ -252,16 +252,41 @@
   white-space: pre-wrap;
 }
 
-.details p {
+.detailMeta {
   display: grid;
-  grid-template-columns: 4rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-2);
+}
+
+.details p {
   margin: 0;
+}
+
+.detailMeta p {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.effect {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-1);
 }
 
 .details p > span {
   color: var(--color-text-muted);
   font-weight: 750;
+}
+
+.effect {
+  min-width: 0;
+}
+
+.detailMeta,
+.effect {
+  margin: 0;
 }
 
 .addButton {

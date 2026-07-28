@@ -1,5 +1,6 @@
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
+import { getRyugiById } from "../../lib/data/ryugi-list";
 import type { PrimarySkillsSectionProps } from "../components/PrimarySkillsSection";
 import {
   type CharacterSheetFormValues,
@@ -118,6 +119,10 @@ export default function usePrimarySkillsSectionProps(
       onSelectionClear: () => {
         setRows(getRows().map((row) => ({ ...row, level: 1, skillId: null })));
       },
+      primaryRyugiName:
+        build.primaryRyugiId === null
+          ? null
+          : (getRyugiById(build.primaryRyugiId)?.name ?? null),
       primaryRyugiSelected: build.primaryRyugiId !== null,
       rows,
     },

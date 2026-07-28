@@ -11,7 +11,7 @@
 .headerRow,
 .firstLine {
   display: grid;
-  grid-template-columns: minmax(8rem, 1fr) 3.25rem 3.6rem 4.25rem 4.8rem 5rem;
+  grid-template-columns: minmax(8rem, 1fr) 3.25rem 3.6rem 4.8rem;
   min-width: 0;
 }
 
@@ -100,9 +100,23 @@
   white-space: nowrap;
 }
 
+.details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+  line-height: var(--line-height-normal);
+}
+
+.details > span {
+  min-width: 0;
+  white-space: nowrap;
+}
+
 .effect {
   margin: 0;
-  border-top: var(--border-width) solid var(--color-border);
   padding: var(--space-1) var(--space-2);
   font-size: 0.75rem;
   line-height: var(--line-height-normal);
@@ -110,6 +124,7 @@
   white-space: pre-wrap;
 }
 
+.details strong,
 .effect strong {
   color: var(--color-text-muted);
 }

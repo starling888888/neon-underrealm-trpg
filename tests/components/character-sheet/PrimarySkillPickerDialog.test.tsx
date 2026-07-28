@@ -47,7 +47,13 @@ describe("primary skill dialogs", () => {
     expect(screen.getByRole("heading", { name: "Lv6以上" })).not.toBeNull();
     expect(screen.getByText(groups.basic[0]?.effect ?? "")).not.toBeNull();
     expect(screen.getAllByText("名称")).toHaveLength(2);
-    expect(screen.getAllByText("取得制限")).toHaveLength(2);
+    expect(screen.getAllByText("使用制限")).toHaveLength(2);
+    expect(screen.getAllByText("技能：")).toHaveLength(
+      groups.basic.length + groups.advanced.length,
+    );
+    expect(screen.getAllByText("取得制限：")).toHaveLength(
+      groups.basic.length + groups.advanced.length,
+    );
     expect(screen.queryByText(groups.bonus[0]?.name ?? "")).toBeNull();
 
     await user.click(

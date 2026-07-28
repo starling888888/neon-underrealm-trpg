@@ -24,6 +24,7 @@ function createProps(): PrimarySkillsSectionProps {
     onReorder: vi.fn(),
     onSelect: vi.fn(),
     onSelectionClear: vi.fn(),
+    primaryRyugiName: "ケンカヤ",
     primaryRyugiSelected: true,
     rows: [
       {
@@ -54,6 +55,10 @@ describe("PrimarySkillsSection", () => {
       2,
     );
     expect(screen.getByText("名称")).not.toBeNull();
+    expect(screen.getByText("タイミング")).not.toBeNull();
+    expect(
+      document.querySelector('[data-primary-skill-kind="bonus"]')?.textContent,
+    ).toContain("1");
     expect(screen.queryByText("取得制限")).toBeNull();
 
     fireEvent.click(
@@ -125,7 +130,9 @@ describe("PrimarySkillsSection", () => {
     const section = screen.getByRole("region", {
       name: "プライマリ流儀スキル",
     });
-    const toggle = screen.getByRole("button", { name: "プライマリ流儀" });
+    const toggle = screen.getByRole("button", {
+      name: "プライマリ流儀：ケンカヤ",
+    });
     const level = screen.getByLabelText("旋風Lv");
 
     expect(section.getAttribute("aria-invalid")).toBe("true");
@@ -137,5 +144,41 @@ describe("PrimarySkillsSection", () => {
     fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
     expect(screen.queryByRole("button", { name: /並べ替え:/ })).toBeNull();
+  });
+
+  it("updates the displayed level when a selected skill resets it", () => {
+    const props = createProps();
+    const selectedRow = props.rows.find(
+      (row) => (row.skill?.maxLevel ?? 0) >= 2,
+    );
+    if (selectedRow?.skill === null || selectedRow?.skill === undefined) {
+      throw new Error("Lv2以上のスキル行を取得できません。");
+    }
+    const selectedName = selectedRow.skill.name;
+    const selectedRows = props.rows.map((row) =>
+      row.rowId === selectedRow.rowId ? { ...row, level: 2 } : row,
+    );
+    const { rerender } = render(
+      <PrimarySkillsSection {...props} rows={selectedRows} />,
+    );
+
+    expect(screen.getByLabelText(`${selectedName}Lv`)).toHaveProperty(
+      "value",
+      "2",
+    );
+
+    rerender(
+      <PrimarySkillsSection
+        {...props}
+        rows={selectedRows.map((row) =>
+          row.rowId === selectedRow.rowId ? { ...row, level: 1 } : row,
+        )}
+      />,
+    );
+
+    expect(screen.getByLabelText(`${selectedName}Lv`)).toHaveProperty(
+      "value",
+      "1",
+    );
   });
 });

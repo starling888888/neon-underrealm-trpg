@@ -109,7 +109,7 @@ export const characterSheetDictionary = {
     },
     skills: {
       add: "＋ スキルを追加",
-      choose: "スキルを選択",
+      choose: "プライマリ流儀スキルを選択",
       initialCreation: "初期作成",
       level6OrAbove: "Lv6以上",
       primaryRyugiChangeConfirmation:
@@ -256,6 +256,7 @@ export const characterSheetDictionary = {
         proficiency: "技能",
         range: "射程",
         target: "対象",
+        timing: "タイミング",
         usageRestriction: "使用制限",
       },
     },

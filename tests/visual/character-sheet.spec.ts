@@ -36,7 +36,9 @@ test.describe("character sheet page", () => {
     }).toPass();
 
     await skillPicker.click();
-    const pickerDialog = page.getByRole("dialog", { name: "スキルを選択" });
+    const pickerDialog = page.getByRole("dialog", {
+      name: "プライマリ流儀スキルを選択",
+    });
     await expect(pickerDialog).toBeVisible();
     await expect(
       pickerDialog.getByRole("heading", { name: "初期作成" }),

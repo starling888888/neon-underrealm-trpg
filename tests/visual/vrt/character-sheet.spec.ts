@@ -60,7 +60,9 @@ async function selectPrimarySkill(page: Page): Promise<void> {
     .getByRole("button", { exact: true, name: "スキルを選択" })
     .first()
     .click();
-  const picker = page.getByRole("dialog", { name: "スキルを選択" });
+  const picker = page.getByRole("dialog", {
+    name: "プライマリ流儀スキルを選択",
+  });
   await expect(picker).toBeVisible();
   await picker.getByRole("button", { name: /旋風/ }).click();
   await expect(picker).toBeHidden();
@@ -103,7 +105,8 @@ const primarySkillsLocator = {
 
 const primarySkillPickerLocator = {
   name: "primary-skill-picker",
-  resolve: (page: Page) => page.getByRole("dialog", { name: "スキルを選択" }),
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { name: "プライマリ流儀スキルを選択" }),
 };
 
 const primaryRyugiChangeConfirmLocator = {
@@ -136,7 +139,7 @@ registerVrtScenarios("character-sheet", [
         .first()
         .click();
       await expect(
-        page.getByRole("dialog", { name: "スキルを選択" }),
+        page.getByRole("dialog", { name: "プライマリ流儀スキルを選択" }),
       ).toBeVisible();
     },
     route: visualRoutes.characterSheet,

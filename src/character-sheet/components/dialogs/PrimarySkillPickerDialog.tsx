@@ -2,6 +2,7 @@ import { useId, useRef } from "react";
 
 import type { Skill } from "../../../lib/types/skill";
 import { characterSheetDictionary } from "../../dictionary";
+import { formatDisplayValue } from "../../format-display-value";
 import type { PrimarySkillGroups } from "../../master-data/primary-skills";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
@@ -46,10 +47,18 @@ function CandidateRow({
           {skill.name}
         </button>
         <span>{skill.maxLevel}</span>
-        <span>{skill.cost ?? "-"}</span>
-        <span>{formatCompactValue(skill.proficiency, "/")}</span>
+        <span>{formatDisplayValue(skill.cost ?? null)}</span>
         <span>{formatCompactValue(skill.usageRestriction, "&")}</span>
-        <span>{skill.acquisitionRestriction ?? "-"}</span>
+      </div>
+      <div className={styles.details}>
+        <span>
+          <strong>{copy.proficiency}：</strong>
+          {formatDisplayValue(skill.proficiency ?? null)}
+        </span>
+        <span>
+          <strong>{copy.acquisitionRestriction}：</strong>
+          {formatDisplayValue(skill.acquisitionRestriction ?? null)}
+        </span>
       </div>
       <p className={styles.effect}>
         <strong>{copy.effect}：</strong>
@@ -67,9 +76,7 @@ function CandidateTableHeader() {
       <span>{copy.name}</span>
       <span>{copy.maximumLevel}</span>
       <span>{copy.cost}</span>
-      <span>{copy.proficiency}</span>
       <span>{copy.usageRestriction}</span>
-      <span>{copy.acquisitionRestriction}</span>
     </div>
   );
 }

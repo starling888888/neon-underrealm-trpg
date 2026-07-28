@@ -27,6 +27,7 @@ export type PrimarySkillsSectionProps = {
   onReorder: (draggedRowId: string, targetRowId: string) => void;
   onSelect: (rowId: string, skillId: string) => void;
   onSelectionClear: () => void;
+  primaryRyugiName: string | null;
   primaryRyugiSelected: boolean;
   rows: readonly PrimarySkillRowView[];
 };
@@ -54,11 +55,11 @@ function SkillMetadata({ skill }: SkillMetadataProps) {
       <span className={styles.cell} data-primary-skill-metadata="maximum">
         {formatDisplayValue(skill?.maxLevel ?? null)}
       </span>
+      <span className={styles.cell} data-primary-skill-metadata="timing">
+        {formatDisplayValue(skill?.timing ?? null)}
+      </span>
       <span className={styles.cell} data-primary-skill-metadata="cost">
         {formatDisplayValue(skill?.cost ?? null)}
-      </span>
-      <span className={styles.cell} data-primary-skill-metadata="proficiency">
-        {formatCompactValue(skill?.proficiency, "/")}
       </span>
       <span className={styles.cell} data-primary-skill-metadata="usage">
         {formatCompactValue(skill?.usageRestriction, "&")}
@@ -72,11 +73,17 @@ function SkillDetails({ skill }: SkillMetadataProps) {
 
   return (
     <div className={styles.details}>
-      <p>
-        <span>{copy.acquisitionRestriction}</span>
-        {formatDisplayValue(skill?.acquisitionRestriction ?? null)}
-      </p>
-      <p>
+      <div className={styles.detailMeta}>
+        <p>
+          <span>{copy.proficiency}</span>
+          {formatDisplayValue(skill?.proficiency ?? null)}
+        </p>
+        <p>
+          <span>{copy.acquisitionRestriction}</span>
+          {formatDisplayValue(skill?.acquisitionRestriction ?? null)}
+        </p>
+      </div>
+      <p className={styles.effect}>
         <span>{copy.effect}</span>
         {skill?.effect ?? ""}
       </p>
@@ -109,7 +116,6 @@ function DetailsToggle({
 }
 
 function PrimaryBonusSkillRow({ skill }: { skill: Skill }) {
-  const { general } = characterSheetDictionary;
   const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
 
   return (
@@ -117,7 +123,7 @@ function PrimaryBonusSkillRow({ skill }: { skill: Skill }) {
       <div className={styles.firstLine}>
         <span aria-hidden="true" className={styles.handlePlaceholder} />
         <span className={styles.skillName}>{skill.name}</span>
-        <span className={styles.levelValue}>{general.automatic}</span>
+        <span className={styles.levelValue}>1</span>
         <SkillMetadata skill={skill} />
         <DetailsToggle
           isExpanded={isDetailsExpanded}
@@ -206,7 +212,6 @@ function PrimarySkillRow({
           <input
             aria-invalid={hasMaximumLevelError || undefined}
             aria-label={`${name}${skillCopy.level}`}
-            defaultValue={row.level}
             max={row.skill?.maxLevel}
             min="1"
             onBlur={(event) => {
@@ -221,6 +226,7 @@ function PrimarySkillRow({
             }}
             step="1"
             type="number"
+            value={row.level}
           />
         </label>
         <SkillMetadata skill={row.skill} />
@@ -255,6 +261,7 @@ export default function PrimarySkillsSection({
   onPickerRequest,
   onRemove,
   onReorder,
+  primaryRyugiName,
   primaryRyugiSelected,
   rows,
 }: PrimarySkillsSectionProps) {
@@ -282,7 +289,11 @@ export default function PrimarySkillsSection({
           onClick={() => setIsExpanded((expanded) => !expanded)}
           type="button"
         >
-          <span>{copy.primary}</span>
+          <span>
+            {primaryRyugiName === null
+              ? copy.primary
+              : `${copy.primary}：${primaryRyugiName}`}
+          </span>
           <span aria-hidden="true" className={styles.chevron} />
         </button>
       </h3>
@@ -302,8 +313,8 @@ export default function PrimarySkillsSection({
                 <br />
                 {skillCopy.level}
               </span>
+              <span>{skillCopy.timing}</span>
               <span>{skillCopy.cost}</span>
-              <span>{skillCopy.proficiency}</span>
               <span>{skillCopy.usageRestriction}</span>
               <span>{skillCopy.expand}</span>
               <span />
