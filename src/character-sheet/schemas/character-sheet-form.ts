@@ -168,6 +168,17 @@ export const characterSheetFormSchema = z.object({
       }),
     }),
   }),
+  commonSkills: z.object({
+    rows: z
+      .array(
+        z.object({
+          level: z.number().int().min(1),
+          rowId: z.string(),
+          skillId: z.string().nullable(),
+        }),
+      )
+      .min(1),
+  }),
   credit: z.object({
     acquired: nonNegativeIntegerSchema,
     changeAdjustment: signedIntegerSchema,

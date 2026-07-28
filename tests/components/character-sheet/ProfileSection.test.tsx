@@ -17,7 +17,10 @@ function createProps(): ProfileSectionProps {
     creditSummary: { change: 10, totalCredit: 10 },
     experience: {
       acquired: characterSheetDefaultValues.build.acquiredExperience,
+      commonSkillLevelLimit: 1,
+      commonSkillLevelTotal: 0,
       derived: calculateBuild(characterSheetDefaultValues.build),
+      hasCommonSkillLevelError: false,
       onAcquiredChange: vi.fn((value: string) => Number(value)),
     },
     isRootOperationInProgress: false,
@@ -108,7 +111,13 @@ describe("ProfileSection", () => {
     expect(screen.queryByRole("button", { name: "消費経験点" })).toBeNull();
     expect(screen.queryByRole("button", { name: "残経験点" })).toBeNull();
 
-    for (const label of ["合計信用", "消費信用", "小銭", "格"]) {
+    for (const label of [
+      "合計信用",
+      "消費信用",
+      "小銭",
+      "格",
+      "共通スキルレベル合計／共通スキル上限",
+    ]) {
       expect(screen.getByRole("button", { name: label })).not.toBeNull();
       expect(
         screen.getByRole("button", { name: label }).querySelector("output"),
@@ -120,6 +129,16 @@ describe("ProfileSection", () => {
     expect(screen.getByRole("tooltip").textContent).toBe(
       "プライマリ流儀レベル + 生き様レベル",
     );
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "共通スキルレベル合計／共通スキル上限",
+      }),
+    );
+
+    expect(
+      screen.getByText("合計レベル上限 = 格 ÷ 2（端数切り上げ）"),
+    ).not.toBeNull();
   });
 
   it("keeps a signed number field editable through its minus intermediate state", async () => {

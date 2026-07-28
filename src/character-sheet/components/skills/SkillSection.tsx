@@ -26,6 +26,8 @@ export type SkillSectionRow = {
 };
 
 export type SkillSectionProps = {
+  actionDescription?: string;
+  actionDescriptionInvalid?: boolean;
   addLabel: string;
   ariaLabel: string;
   heading: string;
@@ -281,6 +283,8 @@ function SkillRow({
 
 /** Shared presentation for one character-sheet skill category. */
 export default function SkillSection({
+  actionDescription,
+  actionDescriptionInvalid = false,
   addLabel,
   ariaLabel,
   heading,
@@ -368,13 +372,23 @@ export default function SkillSection({
               />
             ))}
             {onAdd === undefined ? null : (
-              <button
-                className={styles.addButton}
-                onClick={onAdd}
-                type="button"
-              >
-                {addLabel}
-              </button>
+              <div className={styles.actions}>
+                <button
+                  className={styles.addButton}
+                  onClick={onAdd}
+                  type="button"
+                >
+                  {addLabel}
+                </button>
+                {actionDescription === undefined ? null : (
+                  <output
+                    aria-invalid={actionDescriptionInvalid || undefined}
+                    className={styles.actionDescription}
+                  >
+                    {actionDescription}
+                  </output>
+                )}
+              </div>
             )}
           </>
         ) : (

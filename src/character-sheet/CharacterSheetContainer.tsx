@@ -7,6 +7,7 @@ import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDia
 import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
 import SkillSelectionChangeConfirmDialog from "./components/dialogs/SkillSelectionChangeConfirmDialog";
+import SkillPickerDialog from "./components/skills/SkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
@@ -26,6 +27,9 @@ export default function CharacterSheetContainer() {
   const [ikizamaSkillPickerRowId, setIkizamaSkillPickerRowId] = useState<
     string | null
   >(null);
+  const [commonSkillPickerRowId, setCommonSkillPickerRowId] = useState<
+    string | null
+  >(null);
   const [otherRyugiSkillPickerRowId, setOtherRyugiSkillPickerRowId] = useState<
     string | null
   >(null);
@@ -39,6 +43,7 @@ export default function CharacterSheetContainer() {
     useState(false);
   const primarySkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const ikizamaSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const commonSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const otherRyugiSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
@@ -100,6 +105,10 @@ export default function CharacterSheetContainer() {
         ikizamaSkillPickerTriggerRef.current = trigger;
         setIkizamaSkillPickerRowId(rowId);
       },
+      onCommonSkillPickerRequested: (rowId, trigger) => {
+        commonSkillPickerTriggerRef.current = trigger;
+        setCommonSkillPickerRowId(rowId);
+      },
       onOtherRyugiChangeRequested: (rowId, ryugiId, trigger, applyChange) => {
         const currentRyugiId = rootState.form
           .getValues("build.otherRyugi")
@@ -158,6 +167,10 @@ export default function CharacterSheetContainer() {
 
   function closeIkizamaSkillPicker(): void {
     setIkizamaSkillPickerRowId(null);
+  }
+
+  function closeCommonSkillPicker(): void {
+    setCommonSkillPickerRowId(null);
   }
 
   function closeOtherRyugiSkillPicker(): void {
@@ -255,6 +268,33 @@ export default function CharacterSheetContainer() {
             closeIkizamaSkillPicker();
           }}
           returnFocusRef={ikizamaSkillPickerTriggerRef}
+        />
+        <SkillPickerDialog
+          groups={[
+            {
+              id: "common-skills",
+              skills: presenterProps.commonSkillPicker.candidates,
+            },
+          ]}
+          isOpen={commonSkillPickerRowId !== null}
+          onRequestClose={closeCommonSkillPicker}
+          onSelect={(skillId) => {
+            if (commonSkillPickerRowId !== null) {
+              presenterProps.commonSkillPicker.onSelect(
+                commonSkillPickerRowId,
+                skillId,
+              );
+            }
+            closeCommonSkillPicker();
+          }}
+          returnFocusRef={commonSkillPickerTriggerRef}
+          selectedSkillIds={presenterProps.commonSkillsSection.rows.flatMap(
+            (row) => (row.skillId === null ? [] : [row.skillId]),
+          )}
+          selectionGuide={
+            characterSheetDictionary.characterSheet.skills.selectionGuide
+          }
+          title={characterSheetDictionary.characterSheet.skills.chooseCommon}
         />
         <OtherRyugiSkillPickerDialog
           groups={

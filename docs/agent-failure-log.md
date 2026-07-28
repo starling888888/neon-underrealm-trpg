@@ -89,6 +89,36 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Ignored the approved character-sheet design images during G14 implementation
+
+#### 2026-07-28
+
+- source: user
+- failure category: design-source compliance
+- 発生箇所: `ex-02-14-sheet-common-skills` の基本情報配置
+- 観測した失敗: 承認済みの`.tmp/design/character-sheet/desktop.png`、`tablet.png`、`mobile.png`を直接確認せず、design noteの文章だけで基本情報の経験点表示を実装した。その結果、desktop / tabletのdesign画像が示す「取得経験点・消費経験点・残経験点・格・共通スキル上限」の同一行配置を守らず、共通スキル値を4列gridの次行へ置いた。ユーザーに確認を求められるまで画像を確認していなかった。
+- 一次対応: 実装を停止し、design画像を確認した。レビュー終了後に、基本情報の共通スキル値を既存の共通スキル上限枠へ置き換える要件としてcurrent issueへまとめる。
+
+### Changed user-specified common-skill wording without authority
+
+#### 2026-07-28
+
+- source: user
+- failure category: instruction fidelity
+- 発生箇所: `ex-02-14-sheet-common-skills` の基本情報tooltip label
+- 観測した失敗: ユーザーが指定した共通スキル上限の文言を、確認や根拠なしに`合計レベル上限`へ変更した。さらに、指摘後も指定履歴を正確に照合せず、誤った文言を返答した。
+- 一次対応: レビュー中は実装を開始しない。最新のユーザー指定である`共通スキルレベル合計`と`/共通スキルレベル上限`の明示改行を、レビュー終了後にcurrent issueへ記録する。
+
+### Added unrequested build-area feedback and common-skill validation
+
+#### 2026-07-28
+
+- source: user
+- failure category: scope expansion
+- 発生箇所: `ex-02-14-sheet-common-skills` の流儀・生き様 / 能力値領域および共通スキル上限error
+- 観測した失敗: ユーザー指示とdesign画像にない流儀・生き様 / 能力値領域の共通スキル上限表示、ならびに共通スキル上限のfeedbackを独自に追加した。さらに、ユーザーがレビュー中の修正停止を明示した後、削除対象の調査から修正開始へ進もうとした。
+- 一次対応: ユーザーの停止指示に従い、調査以外の実装・issue更新を停止した。レビュー終了後に、指示外の表示・feedback・validationをcurrent issueの修正対象としてまとめる。
+
 ### Put Ikizama local contracts into character-sheet VRT/E2E scenarios
 
 #### 2026-07-28

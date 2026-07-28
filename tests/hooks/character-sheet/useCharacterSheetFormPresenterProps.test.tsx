@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 import useCharacterSheetFormPresenterProps from "../../../src/character-sheet/form/useCharacterSheetFormPresenterProps";
 import type { CharacterSheetFormValues } from "../../../src/character-sheet/form-values";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { getCommonSkillCandidates } from "../../../src/character-sheet/master-data/common-skills";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
 import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-data/other-ryugi-skills";
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
@@ -106,6 +107,54 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(
       result.current.presenterProps.profileSection.experience.acquired,
     ).toBe(70);
+  });
+
+  it("connects common-skill selections, levels, the level limit, and experience", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [skill] = getCommonSkillCandidates();
+    const firstRowId = result.current.form.getValues(
+      "commonSkills.rows.0.rowId",
+    );
+    if (skill === undefined) {
+      throw new Error("共通スキル候補を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.commonSkillPicker.onSelect(
+        firstRowId,
+        skill.id,
+      );
+      result.current.presenterProps.commonSkillsSection.onLevelChange(
+        firstRowId,
+        "2",
+      );
+    });
+
+    expect(result.current.form.getValues("commonSkills.rows.0")).toMatchObject({
+      level: 2,
+      skillId: skill.id,
+    });
+    expect(
+      result.current.presenterProps.commonSkillsSection.selectedLevelTotal,
+    ).toBe(2);
+    expect(result.current.presenterProps.commonSkillsSection.levelLimit).toBe(
+      1,
+    );
+    expect(
+      result.current.presenterProps.commonSkillsSection
+        .hasCommonSkillLevelError,
+    ).toBe(true);
+    expect(
+      result.current.presenterProps.profileSection.experience.derived
+        .spentExperience,
+    ).toBe(10);
+    expect(
+      result.current.presenterProps.buildSection.derived.hasBuildError,
+    ).toBe(false);
+    expect(
+      result.current.presenterProps.profileSection.experience
+        .hasCommonSkillLevelError,
+    ).toBe(true);
   });
 
   it("keeps primary skill rows in RHF and normalizes selection levels", () => {

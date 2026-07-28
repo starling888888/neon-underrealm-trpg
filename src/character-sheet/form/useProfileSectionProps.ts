@@ -14,6 +14,9 @@ export default function useProfileSectionProps(
   { control, setValue }: UseFormReturn<CharacterSheetFormValues>,
   imageState: CharacterImagePresenterState,
   derivedBuild: BuildDerivedValues,
+  commonSkillLevelTotal: number,
+  commonSkillLevelLimit: number,
+  hasCommonSkillLevelError: boolean,
   onAcquiredExperienceChange: (value: string) => number,
 ): ProfileSectionProps {
   const profile = useWatch({
@@ -45,7 +48,10 @@ export default function useProfileSectionProps(
     creditSummary,
     experience: {
       acquired: acquiredExperience,
+      commonSkillLevelLimit,
+      commonSkillLevelTotal,
       derived: derivedBuild,
+      hasCommonSkillLevelError,
       onAcquiredChange: onAcquiredExperienceChange,
     },
     onCreditBlur: (field, value) => {

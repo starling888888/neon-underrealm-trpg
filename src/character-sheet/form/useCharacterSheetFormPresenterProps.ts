@@ -10,6 +10,7 @@ import type { CharacterImagePresenterState } from "./presenter-state";
 import useBondsSectionProps from "./useBondsSectionProps";
 import useBuildSectionProps from "./useBuildSectionProps";
 import useChecksSectionProps from "./useChecksSectionProps";
+import useCommonSkillsSectionProps from "./useCommonSkillsSectionProps";
 import useIkizamaSkillsSectionProps from "./useIkizamaSkillsSectionProps";
 import useOtherRyugiSkillsSectionProps from "./useOtherRyugiSkillsSectionProps";
 import usePrimarySkillsSectionProps from "./usePrimarySkillsSectionProps";
@@ -51,6 +52,10 @@ type CharacterSheetPresenterOptions = {
     rowId: string,
     trigger: HTMLButtonElement,
   ) => void;
+  onCommonSkillPickerRequested: (
+    rowId: string,
+    trigger: HTMLButtonElement,
+  ) => void;
 };
 
 export type CharacterSheetContainerPresenterState =
@@ -58,6 +63,10 @@ export type CharacterSheetContainerPresenterState =
     ikizamaSkillPicker: {
       candidateGroups: IkizamaSkillGroups;
       clearSelection: () => void;
+      onSelect: (rowId: string, skillId: string) => void;
+    };
+    commonSkillPicker: {
+      candidates: ReturnType<typeof useCommonSkillsSectionProps>["candidates"];
       onSelect: (rowId: string, skillId: string) => void;
     };
     otherRyugiSkillPicker: {
@@ -87,14 +96,19 @@ export default function useCharacterSheetFormPresenterProps(
     otherRyugiAddButtonRef,
     onOtherRyugiRemoveRequested,
     onOtherRyugiSkillPickerRequested,
+    onCommonSkillPickerRequested,
     onPrimaryRyugiChangeRequested,
     onPrimarySkillPickerRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
+  const commonSkills = useCommonSkillsSectionProps(form, {
+    onPickerRequest: onCommonSkillPickerRequested ?? (() => {}),
+  });
   const otherRyugiSkills = useOtherRyugiSkillsSectionProps(form, {
     onPickerRequest: onOtherRyugiSkillPickerRequested ?? (() => {}),
   });
   const build = useBuildSectionProps(form, {
+    commonSkillLevelTotal: commonSkills.sectionProps.selectedLevelTotal,
     onIkizamaChangeRequested,
     onOtherRyugiAdded: otherRyugiSkills.addInitialRow,
     otherRyugiAddButtonRef,
@@ -115,6 +129,9 @@ export default function useCharacterSheetFormPresenterProps(
     form,
     imageState,
     build.derivedBuild,
+    commonSkills.sectionProps.selectedLevelTotal,
+    commonSkills.sectionProps.levelLimit,
+    commonSkills.sectionProps.hasCommonSkillLevelError,
     build.onAcquiredExperienceChange,
   );
   const primarySkills = usePrimarySkillsSectionProps(form, {
@@ -138,6 +155,11 @@ export default function useCharacterSheetFormPresenterProps(
         primarySkills.sectionProps.hasPrimarySkillLevelTotalError,
     },
     checksSection,
+    commonSkillPicker: {
+      candidates: commonSkills.candidates,
+      onSelect: commonSkills.onSelect,
+    },
+    commonSkillsSection: commonSkills.sectionProps,
     ikizamaSkillsSection: ikizamaSkills.sectionProps,
     ikizamaSkillPicker: {
       candidateGroups: ikizamaSkills.candidateGroups,

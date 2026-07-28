@@ -77,6 +77,39 @@ test.describe("character sheet page", () => {
     await expect(pickerDialog).toBeHidden();
   });
 
+  test("selects a common skill and reflects its level total", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const commonSkills = page.getByRole("region", { name: "共通スキル" });
+    const skillPicker = commonSkills.getByRole("button", {
+      name: "共通スキル未選択スキル1",
+      exact: true,
+    });
+
+    await expect(async () => {
+      await skillPicker.click();
+      await expect(
+        page.getByRole("dialog", { name: "共通スキルを選択" }),
+      ).toBeVisible();
+    }).toPass();
+    const pickerDialog = page.getByRole("dialog", {
+      name: "共通スキルを選択",
+    });
+    await pickerDialog.getByRole("button", { name: "基本の連撃" }).click();
+    await expect(pickerDialog).toBeHidden();
+    await expect(
+      commonSkills.getByText("取得合計レベル：1／合計レベル上限：1"),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", {
+        name: "共通スキルレベル合計／共通スキル上限",
+      }),
+    ).toBeVisible();
+  });
+
   test("selects an other-ryugi skill and confirms its removal", async ({
     page,
   }) => {

@@ -79,6 +79,10 @@ export type IkizamaSkillsValues = {
   rows: SkillSelectionRowValues[];
 };
 
+export type CommonSkillsValues = {
+  rows: SkillSelectionRowValues[];
+};
+
 export type OtherRyugiSkillValues = SkillSelectionRowValues & {
   ryugiRowId: string;
 };
@@ -200,10 +204,19 @@ function createInitialIkizamaSkillRows(): SkillSelectionRowValues[] {
   }));
 }
 
+function createInitialCommonSkillRows(): SkillSelectionRowValues[] {
+  return Array.from({ length: 2 }, (_, index) => ({
+    level: 1,
+    rowId: `common-skill-${index + 1}`,
+    skillId: null,
+  }));
+}
+
 export type CharacterSheetFormValues = {
   bonds: BondsValues;
   build: BuildValues;
   checks: ChecksValues;
+  commonSkills: CommonSkillsValues;
   credit: CreditValues;
   ikizamaSkills: IkizamaSkillsValues;
   otherRyugiSkills: OtherRyugiSkillsValues;
@@ -278,6 +291,9 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
       { attribute: "mind", modifier: 0, name: "resistance" },
     ],
     noncombat: createInitialNoncombatChecks(),
+  },
+  commonSkills: {
+    rows: createInitialCommonSkillRows(),
   },
   credit: {
     acquired: 10,

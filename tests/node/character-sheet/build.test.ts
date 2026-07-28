@@ -48,6 +48,14 @@ describe("character sheet build", () => {
     assert.equal(derived.hasAttributeError, false);
   });
 
+  it("adds common-skill levels to experience without changing build validation", () => {
+    const derived = calculateBuild(characterSheetDefaultValues.build, 2);
+
+    assert.equal(derived.spentExperience, 10);
+    assert.equal(derived.remainingExperience, 40);
+    assert.equal(derived.hasBuildError, false);
+  });
+
   it("reports growth overages before master data is selected", () => {
     const build = {
       ...characterSheetDefaultValues.build,

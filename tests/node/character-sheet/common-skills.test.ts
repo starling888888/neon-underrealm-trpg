@@ -1,0 +1,49 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+
+import { calculateCommonSkillsValidation } from "../../../src/character-sheet/logic/common-skills";
+import {
+  getBasicAttackSkill,
+  getCommonSkillCandidates,
+} from "../../../src/character-sheet/master-data/common-skills";
+
+describe("character sheet common skills", () => {
+  it("keeps the basic attack automatic and preserves candidate source order", () => {
+    const basicAttack = getBasicAttackSkill();
+    const candidates = getCommonSkillCandidates();
+
+    assert.equal(basicAttack?.name, "基本の一撃");
+    assert.equal(
+      candidates.some((skill) => skill.category === "bonus"),
+      false,
+    );
+    assert.deepEqual(
+      candidates.map((skill) => skill.sourceOrder),
+      [...candidates.map((skill) => skill.sourceOrder)].sort(
+        (left, right) => left - right,
+      ),
+    );
+  });
+
+  it("counts selected normal rows only and rounds the rank limit upward", () => {
+    const [skill] = getCommonSkillCandidates();
+    if (skill === undefined)
+      throw new Error("共通スキル候補を取得できません。");
+
+    const validation = calculateCommonSkillsValidation(3, [
+      { level: 2, rowId: "selected", skill },
+      { level: 4, rowId: "empty", skill: null },
+    ]);
+
+    assert.equal(validation.selectedLevelTotal, 2);
+    assert.equal(validation.levelLimit, 2);
+    assert.equal(validation.hasCommonSkillLevelError, false);
+
+    assert.equal(
+      calculateCommonSkillsValidation(3, [
+        { level: 3, rowId: "over-limit", skill },
+      ]).hasCommonSkillLevelError,
+      true,
+    );
+  });
+});

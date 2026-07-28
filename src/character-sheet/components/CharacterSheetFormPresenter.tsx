@@ -4,6 +4,9 @@ import BuildSection, { type BuildSectionProps } from "./BuildSection";
 import styles from "./CharacterSheetFormPresenter.module.css";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ChecksSection, { type ChecksSectionProps } from "./ChecksSection";
+import CommonSkillsSection, {
+  type CommonSkillsSectionProps,
+} from "./CommonSkillsSection";
 import IkizamaSkillsSection, {
   type IkizamaSkillsSectionProps,
 } from "./IkizamaSkillsSection";
@@ -28,6 +31,7 @@ export type CharacterSheetFormPresenterProps = {
   bondsSection: BondsSectionProps;
   buildSection: BuildSectionProps;
   checksSection: ChecksSectionProps;
+  commonSkillsSection: CommonSkillsSectionProps;
   ikizamaSkillsSection: IkizamaSkillsSectionProps;
   otherRyugiSkillsSection: OtherRyugiSkillsSectionProps;
   primarySkillsSection: PrimarySkillsSectionProps;
@@ -39,6 +43,7 @@ export default function CharacterSheetFormPresenter({
   bondsSection,
   buildSection,
   checksSection,
+  commonSkillsSection,
   ikizamaSkillsSection,
   otherRyugiSkillsSection,
   primarySkillsSection,
@@ -117,6 +122,7 @@ export default function CharacterSheetFormPresenter({
           >
             <PrimarySkillsSection {...primarySkillsSection} />
             <IkizamaSkillsSection {...ikizamaSkillsSection} />
+            <CommonSkillsSection {...commonSkillsSection} />
             <OtherRyugiSkillsSection {...otherRyugiSkillsSection} />
           </div>
         </CharacterSheetSectionFrame>

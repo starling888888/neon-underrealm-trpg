@@ -24,6 +24,7 @@ export type BuildSectionPresenterState = {
 };
 
 type UseBuildSectionPropsOptions = {
+  commonSkillLevelTotal?: number;
   onIkizamaChangeRequested?: (
     ikizamaId: string | null,
     trigger: HTMLSelectElement,
@@ -53,6 +54,7 @@ export default function useBuildSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
   {
     onIkizamaChangeRequested,
+    commonSkillLevelTotal = 0,
     onOtherRyugiAdded,
     otherRyugiAddButtonRef,
     onOtherRyugiChangeRequested,
@@ -65,7 +67,7 @@ export default function useBuildSectionProps(
     defaultValue: characterSheetDefaultValues.build,
     name: "build",
   });
-  const derivedBuild = calculateBuild(build);
+  const derivedBuild = calculateBuild(build, commonSkillLevelTotal);
 
   function setBuildValue<K extends keyof BuildValues>(
     field: K,

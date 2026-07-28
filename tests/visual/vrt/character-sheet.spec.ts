@@ -7,6 +7,18 @@ async function openTooltip(page: Page, name: string): Promise<void> {
   await expect(page.getByRole("tooltip")).toBeVisible();
 }
 
+async function openCommonSkillLimitTooltip(page: Page): Promise<void> {
+  await expect(async () => {
+    await page
+      .getByRole("button", {
+        exact: true,
+        name: "共通スキルレベル合計／共通スキル上限",
+      })
+      .click();
+    await expect(page.getByRole("tooltip")).toBeVisible();
+  }).toPass();
+}
+
 async function fillBond(page: Page, row: number, value: string): Promise<void> {
   await page.getByLabel(`縁${row}の対象`, { exact: true }).fill(value);
 }
@@ -83,6 +95,27 @@ async function selectLongIkizamaSkill(page: Page): Promise<void> {
     .getByRole("button", { name: /帰還不能地点/ })
     .first()
     .click();
+  await expect(picker).toBeHidden();
+}
+
+async function openCommonSkillPicker(page: Page): Promise<void> {
+  const commonSkills = page.getByRole("region", { name: "共通スキル" });
+
+  await expect(async () => {
+    await commonSkills
+      .getByRole("button", { exact: true, name: "共通スキル未選択スキル1" })
+      .click();
+    await expect(
+      page.getByRole("dialog", { name: "共通スキルを選択" }),
+    ).toBeVisible();
+  }).toPass();
+}
+
+async function selectCommonSkill(page: Page): Promise<void> {
+  await openCommonSkillPicker(page);
+  const picker = page.getByRole("dialog", { name: "共通スキルを選択" });
+
+  await picker.getByRole("button", { name: "基本の連撃" }).click();
   await expect(picker).toBeHidden();
 }
 
@@ -165,6 +198,20 @@ const ikizamaSkillsLocator = {
   resolve: (page: Page) => page.locator("[data-ikizama-skills-section]"),
 };
 
+const commonSkillsLocator = {
+  name: "common-skills-section",
+  resolve: (page: Page) =>
+    page.locator("section[data-skill-section]").filter({
+      has: page.getByRole("heading", { exact: true, name: "共通スキル" }),
+    }),
+};
+
+const commonSkillPickerLocator = {
+  name: "common-skill-picker",
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { name: "共通スキルを選択" }),
+};
+
 const otherRyugiSkillsLocator = {
   name: "other-ryugi-skills-section",
   resolve: (page: Page) =>
@@ -189,6 +236,48 @@ const tooltipLocator = {
 };
 
 registerVrtScenarios("character-sheet", [
+  {
+    id: "common-skills-default",
+    locatorOnly: true,
+    locators: [profileSectionLocator, buildSectionLocator, commonSkillsLocator],
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "common-skill-picker-open",
+    locatorOnly: true,
+    locators: [commonSkillsLocator, commonSkillPickerLocator],
+    prepare: openCommonSkillPicker,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "common-skill-limit-tooltip-open",
+    locatorOnly: true,
+    locators: [profileSectionLocator, tooltipLocator],
+    prepare: openCommonSkillLimitTooltip,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "common-skill-selected",
+    locatorOnly: true,
+    locators: [profileSectionLocator, buildSectionLocator, commonSkillsLocator],
+    prepare: selectCommonSkill,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "common-skill-level-error",
+    locatorOnly: true,
+    locators: [profileSectionLocator, buildSectionLocator, commonSkillsLocator],
+    prepare: async (page) => {
+      await selectCommonSkill(page);
+      await page.getByLabel("基本の連撃Lv", { exact: true }).fill("2");
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
   {
     id: "other-ryugi-skill-selected",
     locatorOnly: true,

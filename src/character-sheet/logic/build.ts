@@ -88,7 +88,10 @@ function getIkizamaCoefficients(ikizama: Ikizama, level: number) {
 }
 
 /** Derives G7-only build values without depending on React or form state. */
-export function calculateBuild(build: BuildValues): BuildDerivedValues {
+export function calculateBuild(
+  build: BuildValues,
+  commonSkillLevelTotal = 0,
+): BuildDerivedValues {
   const { ikizama, primaryRyugi } = getSources(build);
   const primaryLevelInvalid = build.primaryRyugiLevel < 1;
   const ikizamaLevelInvalid = build.ikizamaLevel < 1;
@@ -152,7 +155,8 @@ export function calculateBuild(build: BuildValues): BuildDerivedValues {
         total +
         (otherRyugi.ryugiId === null ? 0 : Math.max(0, otherRyugi.level) * 10),
       0,
-    );
+    ) +
+    commonSkillLevelTotal * 5;
   const remainingExperience = build.acquiredExperience - spentExperience;
   const hasExperienceError =
     hasInvalidAcquiredExperience || remainingExperience < 0;

@@ -2,9 +2,9 @@
 
 ## 最優先のデザイン入力
 
-- 対象design targetは`docs/design/character-sheet/notes.md`と`.tmp/design/character-sheet/`配下の承認済みdraftである。
+- 対象design targetは`docs/design/character-sheet/notes.md`と`.tmp/design/character-sheet/`配下の承認済みdraftである。基本情報の配置は、ユーザー確認済みの`desktop.png`、`tablet.png`、`mobile.png`を直接参照する。
 - 現行の`components/skills/` shared Component、G12で確定したスキル区分のheader、展開、候補dialog、mobile個別最適化は、draftより優先する既存UIとして再利用する。
-- ユーザーの最新指示と`docs/architectures/character-sheet.md`の`可変行のデザイン指針`を優先する。design notes、actual screenshot、reviewer出力を画面設計の根拠にしない。
+- ユーザーの最新指示と`docs/architectures/character-sheet.md`の`可変行のデザイン指針`を優先する。実装後のactual screenshotとreviewer出力はdesign正本に置き換えない。
 
 ## 目的
 
@@ -45,11 +45,10 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 - RHFへ共通スキル通常行2行（最低1行）、各行の`rowId`、skill ID、取得Lvを追加する。通常行の追加・削除・上下移動は`useFieldArray`で行い、既存可変行の移行はG24前TODOへ残す。`common-skills.json`の基本の一撃を先頭へ導出し、内容・Lvとも編集不可にする。基本の一撃は通常行の取得合計と経験点に含めない。
 - 共通スキル候補は生成JSONの定義順を保ち、bonusを候補から除外する。通常行は選択時と別スキルへの変更時にLvを`1`へ戻し、追加・削除・上下移動できる。
 - `SkillSection`と`SkillPickerDialog`を再利用し、共通スキル専用の行Component、候補dialog、CSS Moduleを追加しない。共通スキルadapterが、行ViewModel、候補配列、上限・重複などの表示状態、callbackをshared Propsへ正規化する。
-- 基本の一撃を除く通常行の取得Lv合計を`N`、格の半分を端数切り上げた上限を`M`として、基本情報の経験点表示に、`FormulaTooltip`のlabel `共通スキルレベル合計／合計レベル上限`と読み取り専用値`N／M`を追加する。tooltipの文言は`合計レベル上限 = 格 ÷ 2（端数切り上げ）`とする。`ProfileSection`はこの読み取り専用ViewModelを表示するだけとし、mobileでは経験点の次行に置く。
-- `SkillSection`の追加操作領域には、optionalな`actionDescription`とerror状態を持たせる。共通スキルadapterだけが`取得合計レベル：N／合計レベル上限：M`を渡し、desktop / tabletでは追加button右側、mobileでは追加buttonの下に表示する。他のスキル区分はこのoptional Propsを渡さず、既存表示を変えない。
-- `BuildSection`の参照値領域にも、ゲーム用語としての共通スキル上限`M`を表示する。desktop / tabletでは格と同じ参照値gridで確認できる位置に置く。`N > M`時のerror状態は基本情報、ビルド側表示、共通スキル領域へ伝える。
+- 基本の一撃を除く通常行の取得Lv合計を`N`、格の半分を端数切り上げた上限を`M`として、基本情報のdesign画像にある既存の共通スキル上限枠を置き換える。`FormulaTooltip`のlabelは`共通スキルレベル合計／共通スキル上限`とし、desktop / tabletでは2行、mobileでは1行で表示する。値は読み取り専用の`N／M`とする。tooltipの文言は`合計レベル上限 = 格 ÷ 2（端数切り上げ）`とする。desktop / tabletでは既存5枠の経験点行の右端、mobileでは格を左1列、`N／M`を右2列に置く。`ProfileSection`はこの読み取り専用ViewModelを表示するだけとする。
+- `SkillSection`の追加操作領域には、optionalな`actionDescription`とそのerror状態を持たせる。共通スキルadapterだけが`取得合計レベル：N／合計レベル上限：M`を渡し、desktop / tabletでは追加buttonと下揃えの横並び、mobileでは追加buttonの下に表示する。他のスキル区分はこのoptional Propsを渡さず、既存表示を変えない。
 - `N * 5`を共通スキルの消費経験点として既存の`spentExperience`へ加算し、残経験点・経験点エラーへ反映する。計算はpure logicへ置き、form adapterが共通スキル通常行の合計を明示的に渡す。G16の全スキル横断整合を待たず、G14で扱う共通スキル分だけを正しく合算する。
-- `N > M`では、基本情報、共通スキル領域、ビルド側の共通スキル上限表示をエラー状態にする。通常行の最大Lvと重複、他区分の合計上限、advanced条件の統合validationはG16で扱う。
+- `N > M`では、基本情報の`N／M`枠と共通スキル領域だけをerror状態にする。流儀・生き様 / 能力値領域へ共通スキル上限の表示・feedbackを追加しない。通常行の最大Lvと重複、他区分の合計上限、advanced条件の統合validationはG16で扱う。
 - 固定文言を追加・移動する場合は、ゲーム用語・スキル属性名・経験点の用語を`characterSheetDictionary.gameDomain.terms`へ、section名、操作、button、dialog説明、上限表示用copyを`characterSheetDictionary.characterSheet`へ分類する。生成JSON由来の名称・制限・効果をdictionaryへ複製しない。
 - browser E2Eは、領域表示、候補dialogでの1候補選択、経験点または合計Lv表示の反映など2〜3個の代表操作だけを最終smokeとして確認する。費用式、上限境界、固定候補の順序、disabled、callback、dialog copy、行順はNode / Component / hook testへ置き、test-onlyのDOM・state・data属性を製品コードへ追加しない。
 
@@ -59,26 +58,35 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 - 共通スキルボーナスや自由文の効果を派生値へ自動加算しない。
 - G16の全スキル横断validation、G24の保存・復元、JSON入出力、canonical VRT baseline更新、追加依存の導入を行わない。
 
+## ユーザー指摘の反映
+
+- 共通スキルは生き様スキルの下、その他流儀の上に置く。G15で確定した配置を変更しない。
+- 基本情報は、design画像の経験点5枠の右端を置き換える。流儀・生き様 / 能力値領域へ共通スキル上限の表示・feedbackを追加しない。
+- 基本情報のtooltip labelは`共通スキルレベル合計／共通スキル上限`とする。desktop / tabletでは2行、mobileでは1行で表示する。mobileでは格を左1列、共通スキル値を右2列に置く。
+- 2行labelにより値枠へ余白を加えない。経験点の各枠を下揃えにして、labelと値枠の既存間隔を保つ。
+- 共通スキル区分の`取得合計レベル：N／合計レベル上限：M`は、desktop / tabletでは`＋ スキルを追加`buttonと下揃えにする。mobileではbuttonを先に縦積みする。
+- `N > M`のfeedbackは基本情報の`N／M`枠と共通スキル区分だけに置く。エラー理由の可視文言を追加しない。
+
 ## 完了条件
 
-- [ ] 基本の一撃を編集不可で表示し、通常2行を既存shared Componentで表示・編集できる。
-- [ ] 基本情報の経験点表示に、`FormulaTooltip`のlabel `共通スキルレベル合計／合計レベル上限`と読み取り専用値`N／M`を表示する。tooltip文言は`合計レベル上限 = 格 ÷ 2（端数切り上げ）`とする。
-- [ ] `SkillSection`のoptionalな追加操作説明を使い、通常行の取得Lv合計`N`と上限`M`を指定文言で表示する。他のスキル区分の表示は変えない。
-- [ ] `N * 5`が消費経験点・残経験点・経験点エラーへ反映される。
-- [ ] `BuildSection`で共通スキル上限`M`を表示する。`N > M`で基本情報、共通スキル領域、ビルド側上限表示がエラー状態になる。
-- [ ] dictionaryのゲーム用語とキャラクターシートUI文言を指定の所有者へ分類し、生成データ文言を複製していない。
-- [ ] E2Eが最終smokeの責務を越えず、局所契約をNode / Component / hook testへ分離している。
+- [x] 基本の一撃を編集不可で表示し、通常2行を既存shared Componentで表示・編集できる。
+- [x] 基本情報のdesign画像にある既存共通スキル上限枠へ、`FormulaTooltip`のlabel `共通スキルレベル合計／共通スキル上限`をdesktop / tabletでは2行、mobileでは1行で表示し、読み取り専用値`N／M`を置く。tooltip文言は`合計レベル上限 = 格 ÷ 2（端数切り上げ）`とする。
+- [x] `SkillSection`のoptionalな追加操作説明を使い、通常行の取得Lv合計`N`と上限`M`を指定文言で表示する。desktop / tabletでは追加buttonと下揃えにし、他のスキル区分の表示は変えない。
+- [x] `N * 5`が消費経験点・残経験点・経験点エラーへ反映される。
+- [x] `N > M`で基本情報の`N／M`枠と共通スキル領域だけがerror状態になり、流儀・生き様 / 能力値領域へ共通スキル上限の表示・feedbackを追加しない。
+- [x] dictionaryのゲーム用語とキャラクターシートUI文言を指定の所有者へ分類し、生成データ文言を複製していない。
+- [x] E2Eが最終smokeの責務を越えず、局所契約をNode / Component / hook testへ分離している。
 - [ ] `@character-sheet` targetのdefault、候補dialog、合計Lv / 経験点反映をdesktop、tablet、mobileでVisual Reviewする。canonical VRT baselineは更新しない。
-- [ ] `npm run check`、`npm run build`、関連テストが通る。
+- [x] `npm run check`、`npm run build`、関連テストが通る。
 
 ## チェックポイント
 
-- [ ] 既存のプライマリ・生き様・その他流儀費用と二重計上せず、G16の後続統合を妨げない。
-- [ ] `docs/requirements/character-sheet.md`、architecture、design targetと矛盾していない。
-- [ ] GitHub Pagesのsubpath公開と既存routeに影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 新設する共通スキル通常行だけを`useFieldArray`で操作し、既存可変行の移行はG24前TODOへ残している。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存のプライマリ・生き様・その他流儀費用と二重計上せず、G16の後続統合を妨げない。
+- [x] `docs/requirements/character-sheet.md`、architecture、design targetと矛盾していない。
+- [x] GitHub Pagesのsubpath公開と既存routeに影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 新設する共通スキル通常行だけを`useFieldArray`で操作し、既存可変行の移行はG24前TODOへ残している。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -99,10 +107,68 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 ## レビュー観点
 
 - `N`がbonusを含まず、`N * 5`だけを既存経験点算出へ明示的に合算しているか。
-- 基本情報、共通スキル区分、ビルド側が同じ`N`・`M`を示し、上限超過を同じerror状態で伝えるか。
+- 基本情報と共通スキル区分が同じ`N`・`M`を示し、上限超過を局所的なerror状態で伝えるか。
 - 上限表示と追加buttonの配置が可変行デザイン指針、desktop / tablet / mobileのoverflow契約に沿うか。
 - `actionDescription`がshared表示だけに留まり、dictionary所有者、E2Eの最終smoke責務、shared Component境界を守れているか。
 
 ## 備考
 
 - G12のshared表示契約とrequirementsのdesktop / tablet列契約に差異がある場合は、実装前にrequirementsの正本を同期してから進める。
+
+## ビジュアルレビュー 1（是正前・再確認が必要）
+
+この記録は、ユーザー指摘前の実装を対象とする。基本情報の文言・配置とBuild領域への不正なfeedbackが受入条件から逸脱していたため、以下の肯定結果は現行実装の確認結果として扱わない。是正後のVisual Reviewを完了するまで、完了条件のVisual Review項目は未チェックとする。
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@character-sheet`、`@common-skills-default`、`@common-skill-picker-open`、`@common-skill-limit-tooltip-open`、`@common-skill-selected`、`@common-skill-level-error`
+- route / states / viewports: `/character-sheet/`のdefault、候補dialog、共通スキル上限tooltip、1候補選択後、`N > M`のerror。desktop、tablet、mobile。
+
+### レビュー結果
+
+| 対象                   | 判定       | 差分 | 対応                                                                                                                                                |
+| ---------------------- | ---------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| locator actual         | OK         | なし | 各state・viewportの原寸locator screenshotを確認した。                                                                                               |
+| canonical VRT baseline | 要人間判断 | あり | `character-sheet` defaultのcanonical snapshotが現在の既存画面と大きく異なり、3 viewportで比較失敗。baseline更新は本issueのscope外のため更新しない。 |
+| unrelated VRT target   | 要人間判断 | あり | broad grepで一致した`common-skills` targetにも既存canonicalとの差分がある。今回の未変更targetのため対応しない。                                     |
+
+### 実画面確認
+
+- `/character-sheet/` / default / desktop、tablet、mobile:
+  - locator screenshot（profile、build、共通スキルsection / original pixel resolution）を確認した。
+  - 基本の一撃、通常2行、`0／1`、追加buttonと合計表示の配置、横overflowがないことを確認した。
+- `/character-sheet/` / 候補dialog / desktop、tablet、mobile:
+  - locator screenshot（共通スキルsection、共通スキルpicker dialog / original pixel resolution）を確認した。
+  - dialogの候補一覧、横overflowなし、mobileの縦scroll可能な表示を確認した。
+- `/character-sheet/` / 共通スキル上限tooltip / desktop、tablet、mobile:
+  - locator screenshot（profile、tooltip / original pixel resolution）を確認した。
+  - `合計レベル上限 = 格 ÷ 2（端数切り上げ）`の表示とtooltipのviewport内配置を確認した。
+- `/character-sheet/` / 1候補選択後 / desktop、tablet、mobile:
+  - locator screenshot（profile、build、共通スキルsection / original pixel resolution）を確認した。
+  - `1／1`、消費経験点`5`、残経験点`45`、共通スキル上限`1`、追加操作領域を確認した。
+- `/character-sheet/` / `N > M` error / desktop、tablet、mobile:
+  - locator screenshot（profile、build、共通スキルsection / original pixel resolution）を確認した。
+  - `2／1`、消費経験点`10`、残経験点`40`、基本情報・ビルド参照・共通スキルsectionのerror状態を確認した。
+
+### 自己修正した項目
+
+- [x] 共通スキルsectionのlocatorを既存`data-skill-section`と見出しで特定し、test-onlyの製品DOM属性を追加しない形にした。
+- [x] mobile tooltip stateはhoverではなくclickで開くよう、capture側のstate準備を分けた。
+
+### 人間判断が必要な差分
+
+- `character-sheet` default canonical baselineが現在の既存画面と大きく乖離している。baseline更新は本issueのscope外であり、更新可否を判断する。
+- `common-skills` targetのcanonical差分は、今回未変更のtargetであるため別taskで状態を確認する。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
+- [ ] VRT差分を修正した、または修正不要と判断した。
+- [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る（該当する場合）。
+- [x] `npm run build` が通る（該当する場合）。

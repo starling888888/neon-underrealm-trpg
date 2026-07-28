@@ -2,6 +2,7 @@ import {
   type ChangeEvent,
   type DragEvent,
   type MouseEvent,
+  type ReactNode,
   useRef,
   useState,
 } from "react";
@@ -43,8 +44,10 @@ type CreditFieldProps = {
 };
 
 type ReadOnlyCreditFieldProps = {
+  ariaLabel?: string;
   formula?: string;
-  label: string;
+  invalid?: boolean;
+  label: ReactNode;
   value: number | string;
 };
 
@@ -54,6 +57,9 @@ type ExperienceProps = {
     BuildDerivedValues,
     "hasExperienceError" | "rank" | "remainingExperience" | "spentExperience"
   >;
+  hasCommonSkillLevelError: boolean;
+  commonSkillLevelLimit: number;
+  commonSkillLevelTotal: number;
   onAcquiredChange: (value: string) => number;
 };
 
@@ -235,20 +241,22 @@ function CreditField({
 }
 
 function ReadOnlyCreditField({
+  ariaLabel,
   formula,
+  invalid = false,
   label,
   value,
 }: ReadOnlyCreditFieldProps) {
-  const id = `character-sheet-${label}`;
+  const id = `character-sheet-${ariaLabel ?? "metric"}`;
   const labelContent = <span className={styles.metricLabel}>{label}</span>;
 
   return (
-    <div className={styles.metric}>
+    <div className={styles.metric} data-invalid={invalid || undefined}>
       {formula === undefined ? (
         labelContent
       ) : (
         <FormulaTooltip
-          ariaLabel={label}
+          ariaLabel={ariaLabel}
           className={styles.metricTooltip}
           formula={formula}
         >
@@ -256,6 +264,7 @@ function ReadOnlyCreditField({
         </FormulaTooltip>
       )}
       <output
+        aria-invalid={invalid || undefined}
         className={`${styles.metricValue} character-sheet-number-value`}
         id={id}
       >
@@ -267,11 +276,15 @@ function ReadOnlyCreditField({
 
 function ExperienceField({
   acquired,
+  commonSkillLevelLimit,
+  commonSkillLevelTotal,
   derived,
+  hasCommonSkillLevelError,
   onAcquiredChange,
 }: ExperienceProps) {
   const { characterSheet, gameDomain } = characterSheetDictionary;
   const buildCopy = gameDomain.terms;
+  const skillCopy = characterSheet.skills;
 
   return (
     <section
@@ -304,17 +317,33 @@ function ExperienceField({
           />
         </div>
         <ReadOnlyCreditField
+          ariaLabel={buildCopy.spentExperience}
           label={buildCopy.spentExperience}
           value={formatDisplayValue(derived.spentExperience)}
         />
         <ReadOnlyCreditField
+          ariaLabel={buildCopy.remainingExperience}
           label={buildCopy.remainingExperience}
           value={formatDisplayValue(derived.remainingExperience)}
         />
         <ReadOnlyCreditField
+          ariaLabel={buildCopy.rank}
           formula={characterSheet.build.formulas.rank}
           label={buildCopy.rank}
           value={formatDisplayValue(derived.rank)}
+        />
+        <ReadOnlyCreditField
+          ariaLabel={skillCopy.commonSkillSummaryLabel}
+          formula={skillCopy.commonSkillLevelLimitFormula}
+          invalid={hasCommonSkillLevelError}
+          label={
+            <>
+              共通スキルレベル合計
+              <br className={styles.commonSkillLabelBreak} />
+              ／共通スキル上限
+            </>
+          }
+          value={`${commonSkillLevelTotal}／${commonSkillLevelLimit}`}
         />
       </div>
     </section>
