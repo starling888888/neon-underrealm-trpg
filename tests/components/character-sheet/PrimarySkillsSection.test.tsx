@@ -180,6 +180,11 @@ describe("PrimarySkillsSection", () => {
     );
 
     expect(
+      screen
+        .getByRole("region", { name: "プライマリ流儀スキル" })
+        .getAttribute("aria-invalid"),
+    ).toBe("true");
+    expect(
       document
         .querySelector(`[data-skill-row="${firstRow.rowId}"]`)
         ?.getAttribute("data-invalid"),
@@ -189,6 +194,42 @@ describe("PrimarySkillsSection", () => {
         .querySelector(`[data-skill-row="${secondRow.rowId}"]`)
         ?.getAttribute("data-invalid"),
     ).toBe("true");
+    expect(
+      screen
+        .getByLabelText(`${firstRow.skill?.name ?? ""}Lv`)
+        .getAttribute("aria-invalid"),
+    ).toBe("true");
+    expect(
+      screen
+        .getByLabelText(`${secondRow.skill?.name ?? ""}Lv`)
+        .getAttribute("aria-invalid"),
+    ).toBe("true");
+  });
+
+  it("gives each unselected row a distinct accessible name", () => {
+    const props = createProps();
+    const blankRows = props.rows.map((row) => ({
+      ...row,
+      skill: null,
+      skillId: null,
+    }));
+
+    render(<PrimarySkillsSection {...props} rows={blankRows} />);
+
+    expect(
+      screen.getByRole("button", { name: "未選択スキル1" }),
+    ).not.toBeNull();
+    expect(
+      screen.getByRole("button", { name: "未選択スキル2" }),
+    ).not.toBeNull();
+    expect(screen.getByLabelText("未選択スキル1Lv")).not.toBeNull();
+    expect(screen.getByLabelText("未選択スキル2Lv")).not.toBeNull();
+    expect(
+      screen.getByRole("button", { name: "未選択スキル1下へ移動" }),
+    ).not.toBeNull();
+    expect(
+      screen.getByRole("button", { name: "未選択スキル2上へ移動" }),
+    ).not.toBeNull();
   });
 
   it("updates the displayed level when a selected skill resets it", () => {

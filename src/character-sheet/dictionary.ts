@@ -125,6 +125,7 @@ export const characterSheetDictionary = {
         "スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。",
       label: "プライマリ流儀スキル",
       unselected: "スキルを選択",
+      unselectedRow: "未選択スキル",
     },
     sections: {
       basicInformation: "基本情報",

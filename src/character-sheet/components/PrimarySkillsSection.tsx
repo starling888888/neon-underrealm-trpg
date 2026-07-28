@@ -48,6 +48,7 @@ export default function PrimarySkillsSection({
   const copy = characterSheetDictionary.characterSheet.skills;
   const sectionRows: SkillSectionRow[] = [
     ...bonusSkills.map((skill) => ({
+      accessibilityName: skill.name,
       hasLevelError: false,
       hasRowError: false,
       kind: "automatic" as const,
@@ -60,7 +61,8 @@ export default function PrimarySkillsSection({
       skill,
       skillId: skill.id,
     })),
-    ...rows.map((row) => ({
+    ...rows.map((row, index) => ({
+      accessibilityName: row.skill?.name ?? `${copy.unselectedRow}${index + 1}`,
       hasLevelError: invalidMaximumLevelRowIds.includes(row.rowId),
       hasRowError: invalidDuplicateSkillRowIds.includes(row.rowId),
       kind: "normal" as const,

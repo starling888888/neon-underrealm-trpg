@@ -10,6 +10,7 @@ import styles from "./SkillSection.module.css";
 export type SkillRowKind = "automatic" | "normal";
 
 export type SkillSectionRow = {
+  accessibilityName: string;
   hasLevelError: boolean;
   hasRowError: boolean;
   kind: SkillRowKind;
@@ -58,18 +59,24 @@ function formatCompactValue(
 }
 
 function SkillMetadata({ skill }: SkillMetadataProps) {
+  const copy = characterSheetDictionary.gameDomain.terms.skill;
+
   return (
     <>
       <span className={styles.cell} data-skill-metadata="maximum">
+        <span className={styles.visuallyHidden}>{copy.maximumLevel}：</span>
         {formatDisplayValue(skill?.maxLevel ?? null)}
       </span>
       <span className={styles.cell} data-skill-metadata="timing">
+        <span className={styles.visuallyHidden}>{copy.timing}：</span>
         {formatDisplayValue(skill?.timing ?? null)}
       </span>
       <span className={styles.cell} data-skill-metadata="cost">
+        <span className={styles.visuallyHidden}>{copy.cost}：</span>
         {formatDisplayValue(skill?.cost ?? null)}
       </span>
       <span className={styles.cell} data-skill-metadata="usage">
+        <span className={styles.visuallyHidden}>{copy.usageRestriction}：</span>
         {formatCompactValue(skill?.usageRestriction, "&")}
       </span>
     </>
@@ -155,24 +162,27 @@ function SkillRow({
   const copy = characterSheetDictionary.characterSheet.skills;
   const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
   const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
+  const hasError = row.hasRowError || row.hasLevelError;
   const name = row.skill?.name ?? copy.unselected;
+  const accessibilityName = row.accessibilityName;
 
   return (
     <fieldset
+      aria-invalid={hasError || undefined}
       className={styles.row}
-      data-invalid={row.hasRowError || row.hasLevelError || undefined}
+      data-invalid={hasError || undefined}
       data-skill-row-kind={row.kind}
       data-skill-row={row.rowId}
     >
       {row.kind === "normal" ? (
-        <legend className={styles.visuallyHidden}>{name}</legend>
+        <legend className={styles.visuallyHidden}>{accessibilityName}</legend>
       ) : null}
       <div className={styles.firstLine}>
         {row.movable ? (
           <div className={styles.reorderControls}>
             {canMoveUp ? (
               <button
-                aria-label={`${name}${copy.moveUp}`}
+                aria-label={`${accessibilityName}${copy.moveUp}`}
                 className={styles.reorderButton}
                 onClick={() => onMove(row.rowId, "up")}
                 type="button"
@@ -182,7 +192,7 @@ function SkillRow({
             ) : null}
             {canMoveDown ? (
               <button
-                aria-label={`${name}${copy.moveDown}`}
+                aria-label={`${accessibilityName}${copy.moveDown}`}
                 className={styles.reorderButton}
                 onClick={() => onMove(row.rowId, "down")}
                 type="button"
@@ -196,6 +206,7 @@ function SkillRow({
         )}
         {row.selectable ? (
           <button
+            aria-label={row.skill === null ? accessibilityName : undefined}
             className={styles.skillPicker}
             onClick={(event) => onPickerRequest(row.rowId, event.currentTarget)}
             type="button"
@@ -214,8 +225,8 @@ function SkillRow({
           <label className={styles.levelInput}>
             <span className={styles.visuallyHidden}>{skillCopy.level}</span>
             <input
-              aria-invalid={row.hasLevelError || undefined}
-              aria-label={`${name}${skillCopy.level}`}
+              aria-invalid={hasError || undefined}
+              aria-label={`${accessibilityName}${skillCopy.level}`}
               max={row.skill?.maxLevel}
               min="1"
               onBlur={(event) => {
@@ -239,12 +250,12 @@ function SkillRow({
         <SkillMetadata skill={row.skill} />
         <DetailsToggle
           isExpanded={isDetailsExpanded}
-          name={name}
+          name={accessibilityName}
           onClick={() => setIsDetailsExpanded((expanded) => !expanded)}
         />
         {row.removable ? (
           <button
-            aria-label={`${name}${copy.remove}`}
+            aria-label={`${accessibilityName}${copy.remove}`}
             className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
             disabled={!canRemove}
             onClick={() => onRemove(row.rowId)}
@@ -281,16 +292,18 @@ export default function SkillSection({
   const copy = characterSheetDictionary.characterSheet.skills;
   const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
   const [isExpanded, setIsExpanded] = useState(true);
+  const hasRowError = rows.some((row) => row.hasRowError || row.hasLevelError);
+  const hasError = isInvalid || hasRowError;
   const nameWidthStyle = {
     "--primary-skill-name-width": `${nameColumnWidthCh}ch`,
   } as CSSProperties;
 
   return (
     <section
-      aria-invalid={isInvalid || undefined}
+      aria-invalid={hasError || undefined}
       aria-label={ariaLabel}
       className={styles.section}
-      data-invalid={isInvalid || undefined}
+      data-invalid={hasError || undefined}
       data-skill-section
       style={nameWidthStyle}
     >

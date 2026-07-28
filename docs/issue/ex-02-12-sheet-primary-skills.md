@@ -256,3 +256,33 @@
 - [ ] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `docs/requirements/character-sheet.md`のdesktop / tabletのスキル行・候補dialog列が、G12で確定したタイミング列と、技能・取得制限を展開詳細へ置く表示契約へ同期していない。
+- 重複・最大Lv超過の行エラーが、スキル区分全体と支援技術へ一貫して伝わらない。
+- 未選択の通常行が同じaccessible nameを持つため、Lv、上下移動、詳細展開、削除の操作対象を区別できない。候補dialogの読み取り専用メタ情報も列見出しと関連付いていない。
+- `logic/primary-skills.ts`が表示Componentの`PrimarySkillRowView`型へ依存しており、logicからpresentationへの依存方向がarchitectureと逆になっている。
+
+### 判定
+
+- source: local-agent
+- classification: valid
+- local validation: current requirementsの列は名称、Lv、最大Lv、コスト、技能、使用制限であり、`SkillSection`と`SkillPickerDialog`は名称、Lv、最大Lv、タイミング、コスト、使用制限を要約行へ、技能・取得制限を詳細へ置く。`SkillSection`は行の`data-invalid`だけを設定し、sectionのerrorはLv合計だけ、Lv inputの`aria-invalid`は最大Lvだけを受ける。未選択名`スキルを選択`は操作labelへ繰り返し使われ、candidate headerは`aria-hidden`である。`logic/primary-skills.ts`はComponent型をtype importしている。
+
+### 対応方針
+
+- G12でユーザー確定した列・展開・候補dialog表示契約をrequirementsへ同期し、G13〜G15 shared adapterの基準を一本化する。
+- shared row / section Propsへ、行errorの集約と一意な操作用labelに必要な表示値を追加する。sectionとrowの`aria-invalid`、Lv入力、候補メタ情報の非視覚的な名称を、可視の個別エラー本文を増やさず整合させる。
+- validationが必要とする最小行型を`logic/`またはpresentationより下位の共有型へ置き、ComponentのViewModel型importを除く。
+
+### 対応完了チェックリスト
+
+- [x] requirementsのdesktop / tabletスキル行、展開詳細、候補dialogの表示契約をG12実装と同期する。
+- [x] 最大Lv・重複・Lv合計のいずれでも、該当rowとsectionのerror状態を支援技術へ伝える。
+- [x] 未選択行を含む操作対象を一意に識別し、候補dialogのメタ情報を非視覚的にも判別可能にする。
+- [x] `logic/primary-skills.ts`からComponent型への依存を除く。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

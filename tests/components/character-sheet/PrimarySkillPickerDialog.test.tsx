@@ -77,6 +77,13 @@ describe("primary skill dialogs", () => {
     );
     expect(screen.queryByText(groups.bonus[0]?.name ?? "")).toBeNull();
     expect((multilineNameButton as HTMLButtonElement).disabled).toBe(true);
+    const hiddenLabels = Array.from(
+      document.querySelectorAll('[class*="visuallyHidden"]'),
+      (element) => element.textContent,
+    );
+    expect(hiddenLabels).toContain("最大Lv：");
+    expect(hiddenLabels).toContain("コスト：");
+    expect(hiddenLabels).toContain("使用制限：");
 
     await user.click(multilineNameButton);
     expect(onSelect).not.toHaveBeenCalled();

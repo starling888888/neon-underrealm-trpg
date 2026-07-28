@@ -60,9 +60,20 @@ function CandidateRow({
         >
           {skill.name}
         </button>
-        <span>{skill.maxLevel}</span>
-        <span>{formatDisplayValue(skill.cost ?? null)}</span>
-        <span>{formatCompactValue(skill.usageRestriction, "&")}</span>
+        <span>
+          <span className={styles.visuallyHidden}>{copy.maximumLevel}：</span>
+          {skill.maxLevel}
+        </span>
+        <span>
+          <span className={styles.visuallyHidden}>{copy.cost}：</span>
+          {formatDisplayValue(skill.cost ?? null)}
+        </span>
+        <span>
+          <span className={styles.visuallyHidden}>
+            {copy.usageRestriction}：
+          </span>
+          {formatCompactValue(skill.usageRestriction, "&")}
+        </span>
       </div>
       <div className={styles.details}>
         <span>
