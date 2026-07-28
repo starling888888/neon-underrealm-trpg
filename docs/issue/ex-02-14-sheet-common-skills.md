@@ -172,3 +172,35 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 - [x] baseline更新が必要な差分を人間判断として記録した。
 - [x] `npm run check` が通る（該当する場合）。
 - [x] `npm run build` が通る（該当する場合）。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- その他流儀スキルのLv入力が`0`または負数をRHFへ保存でき、schemaの`min(1)`と不整合になる。
+- `CharacterSheetContainer`へpicker・確認dialog・pending actionの状態が増え、今後のアイテムGateで肥大化する懸念がある。
+- その他流儀候補の`プライマリ限定`除外が生成データの完全一致に依存する。
+- 永続化・JSON入力時には、存在しない`ryugiRowId`を持つスキル行などの孤児行を正規化する必要がある。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）
+- classification:
+  - 指摘1: valid / out-of-scope。現行実装でも`useOtherRyugiSkillsSectionProps`は`0`・負数を保存し、schemaは`min(1)`である。G14はその他流儀スキルを変更しない。
+  - 指摘2: follow-up。現行ContainerにもG15由来のdialog orchestrationが残るが、G14で追加するのは共通スキルpickerだけであり、この抽象化は現在Gateの範囲外である。
+  - 指摘3: invalid。生成データ内の`プライマリ限定`は現時点で完全一致の列挙値であり、Node testもこの候補除外を確認している。自由文の取得制限を解析する要件はない。
+  - 指摘4: follow-up。G24 / G27の復元・JSON入力境界で扱う。
+- local validation: reviewの比較範囲はG13からG15までで、G14実装前のsnapshotである。現行HEADのG14差分に対する直接の指摘ではない。
+
+### 対応方針
+
+- 指摘1・4は`docs/TODO.md`のG24 / G27入力契約TODOへsourceを追加する。
+- 指摘2は、次に確認dialogが増えるG17のTODOとして追跡する。
+- 指摘3は現行要件・生成データ・Node testで否定されるため、コード・TODOへは追加しない。
+
+### 対応完了チェックリスト
+
+- [x] review source snapshotと現行HEADの差分時点を照合した。
+- [x] 指摘1・4をG24 / G27の既存TODOへルーティングした。
+- [x] 指摘2をG17のfollow-up TODOへルーティングした。
+- [x] 指摘3が現行SSoTと矛盾することを確認した。
