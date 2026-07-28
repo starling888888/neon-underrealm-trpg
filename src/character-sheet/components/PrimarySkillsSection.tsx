@@ -1,3 +1,4 @@
+import { ListPlus } from "lucide-react";
 import { type CSSProperties, type DragEvent, useState } from "react";
 
 import type { Skill } from "../../lib/types/skill";
@@ -34,78 +35,98 @@ type SkillMetadataProps = {
   skill: Skill | null;
 };
 
-function SkillMetadata({ skill }: SkillMetadataProps) {
-  const copy = characterSheetDictionary.gameDomain.terms.skill;
+function formatCompactValue(
+  value: string | null | undefined,
+  separator: string,
+) {
+  if (value === null || value === undefined || value === "") return "-";
 
+  return value
+    .split(separator)
+    .map((part, index) => (
+      <span key={part}>{index === 0 ? part : `${separator}${part}`}</span>
+    ));
+}
+
+function SkillMetadata({ skill }: SkillMetadataProps) {
   return (
     <>
-      <span className={styles.metadata} data-primary-skill-metadata="maximum">
-        <span>{copy.maximumLevel}</span>
-        <strong>{formatDisplayValue(skill?.maxLevel ?? null)}</strong>
+      <span className={styles.cell} data-primary-skill-metadata="maximum">
+        {formatDisplayValue(skill?.maxLevel ?? null)}
       </span>
-      <span className={styles.metadata} data-primary-skill-metadata="cost">
-        <span>{copy.cost}</span>
-        <strong>{formatDisplayValue(skill?.cost ?? null)}</strong>
+      <span className={styles.cell} data-primary-skill-metadata="cost">
+        {formatDisplayValue(skill?.cost ?? null)}
       </span>
-      <span
-        className={styles.metadata}
-        data-primary-skill-metadata="proficiency"
-      >
-        <span>{copy.proficiency}</span>
-        <strong>{formatDisplayValue(skill?.proficiency ?? null)}</strong>
+      <span className={styles.cell} data-primary-skill-metadata="proficiency">
+        {formatCompactValue(skill?.proficiency, "/")}
       </span>
-      <span className={styles.metadata} data-primary-skill-metadata="usage">
-        <span>{copy.usageRestriction}</span>
-        <strong>{formatDisplayValue(skill?.usageRestriction ?? null)}</strong>
-      </span>
-      <span className={styles.metadata} data-primary-skill-metadata="target">
-        <span>{copy.target}</span>
-        <strong>{formatDisplayValue(skill?.target ?? null)}</strong>
-      </span>
-      <span className={styles.metadata} data-primary-skill-metadata="range">
-        <span>{copy.range}</span>
-        <strong>{formatDisplayValue(skill?.range ?? null)}</strong>
-      </span>
-      <span
-        className={styles.metadata}
-        data-primary-skill-metadata="acquisition"
-      >
-        <span>{copy.acquisitionRestriction}</span>
-        <strong>
-          {formatDisplayValue(skill?.acquisitionRestriction ?? null)}
-        </strong>
+      <span className={styles.cell} data-primary-skill-metadata="usage">
+        {formatCompactValue(skill?.usageRestriction, "&")}
       </span>
     </>
   );
 }
 
-function SkillEffect({ skill }: SkillMetadataProps) {
+function SkillDetails({ skill }: SkillMetadataProps) {
   const copy = characterSheetDictionary.gameDomain.terms.skill;
 
   return (
-    <p className={styles.effect}>
-      <span>{copy.effect}</span>
-      {skill?.effect ?? ""}
-    </p>
+    <div className={styles.details}>
+      <p>
+        <span>{copy.acquisitionRestriction}</span>
+        {formatDisplayValue(skill?.acquisitionRestriction ?? null)}
+      </p>
+      <p>
+        <span>{copy.effect}</span>
+        {skill?.effect ?? ""}
+      </p>
+    </div>
+  );
+}
+
+function DetailsToggle({
+  isExpanded,
+  name,
+  onClick,
+}: {
+  isExpanded: boolean;
+  name: string;
+  onClick: () => void;
+}) {
+  const copy = characterSheetDictionary.gameDomain.terms.skill;
+
+  return (
+    <button
+      aria-expanded={isExpanded}
+      aria-label={`${name}${isExpanded ? copy.closeDetails : copy.openDetails}`}
+      className={styles.detailsToggle}
+      onClick={onClick}
+      type="button"
+    >
+      <span aria-hidden="true">{isExpanded ? "▾" : "▸"}</span>
+    </button>
   );
 }
 
 function PrimaryBonusSkillRow({ skill }: { skill: Skill }) {
-  const { general, gameDomain } = characterSheetDictionary;
-  const copy = gameDomain.terms.skill;
+  const { general } = characterSheetDictionary;
+  const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
 
   return (
     <div className={styles.row} data-primary-skill-kind="bonus">
       <div className={styles.firstLine}>
         <span aria-hidden="true" className={styles.handlePlaceholder} />
         <span className={styles.skillName}>{skill.name}</span>
-        <span className={styles.levelValue}>
-          <span>{copy.level}</span>
-          <strong>{general.automatic}</strong>
-        </span>
+        <span className={styles.levelValue}>{general.automatic}</span>
         <SkillMetadata skill={skill} />
+        <DetailsToggle
+          isExpanded={isDetailsExpanded}
+          name={skill.name}
+          onClick={() => setIsDetailsExpanded((expanded) => !expanded)}
+        />
+        <span aria-hidden="true" className={styles.removePlaceholder} />
       </div>
-      <SkillEffect skill={skill} />
+      {isDetailsExpanded ? <SkillDetails skill={skill} /> : null}
     </div>
   );
 }
@@ -130,6 +151,8 @@ function PrimarySkillRow({
   const copy = characterSheetDictionary.characterSheet.skills;
   const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
   const [draggedRowId, setDraggedRowId] = useState<string | null>(null);
+  const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
+  const name = row.skill?.name ?? copy.unselected;
 
   function onDragStart(event: DragEvent<HTMLButtonElement>): void {
     event.dataTransfer.effectAllowed = "move";
@@ -148,18 +171,16 @@ function PrimarySkillRow({
   return (
     <fieldset
       className={styles.row}
-      data-primary-skill-kind="normal"
       data-invalid={hasMaximumLevelError || undefined}
+      data-primary-skill-kind="normal"
       data-primary-skill-row={row.rowId}
       onDragOver={(event) => event.preventDefault()}
       onDrop={onDrop}
     >
-      <legend className={styles.visuallyHidden}>
-        {row.skill?.name ?? copy.unselected}
-      </legend>
+      <legend className={styles.visuallyHidden}>{name}</legend>
       <div className={styles.firstLine}>
         <button
-          aria-label={`${copy.reorderPrefix}${row.skill?.name ?? copy.unselected}`}
+          aria-label={`${copy.reorderPrefix}${name}`}
           className={styles.dragHandle}
           draggable
           onDragEnd={() => setDraggedRowId(null)}
@@ -173,16 +194,18 @@ function PrimarySkillRow({
           onClick={(event) => onPickerRequest(row.rowId, event.currentTarget)}
           type="button"
         >
-          <span aria-hidden="true" className={styles.chooseIcon}>
-            ◇
-          </span>
-          <span>{row.skill?.name ?? copy.unselected}</span>
+          <ListPlus
+            aria-hidden="true"
+            className={styles.chooseIcon}
+            size={15}
+          />
+          <span>{name}</span>
         </button>
         <label className={styles.levelInput}>
-          <span>{skillCopy.level}</span>
+          <span className={styles.visuallyHidden}>{skillCopy.level}</span>
           <input
             aria-invalid={hasMaximumLevelError || undefined}
-            aria-label={`${row.skill?.name ?? copy.unselected}${skillCopy.level}`}
+            aria-label={`${name}${skillCopy.level}`}
             defaultValue={row.level}
             max={row.skill?.maxLevel}
             min="1"
@@ -201,8 +224,13 @@ function PrimarySkillRow({
           />
         </label>
         <SkillMetadata skill={row.skill} />
+        <DetailsToggle
+          isExpanded={isDetailsExpanded}
+          name={name}
+          onClick={() => setIsDetailsExpanded((expanded) => !expanded)}
+        />
         <button
-          aria-label={`${row.skill?.name ?? copy.unselected}${copy.remove}`}
+          aria-label={`${name}${copy.remove}`}
           className="character-sheet-remove-button"
           disabled={!canRemove}
           onClick={() => onRemove(row.rowId)}
@@ -211,7 +239,7 @@ function PrimarySkillRow({
           <span aria-hidden="true">×</span>
         </button>
       </div>
-      <SkillEffect skill={row.skill} />
+      {isDetailsExpanded ? <SkillDetails skill={row.skill} /> : null}
     </fieldset>
   );
 }
@@ -231,9 +259,10 @@ export default function PrimarySkillsSection({
   rows,
 }: PrimarySkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
+  const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
   const [isExpanded, setIsExpanded] = useState(true);
   const nameWidthStyle = {
-    "--primary-skill-name-width": `${maximumSkillNameLength}em`,
+    "--primary-skill-name-width": `${maximumSkillNameLength}ch`,
   } as CSSProperties;
 
   return (
@@ -254,14 +283,31 @@ export default function PrimarySkillsSection({
           type="button"
         >
           <span>{copy.primary}</span>
-          <span aria-hidden="true" className={styles.chevron}>
-            {isExpanded ? "▾" : "▸"}
-          </span>
+          <span aria-hidden="true" className={styles.chevron} />
         </button>
       </h3>
-      <div hidden={!isExpanded} id="primary-skills-content">
+      <div
+        className={styles.content}
+        hidden={!isExpanded}
+        id="primary-skills-content"
+      >
         {primaryRyugiSelected ? (
           <>
+            <div aria-hidden="true" className={styles.headerRow}>
+              <span />
+              <span>{skillCopy.name}</span>
+              <span>{skillCopy.level}</span>
+              <span>
+                {skillCopy.maximumLevel.replace(skillCopy.level, "")}
+                <br />
+                {skillCopy.level}
+              </span>
+              <span>{skillCopy.cost}</span>
+              <span>{skillCopy.proficiency}</span>
+              <span>{skillCopy.usageRestriction}</span>
+              <span>{skillCopy.expand}</span>
+              <span />
+            </div>
             {bonusSkills.map((skill) => (
               <PrimaryBonusSkillRow key={skill.id} skill={skill} />
             ))}

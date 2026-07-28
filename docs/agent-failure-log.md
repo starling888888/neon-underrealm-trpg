@@ -1049,6 +1049,15 @@ source種別は以下を使う。
 - 観測した失敗: Playwrightの実ブラウザでプライマリ流儀または生き様のselect変更を行うと、変更後のフォーム再描画を待つ操作がtimeoutした。同じ失敗を原因確定前に複数回繰り返し、G12のlocator captureも完了できなかった。
 - 一次対応: 一時的な切り分け変更はすべて戻し、dev serverを既定portで再起動した。今後は既存form更新経路の最小再現を先に作り、再描画を伴わないdialog操作と区別してから、G12 UIまたはform stateへ修正を加える。
 
+### Attempted to substitute an ad hoc browser script for the VRT capture path
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-12-sheet-primary-skills` のVisual Review
+- 観測した失敗: test-owned locator screenshotが必要なVisual Reviewで、`npm run visual:capture`の経路を使わず、独自の`.tmp` Playwright scriptでfull-page screenshotを撮ろうとした。これは局所表示契約の確認根拠にならず、capture基盤が不足する場合は記録して停止するというskillの規約にも反していた。
+- 一次対応: 独自scriptは削除し、正規の`visual:capture`を対象tagへ限定して実行した。fixtureのselect操作timeoutによりlocator screenshotを取得できなかったため、issueのVisual Reviewへ未確認として記録し、代替screenshotは使わない。
+
 ### Omitted G12 validation feedback and nested skill folding
 
 #### 2026-07-28

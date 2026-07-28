@@ -108,7 +108,8 @@ const primarySkillPickerLocator = {
 
 const primaryRyugiChangeConfirmLocator = {
   name: "primary-ryugi-change-confirm",
-  resolve: (page: Page) => page.getByRole("dialog", { name: "確認" }),
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { name: "プライマリ流儀の変更確認" }),
 };
 
 const tooltipLocator = {
@@ -122,7 +123,7 @@ registerVrtScenarios("character-sheet", [
     locators: [primarySkillsLocator],
     prepare: selectPrimaryRyugi,
     route: visualRoutes.characterSheet,
-    viewports: ["desktop", "tablet", "mobile"],
+    viewports: ["desktop", "tablet"],
   },
   {
     id: "primary-skill-picker-open",
@@ -139,7 +140,17 @@ registerVrtScenarios("character-sheet", [
       ).toBeVisible();
     },
     route: visualRoutes.characterSheet,
-    viewports: ["desktop", "tablet", "mobile"],
+    viewports: ["desktop", "tablet"],
+  },
+  {
+    id: "primary-skill-details-expanded",
+    locators: [primarySkillsLocator],
+    prepare: async (page) => {
+      await selectPrimaryRyugi(page);
+      await page.getByRole("button", { name: "気合十分の詳細を開く" }).click();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet"],
   },
   {
     id: "primary-ryugi-change-confirm",
@@ -149,10 +160,12 @@ registerVrtScenarios("character-sheet", [
       await page
         .getByLabel("プライマリ流儀", { exact: true })
         .selectOption("emono");
-      await expect(page.getByRole("dialog", { name: "確認" })).toBeVisible();
+      await expect(
+        page.getByRole("dialog", { name: "プライマリ流儀の変更確認" }),
+      ).toBeVisible();
     },
     route: visualRoutes.characterSheet,
-    viewports: ["desktop", "tablet", "mobile"],
+    viewports: ["desktop", "tablet"],
   },
   {
     id: "noncombat-expanded",

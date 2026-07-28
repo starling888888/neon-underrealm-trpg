@@ -72,9 +72,6 @@ export default function useCharacterSheetRootState(
   const [imageError, setImageError] = useState<CharacterImageErrorState | null>(
     null,
   );
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const confirmationTriggerRef = useRef<HTMLButtonElement>(null);
-  const confirmationCancelButtonRef = useRef<HTMLButtonElement>(null);
   const imageReturnFocusRef = useRef<HTMLButtonElement>(null);
   const imageErrorCloseButtonRef = useRef<HTMLButtonElement>(null);
   const hasCommittedImageRef = useRef(false);
@@ -151,19 +148,15 @@ export default function useCharacterSheetRootState(
 
   return {
     characterImage,
-    confirmationCancelButtonRef,
-    confirmationTriggerRef,
     form,
     imageError,
     imageErrorCloseButtonRef,
     imageReturnFocusRef,
-    isConfirmationOpen,
     isRootOperationInProgress: rootOperation !== null,
     onCharacterImageSelected,
     onCharacterImageCleared,
     onCharacterImageOperationStarted,
     setImageError,
-    setIsConfirmationOpen,
     rootOperation,
   };
 }

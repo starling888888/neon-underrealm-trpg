@@ -37,7 +37,6 @@ describe("primary skill dialogs", () => {
       <PrimarySkillPickerDialog
         groups={groups}
         isOpen
-        maximumSkillNameLength={8}
         onRequestClose={vi.fn()}
         onSelect={onSelect}
         returnFocusRef={createRef<HTMLButtonElement>()}
@@ -47,6 +46,8 @@ describe("primary skill dialogs", () => {
     expect(screen.getByRole("heading", { name: "初期作成" })).not.toBeNull();
     expect(screen.getByRole("heading", { name: "Lv6以上" })).not.toBeNull();
     expect(screen.getByText(groups.basic[0]?.effect ?? "")).not.toBeNull();
+    expect(screen.getAllByText("名称")).toHaveLength(2);
+    expect(screen.getAllByText("取得制限")).toHaveLength(2);
     expect(screen.queryByText(groups.bonus[0]?.name ?? "")).toBeNull();
 
     await user.click(
@@ -76,6 +77,11 @@ describe("primary skill dialogs", () => {
         "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
       ),
     ).not.toBeNull();
+    expect(
+      screen.getByRole("dialog", { name: "プライマリ流儀の変更確認" }),
+    ).not.toBeNull();
+    expect(screen.queryByRole("heading", { name: "確認" })).toBeNull();
+    expect(screen.getByRole("button", { name: "変更" })).not.toBeNull();
     await user.click(screen.getByRole("button", { name: "キャンセル" }));
     expect(onRequestClose).toHaveBeenCalledOnce();
     expect(onConfirm).not.toHaveBeenCalled();

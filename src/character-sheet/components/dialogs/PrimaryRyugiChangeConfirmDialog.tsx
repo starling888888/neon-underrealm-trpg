@@ -3,7 +3,6 @@ import { characterSheetDictionary } from "../../dictionary";
 import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,
-  CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
 
 type PrimaryRyugiChangeConfirmDialogProps = {
@@ -20,30 +19,22 @@ export default function PrimaryRyugiChangeConfirmDialog({
   onRequestClose,
   returnFocusRef,
 }: PrimaryRyugiChangeConfirmDialogProps) {
-  const { general } = characterSheetDictionary;
-  const titleId = useId();
+  const { general, characterSheet } = characterSheetDictionary;
+  const copy = characterSheet.skills;
   const descriptionId = useId();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <CharacterSheetDialog
       ariaDescribedBy={descriptionId}
-      ariaLabelledBy={titleId}
+      ariaLabel={copy.primaryRyugiChangeConfirmationLabel}
       initialFocusRef={cancelButtonRef}
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       returnFocusRef={returnFocusRef}
     >
-      <CharacterSheetDialogHeader
-        headingId={titleId}
-        onRequestClose={onRequestClose}
-      >
-        確認
-      </CharacterSheetDialogHeader>
       <CharacterSheetDialogContent>
-        <p id={descriptionId}>
-          変更すると、現在選択中のスキルが消去されます。本当によろしいですか？
-        </p>
+        <p id={descriptionId}>{copy.primaryRyugiChangeConfirmation}</p>
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
         <button onClick={onRequestClose} ref={cancelButtonRef} type="button">

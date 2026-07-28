@@ -3,9 +3,9 @@
 ## 最優先のデザイン入力
 
 - 対象の承認済みdesign draftは`.tmp/design/character-sheet/`配下のdesktop、tablet、mobile、picker画像である。
-- ユーザーの最新指示により、スキル大セクションはdesign draftの配置ではなく`判定`セクション直下へ置く。スキル行と候補ダイアログの2行構成、名称列幅、mobileでの幅維持、削除、並べ替え、プライマリ流儀変更確認もdesign draftより優先する。
+- ユーザーの最新指示により、スキル大セクションはdesign draftの配置ではなく`判定`セクション直下へ置く。desktop / tabletのスキル行ヘッダー、行内展開、名称列幅、密度、削除、並べ替え、プライマリ流儀変更確認もdesign draftより優先する。mobileは個別最適化へ切り出し、このGateのdesktop / tablet表示契約に含めない。
 - 既存の`CharacterSheetSectionFrame`、`CharacterSheetDialog`、入力・削除button、Build sectionの実装UIは、draft画像より優先して整合させる。design notes、actual screenshot、reviewer出力を画面設計の根拠にしない。
-- design draftとユーザー指示にないmobileの解決策は、このGateで補完しない。指定幅を保ったactual表示を確認し、調整要否は実装後にユーザーへ報告する。
+- design draftとユーザー指示にないmobileの解決策は、このGateで補完しない。
 
 ## 目的
 
@@ -40,32 +40,40 @@
 - 選択中プライマリ流儀の`bonus`を読み取り専用で先頭表示する。通常行は追加・削除できるが、最低1行を維持する。bonus行には選択、削除、並べ替えを設けない。
 - 通常行の左端drag handleによる順序変更を実装する。通常行だけを対象とし、bonus行より上には並べ替えられない。フォーム配列の順序を唯一の表示順とし、自動ソートしない。
 - 通常行の選択操作から、選択中プライマリ流儀の`bonus`以外だけを候補ダイアログへ表示する。`basic`は「初期作成」、プライマリ流儀レベルが6以上のとき候補となる`advanced`は「Lv6以上」の小見出しで区切る。プライマリ流儀未選択時は候補を開かない。
-- スキル表示行と候補ダイアログの候補行は、名称を含むメタ情報を1行目へ横並びにし、効果本文だけを2行目へ置く。名称領域は、流儀・生き様・共通スキルの全生成スキル名の最大文字列を折り返さない幅とする。G12ではmobileでもこの幅を縮めず、幅不足の横方向overflowはスキル区分内のスクロールに閉じてほかの領域へ漏らさない。
+- desktop / tabletのプライマリ流儀スキル区分には、通常行とbonus行に共通するヘッダー行を追加する。drag handle列の次から、名称、Lv、`最大`／`Lv`の2行見出し、コスト、技能、使用制限、展開の順とする。最大Lv列はひと桁に必要な狭い幅とし、ヘッダー文字サイズは能力値作成のラベルと同程度まで小さくする。
+- desktop / tabletのスキル表は、名称headerと名称cellを左寄せにする。通常行・bonus行はtable rowとして角丸を使わず、削除buttonは専用cellの上下左右中央へ置く。`＋ スキルを追加`は表から余白を空けて左寄せにする。
+- desktop / tabletのプライマリ流儀スキル区分は、`CharacterSheetSectionFrame`と同じ灰色header、右端の開閉icon、外枠を持つsectionデザインにする。エラー枠の追加で行やheaderがずれないよう、通常時から同じ外枠寸法を持つ。
+- desktop / tabletのスキル表示行は、名称、取得Lv、最大Lv、コスト、技能、使用制限、展開トグルだけを既定表示する。技能の複数値は`技能A`／`技能B`、使用制限の複数値は`A`／`&B`のように、区切り記号の前で改行する。取得制限と効果は展開トグルで表示し、既定は閉じる。
+- desktop / tabletの候補ダイアログは、`初期作成`と`Lv6以上`の各小見出しの直後に、名称、最大Lv、コスト、技能、使用制限、取得制限のheaderを表示する。名称headerと名称cellは左寄せにする。展開列は置かず、効果は`効果：本文`として常に2行目へ表示する。候補行では対象と射程を表示しない。候補はcardではなく角丸なしの詰めたtable rowにする。候補数に起因する縦スクロールはdialog内容の領域へ閉じ、文書全体の縦スクロールを発生させない。tabletを含め、dialog内容の横overflowは許可しない。
+- desktop / tabletのスキル区分・ヘッダー・行の文字サイズをわずかに下げる。drag handleは行の左上へ余白なく接続する。スキル選択buttonには`lucide-react`の`ListPlus`を使う。`lucide-react`を追加する理由は、文字記号ではなく意味が判別できる既存デザイン調和のiconを提供するためである。代替の手書きSVGはicon群の保守を増やし、既存の`simple-icons`はブランドicon用であるため、選択操作には用いない。
 - 通常行の選択時はレベルを`1`にし、変更時は選択とレベルを正規化する。選択したスキルの最大レベル、コスト、技能、使用制限、対象、射程、取得制限、効果を読み取り専用で表示する。文章による取得制限や効果は解析・自動検証しない。
 - 通常行の取得レベル入力は、選択済みスキルの最大レベルを`max`として超過入力を防ぐ。既存値または選択変更で最大レベルを超える行は、その行を赤枠で示す。選択済み通常スキルの取得レベル合計がプライマリ流儀レベルを超える場合は、プライマリ流儀のビルド枠とプライマリ流儀スキル区分を赤枠で示す。個別のエラー本文は追加しない。
 - `スキル`大セクションとは別に、プライマリ流儀スキル区分も初期展開・独立開閉とする。開閉状態は保存せず、閉じても子要素をunmountしない。
-- プライマリ流儀を変更する前に、bonus以外のプライマリ通常行で1件以上のskill IDが選択済みなら、G5のdialog shellで確認する。本文は「変更すると、現在選択中のスキルが消去されます。本当によろしいですか？」とする。確認時だけ通常行の選択を消去して流儀を変更し、キャンセル、Escape、閉じる操作では流儀・スキルを変更しない。流儀不一致スキルのエラー表示は実装しない。
+- プライマリ流儀を変更する前に、bonus以外のプライマリ通常行で1件以上のskill IDが選択済みなら、G5のdialog shellで見出しなしの確認を出す。本文は「変更すると、現在選択中のスキルが消去されます。本当によろしいですか？」とする。操作labelは`キャンセル`と`変更`にする。確認時だけ通常行の選択を消去して流儀を変更し、キャンセル、Escape、閉じる操作では流儀・スキルを変更しない。流儀不一致スキルのエラー表示は実装しない。
+- `DialogDemoTrigger`と、確認用に常設しているダミーの`CharacterSheetDialog`を`CharacterSheetContainer`から削除する。実際のプライマリ流儀変更確認だけを残す。
 - プライマリ流儀が未選択、bonus、通常行追加・削除、候補選択、dialogのfocus復帰、dragによる並べ替え、最大名称幅を、logic / hook / Component / browser testの責務に分けて確認する。
 
 ## 初期スコープ外
 
 - 生き様スキル、共通スキル、その他流儀スキルのフォーム値・表示・選択はG13〜G15で扱う。
 - スキルの重複、`advanced`条件、共通スキル上限と、生き様・その他流儀のレベル整合はG16で扱う。ただし、G12のプライマリ流儀スキルの最大レベルと流儀レベル合計だけは本Gateで扱い、候補表示はプライマリ流儀レベル6未満で`advanced`を候補に含めない。
-- mobile表示の追加設計・レイアウト解消、canonical VRT baseline更新、design draft / notesの更新は扱わない。
+- mobile表示の追加設計・レイアウト解消、canonical VRT baseline更新、design draft / notesの更新は扱わない。mobile向けのスキル区分は別taskで個別最適化する。
 - 文章の取得制限、前提スキル、排他、能力値・格・アイテム条件、効果の自動解析・自動算出を追加しない。
-- 保存・復元、JSON入出力、確認対象を除くroot操作、追加パッケージを導入しない。
+- 保存・復元、JSON入出力、確認対象を除くroot操作を追加しない。スキル選択iconのための`lucide-react`導入だけは本Gateの対象とする。
 
 ## 完了条件
 
-- [ ] プライマリ流儀を選ぶと、その流儀のbonusスキルが先頭の読み取り専用2行表示で現れ、通常スキル4行が表示される。
+- [ ] プライマリ流儀を選ぶと、その流儀のbonusスキルが先頭の読み取り専用要約行と展開詳細で現れ、通常スキル4行が表示される。
 - [ ] 通常行は1行を残して追加・削除でき、左端drag handleでbonus行の下だけを並べ替えられる。
 - [ ] 通常行の候補ダイアログは選択中プライマリ流儀の`bonus`以外だけを表示し、`basic`とレベル6以上の`advanced`を指定小見出しで分ける。
-- [ ] 表示行と候補行は、名称を含むメタ情報が1行目、効果本文だけが2行目である。名称領域は全スキル中の最長名称を折り返さない幅とし、mobileでも縮めない。
-- [ ] 通常スキルが1件以上選択済みのプライマリ流儀変更では、指定文言の確認dialogを出す。確認時だけ通常選択を消去して変更し、キャンセル・Escape・閉じる操作では変更しない。
+- [ ] desktop / tabletのスキル区分は、名称、Lv、`最大`／`Lv`、コスト、技能、使用制限、展開のヘッダーを持つ。最大Lv列はひと桁幅で、ヘッダーと行の文字サイズは能力値作成ラベル程度へ下げる。
+- [ ] desktop / tabletの行は取得制限と効果を初期非表示にし、展開トグルで表示する。技能と使用制限の複数値は指定の区切り改行で表示する。drag handleは左上に余白なく接続し、スキル選択buttonは`lucide-react`の`ListPlus`を使う。
+- [ ] desktop / tabletの候補ダイアログは、名称、最大Lv、コスト、技能、使用制限のヘッダーを持つ表形式である。展開列を持たず、効果を`効果：本文`として常時2行目へ表示する。候補数によるスクロールはdialog内容だけに発生し、文書全体の縦スクロールおよびdialog内容の横overflowを発生させない。
+- [ ] 通常スキルが1件以上選択済みのプライマリ流儀変更では、見出しなし、`キャンセル`／`変更`の指定文言確認dialogを出す。確認時だけ通常選択を消去して変更し、キャンセル・Escape・閉じる操作では変更しない。ダミー確認dialogは表示しない。
 - [ ] 通常スキルの取得レベルは最大レベルを超えて変更できず、既存の超過行は行単位で赤枠になる。通常スキル取得レベル合計がプライマリ流儀レベルを超える場合は、プライマリ流儀のビルド枠とプライマリ流儀スキル区分を赤枠にする。
 - [ ] プライマリ流儀スキル区分は、スキル大セクションとは独立して初期展開・開閉できる。
 - [ ] プライマリ流儀未選択、bonus、削除下限、候補絞り込み、行順序、選択時のレベル`1`、dialogのfocus復帰を局所テストで確認する。
-- [ ] 指定幅を保ったdesktop、tablet、mobileのactual screenshotを開いて、スキル大セクション、表示行、候補dialog、確認dialogを確認し、mobileで発生した表示崩れの有無をissueへ記録する。canonical VRT baselineは更新しない。
+- [ ] desktop、tabletのactual screenshotを開いて、スキル大セクション、ヘッダー、通常行、bonus行、展開状態、候補dialog、確認dialogを確認する。候補dialogでは、表ヘッダー、効果の常時表示、文書全体の縦スクロール不在、dialog内容の横overflow不在を確認する。mobileは個別最適化taskまで確認対象外とし、canonical VRT baselineは更新しない。
 - [ ] `npm run check`、関連Node / Component / hook test、対象browser testが通る。
 
 ## チェックポイント
@@ -95,7 +103,10 @@
 - `src/character-sheet/components/dialogs/PrimarySkillPickerDialog.module.css`
 - `src/character-sheet/components/dialogs/PrimaryRyugiChangeConfirmDialog.tsx`
 - `src/character-sheet/components/CharacterSheetFormPresenter.tsx`
+- `src/character-sheet/components/dialogs/DialogDemoTrigger.tsx`（削除）
 - `src/character-sheet/dictionary.ts`
+- `package.json`
+- `package-lock.json`
 - `tests/node/character-sheet/primary-skills.test.ts`
 - `tests/components/character-sheet/PrimarySkillsSection.test.tsx`
 - `tests/components/character-sheet/PrimarySkillPickerDialog.test.tsx`
@@ -110,11 +121,43 @@
 - bonus行を固定しつつ通常行だけの最低1行、削除、drag順序の制約が明確か。
 - 候補の`basic` / `advanced`絞り込みと、小見出しの条件がレビュー可能か。
 - 通常スキルを保持したままプライマリ流儀を変更しない確認dialogの文言・確認時だけの消去・focus復帰が明確か。
-- 全スキル中の最長名称幅を維持し、mobileの解決策をこのGateへ先取りしない範囲が妥当か。
+- desktop / tabletのヘッダー、初期折りたたみ、密度、drag handle位置が、名称列幅を保ちつつ横scrollを発生させない構成になっているか。mobile最適化を混在させていないか。
 - design draftとの差異をユーザー最新指示として扱い、実装前に追加のdesign-image-generationを必要としない判断が妥当か。
 
 ## 備考
 
-- `docs/requirements/character-sheet.md`は、ユーザーの明示指示により、スキル行・候補行の2行構成、全スキル最長名称幅、drag順序、プライマリ流儀変更確認、`判定`直下の配置へ更新した。
+- `docs/requirements/character-sheet.md`は、ユーザーの明示指示により、desktop / tabletのスキルヘッダー、行内展開、密度、icon、drag位置と、mobile個別最適化の境界へ更新した。
 - canonical VRT baselineは更新しない。Visual ReviewはG12で変更したroute / state / viewportのactualを対象にし、G31の統合確認を置き換えない。
 - branchは既存の`ex-02-web-character-sheet`を使用する。新規branchは作成しない。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` の`@primary-skills-selected`（以降、`@primary-skill-details-expanded`、`@primary-skill-picker-open`、`@primary-ryugi-change-confirm`）
+- route / states / viewports: `/character-sheet/` の選択済み、行詳細展開、候補dialog、流儀変更確認dialogをdesktop / tabletで確認する。
+
+### レビュー結果
+
+| 対象                    | 判定 | 差分                                                                             | 対応                                                    |
+| ----------------------- | ---- | -------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| primary-skills-selected | 未達 | Playwrightの流儀select操作がtimeoutし、actual locator screenshotを生成できない。 | form再描画を伴うselect操作のcapture基盤を別途調査する。 |
+
+### 実画面確認
+
+- `/character-sheet/` / 選択済み / desktop・tablet:
+  - locator screenshot: 未生成。`npm run visual:capture -- --grep "@primary-skills-selected"`がfixture準備の`selectOption("kenkaya")`でtimeoutした。
+  - result: 未確認。full-page screenshotや独自browser scriptで代用しない。
+
+### 対応完了チェックリスト
+
+- [ ] 変更targetだけをVRT比較した
+- [ ] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [ ] VRT差分を修正した、または修正不要と判断した
+- [ ] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

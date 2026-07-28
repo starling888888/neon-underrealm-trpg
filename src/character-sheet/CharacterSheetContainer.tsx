@@ -1,17 +1,10 @@
-import { useId, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
-import CharacterSheetDialog, {
-  CharacterSheetDialogActions,
-  CharacterSheetDialogContent,
-  CharacterSheetDialogHeader,
-} from "./components/dialogs/CharacterSheetDialog";
-import DialogDemoTrigger from "./components/dialogs/DialogDemoTrigger";
 import PrimaryRyugiChangeConfirmDialog from "./components/dialogs/PrimaryRyugiChangeConfirmDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
-import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
 
@@ -23,7 +16,6 @@ import useCharacterSheetRootState from "./useCharacterSheetRootState";
  * siblings of that presenter in later Gates.
  */
 export default function CharacterSheetContainer() {
-  const { general } = characterSheetDictionary;
   const rootState = useCharacterSheetRootState();
   const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
     string | null
@@ -33,8 +25,6 @@ export default function CharacterSheetContainer() {
   const primarySkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
-  const confirmationTitleId = useId();
-  const confirmationDescriptionId = useId();
   const presenterProps = useCharacterSheetFormPresenterProps(
     rootState.form,
     {
@@ -91,44 +81,7 @@ export default function CharacterSheetContainer() {
         aria-busy={rootState.isRootOperationInProgress}
         inert={rootState.isRootOperationInProgress || undefined}
       >
-        <DialogDemoTrigger
-          onOpen={() => rootState.setIsConfirmationOpen(true)}
-          triggerRef={rootState.confirmationTriggerRef}
-        />
         <CharacterSheetFormPresenter {...presenterProps} />
-        <CharacterSheetDialog
-          ariaDescribedBy={confirmationDescriptionId}
-          ariaLabelledBy={confirmationTitleId}
-          initialFocusRef={rootState.confirmationCancelButtonRef}
-          isOpen={rootState.isConfirmationOpen}
-          onRequestClose={() => rootState.setIsConfirmationOpen(false)}
-          returnFocusRef={rootState.confirmationTriggerRef}
-        >
-          <CharacterSheetDialogHeader headingId={confirmationTitleId}>
-            確認
-          </CharacterSheetDialogHeader>
-          <CharacterSheetDialogContent>
-            <p id={confirmationDescriptionId}>
-              この操作は確認用です。キャラクターシートの内容は変更されません。
-            </p>
-          </CharacterSheetDialogContent>
-          <CharacterSheetDialogActions>
-            <button
-              onClick={() => rootState.setIsConfirmationOpen(false)}
-              ref={rootState.confirmationCancelButtonRef}
-              type="button"
-            >
-              {general.cancel}
-            </button>
-            <button
-              data-tone="primary"
-              onClick={() => rootState.setIsConfirmationOpen(false)}
-              type="button"
-            >
-              OK
-            </button>
-          </CharacterSheetDialogActions>
-        </CharacterSheetDialog>
         <CharacterImageErrorDialog
           closeButtonRef={rootState.imageErrorCloseButtonRef}
           errorCode={rootState.imageError?.code ?? null}
@@ -138,9 +91,6 @@ export default function CharacterSheetContainer() {
         <PrimarySkillPickerDialog
           groups={presenterProps.primarySkillsSection.candidateGroups}
           isOpen={primarySkillPickerRowId !== null}
-          maximumSkillNameLength={
-            presenterProps.primarySkillsSection.maximumSkillNameLength
-          }
           onRequestClose={closePrimarySkillPicker}
           onSelect={(skillId) => {
             if (primarySkillPickerRowId !== null) {

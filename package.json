@@ -44,6 +44,7 @@
     "@hookform/resolvers": "^5.4.0",
     "astro": "^7.0.6",
     "idb-keyval": "^6.3.0",
+    "lucide-react": "^1.27.0",
     "parse5": "^8.0.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

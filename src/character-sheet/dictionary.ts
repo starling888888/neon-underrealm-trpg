@@ -9,7 +9,7 @@ export const characterSheetDictionary = {
   general: {
     automatic: "自動",
     cancel: "キャンセル",
-    change: "変更する",
+    change: "変更",
     close: "閉じる",
     closeFormulaTooltip: "計算式の説明を閉じる",
     unavailableValue: "-",
@@ -110,6 +110,11 @@ export const characterSheetDictionary = {
     skills: {
       add: "＋ スキルを追加",
       choose: "スキルを選択",
+      initialCreation: "初期作成",
+      level6OrAbove: "Lv6以上",
+      primaryRyugiChangeConfirmation:
+        "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
+      primaryRyugiChangeConfirmationLabel: "プライマリ流儀の変更確認",
       primary: "プライマリ流儀",
       reorderPrefix: "並べ替え: ",
       remove: "を削除",
@@ -242,8 +247,12 @@ export const characterSheetDictionary = {
         acquisitionRestriction: "取得制限",
         cost: "コスト",
         effect: "効果",
+        expand: "展開",
         level: "Lv",
         maximumLevel: "最大Lv",
+        name: "名称",
+        closeDetails: "の詳細を閉じる",
+        openDetails: "の詳細を開く",
         proficiency: "技能",
         range: "射程",
         target: "対象",

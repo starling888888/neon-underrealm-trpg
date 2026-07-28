@@ -1,4 +1,4 @@
-import { type CSSProperties, useId, useRef } from "react";
+import { useId, useRef } from "react";
 
 import type { Skill } from "../../../lib/types/skill";
 import { characterSheetDictionary } from "../../dictionary";
@@ -12,11 +12,23 @@ import styles from "./PrimarySkillPickerDialog.module.css";
 type PrimarySkillPickerDialogProps = {
   groups: PrimarySkillGroups;
   isOpen: boolean;
-  maximumSkillNameLength: number;
   onRequestClose: () => void;
   onSelect: (skillId: string) => void;
   returnFocusRef: React.RefObject<HTMLElement | null>;
 };
+
+function formatCompactValue(
+  value: string | null | undefined,
+  separator: string,
+) {
+  if (value === null || value === undefined || value === "") return "-";
+
+  return value
+    .split(separator)
+    .map((part, index) => (
+      <span key={part}>{index === 0 ? part : `${separator}${part}`}</span>
+    ));
+}
 
 function CandidateRow({
   onSelect,
@@ -28,40 +40,37 @@ function CandidateRow({
   const copy = characterSheetDictionary.gameDomain.terms.skill;
 
   return (
-    <button
-      className={styles.candidate}
-      onClick={() => onSelect(skill.id)}
-      type="button"
-    >
-      <span className={styles.firstLine}>
-        <span className={styles.name}>{skill.name}</span>
-        <span>
-          {copy.maximumLevel}: {skill.maxLevel}
-        </span>
-        <span>
-          {copy.cost}: {skill.cost ?? "-"}
-        </span>
-        <span>
-          {copy.proficiency}: {skill.proficiency ?? "-"}
-        </span>
-        <span>
-          {copy.usageRestriction}: {skill.usageRestriction ?? "-"}
-        </span>
-        <span>
-          {copy.target}: {skill.target ?? "-"}
-        </span>
-        <span>
-          {copy.range}: {skill.range ?? "-"}
-        </span>
-        <span>
-          {copy.acquisitionRestriction}: {skill.acquisitionRestriction ?? "-"}
-        </span>
-      </span>
-      <span className={styles.effect}>
-        <strong>{copy.effect}</strong>
+    <div className={styles.candidate}>
+      <div className={styles.firstLine}>
+        <button onClick={() => onSelect(skill.id)} type="button">
+          {skill.name}
+        </button>
+        <span>{skill.maxLevel}</span>
+        <span>{skill.cost ?? "-"}</span>
+        <span>{formatCompactValue(skill.proficiency, "/")}</span>
+        <span>{formatCompactValue(skill.usageRestriction, "&")}</span>
+        <span>{skill.acquisitionRestriction ?? "-"}</span>
+      </div>
+      <p className={styles.effect}>
+        <strong>{copy.effect}：</strong>
         {skill.effect}
-      </span>
-    </button>
+      </p>
+    </div>
+  );
+}
+
+function CandidateTableHeader() {
+  const copy = characterSheetDictionary.gameDomain.terms.skill;
+
+  return (
+    <div aria-hidden="true" className={styles.headerRow}>
+      <span>{copy.name}</span>
+      <span>{copy.maximumLevel}</span>
+      <span>{copy.cost}</span>
+      <span>{copy.proficiency}</span>
+      <span>{copy.usageRestriction}</span>
+      <span>{copy.acquisitionRestriction}</span>
+    </div>
   );
 }
 
@@ -79,6 +88,7 @@ function CandidateGroup({
   return (
     <section className={styles.group}>
       <h3>{heading}</h3>
+      <CandidateTableHeader />
       {skills.map((skill) => (
         <CandidateRow key={skill.id} onSelect={onSelect} skill={skill} />
       ))}
@@ -90,16 +100,13 @@ function CandidateGroup({
 export default function PrimarySkillPickerDialog({
   groups,
   isOpen,
-  maximumSkillNameLength,
   onRequestClose,
   onSelect,
   returnFocusRef,
 }: PrimarySkillPickerDialogProps) {
   const titleId = useId();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const nameWidthStyle = {
-    "--primary-skill-name-width": `${maximumSkillNameLength}em`,
-  } as CSSProperties;
+  const copy = characterSheetDictionary.characterSheet.skills;
 
   return (
     <CharacterSheetDialog
@@ -115,17 +122,17 @@ export default function PrimarySkillPickerDialog({
         headingId={titleId}
         onRequestClose={onRequestClose}
       >
-        {characterSheetDictionary.characterSheet.skills.choose}
+        {copy.choose}
       </CharacterSheetDialogHeader>
       <CharacterSheetDialogContent>
-        <div className={styles.content} style={nameWidthStyle}>
+        <div className={styles.content}>
           <CandidateGroup
-            heading="初期作成"
+            heading={copy.initialCreation}
             onSelect={onSelect}
             skills={groups.basic}
           />
           <CandidateGroup
-            heading="Lv6以上"
+            heading={copy.level6OrAbove}
             onSelect={onSelect}
             skills={groups.advanced}
           />

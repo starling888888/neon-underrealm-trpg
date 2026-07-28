@@ -53,6 +53,8 @@ describe("PrimarySkillsSection", () => {
     expect(screen.getAllByRole("button", { name: /並べ替え:/ })).toHaveLength(
       2,
     );
+    expect(screen.getByText("名称")).not.toBeNull();
+    expect(screen.queryByText("取得制限")).toBeNull();
 
     fireEvent.click(
       screen.getByRole("button", { name: props.rows[0]?.skill?.name ?? "" }),
@@ -62,6 +64,9 @@ describe("PrimarySkillsSection", () => {
       "first",
       expect.any(HTMLButtonElement),
     );
+
+    fireEvent.click(screen.getByRole("button", { name: "旋風の詳細を開く" }));
+    expect(screen.getByText("取得制限")).not.toBeNull();
   });
 
   it("disables removal at the one-row minimum and forwards drag reorder", () => {
