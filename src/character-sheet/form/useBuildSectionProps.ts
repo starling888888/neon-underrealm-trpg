@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
 import type { BuildSectionProps } from "../components/BuildSection";
@@ -34,6 +35,7 @@ type UseBuildSectionPropsOptions = {
     applyChange: () => void,
   ) => void;
   onOtherRyugiAdded?: (rowId: string) => void;
+  otherRyugiAddButtonRef?: RefObject<HTMLButtonElement | null>;
   onOtherRyugiChangeRequested?: (
     rowId: string,
     ryugiId: string | null,
@@ -52,6 +54,7 @@ export default function useBuildSectionProps(
   {
     onIkizamaChangeRequested,
     onOtherRyugiAdded,
+    otherRyugiAddButtonRef,
     onOtherRyugiChangeRequested,
     onOtherRyugiRemoveRequested,
     onPrimaryRyugiChangeRequested,
@@ -158,6 +161,7 @@ export default function useBuildSectionProps(
         ]);
         onOtherRyugiAdded?.(nextRow.rowId);
       },
+      otherRyugiAddButtonRef,
       onOtherRyugiChange: (index, field, value, trigger) => {
         if (field !== "ryugiId") {
           void setOtherRyugiValue(index, field, value);

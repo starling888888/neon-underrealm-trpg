@@ -51,10 +51,11 @@ G7はその他流儀の可変入力を提供している。G15は、その各行
 - 既存の通常スキル入力にある最大Lvへの自動clampは採用しない。`docs/TODO.md`のG24 / G27前の入力・schema契約を先取りせず、最大Lv超過、復元、JSON入力の扱いを本Gateで補完しない。
 - 固定文言を追加・移動する場合は、ゲーム用語・スキル属性名を`characterSheetDictionary.gameDomain.terms`へ、section名、操作、button、dialog説明、未選択messageを`characterSheetDictionary.characterSheet`へ分類する。生成JSON由来の名称・制限・効果をdictionaryへ複製しない。
 - browser E2Eは、その他流儀追加後の領域表示、候補dialogでの1候補選択、削除確認の確定またはキャンセルなど2〜3個の代表操作だけを最終smokeとして確認する。候補group、Lv境界、disabled、callback、dialog copy、行順、削除対象の全組合せはNode / Component / hook testへ置き、test-onlyのDOM・state・data属性を製品コードへ追加しない。
+- ユーザーの明示承認により、G13で完了記録済みの生き様通常スキル最低0行と`ikizamaSkills.rows` schemaの不一致を本Gateで修正する。プライマリ、生き様の候補・adapter・表示契約、bonus最大Lv、保存・復元・JSON入出力は引き続き対象外とする。
 
 ## 初期スコープ外
 
-- プライマリ、生き様、共通スキルのフォーム値・adapter・候補を変更しない。
+- プライマリ、生き様、共通スキルのフォーム値・adapter・候補を変更しない。ただし、ユーザー承認済みの生き様通常スキル0行を許容するschema修正と、その局所Node testは含む。
 - G16の全スキル横断validation（その他流儀の取得Lv合計と対応流儀Lvの局所error UIを除く）、G14の共通スキル経験点、G24の保存・復元と既存可変行の移行、JSON入出力、canonical VRT baseline更新、追加依存の導入を行わない。
 - 自由文の取得制限、前提、排他、能力値・アイテム条件、スキル効果を解析・自動算出しない。
 
@@ -128,5 +129,33 @@ G7はその他流儀の可変入力を提供している。G15は、その各行
 - [x] 変更targetだけの一時snapshotを取得し、locator screenshotを確認した
 - [x] locator-only scenarioを通常のfull-page VRTから分離し、canonical baselineを不要にした
 - [x] canonical baselineを更新していない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 生き様通常スキル0行をUIは許容する一方、schemaが`.min(1)`で拒否しており、G15の初期スコープ外変更になる。
+- その他流儀の削除確認を確定すると、削除済みbuttonへfocus復帰しようとして操作位置を失う。
+- 複数その他流儀の通常行を混在させたときの行移動・削除・流儀削除後の`rowId`連携をhook testで確認していない。
+
+### 判定
+
+- source: Gate Technical Review
+- classification: valid（ユーザー承認済みのG13 schema修正、G15のfocus復帰、RHF field-array境界のtest不足）
+- local validation: `ikizamaSkills.rows`は最低0行のG13契約に反して`.min(1)`だった。削除確定時には操作元buttonがDOMから消える。flatな`otherRyugiSkills.rows`は複数`ryugiRowId`を混在させるため、対象流儀だけの移動・削除をfield-array操作で確認する必要がある。
+
+### 対応方針
+
+- ユーザー承認により、G13の生き様通常スキル0行をschemaでも許容し、プライマリ最低1行との境界をNode testで固定する。
+- 削除確定時は、削除後も残る「その他流儀を追加」buttonを復帰先とし、確定後のfocusをContainer testで確認する。
+- 2件のその他流儀と交互に並ぶ通常行をfixtureにし、対象流儀内の移動、通常行削除、流儀削除後の`ryugiRowId`と行順をhook testで確認する。
+
+### 対応完了チェックリスト
+
+- [x] 生き様通常スキル0行をschemaで許容し、プライマリ最低1行との境界をNode testで確認する
+- [x] その他流儀削除の確定後に、残存する追加buttonへfocusを戻す
+- [x] 複数その他流儀での通常行移動・削除・流儀削除後のrow ID連携をhook testで確認する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

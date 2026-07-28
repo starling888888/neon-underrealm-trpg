@@ -258,6 +258,79 @@ describe("useCharacterSheetFormPresenterProps", () => {
     ).toEqual([otherRyugi.rowId]);
   });
 
+  it("isolates other-ryugi field-array moves and removals by ryugi row ID", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+
+    act(() => {
+      result.current.presenterProps.buildSection.onOtherRyugiAdd();
+      result.current.presenterProps.buildSection.onOtherRyugiAdd();
+    });
+
+    const [firstRyugi, secondRyugi] =
+      result.current.form.getValues("build.otherRyugi");
+    const [firstRow, secondRow] = result.current.form.getValues(
+      "otherRyugiSkills.rows",
+    );
+    if (
+      firstRyugi === undefined ||
+      secondRyugi === undefined ||
+      firstRow === undefined ||
+      secondRow === undefined
+    ) {
+      throw new Error("複数その他流儀の初期行を取得できません。");
+    }
+
+    let addedFirstRowId = "";
+    let addedSecondRowId = "";
+    act(() => {
+      result.current.presenterProps.otherRyugiSkillsSection.onAdd(
+        firstRyugi.rowId,
+      );
+      result.current.presenterProps.otherRyugiSkillsSection.onAdd(
+        secondRyugi.rowId,
+      );
+      const rows = result.current.form.getValues("otherRyugiSkills.rows");
+      addedFirstRowId = rows[2]?.rowId ?? "";
+      addedSecondRowId = rows[3]?.rowId ?? "";
+      result.current.presenterProps.otherRyugiSkillsSection.onMove(
+        addedFirstRowId,
+        "up",
+      );
+      result.current.presenterProps.otherRyugiSkillsSection.onRemove(
+        firstRow.rowId,
+      );
+    });
+
+    expect(addedFirstRowId).not.toBe("");
+    expect(addedSecondRowId).not.toBe("");
+    expect(
+      result.current.form
+        .getValues("otherRyugiSkills.rows")
+        .map((row) => ({ rowId: row.rowId, ryugiRowId: row.ryugiRowId })),
+    ).toEqual([
+      { rowId: addedFirstRowId, ryugiRowId: firstRyugi.rowId },
+      { rowId: secondRow.rowId, ryugiRowId: secondRyugi.rowId },
+      { rowId: addedSecondRowId, ryugiRowId: secondRyugi.rowId },
+    ]);
+
+    act(() => {
+      result.current.presenterProps.otherRyugiSkills.removeRows(
+        secondRyugi.rowId,
+      );
+      result.current.presenterProps.buildSection.onOtherRyugiRemove(1);
+    });
+
+    expect(result.current.form.getValues("build.otherRyugi")).toEqual([
+      expect.objectContaining({ rowId: firstRyugi.rowId }),
+    ]);
+    expect(result.current.form.getValues("otherRyugiSkills.rows")).toEqual([
+      expect.objectContaining({
+        rowId: addedFirstRowId,
+        ryugiRowId: firstRyugi.rowId,
+      }),
+    ]);
+  });
+
   it("keeps ikizama rows in RHF, resets bonus on an ikizama change, and preserves it across level changes", () => {
     const { result } = renderHook(() => usePresenterHarness());
 

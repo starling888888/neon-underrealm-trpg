@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import type { UseFormReturn } from "react-hook-form";
 
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
@@ -40,6 +41,7 @@ type CharacterSheetPresenterOptions = {
     trigger: HTMLSelectElement,
     applyChange: () => void,
   ) => void;
+  otherRyugiAddButtonRef: RefObject<HTMLButtonElement | null>;
   onOtherRyugiRemoveRequested: (
     rowId: string,
     trigger: HTMLButtonElement,
@@ -82,6 +84,7 @@ export default function useCharacterSheetFormPresenterProps(
     onIkizamaChangeRequested,
     onIkizamaSkillPickerRequested,
     onOtherRyugiChangeRequested,
+    otherRyugiAddButtonRef,
     onOtherRyugiRemoveRequested,
     onOtherRyugiSkillPickerRequested,
     onPrimaryRyugiChangeRequested,
@@ -94,6 +97,7 @@ export default function useCharacterSheetFormPresenterProps(
   const build = useBuildSectionProps(form, {
     onIkizamaChangeRequested,
     onOtherRyugiAdded: otherRyugiSkills.addInitialRow,
+    otherRyugiAddButtonRef,
     onOtherRyugiChangeRequested,
     onOtherRyugiRemoveRequested,
     onPrimaryRyugiChangeRequested,

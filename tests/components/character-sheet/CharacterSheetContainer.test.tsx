@@ -172,5 +172,8 @@ describe("CharacterSheetContainer", () => {
     await user.click(screen.getByRole("button", { name: "削除" }));
     expect(screen.queryByLabelText("その他流儀1")).toBeNull();
     expect(screen.queryByRole("button", { name: emonoSkill.name })).toBeNull();
+    expect(document.activeElement).toBe(
+      screen.getByRole("button", { name: "＋ その他流儀を追加" }),
+    );
   });
 });

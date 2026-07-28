@@ -44,6 +44,7 @@ export default function CharacterSheetContainer() {
   const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const otherRyugiRemoveTriggerRef = useRef<HTMLButtonElement>(null);
+  const otherRyugiAddButtonRef = useRef<HTMLButtonElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
@@ -125,6 +126,7 @@ export default function CharacterSheetContainer() {
         pendingOtherRyugiChangeRef.current = clearAndApply;
         setIsOtherRyugiChangeConfirmOpen(true);
       },
+      otherRyugiAddButtonRef,
       onOtherRyugiRemoveRequested: (rowId, trigger, applyChange) => {
         const hasSelectedSkill = rootState.form
           .getValues("otherRyugiSkills.rows")
@@ -200,6 +202,7 @@ export default function CharacterSheetContainer() {
   function confirmOtherRyugiRemove(): void {
     pendingOtherRyugiRemoveRef.current?.();
     pendingOtherRyugiRemoveRef.current = null;
+    otherRyugiRemoveTriggerRef.current = otherRyugiAddButtonRef.current;
     setIsOtherRyugiRemoveConfirmOpen(false);
   }
 

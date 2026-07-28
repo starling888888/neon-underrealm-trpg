@@ -1,3 +1,5 @@
+import type { RefObject } from "react";
+
 import { characterSheetDictionary } from "../dictionary";
 import type {
   AttributeName,
@@ -45,6 +47,7 @@ export type BuildSectionProps = {
   onIkizamaChange: (id: string | null, trigger?: HTMLSelectElement) => void;
   onIkizamaLevelChange: (value: string) => number;
   onOtherRyugiAdd: () => void;
+  otherRyugiAddButtonRef?: RefObject<HTMLButtonElement | null>;
   onOtherRyugiChange: (
     index: number,
     field: OtherRyugiEditableFieldName,
@@ -158,6 +161,7 @@ export default function BuildSection({
   onIkizamaChange,
   onIkizamaLevelChange,
   onOtherRyugiAdd,
+  otherRyugiAddButtonRef,
   onOtherRyugiChange,
   onOtherRyugiCommit,
   onOtherRyugiRemove,
@@ -276,6 +280,7 @@ export default function BuildSection({
         <button
           className={styles.addButton}
           onClick={onOtherRyugiAdd}
+          ref={otherRyugiAddButtonRef}
           type="button"
         >
           {buildUiCopy.addOtherRyugi}
