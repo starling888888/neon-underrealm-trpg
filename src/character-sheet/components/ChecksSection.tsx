@@ -5,6 +5,7 @@ import type { AttackSkillName, AttributeName } from "../form-values";
 import { attackSkillNames, attributeNames } from "../form-values";
 import type { ChecksDerivedValues, DerivedCheckRow } from "../logic/checks";
 import type { NoncombatSkillName } from "../master-data/noncombat-skills";
+import CharacterSheetButton from "./CharacterSheetButton";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import styles from "./ChecksSection.module.css";
 import DeleteButton from "./DeleteButton";
@@ -216,14 +217,13 @@ export default function ChecksSection({
               );
             })}
           </div>
-          <button
-            className={`${styles.addButton} character-sheet-add-button`}
+          <CharacterSheetButton
+            className={styles.addButton}
             disabled={attacks.length >= 5}
             onClick={onAttackAdd}
-            type="button"
           >
             {labels.addAttack}
-          </button>
+          </CharacterSheetButton>
         </div>
       </CharacterSheetSectionFrame>
 

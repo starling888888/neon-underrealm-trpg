@@ -2,10 +2,12 @@ import { useId, useRef } from "react";
 
 import { characterSheetDictionary } from "../../dictionary";
 import type { SpecialItemCategoryId } from "../../form-values";
+import CharacterSheetButton from "../CharacterSheetButton";
 import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,
 } from "./CharacterSheetDialog";
+import styles from "./CharacterSheetDialog.module.css";
 
 const categoryNames: Record<SpecialItemCategoryId, string> = {
   cybernetics: "サイバネ",
@@ -51,12 +53,19 @@ export default function SpecialItemCategoryRemoveConfirmDialog({
         </p>
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
-        <button onClick={onRequestClose} ref={cancelButtonRef} type="button">
+        <CharacterSheetButton
+          className={`${styles.actionButton} ${styles.actionButtonDefault}`}
+          onClick={onRequestClose}
+          ref={cancelButtonRef}
+        >
           {general.cancel}
-        </button>
-        <button data-tone="primary" onClick={onConfirm} type="button">
+        </CharacterSheetButton>
+        <CharacterSheetButton
+          className={styles.actionButton}
+          onClick={onConfirm}
+        >
           {general.delete}
-        </button>
+        </CharacterSheetButton>
       </CharacterSheetDialogActions>
     </CharacterSheetDialog>
   );

@@ -74,33 +74,17 @@
   padding: var(--space-4) var(--space-5);
 }
 
-.actions > button {
+.actionButton {
   min-height: 2.25rem;
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
   padding: var(--space-2) var(--space-4);
-  font-weight: 750;
 }
 
-.actions > button[data-tone="primary"] {
-  border-color: var(--color-link);
-  background: var(--color-link);
-  color: var(--color-text-inverse);
-}
-
-.actions > button[data-tone="primary"]:hover {
-  border-color: var(--color-link-hover);
-  background: var(--color-link-hover);
-}
-
-.actions > button:not([data-tone="primary"]) {
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.actions > button:not([data-tone="primary"]):hover {
-  background: var(--color-surface-muted);
+.actionButtonDefault[data-character-sheet-button-color="default"] {
+  --character-sheet-button-background: var(--color-surface);
+  --character-sheet-button-border-color: var(--color-border-strong);
+  --character-sheet-button-hover-background: var(--color-surface-muted);
+  --character-sheet-button-hover-border-color: var(--color-border-strong);
+  --character-sheet-button-text-color: var(--color-text);
 }
 
 .visuallyHidden {
@@ -124,7 +108,7 @@
     flex-wrap: wrap;
   }
 
-  .actions button {
+  .actionButton {
     flex: 1 1 8rem;
   }
 }

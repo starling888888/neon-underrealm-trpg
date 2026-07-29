@@ -7,6 +7,7 @@ import {
   formatDisplayValue,
 } from "../../lib/utils/display-value";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
+import CharacterSheetButton from "./CharacterSheetButton";
 import DeleteButton from "./DeleteButton";
 import styles from "./DrugsSection.module.css";
 import FormulaTooltip from "./FormulaTooltip";
@@ -207,13 +208,9 @@ export default function DrugsSection(props: DrugsSectionProps) {
           rowNumber={index + 1}
         />
       ))}
-      <button
-        className={`${styles.addButton} character-sheet-add-button`}
-        onClick={props.onAdd}
-        type="button"
-      >
+      <CharacterSheetButton className={styles.addButton} onClick={props.onAdd}>
         {copy.add}
-      </button>
+      </CharacterSheetButton>
     </div>
   );
 }

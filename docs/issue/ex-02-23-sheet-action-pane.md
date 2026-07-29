@@ -78,8 +78,8 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 ## 完了条件
 
 - [ ] `h1`と操作領域を同一React Islandで表示し、Astro側の見出しと重複しない。
-- [ ] `CharacterSheetButton`が通常のReact button propsとrefを受け渡し、`color`の`undefined`をaccent colorの`default`へ、`size`の`undefined`を`small`へfallbackし、`className`をbase / variant classと合成する。`accent`、`contained` / `border`、`large`は追加しない。
-- [ ] 既存の文言付き追加button、warningカテゴリ追加button、dialogの文言付きaction buttonが、表示・disabled・focus・既存のsection / dialog配置を保ったまま`CharacterSheetButton`を使う。
+- [x] `CharacterSheetButton`が通常のReact button propsとrefを受け渡し、`color`の`undefined`をaccent colorの`default`へ、`size`の`undefined`を`small`へfallbackし、`className`をbase / variant classと合成する。`accent`、`contained` / `border`、`large`は追加しない。
+- [x] 既存の文言付き追加button、warningカテゴリ追加button、dialogの文言付きaction buttonが、表示・disabled・focus・既存のsection / dialog配置を保ったまま`CharacterSheetButton`を使う。
 - [ ] desktopで指定順の文言付き操作button、3つのtooltip、初期化だけのdanger colorを表示する。
 - [ ] tablet / mobileでヘルプicon button、メニューbutton、開閉するモックmenu、4操作、空のエラー表示領域を表示する。
 - [ ] tablet / mobileで末尾paddingにより最終操作がfloating操作領域に隠れない。

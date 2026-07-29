@@ -1,9 +1,11 @@
 import { useId, useRef } from "react";
 import { characterSheetDictionary } from "../../dictionary";
+import CharacterSheetButton from "../CharacterSheetButton";
 import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,
 } from "./CharacterSheetDialog";
+import styles from "./CharacterSheetDialog.module.css";
 
 type SkillSelectionChangeConfirmDialogProps = {
   confirmLabel?: string;
@@ -42,12 +44,19 @@ export default function SkillSelectionChangeConfirmDialog({
         <p id={descriptionId}>{confirmation}</p>
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
-        <button onClick={onRequestClose} ref={cancelButtonRef} type="button">
+        <CharacterSheetButton
+          className={`${styles.actionButton} ${styles.actionButtonDefault}`}
+          onClick={onRequestClose}
+          ref={cancelButtonRef}
+        >
           {general.cancel}
-        </button>
-        <button data-tone="primary" onClick={onConfirm} type="button">
+        </CharacterSheetButton>
+        <CharacterSheetButton
+          className={styles.actionButton}
+          onClick={onConfirm}
+        >
           {confirmLabel ?? general.change}
-        </button>
+        </CharacterSheetButton>
       </CharacterSheetDialogActions>
     </CharacterSheetDialog>
   );

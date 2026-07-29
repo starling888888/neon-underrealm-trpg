@@ -7,6 +7,7 @@ import {
   formatDisplayValue,
 } from "../../lib/utils/display-value";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
+import CharacterSheetButton from "./CharacterSheetButton";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./OmamoriSection.module.css";
@@ -155,13 +156,9 @@ export default function OmamoriSection(props: OmamoriSectionProps) {
           rowNumber={index + 1}
         />
       ))}
-      <button
-        className={`${styles.addButton} character-sheet-add-button`}
-        onClick={props.onAdd}
-        type="button"
-      >
+      <CharacterSheetButton className={styles.addButton} onClick={props.onAdd}>
         {copy.add}
-      </button>
+      </CharacterSheetButton>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import { withBase } from "../../lib/utils/paths";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import type { CyberneticFixedPartKey } from "../form-values";
 import type { CyberneticsDerivedValues } from "../logic/cybernetics";
+import CharacterSheetButton from "./CharacterSheetButton";
 import ClearButton from "./ClearButton";
 import styles from "./CyberneticsSection.module.css";
 import DeleteButton from "./DeleteButton";
@@ -243,14 +244,13 @@ export default function CyberneticsSection({
         />
       ))}
       <div className={styles.footer}>
-        <button
-          className={`${styles.addButton} character-sheet-add-button`}
+        <CharacterSheetButton
+          className={styles.addButton}
           disabled={otherRows.length >= 4}
           onClick={onAddOther}
-          type="button"
         >
           {copy.addOther}
-        </button>
+        </CharacterSheetButton>
         <div
           aria-invalid={derived.hasImplantLimitError || undefined}
           className={styles.summary}

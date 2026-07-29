@@ -20,6 +20,7 @@ import type {
 } from "../form-values";
 import type { BuildDerivedValues } from "../logic/build";
 import type { CreditSummary } from "../logic/credit";
+import CharacterSheetButton from "./CharacterSheetButton";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./ProfileSection.module.css";
@@ -159,14 +160,13 @@ function CharacterImageField({
         type="file"
       />
       <div className={styles.imageActions}>
-        <button
-          className={`${styles.imageSelectButton} character-sheet-add-button`}
+        <CharacterSheetButton
+          className={styles.imageSelectButton}
           disabled={isRootOperationInProgress}
           onClick={selectFile}
-          type="button"
         >
           {image === null ? imageCopy.chooseFile : imageCopy.replaceFile}
-        </button>
+        </CharacterSheetButton>
         <DeleteButton
           ariaLabel={imageCopy.clearFile}
           disabled={image === null || isRootOperationInProgress}

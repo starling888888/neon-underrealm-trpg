@@ -12,6 +12,7 @@ import type { BuildDerivedValues } from "../logic/build";
 import type { CommonSkillBonusLevel } from "../logic/common-skills";
 import type { CharacterSheetSelectOption } from "../master-data/build";
 import styles from "./BuildSection.module.css";
+import CharacterSheetButton from "./CharacterSheetButton";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 
@@ -276,14 +277,13 @@ export default function BuildSection({
             />
           </div>
         ))}
-        <button
-          className={`${styles.addButton} character-sheet-add-button`}
+        <CharacterSheetButton
+          className={styles.addButton}
           onClick={onOtherRyugiAdd}
           ref={otherRyugiAddButtonRef}
-          type="button"
         >
           {buildUiCopy.addOtherRyugi}
-        </button>
+        </CharacterSheetButton>
       </section>
 
       <section

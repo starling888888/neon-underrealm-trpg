@@ -5,6 +5,7 @@ import {
   type SpecialItemCategoryId,
   specialItemCategoryIds,
 } from "../form-values";
+import CharacterSheetButton from "./CharacterSheetButton";
 import SpecialItemCategorySection from "./SpecialItemCategorySection";
 import styles from "./SpecialItemsSection.module.css";
 
@@ -78,15 +79,15 @@ export default function SpecialItemsSection({
         {specialItemCategoryIds
           .filter((category) => !visibleCategories.includes(category))
           .map((category) => (
-            <button
-              className={styles.addButton}
+            <CharacterSheetButton
+              color="warning"
               data-special-item-category-add={category}
               key={category}
               onClick={() => onAddCategory(category)}
-              type="button"
+              size="medium"
             >
               {categoryNames[category]}を追加
-            </button>
+            </CharacterSheetButton>
           ))}
       </div>
     </div>

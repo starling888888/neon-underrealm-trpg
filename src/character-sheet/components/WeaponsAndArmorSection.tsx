@@ -7,6 +7,7 @@ import {
   formatDisplayValue,
 } from "../../lib/utils/display-value";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
+import CharacterSheetButton from "./CharacterSheetButton";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ClearButton from "./ClearButton";
 import DeleteButton from "./DeleteButton";
@@ -427,13 +428,12 @@ export default function WeaponsAndArmorSection(
               rowNumber={index + 1}
             />
           ))}
-          <button
-            className={`${styles.addButton} character-sheet-add-button`}
+          <CharacterSheetButton
+            className={styles.addButton}
             onClick={props.onAddWeapon}
-            type="button"
           >
             {copy.addWeapon}
-          </button>
+          </CharacterSheetButton>
         </div>
       </CharacterSheetSectionFrame>
       <CharacterSheetSectionFrame

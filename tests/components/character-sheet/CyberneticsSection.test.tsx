@@ -85,8 +85,8 @@ describe("CyberneticsSection", () => {
     expect(
       screen
         .getByRole("button", { name: /その他の部位を追加$/ })
-        .classList.contains("character-sheet-add-button"),
-    ).toBe(true);
+        .getAttribute("data-character-sheet-button-color"),
+    ).toBe("default");
     fireEvent.click(
       screen.getByRole("button", {
         name: "その他2：サイバネを選択を削除",

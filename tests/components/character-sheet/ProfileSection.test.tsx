@@ -249,8 +249,8 @@ describe("ProfileSection", () => {
     expect(
       screen
         .getByRole("button", { name: "画像を選択" })
-        .classList.contains("character-sheet-add-button"),
-    ).toBe(true);
+        .getAttribute("data-character-sheet-button-color"),
+    ).toBe("default");
     expect(screen.getByRole("button", { name: "画像をクリア" })).toHaveProperty(
       "disabled",
       true,

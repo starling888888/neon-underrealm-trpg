@@ -2,11 +2,13 @@ import { type RefObject, useId } from "react";
 
 import type { CharacterImageErrorCode } from "../../character-image";
 import { characterSheetDictionary } from "../../dictionary";
+import CharacterSheetButton from "../CharacterSheetButton";
 import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
+import styles from "./CharacterSheetDialog.module.css";
 
 type CharacterImageErrorDialogProps = {
   closeButtonRef: RefObject<HTMLButtonElement | null>;
@@ -53,14 +55,13 @@ export default function CharacterImageErrorDialog({
         </p>
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
-        <button
-          data-tone="primary"
+        <CharacterSheetButton
+          className={styles.actionButton}
           onClick={onRequestClose}
           ref={closeButtonRef}
-          type="button"
         >
           {characterSheetDictionary.general.close}
-        </button>
+        </CharacterSheetButton>
       </CharacterSheetDialogActions>
     </CharacterSheetDialog>
   );

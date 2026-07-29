@@ -10,6 +10,7 @@ import {
   characterSheetDictionary,
   getNamePickerTooltip,
 } from "../../dictionary";
+import CharacterSheetButton from "../CharacterSheetButton";
 import DeleteButton from "../DeleteButton";
 import FormulaTooltip from "../FormulaTooltip";
 import styles from "./SkillSection.module.css";
@@ -412,13 +413,12 @@ export default function SkillSection({
             ))}
             {onAdd === undefined ? null : (
               <div className={styles.actions}>
-                <button
-                  className={`${styles.addButton} character-sheet-add-button`}
+                <CharacterSheetButton
+                  className={styles.addButton}
                   onClick={onAdd}
-                  type="button"
                 >
                   {addLabel}
-                </button>
+                </CharacterSheetButton>
                 {actionDescription === undefined ? null : (
                   <output
                     aria-invalid={actionDescriptionInvalid || undefined}
