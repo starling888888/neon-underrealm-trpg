@@ -8,7 +8,6 @@ import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
-import styles from "./CharacterSheetDialog.module.css";
 
 type CharacterImageErrorDialogProps = {
   closeButtonRef: RefObject<HTMLButtonElement | null>;
@@ -56,9 +55,10 @@ export default function CharacterImageErrorDialog({
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
         <CharacterSheetButton
-          className={styles.actionButton}
           onClick={onRequestClose}
           ref={closeButtonRef}
+          size="medium"
+          variant="solid"
         >
           {characterSheetDictionary.general.close}
         </CharacterSheetButton>

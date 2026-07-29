@@ -7,7 +7,6 @@ import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,
 } from "./CharacterSheetDialog";
-import styles from "./CharacterSheetDialog.module.css";
 
 const categoryNames: Record<SpecialItemCategoryId, string> = {
   cybernetics: "サイバネ",
@@ -54,16 +53,14 @@ export default function SpecialItemCategoryRemoveConfirmDialog({
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
         <CharacterSheetButton
-          className={`${styles.actionButton} ${styles.actionButtonDefault}`}
+          color="muted"
           onClick={onRequestClose}
           ref={cancelButtonRef}
+          size="medium"
         >
           {general.cancel}
         </CharacterSheetButton>
-        <CharacterSheetButton
-          className={styles.actionButton}
-          onClick={onConfirm}
-        >
+        <CharacterSheetButton onClick={onConfirm} size="medium" variant="solid">
           {general.delete}
         </CharacterSheetButton>
       </CharacterSheetDialogActions>

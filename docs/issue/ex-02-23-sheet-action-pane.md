@@ -45,11 +45,12 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 
 - `/character-sheet/`の`h1`を既存のReact Islandへ取り込み、Astro側に重複した`h1`を残さない。
 - `CharacterSheetButton`を、`button`として成立する通常のReact props（`children`、`disabled`、`onClick`、`aria-*`、`data-*`、`ref`を含む）を透過し、未指定時に`type="button"`となる共通Componentとして追加する。呼出し側は必要な場合だけ通常の`type`を明示して上書きできる。
-  - `color`は`"danger" | "warning" | "default" | undefined`を受け、`undefined`は`"default"`へfallbackする。`default`は既存の通常追加・主要操作と同じaccent color、`danger`は初期化など破壊的操作、`warning`は通常使用不可カテゴリの追加に使う。`accent` variantは追加しない。
-  - `size`は`"small" | "medium" | undefined`を受け、`undefined`は`"small"`へfallbackする。`small`は既存キャラクターシートの大半の通常button寸法、`medium`はwarning枠の`サイバネを追加`を含むカテゴリ追加buttonと、このGateで追加する操作buttonの寸法とする。
+  - `color`は`"muted" | "danger" | "warning" | "default" | undefined`を受け、`undefined`は`"default"`へfallbackする。`default`は既存の通常追加・主要操作と同じaccent color、`muted`はdialogのキャンセルなどの中立操作、`danger`は初期化など破壊的操作、`warning`は通常使用不可カテゴリの追加に使う。`accent` color variantは追加しない。
+  - `variant`は`"outline" | "solid" | undefined`を受け、`undefined`は`"outline"`へfallbackする。`outline`は色付き外枠とsurface背景、`solid`は指定colorのfillと反転文字色を使う。dialogのキャンセルは`muted`の`outline`、確定buttonは`default`の`solid`へ接続する。
+  - `size`は`"small" | "medium" | undefined`を受け、`undefined`は`"small"`へfallbackする。`small`は既存キャラクターシートの大半の通常button寸法、`medium`はwarning枠の`サイバネを追加`を含むカテゴリ追加button、dialog action、このGateで追加する操作buttonの寸法とする。dialog固有のbutton size / padding / mobile均等幅styleは持たない。
   - `className`は`string | undefined`を受け、base / variant classを保持したまま末尾に合成する。固定幅などの配置上書きは呼出し側CSS Moduleからこのpropへ渡し、親selectorやglobal classで内部buttonを変更しない。
-  - `contained` / `border`などの見た目variant、`large` size、今回の利用箇所にないpropsは追加しない。必要になったGateで利用例と同時に拡張する。
-- 既存の`character-sheet-add-button`を使う文言付き追加button、warningカテゴリ追加button、`CharacterSheetDialogActions`内の文言付き確定 / キャンセルbuttonを`CharacterSheetButton`へ接続する。視覚契約を変えず、section / dialog固有CSSはgrid、inline-size、配置だけを残す。
+  - `outline` / `solid`以外の見た目variant、`large` size、今回の利用箇所にないpropsは追加しない。必要になったGateで利用例と同時に拡張する。
+- 既存の`character-sheet-add-button`を使う文言付き追加button、warningカテゴリ追加button、`CharacterSheetDialogActions`内の文言付き確定 / キャンセルbuttonを`CharacterSheetButton`へ接続する。dialogの確定buttonは`default` / `solid` / `medium`、キャンセルbuttonは`muted` / `outline` / `medium`とし、section / dialog固有CSSはgrid、inline-size、配置だけを残す。
 - 上記共通化の対象は通常の文言付きbuttonだけとする。候補picker、詳細 / section開閉、並べ替え、frame見出し、ヘルプ / menuのicon button、`ClearButton`、`DeleteButton`は既存の操作意味・アイコン専用styleを維持し、同一Componentへ機械的に統合しない。
 - desktopでは、`h1`の横に文言付きbuttonを左から`ヘルプ`、`エクスポート`、`インポート`、`CCFOLIAコピー`、`初期化`の順で置く。
   - `エクスポート`、`インポート`、`CCFOLIAコピー`には用途を説明するtooltipを付ける。
@@ -78,7 +79,7 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 ## 完了条件
 
 - [ ] `h1`と操作領域を同一React Islandで表示し、Astro側の見出しと重複しない。
-- [x] `CharacterSheetButton`が通常のReact button propsとrefを受け渡し、`color`の`undefined`をaccent colorの`default`へ、`size`の`undefined`を`small`へfallbackし、`className`をbase / variant classと合成する。`accent`、`contained` / `border`、`large`は追加しない。
+- [x] `CharacterSheetButton`が通常のReact button propsとrefを受け渡し、`color`の`undefined`をaccent colorの`default`へ、`variant`の`undefined`を`outline`へ、`size`の`undefined`を`small`へfallbackし、`className`をbase / variant classと合成する。`muted`、`danger`、`warning`、`default`の`outline` / `solid`以外と、`large`は追加しない。
 - [x] 既存の文言付き追加button、warningカテゴリ追加button、dialogの文言付きaction buttonが、表示・disabled・focus・既存のsection / dialog配置を保ったまま`CharacterSheetButton`を使う。
 - [ ] desktopで指定順の文言付き操作button、3つのtooltip、初期化だけのdanger colorを表示する。
 - [ ] tablet / mobileでヘルプicon button、メニューbutton、開閉するモックmenu、4操作、空のエラー表示領域を表示する。
@@ -130,7 +131,7 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 - desktopのheading横操作列とtablet / mobileのfloating操作が、最新のユーザー指定とdesign画像のviewport別意図を満たすか。
 - G23のモックが、G25〜G30の実処理・エラー集約を先取りせず、接続可能な責務境界を残しているか。
 - 通常の文言付きbuttonだけを共通化し、Gate 22以降の共有style / shared Componentの境界と、既存のicon・picker・開閉操作の専用契約を壊していないか。
-- `color`、`size`、`className`、通常button propsのfallback・透過契約が、`default`のaccent color、`danger`、`warning`、small / mediumだけで後続Gateの操作buttonと既存の追加 / dialog actionを重複実装なしに扱えるか。
+- `color`、`variant`、`size`、`className`、通常button propsのfallback・透過契約が、`default`のaccent color、`muted`、`danger`、`warning`、`outline` / `solid`、small / mediumだけで後続Gateの操作buttonと既存の追加 / dialog actionを重複実装なしに扱えるか。
 - 空のエラー表示領域の読み上げと、未実装のエラー集約を誤認させない表示が適切か。
 - `h1`をIslandへ移すことで、見出し階層、ページSEO、Astroの静的shell、subpath公開を損なわないか。
 - VRTを操作領域のdesktop defaultとtablet / mobile menu openへ限定する方針と、baseline更新をユーザー承認待ちにする前提が適切か。

@@ -29,7 +29,9 @@ describe("CharacterSheetButton", () => {
     expect(button).toHaveProperty("type", "button");
     expect(button.dataset.characterSheetButtonColor).toBe("default");
     expect(button.dataset.characterSheetButtonSize).toBe("small");
+    expect(button.dataset.characterSheetButtonVariant).toBe("outline");
     expect(button.className).toContain("default");
+    expect(button.className).toContain("outline");
     expect(button.className).toContain("small");
     expect(button.className).toContain("fixed-width");
     expect(ref.current).toBe(button);
@@ -38,7 +40,7 @@ describe("CharacterSheetButton", () => {
     expect(onClick).toHaveBeenCalledOnce();
   });
 
-  it("accepts the used warning and danger colors, medium size, disabled state, and an explicit type", () => {
+  it("accepts the used colors, solid variant, medium size, disabled state, and an explicit type", () => {
     const onClick = vi.fn();
 
     render(
@@ -46,11 +48,13 @@ describe("CharacterSheetButton", () => {
         <CharacterSheetButton color="warning" size="medium">
           サイバネを追加
         </CharacterSheetButton>
+        <CharacterSheetButton color="muted">キャンセル</CharacterSheetButton>
         <CharacterSheetButton
           color="danger"
           disabled
           onClick={onClick}
           type="submit"
+          variant="solid"
         >
           初期化
         </CharacterSheetButton>
@@ -62,12 +66,18 @@ describe("CharacterSheetButton", () => {
     });
     expect(warningButton.dataset.characterSheetButtonColor).toBe("warning");
     expect(warningButton.dataset.characterSheetButtonSize).toBe("medium");
+    expect(warningButton.dataset.characterSheetButtonVariant).toBe("outline");
     expect(warningButton.className).toContain("warning");
     expect(warningButton.className).toContain("medium");
+
+    const mutedButton = screen.getByRole("button", { name: "キャンセル" });
+    expect(mutedButton.dataset.characterSheetButtonColor).toBe("muted");
+    expect(mutedButton.dataset.characterSheetButtonVariant).toBe("outline");
 
     const dangerButton = screen.getByRole("button", { name: "初期化" });
     expect(dangerButton).toHaveProperty("type", "submit");
     expect(dangerButton).toHaveProperty("disabled", true);
+    expect(dangerButton.dataset.characterSheetButtonVariant).toBe("solid");
     fireEvent.click(dangerButton);
     expect(onClick).not.toHaveBeenCalled();
   });

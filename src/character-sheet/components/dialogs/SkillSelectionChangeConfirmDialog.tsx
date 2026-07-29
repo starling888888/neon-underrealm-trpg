@@ -5,7 +5,6 @@ import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,
 } from "./CharacterSheetDialog";
-import styles from "./CharacterSheetDialog.module.css";
 
 type SkillSelectionChangeConfirmDialogProps = {
   confirmLabel?: string;
@@ -45,16 +44,14 @@ export default function SkillSelectionChangeConfirmDialog({
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
         <CharacterSheetButton
-          className={`${styles.actionButton} ${styles.actionButtonDefault}`}
+          color="muted"
           onClick={onRequestClose}
           ref={cancelButtonRef}
+          size="medium"
         >
           {general.cancel}
         </CharacterSheetButton>
-        <CharacterSheetButton
-          className={styles.actionButton}
-          onClick={onConfirm}
-        >
+        <CharacterSheetButton onClick={onConfirm} size="medium" variant="solid">
           {confirmLabel ?? general.change}
         </CharacterSheetButton>
       </CharacterSheetDialogActions>
