@@ -1517,3 +1517,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-17-sheet-weapons-armor` のtarget限定Visual Review
 - 観測した失敗: 武器pickerのaccessible nameを行番号付きへ変更した後、旧完全一致locatorを使ってcaptureを失敗させた。続く正規表現では詳細・削除buttonまで一致することを確認せず、9 stateを再び失敗させた。
 - 一次対応: picker buttonだけに一致する`/^武器\\d+：武器を選択$/`を使い、VRT再実行前にPlaywright error contextの候補一覧でlocatorの対象を確認する。
+
+### Repeated E2E assertions based on an unverified rendered state
+
+#### 2026-07-29
+
+- source: agent self-report
+- 発生箇所: `ex-02-19-sheet-cybernetics` のサイバネE2E
+- 観測した失敗: 非戦闘技能の修正inputをサイバネsection内にあるものとして参照し、次に非戦闘技能が閉じている状態でも入力が描画されると仮定した。さらに、選択済み`その他`行の削除button数を、未選択の削除行と同じ名前で数えたため、同じE2Eを連続して失敗させた。
+- 一次対応: error contextのaccessibility treeで実際の描画範囲とbutton名を確認し、非戦闘技能を開いてから修正inputを検証する。可変行では選択済みと未選択のaccessible nameを区別し、操作前後の行数をその状態ごとにassertする。非戦闘技能inputはuncontrolledのため、form値の再設定はsectionを閉じて開き直した描画で確認する。

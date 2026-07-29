@@ -608,4 +608,90 @@ test.describe("character sheet page", () => {
       .click();
     await expect(omamori.locator('[id^="omamori-details-"]')).toBeVisible();
   });
+
+  test("selects cybernetics, manages other rows, and resets noncombat modifiers at the threshold", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.mobile);
+    await page.goto("character-sheet/");
+
+    const cybernetics = page.locator("[data-cybernetics-section]");
+    const picker = page.getByRole("dialog", {
+      exact: true,
+      name: "サイバネを選択",
+    });
+
+    async function selectCybernetic(target: string) {
+      await cybernetics
+        .getByRole("button", { exact: true, name: target })
+        .first()
+        .click();
+      await expect(picker).toBeVisible();
+      await picker
+        .getByRole("button", { exact: true, name: "サイバーアイ" })
+        .click();
+      await expect(picker).toBeHidden();
+    }
+
+    await selectCybernetic("頭：サイバネを選択");
+    await cybernetics
+      .getByRole("button", { exact: true, name: "頭：サイバーアイ効果を開く" })
+      .click();
+    await expect(
+      cybernetics.getByText("感覚を用いる判定+1d。", { exact: true }),
+    ).toBeVisible();
+
+    await cybernetics
+      .getByRole("button", { name: "＋ その他の部位を追加" })
+      .click();
+    await cybernetics
+      .getByRole("button", { name: "＋ その他の部位を追加" })
+      .click();
+    await selectCybernetic("その他：サイバネを選択");
+    await selectCybernetic("その他：サイバネを選択");
+
+    await page
+      .getByRole("button", { exact: true, name: "非戦闘技能を開閉" })
+      .click();
+    await expect(
+      page.getByLabel("脅迫の判定修正", { exact: true }),
+    ).toHaveValue("-3");
+    await expect(
+      cybernetics.getByRole("button", {
+        exact: true,
+        name: "その他：サイバーアイを削除",
+      }),
+    ).toHaveCount(1);
+
+    await cybernetics
+      .getByRole("button", { exact: true, name: "その他：サイバーアイを削除" })
+      .first()
+      .click();
+    await expect(
+      cybernetics.getByRole("button", {
+        exact: true,
+        name: "その他：サイバーアイを削除",
+      }),
+    ).toHaveCount(0);
+
+    await cybernetics
+      .getByRole("button", { exact: true, name: "クリア" })
+      .last()
+      .click();
+    await expect(
+      cybernetics.getByRole("button", {
+        exact: true,
+        name: "その他：サイバネを選択",
+      }),
+    ).toHaveCount(2);
+    await page
+      .getByRole("button", { exact: true, name: "非戦闘技能を開閉" })
+      .click();
+    await page
+      .getByRole("button", { exact: true, name: "非戦闘技能を開閉" })
+      .click();
+    await expect(
+      page.getByLabel("脅迫の判定修正", { exact: true }),
+    ).toHaveValue("0");
+  });
 });

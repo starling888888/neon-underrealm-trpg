@@ -113,6 +113,36 @@ async function selectOmamori(
   await expect(picker).toBeHidden();
 }
 
+async function openCyberneticsPicker(
+  page: Page,
+  target: string,
+): Promise<void> {
+  await page
+    .locator("[data-cybernetics-section]")
+    .getByRole("button", { exact: true, name: target })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("dialog", { exact: true, name: "サイバネを選択" }),
+  ).toBeVisible();
+}
+
+async function selectCybernetic(
+  page: Page,
+  target = "頭：サイバネを選択",
+): Promise<void> {
+  await openCyberneticsPicker(page, target);
+  const picker = page.getByRole("dialog", {
+    exact: true,
+    name: "サイバネを選択",
+  });
+
+  await picker
+    .getByRole("button", { exact: true, name: "サイバーアイ" })
+    .click();
+  await expect(picker).toBeHidden();
+}
+
 async function openWeaponsTooltip(page: Page): Promise<void> {
   await page
     .getByRole("region", { exact: true, name: "武器" })
@@ -338,6 +368,17 @@ const omamoriPickerLocator = {
   name: "omamori-picker",
   resolve: (page: Page) =>
     page.getByRole("dialog", { exact: true, name: "お守りを選択" }),
+};
+
+const cyberneticsSectionLocator = {
+  name: "cybernetics-section",
+  resolve: (page: Page) => page.locator("[data-cybernetics-section]"),
+};
+
+const cyberneticsPickerLocator = {
+  name: "cybernetics-picker",
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { exact: true, name: "サイバネを選択" }),
 };
 
 const profileSectionLocator = {
@@ -917,6 +958,104 @@ registerVrtScenarios("character-sheet", [
           .getByRole("region", { exact: true, name: "お守り" })
           .getByRole("button", { exact: true, name: "名称" }),
       ),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "cybernetics-default",
+    locatorOnly: true,
+    locators: [cyberneticsSectionLocator],
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "cybernetics-picker-open",
+    locatorOnly: true,
+    locators: [cyberneticsSectionLocator, cyberneticsPickerLocator],
+    prepare: (page) => openCyberneticsPicker(page, "頭：サイバネを選択"),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "cybernetics-effect-expanded",
+    locatorOnly: true,
+    locators: [cyberneticsSectionLocator],
+    prepare: async (page) => {
+      await selectCybernetic(page);
+      await page
+        .getByRole("button", {
+          exact: true,
+          name: "頭：サイバーアイ効果を開く",
+        })
+        .click();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "cybernetics-other-row-added",
+    locatorOnly: true,
+    locators: [cyberneticsSectionLocator],
+    prepare: async (page) => {
+      await page.getByRole("button", { name: "＋ その他の部位を追加" }).click();
+      await selectCybernetic(page, "その他：サイバネを選択");
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "cybernetics-name-tooltip-open",
+    locatorOnly: true,
+    locators: [cyberneticsSectionLocator, tooltipLocator],
+    prepare: (page) =>
+      openTooltipButton(
+        page,
+        cyberneticsSectionLocator
+          .resolve(page)
+          .getByRole("button", { exact: true, name: "名称" }),
+      ),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "cybernetics-summary-tooltip-open",
+    locatorOnly: true,
+    locators: [cyberneticsSectionLocator, tooltipLocator],
+    prepare: (page) =>
+      openTooltipButton(
+        page,
+        cyberneticsSectionLocator.resolve(page).getByRole("button", {
+          exact: true,
+          name: "埋め込み点数合計／埋め込み上限",
+        }),
+      ),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "cybernetics-limit-error",
+    locatorOnly: true,
+    locators: [cyberneticsSectionLocator],
+    prepare: async (page) => {
+      await page
+        .locator("[data-build-section] select")
+        .first()
+        .selectOption("kenkaya");
+      await page
+        .locator("[data-build-section] select")
+        .nth(1)
+        .selectOption("burai");
+      await selectCybernetic(page);
+      await cyberneticsSectionLocator
+        .resolve(page)
+        .getByLabel("埋め込み点数合計の修正", { exact: true })
+        .first()
+        .fill("20");
+      await expect(cyberneticsSectionLocator.resolve(page)).toHaveAttribute(
+        "aria-invalid",
+        "true",
+      );
+    },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
   },

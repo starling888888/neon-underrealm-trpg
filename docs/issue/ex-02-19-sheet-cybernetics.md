@@ -58,7 +58,7 @@
 - G22の生き様によるサイバネカテゴリの既定表示・非表示、カテゴリ追加・削除、保持済みアイテム警告、消費信用の一元算出を実装しない。
 - 個別サイバネ効果の文章解析、能力値・判定数・防御力などへの自動適用、サイバネ専用武器との選択連動を実装しない。
 - G25の操作メニューへのエラー全件集約、G24以降のlocalStorage、IndexedDB、JSON、CCFOLIA、サーバー、DBを実装しない。
-- confirmation dialog、UI library、キャラクター作成ウィザード、Header、Footer、サイトメニュー、canonical VRT baselineの追加・再設計・更新を行わない。
+- confirmation dialog、UI library、キャラクター作成ウィザード、Header、Footer、サイトメニュー、canonical VRT baselineの追加・再設計を行わない。ユーザー承認済みの`@character-sheet`既存baseline更新のみを許可する。
 - `docs/plan.md`のチェックボックスを変更しない。初期スコープ外の項目は`docs/out-of-scope.md`に従う。
 
 ## アーキテクチャ適用
@@ -88,10 +88,10 @@
 
 - [x] `docs/architectures/character-sheet.md`に従い、pure logic、form adapter、Presenter、Container、Componentの所有境界を越えていない。
 - [x] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
-- [ ] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、default、選択済み、その他追加、効果展開、名称tooltip、集計tooltip、候補dialog、上限超過errorを確認する。
-- [x] E2EとVRTのspec・実行はこのGateでは扱わない。実装後は既定portのdev serverを起動してユーザーレビューを待つ。canonical baselineは更新しない。
+- [x] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、default、選択済み、その他追加、効果展開、名称tooltip、集計tooltip、候補dialog、上限超過errorを確認する。
+- [x] ユーザー承認済みの対象E2Eと`@character-sheet`限定VRTを実装・実行し、状態別locator screenshotを確認した後に、既存canonical baselineだけを更新する。
 - [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装しない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -111,6 +111,10 @@
 - `tests/hooks/character-sheet/useCyberneticsSectionProps.test.tsx`
 - `tests/components/character-sheet/CyberneticsSection.test.tsx`
 - `tests/components/character-sheet/CharacterSheetContainer.test.tsx`
+- `tests/visual/character-sheet.spec.ts`
+- `tests/visual/vrt/character-sheet.spec.ts`
+- `canonical-snapshots/visual/character-sheet/`
+- `docs/design/character-sheet/notes.md`
 - `docs/requirements/character-sheet.md`
 
 ## レビュー観点
@@ -119,7 +123,7 @@
 - mobileで効果以外の要約項目を省略せず、埋め込み点数ヘッダーを指定どおり折り返して横overflowを回避できているか。
 - 埋め込み点数合計の修正と上限の修正を分ける式・tooltip文言、上限超過error、非戦闘技能の段階的再設定が確認可能か。
 - 候補dialogを部位別tableへ分離し、候補効果を2行目へ置く構成が操作しやすいか。
-- `docs/design/character-sheet/notes.md`のVRT扱いを守り、canonical baselineの更新を別途ユーザー承認とできているか。
+- `docs/design/character-sheet/notes.md`のVRT扱いを守り、ユーザー承認済みの既存canonical baselineだけを更新できているか。
 
 ## 備考
 
@@ -210,7 +214,18 @@
 
 - branchは、ユーザー指示により新規作成せず、既存の`ex-02-web-character-sheet`を使用する。
 - user-directed requirement update: 埋め込み点数合計の修正を追加し、合計値を`選択中サイバネの点数合計 + 埋め込み点数合計の修正`、上限を`常時精神 + 埋め込み上限の修正`として扱う。上限errorと非戦闘技能の段階境界は、この最終合計を基準にする。
-- user-directed test scope: E2EとVRTのspec追加・更新および実行は行わない。Node・hook・Componentテストを実装・実行し、実装後はpreview serverを起動せず、既定portのdev serverを維持してユーザーレビューを待つ。
+- user-directed test scope: 初回実装ではE2EとVRTのspec追加・更新および実行は行わない。Node・hook・Componentテストを実装・実行し、実装後はpreview serverを起動せず、既定portのdev serverを維持してユーザーレビューを待つ。
+- user-directed test scope update: ユーザーレビュー完了後に、対象E2Eと`@character-sheet`限定VRTを実装・実行する。状態別のlocator screenshotを実際に確認した後、`@character-sheet`の既存canonical baselineだけを更新する。
+
+## ビジュアルレビュー 1
+
+- target / tags: `tests/visual/vrt/character-sheet.spec.ts`、`@vrt @character-sheet @cybernetics`
+- route: `/character-sheet/`
+- states: default、候補dialog、効果展開、その他行追加、名称tooltip、集計tooltip、上限超過error
+- viewports: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
+- capture: `npm run visual:capture -- --grep '@cybernetics'` で、test-ownedのlocator screenshot 30枚を確認した。
+- result: 各viewportで一覧の要約項目、footerのpair表示、候補dialogの部位別table、tooltip全文、error色が表示契約に一致し、横overflowは確認されなかった。
+- baseline: ユーザー承認済みの`@character-sheet`既存canonical baselineを`npm run visual:update -- --grep '@character-sheet'`で更新した。サイバネの局所状態はlocator-onlyであり、新規full-page canonical snapshotは作成しない。
 
 ## レビュー指摘 2
 
