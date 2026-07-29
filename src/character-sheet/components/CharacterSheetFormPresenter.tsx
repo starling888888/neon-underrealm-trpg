@@ -7,6 +7,9 @@ import ChecksSection, { type ChecksSectionProps } from "./ChecksSection";
 import CommonSkillsSection, {
   type CommonSkillsSectionProps,
 } from "./CommonSkillsSection";
+import CyberneticsSection, {
+  type CyberneticsSectionProps,
+} from "./CyberneticsSection";
 import IkizamaSkillsSection, {
   type IkizamaSkillsSectionProps,
 } from "./IkizamaSkillsSection";
@@ -37,6 +40,7 @@ export type CharacterSheetFormPresenterProps = {
   buildSection: BuildSectionProps;
   checksSection: ChecksSectionProps;
   commonSkillsSection: CommonSkillsSectionProps;
+  cyberneticsSection: CyberneticsSectionProps;
   ikizamaSkillsSection: IkizamaSkillsSectionProps;
   otherRyugiSkillsSection: OtherRyugiSkillsSectionProps;
   omamoriSection: OmamoriSectionProps;
@@ -51,6 +55,7 @@ export default function CharacterSheetFormPresenter({
   buildSection,
   checksSection,
   commonSkillsSection,
+  cyberneticsSection,
   ikizamaSkillsSection,
   otherRyugiSkillsSection,
   omamoriSection,
@@ -151,12 +156,21 @@ export default function CharacterSheetFormPresenter({
           id="special-items"
           title={gameDomain.terms.ikizamaSpecialItems}
         >
-          <div data-character-sheet-section-slot="special-items">
+          <div
+            className={styles.specialItemSections}
+            data-character-sheet-section-slot="special-items"
+          >
             <SpecialItemCategorySection
               id="omamori"
               title={characterSheet.omamori.name}
             >
               <OmamoriSection {...omamoriSection} />
+            </SpecialItemCategorySection>
+            <SpecialItemCategorySection
+              id="cybernetics"
+              title={characterSheet.cybernetics.name}
+            >
+              <CyberneticsSection {...cyberneticsSection} />
             </SpecialItemCategorySection>
           </div>
         </CharacterSheetSectionFrame>

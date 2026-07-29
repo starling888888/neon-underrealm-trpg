@@ -357,7 +357,11 @@ function ArmorFormRow({
           label={name}
           onClick={() => setExpanded((value) => !value)}
         />
-        <button className={styles.clearButton} onClick={onClear} type="button">
+        <button
+          className="character-sheet-clear-button"
+          onClick={onClear}
+          type="button"
+        >
           {copy.clearArmor}
         </button>
       </div>

@@ -112,10 +112,6 @@
   place-items: center;
 }
 
-.removeCell > :global(.character-sheet-remove-button) {
-  transform: translateX(1px);
-}
-
 .addButton {
   composes: addButton from "./CharacterSheetFormList.module.css";
   justify-self: start;

@@ -47,9 +47,9 @@
   埋め込み点数合計 = 選択したサイバネの埋め込み点数の合計 + 修正。個々のサイバネの埋め込み点数を増減させる効果は合計して、埋め込み点数合計の修正値に入力してください。
   ```
 
-- label下には、`埋め込み点数の合計 + 修正入力欄 = 最終値／常時精神 + 修正入力欄 = 最終値`を表示する。両方の修正は整数入力で負数を許可し、マスタ効果の文章解析や自動加算は行わない。最終的な埋め込み点数合計が上限を超える場合、サイバネカテゴリと集計値を支援技術にも伝わるerror状態にする。個別入力へ可視のエラー理由は追加しない。
+- 集計は、武器・防具の防御力／ダメージ軽減、攻撃力／ガード値と同じpair表示にする。desktopでは、`選択したサイバネの埋め込み点数の合計／常時精神 + 修正入力欄／修正入力欄 = 埋め込み点数合計／埋め込み上限`を一行に表示する。mobileでは既存pair表示と同じresponsive表現を用いる。両方の修正は整数入力で負数を許可し、マスタ効果の文章解析や自動加算は行わない。最終的な埋め込み点数合計が上限を超える場合、サイバネカテゴリと集計値を支援技術にも伝わるerror状態にする。個別入力へ可視のエラー理由は追加しない。
 - 選択dialogは、部位ごとに小見出しを置いて候補tableを分離する。各小見出し直下のtableごとにヘッダーを置き、列は名称、信用、埋め込み点数とする。候補行は展開操作を置かず、効果を2行目へ表示する。
-- `cybernetics`のmaster-data adapter、form schema・default値、pure logic、form adapter、Presenter、Container dialog orchestration、Component、CSS Module、dictionary、対象Node / hook / component / browser / Visual testを、既存の所有境界に沿って追加・更新する。
+- `cybernetics`のmaster-data adapter、form schema・default値、pure logic、form adapter、Presenter、Container dialog orchestration、Component、CSS Module、dictionary、対象Node / hook / component testを、既存の所有境界に沿って追加・更新する。
 - 選択済みの埋め込み点数合計が`5以下`、`6〜10`、`11以上`の境界をまたぐ場合に、`docs/requirements/character-sheet.md`で指定された非戦闘技能の標準修正`0`、`-3`、`-6`への再設定を実装する。既存の手動修正を上書きすることを画面で説明し、同じ段階内の点数変動では再設定しない。
 
 ## 初期スコープ外
@@ -75,22 +75,22 @@
 
 ## 完了条件
 
-- [ ] サイバネカテゴリが初期表示され、固定4行とその他の初期1行・最小1行・最大4行を指定どおりに操作できる。
+- [x] サイバネカテゴリが初期表示され、固定4行とその他の初期1行・最小1行・最大4行を指定どおりに操作できる。
 - [ ] 各行の部位、名称、信用、埋め込み点数、展開、クリアまたは削除buttonと、desktop / tablet / mobileの表示契約が指定どおりで、横overflowがない。
 - [ ] 名称ヘッダーと埋め込み点数合計／埋め込み上限labelのtooltip、効果展開、候補選択、クリア・削除・追加がkeyboard操作、Escape、閉じる操作、focus復帰を含めアクセシブルに動作する。
 - [ ] 埋め込み点数合計・上限の式、修正入力、超過error状態、5 / 6〜10 / 11以上の境界での非戦闘技能標準修正の再設定がpure logicと表示で一致する。
 - [ ] 候補dialogが部位別の小見出しと各table headerを表示し、指定列・2行目の効果・重複選択許可を満たす。
-- [ ] 関連TODOを扱わない理由と、参照するdesign target・VRT baselineを更新しない扱いが記録されている。
-- [ ] `npm run build` が通る。
-- [ ] 必要な`npm run check`、対象Node / hook / component / browser test、変更target限定のVRTが通る。
+- [x] 関連TODOを扱わない理由と、参照するdesign target・VRT baselineを更新しない扱いが記録されている。
+- [x] `npm run build` が通る。
+- [x] 必要な`npm run check`、対象Node / hook / component testが通る。
 
 ## チェックポイント
 
-- [ ] `docs/architectures/character-sheet.md`に従い、pure logic、form adapter、Presenter、Container、Componentの所有境界を越えていない。
-- [ ] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
+- [x] `docs/architectures/character-sheet.md`に従い、pure logic、form adapter、Presenter、Container、Componentの所有境界を越えていない。
+- [x] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
 - [ ] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、default、選択済み、その他追加、効果展開、名称tooltip、集計tooltip、候補dialog、上限超過errorを確認する。
-- [ ] Visual Reviewでは上記route・state・viewportのactual screenshotを開き、対象target限定VRTの結果とともに記録する。canonical baselineは更新しない。
-- [ ] 不要な依存関係を追加せず、初期スコープ外の機能を実装しない。
+- [x] E2EとVRTのspec・実行はこのGateでは扱わない。実装後は既定portのdev serverを起動してユーザーレビューを待つ。canonical baselineは更新しない。
+- [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装しない。
 - [ ] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
@@ -111,8 +111,6 @@
 - `tests/hooks/character-sheet/useCyberneticsSectionProps.test.tsx`
 - `tests/components/character-sheet/CyberneticsSection.test.tsx`
 - `tests/components/character-sheet/CharacterSheetContainer.test.tsx`
-- `tests/visual/character-sheet.spec.ts`
-- `tests/visual/vrt/character-sheet.spec.ts`
 - `docs/requirements/character-sheet.md`
 
 ## レビュー観点
@@ -125,7 +123,95 @@
 
 ## 備考
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- デスクトップでの見た目を最優先に調整し、同じ対応をモバイルにも機械的に適用する。
+- クリアボタンを防具セクションの表示と統一する。削除ボタンは上下左右の中央に配置し、再発防止のため配置ルールを共通CSSへ移す。
+- `埋め込み点数合計` と `埋め込み上限` のラベル、計算式の固定値・入力欄・算出値が大きすぎる。武器・防具の計算式と同じ縦幅・フォントサイズ・背景デザインへ合わせる。計算式は `/` 区切りで一行に表示する。
+- `埋め込み点数合計／埋め込み上限` は、`その他の部位を追加` buttonの右側に表示する。お守りとサイバネの間には、スキルセクションと同じ `gap` による余白を入れる。
+- 一覧の埋め込み点数列を広げ、ヘッダーの `埋め込み\n点数` が文字単位で折り返さないようにする。
+- 選択ダイアログはスキル・武器・防具の既存baselineに合わせる。テーブル上に余白を空けず、候補の表示内容は罫線で区切る。
+
+### 判定
+
+- source: human（ユーザーのローカル画面レビュー）
+- classification: valid
+- 根拠: 現在のサイバネ一覧・集計式・選択ダイアログは局所CSSで寸法と余白を定義しており、武器・防具およびスキルの既存レイアウト契約と揃っていない。削除ボタンの共通クラスはあるが、中央配置を保証する共通ルールを持たない。
+
+### 対応方針
+
+- `CyberneticsSection.module.css` の一覧列、クリア・削除ボタン、集計ラベルと計算式を、武器・防具セクションの既存寸法・色・背景・一行レイアウトへ整合させる。デスクトップの寸法を基準とし、モバイルの対応箇所にも同じルールを適用する。
+- `CharacterSheetFormPresenter.module.css` の共通 `.character-sheet-remove-button` に、各セクションで使える中央配置ルールを追加する。サイバネ以外の既存削除ボタンの表示も崩さないことを確認する。
+- 特殊アイテムセクションの並びに `skillsSections` と同じ間隔を適用し、`その他の部位を追加` buttonとその右側の集計ブロックを同じ操作行に配置する。
+- `CyberneticsPickerDialog.module.css` を既存選択ダイアログのテーブル開始位置と候補区切りの表現に揃える。部位ごとの小見出しとテーブル分割は維持する。
+
+### 対応完了チェックリスト
+
+- [ ] デスクトップ表示で、一覧列幅・クリアボタン・削除ボタン・お守りとの余白・集計式を既存武器／防具／スキルのbaselineに合わせた。
+- [ ] モバイル表示にも同じ寸法・配置方針を適用し、必要な表示項目が維持されることを確認した。
+- [ ] 共通削除ボタンCSSに中央配置を追加し、既存の削除ボタンを含めて配置が崩れないことを確認した。
+- [ ] `その他の部位を追加` buttonの右側に集計ブロックを配置し、埋め込み点数ヘッダーが文字単位で折り返さないことを確認した。
+- [ ] 選択ダイアログでテーブル上の余白と候補間の罫線を既存baselineに揃えた。
+- [x] 関連するユニット／コンポーネントテストを更新し、`npm run test`、`npm run check`、`npm run build` を実行した。
+- [x] e2e と VRT は本Gateでは実装・更新しない。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- 防具のクリアbuttonで右側の罫線が再び消えている。既存failure logの「borderの欠落では、寸法変更より前にcomputed styleとcascade上のwinning selectorを確認する」という方針に従って修正する。
+- `その他の部位を追加` buttonと、その右側のサイバネ集計エリアは、上揃えではなく下揃えにする。
+
+### 判定
+
+- source: human（ユーザーのローカル画面レビュー）
+- classification: valid
+- local validation: `WeaponsAndArmorSection.module.css`には、最後のgrid itemの右罫線を消す共通ruleと、防具clear buttonへ右罫線を戻すruleが共存している。クリアbuttonの共通class導入後も、表示結果では後者が有効でないため、既存failure logで記録済みのcascade確認を行わずに完了とした再発である。サイバネfooterは現在`align-items: start`である。
+
+### 対応方針
+
+- browserで防具clear buttonのdesktop computed `border-right`と適用selectorを確認してから、最後のgrid itemの区切り線とクリアbutton自身の枠線が競合しないCSS構造へ直す。buttonの幅・font-sizeは罫線欠落の解決手段として変更しない。
+- サイバネfooterを下揃えに変更し、desktopとmobileの両方で追加buttonと集計エリアの下端を揃える。集計式のpair表示と横overflow回避は維持する。
+
+### 対応完了チェックリスト
+
+- [x] desktopで防具clear buttonのcomputed `border-right`とwinning selectorを確認し、右側罫線を表示した。
+- [x] mobileでも防具clear buttonの右側罫線と列内の収まりを確認した。
+- [x] desktopとmobileで、`その他の部位を追加` buttonと集計エリアの下端を揃えた。
+- [x] 関連するテストを更新し、`npm run test`、`npm run check`、`npm run build` を実行した。
+- [x] e2e と VRT は本Gateでは実装・更新しない。
+
 - branchは、ユーザー指示により新規作成せず、既存の`ex-02-web-character-sheet`を使用する。
 - user-directed requirement update: 埋め込み点数合計の修正を追加し、合計値を`選択中サイバネの点数合計 + 埋め込み点数合計の修正`、上限を`常時精神 + 埋め込み上限の修正`として扱う。上限errorと非戦闘技能の段階境界は、この最終合計を基準にする。
-- G19のVRT targetは`tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`、routeは`/character-sheet/`とする。変更targetだけを比較し、baseline更新はユーザーの明示承認がある場合だけ行う。
-- UI実装後のE2EおよびVRTは、親Gate planの規約に従い、ユーザーレビュー完了の明示指示後に実行する。実装後のレビュー待ちではpreview serverを起動せず、既定portのdev serverを維持する。
+- user-directed test scope: E2EとVRTのspec追加・更新および実行は行わない。Node・hook・Componentテストを実装・実行し、実装後はpreview serverを起動せず、既定portのdev serverを維持してユーザーレビューを待つ。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- サイバネの集計式を、現在の独立した二つの式としては表示しない。武器・防具の防御力／ダメージ軽減、攻撃力／ガード値と同じpair表示へ変更する。
+- クリアbuttonは将来のナノマシンでも再利用できる共通CSSへ移す。削除buttonの中央配置とクリアbuttonの共通CSSは、サイバネだけでなく既存の入力行にも適用する。
+
+### 判定
+
+- source: human（ユーザーのローカル画面レビュー）
+- classification: valid
+- local validation: `WeaponsAndArmorSection` は、二つの元値、二つの修正入力、二つの最終値を `／` で組にして、desktopでは一つの式、mobileでは各値の式として表示する。現在の `CyberneticsSection` は独立した二行の式であり、既存baselineと異なる。削除buttonには既に共通の`character-sheet-remove-button` classがある一方、クリアbuttonは武器・防具、絆、サイバネで局所CSSを重複している。
+
+### 対応方針
+
+- サイバネ集計を既存のpair value expressionと同じ情報構造へ置き換える。元値は`選択したサイバネの埋め込み点数の合計／常時精神`、修正入力は`埋め込み点数合計の修正／埋め込み上限の修正`、最終値は`埋め込み点数合計／埋め込み上限`とする。
+- desktopは組にした値を `＋` と `＝` の間で一行に表示し、mobileは武器・防具の既存responsive表示と同じ表現を適用する。tooltip、aria-label、上限超過errorの意味は維持する。
+- `CharacterSheetFormPresenter.module.css` にクリアbuttonの共通classと削除buttonの中央配置を定義する。既存の各入力行はこの共通classを利用し、各セクション固有の列幅・罫線以外の重複スタイルを持たない。ナノマシンは本Gateで実装しないが、この共通classを再利用できる状態にする。
+
+### 対応完了チェックリスト
+
+- [ ] サイバネ集計を、武器・防具と同じpair value expressionの構造と寸法で表示した。
+- [ ] desktopで`元値／元値 + 修正／修正 = 最終値／最終値`が一行に収まることを確認した。
+- [ ] mobileで武器・防具と同じresponsive表現になり、tooltipと上限超過errorが維持されることを確認した。
+- [ ] クリアbuttonの共通CSSを追加し、既存の入力行へ適用した。ナノマシンで再利用可能であることを確認した。
+- [ ] 削除buttonの共通中央配置を既存の入力行へ適用し、各対象で上下左右中央に配置されることを確認した。
+- [x] 関連するユニット／コンポーネントテストを更新し、`npm run test`、`npm run check`、`npm run build` を実行した。
+- [x] e2e と VRT は本Gateでは実装・更新しない。

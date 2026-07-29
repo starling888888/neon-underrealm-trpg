@@ -89,6 +89,35 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeated incomplete cybernetics component-test selectors
+
+#### 2026-07-29
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-19-sheet-cybernetics` の`CyberneticsSection` component test
+- 観測した失敗: 強制改行を含む埋め込み点数ヘッダーと、複数行へ意図して置く`クリア`buttonについて、Testing Libraryの正規化と複数一致を事前確認せずに単一要素selectorで検証した。修正後の再実行でも同じtestが別のselector不足で失敗した。
+- 一次対応: 改行headerは空白を許容するmatcher、`クリア`は期待される5行の全件matcherへ変更する。今後は可変行の表示testで、同名操作が複数行に現れる前提をDOMとアクセシビリティツリーで確認してからselectorを決める。
+
+### Repeated cybernetics formula selector failure after adding responsive markup
+
+#### 2026-07-29
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-19-sheet-cybernetics` の`CyberneticsSection` component test
+- 観測した失敗: desktop／mobileのpair表示を追加した後、同じaria-labelを持つ修正inputが二組描画されることを考慮せず、単一要素queryのまま実行してtestを失敗させた。
+- 一次対応: 既存の武器・防具と同じresponsive DOMであることを確認し、testではdesktop側のinputを明示して操作するよう更新した。responsive UIのtestでは、CSSで非表示になる要素もDOM上は重複する前提でselectorを設計する。
+
+### Reintroduced the known armor clear-button border cascade defect
+
+#### 2026-07-29
+
+- source: review
+- 発生箇所: `ex-02-19-sheet-cybernetics` の共通クリアbutton CSS適用後の防具clear button
+- 観測した失敗: 右側罫線の欠落について既存failure logが求めるcomputed styleとwinning selectorの確認をせず、共通classへの置換後に表示完了としたため、防具clear buttonで同じ欠落を再発させた。
+- 一次対応: G19のレビュー指摘3へ、desktopのcomputed `border-right`とcascade確認を修正の先行条件として記録した。
+
 ### Started Gate 18 reviews before the explicitly instructed commit and push
 
 #### 2026-07-29

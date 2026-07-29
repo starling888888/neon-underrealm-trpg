@@ -1,7 +1,7 @@
 import type { RefObject } from "react";
 import type { UseFormReturn } from "react-hook-form";
-
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
+import type { CyberneticsPickerTarget } from "../components/CyberneticsSection";
 import type { CharacterSheetFormValues } from "../form-values";
 import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
 import type { OtherRyugiSkillGroups } from "../master-data/other-ryugi-skills";
@@ -11,6 +11,7 @@ import useBondsSectionProps from "./useBondsSectionProps";
 import useBuildSectionProps from "./useBuildSectionProps";
 import useChecksSectionProps from "./useChecksSectionProps";
 import useCommonSkillsSectionProps from "./useCommonSkillsSectionProps";
+import useCyberneticsSectionProps from "./useCyberneticsSectionProps";
 import useIkizamaSkillsSectionProps from "./useIkizamaSkillsSectionProps";
 import useOmamoriSectionProps from "./useOmamoriSectionProps";
 import useOtherRyugiSkillsSectionProps from "./useOtherRyugiSkillsSectionProps";
@@ -60,6 +61,10 @@ type CharacterSheetPresenterOptions = {
   ) => void;
   onArmorPickerRequested: (trigger: HTMLButtonElement) => void;
   onOmamoriPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
+  onCyberneticsPickerRequested: (
+    target: CyberneticsPickerTarget,
+    trigger: HTMLButtonElement,
+  ) => void;
   onWeaponPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
 };
 
@@ -105,6 +110,7 @@ export default function useCharacterSheetFormPresenterProps(
     onPrimaryRyugiChangeRequested,
     onPrimarySkillPickerRequested,
     onArmorPickerRequested,
+    onCyberneticsPickerRequested,
     onOmamoriPickerRequested,
     onWeaponPickerRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
@@ -133,6 +139,9 @@ export default function useCharacterSheetFormPresenterProps(
     secondaryAttributes.derivedSecondaryAttributes,
   );
   const checksSection = useChecksSectionProps(form, build.derivedBuild);
+  const cybernetics = useCyberneticsSectionProps(form, build.derivedBuild, {
+    onPickerRequest: onCyberneticsPickerRequested ?? (() => {}),
+  });
   const profileSection = useProfileSectionProps(
     form,
     imageState,
@@ -171,6 +180,7 @@ export default function useCharacterSheetFormPresenterProps(
       unlockedCommonSkillBonusLevels: commonSkills.unlockedBonusLevels,
     },
     checksSection,
+    cyberneticsSection: cybernetics,
     commonSkillPicker: {
       candidates: commonSkills.candidates,
       onSelect: commonSkills.onSelect,

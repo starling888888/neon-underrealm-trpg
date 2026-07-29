@@ -212,6 +212,23 @@ export const characterSheetFormSchema = z
         }),
       ),
     }),
+    cybernetics: z.object({
+      armId: z.string().nullable(),
+      headId: z.string().nullable(),
+      implantLimitModifier: z.number().int(),
+      implantTotalModifier: z.number().int(),
+      legId: z.string().nullable(),
+      otherRows: z
+        .array(
+          z.object({
+            cyberneticId: z.string().nullable(),
+            rowId: stableRowIdSchema,
+          }),
+        )
+        .min(1)
+        .max(4),
+      torsoId: z.string().nullable(),
+    }),
     omamori: z.object({
       rows: z.array(
         z.object({
@@ -279,6 +296,10 @@ export const characterSheetFormSchema = z
       { path: ["checks", "attacks"], rows: values.checks.attacks },
       { path: ["checks", "reactions"], rows: values.checks.reactions },
       { path: ["commonSkills", "rows"], rows: values.commonSkills.rows },
+      {
+        path: ["cybernetics", "otherRows"],
+        rows: values.cybernetics.otherRows,
+      },
       { path: ["ikizamaSkills", "rows"], rows: values.ikizamaSkills.rows },
       { path: ["omamori", "rows"], rows: values.omamori.rows },
       {

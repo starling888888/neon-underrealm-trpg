@@ -2,8 +2,10 @@ import { useRef, useState } from "react";
 
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
+import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
+import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
 import OmamoriPickerDialog from "./components/dialogs/OmamoriPickerDialog";
 import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
@@ -13,6 +15,7 @@ import WeaponPickerDialog from "./components/dialogs/WeaponPickerDialog";
 import SkillPickerDialog from "./components/skills/SkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
+import { getCyberneticCandidateGroups } from "./master-data/cybernetics";
 import { getOmamori } from "./master-data/omamori";
 import {
   getArmors,
@@ -48,6 +51,8 @@ export default function CharacterSheetContainer() {
   const [omamoriPickerRowId, setOmamoriPickerRowId] = useState<string | null>(
     null,
   );
+  const [cyberneticsPickerTarget, setCyberneticsPickerTarget] =
+    useState<CyberneticsPickerTarget | null>(null);
   const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
     useState(false);
   const [isIkizamaChangeConfirmOpen, setIsIkizamaChangeConfirmOpen] =
@@ -63,6 +68,7 @@ export default function CharacterSheetContainer() {
   const weaponPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const armorPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const omamoriPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const cyberneticsPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
@@ -184,6 +190,10 @@ export default function CharacterSheetContainer() {
         omamoriPickerTriggerRef.current = trigger;
         setOmamoriPickerRowId(rowId);
       },
+      onCyberneticsPickerRequested: (target, trigger) => {
+        cyberneticsPickerTriggerRef.current = trigger;
+        setCyberneticsPickerTarget(target);
+      },
       onWeaponPickerRequested: (rowId, trigger) => {
         weaponPickerTriggerRef.current = trigger;
         setWeaponPickerRowId(rowId);
@@ -214,6 +224,9 @@ export default function CharacterSheetContainer() {
   }
   function closeOmamoriPicker(): void {
     setOmamoriPickerRowId(null);
+  }
+  function closeCyberneticsPicker(): void {
+    setCyberneticsPickerTarget(null);
   }
 
   function confirmPrimaryRyugiChange(): void {
@@ -410,6 +423,27 @@ export default function CharacterSheetContainer() {
             closeOmamoriPicker();
           }}
           returnFocusRef={omamoriPickerTriggerRef}
+        />
+        <CyberneticsPickerDialog
+          groups={getCyberneticCandidateGroups(
+            cyberneticsPickerTarget === null
+              ? "other"
+              : cyberneticsPickerTarget.kind === "fixed"
+                ? cyberneticsPickerTarget.part
+                : "other",
+          )}
+          isOpen={cyberneticsPickerTarget !== null}
+          onRequestClose={closeCyberneticsPicker}
+          onSelect={(cyberneticId) => {
+            if (cyberneticsPickerTarget !== null) {
+              presenterProps.cyberneticsSection.onSelect(
+                cyberneticsPickerTarget,
+                cyberneticId,
+              );
+            }
+            closeCyberneticsPicker();
+          }}
+          returnFocusRef={cyberneticsPickerTriggerRef}
         />
         <SkillSelectionChangeConfirmDialog
           confirmation={

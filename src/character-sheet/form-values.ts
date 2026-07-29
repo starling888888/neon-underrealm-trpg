@@ -198,6 +198,25 @@ export type OmamoriValues = {
   rows: OmamoriRowValues[];
 };
 
+export const cyberneticFixedPartKeys = ["head", "torso", "arm", "leg"] as const;
+
+export type CyberneticFixedPartKey = (typeof cyberneticFixedPartKeys)[number];
+
+export type CyberneticOtherRowValues = {
+  cyberneticId: string | null;
+  rowId: string;
+};
+
+export type CyberneticsValues = {
+  armId: string | null;
+  headId: string | null;
+  implantLimitModifier: number;
+  implantTotalModifier: number;
+  legId: string | null;
+  otherRows: CyberneticOtherRowValues[];
+  torsoId: string | null;
+};
+
 function createInitialBondRows(): BondValues[] {
   return Array.from({ length: 4 }, (_, index) => ({
     isResolved: false,
@@ -251,6 +270,10 @@ function createInitialWeaponRows(): WeaponValues[] {
   ];
 }
 
+function createInitialCyberneticOtherRows(): CyberneticOtherRowValues[] {
+  return [{ cyberneticId: null, rowId: "cybernetic-other-1" }];
+}
+
 export type CharacterSheetFormValues = {
   armor: ArmorValues;
   bonds: BondsValues;
@@ -258,6 +281,7 @@ export type CharacterSheetFormValues = {
   checks: ChecksValues;
   commonSkills: CommonSkillsValues;
   credit: CreditValues;
+  cybernetics: CyberneticsValues;
   ikizamaSkills: IkizamaSkillsValues;
   omamori: OmamoriValues;
   otherRyugiSkills: OtherRyugiSkillsValues;
@@ -361,6 +385,15 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
   },
   commonSkills: {
     rows: createInitialCommonSkillRows(),
+  },
+  cybernetics: {
+    armId: null,
+    headId: null,
+    implantLimitModifier: 0,
+    implantTotalModifier: 0,
+    legId: null,
+    otherRows: createInitialCyberneticOtherRows(),
+    torsoId: null,
   },
   credit: {
     acquired: 10,

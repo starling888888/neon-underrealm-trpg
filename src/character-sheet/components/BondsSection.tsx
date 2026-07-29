@@ -158,7 +158,7 @@ export default function BondsSection({
               ) : (
                 <button
                   aria-label={`${rowName}を${labels.clear}`}
-                  className={styles.clearButton}
+                  className="character-sheet-clear-button"
                   disabled={bond.isResolved}
                   onClick={() => onRowClear(bond.rowId)}
                   type="button"
