@@ -7,15 +7,18 @@ import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
+import NanomachinesPickerDialog from "./components/dialogs/NanomachinesPickerDialog";
 import OmamoriPickerDialog from "./components/dialogs/OmamoriPickerDialog";
 import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
 import SkillSelectionChangeConfirmDialog from "./components/dialogs/SkillSelectionChangeConfirmDialog";
 import WeaponPickerDialog from "./components/dialogs/WeaponPickerDialog";
+import type { NanomachinesPickerTarget } from "./components/NanomachinesSection";
 import SkillPickerDialog from "./components/skills/SkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import { getCyberneticCandidateGroups } from "./master-data/cybernetics";
+import { getNanomachines } from "./master-data/nanomachines";
 import { getOmamori } from "./master-data/omamori";
 import {
   getArmors,
@@ -53,6 +56,8 @@ export default function CharacterSheetContainer() {
   );
   const [cyberneticsPickerTarget, setCyberneticsPickerTarget] =
     useState<CyberneticsPickerTarget | null>(null);
+  const [nanomachinesPickerTarget, setNanomachinesPickerTarget] =
+    useState<NanomachinesPickerTarget | null>(null);
   const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
     useState(false);
   const [isIkizamaChangeConfirmOpen, setIsIkizamaChangeConfirmOpen] =
@@ -69,6 +74,7 @@ export default function CharacterSheetContainer() {
   const armorPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const omamoriPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const cyberneticsPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const nanomachinesPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
@@ -194,6 +200,10 @@ export default function CharacterSheetContainer() {
         cyberneticsPickerTriggerRef.current = trigger;
         setCyberneticsPickerTarget(target);
       },
+      onNanomachinesPickerRequested: (target, trigger) => {
+        nanomachinesPickerTriggerRef.current = trigger;
+        setNanomachinesPickerTarget(target);
+      },
       onWeaponPickerRequested: (rowId, trigger) => {
         weaponPickerTriggerRef.current = trigger;
         setWeaponPickerRowId(rowId);
@@ -227,6 +237,9 @@ export default function CharacterSheetContainer() {
   }
   function closeCyberneticsPicker(): void {
     setCyberneticsPickerTarget(null);
+  }
+  function closeNanomachinesPicker(): void {
+    setNanomachinesPickerTarget(null);
   }
 
   function confirmPrimaryRyugiChange(): void {
@@ -444,6 +457,21 @@ export default function CharacterSheetContainer() {
             closeCyberneticsPicker();
           }}
           returnFocusRef={cyberneticsPickerTriggerRef}
+        />
+        <NanomachinesPickerDialog
+          candidates={getNanomachines()}
+          isOpen={nanomachinesPickerTarget !== null}
+          onRequestClose={closeNanomachinesPicker}
+          onSelect={(nanomachineId) => {
+            if (nanomachinesPickerTarget !== null) {
+              presenterProps.nanomachinesSection.onSelect(
+                nanomachinesPickerTarget,
+                nanomachineId,
+              );
+            }
+            closeNanomachinesPicker();
+          }}
+          returnFocusRef={nanomachinesPickerTriggerRef}
         />
         <SkillSelectionChangeConfirmDialog
           confirmation={

@@ -229,6 +229,14 @@ export const characterSheetFormSchema = z
         .max(4),
       torsoId: z.string().nullable(),
     }),
+    nanomachines: z.object({
+      armId: z.string().nullable(),
+      headId: z.string().nullable(),
+      implantLimitModifier: z.number().int(),
+      implantTotalModifier: z.number().int(),
+      legId: z.string().nullable(),
+      torsoId: z.string().nullable(),
+    }),
     omamori: z.object({
       rows: z.array(
         z.object({

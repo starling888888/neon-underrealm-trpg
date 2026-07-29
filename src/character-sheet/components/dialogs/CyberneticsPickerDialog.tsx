@@ -68,7 +68,10 @@ export default function CyberneticsPickerDialog({
                     <span>{formatDisplayValue(cybernetic.credit)}</span>
                     <span>{cybernetic.implantPoints}</span>
                   </div>
-                  <p>{cybernetic.effect}</p>
+                  <p>
+                    <strong>効果：</strong>
+                    {cybernetic.effect}
+                  </p>
                 </div>
               ))}
             </section>

@@ -20,6 +20,7 @@ import {
 } from "../../../src/character-sheet/form-values";
 import { getCybernetics } from "../../../src/character-sheet/master-data/cybernetics";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
+import { getNanomachines } from "../../../src/character-sheet/master-data/nanomachines";
 import { getOmamori } from "../../../src/character-sheet/master-data/omamori";
 import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-data/other-ryugi-skills";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
@@ -177,6 +178,37 @@ describe("CharacterSheetContainer", () => {
       screen.getByRole("button", { name: `頭：${cybernetic.name}` }),
     ).not.toBeNull();
     expect(document.activeElement).toBe(otherTrigger);
+  });
+
+  it("closes the nanomachines picker and returns focus after selection", async () => {
+    const user = userEvent.setup();
+    const nanomachine = getNanomachines()[0];
+    if (nanomachine === undefined) {
+      throw new Error("ナノマシンmaster dataがありません。");
+    }
+    render(<CharacterSheetContainer />);
+
+    const trigger = screen.getByRole("button", {
+      name: "頭：ナノマシンを選択",
+    });
+    await user.click(trigger);
+    const dialog = screen.getByRole("dialog", { name: "ナノマシンを選択" });
+
+    act(() => {
+      fireEvent(dialog, new Event("cancel", { cancelable: true }));
+    });
+    expect(document.activeElement).toBe(trigger);
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "閉じる" }));
+    expect(document.activeElement).toBe(trigger);
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: nanomachine.name }));
+    expect(
+      screen.getByRole("button", { name: `頭：${nanomachine.name}` }),
+    ).not.toBeNull();
+    expect(document.activeElement).toBe(trigger);
   });
 
   it("confirms an ikizama change only when normal ikizama skills are selected", async () => {

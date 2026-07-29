@@ -13,6 +13,9 @@ import CyberneticsSection, {
 import IkizamaSkillsSection, {
   type IkizamaSkillsSectionProps,
 } from "./IkizamaSkillsSection";
+import NanomachinesSection, {
+  type NanomachinesSectionProps,
+} from "./NanomachinesSection";
 import OmamoriSection, { type OmamoriSectionProps } from "./OmamoriSection";
 import OtherRyugiSkillsSection, {
   type OtherRyugiSkillsSectionProps,
@@ -42,6 +45,7 @@ export type CharacterSheetFormPresenterProps = {
   commonSkillsSection: CommonSkillsSectionProps;
   cyberneticsSection: CyberneticsSectionProps;
   ikizamaSkillsSection: IkizamaSkillsSectionProps;
+  nanomachinesSection: NanomachinesSectionProps;
   otherRyugiSkillsSection: OtherRyugiSkillsSectionProps;
   omamoriSection: OmamoriSectionProps;
   primarySkillsSection: PrimarySkillsSectionProps;
@@ -57,6 +61,7 @@ export default function CharacterSheetFormPresenter({
   commonSkillsSection,
   cyberneticsSection,
   ikizamaSkillsSection,
+  nanomachinesSection,
   otherRyugiSkillsSection,
   omamoriSection,
   primarySkillsSection,
@@ -171,6 +176,12 @@ export default function CharacterSheetFormPresenter({
               title={characterSheet.cybernetics.name}
             >
               <CyberneticsSection {...cyberneticsSection} />
+            </SpecialItemCategorySection>
+            <SpecialItemCategorySection
+              id="nanomachines"
+              title={characterSheet.nanomachines.name}
+            >
+              <NanomachinesSection {...nanomachinesSection} />
             </SpecialItemCategorySection>
           </div>
         </CharacterSheetSectionFrame>

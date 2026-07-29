@@ -6,7 +6,7 @@
 .line {
   display: grid;
   min-width: 0;
-  grid-template-columns: 3.5rem minmax(6.5rem, 1fr) 2.5rem 3.5rem 2rem 3.25rem;
+  grid-template-columns: 3.5rem minmax(5.5rem, 1fr) 2.5rem 3.5rem 3.5rem 2rem 3.25rem;
   align-items: stretch;
 }
 
@@ -30,7 +30,8 @@
   text-align: left;
 }
 
-.pointsHeader {
+.pointsHeader,
+.activationHeader {
   white-space: pre-line;
 }
 
@@ -82,22 +83,11 @@
   color: var(--color-text-muted);
 }
 
-.footer {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  align-items: end;
-  gap: var(--space-3);
-  margin-top: var(--space-3);
-}
-
-.addButton {
-  justify-self: start;
-}
-
 .summary {
   display: grid;
   min-width: 0;
   gap: var(--space-2);
+  margin-top: var(--space-3);
 }
 
 .summaryLabel {
@@ -107,27 +97,21 @@
   line-height: var(--line-height-tight);
 }
 
-.pairedValueExpression {
-  min-width: 0;
-}
-
-.desktopValueExpression {
+.valueExpression {
   display: grid;
   width: max-content;
   max-width: 100%;
   min-width: 0;
   grid-template-columns: 5.25rem auto minmax(4.75rem, auto) auto 5.25rem;
   align-items: center;
-  justify-self: start;
-  justify-content: start;
   gap: 0.125rem;
   font-size: 0.75rem;
   line-height: 1.25;
   text-align: right;
 }
 
-.pairedValueExpression .baseValue,
-.pairedValueExpression .finalValue {
+.baseValue,
+.finalValue {
   box-sizing: border-box;
   min-width: 0;
   overflow: hidden;
@@ -165,20 +149,9 @@
   text-align: center;
 }
 
-.mobileValueExpressions {
-  display: none;
-}
-
 .summary[aria-invalid="true"] .finalValue {
   border-color: var(--color-danger);
   color: var(--color-danger);
-}
-
-.noncombatPenaltyNotice {
-  margin: var(--space-3) 0 0;
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  line-height: var(--line-height-normal);
 }
 
 .visuallyHidden {
@@ -193,7 +166,7 @@
 
 @media (width < 48rem) {
   .line {
-    grid-template-columns: 2.5rem minmax(0, 1fr) 2.25rem 2.75rem 1.5rem 2.75rem;
+    grid-template-columns: 2.5rem minmax(0, 1fr) 2.25rem 2.75rem 2.75rem 1.5rem 2.75rem;
   }
 
   .headerRow > *,
@@ -215,18 +188,5 @@
 
   .summaryLabel {
     font-size: 0.625rem;
-  }
-
-  .noncombatPenaltyNotice {
-    font-size: 0.6875rem;
-  }
-
-  .footer {
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .mobileValueExpressions {
-    display: none;
   }
 }

@@ -7,17 +7,6 @@
   gap: 0;
 }
 
-.group {
-  display: grid;
-  gap: 0;
-}
-
-.group h3 {
-  margin: var(--space-2) 0 0;
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-}
-
 .selectionGuide {
   composes: selectionGuide from "../CharacterSheetFormList.module.css";
 }
@@ -26,7 +15,7 @@
 .firstLine {
   display: grid;
   min-width: 0;
-  grid-template-columns: minmax(0, 1fr) 3rem 4rem;
+  grid-template-columns: minmax(0, 1fr) 3rem 4rem 4rem;
 }
 
 .headerRow {
@@ -100,7 +89,7 @@
 @media (width < 48rem) {
   .headerRow,
   .firstLine {
-    grid-template-columns: minmax(0, 1fr) 2.5rem 3.25rem;
+    grid-template-columns: minmax(0, 1fr) 2.5rem 3.25rem 3.25rem;
   }
 
   .headerRow {

@@ -1,30 +1,29 @@
 import { useId, useRef } from "react";
-
-import type { Omamori } from "../../../lib/types/item";
+import type { Nanomachine } from "../../../lib/types/item";
 import { characterSheetDictionary } from "../../dictionary";
 import { formatDisplayValue } from "../../format-display-value";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
-import styles from "./OmamoriPickerDialog.module.css";
+import styles from "./NanomachinesPickerDialog.module.css";
 
 type Props = {
-  candidates: readonly Omamori[];
+  candidates: readonly Nanomachine[];
   isOpen: boolean;
   onRequestClose: () => void;
   onSelect: (id: string) => void;
   returnFocusRef: React.RefObject<HTMLElement | null>;
 };
 
-export default function OmamoriPickerDialog({
+export default function NanomachinesPickerDialog({
   candidates,
   isOpen,
   onRequestClose,
   onSelect,
   returnFocusRef,
 }: Props) {
-  const copy = characterSheetDictionary.characterSheet.omamori;
+  const copy = characterSheetDictionary.characterSheet.nanomachines;
   const titleId = useId();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -52,18 +51,22 @@ export default function OmamoriPickerDialog({
           <div className={styles.headerRow}>
             <span>{copy.headers.name}</span>
             <span>{copy.headers.credit}</span>
+            <span>{copy.headers.implantPoints}</span>
+            <span>{copy.headers.activationMentalCost}</span>
           </div>
-          {candidates.map((omamori) => (
-            <div className={styles.candidate} key={omamori.id}>
+          {candidates.map((nanomachine) => (
+            <div className={styles.candidate} key={nanomachine.id}>
               <div className={styles.firstLine}>
-                <button onClick={() => onSelect(omamori.id)} type="button">
-                  {omamori.name}
+                <button onClick={() => onSelect(nanomachine.id)} type="button">
+                  {nanomachine.name}
                 </button>
-                <span>{formatDisplayValue(omamori.credit)}</span>
+                <span>{formatDisplayValue(nanomachine.credit)}</span>
+                <span>{nanomachine.implantPoints}</span>
+                <span>{nanomachine.activationMentalCost}</span>
               </div>
               <p>
                 <strong>効果：</strong>
-                {omamori.effect}
+                {nanomachine.effect}
               </p>
             </div>
           ))}

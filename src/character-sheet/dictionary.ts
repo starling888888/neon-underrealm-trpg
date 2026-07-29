@@ -266,6 +266,33 @@ export const characterSheetDictionary = {
       totalModifierLabel: "埋め込み点数合計の修正",
       unselected: "サイバネを選択",
     },
+    nanomachines: {
+      choose: "ナノマシンを選択",
+      clear: "クリア",
+      closeDetails: "効果を閉じる",
+      headers: {
+        activationMentalCost: "発動\n精神力",
+        credit: "信用",
+        effect: "展開",
+        implantPoints: "埋め込み\n点数",
+        name: "名称",
+        part: "部位",
+      },
+      limitBaseLabel: "常時肉体",
+      limitLabel: "埋め込み上限の最終値",
+      limitModifierLabel: "埋め込み上限の修正",
+      name: "ナノマシン",
+      openDetails: "効果を開く",
+      pickerGuide:
+        "ナノマシン名称をクリックするとキャラクターシートに反映されます。",
+      summaryLabel: "埋め込み点数合計／埋め込み上限",
+      summaryTooltip:
+        "埋め込み上限 = 常時肉体 + 修正。\n埋め込み点数合計 = 選択したナノマシンの埋め込み点数の合計 + 修正。個々のナノマシンの埋め込み点数を増減させる効果は合計して、埋め込み点数合計の修正値に入力してください。",
+      totalBaseLabel: "埋め込み点数の合計",
+      totalLabel: "埋め込み点数合計の最終値",
+      totalModifierLabel: "埋め込み点数合計の修正",
+      unselected: "ナノマシンを選択",
+    },
   },
   gameDomain: {
     terms: {

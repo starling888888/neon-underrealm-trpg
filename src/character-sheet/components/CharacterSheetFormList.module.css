@@ -6,6 +6,10 @@
   border-bottom: var(--border-width) solid var(--color-border);
 }
 
+.pickerTableFirstLine > *:not(:last-child) {
+  box-shadow: inset calc(var(--border-width) * -1) 0 var(--color-border);
+}
+
 .listRow {
   min-width: 0;
   margin: 0;

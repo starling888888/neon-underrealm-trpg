@@ -171,6 +171,7 @@ function CyberneticsRow({
       </div>
       {expanded ? (
         <p className={styles.details} id={detailsId}>
+          <strong>効果：</strong>
           {row.cybernetic?.effect ?? ""}
         </p>
       ) : null}

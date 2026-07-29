@@ -75,20 +75,20 @@
 - [ ] 名称選択、効果展開、クリア、候補dialogのEscape・閉じる・選択後のfocus復帰がkeyboard操作を含めアクセシブルに動作する。
 - [ ] 埋め込み点数合計・上限のpair expression、二つの修正入力、上限超過時の最終合計だけのerror状態がpure logicと表示で一致する。上限の基礎値が常時肉体である。
 - [ ] 候補dialogが名称、信用、埋め込み点数、発動精神力のheaderと、候補ごとの効果2行目・重複選択許可を満たす。
-- [ ] `docs/requirements/character-sheet.md`がこのissueのナノマシン集計契約へ整合している。
+- [x] `docs/requirements/character-sheet.md`がこのissueのナノマシン集計契約へ整合している。
 - [ ] 関連TODOを扱わない理由と、`docs/design/character-sheet/notes.md`、`.tmp/design/character-sheet/`、VRT baselineを更新しない扱いが記録されている。
-- [ ] `npm run build` が通る。
-- [ ] 必要な`npm run check`、対象Node / hook / Component testが通る。
+- [x] `npm run build` が通る。
+- [x] 必要な`npm run check`、対象Node / hook / Component testが通る。
 
 ## チェックポイント
 
 - [ ] `docs/architectures/character-sheet.md`に従い、pure logic、form adapter、Presenter、Container、Componentの所有境界を越えていない。
-- [ ] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
+- [x] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
 - [ ] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、default、選択済み、効果展開、名称tooltip、集計tooltip、候補dialog、上限超過errorを確認する。
 - [ ] ユーザーレビュー完了後にだけ対象E2Eと`@character-sheet`限定VRTを実行し、各actual screenshotを開いて確認する。canonical baselineは更新しない。
-- [ ] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
-- [ ] 関連する`docs/TODO.md`および`docs/design/`と矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
+- [x] 関連する`docs/TODO.md`および`docs/design/`と矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 

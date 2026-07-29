@@ -217,6 +217,24 @@ export type CyberneticsValues = {
   torsoId: string | null;
 };
 
+export const nanomachineFixedPartKeys = [
+  "head",
+  "torso",
+  "arm",
+  "leg",
+] as const;
+
+export type NanomachineFixedPartKey = (typeof nanomachineFixedPartKeys)[number];
+
+export type NanomachinesValues = {
+  armId: string | null;
+  headId: string | null;
+  implantLimitModifier: number;
+  implantTotalModifier: number;
+  legId: string | null;
+  torsoId: string | null;
+};
+
 function createInitialBondRows(): BondValues[] {
   return Array.from({ length: 4 }, (_, index) => ({
     isResolved: false,
@@ -283,6 +301,7 @@ export type CharacterSheetFormValues = {
   credit: CreditValues;
   cybernetics: CyberneticsValues;
   ikizamaSkills: IkizamaSkillsValues;
+  nanomachines: NanomachinesValues;
   omamori: OmamoriValues;
   otherRyugiSkills: OtherRyugiSkillsValues;
   primarySkills: PrimarySkillsValues;
@@ -393,6 +412,14 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     implantTotalModifier: 0,
     legId: null,
     otherRows: createInitialCyberneticOtherRows(),
+    torsoId: null,
+  },
+  nanomachines: {
+    armId: null,
+    headId: null,
+    implantLimitModifier: 0,
+    implantTotalModifier: 0,
+    legId: null,
     torsoId: null,
   },
   credit: {

@@ -111,6 +111,7 @@ function OmamoriRow({
       </div>
       {expanded ? (
         <p className={styles.mobileEffect} id={detailsId}>
+          <strong>効果：</strong>
           {row.omamori?.effect ?? ""}
         </p>
       ) : null}

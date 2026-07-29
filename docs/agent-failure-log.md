@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeated a new Node test before reading its assertion diff
+
+#### 2026-07-29
+
+- source: self
+- failure category: repeated test failure
+- 発生箇所: `ex-02-20-sheet-nanomachines` の`tests/node/character-sheet/nanomachines.test.ts`
+- 観測した失敗: 新規Node testで、二つのナノマシンと修正後の埋め込み点数合計`7`に対して上限`6`でもerrorなしと誤って期待した。最初のtest commandが失敗詳細を出さなかった後、同じtestをspec reporterで再実行してからassertion diffを確認した。fixtureの常時肉体を`9`へ変更した後も、期待する上限値を`6`のまま残し、同じtestを再び失敗させた。
+- 一次対応: test fixtureの常時肉体と期待する上限をともに`9`・`7`へ修正し、errorなし状態を明示した。以後、新規Node testが失敗した場合は、再実行前にTAP出力または個別importでassertion diffを取得し、変更した入力値と期待値を同時に見直す。
+
 ### Changed canonical-baseline tracking against the parent Gate plan
 
 #### 2026-07-29

@@ -27,6 +27,10 @@
 .headerRow {
   composes: tableHeader from "../CharacterSheetFormList.module.css";
 }
+
+.firstLine {
+  composes: pickerTableFirstLine from "../CharacterSheetFormList.module.css";
+}
 .headerRow > span,
 .firstLine > * {
   min-width: 0;
@@ -49,14 +53,10 @@
   display: grid;
   min-height: 2rem;
   align-content: center;
-  border-right: var(--border-width) solid var(--color-border);
   font-size: 0.75rem;
   line-height: 1.25;
   text-align: center;
   white-space: nowrap;
-}
-.firstLine > :last-child {
-  border-right: 0;
 }
 .firstLine button {
   border: 0;

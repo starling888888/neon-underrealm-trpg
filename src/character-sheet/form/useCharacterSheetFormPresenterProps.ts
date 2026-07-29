@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
 import type { CyberneticsPickerTarget } from "../components/CyberneticsSection";
+import type { NanomachinesPickerTarget } from "../components/NanomachinesSection";
 import type { CharacterSheetFormValues } from "../form-values";
 import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
 import type { OtherRyugiSkillGroups } from "../master-data/other-ryugi-skills";
@@ -13,6 +14,7 @@ import useChecksSectionProps from "./useChecksSectionProps";
 import useCommonSkillsSectionProps from "./useCommonSkillsSectionProps";
 import useCyberneticsSectionProps from "./useCyberneticsSectionProps";
 import useIkizamaSkillsSectionProps from "./useIkizamaSkillsSectionProps";
+import useNanomachinesSectionProps from "./useNanomachinesSectionProps";
 import useOmamoriSectionProps from "./useOmamoriSectionProps";
 import useOtherRyugiSkillsSectionProps from "./useOtherRyugiSkillsSectionProps";
 import usePrimarySkillsSectionProps from "./usePrimarySkillsSectionProps";
@@ -65,6 +67,10 @@ type CharacterSheetPresenterOptions = {
     target: CyberneticsPickerTarget,
     trigger: HTMLButtonElement,
   ) => void;
+  onNanomachinesPickerRequested: (
+    target: NanomachinesPickerTarget,
+    trigger: HTMLButtonElement,
+  ) => void;
   onWeaponPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
 };
 
@@ -111,6 +117,7 @@ export default function useCharacterSheetFormPresenterProps(
     onPrimarySkillPickerRequested,
     onArmorPickerRequested,
     onCyberneticsPickerRequested,
+    onNanomachinesPickerRequested,
     onOmamoriPickerRequested,
     onWeaponPickerRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
@@ -141,6 +148,9 @@ export default function useCharacterSheetFormPresenterProps(
   const checksSection = useChecksSectionProps(form, build.derivedBuild);
   const cybernetics = useCyberneticsSectionProps(form, build.derivedBuild, {
     onPickerRequest: onCyberneticsPickerRequested ?? (() => {}),
+  });
+  const nanomachines = useNanomachinesSectionProps(form, build.derivedBuild, {
+    onPickerRequest: onNanomachinesPickerRequested ?? (() => {}),
   });
   const profileSection = useProfileSectionProps(
     form,
@@ -187,6 +197,7 @@ export default function useCharacterSheetFormPresenterProps(
     },
     commonSkillsSection: commonSkills.sectionProps,
     ikizamaSkillsSection: ikizamaSkills.sectionProps,
+    nanomachinesSection: nanomachines,
     ikizamaSkillPicker: {
       candidateGroups: ikizamaSkills.candidateGroups,
       clearSelection: ikizamaSkills.clearSelection,
