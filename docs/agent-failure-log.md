@@ -1583,3 +1583,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-20-sheet-nanomachines` の`NanomachinesSection` error-state Component test
 - 観測した失敗: 既存setupにない`toHaveAttribute` matcherを使用した後、集計tooltipのlabelを最終値`output`のaccessible nameと取り違えた。さらに、hover中のtooltipへEscapeを送ればpointer stateにかかわらず閉じると仮定した。そのため、上限超過とtooltip操作を確認するtestを連続して失敗させた。
 - 一次対応: 標準Chaiで属性値を比較し、最終値は実際の`output[aria-label]`で明示的に特定する。表示Componentに近い文言の操作と値が併存する場合、testの対象roleまたはelement typeと実際のaccessible nameを先に確認する。共通Componentで担保済みのkeyboard操作を個別browser testへ複製せず、個別testはpointer移動を含む固有の表示契約だけを確認する。
+
+### Recorded local VRT snapshots as if they were Git-managed baselines
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-21-sheet-drugs` のVRT baseline更新・review報告
+- 観測した失敗: 親Gate planがG31までcanonical VRT snapshotをlocal専用としてGit管理しないと定めているにもかかわらず、G21 issueとdesign notesを「canonical baseline更新」とだけ記録し、review時にGit管理すべきbaselineとして扱われる余地を残した。
+- 一次対応: G21 issueとdesign notesへ、target限定のlocal canonical snapshot更新とG31までの非Git管理を明記した。VRTの記録・レビューでは、snapshotのlocal更新とGit管理の可否を親Gate planへ照合して分けて記録する。

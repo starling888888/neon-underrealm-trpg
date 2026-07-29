@@ -7,10 +7,19 @@ import {
   getDrugById,
   getDrugs,
 } from "../../../src/character-sheet/master-data/drugs";
-import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
+import {
+  characterSheetFormSchema,
+  normalizeIntegerInput,
+} from "../../../src/character-sheet/schemas/character-sheet-form";
 import { getItemsData } from "../../../src/lib/data/items";
 
 describe("character sheet drugs", () => {
+  it("normalizes decimal and empty browser values before drug quantity clamps negatives", () => {
+    assert.equal(normalizeIntegerInput("4.8"), 4);
+    assert.equal(normalizeIntegerInput(""), 0);
+    assert.equal(normalizeIntegerInput("-2"), -2);
+  });
+
   it("keeps generated-data order and resolves only known IDs", () => {
     const drugs = getDrugs();
     const first = drugs[0];

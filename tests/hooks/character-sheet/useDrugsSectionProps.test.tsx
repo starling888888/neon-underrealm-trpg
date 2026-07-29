@@ -21,8 +21,11 @@ function useDrugsHarness() {
 }
 
 describe("useDrugsSectionProps", () => {
-  it("keeps three initial rows, updates quantities, and supports movement and removal to zero", () => {
+  it("normalizes quantities, preserves them across selection changes, and restores an empty list with a new row", () => {
     const { result } = renderHook(() => useDrugsHarness());
+    const drug = getDrugs()[0];
+    if (drug === undefined)
+      throw new Error("ドラッグmaster dataがありません。");
     const [firstRow, secondRow, thirdRow] =
       result.current.form.getValues("drugs.rows");
 
@@ -36,6 +39,25 @@ describe("useDrugsSectionProps", () => {
 
     act(() => {
       result.current.props.onQuantityChange(firstRow.rowId, "4.8");
+    });
+    expect(result.current.form.getValues("drugs.rows.0.quantity")).toBe(4);
+
+    act(() => {
+      result.current.props.onSelect(firstRow.rowId, drug.id);
+    });
+    expect(result.current.form.getValues("drugs.rows.0")).toMatchObject({
+      drugId: drug.id,
+      quantity: 4,
+    });
+
+    act(() => {
+      result.current.props.onQuantityChange(firstRow.rowId, "-2");
+      result.current.props.onQuantityChange(secondRow.rowId, "");
+    });
+    expect(result.current.form.getValues("drugs.rows.0.quantity")).toBe(0);
+    expect(result.current.form.getValues("drugs.rows.1.quantity")).toBe(0);
+
+    act(() => {
       result.current.props.onMove(thirdRow.rowId, "up");
       result.current.props.onRemove(firstRow.rowId);
       result.current.props.onRemove(secondRow.rowId);
@@ -43,6 +65,14 @@ describe("useDrugsSectionProps", () => {
     });
 
     expect(result.current.form.getValues("drugs.rows")).toEqual([]);
+
+    act(() => {
+      result.current.props.onAdd();
+    });
+    const [restoredRow] = result.current.form.getValues("drugs.rows");
+    expect(restoredRow).toMatchObject({ drugId: null, quantity: 0 });
+    expect(restoredRow?.rowId).toBeTruthy();
+    expect(restoredRow?.rowId).not.toBe(firstRow.rowId);
   });
 
   it("keeps duplicate selections visible as errors while the picker can disable them", () => {

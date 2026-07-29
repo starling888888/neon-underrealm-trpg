@@ -101,4 +101,21 @@ describe("DrugsSection", () => {
     );
     expect(details?.textContent).toContain(firstDrug.effect);
   });
+
+  it("restores an empty quantity to zero on blur", () => {
+    const props = createProps();
+    const firstDrug = getDrugs()[0];
+    if (firstDrug === undefined)
+      throw new Error("ドラッグmaster dataがありません。");
+    render(<DrugsSection {...props} />);
+
+    const quantity = screen.getByRole("spinbutton", {
+      name: `ドラッグ1：${firstDrug.name}所持数`,
+    }) as HTMLInputElement;
+    fireEvent.change(quantity, { target: { value: "" } });
+    fireEvent.blur(quantity);
+
+    expect(props.onQuantityChange).toHaveBeenCalledWith("drug-a", "");
+    expect(quantity.value).toBe("0");
+  });
 });

@@ -52,7 +52,7 @@
 - ドラッグ効果の文章解析、能力値・判定数・防御力などへの自動適用、所持数と重複ID以外の独自validationを追加しない。
 - お守り、サイバネ、ナノマシン、武器・防具の個別UI・業務条件を変更しない。異なるform値・業務条件を持つアイテム行の共通Component化は行わない。
 - G25のエラー全件集約、G24以降のlocalStorage、IndexedDB、JSON、CCFOLIA、サーバー、DB、confirmation dialog、UI libraryを追加しない。
-- target限定のcanonical VRT baselineは、ユーザーの明示承認がある場合だけ追加・更新する。今回の更新対象はドラッグsectionと候補dialog、およびドラッグ追加で変化する既存full-page default・専用アイテムoverviewに限定する。
+- target限定のlocal canonical VRT snapshotは、ユーザーの明示承認がある場合だけ生成・更新する。親Gate planに従い、G31までGit管理へ追加・変更しない。今回のlocal更新対象はドラッグsectionと候補dialog、およびドラッグ追加で変化する既存full-page default・専用アイテムoverviewに限定する。
 - `docs/plan.md`のチェックボックスを変更しない。初期スコープ外の項目は`docs/out-of-scope.md`に従う。
 
 ## アーキテクチャ適用
@@ -69,24 +69,24 @@
 
 ## 完了条件
 
-- [ ] ドラッグカテゴリが初期3行で表示され、0行までの追加・削除・上下の並べ替えを指定どおりに操作できる。
-- [ ] desktop / tabletで、並べ替え、名称、信用、使用タイミング、1セット数量、BT強度、所持数input、展開、削除buttonを指定順で横overflowなく表示する。名称tooltipと二つのheader強制改行がある。
-- [ ] mobileで、使用タイミングと1セット数量だけを効果展開内の効果本文直前へ移し、ほかの要約項目と行操作を省略せず、横overflowなく表示する。
-- [ ] 所持数が行ごとに0以上の整数として編集・空欄から`0`への正規化を行い、IDと独立して保持できる。G22より前に消費信用の集計を変更していない。
-- [ ] 重複IDを持つ各ドラッグ行がerror状態になり、候補dialogでは他行で選択済みの候補をdisabledにする。
-- [ ] 行番号付きaccessible nameにより、各行の名称選択、所持数input、効果展開、上下移動、削除を区別できる。名称選択、効果展開、追加・削除・並べ替え、候補dialogのEscape・閉じる・選択後のfocus復帰がkeyboard操作を含めアクセシブルに動作する。
-- [ ] 候補dialogがdesktop / tablet / mobileで同一の名称、信用、使用タイミング、1セット数量、BT強度のheaderと、候補ごとの効果2行目・選択済み候補のdisabledを満たす。
-- [ ] 関連TODOを扱わない理由と、design targetおよびユーザー承認済みVRT baseline更新の扱いが記録されている。
+- [x] ドラッグカテゴリが初期3行で表示され、0行までの追加・削除・上下の並べ替えを指定どおりに操作できる。
+- [x] desktop / tabletで、並べ替え、名称、信用、使用タイミング、1セット数量、BT強度、所持数input、展開、削除buttonを指定順で横overflowなく表示する。名称tooltipと二つのheader強制改行がある。
+- [x] mobileで、使用タイミングと1セット数量だけを効果展開内の効果本文直前へ移し、ほかの要約項目と行操作を省略せず、横overflowなく表示する。
+- [x] 所持数が行ごとに0以上の整数として編集・空欄から`0`への正規化を行い、IDと独立して保持できる。G22より前に消費信用の集計を変更していない。
+- [x] 重複IDを持つ各ドラッグ行がerror状態になり、候補dialogでは他行で選択済みの候補をdisabledにする。
+- [x] 行番号付きaccessible nameにより、各行の名称選択、所持数input、効果展開、上下移動、削除を区別できる。名称選択、効果展開、追加・削除・並べ替え、候補dialogのEscape・閉じる・選択後のfocus復帰がkeyboard操作を含めアクセシブルに動作する。
+- [x] 候補dialogがdesktop / tabletでは名称、信用、使用タイミング、1セット数量、BT強度の5列と候補ごとの効果2行目・選択済み候補のdisabledを満たす。mobileでは名称、信用、BT強度の3列と、使用タイミング、1セット数量、効果の詳細行を満たす。
+- [x] 関連TODOを扱わない理由と、design targetおよびユーザー承認済みlocal VRT snapshot更新・G31までの非Git管理の扱いが記録されている。
 - [x] `npm run build` が通る。
 - [x] 必要な`npm run check`、対象Node / hook / Component testが通る。
 
 ## チェックポイント
 
-- [ ] `docs/architectures/character-sheet.md`に従い、form adapter、Presenter、Container、Component、master-dataの所有境界を越えていない。
+- [x] `docs/architectures/character-sheet.md`に従い、form adapter、Presenter、Container、Component、master-dataの所有境界を越えていない。
 - [x] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
-- [ ] dev serverでdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`のdefault、選択済み、効果展開、所持数編集、追加・削除・並べ替え、名称tooltip、候補dialogをユーザーが確認できる状態にする。
+- [x] dev serverでdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`のdefault、選択済み、効果展開、所持数編集、追加・削除・並べ替え、名称tooltip、候補dialogをユーザーが確認できる状態にした。
 - [x] 重複IDのerror、候補dialogの選択済み候補disabled、行番号付きaccessible name、並べ替え後の表示順追従をNode / hook / Component testで確認した。
-- [x] ユーザー指示に従い、代表E2Eとtarget限定VRTを実装・実行し、approved canonical baselineだけを更新した。
+- [x] ユーザー指示に従い、代表E2Eとtarget限定VRTを実装・実行し、approved local canonical snapshotだけを更新した。G31までGit管理へ追加・変更していない。
 - [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`および`docs/design/`と矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
@@ -116,7 +116,7 @@
 - desktop / tabletの列順、名称tooltip、二つのheader強制改行、所持数inputの位置がユーザー意図どおりか。
 - mobileで使用タイミングと1セット数量だけを効果展開内の先頭へ置き、BT強度、所持数、行操作を要約に残す境界が正しいか。
 - 可変3行、0行までの削除、追加、上下の並べ替え、重複IDのerrorと候補dialogのdisabledを、このGateで扱う範囲として十分か。
-- 候補dialogの5列と効果2行目、選択済み候補のdisabledを全viewportで同じ構成にする判断が正しいか。
+- 候補dialogのdesktop / tabletの5列、mobileの3列と詳細行、選択済み候補のdisabledが指定どおりか。
 - 消費信用の一元算出と生き様・カテゴリ連動をG22へ残し、G21では所持数の入力状態だけを導入する境界が正しいか。
 - 代表E2Eとtarget限定VRTが、ドラッグ固有の操作・表示状態を過不足なく検証しているか。
 
@@ -124,7 +124,7 @@
 
 - ブランチはユーザー指示に従い新規作成しない。親issueと同じ現行branch `ex-02-web-character-sheet` で準備する。
 - `.raw/contents/`にはキャラクターシートに対応する入力Markdownが見つかっていないため、ページ本文・可視構成の優先指示はユーザーの最新指示、承認済みdesign画像、requirements、design notesの順で扱う。
-- VRT baselineの更新はユーザーの明示承認を必要とする。2026-07-29のユーザー指示で、G21の代表E2Eとtarget限定VRTの追加・baseline更新を承認された。
+- VRT snapshotのlocal更新はユーザーの明示承認を必要とする。2026-07-29のユーザー指示で、G21の代表E2Eとtarget限定VRTの追加・local snapshot更新を承認された。親Gate planに従い、G31までGit管理へ追加・変更しない。
 
 ## レビュー指摘 1
 
@@ -154,10 +154,10 @@
 
 ### 対応完了チェックリスト
 
-- [ ] desktop / tabletで使用タイミングheaderが語内折り返しせず、名称列との列幅配分が表示契約に一致する。
-- [ ] ドラッグ候補dialogのdisabled候補が既存スキル候補dialogと同じ背景・文字色・操作不可表現になる。
-- [ ] mobile展開内の使用タイミングと1セット数量が、太字かつ折り返しなしで効果本文の直前に表示される。
-- [ ] 選択dialogで名称列を縮めても、使用タイミングとBT強度を含む全headerが折り返さず1行に収まる。
+- [x] desktop / tabletで使用タイミングheaderが語内折り返しせず、名称列との列幅配分が表示契約に一致する。
+- [x] ドラッグ候補dialogのdisabled候補が既存スキル候補dialogと同じ背景・文字色・操作不可表現になる。
+- [x] mobile展開内の使用タイミングと1セット数量は、後続レビュー指摘3によりラベルだけを太字にして、折り返しなしで効果本文の直前に表示する。
+- [x] 選択dialogのheaderは、後続レビュー指摘2により使用タイミング・1セット数量の指定改行を維持し、語内折り返しを発生させない。
 - [x] 必要な`npm run check`と対象Component testが通る。
 
 ## レビュー指摘 2
@@ -179,7 +179,7 @@
 
 ### 対応完了チェックリスト
 
-- [ ] dialogの使用タイミングと1セット数量が指定改行で表示され、タイミング・数量・BT強度が語内折り返ししない。
+- [x] dialogの使用タイミングと1セット数量が指定改行で表示され、タイミング・数量・BT強度が語内折り返ししない。
 - [x] 必要な`npm run check`と対象Component testが通る。
 
 ## レビュー指摘 3
@@ -200,7 +200,7 @@
 
 ### 対応完了チェックリスト
 
-- [ ] mobile展開内で使用タイミングと1セット数量のラベルだけが太字で、値は通常ウェイトになる。
+- [x] mobile展開内で使用タイミングと1セット数量のラベルだけが太字で、値は通常ウェイトになる。
 - [x] 必要な`npm run check`と対象Component testが通る。
 
 ## レビュー指摘 4
@@ -221,7 +221,7 @@
 
 ### 対応完了チェックリスト
 
-- [ ] mobile展開内で使用タイミングと1セット数量の値が効果本文と同じ通常文字色になる。
+- [x] mobile展開内で使用タイミングと1セット数量の値が効果本文と同じ通常文字色になる。
 - [x] 必要な`npm run check`と対象Component testが通る。
 
 ## レビュー指摘 5
@@ -243,8 +243,8 @@
 
 ### 対応完了チェックリスト
 
-- [ ] mobile候補dialogが名称・信用・BT強度の1行目と、使用タイミング・1セット数量・効果の順の詳細行を表示する。
-- [ ] desktop / tabletのdialog 5列構成を維持する。
+- [x] mobile候補dialogが名称・信用・BT強度の1行目と、使用タイミング・1セット数量・効果の順の詳細行を表示する。
+- [x] desktop / tabletのdialog 5列構成を維持する。
 - [x] 必要な`npm run check`と対象Component testが通る。
 
 ## レビュー指摘 6
@@ -265,12 +265,12 @@
 
 ### 対応完了チェックリスト
 
-- [ ] mobile候補dialogで使用タイミング・1セット数量から効果本文までを区切り線なしで連続表示する。
+- [x] mobile候補dialogで使用タイミング・1セット数量から効果本文までを区切り線なしで連続表示する。
 - [x] 必要な`npm run check`と対象Component testが通る。
 
 ## ユーザー指示による検証範囲変更
 
-- 2026-07-29、ユーザーはG21本体のコミット後に、代表E2E、target限定VRT、canonical baseline更新、追加コミットとpushを明示指示した。
+- 2026-07-29、ユーザーはG21本体のコミット後に、代表E2E、target限定VRT、local canonical snapshot更新、追加コミットとpushを明示指示した。
 - この指示は初期の「E2EとVRTを実装・実行しない」制約を置き換える。VRTは`@character-sheet`のG21関連21状態だけを対象とし、全件VRTは実行しない。
 
 ## ビジュアルレビュー 1
@@ -290,11 +290,11 @@
 
 ### レビュー結果
 
-| 対象                                       | 判定 | 差分                            | 対応                    |
-| ------------------------------------------ | ---- | ------------------------------- | ----------------------- |
-| full-page default / special-items overview | OK   | ドラッグ3行の追加による高さ増加 | approved baselineを更新 |
-| drugs section states                       | OK   | 新規target                      | baselineを追加          |
-| drugs picker dialog                        | OK   | 新規target                      | baselineを追加          |
+| 対象                                       | 判定 | 差分                            | 対応                          |
+| ------------------------------------------ | ---- | ------------------------------- | ----------------------------- |
+| full-page default / special-items overview | OK   | ドラッグ3行の追加による高さ増加 | approved local snapshotを更新 |
+| drugs section states                       | OK   | 新規target                      | local snapshotを追加          |
+| drugs picker dialog                        | OK   | 新規target                      | local snapshotを追加          |
 
 ### 実画面確認
 
@@ -321,7 +321,7 @@
 
 ### 人間判断が必要な差分
 
-- なし。ユーザー承認済みのG21 baseline更新として、対象21状態だけを更新した。
+- なし。ユーザー承認済みのG21 local snapshot更新として、対象21状態だけを更新した。親Gate planに従い、G31までGit管理へ追加・変更していない。
 
 ### 対応完了チェックリスト
 
@@ -331,6 +331,66 @@
 - [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
 - [x] VRT差分を修正した、または修正不要と判断した
-- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] local snapshot更新が必要な差分を人間判断として記録した。G31までGit管理へ追加・変更しない
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 7
+
+### 指摘事項
+
+1. G21で更新したcanonical VRT baselineがGit管理されておらず、クリーン checkoutで再現できない。
+2. design notesの「現在のVRT対象」がdefaultだけとなっており、G21のsection / dialog variationを反映していない。
+3. レビュー指摘1〜6の対応完了チェックリストが、後続のVisual Review 1で確認済みの表示仕様に対して未完了のままである。
+
+### 判定
+
+- source: local-agent
+- classification:
+  - 指摘1: invalid。親Gate planのG19 / G20引継ぎはcanonical VRT snapshotをG31までlocal専用とし、Git管理・更新しないと定めている。G21でもこの方針を踏襲する。
+  - 指摘2: valid。design notesの現行VRT対象はG21のsection / dialog variationを含む。
+  - 指摘3: valid。レビュー指摘1の一部は後続指摘で置換されたが、最終仕様とVisual Review 1の確認結果を対応完了チェックへ反映していない。
+- local validation: `docs/issue/ex-02-web-character-sheet/plan.md`のG19 / G20引継ぎ、G31の範囲、G21のVisual Review 1、`tests/visual/vrt/character-sheet.spec.ts`を照合した。local canonical snapshotの更新自体はユーザー承認済みであり、Git管理への追加・変更は行っていない。
+
+### 対応方針
+
+- G21 issueとdesign notesを、target限定のlocal canonical snapshotを更新してもG31までGit管理へ追加・変更しない記録へ揃える。
+- design notesのVRT対象を、full-page、section variation、dialog variationを含む現行構成へ更新する。
+- レビュー指摘1〜6の対応完了チェックを最終仕様へ更新し、後続指摘で置換された条件はその旨を明記する。
+
+### 対応完了チェックリスト
+
+- [x] G31までlocal canonical snapshotをGit管理へ追加・変更しない方針をG21 issueとdesign notesへ反映した。
+- [x] design notesのVRT対象を現行のfull-page / section / dialog構成へ更新した。
+- [x] レビュー指摘1〜6の対応完了チェックを最終仕様とVisual Review 1の確認結果へ揃えた。
+- [x] 対象Markdownのformat / lintを確認した。
+
+## レビュー指摘 8
+
+### 指摘事項
+
+1. ドラッグ重複エラーがカテゴリ／セクションへ伝播していない。
+2. G21完了条件が最終的なmobile候補dialog契約と矛盾している。
+3. 追加操作と所持数の正規化境界が必須テストで固定されていない。
+
+### 判定
+
+- source: `.tmp/chatgpt-review.md`（browser-draft）
+- classification:
+  - 指摘1: valid。共通要件の重複に関する記述が、ドラッグ固有の「各該当行だけをerror」と矛盾していた。ユーザー判断により現在実装を正とし、要件を訂正する。
+  - 指摘2: valid。完了条件だけがmobile候補dialogの旧5列構成を残している。現在実装、対象範囲、レビュー指摘5、Visual Review 1の3列＋詳細行契約が正しい。
+  - 指摘3: valid。`onAdd`、全行削除後の再追加、負数・空欄・小数の所持数正規化を、Node / hook / Componentの責務に分けて固定する必要がある。
+- local validation: `docs/requirements/character-sheet.md`、現行G21実装、G21 issueの対象範囲とVisual Review 1、既存Node / hook / Component / E2E testを照合した。レビュー草案のPR状態・CI状態はローカル検証の根拠に使わない。
+
+### 対応方針
+
+- 指摘1は、ドラッグ重複が各該当行だけをerrorとし、カテゴリ全体をerrorにしない要件へ訂正する。実装は変更しない。
+- 指摘2は、desktop / tabletの5列とmobileの名称・信用・BT強度3列＋使用タイミング・1セット数量・効果の詳細行を、完了条件とレビュー観点へ反映する。実装は変更しない。
+- 指摘3は、次のreview responseでテストだけを追加する。hook / Node testで所持数`"4.8"`→`4`、`"-2"`→`0`、空欄→`0`、ID変更後の数量保持、全行削除後の`onAdd`による未選択・数量`0`・一意`rowId`の再追加を確認する。Component testでは空欄blur後のDOM表示`0`を確認する。代表E2Eは責務を重複させず、必要なら0行からの追加操作だけを扱う。
+
+### 対応完了チェックリスト
+
+- [x] ドラッグ重複の要件を現在実装の行単位error契約へ訂正した。
+- [x] mobile候補dialogの完了条件とレビュー観点を最終契約へ訂正した。
+- [x] 所持数の正規化境界と0行からの再追加をNode / hook / Component testへ追加した。
+- [x] 必要な対象test、`npm run check`、`npm run build`を確認した。
