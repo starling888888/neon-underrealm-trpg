@@ -380,6 +380,9 @@ test.describe("character sheet page", () => {
   }) => {
     await page.setViewportSize(visualViewports.desktop);
     await page.goto("character-sheet/");
+    await expect(
+      page.locator("astro-island[component-url*='CharacterSheetContainer']"),
+    ).not.toHaveAttribute("ssr");
 
     const attackSkill = page.getByLabel("攻撃1の技能", { exact: true });
     const attackAttribute = page.getByLabel("攻撃1の対応能力", {

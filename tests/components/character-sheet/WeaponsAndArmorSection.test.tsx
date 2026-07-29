@@ -68,6 +68,8 @@ describe("WeaponsAndArmorSection", () => {
 
     render(<WeaponsAndArmorSection {...props} />);
 
+    expect(screen.getAllByRole("region", { name: "武器" })).toHaveLength(1);
+    expect(screen.getAllByRole("region", { name: "防具" })).toHaveLength(1);
     expect(screen.getByRole("group", { name: "武器1：刀" })).not.toBeNull();
     expect(screen.getByRole("group", { name: "武器2：刀" })).not.toBeNull();
     expect(screen.getAllByLabelText("武器1：刀攻撃力の修正")).toHaveLength(2);

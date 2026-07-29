@@ -45,6 +45,10 @@ describe("ChecksSection", () => {
 
     render(<ChecksSection {...props} />);
 
+    expect(screen.getAllByRole("region", { name: "攻撃" })).toHaveLength(1);
+    expect(
+      screen.getAllByRole("region", { name: "リアクション" }),
+    ).toHaveLength(1);
     expect(screen.getAllByText("技能")).toHaveLength(2);
     expect(screen.getAllByText("対応能力")).toHaveLength(2);
     expect(screen.getAllByText("常時／一時")).toHaveLength(2);

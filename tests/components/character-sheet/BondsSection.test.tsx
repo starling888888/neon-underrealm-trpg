@@ -30,6 +30,9 @@ describe("BondsSection", () => {
 
     render(<BondsSection {...props} />);
 
+    expect(screen.getAllByRole("region", { name: "覚悟の効果" })).toHaveLength(
+      1,
+    );
     expect(screen.getByLabelText("縁1の対象")).not.toBeNull();
     expect(screen.getByLabelText("縁4の関係")).not.toBeNull();
     expect(screen.getByRole("group", { name: "縁1" })).not.toBeNull();

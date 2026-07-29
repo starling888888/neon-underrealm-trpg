@@ -289,7 +289,7 @@ describe("CharacterSheetContainer", () => {
 
     expect(ikizamaSelect).toHaveProperty("value", "kejime");
     expect(screen.queryByRole("button", { name: skill.name })).toBeNull();
-  });
+  }, 10_000);
 
   it("confirms changing or removing an other ryugi only when it has selected skills", async () => {
     const user = userEvent.setup();
@@ -356,5 +356,5 @@ describe("CharacterSheetContainer", () => {
     expect(document.activeElement).toBe(
       screen.getByRole("button", { name: "＋ その他流儀を追加" }),
     );
-  });
+  }, 10_000);
 });

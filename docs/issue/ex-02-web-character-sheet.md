@@ -516,7 +516,88 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] 表示表と全skill・item pickerが共通header構造または共通行grid CSSを使う
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
-- [ ] VRTはユーザー指示により未実施
+- [x] 175件のcharacter-sheet VRT baselineを更新し、desktop / tablet / mobileのactual screenshotを確認する
+
+## レビュー指摘 12
+
+### 指摘事項
+
+- 親Gate planのG3引継ぎが、非戦闘技能にも`CharacterSheetSectionFrame`を適用すると記録している。しかし現行契約は、攻撃・リアクション・覚悟の効果・武器・防具だけを共通Frameに置き、非戦闘技能は共通基礎CSSを再利用する専用Componentとする。
+- G10の親Gate planが縁clearと上限外行deleteを旧来のtext / `×`表現として記録している。しかし現行契約は、レビュー指摘5で導入した消しゴムiconのclearとゴミ箱iconのdeleteである。
+- `CharacterSheetContainer`の確認dialog操作2件は、既定5秒を超える既知の操作量を持つ。対象testだけ10秒timeoutへ延長し、通常設定で再発しないことを確認する。
+- `CharacterSheetSectionFrame`が、外側と内容領域の両方を同じ`aria-labelledby`の`section`として出力している。攻撃、リアクション、覚悟の効果、武器、防具では同名のregionを二重生成するため、内容領域はregionでない要素へ変更する。
+
+### 判定
+
+- source: `.tmp/review/ex-02-web-character-sheet/document-review-5.md`、`.tmp/chatgpt-review.md`（`c821ddf`時点のbrowser draft）
+- classification: valid
+- local validation:
+  - `docs/issue/ex-02-web-character-sheet/plan.md`のG3は非戦闘技能まで同じframeと記録する一方、レビュー指摘7、`src/character-sheet/components/NoncombatChecksSection.tsx`、requirements、design notesは専用Componentの責務を定義している。
+  - G10は`クリア` text buttonと`×` delete buttonを記録する一方、レビュー指摘5、`ClearButton.tsx`、`DeleteButton.tsx`、design notesは消しゴム／ゴミ箱iconを現行表現としている。
+  - Technical Reviewは`PickerTableHeader`、共有CSS、shared formatter、fallback、操作・accessibility・GitHub Pages base URLに新規の技術的問題なしと確認した。
+  - `CharacterSheetContainer.test.tsx`の生き様変更とその他流儀変更・削除のtestは、前回review済みSHAでも既定5秒timeoutとなる。各testに10秒のlocal timeoutを指定し、対象7件と通常のComponent test全120件が成功した。
+  - 初回review時のユーザー指示に従い、VRT未実施そのものは指摘対象外とした。その後のユーザー指示で175件のbaseline生成と実画面確認を完了している。
+  - `CharacterSheetSectionFrame.tsx`は外側と内容領域をそれぞれ`aria-labelledby={headingId}`の`section`として出力する。`ChecksSection.tsx`、`BondsSection.tsx`、`WeaponsAndArmorSection.tsx`が各subsectionへこのComponentを使用するため、同名regionが二重になる。関連するVisual / E2E testも`getByRole("region", { exact: true, name: "武器" })`など単一regionを前提にする。
+  - 更新後の`.tmp/chatgpt-review.md`が回収済みとするmobile縁操作列は、`BondsSection.module.css`で共通action-button幅を使う。強調frameは`CharacterSheetSectionFrameBase.module.css`のlayoutへ参加しないoverlayであり、いずれもstaleとして追加対応しない。
+
+### 対応方針
+
+- 親Gate planのG3とG10へ、現行のComponent責務と操作icon表現を明示する追記を行う。過去Gateの経緯は必要最小限に残す。
+- test suite全体のtimeoutは変更せず、長い確認dialog操作2件だけ10秒timeoutを指定する。
+- `CharacterSheetSectionFrame`の内容領域を`div`へ変え、開閉時の`id`、`hidden`、content styleを維持する。Component testでsubsectionごとに同名regionが1件だけであることを確認する。
+- このreview取り込みでは実装・plan本文の修正は行わず、次の明示指示で対応する。
+
+### 対応完了チェックリスト
+
+- [ ] G3で非戦闘技能を専用Componentとして明記する
+- [ ] G10で消しゴム／ゴミ箱iconの現行表現を明記する
+- [x] 長い確認dialog操作2件を10秒timeoutで実行し、通常のComponent testで再発しないことを確認する
+- [x] subsectionごとの同名regionを1件にする
+- [x] 同名regionが二重にならないことをComponent testで確認する
+- [x] Document ReviewとTechnical Reviewを実施する
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt @character-sheet`
+- route: `/character-sheet/`
+- states: default、tooltip-representative、profile（default / image-selected）、build（default / primary-ryugi-selected）、bonds（default / input / error）、combat（default / input）、noncombat-input、skill section（primary / ikizama / common / other-ryugi のinput・error、overview）、weapons-and-armor（default / input）、special items（omamori / cybernetics / nanomachines / drugs の各state、G22 state）、全picker dialog、全confirm dialog
+- viewports: desktop / tablet / mobile（`omamori-mobile-effect`のみmobile）。合計175 screenshot。
+
+### レビュー結果
+
+| 対象                      | 判定 | 差分                          | 対応                |
+| ------------------------- | ---- | ----------------------------- | ------------------- |
+| character-sheet全scenario | OK   | 新baselineを生成。Git差分なし | 175件を順に原寸確認 |
+
+### 実画面確認
+
+- full-page: default / tooltip-representative のdesktop / tablet / mobileをoverviewとして確認した。
+- locator screenshot: section / dialogの全scenario・全対象viewportをoriginal pixel resolutionで開いた。
+  - checked acceptance criteria: table header・名称・数値セル・詳細行の折返し、mobile列の再配置、dialog内の横overflow、clip、操作iconのbounds、意図しない余白。
+  - result: 想定外の折返し、overflow、clip、著しい余白は確認されなかった。防具mobileの`ダメージ` / `軽減` header、装備制限・効果の詳細行、各pickerの統一したheader / row構造も表示契約どおりである。
+
+### 自己修正した項目
+
+- なし
+
+### 人間判断が必要な差分
+
+- なし
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新を実行し、更新不要（Git差分なし）と確認した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## 備考
 

@@ -62,14 +62,13 @@ export default function CharacterSheetSectionFrame({
           </span>
         )}
       </Heading>
-      <section
-        aria-labelledby={headingId}
+      <div
         className={styles.content}
         hidden={expandable ? !isExpanded : undefined}
         id={expandable ? contentId : undefined}
       >
         {children}
-      </section>
+      </div>
     </section>
   );
 }
