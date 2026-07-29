@@ -71,7 +71,7 @@ fieldset.row {
 .group h3 {
   margin: 0;
   color: var(--color-text);
-  font-size: var(--text-sm);
+  font-size: var(--character-sheet-font-display);
 }
 
 .noncombatHeading {
@@ -88,7 +88,7 @@ fieldset.row {
 .noncombatToggle {
   display: grid;
   width: 1.5rem;
-  min-height: 1.5rem;
+  min-height: var(--character-sheet-control-min-height);
   place-items: center;
   border: 0;
   background: transparent;
@@ -160,13 +160,13 @@ fieldset.row {
 .reactionName {
   box-sizing: border-box;
   min-width: 0;
-  min-height: 1.5rem;
+  min-height: var(--character-sheet-control-min-height);
   border: var(--border-width) solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
   color: var(--color-text);
   padding: 0.1875rem 0.25rem;
-  font-size: var(--text-xs);
+  font-size: var(--character-sheet-font-control);
   line-height: var(--line-height-tight);
 }
 
@@ -177,7 +177,7 @@ fieldset.row {
 .noncombatName {
   min-width: 0;
   color: var(--color-text);
-  font-size: var(--text-xs);
+  font-size: var(--character-sheet-font-control);
   font-weight: 700;
   white-space: nowrap;
 }
@@ -186,13 +186,13 @@ fieldset.row {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  min-height: 1.5rem;
+  min-height: var(--character-sheet-control-min-height);
   border: var(--border-width) solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
   color: var(--color-text);
   padding: 0.1875rem 0.25rem;
-  font-size: var(--text-xs);
+  font-size: var(--character-sheet-font-control);
   line-height: var(--line-height-tight);
   text-align: right;
 }

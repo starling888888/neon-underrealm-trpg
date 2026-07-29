@@ -73,6 +73,7 @@
   grid-template-columns: 1.25rem minmax(var(--primary-skill-name-width), 1fr) 3.25rem 2.35rem 4.5rem 3.4rem 4.4rem 2rem var(
       --character-sheet-action-button-size
     );
+  min-height: var(--character-sheet-list-row-min-height);
   align-items: stretch;
 }
 
@@ -83,7 +84,7 @@
 .headerRow > * {
   display: grid;
   min-width: 0;
-  min-height: 1.75rem;
+  min-height: var(--character-sheet-list-row-min-height);
   place-items: center;
   padding: 0.125rem 0.25rem;
   white-space: nowrap;
@@ -152,7 +153,7 @@
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
   color: var(--color-text);
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   font-weight: 750;
   line-height: var(--line-height-tight);
   text-align: left;
@@ -179,26 +180,18 @@
   place-items: center;
   padding: 0.125rem 0.25rem;
   color: var(--color-text);
-  font-size: 0.75rem;
-  line-height: 1.25;
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
   text-align: center;
 }
 
-.levelInput input {
-  box-sizing: border-box;
+.levelNumericInput {
+  composes: tableNumericInput from "../CharacterSheetFormList.module.css";
   width: 100%;
-  min-width: 0;
-  border: var(--border-width) solid var(--color-example-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
-  font-weight: 750;
   padding: 0.125rem 0.1875rem;
-  text-align: center;
 }
 
-.levelInput input[aria-invalid="true"] {
+.levelNumericInput[aria-invalid="true"] {
   border-color: var(--color-danger);
 }
 
@@ -248,7 +241,7 @@
   border-top: var(--border-width) solid var(--color-border);
   padding: var(--space-2);
   color: var(--color-text);
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   line-height: var(--line-height-normal);
   white-space: pre-wrap;
 }
@@ -318,7 +311,7 @@
   }
 
   .headerRow {
-    font-size: 0.625rem;
+    font-size: var(--character-sheet-font-table-mobile-label);
   }
 
   .headerRow > :nth-child(6),
@@ -332,7 +325,7 @@
   .skillPicker {
     align-items: center;
     padding: var(--space-1);
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
     white-space: pre-wrap;
   }
 
@@ -347,7 +340,7 @@
   .detailsToggle,
   .removePlaceholder {
     padding-inline: 0.125rem;
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
 
   .details {

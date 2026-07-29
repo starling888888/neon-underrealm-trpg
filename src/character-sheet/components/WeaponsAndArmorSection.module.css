@@ -19,6 +19,7 @@
 .weaponLine,
 .armorLine {
   display: grid;
+  min-height: var(--character-sheet-list-row-min-height);
   min-width: 0;
   align-items: stretch;
 }
@@ -40,7 +41,7 @@
 .headerRow > * {
   display: grid;
   min-width: 0;
-  min-height: 1.75rem;
+  min-height: var(--character-sheet-list-row-min-height);
   place-items: center;
   padding: 0.125rem 0.25rem;
   white-space: nowrap;
@@ -98,8 +99,8 @@
   place-items: center;
   padding: 0.125rem 0.25rem;
   color: var(--color-text);
-  font-size: 0.75rem;
-  line-height: 1.25;
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
   text-align: center;
 }
 
@@ -124,8 +125,8 @@
   justify-self: start;
   justify-content: start;
   gap: 0.125rem;
-  font-size: 0.75rem;
-  line-height: 1.25;
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
   text-align: right;
 }
 
@@ -155,17 +156,8 @@
 }
 
 .modifierInput {
-  box-sizing: border-box;
+  composes: tableNumericInput from "./CharacterSheetFormList.module.css";
   width: 2.25rem;
-  min-width: 0;
-  border: var(--border-width) solid var(--color-example-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
-  font-weight: 750;
-  padding: 0.125rem;
-  text-align: center;
 }
 
 .mobileValueExpressions {
@@ -184,7 +176,7 @@
   gap: var(--space-1);
   border-top: var(--border-width) solid var(--color-border);
   padding: var(--space-2);
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   line-height: var(--line-height-normal);
 }
 .details p {
@@ -222,17 +214,17 @@
       );
   }
   .headerRow {
-    font-size: 0.625rem;
+    font-size: var(--character-sheet-font-table-mobile-label);
   }
   .headerRow > *,
   .cell,
   .detailsToggle {
     padding-inline: 0.125rem;
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
   .itemPicker {
     padding: var(--space-1);
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
   .chooseIcon {
     width: 0.75rem;
@@ -253,20 +245,19 @@
     grid-template-columns: 1.875rem auto 1.75rem auto 1.875rem;
     align-items: center;
     gap: 0.125rem;
-    font-size: 0.75rem;
+    font-size: var(--character-sheet-font-table);
     line-height: 1.25;
   }
   .mobileValueExpression .baseValue,
   .mobileValueExpression .finalValue {
-    height: 1.5rem;
+    min-height: var(--character-sheet-control-min-height);
     min-width: 0;
-    min-height: 0;
     padding: 0.125rem;
-    font-size: 0.75rem;
+    font-size: var(--character-sheet-font-control);
     text-align: right;
   }
   .mobileValueExpression .modifierInput {
-    height: 1.5rem;
+    min-height: var(--character-sheet-control-min-height);
     width: 1.75rem;
   }
   .detailMeta {

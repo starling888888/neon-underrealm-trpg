@@ -1,6 +1,6 @@
 .tableHeader {
   color: var(--color-text-muted);
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   line-height: 1.1;
   text-align: center;
   border-bottom: var(--border-width) solid var(--color-border);
@@ -11,6 +11,7 @@
 }
 
 .listRow {
+  min-height: var(--character-sheet-list-row-min-height);
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -22,7 +23,7 @@
 
 .reorderControls {
   display: grid;
-  min-height: 2.25rem;
+  min-height: var(--character-sheet-list-row-min-height);
   align-content: center;
   gap: 0.0625rem;
   background: var(--color-surface-muted);
@@ -56,7 +57,7 @@
   cursor: pointer;
   padding: var(--space-1) var(--space-2);
   font: inherit;
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   font-weight: 750;
   line-height: var(--line-height-tight);
   text-align: left;
@@ -83,6 +84,21 @@
 
 .detailsToggle:hover {
   background: var(--color-example-soft);
+}
+
+.tableNumericInput {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: var(--character-sheet-control-min-height);
+  border: var(--border-width) solid var(--color-example-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--character-sheet-font-control);
+  line-height: var(--line-height-tight);
+  padding: 0.125rem;
+  text-align: center;
 }
 
 .pickerDialog {
@@ -123,20 +139,20 @@
 
 @media (width < 48rem) {
   .tableHeader {
-    font-size: 0.625rem;
+    font-size: var(--character-sheet-font-table-mobile-label);
   }
 
   .rowPicker {
     padding: var(--space-1);
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
 
   .detailsToggle {
     padding-inline: 0.125rem;
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
 
   .selectionGuide {
-    font-size: 0.75rem;
+    font-size: var(--character-sheet-font-table);
   }
 }

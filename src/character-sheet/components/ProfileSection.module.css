@@ -36,7 +36,7 @@
 .label {
   display: block;
   color: var(--color-text-muted);
-  font-size: 0.5625rem;
+  font-size: var(--character-sheet-font-label);
   font-weight: 750;
   line-height: var(--line-height-tight);
 }
@@ -47,14 +47,14 @@
   display: block;
   width: 100%;
   min-width: 0;
-  min-height: 1.5rem;
+  min-height: var(--character-sheet-control-min-height);
   margin-top: 0.125rem;
   border: var(--border-width) solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
   color: var(--color-text);
   padding: 0.1875rem 0.375rem;
-  font-size: var(--text-xs);
+  font-size: var(--character-sheet-font-control);
   line-height: var(--line-height-tight);
 }
 
@@ -87,7 +87,7 @@
   display: grid;
   justify-items: center;
   gap: 0.125rem;
-  font-size: var(--text-xs);
+  font-size: var(--character-sheet-font-control);
   line-height: var(--line-height-tight);
 }
 
@@ -170,6 +170,9 @@
 }
 
 .credit {
+  --character-sheet-font-label: var(--character-sheet-font-label-dense);
+  --character-sheet-font-control: var(--text-xs);
+
   margin-top: var(--space-3);
   padding: var(--space-2);
   border: var(--border-width) solid var(--color-border);
@@ -183,6 +186,9 @@
 }
 
 .experience {
+  --character-sheet-font-label: var(--character-sheet-font-label-dense);
+  --character-sheet-font-control: var(--text-xs);
+
   margin-top: var(--space-2);
   padding: var(--space-2);
   border: var(--border-width) solid var(--color-border);
@@ -216,7 +222,7 @@
 .metricLabel {
   display: block;
   color: var(--color-text-muted);
-  font-size: 0.5625rem;
+  font-size: var(--character-sheet-font-label);
   font-weight: 750;
   line-height: var(--line-height-tight);
 }
@@ -227,7 +233,7 @@
 
 .metricTooltip {
   display: block;
-  font-size: 0.5625rem;
+  font-size: var(--character-sheet-font-label);
   line-height: var(--line-height-tight);
 }
 

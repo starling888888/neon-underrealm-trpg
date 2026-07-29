@@ -6,6 +6,7 @@
 
 .line {
   display: grid;
+  min-height: var(--character-sheet-list-row-min-height);
   min-width: 0;
   grid-template-columns: 1.25rem minmax(4rem, 1.1fr) 2.5rem 4.75rem 3.75rem 2.75rem 2.75rem 2rem var(
       --character-sheet-action-button-size
@@ -20,10 +21,10 @@
 .headerRow > * {
   display: grid;
   min-width: 0;
-  min-height: 1.75rem;
+  min-height: var(--character-sheet-list-row-min-height);
   place-items: center;
   padding: 0.125rem 0.25rem;
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   white-space: nowrap;
 }
 
@@ -82,25 +83,15 @@
   min-width: 0;
   place-items: center;
   padding: 0.125rem 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1.25;
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
 }
 
 .quantityInput {
-  box-sizing: border-box;
+  composes: tableNumericInput from "./CharacterSheetFormList.module.css";
   width: calc(100% - 0.5rem);
-  min-width: 0;
   align-self: center;
   justify-self: center;
-  border: var(--border-width) solid var(--color-example-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
-  font-size: 0.75rem;
-  font-weight: 750;
-  padding: 0.125rem;
-  text-align: center;
 }
 
 .detailsToggle {
@@ -117,7 +108,7 @@
   margin: 0;
   border-top: var(--border-width) solid var(--color-border);
   padding: var(--space-2);
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   line-height: var(--line-height-normal);
   overflow-wrap: anywhere;
   white-space: pre-wrap;
@@ -155,7 +146,7 @@
   }
 
   .headerRow {
-    font-size: 0.625rem;
+    font-size: var(--character-sheet-font-table-mobile-label);
   }
 
   .headerRow > *,
@@ -163,12 +154,12 @@
   .detailsToggle,
   .quantityInput {
     padding-inline: 0.125rem;
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-control);
   }
 
   .itemPicker {
     padding: var(--space-1);
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
 
   .chooseIcon {
@@ -181,7 +172,7 @@
   }
 
   .details {
-    font-size: 0.75rem;
+    font-size: var(--character-sheet-font-table);
   }
 
   .mobileDetailsMetadata {
@@ -190,7 +181,7 @@
     gap: var(--space-1);
     margin-bottom: var(--space-2);
     color: var(--color-text-muted);
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
 
   .mobileDetailsMetadata > span {

@@ -262,6 +262,7 @@ function SkillRow({
             <input
               aria-invalid={hasError || undefined}
               aria-label={`${accessibilityName}${skillCopy.level}`}
+              className={styles.levelNumericInput}
               max={row.skill?.maxLevel}
               min="1"
               onBlur={(event) => {

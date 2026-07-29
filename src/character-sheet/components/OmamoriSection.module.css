@@ -6,6 +6,7 @@
 
 .line {
   display: grid;
+  min-height: var(--character-sheet-list-row-min-height);
   min-width: 0;
   grid-template-columns: 1.25rem minmax(7rem, 1.1fr) 2.5rem minmax(14rem, 2.3fr) 0 var(
       --character-sheet-action-button-size
@@ -20,7 +21,7 @@
 .headerRow > * {
   display: grid;
   min-width: 0;
-  min-height: 1.75rem;
+  min-height: var(--character-sheet-list-row-min-height);
   place-items: center;
   padding: 0.125rem 0.25rem;
   white-space: nowrap;
@@ -77,8 +78,8 @@
   min-width: 0;
   place-items: center;
   padding: 0.125rem 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1.25;
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
 }
 
 .effect,
@@ -94,7 +95,7 @@
 
 .effect {
   padding: var(--space-1) var(--space-2);
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   line-height: var(--line-height-normal);
 }
 
@@ -143,19 +144,19 @@
   }
 
   .headerRow {
-    font-size: 0.625rem;
+    font-size: var(--character-sheet-font-table-mobile-label);
   }
 
   .headerRow > *,
   .cell,
   .detailsToggle {
     padding-inline: 0.125rem;
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
 
   .itemPicker {
     padding: var(--space-1);
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
 
   .chooseIcon {
@@ -175,7 +176,7 @@
     display: block;
     border-top: var(--border-width) solid var(--color-border);
     padding: var(--space-2);
-    font-size: 0.75rem;
+    font-size: var(--character-sheet-font-table);
     line-height: var(--line-height-normal);
   }
 }

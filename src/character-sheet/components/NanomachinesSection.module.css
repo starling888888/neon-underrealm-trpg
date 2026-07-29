@@ -5,6 +5,7 @@
 
 .line {
   display: grid;
+  min-height: var(--character-sheet-list-row-min-height);
   min-width: 0;
   grid-template-columns: 3.5rem minmax(5.5rem, 1fr) 2.5rem 3.5rem 3.5rem 2rem var(
       --character-sheet-action-button-size
@@ -21,10 +22,10 @@
 .part {
   display: grid;
   min-width: 0;
-  min-height: 2rem;
+  min-height: var(--character-sheet-list-row-min-height);
   place-items: center;
   padding: 0.125rem 0.25rem;
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
 }
 
 .headerRow > :nth-child(2) {
@@ -71,7 +72,7 @@
   margin: 0;
   border-top: var(--border-width) solid var(--color-border);
   padding: var(--space-2);
-  font-size: 0.75rem;
+  font-size: var(--character-sheet-font-table);
   line-height: var(--line-height-normal);
   overflow-wrap: anywhere;
   white-space: pre-wrap;
@@ -103,8 +104,8 @@
   grid-template-columns: 5.25rem auto minmax(4.75rem, auto) auto 5.25rem;
   align-items: center;
   gap: 0.125rem;
-  font-size: 0.75rem;
-  line-height: 1.25;
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
   text-align: right;
 }
 
@@ -134,17 +135,8 @@
 }
 
 .modifierInput {
-  box-sizing: border-box;
+  composes: tableNumericInput from "./CharacterSheetFormList.module.css";
   width: 2.25rem;
-  min-width: 0;
-  border: var(--border-width) solid var(--color-example-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
-  font-weight: 750;
-  padding: 0.125rem;
-  text-align: center;
 }
 
 .summary[data-invalid="true"] .finalValue {
@@ -173,12 +165,12 @@
   .cell,
   .part {
     padding-inline: 0.125rem;
-    font-size: 0.625rem;
+    font-size: var(--character-sheet-font-table-mobile-label);
   }
 
   .itemPicker {
     padding: var(--space-1);
-    font-size: 0.6875rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
   }
 
   .chooseIcon {
@@ -187,6 +179,6 @@
   }
 
   .summaryLabel {
-    font-size: 0.625rem;
+    font-size: var(--character-sheet-font-table-mobile-label);
   }
 }

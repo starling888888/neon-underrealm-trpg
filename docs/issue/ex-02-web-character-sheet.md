@@ -326,6 +326,46 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [ ] `npm run check` が通る
 - [ ] `npm run build` が通る
 
+## レビュー指摘 6
+
+### 指摘事項
+
+- キャラクターシートの入力欄、読み取り専用表示欄、ラベルのfont sizeとfont指定を棚卸しし、階層を保てる範囲で統一する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - font familyは`--font-sans`を全体で継承しており、Componentごとのfont family指定はない。
+  - 直接入力は主に`--text-xs`、重要な算出値は`--text-sm`、一覧本文は`0.75rem`、フィールドlabelは`0.5625rem`だが、同じ値が複数Componentに直接記述されている。
+  - mobileの密集表は`0.625rem`と`0.6875rem`を使い分けており、viewportの情報密度を保つため単一サイズには統合しない。
+  - 2026-07-29のユーザー画面確認により、PC名〜性別、流儀・生き様の選択とLv、体力増加〜精神力増加ではfield labelが小さすぎる。入力・算出値の標準文字は変更しない。信用〜共通スキルレベル合計／共通スキル上限と画像D&D案内は密集表示のため既存サイズを維持する。
+  - 同日、ユーザーは`体力増加`〜`精神力係数`、`共通スキルボーナス`、副能力値の`最大体力`〜`結べる縁`、覚悟効果の`気絶からの回復`〜`受動判定`を`--text-xs`、muted color、bold（750）へ統一するよう指示した。縁の`対象`・`関係`・`覚悟`は既存表示を維持する。
+  - 同日、ユーザーは共通スキルボーナスを除く読み取り専用の数値枠と、文字・数値・selectの直接入力を`--text-xs`と共通の最小高へ統一するよう指示した。checkbox、textarea、一覧の操作buttonは対象外とする。
+  - 同日、ユーザーは数値inputに付いた個別のbold指定をすべて外し、通常weightへ統一するよう指示した。読み取り専用の数値枠とラベルのweightは変更しない。
+  - 同日、ユーザーはスキル、武器・防具、各専用アイテムの一覧rowと列headerの最小高を、並べ替えcontrolsを収める高さへ統一するよう指示した。
+
+### 対応方針
+
+- `CharacterSheetFormPresenter`に、label、直接入力、重要な算出値、一覧本文、mobile一覧の文字tokenを定義する。
+- 通常のfield labelは`--text-xs`へ上げる。信用・経験点の密集grid、能力値grid、補助labelはlocal overrideで既存の小さい文字を維持する。直接入力・算出値、縁の列header・補助文は既存サイズを維持する。`体力増加`〜`精神力係数`、`共通スキルボーナス`、副能力値の`最大体力`〜`結べる縁`、覚悟効果の`気絶からの回復`〜`受動判定`は`--text-xs`、muted color、bold（750）へ揃える。
+- 共通の読み取り専用数値枠は`--text-xs`と`1.625rem`の最小高を持つ。直接編集する文字・数値・selectも同じfont sizeと最小高を使う。項目表内の数値inputもこの指定を優先する。
+- 全ての数値inputはフォーム共通で`font-weight: normal`を明示する。項目表の親要素にあるbold指定を継承しない。
+- `CharacterSheetFormList`の一覧rowとreorder controls、各一覧の列header、各rowの主lineは`2.25rem`の共通最小高を使う。reorder controlsを持たない防具を含め、内容はrow内で中央配置する。
+- CSS監査では、local overrideを持たない`--character-sheet-font-supporting`を削除し、table数値input（Lv、数量、修正）の共通styleを`CharacterSheetFormList`へ集約する。grid列幅、section固有の余白、dialog固有の情報密度は共通化しない。
+- 基本情報、ビルド、副能力値、縁、判定、スキル、アイテム一覧の共有指定をtokenへ接続する。font family、section見出し、dialog固有の密集レイアウト、色、余白、操作順は変更しない。
+- desktop / tablet / mobileで既存の文字サイズ階層と横overflowなしを確認する。canonical baseline更新は別途ユーザー指示時に限る。
+
+### 対応完了チェックリスト
+
+- [ ] field labelと直接入力の文字指定が共通tokenを使う
+- [ ] 重要な算出値と一覧本文の文字指定が共通tokenを使う
+- [ ] mobile一覧の縮小文字を専用tokenで維持する
+- [ ] desktop / tablet / mobileで文字階層と横overflowを確認する
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。
