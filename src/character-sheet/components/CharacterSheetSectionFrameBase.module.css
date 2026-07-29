@@ -1,0 +1,35 @@
+.frame {
+  overflow: clip;
+  min-width: 0;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.allowOverflow {
+  overflow: visible;
+}
+
+.headingSurface {
+  min-height: var(--sheet-section-toggle-height, 2.25rem);
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 800;
+  line-height: var(--line-height-tight);
+}
+
+.content {
+  min-width: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--sheet-section-content-padding, var(--space-3));
+}
+
+.chevron {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 0.125rem solid currentcolor;
+  border-bottom: 0.125rem solid currentcolor;
+  transition: transform 120ms ease-out;
+}

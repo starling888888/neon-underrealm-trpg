@@ -1,14 +1,9 @@
 .frame {
-  overflow: clip;
-  min-width: 0;
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-soft);
+  composes: frame from "./CharacterSheetSectionFrameBase.module.css";
 }
 
 .allowOverflow {
-  overflow: visible;
+  composes: allowOverflow from "./CharacterSheetSectionFrameBase.module.css";
 }
 
 .heading {
@@ -17,32 +12,22 @@
 }
 
 .toggle {
+  composes: headingSurface from "./CharacterSheetSectionFrameBase.module.css";
   display: flex;
   width: 100%;
-  min-height: var(--sheet-section-toggle-height, 2.25rem);
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
   border: 0;
-  background: var(--color-surface-muted);
-  color: var(--color-text);
   cursor: pointer;
-  font: inherit;
-  font-weight: 800;
-  line-height: var(--line-height-tight);
   text-align: left;
 }
 
 .staticTitle {
+  composes: headingSurface from "./CharacterSheetSectionFrameBase.module.css";
   display: block;
-  min-height: var(--sheet-section-toggle-height, 2.25rem);
   padding: var(--space-2) var(--space-3);
-  background: var(--color-surface-muted);
-  color: var(--color-text);
-  font: inherit;
-  font-weight: 800;
-  line-height: var(--line-height-tight);
 }
 
 .toggle:hover {
@@ -55,11 +40,9 @@
 }
 
 .chevron {
-  width: 0.5rem;
-  height: 0.5rem;
+  composes: chevron from "./CharacterSheetSectionFrameBase.module.css";
   flex: 0 0 auto;
-  border-right: 0.125rem solid var(--color-link);
-  border-bottom: 0.125rem solid var(--color-link);
+  color: var(--color-link);
   transform: rotate(45deg) translateY(-0.125rem);
   transition: transform 120ms ease-out;
 }
@@ -69,9 +52,7 @@
 }
 
 .content {
-  min-width: 0;
-  padding: var(--sheet-section-content-padding, var(--space-3));
-  border-top: var(--border-width) solid var(--color-border);
+  composes: content from "./CharacterSheetSectionFrameBase.module.css";
 }
 
 .content[hidden] {

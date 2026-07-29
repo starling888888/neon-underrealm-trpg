@@ -374,6 +374,7 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - `非戦闘技能`は`CharacterSheetSectionFrame`を使わず、表示に関わるpropsだけを受ける専用Componentとする。初期状態は折りたたみ、見出し横のtooltipと、折りたたみ時に得意技能だけを残す既存の表示を持つ。
 - `縁`内の`覚悟の効果`、`武器・防具`内の`武器`と`防具`も、見出しレベル`h3`の`CharacterSheetSectionFrame`へ統一する。
 - `非戦闘技能`だけは初期状態で折りたたみ、ほかの対象subsectionは初期状態で展開する。非戦闘技能以外の文字サイズ差とtooltipの見た目は今回の確認対象から除く。
+- `CharacterSheetSectionFrame`、`NoncombatChecksSection`、`SpecialItemCategorySection`で重複するframeのCSSを共通化し、後続の専用Sectionでも同じ基礎styleを再利用できるようにする。
 
 ### 判定
 
@@ -383,12 +384,14 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
   - `CharacterSheetSectionFrame`は、section外枠、heading、初期展開状態の開閉を共通で持ち、親sectionではすでに`h2`の見出しに利用している。
   - `ChecksSection`の`攻撃`、`リアクション`、`非戦闘技能`、`BondsSection`の`覚悟の効果`、`WeaponsAndArmorSection`の`武器`と`防具`は、現在それぞれ個別のsection / heading実装であり、frameの外枠と開閉操作を持たない。
   - 最新のユーザー指示により、非戦闘技能は専用Componentへ分離し、初期折りたたみ、見出しtooltip、得意技能だけを残す折りたたみ表示をComponent自身が持つ。これは`CharacterSheetSectionFrame`の責務を拡張せずに実現できる。
+  - `SpecialItemCategorySection`は現在`CharacterSheetSectionFrame.module.css`を直接composeし、`NoncombatChecksSection`は同じframe基礎styleを複製している。共通する外枠、見出しsurface、content、chevronの基礎styleを独立CSS moduleへ置ける。
 
 ### 対応方針
 
 - `CharacterSheetSectionFrame`は変更せず、既存の初期展開・開閉仕様を使う。
 - `攻撃`、`リアクション`、`覚悟の効果`、`武器`、`防具`の5 subsectionを`expandable`かつ`headingAs="h3"`の共通Frameへ置く。
 - `NoncombatChecksSection`を新設し、内部に初期折りたたみの開閉状態、tooltip、展開時の15行、折りたたみ時の得意技能だけのgridを閉じ込める。propsは行の表示値と得意技能・修正のcallbackだけに限定する。
+- `CharacterSheetSectionFrameBase.module.css`へframeの基礎styleを抽出する。各Componentはこのmoduleをcomposeし、開閉操作、tooltip、warning、remove actionなど構造固有のstyleだけをローカルに残す。
 - 非戦闘技能以外のtooltip内容・fontの微差は今回の対象外とする。ゲームデータ、入力・算出、操作callback、親sectionの開閉状態は変更しない。
 
 ### 対応完了チェックリスト
@@ -398,6 +401,7 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] 非戦闘技能は初期折りたたみで、折りたたみ時に得意技能だけを表示する
 - [x] 攻撃、リアクション、覚悟の効果、武器、防具は初期展開する
 - [x] 入力・算出、操作callbackを維持し、見出しtooltipをComponent内で維持する
+- [x] 3種のframeが共通CSS moduleから基礎styleを再利用する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 

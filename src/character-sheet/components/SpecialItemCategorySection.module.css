@@ -1,14 +1,15 @@
 .frame {
-  composes: frame from "./CharacterSheetSectionFrame.module.css";
+  composes: frame from "./CharacterSheetSectionFrameBase.module.css";
   position: relative;
 }
 
 .heading {
-  composes: staticTitle from "./CharacterSheetSectionFrame.module.css";
+  composes: headingSurface from "./CharacterSheetSectionFrameBase.module.css";
   min-width: 0;
   flex: 1;
   margin: 0;
   font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-3);
 }
 
 .headingRow {
@@ -29,5 +30,5 @@
 }
 
 .content {
-  composes: content from "./CharacterSheetSectionFrame.module.css";
+  composes: content from "./CharacterSheetSectionFrameBase.module.css";
 }
