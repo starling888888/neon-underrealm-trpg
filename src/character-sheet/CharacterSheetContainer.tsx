@@ -13,11 +13,13 @@ import OmamoriPickerDialog from "./components/dialogs/OmamoriPickerDialog";
 import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
 import SkillSelectionChangeConfirmDialog from "./components/dialogs/SkillSelectionChangeConfirmDialog";
+import SpecialItemCategoryRemoveConfirmDialog from "./components/dialogs/SpecialItemCategoryRemoveConfirmDialog";
 import WeaponPickerDialog from "./components/dialogs/WeaponPickerDialog";
 import type { NanomachinesPickerTarget } from "./components/NanomachinesSection";
 import SkillPickerDialog from "./components/skills/SkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
+import type { SpecialItemCategoryId } from "./form-values";
 import { getCyberneticCandidateGroups } from "./master-data/cybernetics";
 import { getDrugs } from "./master-data/drugs";
 import { getNanomachines } from "./master-data/nanomachines";
@@ -69,6 +71,8 @@ export default function CharacterSheetContainer() {
     useState(false);
   const [isOtherRyugiRemoveConfirmOpen, setIsOtherRyugiRemoveConfirmOpen] =
     useState(false);
+  const [specialItemCategoryToRemove, setSpecialItemCategoryToRemove] =
+    useState<SpecialItemCategoryId | null>(null);
   const primarySkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const ikizamaSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const commonSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
@@ -84,10 +88,12 @@ export default function CharacterSheetContainer() {
   const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const otherRyugiRemoveTriggerRef = useRef<HTMLButtonElement>(null);
   const otherRyugiAddButtonRef = useRef<HTMLButtonElement>(null);
+  const specialItemCategoryRemoveTriggerRef = useRef<HTMLButtonElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiRemoveRef = useRef<(() => void) | null>(null);
+  const pendingSpecialItemCategoryRemoveRef = useRef<(() => void) | null>(null);
   const presenterProps = useCharacterSheetFormPresenterProps(
     rootState.form,
     {
@@ -216,6 +222,15 @@ export default function CharacterSheetContainer() {
         weaponPickerTriggerRef.current = trigger;
         setWeaponPickerRowId(rowId);
       },
+      onSpecialItemCategoryRemoveRequested: (
+        category,
+        trigger,
+        applyRemoval,
+      ) => {
+        specialItemCategoryRemoveTriggerRef.current = trigger;
+        pendingSpecialItemCategoryRemoveRef.current = applyRemoval;
+        setSpecialItemCategoryToRemove(category);
+      },
     },
   );
 
@@ -298,6 +313,17 @@ export default function CharacterSheetContainer() {
   function closeOtherRyugiRemoveConfirm(): void {
     pendingOtherRyugiRemoveRef.current = null;
     setIsOtherRyugiRemoveConfirmOpen(false);
+  }
+
+  function confirmSpecialItemCategoryRemove(): void {
+    pendingSpecialItemCategoryRemoveRef.current?.();
+    pendingSpecialItemCategoryRemoveRef.current = null;
+    setSpecialItemCategoryToRemove(null);
+  }
+
+  function closeSpecialItemCategoryRemoveConfirm(): void {
+    pendingSpecialItemCategoryRemoveRef.current = null;
+    setSpecialItemCategoryToRemove(null);
   }
   return (
     <>
@@ -559,6 +585,13 @@ export default function CharacterSheetContainer() {
           onConfirm={confirmOtherRyugiRemove}
           onRequestClose={closeOtherRyugiRemoveConfirm}
           returnFocusRef={otherRyugiRemoveTriggerRef}
+        />
+        <SpecialItemCategoryRemoveConfirmDialog
+          category={specialItemCategoryToRemove}
+          isOpen={specialItemCategoryToRemove !== null}
+          onConfirm={confirmSpecialItemCategoryRemove}
+          onRequestClose={closeSpecialItemCategoryRemoveConfirm}
+          returnFocusRef={specialItemCategoryRemoveTriggerRef}
         />
       </div>
       <CharacterSheetLoadingOverlay

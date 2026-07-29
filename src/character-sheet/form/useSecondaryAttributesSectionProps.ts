@@ -21,6 +21,8 @@ export type SecondaryAttributesSectionPresenterState = {
 export default function useSecondaryAttributesSectionProps(
   { control, setValue }: UseFormReturn<CharacterSheetFormValues>,
   derivedBuild: BuildDerivedValues,
+  maximumHealthBonus = 0,
+  showNanomachineHealthBonus = false,
 ): SecondaryAttributesSectionPresenterState {
   const secondaryAttributes = useWatch({
     control,
@@ -30,6 +32,7 @@ export default function useSecondaryAttributesSectionProps(
   const derivedSecondaryAttributes = calculateSecondaryAttributes(
     derivedBuild,
     secondaryAttributes,
+    maximumHealthBonus,
   );
 
   function setSecondaryAttributeValue(
@@ -52,6 +55,9 @@ export default function useSecondaryAttributesSectionProps(
     derivedSecondaryAttributes,
     sectionProps: {
       derived: derivedSecondaryAttributes,
+      healthFormulaSuffix: showNanomachineHealthBonus
+        ? " +埋め込み中のナノマシンの消費精神力の最大値"
+        : undefined,
       onNumberChange: setSecondaryAttributeValue,
       onTemporaryAppliedChange: (field, checked) => {
         setValue(`secondaryAttributes.${field}`, checked, {

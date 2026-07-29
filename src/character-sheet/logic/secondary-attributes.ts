@@ -12,6 +12,7 @@ export type SecondaryAttributeDerivedValues = {
   baseMovement: number | null;
   bondLimit: number;
   health: number | null;
+  maximumHealthBonus: number;
   mental: number | null;
   movement: number | null;
 };
@@ -96,6 +97,7 @@ export function calculateSecondaryAttributes(
       baseHealth === null
         ? null
         : baseHealth + secondaryAttributes.healthModifier + maximumHealthBonus,
+    maximumHealthBonus,
     mental: addModifier(baseMental, secondaryAttributes.mentalModifier),
     movement: addModifier(baseMovement, secondaryAttributes.movementModifier),
   };

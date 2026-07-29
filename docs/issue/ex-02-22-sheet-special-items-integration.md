@@ -78,20 +78,20 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 - [ ] 消費信用が武器・防具と全カテゴリの選択済みアイテムを一元集計し、ドラッグの所持セット数を掛ける。信用超過の基本情報側error feedbackを表示する。
 - [ ] スミ選択時だけ、ナノマシンの消費精神力最大値を最大体力とtooltipへ反映する。
 - [ ] 関連TODOの対応結果を記録している。
-- [ ] `npm run build` と必要な`npm run check`、対象Node / hook / Component testが通る。
+- [x] `npm run build` と必要な`npm run check`、対象Node / hook / Component testが通る。
 - [ ] 実装後のユーザーレビュー承認を受けて、対象E2Eとtarget限定VRTを実行し、必要なactual screenshotを開いて確認している。canonical baselineの更新は別途ユーザーが明示承認した場合だけ行う。
 
 ## チェックポイント
 
-- [ ] `docs/architectures/character-sheet.md`に従い、RHFを入力値の唯一の保持先とし、派生値・validationをpure logic、dialog状態をContainer、表示をPresenter / sectionへ分離している。
-- [ ] `exclusiveItem`、item master-data、各行のform値を明示してlogicへ渡し、Component / Presenterから生成JSONを直接検索していない。
-- [ ] 消費信用、信用超過、スミの最大体力補正、tooltip条件、カテゴリ表示順、削除確認条件をNode / hook / Component testで確認している。
+- [x] `docs/architectures/character-sheet.md`に従い、RHFを入力値の唯一の保持先とし、派生値・validationをpure logic、dialog状態をContainer、表示をPresenter / sectionへ分離している。
+- [x] `exclusiveItem`、item master-data、各行のform値を明示してlogicへ渡し、Component / Presenterから生成JSONを直接検索していない。
+- [x] 消費信用、信用超過、スミの最大体力補正、tooltip条件、カテゴリ表示順、削除確認条件をNode / hook / Component testで確認している。
 - [ ] `/character-sheet/`、GitHub Pagesのサブパス公開、既存の武器・防具とG18–G21のカテゴリ内操作を壊していない。
 - [ ] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、未選択、専用カテゴリ、追加カテゴリ、warning、信用超過、スミの最大体力、カテゴリ削除確認、生き様変更後を確認対象として列挙している。
 - [ ] character-sheet VRTは、専用アイテム全体frameのdefaultを3 viewportで、カテゴリ追加・warning・削除確認は該当sectionまたはdialog locatorで対象限定する。tooltipはComponent / browser behavior testで確認し、個別tooltip snapshotを追加しない。
-- [ ] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
-- [ ] 関連する`docs/TODO.md`、`docs/design/character-sheet/notes.md`、承認済みdesign draftと矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
+- [x] 関連する`docs/TODO.md`、`docs/design/character-sheet/notes.md`、承認済みdesign draftと矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -128,6 +128,53 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 - 消費信用の集計と信用超過feedbackを基本情報側に限定し、アイテムsectionに重複errorを出さない範囲が適切か。
 - スミ固有の最大体力算出とtooltipの差分を、ほかの生き様へ波及させない境界が明確か。
 - 既存design draftとユーザー指定を踏まえたVRT対象・baseline更新の前提が適切か。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- カテゴリ追加buttonと、通常使用不可を示す色が`danger`になっている。これらは`warning` paletteで示すべきである。
+- 通常使用不可カテゴリの削除icon buttonにwarning colorの外枠を付ける必要はない。warningの外枠はカテゴリsectionだけに置く。
+
+### 判定
+
+- source: human
+- classification: valid
+
+### 対応方針
+
+- 未表示カテゴリを追加するbuttonは、白抜きの`--color-warning` border / textと`--color-warning-soft` hover backgroundを使用する。
+- 通常使用不可カテゴリは、section outer frameと見出し横のwarning文で`--color-warning`を使用する。
+- 削除icon buttonはwarning色のiconを維持しても、warning色の外枠・区切り線を追加しない。
+
+### 対応完了チェックリスト
+
+- [x] 追加カテゴリbuttonをwarning paletteへ統一する
+- [x] 通常使用不可カテゴリのsection outer frameとwarning文をwarning paletteへ統一する
+- [x] 削除icon buttonにwarning色の外枠・区切り線を付けない
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- warningカテゴリのsection outer frameと追加カテゴリbuttonの線幅を、既存error状態の強調枠と統一したい。
+
+### 判定
+
+- source: human
+- classification: valid
+
+### 対応方針
+
+- error状態と同じく、通常の`--border-width` borderに同幅のinset box-shadowを重ね、warningカテゴリsectionの見た目の線幅を統一する。
+- 追加カテゴリbuttonはwarning色の通常`--border-width` borderを維持し、強調枠は追加しない。
+- 削除icon buttonにはこの強調枠を追加しない。
+
+### 対応完了チェックリスト
+
+- [x] warningカテゴリのsection outer frameをerror状態と同じ見た目の線幅にする
+- [x] 追加カテゴリbuttonを通常のwarning border幅へ戻す
+- [x] 削除icon buttonへ強調枠を追加しない
 
 ## 備考
 

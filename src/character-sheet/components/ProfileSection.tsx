@@ -76,6 +76,7 @@ export type ProfileSectionProps = {
   onCreditChange: (field: CreditFieldName, value: string) => void;
   onProfileChange: (field: ProfileFieldName, value: string) => void;
   profile: ProfileValues;
+  spentCredit?: number;
 };
 
 type CharacterImageFieldProps = {
@@ -364,6 +365,7 @@ export default function ProfileSection({
   onCreditChange,
   onProfileChange,
   profile,
+  spentCredit = 0,
 }: ProfileSectionProps) {
   const [isSettingExpanded, setIsSettingExpanded] = useState(false);
   const settingContentId = "character-sheet-setting-content";
@@ -446,7 +448,11 @@ export default function ProfileSection({
           onImageOperationStarted={onCharacterImageOperationStarted}
         />
       </div>
-      <section aria-label={creditTerms.name} className={styles.credit}>
+      <section
+        aria-label={creditTerms.name}
+        className={styles.credit}
+        data-invalid={creditSummary.change < 0 || undefined}
+      >
         <div className={styles.creditGrid}>
           <CreditField
             label={creditTerms.acquired}
@@ -477,7 +483,8 @@ export default function ProfileSection({
           <ReadOnlyCreditField
             formula={characterSheet.credit.formulas.consumed}
             label={creditTerms.consumed}
-            value={0}
+            invalid={creditSummary.change < 0}
+            value={spentCredit}
           />
           <CreditField
             allowNegative

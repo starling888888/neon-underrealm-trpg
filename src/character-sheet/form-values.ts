@@ -245,6 +245,20 @@ export type DrugsValues = {
   rows: DrugRowValues[];
 };
 
+export const specialItemCategoryIds = [
+  "omamori",
+  "cybernetics",
+  "nanomachines",
+  "drugs",
+] as const;
+
+export type SpecialItemCategoryId = (typeof specialItemCategoryIds)[number];
+
+/** User-controlled visible category order. The ikizama category is derived. */
+export type SpecialItemsValues = {
+  categories: SpecialItemCategoryId[];
+};
+
 function createInitialBondRows(): BondValues[] {
   return Array.from({ length: 4 }, (_, index) => ({
     isResolved: false,
@@ -326,6 +340,7 @@ export type CharacterSheetFormValues = {
   primarySkills: PrimarySkillsValues;
   profile: ProfileValues;
   secondaryAttributes: SecondaryAttributeValues;
+  specialItems: SpecialItemsValues;
   weapons: WeaponsValues;
 };
 
@@ -480,6 +495,9 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     healthModifier: 0,
     mentalModifier: 0,
     movementModifier: 0,
+  },
+  specialItems: {
+    categories: [],
   },
   weapons: {
     rows: createInitialWeaponRows(),

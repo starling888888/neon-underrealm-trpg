@@ -21,6 +21,7 @@ import useOtherRyugiSkillsSectionProps from "./useOtherRyugiSkillsSectionProps";
 import usePrimarySkillsSectionProps from "./usePrimarySkillsSectionProps";
 import useProfileSectionProps from "./useProfileSectionProps";
 import useSecondaryAttributesSectionProps from "./useSecondaryAttributesSectionProps";
+import useSpecialItemsSectionProps from "./useSpecialItemsSectionProps";
 import useWeaponsAndArmorSectionProps from "./useWeaponsAndArmorSectionProps";
 
 type CharacterSheetPresenterOptions = {
@@ -74,6 +75,11 @@ type CharacterSheetPresenterOptions = {
     trigger: HTMLButtonElement,
   ) => void;
   onWeaponPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
+  onSpecialItemCategoryRemoveRequested: (
+    category: import("../form-values").SpecialItemCategoryId,
+    trigger: HTMLButtonElement,
+    applyRemoval: () => void,
+  ) => void;
 };
 
 export type CharacterSheetContainerPresenterState =
@@ -123,6 +129,7 @@ export default function useCharacterSheetFormPresenterProps(
     onNanomachinesPickerRequested,
     onOmamoriPickerRequested,
     onWeaponPickerRequested,
+    onSpecialItemCategoryRemoveRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
   const commonSkills = useCommonSkillsSectionProps(form, {
@@ -131,9 +138,26 @@ export default function useCharacterSheetFormPresenterProps(
   const otherRyugiSkills = useOtherRyugiSkillsSectionProps(form, {
     onPickerRequest: onOtherRyugiSkillPickerRequested ?? (() => {}),
   });
+  const specialItems = useSpecialItemsSectionProps(form, {
+    onRemoveRequested: onSpecialItemCategoryRemoveRequested,
+  });
   const build = useBuildSectionProps(form, {
     commonSkillLevelTotal: commonSkills.sectionProps.selectedLevelTotal,
-    onIkizamaChangeRequested,
+    onIkizamaChangeRequested: (ikizamaId, trigger, applyChange) => {
+      const applyChangeAndUpdateCategories = () => {
+        specialItems.updateForIkizamaChange(ikizamaId);
+        applyChange();
+      };
+      if (onIkizamaChangeRequested !== undefined) {
+        onIkizamaChangeRequested(
+          ikizamaId,
+          trigger,
+          applyChangeAndUpdateCategories,
+        );
+        return;
+      }
+      applyChangeAndUpdateCategories();
+    },
     onOtherRyugiAdded: otherRyugiSkills.addInitialRow,
     otherRyugiAddButtonRef,
     onOtherRyugiChangeRequested,
@@ -143,6 +167,8 @@ export default function useCharacterSheetFormPresenterProps(
   const secondaryAttributes = useSecondaryAttributesSectionProps(
     form,
     build.derivedBuild,
+    specialItems.maximumHealthBonus,
+    build.sectionProps.build.ikizamaId === "sumi",
   );
   const bondsSection = useBondsSectionProps(
     form,
@@ -166,6 +192,7 @@ export default function useCharacterSheetFormPresenterProps(
     commonSkills.sectionProps.levelLimit,
     commonSkills.sectionProps.hasCommonSkillLevelError,
     build.onAcquiredExperienceChange,
+    specialItems.spentCredit,
   );
   const primarySkills = usePrimarySkillsSectionProps(form, {
     onPickerRequest: onPrimarySkillPickerRequested ?? (() => {}),
@@ -229,6 +256,7 @@ export default function useCharacterSheetFormPresenterProps(
     primarySkillsSection: primarySkills.sectionProps,
     profileSection,
     secondaryAttributesSection: secondaryAttributes.sectionProps,
+    specialItemsSection: specialItems.sectionProps,
     weaponsAndArmorSection: weaponsAndArmor,
   };
 }

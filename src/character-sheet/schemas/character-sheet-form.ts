@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import type { CreditFieldName, ResolveEffectName } from "../form-values";
+import {
+  type CreditFieldName,
+  type ResolveEffectName,
+  specialItemCategoryIds,
+} from "../form-values";
 
 const nonNegativeIntegerSchema = z.number().int().nonnegative();
 const signedIntegerSchema = z.number().int();
@@ -293,6 +297,9 @@ export const characterSheetFormSchema = z
       mentalModifier: z.number().int(),
       movementModifier: z.number().int(),
     }),
+    specialItems: z.object({
+      categories: z.array(z.enum(specialItemCategoryIds)),
+    }),
     weapons: z.object({
       rows: z
         .array(
@@ -359,6 +366,17 @@ export const characterSheetFormSchema = z
           path: ["drugs", "rows", index, "drugId"],
         });
       }
+    }
+
+    if (
+      new Set(values.specialItems.categories).size !==
+      values.specialItems.categories.length
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Special item categories must not repeat.",
+        path: ["specialItems", "categories"],
+      });
     }
 
     const seenReactionNames = new Set<string>();

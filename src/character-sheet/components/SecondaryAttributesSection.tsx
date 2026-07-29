@@ -44,6 +44,7 @@ type SecondaryRowProps = {
 
 export type SecondaryAttributesSectionProps = {
   derived: SecondaryAttributeDerivedValues;
+  healthFormulaSuffix?: string;
   onNumberChange: (
     field: NumericSecondaryAttributeField,
     value: string,
@@ -169,6 +170,7 @@ function SecondaryRow({
 
 export default function SecondaryAttributesSection({
   derived,
+  healthFormulaSuffix,
   onNumberChange,
   onTemporaryAppliedChange,
   secondaryAttributes,
@@ -181,7 +183,7 @@ export default function SecondaryAttributesSection({
     <div className={styles.grid}>
       <SecondaryRow
         baseValue={derived.baseHealth}
-        finalFormula={formulas.health}
+        finalFormula={`${formulas.health}${healthFormulaSuffix ?? ""}`}
         finalLabel={terms.maximumHealth}
         finalValue={derived.health}
         modifierField="healthModifier"

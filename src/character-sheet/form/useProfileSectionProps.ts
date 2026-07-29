@@ -18,6 +18,7 @@ export default function useProfileSectionProps(
   commonSkillLevelLimit: number,
   hasCommonSkillLevelError: boolean,
   onAcquiredExperienceChange: (value: string) => number,
+  spentCredit = 0,
 ): ProfileSectionProps {
   const profile = useWatch({
     control,
@@ -39,7 +40,7 @@ export default function useProfileSectionProps(
     changeAdjustment: credit.changeAdjustment,
     creditProvided: credit.provided,
     creditReceived: credit.received,
-    spentCredit: 0,
+    spentCredit,
   });
 
   return {

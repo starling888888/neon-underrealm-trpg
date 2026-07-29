@@ -28,7 +28,9 @@ import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
 import SecondaryAttributesSection, {
   type SecondaryAttributesSectionProps,
 } from "./SecondaryAttributesSection";
-import SpecialItemCategorySection from "./SpecialItemCategorySection";
+import SpecialItemsSection, {
+  type SpecialItemsSectionProps,
+} from "./SpecialItemsSection";
 import WeaponsAndArmorSection, {
   type WeaponsAndArmorSectionProps,
 } from "./WeaponsAndArmorSection";
@@ -53,6 +55,7 @@ export type CharacterSheetFormPresenterProps = {
   primarySkillsSection: PrimarySkillsSectionProps;
   profileSection: ProfileSectionProps;
   secondaryAttributesSection: SecondaryAttributesSectionProps;
+  specialItemsSection: SpecialItemsSectionProps;
   weaponsAndArmorSection: WeaponsAndArmorSectionProps;
 };
 
@@ -70,6 +73,7 @@ export default function CharacterSheetFormPresenter({
   primarySkillsSection,
   profileSection,
   secondaryAttributesSection,
+  specialItemsSection,
   weaponsAndArmorSection,
 }: CharacterSheetFormPresenterProps) {
   const { characterSheet, gameDomain } = characterSheetDictionary;
@@ -168,30 +172,15 @@ export default function CharacterSheetFormPresenter({
             className={styles.specialItemSections}
             data-character-sheet-section-slot="special-items"
           >
-            <SpecialItemCategorySection
-              id="omamori"
-              title={characterSheet.omamori.name}
-            >
-              <OmamoriSection {...omamoriSection} />
-            </SpecialItemCategorySection>
-            <SpecialItemCategorySection
-              id="cybernetics"
-              title={characterSheet.cybernetics.name}
-            >
-              <CyberneticsSection {...cyberneticsSection} />
-            </SpecialItemCategorySection>
-            <SpecialItemCategorySection
-              id="nanomachines"
-              title={characterSheet.nanomachines.name}
-            >
-              <NanomachinesSection {...nanomachinesSection} />
-            </SpecialItemCategorySection>
-            <SpecialItemCategorySection
-              id="drugs"
-              title={characterSheet.drugs.name}
-            >
-              <DrugsSection {...drugsSection} />
-            </SpecialItemCategorySection>
+            <SpecialItemsSection
+              {...specialItemsSection}
+              categories={{
+                cybernetics: <CyberneticsSection {...cyberneticsSection} />,
+                drugs: <DrugsSection {...drugsSection} />,
+                nanomachines: <NanomachinesSection {...nanomachinesSection} />,
+                omamori: <OmamoriSection {...omamoriSection} />,
+              }}
+            />
           </div>
         </CharacterSheetSectionFrame>
       </div>

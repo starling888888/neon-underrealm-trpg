@@ -85,6 +85,7 @@ describe("CharacterSheetContainer", () => {
       throw new Error("お守りmaster dataがありません。");
     render(<CharacterSheetContainer />);
 
+    await user.click(screen.getByRole("button", { name: "お守りを追加" }));
     await user.click(screen.getByRole("button", { name: "＋ お守りを追加" }));
     const trigger = screen.getByRole("button", {
       name: "お守り1：お守りを選択",
@@ -141,6 +142,8 @@ describe("CharacterSheetContainer", () => {
       throw new Error("サイバネmaster dataがありません。");
     render(<CharacterSheetContainer />);
 
+    await user.click(screen.getByRole("button", { name: "サイバネを追加" }));
+
     const headTrigger = screen.getByRole("button", {
       name: "頭：サイバネを選択",
     });
@@ -189,6 +192,8 @@ describe("CharacterSheetContainer", () => {
     }
     render(<CharacterSheetContainer />);
 
+    await user.click(screen.getByRole("button", { name: "ナノマシンを追加" }));
+
     const trigger = screen.getByRole("button", {
       name: "頭：ナノマシンを選択",
     });
@@ -219,6 +224,8 @@ describe("CharacterSheetContainer", () => {
       throw new Error("ドラッグmaster dataが不足しています。");
     }
     render(<CharacterSheetContainer />);
+
+    await user.click(screen.getByRole("button", { name: "ドラッグを追加" }));
 
     const firstTrigger = screen.getByRole("button", {
       name: "ドラッグ1：ドラッグを選択",
