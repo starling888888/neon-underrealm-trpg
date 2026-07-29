@@ -1,9 +1,9 @@
 ---
 import {
-  displayText,
-  displayValue,
+  formatDisplayText,
+  formatDisplayValue,
   type DisplayValue,
-} from "./card-display";
+} from "../../lib/utils/display-value";
 
 interface Props {
   anchorId?: string;
@@ -52,31 +52,31 @@ const {
 
     <p class="data-card-meta">
       <span>{timing}</span>
-      <span>{displayValue(cost)}</span>
-      <span>{displayValue(proficiency)}</span>
+      <span>{formatDisplayValue(cost)}</span>
+      <span>{formatDisplayValue(proficiency)}</span>
     </p>
 
     <dl class="data-card-details skill-card-details">
       <div class="data-card-detail skill-card-detail-acquisition">
         <dt>取得制限</dt>
-        <dd>{displayValue(acquisitionRestriction)}</dd>
+        <dd>{formatDisplayValue(acquisitionRestriction)}</dd>
       </div>
       <div class="data-card-detail skill-card-detail">
         <dt>使用制限</dt>
-        <dd>{displayValue(usageRestriction)}</dd>
+        <dd>{formatDisplayValue(usageRestriction)}</dd>
       </div>
       <div class="data-card-detail skill-card-detail">
         <dt>対象</dt>
-        <dd>{displayValue(target)}</dd>
+        <dd>{formatDisplayValue(target)}</dd>
       </div>
       <div class="data-card-detail skill-card-detail">
         <dt>射程</dt>
-        <dd>{displayValue(range)}</dd>
+        <dd>{formatDisplayValue(range)}</dd>
       </div>
     </dl>
 
     <div class="data-card-effect skill-card-effect">
-      <p class="data-card-rule skill-card-rule">{displayText(effect)}</p>
+      <p class="data-card-rule skill-card-rule">{formatDisplayText(effect)}</p>
     </div>
   </div>
 </article>
