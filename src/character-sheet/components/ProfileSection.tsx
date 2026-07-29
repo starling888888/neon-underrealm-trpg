@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-
+import { formatDisplayValue } from "../../lib/utils/display-value";
 import {
   type CharacterImageRecord,
   characterImageDataUrl,
@@ -18,7 +18,6 @@ import type {
   ProfileFieldName,
   ProfileValues,
 } from "../form-values";
-import { formatDisplayValue } from "../format-display-value";
 import type { BuildDerivedValues } from "../logic/build";
 import type { CreditSummary } from "../logic/credit";
 import DeleteButton from "./DeleteButton";

@@ -1,12 +1,16 @@
 import { useId, useRef } from "react";
 import type { Nanomachine } from "../../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../../lib/utils/display-value";
 import { characterSheetDictionary } from "../../dictionary";
-import { formatDisplayValue } from "../../format-display-value";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
 import styles from "./NanomachinesPickerDialog.module.css";
+import PickerTableHeader from "./PickerTableHeader";
 
 type Props = {
   candidates: readonly Nanomachine[];
@@ -48,12 +52,15 @@ export default function NanomachinesPickerDialog({
           <p className={styles.selectionGuide}>
             <strong>{copy.pickerGuide}</strong>
           </p>
-          <div className={styles.headerRow}>
-            <span>{copy.headers.name}</span>
-            <span>{copy.headers.credit}</span>
-            <span>{copy.headers.implantPoints}</span>
-            <span>{copy.headers.activationMentalCost}</span>
-          </div>
+          <PickerTableHeader
+            cells={[
+              { content: copy.headers.name },
+              { content: copy.headers.credit },
+              { content: copy.headers.implantPoints },
+              { content: copy.headers.activationMentalCost },
+            ]}
+            className={styles.headerRow}
+          />
           {candidates.map((nanomachine) => (
             <div className={styles.candidate} key={nanomachine.id}>
               <div className={styles.firstLine}>
@@ -70,7 +77,7 @@ export default function NanomachinesPickerDialog({
               </div>
               <p>
                 <strong>効果：</strong>
-                {nanomachine.effect}
+                {formatDisplayText(nanomachine.effect)}
               </p>
             </div>
           ))}

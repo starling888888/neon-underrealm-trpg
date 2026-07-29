@@ -1,13 +1,14 @@
 import { useId, useRef } from "react";
 
 import type { Armor } from "../../../lib/types/item";
+import { formatDisplayValue } from "../../../lib/utils/display-value";
 import { characterSheetDictionary } from "../../dictionary";
-import { formatDisplayValue } from "../../format-display-value";
 import styles from "./ArmorPickerDialog.module.css";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
+import PickerTableHeader from "./PickerTableHeader";
 
 type Props = {
   armors: readonly Armor[];
@@ -47,17 +48,22 @@ export default function ArmorPickerDialog({
           <p className={styles.selectionGuide}>
             <strong>{copy.armorPickerGuide}</strong>
           </p>
-          <div className={styles.headerRow}>
-            <span>{copy.headers.name}</span>
-            <span>{copy.headers.credit}</span>
-            <span>防御力</span>
-            <span className={styles.damageReductionHeader}>
-              {"ダメージ\n軽減"}
-            </span>
-            <span className={styles.restrictionHeader}>
-              {copy.headers.restriction}
-            </span>
-          </div>
+          <PickerTableHeader
+            cells={[
+              { content: copy.headers.name },
+              { content: copy.headers.credit },
+              { content: "防御力" },
+              {
+                className: styles.damageReductionHeader,
+                content: "ダメージ\n軽減",
+              },
+              {
+                className: styles.restrictionHeader,
+                content: copy.headers.restriction,
+              },
+            ]}
+            className={styles.headerRow}
+          />
           {armors.map((armor) => (
             <div className={styles.candidate} key={armor.id}>
               <div className={styles.firstLine}>

@@ -1,8 +1,7 @@
 import { useState } from "react";
-
+import { formatDisplayValue } from "../../lib/utils/display-value";
 import { characterSheetDictionary } from "../dictionary";
 import { attributeNames } from "../form-values";
-import { formatDisplayValue } from "../format-display-value";
 import type { ChecksDerivedValues } from "../logic/checks";
 import type { NoncombatSkillName } from "../master-data/noncombat-skills";
 import FormulaTooltip from "./FormulaTooltip";

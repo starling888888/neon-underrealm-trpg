@@ -18,6 +18,13 @@
   font-weight: var(--character-sheet-table-header-font-weight);
 }
 
+.listTableGrid {
+  display: grid;
+  min-width: 0;
+  min-height: var(--character-sheet-list-row-min-height);
+  align-items: stretch;
+}
+
 .pickerTableFirstLine > *:not(:last-child) {
   box-shadow: inset calc(var(--border-width) * -1) 0 var(--color-border);
 }

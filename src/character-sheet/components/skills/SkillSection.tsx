@@ -3,10 +3,13 @@ import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 import type { Skill } from "../../../lib/types/skill";
 import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../../lib/utils/display-value";
+import {
   characterSheetDictionary,
   getNamePickerTooltip,
 } from "../../dictionary";
-import { formatDisplayValue } from "../../format-display-value";
 import DeleteButton from "../DeleteButton";
 import FormulaTooltip from "../FormulaTooltip";
 import styles from "./SkillSection.module.css";
@@ -57,7 +60,9 @@ function formatCompactValue(
   value: string | null | undefined,
   separator: string,
 ) {
-  if (value === null || value === undefined || value === "") return "-";
+  if (value === null || value === undefined || value.trim() === "") {
+    return formatDisplayValue(value);
+  }
 
   return value
     .split(separator)
@@ -121,7 +126,7 @@ function SkillDetails({
       </div>
       <p className={styles.effect}>
         <span>{copy.effect}</span>
-        {skill?.effect ?? ""}
+        {formatDisplayText(skill?.effect)}
       </p>
     </div>
   );

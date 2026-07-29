@@ -2,9 +2,12 @@ import { ListPlus } from "lucide-react";
 import { useState } from "react";
 
 import type { Nanomachine } from "../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../lib/utils/display-value";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import type { NanomachineFixedPartKey } from "../form-values";
-import { formatDisplayValue } from "../format-display-value";
 import type { NanomachinesDerivedValues } from "../logic/nanomachines";
 import ClearButton from "./ClearButton";
 import FormulaTooltip from "./FormulaTooltip";
@@ -142,7 +145,7 @@ function NanomachinesRow({
       {expanded ? (
         <p className={styles.details} id={detailsId}>
           <strong>効果：</strong>
-          {row.nanomachine?.effect ?? ""}
+          {formatDisplayText(row.nanomachine?.effect)}
         </p>
       ) : null}
     </fieldset>

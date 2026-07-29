@@ -1,13 +1,17 @@
 import { useId, useRef } from "react";
 
 import type { Weapon } from "../../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../../lib/utils/display-value";
 import { characterSheetDictionary } from "../../dictionary";
-import { formatDisplayValue } from "../../format-display-value";
 import type { WeaponCandidateGroup } from "../../master-data/weapons-and-armor";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
+import PickerTableHeader from "./PickerTableHeader";
 import styles from "./WeaponPickerDialog.module.css";
 
 type Props = {
@@ -60,7 +64,7 @@ function Candidate({
       </div>
       <p>
         <strong>{copy.effect}：</strong>
-        {weapon.effect ?? ""}
+        {formatDisplayText(weapon.effect)}
       </p>
     </div>
   );
@@ -101,12 +105,15 @@ export default function WeaponPickerDialog({
             group.weapons.length === 0 ? null : (
               <section className={styles.group} key={group.id}>
                 {group.heading === undefined ? null : <h3>{group.heading}</h3>}
-                <div className={styles.headerRow}>
-                  <span>{copy.headers.name}</span>
-                  <span>{copy.headers.credit}</span>
-                  <span>攻撃力</span>
-                  <span>ガード値</span>
-                </div>
+                <PickerTableHeader
+                  cells={[
+                    { content: copy.headers.name },
+                    { content: copy.headers.credit },
+                    { content: "攻撃力" },
+                    { content: "ガード値" },
+                  ]}
+                  className={styles.headerRow}
+                />
                 {group.weapons.map((weapon) => (
                   <Candidate
                     key={weapon.id}

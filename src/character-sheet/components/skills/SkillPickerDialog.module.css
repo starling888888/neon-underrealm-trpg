@@ -20,37 +20,20 @@
   white-space: nowrap;
 }
 
-.headerRow,
-.firstLine {
-  display: grid;
-  grid-template-columns: minmax(8rem, 1fr) 3.25rem 3.6rem 4.8rem;
-  min-width: 0;
-}
-
 .headerRow {
-  composes: tableHeader from "../CharacterSheetFormList.module.css";
+  composes: headerRow from "../dialogs/PickerTable.module.css";
+  --character-sheet-picker-table-columns: minmax(8rem, 1fr) 3.25rem 3.6rem
+    4.8rem;
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.75rem 3.25rem
+    4rem;
 }
 
 .firstLine {
-  composes: pickerTableFirstLine from "../CharacterSheetFormList.module.css";
-}
-
-.headerRow > span,
-.firstLine > * {
-  min-width: 0;
-  padding: 0.1875rem 0.375rem;
-}
-
-.headerRow > span {
-  display: grid;
-  min-height: 1.75rem;
-  place-items: center;
-  white-space: nowrap;
-}
-
-.headerRow > :first-child {
-  justify-items: start;
-  text-align: left;
+  composes: firstLine from "../dialogs/PickerTable.module.css";
+  --character-sheet-picker-table-columns: minmax(8rem, 1fr) 3.25rem 3.6rem
+    4.8rem;
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.75rem 3.25rem
+    4rem;
 }
 
 .group {
@@ -74,17 +57,6 @@
 
 .candidate[data-disabled]:hover {
   background: var(--color-surface-muted);
-}
-
-.firstLine > * {
-  display: grid;
-  min-height: 2rem;
-  align-content: center;
-  color: var(--color-text);
-  font-size: 0.75rem;
-  line-height: 1.25;
-  text-align: center;
-  white-space: nowrap;
 }
 
 .candidateName {
@@ -112,11 +84,6 @@
   color: var(--color-text-muted);
 }
 
-.firstLine span > span {
-  display: block;
-  white-space: nowrap;
-}
-
 .details {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -129,6 +96,11 @@
 
 .details > span {
   min-width: 0;
+  white-space: nowrap;
+}
+
+.firstLine span > span {
+  display: block;
   white-space: nowrap;
 }
 
@@ -158,20 +130,6 @@
 
   .selectionGuide {
     font-size: 0.75rem;
-  }
-
-  .headerRow,
-  .firstLine {
-    grid-template-columns: minmax(0, 1fr) 2.75rem 3.25rem 4rem;
-  }
-
-  .headerRow > span,
-  .firstLine > * {
-    padding: 0.125rem 0.25rem;
-  }
-
-  .firstLine > * {
-    font-size: 0.6875rem;
   }
 
   .firstLine button {

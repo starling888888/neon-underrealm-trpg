@@ -2,10 +2,13 @@ import { ListPlus } from "lucide-react";
 import { useState } from "react";
 
 import type { Cybernetic } from "../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../lib/utils/display-value";
 import { withBase } from "../../lib/utils/paths";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import type { CyberneticFixedPartKey } from "../form-values";
-import { formatDisplayValue } from "../format-display-value";
 import type { CyberneticsDerivedValues } from "../logic/cybernetics";
 import ClearButton from "./ClearButton";
 import styles from "./CyberneticsSection.module.css";
@@ -166,7 +169,7 @@ function CyberneticsRow({
       {expanded ? (
         <p className={styles.details} id={detailsId}>
           <strong>効果：</strong>
-          {row.cybernetic?.effect ?? ""}
+          {formatDisplayText(row.cybernetic?.effect)}
         </p>
       ) : null}
     </fieldset>

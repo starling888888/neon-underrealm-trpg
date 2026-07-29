@@ -2,8 +2,11 @@ import { ListPlus } from "lucide-react";
 import { useState } from "react";
 
 import type { Drug } from "../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../lib/utils/display-value";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
-import { formatDisplayValue } from "../format-display-value";
 import DeleteButton from "./DeleteButton";
 import styles from "./DrugsSection.module.css";
 import FormulaTooltip from "./FormulaTooltip";
@@ -100,7 +103,7 @@ function DrugRow({
           {formatDisplayValue(row.drug?.credit ?? null)}
         </span>
         <span className={`${styles.cell} ${styles.timing}`}>
-          {row.drug?.timing ?? "−"}
+          {formatDisplayValue(row.drug?.timing)}
         </span>
         <span className={`${styles.cell} ${styles.setQuantity}`}>
           {formatDisplayValue(row.drug?.setQuantity ?? null)}
@@ -149,7 +152,7 @@ function DrugRow({
           <div className={styles.mobileDetailsMetadata}>
             <span>
               <strong>{copy.mobileDetails.timing}：</strong>
-              {row.drug?.timing ?? "−"}
+              {formatDisplayValue(row.drug?.timing)}
             </span>
             <span>
               <strong>{copy.mobileDetails.setQuantity}：</strong>
@@ -158,7 +161,7 @@ function DrugRow({
           </div>
           <p>
             <strong>効果：</strong>
-            {row.drug?.effect ?? ""}
+            {formatDisplayText(row.drug?.effect)}
           </p>
         </div>
       ) : null}

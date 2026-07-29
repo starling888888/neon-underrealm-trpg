@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-
+import { formatDisplayValue } from "../../lib/utils/display-value";
 import { characterSheetDictionary } from "../dictionary";
 import type {
   AttributeName,
@@ -8,7 +8,6 @@ import type {
   OtherRyugiEditableFieldName,
 } from "../form-values";
 import { attributeNames } from "../form-values";
-import { formatDisplayValue } from "../format-display-value";
 import type { BuildDerivedValues } from "../logic/build";
 import type { CommonSkillBonusLevel } from "../logic/common-skills";
 import type { CharacterSheetSelectOption } from "../master-data/build";

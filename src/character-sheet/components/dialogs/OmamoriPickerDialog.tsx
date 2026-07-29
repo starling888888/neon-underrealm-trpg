@@ -1,13 +1,17 @@
 import { useId, useRef } from "react";
 
 import type { Omamori } from "../../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../../lib/utils/display-value";
 import { characterSheetDictionary } from "../../dictionary";
-import { formatDisplayValue } from "../../format-display-value";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
 import styles from "./OmamoriPickerDialog.module.css";
+import PickerTableHeader from "./PickerTableHeader";
 
 type Props = {
   candidates: readonly Omamori[];
@@ -49,10 +53,13 @@ export default function OmamoriPickerDialog({
           <p className={styles.selectionGuide}>
             <strong>{copy.pickerGuide}</strong>
           </p>
-          <div className={styles.headerRow}>
-            <span>{copy.headers.name}</span>
-            <span>{copy.headers.credit}</span>
-          </div>
+          <PickerTableHeader
+            cells={[
+              { content: copy.headers.name },
+              { content: copy.headers.credit },
+            ]}
+            className={styles.headerRow}
+          />
           {candidates.map((omamori) => (
             <div className={styles.candidate} key={omamori.id}>
               <div className={styles.firstLine}>
@@ -67,7 +74,7 @@ export default function OmamoriPickerDialog({
               </div>
               <p>
                 <strong>効果：</strong>
-                {omamori.effect}
+                {formatDisplayText(omamori.effect)}
               </p>
             </div>
           ))}

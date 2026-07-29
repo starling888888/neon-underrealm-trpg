@@ -2,8 +2,11 @@ import { ListPlus } from "lucide-react";
 import { useState } from "react";
 
 import type { Armor, Weapon } from "../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../lib/utils/display-value";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
-import { formatDisplayValue } from "../format-display-value";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ClearButton from "./ClearButton";
 import DeleteButton from "./DeleteButton";
@@ -190,7 +193,7 @@ function WeaponDetails({ weapon, id }: { weapon: Weapon | null; id: string }) {
       </div>
       <p>
         <strong>{copy.effect}：</strong>
-        {weapon?.effect ?? ""}
+        {formatDisplayText(weapon?.effect)}
       </p>
     </div>
   );
@@ -363,11 +366,11 @@ function ArmorFormRow({
         <div className={styles.details} id={detailsId}>
           <p>
             <strong>{copy.headers.restriction}：</strong>
-            {armor.armor?.restriction ?? ""}
+            {formatDisplayValue(armor.armor?.restriction)}
           </p>
           <p>
             <strong>{copy.effect}：</strong>
-            {armor.armor?.effect ?? ""}
+            {formatDisplayText(armor.armor?.effect)}
           </p>
         </div>
       ) : null}

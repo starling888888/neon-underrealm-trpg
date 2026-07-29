@@ -1,12 +1,16 @@
 import { useId, useRef } from "react";
 
 import type { Skill } from "../../../lib/types/skill";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../../lib/utils/display-value";
 import { characterSheetDictionary } from "../../dictionary";
-import { formatDisplayValue } from "../../format-display-value";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "../dialogs/CharacterSheetDialog";
+import PickerTableHeader from "../dialogs/PickerTableHeader";
 import styles from "./SkillPickerDialog.module.css";
 
 export type SkillCandidateGroup = {
@@ -30,7 +34,9 @@ function formatCompactValue(
   value: string | null | undefined,
   separator: string,
 ) {
-  if (value === null || value === undefined || value === "") return "-";
+  if (value === null || value === undefined || value.trim() === "") {
+    return formatDisplayValue(value);
+  }
 
   return value
     .split(separator)
@@ -88,7 +94,7 @@ function CandidateRow({
       </div>
       <p className={styles.effect}>
         <strong>{copy.effect}：</strong>
-        {skill.effect}
+        {formatDisplayText(skill.effect)}
       </p>
     </div>
   );
@@ -98,12 +104,16 @@ function CandidateTableHeader() {
   const copy = characterSheetDictionary.gameDomain.terms.skill;
 
   return (
-    <div aria-hidden="true" className={styles.headerRow}>
-      <span>{copy.name}</span>
-      <span>{copy.maximumLevel}</span>
-      <span>{copy.cost}</span>
-      <span>{copy.usageRestriction}</span>
-    </div>
+    <PickerTableHeader
+      cells={[
+        { content: copy.name },
+        { content: copy.maximumLevel },
+        { content: copy.cost },
+        { content: copy.usageRestriction },
+      ]}
+      className={styles.headerRow}
+      isDecorative
+    />
   );
 }
 

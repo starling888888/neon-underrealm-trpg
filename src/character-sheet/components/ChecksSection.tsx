@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
+import { formatDisplayValue } from "../../lib/utils/display-value";
 import { characterSheetDictionary } from "../dictionary";
 import type { AttackSkillName, AttributeName } from "../form-values";
 import { attackSkillNames, attributeNames } from "../form-values";
-import { formatDisplayValue } from "../format-display-value";
 import type { ChecksDerivedValues, DerivedCheckRow } from "../logic/checks";
 import type { NoncombatSkillName } from "../master-data/noncombat-skills";
 import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";

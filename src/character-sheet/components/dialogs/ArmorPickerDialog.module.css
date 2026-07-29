@@ -9,36 +9,20 @@
   composes: selectionGuide from "../CharacterSheetFormList.module.css";
   margin-bottom: var(--space-2);
 }
-.headerRow,
-.firstLine {
-  display: grid;
-  grid-template-columns: minmax(7rem, 1fr) 2.75rem 3.25rem 4rem minmax(
-      5rem,
-      0.8fr
-    );
-  min-width: 0;
-}
 .headerRow {
-  composes: tableHeader from "../CharacterSheetFormList.module.css";
+  composes: headerRow from "./PickerTable.module.css";
+  --character-sheet-picker-table-columns: minmax(7rem, 1fr) 2.75rem 3.25rem 4rem
+    minmax(5rem, 0.8fr);
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.25rem 2.75rem
+    3.25rem;
 }
 
 .firstLine {
-  composes: pickerTableFirstLine from "../CharacterSheetFormList.module.css";
-}
-.headerRow > span,
-.firstLine > * {
-  min-width: 0;
-  padding: 0.1875rem 0.375rem;
-}
-.headerRow > span {
-  display: grid;
-  min-height: 1.75rem;
-  place-items: center;
-  white-space: nowrap;
-}
-.headerRow > :first-child {
-  justify-items: start;
-  text-align: left;
+  composes: firstLine from "./PickerTable.module.css";
+  --character-sheet-picker-table-columns: minmax(7rem, 1fr) 2.75rem 3.25rem 4rem
+    minmax(5rem, 0.8fr);
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.25rem 2.75rem
+    3.25rem;
 }
 
 .headerRow > .damageReductionHeader {
@@ -52,13 +36,6 @@
   composes: pickerCandidateName from "../CharacterSheetFormList.module.css";
 }
 .firstLine > * {
-  display: grid;
-  min-height: 2rem;
-  align-content: center;
-  color: var(--color-text);
-  font-size: 0.75rem;
-  line-height: 1.25;
-  text-align: center;
   overflow-wrap: anywhere;
 }
 .firstLine button {
@@ -94,11 +71,6 @@
   .selectionGuide {
     font-size: 0.75rem;
   }
-  .headerRow,
-  .firstLine {
-    grid-template-columns: minmax(0, 1fr) 2.25rem 2.75rem 3.25rem;
-  }
-
   .headerRow > .restrictionHeader,
   .firstLine > .restriction {
     display: none;
@@ -106,12 +78,5 @@
 
   .restrictionDetails {
     display: block;
-  }
-  .headerRow > span,
-  .firstLine > * {
-    padding: 0.125rem 0.25rem;
-  }
-  .firstLine > * {
-    font-size: 0.6875rem;
   }
 }

@@ -5,13 +5,10 @@
 }
 
 .line {
-  display: grid;
-  min-height: var(--character-sheet-list-row-min-height);
-  min-width: 0;
+  composes: listTableGrid from "./CharacterSheetFormList.module.css";
   grid-template-columns: 1.25rem minmax(4rem, 1.1fr) 2.5rem 4.75rem 3.75rem 2.75rem 2.75rem 2rem var(
       --character-sheet-action-button-size
     );
-  align-items: stretch;
 }
 
 .headerRow {

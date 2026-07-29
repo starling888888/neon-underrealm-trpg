@@ -1,12 +1,16 @@
 import { useId, useRef } from "react";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../../lib/utils/display-value";
 import { characterSheetDictionary } from "../../dictionary";
-import { formatDisplayValue } from "../../format-display-value";
 import type { CyberneticCandidateGroup } from "../../master-data/cybernetics";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
 import styles from "./CyberneticsPickerDialog.module.css";
+import PickerTableHeader from "./PickerTableHeader";
 
 type Props = {
   groups: readonly CyberneticCandidateGroup[];
@@ -51,11 +55,14 @@ export default function CyberneticsPickerDialog({
           {groups.map((group) => (
             <section className={styles.group} key={group.id}>
               <h3>{group.label}</h3>
-              <div className={styles.headerRow}>
-                <span>{copy.headers.name}</span>
-                <span>{copy.headers.credit}</span>
-                <span>{copy.headers.implantPoints}</span>
-              </div>
+              <PickerTableHeader
+                cells={[
+                  { content: copy.headers.name },
+                  { content: copy.headers.credit },
+                  { content: copy.headers.implantPoints },
+                ]}
+                className={styles.headerRow}
+              />
               {group.candidates.map((cybernetic) => (
                 <div className={styles.candidate} key={cybernetic.id}>
                   <div className={styles.firstLine}>
@@ -71,7 +78,7 @@ export default function CyberneticsPickerDialog({
                   </div>
                   <p>
                     <strong>効果：</strong>
-                    {cybernetic.effect}
+                    {formatDisplayText(cybernetic.effect)}
                   </p>
                 </div>
               ))}

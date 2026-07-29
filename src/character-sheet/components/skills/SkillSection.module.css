@@ -70,12 +70,10 @@
 
 .headerRow,
 .firstLine {
-  display: grid;
+  composes: listTableGrid from "../CharacterSheetFormList.module.css";
   grid-template-columns: 1.25rem minmax(var(--primary-skill-name-width), 1fr) 3.25rem 2.35rem 4.5rem 3.4rem 4.4rem 2rem var(
       --character-sheet-action-button-size
     );
-  min-height: var(--character-sheet-list-row-min-height);
-  align-items: stretch;
 }
 
 .headerRow {

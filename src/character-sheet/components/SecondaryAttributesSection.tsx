@@ -1,9 +1,9 @@
+import { formatDisplayValue } from "../../lib/utils/display-value";
 import { characterSheetDictionary } from "../dictionary";
 import type {
   SecondaryAttributeFieldName,
   SecondaryAttributeValues,
 } from "../form-values";
-import { formatDisplayValue } from "../format-display-value";
 import type { SecondaryAttributeDerivedValues } from "../logic/secondary-attributes";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./SecondaryAttributesSection.module.css";

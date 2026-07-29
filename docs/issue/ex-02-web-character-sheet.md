@@ -496,6 +496,28 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 11
+
+### 指摘事項
+
+- 静的データCardとキャラクターシートで、未設定値と効果本文の表示整形を同じ共有関数へ統一する。
+- スキル、武器、防具、専用アイテムの表示表と候補dialogは、headerのHTML構造と行gridの共通CSSを共有し、個別moduleには列定義と種別固有の詳細表示だけを残す。
+
+### 対応方針
+
+- `src/lib/utils/display-value.ts`を静的ページとキャラクターシート双方の共有層とし、表セルには`formatDisplayValue`、効果本文には`formatDisplayText`を使う。前者は`null`、`undefined`、空文字、空白だけの文字列を`-`へ、後者は空文字へ整形する。
+- 候補dialogのheaderを`PickerTableHeader`で統一し、grid、header cell、候補行cell、mobileのpadding / font sizeは`PickerTable.module.css`で共有する。各候補dialogはdesktop / mobileの列定義と種別固有の列移動・詳細領域だけを持つ。
+- 表示表のheaderとデータ行が共有するgridの最小幅・最小高・配置は`CharacterSheetFormList.module.css`の`listTableGrid`へ集約する。各sectionは列定義、セルと操作の固有スタイルを維持する。
+- 選択、disabled候補、閉じる、Escape、focus復帰、既存のdesktop / tablet / mobile列構成は変更しない。ユーザー指示によりVRTは実施しない。
+
+### 対応完了チェックリスト
+
+- [x] 静的Cardとキャラクターシートが同じ未設定値・本文整形関数を参照する
+- [x] 表示表と全skill・item pickerが共通header構造または共通行grid CSSを使う
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [ ] VRTはユーザー指示により未実施
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。

@@ -2,8 +2,11 @@ import { ListPlus } from "lucide-react";
 import { useState } from "react";
 
 import type { Omamori } from "../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../lib/utils/display-value";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
-import { formatDisplayValue } from "../format-display-value";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./OmamoriSection.module.css";
@@ -88,7 +91,9 @@ function OmamoriRow({
         <span className={styles.cell}>
           {formatDisplayValue(row.omamori?.credit ?? null)}
         </span>
-        <p className={styles.effect}>{row.omamori?.effect ?? ""}</p>
+        <p className={styles.effect}>
+          {formatDisplayText(row.omamori?.effect)}
+        </p>
         <button
           aria-controls={detailsId}
           aria-expanded={expanded}
@@ -109,7 +114,7 @@ function OmamoriRow({
       {expanded ? (
         <p className={styles.mobileEffect} id={detailsId}>
           <strong>効果：</strong>
-          {row.omamori?.effect ?? ""}
+          {formatDisplayText(row.omamori?.effect)}
         </p>
       ) : null}
     </fieldset>

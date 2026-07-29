@@ -14,10 +14,7 @@
 .headerRow,
 .weaponLine,
 .armorLine {
-  display: grid;
-  min-height: var(--character-sheet-list-row-min-height);
-  min-width: 0;
-  align-items: stretch;
+  composes: listTableGrid from "./CharacterSheetFormList.module.css";
 }
 
 .weaponLine {

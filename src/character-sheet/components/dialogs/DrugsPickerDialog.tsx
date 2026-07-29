@@ -1,13 +1,17 @@
 import { useId, useRef } from "react";
 
 import type { Drug } from "../../../lib/types/item";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../../lib/utils/display-value";
 import { characterSheetDictionary } from "../../dictionary";
-import { formatDisplayValue } from "../../format-display-value";
 import CharacterSheetDialog, {
   CharacterSheetDialogContent,
   CharacterSheetDialogHeader,
 } from "./CharacterSheetDialog";
 import styles from "./DrugsPickerDialog.module.css";
+import PickerTableHeader from "./PickerTableHeader";
 
 type Props = {
   candidates: readonly Drug[];
@@ -52,13 +56,16 @@ export default function DrugsPickerDialog({
           <p className={styles.selectionGuide}>
             <strong>{copy.pickerGuide}</strong>
           </p>
-          <div className={styles.headerRow}>
-            <span>{copy.pickerHeaders.name}</span>
-            <span>{copy.pickerHeaders.credit}</span>
-            <span>{copy.pickerHeaders.timing}</span>
-            <span>{copy.pickerHeaders.setQuantity}</span>
-            <span>{copy.pickerHeaders.badTripIntensity}</span>
-          </div>
+          <PickerTableHeader
+            cells={[
+              { content: copy.pickerHeaders.name },
+              { content: copy.pickerHeaders.credit },
+              { content: copy.pickerHeaders.timing },
+              { content: copy.pickerHeaders.setQuantity },
+              { content: copy.pickerHeaders.badTripIntensity },
+            ]}
+            className={styles.headerRow}
+          />
           {candidates.map((drug) => {
             const isSelected = selectedIds.has(drug.id);
 
@@ -78,23 +85,23 @@ export default function DrugsPickerDialog({
                     {drug.name}
                   </button>
                   <span>{formatDisplayValue(drug.credit)}</span>
-                  <span>{drug.timing}</span>
-                  <span>{drug.setQuantity}</span>
-                  <span>{drug.badTripIntensity}</span>
+                  <span>{formatDisplayValue(drug.timing)}</span>
+                  <span>{formatDisplayValue(drug.setQuantity)}</span>
+                  <span>{formatDisplayValue(drug.badTripIntensity)}</span>
                 </div>
                 <div className={styles.mobileDetailsMetadata}>
                   <span>
                     <strong>{copy.mobileDetails.timing}：</strong>
-                    {drug.timing}
+                    {formatDisplayValue(drug.timing)}
                   </span>
                   <span>
                     <strong>{copy.mobileDetails.setQuantity}：</strong>
-                    {drug.setQuantity}
+                    {formatDisplayValue(drug.setQuantity)}
                   </span>
                 </div>
                 <p>
                   <strong>効果：</strong>
-                  {drug.effect}
+                  {formatDisplayText(drug.effect)}
                 </p>
               </div>
             );
