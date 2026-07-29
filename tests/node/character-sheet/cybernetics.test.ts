@@ -46,10 +46,10 @@ describe("character sheet cybernetics", () => {
       implantPoints: first.implantPoints + second.implantPoints,
       implantPointTotal: first.implantPoints + second.implantPoints,
       noncombatModifier:
-        first.implantPoints + second.implantPoints <= 5 ? 0 : -3,
+        first.implantPoints + second.implantPoints <= 5 ? 0 : -2,
     });
-    assert.equal(calculateCybernetics([], 6, 3, 0).noncombatModifier, -3);
-    assert.equal(calculateCybernetics([], 11, 3, 0).noncombatModifier, -6);
+    assert.equal(calculateCybernetics([], 6, 3, 0).noncombatModifier, -2);
+    assert.equal(calculateCybernetics([], 11, 3, 0).noncombatModifier, -4);
     assert.equal(calculateCybernetics([], 4, 3, 0).hasImplantLimitError, true);
   });
 });

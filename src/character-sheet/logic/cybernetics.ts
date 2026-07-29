@@ -5,14 +5,14 @@ export type CyberneticsDerivedValues = {
   implantLimit: number | null;
   implantPoints: number;
   implantPointTotal: number;
-  noncombatModifier: 0 | -3 | -6;
+  noncombatModifier: 0 | -2 | -4;
 };
 
 export function getNoncombatModifierForImplantPoints(
   implantPointTotal: number,
-): 0 | -3 | -6 {
+): 0 | -2 | -4 {
   if (implantPointTotal <= 5) return 0;
-  return implantPointTotal <= 10 ? -3 : -6;
+  return implantPointTotal <= 10 ? -2 : -4;
 }
 
 export function calculateCybernetics(

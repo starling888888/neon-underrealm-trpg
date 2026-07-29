@@ -50,7 +50,7 @@
 - 集計は、武器・防具の防御力／ダメージ軽減、攻撃力／ガード値と同じpair表示にする。desktopでは、`選択したサイバネの埋め込み点数の合計／常時精神 + 修正入力欄／修正入力欄 = 埋め込み点数合計／埋め込み上限`を一行に表示する。mobileでは既存pair表示と同じresponsive表現を用いる。両方の修正は整数入力で負数を許可し、マスタ効果の文章解析や自動加算は行わない。最終的な埋め込み点数合計が上限を超える場合、サイバネカテゴリと集計値を支援技術にも伝わるerror状態にする。個別入力へ可視のエラー理由は追加しない。
 - 選択dialogは、部位ごとに小見出しを置いて候補tableを分離する。各小見出し直下のtableごとにヘッダーを置き、列は名称、信用、埋め込み点数とする。候補行は展開操作を置かず、効果を2行目へ表示する。
 - `cybernetics`のmaster-data adapter、form schema・default値、pure logic、form adapter、Presenter、Container dialog orchestration、Component、CSS Module、dictionary、対象Node / hook / component testを、既存の所有境界に沿って追加・更新する。
-- 選択済みの埋め込み点数合計が`5以下`、`6〜10`、`11以上`の境界をまたぐ場合に、`docs/requirements/character-sheet.md`で指定された非戦闘技能の標準修正`0`、`-3`、`-6`への再設定を実装する。既存の手動修正を上書きすることを画面で説明し、同じ段階内の点数変動では再設定しない。
+- 選択済みの埋め込み点数合計が`5以下`、`6〜10`、`11以上`の境界をまたぐ場合に、`docs/requirements/character-sheet.md`で指定された非戦闘技能の標準修正`0`、`-2`、`-4`への再設定を実装する。既存の手動修正を上書きすることを画面で説明し、同じ段階内の点数変動では再設定しない。
 
 ## 初期スコープ外
 
@@ -216,6 +216,7 @@
 - user-directed requirement update: 埋め込み点数合計の修正を追加し、合計値を`選択中サイバネの点数合計 + 埋め込み点数合計の修正`、上限を`常時精神 + 埋め込み上限の修正`として扱う。上限errorと非戦闘技能の段階境界は、この最終合計を基準にする。
 - user-directed test scope: 初回実装ではE2EとVRTのspec追加・更新および実行は行わない。Node・hook・Componentテストを実装・実行し、実装後はpreview serverを起動せず、既定portのdev serverを維持してユーザーレビューを待つ。
 - user-directed test scope update: ユーザーレビュー完了後に、対象E2Eと`@character-sheet`限定VRTを実装・実行する。状態別のlocator screenshotを実際に確認した後、`@character-sheet`の既存canonical baselineだけを更新する。
+- user-directed requirement update: サイバネの埋め込み点数合計に応じた非戦闘技能の標準修正を、`5以下`で`0`、`6〜10`で`-2`、`11以上`で`-4`へ変更する。ローカルのサイバネルール本文MDX、requirements、logic、テストを同値へ揃える。Google Drive由来のスキルデータ本文はユーザーが後で更新・再生成するため、この変更では扱わない。
 
 ## ビジュアルレビュー 1
 

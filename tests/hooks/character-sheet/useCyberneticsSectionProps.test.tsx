@@ -64,7 +64,7 @@ describe("useCyberneticsSectionProps", () => {
     });
     expect(
       result.current.form.getValues("checks.noncombat.intimidation.modifier"),
-    ).toBe(-3);
+    ).toBe(-2);
 
     act(() => {
       result.current.form.setValue(
@@ -82,6 +82,6 @@ describe("useCyberneticsSectionProps", () => {
     });
     expect(
       result.current.form.getValues("checks.noncombat.intimidation.modifier"),
-    ).toBe(-6);
+    ).toBe(-4);
   });
 });

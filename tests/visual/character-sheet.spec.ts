@@ -655,7 +655,7 @@ test.describe("character sheet page", () => {
       .click();
     await expect(
       page.getByLabel("脅迫の判定修正", { exact: true }),
-    ).toHaveValue("-3");
+    ).toHaveValue("-2");
     await expect(
       cybernetics.getByRole("button", {
         exact: true,
