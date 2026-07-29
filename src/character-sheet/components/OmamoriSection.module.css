@@ -113,12 +113,8 @@
 }
 
 .addButton {
-  composes: addButton from "./CharacterSheetFormList.module.css";
   justify-self: start;
   margin-top: var(--space-3);
-  min-height: 2rem;
-  padding: var(--space-1) var(--space-3);
-  font-size: var(--text-sm);
 }
 
 @media (width < 48rem) {

@@ -407,7 +407,7 @@ export default function SkillSection({
             {onAdd === undefined ? null : (
               <div className={styles.actions}>
                 <button
-                  className={styles.addButton}
+                  className={`${styles.addButton} character-sheet-add-button`}
                   onClick={onAdd}
                   type="button"
                 >

@@ -210,6 +210,11 @@ describe("ProfileSection", () => {
     expect(props.onCharacterImageOperationStarted).toHaveBeenCalledWith(
       screen.getByRole("button", { name: "画像を選択またはドロップ" }),
     );
+    expect(
+      screen
+        .getByRole("button", { name: "画像を選択" })
+        .classList.contains("character-sheet-add-button"),
+    ).toBe(true);
   });
 
   it("shows a saved image in the same input area", () => {

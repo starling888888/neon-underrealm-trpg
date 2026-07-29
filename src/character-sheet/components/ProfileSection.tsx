@@ -158,7 +158,7 @@ function CharacterImageField({
         type="file"
       />
       <button
-        className={styles.imageSelectButton}
+        className={`${styles.imageSelectButton} character-sheet-add-button`}
         disabled={isRootOperationInProgress}
         onClick={selectFile}
         type="button"

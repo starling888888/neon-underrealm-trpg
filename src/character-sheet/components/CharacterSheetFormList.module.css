@@ -81,19 +81,6 @@
   background: var(--color-example-soft);
 }
 
-.addButton {
-  border: var(--border-width) solid var(--color-link);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-link);
-  cursor: pointer;
-  font-weight: 750;
-}
-
-.addButton:hover {
-  background: var(--color-example-soft);
-}
-
 .pickerDialog {
   width: min(44rem, calc(100vw - (var(--page-gutter) * 2)));
   overflow: hidden;

@@ -246,7 +246,7 @@ export default function CyberneticsSection({
       ))}
       <div className={styles.footer}>
         <button
-          className={styles.addButton}
+          className={`${styles.addButton} character-sheet-add-button`}
           disabled={otherRows.length >= 4}
           onClick={onAddOther}
           type="button"

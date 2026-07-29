@@ -26,6 +26,7 @@
   - CCFOLIAコピー成功の通知ダイアログ状態
   - 画像選択の失敗ダイアログ状態
 - canonical baselineの更新は、以後もユーザーの明示承認を必要とする。
+- 2026-07-29のGate外レビュー修正として、`判定` sectionはdesktopでも左列の`縁`の後に置く。right columnは`スキル`から開始する。`画像を選択`と各`〜を追加` buttonは、キャラクターシート内の共通styleでfont size、高さ、padding、border、hover / disabled stateを揃え、section固有CSSは配置だけを持つ。
 
 ### G3 section frame comparison
 

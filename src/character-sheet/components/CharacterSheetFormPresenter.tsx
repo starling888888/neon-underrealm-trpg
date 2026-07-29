@@ -109,11 +109,6 @@ export default function CharacterSheetFormPresenter({
             <BondsSection {...bondsSection} />
           </div>
         </CharacterSheetSectionFrame>
-      </div>
-      <div
-        className={styles.secondaryColumn}
-        data-character-sheet-layout-region="secondary"
-      >
         <CharacterSheetSectionFrame
           expandable
           headingAs="h2"
@@ -124,6 +119,11 @@ export default function CharacterSheetFormPresenter({
             <ChecksSection {...checksSection} />
           </div>
         </CharacterSheetSectionFrame>
+      </div>
+      <div
+        className={styles.secondaryColumn}
+        data-character-sheet-layout-region="secondary"
+      >
         <CharacterSheetSectionFrame
           expandable
           headingAs="h2"

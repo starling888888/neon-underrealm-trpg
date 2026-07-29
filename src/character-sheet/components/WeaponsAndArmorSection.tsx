@@ -426,7 +426,7 @@ export default function WeaponsAndArmorSection(
           />
         ))}
         <button
-          className={styles.addButton}
+          className={`${styles.addButton} character-sheet-add-button`}
           onClick={props.onAddWeapon}
           type="button"
         >

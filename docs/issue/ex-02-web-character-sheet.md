@@ -176,6 +176,38 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 2
+
+### 指摘事項
+
+- desktopの等分2列で左右の表示領域の高さが大きく異なるため、`判定` sectionを右列ではなく左列へ移したい。
+- `画像を選択`と各種の`〜を追加` buttonは、font sizeと高さ・paddingが統一されていない。特にサイバネの`その他の部位を追加`は、ほかの操作より大きく見える。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `CharacterSheetFormPresenter`はdesktopで`判定`をright secondary columnの先頭へ置いている。Gate planのG10もこの旧配置を記録している。
+  - `画像を選択`は`ProfileSection.module.css`の個別styleで`--text-xs`と小さいpaddingを指定する一方、サイバネ・武器・お守りの追加buttonは各sectionのstyleで`2rem`の最小高、`--text-sm`、大きいpaddingを指定している。追加buttonのstyleは複数ファイルに分散している。
+  - 最新のユーザー指示により、旧G10配置と個別button styleの差異をこの親issueのGate外レビュー修正として扱う。
+
+### 対応方針
+
+- desktopでは`判定` sectionを左列の`縁`の後へ移し、tablet / mobileのDOM順と表示内容は維持する。実装時に親issueのGate planとdesign notesの旧配置も同じ判断へ整合させる。
+- `画像を選択`と各`〜を追加` buttonの共通する見た目を、キャラクターシート内の共有styleへ集約する。個別sectionは共有classを利用し、表示文言に応じた幅以外のfont size、高さ、padding、border、hover / disabled stateを重複定義しない。
+- このレビュー指摘の取り込みだけでは実装を開始しない。実装はユーザーの明示承認後に行う。
+
+### 対応完了チェックリスト
+
+- [x] desktopの`判定` sectionを左列へ移し、tablet / mobileの表示順・操作を維持する
+- [x] `画像を選択`と各`〜を追加` buttonの共通styleを作成し、既存buttonへ適用する
+- [x] 個別sectionに重複した共通button styleが残っていない
+- [x] 対象Component testを更新する
+- [ ] 変更targetのVRT比較と原寸locator screenshot確認を行う
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。

@@ -152,7 +152,11 @@ export default function OmamoriSection(props: OmamoriSectionProps) {
           rowNumber={index + 1}
         />
       ))}
-      <button className={styles.addButton} onClick={props.onAdd} type="button">
+      <button
+        className={`${styles.addButton} character-sheet-add-button`}
+        onClick={props.onAdd}
+        type="button"
+      >
         {copy.add}
       </button>
     </div>

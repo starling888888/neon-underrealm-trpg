@@ -355,7 +355,7 @@ export default function ChecksSection({
           })}
         </div>
         <button
-          className={styles.addButton}
+          className={`${styles.addButton} character-sheet-add-button`}
           disabled={attacks.length >= 5}
           onClick={onAttackAdd}
           type="button"

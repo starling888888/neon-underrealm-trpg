@@ -281,7 +281,7 @@ export default function BuildSection({
           </div>
         ))}
         <button
-          className={styles.addButton}
+          className={`${styles.addButton} character-sheet-add-button`}
           onClick={onOtherRyugiAdd}
           ref={otherRyugiAddButtonRef}
           type="button"
