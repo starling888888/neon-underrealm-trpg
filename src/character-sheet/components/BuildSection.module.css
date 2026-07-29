@@ -40,7 +40,9 @@
 
 .otherRow,
 .otherHeader {
-  grid-template-columns: minmax(0, 1fr) 2.75rem 1.75rem;
+  grid-template-columns: minmax(0, 1fr) 2.75rem var(
+      --character-sheet-action-button-size
+    );
 }
 
 .otherRow {

@@ -274,7 +274,7 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 
 - `SkillSection`の見出し背景を、専用アイテム子sectionと同じく外枠の角丸内へclipし、通常・開閉状態・tooltipの既存操作を保ったまま上部角の線を表示する。
 - error / warningの強調は、見出し背景に覆われない単線の太い外周borderとして描く。レイアウトの寸法、通常状態のborder、errorとwarningの色分け、入力・行単位のerror表現は変えない。
-- スキル子sectionの通常・error状態と、専用アイテム子sectionのwarning状態をdesktop / tablet / mobileで対象限定VRTと原寸actual screenshotにより確認する。canonical baselineの追加・更新は行わない。
+- スキル子sectionの通常・error状態と、専用アイテム子sectionのwarning状態をdesktop / tablet / mobileで対象限定VRTと原寸actual screenshotにより確認する。2026-07-29のユーザー承認に従い、`@character-sheet`の全canonical baseline更新時に対象snapshotも更新する。
 
 ### 対応完了チェックリスト
 
@@ -312,7 +312,7 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - 全削除buttonから`×`とmobile compact例外を取り除き、desktop削除buttonの現在の縦横サイズを全viewportの共通基準にする。専用アイテムカテゴリの削除buttonもこの共通classへ接続し、warning categoryではwarning colorを使う。見出し右端を見出し背景と同一の面にして、button自体は透明のままにする。
 - すべてのclear操作を同サイズの消しゴムiconへ置き換える。縁の末尾操作列だけを縮めて`関係`列へ、その他の行では縮めた操作列の分を名称列へ配分し、既存の順序・操作位置・横overflowなしを維持する。
 - 画像操作は選択／差し替えとclearを同一行の固定位置に置く。clearは画像なしでdisabled、画像ありでenabledとし、選択／差し替えbuttonのfixed inline-sizeを両状態で保つ。画像選択中の操作不可状態と完了後のfocus復帰は既存契約を維持する。
-- 既存のComponent / browser操作testをicon-onlyのDOMとdisabled状態へ更新し、代表する削除・clear・画像未選択／選択済み・通常使用不可カテゴリをdesktop / tablet / mobileで対象限定VRTと原寸actual screenshotにより確認する。canonical baselineの追加・更新は行わない。
+- 既存のComponent / browser操作testをicon-onlyのDOMとdisabled状態へ更新し、代表する削除・clear・画像未選択／選択済み・通常使用不可カテゴリをdesktop / tablet / mobileで対象限定VRTと原寸actual screenshotにより確認する。2026-07-29のユーザー承認に従い、`profile-image-selected`を含む`@character-sheet`の全canonical baselineを更新する。
 
 ### 対応完了チェックリスト
 

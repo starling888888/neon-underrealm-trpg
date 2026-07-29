@@ -178,7 +178,9 @@ fieldset.row {
 @media (width < 48rem) {
   .headers,
   .row {
-    grid-template-columns: minmax(3.5rem, 0.5fr) minmax(0, 1.5fr) 3rem 3rem;
+    grid-template-columns: minmax(3.5rem, 0.5fr) minmax(0, 1.5fr) 3rem var(
+        --character-sheet-action-button-size
+      );
   }
 
   .effectsGrid {
