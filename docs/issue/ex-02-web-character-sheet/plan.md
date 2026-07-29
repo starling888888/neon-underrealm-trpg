@@ -216,6 +216,6 @@
 - `spentCredit`は武器・防具と全専用アイテムの選択値から導出し、ドラッグは所持セット数を掛ける。`spentCredit > totalCredit`のerrorは小銭修正から独立し、G25は基本情報の消費信用と信用領域を集約対象として扱う。
 - スミだけは選択済みナノマシンの`activationMentalCost`最大値を最大体力の自動算出値へ加算し、FormulaTooltip末尾へ補足を加える。ほかの生き様では既存表示を維持する。
 - non-exclusiveカテゴリはwarning frameと削除iconで削除可能を示す。未選択時の手動追加カテゴリには通常使用不可の文言を表示しない。カテゴリ削除後は、確認の有無にかかわらず同カテゴリの追加buttonへfocusを戻す。
-- G22のtarget限定local canonical snapshotは21件を更新したが、G31までGit管理へ追加・変更しない。
+- G22のtarget限定local canonical snapshotは、8 state × 3 viewportの24件を更新した。G31までGit管理へ追加・変更しない。
 
 状態は `planned`、`in progress`、`active`、`done` を使う。`active`は、完了済みとしていたGateをreview指摘で再openし、修正または再reviewが終わるまでの状態を表す。
