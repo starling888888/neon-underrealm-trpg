@@ -70,7 +70,6 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
 
         <main class="character-sheet-main" data-page-content>
           <article class="character-sheet-page" data-character-sheet-page>
-            <h1>キャラクターシート</h1>
             <CharacterSheetContainer client:load />
           </article>
         </main>
@@ -131,11 +130,6 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
     width: min(100%, 90rem);
     min-height: 24rem;
     margin-inline: auto;
-  }
-
-  .character-sheet-page > h1 {
-    margin: 0 0 var(--space-3);
-    line-height: var(--line-height-tight);
   }
 
   :global(body.character-sheet-menu-open) {

@@ -7,6 +7,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useRef } from "react";
@@ -78,6 +79,52 @@ afterEach(() => {
 });
 
 describe("CharacterSheetContainer", () => {
+  it("renders action buttons and an empty desktop error summary", () => {
+    render(<CharacterSheetContainer />);
+
+    const exportButton = screen.getByRole("button", {
+      name: "エクスポート",
+    });
+
+    expect(exportButton).not.toBeNull();
+    expect(exportButton.getAttribute("aria-controls")).toBeNull();
+    expect(screen.getByText("エラーはありません。")).not.toBeNull();
+    expect(screen.getByRole("button", { name: "確認" })).not.toBeNull();
+  });
+
+  it("opens the action menu, then closes it with Escape and returns focus", async () => {
+    const user = userEvent.setup();
+    render(<CharacterSheetContainer />);
+
+    const trigger = screen.getByRole("button", {
+      name: "操作メニューを開く",
+    });
+    await user.click(trigger);
+
+    expect(
+      screen.getByRole("region", {
+        name: "キャラクターシートの操作メニュー",
+      }),
+    ).not.toBeNull();
+    const closeTrigger = screen.getByRole("button", {
+      name: "操作メニューを閉じる",
+    });
+    expect(closeTrigger.querySelector("svg")?.getAttribute("class")).toContain(
+      "lucide-x",
+    );
+
+    fireEvent.keyDown(window, { key: "Escape" });
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("region", {
+          name: "キャラクターシートの操作メニュー",
+        }),
+      ).toBeNull();
+      expect(document.activeElement).toBe(trigger);
+    });
+  });
+
   it("closes the omamori picker on Escape or close, selects one row, and returns focus", async () => {
     const user = userEvent.setup();
     const omamori = getOmamori()[0];

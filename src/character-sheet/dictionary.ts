@@ -16,6 +16,22 @@ export const characterSheetDictionary = {
     unavailableValue: "-",
   },
   characterSheet: {
+    actions: {
+      ccfoliaCopy: "CCFOLIAコピー",
+      closeMenu: "操作メニューを閉じる",
+      errorStatusLabel: "エラー状況",
+      errorsHeading: "エラー",
+      export: "エクスポート",
+      help: "ヘルプ",
+      import: "インポート",
+      menuLabel: "キャラクターシートの操作メニュー",
+      noErrors: "エラーはありません。",
+      openMenu: "操作メニューを開く",
+      regionLabel: "キャラクターシートの操作",
+      reviewErrors: "確認",
+      reset: "初期化",
+      title: "キャラクターシート",
+    },
     namePickerTooltip: "名称欄をクリックすると{kind}選択ダイアログが開きます。",
     build: {
       addOtherRyugi: "＋ その他流儀を追加",

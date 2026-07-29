@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
 import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
 import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
@@ -39,6 +40,7 @@ import useCharacterSheetRootState from "./useCharacterSheetRootState";
  */
 export default function CharacterSheetContainer() {
   const rootState = useCharacterSheetRootState();
+  const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
     string | null
   >(null);
@@ -89,6 +91,7 @@ export default function CharacterSheetContainer() {
   const otherRyugiRemoveTriggerRef = useRef<HTMLButtonElement>(null);
   const otherRyugiAddButtonRef = useRef<HTMLButtonElement>(null);
   const specialItemCategoryRemoveTriggerRef = useRef<HTMLButtonElement>(null);
+  const actionMenuTriggerRef = useRef<HTMLButtonElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
@@ -243,6 +246,23 @@ export default function CharacterSheetContainer() {
     },
   );
 
+  useEffect(() => {
+    if (!isActionMenuOpen) {
+      return;
+    }
+
+    function onKeyDown(event: KeyboardEvent): void {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsActionMenuOpen(false);
+        requestAnimationFrame(() => actionMenuTriggerRef.current?.focus());
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isActionMenuOpen]);
+
   function closePrimarySkillPicker(): void {
     setPrimarySkillPickerRowId(null);
   }
@@ -340,6 +360,11 @@ export default function CharacterSheetContainer() {
         aria-busy={rootState.isRootOperationInProgress}
         inert={rootState.isRootOperationInProgress || undefined}
       >
+        <CharacterSheetActionPane
+          isMenuOpen={isActionMenuOpen}
+          menuTriggerRef={actionMenuTriggerRef}
+          onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
+        />
         <CharacterSheetFormPresenter {...presenterProps} />
         <CharacterImageErrorDialog
           closeButtonRef={rootState.imageErrorCloseButtonRef}
