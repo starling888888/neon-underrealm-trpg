@@ -21,8 +21,7 @@
   gap: var(--space-1);
 }
 
-fieldset.row,
-fieldset.noncombatRow {
+fieldset.row {
   border: 0;
   margin: 0;
   min-inline-size: 0;
@@ -72,49 +71,6 @@ fieldset.row {
   gap: var(--space-1);
 }
 
-.noncombatGroups {
-  display: grid;
-  gap: var(--space-2);
-  min-width: 0;
-}
-
-.noncombatAttributeGroup {
-  display: grid;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.noncombatAttributeGroup[hidden] {
-  display: none;
-}
-
-.noncombatAttributeGroup h4 {
-  margin: 0;
-  border-bottom: var(--border-width) solid var(--color-border);
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  font-weight: 750;
-  line-height: var(--line-height-tight);
-  padding-bottom: 0.1875rem;
-}
-
-.noncombatRows {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.noncombatRow {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 2.75rem 4.25rem;
-  min-width: 0;
-  align-items: center;
-  gap: 0.25rem;
-  border-radius: var(--radius-sm);
-  padding: 0.25rem;
-}
-
 .row select,
 .row input,
 .reactionName {
@@ -128,33 +84,6 @@ fieldset.row {
   padding: 0.1875rem 0.25rem;
   font-size: var(--character-sheet-font-control);
   line-height: var(--line-height-tight);
-}
-
-.noncombatRow[data-favorite] {
-  background: var(--color-accent-soft);
-}
-
-.noncombatName {
-  min-width: 0;
-  color: var(--color-text);
-  font-size: var(--character-sheet-font-control);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.noncombatModifier {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  min-height: var(--character-sheet-control-min-height);
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  padding: 0.1875rem 0.25rem;
-  font-size: var(--character-sheet-font-control);
-  line-height: var(--line-height-tight);
-  text-align: right;
 }
 
 .reactionName {
@@ -227,10 +156,6 @@ fieldset.row {
         0,
         1.9fr
       );
-  }
-
-  .noncombatRows {
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .checkCountHeader {

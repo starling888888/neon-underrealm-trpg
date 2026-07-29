@@ -9,6 +9,7 @@ import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import styles from "./ChecksSection.module.css";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
+import NoncombatChecksSection from "./NoncombatChecksSection";
 
 export type ChecksSectionProps = {
   attacks: ChecksDerivedValues["attacks"];
@@ -145,108 +146,6 @@ function CheckHeaders({ sectionName }: { sectionName: string }) {
   );
 }
 
-function NoncombatCheckRow({
-  onFavoriteChange,
-  onModifierChange,
-  row,
-}: {
-  onFavoriteChange: (name: NoncombatSkillName, isFavorite: boolean) => void;
-  onModifierChange: (name: NoncombatSkillName, value: string) => number;
-  row: ChecksDerivedValues["noncombat"][number];
-}) {
-  const name =
-    characterSheetDictionary.gameDomain.terms.noncombatSkillNames[row.id];
-
-  return (
-    <fieldset
-      className={styles.noncombatRow}
-      data-favorite={row.isFavorite || undefined}
-    >
-      <legend className={styles.visuallyHidden}>{name}</legend>
-      <input
-        aria-label={`${name}を得意技能にする`}
-        checked={row.isFavorite}
-        onChange={(event) =>
-          onFavoriteChange(row.id, event.currentTarget.checked)
-        }
-        type="checkbox"
-      />
-      <span className={styles.noncombatName}>{name}</span>
-      <input
-        aria-label={`${name}の判定修正`}
-        className={styles.noncombatModifier}
-        defaultValue={row.modifier}
-        onBlur={(event) => {
-          event.currentTarget.value = String(
-            onModifierChange(row.id, event.currentTarget.value),
-          );
-        }}
-        onChange={(event) => {
-          if (!event.currentTarget.validity.badInput) {
-            onModifierChange(row.id, event.currentTarget.value);
-          }
-        }}
-        step="1"
-        type="number"
-      />
-      <output
-        aria-label={`${name}の常時判定数／一時判定数`}
-        className="character-sheet-number-value character-sheet-number-value--compact"
-      >
-        {formatDisplayValue(row.permanentCheck)}／
-        {formatDisplayValue(row.temporaryCheck)}
-      </output>
-    </fieldset>
-  );
-}
-
-function NoncombatChecks({
-  onFavoriteChange,
-  onModifierChange,
-  rows,
-}: {
-  onFavoriteChange: (name: NoncombatSkillName, isFavorite: boolean) => void;
-  onModifierChange: (name: NoncombatSkillName, value: string) => number;
-  rows: ChecksDerivedValues["noncombat"];
-}) {
-  const { checks: labels } = characterSheetDictionary.characterSheet;
-  const attributeNamesById =
-    characterSheetDictionary.gameDomain.terms.attributeNames;
-
-  return (
-    <CharacterSheetSectionFrame
-      expandable
-      headingAs="h3"
-      id="noncombat-checks"
-      title={labels.noncombat.title}
-    >
-      <div className={styles.noncombatGroups}>
-        {attributeNames.map((attribute) => {
-          const attributeRows = rows.filter(
-            (row) => row.attribute === attribute,
-          );
-
-          return (
-            <section className={styles.noncombatAttributeGroup} key={attribute}>
-              <h4>対応能力：{attributeNamesById[attribute]}</h4>
-              <div className={styles.noncombatRows}>
-                {attributeRows.map((row) => (
-                  <NoncombatCheckRow
-                    key={row.id}
-                    onFavoriteChange={onFavoriteChange}
-                    onModifierChange={onModifierChange}
-                    row={row}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-    </CharacterSheetSectionFrame>
-  );
-}
-
 export default function ChecksSection({
   attacks,
   onAttackAdd,
@@ -360,7 +259,7 @@ export default function ChecksSection({
           </div>
         </div>
       </CharacterSheetSectionFrame>
-      <NoncombatChecks
+      <NoncombatChecksSection
         onFavoriteChange={onNoncombatFavoriteChange}
         onModifierChange={onNoncombatModifierChange}
         rows={noncombat}
