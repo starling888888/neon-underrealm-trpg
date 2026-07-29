@@ -48,7 +48,9 @@ npm run visual:capture -- --grep '@vrt.*@home(?:\s|$)'
 
 `visual:capture`は`playwright.capture.config.ts`を使い、`test-results/visual/`へsnapshotを書き出す。canonical baselineは更新せず、視覚差分では失敗しない。route遷移、状態準備、表示のassertionが失敗した場合はcaptureも失敗する。snapshotは次のPlaywright実行で削除され得る一時artifactであり、Git管理しない。
 
-scenarioが`locators`を宣言した場合、`visual:capture`だけは同じroute / state / viewportで各owner locatorのoriginal-pixel-resolution screenshotも`test-results/visual/<target>/locators/`へ出力する。固定配置のtooltipなどsection境界外へ表示されるComponent stateでは、sectionとtooltip本体を別々のlocatorとして宣言する。`visual:test`はlocator screenshotを比較・生成せず、既存のfull-page canonical VRTだけを比較する。locatorは製品コードへtest-only属性を追加せず、既存のaccessible name、role、label、または実際のsection構造から解決する。
+静的ページのgeneric scenario helperは、full-page / viewport screenshotだけを比較する。static page scenarioのstate準備は、共通のmenu、page TOC、検索状態に限定する。
+
+character-sheetは`tests/visual/vrt/character-sheet-scenarios.ts`の専用helperを使う。defaultとtooltip代表だけをfull-pageで比較し、section variationはowner section、dialog stateはdialog本体を通常の`visual:test`でもcanonical baselineとして比較する。個別tooltipのlocator screenshotは作成しない。locatorは製品コードへtest-only属性を追加せず、既存のaccessible name、role、label、または実際のsection構造から解決する。
 
 ## 実行ポリシー
 

@@ -212,7 +212,8 @@ tests/
 └── visual/
     ├── character-sheet.spec.ts
     └── vrt/
-        └── character-sheet.spec.ts
+        ├── character-sheet.spec.ts
+        └── character-sheet-scenarios.ts
 ```
 
 - `tests/node/character-sheet/`: 既存のNode `node:test`と`tsx`で、`logic/`、`schemas/`、`master-data/`、serializableな`persistence/`、test doubleへ差し替えた`browser/` adapterの契約を表形式中心で確認する。正常値、上限前後、負値、`null`、空欄、明示的な`0`、重複、未知のマスタIDを必要範囲で含める。
@@ -222,6 +223,19 @@ tests/
 - `tests/visual/vrt/character-sheet.spec.ts`: `docs/design/character-sheet/notes.md`で確定したroute、viewport、fixture、表示状態だけをsnapshot比較する。VRTは文言・データ件数・計算式の正しさを担わない。
 
 React Component / Hook単体testは、Vitest、jsdom、React Testing Library、user-eventを使う。`@vitejs/plugin-react`はVitestのReact TSX変換だけを担い、production bundleへ機能を追加しない。ComponentまたはHookをbrowser E2Eより小さい単位で検証する必要が生じたGateでは、必要性、代替案、既存のNode / Playwrightとの役割分担を子issueへ記録し、ユーザー承認のもとで採用する。test-onlyのproduction Componentや状態をその代替にしない。
+
+### Character-sheet E2E / VRTの境界
+
+静的ページ用の`tests/visual/helpers/vrt.ts`は、full-pageまたはviewport screenshotと、サイト共通のmenu、page TOC、検索状態だけを扱う。character-sheet固有の入力、dialog、section locator、state準備をこのhelperへ追加しない。静的ページのscenario specはcharacter-sheetの変更に合わせて変更しない。
+
+character-sheetのVRTは`tests/visual/vrt/character-sheet-scenarios.ts`の専用helperで登録する。通常比較でもsection / dialog locatorをcanonical baselineとして扱い、`visual:capture`だけに局所状態の比較を委ねない。
+
+- full-pageはdefaultと`合計信用`のtooltip代表だけをdesktop / tablet / mobileで比較する。個別tooltip screenshotは作成せず、tooltipの文言・操作・配置はComponent testまたは最小browser behavior testで扱う。
+- dialog stateは背景や呼出し元sectionを含めず、dialog本体だけをdesktop / tablet / mobileで比較する。候補選択、確認、errorなどの開閉・focus復帰はbrowser behavior testの責務とする。
+- sectionの入力・選択・error variationは、そのowner sectionだけを比較する。section frameの表示契約を持つ`縁`、`combat`、`武器・防具`は見出しを含むframeをownerにする。`スキル`と`生き様専用アイテム`はdefault全体frameを3 viewportで1枚ずつ持ち、variationは子sectionへ分ける。`お守り`と`サイバネ`のvariationは各カテゴリ見出しを含むカテゴリsectionをownerにする。
+- noncombatのような独立した子sectionは局所ownerだけを比較し、親`combat`のdefault / 入力stateとは重複させない。
+
+VRTは領域、responsive layout、overlayの見た目を確認する。計算、validationの網羅、データ値、tooltipの個別挙動、dialogの副作用はNode / Component / Hook / browser behavior testへ置く。VRT実行前は`npm run visual:build`でPagefind indexを含むbuildを作成し、targetをgrepで限定する。canonical baselineの削除・更新はユーザーの明示承認時だけに行い、Visual Reviewで肯定報告する前に、変更したstate・viewportのactual screenshotを開く。
 
 ### 責務ごとの検証
 

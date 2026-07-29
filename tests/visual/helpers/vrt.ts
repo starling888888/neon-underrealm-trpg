@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import { visualViewports } from "../config";
 
 type ViewportName = keyof typeof visualViewports;
@@ -16,12 +16,6 @@ export type VrtState =
 export type VrtScenario = {
   fullPage?: boolean;
   id?: string;
-  locatorOnly?: boolean;
-  locators?: readonly {
-    name: string;
-    resolve: (page: Page) => Locator;
-  }[];
-  prepare?: (page: Page) => Promise<void>;
   route: string;
   state?: VrtState;
   viewports?: readonly ViewportName[];
@@ -44,52 +38,21 @@ export function registerVrtScenarios(
       test(`${target} ${scenarioId}${state} @vrt @${target} @${viewportName} @${state}${scenarioTag}`, async ({
         page,
       }) => {
-        const locatorCaptureEnabled = isLocatorCaptureEnabled();
-        if (scenario.locatorOnly && !locatorCaptureEnabled) {
-          test.skip(
-            true,
-            "locator-only scenario is captured only by the visual capture configuration",
-          );
-          return;
-        }
-
         await page.setViewportSize(visualViewports[viewportName]);
         await page.goto(scenario.route);
         await expect(page.locator("body")).toBeVisible();
         await prepareVrtState(page, state);
-        await scenario.prepare?.(page);
 
-        if (!scenario.locatorOnly) {
-          await expect(page).toHaveScreenshot(
-            [target, `${snapshotPrefix}${state}-${viewportName}.png`],
-            {
-              animations: "disabled",
-              fullPage: scenario.fullPage ?? true,
-            },
-          );
-        }
-
-        if (locatorCaptureEnabled) {
-          for (const locator of scenario.locators ?? []) {
-            await expect(locator.resolve(page)).toHaveScreenshot(
-              [
-                target,
-                "locators",
-                `${snapshotPrefix}${state}-${viewportName}-${locator.name}.png`,
-              ],
-              {
-                animations: "disabled",
-              },
-            );
-          }
-        }
+        await expect(page).toHaveScreenshot(
+          [target, `${snapshotPrefix}${state}-${viewportName}.png`],
+          {
+            animations: "disabled",
+            fullPage: scenario.fullPage ?? true,
+          },
+        );
       });
     }
   }
-}
-
-function isLocatorCaptureEnabled(): boolean {
-  return test.info().config.metadata.captureLocatorScreenshots === true;
 }
 
 async function prepareVrtState(page: Page, state: VrtState): Promise<void> {

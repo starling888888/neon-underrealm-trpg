@@ -208,6 +208,51 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 3
+
+### 指摘事項
+
+- character-sheet VRTはscenario数とfull-page screenshotが多く、長時間かつ不安定である。locatorを宣言していても、full-page screenshotが比較対象となるscenarioが残っており、section単位の表示契約を確認できない。
+- full-page screenshotはdesktop / tablet / mobileのdefaultと、tooltipの代表1件だけに絞る。個別tooltipのscreenshotは残さない。
+- dialog stateはdialogだけを、各sectionのdefault・入力・errorなどのvariationはそのsection領域だけをscreenshot対象にする。
+- 静的ページ用のscenario作成helperとcharacter-sheet固有のscenario作成・section locator screenshotを分離し、character-sheet専用helperへ閉じ込める。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `tests/visual/helpers/vrt.ts`の`registerVrtScenarios`は`fullPage`未指定時に`true`を使い、静的ページとcharacter-sheetの両方で共有されている。`tests/visual/vrt/scenario-play.spec.ts`を含む静的ページはこのhelperだけを利用する。
+  - `tests/visual/vrt/character-sheet.spec.ts`には58件のnamed scenarioがあり、`locatorOnly: true`は40件だけである。残るscenarioと末尾のdefault scenarioはfull-page screenshotを比較対象とする。primary skill、判定、縁、tooltipの代表stateにも、section locatorを宣言しながらfull-page比較を行うものがある。
+  - `visual:capture`だけは宣言したlocatorのscreenshotを出力するが、通常の`visual:test`はfull-page canonical baselineだけを比較する。現在のgeneric helperでは、section / dialog screenshotをcanonical VRTとして比較できない。
+  - `docs/design/character-sheet/notes.md`にはcharacter-sheetのfull-page canonical snapshotが51件あると記録されている。これはdesign intentの正本ではなく実装結果のVRT baselineだが、sectionごとの局所表示契約を比較するには粒度が不適切である。
+  - projectのVisual Review方針は、局所表示契約にはowner locatorの原寸screenshotを使い、full-page screenshotを局所確認の根拠にしない。指摘された分離・縮小方針はこの方針と整合する。
+  - この指摘は既存のVRT設計の改善であり、未検証事項を確認済みと報告した記録は見つからないため、agent failure logへの追加は不要とする。
+
+### 対応方針
+
+- static pageのscenario specと既存targetは変更せず、generic helperもmainと同じfull-page / viewport用の引数と処理へ戻す。character-sheetだけは専用のscenario作成helperへ移し、full-page、section locator、dialog locatorを別のbaselineとして比較できるようにする。
+- character-sheetのfull-page baselineは、defaultのdesktop / tablet / mobileと、tooltipの代表1 stateだけに制限する。個別tooltip scenarioは削除し、tooltipの局所文言・挙動は既存Component testの責務に戻す。
+- 全dialog scenarioはdialog locatorだけを比較する。背景sectionとの同時capture、full-page captureは行わない。
+- section scenarioは、defaultと入力・選択・errorなど表示差分があるstateごとに、そのowner section locatorだけを比較する。ほかのsectionは、表示差分の原因となる入力を保持していてもscreenshot対象へ含めない。
+- owner sectionは`CharacterSheetSectionFrame`全体を対象にして見出しを含める。`縁`、`combat`、`武器・防具`は各variationでもこのframeを比較し、`スキル`と`生き様専用アイテム`は全体frameのdefaultをdesktop / tablet / mobileで1枚ずつ比較する。非戦闘技能は既存の局所section captureを維持する。
+- `サイバネ`のdefault・入力・error variationは、内側の一覧だけでなくカテゴリsectionをowner locatorにして、`サイバネ`見出しを含める。`お守り`と同じ粒度にする。
+- current issueの受入条件と最終VRT diffから必要なstateを見直し、同じ局所表示契約を重複するscenarioは統合または削除する。canonical snapshotの更新は、削減後の対象一覧をユーザーが承認した場合だけ行う。
+- tooltip代表は`合計信用`とし、defaultと同じdesktop / tablet / mobileの3 viewportでfull-page比較する。
+- ユーザーは2026-07-29に実装開始と既存character-sheet canonical baseline全削除・再生成を明示承認した。
+
+### 対応完了チェックリスト
+
+- [x] character-sheet専用のVRT scenario helperを作成し、静的ページ用helperから完全に分離する
+- [x] full-page baselineをdefaultの3 viewportとtooltip代表1 stateへ縮小する
+- [x] dialog stateをdialog locatorだけのbaselineへ置き換える
+- [x] sectionごとのdefault・入力・error variationをowner section locatorだけのbaselineへ置き換える
+- [x] 個別tooltip screenshotと重複scenarioを削除する
+- [x] canonical snapshotの削除・更新対象一覧をユーザー承認する
+- [x] 変更targetのVRT比較と原寸locator screenshot確認を行う
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。

@@ -26,6 +26,8 @@
   - CCFOLIAコピー成功の通知ダイアログ状態
   - 画像選択の失敗ダイアログ状態
 - canonical baselineの更新は、以後もユーザーの明示承認を必要とする。
+- 2026-07-29、ユーザー承認によりcharacter-sheetのcanonical baselineを再構成する。full-page比較はdefaultと`合計信用` tooltip代表のdesktop / tablet / mobileだけとし、sectionのdefault・入力・error variationはowner section、dialog stateはdialog本体を比較する。個別tooltip screenshotとstatic page用generic scenario helperは対象外とする。
+- 同日の再構成後のcanonical baselineは118枚である。full-pageは6枚、sectionは82枚、dialogは30枚とする。`縁`、`combat`、`武器・防具`のvariationは見出しを含むsection frameを比較し、`スキル`と`生き様専用アイテム`はdefaultの全体frameだけを各3 viewportで比較する。子sectionの入力・error variationは引き続き子section locatorだけを比較する。
 - 2026-07-29のGate外レビュー修正として、`判定` sectionはdesktopでも左列の`縁`の後に置く。right columnは`スキル`から開始する。`画像を選択`と各`〜を追加` buttonは、キャラクターシート内の共通styleでfont size、高さ、padding、border、hover / disabled stateを揃え、section固有CSSは配置だけを持つ。
 
 ### G3 section frame comparison

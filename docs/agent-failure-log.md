@@ -1536,3 +1536,21 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-19-sheet-cybernetics` のサイバネE2E
 - 観測した失敗: 非戦闘技能の修正inputをサイバネsection内にあるものとして参照し、次に非戦闘技能が閉じている状態でも入力が描画されると仮定した。さらに、選択済み`その他`行の削除button数を、未選択の削除行と同じ名前で数えたため、同じE2Eを連続して失敗させた。
 - 一次対応: error contextのaccessibility treeで実際の描画範囲とbutton名を確認し、非戦闘技能を開いてから修正inputを検証する。可変行では選択済みと未選択のaccessible nameを区別し、操作前後の行数をその状態ごとにassertする。非戦闘技能inputはuncontrolledのため、form値の再設定はsectionを閉じて開き直した描画で確認する。
+
+### Repeated character-sheet VRT setup failures during scenario-helper migration
+
+#### 2026-07-29
+
+- source: agent self-report
+- 発生箇所: `tests/visual/vrt/character-sheet.spec.ts` の専用scenario helperへの移行後のtarget限定VRT
+- 観測した失敗: React hydration前のselect操作を一度だけ行いdesktop / tabletでstateを反映できなかった。続いて、変更確認dialogがselect値を即時変更しない既存契約へ、値変更を待つ汎用helperを誤用した。sandbox内のChromium起動失敗も同じ再実行中に重なった。
+- 一次対応: select値を反映するstateは`toPass`で再試行し、確認dialog stateはdialog表示を待機条件に分離した。Chromiumがsandbox内で起動できない場合は、理由を確認して許可済みtarget限定VRTだけをsandbox外で実行する。新しいVRT scenarioは、入力後のDOM stateと確認dialogのstate遷移を別契約として先に確認する。
+
+### Ran a search-state VRT without the required visual build, then treated its baseline difference as helper validation
+
+#### 2026-07-29
+
+- source: agent self-report
+- 発生箇所: static VRT helper復元後の`@search-modal @search-results`確認
+- 観測した失敗: 最初にPagefind indexを含まない通常buildで検索結果stateを実行し、3 viewportで結果が表示されなかった。`visual:build`後にはstate表示へ進んだが、desktop / tabletで既存baselineとの差分が残った。この差分はhelper変更ではなく、画面左側の既存static内容であった。
+- 一次対応: 検索stateを含むVRTは必ず`visual:build`後のpreviewで実行する。helper変更の回帰確認では、既存baselineとの差分をhelper起因と断定せず、diff画像で影響領域を確認してから対応範囲を判断する。
