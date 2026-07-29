@@ -212,6 +212,14 @@ export const characterSheetFormSchema = z
         }),
       ),
     }),
+    omamori: z.object({
+      rows: z.array(
+        z.object({
+          omamoriId: z.string().nullable(),
+          rowId: stableRowIdSchema,
+        }),
+      ),
+    }),
     otherRyugiSkills: z.object({
       rows: z.array(
         z.object({
@@ -272,6 +280,7 @@ export const characterSheetFormSchema = z
       { path: ["checks", "reactions"], rows: values.checks.reactions },
       { path: ["commonSkills", "rows"], rows: values.commonSkills.rows },
       { path: ["ikizamaSkills", "rows"], rows: values.ikizamaSkills.rows },
+      { path: ["omamori", "rows"], rows: values.omamori.rows },
       {
         path: ["otherRyugiSkills", "rows"],
         rows: values.otherRyugiSkills.rows,

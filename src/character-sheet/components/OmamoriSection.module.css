@@ -1,0 +1,176 @@
+.section {
+  display: grid;
+  min-width: 0;
+  gap: 0;
+}
+
+.line {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 1.25rem minmax(7rem, 1fr) 2.5rem minmax(14rem, 2.3fr) 0 1.75rem;
+  align-items: stretch;
+}
+
+.headerRow {
+  composes: tableHeader from "./CharacterSheetFormList.module.css";
+}
+
+.headerRow > * {
+  display: grid;
+  min-width: 0;
+  min-height: 1.75rem;
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  white-space: nowrap;
+}
+
+.headerRow > :nth-child(2),
+.headerRow > :nth-child(4) {
+  justify-items: start;
+  text-align: left;
+}
+
+.row {
+  composes: listRow from "./CharacterSheetFormList.module.css";
+}
+
+.row > .line > * {
+  min-width: 0;
+  border-right: var(--border-width) solid var(--color-border);
+}
+
+.row > .line > :last-child {
+  border-right: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.reorderControls {
+  composes: reorderControls from "./CharacterSheetFormList.module.css";
+}
+
+.reorderButton {
+  composes: reorderButton from "./CharacterSheetFormList.module.css";
+}
+
+.itemPicker {
+  composes: rowPicker from "./CharacterSheetFormList.module.css";
+}
+
+.chooseIcon {
+  composes: pickerIcon from "./CharacterSheetFormList.module.css";
+}
+
+.cell,
+.detailsToggle {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+
+.effect,
+.mobileEffect {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.effect {
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+  line-height: var(--line-height-normal);
+}
+
+.detailsToggle {
+  composes: detailsToggle from "./CharacterSheetFormList.module.css";
+  display: none;
+}
+
+.mobileEffect {
+  display: none;
+}
+
+.mobileEffectHeader {
+  display: none;
+}
+
+.removeCell {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+}
+
+.removeCell > :global(.character-sheet-remove-button) {
+  transform: translateX(1px);
+}
+
+.addButton {
+  composes: addButton from "./CharacterSheetFormList.module.css";
+  justify-self: start;
+  margin-top: var(--space-3);
+  min-height: 2rem;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+@media (width < 48rem) {
+  .line {
+    grid-template-columns: 1.25rem minmax(0, 1fr) 2.25rem 1.5rem 1.25rem;
+  }
+
+  .line > :nth-child(4) {
+    display: none;
+  }
+
+  .desktopEffectHeader {
+    display: none;
+  }
+
+  .mobileEffectHeader {
+    display: grid;
+  }
+
+  .headerRow {
+    font-size: 0.625rem;
+  }
+
+  .headerRow > *,
+  .cell,
+  .detailsToggle {
+    padding-inline: 0.125rem;
+    font-size: 0.6875rem;
+  }
+
+  .itemPicker {
+    padding: var(--space-1);
+    font-size: 0.6875rem;
+  }
+
+  .chooseIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .detailsToggle {
+    display: grid;
+  }
+
+  .mobileEffect {
+    display: block;
+    border-top: var(--border-width) solid var(--color-border);
+    padding: var(--space-2);
+    font-size: 0.75rem;
+    line-height: var(--line-height-normal);
+  }
+}

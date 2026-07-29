@@ -1,0 +1,13 @@
+.frame {
+  composes: frame from "./CharacterSheetSectionFrame.module.css";
+}
+
+.heading {
+  composes: staticTitle from "./CharacterSheetSectionFrame.module.css";
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.content {
+  composes: content from "./CharacterSheetSectionFrame.module.css";
+}

@@ -189,6 +189,15 @@ export type ArmorValues = {
   defenseModifier: number | null;
 };
 
+export type OmamoriRowValues = {
+  omamoriId: string | null;
+  rowId: string;
+};
+
+export type OmamoriValues = {
+  rows: OmamoriRowValues[];
+};
+
 function createInitialBondRows(): BondValues[] {
   return Array.from({ length: 4 }, (_, index) => ({
     isResolved: false,
@@ -250,6 +259,7 @@ export type CharacterSheetFormValues = {
   commonSkills: CommonSkillsValues;
   credit: CreditValues;
   ikizamaSkills: IkizamaSkillsValues;
+  omamori: OmamoriValues;
   otherRyugiSkills: OtherRyugiSkillsValues;
   primarySkills: PrimarySkillsValues;
   profile: ProfileValues;
@@ -361,6 +371,9 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
   ikizamaSkills: {
     bonusLevel: 1,
     rows: createInitialIkizamaSkillRows(),
+  },
+  omamori: {
+    rows: [],
   },
   otherRyugiSkills: {
     rows: [],

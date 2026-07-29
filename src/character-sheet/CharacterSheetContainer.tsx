@@ -5,6 +5,7 @@ import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOver
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
+import OmamoriPickerDialog from "./components/dialogs/OmamoriPickerDialog";
 import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
 import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
 import SkillSelectionChangeConfirmDialog from "./components/dialogs/SkillSelectionChangeConfirmDialog";
@@ -12,6 +13,7 @@ import WeaponPickerDialog from "./components/dialogs/WeaponPickerDialog";
 import SkillPickerDialog from "./components/skills/SkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
+import { getOmamori } from "./master-data/omamori";
 import {
   getArmors,
   getWeaponCandidateGroups,
@@ -43,6 +45,9 @@ export default function CharacterSheetContainer() {
     null,
   );
   const [isArmorPickerOpen, setIsArmorPickerOpen] = useState(false);
+  const [omamoriPickerRowId, setOmamoriPickerRowId] = useState<string | null>(
+    null,
+  );
   const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
     useState(false);
   const [isIkizamaChangeConfirmOpen, setIsIkizamaChangeConfirmOpen] =
@@ -57,6 +62,7 @@ export default function CharacterSheetContainer() {
   const otherRyugiSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const weaponPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const armorPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const omamoriPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
@@ -174,6 +180,10 @@ export default function CharacterSheetContainer() {
         armorPickerTriggerRef.current = trigger;
         setIsArmorPickerOpen(true);
       },
+      onOmamoriPickerRequested: (rowId, trigger) => {
+        omamoriPickerTriggerRef.current = trigger;
+        setOmamoriPickerRowId(rowId);
+      },
       onWeaponPickerRequested: (rowId, trigger) => {
         weaponPickerTriggerRef.current = trigger;
         setWeaponPickerRowId(rowId);
@@ -201,6 +211,9 @@ export default function CharacterSheetContainer() {
   }
   function closeArmorPicker(): void {
     setIsArmorPickerOpen(false);
+  }
+  function closeOmamoriPicker(): void {
+    setOmamoriPickerRowId(null);
   }
 
   function confirmPrimaryRyugiChange(): void {
@@ -382,6 +395,21 @@ export default function CharacterSheetContainer() {
             closeArmorPicker();
           }}
           returnFocusRef={armorPickerTriggerRef}
+        />
+        <OmamoriPickerDialog
+          candidates={getOmamori()}
+          isOpen={omamoriPickerRowId !== null}
+          onRequestClose={closeOmamoriPicker}
+          onSelect={(omamoriId) => {
+            if (omamoriPickerRowId !== null) {
+              presenterProps.omamoriSection.onSelect(
+                omamoriPickerRowId,
+                omamoriId,
+              );
+            }
+            closeOmamoriPicker();
+          }}
+          returnFocusRef={omamoriPickerTriggerRef}
         />
         <SkillSelectionChangeConfirmDialog
           confirmation={

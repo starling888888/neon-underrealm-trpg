@@ -215,6 +215,24 @@ export const characterSheetDictionary = {
       weaponPickerGuide:
         "武器名称をクリックするとキャラクターシートに反映されます。",
     },
+    omamori: {
+      add: "＋ お守りを追加",
+      choose: "お守りを選択",
+      closeDetails: "効果を閉じる",
+      headers: {
+        credit: "信用",
+        effect: "効果",
+        name: "名称",
+      },
+      moveDown: "下へ移動",
+      moveUp: "上へ移動",
+      name: "お守り",
+      openDetails: "効果を開く",
+      pickerGuide:
+        "お守り名称をクリックするとキャラクターシートに反映されます。",
+      remove: "を削除",
+      unselected: "お守りを選択",
+    },
   },
   gameDomain: {
     terms: {

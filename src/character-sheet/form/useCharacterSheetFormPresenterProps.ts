@@ -12,6 +12,7 @@ import useBuildSectionProps from "./useBuildSectionProps";
 import useChecksSectionProps from "./useChecksSectionProps";
 import useCommonSkillsSectionProps from "./useCommonSkillsSectionProps";
 import useIkizamaSkillsSectionProps from "./useIkizamaSkillsSectionProps";
+import useOmamoriSectionProps from "./useOmamoriSectionProps";
 import useOtherRyugiSkillsSectionProps from "./useOtherRyugiSkillsSectionProps";
 import usePrimarySkillsSectionProps from "./usePrimarySkillsSectionProps";
 import useProfileSectionProps from "./useProfileSectionProps";
@@ -58,6 +59,7 @@ type CharacterSheetPresenterOptions = {
     trigger: HTMLButtonElement,
   ) => void;
   onArmorPickerRequested: (trigger: HTMLButtonElement) => void;
+  onOmamoriPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
   onWeaponPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
 };
 
@@ -103,6 +105,7 @@ export default function useCharacterSheetFormPresenterProps(
     onPrimaryRyugiChangeRequested,
     onPrimarySkillPickerRequested,
     onArmorPickerRequested,
+    onOmamoriPickerRequested,
     onWeaponPickerRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
@@ -149,6 +152,9 @@ export default function useCharacterSheetFormPresenterProps(
     onArmorPickerRequest: onArmorPickerRequested ?? (() => {}),
     onWeaponPickerRequest: onWeaponPickerRequested ?? (() => {}),
   });
+  const omamori = useOmamoriSectionProps(form, {
+    onPickerRequest: onOmamoriPickerRequested ?? (() => {}),
+  });
 
   return {
     bondsSection,
@@ -186,6 +192,7 @@ export default function useCharacterSheetFormPresenterProps(
       removeRows: otherRyugiSkills.removeRows,
     },
     otherRyugiSkillsSection: otherRyugiSkills.sectionProps,
+    omamoriSection: omamori,
     primarySkillPicker: {
       candidateGroups: primarySkills.candidateGroups,
       clearSelection: primarySkills.clearSelection,

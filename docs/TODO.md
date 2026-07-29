@@ -21,6 +21,12 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [ ] G22で専用アイテムカテゴリframeへカテゴリ削除buttonを追加する
+  - source: `.tmp/review/ex-02-18-sheet-omamori/human-review-1.md` / `ex-02-18-sheet-omamori` のレビュー指摘 1
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG22
+  - handling plan: G18で追加する非折りたたみのカテゴリframeへ、カテゴリ削除buttonの表示・操作・focus復帰を追加する。G22で行う既定表示、カテゴリ単位の追加・削除、警告表示と整合させ、現在の生き様に対応する既定カテゴリは削除できない契約を適用する。
+
 - [ ] G24着手前にキャラクターシート可変行のRHF操作境界を`useFieldArray`契約へ整合する
   - source: `.tmp/chatgpt-review.md` / `レビュー指摘 1`
   - classification: follow-up

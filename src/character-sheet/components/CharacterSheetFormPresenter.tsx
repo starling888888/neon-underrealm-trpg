@@ -10,6 +10,7 @@ import CommonSkillsSection, {
 import IkizamaSkillsSection, {
   type IkizamaSkillsSectionProps,
 } from "./IkizamaSkillsSection";
+import OmamoriSection, { type OmamoriSectionProps } from "./OmamoriSection";
 import OtherRyugiSkillsSection, {
   type OtherRyugiSkillsSectionProps,
 } from "./OtherRyugiSkillsSection";
@@ -20,6 +21,7 @@ import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
 import SecondaryAttributesSection, {
   type SecondaryAttributesSectionProps,
 } from "./SecondaryAttributesSection";
+import SpecialItemCategorySection from "./SpecialItemCategorySection";
 import WeaponsAndArmorSection, {
   type WeaponsAndArmorSectionProps,
 } from "./WeaponsAndArmorSection";
@@ -37,6 +39,7 @@ export type CharacterSheetFormPresenterProps = {
   commonSkillsSection: CommonSkillsSectionProps;
   ikizamaSkillsSection: IkizamaSkillsSectionProps;
   otherRyugiSkillsSection: OtherRyugiSkillsSectionProps;
+  omamoriSection: OmamoriSectionProps;
   primarySkillsSection: PrimarySkillsSectionProps;
   profileSection: ProfileSectionProps;
   secondaryAttributesSection: SecondaryAttributesSectionProps;
@@ -50,6 +53,7 @@ export default function CharacterSheetFormPresenter({
   commonSkillsSection,
   ikizamaSkillsSection,
   otherRyugiSkillsSection,
+  omamoriSection,
   primarySkillsSection,
   profileSection,
   secondaryAttributesSection,
@@ -147,7 +151,14 @@ export default function CharacterSheetFormPresenter({
           id="special-items"
           title={gameDomain.terms.ikizamaSpecialItems}
         >
-          <div data-character-sheet-section-slot="special-items" />
+          <div data-character-sheet-section-slot="special-items">
+            <SpecialItemCategorySection
+              id="omamori"
+              title={characterSheet.omamori.name}
+            >
+              <OmamoriSection {...omamoriSection} />
+            </SpecialItemCategorySection>
+          </div>
         </CharacterSheetSectionFrame>
       </div>
     </form>

@@ -50,6 +50,7 @@
 - 候補選択dialogは既存`CharacterSheetDialog`を使い、Containerが開閉、選択対象row、操作元へのfocus復帰を保持する。候補は入力順で表示し、重複選択を許可して選択済み候補をdisabled / mutedにしない。
 - dialogの候補はdesktop / tablet / mobileで、名称と信用を1行目、効果を2行目に置く。候補の効果は常時表示し、折り畳みや展開iconを追加しない。
 - 既存の`CharacterSheetFormList.module.css`を再利用し、お守り固有CSSは列幅、desktop / tabletとmobileの情報配置、効果本文の折返しだけを所有する。
+- お守りカテゴリ全体を、折りたたみを持たない専用frame Componentでラップする。このGateではカテゴリ削除buttonを表示しない。
 - `characterSheetDictionary`へsection / header /操作の固定UI文言を追加し、ゲームデータ由来の名称・信用・効果はmaster dataの読み取り結果を表示する。
 
 ## 初期スコープ外
@@ -69,8 +70,8 @@
 - [ ] お守り行と候補dialogが既存共通form styleを再利用し、固有CSSが列とresponsive差分だけを持つ。
 - [ ] G22以降のカテゴリ連動、カテゴリ単位の追加・削除、信用集計を実装していない。
 - [ ] target限定Visual Reviewの対象route、states、viewports、actual screenshot、VRT結果を記録し、canonical VRT baselineを更新していない。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
@@ -119,3 +120,32 @@
 - user-directed architecture update: `CharacterSheetFormList.module.css`の共通classを、スキル・武器防具・生き様専用アイテムの行一覧と候補dialogが再利用する契約を明文化した。
 - Gate issue review 1で確認した境界の不整合は、ユーザーの明示指示に従い、個別行の操作をG18、カテゴリ操作をG22とする親plan更新で解消した。
 - 実装開始は、このchild issueのユーザーレビューと明示承認後に限る。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- desktopのお守り行で、削除buttonが操作列の中央に収まらず位置がずれている。
+- mobileで効果を展開する行に対応するheaderが表示されていない。
+- 専用アイテムカテゴリ全体は、将来のカテゴリ削除buttonを見据え、折りたたみを持たない専用frame Componentで扱う。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `OmamoriSection.module.css`はdesktop削除buttonを最終grid列へ置くだけで操作列全体の配置を固定していない。mobileでは`効果` headerを非表示にして展開icon列のheaderを空にしている。カテゴリ全体は現在、折りたたみ可能なtop-level `CharacterSheetSectionFrame`の内側へ直接置かれており、カテゴリ削除buttonを持つ非折りたたみframeは存在しない。
+- scope decision: ユーザーの明示指示により、カテゴリ削除buttonを持たない非折りたたみframe ComponentはG18で追加する。カテゴリ削除button自体はG22に残す。
+
+### 対応方針
+
+- desktopでは既存共通styleを保ったまま、削除buttonを最終操作セルの縦横中央へ固定する。
+- mobileでは効果の展開iconに対応するheaderを表示し、effect本文の表示が展開操作に対応することを明確にする。
+- `CharacterSheetSectionFrame`の折りたたみ契約を流用せず、カテゴリ削除buttonを将来受けられる非折りたたみの専用frame ComponentをG18で追加する。
+
+### 対応完了チェックリスト
+
+- [ ] desktopの削除buttonを最終操作セルの縦横中央へ配置する。
+- [ ] mobileの展開iconに対応するheaderを表示する。
+- [ ] お守りカテゴリを非折りたたみの専用frame Componentでラップし、カテゴリ削除buttonを追加していない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
