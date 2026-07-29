@@ -79,16 +79,16 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 - [x] スミ選択時だけ、ナノマシンの消費精神力最大値を最大体力とtooltipへ反映する。
 - [x] 関連TODOの対応結果を記録している。
 - [x] `npm run build` と必要な`npm run check`、対象Node / hook / Component testが通る。
-- [ ] 実装後のユーザーレビュー承認を受けて、対象E2Eとtarget限定VRTを実行し、必要なactual screenshotを開いて確認している。canonical baselineの更新は別途ユーザーが明示承認した場合だけ行う。
+- [x] 実装後のユーザーレビュー承認を受けて、対象E2Eとtarget限定VRTを実行し、必要なactual screenshotを開いて確認している。canonical baselineの更新は別途ユーザーが明示承認した場合だけ行う。
 
 ## チェックポイント
 
 - [x] `docs/architectures/character-sheet.md`に従い、RHFを入力値の唯一の保持先とし、派生値・validationをpure logic、dialog状態をContainer、表示をPresenter / sectionへ分離している。
 - [x] `exclusiveItem`、item master-data、各行のform値を明示してlogicへ渡し、Component / Presenterから生成JSONを直接検索していない。
 - [x] 消費信用、信用超過、スミの最大体力補正、tooltip条件、カテゴリ表示順、削除確認条件をNode / hook / Component testで確認している。
-- [ ] `/character-sheet/`、GitHub Pagesのサブパス公開、既存の武器・防具とG18–G21のカテゴリ内操作を壊していない。
-- [ ] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、未選択、専用カテゴリ、追加カテゴリ、warning、信用超過、スミの最大体力、カテゴリ削除確認、生き様変更後を確認対象として列挙している。
-- [ ] character-sheet VRTは、専用アイテム全体frameのdefaultを3 viewportで、カテゴリ追加・warning・削除確認は該当sectionまたはdialog locatorで対象限定する。tooltipはComponent / browser behavior testで確認し、個別tooltip snapshotを追加しない。
+- [x] `/character-sheet/`、GitHub Pagesのサブパス公開、既存の武器・防具とG18–G21のカテゴリ内操作を壊していない。
+- [x] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、未選択、専用カテゴリ、追加カテゴリ、warning、信用超過、スミの最大体力、カテゴリ削除確認、生き様変更後を確認対象として列挙している。
+- [x] character-sheet VRTは、専用アイテム全体frameのdefaultを3 viewportで、カテゴリ追加・warning・削除確認は該当sectionまたはdialog locatorで対象限定する。tooltipはComponent / browser behavior testで確認し、個別tooltip snapshotを追加しない。
 - [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`、`docs/design/character-sheet/notes.md`、承認済みdesign draftと矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
