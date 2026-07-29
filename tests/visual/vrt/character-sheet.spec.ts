@@ -100,6 +100,30 @@ async function selectNanomachine(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
+async function openDrugsPicker(page: Page, row = 1): Promise<void> {
+  await drugsSection
+    .resolve(page)
+    .getByRole("button", {
+      exact: true,
+      name: `ドラッグ${row}：ドラッグを選択`,
+    })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "ドラッグを選択" }),
+  ).toBeVisible();
+}
+
+async function selectDrug(
+  page: Page,
+  row = 1,
+  name = "マッスルドラッグ",
+): Promise<void> {
+  await openDrugsPicker(page, row);
+  const picker = page.getByRole("dialog", { name: "ドラッグを選択" });
+  await picker.getByRole("button", { exact: true, name }).click();
+  await expect(picker).toBeHidden();
+}
+
 async function selectOption(locator: Locator, value: string): Promise<void> {
   await expect(async () => {
     await locator.selectOption(value);
@@ -252,6 +276,7 @@ const cyberneticsSection = section(
   '[data-special-item-category="cybernetics"]',
 );
 const nanomachinesSection = section("[data-nanomachines-section]");
+const drugsSection = section('[data-special-item-category="drugs"]');
 
 registerCharacterSheetVrtScenarios([
   {
@@ -544,6 +569,41 @@ registerCharacterSheetVrtScenarios([
     route: visualRoutes.characterSheet,
   },
   {
+    id: "drugs-default",
+    kind: "section",
+    locator: drugsSection,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "drugs-input",
+    kind: "section",
+    locator: drugsSection,
+    prepare: async (page) => {
+      await selectDrug(page);
+      await drugsSection
+        .resolve(page)
+        .getByLabel("ドラッグ1：マッスルドラッグ所持数", { exact: true })
+        .fill("2");
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "drugs-expanded",
+    kind: "section",
+    locator: drugsSection,
+    prepare: async (page) => {
+      await selectDrug(page);
+      await drugsSection
+        .resolve(page)
+        .getByRole("button", {
+          exact: true,
+          name: "ドラッグ1：マッスルドラッグ効果を開く",
+        })
+        .click();
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
     id: "special-items-overview",
     kind: "section",
     locator: specialItemsSection,
@@ -582,6 +642,23 @@ registerCharacterSheetVrtScenarios([
     kind: "dialog",
     locator: dialog("ナノマシンを選択"),
     prepare: openNanomachinePicker,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "drugs-picker",
+    kind: "dialog",
+    locator: dialog("ドラッグを選択"),
+    prepare: openDrugsPicker,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "drugs-picker-duplicate",
+    kind: "dialog",
+    locator: dialog("ドラッグを選択"),
+    prepare: async (page) => {
+      await selectDrug(page);
+      await openDrugsPicker(page, 2);
+    },
     route: visualRoutes.characterSheet,
   },
   {

@@ -43,8 +43,8 @@
 - 名称は候補選択dialogを開くbuttonとし、未選択時は既存用語と一致する`ドラッグを選択`を表示する。同じIDを複数行で選択した状態は各該当行をerror状態にし、候補dialogでは他行で選択済みの候補をdisabledにする。
 - 現在の表示順の行番号を含む行labelを定義し、名称選択、所持数input、効果展開、上下移動、削除のaccessible nameへ含める。並べ替え後は表示順に追従させる。
 - 所持数は行ごとに保持する、0以上の整数の編集inputとする。初期値は`0`とし、空欄になる操作では`0`へ正規化する。G21では、この値をドラッグ行に保持・表示するまでとし、消費信用への一元算出への接続はG22で行う。
-- 候補dialogはdesktop / tablet / mobileで同じ列構成とし、名称、信用、使用タイミング、1セット数量、BT強度を一行のheaderと候補行へ表示する。候補ごとの効果は、その候補行の直下に全列をまたぐ2行目で表示する。Escape、可視の閉じる操作、選択後の対象行更新、操作元へのfocus復帰をContainerが所有する。
-- `drugs`のmaster-data adapter、form schema・default値、form adapter、Presenter、Container dialog orchestration、表示Component、CSS Module、dictionary、対象Node / hook / Component testを、既存の所有境界に沿って追加・更新する。ユーザー指示により、E2EとVRTはこのGateで実装・実行しない。
+- 候補dialogはdesktop / tabletでは名称、信用、使用タイミング、1セット数量、BT強度の5列と候補ごとの効果2行目を表示する。mobileでは名称、信用、BT強度を1行目に残し、使用タイミングと1セット数量を効果本文の直前に表示する。Escape、可視の閉じる操作、選択後の対象行更新、操作元へのfocus復帰をContainerが所有する。
+- `drugs`のmaster-data adapter、form schema・default値、form adapter、Presenter、Container dialog orchestration、表示Component、CSS Module、dictionary、対象Node / hook / Component / E2E / VRT testを、既存の所有境界に沿って追加・更新する。
 
 ## 初期スコープ外
 
@@ -52,20 +52,20 @@
 - ドラッグ効果の文章解析、能力値・判定数・防御力などへの自動適用、所持数と重複ID以外の独自validationを追加しない。
 - お守り、サイバネ、ナノマシン、武器・防具の個別UI・業務条件を変更しない。異なるform値・業務条件を持つアイテム行の共通Component化は行わない。
 - G25のエラー全件集約、G24以降のlocalStorage、IndexedDB、JSON、CCFOLIA、サーバー、DB、confirmation dialog、UI libraryを追加しない。
-- canonical VRT baselineの追加・再設計・Git管理を行わない。親Gate planの方針に従い、必要なtarget限定VRTのbaseline更新はユーザーの明示承認がある場合だけ行う。
+- target限定のcanonical VRT baselineは、ユーザーの明示承認がある場合だけ追加・更新する。今回の更新対象はドラッグsectionと候補dialog、およびドラッグ追加で変化する既存full-page default・専用アイテムoverviewに限定する。
 - `docs/plan.md`のチェックボックスを変更しない。初期スコープ外の項目は`docs/out-of-scope.md`に従う。
 
 ## アーキテクチャ適用
 
-| 適用節                        | 許可する変更                                                                                                                           | 禁止する変更                                                                                                | 確認するテスト層           |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `実装時のアーキテクチャ遵守`  | G21の変更を以下の適用節とこのissueの対象範囲へ対応付ける。                                                                             | 対応付けられない共有Component、状態所有者、データ境界、テスト層を変更しない。                               | 最終diffとの照合           |
-| `可変行のデザイン指針`        | ドラッグ固有の可変行・候補dialog ComponentとCSS Moduleで、指定列、mobileの展開内詳細、行操作、行番号付きaccessible nameを実装する。    | 別のform値・業務条件を持つアイテム行を共通Componentへ抽象化しない。ユーザー指定以外の要約項目を省略しない。 | Component                  |
-| `Container / Presenterの責務` | Containerがdialogの開閉、対象行、focus復帰を保持し、PresenterへドラッグsectionのViewModel / Actionsを渡す。                            | Presenter / 表示ComponentからRHF、マスタ検索、dialog stateへ直接アクセスしない。                            | Hook、Component、Container |
-| `状態と派生値の境界`          | RHFにドラッグのID、stable row ID、所持数を保持し、field array操作で追加・削除・並べ替えを行う。重複IDは各該当行のerrorとして導出する。 | RHF値を別storeへ複製しない。効果文を解析せず、G22の消費信用集計を先取りしない。                             | Node、hook、Component      |
-| `データ境界`                  | `master-data/drugs.ts`で生成JSONから候補と表示用情報を取得し、IDだけをform値に保存する。                                               | generated JSONを手編集しない。ComponentまたはPresenterから生成JSONを直接検索しない。                        | Node、hook                 |
-| `HTML / CSSの構造と責務`      | table相当の列見出し・行・展開領域、候補table、数値inputと行操作を意味構造とCSS Moduleで実装する。                                      | CSSだけで操作・入力の意味を表現しない。不必要なtable DOMを増やさない。                                      | Component                  |
-| `テストアーキテクチャ`        | pure logic、form hook、表示Component、Container dialog orchestrationを対象ごとに追加・更新する。                                       | E2Eだけでlogic / form / dialog境界を検証しない。E2EとVRTを実装・実行しない。                                | Node、hook、Component      |
+| 適用節                        | 許可する変更                                                                                                                           | 禁止する変更                                                                                                | 確認するテスト層                |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `実装時のアーキテクチャ遵守`  | G21の変更を以下の適用節とこのissueの対象範囲へ対応付ける。                                                                             | 対応付けられない共有Component、状態所有者、データ境界、テスト層を変更しない。                               | 最終diffとの照合                |
+| `可変行のデザイン指針`        | ドラッグ固有の可変行・候補dialog ComponentとCSS Moduleで、指定列、mobileの展開内詳細、行操作、行番号付きaccessible nameを実装する。    | 別のform値・業務条件を持つアイテム行を共通Componentへ抽象化しない。ユーザー指定以外の要約項目を省略しない。 | Component                       |
+| `Container / Presenterの責務` | Containerがdialogの開閉、対象行、focus復帰を保持し、PresenterへドラッグsectionのViewModel / Actionsを渡す。                            | Presenter / 表示ComponentからRHF、マスタ検索、dialog stateへ直接アクセスしない。                            | Hook、Component、Container      |
+| `状態と派生値の境界`          | RHFにドラッグのID、stable row ID、所持数を保持し、field array操作で追加・削除・並べ替えを行う。重複IDは各該当行のerrorとして導出する。 | RHF値を別storeへ複製しない。効果文を解析せず、G22の消費信用集計を先取りしない。                             | Node、hook、Component           |
+| `データ境界`                  | `master-data/drugs.ts`で生成JSONから候補と表示用情報を取得し、IDだけをform値に保存する。                                               | generated JSONを手編集しない。ComponentまたはPresenterから生成JSONを直接検索しない。                        | Node、hook                      |
+| `HTML / CSSの構造と責務`      | table相当の列見出し・行・展開領域、候補table、数値inputと行操作を意味構造とCSS Moduleで実装する。                                      | CSSだけで操作・入力の意味を表現しない。不必要なtable DOMを増やさない。                                      | Component                       |
+| `テストアーキテクチャ`        | pure logic、form hook、表示Component、Container dialog orchestrationに加え、代表E2Eとtarget限定VRTを追加・更新する。                   | E2Eだけでlogic / form / dialog境界を検証しない。VRTを全件実行しない。                                       | Node、hook、Component、E2E、VRT |
 
 ## 完了条件
 
@@ -76,7 +76,7 @@
 - [ ] 重複IDを持つ各ドラッグ行がerror状態になり、候補dialogでは他行で選択済みの候補をdisabledにする。
 - [ ] 行番号付きaccessible nameにより、各行の名称選択、所持数input、効果展開、上下移動、削除を区別できる。名称選択、効果展開、追加・削除・並べ替え、候補dialogのEscape・閉じる・選択後のfocus復帰がkeyboard操作を含めアクセシブルに動作する。
 - [ ] 候補dialogがdesktop / tablet / mobileで同一の名称、信用、使用タイミング、1セット数量、BT強度のheaderと、候補ごとの効果2行目・選択済み候補のdisabledを満たす。
-- [ ] 関連TODOを扱わない理由と、design targetおよびVRT baselineを更新しない扱いが記録されている。
+- [ ] 関連TODOを扱わない理由と、design targetおよびユーザー承認済みVRT baseline更新の扱いが記録されている。
 - [x] `npm run build` が通る。
 - [x] 必要な`npm run check`、対象Node / hook / Component testが通る。
 
@@ -86,7 +86,7 @@
 - [x] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
 - [ ] dev serverでdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`のdefault、選択済み、効果展開、所持数編集、追加・削除・並べ替え、名称tooltip、候補dialogをユーザーが確認できる状態にする。
 - [x] 重複IDのerror、候補dialogの選択済み候補disabled、行番号付きaccessible name、並べ替え後の表示順追従をNode / hook / Component testで確認した。
-- [x] ユーザー指示に従い、E2EとVRTを実装・実行せず、canonical baselineを更新していない。
+- [x] ユーザー指示に従い、代表E2Eとtarget限定VRTを実装・実行し、approved canonical baselineだけを更新した。
 - [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`および`docs/design/`と矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
@@ -118,14 +118,13 @@
 - 可変3行、0行までの削除、追加、上下の並べ替え、重複IDのerrorと候補dialogのdisabledを、このGateで扱う範囲として十分か。
 - 候補dialogの5列と効果2行目、選択済み候補のdisabledを全viewportで同じ構成にする判断が正しいか。
 - 消費信用の一元算出と生き様・カテゴリ連動をG22へ残し、G21では所持数の入力状態だけを導入する境界が正しいか。
-- E2EとVRTを実装せず、dev server上のユーザーレビューに留める判断が正しいか。
+- 代表E2Eとtarget限定VRTが、ドラッグ固有の操作・表示状態を過不足なく検証しているか。
 
 ## 備考
 
 - ブランチはユーザー指示に従い新規作成しない。親issueと同じ現行branch `ex-02-web-character-sheet` で準備する。
 - `.raw/contents/`にはキャラクターシートに対応する入力Markdownが見つかっていないため、ページ本文・可視構成の優先指示はユーザーの最新指示、承認済みdesign画像、requirements、design notesの順で扱う。
-- VRT baselineはGit管理対象外のlocal artifactであり、G31まで管理判断を持ち越す。G21でbaselineを更新する必要が生じた場合は、実装完了前にユーザーの明示承認を得る。
-- ユーザー指示により、G21ではE2EとVRTを実装・実行しない。実装後はdev serverを起動し、ユーザーレビューを待つ。
+- VRT baselineの更新はユーザーの明示承認を必要とする。2026-07-29のユーザー指示で、G21の代表E2Eとtarget限定VRTの追加・baseline更新を承認された。
 
 ## レビュー指摘 1
 
@@ -268,3 +267,70 @@
 
 - [ ] mobile候補dialogで使用タイミング・1セット数量から効果本文までを区切り線なしで連続表示する。
 - [x] 必要な`npm run check`と対象Component testが通る。
+
+## ユーザー指示による検証範囲変更
+
+- 2026-07-29、ユーザーはG21本体のコミット後に、代表E2E、target限定VRT、canonical baseline更新、追加コミットとpushを明示指示した。
+- この指示は初期の「E2EとVRTを実装・実行しない」制約を置き換える。VRTは`@character-sheet`のG21関連21状態だけを対象とし、全件VRTは実行しない。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` の`default`、`special-items-overview`、`drugs-default`、`drugs-input`、`drugs-expanded`、`drugs-picker`、`drugs-picker-duplicate`
+- route / states / viewports:
+  - full-page default: desktop / tablet / mobile
+  - special-items overview: desktop / tablet / mobile
+  - drugs default: desktop / tablet / mobile
+  - selected drug and quantity: desktop / tablet / mobile
+  - expanded drug effect: desktop / tablet / mobile
+  - drugs picker dialog: desktop / tablet / mobile
+  - drugs picker dialog with an already selected candidate: desktop / tablet / mobile
+
+### レビュー結果
+
+| 対象                                       | 判定 | 差分                            | 対応                    |
+| ------------------------------------------ | ---- | ------------------------------- | ----------------------- |
+| full-page default / special-items overview | OK   | ドラッグ3行の追加による高さ増加 | approved baselineを更新 |
+| drugs section states                       | OK   | 新規target                      | baselineを追加          |
+| drugs picker dialog                        | OK   | 新規target                      | baselineを追加          |
+
+### 実画面確認
+
+- `/character-sheet/` default、desktop / tablet / mobile:
+  - full-page overview: `test-results/visual/character-sheet/full-page/default-*.png`
+  - checked: 専用アイテム全体へのドラッグ追加とページ内の横overflowなし
+  - result: OK
+- `drugs-default`、`drugs-input`、desktop / tablet / mobile:
+  - locator screenshot: `[data-special-item-category="drugs"]` のoriginal-pixel capture
+  - checked: desktop / tabletの列順と指定改行、mobileの要約列、所持数input、追加・削除・並べ替えcontrol、横overflowなし
+  - result: OK
+- `drugs-expanded`、desktop / tablet / mobile:
+  - locator screenshot: `[data-special-item-category="drugs"]` のoriginal-pixel capture
+  - checked: 効果が展開され、mobileでは使用タイミング・1セット数量が効果本文の直前にあり、ラベルだけmuted太字、値が通常色、効果との区切り線なし
+  - result: OK
+- `drugs-picker`、`drugs-picker-duplicate`、desktop / tablet / mobile:
+  - locator screenshot: `dialog[aria-label="ドラッグを選択"]` のoriginal-pixel capture
+  - checked: desktop / tabletの5列と強制改行、語内折り返しなし、mobileの名称・信用・BT強度1行目と詳細行、効果との区切り線なし。取得済み候補はスキル候補と同じmutedなdisabled表示
+  - result: OK
+
+### 自己修正した項目
+
+- [x] mobile候補dialogでは使用タイミング・1セット数量を詳細行へ移し、名称列を広げた。
+
+### 人間判断が必要な差分
+
+- なし。ユーザー承認済みのG21 baseline更新として、対象21状態だけを更新した。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

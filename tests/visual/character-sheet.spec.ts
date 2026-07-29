@@ -609,6 +609,98 @@ test.describe("character sheet page", () => {
     await expect(omamori.locator('[id^="omamori-details-"]')).toBeVisible();
   });
 
+  test("selects, reorders, removes, and expands drugs without duplicate selection", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.mobile);
+    await page.goto("character-sheet/");
+
+    const drugs = page.locator('[data-special-item-category="drugs"]');
+    const picker = page.getByRole("dialog", {
+      exact: true,
+      name: "ドラッグを選択",
+    });
+    const firstPicker = drugs.getByRole("button", {
+      exact: true,
+      name: "ドラッグ1：ドラッグを選択",
+    });
+
+    await firstPicker.click();
+    await expect(picker).toBeVisible();
+    await picker
+      .getByRole("button", { exact: true, name: "マッスルドラッグ" })
+      .click();
+    await expect(picker).toBeHidden();
+
+    await drugs
+      .getByRole("button", {
+        exact: true,
+        name: "ドラッグ2：ドラッグを選択",
+      })
+      .click();
+    const duplicate = picker.getByRole("button", {
+      exact: true,
+      name: "マッスルドラッグ",
+    });
+    await expect(duplicate).toBeDisabled();
+    await page.keyboard.press("Escape");
+    await expect(picker).toBeHidden();
+    await expect(
+      drugs.getByRole("button", {
+        exact: true,
+        name: "ドラッグ2：ドラッグを選択",
+      }),
+    ).toBeFocused();
+
+    await drugs
+      .getByRole("button", {
+        exact: true,
+        name: "ドラッグ2：ドラッグを選択",
+      })
+      .click();
+    await picker
+      .getByRole("button", { exact: true, name: "スピードドラッグ" })
+      .click();
+    await expect(picker).toBeHidden();
+
+    const quantity = drugs.getByLabel("ドラッグ1：マッスルドラッグ所持数", {
+      exact: true,
+    });
+    await quantity.fill("2");
+    await expect(quantity).toHaveValue("2");
+    await drugs
+      .getByRole("button", {
+        exact: true,
+        name: "ドラッグ1：マッスルドラッグ効果を開く",
+      })
+      .click();
+    await expect(
+      drugs.getByText("使用タイミング：", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      drugs.getByText("1セット数量：", { exact: true }),
+    ).toBeVisible();
+
+    await drugs
+      .getByRole("button", {
+        exact: true,
+        name: "ドラッグ1：マッスルドラッグ下へ移動",
+      })
+      .click();
+    await drugs
+      .getByRole("button", {
+        exact: true,
+        name: "ドラッグ1：スピードドラッグを削除",
+      })
+      .click();
+    await expect(
+      drugs.getByRole("button", {
+        exact: true,
+        name: "ドラッグ1：マッスルドラッグ",
+      }),
+    ).toBeVisible();
+  });
+
   test("selects cybernetics, manages other rows, and resets noncombat modifiers at the threshold", async ({
     page,
   }) => {
