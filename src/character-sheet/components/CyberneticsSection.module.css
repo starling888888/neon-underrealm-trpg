@@ -6,7 +6,7 @@
 .line {
   display: grid;
   min-width: 0;
-  grid-template-columns: 3rem minmax(7rem, 1fr) 2.5rem 3.5rem 2rem 3.25rem;
+  grid-template-columns: 3.5rem minmax(6.5rem, 1fr) 2.5rem 3.5rem 2rem 3.25rem;
   align-items: stretch;
 }
 
@@ -184,7 +184,7 @@
 
 @media (width < 48rem) {
   .line {
-    grid-template-columns: 2rem minmax(0, 1fr) 2.25rem 2.75rem 1.5rem 2.75rem;
+    grid-template-columns: 2.5rem minmax(0, 1fr) 2.25rem 2.75rem 1.5rem 2.75rem;
   }
 
   .headerRow > *,
@@ -208,36 +208,12 @@
     font-size: 0.625rem;
   }
 
-  .desktopValueExpression {
-    display: none;
+  .footer {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
   }
 
   .mobileValueExpressions {
-    display: grid;
-    gap: 0.125rem;
-  }
-
-  .mobileValueExpression {
-    display: grid;
-    grid-template-columns: 1.875rem auto 1.75rem auto 1.875rem;
-    align-items: center;
-    gap: 0.125rem;
-    font-size: 0.75rem;
-    line-height: 1.25;
-  }
-
-  .mobileValueExpression .baseValue,
-  .mobileValueExpression .finalValue {
-    height: 1.5rem;
-    min-width: 0;
-    min-height: 0;
-    padding: 0.125rem;
-    font-size: 0.75rem;
-    text-align: right;
-  }
-
-  .mobileValueExpression .modifierInput {
-    height: 1.5rem;
-    width: 1.75rem;
+    display: none;
   }
 }

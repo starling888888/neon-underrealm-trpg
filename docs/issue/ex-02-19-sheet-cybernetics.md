@@ -157,6 +157,31 @@
 - [x] 関連するユニット／コンポーネントテストを更新し、`npm run test`、`npm run check`、`npm run build` を実行した。
 - [x] e2e と VRT は本Gateでは実装・更新しない。
 
+## レビュー指摘 4
+
+### 指摘事項
+
+- サイバネ一覧は、名称列を少し短くし、部位列を少し広くして`その他`が折り返さないようにする。
+- mobileの集計エリアはdesktopと同じpair表示を維持する。`その他の部位を追加` buttonの右側へ狭く配置して式を折り返したり、mobile専用の別デザインへ変えたりせず、buttonの下に置く。
+
+### 判定
+
+- source: human（ユーザーのローカル画面レビュー）
+- classification: valid
+- local validation: 現在の一覧はdesktopで部位列を`3rem`、mobileで`2rem`に固定し、`その他`に十分な表示幅を割り当てていない。mobileではdesktop pair表示を非表示にして別の二行式を表示しており、今回の表示契約と異なる。footerは二列gridのため、mobileでも追加buttonの右側に集計を置く。
+
+### 対応方針
+
+- desktopとmobileの部位列を拡げ、その分だけ名称列の可変幅を縮める。信用、埋め込み点数、展開、操作の列と要約項目は維持する。
+- mobileのfooterを一列gridにし、追加buttonの下へ集計を置く。desktopと同じpair value expressionをそのまま表示し、式を分解・折り返し・再設計しない。
+
+### 対応完了チェックリスト
+
+- [x] desktopとmobileで部位の`その他`が折り返さず、名称列を含む既存要約項目が表示されることを確認した。
+- [x] mobileで追加buttonの下にdesktopと同じpair表示の集計エリアを置き、式を折り返さないことを確認した。
+- [x] 関連するテストを更新し、`npm run test`、`npm run check`、`npm run build` を実行した。
+- [x] e2e と VRT は本Gateでは実装・更新しない。
+
 ## レビュー指摘 3
 
 ### 指摘事項
