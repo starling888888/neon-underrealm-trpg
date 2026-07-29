@@ -51,24 +51,40 @@ export default function ArmorPickerDialog({
             <span>{copy.headers.name}</span>
             <span>{copy.headers.credit}</span>
             <span>防御力</span>
-            <span>ダメージ軽減</span>
-            <span>{copy.headers.restriction}</span>
+            <span className={styles.damageReductionHeader}>
+              {"ダメージ\n軽減"}
+            </span>
+            <span className={styles.restrictionHeader}>
+              {copy.headers.restriction}
+            </span>
           </div>
           {armors.map((armor) => (
             <div className={styles.candidate} key={armor.id}>
               <div className={styles.firstLine}>
-                <button onClick={() => onSelect(armor.id)} type="button">
+                <button
+                  className={styles.candidateName}
+                  onClick={() => onSelect(armor.id)}
+                  type="button"
+                >
                   {armor.name}
                 </button>
                 <span>{formatDisplayValue(armor.credit)}</span>
                 <span>{armor.defense}</span>
                 <span>{formatDisplayValue(armor.damageReduction)}</span>
-                <span>{armor.restriction ?? ""}</span>
+                <span className={styles.restriction}>
+                  {formatDisplayValue(armor.restriction)}
+                </span>
               </div>
-              <p>
-                <strong>{copy.effect}：</strong>
-                {armor.effect ?? ""}
-              </p>
+              <div className={styles.details}>
+                <p className={styles.restrictionDetails}>
+                  <strong>{copy.headers.restriction}：</strong>
+                  {formatDisplayValue(armor.restriction)}
+                </p>
+                <p>
+                  <strong>{copy.effect}：</strong>
+                  {formatDisplayValue(armor.effect)}
+                </p>
+              </div>
             </div>
           ))}
         </div>

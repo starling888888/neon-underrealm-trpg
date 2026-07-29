@@ -22,6 +22,17 @@
   box-shadow: inset calc(var(--border-width) * -1) 0 var(--color-border);
 }
 
+.pickerCandidateName {
+  --character-sheet-picker-name-font-size: var(
+    --character-sheet-font-table,
+    0.75rem
+  );
+
+  font: inherit;
+  font-size: var(--character-sheet-picker-name-font-size);
+  font-weight: 750;
+}
+
 .listRow {
   min-height: var(--character-sheet-list-row-min-height);
   min-width: 0;
@@ -156,6 +167,10 @@
       --character-sheet-font-table-mobile-label,
       0.625rem
     );
+  }
+
+  .pickerCandidateName {
+    --character-sheet-picker-name-font-size: 0.8125rem;
   }
 
   .rowPicker {

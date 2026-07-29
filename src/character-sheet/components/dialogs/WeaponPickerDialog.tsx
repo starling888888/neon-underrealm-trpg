@@ -29,7 +29,11 @@ function Candidate({
   return (
     <div className={styles.candidate}>
       <div className={styles.firstLine}>
-        <button onClick={() => onSelect(weapon.id)} type="button">
+        <button
+          className={styles.candidateName}
+          onClick={() => onSelect(weapon.id)}
+          type="button"
+        >
           {weapon.name}
         </button>
         <span>{formatDisplayValue(weapon.credit)}</span>

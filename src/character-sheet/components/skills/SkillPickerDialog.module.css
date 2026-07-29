@@ -87,12 +87,14 @@
   white-space: nowrap;
 }
 
+.candidateName {
+  composes: pickerCandidateName from "../CharacterSheetFormList.module.css";
+}
+
 .firstLine button {
   border: 0;
   background: transparent;
   cursor: pointer;
-  font: inherit;
-  font-weight: 750;
   text-align: left;
 }
 
@@ -173,7 +175,6 @@
   }
 
   .firstLine button {
-    font-size: 0.8125rem;
     line-height: 1.2;
     overflow-wrap: anywhere;
     white-space: pre-line;

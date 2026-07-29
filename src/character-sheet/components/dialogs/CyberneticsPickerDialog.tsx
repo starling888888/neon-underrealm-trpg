@@ -60,6 +60,7 @@ export default function CyberneticsPickerDialog({
                 <div className={styles.candidate} key={cybernetic.id}>
                   <div className={styles.firstLine}>
                     <button
+                      className={styles.candidateName}
                       onClick={() => onSelect(cybernetic.id)}
                       type="button"
                     >

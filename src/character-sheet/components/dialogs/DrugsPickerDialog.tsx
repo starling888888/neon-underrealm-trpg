@@ -70,6 +70,7 @@ export default function DrugsPickerDialog({
               >
                 <div className={styles.firstLine}>
                   <button
+                    className={styles.candidateName}
                     disabled={isSelected}
                     onClick={() => onSelect(drug.id)}
                     type="button"

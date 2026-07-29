@@ -57,13 +57,15 @@
   text-align: center;
 }
 
+.candidateName {
+  composes: pickerCandidateName from "../CharacterSheetFormList.module.css";
+}
+
 .firstLine button {
   border: 0;
   background: transparent;
   color: var(--color-text);
   cursor: pointer;
-  font: inherit;
-  font-weight: 750;
   text-align: left;
   overflow-wrap: anywhere;
   white-space: pre-wrap;

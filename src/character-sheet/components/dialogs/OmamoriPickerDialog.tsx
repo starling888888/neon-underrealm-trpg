@@ -56,7 +56,11 @@ export default function OmamoriPickerDialog({
           {candidates.map((omamori) => (
             <div className={styles.candidate} key={omamori.id}>
               <div className={styles.firstLine}>
-                <button onClick={() => onSelect(omamori.id)} type="button">
+                <button
+                  className={styles.candidateName}
+                  onClick={() => onSelect(omamori.id)}
+                  type="button"
+                >
                   {omamori.name}
                 </button>
                 <span>{formatDisplayValue(omamori.credit)}</span>

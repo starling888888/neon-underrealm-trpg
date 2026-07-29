@@ -54,6 +54,7 @@ function CandidateRow({
     <div className={styles.candidate} data-disabled={isSelected || undefined}>
       <div className={styles.firstLine}>
         <button
+          className={styles.candidateName}
           disabled={isSelected}
           onClick={() => onSelect(skill.id)}
           type="button"

@@ -40,8 +40,16 @@
   justify-items: start;
   text-align: left;
 }
+
+.headerRow > .damageReductionHeader {
+  white-space: pre-line;
+}
+
 .candidate {
   composes: candidate from "../CharacterSheetFormList.module.css";
+}
+.candidateName {
+  composes: pickerCandidateName from "../CharacterSheetFormList.module.css";
 }
 .firstLine > * {
   display: grid;
@@ -57,15 +65,12 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  font: inherit;
-  font-weight: 750;
   text-align: left;
 }
 .firstLine button:hover {
   background: var(--color-surface-muted);
 }
-.candidate p {
-  margin: 0;
+.details {
   border-top: var(--border-width) solid var(--color-border);
   padding: var(--space-1) var(--space-2);
   font-size: 0.75rem;
@@ -73,7 +78,16 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
-.candidate strong {
+
+.details p {
+  margin: 0;
+}
+
+.restrictionDetails {
+  display: none;
+}
+
+.details strong {
   color: var(--color-text-muted);
 }
 @media (width < 48rem) {
@@ -82,10 +96,16 @@
   }
   .headerRow,
   .firstLine {
-    grid-template-columns: minmax(0, 1fr) 2.25rem 2.75rem 3.25rem minmax(
-        3.5rem,
-        0.8fr
-      );
+    grid-template-columns: minmax(0, 1fr) 2.25rem 2.75rem 3.25rem;
+  }
+
+  .headerRow > .restrictionHeader,
+  .firstLine > .restriction {
+    display: none;
+  }
+
+  .restrictionDetails {
+    display: block;
   }
   .headerRow > span,
   .firstLine > * {

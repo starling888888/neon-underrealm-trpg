@@ -57,7 +57,11 @@ export default function NanomachinesPickerDialog({
           {candidates.map((nanomachine) => (
             <div className={styles.candidate} key={nanomachine.id}>
               <div className={styles.firstLine}>
-                <button onClick={() => onSelect(nanomachine.id)} type="button">
+                <button
+                  className={styles.candidateName}
+                  onClick={() => onSelect(nanomachine.id)}
+                  type="button"
+                >
                   {nanomachine.name}
                 </button>
                 <span>{formatDisplayValue(nanomachine.credit)}</span>

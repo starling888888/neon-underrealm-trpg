@@ -461,6 +461,41 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 10
+
+### 指摘事項
+
+- 選択dialogの候補行にある名称欄のfont sizeを、スキルpickerの名称欄に合わせて統一する。
+- 防具pickerの候補一覧が窮屈で、名称を含む各欄が過度に折り返す。列headerの`ダメージ軽減`は`ダメージ`／`軽減`の2行表示にする。
+- 防具pickerではmobileだけ装備制限を候補行の1行目の列から外し、効果の直前の詳細行へ移す。`装備制限：`は`効果：`と同じbold表示とし、装備制限と効果の間に罫線を置かない。装備制限と効果が空欄のときは、それぞれ`-`を表示する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `SkillPickerDialog`のmobile名称buttonは`0.8125rem`である一方、武器、防具、お守り、サイバネ、ナノマシン、ドラッグのpickerは候補行の共通`0.6875rem`を名称buttonにも適用している。desktopでも名称buttonは個別の共通契約を持たず、候補種別ごとにliteral値へ依存している。
+  - `ArmorPickerDialog`は名称、信用、防御力、ダメージ軽減、装備制限の5列を候補行の1行目に置く。mobileでは同じ列数が名称列を含む各列幅を圧迫して、折り返しが発生する。
+  - `docs/requirements/character-sheet.md`は防具の表示表で装備制限と効果を行下へ置く契約であり、候補pickerでも同じ詳細情報の配置へ揃えることはcurrent issueのアイテム選択UI範囲に適合する。
+  - dialog title、候補行の名称以外の本文font size、候補選択・閉じる操作・focus復帰は対象外とする。
+
+### 対応方針
+
+- 候補pickerの名称button専用font size tokenを共有styleへ置き、desktop / tabletでは既存スキルpickerの名称表示、mobileでは`0.8125rem`を全skill・item pickerへ適用する。列headerおよび候補行の数値・本文はレビュー指摘9のheader tokenと既存の本文tokenを維持する。
+- 防具pickerはdesktop / tabletでは装備制限を候補表の5列目に維持する。mobileだけ装備制限列を非表示にして名称列の幅を確保する。`ダメージ軽減` headerは明示的な改行を含む2行表示にし、候補行のダメージ軽減値と列位置を維持する。
+- mobileの各防具候補で、`装備制限：本文`と`効果：本文`を同じ詳細領域へこの順で置く。両labelはbold、値が空欄のときは`-`を表示する。詳細領域内および装備制限と効果の間には罫線を追加しない。
+- 対象はdesktop / tablet / mobileの防具pickerと全skill・item pickerの名称欄とする。canonical VRT baselineは更新せず、対象dialog locatorをactual screenshotで確認する。
+
+### 対応完了チェックリスト
+
+- [ ] 全skill・item pickerの名称欄が、viewportごとにスキルpickerと同じfont sizeである
+- [ ] 防具pickerの`ダメージ`／`軽減` header、mobileの名称列幅、候補行が横overflow・過度な折り返しなく表示される
+- [ ] 防具pickerの装備制限と効果が、desktop / tabletでは列表示、mobileでは指定順・bold label・罫線なし・`-` fallbackで表示される
+- [ ] 選択、閉じる、Escape、focus復帰、候補のaccessible nameを維持する
+- [ ] 対象dialog locatorのdesktop / tablet / mobile actual screenshotを確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。
