@@ -153,6 +153,21 @@ describe("character sheet form schema", () => {
       },
       {
         ...characterSheetDefaultValues,
+        omamori: {
+          rows: [{ omamoriId: null, rowId: "" }],
+        },
+      },
+      {
+        ...characterSheetDefaultValues,
+        omamori: {
+          rows: [
+            { omamoriId: null, rowId: "duplicate" },
+            { omamoriId: null, rowId: "duplicate" },
+          ],
+        },
+      },
+      {
+        ...characterSheetDefaultValues,
         otherRyugiSkills: {
           rows: [
             {

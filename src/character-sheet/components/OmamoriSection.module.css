@@ -107,6 +107,7 @@
 
 .removeCell {
   display: grid;
+  grid-column: 6;
   min-width: 0;
   place-items: center;
 }
@@ -164,6 +165,10 @@
 
   .detailsToggle {
     display: grid;
+  }
+
+  .removeCell {
+    grid-column: 5;
   }
 
   .mobileEffect {

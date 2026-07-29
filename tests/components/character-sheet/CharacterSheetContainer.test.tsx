@@ -19,6 +19,7 @@ import {
   characterSheetDefaultValues,
 } from "../../../src/character-sheet/form-values";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
+import { getOmamori } from "../../../src/character-sheet/master-data/omamori";
 import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-data/other-ryugi-skills";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
@@ -74,6 +75,39 @@ afterEach(() => {
 });
 
 describe("CharacterSheetContainer", () => {
+  it("closes the omamori picker on Escape or close, selects one row, and returns focus", async () => {
+    const user = userEvent.setup();
+    const omamori = getOmamori()[0];
+    if (omamori === undefined)
+      throw new Error("お守りmaster dataがありません。");
+    render(<CharacterSheetContainer />);
+
+    await user.click(screen.getByRole("button", { name: "＋ お守りを追加" }));
+    const trigger = screen.getByRole("button", {
+      name: "お守り1：お守りを選択",
+    });
+    await user.click(trigger);
+    const dialog = screen.getByRole("dialog", { name: "お守りを選択" });
+
+    expect(screen.getByText(omamori.effect)).not.toBeNull();
+    act(() => {
+      fireEvent(dialog, new Event("cancel", { cancelable: true }));
+    });
+    expect(document.activeElement).toBe(trigger);
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "閉じる" }));
+    expect(document.activeElement).toBe(trigger);
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: omamori.name }));
+
+    expect(
+      screen.getByRole("button", { name: `お守り1：${omamori.name}` }),
+    ).not.toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
+
   it("closes the weapon picker on Escape or selection and returns focus to its row", async () => {
     const user = userEvent.setup();
     render(<CharacterSheetContainer />);

@@ -64,26 +64,26 @@
 
 ## 完了条件
 
-- [ ] お守りのform値、schema、master-data adapter、RHF hook、section、candidate dialogがG18の範囲で結線されている。
-- [ ] desktop / tabletで、並べ替え、名称、信用、常時表示かつ折返し可能な効果、削除buttonを表示し、効果の展開操作を置かない。
-- [ ] mobileで、並べ替え、名称、信用、展開icon、削除buttonを表示し、効果を初期非表示から行下へ開閉できる。
-- [ ] candidate dialogがすべてのviewportで名称・信用を1行目、効果を2行目に常時表示し、折り畳みや展開iconを持たない。
-- [ ] お守り行と候補dialogが既存共通form styleを再利用し、固有CSSが列とresponsive差分だけを持つ。
-- [ ] G22以降のカテゴリ連動、カテゴリ単位の追加・削除、信用集計を実装していない。
+- [x] お守りのform値、schema、master-data adapter、RHF hook、section、candidate dialogがG18の範囲で結線されている。
+- [x] desktop / tabletで、並べ替え、名称、信用、常時表示かつ折返し可能な効果、削除buttonを表示し、効果の展開操作を置かない。
+- [x] mobileで、並べ替え、名称、信用、展開icon、削除buttonを表示し、効果を初期非表示から行下へ開閉できる。
+- [x] candidate dialogがすべてのviewportで名称・信用を1行目、効果を2行目に常時表示し、折り畳みや展開iconを持たない。
+- [x] お守り行と候補dialogが既存共通form styleを再利用し、固有CSSが列とresponsive差分だけを持つ。
+- [x] G22以降のカテゴリ連動、カテゴリ単位の追加・削除、信用集計を実装していない。
 - [x] target限定Visual Reviewの対象route、states、viewports、actual screenshot、VRT結果を記録し、ユーザー承認済みcanonical VRT baselineを更新した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する`docs/TODO.md`項目と矛盾していない。
-- [ ] `docs/design/character-sheet/notes.md`と共通form design契約に矛盾していない。
-- [ ] desktop / tablet / mobileで一覧・candidate dialogに横overflow、clip、操作不能がない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する`docs/TODO.md`項目と矛盾していない。
+- [x] `docs/design/character-sheet/notes.md`と共通form design契約に矛盾していない。
+- [x] desktop / tablet / mobileで一覧・candidate dialogに横overflow、clip、操作不能がない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -145,9 +145,9 @@
 
 ### 対応完了チェックリスト
 
-- [ ] desktopの削除buttonを最終操作セルの縦横中央へ配置する。
-- [ ] mobileの展開iconに対応するheaderを表示する。
-- [ ] お守りカテゴリを非折りたたみの専用frame Componentでラップし、カテゴリ削除buttonを追加していない。
+- [x] desktopの削除buttonを最終操作セルの縦横中央へ配置する。
+- [x] mobileの展開iconに対応するheaderを表示する。
+- [x] お守りカテゴリを非折りたたみの専用frame Componentでラップし、カテゴリ削除buttonを追加していない。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -184,6 +184,79 @@
 ### 人間判断が必要な差分
 
 - なし。canonical baseline更新はユーザーが明示承認済み。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分をユーザー承認として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- desktop / tabletでは、非表示の効果展開buttonがgrid自動配置から外れるため、削除cellが幅`0`の5列目へ配置される。最終操作列（6列目）は空き、削除buttonを操作cellの縦横中央へ置くG18契約を満たしていない。
+- G18で追加したmaster data、RHF hook、section表示、候補dialog / Container結線に対するNode・hook・Componentの直接テストがない。代表操作のPlaywrightだけでは、ID解決、0行、重複選択、row ID単位の更新、responsive表示、Escape・close・選択後focus復帰を局所的に固定できない。
+
+### 判定
+
+- source: browser-draft
+- classification: valid
+- local validation: reviewの対象commit `84686e1` は現在のローカルHEADと一致する。`OmamoriSection.tsx`では効果展開buttonが削除cellより前に置かれ、`OmamoriSection.module.css`ではdesktop / tabletで`.detailsToggle`を`display: none`にする一方、gridの5列目を`0`幅にしている。`.removeCell`に列指定はない。さらに、G18が想定変更ファイルとテストアーキテクチャで定めたお守り専用のNode・hook・Component testは存在せず、追加された確認はPlaywright E2E / VRTに限られる。
+
+### 対応方針
+
+- desktop / tabletでは削除cellを最終操作列へ明示配置し、mobileでは既存の展開操作列と削除列の構成を維持する。修正後はdesktop / tablet / mobileの行配置をComponent testとtarget限定Visual Reviewで確認する。
+- master-data、RHF hook、OmamoriSection、候補dialogを含むContainer結線へ責務別の直接テストを追加する。schema testにはお守りの空行とrow ID重複境界を含め、Playwrightは代表操作だけを維持する。
+
+### 対応完了チェックリスト
+
+- [x] desktop / tabletの削除buttonを最終操作cellの縦横中央へ配置する。
+- [x] master data、RHF hook、Component、Container / dialogのG18責務別テストを追加する。
+- [x] schema testへお守りの空行とrow ID重複境界を追加する。
+- [x] target限定Visual Reviewでdesktop / tablet / mobileの削除操作cellを確認する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@omamori-*`、`@bond-resolved`
+- route / states / viewports:
+  - お守り候補dialog、選択済み行、名称tooltip: desktop / tablet / mobile
+  - mobile効果展開: mobile
+  - `bond-resolved` full-page baseline、縁section、tooltip: desktop / tablet / mobile
+
+### レビュー結果
+
+| 対象                          | 判定 | 差分                                  | 対応                               |
+| ----------------------------- | ---- | ------------------------------------- | ---------------------------------- |
+| お守りの一覧・候補dialog      | OK   | なし                                  | locator screenshotを原寸確認       |
+| mobileの効果展開・名称tooltip | OK   | なし                                  | locator screenshotを原寸確認       |
+| `bond-resolved` baseline      | OK   | 旧baselineの高さ・縁解決stateとの差分 | ユーザー承認により3 viewportを更新 |
+
+### 実画面確認
+
+- owner locator: `data-special-item-category="omamori"`、`お守りを選択` dialog、名称tooltip、縁section、`覚悟の説明` tooltip
+- checked acceptance criteria: desktop / tabletの効果常時表示と削除buttonの最終操作cell配置、mobileの効果header・展開icon・行下本文、候補の二行構成、名称／効果の折返し、clip / overflow / 操作領域、縁解決stateのcheckbox・tooltip
+- result: 宣言した全state・viewportの原寸locator screenshotを開いて確認した。full-page screenshotは`bond-resolved` baseline差分の確認だけに用いた。
+
+### 自己修正した項目
+
+- [x] desktop / tabletの削除cellを6列目へ、mobileを5列目へ明示配置した。
+- [x] mobileの`bond-resolved` VRT stateは、checkboxのキーボード操作とchecked確認で安定化した。
+
+### 人間判断が必要な差分
+
+- なし。`bond-resolved` canonical baselineの更新はユーザーが明示承認済み。
 
 ### 対応完了チェックリスト
 

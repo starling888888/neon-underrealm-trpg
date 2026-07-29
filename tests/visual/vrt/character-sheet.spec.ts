@@ -967,7 +967,10 @@ registerVrtScenarios("character-sheet", [
     locators: [tooltipLocator, bondsSectionLocator],
     prepare: async (page) => {
       await fillBond(page, 1, "アキラ");
-      await page.getByLabel("縁1の覚悟", { exact: true }).check();
+      const resolve = page.getByLabel("縁1の覚悟", { exact: true });
+      await resolve.focus();
+      await resolve.press("Space");
+      await expect(resolve).toBeChecked();
       await openTooltip(page, "覚悟の説明");
     },
     route: visualRoutes.characterSheet,
