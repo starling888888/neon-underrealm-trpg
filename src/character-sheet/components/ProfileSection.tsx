@@ -21,6 +21,7 @@ import type {
 import { formatDisplayValue } from "../format-display-value";
 import type { BuildDerivedValues } from "../logic/build";
 import type { CreditSummary } from "../logic/credit";
+import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./ProfileSection.module.css";
 
@@ -158,27 +159,24 @@ function CharacterImageField({
         tabIndex={-1}
         type="file"
       />
-      <button
-        className={`${styles.imageSelectButton} character-sheet-add-button`}
-        disabled={isRootOperationInProgress}
-        onClick={selectFile}
-        type="button"
-      >
-        {image === null ? imageCopy.chooseFile : imageCopy.replaceFile}
-      </button>
-      {image !== null ? (
+      <div className={styles.imageActions}>
         <button
-          className={styles.imageClearButton}
+          className={`${styles.imageSelectButton} character-sheet-add-button`}
           disabled={isRootOperationInProgress}
+          onClick={selectFile}
+          type="button"
+        >
+          {image === null ? imageCopy.chooseFile : imageCopy.replaceFile}
+        </button>
+        <DeleteButton
+          ariaLabel={imageCopy.clearFile}
+          disabled={image === null || isRootOperationInProgress}
           onClick={(event) => {
             onImageOperationStarted(event.currentTarget);
             void onImageCleared();
           }}
-          type="button"
-        >
-          {imageCopy.clearFile}
-        </button>
-      ) : null}
+        />
+      </div>
     </div>
   );
 }

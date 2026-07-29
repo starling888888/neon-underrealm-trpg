@@ -251,6 +251,10 @@ describe("ProfileSection", () => {
         .getByRole("button", { name: "画像を選択" })
         .classList.contains("character-sheet-add-button"),
     ).toBe(true);
+    expect(screen.getByRole("button", { name: "画像をクリア" })).toHaveProperty(
+      "disabled",
+      true,
+    );
   });
 
   it("shows a saved image in the same input area", () => {

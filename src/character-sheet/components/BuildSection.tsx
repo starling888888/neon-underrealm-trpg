@@ -13,6 +13,7 @@ import type { BuildDerivedValues } from "../logic/build";
 import type { CommonSkillBonusLevel } from "../logic/common-skills";
 import type { CharacterSheetSelectOption } from "../master-data/build";
 import styles from "./BuildSection.module.css";
+import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 
 type BuildNumberInputProps = {
@@ -268,16 +269,12 @@ export default function BuildSection({
                 value={otherRyugi.level}
               />
             </div>
-            <button
-              aria-label={`${buildCopy.otherRyugi}${index + 1}${buildUiCopy.remove}`}
-              className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
+            <DeleteButton
+              ariaLabel={`${buildCopy.otherRyugi}${index + 1}${buildUiCopy.remove}`}
               onClick={(event) =>
                 onOtherRyugiRemove(index, event.currentTarget)
               }
-              type="button"
-            >
-              ×
-            </button>
+            />
           </div>
         ))}
         <button

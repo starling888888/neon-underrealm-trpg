@@ -7,7 +7,9 @@
 .line {
   display: grid;
   min-width: 0;
-  grid-template-columns: 1.25rem minmax(7rem, 1fr) 2.5rem minmax(14rem, 2.3fr) 0 1.75rem;
+  grid-template-columns: 1.25rem minmax(7rem, 1.1fr) 2.5rem minmax(14rem, 2.3fr) 0 var(
+      --character-sheet-action-button-size
+    );
   align-items: stretch;
 }
 
@@ -123,7 +125,9 @@
 
 @media (width < 48rem) {
   .line {
-    grid-template-columns: 1.25rem minmax(0, 1fr) 2.25rem 1.5rem 1.25rem;
+    grid-template-columns: 1.25rem minmax(0, 1.1fr) 2.25rem 1.5rem var(
+        --character-sheet-action-button-size
+      );
   }
 
   .line > :nth-child(4) {

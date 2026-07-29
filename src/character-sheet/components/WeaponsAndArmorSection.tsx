@@ -4,6 +4,8 @@ import { useState } from "react";
 import type { Armor, Weapon } from "../../lib/types/item";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import { formatDisplayValue } from "../format-display-value";
+import ClearButton from "./ClearButton";
+import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./WeaponsAndArmorSection.module.css";
 
@@ -285,15 +287,12 @@ function WeaponFormRow({
           label={rowLabel}
           onClick={() => setExpanded((value) => !value)}
         />
-        <button
-          aria-label={`${rowLabel}を削除`}
-          className={`${styles.removeButton} character-sheet-remove-button character-sheet-remove-button--mobile-compact`}
+        <DeleteButton
+          ariaLabel={`${rowLabel}を削除`}
+          className={styles.removeButton}
           disabled={!removalEnabled}
           onClick={() => onRemove(row.rowId)}
-          type="button"
-        >
-          <span aria-hidden="true">×</span>
-        </button>
+        />
       </div>
       {expanded ? <WeaponDetails id={detailsId} weapon={row.weapon} /> : null}
     </fieldset>
@@ -357,13 +356,7 @@ function ArmorFormRow({
           label={name}
           onClick={() => setExpanded((value) => !value)}
         />
-        <button
-          className="character-sheet-clear-button"
-          onClick={onClear}
-          type="button"
-        >
-          {copy.clearArmor}
-        </button>
+        <ClearButton ariaLabel={copy.clearArmor} onClick={onClear} />
       </div>
       {expanded ? (
         <div className={styles.details} id={detailsId}>

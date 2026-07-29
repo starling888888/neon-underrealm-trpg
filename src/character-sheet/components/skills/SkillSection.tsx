@@ -7,6 +7,7 @@ import {
   getNamePickerTooltip,
 } from "../../dictionary";
 import { formatDisplayValue } from "../../format-display-value";
+import DeleteButton from "../DeleteButton";
 import FormulaTooltip from "../FormulaTooltip";
 import styles from "./SkillSection.module.css";
 
@@ -290,15 +291,12 @@ function SkillRow({
           onClick={() => setIsDetailsExpanded((expanded) => !expanded)}
         />
         {row.removable ? (
-          <button
-            aria-label={`${accessibilityName}${copy.remove}`}
-            className={`${styles.removeButton} character-sheet-remove-button character-sheet-remove-button--mobile-compact`}
+          <DeleteButton
+            ariaLabel={`${accessibilityName}${copy.remove}`}
+            className={styles.removeButton}
             disabled={!row.removalEnabled}
             onClick={() => onRemove(row.rowId)}
-            type="button"
-          >
-            <span aria-hidden="true">×</span>
-          </button>
+          />
         ) : (
           <span aria-hidden="true" className={styles.removePlaceholder} />
         )}

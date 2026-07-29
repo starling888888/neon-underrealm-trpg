@@ -6,7 +6,9 @@
 .line {
   display: grid;
   min-width: 0;
-  grid-template-columns: 3.5rem minmax(5.5rem, 1fr) 2.5rem 3.5rem 3.5rem 2rem 3.25rem;
+  grid-template-columns: 3.5rem minmax(5.5rem, 1fr) 2.5rem 3.5rem 3.5rem 2rem var(
+      --character-sheet-action-button-size
+    );
   align-items: stretch;
 }
 
@@ -46,10 +48,6 @@
 
 .row > .line > :last-child {
   border-right: 0;
-}
-
-.row > .line > :global(.character-sheet-clear-button) {
-  border-right: var(--border-width) solid var(--color-border-strong);
 }
 
 .part {
@@ -166,7 +164,9 @@
 
 @media (width < 48rem) {
   .line {
-    grid-template-columns: 2.5rem minmax(0, 1fr) 2.25rem 2.75rem 2.75rem 1.5rem 2.75rem;
+    grid-template-columns: 2.5rem minmax(0, 1fr) 2.25rem 2.75rem 2.75rem 1.5rem var(
+        --character-sheet-action-button-size
+      );
   }
 
   .headerRow > *,

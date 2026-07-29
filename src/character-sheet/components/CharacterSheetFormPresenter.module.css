@@ -2,6 +2,7 @@
   --sheet-section-content-padding: var(--space-3);
   --sheet-section-gap: var(--space-5);
   --sheet-section-toggle-height: 2.25rem;
+  --character-sheet-action-button-size: 1.5rem;
 
   margin: 0;
   min-inline-size: var(--character-sheet-single-column-min-width);
@@ -58,66 +59,6 @@
   font-size: var(--text-xs);
 }
 
-.form :global(.character-sheet-remove-button) {
-  display: grid;
-  width: 1.5rem;
-  height: 1.5rem;
-  align-self: center;
-  justify-self: center;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: var(--color-text-muted);
-  color: var(--color-surface);
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 750;
-  line-height: 1;
-  padding: 0;
-}
-
-.form :global(.character-sheet-remove-button:hover:not(:disabled)) {
-  background: var(--color-danger);
-}
-
-.form :global(.character-sheet-remove-button:disabled) {
-  cursor: not-allowed;
-  opacity: 0.45;
-}
-
-.form :global(.character-sheet-clear-button) {
-  display: grid;
-  box-sizing: border-box;
-  width: 2.5rem;
-  max-width: calc(100% - 0.125rem);
-  min-width: 0;
-  height: 1.5rem;
-  align-self: center;
-  justify-self: center;
-  place-items: center;
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.625rem;
-  font-weight: 700;
-  line-height: var(--line-height-tight);
-  padding: 0.125rem 0.0625rem;
-  white-space: nowrap;
-}
-
-.form :global(.character-sheet-clear-button:hover:not(:disabled)) {
-  border-color: var(--color-link);
-  color: var(--color-link);
-}
-
-.form :global(.character-sheet-clear-button:disabled) {
-  cursor: not-allowed;
-  opacity: 0.45;
-}
-
 .form :global(.character-sheet-add-button) {
   min-height: 1.75rem;
   border: var(--border-width) solid var(--color-link);
@@ -139,19 +80,6 @@
 .form :global(.character-sheet-add-button:disabled) {
   cursor: not-allowed;
   opacity: 0.45;
-}
-
-@media (width < 48rem) {
-  .form :global(.character-sheet-remove-button--mobile-compact) {
-    width: 1.125rem;
-    height: 1.125rem;
-    font-size: 0.75rem;
-  }
-
-  .form :global(.character-sheet-clear-button) {
-    width: 2.25rem;
-    height: 1.375rem;
-  }
 }
 
 .primaryColumn,

@@ -1,6 +1,6 @@
-import { X } from "lucide-react";
 import type { ReactNode } from "react";
 
+import DeleteButton from "./DeleteButton";
 import styles from "./SpecialItemCategorySection.module.css";
 
 type Props = {
@@ -42,14 +42,11 @@ export default function SpecialItemCategorySection({
           {warning ? <span className={styles.warning}>{warning}</span> : null}
         </h3>
         {onRemove ? (
-          <button
-            aria-label={`${title}カテゴリを削除`}
-            className={styles.removeButton}
+          <DeleteButton
+            ariaLabel={`${title}カテゴリを削除`}
+            color={isUnavailable ? "warning" : "default"}
             onClick={(event) => onRemove(event.currentTarget)}
-            type="button"
-          >
-            <X aria-hidden="true" size={15} />
-          </button>
+          />
         ) : null}
       </div>
       <div className={styles.content}>{children}</div>

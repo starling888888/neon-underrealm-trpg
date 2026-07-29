@@ -7,7 +7,9 @@ import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import type { CyberneticFixedPartKey } from "../form-values";
 import { formatDisplayValue } from "../format-display-value";
 import type { CyberneticsDerivedValues } from "../logic/cybernetics";
+import ClearButton from "./ClearButton";
 import styles from "./CyberneticsSection.module.css";
+import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 
 export type CyberneticsPickerTarget =
@@ -150,23 +152,15 @@ function CyberneticsRow({
           <span aria-hidden="true">{expanded ? "▾" : "▸"}</span>
         </button>
         {canRemove ? (
-          <button
-            aria-label={`${rowLabel}${copy.remove}`}
-            className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
+          <DeleteButton
+            ariaLabel={`${rowLabel}${copy.remove}`}
             onClick={onRemove}
-            type="button"
-          >
-            <span aria-hidden="true">×</span>
-          </button>
+          />
         ) : (
-          <button
-            aria-label={`${rowLabel}を${clearLabel}`}
-            className="character-sheet-clear-button"
+          <ClearButton
+            ariaLabel={`${rowLabel}を${clearLabel}`}
             onClick={onClear}
-            type="button"
-          >
-            {clearLabel}
-          </button>
+          />
         )}
       </div>
       {expanded ? (

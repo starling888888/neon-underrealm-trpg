@@ -244,7 +244,9 @@ fieldset.row {
 
 .attackRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 1.5rem;
+  grid-template-columns: minmax(0, 1fr) var(
+      --character-sheet-action-button-size
+    );
   min-width: 0;
   align-items: center;
   gap: var(--space-1);

@@ -10,6 +10,20 @@ async function openTooltip(page: Page, name: string): Promise<void> {
   await expect(page.getByRole("tooltip")).toBeVisible();
 }
 
+async function selectCharacterImage(page: Page): Promise<void> {
+  await page.locator('input[type="file"]').setInputFiles({
+    buffer: Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLh+wAAAABJRU5ErkJggg==",
+      "base64",
+    ),
+    mimeType: "image/png",
+    name: "character.png",
+  });
+  await expect(
+    page.getByRole("img", { name: "選択したキャラクター画像" }),
+  ).toBeVisible();
+}
+
 async function fillBond(page: Page, row: number, value: string): Promise<void> {
   await page.getByLabel(`縁${row}の対象`, { exact: true }).fill(value);
 }
@@ -318,6 +332,13 @@ registerCharacterSheetVrtScenarios([
     id: "profile-default",
     kind: "section",
     locator: profileSection,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "profile-image-selected",
+    kind: "section",
+    locator: profileSection,
+    prepare: selectCharacterImage,
     route: visualRoutes.characterSheet,
   },
   {

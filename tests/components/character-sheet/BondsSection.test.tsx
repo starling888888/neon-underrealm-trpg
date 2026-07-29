@@ -37,8 +37,8 @@ describe("BondsSection", () => {
       name: "縁1をクリア（行は削除しません）",
     });
 
-    expect(clearAction.textContent).toBe("クリア");
-    expect(clearAction.querySelector("svg")).toBeNull();
+    expect(clearAction.dataset.characterSheetAction).toBe("clear");
+    expect(clearAction.querySelector("svg")).not.toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "覚悟の説明" }));
 
@@ -74,8 +74,8 @@ describe("BondsSection", () => {
 
     const deleteAction = screen.getByRole("button", { name: "縁2を削除" });
 
-    expect(deleteAction.textContent).toBe("×");
-    expect(deleteAction.querySelector("svg")).toBeNull();
+    expect(deleteAction.dataset.characterSheetAction).toBe("delete");
+    expect(deleteAction.querySelector("svg")).not.toBeNull();
 
     fireEvent.click(deleteAction);
 

@@ -6,6 +6,8 @@ import type {
 } from "../form-values";
 import type { BondsDerivedValues } from "../logic/bonds";
 import styles from "./BondsSection.module.css";
+import ClearButton from "./ClearButton";
+import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 
 export type BondsSectionProps = {
@@ -147,24 +149,16 @@ export default function BondsSection({
                 type="checkbox"
               />
               {isDeletableOverflow ? (
-                <button
-                  aria-label={`${rowName}を${labels.delete}`}
-                  className="character-sheet-remove-button"
+                <DeleteButton
+                  ariaLabel={`${rowName}を${labels.delete}`}
                   onClick={() => onRowDelete(bond.rowId)}
-                  type="button"
-                >
-                  <span aria-hidden="true">×</span>
-                </button>
+                />
               ) : (
-                <button
-                  aria-label={`${rowName}を${labels.clear}`}
-                  className="character-sheet-clear-button"
+                <ClearButton
+                  ariaLabel={`${rowName}を${labels.clear}`}
                   disabled={bond.isResolved}
                   onClick={() => onRowClear(bond.rowId)}
-                  type="button"
-                >
-                  クリア
-                </button>
+                />
               )}
             </fieldset>
           );

@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Drug } from "../../lib/types/item";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import { formatDisplayValue } from "../format-display-value";
+import DeleteButton from "./DeleteButton";
 import styles from "./DrugsSection.module.css";
 import FormulaTooltip from "./FormulaTooltip";
 
@@ -137,14 +138,10 @@ function DrugRow({
           <span aria-hidden="true">{expanded ? "▾" : "▸"}</span>
         </button>
         <div className={styles.removeCell}>
-          <button
-            aria-label={`${rowLabel}${copy.remove}`}
-            className="character-sheet-remove-button character-sheet-remove-button--mobile-compact"
+          <DeleteButton
+            ariaLabel={`${rowLabel}${copy.remove}`}
             onClick={() => onRemove(row.rowId)}
-            type="button"
-          >
-            <span aria-hidden="true">×</span>
-          </button>
+          />
         </div>
       </div>
       {expanded ? (

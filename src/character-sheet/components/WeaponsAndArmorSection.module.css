@@ -24,10 +24,14 @@
 }
 
 .weaponLine {
-  grid-template-columns: 1.25rem minmax(7rem, 1fr) 2.5rem minmax(14rem, 2.3fr) 2rem 1.75rem;
+  grid-template-columns: 1.25rem minmax(7rem, 1.1fr) 2.5rem minmax(14rem, 2.3fr) 2rem var(
+      --character-sheet-action-button-size
+    );
 }
 .armorLine {
-  grid-template-columns: minmax(7rem, 1fr) 2.5rem minmax(14rem, 2.3fr) 2rem 3.5rem;
+  grid-template-columns: minmax(7rem, 1.1fr) 2.5rem minmax(14rem, 2.3fr) 2rem var(
+      --character-sheet-action-button-size
+    );
 }
 
 .headerRow {
@@ -207,13 +211,15 @@
 
 @media (width < 48rem) {
   .weaponLine {
-    grid-template-columns: 1.25rem minmax(0, 1fr) 2.25rem minmax(
+    grid-template-columns: 1.25rem minmax(0, 1.1fr) 2.25rem minmax(
         7.75rem,
         1.25fr
-      ) 1.5rem 1.25rem;
+      ) 1.5rem var(--character-sheet-action-button-size);
   }
   .armorLine {
-    grid-template-columns: minmax(0, 1fr) 2.25rem minmax(7.75rem, 1.25fr) 1.5rem 2.5rem;
+    grid-template-columns: minmax(0, 1.1fr) 2.25rem minmax(7.75rem, 1.25fr) 1.5rem var(
+        --character-sheet-action-button-size
+      );
   }
   .headerRow {
     font-size: 0.625rem;
@@ -266,8 +272,4 @@
   .detailMeta {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
-}
-
-.row > .armorLine > :global(.character-sheet-clear-button) {
-  border-right: var(--border-width) solid var(--color-border-strong);
 }

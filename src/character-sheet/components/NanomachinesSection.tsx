@@ -6,6 +6,7 @@ import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import type { NanomachineFixedPartKey } from "../form-values";
 import { formatDisplayValue } from "../format-display-value";
 import type { NanomachinesDerivedValues } from "../logic/nanomachines";
+import ClearButton from "./ClearButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./NanomachinesSection.module.css";
 
@@ -133,14 +134,10 @@ function NanomachinesRow({
         >
           <span aria-hidden="true">{expanded ? "▾" : "▸"}</span>
         </button>
-        <button
-          aria-label={`${rowLabel}を${copy.clear}`}
-          className="character-sheet-clear-button"
+        <ClearButton
+          ariaLabel={`${rowLabel}を${copy.clear}`}
           onClick={() => onClear(row.part)}
-          type="button"
-        >
-          {copy.clear}
-        </button>
+        />
       </div>
       {expanded ? (
         <p className={styles.details} id={detailsId}>

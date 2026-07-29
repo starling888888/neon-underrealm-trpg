@@ -6,6 +6,7 @@ import { formatDisplayValue } from "../format-display-value";
 import type { ChecksDerivedValues, DerivedCheckRow } from "../logic/checks";
 import type { NoncombatSkillName } from "../master-data/noncombat-skills";
 import styles from "./ChecksSection.module.css";
+import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 
 export type ChecksSectionProps = {
@@ -341,15 +342,11 @@ export default function ChecksSection({
                     </select>
                   }
                 />
-                <button
-                  aria-label={`${label}${labels.removeAttack}`}
-                  className="character-sheet-remove-button"
+                <DeleteButton
+                  ariaLabel={`${label}${labels.removeAttack}`}
                   disabled={attacks.length <= 1}
                   onClick={() => onAttackRemove(attack.rowId)}
-                  type="button"
-                >
-                  <span aria-hidden="true">×</span>
-                </button>
+                />
               </div>
             );
           })}
