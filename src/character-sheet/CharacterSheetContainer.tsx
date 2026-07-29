@@ -6,6 +6,7 @@ import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
+import DrugsPickerDialog from "./components/dialogs/DrugsPickerDialog";
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
 import NanomachinesPickerDialog from "./components/dialogs/NanomachinesPickerDialog";
 import OmamoriPickerDialog from "./components/dialogs/OmamoriPickerDialog";
@@ -18,6 +19,7 @@ import SkillPickerDialog from "./components/skills/SkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import { getCyberneticCandidateGroups } from "./master-data/cybernetics";
+import { getDrugs } from "./master-data/drugs";
 import { getNanomachines } from "./master-data/nanomachines";
 import { getOmamori } from "./master-data/omamori";
 import {
@@ -54,6 +56,7 @@ export default function CharacterSheetContainer() {
   const [omamoriPickerRowId, setOmamoriPickerRowId] = useState<string | null>(
     null,
   );
+  const [drugsPickerRowId, setDrugsPickerRowId] = useState<string | null>(null);
   const [cyberneticsPickerTarget, setCyberneticsPickerTarget] =
     useState<CyberneticsPickerTarget | null>(null);
   const [nanomachinesPickerTarget, setNanomachinesPickerTarget] =
@@ -73,6 +76,7 @@ export default function CharacterSheetContainer() {
   const weaponPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const armorPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const omamoriPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const drugsPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const cyberneticsPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const nanomachinesPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
@@ -196,6 +200,10 @@ export default function CharacterSheetContainer() {
         omamoriPickerTriggerRef.current = trigger;
         setOmamoriPickerRowId(rowId);
       },
+      onDrugsPickerRequested: (rowId, trigger) => {
+        drugsPickerTriggerRef.current = trigger;
+        setDrugsPickerRowId(rowId);
+      },
       onCyberneticsPickerRequested: (target, trigger) => {
         cyberneticsPickerTriggerRef.current = trigger;
         setCyberneticsPickerTarget(target);
@@ -234,6 +242,9 @@ export default function CharacterSheetContainer() {
   }
   function closeOmamoriPicker(): void {
     setOmamoriPickerRowId(null);
+  }
+  function closeDrugsPicker(): void {
+    setDrugsPickerRowId(null);
   }
   function closeCyberneticsPicker(): void {
     setCyberneticsPickerTarget(null);
@@ -436,6 +447,25 @@ export default function CharacterSheetContainer() {
             closeOmamoriPicker();
           }}
           returnFocusRef={omamoriPickerTriggerRef}
+        />
+        <DrugsPickerDialog
+          candidates={getDrugs()}
+          isOpen={drugsPickerRowId !== null}
+          onRequestClose={closeDrugsPicker}
+          onSelect={(drugId) => {
+            if (drugsPickerRowId !== null) {
+              presenterProps.drugsSection.onSelect(drugsPickerRowId, drugId);
+            }
+            closeDrugsPicker();
+          }}
+          returnFocusRef={drugsPickerTriggerRef}
+          selectedDrugIds={rootState.form
+            .getValues("drugs.rows")
+            .flatMap((row) =>
+              row.rowId === drugsPickerRowId || row.drugId === null
+                ? []
+                : [row.drugId],
+            )}
         />
         <CyberneticsPickerDialog
           groups={getCyberneticCandidateGroups(

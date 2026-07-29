@@ -235,6 +235,16 @@ export type NanomachinesValues = {
   torsoId: string | null;
 };
 
+export type DrugRowValues = {
+  drugId: string | null;
+  quantity: number;
+  rowId: string;
+};
+
+export type DrugsValues = {
+  rows: DrugRowValues[];
+};
+
 function createInitialBondRows(): BondValues[] {
   return Array.from({ length: 4 }, (_, index) => ({
     isResolved: false,
@@ -292,6 +302,14 @@ function createInitialCyberneticOtherRows(): CyberneticOtherRowValues[] {
   return [{ cyberneticId: null, rowId: "cybernetic-other-1" }];
 }
 
+function createInitialDrugRows(): DrugRowValues[] {
+  return Array.from({ length: 3 }, (_, index) => ({
+    drugId: null,
+    quantity: 0,
+    rowId: `drug-${index + 1}`,
+  }));
+}
+
 export type CharacterSheetFormValues = {
   armor: ArmorValues;
   bonds: BondsValues;
@@ -300,6 +318,7 @@ export type CharacterSheetFormValues = {
   commonSkills: CommonSkillsValues;
   credit: CreditValues;
   cybernetics: CyberneticsValues;
+  drugs: DrugsValues;
   ikizamaSkills: IkizamaSkillsValues;
   nanomachines: NanomachinesValues;
   omamori: OmamoriValues;
@@ -413,6 +432,9 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
     legId: null,
     otherRows: createInitialCyberneticOtherRows(),
     torsoId: null,
+  },
+  drugs: {
+    rows: createInitialDrugRows(),
   },
   nanomachines: {
     armId: null,

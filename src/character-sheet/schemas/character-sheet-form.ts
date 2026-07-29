@@ -229,6 +229,15 @@ export const characterSheetFormSchema = z
         .max(4),
       torsoId: z.string().nullable(),
     }),
+    drugs: z.object({
+      rows: z.array(
+        z.object({
+          drugId: z.string().nullable(),
+          quantity: nonNegativeIntegerSchema,
+          rowId: stableRowIdSchema,
+        }),
+      ),
+    }),
     nanomachines: z.object({
       armId: z.string().nullable(),
       headId: z.string().nullable(),
@@ -308,6 +317,7 @@ export const characterSheetFormSchema = z
         path: ["cybernetics", "otherRows"],
         rows: values.cybernetics.otherRows,
       },
+      { path: ["drugs", "rows"], rows: values.drugs.rows },
       { path: ["ikizamaSkills", "rows"], rows: values.ikizamaSkills.rows },
       { path: ["omamori", "rows"], rows: values.omamori.rows },
       {
@@ -331,6 +341,24 @@ export const characterSheetFormSchema = z
         }
         knownRowIds.add(row.rowId);
       });
+    }
+
+    const drugRowsById = new Map<string, number[]>();
+    values.drugs.rows.forEach((row, index) => {
+      if (row.drugId === null) return;
+      const indexes = drugRowsById.get(row.drugId) ?? [];
+      indexes.push(index);
+      drugRowsById.set(row.drugId, indexes);
+    });
+    for (const indexes of drugRowsById.values()) {
+      if (indexes.length < 2) continue;
+      for (const index of indexes) {
+        context.addIssue({
+          code: "custom",
+          message: "A drug may only be selected once.",
+          path: ["drugs", "rows", index, "drugId"],
+        });
+      }
     }
 
     const seenReactionNames = new Set<string>();

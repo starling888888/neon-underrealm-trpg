@@ -19,6 +19,7 @@ import {
   characterSheetDefaultValues,
 } from "../../../src/character-sheet/form-values";
 import { getCybernetics } from "../../../src/character-sheet/master-data/cybernetics";
+import { getDrugs } from "../../../src/character-sheet/master-data/drugs";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
 import { getNanomachines } from "../../../src/character-sheet/master-data/nanomachines";
 import { getOmamori } from "../../../src/character-sheet/master-data/omamori";
@@ -209,6 +210,42 @@ describe("CharacterSheetContainer", () => {
       screen.getByRole("button", { name: `頭：${nanomachine.name}` }),
     ).not.toBeNull();
     expect(document.activeElement).toBe(trigger);
+  });
+
+  it("disables drugs selected in another row and returns focus after selection", async () => {
+    const user = userEvent.setup();
+    const [firstDrug, secondDrug] = getDrugs();
+    if (firstDrug === undefined || secondDrug === undefined) {
+      throw new Error("ドラッグmaster dataが不足しています。");
+    }
+    render(<CharacterSheetContainer />);
+
+    const firstTrigger = screen.getByRole("button", {
+      name: "ドラッグ1：ドラッグを選択",
+    });
+    await user.click(firstTrigger);
+    await user.click(screen.getByRole("button", { name: firstDrug.name }));
+    expect(document.activeElement).toBe(firstTrigger);
+
+    const secondTrigger = screen.getByRole("button", {
+      name: "ドラッグ2：ドラッグを選択",
+    });
+    await user.click(secondTrigger);
+    expect(screen.getAllByText("使用タイミング：").length).toBe(
+      getDrugs().length,
+    );
+    expect(screen.getAllByText("1セット数量：").length).toBe(getDrugs().length);
+    const disabledDrugButton = screen.getByRole("button", {
+      name: firstDrug.name,
+    }) as HTMLButtonElement;
+    expect(disabledDrugButton.disabled).toBe(true);
+    expect(disabledDrugButton.closest("[data-disabled]")).not.toBeNull();
+    await user.click(screen.getByRole("button", { name: secondDrug.name }));
+
+    expect(
+      screen.getByRole("button", { name: `ドラッグ2：${secondDrug.name}` }),
+    ).not.toBeNull();
+    expect(document.activeElement).toBe(secondTrigger);
   });
 
   it("confirms an ikizama change only when normal ikizama skills are selected", async () => {

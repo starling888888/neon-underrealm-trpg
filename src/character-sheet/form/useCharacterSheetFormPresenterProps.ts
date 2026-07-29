@@ -13,6 +13,7 @@ import useBuildSectionProps from "./useBuildSectionProps";
 import useChecksSectionProps from "./useChecksSectionProps";
 import useCommonSkillsSectionProps from "./useCommonSkillsSectionProps";
 import useCyberneticsSectionProps from "./useCyberneticsSectionProps";
+import useDrugsSectionProps from "./useDrugsSectionProps";
 import useIkizamaSkillsSectionProps from "./useIkizamaSkillsSectionProps";
 import useNanomachinesSectionProps from "./useNanomachinesSectionProps";
 import useOmamoriSectionProps from "./useOmamoriSectionProps";
@@ -67,6 +68,7 @@ type CharacterSheetPresenterOptions = {
     target: CyberneticsPickerTarget,
     trigger: HTMLButtonElement,
   ) => void;
+  onDrugsPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
   onNanomachinesPickerRequested: (
     target: NanomachinesPickerTarget,
     trigger: HTMLButtonElement,
@@ -117,6 +119,7 @@ export default function useCharacterSheetFormPresenterProps(
     onPrimarySkillPickerRequested,
     onArmorPickerRequested,
     onCyberneticsPickerRequested,
+    onDrugsPickerRequested,
     onNanomachinesPickerRequested,
     onOmamoriPickerRequested,
     onWeaponPickerRequested,
@@ -151,6 +154,9 @@ export default function useCharacterSheetFormPresenterProps(
   });
   const nanomachines = useNanomachinesSectionProps(form, build.derivedBuild, {
     onPickerRequest: onNanomachinesPickerRequested ?? (() => {}),
+  });
+  const drugs = useDrugsSectionProps(form, {
+    onPickerRequest: onDrugsPickerRequested ?? (() => {}),
   });
   const profileSection = useProfileSectionProps(
     form,
@@ -191,6 +197,7 @@ export default function useCharacterSheetFormPresenterProps(
     },
     checksSection,
     cyberneticsSection: cybernetics,
+    drugsSection: drugs,
     commonSkillPicker: {
       candidates: commonSkills.candidates,
       onSelect: commonSkills.onSelect,

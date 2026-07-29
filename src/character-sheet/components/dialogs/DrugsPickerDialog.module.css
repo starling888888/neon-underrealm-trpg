@@ -1,0 +1,164 @@
+.dialog {
+  composes: pickerDialog from "../CharacterSheetFormList.module.css";
+}
+
+.content {
+  display: grid;
+  gap: 0;
+}
+
+.selectionGuide {
+  composes: selectionGuide from "../CharacterSheetFormList.module.css";
+}
+
+.headerRow,
+.firstLine {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(4rem, 1fr) 3rem 5rem 5rem 3.5rem;
+}
+
+.headerRow {
+  composes: tableHeader from "../CharacterSheetFormList.module.css";
+}
+
+.firstLine {
+  composes: pickerTableFirstLine from "../CharacterSheetFormList.module.css";
+}
+
+.headerRow > span,
+.firstLine > * {
+  min-width: 0;
+  padding: 0.1875rem 0.375rem;
+}
+
+.headerRow > span {
+  display: grid;
+  min-height: 1.75rem;
+  place-items: center;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
+.headerRow > :first-child {
+  justify-items: start;
+  text-align: left;
+}
+
+.candidate {
+  composes: candidate from "../CharacterSheetFormList.module.css";
+}
+
+.candidate[data-disabled] {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.candidate[data-disabled]:hover {
+  background: var(--color-surface-muted);
+}
+
+.firstLine > * {
+  display: grid;
+  min-height: 2rem;
+  align-content: center;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.firstLine button {
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.firstLine button:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+}
+
+.firstLine button:disabled {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.candidate[data-disabled] .firstLine > * {
+  color: var(--color-text-muted);
+}
+
+.candidate p {
+  margin: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+  line-height: var(--line-height-normal);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.candidate p strong {
+  color: var(--color-text-muted);
+}
+
+.mobileDetailsMetadata {
+  display: none;
+}
+
+@media (width < 48rem) {
+  .headerRow,
+  .firstLine {
+    grid-template-columns: minmax(0, 1fr) 2.5rem 3rem;
+  }
+
+  .headerRow {
+    font-size: 0.625rem;
+  }
+
+  .headerRow > span,
+  .firstLine > * {
+    padding: 0.125rem 0.25rem;
+  }
+
+  .firstLine > * {
+    font-size: 0.6875rem;
+  }
+
+  .headerRow > :nth-child(3),
+  .headerRow > :nth-child(4),
+  .firstLine > :nth-child(3),
+  .firstLine > :nth-child(4) {
+    display: none;
+  }
+
+  .mobileDetailsMetadata {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-1);
+    border-top: var(--border-width) solid var(--color-border);
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.6875rem;
+  }
+
+  .candidate p {
+    border-top: 0;
+  }
+
+  .mobileDetailsMetadata > span {
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .candidate:not([data-disabled]) .mobileDetailsMetadata > span {
+    color: var(--color-text);
+  }
+
+  .candidate .mobileDetailsMetadata strong {
+    color: var(--color-text-muted);
+  }
+}

@@ -77,19 +77,19 @@
 - [ ] 行番号付きaccessible nameにより、各行の名称選択、所持数input、効果展開、上下移動、削除を区別できる。名称選択、効果展開、追加・削除・並べ替え、候補dialogのEscape・閉じる・選択後のfocus復帰がkeyboard操作を含めアクセシブルに動作する。
 - [ ] 候補dialogがdesktop / tablet / mobileで同一の名称、信用、使用タイミング、1セット数量、BT強度のheaderと、候補ごとの効果2行目・選択済み候補のdisabledを満たす。
 - [ ] 関連TODOを扱わない理由と、design targetおよびVRT baselineを更新しない扱いが記録されている。
-- [ ] `npm run build` が通る。
-- [ ] 必要な`npm run check`、対象Node / hook / Component testが通る。
+- [x] `npm run build` が通る。
+- [x] 必要な`npm run check`、対象Node / hook / Component testが通る。
 
 ## チェックポイント
 
 - [ ] `docs/architectures/character-sheet.md`に従い、form adapter、Presenter、Container、Component、master-dataの所有境界を越えていない。
-- [ ] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
+- [x] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
 - [ ] dev serverでdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`のdefault、選択済み、効果展開、所持数編集、追加・削除・並べ替え、名称tooltip、候補dialogをユーザーが確認できる状態にする。
-- [ ] 重複IDのerror、候補dialogの選択済み候補disabled、行番号付きaccessible name、並べ替え後の表示順追従をNode / hook / Component testで確認する。
-- [ ] ユーザー指示に従い、E2EとVRTを実装・実行せず、canonical baselineを更新していない。
-- [ ] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
-- [ ] 関連する`docs/TODO.md`および`docs/design/`と矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 重複IDのerror、候補dialogの選択済み候補disabled、行番号付きaccessible name、並べ替え後の表示順追従をNode / hook / Component testで確認した。
+- [x] ユーザー指示に従い、E2EとVRTを実装・実行せず、canonical baselineを更新していない。
+- [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
+- [x] 関連する`docs/TODO.md`および`docs/design/`と矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -126,3 +126,145 @@
 - `.raw/contents/`にはキャラクターシートに対応する入力Markdownが見つかっていないため、ページ本文・可視構成の優先指示はユーザーの最新指示、承認済みdesign画像、requirements、design notesの順で扱う。
 - VRT baselineはGit管理対象外のlocal artifactであり、G31まで管理判断を持ち越す。G21でbaselineを更新する必要が生じた場合は、実装完了前にユーザーの明示承認を得る。
 - ユーザー指示により、G21ではE2EとVRTを実装・実行しない。実装後はdev serverを起動し、ユーザーレビューを待つ。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+1. desktop / tabletの`使用タイミング` headerで、`タイミング`という語の途中で折り返される。名称列を短くしてよいので、指定済みの`使用`と`タイミング`の2行だけへ収める。
+2. ドラッグ候補dialogのdisabled候補が、既存スキル候補dialogのdisabled表現と異なる。
+3. mobileの効果展開内にある使用タイミングと1セット数量は、折り返さず太字で表示する。
+4. 選択dialogでも使用タイミングとBT強度のheaderが折り返される。名称列を縮め、全headerを折り返さず1行で表示する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `DrugsSection.module.css`のdesktop / tablet gridは名称列に比べて使用タイミング列が狭く、`white-space: pre-line`のheaderで`タイミング`の語内折り返しを防止していない。
+  - `DrugsPickerDialog`はbuttonだけをdisabledにするが、`SkillPickerDialog`はcandidate全体のmuted背景とtext色を`data-disabled`で揃えている。
+  - `DrugsSection`はmobile展開内に改行を含むheader文字列をそのまま表示し、メタ情報を通常weightで描画している。
+  - `DrugsPickerDialog`のheaderは改行を含むmain table用のdictionaryをそのまま使い、名称列の最小幅も大きいため、使用タイミングとBT強度を含むheaderが折り返される。
+
+### 対応方針
+
+- desktop / tabletは名称列を必要最小限へ縮め、使用タイミング列に`タイミング`を1語で収める幅とno-wrapを与える。`使用`と`タイミング`の強制改行は維持する。
+- ドラッグ候補dialogに、スキル候補dialogと同じcandidate単位の`data-disabled`、muted背景、muted text、disabled button表現を適用する。
+- mobile展開内では、見出し用の改行文字列を使わず、使用タイミングと1セット数量をそれぞれ1行・太字・no-wrapで効果本文の直前に表示する。
+- 選択dialogはmain tableの強制改行headerを流用せず、名称列を縮めたうえで、名称、信用、使用タイミング、1セット数量、BT強度の全headerをno-wrapの1行で表示する。
+
+### 対応完了チェックリスト
+
+- [ ] desktop / tabletで使用タイミングheaderが語内折り返しせず、名称列との列幅配分が表示契約に一致する。
+- [ ] ドラッグ候補dialogのdisabled候補が既存スキル候補dialogと同じ背景・文字色・操作不可表現になる。
+- [ ] mobile展開内の使用タイミングと1セット数量が、太字かつ折り返しなしで効果本文の直前に表示される。
+- [ ] 選択dialogで名称列を縮めても、使用タイミングとBT強度を含む全headerが折り返さず1行に収まる。
+- [x] 必要な`npm run check`と対象Component testが通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+1. ドラッグ候補dialogの`使用タイミング`と`1セット数量`は、main表と同じ指定改行（`使用` / `タイミング`、`1セット` / `数量`）を維持する。ただし、`タイミング`、`数量`、`BT強度`などの語内折り返しは発生させない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `pickerHeaders`を1行文字列へ変更した前回対応は、ユーザーが指定したdialog headerの改行契約を消している。`DrugsPickerDialog.module.css`には使用タイミングと1セット数量を各行へ収める列幅があり、header表示だけを指定改行へ戻しても語内折り返しを防止できる。
+
+### 対応方針
+
+- dialog用headerは指定改行を持つ文字列へ戻す。mobile展開用は別の1行文字列を使い続ける。
+- dialog headerの`white-space: pre-line`と、使用タイミング・1セット数量・BT強度の各列幅を維持し、指定改行以外の折り返しを起こさない。
+
+### 対応完了チェックリスト
+
+- [ ] dialogの使用タイミングと1セット数量が指定改行で表示され、タイミング・数量・BT強度が語内折り返ししない。
+- [x] 必要な`npm run check`と対象Component testが通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+1. mobile展開内の使用タイミングと1セット数量は、`：`以降の値を太字にしない。効果と同じく、ラベルだけを強調する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `mobileDetailsMetadata`にfont weightを指定しているため、値まで太字になる。表示構造にはすでにlabelを`strong`で分けているため、親要素のfont weightを外せば効果と同じlabel-onlyの強調になる。
+
+### 対応方針
+
+- mobile展開のメタ情報コンテナから太字指定を外し、`strong`で囲んだラベルと全角コロンだけを太字にする。no-wrapは維持する。
+
+### 対応完了チェックリスト
+
+- [ ] mobile展開内で使用タイミングと1セット数量のラベルだけが太字で、値は通常ウェイトになる。
+- [x] 必要な`npm run check`と対象Component testが通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+1. mobile展開内の使用タイミングと1セット数量の値は、muted textではなく効果本文と同じ通常の文字色にする。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `mobileDetailsMetadata`がコンテナ全体へ`--color-text-muted`を指定しているため、ラベルだけでなく値もmutedになる。効果本文は`.details`の通常文字色で表示している。
+
+### 対応方針
+
+- メタ情報の値を包む行に通常の文字色を指定し、既存の`strong`ラベルだけがmuted色となる表示へ分ける。no-wrapとlabel-onlyの太字は維持する。
+
+### 対応完了チェックリスト
+
+- [ ] mobile展開内で使用タイミングと1セット数量の値が効果本文と同じ通常文字色になる。
+- [x] 必要な`npm run check`と対象Component testが通る。
+
+## レビュー指摘 5
+
+### 指摘事項
+
+1. mobileのドラッグ候補dialogでは、名称の折り返しを減らすため、使用タイミングと1セット数量を1行目の列から外し、効果本文の直前へ移す。ラベルと値の見た目はmain表のmobile展開内と揃える。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: mobile dialogの1行目は5列で、使用タイミングと1セット数量が名称列を圧迫している。候補データには効果2行目がすでにあり、その直前にmobile限定のメタ情報行を置けば、desktop / tabletの5列構成を変えずに名称列を広げられる。
+
+### 対応方針
+
+- mobileではdialog headerと候補1行目から使用タイミング・1セット数量を隠し、名称・信用・BT強度の3列にする。
+- 候補1行目と効果の間に、使用タイミング・1セット数量のmobile限定メタ情報行を追加する。main表のmobile展開と同じく、muted色の太字ラベル、通常色・通常ウェイトの値、no-wrapで表示する。
+
+### 対応完了チェックリスト
+
+- [ ] mobile候補dialogが名称・信用・BT強度の1行目と、使用タイミング・1セット数量・効果の順の詳細行を表示する。
+- [ ] desktop / tabletのdialog 5列構成を維持する。
+- [x] 必要な`npm run check`と対象Component testが通る。
+
+## レビュー指摘 6
+
+### 指摘事項
+
+1. mobile候補dialogの使用タイミング・1セット数量と効果本文の間に、区切り線を表示しない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: 候補の効果本文に共通指定されている上borderが、mobileで追加したメタ情報行との間にも表示される。desktop / tabletでは候補1行目と効果を分けるために必要だが、mobileではメタ情報行が同じ候補詳細を連続して示すため不要である。
+
+### 対応方針
+
+- mobile media queryで効果本文の上borderだけを外す。候補1行目とメタ情報行の区切り、およびdesktop / tabletの既存区切りは維持する。
+
+### 対応完了チェックリスト
+
+- [ ] mobile候補dialogで使用タイミング・1セット数量から効果本文までを区切り線なしで連続表示する。
+- [x] 必要な`npm run check`と対象Component testが通る。

@@ -1,0 +1,69 @@
+// @vitest-environment jsdom
+
+import { act, renderHook } from "@testing-library/react";
+import { useForm } from "react-hook-form";
+import { describe, expect, it, vi } from "vitest";
+
+import useDrugsSectionProps from "../../../src/character-sheet/form/useDrugsSectionProps";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+} from "../../../src/character-sheet/form-values";
+import { getDrugs } from "../../../src/character-sheet/master-data/drugs";
+
+function useDrugsHarness() {
+  const form = useForm<CharacterSheetFormValues>({
+    defaultValues: characterSheetDefaultValues,
+  });
+  const props = useDrugsSectionProps(form, { onPickerRequest: vi.fn() });
+
+  return { form, props };
+}
+
+describe("useDrugsSectionProps", () => {
+  it("keeps three initial rows, updates quantities, and supports movement and removal to zero", () => {
+    const { result } = renderHook(() => useDrugsHarness());
+    const [firstRow, secondRow, thirdRow] =
+      result.current.form.getValues("drugs.rows");
+
+    if (
+      firstRow === undefined ||
+      secondRow === undefined ||
+      thirdRow === undefined
+    ) {
+      throw new Error("ドラッグ初期行がありません。");
+    }
+
+    act(() => {
+      result.current.props.onQuantityChange(firstRow.rowId, "4.8");
+      result.current.props.onMove(thirdRow.rowId, "up");
+      result.current.props.onRemove(firstRow.rowId);
+      result.current.props.onRemove(secondRow.rowId);
+      result.current.props.onRemove(thirdRow.rowId);
+    });
+
+    expect(result.current.form.getValues("drugs.rows")).toEqual([]);
+  });
+
+  it("keeps duplicate selections visible as errors while the picker can disable them", () => {
+    const { result } = renderHook(() => useDrugsHarness());
+    const drug = getDrugs()[0];
+    if (drug === undefined)
+      throw new Error("ドラッグmaster dataがありません。");
+    const [firstRow, secondRow] = result.current.form.getValues("drugs.rows");
+    if (firstRow === undefined || secondRow === undefined) {
+      throw new Error("ドラッグ初期行がありません。");
+    }
+
+    act(() => {
+      result.current.props.onSelect(firstRow.rowId, drug.id);
+      result.current.props.onSelect(secondRow.rowId, drug.id);
+    });
+
+    expect(
+      result.current.props.rows
+        .filter((row) => row.hasDuplicateSelection)
+        .map((row) => row.rowId),
+    ).toEqual([firstRow.rowId, secondRow.rowId]);
+  });
+});
