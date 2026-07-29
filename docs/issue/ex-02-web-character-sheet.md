@@ -204,7 +204,7 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] `画像を選択`と各`〜を追加` buttonの共通styleを作成し、既存buttonへ適用する
 - [x] 個別sectionに重複した共通button styleが残っていない
 - [x] 対象Component testを更新する
-- [ ] 変更targetのVRT比較と原寸locator screenshot確認を行う
+- [x] 変更targetのVRT比較と原寸locator screenshot確認を行う
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -278,12 +278,12 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 
 ### 対応完了チェックリスト
 
-- [ ] スキル子sectionの上部角に通常の外枠線が表示される
-- [ ] スキルのerror状態で見出しを含む外周の強調線が均一に表示される
-- [ ] 専用アイテムのwarning状態で見出しを含む外周の強調線が均一に表示される
-- [ ] 対象stateのVRT比較と原寸actual screenshot確認を行う
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] スキル子sectionの上部角に通常の外枠線が表示される
+- [x] スキルのerror状態で見出しを含む外周の強調線が均一に表示される
+- [x] 専用アイテムのwarning状態で見出しを含む外周の強調線が均一に表示される
+- [x] 対象stateのVRT比較と原寸actual screenshot確認を行う
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## レビュー指摘 5
 
@@ -316,15 +316,15 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 
 ### 対応完了チェックリスト
 
-- [ ] 全削除buttonが囲みのないゴミ箱iconとなり、desktop / tablet / mobileで同じ縦横サイズを保つ
-- [ ] 通常使用不可の専用アイテムカテゴリが、位置を変えずwarning colorのゴミ箱iconを使う
-- [ ] 全clear操作が消しゴムiconとなり、縁の関係列およびその他の名称列へ空き幅を再配分する
-- [ ] 画像clearが選択／差し替えbuttonの右に固定表示され、未選択時はdisabledである
-- [ ] 画像を選択／画像を差し替えbuttonの幅と操作位置が画像の有無で変わらない
-- [ ] 対象Component / browser操作testを更新する
-- [ ] 対象stateのVRT比較と原寸actual screenshot確認を行う
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] 全削除buttonが囲みのないゴミ箱iconとなり、desktop / tablet / mobileで同じ縦横サイズを保つ
+- [x] 通常使用不可の専用アイテムカテゴリが、位置を変えずwarning colorのゴミ箱iconを使う
+- [x] 全clear操作が消しゴムiconとなり、縁の関係列およびその他の名称列へ空き幅を再配分する
+- [x] 画像clearが選択／差し替えbuttonの右に固定表示され、未選択時はdisabledである
+- [x] 画像を選択／画像を差し替えbuttonの幅と操作位置が画像の有無で変わらない
+- [x] 対象Component / browser操作testを更新する
+- [x] 対象stateのVRT比較と原寸actual screenshot確認を行う
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## レビュー指摘 6
 
@@ -359,12 +359,12 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 
 ### 対応完了チェックリスト
 
-- [ ] field labelと直接入力の文字指定が共通tokenを使う
-- [ ] 重要な算出値と一覧本文の文字指定が共通tokenを使う
-- [ ] mobile一覧の縮小文字を専用tokenで維持する
-- [ ] desktop / tablet / mobileで文字階層と横overflowを確認する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] field labelと直接入力の文字指定が共通tokenを使う
+- [x] 重要な算出値と一覧本文の文字指定が共通tokenを使う
+- [x] mobile一覧の縮小文字を専用tokenで維持する
+- [x] desktop / tablet / mobileで文字階層と横overflowを確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## レビュー指摘 7
 
@@ -430,7 +430,7 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 ### 対応完了チェックリスト
 
 - [x] skill errorと専用アイテムwarningで、通常状態からframeのlayout寸法を変えない
-- [ ] 見出しを含む外周が単線の太いborderとして均一に表示される
+- [x] 見出しを含む外周が単線の太いborderとして均一に表示される
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -456,8 +456,8 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 
 ### 対応完了チェックリスト
 
-- [ ] スキル・アイテムの全候補選択dialogで、列headerが表示側の同種の列headerと同じfont size、font weightである
-- [ ] dialog titleと候補行本文のfont size、確認・エラー・通知dialogを変えない
+- [x] スキル・アイテムの全候補選択dialogで、列headerが表示側の同種の列headerと同じfont size、font weightである
+- [x] dialog titleと候補行本文のfont size、確認・エラー・通知dialogを変えない
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -488,11 +488,11 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 
 ### 対応完了チェックリスト
 
-- [ ] 全skill・item pickerの名称欄が、viewportごとにスキルpickerと同じfont sizeである
-- [ ] 防具pickerの`ダメージ`／`軽減` header、mobileの名称列幅、候補行が横overflow・過度な折り返しなく表示される
-- [ ] 防具pickerの装備制限と効果が、desktop / tabletでは列表示、mobileでは指定順・bold label・罫線なし・`-` fallbackで表示される
-- [ ] 選択、閉じる、Escape、focus復帰、候補のaccessible nameを維持する
-- [ ] 対象dialog locatorのdesktop / tablet / mobile actual screenshotを確認する
+- [x] 全skill・item pickerの名称欄が、viewportごとにスキルpickerと同じfont sizeである
+- [x] 防具pickerの`ダメージ`／`軽減` header、mobileの名称列幅、候補行が横overflow・過度な折り返しなく表示される
+- [x] 防具pickerの装備制限と効果が、desktop / tabletでは列表示、mobileでは指定順・bold label・罫線なし・`-` fallbackで表示される
+- [x] 選択、閉じる、Escape、focus復帰、候補のaccessible nameを維持する
+- [x] 対象dialog locatorのdesktop / tablet / mobile actual screenshotを確認する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -549,12 +549,71 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 
 ### 対応完了チェックリスト
 
-- [ ] G3で非戦闘技能を専用Componentとして明記する
-- [ ] G10で消しゴム／ゴミ箱iconの現行表現を明記する
+- [x] G3で非戦闘技能を専用Componentとして明記する
+- [x] G10で消しゴム／ゴミ箱iconの現行表現を明記する
 - [x] 長い確認dialog操作2件を10秒timeoutで実行し、通常のComponent testで再発しないことを確認する
 - [x] subsectionごとの同名regionを1件にする
 - [x] 同名regionが二重にならないことをComponent testで確認する
 - [x] Document ReviewとTechnical Reviewを実施する
+
+## レビュー指摘 13
+
+### 指摘事項
+
+- SectionFrame系のerror / warning状態で、通常の灰色borderの内側へ色付きoverlay borderが重なる。二重線に見え、特にmobileで視覚的な違和感が大きい。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `canonical-snapshots/visual/character-sheet/sections/g22-special-items-warning-{desktop,tablet,mobile}.png`に、通常borderと内側のwarning borderが重なった状態が記録されている。
+  - `primary-skills-error-mobile.png`も同じ共通`emphasisOverlay`をerror色で使う。
+  - `CharacterSheetSectionFrameBase.module.css`の`.emphasisOverlay::after`は通常borderを残したまま、`inset: 0`の2倍幅borderを重ねる。`SkillSection`のerrorと`SpecialItemCategorySection`のwarningがこの共通styleを使用する。
+
+### 対応方針
+
+- 擬似要素overlayを廃止する。強調frameは既存borderを2倍幅のerror / warning色borderへ差し替える。
+- border幅変更による局所的な配置差は許容する。通常状態、強調対象外のerror表示、操作・accessibilityは変更しない。
+
+### 対応完了チェックリスト
+
+- [x] error / warning frameで二重borderを出さない
+- [x] `npm run build` が通る
+- [x] preview serverで修正後の画面を確認可能にする
+- [x] `common-skills-error`と`g22-special-items-warning`の各3 viewport baselineを更新し、通常比較する
+
+## レビュー指摘 14
+
+### 指摘事項
+
+- スキル、武器、防具、専用アイテムの行errorで、行のerror枠が`Lv`より左の並べ替え・名称を囲まず、展開controlの位置で途切れて見える。
+- 現行ではスキル行だけが該当する見込みだが、表示項目ごとのerror表示契約を確認する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `SkillSection`の行は`fieldset.row`に`data-invalid`を付与し、`.row[data-invalid]`のinset `box-shadow`でerror枠を表示する。一方で、列は子要素`.firstLine`の別gridであり、列境界も子要素のborderで構成される。そのため、error枠が要約行の全cellを連続して囲む表示契約になっていない。
+  - `primary-skills-error`、`ikizama-skills-error`、`common-skills-error`、`other-ryugi-skills-error`のVRT stateが、該当するスキル行errorを対象にしている。Component testはrowと入力の`aria-invalid`を確認するが、error枠の表示範囲は確認していない。
+  - 武器・防具・お守り・サイバーウェア・ナノマシンは、同じ行error frameの`data-invalid` styleを持たない。薬物の重複選択は行に`data-invalid`を持つが、名称pickerの文字色だけをerror色へ変える契約であり、スキル行の枠と同じ表示ではない。
+
+### 対応方針
+
+- スキル行のerror枠を、並べ替え、名称、`Lv`、各表示列、展開、削除までを含む要約行の外周で連続して表示する。詳細を展開した場合も、要約行の右端で枠が途切れて見えない構造にする。
+- 武器、防具、専用アイテムの既存error表示契約は変更しない。行全体を囲むerror frameを持つ項目が新たに見つかった場合だけ、同じ外周表示契約へ揃える。
+
+### 対応完了チェックリスト
+
+- [x] スキル行error枠が並べ替えから削除までの要約行外周を連続して囲む
+- [x] 詳細展開時もerror枠が展開control位置で途切れて見えない
+- [x] 武器、防具、専用アイテムの既存error表示契約を意図せず変更しない
+- [x] Component testでスキル行のerror stateを維持する
+- [x] 対象VRTのdesktop / tablet / mobile actual screenshotでerror枠を確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+- [x] `primary-skills-error`、`ikizama-skills-error`、`other-ryugi-skills-error`の各3 viewport baselineを更新し、通常比較する
 
 ## ビジュアルレビュー 1
 

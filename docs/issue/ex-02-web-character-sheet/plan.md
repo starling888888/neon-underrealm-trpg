@@ -70,7 +70,7 @@
 
 ### G3
 
-- `CharacterSheetSectionFrame`は`bonds`、`checks`、`weapons-and-armor`、`skills`、`special-items`だけへ適用する。`profile`、`build`、`secondary`は後続Gateで扱う。親frameの子sectionでは、判定の攻撃・リアクション・非戦闘技能、縁の覚悟の効果、武器・防具の武器・防具にも同じframeを適用する。
+- `CharacterSheetSectionFrame`は`bonds`、`checks`、`weapons-and-armor`、`skills`、`special-items`だけへ適用する。`profile`、`build`、`secondary`は後続Gateで扱う。親frameの子sectionでは、判定の攻撃・リアクション、縁の覚悟の効果、武器・防具の武器・防具に同じframeを適用する。非戦闘技能は共通基礎CSSを再利用する専用Componentとする。
 - frameは初期展開・独立開閉とし、内容を`hidden`にするだけでchildrenをunmountしない。非戦闘技能は専用Componentが初期折りたたみ、見出しtooltip、折りたたみ中の得意技能だけの表示を担う。開閉stateは保存・JSON入出力へ含めない。
 - `headingAs`は`span`または`h1`〜`h6`だけを受け、既定は`span`である。G3の5 top-level frameは`h2`を指定し、後続の入れ子sectionは適切なheading levelを指定する。
 - `CharacterSheetFormPresenter`のIsland scopeは、compact density用のsection gap、content padding、toggle heightを提供する。後続Gateはこのscopeを使い、site全体のglobal type scaleを変更しない。
@@ -123,7 +123,7 @@
 
 - `checks` slotに攻撃とリアクションを実装した。2026-07-29のGate外レビュー修正後は、desktop / tablet / mobileのすべてで左列の`縁`の後に置く。攻撃は1〜5行で、技能候補と対応能力候補は指定順、最後の1行は削除不可、5行目は追加不可とする。リアクションは4固定行で、対応能力だけを変更できる。
 - 判定数は`対応能力 + 手動修正`で常時・一時をそれぞれ導出する。判定数に影響するスキル・アイテム効果は各行の修正へ手入力し、効果文・能力値変化の自動解析はしない。
-- G10のレビュー指摘2として、通常の縁行のクリアを角丸の横長`クリア` text buttonに変え、上限外行の`×` delete buttonと形状・文言で区別した。
+- G10のレビュー指摘2として、通常の縁行のclearと上限外行のdeleteを、それぞれ囲みのない消しゴムiconとゴミ箱iconへ統一した。icon-only化で生じた余白は`関係`列へ再配分する。
 - canonical VRT baselineは更新していない。G10と縁クリアbuttonの局所Visual Reviewは、test-owned locator screenshotを出力できないため未実施のままユーザー指示でGateをcloseした。G31で必要なら再確認する。
 
 ### G11

@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Chromium failed to launch for a target-limited VRT comparison
+
+#### 2026-07-30
+
+- source: self
+- failure category: repeated Playwright environment failure
+- 発生箇所: `g22-special-items-warning`のdesktop / tablet / mobile VRT比較
+- 観測した失敗: `visual:capture`では3 viewportのlocator screenshotを取得できたが、後続の通常比較では各viewportでChromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動できなかった。snapshot差分の比較処理には到達していない。
+- 一次対応: 原寸captureと既存canonical snapshotを開いて警告frameの二重線を確認した。browser起動環境が回復するまで通常VRT比較は未確認として扱う。
+
 ### Added a tooltip accessory despite the user excluding tooltip work
 
 #### 2026-07-30
