@@ -39,7 +39,7 @@
 | G16  | done    | G7, G12, G13, G14, G15                                                                                                                          | `docs/issue/done/ex-02-web-character-sheet/ex-02-16-sheet-experience-consistency.md` | 消費経験点の算出整合性を確認する。                                                                                                                                       |
 | G17  | done    | G4, G7                                                                                                                                          | `docs/issue/done/ex-02-web-character-sheet/ex-02-17-sheet-weapons-armor.md`          | 武器と防具を扱う。                                                                                                                                                       |
 | G18  | done    | G4                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-18-sheet-omamori.md`                | お守りの個別行の選択・追加・削除・並べ替え・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。                                                                   |
-| G19  | planned | G4                                                                                                                                              | `docs/issue/ex-02-19-sheet-cybernetics.md`                                           | サイバネの個別行の選択・行操作・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。                                                                               |
+| G19  | done    | G4                                                                                                                                              | `docs/issue/done/ex-02-web-character-sheet/ex-02-19-sheet-cybernetics.md`            | サイバネの個別行の選択・行操作・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。                                                                               |
 | G20  | planned | G4                                                                                                                                              | `docs/issue/ex-02-20-sheet-nanomachines.md`                                          | ナノマシンの固定個別行の選択・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。                                                                                 |
 | G21  | planned | G4                                                                                                                                              | `docs/issue/ex-02-21-sheet-drugs.md`                                                 | ドラッグの個別行の選択・追加・削除・並べ替え・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。                                                                 |
 | G22  | planned | G4, G7, G17, G18, G19, G20, G21                                                                                                                 | `docs/issue/ex-02-22-sheet-special-items-integration.md`                             | 消費信用を一元算出し、生き様別の既定カテゴリ表示、未選択時のカテゴリ非表示、カテゴリ単位の追加・削除、生き様変更時の入れ替え、通常選択不可の保持アイテム警告を実装する。 |
@@ -187,5 +187,12 @@
 - お守りは初期0行のRHF field arrayで、追加、削除、上下移動、同一IDの重複選択を行う。選択IDと安定したrow IDだけをform値として保持し、master dataは読み取り専用で解決する。
 - desktop / tabletでは名称、信用、常時表示する効果、削除buttonをtable相当の行へ置き、mobileでは効果を行下へ展開する。候補dialogは全viewportで名称・信用を1行目、効果を2行目へ常時表示する。カテゴリ削除buttonを持たない非折りたたみframeだけをG18で導入し、カテゴリ連動・集計・削除はG22に残す。
 - お守りのmaster-data、RHF hook、section、候補dialogとfocus復帰のContainer結線、schema row ID境界を直接テストし、代表E2Eとtarget限定VRTを確認した。`bond-resolved`のdesktop / tablet / mobile canonical baselineは、ユーザー承認により更新した。
+
+### G19
+
+- サイバネは頭・胴体・腕・足の固定4行と、初期1・最小1・最大4行のその他field arrayで保持する。固定部位とその他1行目はclear、それ以降はdeleteとし、同一IDの重複選択を許可する。可変行の操作accessible nameには現在の行番号を含める。
+- 埋め込み点数合計は選択値の合計と修正、上限は常時精神と修正のpair expressionで示す。最終合計だけを上限errorにし、5以下・6〜10・11以上の段階境界をまたぐ時だけ非戦闘技能の標準修正を0・-2・-4へ再設定する。手動修正を上書きする旨とサイバネルールへの別tab linkをsection末尾に置く。
+- 候補dialogは部位ごとの小見出し・table header・効果2行目を持つ。Containerが開閉、対象行、Escape・閉じる・選択後のfocus復帰を保持する。G20は、上限errorをカテゴリ全体ではなく集計の最終値だけへ付与する規則と、共通clear / delete button CSSを踏襲する。
+- canonical VRT baselineは親issue完了までローカル専用とし、G19ではGit管理・更新を行わない。G31で統合Visual Reviewとともに扱う。
 
 状態は `planned`、`in progress`、`active`、`done` を使う。`active`は、完了済みとしていたGateをreview指摘で再openし、修正または再reviewが終わるまでの状態を表す。
