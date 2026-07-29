@@ -2,6 +2,7 @@ import { ListPlus } from "lucide-react";
 import { useState } from "react";
 
 import type { Cybernetic } from "../../lib/types/item";
+import { withBase } from "../../lib/utils/paths";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import type { CyberneticFixedPartKey } from "../form-values";
 import { formatDisplayValue } from "../format-display-value";
@@ -19,6 +20,13 @@ type CyberneticsRow = {
 };
 
 type FixedCyberneticsRow = CyberneticsRow & { part: CyberneticFixedPartKey };
+
+type ModifierInputProps = {
+  field: "implantLimitModifier" | "implantTotalModifier";
+  label: string;
+  onModifierChange: CyberneticsSectionProps["onModifierChange"];
+  value: number;
+};
 
 export type CyberneticsSectionProps = {
   derived: CyberneticsDerivedValues;
@@ -48,6 +56,39 @@ const partLabels = {
   torso: "胴体",
 } as const satisfies Record<CyberneticFixedPartKey, string>;
 
+function ModifierInput({
+  field,
+  label,
+  onModifierChange,
+  value,
+}: ModifierInputProps) {
+  return (
+    <input
+      aria-label={label}
+      className={styles.modifierInput}
+      defaultValue={value}
+      onBlur={(event) => {
+        event.currentTarget.value = String(
+          onModifierChange(field, event.currentTarget.value),
+        );
+      }}
+      onChange={(event) => {
+        const inputValue = event.currentTarget.value;
+
+        if (
+          !event.currentTarget.validity.badInput &&
+          inputValue !== "" &&
+          inputValue !== "-"
+        ) {
+          onModifierChange(field, inputValue);
+        }
+      }}
+      step="1"
+      type="number"
+    />
+  );
+}
+
 function CyberneticsRow({
   canRemove,
   clearLabel,
@@ -62,13 +103,16 @@ function CyberneticsRow({
   onClear: () => void;
   onPickerRequest: CyberneticsSectionProps["onPickerRequest"];
   onRemove: () => void;
-  row: CyberneticsRow & { partLabel: string };
+  row: CyberneticsRow & {
+    accessiblePartLabel?: string;
+    partLabel: string;
+  };
   target: CyberneticsPickerTarget;
 }) {
   const copy = characterSheetDictionary.characterSheet.cybernetics;
   const [expanded, setExpanded] = useState(false);
   const name = row.cybernetic?.name ?? copy.unselected;
-  const rowLabel = `${row.partLabel}：${name}`;
+  const rowLabel = `${row.accessiblePartLabel ?? row.partLabel}：${name}`;
   const detailsId = `cybernetics-details-${row.rowId}`;
 
   return (
@@ -116,6 +160,7 @@ function CyberneticsRow({
           </button>
         ) : (
           <button
+            aria-label={`${rowLabel}を${clearLabel}`}
             className="character-sheet-clear-button"
             onClick={onClear}
             type="button"
@@ -191,7 +236,11 @@ export default function CyberneticsSection({
           onClear={() => onClearOther(row.rowId)}
           onPickerRequest={onPickerRequest}
           onRemove={() => onRemoveOther(row.rowId)}
-          row={{ ...row, partLabel: copy.otherPart }}
+          row={{
+            ...row,
+            accessiblePartLabel: `${copy.otherPart}${index + 1}`,
+            partLabel: copy.otherPart,
+          }}
           target={{ kind: "other", rowId: row.rowId }}
         />
       ))}
@@ -232,29 +281,17 @@ export default function CyberneticsSection({
                 ＋
               </span>
               <span className={styles.modifierValues}>
-                <input
-                  aria-label={copy.totalModifierLabel}
-                  className={styles.modifierInput}
-                  onChange={(event) =>
-                    onModifierChange(
-                      "implantTotalModifier",
-                      event.currentTarget.value,
-                    )
-                  }
-                  type="number"
+                <ModifierInput
+                  field="implantTotalModifier"
+                  label={copy.totalModifierLabel}
+                  onModifierChange={onModifierChange}
                   value={implantTotalModifier}
                 />
                 <span aria-hidden="true">／</span>
-                <input
-                  aria-label={copy.limitModifierLabel}
-                  className={styles.modifierInput}
-                  onChange={(event) =>
-                    onModifierChange(
-                      "implantLimitModifier",
-                      event.currentTarget.value,
-                    )
-                  }
-                  type="number"
+                <ModifierInput
+                  field="implantLimitModifier"
+                  label={copy.limitModifierLabel}
+                  onModifierChange={onModifierChange}
                   value={implantLimitModifier}
                 />
               </span>
@@ -280,16 +317,10 @@ export default function CyberneticsSection({
                 <span aria-hidden="true" className={styles.expressionOperator}>
                   ＋
                 </span>
-                <input
-                  aria-label={copy.totalModifierLabel}
-                  className={styles.modifierInput}
-                  onChange={(event) =>
-                    onModifierChange(
-                      "implantTotalModifier",
-                      event.currentTarget.value,
-                    )
-                  }
-                  type="number"
+                <ModifierInput
+                  field="implantTotalModifier"
+                  label={copy.totalModifierLabel}
+                  onModifierChange={onModifierChange}
                   value={implantTotalModifier}
                 />
                 <span aria-hidden="true" className={styles.expressionOperator}>
@@ -316,16 +347,10 @@ export default function CyberneticsSection({
                 <span aria-hidden="true" className={styles.expressionOperator}>
                   ＋
                 </span>
-                <input
-                  aria-label={copy.limitModifierLabel}
-                  className={styles.modifierInput}
-                  onChange={(event) =>
-                    onModifierChange(
-                      "implantLimitModifier",
-                      event.currentTarget.value,
-                    )
-                  }
-                  type="number"
+                <ModifierInput
+                  field="implantLimitModifier"
+                  label={copy.limitModifierLabel}
+                  onModifierChange={onModifierChange}
                   value={implantLimitModifier}
                 />
                 <span aria-hidden="true" className={styles.expressionOperator}>
@@ -342,6 +367,19 @@ export default function CyberneticsSection({
           </div>
         </div>
       </div>
+      <p className={styles.noncombatPenaltyNotice}>
+        {copy.noncombatPenaltyNotice}
+        <br />
+        {copy.noncombatPenaltyRulesPrefix}
+        <a
+          href={withBase("/data/items/cybernetics")}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          サイバネのルール
+        </a>
+        {copy.noncombatPenaltyRulesSuffix}
+      </p>
     </div>
   );
 }

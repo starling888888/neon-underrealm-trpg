@@ -18,6 +18,7 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "../../../src/character-sheet/form-values";
+import { getCybernetics } from "../../../src/character-sheet/master-data/cybernetics";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
 import { getOmamori } from "../../../src/character-sheet/master-data/omamori";
 import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-data/other-ryugi-skills";
@@ -129,6 +130,53 @@ describe("CharacterSheetContainer", () => {
 
     expect(screen.getByRole("button", { name: "武器1：刀" })).not.toBeNull();
     expect(document.activeElement).toBe(trigger);
+  });
+
+  it("closes the cybernetics picker and selects only its requested row", async () => {
+    const user = userEvent.setup();
+    const cybernetic = getCybernetics()[0];
+    if (cybernetic === undefined)
+      throw new Error("サイバネmaster dataがありません。");
+    render(<CharacterSheetContainer />);
+
+    const headTrigger = screen.getByRole("button", {
+      name: "頭：サイバネを選択",
+    });
+    await user.click(headTrigger);
+    const dialog = screen.getByRole("dialog", { name: "サイバネを選択" });
+
+    act(() => {
+      fireEvent(dialog, new Event("cancel", { cancelable: true }));
+    });
+    expect(document.activeElement).toBe(headTrigger);
+
+    await user.click(headTrigger);
+    await user.click(screen.getByRole("button", { name: "閉じる" }));
+    expect(document.activeElement).toBe(headTrigger);
+
+    await user.click(headTrigger);
+    await user.click(screen.getByRole("button", { name: cybernetic.name }));
+    expect(
+      screen.getByRole("button", { name: `頭：${cybernetic.name}` }),
+    ).not.toBeNull();
+    expect(document.activeElement).toBe(headTrigger);
+
+    await user.click(
+      screen.getByRole("button", { name: "＋ その他の部位を追加" }),
+    );
+    const otherTrigger = screen.getByRole("button", {
+      name: "その他2：サイバネを選択",
+    });
+    await user.click(otherTrigger);
+    await user.click(screen.getByRole("button", { name: cybernetic.name }));
+
+    expect(
+      screen.getByRole("button", { name: `その他2：${cybernetic.name}` }),
+    ).not.toBeNull();
+    expect(
+      screen.getByRole("button", { name: `頭：${cybernetic.name}` }),
+    ).not.toBeNull();
+    expect(document.activeElement).toBe(otherTrigger);
   });
 
   it("confirms an ikizama change only when normal ikizama skills are selected", async () => {

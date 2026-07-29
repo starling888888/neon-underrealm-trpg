@@ -120,7 +120,6 @@ async function openCyberneticsPicker(
   await page
     .locator("[data-cybernetics-section]")
     .getByRole("button", { exact: true, name: target })
-    .first()
     .click();
   await expect(
     page.getByRole("dialog", { exact: true, name: "サイバネを選択" }),
@@ -998,7 +997,7 @@ registerVrtScenarios("character-sheet", [
     locators: [cyberneticsSectionLocator],
     prepare: async (page) => {
       await page.getByRole("button", { name: "＋ その他の部位を追加" }).click();
-      await selectCybernetic(page, "その他：サイバネを選択");
+      await selectCybernetic(page, "その他2：サイバネを選択");
     },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],

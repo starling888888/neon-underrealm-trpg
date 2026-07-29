@@ -647,8 +647,8 @@ test.describe("character sheet page", () => {
     await cybernetics
       .getByRole("button", { name: "＋ その他の部位を追加" })
       .click();
-    await selectCybernetic("その他：サイバネを選択");
-    await selectCybernetic("その他：サイバネを選択");
+    await selectCybernetic("その他1：サイバネを選択");
+    await selectCybernetic("その他2：サイバネを選択");
 
     await page
       .getByRole("button", { exact: true, name: "非戦闘技能を開閉" })
@@ -659,31 +659,38 @@ test.describe("character sheet page", () => {
     await expect(
       cybernetics.getByRole("button", {
         exact: true,
-        name: "その他：サイバーアイを削除",
+        name: "その他2：サイバーアイを削除",
       }),
     ).toHaveCount(1);
 
     await cybernetics
-      .getByRole("button", { exact: true, name: "その他：サイバーアイを削除" })
-      .first()
+      .getByRole("button", { exact: true, name: "その他2：サイバーアイを削除" })
       .click();
     await expect(
       cybernetics.getByRole("button", {
         exact: true,
-        name: "その他：サイバーアイを削除",
+        name: "その他2：サイバーアイを削除",
       }),
     ).toHaveCount(0);
 
     await cybernetics
-      .getByRole("button", { exact: true, name: "クリア" })
-      .last()
+      .getByRole("button", {
+        exact: true,
+        name: "その他1：サイバーアイをクリア",
+      })
       .click();
     await expect(
       cybernetics.getByRole("button", {
         exact: true,
-        name: "その他：サイバネを選択",
+        name: "その他1：サイバネを選択",
       }),
-    ).toHaveCount(2);
+    ).toHaveCount(1);
+    await expect(
+      cybernetics.getByRole("button", {
+        exact: true,
+        name: "その他2：サイバネを選択",
+      }),
+    ).toHaveCount(1);
     await page
       .getByRole("button", { exact: true, name: "非戦闘技能を開閉" })
       .click();

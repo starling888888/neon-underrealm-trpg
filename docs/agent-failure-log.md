@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Changed canonical-baseline tracking against the parent Gate plan
+
+#### 2026-07-29
+
+- source: user
+- failure category: scope and SSoT precedence
+- 発生箇所: `ex-02-19-sheet-cybernetics` のDocument Review指摘対応
+- 観測した失敗: Document Reviewの再現性提案とユーザーの「他の指摘内容も修正」を、親issueのGate planが定める「G31までcanonical VRT baselineを管理しない」制約より優先した。`canonical-snapshots/visual/character-sheet/`のignoreを外し、Git管理する運用へ変更しようとした。
+- 一次対応: ユーザー指摘後、`.gitignore`とdesign noteをローカル専用baselineの運用へ戻した。G19 issueには、baselineのGit管理・再現性判断をG31へ残すことを明記した。今後はDocument Reviewの提案を実装する前に、親Gate planの後続Gateへの割当てを確認する。
+
 ### Repeated incomplete cybernetics component-test selectors
 
 #### 2026-07-29

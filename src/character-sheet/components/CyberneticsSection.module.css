@@ -172,6 +172,13 @@
   color: var(--color-danger);
 }
 
+.noncombatPenaltyNotice {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--line-height-normal);
+}
+
 .visuallyHidden {
   position: absolute;
   width: 1px;
@@ -206,6 +213,10 @@
 
   .summaryLabel {
     font-size: 0.625rem;
+  }
+
+  .noncombatPenaltyNotice {
+    font-size: 0.6875rem;
   }
 
   .footer {

@@ -127,6 +127,43 @@
 
 ## 備考
 
+## レビュー指摘 5
+
+### 指摘事項
+
+- `.tmp/chatgpt-review.md`は、その他行とクリアbuttonのaccessible name重複、負数修正の逐次キーボード入力、非戦闘技能の手動修正を上書きする説明、サイバネカテゴリ全体の上限error、候補dialogのEscape・閉じる・focus復帰の直接テストを指摘した。
+- ローカルのDocument Reviewは、canonical VRT baselineがGit管理対象外で再現不能なことと、未チェックの完了条件を現行確認結果へ更新する必要を指摘した。Technical Reviewは、非戦闘技能の手動修正上書きを画面上で説明しない点を指摘した。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）および local-agent review
+- accessible name: valid。`その他`の各行は同一のrow labelとなり、clear buttonも部位を含まない`クリア`だけである。
+- 負数入力: valid。修正inputはcontrolled inputで、`onChange`時に空文字を`0`へ正規化するため、`-`だけの中間値を保持できない。
+- 非戦闘技能の手動修正上書き説明: valid。G19契約に画面上の説明があるが、現在のtooltipには存在しない。文言はユーザーが検討中のため対応を保留する。
+- サイバネカテゴリ全体の上限error: invalid。ユーザー判断により、上限超過の対象は集計の最終値だけとする。requirements SSoTをサイバネとナノマシンへ同じ規則で修正した。
+- Escape・閉じる・focus復帰のサイバネ固有テスト: valid。共通dialogの動作だけではContainerの対象row・return-focus配線を直接固定できない。
+- canonical baselineのGit管理外: invalid。親Gate planはG31までcanonical VRT baselineを管理しないことを定める。G19ではローカル専用baselineを維持し、Git管理への変更・再現性の判断は親issue完了後のG31で扱う。
+- 完了条件の未チェック: valid。レビュー対応と実画面確認の完了後に、根拠を再確認して更新する。
+
+### 対応方針
+
+- 固定部位とその他の行番号をaccessible nameへ含め、clear buttonにも対象部位・行・名称を含む`aria-label`を付与する。重複選択を含むComponent testで固定する。
+- 修正inputは未確定のDOM文字列を保持し、確定可能な整数だけをRHFへ渡す。blur時の正規化とキー単位の負数入力テストを追加する。
+- セクション最下部に、境界をまたぐたびに非戦闘技能の修正を一括更新することを説明する。サイバネの埋め込み点数ペナルティは、新規tabで開く`/data/items/cybernetics`の`サイバネのルール`へ案内する。
+- サイバネpickerについて、Escape、閉じる、選択後のfocus復帰と対象行だけの更新をContainer testで追加する。
+- canonical baselineのGit管理・再現性はG19で変更しない。親issue完了後のG31で、統合Visual Reviewとともに判断する。
+
+### 対応完了チェックリスト
+
+- [x] その他行とクリアbuttonのaccessible nameを一意にし、重複選択を含むComponent testを追加する。
+- [x] 埋め込み点数の修正inputでキー単位の負数入力とblur時の正規化を扱い、テストで固定する。
+- [x] 非戦闘技能の手動修正を上書きする説明文と新規tabのサイバネルールリンクを、セクション最下部へ追加する。
+- [x] サイバネとナノマシンの埋め込み上限超過を、カテゴリ全体ではなく集計の最終値のerror状態としてrequirements SSoTへ修正した。
+- [x] サイバネpickerのEscape・閉じる・focus復帰・対象行更新をContainer testで固定する。
+- [x] canonical baselineは親issue完了までローカル専用として維持し、G19でGit管理へ変更しないことを親Gate planと整合した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
 ## レビュー指摘 1
 
 ### 指摘事項

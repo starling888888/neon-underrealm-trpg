@@ -249,6 +249,10 @@ export const characterSheetDictionary = {
       limitLabel: "埋め込み上限の最終値",
       limitModifierLabel: "埋め込み上限の修正",
       name: "サイバネ",
+      noncombatPenaltyNotice:
+        "埋め込み点数が一定値を上回る、あるいは下回るたびに非戦闘技能の修正が一括で更新されます。",
+      noncombatPenaltyRulesPrefix: "サイバネの埋め込み点数によるペナルティは",
+      noncombatPenaltyRulesSuffix: "を確認してください。",
       openDetails: "効果を開く",
       otherPart: "その他",
       pickerGuide:
