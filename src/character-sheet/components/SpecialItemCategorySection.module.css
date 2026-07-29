@@ -26,7 +26,8 @@
 }
 
 .unavailable {
-  border: calc(var(--border-width) * 2) solid var(--color-warning);
+  composes: emphasisOverlay from "./CharacterSheetSectionFrameBase.module.css";
+  --character-sheet-section-frame-emphasis-color: var(--color-warning);
 }
 
 .content {

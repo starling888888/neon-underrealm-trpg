@@ -405,6 +405,35 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 8
+
+### 指摘事項
+
+- skill errorと専用アイテムwarningの強調外枠を実borderで太くしているため、通常状態から状態変更したときにcontent boxまたは高さが変わりうる。レビュー指摘4の「レイアウトの寸法を変えない」契約を維持する。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）
+- classification: valid
+- local validation:
+  - `SkillSection.module.css`と`SpecialItemCategorySection.module.css`は、error / warningで`calc(var(--border-width) * 2)`の実borderを指定している。borderはbox modelに参加するため、通常時と強調時でinner contentの利用可能領域またはauto heightを同一に保てない。
+  - `.tmp/review/ex-02-web-character-sheet/pr-review-4/document-review.md`と`technical-review.md`のG22 local canonical snapshot件数は、親Gate planのG22が現在`8 state × 3 viewportの24件`と記録しているためstaleとする。
+  - `.tmp/chatgpt-review.md`のmobile `縁`の操作列は、`BondsSection.module.css`で`--character-sheet-action-button-size`へ置換済みのためstaleとする。
+  - 同reviewのbrowser / VRT未完了は、ユーザー指示により今回の取り込み対象から除外する。
+  - レビュー指摘は通常の実装上の改善であり、未確認作業を完了扱いした手順逸脱ではないため、agent failure logへの追加は不要とする。
+
+### 対応方針
+
+- skill errorと専用アイテムwarningの強調を、通常frameのlayout寸法へ影響しない単線のoverlay表現へ置き換える。通常・強調状態の色分け、角丸、見出しを含む均一な太線、入力・行単位のerror表現は維持する。
+- VRT未完了の確認はこのレビュー指摘の対応条件へ含めない。
+
+### 対応完了チェックリスト
+
+- [x] skill errorと専用アイテムwarningで、通常状態からframeのlayout寸法を変えない
+- [ ] 見出しを含む外周が単線の太いborderとして均一に表示される
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。

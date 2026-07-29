@@ -342,7 +342,9 @@ export default function SkillSection({
     <section
       aria-invalid={hasError || undefined}
       aria-label={ariaLabel}
-      className={styles.section}
+      className={
+        hasError ? `${styles.section} ${styles.invalid}` : styles.section
+      }
       data-invalid={hasError || undefined}
       data-skill-section
       style={nameWidthStyle}

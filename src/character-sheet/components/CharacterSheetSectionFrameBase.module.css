@@ -33,3 +33,18 @@
   border-bottom: 0.125rem solid currentcolor;
   transition: transform 120ms ease-out;
 }
+
+.emphasisOverlay {
+  position: relative;
+}
+
+.emphasisOverlay::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: calc(var(--border-width) * 2) solid
+    var(--character-sheet-section-frame-emphasis-color);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}

@@ -14,8 +14,9 @@
   margin: 0;
 }
 
-.section[data-invalid] {
-  border: calc(var(--border-width) * 2) solid var(--color-danger);
+.invalid {
+  composes: emphasisOverlay from "../CharacterSheetSectionFrameBase.module.css";
+  --character-sheet-section-frame-emphasis-color: var(--color-danger);
 }
 
 .toggle {
