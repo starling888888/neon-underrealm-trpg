@@ -79,4 +79,25 @@ describe("NanomachinesSection", () => {
       "-1",
     );
   });
+
+  it("marks only the final implant value invalid when the limit is exceeded", () => {
+    const props = createProps();
+    props.derived = calculateNanomachines(
+      [props.fixedRows[0]?.nanomachine ?? null],
+      0,
+      0,
+      0,
+    );
+    const { container } = render(<NanomachinesSection {...props} />);
+
+    const finalValue = container.querySelector(
+      'output[aria-label="埋め込み点数合計の最終値／埋め込み上限の最終値"]',
+    );
+    if (finalValue === null) {
+      throw new Error("埋め込み点数の最終値が見つかりません。");
+    }
+    expect(finalValue.getAttribute("aria-invalid")).toBe("true");
+    expect(finalValue.closest('[data-invalid="true"]')).not.toBeNull();
+    expect(finalValue.closest('[aria-invalid="true"]')).toBe(finalValue);
+  });
 });

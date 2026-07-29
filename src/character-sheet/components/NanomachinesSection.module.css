@@ -149,7 +149,7 @@
   text-align: center;
 }
 
-.summary[aria-invalid="true"] .finalValue {
+.summary[data-invalid="true"] .finalValue {
   border-color: var(--color-danger);
   color: var(--color-danger);
 }

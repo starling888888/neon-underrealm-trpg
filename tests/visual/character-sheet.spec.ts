@@ -718,6 +718,23 @@ test.describe("character sheet page", () => {
       name: "頭：ナノマシンを選択",
     });
 
+    await nanomachines
+      .getByRole("button", { exact: true, name: "名称" })
+      .hover();
+    await expect(page.getByRole("tooltip")).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(page.getByRole("tooltip")).toBeHidden();
+
+    await nanomachines
+      .getByRole("button", {
+        exact: true,
+        name: "埋め込み点数合計／埋め込み上限",
+      })
+      .hover();
+    await expect(page.getByRole("tooltip")).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(page.getByRole("tooltip")).toBeHidden();
+
     await headPicker.click();
     await expect(picker).toBeVisible();
     await picker.getByRole("button", { exact: true, name: "マシラ" }).click();
@@ -759,6 +776,12 @@ test.describe("character sheet page", () => {
     await nanomachines
       .getByLabel("埋め込み点数合計の修正", { exact: true })
       .fill("20");
+    await expect(
+      nanomachines.getByLabel(
+        "埋め込み点数合計の最終値／埋め込み上限の最終値",
+        { exact: true },
+      ),
+    ).toHaveAttribute("aria-invalid", "true");
     await expect(nanomachines.locator('[aria-invalid="true"]')).toHaveCount(1);
   });
 });

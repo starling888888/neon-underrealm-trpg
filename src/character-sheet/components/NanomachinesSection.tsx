@@ -194,7 +194,7 @@ export default function NanomachinesSection({
         />
       ))}
       <div
-        aria-invalid={derived.hasImplantLimitError || undefined}
+        data-invalid={derived.hasImplantLimitError || undefined}
         className={styles.summary}
       >
         <FormulaTooltip
@@ -238,6 +238,7 @@ export default function NanomachinesSection({
             ＝
           </span>
           <output
+            aria-invalid={derived.hasImplantLimitError || undefined}
             aria-label={`${copy.totalLabel}／${copy.limitLabel}`}
             className={`character-sheet-number-value character-sheet-number-value--compact ${styles.finalValue}`}
           >

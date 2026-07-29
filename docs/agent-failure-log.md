@@ -1574,3 +1574,12 @@ source種別は以下を使う。
 - 発生箇所: static VRT helper復元後の`@search-modal @search-results`確認
 - 観測した失敗: 最初にPagefind indexを含まない通常buildで検索結果stateを実行し、3 viewportで結果が表示されなかった。`visual:build`後にはstate表示へ進んだが、desktop / tabletで既存baselineとの差分が残った。この差分はhelper変更ではなく、画面左側の既存static内容であった。
 - 一次対応: 検索stateを含むVRTは必ず`visual:build`後のpreviewで実行する。helper変更の回帰確認では、既存baselineとの差分をhelper起因と断定せず、diff画像で影響領域を確認してから対応範囲を判断する。
+
+### Repeated a component-test assertion without resolving the rendered element
+
+#### 2026-07-29
+
+- source: agent self-report
+- 発生箇所: `ex-02-20-sheet-nanomachines` の`NanomachinesSection` error-state Component test
+- 観測した失敗: 既存setupにない`toHaveAttribute` matcherを使用した後、集計tooltipのlabelを最終値`output`のaccessible nameと取り違えた。さらに、hover中のtooltipへEscapeを送ればpointer stateにかかわらず閉じると仮定した。そのため、上限超過とtooltip操作を確認するtestを連続して失敗させた。
+- 一次対応: 標準Chaiで属性値を比較し、最終値は実際の`output[aria-label]`で明示的に特定する。表示Componentに近い文言の操作と値が併存する場合、testの対象roleまたはelement typeと実際のaccessible nameを先に確認する。共通Componentで担保済みのkeyboard操作を個別browser testへ複製せず、個別testはpointer移動を含む固有の表示契約だけを確認する。

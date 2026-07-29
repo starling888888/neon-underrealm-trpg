@@ -171,3 +171,79 @@
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る（該当する場合）
 - [x] `npm run build` が通る（該当する場合）
+
+## レビュー指摘 1
+
+### 指摘事項
+
+1. 埋め込み点数の上限超過時、`aria-invalid`が最終値の`output`ではなく、修正入力を含む集計全体のwrapperに付いている。最終値だけをerror状態にする本issueの契約と一致しない。
+2. E2E設定の`reuseExistingServer: true`により、`visual:build`後でも既存のdev serverを再利用し、build済み`preview`を検証しない可能性がある。
+3. 個別tooltipのcanonical VRTをG20で追加しているが、architectureは個別tooltip screenshotを作成せず、Component testまたは最小browser behavior testで扱う契約である。再構成後139枚というdesign noteと、local canonical artifactに残る旧`sections/`配下のtooltip 6枚も整合していない。
+
+### 判定
+
+- source: `.tmp/chatgpt-review.md`、Doc Review、Tech Review
+- classification: valid
+- local validation:
+  - `NanomachinesSection`は`.summary`に`aria-invalid`を設定し、最終値の`output`には設定していない。Component / browser testも最終値に限定していない。
+  - `playwright.e2e.config.ts`は`reuseExistingServer: true`で、既定portのreview用dev serverを再利用できる。
+  - `docs/architectures/character-sheet.md`は個別tooltip screenshotを禁止する一方、`tests/visual/vrt/character-sheet.spec.ts`にはナノマシンのtooltip 2状態、各3 viewportが登録されている。local artifactには`tooltips/`と旧`sections/`の双方に同じ6枚がある。
+- `.tmp/chatgpt-review.md`の既存picker UIを戻す指摘は対応対象外とした。縦罫線と`効果：`はユーザー明示指示による共通表示調整であり、`.tmp/review/ex-02-web-character-sheet/user-directed-changes.md`に記録済みで、対象pickerのVRT確認も完了しているためである。
+
+### 対応方針
+
+- 集計wrapperのerror用属性は見た目用に限定し、最終値の`output`だけへ`aria-invalid`を移す。Component / browser testは対象要素を固定する。
+- E2Eはreview用dev serverと分離したbuild済みpreviewを起動する設定へ戻し、既存serverを無条件に再利用しない。
+- ナノマシンの個別tooltipをcanonical VRT対象から外し、tooltipの文言・操作・配置は既存のComponent / browser behavior testへ置く。VRT設計と一致しなくなるlocal canonical tooltip artifactを整理する。
+
+### 対応完了チェックリスト
+
+- [x] 上限超過時の`aria-invalid`を最終値だけへ設定し、対象を限定したComponent / browser testを追加・更新する。
+- [x] E2Eをbuild済みpreviewで再現可能に実行する設定へ修正し、対象E2Eを確認する。
+- [x] 個別tooltipのcanonical VRTと不要なlocal artifactを整理し、tooltip behavior testと対象VRTを確認する。
+- [x] 修正後のactual screenshotを開いて確認し、不要なcanonical baselineを整理した。
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`、`@character-sheet.*nanomachines`
+- route / states / viewports: `/character-sheet/`のdefault、選択済み、効果展開、上限超過、候補dialogをdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`で確認した。名称tooltipと埋め込み点数集計tooltipはcanonical VRTから除外し、共通`FormulaTooltip` Component testとナノマシンbrowser behavior testで確認する。
+
+### レビュー結果
+
+| 対象                          | 判定 | 差分                                       | 対応                                                             |
+| ----------------------------- | ---- | ------------------------------------------ | ---------------------------------------------------------------- |
+| ナノマシンsection・候補dialog | OK   | VRT対象をtooltipなしの15 snapshotへ再整理  | 既存canonical snapshotとの通常比較が15件成功した。               |
+| canonical tooltip artifact    | OK   | `sections/`の旧6枚と`tooltips/`の6枚が不要 | ユーザー承認済みのreview修正としてlocal artifactを12枚削除した。 |
+
+### 実画面確認
+
+- `/character-sheet/`のdefault、選択済み、効果展開、上限超過、候補dialogのdesktop / tablet / mobile:
+  - full-page overview: 今回は局所Componentの確認だけであり、full-page screenshotは取得していない。
+  - locator screenshot: `[data-nanomachines-section]`のdefault、選択済み、効果展開、上限超過各12枚と、`dialog[aria-labelledby]`の候補dialog 3枚をoriginal pixel resolutionで確認した。
+  - checked acceptance criteria: 列幅とheader改行、横overflowなし、効果展開、上限超過時に最終値だけがerror色になること、候補dialogの列・縦線・効果2行目、desktop / tablet / mobileの収まり。
+  - result: 15状態すべてで表示契約に一致した。
+
+### 自己修正した項目
+
+- [x] `aria-invalid`を集計wrapperから最終値`output`へ移し、wrapperは表示用`data-invalid`にした。
+- [x] E2Eを4322の専用build済みpreviewで実行し、4321のreview用previewを再利用しない設定にした。
+- [x] 個別tooltip VRTとtooltip scenario typeを削除し、不要なlocal canonical tooltip artifactを整理した。
+
+### 人間判断が必要な差分
+
+- なし。baselineの整理は、ユーザーがレビュー指摘への修正開始を明示承認した範囲で実施した。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] 不要なbaseline artifactをユーザー承認済みの範囲で整理した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（該当する場合）

@@ -100,17 +100,6 @@ async function selectNanomachine(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
-async function openNanomachinesTooltip(
-  page: Page,
-  label: "名称" | "埋め込み点数合計／埋め込み上限",
-): Promise<void> {
-  await nanomachinesSection
-    .resolve(page)
-    .getByRole("button", { exact: true, name: label })
-    .hover();
-  await expect(page.getByRole("tooltip")).toBeVisible();
-}
-
 async function selectOption(locator: Locator, value: string): Promise<void> {
   await expect(async () => {
     await locator.selectOption(value);
@@ -263,9 +252,6 @@ const cyberneticsSection = section(
   '[data-special-item-category="cybernetics"]',
 );
 const nanomachinesSection = section("[data-nanomachines-section]");
-const nanomachinesTooltip = {
-  resolve: (page: Page) => page.getByRole("tooltip"),
-};
 
 registerCharacterSheetVrtScenarios([
   {
@@ -514,21 +500,6 @@ registerCharacterSheetVrtScenarios([
     id: "nanomachines-default",
     kind: "section",
     locator: nanomachinesSection,
-    route: visualRoutes.characterSheet,
-  },
-  {
-    id: "nanomachines-name-tooltip",
-    kind: "tooltip",
-    locator: nanomachinesTooltip,
-    prepare: (page) => openNanomachinesTooltip(page, "名称"),
-    route: visualRoutes.characterSheet,
-  },
-  {
-    id: "nanomachines-summary-tooltip",
-    kind: "tooltip",
-    locator: nanomachinesTooltip,
-    prepare: (page) =>
-      openNanomachinesTooltip(page, "埋め込み点数合計／埋め込み上限"),
     route: visualRoutes.characterSheet,
   },
   {

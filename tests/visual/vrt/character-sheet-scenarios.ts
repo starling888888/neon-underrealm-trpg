@@ -12,7 +12,7 @@ type CharacterSheetLocator = {
 
 export type CharacterSheetVrtScenario = {
   id: string;
-  kind: "dialog" | "full-page" | "section" | "tooltip";
+  kind: "dialog" | "full-page" | "section";
   locator?: CharacterSheetLocator;
   prepare?: (page: Page) => Promise<void>;
   route: string;
@@ -57,11 +57,7 @@ export function registerCharacterSheetVrtScenarios(
         await expect(scenario.locator.resolve(page)).toHaveScreenshot(
           [
             "character-sheet",
-            scenario.kind === "dialog"
-              ? "dialogs"
-              : scenario.kind === "tooltip"
-                ? "tooltips"
-                : "sections",
+            scenario.kind === "dialog" ? "dialogs" : "sections",
             `${scenario.id}-${viewportName}.png`,
           ],
           { animations: "disabled" },

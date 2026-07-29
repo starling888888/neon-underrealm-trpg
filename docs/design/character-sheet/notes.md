@@ -18,7 +18,7 @@
 - 2026-07-29、ユーザー承認により、G17の武器・防具sectionを含む現行画面へ`@character-sheet`のローカルcanonical snapshotを更新した。既存full-page snapshot 51件（desktop、ultrawide、tablet、mobileの既存対応分）を更新し、同じtargetの通常比較は51件成功した。G17の7 state × 3 viewportはlocator-onlyであり、full-page canonical snapshotは作成しない。
 - 2026-07-29、ユーザー承認により、G18のお守りカテゴリと名称選択tooltipを含む現行画面へ`@character-sheet`のcanonical snapshotを更新した。お守りの候補dialog、選択済み行、mobile効果展開、各名称tooltipは、desktop / tablet / mobileのlocator screenshotで確認する。これらの局所状態はfull-page canonical snapshotを増やさない。
 - 2026-07-29、ユーザー承認により、G19のサイバネカテゴリを含む現行画面へ`@character-sheet`の既存canonical snapshotを更新した。`cybernetics-default`、候補dialog、効果展開、その他行追加、名称tooltip、埋め込み点数合計／埋め込み上限tooltip、上限超過errorをdesktop / tablet / mobileのlocator screenshotで確認する。これらの局所状態はfull-page canonical snapshotを増やさない。
-- 2026-07-29、ユーザー承認により、G20のナノマシン固定4行と候補dialogを含む現行画面へ`@character-sheet`のcanonical snapshotを更新する。`nanomachines-default`、名称tooltip、埋め込み点数集計tooltip、選択済み、効果展開、埋め込み上限超過、候補dialogをdesktop / tablet / mobileのowner sectionまたはdialog locator screenshotで確認する。これらの局所状態はfull-page canonical snapshotを増やさない。
+- 2026-07-29、ユーザー承認により、G20のナノマシン固定4行と候補dialogを含む現行画面へ`@character-sheet`のcanonical snapshotを更新する。`nanomachines-default`、選択済み、効果展開、埋め込み上限超過、候補dialogをdesktop / tablet / mobileのowner sectionまたはdialog locator screenshotで確認する。名称tooltipと埋め込み点数集計tooltipの文言・操作・配置はComponent / browser behavior testで確認する。これらの局所状態はfull-page canonical snapshotを増やさない。
 - 承認済みドラフトから決定する将来のVRT状態:
   - 必須の初期値を持つ直接編集の初期状態
   - 可変のスキル、縁、アイテム行を含む入力済み状態
@@ -28,7 +28,7 @@
   - 画像選択の失敗ダイアログ状態
 - canonical baselineの更新は、以後もユーザーの明示承認を必要とする。
 - 2026-07-29、ユーザー承認によりcharacter-sheetのcanonical baselineを再構成する。full-page比較はdefaultと`合計信用` tooltip代表のdesktop / tablet / mobileだけとし、sectionのdefault・入力・error variationはowner section、dialog stateはdialog本体を比較する。個別tooltip screenshotとstatic page用generic scenario helperは対象外とする。
-- 同日の再構成後のcanonical baselineは139枚である。full-pageは6枚、sectionは94枚、dialogは33枚、tooltipは6枚とする。`縁`、`combat`、`武器・防具`のvariationは見出しを含むsection frameを比較し、`スキル`と`生き様専用アイテム`はdefaultの全体frameだけを各3 viewportで比較する。子sectionの入力・error variationは引き続き子section locatorだけを比較する。G20で`nanomachines-default`、選択済み、効果展開、上限超過のsection 12枚、名称tooltip・埋め込み点数集計tooltipのtooltip 6枚、候補dialog 3枚を追加した。
+- 同日の再構成後のcanonical baselineは133枚である。full-pageは6枚、sectionは94枚、dialogは33枚とする。`縁`、`combat`、`武器・防具`のvariationは見出しを含むsection frameを比較し、`スキル`と`生き様専用アイテム`はdefaultの全体frameだけを各3 viewportで1枚ずつ持つ。子sectionの入力・error variationは引き続き子section locatorだけを比較する。G20で`nanomachines-default`、選択済み、効果展開、上限超過のsection 12枚、候補dialog 3枚を追加した。個別tooltip screenshotは作成しない。
 - 2026-07-29のGate外レビュー修正として、`判定` sectionはdesktopでも左列の`縁`の後に置く。right columnは`スキル`から開始する。`画像を選択`と各`〜を追加` buttonは、キャラクターシート内の共通styleでfont size、高さ、padding、border、hover / disabled stateを揃え、section固有CSSは配置だけを持つ。
 
 ### G3 section frame comparison
