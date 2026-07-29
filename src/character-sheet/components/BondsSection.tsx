@@ -6,6 +6,7 @@ import type {
 } from "../form-values";
 import type { BondsDerivedValues } from "../logic/bonds";
 import styles from "./BondsSection.module.css";
+import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ClearButton from "./ClearButton";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
@@ -169,25 +170,28 @@ export default function BondsSection({
           {labels.overLimit}
         </p>
       ) : null}
-      <section
-        aria-labelledby="resolve-effects-heading"
-        className={styles.effects}
+      <CharacterSheetSectionFrame
+        expandable
+        headingAs="h3"
+        id="resolve-effects"
+        title={labels.resolveEffectHeading}
       >
-        <div className={styles.effectsHeading}>
-          <h3 id="resolve-effects-heading">{labels.resolveEffectHeading}</h3>
-          <span>{labels.resolveEffectDescription}</span>
+        <div className={styles.effects}>
+          <div className={styles.effectsHeading}>
+            <span>{labels.resolveEffectDescription}</span>
+          </div>
+          <div className={styles.effectsGrid}>
+            {derived.effects.map((effect) => (
+              <EffectFormula
+                {...effect}
+                key={effect.id}
+                label={labels.resolveEffects[effect.id]}
+                onEffectModifierChange={onEffectModifierChange}
+              />
+            ))}
+          </div>
         </div>
-        <div className={styles.effectsGrid}>
-          {derived.effects.map((effect) => (
-            <EffectFormula
-              {...effect}
-              key={effect.id}
-              label={labels.resolveEffects[effect.id]}
-              onEffectModifierChange={onEffectModifierChange}
-            />
-          ))}
-        </div>
-      </section>
+      </CharacterSheetSectionFrame>
     </div>
   );
 }

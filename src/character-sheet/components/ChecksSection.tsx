@@ -1,10 +1,11 @@
-import { type ReactNode, useState } from "react";
+import type { ReactNode } from "react";
 import { characterSheetDictionary } from "../dictionary";
 import type { AttackSkillName, AttributeName } from "../form-values";
 import { attackSkillNames, attributeNames } from "../form-values";
 import { formatDisplayValue } from "../format-display-value";
 import type { ChecksDerivedValues, DerivedCheckRow } from "../logic/checks";
 import type { NoncombatSkillName } from "../master-data/noncombat-skills";
+import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import styles from "./ChecksSection.module.css";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
@@ -208,81 +209,41 @@ function NoncombatChecks({
   onModifierChange: (name: NoncombatSkillName, value: string) => number;
   rows: ChecksDerivedValues["noncombat"];
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
   const { checks: labels } = characterSheetDictionary.characterSheet;
   const attributeNamesById =
     characterSheetDictionary.gameDomain.terms.attributeNames;
-  const contentId = "noncombat-checks-content";
 
   return (
-    <section
-      aria-labelledby="noncombat-checks-heading"
-      className={styles.group}
+    <CharacterSheetSectionFrame
+      expandable
+      headingAs="h3"
+      id="noncombat-checks"
+      title={labels.noncombat.title}
     >
-      <h3 className={styles.noncombatHeading} id="noncombat-checks-heading">
-        <FormulaTooltip
-          ariaLabel={`${labels.noncombat.title}の説明`}
-          className={styles.noncombatTitleTooltip}
-          formula={labels.noncombat.tooltip}
-          multiline
-        >
-          <span>{labels.noncombat.title}</span>
-        </FormulaTooltip>
-        <button
-          aria-label={`${labels.noncombat.title}を開閉`}
-          aria-controls={contentId}
-          aria-expanded={isExpanded}
-          className={styles.noncombatToggle}
-          onClick={() => setIsExpanded((value) => !value)}
-          type="button"
-        >
-          <span aria-hidden="true" className={styles.noncombatCaret}>
-            ▸
-          </span>
-        </button>
-      </h3>
-      {isExpanded ? (
-        <div className={styles.noncombatGroups} id={contentId}>
-          {attributeNames.map((attribute) => {
-            const attributeRows = rows.filter(
-              (row) => row.attribute === attribute,
-            );
+      <div className={styles.noncombatGroups}>
+        {attributeNames.map((attribute) => {
+          const attributeRows = rows.filter(
+            (row) => row.attribute === attribute,
+          );
 
-            return (
-              <section
-                className={styles.noncombatAttributeGroup}
-                key={attribute}
-              >
-                <h4>対応能力：{attributeNamesById[attribute]}</h4>
-                <div className={styles.noncombatRows}>
-                  {attributeRows.map((row) => (
-                    <NoncombatCheckRow
-                      key={row.id}
-                      onFavoriteChange={onFavoriteChange}
-                      onModifierChange={onModifierChange}
-                      row={row}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
-        </div>
-      ) : (
-        <div className={styles.noncombatCollapsedRows} id={contentId}>
-          {rows
-            .filter((row) => row.isFavorite)
-            .map((row) => (
-              <NoncombatCheckRow
-                key={row.id}
-                onFavoriteChange={onFavoriteChange}
-                onModifierChange={onModifierChange}
-                row={row}
-              />
-            ))}
-        </div>
-      )}
-    </section>
+          return (
+            <section className={styles.noncombatAttributeGroup} key={attribute}>
+              <h4>対応能力：{attributeNamesById[attribute]}</h4>
+              <div className={styles.noncombatRows}>
+                {attributeRows.map((row) => (
+                  <NoncombatCheckRow
+                    key={row.id}
+                    onFavoriteChange={onFavoriteChange}
+                    onModifierChange={onModifierChange}
+                    row={row}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </CharacterSheetSectionFrame>
   );
 }
 
@@ -305,91 +266,100 @@ export default function ChecksSection({
 
   return (
     <div className={styles.root}>
-      <section aria-labelledby="attack-checks-heading" className={styles.group}>
-        <h3 id="attack-checks-heading">{labels.attacks}</h3>
-        <CheckHeaders sectionName={labels.attacks} />
-        <div className={styles.rows}>
-          {attacks.map((attack) => {
-            const label = `${labels.attacks}${attacks.indexOf(attack) + 1}`;
+      <CharacterSheetSectionFrame
+        expandable
+        headingAs="h3"
+        id="attack-checks"
+        title={labels.attacks}
+      >
+        <div className={styles.group}>
+          <CheckHeaders sectionName={labels.attacks} />
+          <div className={styles.rows}>
+            {attacks.map((attack) => {
+              const label = `${labels.attacks}${attacks.indexOf(attack) + 1}`;
 
-            return (
-              <div className={styles.attackRow} key={attack.rowId}>
+              return (
+                <div className={styles.attackRow} key={attack.rowId}>
+                  <CheckRow
+                    label={label}
+                    onAttributeChange={(attribute) =>
+                      onAttackAttributeChange(attack.rowId, attribute)
+                    }
+                    onModifierChange={(value) =>
+                      onAttackModifierChange(attack.rowId, value)
+                    }
+                    row={attack}
+                    skillControl={
+                      <select
+                        aria-label={`${label}の技能`}
+                        onChange={(event) =>
+                          onAttackSkillChange(
+                            attack.rowId,
+                            event.currentTarget.value as AttackSkillName,
+                          )
+                        }
+                        value={attack.skill}
+                      >
+                        {attackSkillNames.map((skill) => (
+                          <option key={skill} value={skill}>
+                            {terms.attackSkillNames[skill]}
+                          </option>
+                        ))}
+                      </select>
+                    }
+                  />
+                  <DeleteButton
+                    ariaLabel={`${label}${labels.removeAttack}`}
+                    disabled={attacks.length <= 1}
+                    onClick={() => onAttackRemove(attack.rowId)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <button
+            className={`${styles.addButton} character-sheet-add-button`}
+            disabled={attacks.length >= 5}
+            onClick={onAttackAdd}
+            type="button"
+          >
+            {labels.addAttack}
+          </button>
+        </div>
+      </CharacterSheetSectionFrame>
+
+      <CharacterSheetSectionFrame
+        expandable
+        headingAs="h3"
+        id="reaction-checks"
+        title={labels.reactions}
+      >
+        <div className={styles.group}>
+          <CheckHeaders sectionName={labels.reactions} />
+          <div className={styles.rows}>
+            {reactions.map((reaction) => {
+              const label = terms.reactionCheckNames[reaction.name];
+
+              return (
                 <CheckRow
+                  key={reaction.rowId}
                   label={label}
                   onAttributeChange={(attribute) =>
-                    onAttackAttributeChange(attack.rowId, attribute)
+                    onReactionAttributeChange(reaction.rowId, attribute)
                   }
                   onModifierChange={(value) =>
-                    onAttackModifierChange(attack.rowId, value)
+                    onReactionModifierChange(reaction.rowId, value)
                   }
-                  row={attack}
+                  row={reaction}
                   skillControl={
-                    <select
-                      aria-label={`${label}の技能`}
-                      onChange={(event) =>
-                        onAttackSkillChange(
-                          attack.rowId,
-                          event.currentTarget.value as AttackSkillName,
-                        )
-                      }
-                      value={attack.skill}
-                    >
-                      {attackSkillNames.map((skill) => (
-                        <option key={skill} value={skill}>
-                          {terms.attackSkillNames[skill]}
-                        </option>
-                      ))}
-                    </select>
+                    <span className={styles.reactionName}>{label}</span>
                   }
                 />
-                <DeleteButton
-                  ariaLabel={`${label}${labels.removeAttack}`}
-                  disabled={attacks.length <= 1}
-                  onClick={() => onAttackRemove(attack.rowId)}
-                />
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-        <button
-          className={`${styles.addButton} character-sheet-add-button`}
-          disabled={attacks.length >= 5}
-          onClick={onAttackAdd}
-          type="button"
-        >
-          {labels.addAttack}
-        </button>
-      </section>
-
-      <section
-        aria-labelledby="reaction-checks-heading"
-        className={styles.group}
-      >
-        <h3 id="reaction-checks-heading">{labels.reactions}</h3>
-        <CheckHeaders sectionName={labels.reactions} />
-        <div className={styles.rows}>
-          {reactions.map((reaction) => {
-            const label = terms.reactionCheckNames[reaction.name];
-
-            return (
-              <CheckRow
-                key={reaction.rowId}
-                label={label}
-                onAttributeChange={(attribute) =>
-                  onReactionAttributeChange(reaction.rowId, attribute)
-                }
-                onModifierChange={(value) =>
-                  onReactionModifierChange(reaction.rowId, value)
-                }
-                row={reaction}
-                skillControl={
-                  <span className={styles.reactionName}>{label}</span>
-                }
-              />
-            );
-          })}
-        </div>
-      </section>
+      </CharacterSheetSectionFrame>
       <NoncombatChecks
         onFavoriteChange={onNoncombatFavoriteChange}
         onModifierChange={onNoncombatModifierChange}

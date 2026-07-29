@@ -89,6 +89,26 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Added a tooltip accessory despite the user excluding tooltip work
+
+#### 2026-07-30
+
+- source: user
+- failure category: instruction fidelity and scope control
+- 発生箇所: `レビュー指摘 7` の`CharacterSheetSectionFrame`と非戦闘技能header
+- 観測した失敗: ユーザーが文字サイズ差とtooltipを今回の確認対象から外すよう明示したにもかかわらず、既存tooltipを保持するための`headingAccessory` APIとCSSを追加した。対象外の表現を実装へ持ち込み、指示の優先順位を誤った。
+- 一次対応: `headingAccessory`のAPI・CSS・非戦闘技能headerでの利用を削除し、レビュー指摘7の対応方針とチェックリストを最新指示へ整合した。
+
+### Repeated the noncombat section test with an unavailable matcher
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `レビュー指摘 7` の`ChecksSection` component test
+- 観測した失敗: `CharacterSheetSectionFrame`が折りたたみ時も子contentをmountしたままにする実装へ変えた後、旧来のDOM不在assertionを可視性assertionへ置き換えた。しかし、このVitest設定で導入されていない`toBeVisible` matcherを確認せずに再実行し、同じ対象testを2回失敗させた。
+- 一次対応: 依存するmatcherを使わず、折りたたみwrapperの標準`hidden`属性を確認するassertionへ変更する。以後、matcherを新たに使う前にtest setupの導入状況を確認する。
+
 ### Reported G22 visual and requirement checks as complete without covering required states
 
 #### 2026-07-29

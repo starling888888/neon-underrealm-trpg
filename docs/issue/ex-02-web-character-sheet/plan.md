@@ -70,8 +70,8 @@
 
 ### G3
 
-- `CharacterSheetSectionFrame`は`bonds`、`checks`、`weapons-and-armor`、`skills`、`special-items`だけへ適用する。`profile`、`build`、`secondary`は後続Gateで扱う。
-- frameは初期展開・独立開閉とし、内容を`hidden`にするだけでchildrenをunmountしない。開閉stateは保存・JSON入出力へ含めない。
+- `CharacterSheetSectionFrame`は`bonds`、`checks`、`weapons-and-armor`、`skills`、`special-items`だけへ適用する。`profile`、`build`、`secondary`は後続Gateで扱う。親frameの子sectionでは、判定の攻撃・リアクション・非戦闘技能、縁の覚悟の効果、武器・防具の武器・防具にも同じframeを適用する。
+- frameは初期展開・独立開閉とし、内容を`hidden`にするだけでchildrenをunmountしない。非戦闘技能も初期展開とし、折りたたみ中は内容をすべて隠す。開閉stateは保存・JSON入出力へ含めない。
 - `headingAs`は`span`または`h1`〜`h6`だけを受け、既定は`span`である。G3の5 top-level frameは`h2`を指定し、後続の入れ子sectionは適切なheading levelを指定する。
 - `CharacterSheetFormPresenter`のIsland scopeは、compact density用のsection gap、content padding、toggle heightを提供する。後続Gateはこのscopeを使い、site全体のglobal type scaleを変更しない。
 - canonical VRT baselineは更新していない。PRレビュー直前には、`@character-sheet` targetだけをVisual Reviewし、baseline更新はユーザーの明示承認時だけとする。
@@ -128,7 +128,7 @@
 
 ### G11
 
-- `checks` slotに、固定15技能の非戦闘技能を追加した。展開時は対応能力別の小見出しと15行、折りたたみ時は得意技能だけを表示する。desktop / tabletは2列、mobileは1列で、得意技能、修正、常時／一時判定数を一行のcard gridに置く。
+- `checks` slotに、固定15技能の非戦闘技能を追加した。初期状態と展開時は対応能力別の小見出しと15行を表示し、折りたたみ時は内容をすべて隠す。desktop / tabletは2列、mobileは1列で、得意技能、修正、常時／一時判定数を一行のcard gridに置く。
 - 表示名はGameDomain、技能ID・順序・対応能力は読み取り専用master data、得意技能と修正はform値、判定数はpure logicの導出値として分離する。得意技能は能力値だけを2倍にし、修正を2倍にしない。
 - G9 / G10の再受入として、縁の削除callbackを未覚悟かつ上限外行だけに制限し、縁・攻撃・リアクションの編集行を`fieldset` / `legend`で意味付けた。mobileの縁`クリア`buttonのgrid overflowも解消した。
 - `FormulaTooltip`のindicatorは共通flex boxへ移した。G31のコンテンツレビューで残る違和感が指摘された場合だけ、個別labelではなく共通Componentを再調整する。

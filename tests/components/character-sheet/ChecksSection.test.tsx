@@ -124,23 +124,16 @@ describe("ChecksSection", () => {
     ).toHaveProperty("disabled", true);
   });
 
-  it("groups noncombat skills by attribute and explains them from the title tooltip", () => {
+  it("groups noncombat skills by attribute", () => {
     const props = createProps();
 
     render(<ChecksSection {...props} />);
 
-    const toggle = screen.getByRole("button", { name: "非戦闘技能を開閉" });
-    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    const toggle = screen.getByRole("button", { name: "非戦闘技能" });
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
     expect(screen.getAllByText("技能")).toHaveLength(2);
     expect(screen.getAllByText("対応能力")).toHaveLength(2);
     expect(screen.getAllByText("常時／一時")).toHaveLength(2);
-    expect(screen.queryByText("対応能力：筋力")).toBeNull();
-    expect(screen.queryByText("対応能力：精神")).toBeNull();
-    expect(screen.queryByRole("checkbox")).toBeNull();
-
-    fireEvent.click(toggle);
-
-    expect(toggle.getAttribute("aria-expanded")).toBe("true");
     expect(screen.getByText("対応能力：筋力")).not.toBeNull();
     expect(screen.getByText("対応能力：精神")).not.toBeNull();
     expect(screen.getAllByRole("checkbox")).toHaveLength(15);
@@ -148,18 +141,16 @@ describe("ChecksSection", () => {
     expect(screen.getByLabelText("ハッキングの判定修正")).not.toBeNull();
     expect(screen.getByRole("group", { name: "脅迫" })).not.toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: "非戦闘技能の説明" }));
-    expect(screen.getByRole("tooltip").textContent).toBe(
-      "チェックを入れると得意技能となります。得意技能は能力値を2倍にして判定数を算出します。修正は2倍になりません。\n修正はサイバネなど能力値ではなく、判定数に影響を与えるスキル、アイテムの効果の数値を入力します。\n判定数は「常時能力値を用いた判定数／一時能力値を用いた判定数」です。\n折りたたみ中は得意技能だけ表示されます。",
-    );
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(screen.queryByRole("checkbox")).toBeNull();
   });
 
-  it("reports noncombat favorite and modifier changes and keeps favorites visible when collapsed", () => {
+  it("reports noncombat favorite and modifier changes before collapsing", () => {
     const props = createProps();
 
     const { rerender } = render(<ChecksSection {...props} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "非戦闘技能を開閉" }));
     fireEvent.click(screen.getByLabelText("脅迫を得意技能にする"));
     fireEvent.change(screen.getByLabelText("脅迫の判定修正"), {
       target: { value: "-12" },
@@ -168,7 +159,7 @@ describe("ChecksSection", () => {
       row.id === "intimidation" ? { ...row, isFavorite: true } : row,
     );
     rerender(<ChecksSection {...props} />);
-    fireEvent.click(screen.getByRole("button", { name: "非戦闘技能を開閉" }));
+    fireEvent.click(screen.getByRole("button", { name: "非戦闘技能" }));
 
     expect(props.onNoncombatFavoriteChange).toHaveBeenCalledWith(
       "intimidation",
@@ -178,7 +169,6 @@ describe("ChecksSection", () => {
       "intimidation",
       "-12",
     );
-    expect(screen.getByRole("checkbox")).not.toBeNull();
-    expect(screen.queryByText("対応能力：筋力")).toBeNull();
+    expect(screen.queryByRole("checkbox")).toBeNull();
   });
 });

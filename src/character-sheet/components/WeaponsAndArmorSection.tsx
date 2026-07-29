@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Armor, Weapon } from "../../lib/types/item";
 import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import { formatDisplayValue } from "../format-display-value";
+import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
 import ClearButton from "./ClearButton";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
@@ -380,82 +381,94 @@ export default function WeaponsAndArmorSection(
   const copy = characterSheetDictionary.characterSheet.weaponsAndArmor;
   return (
     <div className={styles.section} data-weapons-and-armor-section>
-      <section aria-label={copy.weapon} className={styles.itemSection}>
-        <h3>{copy.weapon}</h3>
-        <div className={`${styles.headerRow} ${styles.weaponLine}`}>
-          <span aria-hidden="true" />
-          <span className={styles.headerTooltip}>
-            <FormulaTooltip
-              ariaLabel={copy.headers.name}
-              formula={getNamePickerTooltip(copy.weapon)}
-            >
-              <span>{copy.headers.name}</span>
-            </FormulaTooltip>
-          </span>
-          <span>{copy.headers.credit}</span>
-          <span className={styles.headerTooltip}>
-            <FormulaTooltip
-              ariaLabel={copy.headers.attackGuard}
-              formula={copy.formulaTooltips.weapon}
-            >
-              <span>{copy.headers.attackGuard}</span>
-            </FormulaTooltip>
-          </span>
-          <span>展開</span>
-          <span aria-hidden="true" />
+      <CharacterSheetSectionFrame
+        expandable
+        headingAs="h3"
+        id="weapons"
+        title={copy.weapon}
+      >
+        <div className={styles.itemSection}>
+          <div className={`${styles.headerRow} ${styles.weaponLine}`}>
+            <span aria-hidden="true" />
+            <span className={styles.headerTooltip}>
+              <FormulaTooltip
+                ariaLabel={copy.headers.name}
+                formula={getNamePickerTooltip(copy.weapon)}
+              >
+                <span>{copy.headers.name}</span>
+              </FormulaTooltip>
+            </span>
+            <span>{copy.headers.credit}</span>
+            <span className={styles.headerTooltip}>
+              <FormulaTooltip
+                ariaLabel={copy.headers.attackGuard}
+                formula={copy.formulaTooltips.weapon}
+              >
+                <span>{copy.headers.attackGuard}</span>
+              </FormulaTooltip>
+            </span>
+            <span>展開</span>
+            <span aria-hidden="true" />
+          </div>
+          {props.weaponRows.map((row, index) => (
+            <WeaponFormRow
+              canMoveDown={index < props.weaponRows.length - 1}
+              canMoveUp={index > 0}
+              key={row.rowId}
+              onModifierChange={props.onWeaponModifierChange}
+              onMove={props.onMoveWeapon}
+              onPickerRequest={props.onWeaponPickerRequest}
+              onRemove={props.onRemoveWeapon}
+              removalEnabled={props.weaponRows.length > 1}
+              row={row}
+              rowNumber={index + 1}
+            />
+          ))}
+          <button
+            className={`${styles.addButton} character-sheet-add-button`}
+            onClick={props.onAddWeapon}
+            type="button"
+          >
+            {copy.addWeapon}
+          </button>
         </div>
-        {props.weaponRows.map((row, index) => (
-          <WeaponFormRow
-            canMoveDown={index < props.weaponRows.length - 1}
-            canMoveUp={index > 0}
-            key={row.rowId}
-            onModifierChange={props.onWeaponModifierChange}
-            onMove={props.onMoveWeapon}
-            onPickerRequest={props.onWeaponPickerRequest}
-            onRemove={props.onRemoveWeapon}
-            removalEnabled={props.weaponRows.length > 1}
-            row={row}
-            rowNumber={index + 1}
+      </CharacterSheetSectionFrame>
+      <CharacterSheetSectionFrame
+        expandable
+        headingAs="h3"
+        id="armor"
+        title={copy.armor}
+      >
+        <div className={styles.itemSection}>
+          <div className={`${styles.headerRow} ${styles.armorLine}`}>
+            <span className={styles.headerTooltip}>
+              <FormulaTooltip
+                ariaLabel={copy.headers.name}
+                formula={getNamePickerTooltip(copy.armor)}
+              >
+                <span>{copy.headers.name}</span>
+              </FormulaTooltip>
+            </span>
+            <span>{copy.headers.credit}</span>
+            <span className={styles.headerTooltip}>
+              <FormulaTooltip
+                ariaLabel={copy.headers.armorDefense}
+                formula={copy.formulaTooltips.armor}
+              >
+                <span>{copy.headers.armorDefense}</span>
+              </FormulaTooltip>
+            </span>
+            <span>展開</span>
+            <span aria-hidden="true" />
+          </div>
+          <ArmorFormRow
+            armor={props.armor}
+            onClear={props.onClearArmor}
+            onModifierChange={props.onArmorModifierChange}
+            onPickerRequest={props.onArmorPickerRequest}
           />
-        ))}
-        <button
-          className={`${styles.addButton} character-sheet-add-button`}
-          onClick={props.onAddWeapon}
-          type="button"
-        >
-          {copy.addWeapon}
-        </button>
-      </section>
-      <section aria-label={copy.armor} className={styles.itemSection}>
-        <h3>{copy.armor}</h3>
-        <div className={`${styles.headerRow} ${styles.armorLine}`}>
-          <span className={styles.headerTooltip}>
-            <FormulaTooltip
-              ariaLabel={copy.headers.name}
-              formula={getNamePickerTooltip(copy.armor)}
-            >
-              <span>{copy.headers.name}</span>
-            </FormulaTooltip>
-          </span>
-          <span>{copy.headers.credit}</span>
-          <span className={styles.headerTooltip}>
-            <FormulaTooltip
-              ariaLabel={copy.headers.armorDefense}
-              formula={copy.formulaTooltips.armor}
-            >
-              <span>{copy.headers.armorDefense}</span>
-            </FormulaTooltip>
-          </span>
-          <span>展開</span>
-          <span aria-hidden="true" />
         </div>
-        <ArmorFormRow
-          armor={props.armor}
-          onClear={props.onClearArmor}
-          onModifierChange={props.onArmorModifierChange}
-          onPickerRequest={props.onArmorPickerRequest}
-        />
-      </section>
+      </CharacterSheetSectionFrame>
     </div>
   );
 }

@@ -366,6 +366,38 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [ ] `npm run check` が通る
 - [ ] `npm run build` が通る
 
+## レビュー指摘 7
+
+### 指摘事項
+
+- `判定`内の`攻撃`、`リアクション`、`非戦闘技能`を、見出しレベル`h3`の`CharacterSheetSectionFrame`へ統一する。
+- `縁`内の`覚悟の効果`、`武器・防具`内の`武器`と`防具`も、見出しレベル`h3`の`CharacterSheetSectionFrame`へ統一する。
+- `非戦闘技能`だけは初期状態で折りたたみ、ほかの対象subsectionは初期状態で展開する。文字サイズの差異とtooltipの見た目は今回の確認対象から除く。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `CharacterSheetSectionFrame`は、section外枠、heading、初期展開状態の開閉を共通で持ち、親sectionではすでに`h2`の見出しに利用している。
+  - `ChecksSection`の`攻撃`、`リアクション`、`非戦闘技能`、`BondsSection`の`覚悟の効果`、`WeaponsAndArmorSection`の`武器`と`防具`は、現在それぞれ個別のsection / heading実装であり、frameの外枠と開閉操作を持たない。
+  - 最新のユーザー指示により、非戦闘技能も初期展開とし、折りたたみ時は内容をすべて隠す。`CharacterSheetSectionFrame`の既存仕様だけで実現できる。
+
+### 対応方針
+
+- `CharacterSheetSectionFrame`は変更せず、既存の初期展開・開閉仕様を使う。
+- 対象の6 subsectionを`expandable`かつ`headingAs="h3"`の共通Frameへ移す。非戦闘技能を含め、すべて初期展開とし、折りたたまれたcontentは完全に隠す。
+- tooltipの内容・fontの微差は今回の対象外とし、非戦闘技能の子section見出しへtooltip用のaccessoryは追加しない。ゲームデータ、入力・算出、操作callback、親sectionの開閉状態は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] 対象6 subsectionが`h3`の`CharacterSheetSectionFrame`を使う
+- [x] 非戦闘技能は初期展開し、折りたたみ時は内容をすべて隠す
+- [x] 攻撃、リアクション、覚悟の効果、武器、防具は初期展開する
+- [x] 入力・算出、操作callbackを維持し、tooltip用accessoryを追加しない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。
