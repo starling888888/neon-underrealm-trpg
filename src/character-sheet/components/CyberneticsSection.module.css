@@ -192,6 +192,15 @@
   .cell,
   .part {
     padding-inline: 0.125rem;
+  }
+
+  .headerRow > * {
+    font-size: var(--character-sheet-table-header-font-size);
+    font-weight: var(--character-sheet-table-header-font-weight);
+  }
+
+  .cell,
+  .part {
     font-size: var(--character-sheet-font-table-mobile-label);
   }
 

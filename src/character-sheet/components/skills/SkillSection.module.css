@@ -311,10 +311,6 @@
       );
   }
 
-  .headerRow {
-    font-size: var(--character-sheet-font-table-mobile-label);
-  }
-
   .headerRow > :nth-child(6),
   .headerRow > :nth-child(7),
   .firstLine > [data-skill-metadata="cost"],

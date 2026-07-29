@@ -103,10 +103,6 @@
     grid-template-columns: minmax(0, 1fr) 2.5rem 3.25rem;
   }
 
-  .headerRow {
-    font-size: 0.625rem;
-  }
-
   .headerRow > span,
   .firstLine > * {
     padding: 0.125rem 0.25rem;

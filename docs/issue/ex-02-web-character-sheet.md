@@ -434,6 +434,33 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
+## レビュー指摘 9
+
+### 指摘事項
+
+- スキルとアイテムの候補選択dialogにある、`名称`、`最大Lv`、`コスト`、`使用制限`などの列headerが大きすぎる。表示側の同種の列headerと同じfont size、font weightへ統一する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `SkillPickerDialog`と武器、防具、お守り、サイバネ、ナノマシン、ドラッグのpicker dialog、および表示側の各一覧は`CharacterSheetFormList.module.css`の`tableHeader`をcomposeしている。
+  - `--character-sheet-font-table`とmobile用の値は`CharacterSheetFormPresenter`の`.form`で定義される一方、dialogは`.form`の兄弟要素である。そのため候補表は同じtokenを継承できない。
+  - mobileの武器・防具、お守り、ドラッグ表示表は、列headerの直下要素にも本文操作用のfont sizeを指定していた。表示表同士も同じheader typographyにはなっていない。
+  - `CharacterSheetDialogHeader`のdialog title、確認・エラー・通知dialog、候補行本文は対象外とする。
+
+### 対応方針
+
+- `CharacterSheetFormList.module.css`の`tableHeader`でdesktop / mobileのheader専用font size tokenとfont weightを解決し、直下の列labelへ明示する。表示表でheaderを本文操作用tokenで上書きしている箇所は分離し、同じheader tokenを参照する。pickerごとの列構成、候補行本文、dialog title、accessible name、閉じる操作、focus復帰は変えない。
+
+### 対応完了チェックリスト
+
+- [ ] スキル・アイテムの全候補選択dialogで、列headerが表示側の同種の列headerと同じfont size、font weightである
+- [ ] dialog titleと候補行本文のfont size、確認・エラー・通知dialogを変えない
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## 備考
 
 このissueは`ex-02`全体を追跡する親task contractである。実装開始には、専用Gate planのユーザー明示承認に加え、着手直前に対象Gate専用の子issueを作成・承認することを必要とする。親issueは全実装ゲートの完了まで維持する。

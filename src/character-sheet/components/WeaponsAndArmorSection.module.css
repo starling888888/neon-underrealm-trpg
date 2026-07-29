@@ -209,13 +209,19 @@
         --character-sheet-action-button-size
       );
   }
-  .headerRow {
-    font-size: var(--character-sheet-font-table-mobile-label);
-  }
   .headerRow > *,
   .cell,
   .detailsToggle {
     padding-inline: 0.125rem;
+  }
+
+  .headerRow > * {
+    font-size: var(--character-sheet-table-header-font-size);
+    font-weight: var(--character-sheet-table-header-font-weight);
+  }
+
+  .cell,
+  .detailsToggle {
     font-size: var(--character-sheet-font-table-mobile-control);
   }
   .itemPicker {

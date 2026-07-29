@@ -1,9 +1,21 @@
 .tableHeader {
+  --character-sheet-table-header-font-size: var(
+    --character-sheet-font-table,
+    0.75rem
+  );
+  --character-sheet-table-header-font-weight: 400;
+
   color: var(--color-text-muted);
-  font-size: var(--character-sheet-font-table);
+  font-size: var(--character-sheet-table-header-font-size);
+  font-weight: var(--character-sheet-table-header-font-weight);
   line-height: 1.1;
   text-align: center;
   border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.tableHeader > * {
+  font-size: var(--character-sheet-table-header-font-size);
+  font-weight: var(--character-sheet-table-header-font-weight);
 }
 
 .pickerTableFirstLine > *:not(:last-child) {
@@ -138,8 +150,12 @@
 }
 
 @media (width < 48rem) {
-  .tableHeader {
-    font-size: var(--character-sheet-font-table-mobile-label);
+  .tableHeader,
+  .tableHeader > * {
+    --character-sheet-table-header-font-size: var(
+      --character-sheet-font-table-mobile-label,
+      0.625rem
+    );
   }
 
   .rowPicker {

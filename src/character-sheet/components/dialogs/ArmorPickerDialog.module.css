@@ -87,9 +87,6 @@
         0.8fr
       );
   }
-  .headerRow {
-    font-size: 0.625rem;
-  }
   .headerRow > span,
   .firstLine > * {
     padding: 0.125rem 0.25rem;

@@ -1641,3 +1641,21 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-22-sheet-special-items-integration` の`useProfileSectionProps`
 - 観測した失敗: アイテム信用の合計は`creditSummary.change`へ渡していたが、`ProfileSection`が表示する`spentCredit`をpropsへ返していなかった。そのため、小銭は選択済みアイテムを差し引いた値になる一方、消費信用の表示だけ既定値`0`に留まった。
 - 一次対応: `spentCredit`をProfile section propsへ明示的に返し、お守り選択後に消費信用`2`が表示されるE2Eとpresenter hook testを追加した。派生値を別sectionへ渡す場合は、計算結果だけでなく表示に使う元値もprops契約へ含まれることを確認する。
+
+### Repeatedly misread the target of a dialog-header review
+
+#### 2026-07-30
+
+- source: user
+- 発生箇所: `ex-02-web-character-sheet` の選択dialog column header review intake
+- 観測した失敗: ユーザーが選択dialog内の`名称`、`最大Lv`、`コスト`、`使用制限`などの列headerを指摘したにもかかわらず、dialog titleとして解釈し、その後も列headerとtitleを往復して要件を取り違えた。
+- 一次対応: Review 9を候補表の列headerだけを対象とする契約へ訂正した。UIの「header」指摘では、対象の可視文言とDOM要素を先に対応付けてからissueへ記録し、実装対象外のtitleや本文を明示する。
+
+### Reported a CSS-only dialog-header fix without inspecting the rendered labels
+
+#### 2026-07-30
+
+- source: user
+- 発生箇所: `ex-02-web-character-sheet` のpicker列header修正報告
+- 観測した失敗: `tableHeader`の親へfallbackを追加しただけで、実際の`名称`、`最大Lv`、`コスト`、`使用制限`のlabel要素へstyleが適用されることを画面で確認せず、修正済みと報告した。ユーザー画面では未修正だった。
+- 一次対応: `tableHeader`と直下の列labelへ同じfont size・font weightを明示する。CSSの親継承に依存する表示修正は、実際の対象要素のcomputed styleまたはactual screenshotを確認してから完了報告する。
