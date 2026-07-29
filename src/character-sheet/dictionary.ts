@@ -16,6 +16,7 @@ export const characterSheetDictionary = {
     unavailableValue: "-",
   },
   characterSheet: {
+    namePickerTooltip: "名称欄をクリックすると{kind}選択ダイアログが開きます。",
     build: {
       addOtherRyugi: "＋ その他流儀を追加",
       formulas: {
@@ -136,7 +137,6 @@ export const characterSheetDictionary = {
       selectPrimaryRyugi: "プライマリ流儀を選択してください。",
       selectIkizama: "生き様を選択してください。",
       selectOtherRyugi: "その他流儀を選択してください。",
-      nameTooltip: "名称欄をクリックするとスキル選択ダイアログが開きます。",
       selectionGuide:
         "スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。",
       label: "プライマリ流儀スキル",
@@ -344,3 +344,10 @@ export const characterSheetDictionary = {
     },
   },
 } as const;
+
+export function getNamePickerTooltip(kind: string): string {
+  return characterSheetDictionary.characterSheet.namePickerTooltip.replace(
+    "{kind}",
+    kind,
+  );
+}

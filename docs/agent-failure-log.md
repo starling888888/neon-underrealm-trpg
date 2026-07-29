@@ -89,6 +89,26 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Started Gate 18 reviews before the explicitly instructed commit and push
+
+#### 2026-07-29
+
+- source: user
+- failure category: instruction order and response reliability
+- 発生箇所: `ex-02-18-sheet-omamori` のcanonical VRT baseline更新後のhandoff
+- 観測した失敗: ユーザーがGate 18全体について、先にcommitとpushを行い、その後にGate用ではないDoc ReviewとTech Reviewを実施するよう明示したにもかかわらず、commit・pushを実行せずにreviewを開始した。停止しようとした際にも応答しなかった。
+- 一次対応: 未コミット差分を保全した状態で処理状況を確認した。以後、明示された順序のstate変更を完了・報告してから後続reviewを開始し、停止要求には進行中処理の状態を直ちに返す。
+
+### Repeatedly ran an incomplete omamori E2E test
+
+#### 2026-07-29
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-18-sheet-omamori` の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: 新規のお守り操作E2Eで、mobile時に同じ効果文を持つdesktop用非表示本文と展開済み本文を区別しないlocatorを実行した。修正後も、tooltipのopen stateを行操作E2Eへ混在させたため、専用VRT状態で扱うべきtooltip検証を再度失敗させた。
+- 一次対応: 効果本文は展開本文のIDへ限定し、tooltip検証を行操作E2Eから外した。名称tooltipは`tests/visual/vrt/character-sheet.spec.ts`の専用locator stateでdesktop / tablet / mobileごとに確認する。
+
 ### Ignored the existing character-sheet UI system in G17
 
 #### 2026-07-28

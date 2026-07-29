@@ -2,7 +2,7 @@ import { ListPlus } from "lucide-react";
 import { useState } from "react";
 
 import type { Armor, Weapon } from "../../lib/types/item";
-import { characterSheetDictionary } from "../dictionary";
+import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import { formatDisplayValue } from "../format-display-value";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./WeaponsAndArmorSection.module.css";
@@ -387,7 +387,14 @@ export default function WeaponsAndArmorSection(
         <h3>{copy.weapon}</h3>
         <div className={`${styles.headerRow} ${styles.weaponLine}`}>
           <span aria-hidden="true" />
-          <span>{copy.headers.name}</span>
+          <span className={styles.headerTooltip}>
+            <FormulaTooltip
+              ariaLabel={copy.headers.name}
+              formula={getNamePickerTooltip(copy.weapon)}
+            >
+              <span>{copy.headers.name}</span>
+            </FormulaTooltip>
+          </span>
           <span>{copy.headers.credit}</span>
           <span className={styles.headerTooltip}>
             <FormulaTooltip
@@ -425,7 +432,14 @@ export default function WeaponsAndArmorSection(
       <section aria-label={copy.armor} className={styles.itemSection}>
         <h3>{copy.armor}</h3>
         <div className={`${styles.headerRow} ${styles.armorLine}`}>
-          <span>{copy.headers.name}</span>
+          <span className={styles.headerTooltip}>
+            <FormulaTooltip
+              ariaLabel={copy.headers.name}
+              formula={getNamePickerTooltip(copy.armor)}
+            >
+              <span>{copy.headers.name}</span>
+            </FormulaTooltip>
+          </span>
           <span>{copy.headers.credit}</span>
           <span className={styles.headerTooltip}>
             <FormulaTooltip

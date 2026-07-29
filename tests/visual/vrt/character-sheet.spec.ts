@@ -1,9 +1,16 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 import { visualRoutes } from "../config";
 import { registerVrtScenarios } from "../helpers/vrt";
 
 async function openTooltip(page: Page, name: string): Promise<void> {
-  await page.getByRole("button", { exact: true, name }).hover();
+  await openTooltipButton(
+    page,
+    page.getByRole("button", { exact: true, name }),
+  );
+}
+
+async function openTooltipButton(page: Page, button: Locator): Promise<void> {
+  await button.hover();
   await expect(page.getByRole("tooltip")).toBeVisible();
 }
 
@@ -75,6 +82,34 @@ async function selectArmor(
   });
 
   await picker.getByRole("button", { exact: true, name: armorName }).click();
+  await expect(picker).toBeHidden();
+}
+
+async function openOmamoriPicker(page: Page): Promise<void> {
+  const omamori = page.getByRole("region", { exact: true, name: "お守り" });
+
+  await omamori
+    .getByRole("button", { exact: true, name: "＋ お守りを追加" })
+    .click();
+  await omamori
+    .getByRole("button", { exact: true, name: "お守り1：お守りを選択" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { exact: true, name: "お守りを選択" }),
+  ).toBeVisible();
+}
+
+async function selectOmamori(
+  page: Page,
+  omamoriName = "活気のお守り",
+): Promise<void> {
+  await openOmamoriPicker(page);
+  const picker = page.getByRole("dialog", {
+    exact: true,
+    name: "お守りを選択",
+  });
+
+  await picker.getByRole("button", { exact: true, name: omamoriName }).click();
   await expect(picker).toBeHidden();
 }
 
@@ -291,6 +326,18 @@ const armorPickerLocator = {
   name: "armor-picker",
   resolve: (page: Page) =>
     page.getByRole("dialog", { exact: true, name: "防具を選択" }),
+};
+
+const omamoriSectionLocator = {
+  name: "omamori-section",
+  resolve: (page: Page) =>
+    page.locator('[data-special-item-category="omamori"]'),
+};
+
+const omamoriPickerLocator = {
+  name: "omamori-picker",
+  resolve: (page: Page) =>
+    page.getByRole("dialog", { exact: true, name: "お守りを選択" }),
 };
 
 const profileSectionLocator = {
@@ -796,6 +843,96 @@ registerVrtScenarios("character-sheet", [
     locatorOnly: true,
     locators: [weaponsAndArmorSectionLocator, tooltipLocator],
     prepare: openWeaponsTooltip,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "weapon-name-tooltip-open",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator, tooltipLocator],
+    prepare: (page) =>
+      openTooltipButton(
+        page,
+        page
+          .getByRole("region", { exact: true, name: "武器" })
+          .getByRole("button", { exact: true, name: "名称" }),
+      ),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "armor-name-tooltip-open",
+    locatorOnly: true,
+    locators: [weaponsAndArmorSectionLocator, tooltipLocator],
+    prepare: (page) =>
+      openTooltipButton(
+        page,
+        page
+          .getByRole("region", { exact: true, name: "防具" })
+          .getByRole("button", { exact: true, name: "名称" }),
+      ),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "omamori-picker-open",
+    locatorOnly: true,
+    locators: [omamoriSectionLocator, omamoriPickerLocator],
+    prepare: openOmamoriPicker,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "omamori-selected",
+    locatorOnly: true,
+    locators: [omamoriSectionLocator],
+    prepare: selectOmamori,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "omamori-mobile-effect-expanded",
+    locatorOnly: true,
+    locators: [omamoriSectionLocator],
+    prepare: async (page) => {
+      await selectOmamori(page);
+      await page
+        .getByRole("button", {
+          exact: true,
+          name: "お守り1：活気のお守り効果を開く",
+        })
+        .click();
+    },
+    route: visualRoutes.characterSheet,
+    viewports: ["mobile"],
+  },
+  {
+    id: "omamori-name-tooltip-open",
+    locatorOnly: true,
+    locators: [omamoriSectionLocator, tooltipLocator],
+    prepare: (page) =>
+      openTooltipButton(
+        page,
+        page
+          .getByRole("region", { exact: true, name: "お守り" })
+          .getByRole("button", { exact: true, name: "名称" }),
+      ),
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop", "tablet", "mobile"],
+  },
+  {
+    id: "skill-name-tooltip-open",
+    locatorOnly: true,
+    locators: [primarySkillsLocator, tooltipLocator],
+    prepare: async (page) => {
+      await selectPrimaryRyugi(page);
+      await openTooltipButton(
+        page,
+        primarySkillsLocator
+          .resolve(page)
+          .getByRole("button", { exact: true, name: "名称" }),
+      );
+    },
     route: visualRoutes.characterSheet,
     viewports: ["desktop", "tablet", "mobile"],
   },

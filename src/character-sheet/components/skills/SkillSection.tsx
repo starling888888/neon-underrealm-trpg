@@ -2,7 +2,10 @@ import { ListPlus } from "lucide-react";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 import type { Skill } from "../../../lib/types/skill";
-import { characterSheetDictionary } from "../../dictionary";
+import {
+  characterSheetDictionary,
+  getNamePickerTooltip,
+} from "../../dictionary";
 import { formatDisplayValue } from "../../format-display-value";
 import FormulaTooltip from "../FormulaTooltip";
 import styles from "./SkillSection.module.css";
@@ -327,8 +330,8 @@ export default function SkillSection({
   synchronizationKey,
   unavailableMessage,
 }: SkillSectionProps) {
-  const copy = characterSheetDictionary.characterSheet.skills;
   const skillCopy = characterSheetDictionary.gameDomain.terms.skill;
+  const skillCategoryName = characterSheetDictionary.gameDomain.terms.skills;
   const [isExpanded, setIsExpanded] = useState(true);
   const hasSectionRowError = rows.some((row) => row.hasRowError);
   const hasError = isInvalid || hasSectionRowError;
@@ -365,7 +368,7 @@ export default function SkillSection({
               <span className={styles.headerTooltip}>
                 <FormulaTooltip
                   ariaLabel={skillCopy.name}
-                  formula={copy.nameTooltip}
+                  formula={getNamePickerTooltip(skillCategoryName)}
                 >
                   <span>{skillCopy.name}</span>
                 </FormulaTooltip>

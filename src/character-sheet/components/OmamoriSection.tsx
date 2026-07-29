@@ -2,8 +2,9 @@ import { ListPlus } from "lucide-react";
 import { useState } from "react";
 
 import type { Omamori } from "../../lib/types/item";
-import { characterSheetDictionary } from "../dictionary";
+import { characterSheetDictionary, getNamePickerTooltip } from "../dictionary";
 import { formatDisplayValue } from "../format-display-value";
+import FormulaTooltip from "./FormulaTooltip";
 import styles from "./OmamoriSection.module.css";
 
 type OmamoriRow = {
@@ -124,7 +125,14 @@ export default function OmamoriSection(props: OmamoriSectionProps) {
     <div className={styles.section} data-omamori-section>
       <div className={`${styles.headerRow} ${styles.line}`}>
         <span aria-hidden="true" />
-        <span>{copy.headers.name}</span>
+        <span>
+          <FormulaTooltip
+            ariaLabel={copy.headers.name}
+            formula={getNamePickerTooltip(copy.name)}
+          >
+            <span>{copy.headers.name}</span>
+          </FormulaTooltip>
+        </span>
         <span>{copy.headers.credit}</span>
         <span className={styles.desktopEffectHeader}>
           {copy.headers.effect}

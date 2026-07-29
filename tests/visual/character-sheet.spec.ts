@@ -547,4 +547,65 @@ test.describe("character sheet page", () => {
     await expect(clearedDefenseModifiers.last()).toHaveValue("");
     await expect(page.getByRole("dialog")).toBeHidden();
   });
+
+  test("selects, reorders, removes, and expands omamori", async ({ page }) => {
+    await page.setViewportSize(visualViewports.mobile);
+    await page.goto("character-sheet/");
+
+    const omamori = page.getByRole("region", { exact: true, name: "お守り" });
+    const picker = page.getByRole("dialog", {
+      exact: true,
+      name: "お守りを選択",
+    });
+
+    await omamori
+      .getByRole("button", { exact: true, name: "＋ お守りを追加" })
+      .click();
+    await omamori
+      .getByRole("button", { exact: true, name: "お守り1：お守りを選択" })
+      .click();
+    await expect(picker).toBeVisible();
+    await picker
+      .getByRole("button", { exact: true, name: "活気のお守り" })
+      .click();
+    await expect(picker).toBeHidden();
+
+    await omamori
+      .getByRole("button", { exact: true, name: "＋ お守りを追加" })
+      .click();
+    await omamori
+      .getByRole("button", { exact: true, name: "お守り2：お守りを選択" })
+      .click();
+    await picker
+      .getByRole("button", { exact: true, name: "疫病神のお守り" })
+      .click();
+    await expect(picker).toBeHidden();
+
+    await omamori
+      .getByRole("button", {
+        exact: true,
+        name: "お守り1：活気のお守り下へ移動",
+      })
+      .click();
+    await omamori
+      .getByRole("button", {
+        exact: true,
+        name: "お守り1：疫病神のお守りを削除",
+      })
+      .click();
+    await expect(
+      omamori.getByRole("button", {
+        exact: true,
+        name: "お守り1：活気のお守り",
+      }),
+    ).toBeVisible();
+
+    await omamori
+      .getByRole("button", {
+        exact: true,
+        name: "お守り1：活気のお守り効果を開く",
+      })
+      .click();
+    await expect(omamori.locator('[id^="omamori-details-"]')).toBeVisible();
+  });
 });

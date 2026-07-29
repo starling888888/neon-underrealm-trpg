@@ -51,6 +51,7 @@
 - dialogの候補はdesktop / tablet / mobileで、名称と信用を1行目、効果を2行目に置く。候補の効果は常時表示し、折り畳みや展開iconを追加しない。
 - 既存の`CharacterSheetFormList.module.css`を再利用し、お守り固有CSSは列幅、desktop / tabletとmobileの情報配置、効果本文の折返しだけを所有する。
 - お守りカテゴリ全体を、折りたたみを持たない専用frame Componentでラップする。このGateではカテゴリ削除buttonを表示しない。
+- 名称ヘッダーには、名称欄のクリックでお守り選択ダイアログを開く案内tooltipを表示する。
 - `characterSheetDictionary`へsection / header /操作の固定UI文言を追加し、ゲームデータ由来の名称・信用・効果はmaster dataの読み取り結果を表示する。
 
 ## 初期スコープ外
@@ -69,7 +70,7 @@
 - [ ] candidate dialogがすべてのviewportで名称・信用を1行目、効果を2行目に常時表示し、折り畳みや展開iconを持たない。
 - [ ] お守り行と候補dialogが既存共通form styleを再利用し、固有CSSが列とresponsive差分だけを持つ。
 - [ ] G22以降のカテゴリ連動、カテゴリ単位の追加・削除、信用集計を実装していない。
-- [ ] target限定Visual Reviewの対象route、states、viewports、actual screenshot、VRT結果を記録し、canonical VRT baselineを更新していない。
+- [x] target限定Visual Reviewの対象route、states、viewports、actual screenshot、VRT結果を記録し、ユーザー承認済みcanonical VRT baselineを更新した。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -113,7 +114,7 @@
 - desktop / tabletの常時効果表示とmobileの展開iconが、明示した情報優先度と既存shared styleを損なわず、長文でも横overflowしないか。
 - candidate dialogの二行構成が全viewportで折り畳みなしに読め、重複選択の許可とfocus復帰が保たれるか。
 - architectureへ追記した共通CSS再利用契約が、今後の専用アイテムにも適切か。
-- canonical VRT baselineを更新せず、target限定のVisual Reviewだけを行う前提が適切か。
+- target限定Visual Reviewの結果と、ユーザー承認済みcanonical VRT baseline更新が実装契約に整合するか。
 
 ## 備考
 
@@ -149,3 +150,49 @@
 - [ ] お守りカテゴリを非折りたたみの専用frame Componentでラップし、カテゴリ削除buttonを追加していない。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@character-sheet`
+- route / states / viewports:
+  - default full-page baseline: desktop / ultrawide / tablet / mobile
+  - お守り候補dialog、選択済み行、名称tooltip: desktop / tablet / mobile
+  - mobile効果展開: mobile
+  - 武器・防具・スキルの名称tooltip: desktop / tablet / mobile
+
+### レビュー結果
+
+| 対象                                      | 判定 | 差分                                         | 対応                                  |
+| ----------------------------------------- | ---- | -------------------------------------------- | ------------------------------------- |
+| `@character-sheet` full-page baseline     | OK   | お守りカテゴリ追加に伴う下部領域・footer位置 | ユーザー承認によりbaseline更新        |
+| お守り一覧・候補dialog・mobile効果展開    | OK   | なし                                         | locator screenshotを確認              |
+| 名称tooltip（お守り・武器・防具・スキル） | OK   | スキル種別の初回表示が`名称`                 | `スキル`を渡すよう自己修正し再capture |
+
+### 実画面確認
+
+- owner locator: `data-special-item-category="omamori"`、`お守りを選択` dialog、tooltip、武器・防具section、プライマリ流儀スキルsection
+- checked acceptance criteria: desktop / tabletの常時効果、mobileの効果headerと行下展開、候補の二行構成、名称／効果の折返し、削除buttonのセル内位置、tooltipの種別文言、clip / overflow / 操作領域
+- result: 宣言した全state・viewportの原寸locator screenshotを開いて確認した。full-page screenshotはbaseline差分の確認だけに用いた。
+
+### 自己修正した項目
+
+- [x] スキル名称tooltipへヘッダー名ではなく種別`スキル`を渡した。
+
+### 人間判断が必要な差分
+
+- なし。canonical baseline更新はユーザーが明示承認済み。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分をユーザー承認として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

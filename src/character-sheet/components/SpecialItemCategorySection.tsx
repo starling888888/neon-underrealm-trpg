@@ -21,7 +21,11 @@ export default function SpecialItemCategorySection({
   const headingId = `${id}-category-heading`;
 
   return (
-    <section aria-labelledby={headingId} className={styles.frame}>
+    <section
+      aria-labelledby={headingId}
+      className={styles.frame}
+      data-special-item-category={id}
+    >
       <h3 className={styles.heading} id={headingId}>
         {title}
       </h3>
