@@ -644,6 +644,13 @@ registerCharacterSheetVrtScenarios([
     route: visualRoutes.characterSheet,
   },
   {
+    id: "g22-special-items-unselected-added",
+    kind: "section",
+    locator: specialItemsSection,
+    prepare: (page) => addSpecialItemCategory(page, "お守り"),
+    route: visualRoutes.characterSheet,
+  },
+  {
     id: "g22-special-items-sumi-exclusive",
     kind: "section",
     locator: specialItemsSection,

@@ -14,7 +14,7 @@ function createProps(): ProfileSectionProps {
   return {
     characterImage: null,
     credit: characterSheetDefaultValues.credit,
-    creditSummary: { change: 10, totalCredit: 10 },
+    creditSummary: { change: 10, hasCreditError: false, totalCredit: 10 },
     experience: {
       acquired: characterSheetDefaultValues.build.acquiredExperience,
       commonSkillLevelLimit: 1,
@@ -184,6 +184,42 @@ describe("ProfileSection", () => {
 
     expect(props.onCreditBlur).toHaveBeenCalledWith("acquired", "");
     expect((acquiredCredit as HTMLInputElement).value).toBe("0");
+  });
+
+  it("marks credit overage without treating a negative change adjustment as an error", () => {
+    const { rerender } = render(
+      <ProfileSection
+        {...createProps()}
+        creditSummary={{ change: 3, hasCreditError: true, totalCredit: 10 }}
+        spentCredit={12}
+      />,
+    );
+
+    expect(
+      screen.getByRole("region", { name: "信用" }).getAttribute("data-invalid"),
+    ).toBe("true");
+    expect(
+      screen
+        .getByText("12", { exact: true, selector: "output" })
+        .getAttribute("aria-invalid"),
+    ).toBe("true");
+
+    rerender(
+      <ProfileSection
+        {...createProps()}
+        creditSummary={{ change: -5, hasCreditError: false, totalCredit: 10 }}
+        spentCredit={5}
+      />,
+    );
+
+    expect(
+      screen.getByRole("region", { name: "信用" }).getAttribute("data-invalid"),
+    ).toBeNull();
+    expect(
+      screen
+        .getByText("5", { exact: true, selector: "output" })
+        .getAttribute("aria-invalid"),
+    ).toBeNull();
   });
 
   it("reports files selected by the input and the drop area", () => {

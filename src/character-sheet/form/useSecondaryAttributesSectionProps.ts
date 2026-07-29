@@ -56,7 +56,7 @@ export default function useSecondaryAttributesSectionProps(
     sectionProps: {
       derived: derivedSecondaryAttributes,
       healthFormulaSuffix: showNanomachineHealthBonus
-        ? " +埋め込み中のナノマシンの消費精神力の最大値"
+        ? " + 埋め込み中のナノマシンの消費精神力の最大値"
         : undefined,
       onNumberChange: setSecondaryAttributeValue,
       onTemporaryAppliedChange: (field, checked) => {

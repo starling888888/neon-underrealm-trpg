@@ -108,4 +108,33 @@ describe("SecondaryAttributesSection", () => {
       screen.getByRole("checkbox", { name: "行動値の一時修正を適用" }),
     ).not.toBeNull();
   });
+
+  it("shows the Sumi nanomachine bonus in the automatic maximum health value", () => {
+    const build = calculateBuild({
+      ...characterSheetDefaultValues.build,
+      ikizamaId: "sumi",
+      primaryRyugiId: "kenkaya",
+    });
+    const props = createProps();
+    props.derived = calculateSecondaryAttributes(
+      build,
+      {
+        ...characterSheetDefaultValues.secondaryAttributes,
+        healthModifier: 2,
+      },
+      15,
+    );
+
+    render(<SecondaryAttributesSection {...props} />);
+
+    const automaticHealth = screen.getByLabelText("最大体力の自動算出値");
+    const finalHealth = screen.getByText(String(props.derived.health), {
+      exact: true,
+      selector: "output",
+    });
+
+    expect(automaticHealth.textContent).toBe(String(props.derived.baseHealth));
+    expect(props.derived.health).toBe((props.derived.baseHealth ?? 0) + 2);
+    expect(finalHealth.textContent).toBe(String(props.derived.health));
+  });
 });

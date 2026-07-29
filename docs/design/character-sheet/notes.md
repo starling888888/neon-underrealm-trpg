@@ -30,6 +30,7 @@
 - 2026-07-29、ユーザー承認によりcharacter-sheetのcanonical baselineを再構成する。full-page比較はdefaultと`合計信用` tooltip代表のdesktop / tablet / mobileだけとし、sectionのdefault・入力・error variationはowner section、dialog stateはdialog本体を比較する。個別tooltip screenshotとstatic page用generic scenario helperは対象外とする。
 - 同日の再構成後のcanonical baselineは133枚である。full-pageは6枚、sectionは94枚、dialogは33枚とする。`縁`、`combat`、`武器・防具`のvariationは見出しを含むsection frameを比較し、`スキル`と`生き様専用アイテム`はdefaultの全体frameだけを各3 viewportで1枚ずつ持つ。子sectionの入力・error variationは引き続き子section locatorだけを比較する。G20で`nanomachines-default`、選択済み、効果展開、上限超過のsection 12枚、候補dialog 3枚を追加した。個別tooltip screenshotは作成しない。
 - 2026-07-29、ユーザー承認によりG21のドラッグを追加した。`drugs-default`、`drugs-input`、`drugs-expanded`、`drugs-picker`、`drugs-picker-duplicate`をdesktop / tablet / mobileのowner section / dialog locatorでlocal canonical snapshot化し、ドラッグ追加で変わるfull-page defaultと`special-items-overview`を更新した。local canonical snapshotは148枚となった。G31までGit管理へ追加・変更しない。mobile候補dialogは名称・信用・BT強度を1行目、使用タイミング・1セット数量・効果を詳細行に置く。
+- 2026-07-29、ユーザー承認によりG22の未コミット差分を再確認し、`g22-credit-overage`と`g22-sumi-maximum-health`の各desktop / tablet / mobileを更新し、未選択で手動追加したwarningカテゴリの`g22-special-items-unselected-added`を同3 viewportで新規作成した。合計9枚のtarget限定比較は更新後にすべて通過し、local canonical snapshotは172枚となった。個別tooltip screenshotは作成せず、G31までGit管理へ追加・変更しない。
 - 2026-07-29のGate外レビュー修正として、`判定` sectionはdesktopでも左列の`縁`の後に置く。right columnは`スキル`から開始する。`画像を選択`と各`〜を追加` buttonは、キャラクターシート内の共通styleでfont size、高さ、padding、border、hover / disabled stateを揃え、section固有CSSは配置だけを持つ。
 
 ### G3 section frame comparison

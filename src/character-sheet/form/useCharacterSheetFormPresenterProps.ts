@@ -80,6 +80,9 @@ type CharacterSheetPresenterOptions = {
     trigger: HTMLButtonElement,
     applyRemoval: () => void,
   ) => void;
+  onSpecialItemCategoryRemoved: (
+    category: import("../form-values").SpecialItemCategoryId,
+  ) => void;
 };
 
 export type CharacterSheetContainerPresenterState =
@@ -129,6 +132,7 @@ export default function useCharacterSheetFormPresenterProps(
     onNanomachinesPickerRequested,
     onOmamoriPickerRequested,
     onWeaponPickerRequested,
+    onSpecialItemCategoryRemoved,
     onSpecialItemCategoryRemoveRequested,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
@@ -139,6 +143,7 @@ export default function useCharacterSheetFormPresenterProps(
     onPickerRequest: onOtherRyugiSkillPickerRequested ?? (() => {}),
   });
   const specialItems = useSpecialItemsSectionProps(form, {
+    onCategoryRemoved: onSpecialItemCategoryRemoved,
     onRemoveRequested: onSpecialItemCategoryRemoveRequested,
   });
   const build = useBuildSectionProps(form, {

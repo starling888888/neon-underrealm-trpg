@@ -151,13 +151,14 @@ describe("character sheet secondary attributes", () => {
     assert.equal(temporary.baseActionValue, 23);
   });
 
-  it("accepts a future nanomachine bonus without making G8 select one", () => {
+  it("includes a nanomachine bonus in the displayed automatic health value", () => {
     const derived = calculateSecondaryAttributes(
       calculateBuild(selectedBuild()),
       characterSheetDefaultValues.secondaryAttributes,
       4,
     );
 
+    assert.equal(derived.baseHealth, 64);
     assert.equal(derived.health, 64);
   });
 });

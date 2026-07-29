@@ -34,6 +34,7 @@ export default function SpecialItemCategorySection({
         isUnavailable ? `${styles.frame} ${styles.unavailable}` : styles.frame
       }
       data-special-item-category={id}
+      data-unavailable={isUnavailable || undefined}
     >
       <div className={styles.headingRow}>
         <h3 className={styles.heading} id={headingId}>

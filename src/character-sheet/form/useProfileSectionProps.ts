@@ -76,5 +76,6 @@ export default function useProfileSectionProps(
     onCharacterImageOperationStarted:
       imageState.onCharacterImageOperationStarted,
     profile,
+    spentCredit,
   };
 }

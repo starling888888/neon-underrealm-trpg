@@ -55,7 +55,7 @@ export default function SpecialItemsSection({
           return (
             <SpecialItemCategorySection
               id={category}
-              isUnavailable={!isExclusive && exclusiveCategory !== null}
+              isUnavailable={!isExclusive}
               key={category}
               onRemove={
                 isExclusive

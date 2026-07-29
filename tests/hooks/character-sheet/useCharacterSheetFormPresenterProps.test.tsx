@@ -10,6 +10,7 @@ import type { CharacterSheetFormValues } from "../../../src/character-sheet/form
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { getCommonSkillCandidates } from "../../../src/character-sheet/master-data/common-skills";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
+import { getOmamori } from "../../../src/character-sheet/master-data/omamori";
 import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-data/other-ryugi-skills";
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
@@ -53,6 +54,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
     });
     expect(result.current.presenterProps.profileSection.creditSummary).toEqual({
       change: 17,
+      hasCreditError: false,
       totalCredit: 19,
     });
   });
@@ -72,6 +74,31 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(result.current.presenterProps.profileSection.profile.pcName).toBe(
       "ネオン",
     );
+  });
+
+  it("updates consumed credit after selecting an omamori", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [omamori] = getOmamori();
+    if (omamori === undefined) {
+      throw new Error("お守り候補を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.omamoriSection.onAdd();
+    });
+    const rowId = result.current.form.getValues("omamori.rows.0.rowId");
+
+    act(() => {
+      result.current.presenterProps.omamoriSection.onSelect(rowId, omamori.id);
+    });
+
+    expect(result.current.form.getValues("omamori.rows.0.omamoriId")).toBe(
+      omamori.id,
+    );
+    expect(result.current.presenterProps.profileSection.spentCredit).toBe(2);
+    expect(
+      result.current.presenterProps.profileSection.creditSummary.change,
+    ).toBe(8);
   });
 
   it("keeps consecutive build selections instead of overwriting the first one", () => {

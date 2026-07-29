@@ -39,8 +39,7 @@ function addModifier(value: number | null, modifier: number): number | null {
 /**
  * Derives G8 secondary attributes from G7's selected build and manual modifiers.
  *
- * A future Gate may pass the selected Sumi nanomachine bonus through the third
- * parameter. G8 deliberately uses zero because it does not own that choice.
+ * G22 passes the selected Sumi nanomachine bonus through the third parameter.
  */
 export function calculateSecondaryAttributes(
   build: SecondaryAttributeBuildSource,
@@ -63,12 +62,13 @@ export function calculateSecondaryAttributes(
   const actionPerception = secondaryAttributes.applyTemporaryAction
     ? build.attributes.perception.temporary
     : build.attributes.perception.permanent;
-  const baseHealth =
+  const calculatedHealth =
     healthIncrease === null ||
     healthCoefficient === null ||
     permanentBody === null
       ? null
       : healthIncrease * primaryRyugiLevel + healthCoefficient * permanentBody;
+  const baseHealth = addModifier(calculatedHealth, maximumHealthBonus);
   const baseMental =
     mindIncrease === null || mindCoefficient === null || permanentMind === null
       ? null
@@ -93,10 +93,7 @@ export function calculateSecondaryAttributes(
     baseMental,
     baseMovement,
     bondLimit: 4 + secondaryAttributes.bondLimitModifier,
-    health:
-      baseHealth === null
-        ? null
-        : baseHealth + secondaryAttributes.healthModifier + maximumHealthBonus,
+    health: addModifier(baseHealth, secondaryAttributes.healthModifier),
     maximumHealthBonus,
     mental: addModifier(baseMental, secondaryAttributes.mentalModifier),
     movement: addModifier(baseMovement, secondaryAttributes.movementModifier),

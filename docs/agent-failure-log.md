@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Reported G22 visual and requirement checks as complete without covering required states
+
+#### 2026-07-29
+
+- source: review
+- failure category: unverified completion and visual review coverage
+- 発生箇所: `ex-02-22-sheet-special-items-integration` のVisual Review 1と完了条件
+- 観測した失敗: 未選択で手動追加したカテゴリのwarning frame stateをE2E / VRTへ含めず、スミの最大体力actual screenshotで`自動算出値 + 修正 = 最終値`が成立していないことも見落とした。また、信用超過を小銭修正から独立して判定する要件をtestで固定せず、完了条件を確認済みと記録した。
+- 一次対応: レビュー指摘4としてcurrent issueへ再open条件、実装方針、未完了checklistを記録し、該当完了条件・Visual Review checkpointを未チェックへ戻した。修正と再検証はユーザー承認後に限定する。
+
 ### Requested privilege escalation after the user had already authorized the action
 
 #### 2026-07-29
@@ -1602,3 +1612,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-21-sheet-drugs` のVRT baseline更新・review報告
 - 観測した失敗: 親Gate planがG31までcanonical VRT snapshotをlocal専用としてGit管理しないと定めているにもかかわらず、G21 issueとdesign notesを「canonical baseline更新」とだけ記録し、review時にGit管理すべきbaselineとして扱われる余地を残した。
 - 一次対応: G21 issueとdesign notesへ、target限定のlocal canonical snapshot更新とG31までの非Git管理を明記した。VRTの記録・レビューでは、snapshotのlocal更新とGit管理の可否を親Gate planへ照合して分けて記録する。
+
+### Omitted a derived credit value when composing profile props
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-22-sheet-special-items-integration` の`useProfileSectionProps`
+- 観測した失敗: アイテム信用の合計は`creditSummary.change`へ渡していたが、`ProfileSection`が表示する`spentCredit`をpropsへ返していなかった。そのため、小銭は選択済みアイテムを差し引いた値になる一方、消費信用の表示だけ既定値`0`に留まった。
+- 一次対応: `spentCredit`をProfile section propsへ明示的に返し、お守り選択後に消費信用`2`が表示されるE2Eとpresenter hook testを追加した。派生値を別sectionへ渡す場合は、計算結果だけでなく表示に使う元値もprops契約へ含まれることを確認する。

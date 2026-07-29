@@ -23,6 +23,7 @@ import {
 import { getArmorById, getWeaponById } from "../master-data/weapons-and-armor";
 
 type Options = {
+  onCategoryRemoved?: (category: SpecialItemCategoryId) => void;
   onRemoveRequested?: (
     category: SpecialItemCategoryId,
     trigger: HTMLButtonElement,
@@ -68,7 +69,7 @@ function hasCategoryContent(
 /** Owns serializable special-item category visibility and its derived values. */
 export default function useSpecialItemsSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
-  { onRemoveRequested }: Options = {},
+  { onCategoryRemoved, onRemoveRequested }: Options = {},
 ): {
   maximumHealthBonus: number;
   sectionProps: SpecialItemsSectionProps;
@@ -186,7 +187,10 @@ export default function useSpecialItemsSectionProps(
         }
       },
       onRemoveCategory: (category, trigger) => {
-        const applyRemoval = () => removeCategory(category);
+        const applyRemoval = () => {
+          removeCategory(category);
+          onCategoryRemoved?.(category);
+        };
         if (hasCategoryContent(category, getValues())) {
           onRemoveRequested?.(category, trigger, applyRemoval);
           return;

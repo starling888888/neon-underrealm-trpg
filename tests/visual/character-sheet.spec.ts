@@ -581,9 +581,20 @@ test.describe("character sheet page", () => {
       '[data-special-item-category="omamori"]',
     );
     await expect(omamori).toBeVisible();
+    await expect(omamori).toHaveAttribute("data-unavailable", "true");
     await expect(
       omamori.getByText(/通常使用不可/, { exact: false }),
     ).toHaveCount(0);
+
+    await omamori
+      .getByRole("button", { exact: true, name: "お守りカテゴリを削除" })
+      .click();
+    await expect(omamori).toBeHidden();
+    await expect(
+      specialItems.getByRole("button", { exact: true, name: "お守りを追加" }),
+    ).toBeFocused();
+
+    await addSpecialItemCategory(page, "お守り");
 
     await ikizama.selectOption("sumi");
     await expect(
@@ -611,6 +622,19 @@ test.describe("character sheet page", () => {
     await picker
       .getByRole("button", { exact: true, name: "活気のお守り" })
       .click();
+    await expect(
+      omamori.getByRole("button", {
+        exact: true,
+        name: "お守り1：活気のお守り",
+      }),
+    ).toBeVisible();
+    await expect(
+      page
+        .getByRole("button", { exact: true, name: "消費信用" })
+        .locator("..")
+        .locator("..")
+        .getByRole("status"),
+    ).toHaveText("2");
 
     const removeCategory = page.getByRole("button", {
       exact: true,

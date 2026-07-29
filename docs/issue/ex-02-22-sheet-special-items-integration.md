@@ -79,16 +79,16 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 - [x] スミ選択時だけ、ナノマシンの消費精神力最大値を最大体力とtooltipへ反映する。
 - [x] 関連TODOの対応結果を記録している。
 - [x] `npm run build` と必要な`npm run check`、対象Node / hook / Component testが通る。
-- [x] 実装後のユーザーレビュー承認を受けて、対象E2Eとtarget限定VRTを実行し、必要なactual screenshotを開いて確認している。canonical baselineの更新は別途ユーザーが明示承認した場合だけ行う。
+- [ ] 実装後のユーザーレビュー承認を受けて、対象E2Eとtarget限定VRTを実行し、必要なactual screenshotを開いて確認している。canonical baselineの更新は別途ユーザーが明示承認した場合だけ行う。
 
 ## チェックポイント
 
 - [x] `docs/architectures/character-sheet.md`に従い、RHFを入力値の唯一の保持先とし、派生値・validationをpure logic、dialog状態をContainer、表示をPresenter / sectionへ分離している。
 - [x] `exclusiveItem`、item master-data、各行のform値を明示してlogicへ渡し、Component / Presenterから生成JSONを直接検索していない。
 - [x] 消費信用、信用超過、スミの最大体力補正、tooltip条件、カテゴリ表示順、削除確認条件をNode / hook / Component testで確認している。
-- [x] `/character-sheet/`、GitHub Pagesのサブパス公開、既存の武器・防具とG18–G21のカテゴリ内操作を壊していない。
-- [x] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、未選択、専用カテゴリ、追加カテゴリ、warning、信用超過、スミの最大体力、カテゴリ削除確認、生き様変更後を確認対象として列挙している。
-- [x] character-sheet VRTは、専用アイテム全体frameのdefaultを3 viewportで、カテゴリ追加・warning・削除確認は該当sectionまたはdialog locatorで対象限定する。tooltipはComponent / browser behavior testで確認し、個別tooltip snapshotを追加しない。
+- [ ] `/character-sheet/`、GitHub Pagesのサブパス公開、既存の武器・防具とG18–G21のカテゴリ内操作を壊していない。
+- [ ] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、未選択、専用カテゴリ、追加カテゴリ、warning、信用超過、スミの最大体力、カテゴリ削除確認、生き様変更後を確認対象として列挙している。
+- [ ] character-sheet VRTは、専用アイテム全体frameのdefaultを3 viewportで、カテゴリ追加・warning・削除確認は該当sectionまたはdialog locatorで対象限定する。tooltipはComponent / browser behavior testで確認し、個別tooltip snapshotを追加しない。
 - [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`、`docs/design/character-sheet/notes.md`、承認済みdesign draftと矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
@@ -176,6 +176,88 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 - [x] 追加カテゴリbuttonを通常のwarning border幅へ戻す
 - [x] 削除icon buttonへ強調枠を追加しない
 
+## レビュー指摘 3
+
+### 指摘事項
+
+- input済みカテゴリの確認後削除では追加buttonへfocusを戻すが、空カテゴリの確認なし削除では削除icon buttonのDOM除去後にfocusが失われる。
+- Visual Reviewの結果に、target限定canonical snapshotがlocal専用であり、G31までGit管理へ追加・変更しないという親Gate planの運用境界が明記されていない。
+
+### 判定
+
+- source: local-agent
+- classification: valid
+- local validation: `useSpecialItemsSectionProps`は空カテゴリで`applyRemoval()`を直接実行し、Containerのfocus復帰処理を経由しない。parent Gate planのG21 / G22引継ぎと`.gitignore`はcanonical snapshotをlocal専用と定める。
+
+### 対応方針
+
+- 確認あり・なしの両方で、削除後に同カテゴリの追加buttonへfocusを戻す共通の削除完了処理をContainer / form adapterの責務境界内で設ける。
+- 空カテゴリの即時削除とfocus復帰をE2Eへ追加する。
+- Visual Review結果を、target限定local canonical snapshotの更新でありG31までGit管理しないことが明確な記録へ訂正する。
+
+### 対応完了チェックリスト
+
+- [x] 空カテゴリの確認なし削除でも追加buttonへfocusを戻す
+- [x] 空カテゴリの即時削除・focus復帰をE2Eで確認する
+- [x] baselineのlocal専用・非Git管理境界をVisual Review記録へ明記する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- 信用errorが`消費信用 > 合計信用`ではなく、小銭修正を含む`change < 0`で判定されている。そのため小銭修正で信用超過errorを隠せ、または信用超過なしでerrorになる。
+- 生き様未選択で手動追加したカテゴリにwarning外枠がなく、warning文だけ非表示にする契約と、削除可能カテゴリをwarning枠で示す契約を両立できていない。
+- スミのナノマシン補正が最大体力の最終値だけへ加算され、画面の`自動算出値 + 修正 = 最終値`の式が成立しない。
+
+### 判定
+
+- source: browser-draft
+- classification: valid
+- local validation: `calculateCredit`は`change`だけを返し、`ProfileSection`は`creditSummary.change < 0`をinvalid条件に使う。`SpecialItemsSection`の`isUnavailable`は`exclusiveCategory !== null`時だけtrueである。`calculateSecondaryAttributes`は`baseHealth`へ`maximumHealthBonus`を含めず、`health`だけへ加算し、`SecondaryAttributesSection`は`baseHealth + healthModifier = health`を表示する。
+
+### 対応方針
+
+- `spentCredit > totalCredit`を小銭と独立した信用errorとして導出し、基本情報の信用領域と消費信用outputだけへ渡す。正負の小銭修正でerror条件が変わらないtestを追加する。
+- カテゴリframeのwarning枠とwarning文の表示条件を分離し、未選択時の手動追加カテゴリはwarning枠・削除iconのみを表示する。該当E2Eとtarget限定VRT stateを追加する。
+- 最大体力の表示用自動算出値へスミのナノマシン補正を含め、表示された各項の合計と最終値が一致するようNode / Component testとVRTを更新する。tooltip契約は維持する。
+
+### 対応完了チェックリスト
+
+- [x] 信用超過を小銭修正から独立して導出・表示する
+- [x] 小銭修正の正負で信用errorが変わらないtestを追加する
+- [x] 未選択時の手動追加カテゴリにwarning枠・削除iconを表示する
+- [x] 未選択手動追加カテゴリのE2E / target限定VRT stateを追加する
+- [x] スミ補正を含む最大体力の表示式を成立させる
+- [x] 最大体力の表示項と最終値の一致をNode / Component testとVRTで確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- アイテムを選択しても、基本情報の`消費信用`に選択済みアイテムの信用合計が表示されていない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `useSpecialItemsSectionProps`は各アイテムカテゴリから`spentCredit`を導出しているが、画面操作での表示更新をE2Eで保証していない。表示値とフォーム更新経路を再現して確認する。
+
+### 対応方針
+
+- 選択済み装備・武器・お守り・サイバネ・ナノマシン・ドラッグ（所持セット数を含む）から導出する`spentCredit`を、基本情報の`消費信用`outputへ常に反映する。
+- アイテム選択後の合計表示をE2Eで確認し、集計ロジックとUI表示の接続を回帰防止する。
+
+### 対応完了チェックリスト
+
+- [x] アイテム選択後の消費信用合計を基本情報に表示する
+- [x] 消費信用の画面更新をE2Eで確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
 ## ビジュアルレビュー 1
 
 - 実施日: 2026-07-29
@@ -183,7 +265,10 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 - 実行: `npm run test:e2e:run -- --grep "manages special item categories"`、既存カテゴリ操作4件、`npm run visual:capture -- --grep '@g22-'`、`npm run visual:update -- --grep '@g22-'`、`npm run visual:test -- --grep '@g22-'`
 - VRT target: `@g22-` の21件。未選択、スミ専用、warning、生き様変更後、信用超過、スミ最大体力、カテゴリ削除確認をdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`で確認した。
 - actual確認: `test-results/visual/character-sheet/sections/` の6状態各3枚と、`test-results/visual/character-sheet/dialogs/` の削除確認3枚を原寸で開いた。desktop / tabletの追加buttonは4列、mobileは2列で表示され、warning frame、warning icon、生き様変更後の順序、信用超過error、スミの最大体力、削除確認dialogの配置を確認した。
-- 結果: canonical baseline 21枚を追加し、更新後のtarget比較は21件すべて通過した。tooltipは既存Component / browser behavior testで対象とし、個別tooltip snapshotは追加していない。
+- 結果: target限定local canonical snapshot 21枚を更新し、更新後のtarget比較は21件すべて通過した。snapshotはG31までGit管理へ追加・変更しない。tooltipは既存Component / browser behavior testで対象とし、個別tooltip snapshotは追加していない。
+- 訂正: レビュー指摘 4で、生き様未選択の手動追加カテゴリstateがVRTに欠け、スミ最大体力のactual screenshotで表示式が成立していないことが判明した。このVisual Reviewの肯定結果は取り消し、修正後に対象stateを再確認する。
+- 再確認: ユーザー承認後に`g22-special-items-unselected-added`、`g22-credit-overage`、`g22-sumi-maximum-health`のdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`のactual 9枚を原寸で確認した。未選択手動追加のwarning frame、信用超過時の消費信用とerror枠、スミの最大体力の自動算出値と最終値が表示契約どおりである。
+- 更新結果: 前者3枚を新規作成し、後者6枚をtarget限定local canonical snapshotとして更新した。更新後の同target比較は9件すべて通過した。snapshotはG31までGit管理へ追加・変更しない。tooltipは既存Component / browser behavior testで対象とし、個別tooltip snapshotは追加していない。
 
 ## 備考
 

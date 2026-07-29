@@ -451,7 +451,7 @@ export default function ProfileSection({
       <section
         aria-label={creditTerms.name}
         className={styles.credit}
-        data-invalid={creditSummary.change < 0 || undefined}
+        data-invalid={creditSummary.hasCreditError || undefined}
       >
         <div className={styles.creditGrid}>
           <CreditField
@@ -483,7 +483,7 @@ export default function ProfileSection({
           <ReadOnlyCreditField
             formula={characterSheet.credit.formulas.consumed}
             label={creditTerms.consumed}
-            invalid={creditSummary.change < 0}
+            invalid={creditSummary.hasCreditError}
             value={spentCredit}
           />
           <CreditField

@@ -13,9 +13,33 @@ describe("character sheet credit", () => {
         spentCredit: 0,
       }),
       {
+        hasCreditError: false,
         totalCredit: 12,
         change: 10,
       },
+    );
+  });
+
+  it("keeps a credit overage error independent from the change adjustment", () => {
+    assert.equal(
+      calculateCredit({
+        acquiredCredit: 10,
+        creditProvided: 0,
+        creditReceived: 0,
+        changeAdjustment: 5,
+        spentCredit: 12,
+      }).hasCreditError,
+      true,
+    );
+    assert.equal(
+      calculateCredit({
+        acquiredCredit: 10,
+        creditProvided: 0,
+        creditReceived: 0,
+        changeAdjustment: -10,
+        spentCredit: 5,
+      }).hasCreditError,
+      false,
     );
   });
 });

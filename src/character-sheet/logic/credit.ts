@@ -7,6 +7,7 @@ export type CreditInputs = {
 };
 
 export type CreditSummary = {
+  hasCreditError: boolean;
   totalCredit: number;
   change: number;
 };
@@ -21,6 +22,7 @@ export function calculateCredit({
   const totalCredit = acquiredCredit + creditReceived - creditProvided;
 
   return {
+    hasCreditError: spentCredit > totalCredit,
     totalCredit,
     change: totalCredit - spentCredit + changeAdjustment,
   };
