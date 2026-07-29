@@ -21,7 +21,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
-- [ ] G22で専用アイテムカテゴリframeへカテゴリ削除buttonを追加する
+- [x] G22で専用アイテムカテゴリframeへカテゴリ削除buttonを追加する
   - source: `.tmp/review/ex-02-18-sheet-omamori/human-review-1.md` / `ex-02-18-sheet-omamori` のレビュー指摘 1
   - classification: follow-up
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG22

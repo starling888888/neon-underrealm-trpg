@@ -80,6 +80,7 @@ export default function SpecialItemsSection({
           .map((category) => (
             <button
               className={styles.addButton}
+              data-special-item-category-add={category}
               key={category}
               onClick={() => onAddCategory(category)}
               type="button"

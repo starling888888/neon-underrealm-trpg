@@ -316,9 +316,19 @@ export default function CharacterSheetContainer() {
   }
 
   function confirmSpecialItemCategoryRemove(): void {
+    const category = specialItemCategoryToRemove;
     pendingSpecialItemCategoryRemoveRef.current?.();
     pendingSpecialItemCategoryRemoveRef.current = null;
     setSpecialItemCategoryToRemove(null);
+    if (category !== null) {
+      requestAnimationFrame(() => {
+        document
+          .querySelector<HTMLButtonElement>(
+            `[data-special-item-category-add="${category}"]`,
+          )
+          ?.focus();
+      });
+    }
   }
 
   function closeSpecialItemCategoryRemoveConfirm(): void {

@@ -13,6 +13,12 @@ async function expectLayoutColumnCount(page: Page, count: number) {
   expect(gridTemplateColumns).toHaveLength(count);
 }
 
+async function addSpecialItemCategory(page: Page, name: string): Promise<void> {
+  await page
+    .getByRole("button", { exact: true, name: `${name}を追加` })
+    .click();
+}
+
 test.describe("character sheet page", () => {
   test("selects a primary skill and confirms a primary ryugi change", async ({
     page,
@@ -117,7 +123,10 @@ test.describe("character sheet page", () => {
     await page.goto("character-sheet/");
 
     await page.getByRole("button", { name: "＋ その他流儀を追加" }).click();
-    const otherRyugi = page.getByLabel("その他流儀1", { exact: true });
+    const otherRyugi = page.getByRole("combobox", {
+      exact: true,
+      name: "その他流儀1",
+    });
     await otherRyugi.selectOption("kenkaya");
     await page.getByLabel("その他流儀1Lv", { exact: true }).fill("1");
 
@@ -548,9 +557,96 @@ test.describe("character sheet page", () => {
     await expect(page.getByRole("dialog")).toBeHidden();
   });
 
+  test("manages special item categories and confirms removal of entered items", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const specialItems = page.locator("[data-special-items-section]");
+    const ikizama = page.locator("[data-build-section] select").nth(1);
+
+    await expect(
+      specialItems.getByText("生き様を選択してください。", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      specialItems.locator("[data-special-item-category]"),
+    ).toHaveCount(0);
+    await expect(
+      specialItems.getByRole("button", { name: /を追加$/, exact: false }),
+    ).toHaveCount(4);
+
+    await addSpecialItemCategory(page, "お守り");
+    const omamori = specialItems.locator(
+      '[data-special-item-category="omamori"]',
+    );
+    await expect(omamori).toBeVisible();
+    await expect(
+      omamori.getByText(/通常使用不可/, { exact: false }),
+    ).toHaveCount(0);
+
+    await ikizama.selectOption("sumi");
+    await expect(
+      specialItems.locator("[data-special-item-category]").first(),
+    ).toHaveAttribute("data-special-item-category", "nanomachines");
+    await expect(
+      specialItems.getByText("スミでは通常使用不可", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page
+        .locator('[data-special-item-category="nanomachines"]')
+        .getByRole("button", { name: /カテゴリを削除$/ }),
+    ).toHaveCount(0);
+
+    const picker = page.getByRole("dialog", {
+      exact: true,
+      name: "お守りを選択",
+    });
+    await omamori
+      .getByRole("button", { exact: true, name: "＋ お守りを追加" })
+      .click();
+    await omamori
+      .getByRole("button", { exact: true, name: "お守り1：お守りを選択" })
+      .click();
+    await picker
+      .getByRole("button", { exact: true, name: "活気のお守り" })
+      .click();
+
+    const removeCategory = page.getByRole("button", {
+      exact: true,
+      name: "お守りカテゴリを削除",
+    });
+    await removeCategory.click();
+    const confirm = page.getByRole("dialog", { name: "お守りカテゴリを削除" });
+    await expect(confirm).toBeVisible();
+    await confirm
+      .getByRole("button", { exact: true, name: "キャンセル" })
+      .click();
+    await expect(confirm).toBeHidden();
+    await expect(omamori).toBeVisible();
+
+    await removeCategory.click();
+    await confirm.getByRole("button", { exact: true, name: "削除" }).click();
+    await expect(confirm).toBeHidden();
+    await expect(omamori).toBeHidden();
+    await expect(
+      specialItems.getByRole("button", { exact: true, name: "お守りを追加" }),
+    ).toBeFocused();
+
+    await ikizama.selectOption("burai");
+    await expect(
+      specialItems.locator("[data-special-item-category]").first(),
+    ).toHaveAttribute("data-special-item-category", "omamori");
+    await expect(
+      specialItems.locator("[data-special-item-category]").nth(1),
+    ).toHaveAttribute("data-special-item-category", "nanomachines");
+  });
+
   test("selects, reorders, removes, and expands omamori", async ({ page }) => {
     await page.setViewportSize(visualViewports.mobile);
     await page.goto("character-sheet/");
+
+    await addSpecialItemCategory(page, "お守り");
 
     const omamori = page.getByRole("region", { exact: true, name: "お守り" });
     const picker = page.getByRole("dialog", {
@@ -614,6 +710,8 @@ test.describe("character sheet page", () => {
   }) => {
     await page.setViewportSize(visualViewports.mobile);
     await page.goto("character-sheet/");
+
+    await addSpecialItemCategory(page, "ドラッグ");
 
     const drugs = page.locator('[data-special-item-category="drugs"]');
     const picker = page.getByRole("dialog", {
@@ -707,6 +805,8 @@ test.describe("character sheet page", () => {
     await page.setViewportSize(visualViewports.mobile);
     await page.goto("character-sheet/");
 
+    await addSpecialItemCategory(page, "サイバネ");
+
     const cybernetics = page.locator("[data-cybernetics-section]");
     const picker = page.getByRole("dialog", {
       exact: true,
@@ -730,7 +830,7 @@ test.describe("character sheet page", () => {
       .getByRole("button", { exact: true, name: "頭：サイバーアイ効果を開く" })
       .click();
     await expect(
-      cybernetics.getByText("感覚を用いる判定+1d。", { exact: true }),
+      cybernetics.getByText("効果：感覚を用いる判定+1d。", { exact: true }),
     ).toBeVisible();
 
     await cybernetics
@@ -799,6 +899,8 @@ test.describe("character sheet page", () => {
   }) => {
     await page.setViewportSize(visualViewports.mobile);
     await page.goto("character-sheet/");
+
+    await addSpecialItemCategory(page, "ナノマシン");
 
     const nanomachines = page.locator("[data-nanomachines-section]");
     const picker = page.getByRole("dialog", {

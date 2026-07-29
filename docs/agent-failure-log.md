@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Requested privilege escalation after the user had already authorized the action
+
+#### 2026-07-29
+
+- source: user
+- failure category: permission handling and instruction fidelity
+- 発生箇所: `ex-02-22-sheet-special-items-integration` のE2E再実行前の一時preview確認
+- 観測した失敗: E2Eが残した`4322`の一時previewを停止する必要はユーザーの「e2eとvrtを実装してbaseライン更新。devサーバ停止してpreviewに切り替えてよい」で明示済みだった。それにもかかわらず、process確認のために権限昇格を要求した。
+- 一次対応: ユーザー指摘後、この作業では以後の権限昇格を行わず、通常権限で既知のE2E child processだけを扱った。今後はユーザーが対象操作を明示許可している場合、既存の通常権限手段で先に実行し、追加の昇格確認は要求しない。
+
 ### Repeated a new Node test before reading its assertion diff
 
 #### 2026-07-29

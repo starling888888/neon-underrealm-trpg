@@ -70,25 +70,25 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 
 ## 完了条件
 
-- [ ] 生き様未選択時に指定の案内文、未表示カテゴリだけの追加button、カテゴリframe非表示を満たす。
-- [ ] 追加buttonがdesktop / tabletで4列1行、mobileで2列2行になり、表示済みカテゴリを除外して詰めて表示される。warning枠の白抜き表現を持つ。
-- [ ] 選択中生き様の専用カテゴリが削除不可で先頭に表示され、非対応カテゴリは追加・削除できる。非対応カテゴリのwarning枠・右上のwarning削除icon・見出し横warning文を満たす。
-- [ ] カテゴリ削除の確認条件、確定・キャンセル・Escape・閉じる、focus復帰が指定どおりに動作する。
-- [ ] 生き様変更時に、生き様スキル選択済みでは既存の確認dialogだけを表示し、未選択では即時にカテゴリを入れ替える。いずれもカテゴリ入力の有無にかかわらず専用アイテム用の確認dialogを表示せず、確定時の専用・追加カテゴリ順と入力保持が指定どおりである。
-- [ ] 消費信用が武器・防具と全カテゴリの選択済みアイテムを一元集計し、ドラッグの所持セット数を掛ける。信用超過の基本情報側error feedbackを表示する。
-- [ ] スミ選択時だけ、ナノマシンの消費精神力最大値を最大体力とtooltipへ反映する。
-- [ ] 関連TODOの対応結果を記録している。
+- [x] 生き様未選択時に指定の案内文、未表示カテゴリだけの追加button、カテゴリframe非表示を満たす。
+- [x] 追加buttonがdesktop / tabletで4列1行、mobileで2列2行になり、表示済みカテゴリを除外して詰めて表示される。warning枠の白抜き表現を持つ。
+- [x] 選択中生き様の専用カテゴリが削除不可で先頭に表示され、非対応カテゴリは追加・削除できる。非対応カテゴリのwarning枠・右上のwarning削除icon・見出し横warning文を満たす。
+- [x] カテゴリ削除の確認条件、確定・キャンセル・Escape・閉じる、focus復帰が指定どおりに動作する。
+- [x] 生き様変更時に、生き様スキル選択済みでは既存の確認dialogだけを表示し、未選択では即時にカテゴリを入れ替える。いずれもカテゴリ入力の有無にかかわらず専用アイテム用の確認dialogを表示せず、確定時の専用・追加カテゴリ順と入力保持が指定どおりである。
+- [x] 消費信用が武器・防具と全カテゴリの選択済みアイテムを一元集計し、ドラッグの所持セット数を掛ける。信用超過の基本情報側error feedbackを表示する。
+- [x] スミ選択時だけ、ナノマシンの消費精神力最大値を最大体力とtooltipへ反映する。
+- [x] 関連TODOの対応結果を記録している。
 - [x] `npm run build` と必要な`npm run check`、対象Node / hook / Component testが通る。
-- [ ] 実装後のユーザーレビュー承認を受けて、対象E2Eとtarget限定VRTを実行し、必要なactual screenshotを開いて確認している。canonical baselineの更新は別途ユーザーが明示承認した場合だけ行う。
+- [x] 実装後のユーザーレビュー承認を受けて、対象E2Eとtarget限定VRTを実行し、必要なactual screenshotを開いて確認している。canonical baselineの更新は別途ユーザーが明示承認した場合だけ行う。
 
 ## チェックポイント
 
 - [x] `docs/architectures/character-sheet.md`に従い、RHFを入力値の唯一の保持先とし、派生値・validationをpure logic、dialog状態をContainer、表示をPresenter / sectionへ分離している。
 - [x] `exclusiveItem`、item master-data、各行のform値を明示してlogicへ渡し、Component / Presenterから生成JSONを直接検索していない。
 - [x] 消費信用、信用超過、スミの最大体力補正、tooltip条件、カテゴリ表示順、削除確認条件をNode / hook / Component testで確認している。
-- [ ] `/character-sheet/`、GitHub Pagesのサブパス公開、既存の武器・防具とG18–G21のカテゴリ内操作を壊していない。
-- [ ] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、未選択、専用カテゴリ、追加カテゴリ、warning、信用超過、スミの最大体力、カテゴリ削除確認、生き様変更後を確認対象として列挙している。
-- [ ] character-sheet VRTは、専用アイテム全体frameのdefaultを3 viewportで、カテゴリ追加・warning・削除確認は該当sectionまたはdialog locatorで対象限定する。tooltipはComponent / browser behavior testで確認し、個別tooltip snapshotを追加しない。
+- [x] `/character-sheet/`、GitHub Pagesのサブパス公開、既存の武器・防具とG18–G21のカテゴリ内操作を壊していない。
+- [x] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、未選択、専用カテゴリ、追加カテゴリ、warning、信用超過、スミの最大体力、カテゴリ削除確認、生き様変更後を確認対象として列挙している。
+- [x] character-sheet VRTは、専用アイテム全体frameのdefaultを3 viewportで、カテゴリ追加・warning・削除確認は該当sectionまたはdialog locatorで対象限定する。tooltipはComponent / browser behavior testで確認し、個別tooltip snapshotを追加しない。
 - [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`、`docs/design/character-sheet/notes.md`、承認済みdesign draftと矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
@@ -175,6 +175,15 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 - [x] warningカテゴリのsection outer frameをerror状態と同じ見た目の線幅にする
 - [x] 追加カテゴリbuttonを通常のwarning border幅へ戻す
 - [x] 削除icon buttonへ強調枠を追加しない
+
+## ビジュアルレビュー 1
+
+- 実施日: 2026-07-29
+- 対象route: `/character-sheet/`（GitHub Pages subpath配下のpreview）
+- 実行: `npm run test:e2e:run -- --grep "manages special item categories"`、既存カテゴリ操作4件、`npm run visual:capture -- --grep '@g22-'`、`npm run visual:update -- --grep '@g22-'`、`npm run visual:test -- --grep '@g22-'`
+- VRT target: `@g22-` の21件。未選択、スミ専用、warning、生き様変更後、信用超過、スミ最大体力、カテゴリ削除確認をdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`で確認した。
+- actual確認: `test-results/visual/character-sheet/sections/` の6状態各3枚と、`test-results/visual/character-sheet/dialogs/` の削除確認3枚を原寸で開いた。desktop / tabletの追加buttonは4列、mobileは2列で表示され、warning frame、warning icon、生き様変更後の順序、信用超過error、スミの最大体力、削除確認dialogの配置を確認した。
+- 結果: canonical baseline 21枚を追加し、更新後のtarget比較は21件すべて通過した。tooltipは既存Component / browser behavior testで対象とし、個別tooltip snapshotは追加していない。
 
 ## 備考
 

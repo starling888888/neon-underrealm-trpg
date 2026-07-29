@@ -43,6 +43,7 @@ async function openArmorPicker(page: Page): Promise<void> {
 }
 
 async function openOmamoriPicker(page: Page): Promise<void> {
+  await addSpecialItemCategory(page, "お守り");
   const section = page.getByRole("region", { exact: true, name: "お守り" });
   await section
     .getByRole("button", { exact: true, name: "＋ お守りを追加" })
@@ -65,6 +66,7 @@ async function selectOmamori(page: Page): Promise<void> {
 }
 
 async function openCyberneticsPicker(page: Page): Promise<void> {
+  await addSpecialItemCategory(page, "サイバネ");
   await cyberneticsSection
     .resolve(page)
     .getByRole("button", { exact: true, name: "頭：サイバネを選択" })
@@ -84,6 +86,7 @@ async function selectCybernetic(page: Page): Promise<void> {
 }
 
 async function openNanomachinePicker(page: Page): Promise<void> {
+  await addSpecialItemCategory(page, "ナノマシン");
   await nanomachinesSection
     .resolve(page)
     .getByRole("button", { exact: true, name: "頭：ナノマシンを選択" })
@@ -101,6 +104,7 @@ async function selectNanomachine(page: Page): Promise<void> {
 }
 
 async function openDrugsPicker(page: Page, row = 1): Promise<void> {
+  await addSpecialItemCategory(page, "ドラッグ");
   await drugsSection
     .resolve(page)
     .getByRole("button", {
@@ -131,9 +135,26 @@ async function selectOption(locator: Locator, value: string): Promise<void> {
   }).toPass();
 }
 
+async function addSpecialItemCategory(page: Page, name: string): Promise<void> {
+  const button = page.getByRole("button", {
+    exact: true,
+    name: `${name}を追加`,
+  });
+  if (await button.isVisible()) {
+    await button.click();
+  }
+}
+
 async function selectPrimaryRyugi(page: Page): Promise<void> {
   const primaryRyugi = page.locator("[data-build-section] select").first();
   await selectOption(primaryRyugi, "kenkaya");
+}
+
+async function selectSumi(page: Page): Promise<void> {
+  await selectOption(
+    page.locator("[data-build-section] select").nth(1),
+    "sumi",
+  );
 }
 
 async function openPrimarySkillPicker(page: Page): Promise<void> {
@@ -247,6 +268,9 @@ const dialog = (name: string) => ({
 
 const profileSection = section('[data-character-sheet-section-slot="profile"]');
 const buildSection = section('[data-character-sheet-section-slot="build"]');
+const secondaryAttributesSection = section(
+  '[data-character-sheet-section-slot="secondary"]',
+);
 const bondsSection = sectionFrame("縁");
 const combatSection = sectionFrame("判定");
 const skillsSection = sectionFrame("スキル");
@@ -469,6 +493,7 @@ registerCharacterSheetVrtScenarios([
     id: "omamori-default",
     kind: "section",
     locator: omamoriSection,
+    prepare: (page) => addSpecialItemCategory(page, "お守り"),
     route: visualRoutes.characterSheet,
   },
   {
@@ -498,6 +523,7 @@ registerCharacterSheetVrtScenarios([
     id: "cybernetics-default",
     kind: "section",
     locator: cyberneticsSection,
+    prepare: (page) => addSpecialItemCategory(page, "サイバネ"),
     route: visualRoutes.characterSheet,
   },
   {
@@ -525,6 +551,7 @@ registerCharacterSheetVrtScenarios([
     id: "nanomachines-default",
     kind: "section",
     locator: nanomachinesSection,
+    prepare: (page) => addSpecialItemCategory(page, "ナノマシン"),
     route: visualRoutes.characterSheet,
   },
   {
@@ -572,6 +599,7 @@ registerCharacterSheetVrtScenarios([
     id: "drugs-default",
     kind: "section",
     locator: drugsSection,
+    prepare: (page) => addSpecialItemCategory(page, "ドラッグ"),
     route: visualRoutes.characterSheet,
   },
   {
@@ -607,6 +635,79 @@ registerCharacterSheetVrtScenarios([
     id: "special-items-overview",
     kind: "section",
     locator: specialItemsSection,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "g22-special-items-unselected",
+    kind: "section",
+    locator: specialItemsSection,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "g22-special-items-sumi-exclusive",
+    kind: "section",
+    locator: specialItemsSection,
+    prepare: selectSumi,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "g22-special-items-warning",
+    kind: "section",
+    locator: specialItemsSection,
+    prepare: async (page) => {
+      await selectSumi(page);
+      await addSpecialItemCategory(page, "お守り");
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "g22-special-items-ikizama-changed",
+    kind: "section",
+    locator: specialItemsSection,
+    prepare: async (page) => {
+      await addSpecialItemCategory(page, "お守り");
+      await selectSumi(page);
+      await selectOption(
+        page.locator("[data-build-section] select").nth(1),
+        "burai",
+      );
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "g22-credit-overage",
+    kind: "section",
+    locator: profileSection,
+    prepare: async (page) => {
+      await page.getByLabel("取得信用", { exact: true }).fill("0");
+      await selectOmamori(page);
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "g22-sumi-maximum-health",
+    kind: "section",
+    locator: secondaryAttributesSection,
+    prepare: async (page) => {
+      await selectPrimaryRyugi(page);
+      await selectSumi(page);
+      await selectNanomachine(page);
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "g22-special-items-remove-confirm",
+    kind: "dialog",
+    locator: dialog("お守りカテゴリを削除"),
+    prepare: async (page) => {
+      await selectOmamori(page);
+      await page
+        .getByRole("button", { exact: true, name: "お守りカテゴリを削除" })
+        .click();
+      await expect(
+        page.getByRole("dialog", { name: "お守りカテゴリを削除" }),
+      ).toBeVisible();
+    },
     route: visualRoutes.characterSheet,
   },
   {
