@@ -701,4 +701,64 @@ test.describe("character sheet page", () => {
       page.getByLabel("脅迫の判定修正", { exact: true }),
     ).toHaveValue("0");
   });
+
+  test("selects, expands, clears, and dismisses the fixed nanomachine rows", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.mobile);
+    await page.goto("character-sheet/");
+
+    const nanomachines = page.locator("[data-nanomachines-section]");
+    const picker = page.getByRole("dialog", {
+      exact: true,
+      name: "ナノマシンを選択",
+    });
+    const headPicker = nanomachines.getByRole("button", {
+      exact: true,
+      name: "頭：ナノマシンを選択",
+    });
+
+    await headPicker.click();
+    await expect(picker).toBeVisible();
+    await picker.getByRole("button", { exact: true, name: "マシラ" }).click();
+    await expect(picker).toBeHidden();
+
+    const selectedHead = nanomachines.getByRole("button", {
+      exact: true,
+      name: "頭：マシラ",
+    });
+    await expect(selectedHead).toBeVisible();
+    await nanomachines
+      .getByRole("button", { exact: true, name: "頭：マシラ効果を開く" })
+      .click();
+    await expect(
+      nanomachines.getByText("効果：武器化。筋力+1。", { exact: true }),
+    ).toBeVisible();
+
+    await nanomachines
+      .getByRole("button", { exact: true, name: "頭：マシラをクリア" })
+      .click();
+    await expect(headPicker).toBeVisible();
+
+    await headPicker.click();
+    await expect(picker).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(picker).toBeHidden();
+    await expect(headPicker).toBeFocused();
+
+    await headPicker.click();
+    await picker.getByRole("button", { exact: true, name: "マシラ" }).click();
+    await page
+      .locator("[data-build-section] select")
+      .first()
+      .selectOption("kenkaya");
+    await page
+      .locator("[data-build-section] select")
+      .nth(1)
+      .selectOption("burai");
+    await nanomachines
+      .getByLabel("埋め込み点数合計の修正", { exact: true })
+      .fill("20");
+    await expect(nanomachines.locator('[aria-invalid="true"]')).toHaveCount(1);
+  });
 });

@@ -9,6 +9,6 @@ export default defineConfig({
   webServer: {
     command: "npm run preview",
     url: visualBaseUrl,
-    reuseExistingServer: false,
+    reuseExistingServer: true,
   },
 });

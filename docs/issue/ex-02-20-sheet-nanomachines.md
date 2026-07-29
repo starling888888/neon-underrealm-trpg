@@ -53,7 +53,7 @@
 - 選択中ナノマシンの`activationMentalCost`を最大体力へ反映する生き様との接続は実装しない。G22で、カテゴリ統合とともに扱う。
 - サイバネ、ドラッグ、お守り、武器・防具の個別UI・業務条件を変更しない。共通clear / delete CSSはG19引継ぎ済みのものを利用し、新たな共通化は行わない。
 - G25のエラー全件集約、G24以降のlocalStorage、IndexedDB、JSON、CCFOLIA、サーバー、DB、カテゴリ操作、confirmation dialog、UI libraryを追加しない。
-- canonical VRT baselineの更新・追加・再設計を行わない。baseline更新はユーザー明示承認がある場合だけの別判断とする。
+- 2026-07-29にユーザーが明示承認した対象限定VRT実装とcanonical baseline更新以外のbaseline再設計を行わない。
 - `docs/plan.md`のチェックボックスを変更しない。初期スコープ外の項目は`docs/out-of-scope.md`に従う。
 
 ## アーキテクチャ適用
@@ -70,22 +70,22 @@
 
 ## 完了条件
 
-- [ ] ナノマシンカテゴリが初期表示され、頭・胴体・腕・足の固定4行だけを、追加・削除なしで表示・クリアできる。
-- [ ] 各行が部位、tooltip付き名称、信用、`埋め込み`／`点数`、`発動`／`精神力`、展開、クリアをdesktop / tablet / mobileで横overflowなく表示する。
-- [ ] 名称選択、効果展開、クリア、候補dialogのEscape・閉じる・選択後のfocus復帰がkeyboard操作を含めアクセシブルに動作する。
-- [ ] 埋め込み点数合計・上限のpair expression、二つの修正入力、上限超過時の最終合計だけのerror状態がpure logicと表示で一致する。上限の基礎値が常時肉体である。
-- [ ] 候補dialogが名称、信用、埋め込み点数、発動精神力のheaderと、候補ごとの効果2行目・重複選択許可を満たす。
+- [x] ナノマシンカテゴリが初期表示され、頭・胴体・腕・足の固定4行だけを、追加・削除なしで表示・クリアできる。
+- [x] 各行が部位、tooltip付き名称、信用、`埋め込み`／`点数`、`発動`／`精神力`、展開、クリアをdesktop / tablet / mobileで横overflowなく表示する。
+- [x] 名称選択、効果展開、クリア、候補dialogのEscape・閉じる・選択後のfocus復帰がkeyboard操作を含めアクセシブルに動作する。
+- [x] 埋め込み点数合計・上限のpair expression、二つの修正入力、上限超過時の最終合計だけのerror状態がpure logicと表示で一致する。上限の基礎値が常時肉体である。
+- [x] 候補dialogが名称、信用、埋め込み点数、発動精神力のheaderと、候補ごとの効果2行目・重複選択許可を満たす。
 - [x] `docs/requirements/character-sheet.md`がこのissueのナノマシン集計契約へ整合している。
-- [ ] 関連TODOを扱わない理由と、`docs/design/character-sheet/notes.md`、`.tmp/design/character-sheet/`、VRT baselineを更新しない扱いが記録されている。
+- [x] 関連TODOを扱わない理由と、`docs/design/character-sheet/notes.md`、`.tmp/design/character-sheet/`、ユーザー承認済みの対象限定VRT baseline更新が記録されている。
 - [x] `npm run build` が通る。
 - [x] 必要な`npm run check`、対象Node / hook / Component testが通る。
 
 ## チェックポイント
 
-- [ ] `docs/architectures/character-sheet.md`に従い、pure logic、form adapter、Presenter、Container、Componentの所有境界を越えていない。
+- [x] `docs/architectures/character-sheet.md`に従い、pure logic、form adapter、Presenter、Container、Componentの所有境界を越えていない。
 - [x] `/character-sheet/`の既存ルート、既存special-item category、GitHub Pagesのサブパス公開に影響しない。
-- [ ] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、default、選択済み、効果展開、名称tooltip、集計tooltip、候補dialog、上限超過errorを確認する。
-- [ ] ユーザーレビュー完了後にだけ対象E2Eと`@character-sheet`限定VRTを実行し、各actual screenshotを開いて確認する。canonical baselineは更新しない。
+- [x] desktop `1440x1200`、tablet `820x1180`、mobile `390x900`で、default、選択済み、効果展開、名称tooltip、集計tooltip、候補dialog、上限超過errorを確認する。
+- [x] ユーザーレビュー完了後にだけ対象E2Eと`@character-sheet`限定VRTを実行し、各actual screenshotを開いて確認する。2026-07-29の明示承認に従い、ナノマシン対象のcanonical baselineを更新する。
 - [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`および`docs/design/`と矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。
@@ -120,9 +120,54 @@
 - サイバネと同じ二つの修正を持つpair expressionで、上限の基礎値だけを常時肉体へ変える判断が正しいか。
 - 候補dialogで効果を2行目に置く構成が要件どおりか。
 - G22に残すカテゴリ表示連動・追加削除・警告・信用集計を、このGateへ混ぜていないか。
-- canonical VRT baselineを更新せず、ユーザーレビュー後の対象限定VRTとactual screenshot確認だけを行う扱いが適切か。
+- ユーザー承認済みのナノマシン対象canonical VRT baseline更新とactual screenshot確認が、既存`@character-sheet`契約と整合するか。
 
 ## 備考
 
 - G19の引継ぎに従い、埋め込み上限超過はカテゴリ全体ではなく集計の最終値だけをerror状態にする。G19で導入済みの共通clear / delete button CSSを踏襲する。
 - G20の実装後、親Gate planには固定4行、サイバネと共通の集計境界、常時肉体を使う上限、dialogのfocus復帰、VRTの確定事項だけを引き継ぐ。最大体力への反映はG22の未着手事項として残す。実装経緯やレビュー出力は戻さない。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`、`@character-sheet.*nanomachines`
+- route / states / viewports: `/character-sheet/`のdefault、名称tooltip、集計tooltip、選択済み、効果展開、上限超過、候補dialogをdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`で確認した。
+
+### レビュー結果
+
+| 対象                          | 判定 | 差分                                | 対応                                                            |
+| ----------------------------- | ---- | ----------------------------------- | --------------------------------------------------------------- |
+| ナノマシンsection・候補dialog | OK   | 新規21 snapshot                     | ユーザー明示承認によりlocal canonical baselineを更新した。      |
+| character-sheet full-page     | OK   | ナノマシンsection追加による高さ増加 | `@character-sheet` targetのlocal canonical baselineを更新した。 |
+
+### 実画面確認
+
+- `/character-sheet/`のdefault、名称tooltip、集計tooltip、選択済み、効果展開、上限超過、候補dialogのdesktop / tablet / mobile:
+  - full-page overview: defaultとtooltip代表のlayout差分だけを確認した。
+  - locator screenshot: `[data-nanomachines-section]`、`dialog[aria-labelledby]`、FormulaTooltipをoriginal pixel resolutionで確認した。
+  - checked acceptance criteria: 固定4行、列順と改行、横overflowなし、効果展開、最終値だけのerror、候補dialogのheader・効果行・header非区切り線・均一な縦線、dialogの到達性。
+  - result: 21状態すべてで一致した。
+
+- environment note: 15 stateとtooltip 6 stateはそれぞれ通常比較・captureまで成功した。一括21 stateの最終再実行だけは、Chromiumの`shutdown: Operation not permitted`でbrowser起動前に失敗した。fixture・snapshot比較に到達していない環境障害であり、`docs/agent-failure-log.md`へ記録した。
+
+### 自己修正した項目
+
+- [x] 上限超過stateでは流儀と生き様を選択して常時肉体を確定するよう、E2E / VRTのfixtureを補正した。
+
+### 人間判断が必要な差分
+
+- なし。baseline更新はユーザーが明示承認済みであり、canonical snapshotはparent Gate planに従いGit管理しないlocal artifactとして保持する。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（該当する場合）

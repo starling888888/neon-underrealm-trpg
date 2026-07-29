@@ -83,6 +83,34 @@ async function selectCybernetic(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
+async function openNanomachinePicker(page: Page): Promise<void> {
+  await nanomachinesSection
+    .resolve(page)
+    .getByRole("button", { exact: true, name: "頭：ナノマシンを選択" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "ナノマシンを選択" }),
+  ).toBeVisible();
+}
+
+async function selectNanomachine(page: Page): Promise<void> {
+  await openNanomachinePicker(page);
+  const picker = page.getByRole("dialog", { name: "ナノマシンを選択" });
+  await picker.getByRole("button", { exact: true, name: "マシラ" }).click();
+  await expect(picker).toBeHidden();
+}
+
+async function openNanomachinesTooltip(
+  page: Page,
+  label: "名称" | "埋め込み点数合計／埋め込み上限",
+): Promise<void> {
+  await nanomachinesSection
+    .resolve(page)
+    .getByRole("button", { exact: true, name: label })
+    .hover();
+  await expect(page.getByRole("tooltip")).toBeVisible();
+}
+
 async function selectOption(locator: Locator, value: string): Promise<void> {
   await expect(async () => {
     await locator.selectOption(value);
@@ -234,6 +262,10 @@ const omamoriSection = section('[data-special-item-category="omamori"]');
 const cyberneticsSection = section(
   '[data-special-item-category="cybernetics"]',
 );
+const nanomachinesSection = section("[data-nanomachines-section]");
+const nanomachinesTooltip = {
+  resolve: (page: Page) => page.getByRole("tooltip"),
+};
 
 registerCharacterSheetVrtScenarios([
   {
@@ -479,6 +511,68 @@ registerCharacterSheetVrtScenarios([
     route: visualRoutes.characterSheet,
   },
   {
+    id: "nanomachines-default",
+    kind: "section",
+    locator: nanomachinesSection,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "nanomachines-name-tooltip",
+    kind: "tooltip",
+    locator: nanomachinesTooltip,
+    prepare: (page) => openNanomachinesTooltip(page, "名称"),
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "nanomachines-summary-tooltip",
+    kind: "tooltip",
+    locator: nanomachinesTooltip,
+    prepare: (page) =>
+      openNanomachinesTooltip(page, "埋め込み点数合計／埋め込み上限"),
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "nanomachines-input",
+    kind: "section",
+    locator: nanomachinesSection,
+    prepare: selectNanomachine,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "nanomachines-expanded",
+    kind: "section",
+    locator: nanomachinesSection,
+    prepare: async (page) => {
+      await selectNanomachine(page);
+      await nanomachinesSection
+        .resolve(page)
+        .getByRole("button", {
+          exact: true,
+          name: "頭：マシラ効果を開く",
+        })
+        .click();
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "nanomachines-error",
+    kind: "section",
+    locator: nanomachinesSection,
+    prepare: async (page) => {
+      await selectPrimaryRyugi(page);
+      await selectOption(
+        page.locator("[data-build-section] select").nth(1),
+        "burai",
+      );
+      await selectNanomachine(page);
+      await nanomachinesSection
+        .resolve(page)
+        .getByLabel("埋め込み点数合計の修正", { exact: true })
+        .fill("20");
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
     id: "special-items-overview",
     kind: "section",
     locator: specialItemsSection,
@@ -510,6 +604,13 @@ registerCharacterSheetVrtScenarios([
     kind: "dialog",
     locator: dialog("サイバネを選択"),
     prepare: openCyberneticsPicker,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "nanomachines-picker",
+    kind: "dialog",
+    locator: dialog("ナノマシンを選択"),
+    prepare: openNanomachinePicker,
     route: visualRoutes.characterSheet,
   },
   {

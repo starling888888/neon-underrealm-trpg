@@ -129,6 +129,16 @@ source種別は以下を使う。
 - 観測した失敗: desktop／mobileのpair表示を追加した後、同じaria-labelを持つ修正inputが二組描画されることを考慮せず、単一要素queryのまま実行してtestを失敗させた。
 - 一次対応: 既存の武器・防具と同じresponsive DOMであることを確認し、testではdesktop側のinputを明示して操作するよう更新した。responsive UIのtestでは、CSSで非表示になる要素もDOM上は重複する前提でselectorを設計する。
 
+### Repeated Chromium sandbox launch failures while adding G20 tooltip VRT
+
+#### 2026-07-29
+
+- source: self
+- failure category: repeated Playwright environment failure
+- 発生箇所: `ex-02-20-sheet-nanomachines` のtooltip VRT 6 state
+- 観測した失敗: 同じtarget限定VRT command内でChromiumが6回連続して`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出し、browser contextを起動できなかった。テストfixtureやsnapshot比較に到達していない。
+- 一次対応: 既存の成功済みナノマシン15 state、E2E、baseline更新とは区別してissueへ未確認範囲を残した。preview serverを維持した直接の`visual:update`再試行ではChromiumが起動し、6 stateのbaseline作成・通常比較・captureを完了した。その後の21 state一括比較では同じ環境障害が再発したため、成功済みの15 stateと6 stateの個別比較結果を保持し、一括再試行はここで停止した。環境起因の発生自体は残し、恒久対応の要否はユーザー確認後に判断する。
+
 ### Reintroduced the known armor clear-button border cascade defect
 
 #### 2026-07-29
