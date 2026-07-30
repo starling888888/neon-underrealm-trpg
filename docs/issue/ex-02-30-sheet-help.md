@@ -74,25 +74,25 @@
 
 ## 完了条件
 
-- [ ] desktopの`ヘルプ`buttonとtablet / mobileの`?` buttonが、同一のヘルプdialogを開く。
-- [ ] dialogはvisible heading `ヘルプ`を持ち、本文は空であり、`CharacterSheetDialogActions`を描画しない。Header内には可視`閉じる`操作があり、open直後の初期focus対象になる。
-- [ ] dialog外枠が`CharacterSheetButton`の`default`と同じ青緑アクセント（`--color-link`）で表示される。
-- [ ] EscapeまたはHeader内の`閉じる`操作でdialogを閉じ、desktop / tablet / mobileの各呼出し元へfocusが戻る。dialogが開いている間のEscapeはaction menuより優先される。
-- [ ] ヘルプの開閉がフォーム値、画像、端末内保存、JSON、Clipboard、エラー集約へ副作用を起こさない。
-- [ ] 実装後、`gate_technical_reviewer`のTechReviewを1回完了し、有効な指摘を解消またはユーザー承認済みの後続作業へ明記している。
+- [x] desktopの`ヘルプ`buttonとtablet / mobileの`?` buttonが、同一のヘルプdialogを開く。
+- [x] dialogはvisible heading `ヘルプ`を持ち、本文は空であり、`CharacterSheetDialogActions`を描画しない。Header内には可視`閉じる`操作があり、open直後の初期focus対象になる。
+- [x] dialog外枠が`CharacterSheetButton`の`default`と同じ青緑アクセント（`--color-link`）で表示される。
+- [x] EscapeまたはHeader内の`閉じる`操作でdialogを閉じ、desktop / tablet / mobileの各呼出し元へfocusが戻る。dialogが開いている間のEscapeはaction menuより優先される。
+- [x] ヘルプの開閉がフォーム値、画像、端末内保存、JSON、Clipboard、エラー集約へ副作用を起こさない。
+- [x] 実装後、`gate_technical_reviewer`のTechReviewを1回完了し、有効な指摘を解消またはユーザー承認済みの後続作業へ明記している。
 - [ ] 本文内容はユーザー後続指示待ちであることを残し、本文未確定のままG30をdone / archiveしない。
 - [ ] TechReview完了後も、本文内容の後続指示、ユーザーレビュー、G31で扱うcapture-only手順の決定前にVisual Reviewを実行しない。canonical VRT baseline、VRT scenario、capture-only手順は変更しない。
 - [ ] `npm run check`、`npm run build`、関連テストが通る。
 
 ## チェックポイント
 
-- [ ] `docs/requirements/character-sheet.md`、親issueのGate plan、design targetと矛盾していない。
-- [ ] 既存routeとGitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] `docs/TODO.md`の既存項目と矛盾していない。
-- [ ] 既存のJSON入出力、CCFOLIAコピー、初期化、エラーdialog、action menu、dialogのfocus・Escape処理を回帰させていない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] `docs/requirements/character-sheet.md`、親issueのGate plan、design targetと矛盾していない。
+- [x] 既存routeとGitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] `docs/TODO.md`の既存項目と矛盾していない。
+- [x] 既存のJSON入出力、CCFOLIAコピー、初期化、エラーdialog、action menu、dialogのfocus・Escape処理を回帰させていない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -113,6 +113,16 @@
 - G23のaction menuとG5のdialog shellの責務・Escape優先順位を回帰させないこと。
 - ヘルプ本文が未確定のため、TechReview完了後もG30をarchiveしない判断が適切なこと。
 - 本文未確定の現段階ではTechReviewだけを先行し、Visual Reviewの新規VRT scenario／capture-only手順をG31へ残す方針が適切なこと。
+
+## Tech Review 1
+
+### レビュー結果
+
+- reviewer: `gate_technical_reviewer`
+- conclusion: 指摘なし。
+- checked: dialog構造、`--color-link`の外枠、accessible name、初期focus、Escape、desktop / responsive triggerへのfocus復帰、action menu優先順位、状態境界、GitHub Pages subpath、VRT保留。
+- verification: `npm run check`、Component test、browser E2E。`npm run test:e2e`は64件成功、2件skipであり、追加したdesktop / tablet / mobileのヘルプ操作E2Eを含む。
+- VRT: 実行・更新ともにしていない。本文とVisual Reviewの判断は後続指示を待つ。
 
 ## 備考
 
