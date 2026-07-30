@@ -1,6 +1,6 @@
 {
   "dataName": "items",
-  "updatedAt": "2026-07-30T22:44:02+09:00",
+  "updatedAt": "2026-07-30T22:45:34+09:00",
   "data": {
     "weapons": {
       "normal": {
@@ -9,11 +9,11 @@
             "id": "item-weapon-normal-kenka-f7bff9ed8550",
             "group": "normal",
             "name": "刀",
-            "credit": 4,
+            "credit": 3,
             "range": 0,
             "kind": "近接",
             "check": "喧嘩",
-            "attack": 20,
+            "attack": 19,
             "guard": 5,
             "ammo": null,
             "effect": null,
