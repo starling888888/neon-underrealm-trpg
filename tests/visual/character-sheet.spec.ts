@@ -20,6 +20,48 @@ async function addSpecialItemCategory(page: Page, name: string): Promise<void> {
 }
 
 test.describe("character sheet page", () => {
+  test("keeps action mocks side-effect free and opens the responsive menu", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+
+    const pcName = page.getByLabel("PC名", { exact: true });
+    await pcName.fill("テストPC");
+    await expect(
+      page.getByRole("region", { name: "キャラクターシートの操作" }),
+    ).toContainText("エラーはありません。");
+
+    for (const name of [
+      "ヘルプ",
+      "エクスポート",
+      "インポート",
+      "CCFOLIAコピー",
+      "初期化",
+      "確認",
+    ]) {
+      await page.getByRole("button", { exact: true, name }).click();
+    }
+    await expect(pcName).toHaveValue("テストPC");
+
+    for (const viewport of [visualViewports.tablet, visualViewports.mobile]) {
+      await page.setViewportSize(viewport);
+      await expect(page.getByRole("button", { name: "ヘルプ" })).toBeVisible();
+      const trigger = page.getByRole("button", { name: "操作メニューを開く" });
+      await trigger.click();
+      const menu = page.getByRole("region", {
+        name: "キャラクターシートの操作メニュー",
+      });
+      await expect(menu).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: "操作メニューを閉じる" }),
+      ).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(menu).toBeHidden();
+      await expect(trigger).toBeFocused();
+    }
+  });
+
   test("selects a primary skill and confirms a primary ryugi change", async ({
     page,
   }) => {
@@ -289,7 +331,7 @@ test.describe("character sheet page", () => {
     );
     await expect(page.getByRole("heading", { level: 1 })).toHaveCSS(
       "margin-bottom",
-      "12px",
+      "0px",
     );
   });
 

@@ -269,6 +269,13 @@ async function selectOtherRyugiSkill(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
+async function openActionMenu(page: Page): Promise<void> {
+  await page.getByRole("button", { name: "操作メニューを開く" }).click();
+  await expect(
+    page.getByRole("region", { name: "キャラクターシートの操作メニュー" }),
+  ).toBeVisible();
+}
+
 const section = (selector: string) => ({
   resolve: (page: Page) => page.locator(selector),
 });
@@ -315,6 +322,12 @@ const cyberneticsSection = section(
 );
 const nanomachinesSection = section("[data-nanomachines-section]");
 const drugsSection = section('[data-special-item-category="drugs"]');
+const actionPane = section('[aria-label="キャラクターシートの操作"]');
+const actionControls = section("[data-character-sheet-action-controls]");
+const actionMenu = {
+  resolve: (page: Page) =>
+    page.getByRole("region", { name: "キャラクターシートの操作メニュー" }),
+};
 
 registerCharacterSheetVrtScenarios([
   {
@@ -327,6 +340,28 @@ registerCharacterSheetVrtScenarios([
     kind: "full-page",
     prepare: (page) => openTooltip(page, "合計信用"),
     route: visualRoutes.characterSheet,
+  },
+  {
+    id: "action-pane-desktop",
+    kind: "section",
+    locator: actionPane,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop"],
+  },
+  {
+    id: "action-controls",
+    kind: "section",
+    locator: actionControls,
+    route: visualRoutes.characterSheet,
+    viewports: ["tablet", "mobile"],
+  },
+  {
+    id: "action-menu-open",
+    kind: "section",
+    locator: actionMenu,
+    prepare: openActionMenu,
+    route: visualRoutes.characterSheet,
+    viewports: ["tablet", "mobile"],
   },
   {
     id: "profile-default",

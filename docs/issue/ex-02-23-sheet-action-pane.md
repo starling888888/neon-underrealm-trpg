@@ -34,12 +34,12 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 
 ## 実装時のアーキテクチャ遵守
 
-| 適用するarchitecture節                                     | 許可する変更                                                                                                                                                                                                                                                                                                                                                                                                                                                        | 禁止する変更                                                                                                                                                                                                                                                                                                                                                           | 確認するテスト層                |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| `Container / Presenterの責務`                              | `CharacterSheetContainer`でmenuの開閉、trigger ref、focus復帰を保持し、Presenter / `CharacterSheetActionPane`へ表示propsとcallbackを渡す。                                                                                                                                                                                                                                                                                                                          | ActionPane、Presenter、leaf ComponentからRHF、保存、Clipboard、ファイル、JSON APIへ直接アクセスすること。root横断状態を別storeやPresenterへ複製すること。                                                                                                                                                                                                              | Component                       |
-| `状態と派生値の境界`                                       | menuの開閉とfocus復帰だけを永続化しないIsland UI stateとして扱う。空のエラー表示領域は集約済みerror dataを受け取らない。                                                                                                                                                                                                                                                                                                                                            | UI stateをRHF値、schema、保存データ、JSONへ含めること。error件数・一覧・button色を派生すること。                                                                                                                                                                                                                                                                       | Component                       |
-| `HTML / CSSの構造と責務`（responsive contractを含む）      | Island内のheading、desktop操作列とエラー集約の空表示、ActionPaneのresponsive表示・floating操作を、このGateのComponent / CSS Moduleで所有する。通常の文言付きbuttonは`CharacterSheetButton`とそのCSS Moduleで所有し、各section / dialogのCSSは配置だけを持つ。desktop / tablet / mobileの表示切替とbreakpointはPresenter / CSSの同一契約として扱う。`CharacterSheetFormPresenter`の既存共有styleと`CharacterSheetSectionFrameBase`は責務が一致する範囲で再利用する。 | 既存form sectionの入力・validation・layoutを変更すること。global selector、親要素依存、site共通Header / layoutへのキャラクターシート専用分岐を追加すること。親regionのmin-widthやoverflowを上書きすること。picker、開閉、並べ替え、frame見出し、削除 / clear icon actionを、見た目だけの理由で通常buttonへ置き換えること。`FormulaTooltip`のAPI・styleを変更すること。 | Component                       |
-| `テストアーキテクチャ` / `Character-sheet E2E / VRTの境界` | Component testで表示、accessible name、menu開閉、Escape、focus復帰を確認する。ユーザー指示によりbrowser E2EとVRTのspecはこのGateで追加・更新しない。                                                                                                                                                                                                                                                                                                                | Component testへbrowser viewportを持ち込むこと。VRTをfocus復帰・副作用の検証に使うこと。ユーザーレビュー完了前にE2E / VRTを実行すること。                                                                                                                                                                                                                              | Component（ユーザーレビュー前） |
+| 適用するarchitecture節                                     | 許可する変更                                                                                                                                                                                                                                                                                                                                                                                                                                                        | 禁止する変更                                                                                                                                                                                                                                                                                                                                                           | 確認するテスト層                     |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `Container / Presenterの責務`                              | `CharacterSheetContainer`でmenuの開閉、trigger ref、focus復帰を保持し、Presenter / `CharacterSheetActionPane`へ表示propsとcallbackを渡す。                                                                                                                                                                                                                                                                                                                          | ActionPane、Presenter、leaf ComponentからRHF、保存、Clipboard、ファイル、JSON APIへ直接アクセスすること。root横断状態を別storeやPresenterへ複製すること。                                                                                                                                                                                                              | Component                            |
+| `状態と派生値の境界`                                       | menuの開閉とfocus復帰だけを永続化しないIsland UI stateとして扱う。空のエラー表示領域は集約済みerror dataを受け取らない。                                                                                                                                                                                                                                                                                                                                            | UI stateをRHF値、schema、保存データ、JSONへ含めること。error件数・一覧・button色を派生すること。                                                                                                                                                                                                                                                                       | Component                            |
+| `HTML / CSSの構造と責務`（responsive contractを含む）      | Island内のheading、desktop操作列とエラー集約の空表示、ActionPaneのresponsive表示・floating操作を、このGateのComponent / CSS Moduleで所有する。通常の文言付きbuttonは`CharacterSheetButton`とそのCSS Moduleで所有し、各section / dialogのCSSは配置だけを持つ。desktop / tablet / mobileの表示切替とbreakpointはPresenter / CSSの同一契約として扱う。`CharacterSheetFormPresenter`の既存共有styleと`CharacterSheetSectionFrameBase`は責務が一致する範囲で再利用する。 | 既存form sectionの入力・validation・layoutを変更すること。global selector、親要素依存、site共通Header / layoutへのキャラクターシート専用分岐を追加すること。親regionのmin-widthやoverflowを上書きすること。picker、開閉、並べ替え、frame見出し、削除 / clear icon actionを、見た目だけの理由で通常buttonへ置き換えること。`FormulaTooltip`のAPI・styleを変更すること。 | Component                            |
+| `テストアーキテクチャ` / `Character-sheet E2E / VRTの境界` | Component testで表示、accessible name、menu開閉、Escape、focus復帰を確認する。browser E2Eでdesktopのモック操作の無副作用とtablet / mobileのmenu開閉を確認する。VRTで操作ペインのdesktop、tablet、mobile状態を追加し、既存の`@character-sheet` full-page、section、dialogのcanonical baselineをユーザー承認済みの現行画面へ更新する。                                                                                                                                | Component testへbrowser viewportを持ち込むこと。VRTをfocus復帰・副作用の検証に使うこと。未承認でcanonical baselineを更新すること。                                                                                                                                                                                                                                     | Component / browser E2E / target VRT |
 
 ## 対象範囲
 
@@ -64,7 +64,7 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
   - エラー表示領域は領域・見出し・読み上げ可能な空状態`エラーはありません。`を持つが、既存sectionのerrorを収集、件数化、列挙、メニューbuttonの色へ反映しない。
 - tablet / mobileのフォーム末尾へ、floating操作を避けるためだけの追加bottom paddingは入れない。Footerがある通常のページ余白を維持する。
 - 操作領域の状態、menu trigger、focus復帰をIslandのContainerで保持し、RHF、保存対象、JSON対象へ含めない。
-- desktop `1440x1200`、tablet `820x1180`、mobile `390x900`の操作領域をComponent testの表示・操作契約として実装する。ユーザー指示によりbrowser E2E、VRT、actual screenshot確認とcanonical baselineの更新はこのGateで実施しない。Component test、`npm run build`、必要な`npm run check`の後に既定portのdev serverを起動し、ユーザーレビューを待つ。
+- desktop `1440x1200`、tablet `820x1180`、mobile `390x900`の操作領域をComponent test、browser E2E、VRTの表示・操作契約として実装する。ユーザー明示承認により、既定portのpreview serverで`@character-sheet` targetのactual screenshotを確認し、full-page、buttonを含むsection、dialog、操作ペインのcanonical baselineを更新する。
 
 ## 初期スコープ外
 
@@ -82,26 +82,28 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 - [x] `h1`と操作領域を同一React Islandで表示し、Astro側の見出しと重複しない。
 - [x] `CharacterSheetButton`が通常のReact button propsとrefを受け渡し、`color`の`undefined`をaccent colorの`default`へ、`variant`の`undefined`を`outline`へ、`size`の`undefined`を`small`へfallbackし、`className`をbase / variant classと合成する。`muted`、`danger`、`warning`、`default`の`outline` / `solid`以外と、`large`は追加しない。
 - [x] 既存の文言付き追加button、warningカテゴリ追加button、dialogの文言付きaction buttonが、表示・disabled・focus・既存のsection / dialog配置を保ったまま`CharacterSheetButton`を使う。
-- [ ] desktopで指定順の文言付き操作button、初期化だけのdanger color、固定幅のエラーstatus領域を表示する。
-- [ ] tablet / mobileでヘルプicon button、メニューbutton、開閉するモックmenu、4操作、空のエラー表示領域を表示する。
-- [ ] tablet / mobileでヘルプ・メニューbuttonを横並びにし、フォーム末尾へfloating操作用の追加bottom paddingを入れない。
+- [x] desktopで指定順の文言付き操作button、初期化だけのdanger color、固定幅のエラーstatus領域を表示する。
+- [x] tablet / mobileでヘルプicon button、メニューbutton、開閉するモックmenu、4操作、空のエラー表示領域を表示する。
+- [x] tablet / mobileでヘルプ・メニューbuttonを横並びにし、フォーム末尾へfloating操作用の追加bottom paddingを入れない。
 - [x] モック操作がフォーム値、画像、保存データ、Clipboard、JSONへ副作用を起こさない。
 - [x] menuの開閉、Escape、focus復帰、desktop / tablet / mobileのaccessible nameをComponent testで確認する。
-- [x] browser E2E、VRT、actual screenshot確認、canonical baselineの更新をこのGateでは実施しない。
+- [x] browser E2Eでdesktopのモック操作の無副作用とtablet / mobileのmenu開閉を確認する。
+- [x] VRTでdesktopの操作ペイン、tablet / mobileのfloating controls・開いたmenuを追加し、`@character-sheet`のfull-page、buttonを含むsection、dialogのcanonical baselineを更新する。
+- [x] target VRTのactual screenshotをdesktop、tablet、mobileの各追加状態で確認する。
 - [x] `npm run build` と必要な`npm run check`が通る。
 
 ## チェックポイント
 
 - [x] 既存の`/character-sheet/` routeとGitHub Pages subpath公開を壊していない。
-- [ ] desktop、tablet、mobileでheading、操作順、menuの表示領域、末尾操作の到達性、横overflowを確認する。
+- [x] desktop、tablet、mobileでheading、操作順、menuの表示領域、末尾操作の到達性、横overflowを確認する。
 - [x] 操作状態をRHFや永続化値へ混在させず、後続Gateが個別の副作用を接続できる責務境界を保つ。
 - [x] `CharacterSheetDialog`、`CharacterSheetButton`、既存の削除 / clear icon actionを責務が一致する範囲で再利用し、dialog / menu / 通常buttonの構造とstyleを重複実装しない。`FormulaTooltip`は変更前の契約へ戻す。
 - [x] `CharacterSheetButton`の呼出し側CSSが配置上書きだけを持ち、Component内部へ親selector、global class、要素selectorで依存していない。
 - [x] 不要な依存関係を追加していない。
 - [x] G25〜G30と関連する`docs/TODO.md`項目の範囲を先取りしていない。
-- [ ] `docs/design/character-sheet/notes.md`の操作領域・VRT境界と矛盾していない。
-- [x] E2E / VRTを追加・実行せず、既定portのdev serverを起動してユーザーレビューを待つ。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] `docs/design/character-sheet/notes.md`の操作領域・VRT境界と矛盾していない。
+- [x] 既定portのpreview serverでtarget E2E / VRTを実行し、baseline更新後の通常比較を通す。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -121,6 +123,9 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 - `tests/components/character-sheet/CharacterSheetButton.test.tsx`
 - `tests/components/character-sheet/CharacterSheetActionPane.test.tsx`
 - `tests/components/character-sheet/CharacterSheetContainer.test.tsx`
+- `tests/visual/character-sheet.spec.ts`
+- `tests/visual/vrt/character-sheet.spec.ts`
+- `docs/design/character-sheet/notes.md`
 
 ## レビュー観点
 
@@ -130,7 +135,8 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 - `color`、`variant`、`size`、`className`、通常button propsのfallback・透過契約が、`default`のaccent color、`muted`、`danger`、`warning`、`outline` / `solid`、small / mediumだけで後続Gateの操作buttonと既存の追加 / dialog actionを重複実装なしに扱えるか。
 - 空のエラー表示領域の読み上げと、未実装のエラー集約を誤認させない表示が適切か。
 - `h1`をIslandへ移すことで、見出し階層、ページSEO、Astroの静的shell、subpath公開を損なわないか。
-- ユーザー指示によりE2E / VRTを追加・実行せず、dev server上のユーザーレビューへ渡す境界を守れているか。
+- browser E2Eで、desktopの操作がモックのままフォーム値を変えず、tablet / mobileでmenuの開閉・Escape・focus復帰を保つか。
+- `@character-sheet`のfull-page、buttonを含むsection、dialogのcanonical baseline更新後に通常VRT比較が通るか。
 
 ## ユーザーレビュー指摘（2026-07-30）
 
@@ -140,6 +146,14 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 4. Footerがあるため、floating操作を避けるためだけのform末尾bottom paddingは追加しない。
 5. tablet / mobileのmenuはfloating操作列の直上に表示し、開いている間のmenu buttonは`×` iconへ切り替える。backdropによるdismissは不要とする。
 6. desktopのエラー領域は操作列の下へ増やさず、`初期化`の横に固定幅で置く。空状態は`エラーはありません。`、後続Gateで接続するエラー状態は`エラーがN件あります。`とし、smallの`確認` buttonを含める。
+7. 実装後はproduction buildと4321番portのpreview serverを使い、browser E2EとVRTを作成・実行する。今回変更の影響を受けるfull-page、buttonを表示する領域、dialogのcanonical baselineを更新する。
+
+## ビジュアルレビュー 1（2026-07-30）
+
+- 対象: `/character-sheet/`、desktop `1440x1200`、tablet `820x1180`、mobile `390x900`。
+- actual screenshot: full-page default 3 viewportと、`action-pane-desktop`、`action-controls`（tablet / mobile）、`action-menu-open`（tablet / mobile）をoriginal pixelで確認した。
+- 結果: desktopはheading横の操作列と固定幅のエラーstatusが1行に収まり、tablet / mobileは`?`とmenu buttonが横並びで、開いたmenuがcontrolsの直上に表示される。横overflow、Footerとの不自然な余白は確認されなかった。
+- canonical baseline: ユーザー承認により`@character-sheet`のfull-page、section、dialogを更新し、180件の通常VRT比較が通過した。local canonical snapshotは180枚である。
 
 ## 備考
 

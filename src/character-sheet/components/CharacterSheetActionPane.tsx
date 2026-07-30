@@ -48,7 +48,10 @@ export default function CharacterSheetActionPane({
         </div>
       </div>
 
-      <div className={styles.floatingActions}>
+      <div
+        className={styles.floatingActions}
+        data-character-sheet-action-controls
+      >
         <button
           aria-label={actions.help}
           className={styles.iconButton}
