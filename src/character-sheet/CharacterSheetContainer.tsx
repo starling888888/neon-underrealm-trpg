@@ -6,6 +6,7 @@ import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOver
 import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
+import CharacterSheetErrorDialog from "./components/dialogs/CharacterSheetErrorDialog";
 import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
 import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
 import DrugsPickerDialog from "./components/dialogs/DrugsPickerDialog";
@@ -42,6 +43,7 @@ import useCharacterSheetRootState from "./useCharacterSheetRootState";
 export default function CharacterSheetContainer() {
   const rootState = useCharacterSheetRootState();
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
+  const [isErrorSummaryOpen, setIsErrorSummaryOpen] = useState(false);
   const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
     string | null
   >(null);
@@ -93,6 +95,8 @@ export default function CharacterSheetContainer() {
   const otherRyugiAddButtonRef = useRef<HTMLButtonElement>(null);
   const specialItemCategoryRemoveTriggerRef = useRef<HTMLButtonElement>(null);
   const actionMenuTriggerRef = useRef<HTMLButtonElement>(null);
+  const errorSummaryCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const errorSummaryTriggerRef = useRef<HTMLButtonElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
@@ -368,9 +372,12 @@ export default function CharacterSheetContainer() {
         inert={rootState.isRootOperationInProgress || undefined}
       >
         <CharacterSheetActionPane
+          errorReviewButtonRef={errorSummaryTriggerRef}
+          errorSummary={presenterProps.errorSummary}
           isMenuOpen={isActionMenuOpen}
           menuTriggerRef={actionMenuTriggerRef}
           onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
+          onReviewErrors={() => setIsErrorSummaryOpen(true)}
         />
         <CharacterSheetFormPresenter {...presenterProps} />
         <CharacterImageErrorDialog
@@ -384,6 +391,13 @@ export default function CharacterSheetContainer() {
           isOpen={rootState.isFormRestoreErrorOpen}
           onRequestClose={() => rootState.setIsFormRestoreErrorOpen(false)}
           returnFocusRef={rootState.formRestoreReturnFocusRef}
+        />
+        <CharacterSheetErrorDialog
+          closeButtonRef={errorSummaryCloseButtonRef}
+          errorSummary={presenterProps.errorSummary}
+          isOpen={isErrorSummaryOpen}
+          onRequestClose={() => setIsErrorSummaryOpen(false)}
+          returnFocusRef={errorSummaryTriggerRef}
         />
         <PrimarySkillPickerDialog
           groups={presenterProps.primarySkillPicker.candidateGroups}

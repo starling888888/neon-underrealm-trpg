@@ -2,25 +2,33 @@ import { Menu, X } from "lucide-react";
 import type { RefObject } from "react";
 
 import { characterSheetDictionary } from "../dictionary";
+import type { CharacterSheetErrorSummary } from "../logic/error-summary";
 import styles from "./CharacterSheetActionPane.module.css";
 import CharacterSheetButton from "./CharacterSheetButton";
 
 type CharacterSheetActionPaneProps = {
+  errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
+  errorSummary: CharacterSheetErrorSummary;
   isMenuOpen: boolean;
   menuTriggerRef: RefObject<HTMLButtonElement | null>;
   onMenuToggle: () => void;
+  onReviewErrors: () => void;
 };
 
 const menuId = "character-sheet-actions-menu";
 
 /**
- * Presents mock character-sheet actions without coupling them to future
- * export, import, clipboard, reset, help, or error-aggregation behaviour.
+ * Presents root-level character-sheet actions and the current error summary
+ * without coupling them to future export, import, clipboard, reset, or help
+ * behaviour.
  */
 export default function CharacterSheetActionPane({
+  errorReviewButtonRef,
+  errorSummary,
   isMenuOpen,
   menuTriggerRef,
   onMenuToggle,
+  onReviewErrors,
 }: CharacterSheetActionPaneProps) {
   const { actions } = characterSheetDictionary.characterSheet;
 
@@ -44,7 +52,11 @@ export default function CharacterSheetActionPane({
           <CharacterSheetButton color="danger" size="medium">
             {actions.reset}
           </CharacterSheetButton>
-          <DesktopErrorStatus />
+          <DesktopErrorStatus
+            errorReviewButtonRef={errorReviewButtonRef}
+            errorSummary={errorSummary}
+            onReviewErrors={onReviewErrors}
+          />
         </div>
       </div>
 
@@ -65,7 +77,11 @@ export default function CharacterSheetActionPane({
           aria-controls={menuId}
           aria-expanded={isMenuOpen}
           aria-label={isMenuOpen ? actions.closeMenu : actions.openMenu}
-          className={styles.iconButton}
+          className={
+            errorSummary.hasErrors
+              ? `${styles.iconButton} ${styles.iconButtonDanger}`
+              : styles.iconButton
+          }
           onClick={onMenuToggle}
           ref={menuTriggerRef}
           type="button"
@@ -111,36 +127,75 @@ export default function CharacterSheetActionPane({
               {actions.reset}
             </CharacterSheetButton>
           </div>
-          <ErrorSummary className={styles.errors} />
+          <ErrorSummary errorSummary={errorSummary} className={styles.errors} />
         </section>
       ) : null}
     </section>
   );
 }
 
-function ErrorSummary({ className }: { className: string }) {
+function ErrorSummary({
+  className,
+  errorSummary,
+}: {
+  className: string;
+  errorSummary: CharacterSheetErrorSummary;
+}) {
   const { actions } = characterSheetDictionary.characterSheet;
 
   return (
     <section aria-live="polite" className={className}>
-      <h2>{actions.errorsHeading}</h2>
-      <p>{actions.noErrors}</p>
+      {errorSummary.hasErrors ? (
+        <>
+          <p className={styles.errorCount}>
+            エラーが{errorSummary.errors.length}件あります。
+          </p>
+          <ul className={styles.errorList}>
+            {errorSummary.errors.map((error) => (
+              <li key={error.code}>{error.message}</li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>{actions.noErrors}</p>
+      )}
     </section>
   );
 }
 
-function DesktopErrorStatus() {
+function DesktopErrorStatus({
+  errorReviewButtonRef,
+  errorSummary,
+  onReviewErrors,
+}: {
+  errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
+  errorSummary: CharacterSheetErrorSummary;
+  onReviewErrors: () => void;
+}) {
   const { actions } = characterSheetDictionary.characterSheet;
 
   return (
     <div
       aria-label={actions.errorStatusLabel}
       aria-live="polite"
-      className={styles.desktopErrorStatus}
+      className={
+        errorSummary.hasErrors
+          ? `${styles.desktopErrorStatus} ${styles.desktopErrorStatusDanger}`
+          : styles.desktopErrorStatus
+      }
       role="status"
     >
-      <p>{actions.noErrors}</p>
-      <CharacterSheetButton size="small">
+      <p>
+        {errorSummary.hasErrors
+          ? `エラーが${errorSummary.errors.length}件あります。`
+          : actions.noErrors}
+      </p>
+      <CharacterSheetButton
+        color={errorSummary.hasErrors ? "danger" : "default"}
+        onClick={onReviewErrors}
+        ref={errorReviewButtonRef}
+        size="small"
+      >
         {actions.reviewErrors}
       </CharacterSheetButton>
     </div>

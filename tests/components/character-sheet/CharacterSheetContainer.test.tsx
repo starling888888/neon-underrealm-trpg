@@ -88,8 +88,29 @@ describe("CharacterSheetContainer", () => {
 
     expect(exportButton).not.toBeNull();
     expect(exportButton.getAttribute("aria-controls")).toBeNull();
-    expect(screen.getByText("エラーはありません。")).not.toBeNull();
+    expect(screen.getAllByText("エラーはありません。")).toHaveLength(2);
     expect(screen.getByRole("button", { name: "確認" })).not.toBeNull();
+  });
+
+  it("opens and closes the desktop error dialog from the status", async () => {
+    const user = userEvent.setup();
+    render(<CharacterSheetContainer />);
+
+    const trigger = screen.getByRole("button", { name: "確認" });
+    await user.click(trigger);
+    expect(screen.getByRole("dialog", { name: "エラー" })).not.toBeNull();
+
+    const closeButtons = screen.getAllByRole("button", { name: "閉じる" });
+    const dialogCloseButton = closeButtons[closeButtons.length - 1];
+    if (dialogCloseButton === undefined) {
+      throw new Error("エラーdialogの閉じるbuttonがありません。");
+    }
+    await user.click(dialogCloseButton);
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "エラー" })).toBeNull();
+      expect(document.activeElement).toBe(trigger);
+    });
   });
 
   it("opens the action menu, then closes it with Escape and returns focus", async () => {

@@ -79,7 +79,7 @@ fieldset.row {
   background: var(--color-danger-soft);
 }
 
-.warning {
+.error {
   margin: 0;
   border-left: 0.1875rem solid var(--color-danger);
   color: var(--color-danger);

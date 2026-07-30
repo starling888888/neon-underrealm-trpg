@@ -43,6 +43,15 @@
   white-space: nowrap;
 }
 
+.desktopErrorStatusDanger {
+  border-color: var(--color-danger);
+}
+
+.desktopErrorStatusDanger p {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
 .floatingActions,
 .menu {
   display: none;
@@ -86,6 +95,12 @@
     background: var(--color-link-hover);
   }
 
+  .iconButtonDanger,
+  .iconButtonDanger:hover {
+    border-color: var(--color-danger);
+    background: var(--color-danger);
+  }
+
   .helpMark {
     font-size: 1.125rem;
     font-weight: 800;
@@ -122,19 +137,27 @@
     padding-block-start: var(--space-3);
   }
 
-  .errors h2,
   .errors p {
     margin: 0;
-  }
-
-  .errors h2 {
-    font-size: var(--text-sm);
-    line-height: var(--line-height-tight);
   }
 
   .errors p {
     margin-block-start: var(--space-1);
     color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  .errors .errorCount {
+    color: var(--color-danger);
+    font-weight: 700;
+  }
+
+  .errorList {
+    display: grid;
+    gap: var(--space-1);
+    margin: var(--space-2) 0 0;
+    padding-inline-start: 1.25rem;
+    color: var(--color-text);
     font-size: var(--text-xs);
   }
 }

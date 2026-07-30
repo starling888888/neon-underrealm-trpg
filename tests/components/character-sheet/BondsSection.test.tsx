@@ -90,6 +90,22 @@ describe("BondsSection", () => {
     ).toBeNull();
   });
 
+  it("presents an over-limit bond count as an error", () => {
+    const props = createProps();
+    props.bonds[0] = { ...props.bonds[0], target: "アキラ" };
+    props.bonds[1] = { ...props.bonds[1], target: "ベラ" };
+    props.derived = calculateBonds(
+      { ...characterSheetDefaultValues.bonds, rows: props.bonds },
+      1,
+    );
+
+    render(<BondsSection {...props} />);
+
+    expect(
+      screen.getByText("入力済みの縁が結べる縁の上限を超えています。"),
+    ).not.toBeNull();
+  });
+
   it("groups the four modifier expressions under their effect names", () => {
     const props = createProps();
 

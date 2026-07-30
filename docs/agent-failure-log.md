@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Omitted bond-limit errors and styled the wrong mobile control
+
+#### 2026-07-30
+
+- source: user
+- 発生箇所: `ex-02-25-sheet-error-summary` のerror集約とtablet / mobile操作pane
+- 観測した失敗: 縁の入力済み件数が結べる縁の上限を超える既存errorを集約ViewModelへ渡さず、error時の`danger` classを右下menu buttonではなくヘルプbuttonへ付与した。ユーザーのdev server確認で発見された。
+- 一次対応: 縁上限超過をerror集約と既存の局所error表示へ統一し、`danger` classをmenu buttonへ移す。Node / Component testへ両条件を追加し、E2E・VRT実装前のユーザー確認をやり直す。
+
 ### Chromium failed before the G24 restore-dialog VRT capture
 
 #### 2026-07-30

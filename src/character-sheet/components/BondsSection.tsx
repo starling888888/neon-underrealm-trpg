@@ -166,7 +166,7 @@ export default function BondsSection({
         })}
       </div>
       {derived.isOverLimit ? (
-        <p className={styles.warning} role="status">
+        <p className={styles.error} role="status">
           {labels.overLimit}
         </p>
       ) : null}
