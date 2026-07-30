@@ -406,7 +406,11 @@ export default function CharacterSheetContainer() {
           closeButtonRef={rootState.imageErrorCloseButtonRef}
           errorCode={rootState.imageError?.code ?? null}
           onRequestClose={() => rootState.setImageError(null)}
-          returnFocusRef={rootState.imageReturnFocusRef}
+          returnFocusRef={
+            rootState.isImageErrorFromJsonImport
+              ? rootState.jsonImportReturnFocusRef
+              : rootState.imageReturnFocusRef
+          }
         />
         <CharacterSheetRestoreErrorDialog
           confirmButtonRef={rootState.formRestoreConfirmButtonRef}

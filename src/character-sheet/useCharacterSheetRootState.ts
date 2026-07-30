@@ -98,6 +98,8 @@ export default function useCharacterSheetRootState(
   const [imageError, setImageError] = useState<CharacterImageErrorState | null>(
     null,
   );
+  const [isImageErrorFromJsonImport, setIsImageErrorFromJsonImport] =
+    useState(false);
   const [isFormRestoring, setIsFormRestoring] = useState(true);
   const [isCharacterImageRestoring, setIsCharacterImageRestoring] =
     useState(true);
@@ -115,6 +117,16 @@ export default function useCharacterSheetRootState(
   const jsonImportReturnFocusRef = useRef<HTMLButtonElement>(null);
   const jsonImportErrorConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const hasCommittedImageRef = useRef(false);
+  const isJsonImportReadingRef = useRef(false);
+  const [shouldRestoreJsonImportFocus, setShouldRestoreJsonImportFocus] =
+    useState(false);
+
+  useEffect(() => {
+    if (!shouldRestoreJsonImportFocus || rootOperation !== null) return;
+
+    setShouldRestoreJsonImportFocus(false);
+    jsonImportReturnFocusRef.current?.focus();
+  }, [rootOperation, shouldRestoreJsonImportFocus]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -128,6 +140,7 @@ export default function useCharacterSheetRootState(
       })
       .catch(() => {
         if (isCurrent && !hasCommittedImageRef.current) {
+          setIsImageErrorFromJsonImport(false);
           setImageError({ code: "restore" });
         }
       })
@@ -214,6 +227,7 @@ export default function useCharacterSheetRootState(
   }
 
   async function onCharacterImageSelected(file: File): Promise<void> {
+    setIsImageErrorFromJsonImport(false);
     try {
       await runRootOperation(
         characterSheetDictionary.characterSheet.image.loading,
@@ -226,11 +240,13 @@ export default function useCharacterSheetRootState(
         },
       );
     } catch (error) {
+      setIsImageErrorFromJsonImport(false);
       setImageError(toImageErrorState(error));
     }
   }
 
   async function onCharacterImageCleared(): Promise<void> {
+    setIsImageErrorFromJsonImport(false);
     try {
       await runRootOperation(
         characterSheetDictionary.characterSheet.image.clearing,
@@ -241,6 +257,7 @@ export default function useCharacterSheetRootState(
         },
       );
     } catch (error) {
+      setIsImageErrorFromJsonImport(false);
       setImageError(toImageErrorState(error));
     }
   }
@@ -257,25 +274,42 @@ export default function useCharacterSheetRootState(
   }
 
   function onJsonImportRequested(trigger: HTMLButtonElement): void {
-    if (isCharacterImageRestoring || rootOperation !== null) return;
+    if (
+      isCharacterImageRestoring ||
+      rootOperation !== null ||
+      isJsonImportReadingRef.current
+    )
+      return;
 
     jsonImportReturnFocusRef.current = trigger;
     jsonImportInputRef.current?.click();
   }
 
   async function onJsonImportFileSelected(file: File): Promise<void> {
-    try {
-      const parsed = parseCharacterSheetJsonImport(
-        await operations.readCharacterSheetJsonFile(file),
-      );
-      if (parsed === null) {
-        setIsJsonImportErrorOpen(true);
-        return;
-      }
+    if (rootOperation !== null || isJsonImportReadingRef.current) return;
 
-      setPendingJsonImport(parsed);
+    isJsonImportReadingRef.current = true;
+    setPendingJsonImport(null);
+    setIsJsonImportErrorOpen(false);
+    try {
+      await runRootOperation(
+        characterSheetDictionary.characterSheet.jsonImport.loading,
+        async () => {
+          const parsed = parseCharacterSheetJsonImport(
+            await operations.readCharacterSheetJsonFile(file),
+          );
+          if (parsed === null) {
+            setIsJsonImportErrorOpen(true);
+            return;
+          }
+
+          setPendingJsonImport(parsed);
+        },
+      );
     } catch {
       setIsJsonImportErrorOpen(true);
+    } finally {
+      isJsonImportReadingRef.current = false;
     }
   }
 
@@ -284,6 +318,7 @@ export default function useCharacterSheetRootState(
     if (imported === null) return;
 
     setPendingJsonImport(null);
+    let shouldRestoreFocus = true;
     await runRootOperation(
       characterSheetDictionary.characterSheet.jsonImport.loading,
       async () => {
@@ -298,6 +333,8 @@ export default function useCharacterSheetRootState(
             hasCommittedImageRef.current = true;
             setCharacterImage(null);
           } catch (error) {
+            shouldRestoreFocus = false;
+            setIsImageErrorFromJsonImport(true);
             setImageError(toImageErrorState(error));
           }
           return;
@@ -309,6 +346,7 @@ export default function useCharacterSheetRootState(
             String(imported.imageBase64String),
           );
         } catch {
+          shouldRestoreFocus = false;
           try {
             await operations.deleteCharacterImage();
             hasCommittedImageRef.current = true;
@@ -325,16 +363,22 @@ export default function useCharacterSheetRootState(
           hasCommittedImageRef.current = true;
           setCharacterImage(image);
         } catch (error) {
+          shouldRestoreFocus = false;
+          setIsImageErrorFromJsonImport(true);
           setImageError(toImageErrorState(error));
         }
       },
     );
+    if (shouldRestoreFocus) {
+      setShouldRestoreJsonImportFocus(true);
+    }
   }
 
   return {
     characterImage,
     form,
     imageError,
+    isImageErrorFromJsonImport,
     imageErrorCloseButtonRef,
     isJsonImportErrorOpen,
     isJsonImportImageErrorOpen,

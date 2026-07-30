@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Let JSON import hook fixtures leak form state into later tests
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-27-sheet-json-import`の`useCharacterSheetRootState`追加hook test
+- 観測した失敗: JSON importで`form.reset()`したfixtureに`writeCharacterSheetForm`のtest doubleを渡さず、実localStorageへ非同期保存した。後続の画像復元testが前fixtureのフォーム値を読む失敗を2回繰り返した。
+- 一次対応: JSON import fixtureの保存adapterをすべてmockし、初期フォームを確認する既存testにも`readCharacterSheetForm: () => null`を明示した。
+
 ### Let an optional mocked root-state value open a dialog during component tests
 
 #### 2026-07-30

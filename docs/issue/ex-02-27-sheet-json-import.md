@@ -126,3 +126,36 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 - actual screenshot: `test-results/visual/character-sheet/dialogs/json-import-{confirm,error,image-error}-{desktop,tablet,mobile}.png`を原寸で開き、確認dialogの`キャンセル` / `インポート`、失敗dialogのtitleなし本文と`確認`button、mobileの折返しとdialog内収まりを確認した。
 - baseline: ユーザー承認範囲の9枚を`canonical-snapshots/visual/character-sheet/dialogs/`へ追加した。
 - commands: `npm run visual:capture -- --grep 'json-import'`、`npm run visual:update -- --grep 'json-import'`、`npm run visual:test -- --grep 'json-import'`（9 passed）。`npm run test:e2e`（64 passed）でも、確認dialogのキャンセル / Escape / focus復帰、復元、不正画像通知とdismiss後のfocus復帰を確認した。
+
+## レビュー対応中の検証記録
+
+- 2026-07-30: JSON importの追加hook testでform reset後の自動保存adapterをmockしなかったため、後続testが実localStorageに残ったフォーム値を読んで2回失敗した。fixtureの保存adapterと初期readを明示し、詳細を`docs/agent-failure-log.md`へ記録した。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 非同期のJSON file読取りが操作ロックまたはrequest世代を持たないため、連続選択した複数ファイルの完了順で、最後に選んだものとは異なる復元候補が確認dialogへ残り得る。先行ファイルの失敗通知と後行ファイルの確認dialogが同時に開くこともあり得る。
+- 確認を確定するとdialog closeとroot operationの`inert`が同じ更新で反映され、共通dialogのfocus復帰時にはJSON input triggerがfocus不可になり得る。画像削除・書込みの技術失敗で表示する既存画像error dialogも、JSON inputの操作元ではなく画像選択用のreturn focus refを使う。
+- `null` / property欠落での削除失敗、不正画像時の削除失敗、正しい画像の書込み成功・失敗、初期画像復元中のJSON input開始拒否と初期読込みの非上書きが、JSON import経路のhook testで固定されていない。
+
+### 判定
+
+- source: `.tmp/chatgpt-review.md`（ChatGPT review、source snapshot `6589fdd8f8a76d424025b3ca25dc574fdd9d8973`）およびpush後のNonGate Review（local-agent、同commit）。
+- classification: valid
+- local validation: 現在のHEADはsource snapshotと一致する。`onJsonImportFileSelected()`は非同期read / parse中の`rootOperation`、request ID、最新request以外の破棄を持たず、完了ごとにdialog stateを更新する。`onJsonImportConfirmed()`は`setPendingJsonImport(null)`の直後にroot operationを開始し、Containerの操作領域はoperation中`inert`になる。通常の画像error dialogは`imageReturnFocusRef`を使う一方、JSON import triggerは`jsonImportReturnFocusRef`へ保存している。現hook testは削除成功と不正画像削除成功だけを確認し、上記の失敗・競合経路を網羅していない。
+- failure-log: 通常の実装レビュー指摘であり、workflow逸脱・未確認報告・同種失敗の反復には該当しないため追加しない。
+
+### 対応方針
+
+- JSON file読取り中をroot operationとして排他し、read / parse完了までdesktop・responsive menuのJSON inputを開始できないようにする。read中のerror / candidateは新規開始時に競合しない状態へ整理し、逆順に解決する複数readのhook testを追加する。
+- 確定後はroot operation解除後にJSON inputの操作元へfocusを戻す。JSON import経路で発生した画像永続化失敗のdialogも同じ操作元へ戻るよう、error dialogのreturn focusを操作起点ごとに分ける。desktopとresponsive menuで成功・画像削除失敗・画像書込み失敗のbrowser behaviorを確認する。
+- JSON import専用hook testで、property欠落、`null`削除失敗、不正画像削除失敗、正しい画像の書込み成功・失敗、初期画像復元中の開始拒否と遅延初期readによる非上書きを固定する。いずれもフォーム復元を巻き戻さず、画像表示は永続化成功時だけ切り替える。
+
+### 対応完了チェックリスト
+
+- [x] 非同期のJSON file読取りが競合せず、読取り中の二重開始を拒否して確認候補または失敗通知を更新する。
+- [x] JSON importの成功・画像永続化失敗後に、desktop・responsive menuの操作元へfocusが戻る。
+- [x] JSON importの画像削除・書込み失敗と初期画像復元の競合をhook / browser behaviorで確認し、フォーム復元を維持する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

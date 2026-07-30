@@ -10,7 +10,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -44,6 +44,7 @@ function useRootStateHarness() {
     characterImage: null,
     form,
     imageError: null,
+    isImageErrorFromJsonImport: false,
     imageErrorCloseButtonRef: useRef<HTMLButtonElement>(null),
     imageReturnFocusRef: useRef<HTMLButtonElement>(null),
     isCharacterImageRestoring: false,
@@ -54,6 +55,25 @@ function useRootStateHarness() {
     onJsonExport: () => {},
     rootOperation: null,
     setImageError: vi.fn(),
+  };
+}
+
+function useJsonImportImageErrorHarness() {
+  const rootState = useRootStateHarness();
+  const jsonImportReturnFocusRef = useRef<HTMLButtonElement>(null);
+  const [imageError, setImageError] = useState<{ code: "storage" } | null>({
+    code: "storage",
+  });
+
+  return {
+    ...rootState,
+    imageError,
+    isImageErrorFromJsonImport: true,
+    jsonImportReturnFocusRef,
+    onJsonImportRequested: (trigger: HTMLButtonElement) => {
+      jsonImportReturnFocusRef.current = trigger;
+    },
+    setImageError,
   };
 }
 
@@ -108,6 +128,18 @@ describe("CharacterSheetContainer", () => {
     expect(exportButton.getAttribute("aria-controls")).toBeNull();
     expect(screen.getAllByText("エラーはありません。")).toHaveLength(2);
     expect(screen.getByRole("button", { name: "確認" })).not.toBeNull();
+  });
+
+  it("returns a JSON-import image persistence error to the import trigger", async () => {
+    const user = userEvent.setup();
+    useRootStateMock.mockImplementation(useJsonImportImageErrorHarness);
+    render(<CharacterSheetContainer />);
+
+    const importButton = screen.getByRole("button", { name: "インポート" });
+    await user.click(importButton);
+    await user.click(screen.getByRole("button", { name: "閉じる" }));
+
+    await waitFor(() => expect(document.activeElement).toBe(importButton));
   });
 
   it("opens and closes the desktop error dialog from the status", async () => {

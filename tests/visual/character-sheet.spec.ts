@@ -230,6 +230,9 @@ test.describe("character sheet page", () => {
     await expect(page.getByLabel("PC名", { exact: true })).toHaveValue(
       "JSON入力PC",
     );
+    await expect(
+      page.getByRole("button", { exact: true, name: "インポート" }),
+    ).toBeFocused();
 
     imported.imageBase64String = 42;
     await page.getByRole("button", { exact: true, name: "インポート" }).click();
@@ -255,6 +258,33 @@ test.describe("character sheet page", () => {
     await expect(page.getByLabel("PC名", { exact: true })).toHaveValue(
       "JSON入力PC",
     );
+
+    imported.imageBase64String = null;
+    await page.setViewportSize(visualViewports.mobile);
+    await page
+      .getByRole("button", {
+        exact: true,
+        name: "操作メニューを開く、エラーはありません。",
+      })
+      .click();
+    const menu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    const mobileImport = menu.getByRole("button", {
+      exact: true,
+      name: "インポート",
+    });
+    await mobileImport.click();
+    await page.locator('input[accept="application/json,.json"]').setInputFiles({
+      buffer: Buffer.from(JSON.stringify(imported)),
+      mimeType: "application/json",
+      name: "mobile-character.json",
+    });
+    await page
+      .getByRole("dialog", { name: "JSON入力の確認" })
+      .getByRole("button", { exact: true, name: "インポート" })
+      .click();
+    await expect(mobileImport).toBeFocused();
   });
 
   test("dismisses an open dialog before the responsive action menu", async ({
