@@ -70,7 +70,7 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 - [x] 不正な画像文字列、数値、objectなどはフォーム値の復元を妨げず、既存のIndexedDB image recordを削除したうえで、title / headerなしの画像エラーdialog本文「入力データの画像に誤りがあり表示できませんでした。」と`確認`だけを表示する。
 - [x] G24のunknown ID除外、最小行補完、row identity、`useFieldArray`、uncontrolled inputの`reset`同期、ゲーム上の不整合値の局所error表示をJSON入力でも維持する。
 - [x] JSON入力の確認・失敗・画像失敗のdialogが、Escape、visible dismiss、操作元へのfocus復帰、操作ロックを既存dialog契約どおり維持する。
-- [ ] 画像初期復元中はJSON入力を開始できず、初期読込みがJSON入力後の画像状態を上書きしない。`null`削除失敗、不正画像時の削除失敗、正しい画像の書込み失敗のいずれもフォーム復元を維持する。
+- [x] 画像初期復元中はJSON入力を開始できず、初期読込みがJSON入力後の画像状態を上書きしない。`null`削除失敗、不正画像時の削除失敗、正しい画像の書込み失敗のいずれもフォーム復元を維持する。
 - [x] 関連TODOを確認し、schema version互換性をこのGateへ混在させない理由を記録する。
 - [x] 対象のNode / hook / browser behavior testと、必要な最小E2Eが通る。
 - [x] ユーザーレビュー後に対象VRTのactual screenshotをdesktop / tablet / mobileで開いて確認し、ユーザー明示承認によるcanonical VRT baselineを更新した。
@@ -84,7 +84,7 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 - [x] 既存route、GitHub Pagesのsubpath公開、G6画像復元、G24自動保存、G25 error summary、G26 JSON出力を壊さない。
 - [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装しない。
 - [x] `docs/design/character-sheet/notes.md`のdesktop / tablet / mobile操作領域とdialog契約を維持する。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
