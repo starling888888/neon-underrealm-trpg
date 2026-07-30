@@ -126,9 +126,25 @@ test.describe("character sheet page", () => {
       /^neon-underrealm_character-sheet_\d{4}-\d{2}-\d{2}_テストPL_テストPC\.json$/,
     );
 
-    for (const name of ["ヘルプ", "インポート"]) {
-      await page.getByRole("button", { exact: true, name }).click();
-    }
+    const desktopHelpTrigger = page.getByRole("button", {
+      exact: true,
+      name: "ヘルプ",
+    });
+    await desktopHelpTrigger.click();
+    const helpDialog = page.getByRole("dialog", { name: "ヘルプ" });
+    await expect(
+      helpDialog.getByRole("heading", { name: "ヘルプ" }),
+    ).toBeVisible();
+    await expect(helpDialog.locator("p")).toHaveCount(0);
+    await expect(helpDialog.locator("footer")).toHaveCount(0);
+    await expect(
+      helpDialog.getByRole("button", { name: "閉じる" }),
+    ).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(helpDialog).toBeHidden();
+    await expect(desktopHelpTrigger).toBeFocused();
+
+    await page.getByRole("button", { exact: true, name: "インポート" }).click();
     await page.getByRole("button", { exact: true, name: "確認" }).click();
     const errorDialog = page.getByRole("dialog", { name: "エラー" });
     await expect(errorDialog).toContainText("エラーはありません。");
@@ -140,7 +156,20 @@ test.describe("character sheet page", () => {
 
     for (const viewport of [visualViewports.tablet, visualViewports.mobile]) {
       await page.setViewportSize(viewport);
-      await expect(page.getByRole("button", { name: "ヘルプ" })).toBeVisible();
+      const helpTrigger = page.getByRole("button", { name: "ヘルプ" });
+      await expect(helpTrigger).toBeVisible();
+      await helpTrigger.click();
+      await expect(
+        helpDialog.getByRole("heading", { name: "ヘルプ" }),
+      ).toBeVisible();
+      await expect(helpDialog.locator("p")).toHaveCount(0);
+      await expect(helpDialog.locator("footer")).toHaveCount(0);
+      await expect(
+        helpDialog.getByRole("button", { name: "閉じる" }),
+      ).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(helpDialog).toBeHidden();
+      await expect(helpTrigger).toBeFocused();
       const trigger = page.getByRole("button", {
         exact: true,
         name: "操作メニューを開く、エラーはありません。",

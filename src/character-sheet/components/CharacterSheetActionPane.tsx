@@ -16,6 +16,7 @@ type CharacterSheetActionPaneProps = {
   isMenuOpen: boolean;
   menuTriggerRef: RefObject<HTMLButtonElement | null>;
   onExport: () => void;
+  onHelp: (trigger: HTMLButtonElement) => void;
   onCcfoliaCopy: (trigger: HTMLButtonElement) => void;
   onImport: (trigger: HTMLButtonElement) => void;
   onMenuToggle: () => void;
@@ -40,6 +41,7 @@ export default function CharacterSheetActionPane({
   isMenuOpen,
   menuTriggerRef,
   onExport,
+  onHelp,
   onCcfoliaCopy,
   onImport,
   onMenuToggle,
@@ -56,7 +58,10 @@ export default function CharacterSheetActionPane({
       <div className={styles.desktopHeader}>
         <h1 className={styles.heading}>{actions.title}</h1>
         <div className={styles.desktopActions}>
-          <CharacterSheetButton size="medium">
+          <CharacterSheetButton
+            onClick={(event) => onHelp(event.currentTarget)}
+            size="medium"
+          >
             {actions.help}
           </CharacterSheetButton>
           <CharacterSheetButton
@@ -103,6 +108,7 @@ export default function CharacterSheetActionPane({
         <button
           aria-label={actions.help}
           className={styles.iconButton}
+          onClick={(event) => onHelp(event.currentTarget)}
           type="button"
         >
           <span aria-hidden="true" className={styles.helpMark}>

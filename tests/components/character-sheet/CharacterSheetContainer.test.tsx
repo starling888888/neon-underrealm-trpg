@@ -177,6 +177,31 @@ describe("CharacterSheetContainer", () => {
     expect(screen.getByRole("button", { name: "確認" })).not.toBeNull();
   });
 
+  it("opens help from each action trigger and returns focus without changing form values", async () => {
+    const user = userEvent.setup();
+    render(<CharacterSheetContainer />);
+
+    const pcName = screen.getByLabelText("PC名") as HTMLInputElement;
+    await user.type(pcName, "テストPC");
+
+    for (const trigger of screen.getAllByRole("button", { name: "ヘルプ" })) {
+      await user.click(trigger);
+      const dialog = screen.getByRole("dialog", { name: "ヘルプ" });
+      expect(dialog.querySelector("p")).toBeNull();
+      expect(dialog.querySelector("footer")).toBeNull();
+      expect(document.activeElement).toBe(
+        screen.getByRole("button", { name: "閉じる" }),
+      );
+
+      fireEvent(
+        dialog,
+        new Event("cancel", { bubbles: true, cancelable: true }),
+      );
+      await waitFor(() => expect(document.activeElement).toBe(trigger));
+      expect(pcName.value).toBe("テストPC");
+    }
+  });
+
   it("confirms reset with the specified copy, actions, and focus behaviour", async () => {
     const user = userEvent.setup();
     const onResetConfirmed = vi.fn(async () => {});

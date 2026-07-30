@@ -21,6 +21,40 @@ const errorSummary: CharacterSheetErrorSummary = {
 afterEach(() => cleanup());
 
 describe("CharacterSheetActionPane", () => {
+  it("reports the desktop and responsive help triggers through one callback", async () => {
+    const user = userEvent.setup();
+    const onHelp = vi.fn();
+
+    render(
+      <CharacterSheetActionPane
+        errorReviewButtonRef={createRef<HTMLButtonElement>()}
+        errorSummary={{ errors: [], hasErrors: false }}
+        isCcfoliaCopyDisabled={false}
+        isExportDisabled={false}
+        isImportDisabled={false}
+        isMenuOpen={false}
+        isResetDisabled={false}
+        menuTriggerRef={createRef<HTMLButtonElement>()}
+        onCcfoliaCopy={vi.fn()}
+        onExport={vi.fn()}
+        onHelp={onHelp}
+        onImport={vi.fn()}
+        onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
+        onReviewErrors={vi.fn()}
+      />,
+    );
+
+    for (const button of screen.getAllByRole("button", { name: "ヘルプ" })) {
+      await user.click(button);
+    }
+
+    expect(onHelp).toHaveBeenCalledTimes(2);
+    expect(onHelp.mock.calls.map(([trigger]) => trigger)).toEqual(
+      screen.getAllByRole("button", { name: "ヘルプ" }),
+    );
+  });
+
   it("uses the same export callback for desktop and responsive menu buttons", async () => {
     const user = userEvent.setup();
     const onExport = vi.fn();
@@ -36,6 +70,7 @@ describe("CharacterSheetActionPane", () => {
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={onExport}
+        onHelp={vi.fn()}
         onCcfoliaCopy={vi.fn()}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
@@ -65,6 +100,7 @@ describe("CharacterSheetActionPane", () => {
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
+        onHelp={vi.fn()}
         onCcfoliaCopy={vi.fn()}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
@@ -109,6 +145,7 @@ describe("CharacterSheetActionPane", () => {
         isMenuOpen={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
+        onHelp={vi.fn()}
         onCcfoliaCopy={vi.fn()}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
@@ -136,6 +173,7 @@ describe("CharacterSheetActionPane", () => {
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
+        onHelp={vi.fn()}
         onCcfoliaCopy={vi.fn()}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
@@ -179,6 +217,7 @@ describe("CharacterSheetActionPane", () => {
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onCcfoliaCopy={onCcfoliaCopy}
         onExport={vi.fn()}
+        onHelp={vi.fn()}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}

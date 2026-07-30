@@ -9,6 +9,7 @@ import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorD
 import CharacterSheetCcfoliaCopyConfirmDialog from "./components/dialogs/CharacterSheetCcfoliaCopyConfirmDialog";
 import CharacterSheetCcfoliaCopyNoticeDialog from "./components/dialogs/CharacterSheetCcfoliaCopyNoticeDialog";
 import CharacterSheetErrorDialog from "./components/dialogs/CharacterSheetErrorDialog";
+import CharacterSheetHelpDialog from "./components/dialogs/CharacterSheetHelpDialog";
 import CharacterSheetJsonImportConfirmDialog from "./components/dialogs/CharacterSheetJsonImportConfirmDialog";
 import CharacterSheetJsonImportErrorDialog from "./components/dialogs/CharacterSheetJsonImportErrorDialog";
 import CharacterSheetResetConfirmDialog from "./components/dialogs/CharacterSheetResetConfirmDialog";
@@ -50,6 +51,7 @@ export default function CharacterSheetContainer() {
   const rootState = useCharacterSheetRootState();
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isErrorSummaryOpen, setIsErrorSummaryOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isCcfoliaCopyConfirmOpen, setIsCcfoliaCopyConfirmOpen] =
     useState(false);
   const [ccfoliaCopyNotice, setCcfoliaCopyNotice] = useState<
@@ -108,6 +110,7 @@ export default function CharacterSheetContainer() {
   const otherRyugiAddButtonRef = useRef<HTMLButtonElement>(null);
   const specialItemCategoryRemoveTriggerRef = useRef<HTMLButtonElement>(null);
   const actionMenuTriggerRef = useRef<HTMLButtonElement>(null);
+  const helpTriggerRef = useRef<HTMLButtonElement>(null);
   const errorSummaryCloseButtonRef = useRef<HTMLButtonElement>(null);
   const errorSummaryTriggerRef = useRef<HTMLButtonElement>(null);
   const resetTriggerRef = useRef<HTMLButtonElement>(null);
@@ -438,6 +441,10 @@ export default function CharacterSheetContainer() {
           isMenuOpen={isActionMenuOpen}
           menuTriggerRef={actionMenuTriggerRef}
           onExport={rootState.onJsonExport}
+          onHelp={(trigger) => {
+            helpTriggerRef.current = trigger;
+            setIsHelpOpen(true);
+          }}
           onCcfoliaCopy={(trigger) => {
             ccfoliaCopyTriggerRef.current = isActionMenuOpen
               ? actionMenuTriggerRef.current
@@ -493,6 +500,11 @@ export default function CharacterSheetContainer() {
           onConfirm={() => void rootState.onJsonImportConfirmed()}
           onRequestClose={() => rootState.setPendingJsonImport(null)}
           returnFocusRef={rootState.jsonImportReturnFocusRef}
+        />
+        <CharacterSheetHelpDialog
+          isOpen={isHelpOpen}
+          onRequestClose={() => setIsHelpOpen(false)}
+          returnFocusRef={helpTriggerRef}
         />
         <CharacterSheetCcfoliaCopyConfirmDialog
           isOpen={isCcfoliaCopyConfirmOpen}
