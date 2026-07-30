@@ -84,6 +84,7 @@ export default function useCharacterSheetRootState(
   const [isFormRestoring, setIsFormRestoring] = useState(true);
   const [isFormRestoreErrorOpen, setIsFormRestoreErrorOpen] = useState(false);
   const formRestoreConfirmButtonRef = useRef<HTMLButtonElement>(null);
+  const formRestoreReturnFocusRef = useRef<HTMLInputElement>(null);
   const imageReturnFocusRef = useRef<HTMLButtonElement>(null);
   const imageErrorCloseButtonRef = useRef<HTMLButtonElement>(null);
   const hasCommittedImageRef = useRef(false);
@@ -132,26 +133,33 @@ export default function useCharacterSheetRootState(
 
     let timeout: ReturnType<typeof setTimeout> | undefined;
     let latestValues = form.getValues();
+    let hasPendingWrite = false;
+    const flush = () => {
+      if (!hasPendingWrite) return;
+      hasPendingWrite = false;
+      if (timeout !== undefined) clearTimeout(timeout);
+      try {
+        operations.writeCharacterSheetForm(window.localStorage, latestValues);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     const subscription = form.subscribe({
       callback: ({ values }) => {
         latestValues = values as CharacterSheetFormValues;
         if (timeout !== undefined) clearTimeout(timeout);
+        hasPendingWrite = true;
         timeout = setTimeout(() => {
-          try {
-            operations.writeCharacterSheetForm(
-              window.localStorage,
-              latestValues,
-            );
-          } catch (error) {
-            console.error(error);
-          }
+          flush();
         }, 200);
       },
       formState: { values: true },
     });
+    window.addEventListener("pagehide", flush);
 
     return () => {
-      if (timeout !== undefined) clearTimeout(timeout);
+      window.removeEventListener("pagehide", flush);
+      flush();
       subscription();
     };
   }, [form, isFormRestoring, operations]);
@@ -212,6 +220,7 @@ export default function useCharacterSheetRootState(
     imageErrorCloseButtonRef,
     imageReturnFocusRef,
     formRestoreConfirmButtonRef,
+    formRestoreReturnFocusRef,
     isFormRestoreErrorOpen,
     isFormRestoring,
     isRootOperationInProgress: rootOperation !== null,

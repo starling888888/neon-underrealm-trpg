@@ -11,6 +11,7 @@ type Props = {
   confirmButtonRef: RefObject<HTMLButtonElement | null>;
   isOpen: boolean;
   onRequestClose: () => void;
+  returnFocusRef: RefObject<HTMLElement | null>;
 };
 
 /** Presents a non-recoverable stored-form restore failure. */
@@ -18,6 +19,7 @@ export default function CharacterSheetRestoreErrorDialog({
   confirmButtonRef,
   isOpen,
   onRequestClose,
+  returnFocusRef,
 }: Props) {
   const descriptionId = useId();
   const { restoreError, restoreErrorDialogLabel } =
@@ -30,6 +32,7 @@ export default function CharacterSheetRestoreErrorDialog({
       initialFocusRef={confirmButtonRef}
       isOpen={isOpen}
       onRequestClose={onRequestClose}
+      returnFocusRef={returnFocusRef}
     >
       <CharacterSheetDialogContent>
         <p id={descriptionId}>{restoreError}</p>

@@ -146,3 +146,35 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 - [ ] baseline更新が必要な差分を人間判断として記録した（比較未実行）
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+1. restore adapterがresolver用form schemaだけを使うため、構造・型の検証、ゲーム上の不整合の保持、現在のmaster ID照合を分離していない。未知IDを除外せず、ドラッグ重複など保存を妨げない局所error状態を復元不能として拒否する。
+2. debounce待機中にunmountまたはページ離脱すると、最新入力を同期保存せずにtimeoutを破棄する。
+3. 起動時に表示する復元失敗dialogの確認後のfocus先をroot-stateが持たず、明示的な編集可能要素へ戻らない。
+4. G24のroot-state結線に必要なrestore、保存抑止、flush、storage例外、画像復元との独立、未知IDのhook testが不足している。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）
+- classification: valid
+- local validation: `parseCharacterSheetRestoreValue`は`characterSheetFormSchema.safeParse()`だけを実行し、master-data入力・ID除外・関連rowの完全性検証を持たない。既存form schemaはIDを`string | null`として受理する一方、ドラッグ重複をsuperRefineで拒否する。root-state cleanupは保留timeoutをclearするだけで同期writeまたは`pagehide`処理を行わない。restore dialogには`returnFocusRef`が渡されず、G24用hook testは未追加である。
+
+### 対応方針
+
+- persistence専用の構造・identity schemaと、read-only master-dataを明示入力とするshared restore adapterを分離する。局所errorとなるゲーム上の不整合は保持し、未知IDだけを要件どおり空欄化または行除外した後に関連参照と最小行数を検証する。
+- pending状態を持つ共通flushをdebounce、effect cleanup、`pagehide`から呼び、書込み例外は`console.error`だけで非停止とする。
+- 復元失敗dialogを閉じるときのfocus先をroot-stateで定め、確認buttonとEscapeの両方をbrowser testで固定する。
+- fake timerとstorage / image operation test doubleを使うhook testを追加し、上記の復元・保存境界を固定する。
+
+### 対応完了チェックリスト
+
+- [x] 構造・identity・ゲーム上の不整合・master ID照合を分離したrestore adapterを実装する
+- [x] 未知IDの除外後にfield array最小行数と関連row IDの完全性を検証する
+- [x] debounce中の最新入力をcleanupと`pagehide`でflushする
+- [x] 復元失敗dialogの確認・Escape後のfocus先を定める
+- [x] G24 root-stateのrestore、保存抑止、flush、storage例外、画像独立のhook testを追加する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

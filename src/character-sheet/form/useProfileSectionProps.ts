@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
 import type { ProfileSectionProps } from "../components/ProfileSection";
@@ -19,6 +20,7 @@ export default function useProfileSectionProps(
   hasCommonSkillLevelError: boolean,
   onAcquiredExperienceChange: (value: string) => number,
   spentCredit = 0,
+  pcNameInputRef?: RefObject<HTMLInputElement | null>,
 ): ProfileSectionProps {
   const profile = useWatch({
     control,
@@ -70,6 +72,7 @@ export default function useProfileSectionProps(
     onProfileChange: (field, value) => {
       setValue(`profile.${field}`, value);
     },
+    pcNameInputRef,
     isRootOperationInProgress: imageState.isRootOperationInProgress,
     onCharacterImageCleared: imageState.onCharacterImageCleared,
     onCharacterImageSelected: imageState.onCharacterImageSelected,

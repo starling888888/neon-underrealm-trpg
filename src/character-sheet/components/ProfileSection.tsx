@@ -3,6 +3,7 @@ import {
   type DragEvent,
   type MouseEvent,
   type ReactNode,
+  type RefObject,
   useRef,
   useState,
 } from "react";
@@ -26,6 +27,7 @@ import FormulaTooltip from "./FormulaTooltip";
 import styles from "./ProfileSection.module.css";
 
 type TextFieldProps = {
+  inputRef?: RefObject<HTMLInputElement | null>;
   label: string;
   name: Exclude<ProfileFieldName, "setting">;
   onChange: (
@@ -76,6 +78,7 @@ export type ProfileSectionProps = {
   onCreditBlur: (field: CreditFieldName, value: string) => number;
   onCreditChange: (field: CreditFieldName, value: string) => void;
   onProfileChange: (field: ProfileFieldName, value: string) => void;
+  pcNameInputRef?: RefObject<HTMLInputElement | null>;
   profile: ProfileValues;
   spentCredit?: number;
 };
@@ -180,7 +183,7 @@ function CharacterImageField({
   );
 }
 
-function TextField({ label, name, onChange, value }: TextFieldProps) {
+function TextField({ inputRef, label, name, onChange, value }: TextFieldProps) {
   const id = `character-sheet-profile-${name}`;
 
   return (
@@ -192,6 +195,7 @@ function TextField({ label, name, onChange, value }: TextFieldProps) {
         className={styles.textInput}
         id={id}
         onChange={(event) => onChange(name, event.target.value)}
+        ref={inputRef}
         type="text"
         value={value}
       />
@@ -361,6 +365,7 @@ export default function ProfileSection({
   onCreditBlur,
   onCreditChange,
   onProfileChange,
+  pcNameInputRef,
   profile,
   spentCredit = 0,
 }: ProfileSectionProps) {
@@ -379,6 +384,7 @@ export default function ProfileSection({
                 label={gameDomain.terms.pcName}
                 name="pcName"
                 onChange={onProfileChange}
+                inputRef={pcNameInputRef}
                 value={profile.pcName}
               />
             </div>

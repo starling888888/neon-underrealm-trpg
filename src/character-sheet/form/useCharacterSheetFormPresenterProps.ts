@@ -25,6 +25,7 @@ import useSpecialItemsSectionProps from "./useSpecialItemsSectionProps";
 import useWeaponsAndArmorSectionProps from "./useWeaponsAndArmorSectionProps";
 
 type CharacterSheetPresenterOptions = {
+  formRestoreReturnFocusRef: RefObject<HTMLInputElement | null>;
   onIkizamaChangeRequested: (
     ikizamaId: string | null,
     trigger: HTMLSelectElement,
@@ -134,6 +135,7 @@ export default function useCharacterSheetFormPresenterProps(
     onWeaponPickerRequested,
     onSpecialItemCategoryRemoved,
     onSpecialItemCategoryRemoveRequested,
+    formRestoreReturnFocusRef,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
   const commonSkills = useCommonSkillsSectionProps(form, {
@@ -198,6 +200,7 @@ export default function useCharacterSheetFormPresenterProps(
     commonSkills.sectionProps.hasCommonSkillLevelError,
     build.onAcquiredExperienceChange,
     specialItems.spentCredit,
+    formRestoreReturnFocusRef,
   );
   const primarySkills = usePrimarySkillsSectionProps(form, {
     onPickerRequest: onPrimarySkillPickerRequested ?? (() => {}),

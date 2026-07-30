@@ -109,6 +109,7 @@ export default function CharacterSheetContainer() {
         rootState.onCharacterImageOperationStarted,
     },
     {
+      formRestoreReturnFocusRef: rootState.formRestoreReturnFocusRef,
       onIkizamaChangeRequested: (ikizamaId, trigger, applyChange) => {
         const currentIkizamaId = rootState.form.getValues("build.ikizamaId");
         const hasSelectedSkill = rootState.form
@@ -382,6 +383,7 @@ export default function CharacterSheetContainer() {
           confirmButtonRef={rootState.formRestoreConfirmButtonRef}
           isOpen={rootState.isFormRestoreErrorOpen}
           onRequestClose={() => rootState.setIsFormRestoreErrorOpen(false)}
+          returnFocusRef={rootState.formRestoreReturnFocusRef}
         />
         <PrimarySkillPickerDialog
           groups={presenterProps.primarySkillPicker.candidateGroups}

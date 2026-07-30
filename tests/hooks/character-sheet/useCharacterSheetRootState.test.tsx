@@ -4,6 +4,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { CharacterImageRecord } from "../../../src/character-sheet/character-image";
 import { CharacterImageError } from "../../../src/character-sheet/character-image";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import useCharacterSheetRootState from "../../../src/character-sheet/useCharacterSheetRootState";
 
 const storedImage: CharacterImageRecord = {
@@ -20,6 +21,111 @@ function createFile(): File {
 }
 
 describe("useCharacterSheetRootState", () => {
+  it("restores a valid saved form before starting automatic saves", async () => {
+    const values = structuredClone(characterSheetDefaultValues);
+    values.profile.pcName = "復元されたPC";
+    const writeCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => JSON.stringify(values)),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+
+    expect(result.current.form.getValues("profile.pcName")).toBe(
+      "復元されたPC",
+    );
+    expect(writeCharacterSheetForm).not.toHaveBeenCalled();
+  });
+
+  it("opens the restore error dialog without writing when stored JSON is malformed", async () => {
+    const writeCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => "{broken"),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+
+    expect(result.current.isFormRestoreErrorOpen).toBe(true);
+    expect(writeCharacterSheetForm).not.toHaveBeenCalled();
+  });
+
+  it("flushes a pending save when the root state unmounts", async () => {
+    const writeCharacterSheetForm = vi.fn();
+    const { result, unmount } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+    act(() => {
+      result.current.form.setValue("profile.pcName", "離脱前のPC");
+    });
+    unmount();
+
+    expect(writeCharacterSheetForm).toHaveBeenCalledWith(
+      window.localStorage,
+      expect.objectContaining({
+        profile: expect.objectContaining({ pcName: "離脱前のPC" }),
+      }),
+    );
+  });
+
+  it("flushes a pending save on pagehide", async () => {
+    const writeCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+    act(() => {
+      result.current.form.setValue("profile.pcName", "ページ離脱前のPC");
+      window.dispatchEvent(new Event("pagehide"));
+    });
+
+    expect(writeCharacterSheetForm).toHaveBeenCalledWith(
+      window.localStorage,
+      expect.objectContaining({
+        profile: expect.objectContaining({ pcName: "ページ離脱前のPC" }),
+      }),
+    );
+  });
+
+  it("logs localStorage exceptions without opening the restore error dialog", async () => {
+    const error = new Error("storage unavailable");
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => {
+          throw error;
+        }),
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+
+    expect(consoleError).toHaveBeenCalledWith(error);
+    expect(result.current.isFormRestoreErrorOpen).toBe(false);
+    consoleError.mockRestore();
+  });
+
   it("switches the displayed image only after a successful write", async () => {
     let resolveWrite: (() => void) | undefined;
     const writeCharacterImage = vi.fn(
