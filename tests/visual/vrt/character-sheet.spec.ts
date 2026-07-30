@@ -138,7 +138,7 @@ async function openCcfoliaCopyFailure(page: Page): Promise<void> {
 }
 
 async function selectCharacterImage(page: Page): Promise<void> {
-  await page.locator('input[type="file"]').setInputFiles({
+  await page.locator('input[accept="image/*"]').setInputFiles({
     buffer: Buffer.from(
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLh+wAAAABJRU5ErkJggg==",
       "base64",

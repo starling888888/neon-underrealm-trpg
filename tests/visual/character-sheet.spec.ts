@@ -109,6 +109,18 @@ test.describe("character sheet page", () => {
     page,
   }) => {
     await page.goto("character-sheet/");
+    await page.locator('input[accept="image/*"]').setInputFiles({
+      buffer: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLh+wAAAABJRU5ErkJggg==",
+        "base64",
+      ),
+      mimeType: "image/png",
+      name: "character.png",
+    });
+    await expect(
+      page.getByRole("img", { name: "選択したキャラクター画像" }),
+    ).toBeVisible();
+
     const downloadPromise = page.waitForEvent("download");
     await page
       .getByRole("button", { exact: true, name: "エクスポート" })
@@ -141,10 +153,17 @@ test.describe("character sheet page", () => {
         .click();
     };
 
+    await page.getByRole("button", { name: "画像をクリア" }).click();
+    await expect(
+      page.getByRole("img", { name: "選択したキャラクター画像" }),
+    ).toBeHidden();
     await importFile(imported);
     await expect(page.getByLabel("PC名", { exact: true })).toHaveValue(
       "JSON入力PC",
     );
+    await expect(
+      page.getByRole("img", { name: "選択したキャラクター画像" }),
+    ).toBeVisible();
     await importFile({ ...imported, imageBase64String: 42 });
     await expect(
       page.getByRole("dialog", { name: "入力データの画像の誤り" }),
