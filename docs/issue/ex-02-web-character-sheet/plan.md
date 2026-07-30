@@ -46,7 +46,7 @@
 | G23  | done    | G2, G3, G5                                                                                                                                      | `docs/issue/done/ex-02-web-character-sheet/ex-02-23-sheet-action-pane.md`               | 操作ペインとモックのコントロールボタンを作成する。                                                                                                                                                                                                      |
 | G24  | done    | G4, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G17, G18, G19, G20, G21, G22                                                                  | `docs/issue/done/ex-02-web-character-sheet/ex-02-24-sheet-persistence.md`               | 自動保存と保存済み項目の自動復元を扱う。                                                                                                                                                                                                                |
 | G25  | done    | G4, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G17, G18, G19, G20, G21, G22, G23                                                             | `docs/issue/done/ex-02-web-character-sheet/ex-02-25-sheet-error-summary.md`             | エラーの集約表示を扱う。現在の生き様では通常使用不可の専用アイテムカテゴリのwarningは既存の局所フィードバックに留める。                                                                                                                                 |
-| G26  | planned | G4, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G17, G18, G19, G20, G21, G22, G23                                                             | `docs/issue/ex-02-26-sheet-json-export.md`                                              | JSON出力を扱う。                                                                                                                                                                                                                                        |
+| G26  | done    | G4, G6, G7, G8, G9, G10, G11, G12, G13, G14, G15, G17, G18, G19, G20, G21, G22, G23                                                             | `docs/issue/done/ex-02-web-character-sheet/ex-02-26-sheet-json-export.md`               | JSON出力を扱う。                                                                                                                                                                                                                                        |
 | G27  | planned | G5, G24, G25, G26                                                                                                                               | `docs/issue/ex-02-27-sheet-json-import.md`                                              | JSON入力を扱う。                                                                                                                                                                                                                                        |
 | G28  | planned | G5, G22, G23, G25, G26                                                                                                                          | `docs/issue/ex-02-28-sheet-ccfolia.md`                                                  | CCFOLIA出力を扱う。                                                                                                                                                                                                                                     |
 | G29  | planned | G5, G22, G23, G24, G25                                                                                                                          | `docs/issue/ex-02-29-sheet-reset.md`                                                    | 全クリアを扱う。                                                                                                                                                                                                                                        |
@@ -94,7 +94,7 @@
 
 ### G6
 
-- 画像recordは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへ、変換済みWebPのMIME typeとbase64をIndexedDB保存する。RHF、localStorage、URL、JSONへ混在させない。
+- 画像recordは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへ、変換済みWebPのMIME typeとbase64をIndexedDB保存する。RHF、localStorage、URLへ混在させない。G26のJSON出力時だけform値とbase64をトップレベル`imageBase64String`へ合成し、画像未選択時は`null`にする。
 - 基本情報内の画像はdesktop / tabletでprofile・settingの右、mobileでsettingの下かつ信用の上に置く。選択済み時は差し替えと個別の`画像をクリア`を表示し、書込み・削除成功後だけ表示を更新する。G29は全クリアに伴う画像削除を扱う。
 - Root操作ロックとloading overlayは画像専用にせず、表示文言を渡して後続Gateの保存・出力・入力操作でも共有する。画像の失敗通知は`CharacterImageErrorDialog`でG5 dialog shellを合成し、操作元へfocusを復帰する。
 
@@ -238,5 +238,11 @@
 - error summaryは既存の局所判定からstable code・row ID・解決済み名称・現在Lvまたは明示的な条件を含むfactを組み立て、desktop dialogとtablet / mobile menuへ同じViewModelを渡す。行単位の同一codeはrow IDを含むkeyで表示し、専用アイテムカテゴリのwarningは集約しない。
 - 上級スキルはスキル行Lvではなく、プライマリ／その他流儀なら流儀Lv 6以上、生き様なら生き様Lv 4以上の所有元条件と現在Lvを示す。縁上限超過は上限外の各行を一件として表示する。
 - summary adapterはG25では責務分離だけを担い、section presenter stateの再生成に対する実効的なmemo化と無関係なUI state更新でsummary identityを保つhook testはG31で扱う。
+
+### G26
+
+- JSON出力は現在のform値へトップレベル`imageBase64String`を合成する。選択済み画像はIndexedDB recordのbase64文字列だけを含め、未選択時は`null`とする。派生値、error・warning、UI state、master data、画像recordの永続化メタデータは含めない。
+- 画像初期復元が完了するまでdesktop・responsive menuの`エクスポート`buttonをdisabledにし、復元途中に`null`の画像JSONを出力しない。browser download adapterは例外時もobject URLを解放する。
+- JSONは改行と2スペースのインデントを使う。`docs/architectures/character-sheet-export-import-sample.json`をG27以降の入出力構造参照とし、G27はこの形式をschemaで検証してから現在formへ反映する。schema version・旧形式との互換性・移行は後続Gateで扱う。
 
 状態は `planned`、`in progress`、`active`、`done` を使う。`active`は、完了済みとしていたGateをreview指摘で再openし、修正または再reviewが終わるまでの状態を表す。

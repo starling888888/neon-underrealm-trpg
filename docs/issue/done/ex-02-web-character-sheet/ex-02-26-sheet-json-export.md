@@ -109,3 +109,34 @@ G23で表示だけを作成した既存の`エクスポート`buttonは、まだ
 - ユーザーのtypo訂正に従い、`character`を使う。
 - `npm run test:e2e:run`では、G26の`exports JSON from desktop and responsive action buttons`を含むcharacter-sheet E2E 28件は成功した。一方、検索modal 4件はe2e serverの`4322`ではなく`visualBaseUrl`の`4321`へPagefindを要求する既存設定不整合で失敗した。G26の変更範囲外のため修正しない。
 - Git commit / push はこのissue作成時点で実行しない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 保存済み画像の非同期復元中にJSON exportすると、`imageBase64String`が`null`で出力され得る。
+- download adapterは`createAnchor()`または`click()`が例外を投げるとobject URLを解放しない。
+- G26の完了後に親Gate planへ戻すべきJSON画像・フォーマット参照の引継ぎが未反映である。
+
+### 判定
+
+- source: local-agent
+- classification: valid
+- local validation:
+  - `readCharacterImage()`のPromise完了を待たずにform restoreだけが完了し、`onJsonExport()`はその時点の`characterImage`を直ちにserializeする。保存済み画像を失わせないため、画像復元完了前のexportを防ぐ必要がある。
+  - `downloadJsonFile()`はobject URL生成後の例外時に`revokeObjectUrl()`へ到達しない。object URL解放はG26のbrowser adapter契約であり、例外時にも維持する。
+  - 親Gate planのG26は`planned`のままで、G6のJSON画像に関する引継ぎも現在の`imageBase64String`契約と矛盾する。G26を完了処理する際に正す必要がある。
+
+### 対応方針
+
+- root stateで画像初期復元の完了を管理し、完了前はexportを実行できないようにする。遅延した画像readを使う回帰testで、画像なしJSONを出力しないことを確認する。
+- browser download adapterを`try` / `finally`で囲み、例外時もobject URLを解放するNode testを追加する。
+- 上記の修正と検証が完了した後、G26を`done`へ更新し、子issueのdone移動と親Gate planへの簡潔な引継ぎを行う。
+
+### 対応完了チェックリスト
+
+- [x] 画像初期復元中にexportしても、保存済み画像を`null`として出力しない。
+- [x] download開始の例外時にもobject URLを解放する。
+- [x] 親Gate planへG26のJSON画像・フォーマット参照を引き継ぎ、G26を`done`へ更新する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
