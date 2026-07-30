@@ -40,6 +40,7 @@
 - 2026-07-29のGate外レビュー修正として、`判定` sectionはdesktopでも左列の`縁`の後に置く。right columnは`スキル`から開始する。`画像を選択`と各`〜を追加` buttonは、キャラクターシート内の共通styleでfont size、高さ、padding、border、hover / disabled stateを揃え、section固有CSSは配置だけを持つ。
 - 2026-07-29のGate外レビュー修正として、削除操作は背景・囲みのないゴミ箱icon、clear操作は同じ寸法の消しゴムiconに統一する。通常使用不可の専用アイテムカテゴリの削除iconだけはwarning colorを使う。画像clearは画像を選択／差し替えbuttonの右に常時置き、未選択時はdisabledにする。選択／差し替えbuttonは固定幅とする。
 - 同日、ユーザーは`@character-sheet`の全canonical baseline更新を明示承認した。`profile-image-selected`を含む対象stateは、修正後にdesktop / tablet / mobileで更新・通常比較する。
+- 2026-07-31、G31の方針として`canonical-snapshots/visual/**`をGit管理から全削除した。以後のcanonical baselineは同じpathへlocal-onlyで再生成し、Gitへ追加しない。
 - 同日のGate外レビュー修正として、font familyは既存の`--font-sans`継承を保つ。field label、直接入力、重要な算出値、一覧本文、mobileの密集一覧をそれぞれ専用文字tokenで統一する。`体力増加`〜`精神力係数`、`共通スキルボーナス`、副能力値の`最大体力`〜`結べる縁`、覚悟効果の`気絶からの回復`〜`受動判定`は、`--text-xs`、muted color、bold（750）へ揃える。共通スキルボーナスを除く読み取り専用の数値枠と、文字・数値・selectの直接入力は`--text-xs`と共通の最小高を使う。縁の`対象`・`関係`・`覚悟`header、section見出し、dialog固有の情報密度は変更しない。
 - スキル、武器・防具、各専用アイテムの一覧rowと列headerは、並べ替えcontrolsを収める`2.25rem`の共通最小高を使う。項目名・数値input・icon操作は同じrow高の中で配置する。
 

@@ -11,4 +11,4 @@ raw-google-drive.url
 .tmp/
 test-results/
 playwright-report/
-canonical-snapshots/visual/character-sheet/
+canonical-snapshots/visual/

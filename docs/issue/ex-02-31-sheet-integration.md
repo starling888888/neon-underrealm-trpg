@@ -109,7 +109,7 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [x] browser-onlyの主要導線だけをE2Eで確認している。
 - [x] dictionaryでゲームドメイン用語と汎用UI文言が整理され、可視文言を変えていない。
 - [x] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
-- [ ] `canonical-snapshots/visual/**` のGit管理を解除し、local-onlyのignore規則を確認している。
+- [x] `canonical-snapshots/visual/**` のGit管理を解除し、local-onlyのignore規則を確認している。
 - [ ] 全VRT targetのbaselineを再生成し、全件比較が通る。
 - [ ] locator-only stateがcanonical full-page baselineを要求しない。
 - [ ] 最終Tech Reviewを指定の限定観点で完了し、有効な指摘を解消またはユーザー判断へ戻している。
@@ -121,11 +121,11 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 
 ## チェックポイント
 
-- [ ] Git削除対象は`canonical-snapshots/visual/**`だけであり、対象外のGit管理ファイルとユーザーの未コミット変更を破壊していない。
+- [x] Git削除対象は`canonical-snapshots/visual/**`だけであり、対象外のGit管理ファイルとユーザーの未コミット変更を破壊していない。
 - [x] GitHub Pagesのサブパス公開に影響しない。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
-- [ ] baseline運用の記述が`docs/design/`、data-management rule、Visual Test READMEで矛盾していない。
+- [x] baseline運用の記述が`docs/design/`、data-management rule、Visual Test READMEで矛盾していない。
 - [ ] 関連する`docs/TODO.md`項目と矛盾していない。
 - [ ] 画面変更があれば、actual screenshotを開いて表示契約を確認している。
 
