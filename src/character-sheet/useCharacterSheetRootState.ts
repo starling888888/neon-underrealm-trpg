@@ -103,6 +103,7 @@ export default function useCharacterSheetRootState(
   );
   const [isImageErrorFromJsonImport, setIsImageErrorFromJsonImport] =
     useState(false);
+  const [isImageErrorFromReset, setIsImageErrorFromReset] = useState(false);
   const [isFormRestoring, setIsFormRestoring] = useState(true);
   const [isCharacterImageRestoring, setIsCharacterImageRestoring] =
     useState(true);
@@ -231,6 +232,7 @@ export default function useCharacterSheetRootState(
 
   async function onCharacterImageSelected(file: File): Promise<void> {
     setIsImageErrorFromJsonImport(false);
+    setIsImageErrorFromReset(false);
     try {
       await runRootOperation(
         characterSheetDictionary.characterSheet.image.loading,
@@ -244,12 +246,14 @@ export default function useCharacterSheetRootState(
       );
     } catch (error) {
       setIsImageErrorFromJsonImport(false);
+      setIsImageErrorFromReset(false);
       setImageError(toImageErrorState(error));
     }
   }
 
   async function onCharacterImageCleared(): Promise<void> {
     setIsImageErrorFromJsonImport(false);
+    setIsImageErrorFromReset(false);
     try {
       await runRootOperation(
         characterSheetDictionary.characterSheet.image.clearing,
@@ -261,6 +265,7 @@ export default function useCharacterSheetRootState(
       );
     } catch (error) {
       setIsImageErrorFromJsonImport(false);
+      setIsImageErrorFromReset(false);
       setImageError(toImageErrorState(error));
     }
   }
@@ -269,16 +274,30 @@ export default function useCharacterSheetRootState(
     if (isCharacterImageRestoring || rootOperation !== null) return;
 
     setIsImageErrorFromJsonImport(false);
+    setIsImageErrorFromReset(false);
     try {
       await runRootOperation(
         characterSheetDictionary.characterSheet.reset.loading,
         async () => {
-          await operations.deleteCharacterImage();
-
+          const valuesBeforeReset = structuredClone(form.getValues());
           try {
             operations.deleteCharacterSheetForm(window.localStorage);
+          } catch {
+            throw new CharacterImageError("storage");
+          }
+
+          try {
+            await operations.deleteCharacterImage();
           } catch (error) {
-            console.error(error);
+            try {
+              operations.writeCharacterSheetForm(
+                window.localStorage,
+                valuesBeforeReset,
+              );
+            } catch {
+              // The reset remains failed; retain the in-memory state and report it.
+            }
+            throw error;
           }
 
           hasCommittedImageRef.current = true;
@@ -288,6 +307,7 @@ export default function useCharacterSheetRootState(
       );
     } catch (error) {
       setIsImageErrorFromJsonImport(false);
+      setIsImageErrorFromReset(true);
       setImageError(toImageErrorState(error));
     }
   }
@@ -409,6 +429,7 @@ export default function useCharacterSheetRootState(
     form,
     imageError,
     isImageErrorFromJsonImport,
+    isImageErrorFromReset,
     imageErrorCloseButtonRef,
     isJsonImportErrorOpen,
     isJsonImportImageErrorOpen,

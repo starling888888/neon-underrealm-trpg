@@ -199,6 +199,40 @@ test.describe("character sheet page", () => {
     await expect(resetDialog).toBeHidden();
     await expect(pcName).toHaveValue("");
     await expect(resetTrigger).toBeFocused();
+
+    for (const viewport of [visualViewports.tablet, visualViewports.mobile]) {
+      await page.setViewportSize(viewport);
+      const menuTrigger = page.getByRole("button", {
+        exact: true,
+        name: "操作メニューを開く、エラーはありません。",
+      });
+      const openResetDialog = async () => {
+        await menuTrigger.click();
+        const menu = page.getByRole("region", {
+          name: "キャラクターシートの操作メニュー",
+        });
+        await menu.getByRole("button", { exact: true, name: "初期化" }).click();
+        await expect(resetDialog).toBeVisible();
+      };
+
+      await openResetDialog();
+      await resetDialog
+        .getByRole("button", { exact: true, name: "キャンセル" })
+        .click();
+      await expect(menuTrigger).toBeFocused();
+
+      await openResetDialog();
+      await page.keyboard.press("Escape");
+      await expect(resetDialog).toBeHidden();
+      await expect(menuTrigger).toBeFocused();
+
+      await openResetDialog();
+      await resetDialog
+        .getByRole("button", { exact: true, name: "初期化" })
+        .click();
+      await expect(resetDialog).toBeHidden();
+      await expect(menuTrigger).toBeFocused();
+    }
   });
 
   test("replaces form values from JSON and reports an invalid imported image", async ({

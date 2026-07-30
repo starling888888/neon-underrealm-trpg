@@ -167,3 +167,32 @@
 ## 備考
 
 `docs/design/character-sheet/notes.md`の旧記述（「本当に初期化してよろしいですか？」、`OK`と`キャンセル`）は、ユーザーの最新指示により本Gateで更新する。初期化の成否とフォーム・画像の原子性は、既存のroot operation / persistence境界を確認してから実装時に確定する。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- localStorageのフォーム削除が失敗しても、IndexedDB画像recordの削除とRHF resetを続行するため、再読込時に旧フォームだけが復元される。
+- responsive action menuの`初期化`buttonをdialog表示前にunmountするため、キャンセル、Escape、確認、画像削除失敗後のfocus復帰先が失われる。
+- G29のdesign notesがcanonical snapshot総数を183枚と記録しているが、G27時点の202枚と今回の3枚から205枚が正しい。
+
+### 判定
+
+- source: `.tmp/chatgpt-review.md`（ChatGPT review、source snapshot `2b86dd8d12b5f8ec46c48e468226effdefc7b282`）およびpush後のNon Gate Review（local-agent、同commit）。
+- classification: valid。
+- local validation: `onResetConfirmed()`は画像record削除後に`deleteCharacterSheetForm()`の例外を握りつぶし、そのままimage stateとRHFを初期化する。responsive action menuはreset action直後に閉じ、dialogのreturn focus refへunmount済みbuttonを渡す。local canonical snapshotは205枚である。通常の実装レビュー指摘であり、agent failureには該当しない。
+
+### 対応方針
+
+- localStorage削除に失敗した場合はIndexedDB削除とRHF resetを開始せず、既存状態を保持して失敗feedbackを表示する。localStorage削除成功後の画像削除失敗では、直前のフォーム値をlocalStorageへ補償書込みし、UI stateを保持する。補償失敗時も成功扱いにせず失敗feedbackを表示する。
+- responsive action menuから開いたdialogとreset起因の失敗feedbackは、unmountされないaction menu triggerへfocusを戻す。desktopは押下buttonを復帰先に維持する。
+- design notesのG29 snapshot総数を205枚へ訂正する。
+
+### 対応完了チェックリスト
+
+- [x] localStorage削除失敗時に画像・RHF・端末内保存を初期状態へ進めず、hook testで固定する。
+- [x] 画像削除失敗時にフォーム保存を補償し、既存stateと失敗feedbackを維持する。
+- [x] desktop、tablet、mobileでキャンセル、Escape、確認、reset起因の失敗feedback後に安定した操作元へfocusが戻る。
+- [x] G29のdesign notesがcanonical snapshot総数205枚を記録する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

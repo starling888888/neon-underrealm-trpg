@@ -262,8 +262,15 @@ export default function CharacterSheetContainer() {
     if (!shouldRestoreResetFocus || rootState.isRootOperationInProgress) return;
 
     setShouldRestoreResetFocus(false);
-    resetTriggerRef.current?.focus();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resetTriggerRef.current?.focus());
+    });
   }, [rootState.isRootOperationInProgress, shouldRestoreResetFocus]);
+
+  function closeResetConfirm(): void {
+    setIsResetConfirmOpen(false);
+    setShouldRestoreResetFocus(true);
+  }
 
   useEffect(() => {
     if (!isActionMenuOpen) {
@@ -402,7 +409,9 @@ export default function CharacterSheetContainer() {
           onImport={rootState.onJsonImportRequested}
           onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
           onReset={(trigger) => {
-            resetTriggerRef.current = trigger;
+            resetTriggerRef.current = isActionMenuOpen
+              ? actionMenuTriggerRef.current
+              : trigger;
             setIsActionMenuOpen(false);
             setIsResetConfirmOpen(true);
           }}
@@ -429,7 +438,9 @@ export default function CharacterSheetContainer() {
           returnFocusRef={
             rootState.isImageErrorFromJsonImport
               ? rootState.jsonImportReturnFocusRef
-              : rootState.imageReturnFocusRef
+              : rootState.isImageErrorFromReset
+                ? resetTriggerRef
+                : rootState.imageReturnFocusRef
           }
         />
         <CharacterSheetRestoreErrorDialog
@@ -447,11 +458,10 @@ export default function CharacterSheetContainer() {
         <CharacterSheetResetConfirmDialog
           isOpen={isResetConfirmOpen}
           onConfirm={() => {
-            setIsResetConfirmOpen(false);
-            setShouldRestoreResetFocus(true);
+            closeResetConfirm();
             void rootState.onResetConfirmed();
           }}
-          onRequestClose={() => setIsResetConfirmOpen(false)}
+          onRequestClose={closeResetConfirm}
           returnFocusRef={resetTriggerRef}
         />
         <CharacterSheetJsonImportErrorDialog

@@ -89,6 +89,26 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeatedly used unscoped Testing Library queries in a typed component test
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-29-sheet-reset`のresponsive reset error focus Component test
+- 観測した失敗: scoped dialog / menu queryを追加する際、HTMLElementへ`getByRole`を直接呼ぶ型エラーを2回出した。
+- 一次対応: HTMLElement配下のrole queryは`within(element).getByRole()`へ統一し、source編集後に`npm run check`を実行する。
+
+### Retried responsive reset focus E2E against a stale preview build
+
+#### 2026-07-30
+
+- source: self
+- failure category: validation command ordering
+- 発生箇所: `ex-02-29-sheet-reset`のresponsive reset dialog browser E2E
+- 観測した失敗: `playwright.e2e.config.ts`が直前の`dist/`をpreviewすることを確認せず、source修正後のbuildを実行しないまま同じresponsive reset focus E2Eを3回再実行した。
+- 一次対応: preview E2Eの前に対象sourceをbuildし、失敗時はconfigのweb server commandとserved artifactを確認してから再実行する。
+
 ### Retried reset-dialog component test with broad text queries
 
 #### 2026-07-30

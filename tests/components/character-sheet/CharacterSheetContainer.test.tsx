@@ -8,6 +8,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useRef, useState } from "react";
@@ -45,6 +46,7 @@ function useRootStateHarness() {
     form,
     imageError: null,
     isImageErrorFromJsonImport: false,
+    isImageErrorFromReset: false,
     imageErrorCloseButtonRef: useRef<HTMLButtonElement>(null),
     imageReturnFocusRef: useRef<HTMLButtonElement>(null),
     isCharacterImageRestoring: false,
@@ -74,6 +76,21 @@ function useJsonImportImageErrorHarness() {
     onJsonImportRequested: (trigger: HTMLButtonElement) => {
       jsonImportReturnFocusRef.current = trigger;
     },
+    setImageError,
+  };
+}
+
+function useResetImageErrorHarness() {
+  const rootState = useRootStateHarness();
+  const [imageError, setImageError] = useState<{ code: "storage" } | null>(
+    null,
+  );
+
+  return {
+    ...rootState,
+    imageError,
+    isImageErrorFromReset: imageError !== null,
+    onResetConfirmed: async () => setImageError({ code: "storage" }),
     setImageError,
   };
 }
@@ -212,6 +229,58 @@ describe("CharacterSheetContainer", () => {
     await user.click(screen.getByRole("button", { name: "閉じる" }));
 
     await waitFor(() => expect(document.activeElement).toBe(importButton));
+  });
+
+  it("returns responsive reset dialogs and errors to the menu trigger", async () => {
+    const user = userEvent.setup();
+    useRootStateMock.mockImplementation(useResetImageErrorHarness);
+    render(<CharacterSheetContainer />);
+
+    const trigger = screen.getByRole("button", {
+      name: "操作メニューを開く、エラーはありません。",
+    });
+    await user.click(trigger);
+    await user.click(
+      within(
+        screen.getByRole("region", {
+          name: "キャラクターシートの操作メニュー",
+        }),
+      ).getByRole("button", { name: "初期化" }),
+    );
+    await user.click(screen.getByRole("button", { name: "キャンセル" }));
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
+
+    await user.click(trigger);
+    await user.click(
+      within(
+        screen.getByRole("region", {
+          name: "キャラクターシートの操作メニュー",
+        }),
+      ).getByRole("button", { name: "初期化" }),
+    );
+    fireEvent.keyDown(window, { key: "Escape" });
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
+
+    await user.click(trigger);
+    await user.click(
+      within(
+        screen.getByRole("region", {
+          name: "キャラクターシートの操作メニュー",
+        }),
+      ).getByRole("button", { name: "初期化" }),
+    );
+    await user.click(
+      within(
+        screen.getByRole("dialog", { name: "入力内容を初期化" }),
+      ).getByRole("button", { name: "初期化" }),
+    );
+    const errorDialog = screen.getByRole("dialog", {
+      name: "画像を処理できませんでした",
+    });
+    await user.click(
+      within(errorDialog).getByRole("button", { name: "閉じる" }),
+    );
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
   });
 
   it("opens and closes the desktop error dialog from the status", async () => {
