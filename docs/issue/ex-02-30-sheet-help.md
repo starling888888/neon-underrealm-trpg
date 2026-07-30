@@ -63,6 +63,7 @@
 - dialogが開いている間は、G23のEscape優先順位に従いdialogを先に閉じる。tablet / mobileでmenuが開いている場合は、help triggerがmenu外の常設buttonである既存配置を維持する。
 - `dictionary.ts`、Component / browser E2Eを、このGateに必要な最小範囲で更新する。Visual Reviewの新規VRT scenarioまたはcapture-only手順はG31へ残す。
 - 実装後、ユーザーレビューとVisual Reviewの前に`gate_technical_reviewer`によるTechReviewを1回実施し、有効な指摘は本issueの`レビュー指摘`へ記録して対応する。
+- ユーザーが本文作成を指示した後にだけ、`contents_beginner_reviewer`と`contents_expert_reviewer`へコンテンツレビューを依頼する。レビュー完了前にヘルプ本文をComponentへ実装しない。
 
 ## 初期スコープ外
 
@@ -71,6 +72,40 @@
 - 既存dialog shellの共通API、ほかのdialogのvisible heading・本文・action・色・focus契約を変更しない。
 - 新規npm package、UI library、browser native `alert` / `confirm`、サーバー・DB・認証・SSR・CMSを追加しない。
 - `docs/plan.md`、親Gate planのG30状態、canonical VRT baselineを変更しない。
+
+## コンテンツレビューとヘルプ本文作成
+
+### レビュー入力と渡し方
+
+コンテンツレビュワーには、実際にキャラクターを作れそうかを判断するため、次だけを渡す。
+
+- キャラクターメイキングページ
+- キャラクター成長ページ
+- キャラクターシートページ
+- キャラクターシートのcanonical snapshot
+
+ヘルプはまだ空であるため、レビュー対象から除外する。requirements、issue、既存review、実装方針、ヘルプ本文案、画像ファイル名、canonical snapshotのファイル名は渡さない。
+
+canonical snapshotは、画像名・snapshot名・テスト名から内容を推測せず、画像に表示されている要素だけで判断する。キャラクターシートページの確認では、URL、role、`aria-*`、screen reader専用文言を可能な限り判断材料にせず、画面で読めるラベルと対応する入力欄・操作だけで判断する。
+
+### レビュー依頼の出力形式
+
+各コンテンツレビューは、次の3項目だけをこの順で返す。
+
+1. `キャラクターシートだけで操作できる項目`
+2. `ルールブックのキャラクターメイキングとキャラクター成長があれば操作できる項目`
+3. `使い方、見方がよくわからなかった項目`
+
+各項目では、表示されている根拠、実際に作成操作を進めるときの判断、必要な場合だけの具体的な不足情報を記録する。存在しない操作や非表示の情報を推測しない。
+
+### ヘルプ本文の作成・承認順序
+
+1. ユーザーの本文作成開始指示後、上記の制約でコンテンツレビューを実施する。
+2. レビュー結果だけを根拠に、Codexがヘルプ本文のMarkdown draftをこのissueへ作成する。Component、`dictionary.ts`、E2E、VRTは変更しない。
+3. ユーザーがMarkdown draftをレビューする。ユーザーの明示承認前に本文をComponentへ反映しない。
+4. 承認済み本文だけを`CharacterSheetHelpDialog`へ実装し、必要なComponent / browser E2Eを更新する。VRTは本文実装後もユーザーの別指示まで保留する。
+
+この内容レビューは、本文を作るための利用者視点の入力であり、G30のTechReview、Visual Review、canonical snapshotの更新、G31のcapture-only手順を置き換えない。
 
 ## 完了条件
 
@@ -113,6 +148,8 @@
 - G23のaction menuとG5のdialog shellの責務・Escape優先順位を回帰させないこと。
 - ヘルプ本文が未確定のため、TechReview完了後もG30をarchiveしない判断が適切なこと。
 - 本文未確定の現段階ではTechReviewだけを先行し、Visual Reviewの新規VRT scenario／capture-only手順をG31へ残す方針が適切なこと。
+- コンテンツレビュワーへ渡す入力を3ページとcanonical snapshotに限定し、ヘルプ、要件、issue、既存review、画像名を渡さない方針が、利用者視点のレビューに必要かつ十分であること。
+- レビュー出力の3分類と、Markdown draftをユーザー承認後にだけComponentへ反映する順序が、本文の作り方として適切なこと。
 
 ## Tech Review 1
 
