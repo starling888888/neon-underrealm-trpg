@@ -2,9 +2,11 @@ import { z } from "zod";
 
 import {
   type CreditFieldName,
+  type CyberneticFixedPartKey,
   type ResolveEffectName,
   specialItemCategoryIds,
 } from "../form-values";
+import { isCyberneticCompatibleWithFixedPart } from "../master-data/cybernetics";
 
 const nonNegativeIntegerSchema = z.number().int().nonnegative();
 const signedIntegerSchema = z.number().int();
@@ -376,6 +378,22 @@ export const characterSheetRestoreInputSchema =
 
 export const characterSheetFormSchema =
   characterSheetRestoreInputSchema.superRefine((values, context) => {
+    for (const part of ["head", "torso", "arm", "leg"] as const) {
+      if (
+        isCyberneticCompatibleWithFixedPart(
+          part,
+          values.cybernetics[`${part}Id` as `${CyberneticFixedPartKey}Id`],
+        )
+      ) {
+        continue;
+      }
+      context.addIssue({
+        code: "custom",
+        message: "A fixed cybernetic slot must match its part.",
+        path: ["cybernetics", `${part}Id`],
+      });
+    }
+
     const drugRowsById = new Map<string, number[]>();
     values.drugs.rows.forEach((row, index) => {
       if (row.drugId === null) return;

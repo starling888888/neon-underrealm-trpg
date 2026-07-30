@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { characterSheetDefaultValues } from "../../../../src/character-sheet/form-values";
+import { getCybernetics } from "../../../../src/character-sheet/master-data/cybernetics";
 import { getDrugs } from "../../../../src/character-sheet/master-data/drugs";
 import {
   readCharacterSheetForm,
   writeCharacterSheetForm,
 } from "../../../../src/character-sheet/persistence/character-sheet-form";
+import { characterSheetFormSchema } from "../../../../src/character-sheet/schemas/character-sheet-form";
 import { parseCharacterSheetRestoreJson } from "../../../../src/character-sheet/schemas/character-sheet-persistence";
 
 describe("character sheet form persistence", () => {
@@ -86,5 +88,22 @@ describe("character sheet form persistence", () => {
     assert.equal(restored.weapons.rows[0].weaponId, null);
     assert.equal(restored.weapons.rows[0].rowId, "restore-weapon-1");
     assert.equal(restored.drugs.rows.length, values.drugs.rows.length - 1);
+  });
+
+  it("retains an incompatible fixed cybernetic for the form error state", () => {
+    const armCybernetic = getCybernetics().find(
+      (cybernetic) => cybernetic.part === "腕",
+    );
+    if (armCybernetic === undefined) {
+      throw new Error("Expected an arm cybernetic.");
+    }
+    const values = structuredClone(characterSheetDefaultValues);
+    values.cybernetics.headId = armCybernetic.id;
+
+    const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
+    if (restored === null) throw new Error("Expected a restored form value.");
+
+    assert.equal(restored.cybernetics.headId, armCybernetic.id);
+    assert.equal(characterSheetFormSchema.safeParse(restored).success, false);
   });
 });

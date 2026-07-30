@@ -56,6 +56,11 @@
   composes: rowPicker from "./CharacterSheetFormList.module.css";
 }
 
+.row[data-invalid="true"] .itemPicker {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
 .chooseIcon {
   composes: pickerIcon from "./CharacterSheetFormList.module.css";
 }

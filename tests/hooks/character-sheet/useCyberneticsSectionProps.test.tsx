@@ -84,4 +84,26 @@ describe("useCyberneticsSectionProps", () => {
       result.current.form.getValues("checks.noncombat.intimidation.modifier"),
     ).toBe(-4);
   });
+
+  it("marks a fixed row invalid when its selected cybernetic has another part", () => {
+    const armCybernetic = getCybernetics().find(
+      (cybernetic) => cybernetic.part === "腕",
+    );
+    if (armCybernetic === undefined) {
+      throw new Error("サイバネmaster dataに腕部品がありません。");
+    }
+    const { result } = renderHook(() => useCyberneticsHarness());
+
+    act(() => {
+      result.current.props.onSelect(
+        { kind: "fixed", part: "head" },
+        armCybernetic.id,
+      );
+    });
+
+    expect(
+      result.current.props.fixedRows.find((row) => row.part === "head")
+        ?.hasPartError,
+    ).toBe(true);
+  });
 });

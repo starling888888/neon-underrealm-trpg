@@ -40,16 +40,16 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 | `実装時のアーキテクチャ遵守` | 最終diffをこの表と本issueの対象範囲へ対応付け、G24に必要なroot-state、persistence、schemaだけを変更する。                                                                                       | ほかのGateのUI、JSON export / import、全消去、派生logicの設計変更を混在させる。                                             | 最終diff照合、Node、hook、必要時のbrowser behavior       |
 | `状態と派生値の境界`         | RHFを唯一の編集stateとして保ち、復元済み値を`reset`または既存field array契約に従って反映する。復元中・利用可能・失敗のroot状態と復元失敗dialogの開閉・focus復帰をroot-state custom hookへ置く。 | RHF値の別store複製、外部更新でのclamp・自動削除、画像record・dialog・menu・section開閉stateの保存値への混在。               | hook、既存uncontrolled input同期の回帰、browser behavior |
 | `自動保存と復元`             | localStorage adapter、RHF `subscribe`、debounce、離脱時flush、マウント後の構造検証済み`reset`、画像読取りと独立した初期化を実装する。                                                           | `useWatch`による保存専用再描画、復元完了前の保存、復元失敗時の部分反映、画像復元とフォーム復元の相互停止。                  | persistence Node、root-state hook                        |
-| `データ境界`                 | `schemas/`で復元入力を検証し、`master-data/`の読み取り結果を明示入力として未知IDを扱うshared restore adapterを置く。                                                                            | `logic/`へStorage / React依存を混在させること、既存TODOが求める派生logicからのmaster ID解決分離をこのGate内で回収すること。 | schema / persistence Node、master-data境界の既存回帰     |
+| `データ境界`                 | `schemas/`で復元入力を検証し、read-onlyな`master-data/` lookupを直接参照して未知IDを扱うshared restore adapterを置く。                                                                          | `logic/`へStorage / React依存を混在させること、既存TODOが求める派生logicからのmaster ID解決分離をこのGate内で回収すること。 | schema / persistence Node、master-data境界の既存回帰     |
 | `テスト層と配置`             | serializable persistenceとschemaをNode test、RHFと副作用の結線をhook testで確認する。既存画面表示を変更しない範囲ではVRTを実行しない。                                                          | Storage実装へ直結したテスト、VRTへ構造・復元競合の検証を置くこと、test-onlyの製品状態・DOMを追加すること。                  | Node、hook、必要最小限のbrowser behavior                 |
 
 ## 対象範囲
 
 - `CharacterSheetFormValues`だけを対象にするlocalStorage persistence adapterを`src/character-sheet/persistence/`へ置く。保存keyはfeature内で定数化し、最新1件だけを読み書きできるようにする。画像record、派生値、dialog・menu・section開閉などのUI stateは含めない。
 - `unknown`の保存入力を、JSON textの解析、フォーム構造・プリミティブ型・配列要件・row IDの検証、現在のマスタID照合、復元可能な`CharacterSheetFormValues`への変換の順に扱うshared restore adapterを定める。このadapterはブラウザAPIやReact stateを持たず、G27がファイル読取り後に同じ検証・正規化境界を利用できる公開APIにする。
-- 構造と型が正しい値は、経験点・信用・能力値配分・重複・スキルLvの下限または最大Lv超過など、既存logicが局所errorとして扱う不整合を含んでも除外・clamp・初期値への置換をせず復元する。派生値とerror表示は既存のRHF値から再計算する。
-- 現在のマスタにない選択IDは、該当する単一選択値を空欄へ、可変行を行単位で除外する。除外後にfield arrayの最小行数、固定rowのidentity、関連する`ryugiRowId`参照を含む必須構造を満たせず完全な互換性を保てない場合は、フォームへ一切反映しない。
-- JSONとして解析できない、必須構造・型・列挙値・row IDが不正、または上記マスタ除外後に完全な互換性を保てない保存値は「復元不可」として扱う。初期RHF値または現在の編集値を部分変更せず、該当localStorage recordも自動削除・書換えしない。
+- 構造と型が正しい値は、経験点・信用・能力値配分・重複・スキルLvの下限または最大Lv超過・固定サイバネslotへの部位不一致など、既存logicまたはform schemaが局所errorとして扱う不整合を含んでも除外・clamp・初期値への置換をせず復元する。派生値とerror表示は既存のRHF値から再計算する。
+- 現在のマスタにない選択IDは、該当する単一選択値を空欄へ、可変行を行単位で除外する。除外後にfield arrayの最小行数を下回る場合は、必要な最小数だけ空欄行を追加する。固定rowのidentityまたは関連する`ryugiRowId`参照を保てない場合は、フォームへ一切反映しない。
+- JSONとして解析できない、必須構造・型・列挙値・row IDが不正、または上記の固定row identity・関連参照を保てない保存値は「復元不可」として扱う。初期RHF値または現在の編集値を部分変更せず、該当localStorage recordも自動削除・書換えしない。
 - root-state custom hookで、マウント後にフォーム復元を開始し、検証済み値だけを`form.reset()`で一括反映する。復元が完了または失敗して保存値を破棄するまで自動保存を開始しない。画像IndexedDB読取りとは独立して進め、片方の失敗で他方を停止させない。
 - RHFの`subscribe`を使ってフォーム値を監視し、短時間の連続入力はまとめて保存する。unmount / page離脱時は保留中の最新値を保存する。`useWatch`で保存専用の再描画を発生させず、RHF外の編集state storeを追加しない。
 - JSON解析、構造・型検証、マスタ照合のいずれかで復元に失敗した場合は、既存の`CharacterSheetDialog`を使う。title / headerとheaderのclose buttonは置かず、本文だけに「自動復元に失敗しました。」を表示する。visibleなaction buttonは`確認`だけとし、確認後は初期フォーム値を編集可能な状態へ戻す。dialogのaccessible name、開閉・確認後のfocus復帰はroot-state custom hookが所有し、保存値は変更しない。
@@ -63,7 +63,7 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 - エラー・警告の集約表示、action paneのbutton文言・レイアウト・新しい通知dialogの実装（G25、G23の既存境界を維持する）。ただし、復元失敗の既存`CharacterSheetDialog`接続はこのGateに含める。
 - 全消去に伴うform reset、localStorageまたは画像recordの削除操作（G29）。復元不能な自動保存値の削除・書換えもこのGateでは行わない。
 - スキーマバージョン、旧JSON形式の移行、複数キャラクター、クラウド同期、サーバー・DB・認証、追加npm package。
-- `docs/TODO.md`で別taskとされる、派生logicからのmaster ID解決の分離を、このGateへ拡張して実装すること。復元境界でread-only master-data adapterを入力として使うことは許可するが、既存`logic/`のID解決責務は変更しない。
+- `docs/TODO.md`で別taskとされる、派生logicからのmaster ID解決の分離を、このGateへ拡張して実装すること。復元境界はread-onlyな`master-data/` lookupを直接参照してよいが、既存`logic/`のID解決責務は変更しない。
 
 ## 完了条件
 
@@ -71,7 +71,7 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 - [ ] 起動後の復元完了前に初期値で既存保存値を上書きせず、復元済み値は`form.reset()`で一括反映される。
 - [ ] 構造・型として正しい不整合値は、clamp・削除・初期値化をせず復元され、既存の局所error判定へ渡る。
 - [ ] 解析不能または構造・型として復元不能な保存値は、formへの部分反映なしに拒否され、端末内保存を変更しない。
-- [ ] 現在のマスタにないIDは要件どおり除外し、除外後に必須構造を維持できない値はformと端末内保存を変更せず、復元失敗として扱う。
+- [ ] 現在のマスタにないIDは要件どおり除外し、最小行数を下回る配列には必要な空欄行だけを追加して復元する。
 - [ ] shared restore adapterをG27のJSON importが再利用でき、localStorage固有の削除やReact副作用をimport入力へ持ち込まない。
 - [ ] 画像復元の成功・不在・失敗がフォーム復元を停止させず、フォーム復元の失敗も画像表示を変更しない。
 - [ ] localStorage APIの読取り・書込み例外で`console.error`を出し、現在の編集を停止または破壊せず、dialogを表示しない。
@@ -115,7 +115,7 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 
 - 親Gate planのG24依存Gateはすべて`done`である。
 - `docs/TODO.md`にはG24関連の未チェック項目が2件ある。一方、親Gate planのG16 handoffは全field arrayの`useFieldArray`操作とreset同期を「確定」と記録している。実コードとarchitectureを照合して、G24は既存field array契約に従うだけとする。
-- ユーザーの実装開始指示により、`logic/build.ts`に残るmaster ID解決分離はG24の前提ではなく別taskとして維持する。G24はread-only master-data adapterを明示入力にして未知IDを復元境界で扱い、既存`logic/`の責務を変更しない。
+- ユーザーの実装開始指示により、`logic/build.ts`に残るmaster ID解決分離はG24の前提ではなく別taskとして維持する。G24はread-onlyな`master-data/` lookupを直接参照して未知IDを復元境界で扱い、既存`logic/`の責務を変更しない。
 - requirementsとarchitectureは、復元不能データをフォームへ部分反映せず、端末内保存も変更せずにエラー表示することを定める。ユーザー指示の「キック」は、このrecordを削除する意味ではなく、フォームへ受け入れず拒否する意味として扱う。
 - ユーザー指示により、復元失敗は既存の`CharacterSheetDialog`でtitle / headerを置かず、本文「自動復元に失敗しました。」とvisibleなaction buttonの`確認`だけを表示する。localStorage API例外は`console.error`だけで握りつぶし、dialogを表示しない。
 - JSON schema version互換性は`docs/TODO.md`で将来taskへ分離済みであり、このGateではversionを保存・比較・移行しない。現在の形式として構造・型を受理できない値は復元不可として扱う。
@@ -164,7 +164,7 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 
 ### 対応方針
 
-- persistence専用の構造・identity schemaと、read-only master-dataを明示入力とするshared restore adapterを分離する。局所errorとなるゲーム上の不整合は保持し、未知IDだけを要件どおり空欄化または行除外した後に関連参照と最小行数を検証する。
+- persistence専用の構造・identity schemaと、read-onlyな`master-data/` lookupを直接参照するshared restore adapterを分離する。局所errorとなるゲーム上の不整合は保持し、未知IDだけを要件どおり空欄化または行除外した後に関連参照と最小行数を検証する。
 - pending状態を持つ共通flushをdebounce、effect cleanup、`pagehide`から呼び、書込み例外は`console.error`だけで非停止とする。
 - 復元失敗dialogを閉じるときのfocus先をroot-stateで定め、確認buttonとEscapeの両方をbrowser testで固定する。
 - fake timerとstorage / image operation test doubleを使うhook testを追加し、上記の復元・保存境界を固定する。

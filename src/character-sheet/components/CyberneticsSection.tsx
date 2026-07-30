@@ -25,7 +25,10 @@ type CyberneticsRow = {
   rowId: string;
 };
 
-type FixedCyberneticsRow = CyberneticsRow & { part: CyberneticFixedPartKey };
+type FixedCyberneticsRow = CyberneticsRow & {
+  hasPartError?: boolean;
+  part: CyberneticFixedPartKey;
+};
 
 type ModifierInputProps = {
   field: "implantLimitModifier" | "implantTotalModifier";
@@ -111,6 +114,7 @@ function CyberneticsRow({
   onRemove: () => void;
   row: CyberneticsRow & {
     accessiblePartLabel?: string;
+    hasPartError?: boolean;
     partLabel: string;
   };
   target: CyberneticsPickerTarget;
@@ -122,12 +126,17 @@ function CyberneticsRow({
   const detailsId = `cybernetics-details-${row.rowId}`;
 
   return (
-    <fieldset className={styles.row} data-cybernetics-row={row.rowId}>
+    <fieldset
+      className={styles.row}
+      data-cybernetics-row={row.rowId}
+      data-invalid={row.hasPartError || undefined}
+    >
       <legend className={styles.visuallyHidden}>{rowLabel}</legend>
       <div className={styles.line}>
         <span className={styles.part}>{row.partLabel}</span>
         <button
           aria-label={rowLabel}
+          aria-invalid={row.hasPartError || undefined}
           className={styles.itemPicker}
           onClick={(event) => onPickerRequest(target, event.currentTarget)}
           type="button"

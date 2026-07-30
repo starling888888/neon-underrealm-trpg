@@ -1,5 +1,6 @@
 import { getItemsData } from "../../lib/data/items";
 import type { Cybernetic, CyberneticPartKey } from "../../lib/types/item";
+import type { CyberneticFixedPartKey } from "../form-values";
 
 export const cyberneticPartKeys = [
   "head",
@@ -23,6 +24,13 @@ const partLabelByKey = {
   torso: "胴体",
 } as const satisfies Record<CyberneticPartKey, Cybernetic["part"]>;
 
+const fixedPartLabelByKey = {
+  arm: "腕",
+  head: "頭",
+  leg: "足",
+  torso: "胴体",
+} as const satisfies Record<CyberneticFixedPartKey, Cybernetic["part"]>;
+
 export function getCybernetics(): readonly Cybernetic[] {
   return cyberneticPartKeys.flatMap(
     (part) => getItemsData().cybernetics[part] ?? [],
@@ -32,6 +40,20 @@ export function getCybernetics(): readonly Cybernetic[] {
 export function getCyberneticById(id: string | null): Cybernetic | null {
   if (id === null) return null;
   return getCybernetics().find((candidate) => candidate.id === id) ?? null;
+}
+
+/** True when a fixed slot accepts its matching part or an any-part cybernetic. */
+export function isCyberneticCompatibleWithFixedPart(
+  part: CyberneticFixedPartKey,
+  id: string | null,
+): boolean {
+  const cybernetic = getCyberneticById(id);
+
+  return (
+    cybernetic === null ||
+    cybernetic.part === "任意" ||
+    cybernetic.part === fixedPartLabelByKey[part]
+  );
 }
 
 export function getCyberneticCandidateGroups(

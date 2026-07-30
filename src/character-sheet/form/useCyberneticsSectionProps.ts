@@ -11,7 +11,10 @@ import type {
 } from "../form-values";
 import type { BuildDerivedValues } from "../logic/build";
 import { calculateCybernetics } from "../logic/cybernetics";
-import { getCyberneticById } from "../master-data/cybernetics";
+import {
+  getCyberneticById,
+  isCyberneticCompatibleWithFixedPart,
+} from "../master-data/cybernetics";
 import { noncombatSkills } from "../master-data/noncombat-skills";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
 
@@ -89,6 +92,10 @@ export default function useCyberneticsSectionProps(
     derived,
     fixedRows: fixedPartKeys.map((part) => ({
       cybernetic: getCyberneticById(values[getFixedField(part)]),
+      hasPartError: !isCyberneticCompatibleWithFixedPart(
+        part,
+        values[getFixedField(part)],
+      ),
       part,
       rowId: `cybernetic-${part}`,
     })),
