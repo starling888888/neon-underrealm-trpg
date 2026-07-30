@@ -118,7 +118,7 @@ describe("CharacterSheetContainer", () => {
     render(<CharacterSheetContainer />);
 
     const trigger = screen.getByRole("button", {
-      name: "操作メニューを開く",
+      name: "操作メニューを開く、エラーはありません。",
     });
     await user.click(trigger);
 
@@ -128,7 +128,7 @@ describe("CharacterSheetContainer", () => {
       }),
     ).not.toBeNull();
     const closeTrigger = screen.getByRole("button", {
-      name: "操作メニューを閉じる",
+      name: "操作メニューを閉じる、エラーはありません。",
     });
     expect(closeTrigger.querySelector("svg")?.getAttribute("class")).toContain(
       "lucide-x",

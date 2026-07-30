@@ -132,14 +132,20 @@ test.describe("character sheet page", () => {
     for (const viewport of [visualViewports.tablet, visualViewports.mobile]) {
       await page.setViewportSize(viewport);
       await expect(page.getByRole("button", { name: "ヘルプ" })).toBeVisible();
-      const trigger = page.getByRole("button", { name: "操作メニューを開く" });
+      const trigger = page.getByRole("button", {
+        exact: true,
+        name: "操作メニューを開く、エラーはありません。",
+      });
       await trigger.click();
       const menu = page.getByRole("region", {
         name: "キャラクターシートの操作メニュー",
       });
       await expect(menu).toBeVisible();
       await expect(
-        page.getByRole("button", { name: "操作メニューを閉じる" }),
+        page.getByRole("button", {
+          exact: true,
+          name: "操作メニューを閉じる、エラーはありません。",
+        }),
       ).toBeVisible();
       await page.keyboard.press("Escape");
       await expect(menu).toBeHidden();
@@ -153,7 +159,10 @@ test.describe("character sheet page", () => {
     await page.setViewportSize(visualViewports.mobile);
     await page.goto("character-sheet/");
 
-    const trigger = page.getByRole("button", { name: "操作メニューを開く" });
+    const trigger = page.getByRole("button", {
+      exact: true,
+      name: "操作メニューを開く、エラーはありません。",
+    });
     const menu = page.getByRole("region", {
       name: "キャラクターシートの操作メニュー",
     });
@@ -661,7 +670,7 @@ test.describe("character sheet page", () => {
     const dialog = page.getByRole("dialog", { name: "エラー" });
     await expect(dialog).toContainText("エラーが2件あります。");
     await expect(dialog.getByRole("list")).toContainText(
-      "入力済みの縁が結べる縁の上限を超えています。",
+      "縁2「ベラ」：結べる縁の上限を超えています。",
     );
     await expect(dialog.getByRole("list")).toContainText(
       "消費経験点が取得経験点を超えているか、取得経験点が不正です。",
@@ -671,7 +680,8 @@ test.describe("character sheet page", () => {
 
     await page.setViewportSize(visualViewports.mobile);
     const menuTrigger = page.getByRole("button", {
-      name: "操作メニューを開く",
+      exact: true,
+      name: "操作メニューを開く、エラーが2件あります。",
     });
     await menuTrigger.click();
     const menu = page.getByRole("region", {
@@ -679,7 +689,7 @@ test.describe("character sheet page", () => {
     });
     await expect(menu).toContainText("エラーが2件あります。");
     await expect(menu.getByRole("list")).toContainText(
-      "入力済みの縁が結べる縁の上限を超えています。",
+      "縁2「ベラ」：結べる縁の上限を超えています。",
     );
     await expect(menu.getByRole("list")).toContainText(
       "消費経験点が取得経験点を超えているか、取得経験点が不正です。",

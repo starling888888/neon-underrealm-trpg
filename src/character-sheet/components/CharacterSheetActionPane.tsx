@@ -31,6 +31,9 @@ export default function CharacterSheetActionPane({
   onReviewErrors,
 }: CharacterSheetActionPaneProps) {
   const { actions } = characterSheetDictionary.characterSheet;
+  const errorStatusText = errorSummary.hasErrors
+    ? `エラーが${errorSummary.errors.length}件あります。`
+    : actions.noErrors;
 
   return (
     <section aria-label={actions.regionLabel} className={styles.root}>
@@ -76,7 +79,7 @@ export default function CharacterSheetActionPane({
         <button
           aria-controls={menuId}
           aria-expanded={isMenuOpen}
-          aria-label={isMenuOpen ? actions.closeMenu : actions.openMenu}
+          aria-label={`${isMenuOpen ? actions.closeMenu : actions.openMenu}、${errorStatusText}`}
           className={
             errorSummary.hasErrors
               ? `${styles.iconButton} ${styles.iconButtonDanger}`
@@ -151,8 +154,10 @@ function ErrorSummary({
             エラーが{errorSummary.errors.length}件あります。
           </p>
           <ul className={styles.errorList}>
-            {errorSummary.errors.map((error) => (
-              <li key={error.code}>{error.message}</li>
+            {errorSummary.errors.map((error, index) => (
+              <li key={`${error.code}-${error.rowId ?? index}`}>
+                {error.message}
+              </li>
             ))}
           </ul>
         </>

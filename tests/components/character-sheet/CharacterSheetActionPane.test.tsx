@@ -48,7 +48,28 @@ describe("CharacterSheetActionPane", () => {
     }
     expect(floatingHelpButton.className).not.toContain("iconButtonDanger");
     expect(
-      screen.getByRole("button", { name: "操作メニューを閉じる" }).className,
+      screen.getByRole("button", {
+        name: "操作メニューを閉じる、エラーが1件あります。",
+      }).className,
     ).toContain("iconButtonDanger");
+  });
+
+  it("includes the empty error state in the closed menu button name", () => {
+    render(
+      <CharacterSheetActionPane
+        errorReviewButtonRef={createRef<HTMLButtonElement>()}
+        errorSummary={{ errors: [], hasErrors: false }}
+        isMenuOpen={false}
+        menuTriggerRef={createRef<HTMLButtonElement>()}
+        onMenuToggle={vi.fn()}
+        onReviewErrors={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", {
+        name: "操作メニューを開く、エラーはありません。",
+      }),
+    ).not.toBeNull();
   });
 });

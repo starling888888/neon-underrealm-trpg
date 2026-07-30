@@ -4,16 +4,14 @@ import type { CharacterSheetFormPresenterProps } from "../components/CharacterSh
 import type { CyberneticsPickerTarget } from "../components/CyberneticsSection";
 import type { NanomachinesPickerTarget } from "../components/NanomachinesSection";
 import type { CharacterSheetFormValues } from "../form-values";
-import {
-  type CharacterSheetErrorSummary,
-  getCharacterSheetErrorSummary,
-} from "../logic/error-summary";
+import type { CharacterSheetErrorSummary } from "../logic/error-summary";
 import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
 import type { OtherRyugiSkillGroups } from "../master-data/other-ryugi-skills";
 import type { PrimarySkillGroups } from "../master-data/primary-skills";
 import type { CharacterImagePresenterState } from "./presenter-state";
 import useBondsSectionProps from "./useBondsSectionProps";
 import useBuildSectionProps from "./useBuildSectionProps";
+import useCharacterSheetErrorSummary from "./useCharacterSheetErrorSummary";
 import useChecksSectionProps from "./useChecksSectionProps";
 import useCommonSkillsSectionProps from "./useCommonSkillsSectionProps";
 import useCyberneticsSectionProps from "./useCyberneticsSectionProps";
@@ -220,59 +218,17 @@ export default function useCharacterSheetFormPresenterProps(
   const omamori = useOmamoriSectionProps(form, {
     onPickerRequest: onOmamoriPickerRequested ?? (() => {}),
   });
-  const errorSummary = getCharacterSheetErrorSummary({
-    bonds: { hasOverLimitError: bondsSection.derived.isOverLimit },
-    build: build.derivedBuild,
-    commonSkills: {
-      hasDuplicateError:
-        commonSkills.sectionProps.invalidDuplicateSkillRowIds.length > 0,
-      hasLevelError: commonSkills.sectionProps.hasCommonSkillLevelError,
-      hasMaximumLevelError:
-        commonSkills.sectionProps.invalidMaximumLevelRowIds.length > 0,
-    },
-    credit: profileSection.creditSummary,
-    cybernetics: {
-      hasImplantLimitError: cybernetics.derived.hasImplantLimitError,
-      hasPartError: cybernetics.fixedRows.some((row) => row.hasPartError),
-    },
-    drugs: {
-      hasDuplicateError: drugs.rows.some((row) => row.hasDuplicateSelection),
-    },
-    ikizamaSkills: {
-      hasAdvancedError:
-        ikizamaSkills.sectionProps.invalidAdvancedSkillRowIds.length > 0,
-      hasDuplicateError:
-        ikizamaSkills.sectionProps.invalidDuplicateSkillRowIds.length > 0,
-      hasLevelError: ikizamaSkills.sectionProps.hasIkizamaSkillLevelTotalError,
-      hasMaximumLevelError:
-        ikizamaSkills.sectionProps.invalidMaximumLevelRowIds.length > 0,
-    },
-    nanomachines: {
-      hasImplantLimitError: nanomachines.derived.hasImplantLimitError,
-    },
-    otherRyugiSkills: {
-      hasAdvancedError: otherRyugiSkills.sectionProps.sections.some(
-        (section) => section.invalidAdvancedSkillRowIds.length > 0,
-      ),
-      hasDuplicateError: otherRyugiSkills.sectionProps.sections.some(
-        (section) => section.invalidDuplicateSkillRowIds.length > 0,
-      ),
-      hasLevelError: otherRyugiSkills.sectionProps.sections.some(
-        (section) => section.hasSkillLevelTotalError,
-      ),
-      hasMaximumLevelError: otherRyugiSkills.sectionProps.sections.some(
-        (section) => section.invalidMaximumLevelRowIds.length > 0,
-      ),
-    },
-    primarySkills: {
-      hasAdvancedError:
-        primarySkills.sectionProps.invalidAdvancedSkillRowIds.length > 0,
-      hasDuplicateError:
-        primarySkills.sectionProps.invalidDuplicateSkillRowIds.length > 0,
-      hasLevelError: primarySkills.sectionProps.hasPrimarySkillLevelTotalError,
-      hasMaximumLevelError:
-        primarySkills.sectionProps.invalidMaximumLevelRowIds.length > 0,
-    },
+  const errorSummary = useCharacterSheetErrorSummary({
+    bondsSection,
+    build,
+    commonSkills,
+    cybernetics,
+    drugs,
+    ikizamaSkills,
+    nanomachines,
+    otherRyugiSkills,
+    primarySkills,
+    profileSection,
   });
 
   return {

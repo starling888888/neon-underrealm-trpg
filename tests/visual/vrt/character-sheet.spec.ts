@@ -305,8 +305,16 @@ async function selectOtherRyugiSkill(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
-async function openActionMenu(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "操作メニューを開く" }).click();
+async function openActionMenu(
+  page: Page,
+  errorStatusText = "エラーはありません。",
+): Promise<void> {
+  await page
+    .getByRole("button", {
+      exact: true,
+      name: `操作メニューを開く、${errorStatusText}`,
+    })
+    .click();
   await expect(
     page.getByRole("region", { name: "キャラクターシートの操作メニュー" }),
   ).toBeVisible();
@@ -325,7 +333,7 @@ async function openEmptyErrorDialog(page: Page): Promise<void> {
 
 async function openErrorActionMenu(page: Page): Promise<void> {
   await prepareRepresentativeErrors(page);
-  await openActionMenu(page);
+  await openActionMenu(page, "エラーが2件あります。");
 }
 
 const section = (selector: string) => ({
