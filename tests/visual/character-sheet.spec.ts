@@ -235,6 +235,103 @@ test.describe("character sheet page", () => {
     }
   });
 
+  test("opens the titleless CCFOLIA confirmation dialog from every action pane", async ({
+    page,
+  }) => {
+    await page.goto("character-sheet/");
+
+    const copyDialog = page.getByRole("dialog", { name: "CCFOLIAコピー" });
+    const openCcfoliaCopy = async () => {
+      const menuTrigger = page.getByRole("button", {
+        exact: true,
+        name: "操作メニューを開く、エラーはありません。",
+      });
+      const trigger = (await menuTrigger.isVisible())
+        ? menuTrigger
+        : page.getByRole("button", { exact: true, name: "CCFOLIAコピー" });
+
+      if (await menuTrigger.isVisible()) {
+        await menuTrigger.click();
+      }
+      await page
+        .getByRole("button", { exact: true, name: "CCFOLIAコピー" })
+        .click();
+      await expect(copyDialog).toBeVisible();
+      return trigger;
+    };
+
+    for (const viewport of [
+      visualViewports.desktop,
+      visualViewports.tablet,
+      visualViewports.mobile,
+    ]) {
+      await page.setViewportSize(viewport);
+      const trigger = await openCcfoliaCopy();
+      await expect(copyDialog).toContainText(
+        "CCFOLIAのコマ作成データをクリップボードにコピーします。CCFOLIAの盤面で貼り付けを行うとコマが作成されます。",
+      );
+      await expect(copyDialog.getByRole("heading")).toHaveCount(0);
+      await expect(
+        copyDialog.getByRole("button", { exact: true, name: "キャンセル" }),
+      ).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(copyDialog).toBeHidden();
+      await expect(trigger).toBeFocused();
+    }
+  });
+
+  test("notifies CCFOLIA clipboard success and failure", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: { writeText: () => Promise.resolve() },
+      });
+    });
+    await page.goto("character-sheet/");
+
+    const trigger = page.getByRole("button", {
+      exact: true,
+      name: "CCFOLIAコピー",
+    });
+    await trigger.click();
+    await page
+      .getByRole("dialog", { name: "CCFOLIAコピー" })
+      .getByRole("button", { exact: true, name: "コピー" })
+      .click();
+    const success = page.getByRole("dialog", { name: "CCFOLIAコピー完了" });
+    await expect(success).toContainText("クリップボードにコピーしました。");
+    await expect(success.getByRole("heading")).toHaveCount(0);
+    await expect(
+      success.getByRole("button", { exact: true, name: "確認" }),
+    ).toBeFocused();
+    await success.getByRole("button", { exact: true, name: "確認" }).click();
+    await expect(trigger).toBeFocused();
+
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: {
+          writeText: () =>
+            Promise.reject(new Error("Clipboard write rejected.")),
+        },
+      });
+    });
+    await trigger.click();
+    await page
+      .getByRole("dialog", { name: "CCFOLIAコピー" })
+      .getByRole("button", { exact: true, name: "コピー" })
+      .click();
+    const failure = page.getByRole("dialog", { name: "CCFOLIAコピー失敗" });
+    await expect(failure).toContainText(
+      "クリップボードへのコピーに失敗しました。\nブラウザの権限設定を確認してください。",
+    );
+    await expect(
+      failure.getByRole("button", { exact: true, name: "確認" }),
+    ).toBeFocused();
+    await failure.getByRole("button", { exact: true, name: "確認" }).click();
+    await expect(trigger).toBeFocused();
+  });
+
   test("replaces form values from JSON and reports an invalid imported image", async ({
     page,
   }) => {

@@ -9,12 +9,14 @@ import CharacterSheetButton from "./CharacterSheetButton";
 type CharacterSheetActionPaneProps = {
   errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
   errorSummary: CharacterSheetErrorSummary;
+  isCcfoliaCopyDisabled: boolean;
   isExportDisabled: boolean;
   isImportDisabled: boolean;
   isResetDisabled: boolean;
   isMenuOpen: boolean;
   menuTriggerRef: RefObject<HTMLButtonElement | null>;
   onExport: () => void;
+  onCcfoliaCopy: (trigger: HTMLButtonElement) => void;
   onImport: (trigger: HTMLButtonElement) => void;
   onMenuToggle: () => void;
   onReset: (trigger: HTMLButtonElement) => void;
@@ -31,12 +33,14 @@ const menuId = "character-sheet-actions-menu";
 export default function CharacterSheetActionPane({
   errorReviewButtonRef,
   errorSummary,
+  isCcfoliaCopyDisabled,
   isExportDisabled,
   isImportDisabled,
   isResetDisabled,
   isMenuOpen,
   menuTriggerRef,
   onExport,
+  onCcfoliaCopy,
   onImport,
   onMenuToggle,
   onReset,
@@ -69,7 +73,11 @@ export default function CharacterSheetActionPane({
           >
             {actions.import}
           </CharacterSheetButton>
-          <CharacterSheetButton size="medium">
+          <CharacterSheetButton
+            disabled={isCcfoliaCopyDisabled}
+            onClick={(event) => onCcfoliaCopy(event.currentTarget)}
+            size="medium"
+          >
             {actions.ccfoliaCopy}
           </CharacterSheetButton>
           <CharacterSheetButton
@@ -147,6 +155,8 @@ export default function CharacterSheetActionPane({
             </CharacterSheetButton>
             <CharacterSheetButton
               className={styles.menuActionButton}
+              disabled={isCcfoliaCopyDisabled}
+              onClick={(event) => onCcfoliaCopy(event.currentTarget)}
               size="medium"
             >
               {actions.ccfoliaCopy}

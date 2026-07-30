@@ -1796,3 +1796,32 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-24-sheet-persistence` のサイバネ部位不一致E2E / VRT
 - 観測した失敗: VRTで候補groupの見出しを経由するlocatorが解決できず、続くE2Eでは`/^頭：.+$/`がpicker、詳細、clear buttonの3要素へ一致してstrict mode違反になった。
 - 一次対応: `data/generated/items.json`とpicker Componentを確認し、テストで選ぶ既知の腕サイバネ`ガードアーム`と、対応するpicker buttonの完全一致accessible nameを使った。新規の復元state testは、候補選択と最終assertionの両方で実際のDOM上の一意なrole / nameを確認してから全viewportへ展開する。
+
+### Repeatedly ran a broad Container test before isolating its existing dialog-focus contract
+
+#### 2026-07-30
+
+- source: agent self-report
+- 発生箇所: `ex-02-28-sheet-ccfolia` の`CharacterSheetContainer` Component test
+- 観測した失敗: G28の確認・Clipboard通知結線を追加した直後、既存のresponsive reset / image errorのfocus復帰testを含むContainer全体を2回実行した。1回目はjsdomでnative Escapeを再現できない既存assertion、2回目は同じ既存testの画像エラーdialogからmenu triggerへのfocus復帰assertionで失敗し、CCFOLIA対象testを切り分ける前に同じ広いtest実行を繰り返した。
+- 一次対応: CCFOLIAのContainer結線は対象test名で単独実行し、ActionPane、CCFOLIA dialog、root-state hook、Node logic / Clipboard adapterを別々に確認した。reset test harnessがerrorを閉じた直後に本番root stateでは保持される`isImageErrorFromReset`までfalseにしていたため、本番と同じ保持契約へ修正した。対象Component / hook testは55件すべて通過した。
+
+### Retried VRT capture with an unmatched tag expression
+
+#### 2026-07-30
+
+- source: self
+- failure category: validation command targeting
+- 発生箇所: `ex-02-28-sheet-ccfolia`のCCFOLIA dialog VRT capture
+- 観測した失敗: `@ccfolia-copy`を完全tagとして扱う正規表現を2回指定したが、実際のtagは`@ccfolia-copy-confirm`、`@ccfolia-copy-success`、`@ccfolia-copy-failure`であり、Playwrightが対象なしで終了した。
+- 一次対応: VRT scenarioの実際のtagを先に確認し、3 stateをまとめて選ぶprefix `@ccfolia-copy`でtarget限定capture・baseline更新・通常比較を実行した。
+
+### Chained two Git staging operations in one shell command
+
+#### 2026-07-30
+
+- source: self
+- failure category: Git operation discipline
+- 発生箇所: `ex-02-28-sheet-ccfolia`のcommit準備
+- 観測した失敗: repository ruleが状態変更Git操作を1件ずつ実行するよう定めるなか、通常ファイルのstageとignoreされたcanonical snapshotのforce stageを`&&`で連結した。
+- 一次対応: stage対象がCCFOLIA Gateとユーザー承認済みの9枚のbaselineだけであることを確認し、手順逸脱を本logへ記録した。以後のstatus確認、staged diff確認、commit、pushはすべて単独のGit操作として実行する。

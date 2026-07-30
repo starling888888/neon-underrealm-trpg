@@ -98,6 +98,33 @@ describe("useCharacterSheetRootState", () => {
     expect(JSON.parse(exportedJson).imageBase64String).toBe(storedImage.base64);
   });
 
+  it("copies CCFOLIA JSON through the replaceable Clipboard adapter and reports failures", async () => {
+    const writeTextToClipboard = vi.fn(async () => {});
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeTextToClipboard,
+      }),
+    );
+
+    await waitFor(() =>
+      expect(result.current.isCharacterImageRestoring).toBe(false),
+    );
+    let copied = false;
+    await act(async () => {
+      copied = await result.current.onCcfoliaCopy('{"kind":"character"}');
+    });
+    expect(copied).toBe(true);
+    expect(writeTextToClipboard).toHaveBeenCalledWith('{"kind":"character"}');
+
+    writeTextToClipboard.mockRejectedValueOnce(new Error("denied"));
+    await act(async () => {
+      copied = await result.current.onCcfoliaCopy('{"kind":"character"}');
+    });
+    expect(copied).toBe(false);
+  });
+
   it("confirms JSON form replacement and clears an image-less import", async () => {
     const values = structuredClone(characterSheetDefaultValues);
     values.profile.pcName = "JSONから復元したPC";

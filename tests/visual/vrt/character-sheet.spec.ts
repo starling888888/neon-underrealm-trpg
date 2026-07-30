@@ -84,6 +84,59 @@ async function openResetConfirm(page: Page): Promise<void> {
   ).toBeVisible();
 }
 
+async function configureCcfoliaClipboard(
+  page: Page,
+  shouldReject: boolean,
+): Promise<void> {
+  await page.addInitScript((rejectClipboardWrite: boolean) => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: () =>
+          rejectClipboardWrite
+            ? Promise.reject(new Error("Clipboard write rejected."))
+            : Promise.resolve(),
+      },
+    });
+  }, shouldReject);
+}
+
+async function openCcfoliaCopyConfirm(page: Page): Promise<void> {
+  const menuTrigger = page.getByRole("button", { name: /操作メニューを開く/ });
+  if (await menuTrigger.isVisible()) {
+    await menuTrigger.click();
+  }
+
+  await page
+    .getByRole("button", { exact: true, name: "CCFOLIAコピー" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "CCFOLIAコピー" }),
+  ).toBeVisible();
+}
+
+async function openCcfoliaCopySuccess(page: Page): Promise<void> {
+  await openCcfoliaCopyConfirm(page);
+  await page
+    .getByRole("dialog", { name: "CCFOLIAコピー" })
+    .getByRole("button", { exact: true, name: "コピー" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "CCFOLIAコピー完了" }),
+  ).toBeVisible();
+}
+
+async function openCcfoliaCopyFailure(page: Page): Promise<void> {
+  await openCcfoliaCopyConfirm(page);
+  await page
+    .getByRole("dialog", { name: "CCFOLIAコピー" })
+    .getByRole("button", { exact: true, name: "コピー" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "CCFOLIAコピー失敗" }),
+  ).toBeVisible();
+}
+
 async function selectCharacterImage(page: Page): Promise<void> {
   await page.locator('input[type="file"]').setInputFiles({
     buffer: Buffer.from(
@@ -574,6 +627,29 @@ registerCharacterSheetVrtScenarios([
     kind: "dialog",
     locator: dialog("入力内容を初期化"),
     prepare: openResetConfirm,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "ccfolia-copy-confirm",
+    kind: "dialog",
+    locator: dialog("CCFOLIAコピー"),
+    prepare: openCcfoliaCopyConfirm,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "ccfolia-copy-success",
+    beforeGoto: (page) => configureCcfoliaClipboard(page, false),
+    kind: "dialog",
+    locator: dialog("CCFOLIAコピー完了"),
+    prepare: openCcfoliaCopySuccess,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "ccfolia-copy-failure",
+    beforeGoto: (page) => configureCcfoliaClipboard(page, true),
+    kind: "dialog",
+    locator: dialog("CCFOLIAコピー失敗"),
+    prepare: openCcfoliaCopyFailure,
     route: visualRoutes.characterSheet,
   },
   {

@@ -33,6 +33,18 @@ export const characterSheetDictionary = {
       reset: "初期化",
       title: "キャラクターシート",
     },
+    ccfolia: {
+      confirm:
+        "CCFOLIAのコマ作成データをクリップボードにコピーします。CCFOLIAの盤面で貼り付けを行うとコマが作成されます。",
+      confirmLabel: "CCFOLIAコピー",
+      copy: "コピー",
+      failure:
+        "クリップボードへのコピーに失敗しました。\nブラウザの権限設定を確認してください。",
+      failureLabel: "CCFOLIAコピー失敗",
+      loading: "CCFOLIA用データをコピーしています",
+      success: "クリップボードにコピーしました。",
+      successLabel: "CCFOLIAコピー完了",
+    },
     reset: {
       confirm:
         "入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？",

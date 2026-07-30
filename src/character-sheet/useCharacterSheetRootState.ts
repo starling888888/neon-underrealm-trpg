@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { writeTextToClipboard } from "./browser/ccfolia-clipboard";
 import {
   CharacterImageError,
   convertCharacterImage,
@@ -44,6 +45,7 @@ export type CharacterImageErrorState = {
 
 type CharacterSheetRootOperations = {
   convertCharacterImage: typeof convertCharacterImage;
+  writeTextToClipboard: typeof writeTextToClipboard;
   decodeImportedCharacterImage: typeof decodeImportedCharacterImage;
   deleteCharacterImage: typeof deleteCharacterImage;
   deleteCharacterSheetForm: typeof deleteCharacterSheetForm;
@@ -59,6 +61,7 @@ type CharacterSheetRootDependencies = Partial<CharacterSheetRootOperations>;
 
 const defaultOperations: CharacterSheetRootOperations = {
   convertCharacterImage,
+  writeTextToClipboard,
   decodeImportedCharacterImage,
   deleteCharacterImage,
   deleteCharacterSheetForm,
@@ -323,6 +326,20 @@ export default function useCharacterSheetRootState(
     );
   }
 
+  async function onCcfoliaCopy(json: string): Promise<boolean> {
+    if (rootOperation !== null) return false;
+
+    try {
+      await runRootOperation(
+        characterSheetDictionary.characterSheet.ccfolia.loading,
+        () => operations.writeTextToClipboard(json),
+      );
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   function onJsonImportRequested(trigger: HTMLButtonElement): void {
     if (
       isCharacterImageRestoring ||
@@ -443,6 +460,7 @@ export default function useCharacterSheetRootState(
     onCharacterImageSelected,
     onCharacterImageCleared,
     onCharacterImageOperationStarted,
+    onCcfoliaCopy,
     onJsonExport,
     onJsonImportConfirmed,
     onJsonImportFileSelected,

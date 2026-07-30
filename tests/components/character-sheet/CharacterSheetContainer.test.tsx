@@ -29,6 +29,7 @@ import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-da
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
 const { useRootStateMock } = vi.hoisted(() => ({ useRootStateMock: vi.fn() }));
+const { onCcfoliaCopy } = vi.hoisted(() => ({ onCcfoliaCopy: vi.fn() }));
 
 vi.mock("../../../src/character-sheet/useCharacterSheetRootState", () => ({
   default: useRootStateMock,
@@ -54,6 +55,7 @@ function useRootStateHarness() {
     onCharacterImageCleared: async () => {},
     onCharacterImageOperationStarted: () => {},
     onCharacterImageSelected: async () => {},
+    onCcfoliaCopy: async () => true,
     onJsonExport: () => {},
     onResetConfirmed: async () => {},
     rootOperation: null,
@@ -85,13 +87,24 @@ function useResetImageErrorHarness() {
   const [imageError, setImageError] = useState<{ code: "storage" } | null>(
     null,
   );
+  const [isImageErrorFromReset, setIsImageErrorFromReset] = useState(false);
 
   return {
     ...rootState,
     imageError,
-    isImageErrorFromReset: imageError !== null,
-    onResetConfirmed: async () => setImageError({ code: "storage" }),
+    isImageErrorFromReset,
+    onResetConfirmed: async () => {
+      setIsImageErrorFromReset(true);
+      setImageError({ code: "storage" });
+    },
     setImageError,
+  };
+}
+
+function useCcfoliaCopyHarness() {
+  return {
+    ...useRootStateHarness(),
+    onCcfoliaCopy,
   };
 }
 
@@ -116,6 +129,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   useRootStateMock.mockReset();
+  onCcfoliaCopy.mockReset();
 });
 
 describe("CharacterSheetContainer", () => {
@@ -231,6 +245,25 @@ describe("CharacterSheetContainer", () => {
     await waitFor(() => expect(document.activeElement).toBe(importButton));
   });
 
+  it("confirms CCFOLIA copy before invoking the root Clipboard operation", async () => {
+    const user = userEvent.setup();
+    onCcfoliaCopy.mockResolvedValue(true);
+    useRootStateMock.mockImplementation(useCcfoliaCopyHarness);
+    render(<CharacterSheetContainer />);
+
+    await user.click(screen.getByRole("button", { name: "CCFOLIAコピー" }));
+    expect(
+      screen.getByRole("dialog", { name: "CCFOLIAコピー" }),
+    ).not.toBeNull();
+    expect(onCcfoliaCopy).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: "コピー" }));
+    await waitFor(() => expect(onCcfoliaCopy).toHaveBeenCalledOnce());
+    expect(
+      screen.getByRole("dialog", { name: "CCFOLIAコピー完了" }),
+    ).not.toBeNull();
+  });
+
   it("returns responsive reset dialogs and errors to the menu trigger", async () => {
     const user = userEvent.setup();
     useRootStateMock.mockImplementation(useResetImageErrorHarness);
@@ -258,7 +291,10 @@ describe("CharacterSheetContainer", () => {
         }),
       ).getByRole("button", { name: "初期化" }),
     );
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent(
+      screen.getByRole("dialog", { name: "入力内容を初期化" }),
+      new Event("cancel", { bubbles: true, cancelable: true }),
+    );
     await waitFor(() => expect(document.activeElement).toBe(trigger));
 
     await user.click(trigger);

@@ -6,6 +6,8 @@ import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOver
 import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
+import CharacterSheetCcfoliaCopyConfirmDialog from "./components/dialogs/CharacterSheetCcfoliaCopyConfirmDialog";
+import CharacterSheetCcfoliaCopyNoticeDialog from "./components/dialogs/CharacterSheetCcfoliaCopyNoticeDialog";
 import CharacterSheetErrorDialog from "./components/dialogs/CharacterSheetErrorDialog";
 import CharacterSheetJsonImportConfirmDialog from "./components/dialogs/CharacterSheetJsonImportConfirmDialog";
 import CharacterSheetJsonImportErrorDialog from "./components/dialogs/CharacterSheetJsonImportErrorDialog";
@@ -26,6 +28,7 @@ import SkillPickerDialog from "./components/skills/SkillPickerDialog";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import type { SpecialItemCategoryId } from "./form-values";
+import { serializeCcfoliaCharacterClipboardData } from "./logic/ccfolia";
 import { getCyberneticCandidateGroups } from "./master-data/cybernetics";
 import { getDrugs } from "./master-data/drugs";
 import { getNanomachines } from "./master-data/nanomachines";
@@ -47,6 +50,11 @@ export default function CharacterSheetContainer() {
   const rootState = useCharacterSheetRootState();
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isErrorSummaryOpen, setIsErrorSummaryOpen] = useState(false);
+  const [isCcfoliaCopyConfirmOpen, setIsCcfoliaCopyConfirmOpen] =
+    useState(false);
+  const [ccfoliaCopyNotice, setCcfoliaCopyNotice] = useState<
+    "success" | "failure" | null
+  >(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [shouldRestoreResetFocus, setShouldRestoreResetFocus] = useState(false);
   const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
@@ -103,6 +111,8 @@ export default function CharacterSheetContainer() {
   const errorSummaryCloseButtonRef = useRef<HTMLButtonElement>(null);
   const errorSummaryTriggerRef = useRef<HTMLButtonElement>(null);
   const resetTriggerRef = useRef<HTMLButtonElement>(null);
+  const ccfoliaCopyTriggerRef = useRef<HTMLButtonElement>(null);
+  const ccfoliaCopyNoticeConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
@@ -272,6 +282,27 @@ export default function CharacterSheetContainer() {
     setShouldRestoreResetFocus(true);
   }
 
+  function closeCcfoliaCopyConfirm(): void {
+    setIsCcfoliaCopyConfirmOpen(false);
+  }
+
+  async function confirmCcfoliaCopy(): Promise<void> {
+    closeCcfoliaCopyConfirm();
+    const values = rootState.form.getValues();
+    const { derived } = presenterProps.secondaryAttributesSection;
+    const copied = await rootState.onCcfoliaCopy(
+      serializeCcfoliaCharacterClipboardData({
+        actionValue: derived.actionValue,
+        bondLimit: derived.bondLimit,
+        bonds: values.bonds.rows,
+        health: derived.health,
+        mental: derived.mental,
+        pcName: values.profile.pcName,
+      }),
+    );
+    setCcfoliaCopyNotice(copied ? "success" : "failure");
+  }
+
   useEffect(() => {
     if (!isActionMenuOpen) {
       return;
@@ -394,6 +425,7 @@ export default function CharacterSheetContainer() {
         <CharacterSheetActionPane
           errorReviewButtonRef={errorSummaryTriggerRef}
           errorSummary={presenterProps.errorSummary}
+          isCcfoliaCopyDisabled={rootState.isRootOperationInProgress}
           isExportDisabled={rootState.isCharacterImageRestoring}
           isImportDisabled={
             rootState.isCharacterImageRestoring ||
@@ -406,6 +438,13 @@ export default function CharacterSheetContainer() {
           isMenuOpen={isActionMenuOpen}
           menuTriggerRef={actionMenuTriggerRef}
           onExport={rootState.onJsonExport}
+          onCcfoliaCopy={(trigger) => {
+            ccfoliaCopyTriggerRef.current = isActionMenuOpen
+              ? actionMenuTriggerRef.current
+              : trigger;
+            setIsActionMenuOpen(false);
+            setIsCcfoliaCopyConfirmOpen(true);
+          }}
           onImport={rootState.onJsonImportRequested}
           onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
           onReset={(trigger) => {
@@ -454,6 +493,28 @@ export default function CharacterSheetContainer() {
           onConfirm={() => void rootState.onJsonImportConfirmed()}
           onRequestClose={() => rootState.setPendingJsonImport(null)}
           returnFocusRef={rootState.jsonImportReturnFocusRef}
+        />
+        <CharacterSheetCcfoliaCopyConfirmDialog
+          isOpen={isCcfoliaCopyConfirmOpen}
+          onConfirm={() => void confirmCcfoliaCopy()}
+          onRequestClose={closeCcfoliaCopyConfirm}
+          returnFocusRef={ccfoliaCopyTriggerRef}
+        />
+        <CharacterSheetCcfoliaCopyNoticeDialog
+          confirmButtonRef={ccfoliaCopyNoticeConfirmButtonRef}
+          dialogLabel={
+            ccfoliaCopyNotice === "success"
+              ? characterSheetDictionary.characterSheet.ccfolia.successLabel
+              : characterSheetDictionary.characterSheet.ccfolia.failureLabel
+          }
+          isOpen={ccfoliaCopyNotice !== null}
+          message={
+            ccfoliaCopyNotice === "success"
+              ? characterSheetDictionary.characterSheet.ccfolia.success
+              : characterSheetDictionary.characterSheet.ccfolia.failure
+          }
+          onRequestClose={() => setCcfoliaCopyNotice(null)}
+          returnFocusRef={ccfoliaCopyTriggerRef}
         />
         <CharacterSheetResetConfirmDialog
           isOpen={isResetConfirmOpen}
