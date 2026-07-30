@@ -83,6 +83,22 @@ export default function useBondsSectionProps(
     const index = rows.findIndex((row) => row.rowId === rowId);
     const row = rows[index];
     if (row === undefined) return;
+    if (field === "target") {
+      setValue(`bonds.rows.${index}.target`, value as string, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      return;
+    }
+
+    if (field === "relation") {
+      setValue(`bonds.rows.${index}.relation`, value as string, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      return;
+    }
+
     update(index, { ...row, [field]: value } as BondValues);
   }
 

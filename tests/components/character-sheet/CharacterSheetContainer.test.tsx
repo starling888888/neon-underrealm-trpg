@@ -79,6 +79,22 @@ afterEach(() => {
 });
 
 describe("CharacterSheetContainer", () => {
+  it("keeps focus while typing a bond target and relation", async () => {
+    const user = userEvent.setup();
+    render(<CharacterSheetContainer />);
+
+    const target = screen.getByLabelText("縁1の対象");
+    const relation = screen.getByLabelText("縁1の関係");
+
+    await user.type(target, "アキラ");
+    expect((target as HTMLInputElement).value).toBe("アキラ");
+    expect(document.activeElement).toBe(target);
+
+    await user.type(relation, "仕事仲間");
+    expect((relation as HTMLInputElement).value).toBe("仕事仲間");
+    expect(document.activeElement).toBe(relation);
+  });
+
   it("renders action buttons and an empty desktop error summary", () => {
     render(<CharacterSheetContainer />);
 
