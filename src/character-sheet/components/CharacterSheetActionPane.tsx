@@ -85,16 +85,29 @@ export default function CharacterSheetActionPane({
           id={menuId}
         >
           <div className={styles.menuActions}>
-            <CharacterSheetButton size="medium">
+            <CharacterSheetButton
+              className={styles.menuActionButton}
+              size="medium"
+            >
               {actions.export}
             </CharacterSheetButton>
-            <CharacterSheetButton size="medium">
+            <CharacterSheetButton
+              className={styles.menuActionButton}
+              size="medium"
+            >
               {actions.import}
             </CharacterSheetButton>
-            <CharacterSheetButton size="medium">
+            <CharacterSheetButton
+              className={styles.menuActionButton}
+              size="medium"
+            >
               {actions.ccfoliaCopy}
             </CharacterSheetButton>
-            <CharacterSheetButton color="danger" size="medium">
+            <CharacterSheetButton
+              className={styles.menuActionButton}
+              color="danger"
+              size="medium"
+            >
               {actions.reset}
             </CharacterSheetButton>
           </div>

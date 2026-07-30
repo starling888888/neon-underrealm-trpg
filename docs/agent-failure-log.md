@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Implemented a Container layout exception without reconciling the architecture SSoT
+
+#### 2026-07-30
+
+- source: review
+- failure category: scope and SSoT precedence
+- 発生箇所: `ex-02-23-sheet-action-pane`の`CharacterSheetActionPane`配置
+- 観測した失敗: 子issueがarchitecture正本を適用対象として列挙していたにもかかわらず、`CharacterSheetContainer`直下をForm Presenterとroot dialogに限定する契約と矛盾するActionPane直下配置を実装・完了扱いにした。
+- 一次対応: PR #69 Review 6の有効指摘としてG23 issueへ記録した。ユーザー判断により、ActionPaneをForm Presenterへ移さず、form外のroot-level表示Componentとしてarchitecture正本へ明記して境界を整合させた。関連するbrowser E2Eとtarget VRTを確認した。
+
 ### Chromium failed to launch for a target-limited VRT comparison
 
 #### 2026-07-30

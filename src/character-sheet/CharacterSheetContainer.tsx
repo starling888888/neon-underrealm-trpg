@@ -252,11 +252,16 @@ export default function CharacterSheetContainer() {
     }
 
     function onKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setIsActionMenuOpen(false);
-        requestAnimationFrame(() => actionMenuTriggerRef.current?.focus());
+      if (
+        event.key !== "Escape" ||
+        document.querySelector("dialog[open]") !== null
+      ) {
+        return;
       }
+
+      event.preventDefault();
+      setIsActionMenuOpen(false);
+      requestAnimationFrame(() => actionMenuTriggerRef.current?.focus());
     }
 
     window.addEventListener("keydown", onKeyDown);

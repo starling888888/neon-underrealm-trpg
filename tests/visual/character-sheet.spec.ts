@@ -62,6 +62,36 @@ test.describe("character sheet page", () => {
     }
   });
 
+  test("dismisses an open dialog before the responsive action menu", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.mobile);
+    await page.goto("character-sheet/");
+
+    const trigger = page.getByRole("button", { name: "操作メニューを開く" });
+    const menu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    const weaponPicker = page
+      .getByRole("region", { exact: true, name: "武器" })
+      .getByRole("button", { exact: true, name: "武器1：武器を選択" });
+
+    await trigger.click();
+    await expect(menu).toBeVisible();
+    await weaponPicker.focus();
+    await weaponPicker.press("Enter");
+
+    const dialog = page.getByRole("dialog", { name: "武器を選択" });
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(menu).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    await expect(trigger).toBeFocused();
+  });
+
   test("selects a primary skill and confirms a primary ryugi change", async ({
     page,
   }) => {

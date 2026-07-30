@@ -155,6 +155,43 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 - 結果: desktopはheading横の操作列と固定幅のエラーstatusが1行に収まり、tablet / mobileは`?`とmenu buttonが横並びで、開いたmenuがcontrolsの直上に表示される。横overflow、Footerとの不自然な余白は確認されなかった。
 - canonical baseline: ユーザー承認により`@character-sheet`のfull-page、section、dialogを更新し、180件の通常VRT比較が通過した。local canonical snapshotは180枚である。
 
+## レビュー指摘 1（PR #69 Review 6）
+
+### 指摘事項
+
+1. `CharacterSheetActionPane`が`CharacterSheetContainer`の直下にあるが、architecture正本がform外のページ見出し・全体操作を担うroot-level表示Componentを定義していなかった。
+2. action menuを開いたまま背面のdialogを開ける状態では、windowのEscape listenerがdialogより先にEscapeを消費する。
+3. mobile menu内の通常button幅を`.menuActions > *`で指定しており、共通buttonの内部へ親selectorで依存している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation:
+  - ActionPaneはform外の`h1`・全体操作・responsive controlを担い、RHF・保存・browser APIへ直接アクセスしない。Form Presenterへ移すより、Containerから表示propsとcallbackだけを受けるroot-level表示Componentとしてarchitectureへ明記するほうが責務に合う。
+  - `CharacterSheetContainer`のaction menu Escape listenerは、menu表示中のすべてのEscapeで`preventDefault()`する。dialogの表示状態との優先順位を持たず、最前面dialogのEscape dismiss契約を妨げる。
+  - issueの共通button契約は親selectorで内部buttonを変更しないと定めるが、ActionPane CSSの`.menuActions > *`はこれに該当する。
+
+### 対応方針
+
+- architecture正本で、Form Presenterのform DOM配置責務を保ったまま、ActionPaneのようなform外のroot-level表示ComponentをContainer直下に許可する。Containerは開閉状態・callbackだけを渡す。
+- dialogが開いているときはmenuのEscape処理を行わず、最前面overlayがEscapeを受ける優先順位をContainerで明示する。重複状態をbrowser E2Eで固定する。
+- menu action用の配置classを各`CharacterSheetButton`の`className`へ渡し、子孫selectorを削除する。
+
+### 対応完了チェックリスト
+
+- [x] ActionPaneをform外のroot-level表示Componentとしてarchitecture正本へ明記し、Container / Presenter境界を整合させる。
+- [x] dialogとaction menuが重なる場合、Escapeが最前面dialogを閉じ、focus復帰を保つことをbrowser E2Eで確認する。
+- [x] mobile menu actionの均等幅を`className`で指定し、親selector依存を除去する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+### 対応結果
+
+- architecture正本で、Form Presenterのform DOM配置責務を維持しつつ、ActionPaneのようなform外のroot-level表示ComponentをContainer直下へ置けることを明記した。
+- menuのEscape handlerはnative `dialog[open]`がある間は処理しない。browser E2Eで、1回目のEscapeがdialogを閉じ、2回目がmenuを閉じてtriggerへfocus復帰することを確認した。
+- menu actionの均等幅は`CharacterSheetButton`の`className`で指定し、`.menuActions > *`を削除した。操作ペイン5状態のVRT比較は既存baselineと全件一致した。
+
 ## 備考
 
 - ユーザー指示に従い、新規branchは作成せず、現行branch `ex-02-web-character-sheet`で作業する。

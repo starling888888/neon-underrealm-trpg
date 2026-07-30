@@ -61,10 +61,10 @@ src/
     └── utils/
 ```
 
-- `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`、RHF adapter hookの接続、処理順序、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の統合を担う。form、dialog、focus ref、loadingなどRoot横断の状態はroot-state custom hookへ置く。DOMの画面配置を持たず、直下には`CharacterSheetFormPresenter`と、Rootで扱うほうが適切なdialog Componentだけを置く。
+- `CharacterSheetContainer.tsx`: `client:load`でhydrateするIslandのRootであり、このfeature唯一のContainerとする。RHFの`useForm`、RHF adapter hookの接続、処理順序、保存済み下書きの復元、マスタデータ・純粋logic・ブラウザ副作用の統合を担う。form、dialog、focus ref、loadingなどRoot横断の状態はroot-state custom hookへ置く。formのDOM配置は持たない。直下には`CharacterSheetFormPresenter`、Rootで扱うほうが適切なdialog Component、およびform外の`h1`・全体操作・responsive controlを担うroot-level表示Componentを置ける。root-level表示ComponentはRHF・保存・browser APIへ直接アクセスせず、Containerから受け取る表示propsとcallbackだけを使う。
 - `dictionary.ts`: キャラクターシートで固定表示する画面文言の唯一の参照先とする。section見出し、label、button、補足、定型の式などは`characterSheetDictionary`から参照し、Componentへ同じ文言を重複してベタ書きしない。ゲーム用語は`gameDomain.terms`、入力・操作・補足・式などキャラクターシート固有UIの文言は`characterSheet`へ置く。これはi18n catalogではない。ゲームデータ由来の名称・効果文は`master-data/`の読み取り結果を使い、実行時に組み立てる値・文言はこのdictionaryへ無理に入れない。
 - `CharacterSheetFormPresenter.tsx`: formのDOM配置、sectionの並び、表示用propsの受け渡しを担う。RHF formの生成・参照、マスタ検索、派生値算出、検証、永続化、ブラウザAPI、dialogの開閉状態を持たない。各section・行ComponentはこのPresenter配下の表示Componentとして組み立て、RHFを参照せず必要な表示値と操作callbackをPresenter hook経由のPropsで受け取る。Component内のstateは、自身に閉じた開閉状態などに限定する。
-- `components/`: Presenterとその配下のJSX・表示Component、およびRoot直下へ配置するdialog Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。`CharacterSheetSectionFrame`は`expandable?: boolean`（default: `false`）で静的・折りたたみを共通化し、同じframe・mutedなタイトル領域・分割線を使う。title要素は`span`または`h1`〜`h6`を指定できる。`FormulaTooltip`は派生値の子要素を操作対象にして、hoverまたはtapで開く局所的な状態だけを持ち、タップ端末ではコンポーネント外タップとEscで閉じる。focus表示は現在の対象外とする。
+- `components/`: Presenterとその配下のJSX・表示Component、Root直下へ配置するdialog Component、form外のroot-level表示Componentを置く。表示ComponentはContainerから受け取る値とevent handlerで描画し、マスタ検索、派生値算出、検証、永続化、ブラウザAPIへの直接アクセスは置かない。`CharacterSheetSectionFrame`は`expandable?: boolean`（default: `false`）で静的・折りたたみを共通化し、同じframe・mutedなタイトル領域・分割線を使う。title要素は`span`または`h1`〜`h6`を指定できる。`FormulaTooltip`は派生値の子要素を操作対象にして、hoverまたはtapで開く局所的な状態だけを持ち、タップ端末ではコンポーネント外タップとEscで閉じる。focus表示は現在の対象外とする。
 - `form/`: 編集値の型、初期値、RHFの可変配列操作、`zodResolver`を接続するform Hook、保存・復元の接続を置く。RHF以外の編集state storeは置かない。
 - `logic/`: React、RHF、DOM、Storage、IndexedDBに依存しない派生値算出、選択可能性判定、構造化検証、ViewModel組み立てを置く。
 - `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかは実装Gateで決める。
@@ -105,7 +105,7 @@ shared表示Componentは、次の表示契約だけをPropsで受け取る。
 
 `CharacterSheetContainer`はFat Coordinatorになってよいが、Fat Domain Logicにはしない。処理の入口と実行順はContainerから追跡できるようにし、算出式、JSONの具体的な組み立て、schema検証、Storage / IndexedDB / Clipboard / download / 画像APIの直接操作は対応する境界へ分離する。
 
-Containerは、表示に必要な値と操作をsection単位のViewModel / ActionsとしてPresenterへ渡す。大量のフラットprops、Presenterからのマスタ検索、Presenterによる値の補正・業務ルール判断を置かない。型の具体形は、最初にそのsectionを実装するGateで定める。
+Containerは、表示に必要な値と操作をsection単位のViewModel / ActionsとしてPresenterまたはroot-level表示Componentへ渡す。大量のフラットprops、Presenterからのマスタ検索、Presenterによる値の補正・業務ルール判断を置かない。型の具体形は、最初にそのsectionを実装するGateで定める。
 
 Presenterとその配下の表示Componentは、渡されたpropsの表示、配列の描画、Containerが決定済みの表示フラグ、渡されたevent handlerの呼出しだけを担う。leaf ComponentはHookを使わない。sectionの開閉など、保存せずContainerへ通知不要な局所的表示状態だけは対応するsection Presenterに置いてよい。dialogの開閉と選択対象のようにRoot横断で扱う状態はContainerへ戻す。
 
