@@ -12,7 +12,7 @@
 .headers,
 .row {
   display: grid;
-  grid-template-columns: minmax(3.75rem, 0.5fr) minmax(0, 1.5fr) 3.5rem var(
+  grid-template-columns: 1.25rem minmax(3.75rem, 0.5fr) minmax(0, 1.5fr) 3.5rem var(
       --character-sheet-action-button-size
     );
   align-items: center;
@@ -74,9 +74,16 @@ fieldset.row {
   justify-self: center;
 }
 
+.reorderControls {
+  composes: reorderControls from "./CharacterSheetFormList.module.css";
+}
+
+.reorderButton {
+  composes: reorderButton from "./CharacterSheetFormList.module.css";
+}
+
 .row[data-over-limit="true"] input[type="text"] {
   border-color: var(--color-danger);
-  background: var(--color-danger-soft);
 }
 
 .error {
@@ -177,7 +184,7 @@ fieldset.row {
 @media (width < 48rem) {
   .headers,
   .row {
-    grid-template-columns: minmax(3.5rem, 0.5fr) minmax(0, 1.5fr) 3rem var(
+    grid-template-columns: 1.25rem minmax(3.5rem, 0.5fr) minmax(0, 1.5fr) 3rem var(
         --character-sheet-action-button-size
       );
   }

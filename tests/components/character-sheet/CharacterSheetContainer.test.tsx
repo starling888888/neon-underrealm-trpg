@@ -146,6 +146,21 @@ describe("CharacterSheetContainer", () => {
     });
   });
 
+  it("reorders entered bonds instead of requiring an over-limit row to be deleted", async () => {
+    const user = userEvent.setup();
+    render(<CharacterSheetContainer />);
+
+    await user.type(screen.getByLabelText("縁1の対象"), "アキラ");
+    await user.type(screen.getByLabelText("縁2の対象"), "ベラ");
+    await user.click(screen.getByRole("button", { name: "縁2上へ移動" }));
+
+    expect(screen.getByLabelText("縁1の対象")).toHaveProperty("value", "ベラ");
+    expect(screen.getByLabelText("縁2の対象")).toHaveProperty(
+      "value",
+      "アキラ",
+    );
+  });
+
   it("closes the omamori picker on Escape or close, selects one row, and returns focus", async () => {
     const user = userEvent.setup();
     const omamori = getOmamori()[0];

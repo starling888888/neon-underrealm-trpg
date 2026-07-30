@@ -22,6 +22,7 @@ export type BondsSectionProps = {
   ) => void;
   onRowClear: (rowId: string) => void;
   onRowDelete: (rowId: string) => void;
+  onRowMove: (rowId: string, direction: "up" | "down") => void;
 };
 
 function EffectFormula({
@@ -87,6 +88,7 @@ export default function BondsSection({
   onRowChange,
   onRowClear,
   onRowDelete,
+  onRowMove,
 }: BondsSectionProps) {
   const { bonds: labels } = characterSheetDictionary.characterSheet;
 
@@ -94,6 +96,7 @@ export default function BondsSection({
     <div className={styles.root}>
       <div className={styles.rows}>
         <div className={styles.headers}>
+          <span aria-hidden="true" />
           <span>{labels.headers.target}</span>
           <span>{labels.headers.relationship}</span>
           <FormulaTooltip
@@ -109,6 +112,8 @@ export default function BondsSection({
         </div>
         {bonds.map((bond, index) => {
           const rowName = `縁${index + 1}`;
+          const canMoveUp = index > 0;
+          const canMoveDown = index < bonds.length - 1;
           const isOverflow = derived.overflowRowIds.includes(bond.rowId);
           const isDeletableOverflow = isOverflow && !bond.isResolved;
 
@@ -119,6 +124,28 @@ export default function BondsSection({
               key={bond.rowId}
             >
               <legend className={styles.visuallyHidden}>{rowName}</legend>
+              <div className={styles.reorderControls}>
+                {canMoveUp ? (
+                  <button
+                    aria-label={`${rowName}${labels.moveUp}`}
+                    className={styles.reorderButton}
+                    onClick={() => onRowMove(bond.rowId, "up")}
+                    type="button"
+                  >
+                    <span aria-hidden="true">▲</span>
+                  </button>
+                ) : null}
+                {canMoveDown ? (
+                  <button
+                    aria-label={`${rowName}${labels.moveDown}`}
+                    className={styles.reorderButton}
+                    onClick={() => onRowMove(bond.rowId, "down")}
+                    type="button"
+                  >
+                    <span aria-hidden="true">▼</span>
+                  </button>
+                ) : null}
+              </div>
               <input
                 aria-label={`${rowName}の${labels.headers.target}`}
                 disabled={bond.isResolved}

@@ -19,6 +19,7 @@ function createProps(): BondsSectionProps {
     onRowChange: vi.fn(),
     onRowClear: vi.fn(),
     onRowDelete: vi.fn(),
+    onRowMove: vi.fn(),
   };
 }
 
@@ -88,6 +89,23 @@ describe("BondsSection", () => {
         name: "縁2をクリア（行は削除しません）",
       }),
     ).toBeNull();
+  });
+
+  it("keeps over-limit input backgrounds normal and exposes row reordering", () => {
+    const props = createProps();
+    props.bonds[0] = { ...props.bonds[0], target: "アキラ" };
+    props.bonds[1] = { ...props.bonds[1], target: "ベラ" };
+    props.derived = calculateBonds(
+      { ...characterSheetDefaultValues.bonds, rows: props.bonds },
+      1,
+    );
+
+    render(<BondsSection {...props} />);
+
+    expect(screen.getByLabelText("縁2の対象").getAttribute("style")).toBeNull();
+    expect(screen.queryByRole("button", { name: "縁1上へ移動" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "縁2上へ移動" }));
+    expect(props.onRowMove).toHaveBeenCalledWith("bond-2", "up");
   });
 
   it("presents an over-limit bond count as an error", () => {

@@ -17,7 +17,7 @@ export default function useBondsSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
   derivedSecondaryAttributes: SecondaryAttributeDerivedValues,
 ): BondsSectionProps {
-  const { remove, replace, update } = useFieldArray({
+  const { move, remove, replace, update } = useFieldArray({
     control,
     keyName: "fieldKey",
     name: "bonds.rows",
@@ -120,6 +120,12 @@ export default function useBondsSectionProps(
 
       const index = bonds.rows.findIndex((entry) => entry.rowId === rowId);
       if (index >= 0) remove(index);
+    },
+    onRowMove: (rowId, direction) => {
+      const rows = getValues("bonds.rows");
+      const index = rows.findIndex((row) => row.rowId === rowId);
+      const next = index + (direction === "up" ? -1 : 1);
+      if (index >= 0 && next >= 0 && next < rows.length) move(index, next);
     },
   };
 }

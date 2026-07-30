@@ -79,6 +79,8 @@ export const characterSheetDictionary = {
         resolve: "覚悟",
         target: "対象",
       },
+      moveDown: "下へ移動",
+      moveUp: "上へ移動",
       overLimit: "入力済みの縁が結べる縁の上限を超えています。",
       resolveEffectDescription: "通常の縁／今生の縁",
       resolveEffectHeading: "覚悟の効果",

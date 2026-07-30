@@ -56,6 +56,20 @@
 - 個別入力・行・sectionに新しい可視error本文を追加しない。現在の生き様では通常使用不可の専用アイテムカテゴリの既存warning feedbackを変更・集約しない。warningの全画面notification、warningでのmenu buttonのdanger化、warning dialogを追加しない。
 - 新しいnpm package、state store、UI kit、i18n framework、server、DB、認証を追加しない。`docs/out-of-scope.md`の初期スコープ外も実装しない。
 
+## ユーザー承認による未実装のスコープ拡張
+
+2026-07-30のユーザー指示により、縁の上限超過error表示と行操作をG25へ追加する。
+
+- 縁の上限超過行のtext inputは、他の入力欄のerrorと同じ背景を保ち、dangerカラーはborderなど既存のerror表現だけで示す。`--color-danger-soft`の背景は使わない。
+- 縁の入力行の左端へ、スキルと武器・防具で既存の順序入れ替えcontrolと同じ操作契約・アクセシブル名・グレー背景を持つcontrolを追加する。行の並びを変更して、上限内に残す縁と上限外となる縁を利用者が選べるようにする。
+- 上限超過行を自動削除しない既存の保持契約は維持する。上限超過時の既存delete actionは任意操作として残し、順序入れ替え導線と併存させる。
+- 実装前に、既存の順序入れ替えcontrolのComponent、design intent、desktop / tablet / mobileの表示・操作状態、必要なtarget限定E2E / VRTを確認する。
+
+- [x] 上限超過行のtext input backgroundが他のerror inputと揃い、danger borderだけを示す。
+- [x] 縁の各行が既存の順序入れ替えcontrolと同じ上下操作を持ち、移動後も入力内容・上限error・削除契約を保つ。
+
+この拡張は、error summary自体、通常使用不可の専用アイテムカテゴリのwarning除外、既存の保存・JSON出力契約を変更しない。
+
 ## 取り込み済みのユーザー指摘
 
 - 縁の入力済み件数が結べる縁の上限を超える状態は、通常使用不可の専用アイテムカテゴリだけに限定するwarningではなく、局所表示とerror summaryの両方でerrorとして扱う。summaryには`入力済みの縁が結べる縁の上限を超えています。`を一件だけ置く。
@@ -96,6 +110,9 @@
 - `src/character-sheet/CharacterSheetContainer.tsx`
 - `src/character-sheet/components/CharacterSheetActionPane.tsx`
 - `src/character-sheet/components/CharacterSheetActionPane.module.css`
+- `src/character-sheet/components/BondsSection.tsx`
+- `src/character-sheet/components/BondsSection.module.css`
+- `src/character-sheet/form/useBondsSectionProps.ts`
 - `src/character-sheet/components/dialogs/`配下のerror dialog
 - `docs/design/character-sheet/notes.md`
 - `tests/node/character-sheet/`、`tests/hooks/character-sheet/`、`tests/components/character-sheet/`、必要最小限のbrowser / VRT test
