@@ -1,6 +1,6 @@
 {
   "dataName": "ikizama-skills",
-  "updatedAt": "2026-07-22T20:29:02+09:00",
+  "updatedAt": "2026-07-30T22:40:43+09:00",
   "data": {
     "burai": {
       "bonus": [
@@ -296,7 +296,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "シナリオ開始時に気合をlv+1点獲得する。戦闘終了時に持ち越せる気合の点数がlv+1点になる。",
+          "effect": "シナリオ開始時に気合をlv点獲得する。戦闘終了時に持ち越せる気合の点数がlv+1点になる。",
           "sourceOrder": 1,
           "id": "skill-ikizama-kejime-bonus-pv-f78f03ac5129"
         }
@@ -444,7 +444,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "サイバネを埋め込んでいない部位1つにつきいずれかの効果を選ぶ。同じ効果は一度しか選べない。最大体力+15。攻撃力+3。防御力+3。行動値+4。移動力+3。サイバネの埋め込み点数+2。",
+          "effect": "サイバネの埋め込み点数+2。サイバネを埋め込んでいない部位1つにつきいずれかの効果を選ぶ。同じ効果は一度しか選べない。最大体力+15。攻撃力+3。防御力+3。行動値+4。移動力+2。",
           "sourceOrder": 10,
           "id": "skill-ikizama-kejime-advanced-pv-e346f6f4768d"
         },
@@ -476,7 +476,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "サイバネの埋め込み可能点数+6。攻撃力+「埋め込んでいるサイバネの数」。防御力+「サイバネの埋め込み点数の合計」。サイバネを埋め込んでいる際の非戦闘技能による判定のペナルティが更に-3される。（5点以下でも判定数に-3のペナルティがかかる）",
+          "effect": "サイバネの埋め込み可能点数+6。攻撃力+「埋め込んでいるサイバネの数」。防御力+「サイバネの埋め込み点数の合計」。サイバネを埋め込んでいる際の非戦闘技能による判定のペナルティが更に-2される。（5点以下でも判定数に-2のペナルティがかかる）",
           "sourceOrder": 12,
           "id": "skill-ikizama-kejime-advanced-pv-a21a42ccccb9"
         }
@@ -676,7 +676,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "ナノマシンの埋め込み可能点数+2。ナノマシン発動中攻撃力とダメージ軽減+「ナノマシンの埋め込み点数の合計」。ナノマシン発動中、クリンナップに精神力が5点回復する。戦闘外でナノマシンを発動した際のペナルティが2倍になる。",
+          "effect": "ナノマシンの埋め込み可能点数+4。ナノマシン発動中攻撃力とダメージ軽減+「ナノマシンの埋め込み点数の合計」。ナノマシン発動中、クリンナップに精神力が5点回復する。戦闘外でナノマシンを発動した際のペナルティが2倍になる。",
           "sourceOrder": 12,
           "id": "skill-ikizama-sumi-advanced-pv-fb25e21f8dd9"
         }
@@ -714,7 +714,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "最大体力+lv×15点、最大精神力+lv×10点。",
+          "effect": "最大体力+lv×10点、最大精神力+lv×10点。",
           "sourceOrder": 2,
           "id": "skill-ikizama-yaku-basic-pv-f39380ba6776"
         },
