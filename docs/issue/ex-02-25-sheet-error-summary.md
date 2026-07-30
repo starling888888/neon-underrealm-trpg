@@ -89,7 +89,7 @@
 - [x] `docs/design/character-sheet/notes.md`がユーザー指定の状態・文言へ整合している。
 - [x] 関連TODOを追加せず、対象外のTODOを変更していない。
 - [x] UI系タスクとしてdesign target、actual screenshotの確認対象、canonical VRT baselineを無断更新しない扱いが記録されている。
-- [ ] `npm run check`、`npm run build`、関連Node / Vitest / browser testが通る。
+- [x] `npm run check`、`npm run build`、関連Node / Vitest / browser testが通る。
 
 ## チェックポイント
 
@@ -98,10 +98,63 @@
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
 - [x] 関連する`docs/TODO.md`、`docs/design/character-sheet/notes.md`、親Gate planと矛盾していない。
-- [ ] UI実装後かつE2E・VRT specを追加・更新する前に、既定portのdev serverでユーザーが対象routeを動作確認している。
-- [ ] ユーザーの動作確認完了の明示指示後にだけ、desktop / tablet / mobileの指定stateのactual screenshotを実際に開き、error色、本文色、`ul`、clip / overflow、dialog / menuの状態を確認している。
-- [ ] ユーザーの動作確認完了の明示指示後にだけ、変更targetのE2E・VRT specを追加・更新し、限定VRTで比較してcanonical baselineの扱いを記録している。
+- [x] UI実装後かつE2E・VRT specを追加・更新する前に、既定portのdev serverでユーザーが対象routeを動作確認している。
+- [x] ユーザーの動作確認完了の明示指示後にだけ、desktop / tablet / mobileの指定stateのactual screenshotを実際に開き、error色、本文色、`ul`、clip / overflow、dialog / menuの状態を確認している。
+- [x] ユーザーの動作確認完了の明示指示後にだけ、変更targetのE2E・VRT specを追加・更新し、限定VRTで比較してcanonical baselineの扱いを記録している。
 - [x] ユーザーの未コミット変更を破壊していない。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`。`action-pane-desktop`、`action-controls`、`action-menu-open`、`action-pane-error`、`action-controls-error`、`action-menu-error`、`error-dialog`、`error-dialog-empty`、`bonds-default`、`bonds-input`、`bonds-error`。
+- route / states / viewports: `/character-sheet/`。errorなしのdesktop action pane / desktop dialog、tablet / mobile controls / menu、代表的な2 errorのdesktop status / dialog、tablet / mobile controls / menu、縁のdefault / input / over-limitをdesktop（1440px）、tablet（820px）、mobile（390px）で確認した。desktop専用stateはdesktopだけとした。
+
+### レビュー結果
+
+| 対象                     | 判定 | 差分 | 対応                                                   |
+| ------------------------ | ---- | ---- | ------------------------------------------------------ |
+| 操作ペイン・dialog・menu | OK   | なし | errorなしと2 errorのstateを追加・更新した。            |
+| 縁                       | OK   | なし | default / input / over-limitの既存baselineを更新した。 |
+
+### 実画面確認
+
+- `/character-sheet/` / errorなし / desktop:
+  - locator screenshot: `test-results/visual/character-sheet/sections/action-pane-desktop-desktop.png`、`test-results/visual/character-sheet/dialogs/error-dialog-empty-desktop.png`
+  - 確認: 通常色のstatus、`エラーはありません。`、visible titleなしのdialog、muted outlineの`閉じる`、clip / overflowなし。
+- `/character-sheet/` / errorなし / tablet・mobile:
+  - locator screenshot: `test-results/visual/character-sheet/sections/action-controls-{tablet,mobile}.png`、`test-results/visual/character-sheet/sections/action-menu-open-{tablet,mobile}.png`
+  - 確認: ヘルプとmenu buttonが通常色、menuが件数見出しなしで`エラーはありません。`から始まり、clip / overflowなし。
+- `/character-sheet/` / 代表的な2 error / desktop:
+  - locator screenshot: `test-results/visual/character-sheet/sections/action-pane-error-desktop.png`、`test-results/visual/character-sheet/dialogs/error-dialog-desktop.png`
+  - 確認: status枠・件数・`確認`がdanger、visible titleなしのdialogがdanger件数と通常本文色の`ul`を表示し、折返し・button境界・clip / overflowなし。
+- `/character-sheet/` / 代表的な2 error / tablet・mobile:
+  - locator screenshot: `test-results/visual/character-sheet/sections/action-controls-error-{tablet,mobile}.png`、`test-results/visual/character-sheet/sections/action-menu-error-{tablet,mobile}.png`
+  - 確認: menu buttonだけがdanger、ヘルプは通常色、menuは見出しなしでdanger件数と通常本文色の`ul`を表示し、折返し・clip / overflowなし。
+- `/character-sheet/` / 縁 default・input・over-limit / desktop・tablet・mobile:
+  - locator screenshot: `test-results/visual/character-sheet/sections/bonds-{default,input,error}-{desktop,tablet,mobile}.png`
+  - 確認: 各行左端のグレー背景の上下control、入力済み値、over-limit inputの通常backgroundとdanger border、delete action、section内の配置・折返し・clip / overflowなし。
+
+### 自己修正した項目
+
+- [x] browser E2Eの既存縁error locatorを、error summary listとの重複を避けるsection scopeへ更新した。
+
+### 人間判断が必要な差分
+
+- なし。2026-07-30のユーザー明示指示により、G25のlocal canonical baselineを追加・更新した。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
+- [x] VRT差分を修正した、または修正不要と判断した。
+- [x] baseline更新をユーザー明示承認として記録した。
+- [x] `npm run check` が通る（該当する場合）。
+- [x] `npm run build` が通る（該当する場合）。
 
 ## 想定変更ファイル
 

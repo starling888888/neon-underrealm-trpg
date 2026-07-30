@@ -28,6 +28,17 @@ async function fillBond(page: Page, row: number, value: string): Promise<void> {
   await page.getByLabel(`縁${row}の対象`, { exact: true }).fill(value);
 }
 
+async function prepareBondLimitError(page: Page): Promise<void> {
+  await fillBond(page, 1, "アキラ");
+  await fillBond(page, 2, "ベラ");
+  await page.getByLabel("縁最大数修正", { exact: true }).fill("-3");
+}
+
+async function prepareRepresentativeErrors(page: Page): Promise<void> {
+  await prepareBondLimitError(page);
+  await page.getByLabel("取得経験点", { exact: true }).fill("-1");
+}
+
 async function addAttack(page: Page): Promise<void> {
   await page.getByRole("button", { name: "＋ 攻撃を追加" }).click();
   await expect(page.getByLabel("攻撃2の技能", { exact: true })).toBeVisible();
@@ -301,6 +312,22 @@ async function openActionMenu(page: Page): Promise<void> {
   ).toBeVisible();
 }
 
+async function openErrorDialog(page: Page): Promise<void> {
+  await prepareRepresentativeErrors(page);
+  await page.getByRole("button", { exact: true, name: "確認" }).click();
+  await expect(page.getByRole("dialog", { name: "エラー" })).toBeVisible();
+}
+
+async function openEmptyErrorDialog(page: Page): Promise<void> {
+  await page.getByRole("button", { exact: true, name: "確認" }).click();
+  await expect(page.getByRole("dialog", { name: "エラー" })).toBeVisible();
+}
+
+async function openErrorActionMenu(page: Page): Promise<void> {
+  await prepareRepresentativeErrors(page);
+  await openActionMenu(page);
+}
+
 const section = (selector: string) => ({
   resolve: (page: Page) => page.locator(selector),
 });
@@ -400,6 +427,46 @@ registerCharacterSheetVrtScenarios([
     viewports: ["tablet", "mobile"],
   },
   {
+    id: "action-pane-error",
+    kind: "section",
+    locator: actionPane,
+    prepare: prepareRepresentativeErrors,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop"],
+  },
+  {
+    id: "action-controls-error",
+    kind: "section",
+    locator: actionControls,
+    prepare: prepareRepresentativeErrors,
+    route: visualRoutes.characterSheet,
+    viewports: ["tablet", "mobile"],
+  },
+  {
+    id: "action-menu-error",
+    kind: "section",
+    locator: actionMenu,
+    prepare: openErrorActionMenu,
+    route: visualRoutes.characterSheet,
+    viewports: ["tablet", "mobile"],
+  },
+  {
+    id: "error-dialog",
+    kind: "dialog",
+    locator: dialog("エラー"),
+    prepare: openErrorDialog,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop"],
+  },
+  {
+    id: "error-dialog-empty",
+    kind: "dialog",
+    locator: dialog("エラー"),
+    prepare: openEmptyErrorDialog,
+    route: visualRoutes.characterSheet,
+    viewports: ["desktop"],
+  },
+  {
     id: "profile-default",
     kind: "section",
     locator: profileSection,
@@ -448,11 +515,7 @@ registerCharacterSheetVrtScenarios([
     id: "bonds-error",
     kind: "section",
     locator: bondsSection,
-    prepare: async (page) => {
-      await fillBond(page, 1, "アキラ");
-      await fillBond(page, 2, "ベラ");
-      await page.getByLabel("縁最大数修正", { exact: true }).fill("-3");
-    },
+    prepare: prepareBondLimitError,
     route: visualRoutes.characterSheet,
   },
   {

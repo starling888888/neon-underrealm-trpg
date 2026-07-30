@@ -117,10 +117,16 @@ test.describe("character sheet page", () => {
       "インポート",
       "CCFOLIAコピー",
       "初期化",
-      "確認",
     ]) {
       await page.getByRole("button", { exact: true, name }).click();
     }
+    await page.getByRole("button", { exact: true, name: "確認" }).click();
+    const errorDialog = page.getByRole("dialog", { name: "エラー" });
+    await expect(errorDialog).toContainText("エラーはありません。");
+    await errorDialog
+      .getByRole("button", { exact: true, name: "閉じる" })
+      .click();
+    await expect(errorDialog).toBeHidden();
     await expect(pcName).toHaveValue("テストPC");
 
     for (const viewport of [visualViewports.tablet, visualViewports.mobile]) {
@@ -599,7 +605,9 @@ test.describe("character sheet page", () => {
     await firstResolve.check();
     await expect(firstTarget).toBeDisabled();
     await expect(firstClear).toBeDisabled();
-    await firstResolve.uncheck();
+    await firstResolve.focus();
+    await firstResolve.press("Space");
+    await expect(firstResolve).not.toBeChecked();
     await expect(firstTarget).toBeEnabled();
     await firstClear.click();
     await expect(firstTarget).toHaveValue("");
@@ -610,13 +618,73 @@ test.describe("character sheet page", () => {
     await page.getByLabel("縁1の対象", { exact: true }).fill("アキラ");
     await page.getByLabel("縁2の対象", { exact: true }).fill("ベラ");
     await bondLimitModifier.fill("-3");
-    await expect(
-      page.getByText("入力済みの縁が結べる縁の上限を超えています。"),
-    ).toBeVisible();
+    const bondLimitError = page
+      .getByRole("region", { exact: true, name: "縁" })
+      .getByText("入力済みの縁が結べる縁の上限を超えています。");
+    await expect(bondLimitError).toBeVisible();
+    const firstOverflowCandidate = page.getByLabel("縁1の対象", {
+      exact: true,
+    });
+    const overflowTarget = page.getByLabel("縁2の対象", { exact: true });
+    await expect(overflowTarget).toHaveCSS(
+      "background-color",
+      await firstOverflowCandidate.evaluate(
+        (input) => getComputedStyle(input).backgroundColor,
+      ),
+    );
+    await page.getByRole("button", { name: "縁2上へ移動" }).click();
+    await expect(page.getByLabel("縁1の対象", { exact: true })).toHaveValue(
+      "ベラ",
+    );
+    await expect(page.getByLabel("縁2の対象", { exact: true })).toHaveValue(
+      "アキラ",
+    );
     await page.getByRole("button", { name: "縁2を削除" }).click();
-    await expect(
-      page.getByText("入力済みの縁が結べる縁の上限を超えています。"),
-    ).toBeHidden();
+    await expect(bondLimitError).toBeHidden();
+  });
+
+  test("summarizes errors in the desktop dialog and responsive menu", async ({
+    page,
+  }) => {
+    await page.setViewportSize(visualViewports.desktop);
+    await page.goto("character-sheet/");
+    await page.getByLabel("縁1の対象", { exact: true }).fill("アキラ");
+    await page.getByLabel("縁2の対象", { exact: true }).fill("ベラ");
+    await page.getByLabel("縁最大数修正", { exact: true }).fill("-3");
+    await page.getByLabel("取得経験点", { exact: true }).fill("-1");
+
+    const actionPane = page.getByRole("region", {
+      name: "キャラクターシートの操作",
+    });
+    await expect(actionPane).toContainText("エラーが2件あります。");
+    await page.getByRole("button", { exact: true, name: "確認" }).click();
+    const dialog = page.getByRole("dialog", { name: "エラー" });
+    await expect(dialog).toContainText("エラーが2件あります。");
+    await expect(dialog.getByRole("list")).toContainText(
+      "入力済みの縁が結べる縁の上限を超えています。",
+    );
+    await expect(dialog.getByRole("list")).toContainText(
+      "消費経験点が取得経験点を超えているか、取得経験点が不正です。",
+    );
+    await dialog.getByRole("button", { exact: true, name: "閉じる" }).click();
+    await expect(dialog).toBeHidden();
+
+    await page.setViewportSize(visualViewports.mobile);
+    const menuTrigger = page.getByRole("button", {
+      name: "操作メニューを開く",
+    });
+    await menuTrigger.click();
+    const menu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    await expect(menu).toContainText("エラーが2件あります。");
+    await expect(menu.getByRole("list")).toContainText(
+      "入力済みの縁が結べる縁の上限を超えています。",
+    );
+    await expect(menu.getByRole("list")).toContainText(
+      "消費経験点が取得経験点を超えているか、取得経験点が不正です。",
+    );
+    await expect(menu.getByRole("heading", { name: "エラー" })).toHaveCount(0);
   });
 
   test("selects, reorders, and removes weapons while keeping one row", async ({
