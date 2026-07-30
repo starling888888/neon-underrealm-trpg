@@ -791,6 +791,69 @@ describe("useCharacterSheetRootState", () => {
     expect(result.current.isRootOperationInProgress).toBe(false);
   });
 
+  it("resets the form and both browser snapshots only after confirming reset", async () => {
+    const deleteCharacterImage = vi.fn(async () => {});
+    const deleteCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        deleteCharacterImage,
+        deleteCharacterSheetForm,
+        readCharacterImage: vi.fn(async () => storedImage),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeCharacterSheetForm: vi.fn(),
+      }),
+    );
+
+    await waitFor(() =>
+      expect(result.current.characterImage).toEqual(storedImage),
+    );
+    act(() => {
+      result.current.form.setValue("profile.pcName", "初期化前PC");
+    });
+
+    await act(async () => {
+      await result.current.onResetConfirmed();
+    });
+
+    expect(deleteCharacterImage).toHaveBeenCalledOnce();
+    expect(deleteCharacterSheetForm).toHaveBeenCalledWith(window.localStorage);
+    expect(result.current.characterImage).toBeNull();
+    expect(result.current.form.getValues()).toEqual(
+      characterSheetDefaultValues,
+    );
+  });
+
+  it("keeps the current form and image when reset cannot delete the image record", async () => {
+    const deleteCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        deleteCharacterImage: vi.fn(async () => {
+          throw new CharacterImageError("storage");
+        }),
+        deleteCharacterSheetForm,
+        readCharacterImage: vi.fn(async () => storedImage),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeCharacterSheetForm: vi.fn(),
+      }),
+    );
+
+    await waitFor(() =>
+      expect(result.current.characterImage).toEqual(storedImage),
+    );
+    act(() => {
+      result.current.form.setValue("profile.pcName", "初期化前PC");
+    });
+
+    await act(async () => {
+      await result.current.onResetConfirmed();
+    });
+
+    expect(deleteCharacterSheetForm).not.toHaveBeenCalled();
+    expect(result.current.characterImage).toEqual(storedImage);
+    expect(result.current.form.getValues("profile.pcName")).toBe("初期化前PC");
+    expect(result.current.imageError).toEqual({ code: "storage" });
+  });
+
   it("keeps the saved image when IndexedDB deletion fails", async () => {
     const { result } = renderHook(() =>
       useCharacterSheetRootState({

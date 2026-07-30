@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Retried reset-dialog component test with broad text queries
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-29-sheet-reset`の`CharacterSheetContainer`確認dialogcomponent test
+- 観測した失敗: 改行を含む本文をTesting Libraryの既定text正規化で検索して失敗した後、dialog外の操作paneとdialog内で重複する`初期化`buttonを広域queryして再度失敗させた。
+- 一次対応: 本文はtext nodeの改行を直接確認し、actionは対象dialog配下のbuttonへscopeを限定する。新しいmatcherは使わず、既存testのDOM queryと標準assertionだけで確認する。
+
 ### Let JSON import hook fixtures leak form state into later tests
 
 #### 2026-07-30

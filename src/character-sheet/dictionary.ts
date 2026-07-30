@@ -33,6 +33,12 @@ export const characterSheetDictionary = {
       reset: "初期化",
       title: "キャラクターシート",
     },
+    reset: {
+      confirm:
+        "入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？",
+      confirmLabel: "入力内容を初期化",
+      loading: "初期化中…",
+    },
     namePickerTooltip: "名称欄をクリックすると{kind}選択ダイアログが開きます。",
     build: {
       addOtherRyugi: "＋ その他流儀を追加",

@@ -72,6 +72,18 @@ async function openJsonImportError(page: Page): Promise<void> {
   ).toBeVisible();
 }
 
+async function openResetConfirm(page: Page): Promise<void> {
+  const menuTrigger = page.getByRole("button", { name: /操作メニューを開く/ });
+  if (await menuTrigger.isVisible()) {
+    await menuTrigger.click();
+  }
+
+  await page.getByRole("button", { exact: true, name: "初期化" }).click();
+  await expect(
+    page.getByRole("dialog", { name: "入力内容を初期化" }),
+  ).toBeVisible();
+}
+
 async function selectCharacterImage(page: Page): Promise<void> {
   await page.locator('input[type="file"]').setInputFiles({
     buffer: Buffer.from(
@@ -555,6 +567,13 @@ registerCharacterSheetVrtScenarios([
     kind: "dialog",
     locator: dialog("JSON入力の失敗"),
     prepare: openJsonImportError,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "reset-confirm",
+    kind: "dialog",
+    locator: dialog("入力内容を初期化"),
+    prepare: openResetConfirm,
     route: visualRoutes.characterSheet,
   },
   {

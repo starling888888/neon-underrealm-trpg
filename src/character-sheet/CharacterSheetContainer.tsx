@@ -9,6 +9,7 @@ import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorD
 import CharacterSheetErrorDialog from "./components/dialogs/CharacterSheetErrorDialog";
 import CharacterSheetJsonImportConfirmDialog from "./components/dialogs/CharacterSheetJsonImportConfirmDialog";
 import CharacterSheetJsonImportErrorDialog from "./components/dialogs/CharacterSheetJsonImportErrorDialog";
+import CharacterSheetResetConfirmDialog from "./components/dialogs/CharacterSheetResetConfirmDialog";
 import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
 import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
 import DrugsPickerDialog from "./components/dialogs/DrugsPickerDialog";
@@ -46,6 +47,8 @@ export default function CharacterSheetContainer() {
   const rootState = useCharacterSheetRootState();
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isErrorSummaryOpen, setIsErrorSummaryOpen] = useState(false);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [shouldRestoreResetFocus, setShouldRestoreResetFocus] = useState(false);
   const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
     string | null
   >(null);
@@ -99,6 +102,7 @@ export default function CharacterSheetContainer() {
   const actionMenuTriggerRef = useRef<HTMLButtonElement>(null);
   const errorSummaryCloseButtonRef = useRef<HTMLButtonElement>(null);
   const errorSummaryTriggerRef = useRef<HTMLButtonElement>(null);
+  const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
@@ -255,6 +259,13 @@ export default function CharacterSheetContainer() {
   );
 
   useEffect(() => {
+    if (!shouldRestoreResetFocus || rootState.isRootOperationInProgress) return;
+
+    setShouldRestoreResetFocus(false);
+    resetTriggerRef.current?.focus();
+  }, [rootState.isRootOperationInProgress, shouldRestoreResetFocus]);
+
+  useEffect(() => {
     if (!isActionMenuOpen) {
       return;
     }
@@ -381,11 +392,20 @@ export default function CharacterSheetContainer() {
             rootState.isCharacterImageRestoring ||
             rootState.isRootOperationInProgress
           }
+          isResetDisabled={
+            rootState.isCharacterImageRestoring ||
+            rootState.isRootOperationInProgress
+          }
           isMenuOpen={isActionMenuOpen}
           menuTriggerRef={actionMenuTriggerRef}
           onExport={rootState.onJsonExport}
           onImport={rootState.onJsonImportRequested}
           onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
+          onReset={(trigger) => {
+            resetTriggerRef.current = trigger;
+            setIsActionMenuOpen(false);
+            setIsResetConfirmOpen(true);
+          }}
           onReviewErrors={() => setIsErrorSummaryOpen(true)}
         />
         <input
@@ -423,6 +443,16 @@ export default function CharacterSheetContainer() {
           onConfirm={() => void rootState.onJsonImportConfirmed()}
           onRequestClose={() => rootState.setPendingJsonImport(null)}
           returnFocusRef={rootState.jsonImportReturnFocusRef}
+        />
+        <CharacterSheetResetConfirmDialog
+          isOpen={isResetConfirmOpen}
+          onConfirm={() => {
+            setIsResetConfirmOpen(false);
+            setShouldRestoreResetFocus(true);
+            void rootState.onResetConfirmed();
+          }}
+          onRequestClose={() => setIsResetConfirmOpen(false)}
+          returnFocusRef={resetTriggerRef}
         />
         <CharacterSheetJsonImportErrorDialog
           confirmButtonRef={rootState.jsonImportErrorConfirmButtonRef}

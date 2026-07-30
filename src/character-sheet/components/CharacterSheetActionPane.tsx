@@ -11,11 +11,13 @@ type CharacterSheetActionPaneProps = {
   errorSummary: CharacterSheetErrorSummary;
   isExportDisabled: boolean;
   isImportDisabled: boolean;
+  isResetDisabled: boolean;
   isMenuOpen: boolean;
   menuTriggerRef: RefObject<HTMLButtonElement | null>;
   onExport: () => void;
   onImport: (trigger: HTMLButtonElement) => void;
   onMenuToggle: () => void;
+  onReset: (trigger: HTMLButtonElement) => void;
   onReviewErrors: () => void;
 };
 
@@ -31,11 +33,13 @@ export default function CharacterSheetActionPane({
   errorSummary,
   isExportDisabled,
   isImportDisabled,
+  isResetDisabled,
   isMenuOpen,
   menuTriggerRef,
   onExport,
   onImport,
   onMenuToggle,
+  onReset,
   onReviewErrors,
 }: CharacterSheetActionPaneProps) {
   const { actions } = characterSheetDictionary.characterSheet;
@@ -68,7 +72,12 @@ export default function CharacterSheetActionPane({
           <CharacterSheetButton size="medium">
             {actions.ccfoliaCopy}
           </CharacterSheetButton>
-          <CharacterSheetButton color="danger" size="medium">
+          <CharacterSheetButton
+            color="danger"
+            disabled={isResetDisabled}
+            onClick={(event) => onReset(event.currentTarget)}
+            size="medium"
+          >
             {actions.reset}
           </CharacterSheetButton>
           <DesktopErrorStatus
@@ -145,6 +154,8 @@ export default function CharacterSheetActionPane({
             <CharacterSheetButton
               className={styles.menuActionButton}
               color="danger"
+              disabled={isResetDisabled}
+              onClick={(event) => onReset(event.currentTarget)}
               size="medium"
             >
               {actions.reset}

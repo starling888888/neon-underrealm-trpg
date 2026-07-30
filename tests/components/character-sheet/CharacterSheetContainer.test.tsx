@@ -53,6 +53,7 @@ function useRootStateHarness() {
     onCharacterImageOperationStarted: () => {},
     onCharacterImageSelected: async () => {},
     onJsonExport: () => {},
+    onResetConfirmed: async () => {},
     rootOperation: null,
     setImageError: vi.fn(),
   };
@@ -128,6 +129,77 @@ describe("CharacterSheetContainer", () => {
     expect(exportButton.getAttribute("aria-controls")).toBeNull();
     expect(screen.getAllByText("エラーはありません。")).toHaveLength(2);
     expect(screen.getByRole("button", { name: "確認" })).not.toBeNull();
+  });
+
+  it("confirms reset with the specified copy, actions, and focus behaviour", async () => {
+    const user = userEvent.setup();
+    const onResetConfirmed = vi.fn(async () => {});
+    useRootStateMock.mockImplementation(() => ({
+      ...useRootStateHarness(),
+      onResetConfirmed,
+    }));
+    render(<CharacterSheetContainer />);
+
+    const trigger = screen.getAllByRole("button", { name: "初期化" })[0];
+    if (trigger === undefined) throw new Error("初期化buttonがありません。");
+    await user.click(trigger);
+
+    const dialog = screen.getByRole("dialog", { name: "入力内容を初期化" });
+    expect(dialog.querySelector("h2")).toBeNull();
+    const message = Array.from(dialog.querySelectorAll("p")).find(
+      (element) =>
+        element.textContent ===
+        "入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？",
+    );
+    if (message === undefined) {
+      throw new Error("改行を含む初期化確認本文がありません。");
+    }
+    const resetButton = Array.from(dialog.querySelectorAll("button")).find(
+      (button) => button.textContent === "初期化",
+    );
+    if (resetButton === undefined) {
+      throw new Error("確認dialog内に初期化buttonがありません。");
+    }
+    expect(message.textContent).toBe(
+      "入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？",
+    );
+    expect(document.activeElement).toBe(
+      screen.getByRole("button", { name: "キャンセル" }),
+    );
+    expect(
+      screen
+        .getByRole("button", { name: "キャンセル" })
+        .getAttribute("data-character-sheet-button-color"),
+    ).toBe("muted");
+    expect(
+      screen
+        .getByRole("button", { name: "キャンセル" })
+        .getAttribute("data-character-sheet-button-variant"),
+    ).toBe("outline");
+    expect(resetButton.getAttribute("data-character-sheet-button-color")).toBe(
+      "danger",
+    );
+    expect(
+      resetButton.getAttribute("data-character-sheet-button-variant"),
+    ).toBe("solid");
+
+    await user.click(screen.getByRole("button", { name: "キャンセル" }));
+    expect(onResetConfirmed).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(trigger);
+
+    await user.click(trigger);
+    await user.click(
+      Array.from(
+        screen
+          .getByRole("dialog", { name: "入力内容を初期化" })
+          .querySelectorAll("button"),
+      ).find((button) => button.textContent === "初期化") ??
+        (() => {
+          throw new Error("確認dialog内に初期化buttonがありません。");
+        })(),
+    );
+    expect(onResetConfirmed).toHaveBeenCalledOnce();
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
   });
 
   it("returns a JSON-import image persistence error to the import trigger", async () => {

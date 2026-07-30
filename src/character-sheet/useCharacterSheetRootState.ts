@@ -27,6 +27,7 @@ import {
   writeCharacterImage,
 } from "./persistence/character-image";
 import {
+  deleteCharacterSheetForm,
   readCharacterSheetForm,
   writeCharacterSheetForm,
 } from "./persistence/character-sheet-form";
@@ -45,6 +46,7 @@ type CharacterSheetRootOperations = {
   convertCharacterImage: typeof convertCharacterImage;
   decodeImportedCharacterImage: typeof decodeImportedCharacterImage;
   deleteCharacterImage: typeof deleteCharacterImage;
+  deleteCharacterSheetForm: typeof deleteCharacterSheetForm;
   downloadJsonFile: typeof downloadJsonFile;
   readCharacterSheetJsonFile: typeof readCharacterSheetJsonFile;
   readCharacterImage: typeof readCharacterImage;
@@ -59,6 +61,7 @@ const defaultOperations: CharacterSheetRootOperations = {
   convertCharacterImage,
   decodeImportedCharacterImage,
   deleteCharacterImage,
+  deleteCharacterSheetForm,
   downloadJsonFile,
   readCharacterSheetJsonFile,
   readCharacterImage,
@@ -262,6 +265,33 @@ export default function useCharacterSheetRootState(
     }
   }
 
+  async function onResetConfirmed(): Promise<void> {
+    if (isCharacterImageRestoring || rootOperation !== null) return;
+
+    setIsImageErrorFromJsonImport(false);
+    try {
+      await runRootOperation(
+        characterSheetDictionary.characterSheet.reset.loading,
+        async () => {
+          await operations.deleteCharacterImage();
+
+          try {
+            operations.deleteCharacterSheetForm(window.localStorage);
+          } catch (error) {
+            console.error(error);
+          }
+
+          hasCommittedImageRef.current = true;
+          setCharacterImage(null);
+          form.reset(structuredClone(characterSheetDefaultValues));
+        },
+      );
+    } catch (error) {
+      setIsImageErrorFromJsonImport(false);
+      setImageError(toImageErrorState(error));
+    }
+  }
+
   function onJsonExport(): void {
     if (isCharacterImageRestoring) return;
 
@@ -396,6 +426,7 @@ export default function useCharacterSheetRootState(
     onJsonImportConfirmed,
     onJsonImportFileSelected,
     onJsonImportRequested,
+    onResetConfirmed,
     jsonImportErrorConfirmButtonRef,
     jsonImportInputRef,
     jsonImportReturnFocusRef,

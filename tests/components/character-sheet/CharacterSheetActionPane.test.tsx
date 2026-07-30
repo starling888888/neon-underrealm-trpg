@@ -31,11 +31,13 @@ describe("CharacterSheetActionPane", () => {
         errorSummary={{ errors: [], hasErrors: false }}
         isExportDisabled={false}
         isImportDisabled={false}
+        isResetDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={onExport}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
     );
@@ -56,11 +58,13 @@ describe("CharacterSheetActionPane", () => {
         errorSummary={errorSummary}
         isExportDisabled={false}
         isImportDisabled={false}
+        isResetDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
     );
@@ -96,11 +100,13 @@ describe("CharacterSheetActionPane", () => {
         errorSummary={{ errors: [], hasErrors: false }}
         isExportDisabled={false}
         isImportDisabled={false}
+        isResetDisabled={false}
         isMenuOpen={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
     );
@@ -119,11 +125,13 @@ describe("CharacterSheetActionPane", () => {
         errorSummary={{ errors: [], hasErrors: false }}
         isExportDisabled
         isImportDisabled
+        isResetDisabled
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
         onImport={vi.fn()}
         onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
     );

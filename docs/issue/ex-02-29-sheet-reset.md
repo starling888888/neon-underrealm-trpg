@@ -72,24 +72,24 @@
 
 ## 完了条件
 
-- [ ] desktopとtablet / mobileの`初期化`buttonが、titleなしでアクセシブル名を持つ確認dialogを開く。
-- [ ] dialog本文が「入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？」であり、改行コードを可視の改行として表示する。`キャンセル`はmuted outline、`初期化`はdanger solidで表示される。
-- [ ] `キャンセル`、Escape、dialogを閉じた場合に、入力、画像、端末内保存を変更せず、操作元へfocusを戻す。
-- [ ] dialogを開いた直後は`キャンセル`にfocusし、`初期化`の確認後だけフォーム値、可変行、画像、エラー・警告、localStorage、IndexedDB画像recordを初期化する。
-- [ ] 画像record削除または保存初期化の失敗時に、フォームと画像の状態を不整合にせず、既存の失敗feedbackへ接続する。
-- [ ] `docs/design/character-sheet/notes.md`の初期化dialog記述がユーザー指示と一致する。
-- [ ] ユーザーレビュー完了後に、`@character-sheet` targetの初期化確認dialogをdesktop（1440x1200）、tablet（820x1180）、mobile（390x900）でVisual Reviewし、canonical VRT baselineを更新しない。
-- [ ] `npm run check`、`npm run build`、関連テストが通る。
+- [x] desktopとtablet / mobileの`初期化`buttonが、titleなしでアクセシブル名を持つ確認dialogを開く。
+- [x] dialog本文が「入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？」であり、改行コードを可視の改行として表示する。`キャンセル`はmuted outline、`初期化`はdanger solidで表示される。
+- [x] `キャンセル`、Escape、dialogを閉じた場合に、入力、画像、端末内保存を変更せず、操作元へfocusを戻す。
+- [x] dialogを開いた直後は`キャンセル`にfocusし、`初期化`の確認後だけフォーム値、可変行、画像、エラー・警告、localStorage、IndexedDB画像recordを初期化する。
+- [x] 画像record削除または保存初期化の失敗時に、フォームと画像の状態を不整合にせず、既存の失敗feedbackへ接続する。
+- [x] `docs/design/character-sheet/notes.md`の初期化dialog記述がユーザー指示と一致する。
+- [x] ユーザーレビュー完了後に、`@character-sheet` targetの初期化確認dialogをdesktop（1440x1200）、tablet（820x1180）、mobile（390x900）でVisual Reviewし、ユーザー明示承認によりcanonical VRT baselineを更新した。
+- [x] `npm run check`、`npm run build`、関連テストが通る。
 
 ## チェックポイント
 
-- [ ] `docs/requirements/character-sheet.md`、親issueのGate plan、design targetと矛盾していない。
-- [ ] 既存routeとGitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] `docs/TODO.md`の既存項目と矛盾していない。
-- [ ] 既存のJSONインポート、画像操作、確認dialogのfocus・失敗処理を回帰させていない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] `docs/requirements/character-sheet.md`、親issueのGate plan、design targetと矛盾していない。
+- [x] 既存routeとGitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] `docs/TODO.md`の既存項目と矛盾していない。
+- [x] 既存のJSONインポート、画像操作、確認dialogのfocus・失敗処理を回帰させていない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -112,6 +112,57 @@
 - 画像とフォームの削除失敗時に一方だけを初期化して不整合を残さないこと。
 - design notesの更新がユーザー指示を正しく記録し、G29以外のdesignを変更しないこと。
 - target限定Visual Reviewで3 viewportと開いたdialog stateを確認し、canonical VRT baselineを更新しないこと。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `@character-sheet`、`@reset-confirm`
+- route / states / viewports: `/character-sheet/`の初期化確認dialogをdesktop（1440x1200）、tablet（820x1180）、mobile（390x900）で確認。
+
+### レビュー結果
+
+| 対象                    | 判定 | 差分                                                                 | 対応                                               |
+| ----------------------- | ---- | -------------------------------------------------------------------- | -------------------------------------------------- |
+| reset-confirm / desktop | OK   | 初回baseline未作成。更新後に7px（0.01%）のアンチエイリアス差を検出。 | baselineを再生成し、再比較で通過。                 |
+| reset-confirm / tablet  | OK   | 初回baseline未作成。                                                 | ユーザー承認によりbaselineを追加し、再比較で通過。 |
+| reset-confirm / mobile  | OK   | 初回baseline未作成。                                                 | ユーザー承認によりbaselineを追加し、再比較で通過。 |
+
+### 実画面確認
+
+- `/character-sheet/` / 初期化確認dialog / desktop:
+  - locator screenshot: `[role="dialog"][aria-label="入力内容を初期化"]`（`test-results/visual/character-sheet/dialogs/reset-confirm-desktop.png`、original pixel resolution）
+  - checked acceptance criteria: visible titleなし、本文の2行改行、muted outlineの`キャンセル`、danger solidの`初期化`、actionのbounds、横overflowなし。
+  - result: OK。
+- `/character-sheet/` / 初期化確認dialog / tablet:
+  - locator screenshot: `[role="dialog"][aria-label="入力内容を初期化"]`（`test-results/visual/character-sheet/dialogs/reset-confirm-tablet.png`、original pixel resolution）
+  - checked acceptance criteria: visible titleなし、本文の2行改行、actionの到達性、横overflowなし。
+  - result: OK。
+- `/character-sheet/` / 初期化確認dialog / mobile:
+  - locator screenshot: `[role="dialog"][aria-label="入力内容を初期化"]`（`test-results/visual/character-sheet/dialogs/reset-confirm-mobile.png`、original pixel resolution）
+  - checked acceptance criteria: visible titleなし、本文の2行改行、actionの横並びとbounds、横overflowなし。
+  - result: OK。
+
+### 自己修正した項目
+
+- [x] desktop snapshotに生じた7pxのアンチエイリアス差を、ユーザー承認済みbaselineの再生成後に再比較した。
+
+### 人間判断が必要な差分
+
+- なし。baseline更新はユーザーが明示承認済み。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
+- [x] VRT差分を修正した、または修正不要と判断した。
+- [x] baseline更新が必要な差分をユーザー明示承認として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## 備考
 

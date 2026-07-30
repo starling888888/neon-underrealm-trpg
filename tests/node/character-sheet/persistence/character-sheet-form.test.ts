@@ -5,6 +5,7 @@ import { characterSheetDefaultValues } from "../../../../src/character-sheet/for
 import { getCybernetics } from "../../../../src/character-sheet/master-data/cybernetics";
 import { getDrugs } from "../../../../src/character-sheet/master-data/drugs";
 import {
+  deleteCharacterSheetForm,
   readCharacterSheetForm,
   writeCharacterSheetForm,
 } from "../../../../src/character-sheet/persistence/character-sheet-form";
@@ -23,6 +24,7 @@ describe("character sheet form persistence", () => {
     const data = new Map<string, string>();
     const storage = {
       getItem: (key: string) => data.get(key) ?? null,
+      removeItem: (key: string) => data.delete(key),
       setItem: (key: string, value: string) => data.set(key, value),
     };
 
@@ -31,6 +33,19 @@ describe("character sheet form persistence", () => {
       parseCharacterSheetRestoreJson(readCharacterSheetForm(storage) ?? ""),
       values,
     );
+  });
+
+  it("removes the stored form snapshot", () => {
+    const data = new Map([["neon-underrealm-character-sheet-form", "saved"]]);
+    const storage = {
+      getItem: (key: string) => data.get(key) ?? null,
+      removeItem: (key: string) => data.delete(key),
+      setItem: (key: string, value: string) => data.set(key, value),
+    };
+
+    deleteCharacterSheetForm(storage);
+
+    assert.equal(readCharacterSheetForm(storage), null);
   });
 
   it("rejects malformed snapshots without a partial value", () => {

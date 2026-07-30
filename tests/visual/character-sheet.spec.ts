@@ -123,7 +123,7 @@ test.describe("character sheet page", () => {
       /^neon-underrealm_character-sheet_\d{4}-\d{2}-\d{2}_テストPL_テストPC\.json$/,
     );
 
-    for (const name of ["ヘルプ", "インポート", "CCFOLIAコピー", "初期化"]) {
+    for (const name of ["ヘルプ", "インポート", "CCFOLIAコピー"]) {
       await page.getByRole("button", { exact: true, name }).click();
     }
     await page.getByRole("button", { exact: true, name: "確認" }).click();
@@ -165,6 +165,40 @@ test.describe("character sheet page", () => {
       await expect(menu).toBeHidden();
       await expect(trigger).toBeFocused();
     }
+
+    await page.setViewportSize(visualViewports.desktop);
+    const resetTrigger = page.getByRole("button", {
+      exact: true,
+      name: "初期化",
+    });
+    await resetTrigger.click();
+    const resetDialog = page.getByRole("dialog", { name: "入力内容を初期化" });
+    await expect(resetDialog).toContainText(
+      "入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？",
+    );
+    await expect(resetDialog.getByRole("heading")).toHaveCount(0);
+    await expect(
+      resetDialog.getByRole("button", { exact: true, name: "キャンセル" }),
+    ).toBeFocused();
+    await resetDialog
+      .getByRole("button", { exact: true, name: "キャンセル" })
+      .click();
+    await expect(pcName).toHaveValue("テストPC");
+    await expect(resetTrigger).toBeFocused();
+
+    await resetTrigger.click();
+    await page.keyboard.press("Escape");
+    await expect(resetDialog).toBeHidden();
+    await expect(pcName).toHaveValue("テストPC");
+    await expect(resetTrigger).toBeFocused();
+
+    await resetTrigger.click();
+    await resetDialog
+      .getByRole("button", { exact: true, name: "初期化" })
+      .click();
+    await expect(resetDialog).toBeHidden();
+    await expect(pcName).toHaveValue("");
+    await expect(resetTrigger).toBeFocused();
   });
 
   test("replaces form values from JSON and reports an invalid imported image", async ({

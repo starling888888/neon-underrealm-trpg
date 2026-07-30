@@ -32,6 +32,7 @@
 - 2026-07-29、ユーザー承認によりG21のドラッグを追加した。`drugs-default`、`drugs-input`、`drugs-expanded`、`drugs-picker`、`drugs-picker-duplicate`をdesktop / tablet / mobileのowner section / dialog locatorでlocal canonical snapshot化し、ドラッグ追加で変わるfull-page defaultと`special-items-overview`を更新した。local canonical snapshotは148枚となった。G31までGit管理へ追加・変更しない。mobile候補dialogは名称・信用・BT強度を1行目、使用タイミング・1セット数量・効果を詳細行に置く。
 - 2026-07-29、ユーザー承認によりG22の未コミット差分を再確認し、`g22-credit-overage`と`g22-sumi-maximum-health`の各desktop / tablet / mobileを更新し、未選択で手動追加したwarningカテゴリの`g22-special-items-unselected-added`を同3 viewportで新規作成した。合計9枚のtarget限定比較は更新後にすべて通過し、local canonical snapshotは172枚となった。個別tooltip screenshotは作成せず、G31までGit管理へ追加・変更しない。
 - 2026-07-30、ユーザー明示承認によりG23の操作ペインと共通button変更を含む`@character-sheet` targetを更新した。full-page 6枚、buttonを含むsection、dialogを含む既存targetに、desktop操作ペイン1枚、tablet / mobileのfloating controls各1枚、開いた操作menu各1枚を追加し、local canonical snapshotは180枚となった。更新後のtarget通常比較は180件すべて通過した。G31までGit管理へ追加・変更しない。
+- 2026-07-30、ユーザー明示承認によりG29の`reset-confirm` dialogをdesktop、tablet、mobileの`@character-sheet` targetへ追加した。titleなし、本文の可視改行、muted outlineの`キャンセル`、danger solidの`初期化`をdialog locatorで比較し、3枚のcanonical snapshotを更新した。target通常比較は3件すべて通過し、local canonical snapshotは183枚となった。ユーザーがbaseline更新とcommitを明示指示したため、この3枚だけをGit管理へ追加する。G31まで、それ以外のsnapshotを追加・変更しない。
 - 2026-07-30、ユーザー明示承認によりG25の変更targetだけを更新した。既存の`bonds-default`、`bonds-input`、`bonds-error`各desktop / tablet / mobileと、errorなしのtablet / mobile action menuを更新し、代表的な2 errorのdesktop status、tablet / mobile floating control・menu、desktop error dialog、errorなしのdesktop error dialogを追加した。21件のtarget限定通常比較が通り、local canonical snapshotは193枚となった。このG25の明示承認以外では、G31までsnapshotを追加・変更しない。
 - 2026-07-30、ユーザー明示承認によりG27のJSON input dialog 3 stateを追加した。`json-import-confirm`、`json-import-error`、`json-import-image-error`をdesktop / tablet / mobileのdialog locator screenshotで確認し、target限定通常比較9件が通った。local canonical snapshotは202枚となった。このG27の明示承認以外では、G31までsnapshotを追加・変更しない。
 - 2026-07-29のGate外レビュー修正として、`判定` sectionはdesktopでも左列の`縁`の後に置く。right columnは`スキル`から開始する。`画像を選択`と各`〜を追加` buttonは、キャラクターシート内の共通styleでfont size、高さ、padding、border、hover / disabled stateを揃え、section固有CSSは配置だけを持つ。
@@ -176,7 +177,7 @@
 - 警告、破壊的操作の確認、CCFOLIAコピー完了、画像選択の失敗はダイアログで表示する。
 - ブラウザ組み込みの`alert`は使わない。
 - CCFOLIAコピー成功の通知ダイアログ本文は「クリップボードにコピーしました。」とする。
-- 初期化確認ダイアログ本文は「本当に初期化してよろしいですか？」とし、`OK`と`キャンセル`のbuttonを置く。
+- 初期化確認ダイアログはvisible titleを置かず、本文を「入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？」とする。本文の改行コードは空白に折り畳まず可視の改行として表示する。actionはmuted outlineの`キャンセル`とdanger solidの`初期化`とし、初期focusは`キャンセル`へ置く。
 - desktopのエラー確認ダイアログは、太めのdangerカラーの枠線と白い背景に黒い文字で表示する。visible titleは置かず、アクセシブル名を`エラー`とする。本文は空状態`エラーはありません。`またはdangerカラーの`エラーがN件あります。`と、通常本文カラーの順序なしerror一覧から始める。`閉じる`buttonはmuted outlineとする。
 - ヘルプダイアログは青緑のアクセントカラーの枠線、薄いグレーの背景、青緑の丸い`?`アイコンと「ヘルプ」のタイトル行を使う。最大高さを定め、本文だけを独立してscrollできるようにする。
 - それ以外のダイアログのbutton配置、dismiss操作、focus処理、Clipboard API失敗時の扱いは、後続のdesign対話で決める。
