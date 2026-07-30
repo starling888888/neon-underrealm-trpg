@@ -1825,3 +1825,13 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-28-sheet-ccfolia`のcommit準備
 - 観測した失敗: repository ruleが状態変更Git操作を1件ずつ実行するよう定めるなか、通常ファイルのstageとignoreされたcanonical snapshotのforce stageを`&&`で連結した。
 - 一次対応: stage対象がCCFOLIA Gateとユーザー承認済みの9枚のbaselineだけであることを確認し、手順逸脱を本logへ記録した。以後のstatus確認、staged diff確認、commit、pushはすべて単独のGit操作として実行する。
+
+### Repeatedly failed the CCFOLIA Container test while changing its fixture
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-28-sheet-ccfolia`のContainerからCCFOLIA payloadへの結線test
+- 観測した失敗: UI操作で複数の入力を設定してtest timeoutを起こした後、fixture設定へ切り替える際に既存environmentにない`toHaveValue` matcherを使い、同じtestを再度失敗させた。
+- 一次対応: test目的をContainer入力結線だけに戻してfixtureでRHF値を設定し、inputは標準Chaiの`value` propertyで待機する。修正後は対象test単体と関連testを確認する。

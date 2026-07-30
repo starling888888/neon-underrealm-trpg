@@ -155,3 +155,50 @@ CCFOLIAの形式・出力項目・数値の扱い・必要なテストは、ユ�
 - [x] baseline更新が必要な差分をユーザー明示指示として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 既存の`exports JSON from desktop and responsive action buttons` E2Eが、`CCFOLIAコピー`を副作用のない操作として連続クリックしている。G28ではこの操作がmodal確認dialogを開くため、dialogを閉じずに続けると外側のエラー集約`確認`buttonを操作できない。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）
+- classification: valid
+- local validation: `tests/visual/character-sheet.spec.ts`の現行loopが`ヘルプ`、`インポート`、`CCFOLIAコピー`を連続クリックしていること、`CCFOLIAコピー`のdialogには`キャンセル`と`コピー`だけがあることを確認した。全E2Eの直近実行では、この箇所より前の既存JSON exportファイル名assertionで失敗したため、review本文が述べる操作不能timeoutまでは到達していない。ただし、前段の既存失敗を解消した後に現行loopが統合回帰になることはローカル実装とdialog契約から確認できる。
+
+### 対応方針
+
+- 既存smoke testの副作用なし操作loopから`CCFOLIAコピー`を外す。CCFOLIAの確認・成功・失敗・focus復帰は、このGateで追加済みの専用E2Eへ保持する。
+- 修正時は、CCFOLIA専用E2Eに加え、`tests/visual/character-sheet.spec.ts`全体を実行して既存smokeとの統合を確認する。直近で観測したJSON exportファイル名の既存失敗は、同一実行で再現した場合に原因を分離して扱う。
+
+### 対応完了チェックリスト
+
+- [x] 既存smoke testからCCFOLIAを副作用なし操作として扱う前提を除く
+- [x] CCFOLIA専用E2Eとcharacter-sheet全体E2Eを実行する。`npx playwright test tests/visual/character-sheet.spec.ts --workers=1` は31件通過した。
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- Containerが現在のフォーム値と派生値をCCFOLIA JSONへ渡す結線を、Container testまたはE2Eで直接検証していない。現行のContainer testはClipboard操作の呼出回数だけを、E2Eは通知dialogだけを確認しているため、値の取り違え・縁行の渡し忘れを検知できない。
+
+### 判定
+
+- source: local-agent（通常Tech Review）
+- classification: valid
+- local validation: `CharacterSheetContainer`がPC名、行動値、体力、精神力、縁上限、縁行を`serializeCcfoliaCharacterClipboardData()`へ渡すことを確認した。純粋logic testは合成入力を検証している一方、Container testの`onCcfoliaCopy`は呼出回数のみ、E2Eの`navigator.clipboard.writeText` stubはpayloadを保持しないため、この結線境界は未検証である。
+
+### 対応方針
+
+- Container testでフォーム入力と派生値を設定し、`onCcfoliaCopy`へ渡したJSON文字列をparseして、少なくともPC名、行動値、体力、精神力、縁・覚悟にした縁を確認する。純粋logicの仕様testは重複させず、Containerからlogicへの入力結線だけを担保する。
+
+### 対応完了チェックリスト
+
+- [x] ContainerからCCFOLIA logicへ渡す実フォーム値・派生値を検証するtestを追加する
+- [x] 対象Component / hook testが通る。`CharacterSheetContainer.test.tsx` は15件通過した。
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

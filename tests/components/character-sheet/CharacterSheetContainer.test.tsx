@@ -11,7 +11,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -102,8 +102,23 @@ function useResetImageErrorHarness() {
 }
 
 function useCcfoliaCopyHarness() {
+  const rootState = useRootStateHarness();
+
+  useEffect(() => {
+    rootState.form.setValue("profile.pcName", "テストPC");
+    rootState.form.setValue("build.primaryRyugiId", "kenkaya");
+    rootState.form.setValue("build.ikizamaId", "burai");
+    rootState.form.setValue("secondaryAttributes.healthModifier", 7);
+    rootState.form.setValue("secondaryAttributes.mentalModifier", 11);
+    rootState.form.setValue("secondaryAttributes.actionModifier", 13);
+    rootState.form.setValue("secondaryAttributes.bondLimitModifier", 17);
+    rootState.form.setValue("bonds.rows.0.target", "アキラ");
+    rootState.form.setValue("bonds.rows.0.isResolved", true);
+    rootState.form.setValue("bonds.rows.1.relation", "仕事仲間");
+  }, [rootState.form]);
+
   return {
-    ...useRootStateHarness(),
+    ...rootState,
     onCcfoliaCopy,
   };
 }
@@ -251,6 +266,27 @@ describe("CharacterSheetContainer", () => {
     useRootStateMock.mockImplementation(useCcfoliaCopyHarness);
     render(<CharacterSheetContainer />);
 
+    await waitFor(() =>
+      expect((screen.getByLabelText("PC名") as HTMLInputElement).value).toBe(
+        "テストPC",
+      ),
+    );
+
+    const getDerivedValue = (label: string) => {
+      const value = screen
+        .getByRole("group", { name: label })
+        .querySelector(`output[aria-label="${label}"]`)?.textContent;
+      if (value === undefined || value === null) {
+        throw new Error(`${label}の算出値がありません。`);
+      }
+
+      return Number(value);
+    };
+    const actionValue = getDerivedValue("行動値");
+    const bondLimit = getDerivedValue("結べる縁");
+    const health = getDerivedValue("最大体力");
+    const mental = getDerivedValue("最大精神力");
+
     await user.click(screen.getByRole("button", { name: "CCFOLIAコピー" }));
     expect(
       screen.getByRole("dialog", { name: "CCFOLIAコピー" }),
@@ -259,6 +295,29 @@ describe("CharacterSheetContainer", () => {
 
     await user.click(screen.getByRole("button", { name: "コピー" }));
     await waitFor(() => expect(onCcfoliaCopy).toHaveBeenCalledOnce());
+    const json = onCcfoliaCopy.mock.calls[0]?.[0];
+    if (typeof json !== "string") {
+      throw new Error("CCFOLIA JSONがClipboard操作へ渡されませんでした。");
+    }
+    const copied = JSON.parse(json) as {
+      data: {
+        initiative: number;
+        name: string;
+        status: Array<{ label: string; max: number; value: number }>;
+      };
+      kind: string;
+    };
+    expect(copied.kind).toBe("character");
+    expect(copied.data.name).toBe("テストPC");
+    expect(copied.data.initiative).toBe(actionValue);
+    expect(copied.data.status).toEqual(
+      expect.arrayContaining([
+        { label: "体力", max: health, value: health },
+        { label: "精神力", max: mental, value: mental },
+        { label: "縁", max: bondLimit, value: 2 },
+        { label: "覚悟にした縁", max: bondLimit, value: 1 },
+      ]),
+    );
     expect(
       screen.getByRole("dialog", { name: "CCFOLIAコピー完了" }),
     ).not.toBeNull();

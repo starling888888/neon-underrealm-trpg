@@ -106,6 +106,9 @@ test.describe("character sheet page", () => {
   }) => {
     await page.setViewportSize(visualViewports.desktop);
     await page.goto("character-sheet/");
+    await expect(
+      page.getByRole("status", { name: "保存済みの入力を復元しています" }),
+    ).toBeHidden();
 
     const pcName = page.getByLabel("PC名", { exact: true });
     await pcName.fill("テストPC");
@@ -123,7 +126,7 @@ test.describe("character sheet page", () => {
       /^neon-underrealm_character-sheet_\d{4}-\d{2}-\d{2}_テストPL_テストPC\.json$/,
     );
 
-    for (const name of ["ヘルプ", "インポート", "CCFOLIAコピー"]) {
+    for (const name of ["ヘルプ", "インポート"]) {
       await page.getByRole("button", { exact: true, name }).click();
     }
     await page.getByRole("button", { exact: true, name: "確認" }).click();
