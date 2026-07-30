@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Re-ran the JSON download test after fixing the wrong fixture cast
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-26-sheet-json-export`のレビュー指摘1対応におけるJSON download例外test
+- 観測した失敗: `HTMLAnchorElement`へ直接castした例外用test doubleが型検査を失敗させた後、最初の修正で同じfile内の成功用test doubleを修正し、例外用test doubleは未修正のまま`npm run check`を再実行した。
+- 一次対応: 型検査の行番号を確認し、例外用test doubleを`unknown`経由の明示castへ修正する。複数の同形fixtureがある場合、修正後は対象行と差分を確認してから全体checkを再実行する。
+
 ### Used an unavailable DOM matcher while testing the bond focus fix
 
 #### 2026-07-30

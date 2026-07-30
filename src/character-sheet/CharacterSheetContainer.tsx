@@ -374,6 +374,7 @@ export default function CharacterSheetContainer() {
         <CharacterSheetActionPane
           errorReviewButtonRef={errorSummaryTriggerRef}
           errorSummary={presenterProps.errorSummary}
+          isExportDisabled={rootState.isCharacterImageRestoring}
           isMenuOpen={isActionMenuOpen}
           menuTriggerRef={actionMenuTriggerRef}
           onExport={rootState.onJsonExport}

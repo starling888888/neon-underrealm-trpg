@@ -46,6 +46,7 @@ function useRootStateHarness() {
     imageError: null,
     imageErrorCloseButtonRef: useRef<HTMLButtonElement>(null),
     imageReturnFocusRef: useRef<HTMLButtonElement>(null),
+    isCharacterImageRestoring: false,
     isRootOperationInProgress: false,
     onCharacterImageCleared: async () => {},
     onCharacterImageOperationStarted: () => {},

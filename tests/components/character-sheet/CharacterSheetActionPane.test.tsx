@@ -29,6 +29,7 @@ describe("CharacterSheetActionPane", () => {
       <CharacterSheetActionPane
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
+        isExportDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={onExport}
@@ -51,6 +52,7 @@ describe("CharacterSheetActionPane", () => {
       <CharacterSheetActionPane
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={errorSummary}
+        isExportDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
@@ -88,6 +90,7 @@ describe("CharacterSheetActionPane", () => {
       <CharacterSheetActionPane
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
+        isExportDisabled={false}
         isMenuOpen={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
@@ -101,5 +104,26 @@ describe("CharacterSheetActionPane", () => {
         name: "操作メニューを開く、エラーはありません。",
       }),
     ).not.toBeNull();
+  });
+
+  it("disables desktop and responsive export while an image is restoring", () => {
+    render(
+      <CharacterSheetActionPane
+        errorReviewButtonRef={createRef<HTMLButtonElement>()}
+        errorSummary={{ errors: [], hasErrors: false }}
+        isExportDisabled
+        isMenuOpen
+        menuTriggerRef={createRef<HTMLButtonElement>()}
+        onExport={vi.fn()}
+        onMenuToggle={vi.fn()}
+        onReviewErrors={vi.fn()}
+      />,
+    );
+
+    for (const button of screen.getAllByRole("button", {
+      name: "エクスポート",
+    })) {
+      expect((button as HTMLButtonElement).disabled).toBe(true);
+    }
   });
 });

@@ -89,6 +89,8 @@ export default function useCharacterSheetRootState(
     null,
   );
   const [isFormRestoring, setIsFormRestoring] = useState(true);
+  const [isCharacterImageRestoring, setIsCharacterImageRestoring] =
+    useState(true);
   const [isFormRestoreErrorOpen, setIsFormRestoreErrorOpen] = useState(false);
   const formRestoreConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const formRestoreReturnFocusRef = useRef<HTMLInputElement>(null);
@@ -109,6 +111,11 @@ export default function useCharacterSheetRootState(
       .catch(() => {
         if (isCurrent && !hasCommittedImageRef.current) {
           setImageError({ code: "restore" });
+        }
+      })
+      .finally(() => {
+        if (isCurrent) {
+          setIsCharacterImageRestoring(false);
         }
       });
 
@@ -221,6 +228,8 @@ export default function useCharacterSheetRootState(
   }
 
   function onJsonExport(): void {
+    if (isCharacterImageRestoring) return;
+
     const values = form.getValues();
 
     operations.downloadJsonFile(
@@ -237,6 +246,7 @@ export default function useCharacterSheetRootState(
     imageReturnFocusRef,
     formRestoreConfirmButtonRef,
     formRestoreReturnFocusRef,
+    isCharacterImageRestoring,
     isFormRestoreErrorOpen,
     isFormRestoring,
     isRootOperationInProgress: rootOperation !== null,

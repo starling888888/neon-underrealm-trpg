@@ -58,7 +58,7 @@ test("downloads JSON through replaceable browser dependencies and revokes its UR
     },
     download: "",
     href: "",
-  } as HTMLAnchorElement;
+  } as unknown as HTMLAnchorElement;
   const revokedUrls: string[] = [];
 
   downloadJsonFile('{"test":true}', "character.json", {
@@ -78,4 +78,28 @@ test("downloads JSON through replaceable browser dependencies and revokes its UR
   assert.notEqual(createdBlob, undefined);
   assert.equal(await createdBlob.text(), '{"test":true}');
   assert.equal(createdBlob.type, "application/json;charset=utf-8");
+});
+
+test("revokes the object URL when starting the download throws", () => {
+  const error = new Error("download failed");
+  const revokedUrls: string[] = [];
+  const anchor = {
+    click: () => {
+      throw error;
+    },
+    download: "",
+    href: "",
+  } as unknown as HTMLAnchorElement;
+
+  assert.throws(
+    () =>
+      downloadJsonFile('{"test":true}', "character.json", {
+        createAnchor: () => anchor,
+        createObjectUrl: () => "blob:test",
+        revokeObjectUrl: (url) => revokedUrls.push(url),
+      }),
+    error,
+  );
+
+  assert.deepEqual(revokedUrls, ["blob:test"]);
 });

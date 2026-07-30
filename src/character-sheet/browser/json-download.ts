@@ -19,10 +19,14 @@ export function downloadJsonFile(
   const url = dependencies.createObjectUrl(
     new Blob([json], { type: "application/json;charset=utf-8" }),
   );
-  const anchor = dependencies.createAnchor();
 
-  anchor.href = url;
-  anchor.download = filename;
-  anchor.click();
-  dependencies.revokeObjectUrl(url);
+  try {
+    const anchor = dependencies.createAnchor();
+
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+  } finally {
+    dependencies.revokeObjectUrl(url);
+  }
 }

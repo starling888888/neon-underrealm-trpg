@@ -9,6 +9,7 @@ import CharacterSheetButton from "./CharacterSheetButton";
 type CharacterSheetActionPaneProps = {
   errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
   errorSummary: CharacterSheetErrorSummary;
+  isExportDisabled: boolean;
   isMenuOpen: boolean;
   menuTriggerRef: RefObject<HTMLButtonElement | null>;
   onExport: () => void;
@@ -26,6 +27,7 @@ const menuId = "character-sheet-actions-menu";
 export default function CharacterSheetActionPane({
   errorReviewButtonRef,
   errorSummary,
+  isExportDisabled,
   isMenuOpen,
   menuTriggerRef,
   onExport,
@@ -45,7 +47,11 @@ export default function CharacterSheetActionPane({
           <CharacterSheetButton size="medium">
             {actions.help}
           </CharacterSheetButton>
-          <CharacterSheetButton onClick={onExport} size="medium">
+          <CharacterSheetButton
+            disabled={isExportDisabled}
+            onClick={onExport}
+            size="medium"
+          >
             {actions.export}
           </CharacterSheetButton>
           <CharacterSheetButton size="medium">
@@ -108,6 +114,7 @@ export default function CharacterSheetActionPane({
           <div className={styles.menuActions}>
             <CharacterSheetButton
               className={styles.menuActionButton}
+              disabled={isExportDisabled}
               onClick={onExport}
               size="medium"
             >
