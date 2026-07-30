@@ -1835,3 +1835,53 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-28-sheet-ccfolia`のContainerからCCFOLIA payloadへの結線test
 - 観測した失敗: UI操作で複数の入力を設定してtest timeoutを起こした後、fixture設定へ切り替える際に既存environmentにない`toHaveValue` matcherを使い、同じtestを再度失敗させた。
 - 一次対応: test目的をContainer入力結線だけに戻してfixtureでRHF値を設定し、inputは標準Chaiの`value` propertyで待機する。修正後は対象test単体と関連testを確認する。
+
+### Repeated unavailable DOM matcher usage in the Help dialog Component test
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-30-sheet-help` の`CharacterSheetHelpDialog` Component test
+- 観測した失敗: `@testing-library/jest-dom`をsetupしていないtest環境で`toBeInTheDocument`を使った後、それを`not.toBeNull()`へ置き換えたにもかかわらず、続けて同じく未提供の`toHaveTextContent` matcherを使った。そのため、同じ対象testを2回失敗させた。
+- 一次対応: DOMの存在と本文は標準Chaiの`not.toBeNull()`および`element.textContent`に対する`toContain()`で確認する。testを追加・変更する前に、既存testのmatcher利用かtest setupを確認する。
+
+### Broke the Help dialog body scroll while correcting outer scroll
+
+#### 2026-07-30
+
+- source: user
+- failure category: visual implementation verification
+- 発生箇所: `ex-02-30-sheet-help` の`CharacterSheetDialog` shared CSS
+- 観測した失敗: ヘルプdialogの外側scrollを抑える調整で、surfaceの最大高を誤って内側の高さへ計算し直した。その結果、本文領域が内容高まで広がり、本文自体をscrollできなくなったとユーザーから指摘された。
+- 一次対応: surfaceには既存の最大高継承を戻し、native dialog側を`overflow: clip`として外側scrollだけを禁止した。実行時にdialogの`scrollTop`が`0`のまま、本文領域の`scrollTop`が移動できることを確認してから、ユーザーレビューへ戻す。
+
+### Chained local validation commands
+
+#### 2026-07-30
+
+- source: self
+- failure category: command execution discipline
+- 発生箇所: `ex-02-30-sheet-help` のformatterとMarkdown check
+- 観測した失敗: shell commandを`&&`で連結しないrepository ruleに反して、Biome formatterと`npm run check:md`を一つのcommandとして実行した。
+- 一次対応: 以後のformatter、test、check、buildはそれぞれ個別のcommandとして実行する。
+
+### Applied the example treatment to the calculated-value explanation
+
+#### 2026-07-30
+
+- source: user
+- failure category: implementation accuracy
+- 発生箇所: `ex-02-30-sheet-help` の`CharacterSheetHelpDialog`
+- 観測した失敗: 「例」のCallout対応色を追加する際、直前にある「算出値」の説明paragraphへ`example` classを付与し、実際の例文へ付与しなかった。
+- 一次対応: classを例文のparagraphへ移した。class追加時は、可視ラベルと同じparagraphであることをDOM上で確認する。
+
+### Reported an obsolete VRT capture as a current dialog defect
+
+#### 2026-07-30
+
+- source: user
+- failure category: visual implementation verification
+- 発生箇所: `ex-02-30-sheet-help` のHelp dialog contents review報告
+- 観測した失敗: 先に作成されたVRT captureで最下部のヘッダーと閉じる操作が見えないことを、現行preview・現行buildで再captureせず、実装の外側scroll不備として報告した。ユーザーからVRT側の問題ではないかと指摘された。
+- 一次対応: VRT scenarioのscroll対象が`header + div`の本文要素だけであることを確認し、実行時にdialogの`scrollTop`が`0`、本文の`scrollTop`だけが最大値へ移動することをdesktop / tablet / mobileで確認した。現行4321 previewに対して9状態を再captureし、すべてでheaderと閉じる操作が残ることを原寸画像で確認した。VRT captureをreview入力へ渡す前に、現行build由来であることと対象stateを再確認する。

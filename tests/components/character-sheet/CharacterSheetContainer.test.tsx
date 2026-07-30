@@ -187,7 +187,7 @@ describe("CharacterSheetContainer", () => {
     for (const trigger of screen.getAllByRole("button", { name: "ヘルプ" })) {
       await user.click(trigger);
       const dialog = screen.getByRole("dialog", { name: "ヘルプ" });
-      expect(dialog.querySelector("p")).toBeNull();
+      expect(dialog.textContent).toContain("入力の進め方");
       expect(dialog.querySelector("footer")).toBeNull();
       expect(document.activeElement).toBe(
         screen.getByRole("button", { name: "閉じる" }),

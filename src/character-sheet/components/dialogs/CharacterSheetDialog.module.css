@@ -1,12 +1,18 @@
 .dialog {
+  --character-sheet-dialog-max-height: min(
+    36rem,
+    calc(100dvh - (var(--space-8) * 2))
+  );
+
   width: min(32rem, calc(100vw - (var(--page-gutter) * 2)));
   max-width: none;
-  max-height: min(36rem, calc(100dvh - (var(--space-8) * 2)));
+  max-height: var(--character-sheet-dialog-max-height);
   border: var(--border-width) solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
   color: var(--color-text);
+  overflow: clip;
   padding: 0;
 }
 
@@ -18,6 +24,7 @@
   display: flex;
   flex-direction: column;
   max-height: inherit;
+  min-height: 0;
 }
 
 .header {
@@ -55,6 +62,7 @@
 
 .content {
   display: grid;
+  flex: 1 1 auto;
   gap: var(--space-4);
   min-height: 0;
   overflow-y: auto;

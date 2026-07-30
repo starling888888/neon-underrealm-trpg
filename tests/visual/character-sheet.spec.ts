@@ -135,7 +135,8 @@ test.describe("character sheet page", () => {
     await expect(
       helpDialog.getByRole("heading", { name: "ヘルプ" }),
     ).toBeVisible();
-    await expect(helpDialog.locator("p")).toHaveCount(0);
+    await expect(helpDialog).toContainText("入力の進め方");
+    await expect(helpDialog).toContainText("▸");
     await expect(helpDialog.locator("footer")).toHaveCount(0);
     await expect(
       helpDialog.getByRole("button", { name: "閉じる" }),
@@ -162,7 +163,8 @@ test.describe("character sheet page", () => {
       await expect(
         helpDialog.getByRole("heading", { name: "ヘルプ" }),
       ).toBeVisible();
-      await expect(helpDialog.locator("p")).toHaveCount(0);
+      await expect(helpDialog).toContainText("入力の進め方");
+      await expect(helpDialog).toContainText("▸");
       await expect(helpDialog.locator("footer")).toHaveCount(0);
       await expect(
         helpDialog.getByRole("button", { name: "閉じる" }),

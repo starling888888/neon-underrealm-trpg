@@ -458,6 +458,29 @@ async function openEmptyErrorDialog(page: Page): Promise<void> {
   await expect(page.getByRole("dialog", { name: "エラー" })).toBeVisible();
 }
 
+async function openHelpDialog(page: Page): Promise<void> {
+  await page.getByRole("button", { exact: true, name: "ヘルプ" }).click();
+  await expect(page.getByRole("dialog", { name: "ヘルプ" })).toBeVisible();
+}
+
+async function scrollHelpDialog(
+  page: Page,
+  position: "middle" | "end",
+): Promise<void> {
+  await openHelpDialog(page);
+  const content = page
+    .getByRole("dialog", { name: "ヘルプ" })
+    .locator("header + div");
+
+  await content.evaluate((element, scrollPosition) => {
+    const maximumScrollTop = element.scrollHeight - element.clientHeight;
+    element.scrollTop =
+      scrollPosition === "middle"
+        ? Math.round(maximumScrollTop / 2)
+        : maximumScrollTop;
+  }, position);
+}
+
 async function openErrorActionMenu(page: Page): Promise<void> {
   await prepareRepresentativeErrors(page);
   await openActionMenu(page, "エラーが2件あります。");
@@ -600,6 +623,27 @@ registerCharacterSheetVrtScenarios([
     prepare: openEmptyErrorDialog,
     route: visualRoutes.characterSheet,
     viewports: ["desktop"],
+  },
+  {
+    id: "help-dialog",
+    kind: "dialog",
+    locator: dialog("ヘルプ"),
+    prepare: openHelpDialog,
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "help-dialog-middle",
+    kind: "dialog",
+    locator: dialog("ヘルプ"),
+    prepare: (page) => scrollHelpDialog(page, "middle"),
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "help-dialog-end",
+    kind: "dialog",
+    locator: dialog("ヘルプ"),
+    prepare: (page) => scrollHelpDialog(page, "end"),
+    route: visualRoutes.characterSheet,
   },
   {
     id: "json-import-confirm",

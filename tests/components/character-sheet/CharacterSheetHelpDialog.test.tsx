@@ -45,7 +45,7 @@ function HelpDialogHarness() {
 }
 
 describe("CharacterSheetHelpDialog", () => {
-  it("renders an empty dialog with a header close control and restores focus", async () => {
+  it("renders help content with a header close control and restores focus", async () => {
     const user = userEvent.setup();
     render(<HelpDialogHarness />);
 
@@ -54,7 +54,15 @@ describe("CharacterSheetHelpDialog", () => {
 
     const dialog = screen.getByRole("dialog", { name: "ヘルプ" });
     expect(dialog.querySelector("h2")?.textContent).toBe("ヘルプ");
-    expect(dialog.querySelector("p")).toBeNull();
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: "キャラクターシートについて",
+      }),
+    ).not.toBeNull();
+    expect(dialog.textContent).toContain("入力の進め方");
+    expect(dialog.textContent).toContain("保存・引き継ぎ");
+    expect(dialog.textContent).toContain("▸");
     expect(dialog.querySelector("footer")).toBeNull();
     expect(document.activeElement).toBe(
       screen.getByRole("button", { name: "閉じる" }),
