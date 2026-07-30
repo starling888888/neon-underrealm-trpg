@@ -19,7 +19,12 @@ import {
   readCharacterImage,
   writeCharacterImage,
 } from "./persistence/character-image";
+import {
+  readCharacterSheetForm,
+  writeCharacterSheetForm,
+} from "./persistence/character-sheet-form";
 import { characterSheetFormSchema } from "./schemas/character-sheet-form";
+import { parseCharacterSheetRestoreJson } from "./schemas/character-sheet-persistence";
 
 export type CharacterImageErrorState = {
   code: CharacterImageErrorCode | "restore";
@@ -30,6 +35,8 @@ type CharacterSheetRootOperations = {
   deleteCharacterImage: typeof deleteCharacterImage;
   readCharacterImage: typeof readCharacterImage;
   writeCharacterImage: typeof writeCharacterImage;
+  readCharacterSheetForm: typeof readCharacterSheetForm;
+  writeCharacterSheetForm: typeof writeCharacterSheetForm;
 };
 
 type CharacterSheetRootDependencies = Partial<CharacterSheetRootOperations>;
@@ -39,6 +46,8 @@ const defaultOperations: CharacterSheetRootOperations = {
   deleteCharacterImage,
   readCharacterImage,
   writeCharacterImage,
+  readCharacterSheetForm,
+  writeCharacterSheetForm,
 };
 
 type RootOperation = {
@@ -72,6 +81,9 @@ export default function useCharacterSheetRootState(
   const [imageError, setImageError] = useState<CharacterImageErrorState | null>(
     null,
   );
+  const [isFormRestoring, setIsFormRestoring] = useState(true);
+  const [isFormRestoreErrorOpen, setIsFormRestoreErrorOpen] = useState(false);
+  const formRestoreConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const imageReturnFocusRef = useRef<HTMLButtonElement>(null);
   const imageErrorCloseButtonRef = useRef<HTMLButtonElement>(null);
   const hasCommittedImageRef = useRef(false);
@@ -96,6 +108,53 @@ export default function useCharacterSheetRootState(
       isCurrent = false;
     };
   }, [operations]);
+
+  useEffect(() => {
+    try {
+      const text = operations.readCharacterSheetForm(window.localStorage);
+      if (text !== null) {
+        const values = parseCharacterSheetRestoreJson(text);
+        if (values === null) {
+          setIsFormRestoreErrorOpen(true);
+        } else {
+          form.reset(values);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsFormRestoring(false);
+    }
+  }, [form, operations]);
+
+  useEffect(() => {
+    if (isFormRestoring) return;
+
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    let latestValues = form.getValues();
+    const subscription = form.subscribe({
+      callback: ({ values }) => {
+        latestValues = values as CharacterSheetFormValues;
+        if (timeout !== undefined) clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          try {
+            operations.writeCharacterSheetForm(
+              window.localStorage,
+              latestValues,
+            );
+          } catch (error) {
+            console.error(error);
+          }
+        }, 200);
+      },
+      formState: { values: true },
+    });
+
+    return () => {
+      if (timeout !== undefined) clearTimeout(timeout);
+      subscription();
+    };
+  }, [form, isFormRestoring, operations]);
 
   function onCharacterImageOperationStarted(trigger: HTMLButtonElement): void {
     imageReturnFocusRef.current = trigger;
@@ -152,11 +211,15 @@ export default function useCharacterSheetRootState(
     imageError,
     imageErrorCloseButtonRef,
     imageReturnFocusRef,
+    formRestoreConfirmButtonRef,
+    isFormRestoreErrorOpen,
+    isFormRestoring,
     isRootOperationInProgress: rootOperation !== null,
     onCharacterImageSelected,
     onCharacterImageCleared,
     onCharacterImageOperationStarted,
     setImageError,
+    setIsFormRestoreErrorOpen,
     rootOperation,
   };
 }

@@ -63,7 +63,7 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 - エラー・警告の集約表示、action paneのbutton文言・レイアウト・新しい通知dialogの実装（G25、G23の既存境界を維持する）。ただし、復元失敗の既存`CharacterSheetDialog`接続はこのGateに含める。
 - 全消去に伴うform reset、localStorageまたは画像recordの削除操作（G29）。復元不能な自動保存値の削除・書換えもこのGateでは行わない。
 - スキーマバージョン、旧JSON形式の移行、複数キャラクター、クラウド同期、サーバー・DB・認証、追加npm package。
-- `docs/TODO.md`で別taskとされる、派生logicからのmaster ID解決の分離を、このGateへ拡張して実装すること。G24の開始前に、このTODOが現行architectureと整合済みかを確認し、未解決なら実装を開始せずにユーザーへ報告する。
+- `docs/TODO.md`で別taskとされる、派生logicからのmaster ID解決の分離を、このGateへ拡張して実装すること。復元境界でread-only master-data adapterを入力として使うことは許可するが、既存`logic/`のID解決責務は変更しない。
 
 ## 完了条件
 
@@ -76,7 +76,7 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 - [ ] 画像復元の成功・不在・失敗がフォーム復元を停止させず、フォーム復元の失敗も画像表示を変更しない。
 - [ ] localStorage APIの読取り・書込み例外で`console.error`を出し、現在の編集を停止または破壊せず、dialogを表示しない。
 - [ ] 復元失敗時に、`CharacterSheetDialog`で「自動復元に失敗しました。」と`確認`だけを表示し、確認後に初期フォーム値を編集できる。
-- [ ] `docs/TODO.md`のG24前提2項目を現行SSoTと照合し、このGateで回収しないものを明記している。
+- [ ] `docs/TODO.md`の関連2項目を現行SSoTと照合し、このGateで回収しないものを明記している。
 - [ ] `npm run check` が通る。
 - [ ] `npm run build` が通る。
 
@@ -86,7 +86,7 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 - [ ] 保存専用の`useWatch`、別のstate store、React ComponentからのlocalStorage直接操作、不要な依存関係を追加していない。
 - [ ] 正常な復元、保存済みデータなし、recordを保持する破損保存値、構造は正しいerror状態、未知ID除外、`console.error`するlocalStorage例外、画像復元との並行をテストで確認している。
 - [ ] 既存route、GitHub Pagesのsubpath公開、G6画像復元、G16のfield array row ID / reset同期を壊していない。
-- [ ] `docs/TODO.md`のG24前提が未解決の場合、その変更を混在させず実装を停止している。
+- [ ] `docs/TODO.md`の関連TODOをこのGateへ混在させず、read-only master-data adapterを使う復元境界だけを実装している。
 - [ ] 復元失敗dialogが既存`CharacterSheetDialog`のfocus・Escape・閉じる契約を壊さず、title / headerとheaderのclose buttonを置かず、本文とvisibleなaction buttonを`確認`だけにしている。
 - [ ] 初期スコープ外の機能を実装していない。
 - [ ] ユーザーの未コミット変更を破壊していない。
@@ -107,16 +107,42 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 - 「構造・型として利用可能」と「既存logicが表示するゲーム上の不整合」を分離し、error状態のフォーム値を誤って破棄・補正しない契約になっているか。
 - 壊れたlocalStorage recordをフォームへ反映せず、record自体とJSON import予定の入力または現在の編集値を変更しない責務分離になっているか。
 - 未知IDの除外と、row ID・field array最小行数・関連参照の完全性確認が、部分復元を許さない要件と両立しているか。
-- G24前提として残る`docs/TODO.md`のRHF操作境界・master ID解決分離を、別scopeへ広げずに実装開始可否へ反映できているか。
+- G24関連の`docs/TODO.md`のRHF操作境界・master ID解決分離を別scopeへ広げず、read-only master-data adapterを使う復元境界だけに限定できているか。
 - title / headerなしの復元失敗dialog本文、`確認`だけのvisible action、確認後の編集可能状態とfocus復帰が、既存dialog契約と要件に適合するか。
 - localStorage API例外を`console.error`だけで握りつぶし、復元不能な保存データのdialogと混同していないか。
 
 ## 備考
 
 - 親Gate planのG24依存Gateはすべて`done`である。
-- `docs/TODO.md`にはG24前提の未チェック項目が2件ある。一方、親Gate planのG16 handoffは全field arrayの`useFieldArray`操作とreset同期を「確定」と記録している。実装開始前に実コードとarchitectureを照合して、TODOが既に解消済みの追跡漏れか、独立taskが必要な未達かを判定する。
-- `logic/build.ts`は現在も`master-data/`のID lookupを直接行うため、master ID解決分離のTODOは未達である。この独立taskを完了するまでG24の実装を開始しない。
+- `docs/TODO.md`にはG24関連の未チェック項目が2件ある。一方、親Gate planのG16 handoffは全field arrayの`useFieldArray`操作とreset同期を「確定」と記録している。実コードとarchitectureを照合して、G24は既存field array契約に従うだけとする。
+- ユーザーの実装開始指示により、`logic/build.ts`に残るmaster ID解決分離はG24の前提ではなく別taskとして維持する。G24はread-only master-data adapterを明示入力にして未知IDを復元境界で扱い、既存`logic/`の責務を変更しない。
 - requirementsとarchitectureは、復元不能データをフォームへ部分反映せず、端末内保存も変更せずにエラー表示することを定める。ユーザー指示の「キック」は、このrecordを削除する意味ではなく、フォームへ受け入れず拒否する意味として扱う。
 - ユーザー指示により、復元失敗は既存の`CharacterSheetDialog`でtitle / headerを置かず、本文「自動復元に失敗しました。」とvisibleなaction buttonの`確認`だけを表示する。localStorage API例外は`console.error`だけで握りつぶし、dialogを表示しない。
 - JSON schema version互換性は`docs/TODO.md`で将来taskへ分離済みであり、このGateではversionを保存・比較・移行しない。現在の形式として構造・型を受理できない値は復元不可として扱う。
 - Git commit / push はこのissue作成時点で実行しない。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `@persistence-restore-error`
+- route / states / viewports: `/character-sheet/`、構造不正なlocalStorageによる復元失敗dialog、desktop / tablet / mobile
+
+### レビュー結果
+
+| 対象           | 判定   | 差分                                                                 | 対応                                  |
+| -------------- | ------ | -------------------------------------------------------------------- | ------------------------------------- |
+| 復元失敗dialog | 未確認 | Chromiumが起動前にsandbox環境エラーで停止し、capture・比較とも未実行 | browser環境回復後にtarget限定で再実行 |
+
+### 対応完了チェックリスト
+
+- [ ] 変更targetだけをVRT比較した（Chromium起動失敗）
+- [ ] 変更targetだけの一時snapshotを取得した（Chromium起動失敗）
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（Chromium起動失敗）
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [ ] VRT差分を修正した、または修正不要と判断した（比較未実行）
+- [ ] baseline更新が必要な差分を人間判断として記録した（比較未実行）
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

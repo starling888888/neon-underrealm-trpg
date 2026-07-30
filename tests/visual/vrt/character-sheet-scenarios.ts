@@ -14,6 +14,7 @@ export type CharacterSheetVrtScenario = {
   id: string;
   kind: "dialog" | "full-page" | "section";
   locator?: CharacterSheetLocator;
+  beforeGoto?: (page: Page) => Promise<void>;
   prepare?: (page: Page) => Promise<void>;
   route: string;
   viewports?: readonly ViewportName[];
@@ -34,6 +35,7 @@ export function registerCharacterSheetVrtScenarios(
         page,
       }) => {
         await page.setViewportSize(visualViewports[viewportName]);
+        await scenario.beforeGoto?.(page);
         await page.goto(scenario.route);
         await expect(page.locator("body")).toBeVisible();
         await scenario.prepare?.(page);

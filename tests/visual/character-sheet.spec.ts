@@ -20,6 +20,25 @@ async function addSpecialItemCategory(page: Page, name: string): Promise<void> {
 }
 
 test.describe("character sheet page", () => {
+  test("rejects a malformed saved form without changing the initial form", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("neon-underrealm-character-sheet-form", "{");
+    });
+    await page.goto("character-sheet/");
+
+    const dialog = page.getByRole("dialog", { name: "自動復元の失敗" });
+    await expect(dialog).toBeVisible();
+    await expect(
+      dialog.getByText("自動復元に失敗しました。", { exact: true }),
+    ).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "確認" })).toBeVisible();
+    await dialog.getByRole("button", { name: "確認" }).click();
+    await expect(dialog).toBeHidden();
+    await expect(page.getByLabel("PC名", { exact: true })).toHaveValue("");
+  });
+
   test("keeps action mocks side-effect free and opens the responsive menu", async ({
     page,
   }) => {

@@ -331,6 +331,17 @@ const actionMenu = {
 
 registerCharacterSheetVrtScenarios([
   {
+    id: "persistence-restore-error",
+    kind: "dialog",
+    locator: dialog("自動復元の失敗"),
+    beforeGoto: async (page) => {
+      await page.addInitScript(() => {
+        localStorage.setItem("neon-underrealm-character-sheet-form", "{");
+      });
+    },
+    route: visualRoutes.characterSheet,
+  },
+  {
     id: "default",
     kind: "full-page",
     route: visualRoutes.characterSheet,

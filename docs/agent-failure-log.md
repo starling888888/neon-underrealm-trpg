@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Chromium failed before the G24 restore-dialog VRT capture
+
+#### 2026-07-30
+
+- source: self
+- failure category: repeated Playwright environment failure
+- 発生箇所: `ex-02-24-sheet-persistence`の`@persistence-restore-error` target限定VRT capture
+- 観測した失敗: desktop、tablet、mobileの3 targetでChromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動できなかった。captureとbaseline比較には到達していない。
+- 一次対応: 同一command内で3回発生したため再試行せず、Node・hook・browser E2Eの結果とは区別してissueへ未確認として記録した。
+
 ### Implemented a Container layout exception without reconciling the architecture SSoT
 
 #### 2026-07-30

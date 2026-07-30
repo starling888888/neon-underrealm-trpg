@@ -6,6 +6,7 @@ import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOver
 import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
+import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
 import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
 import DrugsPickerDialog from "./components/dialogs/DrugsPickerDialog";
 import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
@@ -377,6 +378,11 @@ export default function CharacterSheetContainer() {
           onRequestClose={() => rootState.setImageError(null)}
           returnFocusRef={rootState.imageReturnFocusRef}
         />
+        <CharacterSheetRestoreErrorDialog
+          confirmButtonRef={rootState.formRestoreConfirmButtonRef}
+          isOpen={rootState.isFormRestoreErrorOpen}
+          onRequestClose={() => rootState.setIsFormRestoreErrorOpen(false)}
+        />
         <PrimarySkillPickerDialog
           groups={presenterProps.primarySkillPicker.candidateGroups}
           isOpen={primarySkillPickerRowId !== null}
@@ -634,8 +640,13 @@ export default function CharacterSheetContainer() {
         />
       </div>
       <CharacterSheetLoadingOverlay
-        isOpen={rootState.isRootOperationInProgress}
-        label={rootState.rootOperation?.label ?? ""}
+        isOpen={
+          rootState.isRootOperationInProgress || rootState.isFormRestoring
+        }
+        label={
+          rootState.rootOperation?.label ??
+          characterSheetDictionary.characterSheet.persistence.restoring
+        }
       />
     </>
   );

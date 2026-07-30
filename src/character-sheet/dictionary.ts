@@ -10,6 +10,7 @@ export const characterSheetDictionary = {
     automatic: "自動",
     cancel: "キャンセル",
     change: "変更",
+    confirm: "確認",
     close: "閉じる",
     delete: "削除",
     closeFormulaTooltip: "計算式の説明を閉じる",
@@ -118,6 +119,11 @@ export const characterSheetDictionary = {
       preview: "選択したキャラクター画像",
       replaceFile: "画像を差し替え",
       replaceFileOrDrop: "画像を差し替えまたはドロップ",
+    },
+    persistence: {
+      restoreError: "自動復元に失敗しました。",
+      restoreErrorDialogLabel: "自動復元の失敗",
+      restoring: "保存済みの入力を復元しています",
     },
     profile: {
       age: "年齢",

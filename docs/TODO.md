@@ -126,8 +126,8 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] キャラクターシートの派生logicからマスタID解決を分離する
   - source: ChatGPT review draft (`.tmp/chatgpt-review.md`) のG7 review
   - classification: architecture follow-up
-  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24着手前に、独立した設計・実装taskとして扱う。
-  - handling plan: `logic/`はマスタIDではなく、`master-data/`またはPresenter adapterが解決した選択中流儀・生き様のview modelを入力として受ける。未知IDの検出・復元時の除外・エラーはpersistence / import境界で明示し、未選択と同じ`undefined`として派生logicへ渡さない。fixtureを使うlogic testへ更新してからG24の自動復元を実装する。
+  - plan: G24とは別の設計・実装taskとして扱う。
+  - handling plan: `logic/`はマスタIDではなく、`master-data/`またはPresenter adapterが解決した選択中流儀・生き様のview modelを入力として受ける。未知IDの検出・復元時の除外・エラーはpersistence / import境界で明示し、未選択と同じ`undefined`として派生logicへ渡さない。G24は既存`logic/`を変更せず、read-only master-data adapterを入力にした復元境界だけを実装する。この分離taskではfixtureを使うlogic testへ更新する。
 
 - [ ] Footerからクレジット導線を出すか将来検討する
   - source: `phase-2-prep-doc-agent-ops` Group 12
