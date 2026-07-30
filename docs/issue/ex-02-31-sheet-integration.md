@@ -110,8 +110,8 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [x] dictionaryでゲームドメイン用語と汎用UI文言が整理され、可視文言を変えていない。
 - [x] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
 - [x] `canonical-snapshots/visual/**` のGit管理を解除し、local-onlyのignore規則を確認している。
-- [ ] 全VRT targetのbaselineを再生成し、全件比較が通る。
-- [ ] locator-only stateがcanonical full-page baselineを要求しない。
+- [x] 全VRT targetのbaselineを再生成し、全件比較が通る。
+- [x] locator-only stateがcanonical full-page baselineを要求しない。
 - [ ] 最終Tech Reviewを指定の限定観点で完了し、有効な指摘を解消またはユーザー判断へ戻している。
 - [ ] 最終UI Reviewを指定の限定観点で完了し、結果と未対応の判断を記録している。
 - [ ] 関連TODOを扱った結果または未対応理由が記録されている。

@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Omitted the Pagefind build step from VRT baseline instructions
+
+#### 2026-07-31
+
+- source: user
+- 発生箇所: G31のbaseline全件再生成手順の案内
+- 観測した失敗: `npm run build`だけを案内したため、Pagefind indexが生成されず、`search-modal`の`search-results` VRTが`[data-search-results-list]`の非表示で3 viewportとも失敗した。`/pagefind/pagefind.js`が404であることを確認した。
+- 一次対応: 正しい前提commandを`npm run visual:build`へ訂正する。これは`npm run build && pagefind --site dist`を実行してindexを生成する。
+
 ### Repeatedly used unscoped Testing Library queries in a typed component test
 
 #### 2026-07-30
