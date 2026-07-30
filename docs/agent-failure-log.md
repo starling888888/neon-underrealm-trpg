@@ -1689,3 +1689,12 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-web-character-sheet` のpicker列header修正報告
 - 観測した失敗: `tableHeader`の親へfallbackを追加しただけで、実際の`名称`、`最大Lv`、`コスト`、`使用制限`のlabel要素へstyleが適用されることを画面で確認せず、修正済みと報告した。ユーザー画面では未修正だった。
 - 一次対応: `tableHeader`と直下の列labelへ同じfont size・font weightを明示する。CSSの親継承に依存する表示修正は、実際の対象要素のcomputed styleまたはactual screenshotを確認してから完了報告する。
+
+### Repeated browser-test locator mistakes while adding a restored cybernetic error state
+
+#### 2026-07-30
+
+- source: agent self-report
+- 発生箇所: `ex-02-24-sheet-persistence` のサイバネ部位不一致E2E / VRT
+- 観測した失敗: VRTで候補groupの見出しを経由するlocatorが解決できず、続くE2Eでは`/^頭：.+$/`がpicker、詳細、clear buttonの3要素へ一致してstrict mode違反になった。
+- 一次対応: `data/generated/items.json`とpicker Componentを確認し、テストで選ぶ既知の腕サイバネ`ガードアーム`と、対応するpicker buttonの完全一致accessible nameを使った。新規の復元state testは、候補選択と最終assertionの両方で実際のDOM上の一意なrole / nameを確認してから全viewportへ展開する。

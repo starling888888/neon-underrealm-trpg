@@ -67,29 +67,29 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 
 ## 完了条件
 
-- [ ] 画像を含まない最新1件のserializableなフォーム値をlocalStorageへ自動保存できる。
-- [ ] 起動後の復元完了前に初期値で既存保存値を上書きせず、復元済み値は`form.reset()`で一括反映される。
-- [ ] 構造・型として正しい不整合値は、clamp・削除・初期値化をせず復元され、既存の局所error判定へ渡る。
-- [ ] 解析不能または構造・型として復元不能な保存値は、formへの部分反映なしに拒否され、端末内保存を変更しない。
-- [ ] 現在のマスタにないIDは要件どおり除外し、最小行数を下回る配列には必要な空欄行だけを追加して復元する。
-- [ ] shared restore adapterをG27のJSON importが再利用でき、localStorage固有の削除やReact副作用をimport入力へ持ち込まない。
-- [ ] 画像復元の成功・不在・失敗がフォーム復元を停止させず、フォーム復元の失敗も画像表示を変更しない。
-- [ ] localStorage APIの読取り・書込み例外で`console.error`を出し、現在の編集を停止または破壊せず、dialogを表示しない。
-- [ ] 復元失敗時に、`CharacterSheetDialog`で「自動復元に失敗しました。」と`確認`だけを表示し、確認後に初期フォーム値を編集できる。
-- [ ] `docs/TODO.md`の関連2項目を現行SSoTと照合し、このGateで回収しないものを明記している。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] 画像を含まない最新1件のserializableなフォーム値をlocalStorageへ自動保存できる。
+- [x] 起動後の復元完了前に初期値で既存保存値を上書きせず、復元済み値は`form.reset()`で一括反映される。
+- [x] 構造・型として正しい不整合値は、clamp・削除・初期値化をせず復元され、既存の局所error判定へ渡る。
+- [x] 解析不能または構造・型として復元不能な保存値は、formへの部分反映なしに拒否され、端末内保存を変更しない。
+- [x] 現在のマスタにないIDは要件どおり除外し、最小行数を下回る配列には必要な空欄行だけを追加して復元する。
+- [x] shared restore adapterをG27のJSON importが再利用でき、localStorage固有の削除やReact副作用をimport入力へ持ち込まない。
+- [x] 画像復元の成功・不在・失敗がフォーム復元を停止させず、フォーム復元の失敗も画像表示を変更しない。
+- [x] localStorage APIの読取り・書込み例外で`console.error`を出し、現在の編集を停止または破壊せず、dialogを表示しない。
+- [x] 復元失敗時に、`CharacterSheetDialog`で「自動復元に失敗しました。」と`確認`だけを表示し、確認後に初期フォーム値を編集できる。
+- [x] `docs/TODO.md`の関連2項目を現行SSoTと照合し、このGateで回収しないものを明記している。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] architectureのRHF唯一の編集state、`useFieldArray`、`reset`、uncontrolled input同期、browser副作用分離の契約を守る。
-- [ ] 保存専用の`useWatch`、別のstate store、React ComponentからのlocalStorage直接操作、不要な依存関係を追加していない。
-- [ ] 正常な復元、保存済みデータなし、recordを保持する破損保存値、構造は正しいerror状態、未知ID除外、`console.error`するlocalStorage例外、画像復元との並行をテストで確認している。
-- [ ] 既存route、GitHub Pagesのsubpath公開、G6画像復元、G16のfield array row ID / reset同期を壊していない。
-- [ ] `docs/TODO.md`の関連TODOをこのGateへ混在させず、read-only master-data adapterを使う復元境界だけを実装している。
-- [ ] 復元失敗dialogが既存`CharacterSheetDialog`のfocus・Escape・閉じる契約を壊さず、title / headerとheaderのclose buttonを置かず、本文とvisibleなaction buttonを`確認`だけにしている。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] architectureのRHF唯一の編集state、`useFieldArray`、`reset`、uncontrolled input同期、browser副作用分離の契約を守る。
+- [x] 保存専用の`useWatch`、別のstate store、React ComponentからのlocalStorage直接操作、不要な依存関係を追加していない。
+- [x] 正常な復元、保存済みデータなし、recordを保持する破損保存値、構造は正しいerror状態、未知ID除外、`console.error`するlocalStorage例外、画像復元との並行をテストで確認している。
+- [x] 既存route、GitHub Pagesのsubpath公開、G6画像復元、G16のfield array row ID / reset同期を壊していない。
+- [x] `docs/TODO.md`の関連TODOをこのGateへ混在させず、read-only master-data adapterを使う復元境界だけを実装している。
+- [x] 復元失敗dialogが既存`CharacterSheetDialog`のfocus・Escape・閉じる契約を壊さず、title / headerとheaderのclose buttonを置かず、本文とvisibleなaction buttonを`確認`だけにしている。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -126,24 +126,54 @@ G6は画像recordをIndexedDBへ復元する処理だけを実装済みであり
 ### VRT対象
 
 - design target: `docs/design/character-sheet/notes.md`
-- VRT test / tags: `@persistence-restore-error`
-- route / states / viewports: `/character-sheet/`、構造不正なlocalStorageによる復元失敗dialog、desktop / tablet / mobile
+- VRT test / tags: `@persistence-restore-error`、`@cybernetics-part-error`
+- route / states / viewports: `/character-sheet/`、構造不正なlocalStorageによる復元失敗dialogと、復元後に固定部位と異なるサイバネを持つ局所error、desktop / tablet / mobile
 
 ### レビュー結果
 
-| 対象           | 判定   | 差分                                                                 | 対応                                  |
-| -------------- | ------ | -------------------------------------------------------------------- | ------------------------------------- |
-| 復元失敗dialog | 未確認 | Chromiumが起動前にsandbox環境エラーで停止し、capture・比較とも未実行 | browser環境回復後にtarget限定で再実行 |
+| 対象              | 判定     | 差分                                                                              | 対応                       |
+| ----------------- | -------- | --------------------------------------------------------------------------------- | -------------------------- |
+| 復元失敗dialog    | 確認済み | title / headerなしの本文と`確認`button、desktop / tablet / mobileで表示契約どおり | 3 viewportのbaselineを追加 |
+| サイバネ部位error | 確認済み | 固定`頭`行の部位不一致を局所errorとして表示し、値を保持する                       | 3 viewportのbaselineを追加 |
 
 ### 対応完了チェックリスト
 
-- [ ] 変更targetだけをVRT比較した（Chromium起動失敗）
-- [ ] 変更targetだけの一時snapshotを取得した（Chromium起動失敗）
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（Chromium起動失敗）
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
-- [ ] VRT差分を修正した、または修正不要と判断した（比較未実行）
-- [ ] baseline更新が必要な差分を人間判断として記録した（比較未実行）
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+1. 未知IDを持つ可変行の除外後、最低行を満たすために空欄行を補う処理が、review snapshot時点のissue契約と異なる。
+2. 重複した`specialItems.categories`をrestore input schemaが受理し、同一カテゴリsectionが重複表示されうる。
+3. 通常debounce保存、書込み例外、復元失敗dialogを確認またはEscapeで閉じた後のfocus復帰のテストが不足している。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）
+- classification:
+  - 1: invalid。ユーザーが最低行を下回る場合は必要な空欄行だけを追加して復元すると明示決定し、issue・requirements・architectureを更新済み。
+  - 2、3: valid。
+- local validation: category重複は通常UIで生成できず、同一sectionとReact keyを重複させる構造不整合である。通常保存と書込み例外、dialog閉鎖後focusは実装済みだが、各経路を固定するテストが不足していた。
+
+### 対応方針
+
+- category一意性をrestore input schemaの構造・identity検証へ移し、重複保存値は全体を拒否する。
+- debounce保存と書込み例外をroot-state hook test、確認・Escapeのfocus復帰をbrowser E2Eへ追加する。
+
+### 対応完了チェックリスト
+
+- [x] 重複カテゴリを復元不可として拒否する
+- [x] 通常debounce保存とlocalStorage書込み例外をhook testで確認する
+- [x] dialog確認・Escape後のPC名focusをbrowser E2Eで確認する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 

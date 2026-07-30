@@ -27,17 +27,17 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG22
   - handling plan: G18で追加する非折りたたみのカテゴリframeへ、カテゴリ削除buttonの表示・操作・focus復帰を追加する。G22で行う既定表示、カテゴリ単位の追加・削除、警告表示と整合させ、現在の生き様に対応する既定カテゴリは削除できない契約を適用する。
 
-- [ ] G24着手前にキャラクターシート可変行のRHF操作境界を`useFieldArray`契約へ整合する
+- [x] G24着手前にキャラクターシート可変行のRHF操作境界を`useFieldArray`契約へ整合する
   - source: `.tmp/chatgpt-review.md` / `レビュー指摘 1`
   - classification: follow-up
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24
-  - handling plan: 縁と攻撃を含む可変行について、配列全体の`setValue`による更新とarchitectureの`useFieldArray`契約を比較し、復元・JSON入力時のuncontrolled input同期、row ID、削除・追加の責務を定義してから移行する。`onRowChange`のfieldとvalueの型対応も同じ設計で見直す。
+  - handling result: G16で全可変行の追加・削除・移動・置換を`useFieldArray`へ統一し、row IDと`reset`後のuncontrolled input同期を固定した。G24はこの契約に従って復元する。
 
-- [ ] G24 / G27着手前にスキルLvの未確定入力、最大Lv超過、復元・JSON入力値の扱いをrequirements / schema契約として確定する
+- [x] G24 / G27着手前にスキルLvの未確定入力、最大Lv超過、復元・JSON入力値の扱いをrequirements / schema契約として確定する
   - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 2、レビュー指摘 3、G15 レビュー指摘 1・4
   - classification: requirements and schema follow-up
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24、G27
-  - handling plan: `docs/requirements/character-sheet.md`の「不整合を自動補正しない」と、既存のbrowser入力時max Lv clampを照合する。入力中、blur、端末内復元、JSON入力のそれぞれについて、値を保持してerror表示するか、いつschemaで拒否または除外するかを先に定義し、各skill adapterへ一貫して適用する。生き様ID変更でbonus Lvを1へ戻す処理は、ユーザー変更とrestore / importを区別してから適用する。
+  - handling result: G16で未確定入力・最大Lv超過を値保持と局所errorへ統一し、G24で構造・identityだけを拒否してゲーム上の不整合値を復元する契約をrequirements / schemaへ反映した。G27は同じrestore adapterを利用する。
 
 - [ ] G16で生き様bonusを含む全スキルの最大Lv制約を定義する
   - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
