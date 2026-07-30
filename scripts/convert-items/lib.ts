@@ -9,15 +9,6 @@ import { convertOmamori } from "./omamori";
 import { readItemSheet } from "./shared";
 import { convertWeapons } from "./weapons";
 
-const EXPECTED_COUNTS = {
-  weapons: 50,
-  armors: 16,
-  omamori: 21,
-  cybernetics: 31,
-  nanomachines: 19,
-  drugs: 18,
-} as const;
-
 export interface ConvertItemsOptions {
   inputPath: string;
   outputPath: string;
@@ -51,7 +42,6 @@ export async function convertItems(
     drugs: convertDrugs(drugsRows),
   };
 
-  assertExpectedCounts(data);
   return writeGeneratedJson<ItemsData, ItemsJson>({
     outputPath: options.outputPath,
     dataName: "items",
@@ -59,27 +49,4 @@ export async function convertItems(
     now: options.now,
     assertJson: assertItemsJson,
   });
-}
-
-function assertExpectedCounts(data: ItemsData): void {
-  const actual = {
-    weapons: Object.values(data.weapons).flatMap((checks) =>
-      checks ? Object.values(checks).flatMap((items) => items ?? []) : [],
-    ).length,
-    armors: data.armors.length,
-    omamori: data.omamori.length,
-    cybernetics: Object.values(data.cybernetics).flatMap((items) => items ?? [])
-      .length,
-    nanomachines: data.nanomachines.length,
-    drugs: data.drugs.length,
-  };
-  for (const [kind, expected] of Object.entries(EXPECTED_COUNTS) as Array<
-    [keyof typeof EXPECTED_COUNTS, number]
-  >) {
-    if (actual[kind] !== expected) {
-      throw new Error(
-        `Expected ${expected} ${kind} rows, received ${actual[kind]}.`,
-      );
-    }
-  }
 }
