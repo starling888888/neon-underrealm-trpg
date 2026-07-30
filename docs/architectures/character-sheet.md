@@ -4,7 +4,7 @@
 
 `/character-sheet/`を、既存のAstro静的サイトへ限定的なReact Islandとして追加する。キャラクター入力、派生値算出、検証、端末内の最新1件保存・復元、画像、JSON入出力、CCFOLIAコピーを、サーバー処理なしで扱う。
 
-本書はコンポーネント境界、状態境界、データ参照、ブラウザ永続化、テスト境界、依存ライブラリを正本化する。実装ゲート、作業順、Gateごとの完了条件、JSON入出力形式、CCFOLIA出力文字列形式、実行時schemaの具体形は扱わない。
+本書はコンポーネント境界、状態境界、データ参照、ブラウザ永続化、テスト境界、依存ライブラリを正本化する。実装ゲート、作業順、Gateごとの完了条件、CCFOLIA出力文字列形式、実行時schemaの具体形は扱わない。キャラクターシートJSON入出力の現行フォーマットは、本書の「JSON入出力フォーマット」とそのサンプルを参照する。
 
 ## 参照正本と制約
 
@@ -145,6 +145,14 @@ AstroのSSRとhydrationにおける表示差分を避けるため、初回復元
 派生値算出と検証は純粋関数に分離する。副作用を持つ処理は、Containerから`persistence/`または`browser/`を経由して実行する。これにより、JSON形式、CCFOLIA出力、schemaの詳細が後続Gateで増えても、画面Componentや算出logicへ混入させない。
 
 `logic/`は同じ入力へ同じ結果を返し、UI配置や文言の最終表現を決めない。エラー条件・識別子と表示文言は必要に応じて分離する。`master-data/`の検索結果を入力として受け、未知のマスタIDを黙って補正・保存しない。
+
+### JSON入出力フォーマット
+
+キャラクターシートのエクスポート・インポートで共有する現行フォーマットのサンプルは、[character-sheet-export-import-sample.json](character-sheet-export-import-sample.json)とする。このファイルはフォーム全体を含む参照用データであり、実際のキャラクター画像は含めない。
+
+- トップレベルは`CharacterSheetFormValues`の値と`imageBase64String`で構成する。画像未選択時は`imageBase64String: null`とし、選択済み時は画像recordのbase64文字列だけを含める。
+- JSON出力は改行と2スペースのインデントを使う。派生値、error・warning、UI state、master data、画像recordの永続化メタデータは含めない。
+- G27以降のJSON importは、このサンプルを入出力の構造参照としてschemaを実装・更新する。schema version、旧形式との互換性、移行方針は別途の実装Gateで定める。
 
 ### スタイル境界
 
@@ -329,4 +337,4 @@ UIは全てフルスクラッチとし、画像変換、Clipboard、downloadはb
 | scoped CSS         | CSS Modules（`*.module.css`）、追加依存なし                             | 既存Astro scoped CSSと共存させ、React ComponentのスタイルをComponent単位へ限定する。                           |
 | 型定義依存         | devDependenciesへ先行して明記しない                                     | React関連以外を含む必要な型定義を、実装時の実際の依存と型検査から判断する。                                    |
 
-JSON入出力形式、CCFOLIA出力テキスト形式、実行時schemaの詳細は、いずれもユーザー判断を含む各実装Gateで定める。本書では固定しない。
+キャラクターシートJSON入出力の現行フォーマットは[character-sheet-export-import-sample.json](character-sheet-export-import-sample.json)を参照する。CCFOLIA出力テキスト形式、実行時schemaの詳細、JSON schema versionと互換性・移行は、いずれもユーザー判断を含む各実装Gateで定める。

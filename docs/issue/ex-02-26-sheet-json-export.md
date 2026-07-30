@@ -26,7 +26,7 @@ G23で表示だけを作成した既存の`エクスポート`buttonは、まだ
 - `docs/TODO.md` のJSON schema version互換性の将来task
 - `docs/out-of-scope.md`
 
-出力機能完成後、ユーザーが全項目を埋めたJSONを`docs/architectures/`配下へ配置し、G27以降の入出力JSONフォーマット正本として管理する。このGateでは、そのユーザー作成artifactを先行作成・更新しない。
+出力機能完成後、ユーザーがフォーム全体を含むJSONを`docs/architectures/character-sheet-export-import-sample.json`へ配置した。これはG27以降の入出力JSONフォーマットの構造参照として`docs/architectures/character-sheet.md`から参照する。G26の製品コードは、このユーザー作成artifactを生成・読取りしない。
 
 ## Gate関係
 
@@ -49,6 +49,7 @@ G23で表示だけを作成した既存の`エクスポート`buttonは、まだ
 
 - 既存の`CharacterSheetActionPane`のdesktopおよびtablet / mobile menuにある`エクスポート`buttonへ、同じ`onExport` callbackを接続する。実行後にmenuを閉じるかどうかは、既存の操作menuの副作用契約に従い、このGateで新たな表示状態を追加しない。
 - 現在の`CharacterSheetFormValues`をそのまま基礎とし、トップレベルの`imageBase64String`だけを合成したJSON文字列を生成する。画像未選択時は`imageBase64String: null`とし、選択済み時はIndexedDB画像recordの`base64`だけを文字列として含める。MIME typeは既存仕様どおりWebP固定のため、このGateの出力へ別fieldとして追加しない。
+- JSON文字列は、読みやすい改行と2スペースのインデントを使う。JSONのfield、値、順序はこの整形によって変更しない。
 - JSONへ派生値、error・warning、master data、dialog・menu・section開閉state、localStorage下書き、IndexedDB recordのkey / database情報を含めない。出力はエラー状態のform valueを拒否・clamp・補正しない。
 - `browser/`の小さなdownload adapterで、JSON MIME typeの`Blob`、object URL、一時`<a download>`操作、object URL解放を扱い、ブラウザ標準の保存ダイアログを開く。追加npm packageおよびアプリ内の成功・失敗dialog / notificationは追加しない。
 - ダウンロード属性の既定ファイル名は、クリック時のローカル日付と現在のプロフィール値から、正確に`neon-underrealm_character-sheet_YYYY-MM-DD_$PL名_$PC名.json`を生成する。`$PL名`は`profile.playerName`、`$PC名`は`profile.pcName`へ置換し、未入力値は空文字のままとする。
@@ -58,30 +59,30 @@ G23で表示だけを作成した既存の`エクスポート`buttonは、まだ
 
 - JSON file選択、JSON parse / schema検証、current form・localStorageを置換する確認dialog、import失敗dialogを実装しない（G27）。
 - schema version、旧形式の互換性・移行、JSON入出力のユーザー作成fixtureを実装しない。将来のJSON schema version互換性は`docs/TODO.md`の既存項目へ残す。
-- `docs/architectures/`配下の完成JSON fixtureまたはJSONフォーマット文書を作成・更新しない。ユーザーが出力機能完成後に配置する。
+- JSON importの実装、schema version、旧形式との互換性・移行は行わない。ユーザーが出力機能完成後に配置した`docs/architectures/character-sheet-export-import-sample.json`は、後続Gateの構造参照としてのみ管理する。
 - 画像の選択・変換・IndexedDB保存・復元・削除、localStorage下書きの形式、CCFOLIAコピー、全消去、操作menuの配置・文言・新規dialog・通知を変更しない。
 - DB、認証、クラウド保存、複数キャラクター、PDF出力、追加npm package、canonical VRT baseline更新を行わない。
 
 ## 完了条件
 
-- [ ] 現在のform valueと画像recordのbase64を、トップレベル`imageBase64String`を持つ1つのJSON文字列へ合成できる。画像未選択時は`null`を明示する。
-- [ ] JSON出力に派生値、error・warning、UI state、master data、画像recordの永続化メタデータを含めず、入力上の不整合を理由に出力を拒否・補正しない。
-- [ ] desktopおよびtablet / mobileの既存`エクスポート`buttonから同じ処理を実行し、ブラウザ標準の保存ダイアログを開く。
-- [ ] ファイル名が`neon-underrealm_character-sheet_YYYY-MM-DD_$PL名_$PC名.json`の指定どおりに生成される。
-- [ ] JSON文字列・画像あり / なし・ファイル名・object URL解放をbrowser API差し替えのNode testで確認し、両buttonの出力導線を既存Playwright browser behavior testで確認する。
-- [ ] 関連TODOを扱わず、schema version互換性を将来taskとして維持する理由が記録されている。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] 現在のform valueと画像recordのbase64を、トップレベル`imageBase64String`を持つ1つのJSON文字列へ合成できる。画像未選択時は`null`を明示する。
+- [x] JSON出力に派生値、error・warning、UI state、master data、画像recordの永続化メタデータを含めず、入力上の不整合を理由に出力を拒否・補正しない。
+- [x] desktopおよびtablet / mobileの既存`エクスポート`buttonから同じ処理を実行し、ブラウザ標準の保存ダイアログを開く。
+- [x] ファイル名が`neon-underrealm_character-sheet_YYYY-MM-DD_$PL名_$PC名.json`の指定どおりに生成される。
+- [x] JSON文字列・画像あり / なし・2スペースインデント・ファイル名・object URL解放をbrowser API差し替えのNode testで確認し、両buttonの出力導線を既存Playwright browser behavior testで確認する。
+- [x] 関連TODOを扱わず、schema version互換性を将来taskとして維持する理由が記録されている。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] RHFを唯一の編集stateとして維持し、画像recordを出力時以外にRHFまたはlocalStorageへ混在させていない。
-- [ ] browser APIの副作用を`browser/` adapterへ分離し、object URLを解放している。adapterはbrowser APIを要求しないtest doubleでNode testできる。
-- [ ] 既存route、GitHub Pagesのsubpath公開、G6の画像処理、G24の自動保存・復元を壊していない。
-- [ ] 画面配置・button文言・menu・dialogを変更しないため、VRT baselineを更新または実行していない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] RHFを唯一の編集stateとして維持し、画像recordを出力時以外にRHFまたはlocalStorageへ混在させていない。
+- [x] browser APIの副作用を`browser/` adapterへ分離し、object URLを解放している。adapterはbrowser APIを要求しないtest doubleでNode testできる。
+- [x] 既存route、GitHub Pagesのsubpath公開、G6の画像処理、G24の自動保存・復元を壊していない。
+- [x] 画面配置・button文言・menu・dialogを変更しないため、VRT baselineを更新または実行していない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -106,4 +107,5 @@ G23で表示だけを作成した既存の`エクスポート`buttonは、まだ
 - `imageBase64String`はRHF form valueではなく、出力時にだけ合成するトップレベルfieldである。JSON.stringifyによりfieldが欠落しないよう、画像未選択状態を`null`で明示する。
 - ブラウザ標準の保存ダイアログは環境ごとに表示表現が異なるため、製品コードでは`Blob` downloadを起動するまでを責務とし、テストではdownload adapterへ渡すJSON文字列と`download`属性の既定ファイル名を確認する。
 - ユーザーのtypo訂正に従い、`character`を使う。
+- `npm run test:e2e:run`では、G26の`exports JSON from desktop and responsive action buttons`を含むcharacter-sheet E2E 28件は成功した。一方、検索modal 4件はe2e serverの`4322`ではなく`visualBaseUrl`の`4321`へPagefindを要求する既存設定不整合で失敗した。G26の変更範囲外のため修正しない。
 - Git commit / push はこのissue作成時点で実行しない。

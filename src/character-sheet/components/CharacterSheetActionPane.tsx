@@ -11,6 +11,7 @@ type CharacterSheetActionPaneProps = {
   errorSummary: CharacterSheetErrorSummary;
   isMenuOpen: boolean;
   menuTriggerRef: RefObject<HTMLButtonElement | null>;
+  onExport: () => void;
   onMenuToggle: () => void;
   onReviewErrors: () => void;
 };
@@ -27,6 +28,7 @@ export default function CharacterSheetActionPane({
   errorSummary,
   isMenuOpen,
   menuTriggerRef,
+  onExport,
   onMenuToggle,
   onReviewErrors,
 }: CharacterSheetActionPaneProps) {
@@ -43,7 +45,7 @@ export default function CharacterSheetActionPane({
           <CharacterSheetButton size="medium">
             {actions.help}
           </CharacterSheetButton>
-          <CharacterSheetButton size="medium">
+          <CharacterSheetButton onClick={onExport} size="medium">
             {actions.export}
           </CharacterSheetButton>
           <CharacterSheetButton size="medium">
@@ -106,6 +108,7 @@ export default function CharacterSheetActionPane({
           <div className={styles.menuActions}>
             <CharacterSheetButton
               className={styles.menuActionButton}
+              onClick={onExport}
               size="medium"
             >
               {actions.export}

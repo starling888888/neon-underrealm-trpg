@@ -376,6 +376,7 @@ export default function CharacterSheetContainer() {
           errorSummary={presenterProps.errorSummary}
           isMenuOpen={isActionMenuOpen}
           menuTriggerRef={actionMenuTriggerRef}
+          onExport={rootState.onJsonExport}
           onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
           onReviewErrors={() => setIsErrorSummaryOpen(true)}
         />

@@ -5,6 +5,7 @@ import {
   CharacterImageError,
   convertCharacterImage,
 } from "./browser/character-image";
+import { downloadJsonFile } from "./browser/json-download";
 import type {
   CharacterImageErrorCode,
   CharacterImageRecord,
@@ -14,6 +15,10 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "./form-values";
+import {
+  createCharacterSheetJsonFilename,
+  serializeCharacterSheetJsonExport,
+} from "./json-export";
 import {
   deleteCharacterImage,
   readCharacterImage,
@@ -33,6 +38,7 @@ export type CharacterImageErrorState = {
 type CharacterSheetRootOperations = {
   convertCharacterImage: typeof convertCharacterImage;
   deleteCharacterImage: typeof deleteCharacterImage;
+  downloadJsonFile: typeof downloadJsonFile;
   readCharacterImage: typeof readCharacterImage;
   writeCharacterImage: typeof writeCharacterImage;
   readCharacterSheetForm: typeof readCharacterSheetForm;
@@ -44,6 +50,7 @@ type CharacterSheetRootDependencies = Partial<CharacterSheetRootOperations>;
 const defaultOperations: CharacterSheetRootOperations = {
   convertCharacterImage,
   deleteCharacterImage,
+  downloadJsonFile,
   readCharacterImage,
   writeCharacterImage,
   readCharacterSheetForm,
@@ -213,6 +220,15 @@ export default function useCharacterSheetRootState(
     }
   }
 
+  function onJsonExport(): void {
+    const values = form.getValues();
+
+    operations.downloadJsonFile(
+      serializeCharacterSheetJsonExport(values, characterImage),
+      createCharacterSheetJsonFilename(values, new Date()),
+    );
+  }
+
   return {
     characterImage,
     form,
@@ -227,6 +243,7 @@ export default function useCharacterSheetRootState(
     onCharacterImageSelected,
     onCharacterImageCleared,
     onCharacterImageOperationStarted,
+    onJsonExport,
     setImageError,
     setIsFormRestoreErrorOpen,
     rootOperation,

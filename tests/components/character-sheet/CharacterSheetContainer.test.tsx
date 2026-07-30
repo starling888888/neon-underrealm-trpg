@@ -50,6 +50,7 @@ function useRootStateHarness() {
     onCharacterImageCleared: async () => {},
     onCharacterImageOperationStarted: () => {},
     onCharacterImageSelected: async () => {},
+    onJsonExport: () => {},
     rootOperation: null,
     setImageError: vi.fn(),
   };

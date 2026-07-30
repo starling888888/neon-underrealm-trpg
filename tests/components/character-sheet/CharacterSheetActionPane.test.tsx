@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import CharacterSheetActionPane from "../../../src/character-sheet/components/CharacterSheetActionPane";
 import type { CharacterSheetErrorSummary } from "../../../src/character-sheet/logic/error-summary";
@@ -17,7 +18,34 @@ const errorSummary: CharacterSheetErrorSummary = {
   hasErrors: true,
 };
 
+afterEach(() => cleanup());
+
 describe("CharacterSheetActionPane", () => {
+  it("uses the same export callback for desktop and responsive menu buttons", async () => {
+    const user = userEvent.setup();
+    const onExport = vi.fn();
+
+    render(
+      <CharacterSheetActionPane
+        errorReviewButtonRef={createRef<HTMLButtonElement>()}
+        errorSummary={{ errors: [], hasErrors: false }}
+        isMenuOpen
+        menuTriggerRef={createRef<HTMLButtonElement>()}
+        onExport={onExport}
+        onMenuToggle={vi.fn()}
+        onReviewErrors={vi.fn()}
+      />,
+    );
+
+    for (const button of screen.getAllByRole("button", {
+      name: "エクスポート",
+    })) {
+      await user.click(button);
+    }
+
+    expect(onExport).toHaveBeenCalledTimes(2);
+  });
+
   it("shows the error count and list in the open mobile menu", () => {
     render(
       <CharacterSheetActionPane
@@ -25,6 +53,7 @@ describe("CharacterSheetActionPane", () => {
         errorSummary={errorSummary}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
+        onExport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
@@ -61,6 +90,7 @@ describe("CharacterSheetActionPane", () => {
         errorSummary={{ errors: [], hasErrors: false }}
         isMenuOpen={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
+        onExport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReviewErrors={vi.fn()}
       />,

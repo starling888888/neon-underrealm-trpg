@@ -99,7 +99,7 @@ test.describe("character sheet page", () => {
     );
   });
 
-  test("keeps action mocks side-effect free and opens the responsive menu", async ({
+  test("exports JSON from desktop and responsive action buttons", async ({
     page,
   }) => {
     await page.setViewportSize(visualViewports.desktop);
@@ -107,17 +107,21 @@ test.describe("character sheet page", () => {
 
     const pcName = page.getByLabel("PC名", { exact: true });
     await pcName.fill("テストPC");
+    await page.getByLabel("PL名", { exact: true }).fill("テストPL");
     await expect(
       page.getByRole("region", { name: "キャラクターシートの操作" }),
     ).toContainText("エラーはありません。");
 
-    for (const name of [
-      "ヘルプ",
-      "エクスポート",
-      "インポート",
-      "CCFOLIAコピー",
-      "初期化",
-    ]) {
+    const desktopDownloadPromise = page.waitForEvent("download");
+    await page
+      .getByRole("button", { exact: true, name: "エクスポート" })
+      .click();
+    const desktopDownload = await desktopDownloadPromise;
+    expect(desktopDownload.suggestedFilename()).toMatch(
+      /^neon-underrealm_character-sheet_\d{4}-\d{2}-\d{2}_テストPL_テストPC\.json$/,
+    );
+
+    for (const name of ["ヘルプ", "インポート", "CCFOLIAコピー", "初期化"]) {
       await page.getByRole("button", { exact: true, name }).click();
     }
     await page.getByRole("button", { exact: true, name: "確認" }).click();
@@ -141,6 +145,14 @@ test.describe("character sheet page", () => {
         name: "キャラクターシートの操作メニュー",
       });
       await expect(menu).toBeVisible();
+      const responsiveDownloadPromise = page.waitForEvent("download");
+      await menu
+        .getByRole("button", { exact: true, name: "エクスポート" })
+        .click();
+      const responsiveDownload = await responsiveDownloadPromise;
+      expect(responsiveDownload.suggestedFilename()).toMatch(
+        /^neon-underrealm_character-sheet_\d{4}-\d{2}-\d{2}_テストPL_テストPC\.json$/,
+      );
       await expect(
         page.getByRole("button", {
           exact: true,

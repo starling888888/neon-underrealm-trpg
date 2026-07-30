@@ -89,6 +89,36 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Used an unavailable DOM matcher while testing the bond focus fix
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-26-sheet-json-export`中の縁input focus回帰test
+- 観測した失敗: このVitest設定に導入されていない`toHaveValue` matcherを使い、Component testを失敗させた。既存failure logと同じく、matcher利用可否をtest setupから確認していなかった。
+- 一次対応: `HTMLInputElement.value`と`document.activeElement`の標準assertionへ置き換える。以後、このtaskでは新しいmatcherを追加せず、既存testで利用を確認できるものだけを使う。
+
+### Bond target and relation inputs remounted on every character
+
+#### 2026-07-30
+
+- source: user
+- failure category: user-observed input lock
+- 発生箇所: `ex-02-26-sheet-json-export` のpreview中に確認された縁セクション
+- 観測した失敗: ユーザーが縁の「対象」と「関係」へ入力できないと報告した。`useBondsSectionProps`は各inputの`onChange`で`useFieldArray.update()`を呼ぶため、React Hook Formが行をunmount / remountし、キー入力ごとにfocusを失う。`isResolved`、画面上の「覚悟」が選択済みなら意図的にdisabledになる別契約もあるが、今回の原因ではなかった。G26のJSON出力差分は入力更新を持たず、この挙動を変更していない。
+- 一次対応: previewを停止し、先の覚悟による入力ロックという誤った切り分けを訂正した。ユーザーの明示指示後、`update()`ではなく対象fieldへの`setValue()`を使う実装修正と、連続キー入力後の値・focusを確認するComponent testを追加し、`fcefd86 fix: preserve bond input focus`としてcommitした。
+
+### E2E search-modal tests used the visual server port during the G26 run
+
+#### 2026-07-30
+
+- source: self
+- failure category: repeated Playwright test-configuration failure
+- 発生箇所: `ex-02-26-sheet-json-export` の`npm run test:e2e:run`
+- 観測した失敗: G26のcharacter-sheet E2Eは成功したが、同じe2e command内でsearch-modalの4件が`http://127.0.0.1:4321`へPagefindを要求して`ECONNREFUSED`になった。e2e configのweb serverは`4322`であり、search testが`visualBaseUrl`を参照していた。
+- 一次対応: G26の範囲外の既存テスト設定不整合として修正せず、JSON出力の対象browser behavior成功と区別して記録した。検索modalのE2E server URL統一は別taskで扱う。
+
 ### Omitted bond-limit errors and styled the wrong mobile control
 
 #### 2026-07-30
