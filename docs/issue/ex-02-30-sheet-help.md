@@ -81,8 +81,8 @@
 - [x] ヘルプの開閉がフォーム値、画像、端末内保存、JSON、Clipboard、エラー集約へ副作用を起こさない。
 - [x] 実装後、`gate_technical_reviewer`のTechReviewを1回完了し、有効な指摘を解消またはユーザー承認済みの後続作業へ明記している。
 - [ ] 本文内容はユーザー後続指示待ちであることを残し、本文未確定のままG30をdone / archiveしない。
-- [ ] TechReview完了後も、本文内容の後続指示、ユーザーレビュー、G31で扱うcapture-only手順の決定前にVisual Reviewを実行しない。canonical VRT baseline、VRT scenario、capture-only手順は変更しない。
-- [ ] `npm run check`、`npm run build`、関連テストが通る。
+- [x] TechReview完了後も、本文内容の後続指示、ユーザーレビュー、G31で扱うcapture-only手順の決定前にVisual Reviewを実行しない。canonical VRT baseline、VRT scenario、capture-only手順は変更しない。
+- [x] `npm run check`、`npm run build`、関連テストが通る。
 
 ## チェックポイント
 
