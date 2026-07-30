@@ -13,6 +13,8 @@ import ClearButton from "./ClearButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./NanomachinesSection.module.css";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 export type NanomachinesPickerTarget = NanomachineFixedPartKey;
 
 type FixedNanomachinesRow = {
@@ -166,23 +168,23 @@ export default function NanomachinesSection({
   return (
     <div className={styles.section} data-nanomachines-section>
       <div className={`${styles.headerRow} ${styles.line}`}>
-        <span>{copy.headers.part}</span>
+        <span>{itemTerms.nanomachines.part}</span>
         <span>
           <FormulaTooltip
-            ariaLabel={copy.headers.name}
-            formula={getNamePickerTooltip(copy.name)}
+            ariaLabel={itemTerms.common.name}
+            formula={getNamePickerTooltip(itemTerms.nanomachines.name)}
           >
-            <span>{copy.headers.name}</span>
+            <span>{itemTerms.common.name}</span>
           </FormulaTooltip>
         </span>
-        <span>{copy.headers.credit}</span>
+        <span>{itemTerms.common.credit}</span>
         <span className={styles.pointsHeader}>
           {copy.headers.implantPoints}
         </span>
         <span className={styles.activationHeader}>
           {copy.headers.activationMentalCost}
         </span>
-        <span>{copy.headers.effect}</span>
+        <span>{itemTerms.common.expand}</span>
         <span aria-hidden="true" />
       </div>
       {fixedRows.map((row) => (

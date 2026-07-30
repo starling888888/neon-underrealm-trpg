@@ -91,22 +91,21 @@ export default function BondsSection({
   onRowMove,
 }: BondsSectionProps) {
   const { bonds: labels } = characterSheetDictionary.characterSheet;
+  const terms = characterSheetDictionary.gameDomain.terms.bonds;
 
   return (
     <div className={styles.root}>
       <div className={styles.rows}>
         <div className={styles.headers}>
           <span aria-hidden="true" />
-          <span>{labels.headers.target}</span>
-          <span>{labels.headers.relationship}</span>
+          <span>{terms.target}</span>
+          <span>{terms.relationship}</span>
           <FormulaTooltip
-            ariaLabel={`${labels.headers.resolve}の説明`}
+            ariaLabel={`${terms.resolve}の説明`}
             className={styles.resolveTooltip}
             formula={labels.resolveTooltip}
           >
-            <span className={styles.resolveHeader}>
-              {labels.headers.resolve}
-            </span>
+            <span className={styles.resolveHeader}>{terms.resolve}</span>
           </FormulaTooltip>
           <span className={styles.visuallyHidden}>クリア</span>
         </div>
@@ -147,7 +146,7 @@ export default function BondsSection({
                 ) : null}
               </div>
               <input
-                aria-label={`${rowName}の${labels.headers.target}`}
+                aria-label={`${rowName}の${terms.target}`}
                 disabled={bond.isResolved}
                 onChange={(event) =>
                   onRowChange(bond.rowId, "target", event.currentTarget.value)
@@ -156,7 +155,7 @@ export default function BondsSection({
                 value={bond.target}
               />
               <input
-                aria-label={`${rowName}の${labels.headers.relationship}`}
+                aria-label={`${rowName}の${terms.relationship}`}
                 disabled={bond.isResolved}
                 onChange={(event) =>
                   onRowChange(bond.rowId, "relation", event.currentTarget.value)
@@ -165,7 +164,7 @@ export default function BondsSection({
                 value={bond.relation}
               />
               <input
-                aria-label={`${rowName}の${labels.headers.resolve}`}
+                aria-label={`${rowName}の${terms.resolve}`}
                 checked={bond.isResolved}
                 onChange={(event) =>
                   onRowChange(
@@ -205,14 +204,14 @@ export default function BondsSection({
       >
         <div className={styles.effects}>
           <div className={styles.effectsHeading}>
-            <span>{labels.resolveEffectDescription}</span>
+            <span>{`${terms.ordinary}／${terms.currentLife}`}</span>
           </div>
           <div className={styles.effectsGrid}>
             {derived.effects.map((effect) => (
               <EffectFormula
                 {...effect}
                 key={effect.id}
-                label={labels.resolveEffects[effect.id]}
+                label={terms.resolveEffects[effect.id]}
                 onEffectModifierChange={onEffectModifierChange}
               />
             ))}

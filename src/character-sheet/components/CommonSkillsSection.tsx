@@ -44,6 +44,7 @@ export default function CommonSkillsSection({
   synchronizationKey,
 }: CommonSkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
+  const terms = characterSheetDictionary.gameDomain.terms;
   const sectionRows: SkillSectionRow[] = [
     ...(basicAttack === null
       ? []
@@ -66,7 +67,8 @@ export default function CommonSkillsSection({
         ]),
     ...rows.map((row, index) => ({
       accessibilityName:
-        row.skill?.name ?? `${copy.common}${copy.unselectedRow}${index + 1}`,
+        row.skill?.name ??
+        `${terms.commonSkills}${copy.unselectedRow}${index + 1}`,
       hasLevelError: invalidMaximumLevelRowIds.includes(row.rowId),
       hasRowError: invalidDuplicateSkillRowIds.includes(row.rowId),
       kind: "normal" as const,
@@ -87,8 +89,8 @@ export default function CommonSkillsSection({
       actionDescription={`${copy.commonSkillTotal}：${selectedLevelTotal}／${copy.commonSkillLevelLimit}：${levelLimit}`}
       actionDescriptionInvalid={hasCommonSkillLevelError}
       addLabel={copy.add}
-      ariaLabel={copy.commonLabel}
-      heading={copy.common}
+      ariaLabel={terms.commonSkills}
+      heading={terms.commonSkills}
       isAvailable
       isInvalid={hasCommonSkillLevelError}
       nameColumnWidthCh={maximumSkillNameLength}

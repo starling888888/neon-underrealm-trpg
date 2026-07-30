@@ -13,6 +13,8 @@ import CharacterSheetDialog, {
 import styles from "./OmamoriPickerDialog.module.css";
 import PickerTableHeader from "./PickerTableHeader";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type Props = {
   candidates: readonly Omamori[];
   isOpen: boolean;
@@ -55,8 +57,8 @@ export default function OmamoriPickerDialog({
           </p>
           <PickerTableHeader
             cells={[
-              { content: copy.headers.name },
-              { content: copy.headers.credit },
+              { content: itemTerms.common.name },
+              { content: itemTerms.common.credit },
             ]}
             className={styles.headerRow}
           />
@@ -73,7 +75,7 @@ export default function OmamoriPickerDialog({
                 <span>{formatDisplayValue(omamori.credit)}</span>
               </div>
               <p>
-                <strong>効果：</strong>
+                <strong>{itemTerms.common.effect}：</strong>
                 {formatDisplayText(omamori.effect)}
               </p>
             </div>

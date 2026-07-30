@@ -12,6 +12,8 @@ import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./OmamoriSection.module.css";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type OmamoriRow = {
   omamori: Omamori | null;
   omamoriId: string | null;
@@ -47,7 +49,7 @@ function OmamoriRow({
   const copy = characterSheetDictionary.characterSheet.omamori;
   const [expanded, setExpanded] = useState(false);
   const name = row.omamori?.name ?? copy.unselected;
-  const rowLabel = `${copy.name}${rowNumber}：${name}`;
+  const rowLabel = `${itemTerms.omamori}${rowNumber}：${name}`;
   const detailsId = `omamori-details-${row.rowId}`;
 
   return (
@@ -114,7 +116,7 @@ function OmamoriRow({
       </div>
       {expanded ? (
         <p className={styles.mobileEffect} id={detailsId}>
-          <strong>効果：</strong>
+          <strong>{itemTerms.common.effect}：</strong>
           {formatDisplayText(row.omamori?.effect)}
         </p>
       ) : null}
@@ -131,17 +133,19 @@ export default function OmamoriSection(props: OmamoriSectionProps) {
         <span aria-hidden="true" />
         <span>
           <FormulaTooltip
-            ariaLabel={copy.headers.name}
-            formula={getNamePickerTooltip(copy.name)}
+            ariaLabel={itemTerms.common.name}
+            formula={getNamePickerTooltip(itemTerms.omamori)}
           >
-            <span>{copy.headers.name}</span>
+            <span>{itemTerms.common.name}</span>
           </FormulaTooltip>
         </span>
-        <span>{copy.headers.credit}</span>
+        <span>{itemTerms.common.credit}</span>
         <span className={styles.desktopEffectHeader}>
-          {copy.headers.effect}
+          {itemTerms.common.effect}
         </span>
-        <span className={styles.mobileEffectHeader}>{copy.headers.effect}</span>
+        <span className={styles.mobileEffectHeader}>
+          {itemTerms.common.effect}
+        </span>
         <span aria-hidden="true" />
       </div>
       {props.rows.map((row, index) => (

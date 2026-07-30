@@ -12,6 +12,8 @@ import CharacterSheetDialog, {
 import styles from "./NanomachinesPickerDialog.module.css";
 import PickerTableHeader from "./PickerTableHeader";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type Props = {
   candidates: readonly Nanomachine[];
   isOpen: boolean;
@@ -54,8 +56,8 @@ export default function NanomachinesPickerDialog({
           </p>
           <PickerTableHeader
             cells={[
-              { content: copy.headers.name },
-              { content: copy.headers.credit },
+              { content: itemTerms.common.name },
+              { content: itemTerms.common.credit },
               { content: copy.headers.implantPoints },
               { content: copy.headers.activationMentalCost },
             ]}
@@ -76,7 +78,7 @@ export default function NanomachinesPickerDialog({
                 <span>{nanomachine.activationMentalCost}</span>
               </div>
               <p>
-                <strong>効果：</strong>
+                <strong>{itemTerms.common.effect}：</strong>
                 {formatDisplayText(nanomachine.effect)}
               </p>
             </div>

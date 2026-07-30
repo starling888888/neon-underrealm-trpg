@@ -128,18 +128,19 @@ function CheckRow({
 
 function CheckHeaders({ sectionName }: { sectionName: string }) {
   const { checks: labels } = characterSheetDictionary.characterSheet;
+  const terms = characterSheetDictionary.gameDomain.terms.checks;
 
   return (
     <div className={styles.headers}>
-      <span>{labels.headers.skill}</span>
-      <span>{labels.headers.attribute}</span>
+      <span>{terms.skill}</span>
+      <span>{terms.attribute}</span>
       <FormulaTooltip
-        ariaLabel={`${sectionName}の${labels.headers.checkCount}の説明`}
+        ariaLabel={`${sectionName}の${terms.checkCount}の説明`}
         className={styles.checkCountTooltip}
         formula={labels.formula}
       >
         <span className={styles.checkCountHeader}>
-          {labels.headers.checkCount}
+          {terms.checkCount}
           <span>{labels.headers.temporary}</span>
         </span>
       </FormulaTooltip>
@@ -231,10 +232,10 @@ export default function ChecksSection({
         expandable
         headingAs="h3"
         id="reaction-checks"
-        title={labels.reactions}
+        title={terms.checks.reaction}
       >
         <div className={styles.group}>
-          <CheckHeaders sectionName={labels.reactions} />
+          <CheckHeaders sectionName={terms.checks.reaction} />
           <div className={styles.rows}>
             {reactions.map((reaction) => {
               const label = terms.reactionCheckNames[reaction.name];

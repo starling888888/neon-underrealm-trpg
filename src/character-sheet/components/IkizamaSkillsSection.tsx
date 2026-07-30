@@ -48,6 +48,7 @@ export default function IkizamaSkillsSection({
   synchronizationKey,
 }: IkizamaSkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
+  const terms = characterSheetDictionary.gameDomain.terms;
   const sectionRows: SkillSectionRow[] = [
     ...(bonusSkill === null
       ? []
@@ -96,8 +97,8 @@ export default function IkizamaSkillsSection({
         ariaLabel={copy.ikizamaLabel}
         heading={
           ikizamaName === null
-            ? copy.ikizama
-            : `${copy.ikizama}：${ikizamaName}`
+            ? terms.ikizama
+            : `${terms.ikizama}：${ikizamaName}`
         }
         isAvailable={ikizamaSelected}
         isInvalid={hasIkizamaSkillLevelTotalError}

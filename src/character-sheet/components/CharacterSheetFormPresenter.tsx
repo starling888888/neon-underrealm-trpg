@@ -115,7 +115,7 @@ export default function CharacterSheetFormPresenter({
           expandable
           headingAs="h2"
           id="bonds"
-          title={gameDomain.terms.bonds}
+          title={gameDomain.terms.bonds.name}
         >
           <div data-character-sheet-section-slot="bonds">
             <BondsSection {...bondsSection} />
@@ -125,7 +125,7 @@ export default function CharacterSheetFormPresenter({
           expandable
           headingAs="h2"
           id="checks"
-          title={gameDomain.terms.checks}
+          title={gameDomain.terms.checks.name}
         >
           <div data-character-sheet-section-slot="checks">
             <ChecksSection {...checksSection} />

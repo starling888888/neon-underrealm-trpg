@@ -16,6 +16,8 @@ import styles from "./CyberneticsSection.module.css";
 import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 export type CyberneticsPickerTarget =
   | { kind: "fixed"; part: CyberneticFixedPartKey }
   | { kind: "other"; rowId: string };
@@ -208,20 +210,20 @@ export default function CyberneticsSection({
       data-cybernetics-section
     >
       <div className={`${styles.headerRow} ${styles.line}`}>
-        <span>{copy.headers.part}</span>
+        <span>{itemTerms.cybernetics.part}</span>
         <span>
           <FormulaTooltip
-            ariaLabel={copy.headers.name}
-            formula={getNamePickerTooltip(copy.name)}
+            ariaLabel={itemTerms.common.name}
+            formula={getNamePickerTooltip(itemTerms.cybernetics.name)}
           >
-            <span>{copy.headers.name}</span>
+            <span>{itemTerms.common.name}</span>
           </FormulaTooltip>
         </span>
-        <span>{copy.headers.credit}</span>
+        <span>{itemTerms.common.credit}</span>
         <span className={styles.pointsHeader}>
           {copy.headers.implantPoints}
         </span>
-        <span>{copy.headers.effect}</span>
+        <span>{itemTerms.common.expand}</span>
         <span aria-hidden="true" />
       </div>
       {fixedRows.map((row) => (

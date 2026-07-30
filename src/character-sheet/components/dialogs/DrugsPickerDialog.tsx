@@ -13,6 +13,8 @@ import CharacterSheetDialog, {
 import styles from "./DrugsPickerDialog.module.css";
 import PickerTableHeader from "./PickerTableHeader";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type Props = {
   candidates: readonly Drug[];
   isOpen: boolean;
@@ -58,11 +60,11 @@ export default function DrugsPickerDialog({
           </p>
           <PickerTableHeader
             cells={[
-              { content: copy.pickerHeaders.name },
-              { content: copy.pickerHeaders.credit },
+              { content: itemTerms.common.name },
+              { content: itemTerms.common.credit },
               { content: copy.pickerHeaders.timing },
               { content: copy.pickerHeaders.setQuantity },
-              { content: copy.pickerHeaders.badTripIntensity },
+              { content: itemTerms.drugs.badTripIntensity },
             ]}
             className={styles.headerRow}
           />
@@ -91,16 +93,16 @@ export default function DrugsPickerDialog({
                 </div>
                 <div className={styles.mobileDetailsMetadata}>
                   <span>
-                    <strong>{copy.mobileDetails.timing}：</strong>
+                    <strong>{itemTerms.drugs.timing}：</strong>
                     {formatDisplayValue(drug.timing)}
                   </span>
                   <span>
-                    <strong>{copy.mobileDetails.setQuantity}：</strong>
+                    <strong>{itemTerms.drugs.setQuantity}：</strong>
                     {formatDisplayValue(drug.setQuantity)}
                   </span>
                 </div>
                 <p>
-                  <strong>効果：</strong>
+                  <strong>{itemTerms.common.effect}：</strong>
                   {formatDisplayText(drug.effect)}
                 </p>
               </div>

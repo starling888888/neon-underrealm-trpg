@@ -10,6 +10,8 @@ import CharacterSheetDialog, {
 } from "./CharacterSheetDialog";
 import PickerTableHeader from "./PickerTableHeader";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type Props = {
   armors: readonly Armor[];
   isOpen: boolean;
@@ -50,16 +52,16 @@ export default function ArmorPickerDialog({
           </p>
           <PickerTableHeader
             cells={[
-              { content: copy.headers.name },
-              { content: copy.headers.credit },
-              { content: "防御力" },
+              { content: itemTerms.common.name },
+              { content: itemTerms.common.credit },
+              { content: itemTerms.weaponsAndArmor.defense },
               {
                 className: styles.damageReductionHeader,
                 content: "ダメージ\n軽減",
               },
               {
                 className: styles.restrictionHeader,
-                content: copy.headers.restriction,
+                content: itemTerms.weaponsAndArmor.equipmentRestriction,
               },
             ]}
             className={styles.headerRow}
@@ -83,11 +85,13 @@ export default function ArmorPickerDialog({
               </div>
               <div className={styles.details}>
                 <p className={styles.restrictionDetails}>
-                  <strong>{copy.headers.restriction}：</strong>
+                  <strong>
+                    {itemTerms.weaponsAndArmor.equipmentRestriction}：
+                  </strong>
                   {formatDisplayValue(armor.restriction)}
                 </p>
                 <p>
-                  <strong>{copy.effect}：</strong>
+                  <strong>{itemTerms.common.effect}：</strong>
                   {formatDisplayValue(armor.effect)}
                 </p>
               </div>

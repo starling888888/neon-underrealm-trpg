@@ -14,6 +14,8 @@ import CharacterSheetDialog, {
 import PickerTableHeader from "./PickerTableHeader";
 import styles from "./WeaponPickerDialog.module.css";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type Props = {
   groups: readonly WeaponCandidateGroup[];
   isOpen: boolean;
@@ -29,7 +31,6 @@ function Candidate({
   weapon: Weapon;
   onSelect: (id: string) => void;
 }) {
-  const copy = characterSheetDictionary.characterSheet.weaponsAndArmor;
   return (
     <div className={styles.candidate}>
       <div className={styles.firstLine}>
@@ -46,24 +47,26 @@ function Candidate({
       </div>
       <div className={styles.details}>
         <span>
-          <strong>{copy.headers.kind}：</strong>
+          <strong>{itemTerms.weaponsAndArmor.kind}：</strong>
           {weapon.kind}
         </span>
         <span>
-          <strong>{copy.headers.skill}：</strong>
+          <strong>
+            {characterSheetDictionary.gameDomain.terms.checks.skill}：
+          </strong>
           {weapon.check}
         </span>
         <span>
-          <strong>{copy.headers.range}：</strong>
+          <strong>{itemTerms.weaponsAndArmor.range}：</strong>
           {weapon.range}
         </span>
         <span>
-          <strong>{copy.headers.ammo}：</strong>
+          <strong>{itemTerms.weaponsAndArmor.ammo}：</strong>
           {formatDisplayValue(weapon.ammo)}
         </span>
       </div>
       <p>
-        <strong>{copy.effect}：</strong>
+        <strong>{itemTerms.common.effect}：</strong>
         {formatDisplayText(weapon.effect)}
       </p>
     </div>
@@ -107,10 +110,10 @@ export default function WeaponPickerDialog({
                 {group.heading === undefined ? null : <h3>{group.heading}</h3>}
                 <PickerTableHeader
                   cells={[
-                    { content: copy.headers.name },
-                    { content: copy.headers.credit },
-                    { content: "攻撃力" },
-                    { content: "ガード値" },
+                    { content: itemTerms.common.name },
+                    { content: itemTerms.common.credit },
+                    { content: itemTerms.weaponsAndArmor.attack },
+                    { content: itemTerms.weaponsAndArmor.guard },
                   ]}
                   className={styles.headerRow}
                 />

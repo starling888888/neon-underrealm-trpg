@@ -14,6 +14,8 @@ import DeleteButton from "./DeleteButton";
 import FormulaTooltip from "./FormulaTooltip";
 import styles from "./WeaponsAndArmorSection.module.css";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type WeaponRow = {
   attack: number | null;
   attackModifier: number | null;
@@ -171,29 +173,30 @@ function PairedValueExpression({
 }
 
 function WeaponDetails({ weapon, id }: { weapon: Weapon | null; id: string }) {
-  const copy = characterSheetDictionary.characterSheet.weaponsAndArmor;
   return (
     <div className={styles.details} id={id}>
       <div className={styles.detailMeta}>
         <span>
-          <strong>{copy.headers.kind}：</strong>
+          <strong>{itemTerms.weaponsAndArmor.kind}：</strong>
           {formatDisplayValue(weapon?.kind ?? null)}
         </span>
         <span>
-          <strong>{copy.headers.skill}：</strong>
+          <strong>
+            {characterSheetDictionary.gameDomain.terms.checks.skill}：
+          </strong>
           {formatDisplayValue(weapon?.check ?? null)}
         </span>
         <span>
-          <strong>{copy.headers.range}：</strong>
+          <strong>{itemTerms.weaponsAndArmor.range}：</strong>
           {formatDisplayValue(weapon?.range ?? null)}
         </span>
         <span>
-          <strong>{copy.headers.ammo}：</strong>
+          <strong>{itemTerms.weaponsAndArmor.ammo}：</strong>
           {formatDisplayValue(weapon?.ammo ?? null)}
         </span>
       </div>
       <p>
-        <strong>{copy.effect}：</strong>
+        <strong>{itemTerms.common.effect}：</strong>
         {formatDisplayText(weapon?.effect)}
       </p>
     </div>
@@ -366,11 +369,11 @@ function ArmorFormRow({
       {expanded ? (
         <div className={styles.details} id={detailsId}>
           <p>
-            <strong>{copy.headers.restriction}：</strong>
+            <strong>{itemTerms.weaponsAndArmor.equipmentRestriction}：</strong>
             {formatDisplayValue(armor.armor?.restriction)}
           </p>
           <p>
-            <strong>{copy.effect}：</strong>
+            <strong>{itemTerms.common.effect}：</strong>
             {formatDisplayText(armor.armor?.effect)}
           </p>
         </div>
@@ -389,20 +392,20 @@ export default function WeaponsAndArmorSection(
         expandable
         headingAs="h3"
         id="weapons"
-        title={copy.weapon}
+        title={itemTerms.weaponsAndArmor.weapon}
       >
         <div className={styles.itemSection}>
           <div className={`${styles.headerRow} ${styles.weaponLine}`}>
             <span aria-hidden="true" />
             <span className={styles.headerTooltip}>
               <FormulaTooltip
-                ariaLabel={copy.headers.name}
-                formula={getNamePickerTooltip(copy.weapon)}
+                ariaLabel={itemTerms.common.name}
+                formula={getNamePickerTooltip(itemTerms.weaponsAndArmor.weapon)}
               >
-                <span>{copy.headers.name}</span>
+                <span>{itemTerms.common.name}</span>
               </FormulaTooltip>
             </span>
-            <span>{copy.headers.credit}</span>
+            <span>{itemTerms.common.credit}</span>
             <span className={styles.headerTooltip}>
               <FormulaTooltip
                 ariaLabel={copy.headers.attackGuard}
@@ -411,7 +414,7 @@ export default function WeaponsAndArmorSection(
                 <span>{copy.headers.attackGuard}</span>
               </FormulaTooltip>
             </span>
-            <span>展開</span>
+            <span>{itemTerms.common.expand}</span>
             <span aria-hidden="true" />
           </div>
           {props.weaponRows.map((row, index) => (
@@ -440,19 +443,19 @@ export default function WeaponsAndArmorSection(
         expandable
         headingAs="h3"
         id="armor"
-        title={copy.armor}
+        title={itemTerms.weaponsAndArmor.armor}
       >
         <div className={styles.itemSection}>
           <div className={`${styles.headerRow} ${styles.armorLine}`}>
             <span className={styles.headerTooltip}>
               <FormulaTooltip
-                ariaLabel={copy.headers.name}
-                formula={getNamePickerTooltip(copy.armor)}
+                ariaLabel={itemTerms.common.name}
+                formula={getNamePickerTooltip(itemTerms.weaponsAndArmor.armor)}
               >
-                <span>{copy.headers.name}</span>
+                <span>{itemTerms.common.name}</span>
               </FormulaTooltip>
             </span>
-            <span>{copy.headers.credit}</span>
+            <span>{itemTerms.common.credit}</span>
             <span className={styles.headerTooltip}>
               <FormulaTooltip
                 ariaLabel={copy.headers.armorDefense}
@@ -461,7 +464,7 @@ export default function WeaponsAndArmorSection(
                 <span>{copy.headers.armorDefense}</span>
               </FormulaTooltip>
             </span>
-            <span>展開</span>
+            <span>{itemTerms.common.expand}</span>
             <span aria-hidden="true" />
           </div>
           <ArmorFormRow

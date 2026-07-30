@@ -12,6 +12,8 @@ import DeleteButton from "./DeleteButton";
 import styles from "./DrugsSection.module.css";
 import FormulaTooltip from "./FormulaTooltip";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type DrugRow = {
   drug: Drug | null;
   drugId: string | null;
@@ -52,7 +54,7 @@ function DrugRow({
   const copy = characterSheetDictionary.characterSheet.drugs;
   const [expanded, setExpanded] = useState(false);
   const name = row.drug?.name ?? copy.unselected;
-  const rowLabel = `${copy.name}${rowNumber}：${name}`;
+  const rowLabel = `${itemTerms.drugs.name}${rowNumber}：${name}`;
   const detailsId = `drugs-details-${row.rowId}`;
 
   return (
@@ -113,7 +115,7 @@ function DrugRow({
           {formatDisplayValue(row.drug?.badTripIntensity ?? null)}
         </span>
         <input
-          aria-label={`${rowLabel}${copy.headers.quantity}`}
+          aria-label={`${rowLabel}${itemTerms.drugs.quantity}`}
           className={styles.quantityInput}
           defaultValue={row.quantity}
           min="0"
@@ -152,11 +154,11 @@ function DrugRow({
         <div className={styles.details} id={detailsId}>
           <div className={styles.mobileDetailsMetadata}>
             <span>
-              <strong>{copy.mobileDetails.timing}：</strong>
+              <strong>{itemTerms.drugs.timing}：</strong>
               {formatDisplayValue(row.drug?.timing)}
             </span>
             <span>
-              <strong>{copy.mobileDetails.setQuantity}：</strong>
+              <strong>{itemTerms.drugs.setQuantity}：</strong>
               {formatDisplayValue(row.drug?.setQuantity ?? null)}
             </span>
           </div>
@@ -179,20 +181,20 @@ export default function DrugsSection(props: DrugsSectionProps) {
         <span aria-hidden="true" />
         <span>
           <FormulaTooltip
-            ariaLabel={copy.headers.name}
-            formula={getNamePickerTooltip(copy.name)}
+            ariaLabel={itemTerms.common.name}
+            formula={getNamePickerTooltip(itemTerms.drugs.name)}
           >
-            <span>{copy.headers.name}</span>
+            <span>{itemTerms.common.name}</span>
           </FormulaTooltip>
         </span>
-        <span>{copy.headers.credit}</span>
+        <span>{itemTerms.common.credit}</span>
         <span className={styles.timingHeader}>{copy.headers.timing}</span>
         <span className={styles.setQuantityHeader}>
           {copy.headers.setQuantity}
         </span>
-        <span>{copy.headers.badTripIntensity}</span>
-        <span>{copy.headers.quantity}</span>
-        <span>{copy.headers.effect}</span>
+        <span>{itemTerms.drugs.badTripIntensity}</span>
+        <span>{itemTerms.drugs.quantity}</span>
+        <span>{itemTerms.common.expand}</span>
         <span aria-hidden="true" />
       </div>
       {props.rows.map((row, index) => (

@@ -104,10 +104,10 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 
 ## 完了条件
 
-- [ ] G30が完了し、その確定事項が親Gate planへ記録されている。
+- [x] G30が完了し、その確定事項が親Gate planへ記録されている。
 - [ ] キャラクターシートアーキテクチャのE2E責務と全named E2E scenarioを照合し、詳細シナリオの実装過多を解消している。
 - [ ] browser-onlyの主要導線だけをE2Eで確認している。
-- [ ] dictionaryでゲームドメイン用語と汎用UI文言が整理され、可視文言を変えていない。
+- [x] dictionaryでゲームドメイン用語と汎用UI文言が整理され、可視文言を変えていない。
 - [ ] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
 - [ ] `canonical-snapshots/visual/**` のGit管理を解除し、local-onlyのignore規則を確認している。
 - [ ] 全VRT targetのbaselineを再生成し、全件比較が通る。
@@ -115,16 +115,16 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [ ] 最終Tech Reviewを指定の限定観点で完了し、有効な指摘を解消またはユーザー判断へ戻している。
 - [ ] 最終UI Reviewを指定の限定観点で完了し、結果と未対応の判断を記録している。
 - [ ] 関連TODOを扱った結果または未対応理由が記録されている。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
-- [ ] 整理後の`npm run test:e2e`が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+- [x] 整理後の`npm run test:e2e`が通る。
 
 ## チェックポイント
 
 - [ ] Git削除対象は`canonical-snapshots/visual/**`だけであり、対象外のGit管理ファイルとユーザーの未コミット変更を破壊していない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
 - [ ] baseline運用の記述が`docs/design/`、data-management rule、Visual Test READMEで矛盾していない。
 - [ ] 関連する`docs/TODO.md`項目と矛盾していない。
 - [ ] 画面変更があれば、actual screenshotを開いて表示契約を確認している。

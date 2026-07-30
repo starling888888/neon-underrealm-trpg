@@ -12,6 +12,8 @@ import CharacterSheetDialog, {
 import styles from "./CyberneticsPickerDialog.module.css";
 import PickerTableHeader from "./PickerTableHeader";
 
+const itemTerms = characterSheetDictionary.gameDomain.terms.items;
+
 type Props = {
   groups: readonly CyberneticCandidateGroup[];
   isOpen: boolean;
@@ -57,8 +59,8 @@ export default function CyberneticsPickerDialog({
               <h3>{group.label}</h3>
               <PickerTableHeader
                 cells={[
-                  { content: copy.headers.name },
-                  { content: copy.headers.credit },
+                  { content: itemTerms.common.name },
+                  { content: itemTerms.common.credit },
                   { content: copy.headers.implantPoints },
                 ]}
                 className={styles.headerRow}
@@ -77,7 +79,7 @@ export default function CyberneticsPickerDialog({
                     <span>{cybernetic.implantPoints}</span>
                   </div>
                   <p>
-                    <strong>効果：</strong>
+                    <strong>{itemTerms.common.effect}：</strong>
                     {formatDisplayText(cybernetic.effect)}
                   </p>
                 </div>

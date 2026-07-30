@@ -76,6 +76,7 @@ export default function NoncombatChecksSection({
 }: NoncombatChecksSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { checks: labels } = characterSheetDictionary.characterSheet;
+  const terms = characterSheetDictionary.gameDomain.terms;
   const attributeNamesById =
     characterSheetDictionary.gameDomain.terms.attributeNames;
   const contentId = "noncombat-checks-content";
@@ -87,15 +88,15 @@ export default function NoncombatChecksSection({
     >
       <h3 className={styles.heading} id="noncombat-checks-heading">
         <FormulaTooltip
-          ariaLabel={`${labels.noncombat.title}の説明`}
+          ariaLabel={`${terms.checks.noncombat}の説明`}
           className={styles.titleTooltip}
           formula={labels.noncombat.tooltip}
           multiline
         >
-          <span>{labels.noncombat.title}</span>
+          <span>{terms.checks.noncombat}</span>
         </FormulaTooltip>
         <button
-          aria-label={`${labels.noncombat.title}を開閉`}
+          aria-label={`${terms.checks.noncombat}を開閉`}
           aria-controls={contentId}
           aria-expanded={isExpanded}
           className={styles.toggle}
@@ -115,7 +116,9 @@ export default function NoncombatChecksSection({
 
               return (
                 <section className={styles.attributeGroup} key={attribute}>
-                  <h4>対応能力：{attributeNamesById[attribute]}</h4>
+                  <h4>
+                    {terms.checks.attribute}：{attributeNamesById[attribute]}
+                  </h4>
                   <div className={styles.rows}>
                     {attributeRows.map((row) => (
                       <NoncombatCheckRow

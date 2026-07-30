@@ -46,6 +46,7 @@ export default function PrimarySkillsSection({
   synchronizationKey,
 }: PrimarySkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
+  const terms = characterSheetDictionary.gameDomain.terms;
   const sectionRows: SkillSectionRow[] = [
     ...bonusSkills.map((skill) => ({
       accessibilityName: skill.name,
@@ -88,8 +89,8 @@ export default function PrimarySkillsSection({
         ariaLabel={copy.label}
         heading={
           primaryRyugiName === null
-            ? copy.primary
-            : `${copy.primary}：${primaryRyugiName}`
+            ? terms.primaryRyugi
+            : `${terms.primaryRyugi}：${primaryRyugiName}`
         }
         isAvailable={primaryRyugiSelected}
         isInvalid={hasPrimarySkillLevelTotalError}

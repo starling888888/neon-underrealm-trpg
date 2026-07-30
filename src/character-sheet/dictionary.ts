@@ -56,7 +56,7 @@ export const characterSheetDictionary = {
       addOtherRyugi: "＋ その他流儀を追加",
       formulas: {
         growthPoints:
-          "格が15の倍数になるたびに格÷15点獲得します。（格が15で1点、格が30で2点）２点以上獲得した場合は1点ずつ別の能力に割り振る必要があります。",
+          "格が15の倍数になるたびに格÷15点獲得します。（格が15で1点、格が30で2点）2点以上獲得した場合は1点ずつ別の能力に割り振る必要があります。",
         points: "生き様の4値と0を、5つの能力値へ一度ずつ割り振ります。",
         rank: "プライマリ流儀レベル + 生き様レベル",
       },
@@ -76,38 +76,21 @@ export const characterSheetDictionary = {
       formula:
         "判定数=対応能力 + 修正。\n\n修正はサイバネなど能力値ではなく判定数に影響を与えるスキル、アイテムの効果の数値を入力します。",
       headers: {
-        attribute: "対応能力",
-        checkCount: "判定数",
-        skill: "技能",
         temporary: "常時／一時",
       },
       noncombat: {
-        title: "非戦闘技能",
         tooltip:
           "チェックを入れると得意技能となります。得意技能は能力値を2倍にして判定数を算出します。修正は2倍になりません。\n修正はサイバネなど能力値ではなく、判定数に影響を与えるスキル、アイテムの効果の数値を入力します。\n判定数は「常時能力値を用いた判定数／一時能力値を用いた判定数」です。\n折りたたみ中は得意技能だけ表示されます。",
       },
-      reactions: "リアクション",
       removeAttack: "を削除",
     },
     bonds: {
       clear: "クリア（行は削除しません）",
       delete: "削除",
-      headers: {
-        relationship: "関係",
-        resolve: "覚悟",
-        target: "対象",
-      },
       moveDown: "下へ移動",
       moveUp: "上へ移動",
       overLimit: "入力済みの縁が結べる縁の上限を超えています。",
-      resolveEffectDescription: "通常の縁／今生の縁",
       resolveEffectHeading: "覚悟の効果",
-      resolveEffects: {
-        activeCheck: "能動判定",
-        morale: "気合獲得",
-        passiveCheck: "受動判定",
-        recovery: "気絶からの回復",
-      },
       resolveTooltip:
         "シナリオ中、覚悟にした縁にチェックを入れます。チェックが入っている限り、変更もクリアもできません",
     },
@@ -168,7 +151,6 @@ export const characterSheetDictionary = {
       chooseCommon: "共通スキルを選択",
       chooseOtherRyugi: "その他流儀スキルを選択",
       initialCreation: "初期作成",
-      ikizama: "生き様",
       ikizamaChangeConfirmationLabel: "生き様の変更確認",
       ikizamaLabel: "生き様スキル",
       level6OrAbove: "Lv6以上",
@@ -184,7 +166,6 @@ export const characterSheetDictionary = {
       skillSelectionChangeConfirmation:
         "変更すると、現在選択中のスキルが消去されます。本当によろしいですか？",
       primaryRyugiChangeConfirmationLabel: "プライマリ流儀の変更確認",
-      primary: "プライマリ流儀",
       remove: "を削除",
       selectPrimaryRyugi: "プライマリ流儀を選択してください。",
       selectIkizama: "生き様を選択してください。",
@@ -192,8 +173,6 @@ export const characterSheetDictionary = {
       selectionGuide:
         "スキル名称をクリックすると選択したスキルがキャラクターシートに反映されます。",
       label: "プライマリ流儀スキル",
-      common: "共通スキル",
-      commonLabel: "共通スキル",
       commonSkillLevelLimit: "合計レベル上限",
       commonSkillLevelLimitFormula: "合計レベル上限 = 格 ÷ 2（端数切り上げ）",
       commonSkillSummaryLabel: "共通スキルレベル合計／共通スキル上限",
@@ -232,13 +211,11 @@ export const characterSheetDictionary = {
     },
     weaponsAndArmor: {
       addWeapon: "＋ 武器を追加",
-      armor: "防具",
       armorPickerGuide:
         "防具名称をクリックするとキャラクターシートに反映されます。",
       clearArmor: "クリア",
       chooseArmor: "防具を選択",
       chooseWeapon: "武器を選択",
-      effect: "効果",
       formulaTooltips: {
         armor:
           "防御力やダメージ軽減が-や特殊の場合、修正を入力すると最終的な値が表示されます。",
@@ -246,16 +223,8 @@ export const characterSheetDictionary = {
           "攻撃力やガード値が-や特殊の場合、修正を入力すると最終的な値が表示されます。",
       },
       headers: {
-        ammo: "装弾数",
         armorDefense: "防御力／ダメージ軽減",
         attackGuard: "攻撃力／ガード値",
-        credit: "信用",
-        effect: "効果",
-        kind: "種別",
-        name: "名称",
-        range: "射程",
-        restriction: "装備制限",
-        skill: "技能",
       },
       moveDown: "下へ移動",
       moveUp: "上へ移動",
@@ -263,7 +232,6 @@ export const characterSheetDictionary = {
       closeDetails: "詳細を閉じる",
       unselectedArmor: "防具を選択",
       unselectedWeapon: "武器を選択",
-      weapon: "武器",
       weaponPickerGuide:
         "武器名称をクリックするとキャラクターシートに反映されます。",
     },
@@ -271,14 +239,8 @@ export const characterSheetDictionary = {
       add: "＋ お守りを追加",
       choose: "お守りを選択",
       closeDetails: "効果を閉じる",
-      headers: {
-        credit: "信用",
-        effect: "効果",
-        name: "名称",
-      },
       moveDown: "下へ移動",
       moveUp: "上へ移動",
-      name: "お守り",
       openDetails: "効果を開く",
       pickerGuide:
         "お守り名称をクリックするとキャラクターシートに反映されます。",
@@ -290,30 +252,17 @@ export const characterSheetDictionary = {
       choose: "ドラッグを選択",
       closeDetails: "効果を閉じる",
       headers: {
-        badTripIntensity: "BT強度",
-        credit: "信用",
-        effect: "展開",
-        name: "名称",
-        quantity: "所持数",
         setQuantity: "1セット\n数量",
         timing: "使用\nタイミング",
       },
       moveDown: "下へ移動",
       moveUp: "上へ移動",
-      name: "ドラッグ",
       openDetails: "効果を開く",
       pickerGuide:
         "ドラッグ名称をクリックするとキャラクターシートに反映されます。",
       pickerHeaders: {
-        badTripIntensity: "BT強度",
-        credit: "信用",
-        name: "名称",
         setQuantity: "1セット\n数量",
         timing: "使用\nタイミング",
-      },
-      mobileDetails: {
-        setQuantity: "1セット数量",
-        timing: "使用タイミング",
       },
       remove: "を削除",
       unselected: "ドラッグを選択",
@@ -324,16 +273,11 @@ export const characterSheetDictionary = {
       clear: "クリア",
       closeDetails: "効果を閉じる",
       headers: {
-        credit: "信用",
-        effect: "展開",
         implantPoints: "埋め込み\n点数",
-        name: "名称",
-        part: "部位",
       },
       limitBaseLabel: "常時精神",
       limitLabel: "埋め込み上限の最終値",
       limitModifierLabel: "埋め込み上限の修正",
-      name: "サイバネ",
       noncombatPenaltyNotice:
         "埋め込み点数が一定値を上回る、あるいは下回るたびに非戦闘技能の修正が一括で更新されます。",
       noncombatPenaltyRulesPrefix: "サイバネの埋め込み点数によるペナルティは",
@@ -357,16 +301,11 @@ export const characterSheetDictionary = {
       closeDetails: "効果を閉じる",
       headers: {
         activationMentalCost: "発動\n精神力",
-        credit: "信用",
-        effect: "展開",
         implantPoints: "埋め込み\n点数",
-        name: "名称",
-        part: "部位",
       },
       limitBaseLabel: "常時肉体",
       limitLabel: "埋め込み上限の最終値",
       limitModifierLabel: "埋め込み上限の修正",
-      name: "ナノマシン",
       openDetails: "効果を開く",
       pickerGuide:
         "ナノマシン名称をクリックするとキャラクターシートに反映されます。",
@@ -381,7 +320,20 @@ export const characterSheetDictionary = {
   },
   gameDomain: {
     terms: {
-      bonds: "縁",
+      bonds: {
+        currentLife: "今生の縁",
+        name: "縁",
+        ordinary: "通常の縁",
+        relationship: "関係",
+        resolve: "覚悟",
+        resolveEffects: {
+          activeCheck: "能動判定",
+          morale: "気合獲得",
+          passiveCheck: "受動判定",
+          recovery: "気絶からの回復",
+        },
+        target: "対象",
+      },
       acquiredExperience: "取得経験点",
       attribute: "能力",
       attributeNames: {
@@ -403,7 +355,14 @@ export const characterSheetDictionary = {
       },
       base: "基礎",
       bondCapacity: "結べる縁",
-      checks: "判定",
+      checks: {
+        attribute: "対応能力",
+        checkCount: "判定数",
+        name: "判定",
+        noncombat: "非戦闘技能",
+        reaction: "リアクション",
+        skill: "技能",
+      },
       commonSkillBonuses: "共通スキルボーナス",
       credit: {
         acquired: "取得信用",
@@ -431,6 +390,45 @@ export const characterSheetDictionary = {
       maximumHealth: "最大体力",
       maximumMental: "最大精神力",
       movement: "移動力",
+      items: {
+        common: {
+          credit: "信用",
+          effect: "効果",
+          expand: "展開",
+          name: "名称",
+        },
+        cybernetics: {
+          implantPoints: "埋め込み点数",
+          name: "サイバネ",
+          part: "部位",
+        },
+        drugs: {
+          badTripIntensity: "BT強度",
+          name: "ドラッグ",
+          quantity: "所持数",
+          setQuantity: "1セット数量",
+          timing: "使用タイミング",
+        },
+        nanomachines: {
+          activationMentalCost: "発動精神力",
+          implantPoints: "埋め込み点数",
+          name: "ナノマシン",
+          part: "部位",
+        },
+        omamori: "お守り",
+        weaponsAndArmor: {
+          ammo: "装弾数",
+          armor: "防具",
+          attack: "攻撃力",
+          damageReduction: "ダメージ軽減",
+          defense: "防御力",
+          equipmentRestriction: "装備制限",
+          guard: "ガード値",
+          kind: "種別",
+          range: "射程",
+          weapon: "武器",
+        },
+      },
       noncombatSkillNames: {
         acrobatics: "軽業",
         analysis: "分析",
@@ -466,6 +464,7 @@ export const characterSheetDictionary = {
       },
       remainingExperience: "残経験点",
       skills: "スキル",
+      commonSkills: "共通スキル",
       spentExperience: "消費経験点",
       temporary: "一時",
       temporaryModifier: "一時修正",
