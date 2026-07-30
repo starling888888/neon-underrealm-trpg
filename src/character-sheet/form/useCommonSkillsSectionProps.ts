@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import {
   type UseFormReturn,
   useFieldArray,
@@ -61,35 +62,50 @@ export default function useCommonSkillsSectionProps(
     defaultValue: characterSheetDefaultValues.commonSkills,
     name: "commonSkills",
   });
-  const rows = commonSkills.rows.map((row) => ({
-    ...row,
-    skill: getCommonSkillById(row.skillId),
-  }));
-  const validation = calculateCommonSkillsValidation(
-    build.primaryRyugiLevel + build.ikizamaLevel,
-    rows,
+  const rows = useMemo(
+    () =>
+      commonSkills.rows.map((row) => ({
+        ...row,
+        skill: getCommonSkillById(row.skillId),
+      })),
+    [commonSkills.rows],
+  );
+  const validation = useMemo(
+    () =>
+      calculateCommonSkillsValidation(
+        build.primaryRyugiLevel + build.ikizamaLevel,
+        rows,
+      ),
+    [build.ikizamaLevel, build.primaryRyugiLevel, rows],
   );
 
-  function setRow(rowId: string, nextRow: SkillSelectionRowValues): void {
-    const index = getValues("commonSkills.rows").findIndex(
-      (row) => row.rowId === rowId,
-    );
-    if (index < 0) return;
+  const setRow = useCallback(
+    function setRow(rowId: string, nextRow: SkillSelectionRowValues): void {
+      const index = getValues("commonSkills.rows").findIndex(
+        (row) => row.rowId === rowId,
+      );
+      if (index < 0) return;
 
-    update(index, nextRow);
-  }
-
-  return {
-    candidates: getCommonSkillCandidates(),
-    onSelect: (rowId, skillId) => {
+      update(index, nextRow);
+    },
+    [getValues, update],
+  );
+  const onSelect = useCallback(
+    (rowId: string, skillId: string) => {
       const current = getValues("commonSkills.rows").find(
         (row) => row.rowId === rowId,
       );
-      if (current !== undefined) {
+      if (current !== undefined)
         setRow(rowId, { ...current, level: 1, skillId });
-      }
     },
-    sectionProps: {
+    [getValues, setRow],
+  );
+  const unlockedBonusLevels = useMemo(
+    () => getUnlockedCommonSkillBonusLevels(validation.selectedLevelTotal),
+    [validation.selectedLevelTotal],
+  );
+  const sectionProps = useMemo<CommonSkillsSectionProps>(
+    () => ({
       basicAttack: getBasicAttackSkill(),
       hasCommonSkillLevelError: validation.hasCommonSkillLevelError,
       invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
@@ -106,24 +122,45 @@ export default function useCommonSkillsSectionProps(
         return level;
       },
       onMove: (rowId, direction) => {
-        const rows = getValues("commonSkills.rows");
-        const index = rows.findIndex((row) => row.rowId === rowId);
+        const currentRows = getValues("commonSkills.rows");
+        const index = currentRows.findIndex((row) => row.rowId === rowId);
         const targetIndex = index + (direction === "up" ? -1 : 1);
-        if (index < 0 || targetIndex < 0 || targetIndex >= rows.length) return;
+        if (index < 0 || targetIndex < 0 || targetIndex >= currentRows.length) {
+          return;
+        }
         move(index, targetIndex);
       },
       onPickerRequest,
       onRemove: (rowId) => {
-        const rows = getValues("commonSkills.rows");
-        const index = rows.findIndex((row) => row.rowId === rowId);
-        if (rows.length > 1 && index >= 0) remove(index);
+        const currentRows = getValues("commonSkills.rows");
+        const index = currentRows.findIndex((row) => row.rowId === rowId);
+        if (currentRows.length > 1 && index >= 0) remove(index);
       },
       rows,
       selectedLevelTotal: validation.selectedLevelTotal,
       synchronizationKey: defaultValues?.commonSkills,
-    },
-    unlockedBonusLevels: getUnlockedCommonSkillBonusLevels(
-      validation.selectedLevelTotal,
-    ),
-  };
+    }),
+    [
+      append,
+      defaultValues?.commonSkills,
+      getValues,
+      move,
+      onPickerRequest,
+      remove,
+      rows,
+      setRow,
+      validation,
+    ],
+  );
+  const presenterState = useMemo(
+    () => ({
+      candidates: getCommonSkillCandidates(),
+      onSelect,
+      sectionProps,
+      unlockedBonusLevels,
+    }),
+    [onSelect, sectionProps, unlockedBonusLevels],
+  );
+
+  return presenterState;
 }

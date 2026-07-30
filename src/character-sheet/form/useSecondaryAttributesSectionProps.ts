@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
 import type { SecondaryAttributesSectionProps } from "../components/SecondaryAttributesSection";
@@ -29,42 +30,72 @@ export default function useSecondaryAttributesSectionProps(
     defaultValue: characterSheetDefaultValues.secondaryAttributes,
     name: "secondaryAttributes",
   });
-  const derivedSecondaryAttributes = calculateSecondaryAttributes(
-    derivedBuild,
-    secondaryAttributes,
-    maximumHealthBonus,
+  const derivedSecondaryAttributes = useMemo(
+    () =>
+      calculateSecondaryAttributes(
+        derivedBuild,
+        secondaryAttributes,
+        maximumHealthBonus,
+      ),
+    [derivedBuild, maximumHealthBonus, secondaryAttributes],
   );
 
-  function setSecondaryAttributeValue(
-    field: Exclude<
-      SecondaryAttributeFieldName,
-      "applyTemporaryAction" | "applyTemporaryMovement"
-    >,
-    value: string,
-  ): number {
-    const normalizedValue = normalizeIntegerInput(value);
+  const setSecondaryAttributeValue = useCallback(
+    function setSecondaryAttributeValue(
+      field: Exclude<
+        SecondaryAttributeFieldName,
+        "applyTemporaryAction" | "applyTemporaryMovement"
+      >,
+      value: string,
+    ): number {
+      const normalizedValue = normalizeIntegerInput(value);
 
-    setValue(`secondaryAttributes.${field}`, normalizedValue, {
-      shouldValidate: true,
-    });
+      setValue(`secondaryAttributes.${field}`, normalizedValue, {
+        shouldValidate: true,
+      });
 
-    return normalizedValue;
-  }
+      return normalizedValue;
+    },
+    [setValue],
+  );
+  const onTemporaryAppliedChange = useCallback(
+    (
+      field: "applyTemporaryAction" | "applyTemporaryMovement",
+      checked: boolean,
+    ) => {
+      setValue(`secondaryAttributes.${field}`, checked, {
+        shouldValidate: true,
+      });
+    },
+    [setValue],
+  );
 
-  return {
-    derivedSecondaryAttributes,
-    sectionProps: {
+  const sectionProps = useMemo(
+    () => ({
       derived: derivedSecondaryAttributes,
       healthFormulaSuffix: showNanomachineHealthBonus
         ? " + 埋め込み中のナノマシンの消費精神力の最大値"
         : undefined,
       onNumberChange: setSecondaryAttributeValue,
-      onTemporaryAppliedChange: (field, checked) => {
-        setValue(`secondaryAttributes.${field}`, checked, {
-          shouldValidate: true,
-        });
-      },
+      onTemporaryAppliedChange,
       secondaryAttributes,
-    },
-  };
+    }),
+    [
+      derivedSecondaryAttributes,
+      onTemporaryAppliedChange,
+      secondaryAttributes,
+      setSecondaryAttributeValue,
+      showNanomachineHealthBonus,
+    ],
+  );
+
+  const presenterState = useMemo(
+    () => ({
+      derivedSecondaryAttributes,
+      sectionProps,
+    }),
+    [derivedSecondaryAttributes, sectionProps],
+  );
+
+  return presenterState;
 }

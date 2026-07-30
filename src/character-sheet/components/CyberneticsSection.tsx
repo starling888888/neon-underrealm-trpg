@@ -1,5 +1,5 @@
 import { ListPlus } from "lucide-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import type { Cybernetic } from "../../lib/types/item";
 import {
@@ -188,7 +188,7 @@ function CyberneticsRow({
   );
 }
 
-export default function CyberneticsSection({
+function CyberneticsSection({
   derived,
   fixedRows,
   implantLimitModifier,
@@ -392,3 +392,5 @@ export default function CyberneticsSection({
     </div>
   );
 }
+
+export default memo(CyberneticsSection);

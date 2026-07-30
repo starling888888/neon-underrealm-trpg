@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type { OmamoriSectionProps } from "../components/OmamoriSection";
@@ -26,32 +27,55 @@ export default function useOmamoriSectionProps(
   });
   const omamori = useWatch({ control, name: "omamori" });
 
-  function getRows(): OmamoriRowValues[] {
-    return getValues("omamori.rows");
-  }
-
-  return {
-    onAdd: () => append(createOmamoriRow()),
-    onMove: (rowId, direction) => {
+  const getRows = useCallback(
+    (): OmamoriRowValues[] => getValues("omamori.rows"),
+    [getValues],
+  );
+  const onAdd = useCallback(() => append(createOmamoriRow()), [append]);
+  const onMove = useCallback(
+    (rowId: string, direction: "up" | "down") => {
       const rows = getRows();
       const index = rows.findIndex((row) => row.rowId === rowId);
       const next = index + (direction === "up" ? -1 : 1);
       if (index >= 0 && next >= 0 && next < rows.length) move(index, next);
     },
-    onPickerRequest: options.onPickerRequest,
-    onRemove: (rowId) => {
+    [getRows, move],
+  );
+  const onRemove = useCallback(
+    (rowId: string) => {
       const index = getRows().findIndex((row) => row.rowId === rowId);
       if (index >= 0) remove(index);
     },
-    onSelect: (rowId, omamoriId) => {
+    [getRows, remove],
+  );
+  const onSelect = useCallback(
+    (rowId: string, omamoriId: string | null) => {
       const rows = getRows();
       const index = rows.findIndex((row) => row.rowId === rowId);
       const row = rows[index];
       if (row !== undefined && index >= 0) update(index, { ...row, omamoriId });
     },
-    rows: omamori.rows.map((row) => ({
-      ...row,
-      omamori: getOmamoriById(row.omamoriId),
-    })),
-  };
+    [getRows, update],
+  );
+  const rows = useMemo(
+    () =>
+      omamori.rows.map((row) => ({
+        ...row,
+        omamori: getOmamoriById(row.omamoriId),
+      })),
+    [omamori.rows],
+  );
+  const sectionProps = useMemo(
+    () => ({
+      onAdd,
+      onMove,
+      onPickerRequest: options.onPickerRequest,
+      onRemove,
+      onSelect,
+      rows,
+    }),
+    [onAdd, onMove, onRemove, onSelect, options.onPickerRequest, rows],
+  );
+
+  return sectionProps;
 }

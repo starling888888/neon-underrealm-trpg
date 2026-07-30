@@ -1,5 +1,5 @@
 import { ListPlus } from "lucide-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import type { Drug } from "../../lib/types/item";
 import {
@@ -172,7 +172,7 @@ function DrugRow({
   );
 }
 
-export default function DrugsSection(props: DrugsSectionProps) {
+function DrugsSection(props: DrugsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.drugs;
 
   return (
@@ -216,3 +216,5 @@ export default function DrugsSection(props: DrugsSectionProps) {
     </div>
   );
 }
+
+export default memo(DrugsSection);

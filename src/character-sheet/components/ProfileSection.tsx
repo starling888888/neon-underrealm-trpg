@@ -2,6 +2,7 @@ import {
   type ChangeEvent,
   type DragEvent,
   type MouseEvent,
+  memo,
   type ReactNode,
   type RefObject,
   useRef,
@@ -353,7 +354,7 @@ function ExperienceField({
 }
 
 /** Basic profile and credit fields controlled by the containing presenter. */
-export default function ProfileSection({
+function ProfileSection({
   characterImage,
   credit,
   creditSummary,
@@ -508,3 +509,5 @@ export default function ProfileSection({
     </div>
   );
 }
+
+export default memo(ProfileSection);

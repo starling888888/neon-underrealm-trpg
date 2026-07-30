@@ -1,5 +1,5 @@
 import { ListPlus } from "lucide-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import type { Omamori } from "../../lib/types/item";
 import {
@@ -124,7 +124,7 @@ function OmamoriRow({
   );
 }
 
-export default function OmamoriSection(props: OmamoriSectionProps) {
+function OmamoriSection(props: OmamoriSectionProps) {
   const copy = characterSheetDictionary.characterSheet.omamori;
 
   return (
@@ -166,3 +166,5 @@ export default function OmamoriSection(props: OmamoriSectionProps) {
     </div>
   );
 }
+
+export default memo(OmamoriSection);

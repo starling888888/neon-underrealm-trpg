@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { characterSheetDictionary } from "../dictionary";
 import type {
   BondEditableFieldName,
@@ -81,7 +82,7 @@ function EffectFormula({
   );
 }
 
-export default function BondsSection({
+function BondsSection({
   bonds,
   derived,
   onEffectModifierChange,
@@ -221,3 +222,5 @@ export default function BondsSection({
     </div>
   );
 }
+
+export default memo(BondsSection);

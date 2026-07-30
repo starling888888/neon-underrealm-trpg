@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Skill } from "../../lib/types/skill";
 import { characterSheetDictionary } from "../dictionary";
 import SkillSection, { type SkillSectionRow } from "./skills/SkillSection";
@@ -32,7 +33,7 @@ export type OtherRyugiSkillsSectionProps = {
 };
 
 /** Adapts each other-ryugi row to the shared skill-section display. */
-export default function OtherRyugiSkillsSection({
+function OtherRyugiSkillsSection({
   maximumSkillNameLength,
   onAdd,
   onLevelChange,
@@ -98,3 +99,5 @@ export default function OtherRyugiSkillsSection({
     </>
   );
 }
+
+export default memo(OtherRyugiSkillsSection);

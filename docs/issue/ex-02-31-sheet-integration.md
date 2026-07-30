@@ -108,7 +108,7 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [ ] キャラクターシートアーキテクチャのE2E責務と全named E2E scenarioを照合し、詳細シナリオの実装過多を解消している。
 - [ ] browser-onlyの主要導線だけをE2Eで確認している。
 - [x] dictionaryでゲームドメイン用語と汎用UI文言が整理され、可視文言を変えていない。
-- [ ] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
+- [x] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
 - [ ] `canonical-snapshots/visual/**` のGit管理を解除し、local-onlyのignore規則を確認している。
 - [ ] 全VRT targetのbaselineを再生成し、全件比較が通る。
 - [ ] locator-only stateがcanonical full-page baselineを要求しない。

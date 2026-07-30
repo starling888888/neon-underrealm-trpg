@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import { type RefObject, useCallback, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
 import type { ProfileSectionProps } from "../components/ProfileSection";
@@ -37,48 +37,95 @@ export default function useProfileSectionProps(
     defaultValue: characterSheetDefaultValues.build.acquiredExperience,
     name: "build.acquiredExperience",
   });
-  const creditSummary = calculateCredit({
-    acquiredCredit: credit.acquired,
-    changeAdjustment: credit.changeAdjustment,
-    creditProvided: credit.provided,
-    creditReceived: credit.received,
-    spentCredit,
-  });
-
-  return {
-    characterImage: imageState.characterImage,
-    credit,
-    creditSummary,
-    experience: {
-      acquired: acquiredExperience,
-      commonSkillLevelLimit,
-      commonSkillLevelTotal,
-      derived: derivedBuild,
-      hasCommonSkillLevelError,
-      onAcquiredChange: onAcquiredExperienceChange,
-    },
-    onCreditBlur: (field, value) => {
+  const creditSummary = useMemo(
+    () =>
+      calculateCredit({
+        acquiredCredit: credit.acquired,
+        changeAdjustment: credit.changeAdjustment,
+        creditProvided: credit.provided,
+        creditReceived: credit.received,
+        spentCredit,
+      }),
+    [credit, spentCredit],
+  );
+  const onCreditBlur = useCallback(
+    (field: keyof typeof credit, value: string) => {
       const normalizedValue = normalizeCreditInput(field, value);
 
       setValue(`credit.${field}`, normalizedValue, { shouldValidate: true });
 
       return normalizedValue;
     },
-    onCreditChange: (field, value) => {
+    [setValue],
+  );
+  const onCreditChange = useCallback(
+    (field: keyof typeof credit, value: string) => {
       setValue(`credit.${field}`, normalizeCreditInput(field, value), {
         shouldValidate: true,
       });
     },
-    onProfileChange: (field, value) => {
+    [setValue],
+  );
+  const onProfileChange = useCallback(
+    (field: keyof typeof profile, value: string) => {
       setValue(`profile.${field}`, value);
     },
-    pcNameInputRef,
-    isRootOperationInProgress: imageState.isRootOperationInProgress,
-    onCharacterImageCleared: imageState.onCharacterImageCleared,
-    onCharacterImageSelected: imageState.onCharacterImageSelected,
-    onCharacterImageOperationStarted:
+    [setValue],
+  );
+  const experience = useMemo(
+    () => ({
+      acquired: acquiredExperience,
+      commonSkillLevelLimit,
+      commonSkillLevelTotal,
+      derived: derivedBuild,
+      hasCommonSkillLevelError,
+      onAcquiredChange: onAcquiredExperienceChange,
+    }),
+    [
+      acquiredExperience,
+      commonSkillLevelLimit,
+      commonSkillLevelTotal,
+      derivedBuild,
+      hasCommonSkillLevelError,
+      onAcquiredExperienceChange,
+    ],
+  );
+
+  const sectionProps = useMemo(
+    () => ({
+      characterImage: imageState.characterImage,
+      credit,
+      creditSummary,
+      experience,
+      onCreditBlur,
+      onCreditChange,
+      onProfileChange,
+      pcNameInputRef,
+      isRootOperationInProgress: imageState.isRootOperationInProgress,
+      onCharacterImageCleared: imageState.onCharacterImageCleared,
+      onCharacterImageSelected: imageState.onCharacterImageSelected,
+      onCharacterImageOperationStarted:
+        imageState.onCharacterImageOperationStarted,
+      profile,
+      spentCredit,
+    }),
+    [
+      credit,
+      creditSummary,
+      experience,
+      imageState.characterImage,
+      imageState.isRootOperationInProgress,
+      imageState.onCharacterImageCleared,
       imageState.onCharacterImageOperationStarted,
-    profile,
-    spentCredit,
-  };
+      imageState.onCharacterImageSelected,
+      onCreditBlur,
+      onCreditChange,
+      onProfileChange,
+      pcNameInputRef,
+      profile,
+      spentCredit,
+    ],
+  );
+
+  return sectionProps;
 }

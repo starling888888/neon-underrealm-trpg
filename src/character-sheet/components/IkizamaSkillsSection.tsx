@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Skill } from "../../lib/types/skill";
 import { characterSheetDictionary } from "../dictionary";
 import SkillSection, { type SkillSectionRow } from "./skills/SkillSection";
@@ -29,7 +30,7 @@ export type IkizamaSkillsSectionProps = {
 };
 
 /** Adapts ikizama form values to the shared skill-section display. */
-export default function IkizamaSkillsSection({
+function IkizamaSkillsSection({
   bonusLevel,
   bonusSkill,
   ikizamaName,
@@ -116,3 +117,5 @@ export default function IkizamaSkillsSection({
     </div>
   );
 }
+
+export default memo(IkizamaSkillsSection);

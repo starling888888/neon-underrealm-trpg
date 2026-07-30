@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import {
   type UseFormReturn,
   useFieldArray,
@@ -58,35 +59,41 @@ export default function usePrimarySkillsSectionProps(
     defaultValue: characterSheetDefaultValues.primarySkills,
     name: "primarySkills",
   });
-  const groups = getPrimarySkillGroups(
-    build.primaryRyugiId,
-    build.primaryRyugiLevel,
+  const groups = useMemo(
+    () => getPrimarySkillGroups(build.primaryRyugiId, build.primaryRyugiLevel),
+    [build.primaryRyugiId, build.primaryRyugiLevel],
   );
 
-  function getRows(): SkillSelectionRowValues[] {
-    return getValues("primarySkills").rows;
-  }
-
-  const rows = primarySkills.rows.map((row) => ({
-    ...row,
-    skill: getPrimarySkillById(build.primaryRyugiId, row.skillId),
-  }));
-  const validation = calculatePrimarySkillsValidation(
-    build.primaryRyugiLevel,
-    rows,
+  const getRows = useCallback(
+    (): SkillSelectionRowValues[] => getValues("primarySkills").rows,
+    [getValues],
   );
-
-  return {
-    candidateGroups: groups,
-    clearSelection: () => {
-      replace(getRows().map((row) => ({ ...row, level: 1, skillId: null })));
-    },
-    onSelect: (rowId, skillId) => {
-      const index = getRows().findIndex((row) => row.rowId === rowId);
-      const row = getRows()[index];
+  const rows = useMemo(
+    () =>
+      primarySkills.rows.map((row) => ({
+        ...row,
+        skill: getPrimarySkillById(build.primaryRyugiId, row.skillId),
+      })),
+    [build.primaryRyugiId, primarySkills.rows],
+  );
+  const validation = useMemo(
+    () => calculatePrimarySkillsValidation(build.primaryRyugiLevel, rows),
+    [build.primaryRyugiLevel, rows],
+  );
+  const clearSelection = useCallback(() => {
+    replace(getRows().map((row) => ({ ...row, level: 1, skillId: null })));
+  }, [getRows, replace]);
+  const onSelect = useCallback(
+    (rowId: string, skillId: string) => {
+      const currentRows = getRows();
+      const index = currentRows.findIndex((row) => row.rowId === rowId);
+      const row = currentRows[index];
       if (row !== undefined) update(index, { ...row, level: 1, skillId });
     },
-    sectionProps: {
+    [getRows, update],
+  );
+  const sectionProps = useMemo<PrimarySkillsSectionProps>(
+    () => ({
       bonusSkills: groups.bonus,
       hasPrimarySkillLevelTotalError: validation.hasPrimarySkillLevelTotalError,
       invalidAdvancedSkillRowIds: validation.invalidAdvancedSkillRowIds,
@@ -95,9 +102,10 @@ export default function usePrimarySkillsSectionProps(
       maximumSkillNameLength,
       onAdd: () => append(createPrimarySkillRow()),
       onLevelChange: (rowId, value) => {
-        const selectedRow = getRows().find((row) => row.rowId === rowId);
+        const currentRows = getRows();
+        const selectedRow = currentRows.find((row) => row.rowId === rowId);
         const level = normalizeIntegerInput(value);
-        const index = getRows().findIndex((row) => row.rowId === rowId);
+        const index = currentRows.findIndex((row) => row.rowId === rowId);
         if (selectedRow !== undefined && index >= 0) {
           update(index, { ...selectedRow, level });
         }
@@ -105,17 +113,22 @@ export default function usePrimarySkillsSectionProps(
       },
       onPickerRequest,
       onRemove: (rowId) => {
-        const rows = getRows();
-        const index = rows.findIndex((row) => row.rowId === rowId);
-        if (rows.length > 1 && index >= 0) remove(index);
+        const currentRows = getRows();
+        const index = currentRows.findIndex((row) => row.rowId === rowId);
+        if (currentRows.length > 1 && index >= 0) remove(index);
       },
       onMove: (rowId, direction) => {
-        const rows = getRows();
-        const currentIndex = rows.findIndex((row) => row.rowId === rowId);
+        const currentRows = getRows();
+        const currentIndex = currentRows.findIndex(
+          (row) => row.rowId === rowId,
+        );
         const targetIndex = currentIndex + (direction === "up" ? -1 : 1);
-        if (currentIndex < 0 || targetIndex < 0 || targetIndex >= rows.length) {
+        if (
+          currentIndex < 0 ||
+          targetIndex < 0 ||
+          targetIndex >= currentRows.length
+        )
           return;
-        }
         move(currentIndex, targetIndex);
       },
       primaryRyugiName:
@@ -125,6 +138,25 @@ export default function usePrimarySkillsSectionProps(
       primaryRyugiSelected: build.primaryRyugiId !== null,
       rows,
       synchronizationKey: defaultValues?.primarySkills,
-    },
-  };
+    }),
+    [
+      append,
+      build.primaryRyugiId,
+      defaultValues?.primarySkills,
+      getRows,
+      groups.bonus,
+      move,
+      onPickerRequest,
+      remove,
+      rows,
+      update,
+      validation,
+    ],
+  );
+  const presenterState = useMemo(
+    () => ({ candidateGroups: groups, clearSelection, onSelect, sectionProps }),
+    [clearSelection, groups, onSelect, sectionProps],
+  );
+
+  return presenterState;
 }

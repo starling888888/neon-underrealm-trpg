@@ -1,5 +1,5 @@
 import { ListPlus } from "lucide-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import type { Armor, Weapon } from "../../lib/types/item";
 import {
@@ -382,9 +382,7 @@ function ArmorFormRow({
   );
 }
 
-export default function WeaponsAndArmorSection(
-  props: WeaponsAndArmorSectionProps,
-) {
+function WeaponsAndArmorSection(props: WeaponsAndArmorSectionProps) {
   const copy = characterSheetDictionary.characterSheet.weaponsAndArmor;
   return (
     <div className={styles.section} data-weapons-and-armor-section>
@@ -478,3 +476,5 @@ export default function WeaponsAndArmorSection(
     </div>
   );
 }
+
+export default memo(WeaponsAndArmorSection);

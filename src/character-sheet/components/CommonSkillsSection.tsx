@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Skill } from "../../lib/types/skill";
 import { characterSheetDictionary } from "../dictionary";
 import SkillSection, { type SkillSectionRow } from "./skills/SkillSection";
@@ -27,7 +28,7 @@ export type CommonSkillsSectionProps = {
 };
 
 /** Adapts common-skill form values to the shared skill-section display. */
-export default function CommonSkillsSection({
+function CommonSkillsSection({
   basicAttack,
   hasCommonSkillLevelError,
   invalidDuplicateSkillRowIds,
@@ -106,3 +107,5 @@ export default function CommonSkillsSection({
     />
   );
 }
+
+export default memo(CommonSkillsSection);

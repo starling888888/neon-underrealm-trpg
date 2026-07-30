@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
 import type {
@@ -33,42 +34,85 @@ export default function useNanomachinesSectionProps(
   options: Options,
 ): NanomachinesSectionProps {
   const values = useWatch({ control, name: "nanomachines" });
-  const derived = calculateNanomachines(
-    fixedPartKeys.map((part) =>
-      getNanomachineById(values[getFixedField(part)]),
-    ),
-    values.implantTotalModifier,
-    derivedBuild.attributes.body.permanent,
-    values.implantLimitModifier,
+  const derived = useMemo(
+    () =>
+      calculateNanomachines(
+        fixedPartKeys.map((part) =>
+          getNanomachineById(values[getFixedField(part)]),
+        ),
+        values.implantTotalModifier,
+        derivedBuild.attributes.body.permanent,
+        values.implantLimitModifier,
+      ),
+    [
+      derivedBuild.attributes.body.permanent,
+      values.implantLimitModifier,
+      values.implantTotalModifier,
+      values,
+    ],
   );
 
-  function setFixedSelection(
-    part: NanomachineFixedPartKey,
-    nanomachineId: string | null,
-  ): void {
-    setValue(`nanomachines.${getFixedField(part)}`, nanomachineId, {
-      shouldValidate: true,
-    });
-  }
-
-  return {
-    derived,
-    fixedRows: fixedPartKeys.map((part) => ({
-      nanomachine: getNanomachineById(values[getFixedField(part)]),
-      part,
-      rowId: `nanomachine-${part}`,
-    })),
-    implantLimitModifier: values.implantLimitModifier,
-    implantTotalModifier: values.implantTotalModifier,
-    onClear: (part) => setFixedSelection(part, null),
-    onModifierChange: (field, value) => {
+  const setFixedSelection = useCallback(
+    function setFixedSelection(
+      part: NanomachineFixedPartKey,
+      nanomachineId: string | null,
+    ): void {
+      setValue(`nanomachines.${getFixedField(part)}`, nanomachineId, {
+        shouldValidate: true,
+      });
+    },
+    [setValue],
+  );
+  const fixedRows = useMemo(
+    () =>
+      fixedPartKeys.map((part) => ({
+        nanomachine: getNanomachineById(values[getFixedField(part)]),
+        part,
+        rowId: `nanomachine-${part}`,
+      })),
+    [values],
+  );
+  const onClear = useCallback(
+    (part: NanomachineFixedPartKey) => setFixedSelection(part, null),
+    [setFixedSelection],
+  );
+  const onModifierChange = useCallback(
+    (field: "implantLimitModifier" | "implantTotalModifier", value: string) => {
       const normalizedValue = normalizeIntegerInput(value);
       setValue(`nanomachines.${field}`, normalizedValue, {
         shouldValidate: true,
       });
       return normalizedValue;
     },
-    onPickerRequest: options.onPickerRequest,
-    onSelect: (part, nanomachineId) => setFixedSelection(part, nanomachineId),
-  };
+    [setValue],
+  );
+  const onSelect = useCallback(
+    (part: NanomachineFixedPartKey, nanomachineId: string | null) =>
+      setFixedSelection(part, nanomachineId),
+    [setFixedSelection],
+  );
+  const sectionProps = useMemo(
+    () => ({
+      derived,
+      fixedRows,
+      implantLimitModifier: values.implantLimitModifier,
+      implantTotalModifier: values.implantTotalModifier,
+      onClear,
+      onModifierChange,
+      onPickerRequest: options.onPickerRequest,
+      onSelect,
+    }),
+    [
+      derived,
+      fixedRows,
+      onClear,
+      onModifierChange,
+      onSelect,
+      options.onPickerRequest,
+      values.implantLimitModifier,
+      values.implantTotalModifier,
+    ],
+  );
+
+  return sectionProps;
 }

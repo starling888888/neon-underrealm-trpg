@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type { DrugsSectionProps } from "../components/DrugsSection";
@@ -30,17 +31,18 @@ export default function useDrugsSectionProps(
   const drugs = useWatch({ control, name: "drugs" });
   const duplicateRowIds = getDuplicateDrugRowIds(drugs.rows);
 
-  function getRows(): DrugRowValues[] {
-    return getValues("drugs.rows");
-  }
-
-  function getRowIndex(rowId: string): number {
-    return getRows().findIndex((row) => row.rowId === rowId);
-  }
-
-  return {
-    onAdd: () => append(createDrugRow()),
-    onMove: (rowId, direction) => {
+  const getRows = useCallback(
+    (): DrugRowValues[] => getValues("drugs.rows"),
+    [getValues],
+  );
+  const getRowIndex = useCallback(
+    (rowId: string): number =>
+      getRows().findIndex((row) => row.rowId === rowId),
+    [getRows],
+  );
+  const onAdd = useCallback(() => append(createDrugRow()), [append]);
+  const onMove = useCallback(
+    (rowId: string, direction: "up" | "down") => {
       const rows = getRows();
       const index = rows.findIndex((row) => row.rowId === rowId);
       const nextIndex = index + (direction === "up" ? -1 : 1);
@@ -48,8 +50,10 @@ export default function useDrugsSectionProps(
         move(index, nextIndex);
       }
     },
-    onPickerRequest: options.onPickerRequest,
-    onQuantityChange: (rowId, value) => {
+    [getRows, move],
+  );
+  const onQuantityChange = useCallback(
+    (rowId: string, value: string) => {
       const index = getRowIndex(rowId);
       if (index < 0) return 0;
       const quantity = Math.max(0, normalizeIntegerInput(value));
@@ -58,21 +62,54 @@ export default function useDrugsSectionProps(
       });
       return quantity;
     },
-    onRemove: (rowId) => {
+    [getRowIndex, setValue],
+  );
+  const onRemove = useCallback(
+    (rowId: string) => {
       const index = getRowIndex(rowId);
       if (index >= 0) remove(index);
     },
-    onSelect: (rowId, drugId) => {
+    [getRowIndex, remove],
+  );
+  const onSelect = useCallback(
+    (rowId: string, drugId: string | null) => {
       const index = getRowIndex(rowId);
       if (index < 0) return;
       setValue(`drugs.rows.${index}.drugId`, drugId, {
         shouldValidate: true,
       });
     },
-    rows: drugs.rows.map((row) => ({
-      ...row,
-      drug: getDrugById(row.drugId),
-      hasDuplicateSelection: duplicateRowIds.has(row.rowId),
-    })),
-  };
+    [getRowIndex, setValue],
+  );
+  const rows = useMemo(
+    () =>
+      drugs.rows.map((row) => ({
+        ...row,
+        drug: getDrugById(row.drugId),
+        hasDuplicateSelection: duplicateRowIds.has(row.rowId),
+      })),
+    [drugs.rows, duplicateRowIds],
+  );
+  const sectionProps = useMemo(
+    () => ({
+      onAdd,
+      onMove,
+      onPickerRequest: options.onPickerRequest,
+      onQuantityChange,
+      onRemove,
+      onSelect,
+      rows,
+    }),
+    [
+      onAdd,
+      onMove,
+      onQuantityChange,
+      onRemove,
+      onSelect,
+      options.onPickerRequest,
+      rows,
+    ],
+  );
+
+  return sectionProps;
 }

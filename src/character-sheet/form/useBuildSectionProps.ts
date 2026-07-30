@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import { type RefObject, useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type { BuildSectionProps } from "../components/BuildSection";
@@ -71,54 +71,64 @@ export default function useBuildSectionProps(
     defaultValue: characterSheetDefaultValues.build,
     name: "build",
   });
-  const derivedBuild = calculateBuild(build, commonSkillLevelTotal);
+  const derivedBuild = useMemo(
+    () => calculateBuild(build, commonSkillLevelTotal),
+    [build, commonSkillLevelTotal],
+  );
 
-  function setAttributeValue(
-    attribute: AttributeName,
-    field: keyof AttributeValues,
-    value: string,
-  ): number {
-    const normalizedValue = normalizeIntegerInput(value);
+  const setAttributeValue = useCallback(
+    function setAttributeValue(
+      attribute: AttributeName,
+      field: keyof AttributeValues,
+      value: string,
+    ): number {
+      const normalizedValue = normalizeIntegerInput(value);
 
-    setValue(`build.attributes.${attribute}.${field}`, normalizedValue, {
-      shouldValidate: true,
-    });
+      setValue(`build.attributes.${attribute}.${field}`, normalizedValue, {
+        shouldValidate: true,
+      });
 
-    return normalizedValue;
-  }
+      return normalizedValue;
+    },
+    [setValue],
+  );
 
-  function setOtherRyugiValue(
-    index: number,
-    field: OtherRyugiEditableFieldName,
-    value: string,
-  ): number | undefined {
-    const entry = getValues("build.otherRyugi")[index];
-    if (entry === undefined) return undefined;
+  const setOtherRyugiValue = useCallback(
+    function setOtherRyugiValue(
+      index: number,
+      field: OtherRyugiEditableFieldName,
+      value: string,
+    ): number | undefined {
+      const entry = getValues("build.otherRyugi")[index];
+      if (entry === undefined) return undefined;
 
-    update(
-      index,
-      field === "ryugiId"
-        ? { ...entry, ryugiId: value || null }
-        : { ...entry, level: normalizeIntegerInput(value) },
-    );
+      update(
+        index,
+        field === "ryugiId"
+          ? { ...entry, ryugiId: value || null }
+          : { ...entry, level: normalizeIntegerInput(value) },
+      );
 
-    return field === "level" ? normalizeIntegerInput(value) : undefined;
-  }
+      return field === "level" ? normalizeIntegerInput(value) : undefined;
+    },
+    [getValues, update],
+  );
 
-  function onAcquiredExperienceChange(value: string): number {
-    const normalizedValue = normalizeIntegerInput(value);
+  const onAcquiredExperienceChange = useCallback(
+    function onAcquiredExperienceChange(value: string): number {
+      const normalizedValue = normalizeIntegerInput(value);
 
-    setValue("build.acquiredExperience", normalizedValue, {
-      shouldValidate: true,
-    });
+      setValue("build.acquiredExperience", normalizedValue, {
+        shouldValidate: true,
+      });
 
-    return normalizedValue;
-  }
+      return normalizedValue;
+    },
+    [setValue],
+  );
 
-  return {
-    derivedBuild,
-    onAcquiredExperienceChange,
-    sectionProps: {
+  const sectionProps = useMemo<BuildSectionProps>(
+    () => ({
       build,
       derived: derivedBuild,
       hasIkizamaSkillLevelError: false,
@@ -229,6 +239,32 @@ export default function useBuildSectionProps(
       },
       ryugiOptions: getCharacterSheetRyugiOptions(),
       unlockedCommonSkillBonusLevels: [],
-    },
-  };
+    }),
+    [
+      append,
+      build,
+      derivedBuild,
+      getValues,
+      onIkizamaChangeRequested,
+      onOtherRyugiAdded,
+      onOtherRyugiChangeRequested,
+      onOtherRyugiRemoveRequested,
+      onPrimaryRyugiChangeRequested,
+      otherRyugiAddButtonRef,
+      remove,
+      setAttributeValue,
+      setOtherRyugiValue,
+      setValue,
+    ],
+  );
+  const presenterState = useMemo(
+    () => ({
+      derivedBuild,
+      onAcquiredExperienceChange,
+      sectionProps,
+    }),
+    [derivedBuild, onAcquiredExperienceChange, sectionProps],
+  );
+
+  return presenterState;
 }

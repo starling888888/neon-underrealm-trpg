@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
-import CharacterSheetFormPresenter from "./components/CharacterSheetFormPresenter";
+import CharacterSheetFormPresenter, {
+  type CharacterSheetFormPresenterProps,
+} from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
 import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
@@ -121,154 +123,266 @@ export default function CharacterSheetContainer() {
   const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiRemoveRef = useRef<(() => void) | null>(null);
   const pendingSpecialItemCategoryRemoveRef = useRef<(() => void) | null>(null);
-  const presenterProps = useCharacterSheetFormPresenterProps(
-    rootState.form,
-    {
+  const clearOtherRyugiSkillsRef = useRef<(rowId: string) => void>(() => {});
+  const removeOtherRyugiSkillsRef = useRef<(rowId: string) => void>(() => {});
+  const form = rootState.form;
+  const imageState = useMemo(
+    () => ({
       characterImage: rootState.characterImage,
       isRootOperationInProgress: rootState.isRootOperationInProgress,
       onCharacterImageCleared: rootState.onCharacterImageCleared,
-      onCharacterImageSelected: rootState.onCharacterImageSelected,
       onCharacterImageOperationStarted:
         rootState.onCharacterImageOperationStarted,
+      onCharacterImageSelected: rootState.onCharacterImageSelected,
+    }),
+    [
+      rootState.characterImage,
+      rootState.isRootOperationInProgress,
+      rootState.onCharacterImageCleared,
+      rootState.onCharacterImageOperationStarted,
+      rootState.onCharacterImageSelected,
+    ],
+  );
+  const onPrimarySkillPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      primarySkillPickerTriggerRef.current = trigger;
+      setPrimarySkillPickerRowId(rowId);
     },
-    {
-      formRestoreReturnFocusRef: rootState.formRestoreReturnFocusRef,
-      onIkizamaChangeRequested: (ikizamaId, trigger, applyChange) => {
-        const currentIkizamaId = rootState.form.getValues("build.ikizamaId");
-        const hasSelectedSkill = rootState.form
-          .getValues("ikizamaSkills.rows")
-          .some((row) => row.skillId !== null);
-
-        if (ikizamaId === currentIkizamaId || !hasSelectedSkill) {
-          applyChange();
-          return;
-        }
-
-        ikizamaChangeTriggerRef.current = trigger;
-        pendingIkizamaChangeRef.current = applyChange;
-        setIsIkizamaChangeConfirmOpen(true);
-      },
-      onPrimaryRyugiChangeRequested: (primaryRyugiId, trigger, applyChange) => {
-        const currentPrimaryRyugiId = rootState.form.getValues(
-          "build.primaryRyugiId",
-        );
-        const hasSelectedSkill = rootState.form
-          .getValues("primarySkills.rows")
-          .some((row) => row.skillId !== null);
-
-        if (primaryRyugiId === currentPrimaryRyugiId || !hasSelectedSkill) {
-          applyChange();
-          return;
-        }
-
-        primaryRyugiChangeTriggerRef.current = trigger;
-        pendingPrimaryRyugiChangeRef.current = applyChange;
-        setIsPrimaryRyugiChangeConfirmOpen(true);
-      },
-      onPrimarySkillPickerRequested: (rowId, trigger) => {
-        primarySkillPickerTriggerRef.current = trigger;
-        setPrimarySkillPickerRowId(rowId);
-      },
-      onIkizamaSkillPickerRequested: (rowId, trigger) => {
-        ikizamaSkillPickerTriggerRef.current = trigger;
-        setIkizamaSkillPickerRowId(rowId);
-      },
-      onCommonSkillPickerRequested: (rowId, trigger) => {
-        commonSkillPickerTriggerRef.current = trigger;
-        setCommonSkillPickerRowId(rowId);
-      },
-      onOtherRyugiChangeRequested: (rowId, ryugiId, trigger, applyChange) => {
-        const currentRyugiId = rootState.form
-          .getValues("build.otherRyugi")
-          .find((row) => row.rowId === rowId)?.ryugiId;
-        if (ryugiId === currentRyugiId) {
-          applyChange();
-          return;
-        }
-
-        const hasSelectedSkill = rootState.form
-          .getValues("otherRyugiSkills.rows")
-          .some((row) => row.ryugiRowId === rowId && row.skillId !== null);
-        const clearAndApply = () => {
-          presenterProps.otherRyugiSkills.clearSelection(rowId);
-          applyChange();
-        };
-
-        if (!hasSelectedSkill) {
-          clearAndApply();
-          return;
-        }
-
-        otherRyugiChangeTriggerRef.current = trigger;
-        pendingOtherRyugiChangeRef.current = clearAndApply;
-        setIsOtherRyugiChangeConfirmOpen(true);
-      },
-      otherRyugiAddButtonRef,
-      onOtherRyugiRemoveRequested: (rowId, trigger, applyChange) => {
-        const hasSelectedSkill = rootState.form
-          .getValues("otherRyugiSkills.rows")
-          .some((row) => row.ryugiRowId === rowId && row.skillId !== null);
-        const removeAndApply = () => {
-          presenterProps.otherRyugiSkills.removeRows(rowId);
-          applyChange();
-        };
-
-        if (!hasSelectedSkill) {
-          removeAndApply();
-          return;
-        }
-
-        otherRyugiRemoveTriggerRef.current = trigger;
-        pendingOtherRyugiRemoveRef.current = removeAndApply;
-        setIsOtherRyugiRemoveConfirmOpen(true);
-      },
-      onOtherRyugiSkillPickerRequested: (rowId, trigger) => {
-        otherRyugiSkillPickerTriggerRef.current = trigger;
-        setOtherRyugiSkillPickerRowId(rowId);
-      },
-      onArmorPickerRequested: (trigger) => {
-        armorPickerTriggerRef.current = trigger;
-        setIsArmorPickerOpen(true);
-      },
-      onOmamoriPickerRequested: (rowId, trigger) => {
-        omamoriPickerTriggerRef.current = trigger;
-        setOmamoriPickerRowId(rowId);
-      },
-      onDrugsPickerRequested: (rowId, trigger) => {
-        drugsPickerTriggerRef.current = trigger;
-        setDrugsPickerRowId(rowId);
-      },
-      onCyberneticsPickerRequested: (target, trigger) => {
-        cyberneticsPickerTriggerRef.current = trigger;
-        setCyberneticsPickerTarget(target);
-      },
-      onNanomachinesPickerRequested: (target, trigger) => {
-        nanomachinesPickerTriggerRef.current = trigger;
-        setNanomachinesPickerTarget(target);
-      },
-      onWeaponPickerRequested: (rowId, trigger) => {
-        weaponPickerTriggerRef.current = trigger;
-        setWeaponPickerRowId(rowId);
-      },
-      onSpecialItemCategoryRemoveRequested: (
-        category,
-        trigger,
-        applyRemoval,
-      ) => {
-        specialItemCategoryRemoveTriggerRef.current = trigger;
-        pendingSpecialItemCategoryRemoveRef.current = applyRemoval;
-        setSpecialItemCategoryToRemove(category);
-      },
-      onSpecialItemCategoryRemoved: (category) => {
-        requestAnimationFrame(() => {
-          document
-            .querySelector<HTMLButtonElement>(
-              `[data-special-item-category-add="${category}"]`,
-            )
-            ?.focus();
-        });
-      },
+    [],
+  );
+  const onIkizamaSkillPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      ikizamaSkillPickerTriggerRef.current = trigger;
+      setIkizamaSkillPickerRowId(rowId);
     },
+    [],
+  );
+  const onCommonSkillPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      commonSkillPickerTriggerRef.current = trigger;
+      setCommonSkillPickerRowId(rowId);
+    },
+    [],
+  );
+  const onOtherRyugiSkillPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      otherRyugiSkillPickerTriggerRef.current = trigger;
+      setOtherRyugiSkillPickerRowId(rowId);
+    },
+    [],
+  );
+  const onArmorPickerRequested = useCallback((trigger: HTMLButtonElement) => {
+    armorPickerTriggerRef.current = trigger;
+    setIsArmorPickerOpen(true);
+  }, []);
+  const onOmamoriPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      omamoriPickerTriggerRef.current = trigger;
+      setOmamoriPickerRowId(rowId);
+    },
+    [],
+  );
+  const onDrugsPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      drugsPickerTriggerRef.current = trigger;
+      setDrugsPickerRowId(rowId);
+    },
+    [],
+  );
+  const onCyberneticsPickerRequested = useCallback(
+    (target: CyberneticsPickerTarget, trigger: HTMLButtonElement) => {
+      cyberneticsPickerTriggerRef.current = trigger;
+      setCyberneticsPickerTarget(target);
+    },
+    [],
+  );
+  const onNanomachinesPickerRequested = useCallback(
+    (target: NanomachinesPickerTarget, trigger: HTMLButtonElement) => {
+      nanomachinesPickerTriggerRef.current = trigger;
+      setNanomachinesPickerTarget(target);
+    },
+    [],
+  );
+  const onWeaponPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      weaponPickerTriggerRef.current = trigger;
+      setWeaponPickerRowId(rowId);
+    },
+    [],
+  );
+  const onIkizamaChangeRequested = useCallback(
+    (
+      ikizamaId: string | null,
+      trigger: HTMLSelectElement,
+      applyChange: () => void,
+    ) => {
+      const currentIkizamaId = form.getValues("build.ikizamaId");
+      const hasSelectedSkill = form
+        .getValues("ikizamaSkills.rows")
+        .some((row) => row.skillId !== null);
+      if (ikizamaId === currentIkizamaId || !hasSelectedSkill) {
+        applyChange();
+        return;
+      }
+      ikizamaChangeTriggerRef.current = trigger;
+      pendingIkizamaChangeRef.current = applyChange;
+      setIsIkizamaChangeConfirmOpen(true);
+    },
+    [form],
+  );
+  const onPrimaryRyugiChangeRequested = useCallback(
+    (
+      primaryRyugiId: string | null,
+      trigger: HTMLSelectElement,
+      applyChange: () => void,
+    ) => {
+      const currentPrimaryRyugiId = form.getValues("build.primaryRyugiId");
+      const hasSelectedSkill = form
+        .getValues("primarySkills.rows")
+        .some((row) => row.skillId !== null);
+      if (primaryRyugiId === currentPrimaryRyugiId || !hasSelectedSkill) {
+        applyChange();
+        return;
+      }
+      primaryRyugiChangeTriggerRef.current = trigger;
+      pendingPrimaryRyugiChangeRef.current = applyChange;
+      setIsPrimaryRyugiChangeConfirmOpen(true);
+    },
+    [form],
+  );
+  const onOtherRyugiChangeRequested = useCallback(
+    (
+      rowId: string,
+      ryugiId: string | null,
+      trigger: HTMLSelectElement,
+      applyChange: () => void,
+    ) => {
+      const currentRyugiId = form
+        .getValues("build.otherRyugi")
+        .find((row) => row.rowId === rowId)?.ryugiId;
+      if (ryugiId === currentRyugiId) {
+        applyChange();
+        return;
+      }
+      const hasSelectedSkill = form
+        .getValues("otherRyugiSkills.rows")
+        .some((row) => row.ryugiRowId === rowId && row.skillId !== null);
+      const clearAndApply = () => {
+        clearOtherRyugiSkillsRef.current(rowId);
+        applyChange();
+      };
+      if (!hasSelectedSkill) {
+        clearAndApply();
+        return;
+      }
+      otherRyugiChangeTriggerRef.current = trigger;
+      pendingOtherRyugiChangeRef.current = clearAndApply;
+      setIsOtherRyugiChangeConfirmOpen(true);
+    },
+    [form],
+  );
+  const onOtherRyugiRemoveRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement, applyChange: () => void) => {
+      const hasSelectedSkill = form
+        .getValues("otherRyugiSkills.rows")
+        .some((row) => row.ryugiRowId === rowId && row.skillId !== null);
+      const removeAndApply = () => {
+        removeOtherRyugiSkillsRef.current(rowId);
+        applyChange();
+      };
+      if (!hasSelectedSkill) {
+        removeAndApply();
+        return;
+      }
+      otherRyugiRemoveTriggerRef.current = trigger;
+      pendingOtherRyugiRemoveRef.current = removeAndApply;
+      setIsOtherRyugiRemoveConfirmOpen(true);
+    },
+    [form],
+  );
+  const onSpecialItemCategoryRemoveRequested = useCallback(
+    (
+      category: SpecialItemCategoryId,
+      trigger: HTMLButtonElement,
+      applyRemoval: () => void,
+    ) => {
+      specialItemCategoryRemoveTriggerRef.current = trigger;
+      pendingSpecialItemCategoryRemoveRef.current = applyRemoval;
+      setSpecialItemCategoryToRemove(category);
+    },
+    [],
+  );
+  const onSpecialItemCategoryRemoved = useCallback(
+    (category: SpecialItemCategoryId) => {
+      requestAnimationFrame(() => {
+        document
+          .querySelector<HTMLButtonElement>(
+            `[data-special-item-category-add="${category}"]`,
+          )
+          ?.focus();
+      });
+    },
+    [],
+  );
+  const presenterProps = useCharacterSheetFormPresenterProps(form, imageState, {
+    formRestoreReturnFocusRef: rootState.formRestoreReturnFocusRef,
+    onIkizamaChangeRequested,
+    onPrimaryRyugiChangeRequested,
+    onPrimarySkillPickerRequested,
+    onIkizamaSkillPickerRequested,
+    onCommonSkillPickerRequested,
+    onOtherRyugiChangeRequested,
+    otherRyugiAddButtonRef,
+    onOtherRyugiRemoveRequested,
+    onOtherRyugiSkillPickerRequested,
+    onArmorPickerRequested,
+    onOmamoriPickerRequested,
+    onDrugsPickerRequested,
+    onCyberneticsPickerRequested,
+    onNanomachinesPickerRequested,
+    onWeaponPickerRequested,
+    onSpecialItemCategoryRemoveRequested,
+    onSpecialItemCategoryRemoved,
+  });
+  clearOtherRyugiSkillsRef.current =
+    presenterProps.otherRyugiSkills.clearSelection;
+  removeOtherRyugiSkillsRef.current =
+    presenterProps.otherRyugiSkills.removeRows;
+  const formPresenterProps = useMemo<CharacterSheetFormPresenterProps>(
+    () => ({
+      bondsSection: presenterProps.bondsSection,
+      buildSection: presenterProps.buildSection,
+      checksSection: presenterProps.checksSection,
+      commonSkillsSection: presenterProps.commonSkillsSection,
+      cyberneticsSection: presenterProps.cyberneticsSection,
+      drugsSection: presenterProps.drugsSection,
+      ikizamaSkillsSection: presenterProps.ikizamaSkillsSection,
+      nanomachinesSection: presenterProps.nanomachinesSection,
+      omamoriSection: presenterProps.omamoriSection,
+      otherRyugiSkillsSection: presenterProps.otherRyugiSkillsSection,
+      primarySkillsSection: presenterProps.primarySkillsSection,
+      profileSection: presenterProps.profileSection,
+      secondaryAttributesSection: presenterProps.secondaryAttributesSection,
+      specialItemsSection: presenterProps.specialItemsSection,
+      weaponsAndArmorSection: presenterProps.weaponsAndArmorSection,
+    }),
+    [
+      presenterProps.bondsSection,
+      presenterProps.buildSection,
+      presenterProps.checksSection,
+      presenterProps.commonSkillsSection,
+      presenterProps.cyberneticsSection,
+      presenterProps.drugsSection,
+      presenterProps.ikizamaSkillsSection,
+      presenterProps.nanomachinesSection,
+      presenterProps.omamoriSection,
+      presenterProps.otherRyugiSkillsSection,
+      presenterProps.primarySkillsSection,
+      presenterProps.profileSection,
+      presenterProps.secondaryAttributesSection,
+      presenterProps.specialItemsSection,
+      presenterProps.weaponsAndArmorSection,
+    ],
   );
 
   useEffect(() => {
@@ -476,7 +590,7 @@ export default function CharacterSheetContainer() {
           ref={rootState.jsonImportInputRef}
           type="file"
         />
-        <CharacterSheetFormPresenter {...presenterProps} />
+        <CharacterSheetFormPresenter {...formPresenterProps} />
         <CharacterImageErrorDialog
           closeButtonRef={rootState.imageErrorCloseButtonRef}
           errorCode={rootState.imageError?.code ?? null}

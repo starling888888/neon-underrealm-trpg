@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Skill } from "../../lib/types/skill";
 import { characterSheetDictionary } from "../dictionary";
 import SkillSection, { type SkillSectionRow } from "./skills/SkillSection";
@@ -28,7 +29,7 @@ export type PrimarySkillsSectionProps = {
 };
 
 /** Adapts primary-ryugi form values to the shared skill-section display. */
-export default function PrimarySkillsSection({
+function PrimarySkillsSection({
   bonusSkills,
   hasPrimarySkillLevelTotalError,
   invalidAdvancedSkillRowIds,
@@ -108,3 +109,5 @@ export default function PrimarySkillsSection({
     </div>
   );
 }
+
+export default memo(PrimarySkillsSection);

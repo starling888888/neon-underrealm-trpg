@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { formatDisplayValue } from "../../lib/utils/display-value";
 import { characterSheetDictionary } from "../dictionary";
 import type {
@@ -168,7 +169,7 @@ function SecondaryRow({
   );
 }
 
-export default function SecondaryAttributesSection({
+function SecondaryAttributesSection({
   derived,
   healthFormulaSuffix,
   onNumberChange,
@@ -256,3 +257,5 @@ export default function SecondaryAttributesSection({
     </div>
   );
 }
+
+export default memo(SecondaryAttributesSection);

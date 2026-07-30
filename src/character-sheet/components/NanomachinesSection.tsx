@@ -1,5 +1,5 @@
 import { ListPlus } from "lucide-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import type { Nanomachine } from "../../lib/types/item";
 import {
@@ -154,7 +154,7 @@ function NanomachinesRow({
   );
 }
 
-export default function NanomachinesSection({
+function NanomachinesSection({
   derived,
   fixedRows,
   implantLimitModifier,
@@ -252,3 +252,5 @@ export default function NanomachinesSection({
     </div>
   );
 }
+
+export default memo(NanomachinesSection);

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { memo, type ReactNode } from "react";
 
 import { characterSheetDictionary } from "../dictionary";
 import {
@@ -32,7 +32,7 @@ const categoryNames: Record<SpecialItemCategoryId, string> = {
 };
 
 /** Presents category visibility and warnings around the existing item sections. */
-export default function SpecialItemsSection({
+function SpecialItemsSection({
   categories,
   exclusiveCategory,
   ikizamaName,
@@ -93,3 +93,5 @@ export default function SpecialItemsSection({
     </div>
   );
 }
+
+export default memo(SpecialItemsSection);

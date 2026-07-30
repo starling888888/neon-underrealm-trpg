@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { memo, type ReactNode } from "react";
 import { formatDisplayValue } from "../../lib/utils/display-value";
 import { characterSheetDictionary } from "../dictionary";
 import type { AttackSkillName, AttributeName } from "../form-values";
@@ -148,7 +148,7 @@ function CheckHeaders({ sectionName }: { sectionName: string }) {
   );
 }
 
-export default function ChecksSection({
+function ChecksSection({
   attacks,
   onAttackAdd,
   onAttackAttributeChange,
@@ -268,3 +268,5 @@ export default function ChecksSection({
     </div>
   );
 }
+
+export default memo(ChecksSection);

@@ -35,6 +35,35 @@ function usePresenterHarness() {
 }
 
 describe("useCharacterSheetFormPresenterProps", () => {
+  it("keeps unaffected section props and callbacks stable across a profile update", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const before = {
+      commonSkillsSection: result.current.presenterProps.commonSkillsSection,
+      commonSkillOnSelect:
+        result.current.presenterProps.commonSkillPicker.onSelect,
+      primarySkillsSection: result.current.presenterProps.primarySkillsSection,
+      primarySkillOnSelect:
+        result.current.presenterProps.primarySkillPicker.onSelect,
+    };
+
+    act(() => {
+      result.current.form.setValue("profile.pcName", "ネオン");
+    });
+
+    expect(result.current.presenterProps.commonSkillsSection).toBe(
+      before.commonSkillsSection,
+    );
+    expect(result.current.presenterProps.commonSkillPicker.onSelect).toBe(
+      before.commonSkillOnSelect,
+    );
+    expect(result.current.presenterProps.primarySkillsSection).toBe(
+      before.primarySkillsSection,
+    );
+    expect(result.current.presenterProps.primarySkillPicker.onSelect).toBe(
+      before.primarySkillOnSelect,
+    );
+  });
+
   it("connects normalized credit inputs and derived values through RHF", () => {
     const { result } = renderHook(() => usePresenterHarness());
     const { profileSection } = result.current.presenterProps;

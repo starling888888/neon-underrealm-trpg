@@ -1885,3 +1885,13 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-30-sheet-help` のHelp dialog contents review報告
 - 観測した失敗: 先に作成されたVRT captureで最下部のヘッダーと閉じる操作が見えないことを、現行preview・現行buildで再captureせず、実装の外側scroll不備として報告した。ユーザーからVRT側の問題ではないかと指摘された。
 - 一次対応: VRT scenarioのscroll対象が`header + div`の本文要素だけであることを確認し、実行時にdialogの`scrollTop`が`0`、本文の`scrollTop`だけが最大値へ移動することをdesktop / tablet / mobileで確認した。現行4321 previewに対して9状態を再captureし、すべてでheaderと閉じる操作が残ることを原寸画像で確認した。VRT captureをreview入力へ渡す前に、現行build由来であることと対象stateを再確認する。
+
+### Repeated formatting check failure during Presenter memoization
+
+#### 2026-07-30
+
+- source: self
+- failure category: validation formatting discipline
+- 発生箇所: `ex-02-31-sheet-integration` のPresenter再レンダリング防止リファクタ
+- 観測した失敗: 最初の`check`で新規Hook記述の整形差分を見落とし、formatter適用後の再実行でも`ProfileSection`のReact import順がBiome規則に合わず、同じformat検証を再度失敗させた。
+- 一次対応: import順をBiome指定へ修正し、最終検証は`format`後に`check`を単独実行して確認する。

@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import { memo, type RefObject } from "react";
 import { formatDisplayValue } from "../../lib/utils/display-value";
 import { characterSheetDictionary } from "../dictionary";
 import type {
@@ -152,7 +152,7 @@ function SelectField({
 }
 
 /** G7 direct-edit section for build choices, attributes, and references. */
-export default function BuildSection({
+function BuildSection({
   build,
   derived,
   hasIkizamaSkillLevelError,
@@ -486,3 +486,5 @@ export default function BuildSection({
     </div>
   );
 }
+
+export default memo(BuildSection);

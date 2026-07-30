@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { characterSheetDictionary } from "../dictionary";
 import BondsSection, { type BondsSectionProps } from "./BondsSection";
 import BuildSection, { type BuildSectionProps } from "./BuildSection";
@@ -59,7 +60,7 @@ export type CharacterSheetFormPresenterProps = {
   weaponsAndArmorSection: WeaponsAndArmorSectionProps;
 };
 
-export default function CharacterSheetFormPresenter({
+function CharacterSheetFormPresenter({
   bondsSection,
   buildSection,
   checksSection,
@@ -77,6 +78,15 @@ export default function CharacterSheetFormPresenter({
   weaponsAndArmorSection,
 }: CharacterSheetFormPresenterProps) {
   const { characterSheet, gameDomain } = characterSheetDictionary;
+  const specialItemCategories = useMemo(
+    () => ({
+      cybernetics: <CyberneticsSection {...cyberneticsSection} />,
+      drugs: <DrugsSection {...drugsSection} />,
+      nanomachines: <NanomachinesSection {...nanomachinesSection} />,
+      omamori: <OmamoriSection {...omamoriSection} />,
+    }),
+    [cyberneticsSection, drugsSection, nanomachinesSection, omamoriSection],
+  );
 
   return (
     <form className={styles.form} data-character-sheet-layout>
@@ -174,12 +184,7 @@ export default function CharacterSheetFormPresenter({
           >
             <SpecialItemsSection
               {...specialItemsSection}
-              categories={{
-                cybernetics: <CyberneticsSection {...cyberneticsSection} />,
-                drugs: <DrugsSection {...drugsSection} />,
-                nanomachines: <NanomachinesSection {...nanomachinesSection} />,
-                omamori: <OmamoriSection {...omamoriSection} />,
-              }}
+              categories={specialItemCategories}
             />
           </div>
         </CharacterSheetSectionFrame>
@@ -187,3 +192,5 @@ export default function CharacterSheetFormPresenter({
     </form>
   );
 }
+
+export default memo(CharacterSheetFormPresenter);

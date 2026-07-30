@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
 import type { SpecialItemsSectionProps } from "../components/SpecialItemsSection";
@@ -84,123 +85,141 @@ export default function useSpecialItemsSectionProps(
   const cybernetics = useWatch({ control, name: "cybernetics" });
   const nanomachines = useWatch({ control, name: "nanomachines" });
   const drugs = useWatch({ control, name: "drugs" });
-  const exclusiveCategory = getIkizamaExclusiveItemCategory(build.ikizamaId);
-  const ikizamaName = getIkizamaName(build.ikizamaId);
-  const visibleCategories = getVisibleSpecialItemCategories(
-    exclusiveCategory,
-    specialItems.categories,
+  const exclusiveCategory = useMemo(
+    () => getIkizamaExclusiveItemCategory(build.ikizamaId),
+    [build.ikizamaId],
   );
-  const nanomachineMentalCosts = fixedPartKeys.map(
-    (part) =>
-      getNanomachineById(nanomachines[`${part}Id`])?.activationMentalCost ??
-      null,
+  const ikizamaName = useMemo(
+    () => getIkizamaName(build.ikizamaId),
+    [build.ikizamaId],
   );
-  const maximumHealthBonus =
-    build.ikizamaId === "sumi"
-      ? getMaximumNanomachineMentalCost(nanomachineMentalCosts)
-      : 0;
-  const spentCredit = calculateSpecialItemCredit({
-    armorCredit: getArmorById(armor.armorId)?.credit ?? null,
-    cybernetics: [
-      ...fixedPartKeys.map(
-        (part) => getCyberneticById(cybernetics[`${part}Id`])?.credit ?? null,
+  const visibleCategories = useMemo(
+    () =>
+      getVisibleSpecialItemCategories(
+        exclusiveCategory,
+        specialItems.categories,
       ),
-      ...cybernetics.otherRows.map(
-        (row) => getCyberneticById(row.cyberneticId)?.credit ?? null,
+    [exclusiveCategory, specialItems.categories],
+  );
+  const maximumHealthBonus = useMemo(() => {
+    if (build.ikizamaId !== "sumi") return 0;
+    return getMaximumNanomachineMentalCost(
+      fixedPartKeys.map(
+        (part) =>
+          getNanomachineById(nanomachines[`${part}Id`])?.activationMentalCost ??
+          null,
       ),
-    ],
-    drugs: drugs.rows.map((row) => ({
-      credit: getDrugById(row.drugId)?.credit ?? null,
-      quantity: row.quantity,
-    })),
-    nanomachines: fixedPartKeys.map(
-      (part) => getNanomachineById(nanomachines[`${part}Id`])?.credit ?? null,
-    ),
-    omamori: omamori.rows.map(
-      (row) => getOmamoriById(row.omamoriId)?.credit ?? null,
-    ),
-    weapons: weapons.rows.map(
-      (row) => getWeaponById(row.weaponId)?.credit ?? null,
-    ),
-  });
-
-  function removeCategory(category: SpecialItemCategoryId): void {
-    const values = getValues();
-    setValue(
-      "specialItems.categories",
-      values.specialItems.categories.filter((item) => item !== category),
-      { shouldDirty: true, shouldValidate: true },
     );
-    switch (category) {
-      case "omamori":
-        setValue(
-          "omamori",
-          { rows: [] },
-          { shouldDirty: true, shouldValidate: true },
-        );
-        break;
-      case "cybernetics":
-        setValue(
-          "cybernetics",
-          {
-            ...characterSheetDefaultValues.cybernetics,
-            otherRows: characterSheetDefaultValues.cybernetics.otherRows.map(
-              (row) => ({ ...row }),
-            ),
-          },
-          { shouldDirty: true, shouldValidate: true },
-        );
-        break;
-      case "nanomachines":
-        setValue(
-          "nanomachines",
-          { ...characterSheetDefaultValues.nanomachines },
-          { shouldDirty: true, shouldValidate: true },
-        );
-        break;
-      case "drugs":
-        setValue(
-          "drugs",
-          {
-            rows: characterSheetDefaultValues.drugs.rows.map((row) => ({
-              ...row,
-            })),
-          },
-          { shouldDirty: true, shouldValidate: true },
-        );
-        break;
-    }
-  }
+  }, [build.ikizamaId, nanomachines]);
+  const spentCredit = useMemo(
+    () =>
+      calculateSpecialItemCredit({
+        armorCredit: getArmorById(armor.armorId)?.credit ?? null,
+        cybernetics: [
+          ...fixedPartKeys.map(
+            (part) =>
+              getCyberneticById(cybernetics[`${part}Id`])?.credit ?? null,
+          ),
+          ...cybernetics.otherRows.map(
+            (row) => getCyberneticById(row.cyberneticId)?.credit ?? null,
+          ),
+        ],
+        drugs: drugs.rows.map((row) => ({
+          credit: getDrugById(row.drugId)?.credit ?? null,
+          quantity: row.quantity,
+        })),
+        nanomachines: fixedPartKeys.map(
+          (part) =>
+            getNanomachineById(nanomachines[`${part}Id`])?.credit ?? null,
+        ),
+        omamori: omamori.rows.map(
+          (row) => getOmamoriById(row.omamoriId)?.credit ?? null,
+        ),
+        weapons: weapons.rows.map(
+          (row) => getWeaponById(row.weaponId)?.credit ?? null,
+        ),
+      }),
+    [armor, cybernetics, drugs, nanomachines, omamori, weapons],
+  );
 
-  return {
-    maximumHealthBonus,
-    sectionProps: {
-      exclusiveCategory,
-      ikizamaName,
-      onAddCategory: (category) => {
-        const categories = getValues("specialItems.categories");
-        if (!categories.includes(category)) {
-          setValue("specialItems.categories", [...categories, category], {
-            shouldDirty: true,
-            shouldValidate: true,
-          });
-        }
-      },
-      onRemoveCategory: (category, trigger) => {
-        const applyRemoval = () => {
-          removeCategory(category);
-          onCategoryRemoved?.(category);
-        };
-        if (hasCategoryContent(category, getValues())) {
-          onRemoveRequested?.(category, trigger, applyRemoval);
-          return;
-        }
-        applyRemoval();
-      },
-      visibleCategories,
+  const removeCategory = useCallback(
+    function removeCategory(category: SpecialItemCategoryId): void {
+      const values = getValues();
+      setValue(
+        "specialItems.categories",
+        values.specialItems.categories.filter((item) => item !== category),
+        { shouldDirty: true, shouldValidate: true },
+      );
+      switch (category) {
+        case "omamori":
+          setValue(
+            "omamori",
+            { rows: [] },
+            { shouldDirty: true, shouldValidate: true },
+          );
+          break;
+        case "cybernetics":
+          setValue(
+            "cybernetics",
+            {
+              ...characterSheetDefaultValues.cybernetics,
+              otherRows: characterSheetDefaultValues.cybernetics.otherRows.map(
+                (row) => ({ ...row }),
+              ),
+            },
+            { shouldDirty: true, shouldValidate: true },
+          );
+          break;
+        case "nanomachines":
+          setValue(
+            "nanomachines",
+            { ...characterSheetDefaultValues.nanomachines },
+            { shouldDirty: true, shouldValidate: true },
+          );
+          break;
+        case "drugs":
+          setValue(
+            "drugs",
+            {
+              rows: characterSheetDefaultValues.drugs.rows.map((row) => ({
+                ...row,
+              })),
+            },
+            { shouldDirty: true, shouldValidate: true },
+          );
+          break;
+      }
     },
-    spentCredit,
-    updateForIkizamaChange: (nextIkizamaId) => {
+    [getValues, setValue],
+  );
+  const onAddCategory = useCallback(
+    (category: SpecialItemCategoryId) => {
+      const categories = getValues("specialItems.categories");
+      if (!categories.includes(category)) {
+        setValue("specialItems.categories", [...categories, category], {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+      }
+    },
+    [getValues, setValue],
+  );
+  const onRemoveCategory = useCallback(
+    (category: SpecialItemCategoryId, trigger: HTMLButtonElement) => {
+      const applyRemoval = () => {
+        removeCategory(category);
+        onCategoryRemoved?.(category);
+      };
+      if (hasCategoryContent(category, getValues())) {
+        onRemoveRequested?.(category, trigger, applyRemoval);
+        return;
+      }
+      applyRemoval();
+    },
+    [getValues, onCategoryRemoved, onRemoveRequested, removeCategory],
+  );
+  const updateForIkizamaChange = useCallback(
+    (nextIkizamaId: string | null) => {
       const nextExclusiveCategory =
         getIkizamaExclusiveItemCategory(nextIkizamaId);
       const categories = getValues("specialItems.categories");
@@ -214,5 +233,33 @@ export default function useSpecialItemsSectionProps(
         { shouldDirty: true, shouldValidate: true },
       );
     },
-  };
+    [getValues, setValue],
+  );
+  const sectionProps = useMemo(
+    () => ({
+      exclusiveCategory,
+      ikizamaName,
+      onAddCategory,
+      onRemoveCategory,
+      visibleCategories,
+    }),
+    [
+      exclusiveCategory,
+      ikizamaName,
+      onAddCategory,
+      onRemoveCategory,
+      visibleCategories,
+    ],
+  );
+  const presenterState = useMemo(
+    () => ({
+      maximumHealthBonus,
+      sectionProps,
+      spentCredit,
+      updateForIkizamaChange,
+    }),
+    [maximumHealthBonus, sectionProps, spentCredit, updateForIkizamaChange],
+  );
+
+  return presenterState;
 }

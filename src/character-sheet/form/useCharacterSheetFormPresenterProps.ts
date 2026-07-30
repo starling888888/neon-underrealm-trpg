@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import { type RefObject, useCallback, useMemo } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
 import type { CyberneticsPickerTarget } from "../components/CyberneticsSection";
@@ -88,6 +88,8 @@ type CharacterSheetPresenterOptions = {
   ) => void;
 };
 
+const noop = () => {};
+
 export type CharacterSheetContainerPresenterState =
   CharacterSheetFormPresenterProps & {
     errorSummary: CharacterSheetErrorSummary;
@@ -141,19 +143,32 @@ export default function useCharacterSheetFormPresenterProps(
     formRestoreReturnFocusRef,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
+  const commonSkillPickerRequest = onCommonSkillPickerRequested ?? noop;
+  const otherRyugiSkillPickerRequest = onOtherRyugiSkillPickerRequested ?? noop;
+  const primarySkillPickerRequest = onPrimarySkillPickerRequested ?? noop;
+  const ikizamaSkillPickerRequest = onIkizamaSkillPickerRequested ?? noop;
+  const armorPickerRequest = onArmorPickerRequested ?? noop;
+  const cyberneticsPickerRequest = onCyberneticsPickerRequested ?? noop;
+  const drugsPickerRequest = onDrugsPickerRequested ?? noop;
+  const nanomachinesPickerRequest = onNanomachinesPickerRequested ?? noop;
+  const omamoriPickerRequest = onOmamoriPickerRequested ?? noop;
+  const weaponPickerRequest = onWeaponPickerRequested ?? noop;
   const commonSkills = useCommonSkillsSectionProps(form, {
-    onPickerRequest: onCommonSkillPickerRequested ?? (() => {}),
+    onPickerRequest: commonSkillPickerRequest,
   });
   const otherRyugiSkills = useOtherRyugiSkillsSectionProps(form, {
-    onPickerRequest: onOtherRyugiSkillPickerRequested ?? (() => {}),
+    onPickerRequest: otherRyugiSkillPickerRequest,
   });
   const specialItems = useSpecialItemsSectionProps(form, {
     onCategoryRemoved: onSpecialItemCategoryRemoved,
     onRemoveRequested: onSpecialItemCategoryRemoveRequested,
   });
-  const build = useBuildSectionProps(form, {
-    commonSkillLevelTotal: commonSkills.sectionProps.selectedLevelTotal,
-    onIkizamaChangeRequested: (ikizamaId, trigger, applyChange) => {
+  const onIkizamaChange = useCallback(
+    (
+      ikizamaId: string | null,
+      trigger: HTMLSelectElement,
+      applyChange: () => void,
+    ) => {
       const applyChangeAndUpdateCategories = () => {
         specialItems.updateForIkizamaChange(ikizamaId);
         applyChange();
@@ -168,12 +183,29 @@ export default function useCharacterSheetFormPresenterProps(
       }
       applyChangeAndUpdateCategories();
     },
-    onOtherRyugiAdded: otherRyugiSkills.addInitialRow,
-    otherRyugiAddButtonRef,
-    onOtherRyugiChangeRequested,
-    onOtherRyugiRemoveRequested,
-    onPrimaryRyugiChangeRequested,
-  });
+    [onIkizamaChangeRequested, specialItems.updateForIkizamaChange],
+  );
+  const buildOptions = useMemo(
+    () => ({
+      commonSkillLevelTotal: commonSkills.sectionProps.selectedLevelTotal,
+      onIkizamaChangeRequested: onIkizamaChange,
+      onOtherRyugiAdded: otherRyugiSkills.addInitialRow,
+      otherRyugiAddButtonRef,
+      onOtherRyugiChangeRequested,
+      onOtherRyugiRemoveRequested,
+      onPrimaryRyugiChangeRequested,
+    }),
+    [
+      commonSkills.sectionProps.selectedLevelTotal,
+      onIkizamaChange,
+      onOtherRyugiChangeRequested,
+      onOtherRyugiRemoveRequested,
+      onPrimaryRyugiChangeRequested,
+      otherRyugiAddButtonRef,
+      otherRyugiSkills.addInitialRow,
+    ],
+  );
+  const build = useBuildSectionProps(form, buildOptions);
   const secondaryAttributes = useSecondaryAttributesSectionProps(
     form,
     build.derivedBuild,
@@ -186,13 +218,13 @@ export default function useCharacterSheetFormPresenterProps(
   );
   const checksSection = useChecksSectionProps(form, build.derivedBuild);
   const cybernetics = useCyberneticsSectionProps(form, build.derivedBuild, {
-    onPickerRequest: onCyberneticsPickerRequested ?? (() => {}),
+    onPickerRequest: cyberneticsPickerRequest,
   });
   const nanomachines = useNanomachinesSectionProps(form, build.derivedBuild, {
-    onPickerRequest: onNanomachinesPickerRequested ?? (() => {}),
+    onPickerRequest: nanomachinesPickerRequest,
   });
   const drugs = useDrugsSectionProps(form, {
-    onPickerRequest: onDrugsPickerRequested ?? (() => {}),
+    onPickerRequest: drugsPickerRequest,
   });
   const profileSection = useProfileSectionProps(
     form,
@@ -206,17 +238,17 @@ export default function useCharacterSheetFormPresenterProps(
     formRestoreReturnFocusRef,
   );
   const primarySkills = usePrimarySkillsSectionProps(form, {
-    onPickerRequest: onPrimarySkillPickerRequested ?? (() => {}),
+    onPickerRequest: primarySkillPickerRequest,
   });
   const ikizamaSkills = useIkizamaSkillsSectionProps(form, {
-    onPickerRequest: onIkizamaSkillPickerRequested ?? (() => {}),
+    onPickerRequest: ikizamaSkillPickerRequest,
   });
   const weaponsAndArmor = useWeaponsAndArmorSectionProps(form, {
-    onArmorPickerRequest: onArmorPickerRequested ?? (() => {}),
-    onWeaponPickerRequest: onWeaponPickerRequested ?? (() => {}),
+    onArmorPickerRequest: armorPickerRequest,
+    onWeaponPickerRequest: weaponPickerRequest,
   });
   const omamori = useOmamoriSectionProps(form, {
-    onPickerRequest: onOmamoriPickerRequested ?? (() => {}),
+    onPickerRequest: omamoriPickerRequest,
   });
   const errorSummary = useCharacterSheetErrorSummary({
     bondsSection,
@@ -230,10 +262,8 @@ export default function useCharacterSheetFormPresenterProps(
     primarySkills,
     profileSection,
   });
-
-  return {
-    bondsSection,
-    buildSection: {
+  const buildSection = useMemo(
+    () => ({
       ...build.sectionProps,
       hasIkizamaSkillLevelError:
         ikizamaSkills.sectionProps.hasIkizamaSkillLevelTotalError,
@@ -244,7 +274,19 @@ export default function useCharacterSheetFormPresenterProps(
       hasPrimarySkillLevelError:
         primarySkills.sectionProps.hasPrimarySkillLevelTotalError,
       unlockedCommonSkillBonusLevels: commonSkills.unlockedBonusLevels,
-    },
+    }),
+    [
+      build.sectionProps,
+      commonSkills.unlockedBonusLevels,
+      ikizamaSkills.sectionProps.hasIkizamaSkillLevelTotalError,
+      otherRyugiSkills.sectionProps.sections,
+      primarySkills.sectionProps.hasPrimarySkillLevelTotalError,
+    ],
+  );
+
+  return {
+    bondsSection,
+    buildSection,
     checksSection,
     cyberneticsSection: cybernetics,
     drugsSection: drugs,
