@@ -105,8 +105,8 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 ## 完了条件
 
 - [x] G30が完了し、その確定事項が親Gate planへ記録されている。
-- [ ] キャラクターシートアーキテクチャのE2E責務と全named E2E scenarioを照合し、詳細シナリオの実装過多を解消している。
-- [ ] browser-onlyの主要導線だけをE2Eで確認している。
+- [x] キャラクターシートアーキテクチャのE2E責務と全named E2E scenarioを照合し、詳細シナリオの実装過多を解消している。
+- [x] browser-onlyの主要導線だけをE2Eで確認している。
 - [x] dictionaryでゲームドメイン用語と汎用UI文言が整理され、可視文言を変えていない。
 - [x] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
 - [ ] `canonical-snapshots/visual/**` のGit管理を解除し、local-onlyのignore規則を確認している。
@@ -117,7 +117,7 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [ ] 関連TODOを扱った結果または未対応理由が記録されている。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
-- [x] 整理後の`npm run test:e2e`が通る。
+- [ ] 整理後の`npm run test:e2e`が通る。
 
 ## チェックポイント
 
