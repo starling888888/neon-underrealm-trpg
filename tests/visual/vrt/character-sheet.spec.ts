@@ -99,6 +99,31 @@ async function selectCybernetic(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
+async function restoreFixedCyberneticPartMismatch(page: Page): Promise<void> {
+  await addSpecialItemCategory(page, "サイバネ");
+  await cyberneticsSection
+    .resolve(page)
+    .getByRole("button", { exact: true, name: "その他1：サイバネを選択" })
+    .click();
+  const picker = page.getByRole("dialog", {
+    exact: true,
+    name: "サイバネを選択",
+  });
+  await picker
+    .getByRole("button", { exact: true, name: "ガードアーム" })
+    .click();
+  await page.waitForTimeout(250);
+  await page.evaluate(() => {
+    const storageKey = "neon-underrealm-character-sheet-form";
+    const stored = localStorage.getItem(storageKey);
+    if (stored === null) throw new Error("Expected a saved character sheet.");
+    const values = JSON.parse(stored);
+    values.cybernetics.headId = values.cybernetics.otherRows[0].cyberneticId;
+    localStorage.setItem(storageKey, JSON.stringify(values));
+  });
+  await page.reload();
+}
+
 async function openNanomachinePicker(page: Page): Promise<void> {
   await addSpecialItemCategory(page, "ナノマシン");
   await nanomachinesSection
@@ -612,6 +637,13 @@ registerCharacterSheetVrtScenarios([
         .first()
         .fill("20");
     },
+    route: visualRoutes.characterSheet,
+  },
+  {
+    id: "cybernetics-part-error",
+    kind: "section",
+    locator: cyberneticsSection,
+    prepare: restoreFixedCyberneticPartMismatch,
     route: visualRoutes.characterSheet,
   },
   {

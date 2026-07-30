@@ -317,7 +317,7 @@ const characterSheetFormShape = {
 
 const characterSheetFormBaseSchema = z.object(characterSheetFormShape);
 
-function addRowIdentityIssues(
+function addRestoreIntegrityIssues(
   values: z.infer<typeof characterSheetFormBaseSchema>,
   context: z.RefinementCtx,
 ): void {
@@ -370,11 +370,22 @@ function addRowIdentityIssues(
       });
     }
   });
+
+  if (
+    new Set(values.specialItems.categories).size !==
+    values.specialItems.categories.length
+  ) {
+    context.addIssue({
+      code: "custom",
+      message: "Special item categories must not repeat.",
+      path: ["specialItems", "categories"],
+    });
+  }
 }
 
 /** Validates persisted input before restore-only master-data normalization. */
 export const characterSheetRestoreInputSchema =
-  characterSheetFormBaseSchema.superRefine(addRowIdentityIssues);
+  characterSheetFormBaseSchema.superRefine(addRestoreIntegrityIssues);
 
 export const characterSheetFormSchema =
   characterSheetRestoreInputSchema.superRefine((values, context) => {
@@ -410,17 +421,6 @@ export const characterSheetFormSchema =
           path: ["drugs", "rows", index, "drugId"],
         });
       }
-    }
-
-    if (
-      new Set(values.specialItems.categories).size !==
-      values.specialItems.categories.length
-    ) {
-      context.addIssue({
-        code: "custom",
-        message: "Special item categories must not repeat.",
-        path: ["specialItems", "categories"],
-      });
     }
   });
 

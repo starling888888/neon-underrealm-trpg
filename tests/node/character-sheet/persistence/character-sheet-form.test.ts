@@ -53,6 +53,13 @@ describe("character sheet form persistence", () => {
       parseCharacterSheetRestoreJson(JSON.stringify(invalidReactionRow)),
       null,
     );
+
+    const duplicateCategories = structuredClone(characterSheetDefaultValues);
+    duplicateCategories.specialItems.categories = ["omamori", "omamori"];
+    assert.equal(
+      parseCharacterSheetRestoreJson(JSON.stringify(duplicateCategories)),
+      null,
+    );
   });
 
   it("keeps game-rule errors while restoring a structurally valid draft", () => {

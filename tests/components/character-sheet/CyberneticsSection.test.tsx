@@ -125,4 +125,20 @@ describe("CyberneticsSection", () => {
       "-1",
     );
   });
+
+  it("exposes a fixed-part mismatch as a local invalid row", () => {
+    const props = createProps();
+    const [head, ...remainingRows] = props.fixedRows;
+    if (head === undefined) throw new Error("頭部サイバネがありません。");
+    props.fixedRows = [{ ...head, hasPartError: true }, ...remainingRows];
+    render(<CyberneticsSection {...props} />);
+
+    const picker = screen.getByRole("button", {
+      name: `頭：${head.cybernetic?.name}`,
+    });
+    expect(picker.getAttribute("aria-invalid")).toBe("true");
+    expect(
+      picker.closest("[data-cybernetics-row]")?.getAttribute("data-invalid"),
+    ).toBe("true");
+  });
 });

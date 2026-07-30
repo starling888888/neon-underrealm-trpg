@@ -19,6 +19,31 @@ async function addSpecialItemCategory(page: Page, name: string): Promise<void> {
     .click();
 }
 
+async function restoreFixedCyberneticPartMismatch(page: Page): Promise<void> {
+  await addSpecialItemCategory(page, "サイバネ");
+  const cybernetics = page.locator("[data-cybernetics-section]");
+  await cybernetics
+    .getByRole("button", { exact: true, name: "その他1：サイバネを選択" })
+    .click();
+  const picker = page.getByRole("dialog", {
+    exact: true,
+    name: "サイバネを選択",
+  });
+  await picker
+    .getByRole("button", { exact: true, name: "ガードアーム" })
+    .click();
+  await page.waitForTimeout(250);
+  await page.evaluate(() => {
+    const storageKey = "neon-underrealm-character-sheet-form";
+    const stored = localStorage.getItem(storageKey);
+    if (stored === null) throw new Error("Expected a saved character sheet.");
+    const values = JSON.parse(stored);
+    values.cybernetics.headId = values.cybernetics.otherRows[0].cyberneticId;
+    localStorage.setItem(storageKey, JSON.stringify(values));
+  });
+  await page.reload();
+}
+
 test.describe("character sheet page", () => {
   test("rejects a malformed saved form without changing the initial form", async ({
     page,
@@ -36,7 +61,42 @@ test.describe("character sheet page", () => {
     await expect(dialog.getByRole("button", { name: "確認" })).toBeVisible();
     await dialog.getByRole("button", { name: "確認" }).click();
     await expect(dialog).toBeHidden();
-    await expect(page.getByLabel("PC名", { exact: true })).toHaveValue("");
+    const pcName = page.getByLabel("PC名", { exact: true });
+    await expect(pcName).toHaveValue("");
+    await expect(pcName).toBeFocused();
+  });
+
+  test("returns focus after dismissing the restore error dialog with Escape", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("neon-underrealm-character-sheet-form", "{");
+    });
+    await page.goto("character-sheet/");
+
+    const dialog = page.getByRole("dialog", { name: "自動復元の失敗" });
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(page.getByLabel("PC名", { exact: true })).toBeFocused();
+  });
+
+  test("restores an incompatible fixed cybernetic as a local row error", async ({
+    page,
+  }) => {
+    await page.goto("character-sheet/");
+    await restoreFixedCyberneticPartMismatch(page);
+
+    const cybernetics = page.locator("[data-cybernetics-section]");
+    const picker = cybernetics.getByRole("button", {
+      exact: true,
+      name: "頭：ガードアーム",
+    });
+    await expect(picker).toHaveAttribute("aria-invalid", "true");
+    await expect(picker.locator("xpath=ancestor::fieldset")).toHaveAttribute(
+      "data-invalid",
+      "true",
+    );
   });
 
   test("keeps action mocks side-effect free and opens the responsive menu", async ({

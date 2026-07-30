@@ -263,6 +263,7 @@
 - 現在のエラーと警告の概要、および該当行・該当セクションを特定できる表示。色だけに依存しない。
 - ブラウザ内の最新1キャラクター自動保存・復元。復元完了前に保存済みデータを上書きしない状態を伝える。
 - 構造・型・現在のマスタIDとの照合に失敗して自動復元できない場合は、title / headerなしの既存dialogで本文「自動復元に失敗しました。」と`確認`buttonだけを表示する。確認後は初期フォーム値を編集できる。localStorage APIの読取り・書込み例外は`console.error`だけで握りつぶし、dialogを表示しない。
+- VRTは`@persistence-restore-error`と`@cybernetics-part-error`で、復元失敗dialogおよび復元後の固定サイバネ部位errorをdesktop / tablet / mobileの局所snapshotとして比較する。
 - JSON export、現在状態の置換確認を伴うJSON import、編集内容を維持する失敗フィードバック、確認を伴う全消去
 - CCFOLIAキャラクターデータのcopy操作、およびClipboard APIの成功・失敗フィードバック
 - スキルとアイテム効果は現在のマスタデータを参照するため、ルール更新に伴い表示が変わりうることを説明するhelp

@@ -105,6 +105,60 @@ describe("useCharacterSheetRootState", () => {
     );
   });
 
+  it("writes a changed form after the debounce delay", async () => {
+    const writeCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+    vi.useFakeTimers();
+    act(() => {
+      result.current.form.setValue("profile.pcName", "自動保存PC");
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(writeCharacterSheetForm).toHaveBeenCalledWith(
+      window.localStorage,
+      expect.objectContaining({
+        profile: expect.objectContaining({ pcName: "自動保存PC" }),
+      }),
+    );
+    vi.useRealTimers();
+  });
+
+  it("logs a write exception while retaining the current edit state", async () => {
+    const error = new Error("storage write failed");
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeCharacterSheetForm: vi.fn(() => {
+          throw error;
+        }),
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+    vi.useFakeTimers();
+    act(() => {
+      result.current.form.setValue("profile.pcName", "保持するPC");
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(consoleError).toHaveBeenCalledWith(error);
+    expect(result.current.form.getValues("profile.pcName")).toBe("保持するPC");
+    consoleError.mockRestore();
+    vi.useRealTimers();
+  });
+
   it("logs localStorage exceptions without opening the restore error dialog", async () => {
     const error = new Error("storage unavailable");
     const consoleError = vi
