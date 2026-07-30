@@ -37,7 +37,7 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 | データ境界                 | JSONのフォーム値はpersistence / schema、画像はbrowser / image adapterで別々に扱う。読み取り専用master-data lookupをshared restore adapter内だけで使う。                                                       | `logic/`へmaster ID解決、JSON file API、画像base64検証、永続化副作用を混ぜない。画像recordをlocalStorageやRHFへ混在させない。         | Node、hook                                     |
 | 自動保存と復元             | 確認後のフォーム置換をG24と同じ復元・自動保存接続へ渡し、画像処理を独立して完了させる。画像初期復元が完了するまでJSON入力を開始可能にしない。                                                                 | localStorageの初回復元・削除・例外通知方式を変更しない。画像検証・IndexedDB失敗でフォーム復元を巻き戻さない。                         | Node、hook、browser behavior                   |
 | JSON入出力フォーマット     | 現行のトップレベルフォーム値と`imageBase64String`だけを検証・入力する。`null` / property欠落は画像なしとしてIndexedDB recordを削除し、成功時だけ未選択表示にする。                                            | schema version、旧形式互換、移行、派生値、UI state、master data、画像永続化metadataを追加しない。                                     | Node、hook、browser behavior                   |
-| テスト層と配置             | schema / restore / image検証はNode、Container結線はhook、確認・file選択・dialog・focus・responsive操作導線はbrowser behaviorと最小E2Eで確認する。ユーザーレビュー後だけ対象VRTとactual screenshotを確認する。 | VRTでJSON構造、画像decode、状態置換の正しさを代替確認しない。canonical baselineを更新しない。                                         | Node、hook、browser behavior、最小E2E、限定VRT |
+| テスト層と配置             | schema / restore / image検証はNode、Container結線はhook、確認・file選択・dialog・focus・responsive操作導線はbrowser behaviorと最小E2Eで確認する。ユーザーレビュー後だけ対象VRTとactual screenshotを確認する。 | VRTでJSON構造、画像decode、状態置換の正しさを代替確認しない。ユーザーが明示承認した対象baselineだけを更新する。                       | Node、hook、browser behavior、最小E2E、限定VRT |
 
 ## 対象範囲
 
@@ -50,40 +50,40 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 - 画像文字列が正しい場合は、G6のIndexedDB image adapterを通して画像を復元する。画像が不正な場合も、JSON importの置換対象として先に既存のIndexedDB image recordを削除し、visible title / headerなしの既存dialogで「入力データの画像に誤りがあり表示できませんでした。」と`確認`だけを表示する。フォーム復元後も編集を続行できる。
 - `null` / `undefined`からの画像record削除、不正画像時の画像record削除、または正しい画像のIndexedDB書込みが技術的に失敗した場合も、フォーム復元を巻き戻さない。画像表示は削除または書込みの成功時だけ切り替える。`null` / `undefined`自体を入力データの画像エラーとして通知しない。
 - 既存の操作ロック、loading、dialogのEscape・可視dismiss・focus復帰、desktop操作ペインとtablet / mobile menuのresponsive配置を維持する。JSON入力が表示する確認・失敗・画像失敗のdialog stateはRHF、localStorage、JSONへ含めない。
-- 現行形式のJSON入力と画像処理のNode / hook / browser behaviorテスト、および変更stateを含む最小限のE2Eを追加・更新する。UI変更のため、ユーザーレビュー完了後にだけG27の対象state・desktop / tablet / mobileへ限定したVRTとactual screenshot確認を行い、canonical VRT baselineは更新しない。
+- 現行形式のJSON入力と画像処理のNode / hook / browser behaviorテスト、および変更stateを含む最小限のE2Eを追加・更新する。UI変更のため、ユーザーレビュー完了後にだけG27の対象state・desktop / tablet / mobileへ限定したVRTとactual screenshot確認を行う。2026-07-30のユーザー明示承認により、このGateの追加targetだけcanonical VRT baselineを更新する。
 
 ## 初期スコープ外
 
 - JSON schema version、旧形式互換、移行、複数ファイルの一括入力、クラウド保存、共有、サーバー処理を追加しない。
 - G24のlocalStorage保存・復元契約、G6の通常の画像選択・変換・容量制限、G25のerror summary、G28のCCFOLIA出力、G29の全消去を変更しない。
 - 画像が不正なとき、フォーム値の復元を取り消す、部分的に巻き戻す、またはJSONファイルを書き換える処理を追加しない。
-- ブラウザ組み込みの`alert` / `confirm`、別の編集state store、不要な依存ライブラリ、canonical VRT baseline更新を追加しない。
+- ブラウザ組み込みの`alert` / `confirm`、別の編集state store、不要な依存ライブラリを追加しない。canonical VRT baselineは、2026-07-30のユーザー明示承認による対象dialog 3 state以外は更新しない。
 
 ## 完了条件
 
-- [ ] G26の現行JSON形式をファイルから読み、構造・型として有効なフォーム値だけを確認後に一括復元できる。
-- [ ] 不正JSON、復元不能な構造・identity、関連row参照、重複categoryでは、フォーム、localStorage、画像recordを変更せず、既存のJSON入力失敗通知を表示する。
-- [ ] 確認dialogのキャンセルとEscapeでは現在のフォーム・端末内保存・画像を維持し、確認時だけフォームと端末内保存を置換する。
-- [ ] `imageBase64String`が`null`または`undefined`ならエラーにせず、画像なしをG24のrecord不在と同じ未選択状態として反映する。
-- [ ] `null`または`undefined`の確認後はIndexedDB image recordを削除し、削除成功時だけ画像を未選択へ切り替える。次回マウント時に削除前の画像を再表示しない。
-- [ ] `imageBase64String`が非nullなら必ず`String`変換後にWebP base64として独立検証し、正しい画像だけをIndexedDB経由で復元する。
-- [ ] 不正な画像文字列、数値、objectなどはフォーム値の復元を妨げず、既存のIndexedDB image recordを削除したうえで、title / headerなしの画像エラーdialog本文「入力データの画像に誤りがあり表示できませんでした。」と`確認`だけを表示する。
-- [ ] G24のunknown ID除外、最小行補完、row identity、`useFieldArray`、uncontrolled inputの`reset`同期、ゲーム上の不整合値の局所error表示をJSON入力でも維持する。
-- [ ] JSON入力の確認・失敗・画像失敗のdialogが、Escape、visible dismiss、操作元へのfocus復帰、操作ロックを既存dialog契約どおり維持する。
+- [x] G26の現行JSON形式をファイルから読み、構造・型として有効なフォーム値だけを確認後に一括復元できる。
+- [x] 不正JSON、復元不能な構造・identity、関連row参照、重複categoryでは、フォーム、localStorage、画像recordを変更せず、既存のJSON入力失敗通知を表示する。
+- [x] 確認dialogのキャンセルとEscapeでは現在のフォーム・端末内保存・画像を維持し、確認時だけフォームと端末内保存を置換する。
+- [x] `imageBase64String`が`null`または`undefined`ならエラーにせず、画像なしをG24のrecord不在と同じ未選択状態として反映する。
+- [x] `null`または`undefined`の確認後はIndexedDB image recordを削除し、削除成功時だけ画像を未選択へ切り替える。次回マウント時に削除前の画像を再表示しない。
+- [x] `imageBase64String`が非nullなら必ず`String`変換後にWebP base64として独立検証し、正しい画像だけをIndexedDB経由で復元する。
+- [x] 不正な画像文字列、数値、objectなどはフォーム値の復元を妨げず、既存のIndexedDB image recordを削除したうえで、title / headerなしの画像エラーdialog本文「入力データの画像に誤りがあり表示できませんでした。」と`確認`だけを表示する。
+- [x] G24のunknown ID除外、最小行補完、row identity、`useFieldArray`、uncontrolled inputの`reset`同期、ゲーム上の不整合値の局所error表示をJSON入力でも維持する。
+- [x] JSON入力の確認・失敗・画像失敗のdialogが、Escape、visible dismiss、操作元へのfocus復帰、操作ロックを既存dialog契約どおり維持する。
 - [ ] 画像初期復元中はJSON入力を開始できず、初期読込みがJSON入力後の画像状態を上書きしない。`null`削除失敗、不正画像時の削除失敗、正しい画像の書込み失敗のいずれもフォーム復元を維持する。
-- [ ] 関連TODOを確認し、schema version互換性をこのGateへ混在させない理由を記録する。
-- [ ] 対象のNode / hook / browser behavior testと、必要な最小E2Eが通る。
-- [ ] ユーザーレビュー後に対象VRTのactual screenshotをdesktop / tablet / mobileで開いて確認し、canonical VRT baselineを更新していない。
-- [ ] `npm run check` と `npm run build` が通る。
+- [x] 関連TODOを確認し、schema version互換性をこのGateへ混在させない理由を記録する。
+- [x] 対象のNode / hook / browser behavior testと、必要な最小E2Eが通る。
+- [x] ユーザーレビュー後に対象VRTのactual screenshotをdesktop / tablet / mobileで開いて確認し、ユーザー明示承認によるcanonical VRT baselineを更新した。
+- [x] `npm run check` と `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] `CharacterSheetContainer`だけがRHF、browser file API、画像adapter、dialog / loading stateの結線を担い、表示Componentがbrowser APIや保存処理へ直接アクセスしない。
-- [ ] JSON入力はshared restore adapterを再利用し、localStorage固有の読取り・削除や初回自動復元の副作用を持ち込まない。
-- [ ] フォーム復元と画像検証・復元の失敗境界が独立し、画像不正をフォーム復元失敗として扱わない。
-- [ ] 既存route、GitHub Pagesのsubpath公開、G6画像復元、G24自動保存、G25 error summary、G26 JSON出力を壊さない。
-- [ ] 不要な依存関係を追加せず、初期スコープ外の機能を実装しない。
-- [ ] `docs/design/character-sheet/notes.md`のdesktop / tablet / mobile操作領域とdialog契約を維持する。
+- [x] `CharacterSheetContainer`だけがRHF、browser file API、画像adapter、dialog / loading stateの結線を担い、表示Componentがbrowser APIや保存処理へ直接アクセスしない。
+- [x] JSON入力はshared restore adapterを再利用し、localStorage固有の読取り・削除や初回自動復元の副作用を持ち込まない。
+- [x] フォーム復元と画像検証・復元の失敗境界が独立し、画像不正をフォーム復元失敗として扱わない。
+- [x] 既存route、GitHub Pagesのsubpath公開、G6画像復元、G24自動保存、G25 error summary、G26 JSON出力を壊さない。
+- [x] 不要な依存関係を追加せず、初期スコープ外の機能を実装しない。
+- [x] `docs/design/character-sheet/notes.md`のdesktop / tablet / mobile操作領域とdialog契約を維持する。
 - [ ] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
@@ -104,7 +104,7 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 - 不正画像でも正常なフォーム値を復元する一方、構造不正なフォーム値では一切置換しない、失敗境界が明確か。
 - `String(value)`後のWebP base64検証と、不正時の既存画像削除・titleなし通知の組み合わせが、JSON importの置換契約と整合するか。
 - JSON入力の確認、失敗通知、画像失敗通知がdesktop / tablet / mobileの既存操作導線・dialog focus契約に収まり、schema version対応などへscopeが広がっていないか。
-- VRTはユーザーレビュー後の変更targetだけに限定し、baseline更新を行わない計画でよいか。
+- VRTはユーザーレビュー後の変更targetだけに限定し、ユーザー承認済みのdialog 3 stateだけbaselineを更新する。
 
 ## 備考
 
@@ -112,3 +112,17 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 - `imageBase64String`はG26が出力する`null`またはbase64文字列に加え、手編集JSONの`undefined`相当（property欠落）をエラーにしない。確認後はproperty欠落も`null`と同様に既存image recordを削除する。JSONとして表現できるobjectやnumberは、JSON parserを経由して取得できる非null値として`String`変換して画像専用検証する。
 - JSON parserで表現できるobjectやnumberの`imageBase64String`は、フォーム値の成否と切り離して画像不正として通知する。不正画像もJSON importの画像置換対象なので、既存image recordを削除する。画像復元・削除・検証の例外も同じくフォーム値の復元を巻き戻さない。
 - JSON schema versionの将来互換は`docs/TODO.md`に残し、現行形式として処理できないフォーム値は要件どおり一律エラーにする。
+
+## 実装中の検証記録
+
+- 2026-07-30: G27のJSON入力確認dialogで、既存Component test harnessが返す未定義の`pendingJsonImport`をopenとして扱ったため、`npm run test`と`npm run test:component`が既存dialog / action menuの3件で失敗した。open判定を`pendingJsonImport != null`へ修正してから再確認する。詳細は`docs/agent-failure-log.md`に記録した。
+- 2026-07-30: `npm run check`、`npm run test`、`npm run build`が通った。追加・更新したNode、hook、Component testを含む通常testは通過した。UI Gateのbrowser E2EとVRTは親planの手順に従い、ユーザーレビュー完了後に実行する。
+
+## ビジュアルレビュー 1
+
+- user approval: 2026-07-30にユーザーがG27のE2E実行、対象VRT baselineの追加・更新を明示承認した。
+- target: `character-sheet` の `json-import-confirm`、`json-import-error`、`json-import-image-error` dialog。JSON構造・画像decode・フォーム置換の正しさはNode / hook / E2Eで確認し、VRTでは代替していない。
+- states / viewports: 各dialogをdesktop（1440px）、tablet（820px）、mobile（390px）で確認した。
+- actual screenshot: `test-results/visual/character-sheet/dialogs/json-import-{confirm,error,image-error}-{desktop,tablet,mobile}.png`を原寸で開き、確認dialogの`キャンセル` / `インポート`、失敗dialogのtitleなし本文と`確認`button、mobileの折返しとdialog内収まりを確認した。
+- baseline: ユーザー承認範囲の9枚を`canonical-snapshots/visual/character-sheet/dialogs/`へ追加した。
+- commands: `npm run visual:capture -- --grep 'json-import'`、`npm run visual:update -- --grep 'json-import'`、`npm run visual:test -- --grep 'json-import'`（9 passed）。`npm run test:e2e`（64 passed）でも、確認dialogのキャンセル / Escape / focus復帰、復元、不正画像通知とdismiss後のfocus復帰を確認した。

@@ -23,6 +23,29 @@ export function validateCharacterImageFile(file: ImageFile): void {
   }
 }
 
+/** Checks that an exported image string is base64-encoded WebP data. */
+export function isWebpBase64(base64: string): boolean {
+  if (
+    !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(
+      base64,
+    )
+  ) {
+    return false;
+  }
+
+  try {
+    const bytes = atob(base64);
+
+    return (
+      bytes.length >= 12 &&
+      bytes.slice(0, 4) === "RIFF" &&
+      bytes.slice(8, 12) === "WEBP"
+    );
+  } catch {
+    return false;
+  }
+}
+
 function loadImage(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
@@ -51,6 +74,19 @@ export function decodeCharacterImageRecord(
     image.onload = () => resolve();
     image.src = characterImageDataUrl(record);
   });
+}
+
+/** Validates an imported image independently from imported form values. */
+export async function decodeImportedCharacterImage(
+  base64: string,
+): Promise<CharacterImageRecord> {
+  if (!isWebpBase64(base64)) {
+    throw new CharacterImageError("decode");
+  }
+
+  const record = { base64, mimeType: characterImageMimeType } as const;
+  await decodeCharacterImageRecord(record);
+  return record;
 }
 
 function toBase64(dataUrl: string): string {

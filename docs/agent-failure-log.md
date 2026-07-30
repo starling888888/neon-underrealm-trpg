@@ -89,6 +89,15 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Let an optional mocked root-state value open a dialog during component tests
+
+#### 2026-07-30
+
+- source: self
+- 発生箇所: `CharacterSheetContainer`のG27 JSON入力確認dialogのopen判定、および`npm run test` / `npm run test:component`
+- 観測した失敗: 新設した`pendingJsonImport !== null`は既存Component test harnessの`undefined`をopenとして扱い、操作menuのEscape testと既存の変更確認dialog testを失敗させた。同じComponent test失敗を全体testと個別testで2回実行した。
+- 一次対応: open判定を`pendingJsonImport != null`へ変更し、optionalな旧test harnessをclosed stateとして扱うようにした。再実行前にfailure logとcurrent Gate issueへ記録した。
+
 ### Re-ran the JSON download test after fixing the wrong fixture cast
 
 #### 2026-07-30

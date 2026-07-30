@@ -9,7 +9,10 @@ import {
   writeCharacterSheetForm,
 } from "../../../../src/character-sheet/persistence/character-sheet-form";
 import { characterSheetFormSchema } from "../../../../src/character-sheet/schemas/character-sheet-form";
-import { parseCharacterSheetRestoreJson } from "../../../../src/character-sheet/schemas/character-sheet-persistence";
+import {
+  parseCharacterSheetJsonImport,
+  parseCharacterSheetRestoreJson,
+} from "../../../../src/character-sheet/schemas/character-sheet-persistence";
 
 describe("character sheet form persistence", () => {
   it("round-trips a valid form snapshot", () => {
@@ -36,6 +39,32 @@ describe("character sheet form persistence", () => {
       parseCharacterSheetRestoreJson(JSON.stringify({ profile: null })),
       null,
     );
+  });
+
+  it("extracts an import image without including it in form validation", () => {
+    const snapshot = {
+      ...characterSheetDefaultValues,
+      imageBase64String: { unexpected: "image value" },
+      profile: {
+        ...characterSheetDefaultValues.profile,
+        pcName: "JSON入力PC",
+      },
+    };
+
+    const parsed = parseCharacterSheetJsonImport(JSON.stringify(snapshot));
+    if (parsed === null) throw new Error("Expected a parsed JSON import.");
+
+    assert.equal(parsed.values.profile.pcName, "JSON入力PC");
+    assert.deepEqual(parsed.imageBase64String, { unexpected: "image value" });
+  });
+
+  it("accepts a missing image property as an image-less JSON import", () => {
+    const parsed = parseCharacterSheetJsonImport(
+      JSON.stringify(characterSheetDefaultValues),
+    );
+    if (parsed === null) throw new Error("Expected a parsed JSON import.");
+
+    assert.equal(parsed.imageBase64String, undefined);
   });
 
   it("rejects snapshots with broken row identity", () => {

@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+
 import { expect, type Page, test } from "@playwright/test";
 import { visualBaseUrl, visualViewports } from "./config";
 
@@ -163,6 +165,96 @@ test.describe("character sheet page", () => {
       await expect(menu).toBeHidden();
       await expect(trigger).toBeFocused();
     }
+  });
+
+  test("replaces form values from JSON and reports an invalid imported image", async ({
+    page,
+  }) => {
+    await page.goto("character-sheet/");
+
+    const downloadPromise = page.waitForEvent("download");
+    await page
+      .getByRole("button", { exact: true, name: "エクスポート" })
+      .click();
+    const download = await downloadPromise;
+    const downloadPath = await download.path();
+    if (downloadPath === null) throw new Error("Expected an exported JSON.");
+    const imported = JSON.parse(await readFile(downloadPath, "utf8")) as Record<
+      string,
+      unknown
+    >;
+    imported.profile = {
+      ...(imported.profile as Record<string, unknown>),
+      pcName: "JSON入力PC",
+    };
+
+    await page.getByRole("button", { exact: true, name: "インポート" }).click();
+    await page.locator('input[accept="application/json,.json"]').setInputFiles({
+      buffer: Buffer.from(JSON.stringify(imported)),
+      mimeType: "application/json",
+      name: "character.json",
+    });
+    const confirmDialog = page.getByRole("dialog", { name: "JSON入力の確認" });
+    await expect(confirmDialog).toBeVisible();
+    await confirmDialog
+      .getByRole("button", { exact: true, name: "キャンセル" })
+      .click();
+    await expect(confirmDialog).toBeHidden();
+    await expect(
+      page.getByRole("button", { exact: true, name: "インポート" }),
+    ).toBeFocused();
+
+    await page.getByRole("button", { exact: true, name: "インポート" }).click();
+    await page.locator('input[accept="application/json,.json"]').setInputFiles({
+      buffer: Buffer.from(JSON.stringify(imported)),
+      mimeType: "application/json",
+      name: "character.json",
+    });
+    await expect(confirmDialog).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(confirmDialog).toBeHidden();
+    await expect(
+      page.getByRole("button", { exact: true, name: "インポート" }),
+    ).toBeFocused();
+
+    await page.getByRole("button", { exact: true, name: "インポート" }).click();
+    await page.locator('input[accept="application/json,.json"]').setInputFiles({
+      buffer: Buffer.from(JSON.stringify(imported)),
+      mimeType: "application/json",
+      name: "character.json",
+    });
+    await expect(confirmDialog).toBeVisible();
+    await confirmDialog
+      .getByRole("button", { exact: true, name: "インポート" })
+      .click();
+    await expect(page.getByLabel("PC名", { exact: true })).toHaveValue(
+      "JSON入力PC",
+    );
+
+    imported.imageBase64String = 42;
+    await page.getByRole("button", { exact: true, name: "インポート" }).click();
+    await page.locator('input[accept="application/json,.json"]').setInputFiles({
+      buffer: Buffer.from(JSON.stringify(imported)),
+      mimeType: "application/json",
+      name: "broken-image.json",
+    });
+    await page
+      .getByRole("dialog", { name: "JSON入力の確認" })
+      .getByRole("button", { exact: true, name: "インポート" })
+      .click();
+    const imageError = page.getByRole("dialog", {
+      name: "入力データの画像の誤り",
+    });
+    await expect(imageError).toContainText(
+      "入力データの画像に誤りがあり表示できませんでした。",
+    );
+    await imageError.getByRole("button", { exact: true, name: "確認" }).click();
+    await expect(
+      page.getByRole("button", { exact: true, name: "インポート" }),
+    ).toBeFocused();
+    await expect(page.getByLabel("PC名", { exact: true })).toHaveValue(
+      "JSON入力PC",
+    );
   });
 
   test("dismisses an open dialog before the responsive action menu", async ({

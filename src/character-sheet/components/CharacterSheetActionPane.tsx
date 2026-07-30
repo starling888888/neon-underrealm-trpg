@@ -10,9 +10,11 @@ type CharacterSheetActionPaneProps = {
   errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
   errorSummary: CharacterSheetErrorSummary;
   isExportDisabled: boolean;
+  isImportDisabled: boolean;
   isMenuOpen: boolean;
   menuTriggerRef: RefObject<HTMLButtonElement | null>;
   onExport: () => void;
+  onImport: (trigger: HTMLButtonElement) => void;
   onMenuToggle: () => void;
   onReviewErrors: () => void;
 };
@@ -28,9 +30,11 @@ export default function CharacterSheetActionPane({
   errorReviewButtonRef,
   errorSummary,
   isExportDisabled,
+  isImportDisabled,
   isMenuOpen,
   menuTriggerRef,
   onExport,
+  onImport,
   onMenuToggle,
   onReviewErrors,
 }: CharacterSheetActionPaneProps) {
@@ -54,7 +58,11 @@ export default function CharacterSheetActionPane({
           >
             {actions.export}
           </CharacterSheetButton>
-          <CharacterSheetButton size="medium">
+          <CharacterSheetButton
+            disabled={isImportDisabled}
+            onClick={(event) => onImport(event.currentTarget)}
+            size="medium"
+          >
             {actions.import}
           </CharacterSheetButton>
           <CharacterSheetButton size="medium">
@@ -122,6 +130,8 @@ export default function CharacterSheetActionPane({
             </CharacterSheetButton>
             <CharacterSheetButton
               className={styles.menuActionButton}
+              disabled={isImportDisabled}
+              onClick={(event) => onImport(event.currentTarget)}
               size="medium"
             >
               {actions.import}

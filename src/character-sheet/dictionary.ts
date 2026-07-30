@@ -122,6 +122,16 @@ export const characterSheetDictionary = {
       replaceFile: "画像を差し替え",
       replaceFileOrDrop: "画像を差し替えまたはドロップ",
     },
+    jsonImport: {
+      confirm:
+        "JSONを読み込むと、現在の入力内容と保存済みデータが置き換わります。よろしいですか？",
+      confirmLabel: "JSON入力の確認",
+      error: "JSONを読み込めませんでした。ファイルの形式を確認してください。",
+      errorLabel: "JSON入力の失敗",
+      imageError: "入力データの画像に誤りがあり表示できませんでした。",
+      imageErrorLabel: "入力データの画像の誤り",
+      loading: "JSONを読み込んでいます",
+    },
     persistence: {
       restoreError: "自動復元に失敗しました。",
       restoreErrorDialogLabel: "自動復元の失敗",

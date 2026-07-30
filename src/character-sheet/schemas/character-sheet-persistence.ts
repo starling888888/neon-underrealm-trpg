@@ -171,3 +171,34 @@ export function parseCharacterSheetRestoreJson(
     return null;
   }
 }
+
+export type CharacterSheetJsonImport = {
+  imageBase64String: unknown;
+  values: CharacterSheetFormValues;
+};
+
+/** Parses the current JSON export shape without accepting image data as form data. */
+export function parseCharacterSheetJsonImport(
+  text: string,
+): CharacterSheetJsonImport | null {
+  try {
+    const parsed: unknown = JSON.parse(text);
+    if (
+      typeof parsed !== "object" ||
+      parsed === null ||
+      Array.isArray(parsed)
+    ) {
+      return null;
+    }
+
+    const { imageBase64String, ...formValue } = parsed as Record<
+      string,
+      unknown
+    >;
+    const values = parseCharacterSheetRestoreValue(formValue);
+
+    return values === null ? null : { imageBase64String, values };
+  } catch {
+    return null;
+  }
+}

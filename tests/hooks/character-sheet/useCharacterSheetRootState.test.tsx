@@ -94,6 +94,99 @@ describe("useCharacterSheetRootState", () => {
     expect(JSON.parse(exportedJson).imageBase64String).toBe(storedImage.base64);
   });
 
+  it("confirms JSON form replacement and clears an image-less import", async () => {
+    const values = structuredClone(characterSheetDefaultValues);
+    values.profile.pcName = "JSONから復元したPC";
+    const deleteCharacterImage = vi.fn(async () => {});
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        deleteCharacterImage,
+        readCharacterImage: vi.fn(async () => storedImage),
+        readCharacterSheetForm: vi.fn(() => null),
+        readCharacterSheetJsonFile: vi.fn(async () =>
+          JSON.stringify({ ...values, imageBase64String: null }),
+        ),
+        writeCharacterSheetForm: vi.fn(),
+      }),
+    );
+
+    await waitFor(() =>
+      expect(result.current.characterImage).toEqual(storedImage),
+    );
+
+    await act(async () => {
+      await result.current.onJsonImportFileSelected(createFile());
+    });
+
+    expect(result.current.pendingJsonImport).not.toBeNull();
+    await act(async () => {
+      await result.current.onJsonImportConfirmed();
+    });
+
+    expect(result.current.form.getValues("profile.pcName")).toBe(
+      "JSONから復元したPC",
+    );
+    expect(deleteCharacterImage).toHaveBeenCalledOnce();
+    expect(result.current.characterImage).toBeNull();
+  });
+
+  it("restores form data and removes the previous image for a malformed import image", async () => {
+    const values = structuredClone(characterSheetDefaultValues);
+    values.profile.pcName = "画像エラーでも復元するPC";
+    const deleteCharacterImage = vi.fn(async () => {});
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        decodeImportedCharacterImage: vi.fn(async () => {
+          throw new CharacterImageError("decode");
+        }),
+        deleteCharacterImage,
+        readCharacterImage: vi.fn(async () => storedImage),
+        readCharacterSheetForm: vi.fn(() => null),
+        readCharacterSheetJsonFile: vi.fn(async () =>
+          JSON.stringify({ ...values, imageBase64String: 123 }),
+        ),
+        writeCharacterSheetForm: vi.fn(),
+      }),
+    );
+
+    await waitFor(() =>
+      expect(result.current.characterImage).toEqual(storedImage),
+    );
+    await act(async () => {
+      await result.current.onJsonImportFileSelected(createFile());
+    });
+    await act(async () => {
+      await result.current.onJsonImportConfirmed();
+    });
+
+    expect(result.current.form.getValues("profile.pcName")).toBe(
+      "画像エラーでも復元するPC",
+    );
+    expect(deleteCharacterImage).toHaveBeenCalledOnce();
+    expect(result.current.characterImage).toBeNull();
+    expect(result.current.isJsonImportImageErrorOpen).toBe(true);
+  });
+
+  it("keeps the current character unchanged when JSON input is malformed", async () => {
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => null),
+        readCharacterSheetJsonFile: vi.fn(async () => "{invalid"),
+        writeCharacterSheetForm: vi.fn(),
+      }),
+    );
+    result.current.form.setValue("profile.pcName", "現在のPC");
+
+    await act(async () => {
+      await result.current.onJsonImportFileSelected(createFile());
+    });
+
+    expect(result.current.isJsonImportErrorOpen).toBe(true);
+    expect(result.current.pendingJsonImport).toBeNull();
+    expect(result.current.form.getValues("profile.pcName")).toBe("現在のPC");
+  });
+
   it("flushes a pending save when the root state unmounts", async () => {
     const writeCharacterSheetForm = vi.fn();
     const { result, unmount } = renderHook(() =>

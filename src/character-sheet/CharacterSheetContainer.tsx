@@ -7,6 +7,8 @@ import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import CharacterSheetErrorDialog from "./components/dialogs/CharacterSheetErrorDialog";
+import CharacterSheetJsonImportConfirmDialog from "./components/dialogs/CharacterSheetJsonImportConfirmDialog";
+import CharacterSheetJsonImportErrorDialog from "./components/dialogs/CharacterSheetJsonImportErrorDialog";
 import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
 import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
 import DrugsPickerDialog from "./components/dialogs/DrugsPickerDialog";
@@ -375,11 +377,29 @@ export default function CharacterSheetContainer() {
           errorReviewButtonRef={errorSummaryTriggerRef}
           errorSummary={presenterProps.errorSummary}
           isExportDisabled={rootState.isCharacterImageRestoring}
+          isImportDisabled={
+            rootState.isCharacterImageRestoring ||
+            rootState.isRootOperationInProgress
+          }
           isMenuOpen={isActionMenuOpen}
           menuTriggerRef={actionMenuTriggerRef}
           onExport={rootState.onJsonExport}
+          onImport={rootState.onJsonImportRequested}
           onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
           onReviewErrors={() => setIsErrorSummaryOpen(true)}
+        />
+        <input
+          accept="application/json,.json"
+          hidden
+          onChange={(event) => {
+            const file = event.currentTarget.files?.[0];
+            event.currentTarget.value = "";
+            if (file !== undefined) {
+              void rootState.onJsonImportFileSelected(file);
+            }
+          }}
+          ref={rootState.jsonImportInputRef}
+          type="file"
         />
         <CharacterSheetFormPresenter {...presenterProps} />
         <CharacterImageErrorDialog
@@ -393,6 +413,34 @@ export default function CharacterSheetContainer() {
           isOpen={rootState.isFormRestoreErrorOpen}
           onRequestClose={() => rootState.setIsFormRestoreErrorOpen(false)}
           returnFocusRef={rootState.formRestoreReturnFocusRef}
+        />
+        <CharacterSheetJsonImportConfirmDialog
+          isOpen={rootState.pendingJsonImport != null}
+          onConfirm={() => void rootState.onJsonImportConfirmed()}
+          onRequestClose={() => rootState.setPendingJsonImport(null)}
+          returnFocusRef={rootState.jsonImportReturnFocusRef}
+        />
+        <CharacterSheetJsonImportErrorDialog
+          confirmButtonRef={rootState.jsonImportErrorConfirmButtonRef}
+          dialogLabel={
+            characterSheetDictionary.characterSheet.jsonImport.errorLabel
+          }
+          isOpen={rootState.isJsonImportErrorOpen}
+          message={characterSheetDictionary.characterSheet.jsonImport.error}
+          onRequestClose={() => rootState.setIsJsonImportErrorOpen(false)}
+          returnFocusRef={rootState.jsonImportReturnFocusRef}
+        />
+        <CharacterSheetJsonImportErrorDialog
+          confirmButtonRef={rootState.jsonImportErrorConfirmButtonRef}
+          dialogLabel={
+            characterSheetDictionary.characterSheet.jsonImport.imageErrorLabel
+          }
+          isOpen={rootState.isJsonImportImageErrorOpen}
+          message={
+            characterSheetDictionary.characterSheet.jsonImport.imageError
+          }
+          onRequestClose={() => rootState.setIsJsonImportImageErrorOpen(false)}
+          returnFocusRef={rootState.jsonImportReturnFocusRef}
         />
         <CharacterSheetErrorDialog
           closeButtonRef={errorSummaryCloseButtonRef}

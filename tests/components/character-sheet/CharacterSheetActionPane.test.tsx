@@ -30,9 +30,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isExportDisabled={false}
+        isImportDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={onExport}
+        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
@@ -53,9 +55,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={errorSummary}
         isExportDisabled={false}
+        isImportDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
+        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
@@ -91,9 +95,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isExportDisabled={false}
+        isImportDisabled={false}
         isMenuOpen={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
+        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
@@ -112,9 +118,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isExportDisabled
+        isImportDisabled
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onExport={vi.fn()}
+        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReviewErrors={vi.fn()}
       />,
@@ -122,6 +130,12 @@ describe("CharacterSheetActionPane", () => {
 
     for (const button of screen.getAllByRole("button", {
       name: "エクスポート",
+    })) {
+      expect((button as HTMLButtonElement).disabled).toBe(true);
+    }
+
+    for (const button of screen.getAllByRole("button", {
+      name: "インポート",
     })) {
       expect((button as HTMLButtonElement).disabled).toBe(true);
     }
