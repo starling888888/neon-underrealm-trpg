@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import {
   type CharacterSheetErrorFact,
   type CharacterSheetErrorSummary,
@@ -62,6 +60,32 @@ function addSkillRowFacts(
     facts.push({
       code,
       level: row.level,
+      rowId: row.rowId,
+      subject: `${sectionName}「${row.skill.name}」`,
+    });
+  }
+}
+
+function addAdvancedSkillRowFacts(
+  facts: CharacterSheetErrorFact[],
+  code: Extract<
+    CharacterSheetErrorFact["code"],
+    | "ikizama-skill-advanced"
+    | "other-ryugi-skill-advanced"
+    | "primary-skill-advanced"
+  >,
+  invalidRowIds: readonly string[],
+  rows: readonly NamedSkillRow[],
+  sectionName: string,
+  condition: string,
+): void {
+  const invalidRowIdSet = new Set(invalidRowIds);
+
+  for (const row of rows) {
+    if (!invalidRowIdSet.has(row.rowId) || row.skill === null) continue;
+    facts.push({
+      code,
+      condition,
       rowId: row.rowId,
       subject: `${sectionName}「${row.skill.name}」`,
     });
@@ -172,12 +196,13 @@ function createCharacterSheetErrorSummary({
     primarySkills.sectionProps.rows,
     "プライマリ流儀スキル",
   );
-  addSkillRowFacts(
+  addAdvancedSkillRowFacts(
     errorFacts,
     "primary-skill-advanced",
     primarySkills.sectionProps.invalidAdvancedSkillRowIds,
     primarySkills.sectionProps.rows,
     "プライマリ流儀スキル",
+    `流儀Lv 6以上が必要です（現在Lv ${build.sectionProps.build.primaryRyugiLevel}）。`,
   );
 
   if (ikizamaSkills.sectionProps.hasIkizamaSkillLevelTotalError) {
@@ -208,12 +233,13 @@ function createCharacterSheetErrorSummary({
     ikizamaSkills.sectionProps.rows,
     "生き様スキル",
   );
-  addSkillRowFacts(
+  addAdvancedSkillRowFacts(
     errorFacts,
     "ikizama-skill-advanced",
     ikizamaSkills.sectionProps.invalidAdvancedSkillRowIds,
     ikizamaSkills.sectionProps.rows,
     "生き様スキル",
+    `生き様Lv 4以上が必要です（現在Lv ${build.sectionProps.build.ikizamaLevel}）。`,
   );
 
   if (commonSkills.sectionProps.hasCommonSkillLevelError) {
@@ -256,12 +282,16 @@ function createCharacterSheetErrorSummary({
       section.rows,
       `その他流儀「${section.ryugiName ?? "未選択"}」のスキル`,
     );
-    addSkillRowFacts(
+    const otherRyugiLevel = build.sectionProps.build.otherRyugi.find(
+      (row) => row.rowId === section.ryugiRowId,
+    )?.level;
+    addAdvancedSkillRowFacts(
       errorFacts,
       "other-ryugi-skill-advanced",
       section.invalidAdvancedSkillRowIds,
       section.rows,
       `その他流儀「${section.ryugiName ?? "未選択"}」のスキル`,
+      `流儀Lv 6以上が必要です（現在Lv ${otherRyugiLevel ?? 0}）。`,
     );
   }
 
@@ -301,44 +331,5 @@ function createCharacterSheetErrorSummary({
 export default function useCharacterSheetErrorSummary(
   sources: ErrorSummarySources,
 ): CharacterSheetErrorSummary {
-  const {
-    bondsSection,
-    build,
-    commonSkills,
-    cybernetics,
-    drugs,
-    ikizamaSkills,
-    nanomachines,
-    otherRyugiSkills,
-    primarySkills,
-    profileSection,
-  } = sources;
-
-  return useMemo(
-    () =>
-      createCharacterSheetErrorSummary({
-        bondsSection,
-        build,
-        commonSkills,
-        cybernetics,
-        drugs,
-        ikizamaSkills,
-        nanomachines,
-        otherRyugiSkills,
-        primarySkills,
-        profileSection,
-      }),
-    [
-      bondsSection,
-      build,
-      commonSkills,
-      cybernetics,
-      drugs,
-      ikizamaSkills,
-      nanomachines,
-      otherRyugiSkills,
-      primarySkills,
-      profileSection,
-    ],
-  );
+  return createCharacterSheetErrorSummary(sources);
 }

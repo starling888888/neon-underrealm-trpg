@@ -71,4 +71,16 @@ describe("character sheet error summary", () => {
       translateCharacterSheetError(fact),
     );
   });
+
+  it("uses an explicit rule condition instead of a skill-row level", () => {
+    assert.equal(
+      translateCharacterSheetError({
+        code: "primary-skill-advanced",
+        condition: "流儀Lv 6以上が必要です（現在Lv 1）。",
+        level: 4,
+        subject: "プライマリ流儀スキル「ブレード」",
+      }),
+      "プライマリ流儀スキル「ブレード」：流儀Lv 6以上が必要です（現在Lv 1）。",
+    );
+  });
 });

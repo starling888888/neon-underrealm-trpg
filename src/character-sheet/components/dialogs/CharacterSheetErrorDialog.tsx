@@ -40,8 +40,10 @@ export default function CharacterSheetErrorDialog({
               エラーが{errorSummary.errors.length}件あります。
             </p>
             <ul className={styles.list}>
-              {errorSummary.errors.map((error) => (
-                <li key={error.code}>{error.message}</li>
+              {errorSummary.errors.map((error, index) => (
+                <li key={`${error.code}-${error.rowId ?? index}`}>
+                  {error.message}
+                </li>
               ))}
             </ul>
           </>

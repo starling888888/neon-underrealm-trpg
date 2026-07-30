@@ -332,6 +332,84 @@ describe("useCharacterSheetFormPresenterProps", () => {
     ).toEqual([firstRowId, secondRowId]);
   });
 
+  it("summarizes advanced skills with their owning ryugi or ikizama level", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [primarySkill] = getPrimarySkillGroups("kenkaya", 6).advanced;
+    const [ikizamaSkill] = getIkizamaSkillGroups("burai", 4).advanced;
+    const [otherRyugiSkill] = getOtherRyugiSkillGroups("kenkaya", 6).advanced;
+    if (
+      primarySkill === undefined ||
+      ikizamaSkill === undefined ||
+      otherRyugiSkill === undefined
+    ) {
+      throw new Error("上級スキル候補を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.buildSection.onPrimaryRyugiChange(
+        "kenkaya",
+      );
+      result.current.presenterProps.buildSection.onIkizamaChange("burai");
+      result.current.presenterProps.buildSection.onOtherRyugiAdd();
+    });
+
+    const primaryRowId = result.current.form.getValues(
+      "primarySkills.rows.0.rowId",
+    );
+    const ikizamaRowId = result.current.form.getValues(
+      "ikizamaSkills.rows.0.rowId",
+    );
+    const [otherRyugi] = result.current.form.getValues("build.otherRyugi");
+    const [otherRyugiRow] = result.current.form.getValues(
+      "otherRyugiSkills.rows",
+    );
+    if (otherRyugi === undefined || otherRyugiRow === undefined) {
+      throw new Error("その他流儀の上級スキル行を取得できません。");
+    }
+
+    act(() => {
+      result.current.presenterProps.buildSection.onOtherRyugiChange(
+        0,
+        "ryugiId",
+        "kenkaya",
+      );
+      result.current.presenterProps.buildSection.onOtherRyugiChange(
+        0,
+        "level",
+        "1",
+      );
+      result.current.presenterProps.primarySkillPicker.onSelect(
+        primaryRowId,
+        primarySkill.id,
+      );
+      result.current.presenterProps.ikizamaSkillPicker.onSelect(
+        ikizamaRowId,
+        ikizamaSkill.id,
+      );
+      result.current.presenterProps.otherRyugiSkillPicker.onSelect(
+        otherRyugiRow.rowId,
+        otherRyugiSkill.id,
+      );
+    });
+
+    expect(result.current.presenterProps.errorSummary.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "primary-skill-advanced",
+          message: `プライマリ流儀スキル「${primarySkill.name}」：流儀Lv 6以上が必要です（現在Lv 1）。`,
+        }),
+        expect.objectContaining({
+          code: "ikizama-skill-advanced",
+          message: `生き様スキル「${ikizamaSkill.name}」：生き様Lv 4以上が必要です（現在Lv 1）。`,
+        }),
+        expect.objectContaining({
+          code: "other-ryugi-skill-advanced",
+          message: `その他流儀「ケンカヤ」のスキル「${otherRyugiSkill.name}」：流儀Lv 6以上が必要です（現在Lv 1）。`,
+        }),
+      ]),
+    );
+  });
+
   it("moves primary skill rows one step without crossing the boundaries", () => {
     const { result } = renderHook(() => usePresenterHarness());
     const [firstRow, secondRow] =

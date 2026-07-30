@@ -83,4 +83,43 @@ describe("CharacterSheetErrorDialog", () => {
     expect(screen.getByText("エラーはありません。")).not.toBeNull();
     expect(screen.queryByRole("list")).toBeNull();
   });
+
+  it("uses distinct list keys for row-level errors with the same rule code", () => {
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    try {
+      render(
+        <CharacterSheetErrorDialog
+          closeButtonRef={createRef<HTMLButtonElement>()}
+          errorSummary={{
+            errors: [
+              {
+                code: "primary-skill-maximum-level",
+                message:
+                  "プライマリ流儀スキル「受け流し強化」（Lv 7）：取得可能レベル外の値があります。",
+                rowId: "primary-skill-1",
+              },
+              {
+                code: "primary-skill-maximum-level",
+                message:
+                  "プライマリ流儀スキル「急所撃ち」（Lv 8）：取得可能レベル外の値があります。",
+                rowId: "primary-skill-2",
+              },
+            ],
+            hasErrors: true,
+          }}
+          isOpen
+          onRequestClose={() => {}}
+          returnFocusRef={createRef<HTMLElement>()}
+        />,
+      );
+
+      expect(screen.getAllByRole("listitem")).toHaveLength(2);
+      expect(consoleError).not.toHaveBeenCalled();
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
 });

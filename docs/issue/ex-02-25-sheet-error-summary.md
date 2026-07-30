@@ -39,7 +39,7 @@
 
 ## 対象範囲
 
-- 既存のbuild、credit、各skill区分、サイバネ、ナノマシン、ドラッグなどが既に導出している局所errorを入力に、同じ違反を一件として集約するpure logicとViewModelを追加する。集約順はDOM順や入力行の偶発順ではなく、固定の識別子順とする。複数行を対象にする違反は対象行ごとに重複せず、利用者が判断できる一文へまとめる。
+- 既存のbuild、credit、各skill区分、サイバネ、ナノマシン、ドラッグなどが既に導出している局所errorを入力に、同じ違反を一件として集約するpure logicとViewModelを追加する。集約順はDOM順や入力行の偶発順ではなく、固定の識別子順とする。複数行を対象にする違反は該当行ごとに一件とし、名称と現在Lvまたは不正条件を含む一文へまとめる。
 - エラー文言は各ゲーム規則の識別子と現在の表示値・解決済み名称から専用translatorで生成する。Zod v4の`error` / global error mapは、現在の`characterSheetFormSchema`が担う構造・整数正規化と、G25で扱う横断的なゲームルール違反を混同するため使用しない。`dictionary.ts`には固定の操作labelだけを残し、動的な集約文言を格納しない。
 - 初期文言は、経験点・信用の不足、能力値ポイント配分・成長点、縁の上限超過、流儀重複・Lv不正、各スキルのLv下限 / 最大Lv・重複・`advanced`条件・区分合計、共通スキル上限、サイバネ / ナノマシン埋め込み上限、固定サイバネ部位不一致、ドラッグ重複を利用者が区別できる日本語にする。現在の生き様では通常使用不可の専用アイテムカテゴリの`通常使用不可`表示とwarningカラーは既存の局所フィードバックとして保ち、件数化・一覧化しない。
 - desktopの固定幅error statusは、エラーなしでは既存の通常色・`エラーはありません。`・通常の`確認`buttonを維持する。エラーありでは外枠、件数文言、`確認`buttonをdangerカラーにし、`エラーがN件あります。`を表示する。`確認`で既存dialog shellを使ったerror dialogを開く。
@@ -72,7 +72,7 @@
 
 ## 取り込み済みのユーザー指摘
 
-- 縁の入力済み件数が結べる縁の上限を超える状態は、通常使用不可の専用アイテムカテゴリだけに限定するwarningではなく、局所表示とerror summaryの両方でerrorとして扱う。summaryには`入力済みの縁が結べる縁の上限を超えています。`を一件だけ置く。
+- 縁の入力済み件数が結べる縁の上限を超える状態は、通常使用不可の専用アイテムカテゴリだけに限定するwarningではなく、局所表示とerror summaryの両方でerrorとして扱う。summaryには上限外となる各縁行について、行番号と対象名を含むerrorを置く。
 - tablet / mobileのerror時のdanger色は、右下のmenu buttonへだけ付ける。ヘルプbuttonは通常色を保つ。この状態をComponent testで両buttonのclassとして確認する。
 - desktop error dialogにはvisible titleを置かず、本文を`エラーはありません。`または`エラーがN件あります。`から始める。dialogのアクセシブル名だけを`エラー`として保つ。
 - tablet / mobileの開いたmenu内にも`エラー`のsection見出しを置かず、空状態または件数文言から始める。
@@ -207,15 +207,68 @@
 ### 対応方針
 
 - `useCharacterSheetErrorSummary`をform adapter配下へ追加し、既存section presenter stateからerror factを組み立てる責務と`getCharacterSheetErrorSummary()`呼び出しを移す。
-- 既存のerror code、文言、行単位の件数・順序、UI propsは変えない。専用hookは`useMemo`でsummary ViewModelを返し、依存するsection inputが変わらない限り同じsummary objectを保つ。
+- 既存のerror code、文言、行単位の件数・順序、UI propsは変えない。G25では専用hookを責務分離のadapterとして使い、section presenter stateがrenderごとにnew objectを返す現状で効果のない`useMemo`は使わない。実効的なmemo化と無関係なUI state更新でsummary identityを保つ検証はG31で扱う。
 - VRT対象の画面状態とbaselineは、ユーザーが今回明示承認した範囲だけを更新する。切り出し以外のUI・ゲームルール・入力状態の変更は行わない。
 
 ### 対応完了チェックリスト
 
 - [x] error集約の行走査とViewModel生成が専用custom hookへ分離される。
-- [x] summary ViewModelが`useMemo`でmemo化され、Presenterがhookの結果だけを渡す。
+- [x] Presenterが専用hookのsummary ViewModelだけを渡し、G25では効果のない`useMemo`を置かない。
 - [x] Node / Component / browser E2Eと対象限定VRTが通る。
 - [x] 承認済みの対象canonical VRT baselineを更新し、差分比較とactual screenshot確認を記録する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- 上級スキルのsummary文言が、取得したスキル行のLvを現在Lvとして表示している。一方で`advanced`条件は、プライマリ／その他流儀なら流儀Lv 6以上、生き様なら生き様Lv 4以上で判定するため、所有元の現在Lvを示す必要がある。
+- 縁上限超過を行単位で数える現在の実装と、issue内に残る「一件だけ」とする記述が矛盾している。
+
+### 判定
+
+- source: push後のNon Gate Review（local-agent、`bcfa86e`）。
+- classification: valid
+- local validation: `invalidAdvancedSkillRowIds`はスキル行を返すが、各判定は`primaryRyugiLevel`、`ikizamaLevel`、または該当その他流儀行のLvを使う。現adapterは共通の行fact helperを使うため、スキル行Lvを表示している。
+- deferred: summary objectの実効的なmemo化は、ユーザー指示によりG31で扱う。G25では対応しない。
+
+### 対応方針
+
+- 上級スキル専用のfact生成で、対象スキル名に加え、所有元の種別・必要Lv・現在Lvを文言条件として渡す。スキル行Lvは表示しない。
+- プライマリ流儀、生き様、その他流儀の各上級条件をhook integration testで固定する。
+- 縁上限超過は上限外の行ごとに一件という現在の仕様へissue本文を統一する。
+
+### 対応完了チェックリスト
+
+- [x] プライマリ流儀・生き様・その他流儀の上級スキルが、それぞれ所有元の必要Lvと現在Lvを示す。
+- [x] 上級条件の3区分をhook integration testで確認する。
+- [x] 縁上限超過の件数・文言仕様が行単位の実装とissue本文で一致する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- desktop error dialogがsummary listのReact keyに`error.code`だけを使うため、同じ規則codeの行単位errorが複数あるとkeyが重複する。tablet / mobile menuはすでにrow IDを含むkeyを使っている。
+
+### 判定
+
+- source: `.tmp/chatgpt-review.md`（browser-draft、source snapshot: `bcfa86e`）。
+- classification: valid
+- local validation: 現在の`CharacterSheetErrorDialog`は`<li key={error.code}>`であり、行単位の同一codeを複数件持つ`CharacterSheetErrorSummary`と矛盾する。`CharacterSheetActionPane`は`code + rowId`（row IDなしはindex）でkeyを作っている。
+- out-of-intake note: 同reviewのsummary memo化指摘は、現在のworktreeで`useMemo`を外したうえ、レビュー指摘2と親Gate planのG31へ実効的なmemo化・identity testとして既に引き継いでいるため、重複して追加しない。
+
+### 対応方針
+
+- desktop dialogもmenuと同じ安定key規則へ統一し、同一code・異なるrow IDのerrorを同時に表示するComponent testを追加する。
+- UIの表示文言、error件数、順序、dialogのfocus / close契約は変えない。
+
+### 対応完了チェックリスト
+
+- [x] desktop dialogが行単位errorに重複しない安定keyを使う。
+- [x] 同一codeの複数行errorをdialog Component testで確認する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 

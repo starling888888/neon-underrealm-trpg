@@ -30,6 +30,7 @@ export type CharacterSheetErrorCode =
 
 export type CharacterSheetErrorFact = {
   code: CharacterSheetErrorCode;
+  condition?: string;
   level?: number;
   rowId?: string;
   subject?: string;
@@ -122,11 +123,15 @@ const errorCodeRank = new Map(
 
 /** Translates a stable game-rule error fact for the summary UI. */
 export function translateCharacterSheetError({
+  condition,
   code,
   level,
   subject,
 }: CharacterSheetErrorFact): string {
   const target = subject ?? "";
+  if (condition !== undefined) {
+    return `${target}${target ? "：" : ""}${condition}`;
+  }
   const currentLevel = level === undefined ? "" : `（Lv ${level}）`;
 
   return `${target}${currentLevel}${target || currentLevel ? "：" : ""}${errorMessages[code]}`;
