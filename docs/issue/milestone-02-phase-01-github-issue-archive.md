@@ -32,7 +32,7 @@
   - phase / archiveのREADMEはGitHub Issueへ移さず、ローカルarchiveとともに削除する。
 - 一時inventoryを `.tmp/` に作成し、各対象の元path、slug、分類、現行SSoT監査結果、GitHub Issue番号、本文確認、closed確認、またはGate planの移動先pathを記録する。inventoryはGit管理しない。
 - 各GitHub Issue本文には元pathを機械的に照合できるmarkerとして含める。marker検索が0件でinventoryに既存Issue番号がなければ新規作成し、1件なら再利用する。marker検索が複数件の場合、またはinventoryに既存Issue番号があるのにmarker検索が0件の場合は、重複作成・ローカルarchive削除を行わず停止する。
-- GitHub Issue作成後、GitHub Issue番号とslugの対応を使って、Git管理文書に残る旧archive path参照をplain-textの `GitHub Issue #<number>: <slug>` 形式へ更新する。Markdownリンクは作らない。
+- GitHub Issue作成後、GitHub Issue番号とslugの対応を使って、Git管理文書に残る旧archive path参照をplain-textの `<slug> — GitHub Issue #<number>` 形式へ更新する。Markdownリンクは作らない。
 - 完了済みissueごとに、履歴のみか、現行の要件・設計・後続対応をrequirements、design notes、TODO、milestone plan、またはAGENTS / SKILLへ昇格したかをinventoryへ記録する。昇格先と反映済み根拠を確認できない対象は削除しない。
 - `docs/issue/milestone-01/done/` と、そのarchive専用のREADMEを削除する。
 - 新しいissue運用を、AGENTS、issue-first、post-merge、Gate plan template、README、AI Ops、development structure、milestone planなど必要なGit管理文書へ反映する。
@@ -71,7 +71,7 @@
 - [x] Git管理対象の旧archive path参照が残っていないことを検索で確認する。ただし、このissue自身および移行方針の説明に必要な一般表記は除く。
 - [x] GitHub Issue番号なしの「同名issue」参照を作らない。
 - [ ] closed GitHub Issueが要件、design、TODO、現行issueに対する唯一の参照先になっていない。
-- [ ] milestone planとGate planには、完了issueの詳細要件・完了条件・引継ぎを残さず、対象issueの名称とGitHub Issue番号だけが残っている。
+- [x] milestone planとGate planには、完了issueの詳細要件・完了条件・引継ぎを残さず、対象issueの名称とGitHub Issue番号だけが残っている。対応するローカルissueがなかった`01-docs-requirements`は、GitHub Issue未発行の理由と既存plan内容を例外として残す。
 - [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
@@ -131,3 +131,19 @@
 
 - [x] GitHub Issue #81をclosedへ更新した。
 - [x] `55-0-sample-characters` の重複Issueをユーザー指示に従って整理した。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- ユーザーが、`51-performance-pass`、`52-github-pages-base-check`、`53-content-smoke-test` は `51-53-deployed-site-audit` のGitHub Issueに対応すると指摘した。
+
+### 判定
+
+- source: user
+- classification: valid
+- 原因: plan task名と同名のarchive issueだけを対応表で照合し、3 taskをまとめて扱った親issue `51-53-deployed-site-audit` を見落とした。
+
+### 対応
+
+- 3 taskの履歴参照を `51-53-deployed-site-audit — GitHub Issue #181` に訂正した。

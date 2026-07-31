@@ -1,740 +1,116 @@
 # milestone-01 計画と履歴
 
-このファイルは、初回公開を完了したmilestone-01の計画、進行中のクローズ作業、完了済みtask履歴を一元管理する正本である。旧 `docs/plan.md` と `docs/plan-done.md` を統合し、旧ファイルは残さない。
+milestone-01は初回公開を完了している。現在の実装要件は `docs/requirements.md` と `docs/requirements/*.md`、初期スコープ外は `docs/out-of-scope.md` を正本とする。
 
-`docs/issue/milestone-01/plan.md` はGate planではない。Gateを列挙するplanは通常どおり `docs/issue/<parent-issue>/plan.md` にだけ置く。milestone planは、milestone全体の履歴と現在のクローズtaskを管理する。
+`docs/issue/milestone-01/plan.md` はGate planではない。完了済みtaskの詳細はGitHub closed Issueに残し、このplanには `元issue名 — GitHub Issue #<number>` の形式だけを記録する。
 
 ## milestone-01の目的
 
 - 静的ルールサイトをGitHub Pagesのサブパスで公開する。
 - PLが遊ぶ判断と参加準備に必要なルール、世界観、キャラクターメイキング、データ、検索、更新履歴を提供する。
-- Webキャラクターシート、Cloudflare Web Analytics、Google Spreadsheetのローカル同期を、初期スコープとして実装済み機能に含める。
-- Excel本体とローカル補助入力は `.raw/` に置き、Git管理済みのMDX / Astro、生成JSON、仕様文書だけでCI/CDと公開を成立させる。
-
-初期スコープ外の正本は `docs/out-of-scope.md`、現在の実装要件の正本は `docs/requirements.md` と `docs/requirements/*.md` とする。
+- Webキャラクターシート、Cloudflare Web Analytics、Google Spreadsheetのローカル同期を初期スコープに含める。
 
 ## 完了したクローズtask
 
-- [x] `ex-07` — milestone-01の公開・要求・運用文書を現行実装へ正規化する
-  - completed: 2026-07-31 via PR #76 / `6cbb278`
-  - source task: `54-release-docs`
-  - expanded responsibility: 公開手順だけでなく、要求、out-of-scope、アーキテクチャ、テスト・実装指針、AI Ops、完了issue配置を現行実装に合わせる。
-  - archive: `GitHub Issue #116: ex-07`
-  - source code、scripts、tests、workflow、package設定、生成データ、assetは変更しない。
+- [x] `ex-07` — GitHub Issue #116
 
-milestone-01はex-07のmergeによりクローズした。milestone-02の計画、issue、実装は、このファイルではなく次のmilestoneの計画としてユーザー指示後に開始する。
+milestone-01はex-07のmergeによりクローズした。milestone-02の計画、issue、実装は次のmilestoneの計画としてユーザー指示後に開始する。
 
 ## 履歴の扱い
 
 - 完了済みissueの最終契約・完了記録は同名のGitHub closed Issueへ残し、ローカルのissue fileは削除する。
-- milestone planには、完了issueの名称とplain-textの `GitHub Issue #<number>: <slug>` だけを履歴として残す。詳細要件、完了条件、実装経緯は残さない。
+- milestone planには、完了issueの名称とplain-textの `<slug> — GitHub Issue #<number>` だけを履歴として残す。詳細要件、完了条件、実装経緯は残さない。
 - 完了したparent Gate planは `docs/issue/milestone-01/plans/` に置き、各完了Gateを名称とGitHub Issue番号だけに縮約する。
 - GitHub Issueの作成・close・ローカルissue削除は、ユーザー承認または承認済みのpost-merge完了処理でだけ行う。
-
-## 依存関係
-
-```mermaid id="pl5m29"
-flowchart TD
-  A[01-04 Docs / Init] --> B[05-08 Astro Base]
-  B --> C[09-17 Layout / Navigation / Basic Deploy]
-  C --> D[18-42 Page / Data Creation]
-  D --> E[43-48 Search]
-  E --> F[49-56 Finish / Release]
-  F --> G[ex-07 milestone-01 closure]
-```
 
 ## 完了済み
 
 ## Phase 0: リポジトリ初期化
 
-- [x] `01-docs-requirements` — 要件定義ドキュメントを配置する
-  - completed: 2026-07-03 d4a6507
-
+- [x] `01-docs-requirements` — 対応するローカルissueがarchiveに存在しなかったため、GitHub Issueは発行していない。
+  - completed: 2026-07-03 `d4a6507`
   - [x] `docs/requirements.md` を配置
   - [x] `docs/out-of-scope.md` を配置
   - [x] 初期スコープ外項目を明示
-
-- [x] `02-init-astro-project` — Astro + TypeScript プロジェクトを初期化する
-  - completed: 2026-07-03 6792015
-
-  - [x] Astroプロジェクト作成
-  - [x] `package.json` 作成
-  - [x] `tsconfig.json` 作成
-  - [x] `npm run build` が通る状態にする
-
-- [x] `03-gitignore-raw-policy` — `.raw/` と生成データ管理方針を追加する
-  - completed: 2026-07-03 e55366e
-
-  - [x] `.raw/` を `.gitignore` に追加
-  - [x] `*.xlsx`, `*.xlsm`, `~$*.xlsx` を `.gitignore` に追加
-  - [x] `data/generated/` を作成
-  - [x] `data/generated/README.md` に手編集禁止方針を書く
-
-- [x] `04-basic-project-docs` — READMEと開発手順の初期版を作成する
-  - completed: 2026-07-03 606cb33
-
-  - [x] `README.md` 作成
-  - [x] `docs/deployment.md` 作成
-  - [x] `docs/content-writing-guide.md` 作成
-  - [x] 初期開発・ビルド手順を記載
+- [x] `02-init-astro-project` — GitHub Issue #125
+- [x] `03-gitignore-raw-policy` — GitHub Issue #126
+- [x] `04-basic-project-docs` — GitHub Issue #127
 
 ## Phase 1: Astro基盤
 
-- [x] `05-config-mdx` — MDX対応を追加する
-  - completed: 2026-07-04 c02473d
-
-  - [x] Astro MDX integration を追加
-  - [x] `.mdx` ページの表示を確認
-  - [x] MDX内Component埋め込み方針を確認
-
-- [x] `06-config-base-path` — GitHub Pagesサブパス対応を追加する
-  - completed: 2026-07-04 8c01373
-
-  - [x] `astro.config.mjs` に `site` / `base` 設定を追加
-  - [x] base path helper を用意
-  - [x] 内部リンク・画像パスがサブパスで壊れない方針を作る
-
-- [x] `07-0-prepare-design-review` — Visual Review基盤を準備する
-  - completed: 2026-07-04 ada513c
-
-  - [x] Visual Review用skillを追加
-  - [x] design正本とVisual Review成果物の配置方針を定義
-  - [x] package.jsonにVisual Review用scriptと必要最小限の依存関係を追加
-  - [x] `.tmp/*.md` と `review-to-issue` との責務分離を明記
-  - [x] 既存ドキュメントに必要であれば対応方針を追記
-
-- [x] `07-global-styles` — CSS基盤を追加する
-  - completed: 2026-07-05 3afbf80
-
-  - [x] `src/styles/tokens.css` 作成
-  - [x] `src/styles/global.css` 作成
-  - [x] `src/styles/prose.css` 作成
-  - [x] 基本文字組み・本文幅・背景・色トークンを定義
-
-- [x] `08-seo-component` — SEO/OGP Componentを作成する
-  - completed: 2026-07-05 71c3d7d
-
-  - [x] `src/components/seo/Seo.astro` 作成
-  - [x] 共通OGP設定を実装
-  - [x] `title`, `description`, `og:*` を設定可能にする
-  - [x] 共通OGP画像の参照パスをbase path対応にする
+- [x] `05-config-mdx` — GitHub Issue #128
+- [x] `06-config-base-path` — GitHub Issue #129
+- [x] `07-0-prepare-design-review` — GitHub Issue #130
+- [x] `07-global-styles` — GitHub Issue #131
+- [x] `08-seo-component` — GitHub Issue #132
 
 ## Phase 2: レイアウト・ナビゲーション
 
-- [x] `09-base-layout` — 共通Layoutを作成する
-  - completed: 2026-07-05 ae6648b
-
-  - [x] designを生成する
-  - [x] `src/layouts/BaseLayout.astro` 作成
-  - [x] `src/layouts/ContentLayout.astro` 作成
-  - [x] ヘッダー・本文・フッターの基本構造を作成
-
-- [x] `10-header-footer` — Header / Footerを実装する
-  - completed: 2026-07-05 8754afa
-
-  - [x] designを生成する
-  - [x] `Header.astro` 作成
-  - [x] `Footer.astro` 作成
-  - [x] コピーライトを表示
-  - [x] GitHub、X、Discordリンク枠をアイコンで表示
-  - [x] アイコンリンクに `aria-label` を設定
-
-- [x] `11-site-menu` — PC左サイトメニューを実装する
-  - completed: 2026-07-06 0fbcf5f
-
-  - [x] designを生成する
-  - [x] `src/lib/site/menu.ts` 作成
-  - [x] `SiteMenu.astro` 作成
-  - [x] PC版で左サイドに常設表示
-
-- [x] `12-mobile-menu` — スマホ用開閉メニューを実装する
-  - completed: 2026-07-06 ee2395a
-
-  - [x] designを生成する
-  - [x] 既存 `SiteMenu.astro` をスマホdrawerで再利用
-  - [x] ヘッダーのボタンで開閉
-  - [x] メニュー項目選択後に閉じる
-  - [x] Escキーで閉じられることが望ましい
-
-- [x] `12-1-site-menu-layout-copy` — サイトメニューの文言と階層レイアウトを調整する
-  - completed: 2026-07-06 07eb806
-
-  - [x] `サイトメニュー` 表示文言を削除またはより適切な文言へ変更
-  - [x] 子項目開閉トグルを項目左側ではなく右端へ移動
-  - [x] トグル用スペースでリンク群の左側が空きすぎないよう、全体を左寄せに調整
-  - [x] PC左サイトメニューとスマホdrawer内メニューの両方で表示を確認
-
-- [x] `13-page-toc` — PC右ページ内目次を実装する
-  - completed: 2026-07-06 330ccf2
-
-  - [x] designを生成する
-  - [x] `PageToc.astro` 作成
-  - [x] ページ見出しから目次を生成
-  - [x] PC版では右サイドに固定表示
-  - [x] 見出しリンクでページ内ジャンプ可能にする
-  - [x] Layout propsでページ内目次の表示/非表示を制御可能にする
-  - [x] MDX frontmatterでページ内目次の表示/非表示を制御可能にする
-  - [x] トップページ、更新履歴ページ、404ページではページ内目次を表示しない
-  - [x] MDX / Markdown / Astro / データ生成ページを最終HTMLベースで統一的にTOC生成する
-  - [x] build後postprocessでTOC対象見出しにアンカーIDを自動付与する
-  - [x] 日本語見出し本文をそのままアンカーIDにしない
-  - [x] ASCII-onlyのhash形式アンカーIDを生成する
-  - [x] 自動生成IDにページ内出現順の連番を含めない
-  - [x] 自動生成IDが同一ページ内で衝突した場合はbuild時に検出する
-  - [x] 重複見出しは黙ってsuffix付与せず、必要に応じて `data-anchor-id` で明示解決する
-  - [x] ユーザー承認済み追加仕様として、表示制御要件とアンカーID生成方針を `docs/requirements.md` に反映する
-
-- [x] `14-mobile-page-toc` — スマホ用ページ内目次を実装する
-  - completed: 2026-07-07 3858ff8
-
-  - [x] designを生成する
-  - [x] `MobilePageToc.astro` 作成
-  - [x] 「このページの目次」をワンタッチで開ける
-  - [x] 項目選択で該当見出しへジャンプ
-  - [x] サイトメニューとは導線を分離
-
-- [x] `15-current-menu-highlight` — 現在ページハイライトを実装する
-  - completed: 2026-07-07 31de58f
-
-  - [x] designを生成する
-  - [x] 現在ページをサイトメニューで視覚的に識別
-  - [x] 親カテゴリを展開または強調
-  - [x] `aria-current="page"` を設定できるようにする
-
-- [x] `15-1-menu-expand-current-ancestors-only` — 現在ページに至る親カテゴリだけを初期展開する
-  - completed: 2026-07-07 9ae4885
-
-  - [x] `defaultExpanded` 前提の初期展開をやめる
-  - [x] 現在ページが子孫ページの場合のみancestor親カテゴリを初期展開する
-  - [x] 親カテゴリ自身がcurrentの場合は子項目を初期展開しない
-  - [x] PC左サイトメニューとスマホdrawer内サイトメニューで同じ初期展開ルールを使う
-  - [x] `aria-expanded` と `hidden` の初期状態を展開状態と一致させる
-
-- [x] `16-layout-screenshot-design-refresh` — レイアウト一式を画面キャプチャベースのdesignに更新する
-  - completed: 2026-07-07 d9af7fb
-
-  - [x] 実装済みレイアウト一式の画面キャプチャを取得する
-  - [x] PC、タブレット、スマホ幅の代表スクリーンショットを取得する
-  - [x] Header / Footer / SiteMenu / MobileMenu / PageToc / MobilePageToc / 現在ページハイライトの状態を確認する
-  - [x] 画面キャプチャをもとにdesign正本を更新する
-  - [x] design正本と実装の差分、未解決事項、後続で調整すべきUI課題を記録する
-  - [x] このタスクでは、design更新を主目的とし、追加の機能実装は行わない
-
-- [x] `17-github-actions-deploy-basic` — GitHub Actionsによる基本デプロイを追加する
-  - completed: 2026-07-07 509cefa
-
-  - [x] `.github/workflows/deploy.yml` 作成
-  - [x] `npm ci` を実行する
-  - [x] `npm run check` を実行する
-  - [x] `npm run build` を実行する
-  - [x] GitHub Pagesへdeployする
-  - [x] この段階では検索index生成をCIに含めない
-  - [x] この段階では `npm run index:search` を実行しない
-  - [x] この段階では `npm run build:search` を実行しない
-  - [x] Excel本体なしでCI/CDビルドが成功することを確認する
+- [x] `09-base-layout` — GitHub Issue #133
+- [x] `10-header-footer` — GitHub Issue #134
+- [x] `11-site-menu` — GitHub Issue #135
+- [x] `12-mobile-menu` — GitHub Issue #137
+- [x] `12-1-site-menu-layout-copy` — GitHub Issue #136
+- [x] `13-page-toc` — GitHub Issue #138
+- [x] `14-mobile-page-toc` — GitHub Issue #139
+- [x] `15-current-menu-highlight` — GitHub Issue #141
+- [x] `15-1-menu-expand-current-ancestors-only` — GitHub Issue #140
+- [x] `16-layout-screenshot-design-refresh` — GitHub Issue #142
+- [x] `17-github-actions-deploy-basic` — GitHub Issue #143
 
 ## Phase 3: ページ作成
 
-- [x] `18-0-release-notes-data` — トップページ・更新履歴ページ用リリースノートデータを整備する
-  - completed: 2026-07-09 e505b91
-
-  - [x] `docs/conversion/release-notes.md` にリリースノートデータ変換仕様を策定する
-  - [x] `ReleaseNote` 検証スキーマを策定する
-  - [x] リリースノートExcelから `data/generated/release-notes.json` を生成する変換スクリプトを策定する
-  - [x] トップページ最新5件表示と更新履歴ページ全件表示に必要なデータ取得処理を策定する
-  - [x] 変換スクリプトと検証スキーマのテストを追加する
-  - [x] 更新日降順、必須項目、改行保持、`body` 空欄時fallbackを検証する
-
-- [x] `18-1-common-image-block-component` — 共通画像Componentを作成する
-  - completed: 2026-07-09 7906f49
-
-  - [x] Component designを追加しない判断をissueに記録する
-  - [x] `ImageBlock.astro` を作成する
-  - [x] タイトルロゴ画像を表示できるようにする
-  - [x] `src`, `alt`, `caption` を指定可能にする
-  - [x] base pathに対応する
-  - [x] `loading="lazy"` に対応する
-  - [x] トップページ以外の後続ページでも再利用できる共通Componentとして実装する
-  - [x] Markdown / MDX本文またはAstroページから利用できることを確認する
-
-- [x] `18-2-home-page` — トップページを作成する
-  - completed: 2026-07-09 13f1ee2
-
-  - [x] designを生成する
-  - [x] `/` を作成する
-  - [x] `.raw/contents/home.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] キャッチコピー枠を作成する
-  - [x] タイトルロゴ枠を作成する
-  - [x] 最新リリースノート5件枠を作成する
-  - [x] 簡単な説明枠を作成する
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `19-2-release-notes-page` — 更新履歴ページを作成する
-  - completed: 2026-07-10 f7a9d42
-
-  - [x] designを生成する
-  - [x] `/release-notes` を作成する
-  - [x] `.raw/contents/release-notes.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] 全リリースノートを表示する
-  - [x] 更新日と全文を表示する
-  - [x] 全文が空欄なら簡単説明を表示する
-  - [x] 改行を反映する
-  - [x] ページ内目次は表示しない
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `20-1-common-callout-component` — 共通Callout Componentを作成する
-  - completed: 2026-07-11 c1b4ead
-
-  - [x] Component designを作成する
-  - [x] `Callout.astro` を作成する
-  - [x] `note`, `tip`, `warning`, `danger`, `example`, `version` を扱えるようにする
-  - [x] 色だけに依存せず、見出し・ラベル・アイコン等でも種別を識別できるようにする
-  - [x] はじめにページ以外の後続ページでも再利用できる共通Componentとして実装する
-  - [x] Markdown / MDX本文から利用できることを確認する
-
-- [x] `20-2-introduction-page` — はじめにページを作成する
-  - completed: 2026-07-11 1adfe53
-
-  - [x] designを生成する
-  - [x] `/introduction.mdx` を作成する
-  - [x] `.raw/contents/introduction.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] ゲーム概要を再掲せず、ページの役割を示す短い導入文、必要なもの、基本用語、ゴールデンルール、読み始める導線を配置する
-  - [x] ゴールデンルールを注意枠のCalloutで表示する
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `21-2-world-page` — ワールドガイドページを作成する
-  - completed: 2026-07-12 c190310
-
-  - [x] designを生成する
-  - [x] `/world.mdx` を作成する
-  - [x] `.raw/contents/world.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] 初期公開範囲の世界観本文、強大な敵、NPC紹介を配置する
-  - [x] 共通のシンプルな人物アイコン、二つ名、名前、説明を表示する静的 `NpcCard` をこのタスクで作成する。二つ名がある場合はルビ付きの控えめな青緑寄りの文字色で名前の直前に続け、ない場合は名前から表示する
-  - [x] NPCをExcel / JSON管理へ移行せず、MDX内の静的propsで `NpcCard` を配置する
-  - [x] GM専用情報、シナリオ本文、キャンペーン本文は配置しない
-  - [x] 必要に応じてImageBlockを配置する
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `22-2-character-making-page` — キャラクターメイキングページを作成する
-  - completed: 2026-07-12 774dbf4
-
-  - [x] designを生成する
-  - [x] `/character-making.mdx` を作成する
-  - [x] `.raw/contents/character-making.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] キャラクターメイキング手順の説明を配置する
-  - [x] データ参照導線を配置する
-  - [x] 自動計算、入力フォーム、保存機能は作らない
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `23-2-rules-page` — ルールトップページを作成する
-  - completed: 2026-07-12 9494017
-
-  - [x] initial design draftを作成しない。既存の共通designを参照する
-  - [x] `/rules/index.mdx` を作成する
-  - [x] `.raw/contents/rules.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] `/introduction` のゴールデンルールへの参照を配置する
-  - [x] 判定、達成値、効果値、対抗判定を配置する
-  - [x] 必要に応じてCalloutを配置する
-  - [x] 完成画面のスクリーンショットを取得してVisual Reviewを行い、ユーザー承認済みの`docs/design/rules/`へdesign正本化する
-
-- [x] `24-2-scenario-play-page` — シナリオ進行ルールページを作成する
-  - completed: 2026-07-12 bee3be3
-
-  - [x] initial design draftを作成せず、既存の共通designを参照する
-  - [x] `/rules/scenario-play.mdx` を作成する
-  - [x] `.raw/contents/scenario-play.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] シーン、情報収集、休息、シナリオ終了処理を配置する
-  - [x] シナリオ本文、ハンドアウト本文、キャンペーン本文は配置しない
-  - [x] 完成画面のスクリーンショットを取得してVisual Reviewを行い、ユーザー承認済みの`docs/design/scenario-play/`へdesign正本化する
-
-- [x] `25-2-battle-page` — 戦闘ルールページを作成する
-  - completed: 2026-07-12 0f2dc89
-
-  - [x] designを生成する
-  - [x] `/rules/battle.mdx` を作成する
-  - [x] `.raw/contents/battle.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] 攻撃、リアクション、コンボ、掛け合い等を配置する
-  - [x] 戦闘処理支援ツール、ダイスローラー、戦闘シミュレーターは作らない
-  - [x] 必要に応じてCalloutやImageBlockを配置する
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `26-2-advancement-page` — 成長ページを作成する
-  - completed: 2026-07-13 4a6f522
-
-  - [x] initial design draftを作成しない。既存の共通designを参照する
-  - [x] `/advancement.mdx` を作成する
-  - [x] `.raw/contents/advancement.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] キャラクター成長に関する本文を配置する
-  - [x] 必要に応じてCalloutを配置する
-  - [x] 完成画面のスクリーンショットを取得し、既存の共通designとの整合を確認する。ユーザー承認済みのdesign fixではdesign正本を更新する
-
-- [x] `27-1-skill-card-component` — SkillCard Componentを作成する
-  - completed: 2026-07-13 5700062
-
-  - [x] Component designを作成する
-  - [x] `SkillCard.astro` を作成する
-  - [x] 名称、最大レベル、タイミング、コスト、技能、制限、対象、射程、概要と効果を連結した本文を表示する
-  - [x] カテゴリ、所属流儀または所属生き様はカード内に表示せず、表示ページとそのセクションで識別する
-  - [x] 個別アンカーIDを付与できるようにする
-  - [x] 通常のスキル表示だけでなく、凡例用データを渡して凡例としても表示できるようにする
-
-- [x] `28-0-common-skills-data` — 共通スキル一覧ページ用データを整備する
-  - completed: 2026-07-14 069f95f
-
-  - [x] `docs/conversion/common-skills.md` に共通スキル一覧用のデータ変換仕様を策定する
-  - [x] `Skill` 検証スキーマを策定する
-  - [x] スキルExcelから共通スキルを生成する変換スクリプトを策定する
-  - [x] 共通スキル一覧ページに必要なデータ取得処理を策定する
-  - [x] 変換スクリプトと検証スキーマのテストを追加する
-  - [x] 必須項目、ID重複、カテゴリ値、タイミング表記を検証する
-
-- [x] `28-2-common-skills-page` — 共通スキル一覧ページを作成する
-  - completed: 2026-07-15 via PR #45 / f904aa8
-
-  - [x] designを生成する
-  - [x] `/data/common-skills` ページを作成する
-  - [x] `.raw/contents/common-skills.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] 共通スキル一覧データを表示する
-  - [x] CardContainer / SkillCard の表示方針と整合させる
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `29-0-ryugi-index-data` — 流儀一覧ページ用データを整備する
-  - completed: 2026-07-15 via PR #46 / 963118d
-
-  - [x] `docs/conversion/ryugi-index.md` に流儀一覧用のデータ変換仕様を策定する
-  - [x] `ryugi-list.xlsx` から、流儀一覧と流儀詳細ページで共用する非スキル情報を生成する
-  - [x] `Ryugi` 検証スキーマを策定する
-  - [x] 流儀Excelから流儀一覧データを生成する変換スクリプトを策定する
-  - [x] 流儀一覧ページと後続の流儀詳細ページに必要なデータ取得処理を策定する
-  - [x] 変換スクリプトと検証スキーマのテストを追加する
-  - [x] 必須項目、ID重複、表示順を検証する
-
-- [x] `29-2-ryugi-index-page` — 流儀一覧ページを作成する
-  - completed: 2026-07-22 via PR #54 / `da8b5d7`
-
-  - [x] designを生成する
-  - [x] `/data/ryugi/index.astro` を作成する
-  - [x] `.raw/contents/ryugi-index.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] ケンカヤの `RyugiDataSection` と、流儀データの4項目の説明を表示する
-  - [x] 入力順の流儀名リンクと横に配置する `shortDescription` だけを一覧に表示する
-  - [x] キャラクターメイキングと成長では、流儀の共通スキルボーナスを変換済み流儀データから表示する
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `30-0-ryugi-detail-data` — 流儀詳細ページ用の流儀スキルデータを整備する
-  - completed: 2026-07-21 via PR #52 / 071a035
-
-  - [x] `docs/conversion/ryugi-skills.md` に流儀スキルExcel用のデータ変換仕様を策定する
-  - [x] `Ryugi` と `Skill` の関連検証スキーマを策定する
-  - [x] 流儀スキルExcelから流儀スキルを変換し、`29-0-ryugi-index-data` の流儀情報と合わせて取得できる処理を策定する
-  - [x] 変換スクリプトと検証スキーマのテストを追加する
-  - [x] 所属流儀ID、スキルID、個別アンカーIDの整合性を検証する
-
-- [x] `30-2-ryugi-detail-page` — 流儀詳細ページを作成する
-  - completed: 2026-07-21 via PR #53 / be092df
-
-  - [x] designを生成する
-  - [x] `/data/ryugi/[ryugiId].astro` を作成する
-  - [x] `.raw/contents/ryugi-detail.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] 共通テンプレートから流儀詳細ページを静的生成する
-  - [x] 流儀説明、基礎能力値、プライマリボーナス、共通スキルボーナス、流儀スキル一覧を表示する
-  - [x] 個別流儀ごとのページファイルを複製しない
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `31-0-ikizama-index-data` — 生き様一覧ページ用データを整備する
-  - completed: 2026-07-22 via PR #55 / dfaa60c
-
-  - [x] `docs/conversion/ikizama-index.md` に生き様一覧用のデータ変換仕様を策定する
-  - [x] `Ikizama` 検証スキーマを策定する
-  - [x] 生き様Excelから生き様一覧データを生成する変換スクリプトを策定する
-  - [x] 生き様一覧ページに必要なデータ取得処理を策定する
-  - [x] 変換スクリプトと検証スキーマのテストを追加する
-  - [x] 必須項目、ID重複、表示順を検証する
-
-- [x] `31-2-ikizama-index-page` — 生き様一覧ページを作成する
-  - completed: 2026-07-22 via PR #58 / `31-2-ikizama-index-page`
-
-  - [x] designを生成する
-  - [x] `/data/ikizama/index.astro` を作成する
-  - [x] `.raw/contents/ikizama-index.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] 生き様一覧を表示する
-  - [x] 各生き様詳細ページへの導線を配置する
-  - [x] サイドメニューの生き様を、変換済みデータの入力順から子項目として展開する
-  - [x] キャラクターメイキングの専用アイテム対応と成長ルールの生き様係数表を、変換済み生き様データから表示する
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `32-0-ikizama-detail-data` — 生き様詳細ページ用データを整備する
-  - completed: 2026-07-22 via PR #56 / 98544ae
-
-  - [x] `docs/conversion/ikizama-skills.md` に生き様スキルのデータ変換仕様を策定する
-  - [x] `Ikizama`、`Skill`、`Item` の関連検証スキーマを策定する
-  - [x] 生き様詳細ページで生き様情報、生き様スキル、関連アイテムを取得できる変換・取得処理を策定する
-  - [x] 変換スクリプトと検証スキーマのテストを追加する
-  - [x] 生き様ID、スキルID、関連アイテムID、個別アンカーIDの整合性を検証する
-
-- [x] `32-2-ikizama-detail-page` — 生き様詳細ページを作成する
-  - completed: 2026-07-22 via PR #57 / e13125f
-
-  - [x] designを生成する
-  - [x] `/data/ikizama/[ikizamaId].astro` を作成する
-  - [x] `.raw/contents/ikizama-detail.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] 共通テンプレートから生き様詳細ページを静的生成する
-  - [x] 生き様説明、生き様データ（生き様ボーナス、能力値ポイント、副能力係数）、生き様スキル一覧、専用アイテムリンクを表示する
-  - [x] 個別生き様ごとのページファイルを複製しない
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `33-2-items-index-page` — アイテムトップページを作成する
-  - completed: 2026-07-22 via PR #60 / `db63a1c`
-
-  - [x] designを生成する
-  - [x] `/data/items/index.mdx` を作成する
-  - [x] `.raw/contents/items.md` のfrontmatterをページmetadataとして使い、H1以下のMarkdown本文とHTMLコメントをもとに、H1直後へ`items_hero.webp`を表示し、信用・アイテムの基本ルールを説明する
-  - [x] アイテム種別説明を、武器、防具、お守り、サイバネ、ナノマシン、ドラッグの順の表で配置する
-  - [x] 各アイテム種別と、ブライ、ケジメ、スミ、ヤクの生き様ページへの導線を配置する
-  - [x] 1件以上の見出しをPageTocへ表示し、0件の場合は空状態を表示する共通PageToc仕様と整合させる
-  - [x] 完成画面をVisual Reviewで確認し、design正本化が必要な場合はユーザーの明示承認後にdesign fix modeで更新する
-
-- [x] `34-0-items-data` — アイテムページ用データを整備する
-  - completed: 2026-07-22 via PR #61 / `0af3f75`
-
-  - [x] `docs/conversion/items.md` にアイテムデータ変換仕様を策定する
-  - [x] `Item` と種別ごとのアイテム検証スキーマを策定する
-  - [x] アイテムExcelの各シートを個別の変換ロジックで変換する
-  - [x] 各シートの変換結果を1つのアイテムJSONに集約する
-  - [x] 静的ページと将来のクライアント側キャラクターシートの双方で利用できるデータ取得処理を策定する
-  - [x] 変換スクリプトと検証スキーマのテストを追加する
-  - [x] 必須項目、ID重複、アイテム種別、種別固有項目を検証する
-
-- [x] `34-1-item-card-components` — アイテム種別ごとのCardを整備する
-  - completed: 2026-07-23 via PR #62 / `34-1-item-card-components`
-
-  - [x] Component designを作成する
-  - [x] `WeaponCard.astro`、`ArmorCard.astro`、`OmamoriCard.astro`、`CyberneticCard.astro`、`NanomachineCard.astro`、`DrugCard.astro` を作成する
-  - [x] 各Cardで共通項目と種別固有項目をPropsで表示できるようにする
-  - [x] `SkillCard` を含めてカードデザインを統一する
-  - [x] 各Cardの通常表示と凡例表示で共通利用するProps定義を整理する
-  - [x] `SkillCard` を含む凡例用Props定義を整理する
-  - [x] 各Cardに個別アンカーIDを付与する
-
-- [x] `27-2-data-index-page` — データトップページを作成する
-  - completed: 2026-07-23 via PR #64 / `1a1b5e2` (final dependent subtask)
-
-  - [x] designを生成する
-  - [x] `/data/index.mdx` を作成する
-  - [x] `.raw/contents/data.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] スキルの見方、データ項目、タイミング、コスト、制限などを配置する
-  - [x] SkillCardに凡例用データを渡す形でスキル凡例を表示する
-  - [x] アイテム凡例は`34-2-items-pages`で、各Item系Cardに凡例用データを渡して表示する
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `34-2-items-pages` — 6種別のアイテムページをまとめて作成する
-  - completed: 2026-07-23 via PR #64 / `1a1b5e2`
-
-  - [x] 6ページを同一issue・branch・PRで実装し、共通するページ構造とデータ取得をまとめて扱う
-  - [x] `WeaponCard`、`ArmorCard`、`OmamoriCard`、`CyberneticCard`、`NanomachineCard`、`DrugCard`の既存表示契約と整合させる
-  - [x] 次の6 routeを作成し、各種別の一覧と対応するCardの凡例を表示する
-    - [x] `/data/items/weapons.astro` — 武器 / `WeaponCard`
-    - [x] `/data/items/armors.astro` — 防具 / `ArmorCard`
-    - [x] `/data/items/omamori.astro` — お守り / `OmamoriCard`
-    - [x] `/data/items/cybernetics.astro` — サイバネ / `CyberneticCard`
-    - [x] `/data/items/nanomachines.astro` — ナノマシン / `NanomachineCard`
-    - [x] `/data/items/drugs.astro` — ドラッグ / `DrugCard`
-  - [x] 各ページで対応するcontents inputのfrontmatter、Markdown本文、HTMLコメント指示を表示構成の正本として使う
-    - [x] `.raw/contents/items-weapons.md`
-    - [x] `.raw/contents/items-armors.md`
-    - [x] `.raw/contents/items-omamori.md`
-    - [x] `.raw/contents/items-cybernetics.md`
-    - [x] `.raw/contents/items-nanomachines.md`
-    - [x] `.raw/contents/items-drugs.md`
-  - [x] 各ページのVisual Test用スクリーンショットを取得し、種別ごとのdesign targetをcanonicalizeする
-
-- [x] `42-0-npc-data-normalization` — NPCデータと画像を正規化する
-  - completed: 2026-07-22 via PR #59 / `42-0-npc-data-normalization`
-
-  - [x] `.raw/data/npcs.xlsx` をNPCデータのローカル正本として整備する
-  - [x] NPCデータを `data/generated/npcs.json` へ変換する仕様、スキーマ、取得層を整備する
-  - [x] 各NPC画像を `public/images/npc/` に配置し、個別画像がないIDは `no_image.webp` を表示する
-  - [x] `/world` の静的 `NpcCard` を生成JSONと個別画像を参照する表示へ移行する
-  - [x] 変換はローカル明示実行とし、CI/CDでExcel本体を扱わない
-
-- [x] `40-2-404-page` — 404ページを作成する
-  - completed: 2026-07-23 (tracking confirmed)
-
-  - [x] designを生成する
-  - [x] `/404.astro` を作成する
-  - [x] `.raw/contents/404.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-    - ユーザー指示により実施しなかった。
-  - [x] ページが見つからない旨を表示する
-  - [x] トップページへのリンクを表示する
-  - [x] サイトメニューまたは検索への導線を表示する
-  - [x] ページ内目次は表示しない
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `ex-01-page-navigation-links` — スマホでのページ間移動を容易にするため、ページ下部に前後ページへのナビゲーションリンクを追加する
-  - completed: 2026-07-23 via PR #65 / `2fbc185`
-
-  - [x] designを生成する
-  - [x] 表示対象ページと前後関係を定義する
-  - [x] ページ下部に前ページ・次ページへのリンクを表示する
-  - [x] スマホで十分なタップ領域と視認性を確保する
-  - [x] ページ内目次やサイトメニューと役割が混同されないことを確認する
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
-
-- [x] `41-2-support-page` — オンラインセッションのサポートページを作成する
-  - completed: 2026-07-23 via PR #67 / `928f738`
-
-  - [x] designを生成する
-  - [x] `/support.mdx` を作成する
-  - [x] `.raw/contents/support.md` のfrontmatter、Markdown本文、HTMLコメント指示をもとに画面を作成する
-  - [x] 本作で多数のダイスを使うことと、オンラインセッションを推奨することを案内する
-  - [x] オンラインセッションの準備と進め方を配置する
-  - [x] 特定ツールを必須にせず、このページ内にダイスローラー、戦闘支援を作らない
-  - [x] 完成画面のスクリーンショットを取得し、design正本を更新する
+- [x] `18-0-release-notes-data` — GitHub Issue #145
+- [x] `18-1-common-image-block-component` — GitHub Issue #146
+- [x] `18-2-home-page` — GitHub Issue #147
+- [x] `19-2-release-notes-page` — GitHub Issue #148
+- [x] `20-1-common-callout-component` — GitHub Issue #149
+- [x] `20-2-introduction-page` — GitHub Issue #150
+- [x] `21-2-world-page` — GitHub Issue #151
+- [x] `22-2-character-making-page` — GitHub Issue #144
+- [x] `23-2-rules-page` — GitHub Issue #152
+- [x] `24-2-scenario-play-page` — GitHub Issue #153
+- [x] `25-2-battle-page` — GitHub Issue #154
+- [x] `26-2-advancement-page` — GitHub Issue #155
+- [x] `27-1-skill-card-component` — GitHub Issue #156
+- [x] `28-0-common-skills-data` — GitHub Issue #158
+- [x] `28-2-common-skills-page` — GitHub Issue #159
+- [x] `29-0-ryugi-index-data` — GitHub Issue #160
+- [x] `29-2-ryugi-index-page` — GitHub Issue #161
+- [x] `30-0-ryugi-detail-data` — GitHub Issue #162
+- [x] `30-2-ryugi-detail-page` — GitHub Issue #163
+- [x] `31-0-ikizama-index-data` — GitHub Issue #164
+- [x] `31-2-ikizama-index-page` — GitHub Issue #165
+- [x] `32-0-ikizama-detail-data` — GitHub Issue #166
+- [x] `32-2-ikizama-detail-page` — GitHub Issue #167
+- [x] `33-2-items-index-page` — GitHub Issue #168
+- [x] `34-0-items-data` — GitHub Issue #169
+- [x] `34-1-item-card-components` — GitHub Issue #170
+- [x] `27-2-data-index-page` — GitHub Issue #157
+- [x] `34-2-items-pages` — GitHub Issue #171
+- [x] `42-0-npc-data-normalization` — GitHub Issue #174
+- [x] `40-2-404-page` — GitHub Issue #172
+- [x] `ex-01-page-navigation-links` — GitHub Issue #79
+- [x] `41-2-support-page` — GitHub Issue #173
 
 ## Phase 4: キャラクター作成
 
-- [x] `ex-02-web-character-sheet` — ルールを読み込む前でもキャラクターを作って遊んでみたいと思える、Webキャラクターシートを作成する
-  - completed: 2026-07-31 via PR #69 / `7f4905f`
-
-  - [x] designを生成する
-  - [x] キャラクター作成に必要な入力項目と手順を定義する
-  - [x] ルールサイト上でキャラクターを作成・編集できるWebキャラクターシートを実装する
-  - [x] 初めて本作に触れるPLが、ルールを通読しなくても試しにキャラクターを作り始められる導線を用意する
-  - [x] スマホで入力・閲覧しやすいことを確認する
-  - [x] 作成したキャラクターを遊ぶために必要な情報が確認できることを確認する
-  - [x] 対象VRTを比較し、必要なdesign intentとVRT参照情報を確認する。canonical baselineの初回作成・更新は、ユーザー明示指示時だけ行う
+- [x] `ex-02-web-character-sheet` — GitHub Issue #113
 
 ## Phase 4: 検索
 
-- [x] `43-install-pagefind` — Pagefindを導入する
-  - completed: 2026-07-19 via PR #48 / c98e6d3
-
-  - [x] Pagefind package追加
-  - [x] build後にindex生成できる
-  - [x] `npm run build:search-index` 追加
-
-- [x] `44-search-modal-ui` — 検索モーダルUIを作成する
-  - completed: 2026-07-19 via PR #49 / b2149b5
-
-  - [x] designを生成する
-  - [x] `SearchButton.astro` 作成
-  - [x] `SearchModal.astro` 作成
-  - [x] 検索結果を同一画面内に表示する枠を作成
-  - [x] ヘッダー右側に検索アイコンを表示する
-  - [x] 検索アイコンからポップアップ表示する
-  - [x] 検索中に背景本文が不用意にスクロールしないよう調整する
-  - [x] Escまたは閉じる操作で検索UIを閉じられるようにする
-
-- [x] `45-search-pagefind-integration` — Pagefind検索連携と検索メタデータを実装する
-  - completed: 2026-07-20 via PR #50 / 75888fd
-
-  - [x] 検索語入力でPagefind検索
-  - [x] 検索結果をモーダル内に表示
-  - [x] 結果クリックで該当ページまたはアンカーへ遷移
-  - [x] ヘッダー、フッター、サイトメニュー、ページ内目次を検索対象から除外
-  - [x] ページタイトル、セクション、種別ラベルを検索結果に表示
-  - [x] データカード個別アンカーが検索結果から利用できることを確認する
-
-- [x] `48-search-index-ci-deploy` — CIを更新して検索index生成込みでデプロイする
-  - completed: 2026-07-20 via PR #51 / 6ecf322
-
-  - [x] `.github/workflows/deploy.yml` を更新する
-  - [x] `npm run check` を実行する
-  - [x] `npm run build:public` 後に `npm run build:search-index` を実行する
-  - [x] Pagefind生成物がGitHub Pagesへdeployされる成果物に含まれることを確認する
-  - [x] 公開環境で検索UIがPagefind indexを参照できることを確認する
-  - [x] GitHub Pagesサブパス配下で検索indexのパスが壊れないことを確認する
+- [x] `43-install-pagefind` — GitHub Issue #175
+- [x] `44-search-modal-ui` — GitHub Issue #176
+- [x] `45-search-pagefind-integration` — GitHub Issue #177
+- [x] `48-search-index-ci-deploy` — GitHub Issue #178
 
 ## Phase 5: 仕上げ・公開
 
-- [x] `49-50-accessibility-responsive-pass` — アクセシビリティとレスポンシブの確認・調整を行う
-  - completed: 2026-07-23 via PR #68 / `5d4900c`
-
-  - [x] 画像altを確認
-  - [x] アイコンリンクのaria-labelを確認
-  - [x] メニュー・検索・目次のEsc挙動を確認
-  - [x] 見出し階層を確認
-  - [x] 色だけに依存した表現がないか確認
-  - [x] タップ領域が極端に小さくないか確認
-  - [x] 1280px以上の3レールPCレイアウトを確認
-  - [x] 768px以上1280px未満のtablet / 狭幅PC表示を確認
-  - [x] 768px未満のスマホレイアウトを確認
-  - [x] スマホヘッダーの下スクロール非表示・上スクロール表示を確認
-  - [x] サイトメニュー、ページ内目次、検索UIがスマホで混同されないことを確認
-  - [x] Playwright標準VRTの対象route・状態・desktop / tablet / mobile baselineを整備する
-  - [x] VRTでmobile layoutの横スクロール、MobilePageToc sticky headingの背景、TOC非表示対象ページを回帰検知する
-  - [x] `docs/design/<target>/` をnotes専用に移行し、baseline更新をユーザー明示指示時だけにする
-
-- [x] `ex-03-hero-layout-stability` — ヒーロー画像の表示遅延によるコンテンツ位置ずれを防ぐ
-  - completed: 2026-07-23 via PR #66 / `f0e83af`
-
-  - [x] 既存designを参照してVisual Reviewを行う（ユーザー決定: 新規design生成なし）
-  - [x] ヒーロー画像の表示前から表示領域を確保する
-  - [x] skeleton表示を検討する（ユーザー決定: 不要）
-  - [x] 画像の表示完了前後で本文コンテンツの位置がずれないことを確認する
-  - [x] 不要なクライアントJSを追加しない
-  - [x] 完成画面のスクリーンショットを取得する（ユーザー決定: design正本は更新しない）
-
-- [x] `51-performance-pass` — 軽量性を確認する
-  - completed: 2026-07-31 via PR #71 / `acdb0d7`
-
-  - [x] 不要なクライアントJSを削減
-  - [x] 画像lazy loadingを確認
-  - [x] カード一覧が過剰なクライアント描画に依存していないか確認
-  - [x] キャラクターシートのReact Islandとその専用依存を除き、大規模UIライブラリを導入していないことを確認
-  - [x] 外部解析スクリプトを導入していないことを確認
-
-- [x] `52-github-pages-base-check` — GitHub Pagesサブパス確認を行う
-  - completed: 2026-07-31 via PR #71 / `acdb0d7`
-
-  - [x] 内部リンク確認
-  - [x] 画像パス確認
-  - [x] CSS/JSパス確認
-  - [x] OGP画像URL確認
-  - [x] Pagefind検索ファイルパス確認
-  - [x] スキルカード個別アンカーの遷移確認
-  - [x] 各アイテムカード個別アンカーの遷移確認
-  - [x] データカード個別アンカーがGitHub Pagesサブパス配下でも壊れないことを確認
-
-- [x] `ex-05-access-analytics` — 初回公開告知前に、Cloudflare Web Analyticsで公開サイトの利用傾向を把握できるようにする
-  - completed: 2026-07-31 via PR #72 / `6ddfac8`
-
-  - Cloudflare Web Analyticsだけをmanual beaconで導入する
-  - GitHub Pagesの本番deployだけでbeaconを出力し、local build、PR検証、Visual Testでは送信しない
-  - Cloudflare側のsite登録、GitHub Actions Repository Variable、公開後の確認手順を運用文書へ記載する
-  - custom event、閲覧者単位の追跡、server-side access log、ほかの解析サービスは導入しない
-
-- [x] `53-content-smoke-test` — 主要ページ表示確認を行う
-  - completed: 2026-07-31 via PR #71 / `acdb0d7`
-
-  - [x] 全ルートにアクセスできる
-  - [x] サイトメニューが機能する
-  - [x] ページ内目次が機能する
-  - [x] 検索が機能する
-  - [x] トップページが表示される
-  - [x] 更新履歴ページが表示される
-  - [x] ルール本文ページが表示される
-  - [x] スキルカードが表示される
-  - [x] 各アイテム種別のカードが表示される
-  - [x] 流儀/生き様テンプレートページが表示される
-  - [x] スキルカードと各アイテムカードに個別アンカーIDが付与されていることを確認する
-  - [x] 本文内リンクまたは検索結果からデータカード個別アンカーへ遷移できることを確認する
-
-- [x] `55-initial-release` — 初期公開用最終調整を行う
-  - completed: 2026-07-31 via PR #73 / `d2ef9b1`
-
-  - [x] 初期リリースノートを追加
-  - [x] version `0.9.0` を初期release名として決定（GitHub上のtag付与はユーザー担当）
-  - [x] 初期公開前の最終build確認
-  - [x] 初期スコープ外機能が混入していないことを確認
-
-- [x] `56-ci-non-main-branches` — main以外でdeployなしCIを回すためのテスト / CIを整備する
-  - completed: 2026-07-31 via PR #74 / `8559f4c`
-
-  - [x] branch / pull_request向けのCI workflowをdeploy workflowと分離して作成する
-  - [x] `npm ci` を実行する
-  - [x] `npm run check` を実行する
-  - [x] `npm run build` を実行する
-  - [x] 必要なtestを実行する
-  - [x] GitHub Pages deployは行わない
-  - [x] main以外のbranch / PRで、deployなしに品質確認できることを確認する
-  - [x] docs-only更新、AGENTS / SKILL更新のみの場合にCIを走らせるかどうかの方針を明記する
+- [x] `49-50-accessibility-responsive-pass` — GitHub Issue #179
+- [x] `ex-03-hero-layout-stability` — GitHub Issue #184
+- [x] `51-performance-pass` — GitHub Issue #181
+- [x] `52-github-pages-base-check` — GitHub Issue #181
+- [x] `ex-05-access-analytics` — GitHub Issue #114
+- [x] `53-content-smoke-test` — GitHub Issue #181
+- [x] `55-initial-release` — GitHub Issue #182
+- [x] `56-ci-non-main-branches` — GitHub Issue #183

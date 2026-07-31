@@ -173,7 +173,7 @@ Archive an issue only when all of these are true:
 - the merged PR or commit is present on `main`
 - the issue is not the current in-progress tracking issue
 
-For a Gate child issue, confirm the parent Gate plan path from the child issue. After GitHub closure, update that Gate entry to status `done` and retain only `GitHub Issue #<number>: <child-issue-slug>`. Do not copy implementation logs, temporary review notes, background, detailed requirements, or follow-up handoff into the plan.
+For a Gate child issue, confirm the parent Gate plan path from the child issue. After GitHub closure, update that Gate entry to status `done` and retain only `<child-issue-slug> — GitHub Issue #<number>`. Do not copy implementation logs, temporary review notes, background, detailed requirements, or follow-up handoff into the plan.
 
 Before deciding whether an issue is complete, inspect its `完了条件` and `チェックポイント`.
 
@@ -205,7 +205,7 @@ Before deleting the local issue file:
 
 - Do not make active documents depend on completed issue files.
 - If active docs still need information from a completed issue, promote that information to the appropriate active SSoT: requirements, design notes, TODO, plan, `AGENTS.md`, or a skill.
-- Historical references must use plain text `GitHub Issue #<number>: <slug>`, not a Markdown link or a local issue path.
+- Historical references must use plain text `<slug> — GitHub Issue #<number>`, not a Markdown link or a local issue path.
 - For a milestone plan, retain only the completed issue name and GitHub Issue number; remove its detailed requirements, completion criteria, and implementation history.
 - For a completed parent Gate plan, move the lightweight plan to `docs/issue/milestone-<NN>/plans/` before deleting its parent issue file.
 

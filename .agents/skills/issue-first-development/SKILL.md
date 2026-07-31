@@ -293,7 +293,7 @@ After the child work is complete and the normal archive conditions are met:
 1. Run the child completion-record audit below.
 2. Create or reuse one same-name GitHub Issue containing the final local issue body, source path, completion record, and related PR or commit.
 3. Confirm that the GitHub Issue is closed.
-4. Replace the selected Gate entry's completed record with only `GitHub Issue #<number>: <child-issue-slug>` and update the Gate status to `done`.
+4. Replace the selected Gate entry's completed record with only `<child-issue-slug> — GitHub Issue #<number>` and update the Gate status to `done`.
 5. Delete the child issue file.
 
 Do not close or delete a child issue before GitHub Issue creation and close are authorized by the user or the approved post-merge policy. Do not retain the child issue as the active source of truth for later Gates.

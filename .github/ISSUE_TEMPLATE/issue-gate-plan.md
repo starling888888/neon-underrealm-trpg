@@ -16,6 +16,6 @@
 
 ### G1: Gate名
 
-- GitHub Issue: `GitHub Issue #<number>: NN-1-gate-slug`
+- Issue: `NN-1-gate-slug — GitHub Issue #<number>`
 
 plannedまたはin progressのGateには、この節を作らない。完了Gateには子issueの名称とGitHub Issue番号だけを残す。各Gateの詳細な目的、範囲、完了条件、参照正本、実装判断は、着手時に作る子issueだけへ記録し、完了後はローカルに残さない。
