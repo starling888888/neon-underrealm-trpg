@@ -111,12 +111,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: なし。CIと公開workflowの責務を整理するtaskを追加してから紐付ける。
   - handling plan: buildとPagefind index作成後に全`@vrt` targetを比較できるGitHub Actions workflowを整備する。定期実行と公開直後実行のどちらか、または両方を選び、GitHub Pages公開時の実行順序、失敗時の通知、snapshot更新の扱いを定義する。PR前のローカル確認は、UI変更時だけ変更targetに限定する。
 
-- [ ] ゲーム画像生成のbase promptを改訂し、利用方針を決定する
-  - source: `21-2-world-page` のPR #35 reviewとユーザー指示
-  - classification: follow-up
-  - plan: `docs/plan.md` の `54-1-game-image-generation-policy`
-  - handling plan: `docs/image-generation/base-prompt.md`は現時点ではsampleとして維持する。将来taskで、公式ロゴ、in-world signage、overlay typography、画像固有promptの役割分担、生成前の承認事項、base promptの改訂方針を決定する。
-
 <!--
 例:
 

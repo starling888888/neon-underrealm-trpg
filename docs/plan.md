@@ -37,12 +37,6 @@ PR merge後の計画更新は `.agents/skills/post-merge-plan-update/SKILL.md` �
   - [ ] ローカル開発、データ変換、検証、公開手順を記載
   - [ ] Excel変換がローカル作業であり、CI/CDでは変換済みJSONを使うことを明記
 
-- [ ] `54-1-game-image-generation-policy` — ゲーム画像生成promptの利用方針を整備する
-
-  - [ ] `docs/image-generation/base-prompt.md`を現行hero実績と将来の用途に合わせて改訂する
-  - [ ] 画像固有prompt、公式ロゴ、in-world signage、overlay typographyの利用方針と承認手順を決定する
-  - [ ] base promptをsampleとして使う範囲と、生成前に画像固有promptで必ず決める事項を記載する
-
 ---
 
 ## 初期スコープ外として維持するもの
