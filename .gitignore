@@ -11,3 +11,4 @@ raw-google-drive.url
 .tmp/
 test-results/
 playwright-report/
+canonical-snapshots/visual/

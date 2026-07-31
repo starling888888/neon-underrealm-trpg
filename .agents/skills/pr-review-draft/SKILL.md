@@ -67,6 +67,15 @@ The technical reviewer checks:
 - tests, validation, and maintainability
 - Codex workflow and agent-facing Markdown safety
 
+### Gate technical review
+
+Technical review is required for every PR. Select the technical review agent from the current issue.
+
+- Gate child issue: use `gate_technical_reviewer` from `.codex/agents/gate-technical-reviewer.toml`. A Gate child issue maps to exactly one selected Gate in its parent Gate plan.
+- Parent issue or non-Gate issue: use `technical_reviewer` from `.codex/agents/technical-reviewer.toml`.
+
+Do not omit technical review for a Gate PR. The Gate technical reviewer reports only `blocker` and `important` findings. Do not run the high-effort `technical_reviewer` again for the same Gate diff unless the user explicitly asks for an additional review.
+
 Both reviewers return Japanese Markdown. Each report must use:
 
 ```md
@@ -91,18 +100,20 @@ Both reviewers return Japanese Markdown. Each report must use:
 ## 判断不能・ユーザー確認事項
 ```
 
+For a Gate child issue, the selected Gate technical reviewer uses `# Gate Technical Review` and only the `blocker` / `important` severities defined in its agent definition. The document reviewer keeps the shared format above.
+
 ## Workflow
 
 1. Assign the next shared review number `N`.
-2. Spawn `document_reviewer` and `technical_reviewer` in parallel.
-3. Give both reviewers the remote PR information, reviewed commit range, current issue path, and required local SSoT paths.
+2. Select the technical review agent under Gate technical review. Spawn `document_reviewer` and the selected technical reviewer in parallel.
+3. Give both reviewers the remote PR information, reviewed commit range, current issue path, and required local SSoT paths. For a Gate child issue, also give the selected Gate and parent Gate plan path.
 4. Write their responses to:
    - `.tmp/review/<branch-name>/document-review-N.md`
    - `.tmp/review/<branch-name>/technical-review-N.md`
 5. Write `.tmp/review/<branch-name>/pr-review-N.md` with:
    - PR number, URL, base, head, and remote head commit
    - reviewed commit range
-   - local agent and skill definitions used
+   - local agent and skill definitions used, including the selected technical review agent
    - linked document and technical report paths
    - known unchecked remote data
 6. Run `review-to-issue` for both reports.

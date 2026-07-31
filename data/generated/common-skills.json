@@ -1,6 +1,6 @@
 {
   "dataName": "common-skills",
-  "updatedAt": "2026-07-22T20:28:52+09:00",
+  "updatedAt": "2026-07-30T22:32:13+09:00",
   "data": {
     "bonus": [
       {
@@ -193,7 +193,7 @@
         "range": null,
         "usageRestriction": null,
         "summary": "覚悟で立ち上がるときの回復量を増やす。",
-        "effect": "覚悟を使用した際の体力回復を+lv×2d6点する。他の覚悟増強とは別のスキルとして扱う。",
+        "effect": "覚悟を使用した際の体力回復量+lv×2d6点。他の覚悟増強とは別のスキルとして扱う。",
         "sourceOrder": 12,
         "id": "skill-common-basic-pv-3f26aebf68c5"
       },
@@ -209,7 +209,7 @@
         "range": null,
         "usageRestriction": null,
         "summary": "覚悟で攻撃を強化するときの強化量を増やす。",
-        "effect": "覚悟を使用した際の能動判定数を+lv÷2個する。他の覚悟増強とは別のスキルとして扱う。",
+        "effect": "覚悟を使用した際の能動判定数+lv÷2。他の覚悟増強とは別のスキルとして扱う。",
         "sourceOrder": 13,
         "id": "skill-common-basic-pv-809f880285ea"
       },
@@ -225,7 +225,7 @@
         "range": null,
         "usageRestriction": null,
         "summary": "覚悟でリアクションを強化するときの強化量を増やす。",
-        "effect": "覚悟を使用した際の受動判定数を+lv個する。他の覚悟増強とは別のスキルとして扱う。",
+        "effect": "覚悟を使用した際の受動判定数+lv。他の覚悟増強とは別のスキルとして扱う。",
         "sourceOrder": 14,
         "id": "skill-common-basic-pv-33718016fb39"
       },
@@ -241,7 +241,7 @@
         "range": null,
         "usageRestriction": null,
         "summary": "覚悟で気合を獲得するときの獲得量を増やす。",
-        "effect": "覚悟を使用した際の気合獲得量を+lv÷2個する。ただし気合を獲得する「覚悟の力」には効果を発揮しない。他の覚悟増強とは別のスキルとして扱う。",
+        "effect": "覚悟を使用した際の気合獲得量+lv÷2。ただし気合を獲得する「覚悟の力」には効果を発揮しない。他の覚悟増強とは別のスキルとして扱う。",
         "sourceOrder": 15,
         "id": "skill-common-basic-pv-5f2dff99a4b4"
       },
@@ -449,7 +449,7 @@
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
         "summary": "特殊攻撃の抵抗に失敗した際でもダメージを減少させる。",
-        "effect": "抵抗判定に失敗した掛け合い時に使用。受けるダメージを「精神」点減少する。この効果はダメージ軽減を無視、減少する効果の影響を受けない。",
+        "effect": "抵抗判定に失敗した掛け合い時に使用。受けるダメージを「精神」点減少する。",
         "sourceOrder": 28,
         "id": "skill-common-basic-d-ffa609deb8b8"
       },

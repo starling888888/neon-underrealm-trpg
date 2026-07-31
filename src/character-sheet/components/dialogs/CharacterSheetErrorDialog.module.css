@@ -1,0 +1,19 @@
+.dialog {
+  border-color: var(--color-danger);
+}
+
+.noErrors {
+  border-color: var(--color-border-strong);
+}
+
+.count {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-inline-start: 1.25rem;
+}

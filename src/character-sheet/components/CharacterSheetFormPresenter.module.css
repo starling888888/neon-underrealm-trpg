@@ -1,0 +1,99 @@
+.form {
+  --sheet-section-content-padding: var(--space-3);
+  --sheet-section-gap: var(--space-5);
+  --sheet-section-toggle-height: 2.25rem;
+  --character-sheet-action-button-size: 1.5rem;
+  --character-sheet-font-label: var(--text-xs);
+  --character-sheet-font-label-dense: 0.5625rem;
+  --character-sheet-font-control: var(--text-xs);
+  --character-sheet-font-display: var(--text-sm);
+  --character-sheet-control-min-height: 1.625rem;
+  --character-sheet-list-row-min-height: 2.25rem;
+  --character-sheet-font-table: 0.75rem;
+  --character-sheet-font-table-mobile-label: 0.625rem;
+  --character-sheet-font-table-mobile-control: 0.6875rem;
+  --character-sheet-line-height-table: 1.25;
+
+  margin: 0;
+  min-inline-size: var(--character-sheet-single-column-min-width);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sheet-section-gap);
+}
+
+.form :where(h2, h3, h4) {
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.form h2 {
+  font-size: var(--text-base);
+}
+
+.form h3 {
+  font-size: var(--character-sheet-font-display);
+}
+
+.form h4 {
+  font-size: var(--text-xs);
+}
+
+.form input[type="number"] {
+  font-weight: normal;
+  text-align: right;
+}
+
+.form input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-link);
+  margin: 0;
+}
+
+.form :global(.character-sheet-number-value) {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--character-sheet-control-min-height);
+  border: var(--border-width) solid var(--color-example-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-example-soft);
+  padding: 0.1875rem 1.125rem 0.1875rem 0.375rem;
+  color: var(--color-text);
+  font-size: var(--character-sheet-font-control);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+  text-align: right;
+}
+
+.primaryColumn,
+.secondaryColumn {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: var(--sheet-section-gap);
+}
+
+.skillsSections {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.specialItemSections {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (width >= 80rem) {
+  .form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (width < 48rem) {
+  .form {
+    --sheet-section-content-padding: var(--space-2);
+    --sheet-section-gap: var(--space-4);
+    min-inline-size: 0;
+  }
+}

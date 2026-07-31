@@ -1,9 +1,9 @@
 ---
 import {
-  displayText,
-  displayValue,
+  formatDisplayText,
+  formatDisplayValue,
   type DisplayValue,
-} from "./card-display";
+} from "../../lib/utils/display-value";
 
 interface Props {
   anchorId?: string;
@@ -23,21 +23,21 @@ const { anchorId, name, credit, activationMentalCost, implantPoints, effect } = 
       <span class="data-card-name">{name}</span>
     </header>
 
-    <p class="data-card-meta"><span class="data-card-credit">信用：{displayValue(credit)}</span></p>
+    <p class="data-card-meta"><span class="data-card-credit">信用：{formatDisplayValue(credit)}</span></p>
 
     <dl class="data-card-details">
       <div class="data-card-detail">
         <dt>発動精神力</dt>
-        <dd>{displayValue(activationMentalCost)}</dd>
+        <dd>{formatDisplayValue(activationMentalCost)}</dd>
       </div>
       <div class="data-card-detail">
         <dt>埋め込み点数</dt>
-        <dd>{displayValue(implantPoints)}</dd>
+        <dd>{formatDisplayValue(implantPoints)}</dd>
       </div>
     </dl>
 
     <div class="data-card-effect">
-      <p class="data-card-rule">{displayText(effect)}</p>
+      <p class="data-card-rule">{formatDisplayText(effect)}</p>
     </div>
   </div>
 </article>

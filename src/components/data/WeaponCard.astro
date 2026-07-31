@@ -1,9 +1,9 @@
 ---
 import {
-  displayText,
-  displayValue,
+  formatDisplayText,
+  formatDisplayValue,
   type DisplayValue,
-} from "./card-display";
+} from "../../lib/utils/display-value";
 
 interface Props {
   anchorId?: string;
@@ -28,33 +28,33 @@ const { anchorId, name, credit, kind, check, attack, guard, ammo, range, effect 
       <span class="data-card-name">{name}</span>
     </header>
 
-    <p class="data-card-meta"><span class="data-card-credit">信用：{displayValue(credit)}</span></p>
+    <p class="data-card-meta"><span class="data-card-credit">信用：{formatDisplayValue(credit)}</span></p>
     <p class="data-card-meta data-card-meta-secondary">
-      <span>{displayValue(kind)}武器</span>
-      <span>技能：{displayValue(check)}</span>
+      <span>{formatDisplayValue(kind)}武器</span>
+      <span>技能：{formatDisplayValue(check)}</span>
     </p>
 
     <dl class="data-card-details">
       <div class="data-card-detail">
         <dt>攻撃力</dt>
-        <dd>{displayValue(attack)}</dd>
+        <dd>{formatDisplayValue(attack)}</dd>
       </div>
       <div class="data-card-detail">
         <dt>ガード値</dt>
-        <dd>{displayValue(guard)}</dd>
+        <dd>{formatDisplayValue(guard)}</dd>
       </div>
       <div class="data-card-detail">
         <dt>射程</dt>
-        <dd>{displayValue(range)}</dd>
+        <dd>{formatDisplayValue(range)}</dd>
       </div>
       <div class="data-card-detail">
         <dt>装弾数</dt>
-        <dd>{displayValue(ammo)}</dd>
+        <dd>{formatDisplayValue(ammo)}</dd>
       </div>
     </dl>
 
     <div class="data-card-effect">
-      <p class="data-card-rule">{displayText(effect)}</p>
+      <p class="data-card-rule">{formatDisplayText(effect)}</p>
     </div>
   </div>
 </article>

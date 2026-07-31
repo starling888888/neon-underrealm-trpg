@@ -109,6 +109,10 @@ export const siteMenuItems: SiteMenuItem[] = [
     href: "/advancement",
   },
   {
+    label: "キャラクターシート",
+    href: "/character-sheet",
+  },
+  {
     label: "サポート",
     href: "/support",
   },

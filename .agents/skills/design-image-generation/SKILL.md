@@ -1,71 +1,110 @@
 ---
 name: design-image-generation
-description: Use this skill when the user asks to create or update design intent and VRT reference notes under docs/design/<design-target>, or to update an approved VRT baseline.
+description: Use this skill when creating an HTML and Playwright-captured design draft, maintaining design intent notes, or updating an approved VRT baseline for a UI task.
 ---
 
-# Design Notes and VRT Baseline Skill
+# Design Draft, Notes, and VRT Baseline Skill
 
-Maintain design intent notes and approved VRT baselines. Do not create design images.
+Create reviewable design drafts. Maintain design intent notes. Maintain approved
+VRT baselines.
 
 Use when the user asks to:
 
+- create or generate a design draft image for a UI, CSS, layout, page, or
+  Component task
+- create a desktop, tablet, or mobile HTML design draft before implementation
 - create or update `docs/design/<design-target>/notes.md`
-- prepare design intent, routes, states, viewports, or comparison points for a UI task
-- record a VRT target and its snapshot names
-- create or update a Playwright VRT baseline after explicitly approving it
+- prepare design intent, routes, states, viewports, or comparison points for a
+  UI task
+- create or update a Playwright VRT baseline after explicit approval
 
 Do not use for:
 
-- implementation
-- Visual Review or VRT comparison before the user approves a baseline update
-- screenshot capture for a design document
-- PR creation, commit, push, or post-merge cleanup
+- application UI implementation
+- Visual Review of an implementation before the user approves a baseline update
+- copying a design draft or implementation screenshot into `docs/design/`
+- PR creation, commit, push, merge, tag, or release
 
 ## Core Rule
 
-`docs/design/<design-target>/` is notes-only. The canonical visual baseline is
-the Playwright `toHaveScreenshot()` snapshot under
-`canonical-snapshots/visual/<target>/`.
+Keep these artifact roles separate:
 
-Do not create, copy, or canonicalize PNG images under `docs/design/`. Do not
-run `visual:capture`, use `test-results/` or `playwright-report/` as a design
-source, create a standalone screenshot prototype, or use an ad hoc Playwright
-command.
+- A design draft is a temporary HTML/CSS prototype and capture under
+  `.tmp/design/<design-target>/`. It supports a design conversation. Do not
+  commit it or treat it as a canonical visual baseline.
+- `docs/design/<design-target>/notes.md` records approved design intent in text.
+  It is the design documentation source of truth. Do not put PNG files there.
+- A Playwright `toHaveScreenshot()` snapshot under
+  `canonical-snapshots/visual/<target>/` is the canonical visual baseline for an
+  implemented UI. Create or update it only after the user explicitly approves
+  the affected target.
 
-Run `npm run visual:update` only after the user explicitly approves creation or
-update of the baseline. Limit the update to the approved target. Do not update a
-baseline merely to hide a Visual Review difference.
+Do not use raster image generation as the default for a page or Component
+layout draft. Use it only when the design needs a bitmap asset such as an
+illustration, texture, or non-system visual.
 
 ## Preconditions
 
-Before editing design notes or a VRT baseline:
+Before creating a draft, updating notes, or updating a baseline:
 
 1. Read `AGENTS.md` and the current issue when one exists.
-2. Read the relevant requirements, out-of-scope constraints, TODOs, and
-   existing `docs/design/` notes.
-3. Identify the target, route, states, viewports, VRT test file, tags, and
-   snapshot names.
-4. For a baseline update, confirm that the user explicitly approved the
-   affected target and that the implementation difference is understood.
+2. Read relevant requirements, out-of-scope constraints, TODOs, and existing
+   `docs/design/` notes.
+3. Identify the design target, route when known, states, viewports, and the
+   decision that the user wants to review.
+4. Identify existing global style and layout constraints.
+5. For a baseline update, identify the VRT test, tags, and snapshot names, and
+   confirm explicit user approval.
 
-Stop and report missing information or an SSoT conflict. Do not implement a UI
-change from this skill.
+Stop and report an SSoT conflict. Do not implement application UI from this
+skill.
 
-## Notes Format
+## Initial Draft Workflow
 
-Create or update `docs/design/<design-target>/notes.md` with the information
-needed to understand and review the target:
+Use this workflow only when the user explicitly asks to create or generate a
+draft.
+
+1. Identify the design target and review scope.
+2. Read the required SSoT and existing design notes.
+3. Record unresolved questions in `notes.md` before guessing a requirement that
+   changes scope.
+4. Create a standalone HTML/CSS prototype under
+   `.tmp/design/<design-target>/`. Do not alter application source files.
+5. Add a local Playwright capture script in the same directory when one is
+   needed. Capture the prototype, not an application route.
+6. Capture the requested viewport and state. Use the review viewport values in
+   `notes.md` when they exist.
+7. Inspect the capture. Correct visible conflicts with the approved design
+   intent before presenting it.
+8. Present the temporary capture to the user and stop for review.
+9. Record accepted decisions in `docs/design/<design-target>/notes.md`. Do not
+   rely on the temporary image alone to carry an approved decision.
+
+Do not copy the draft capture into `docs/design/`, `test-results/`,
+`playwright-report/`, or a canonical VRT snapshot. Do not run
+`npm run visual:update` for a draft.
+
+## Design Notes Workflow
+
+1. Identify the design target and its relationship to the current task.
+2. Record the route, states, viewports, constraints, comparison points, and
+   VRT status in `docs/design/<design-target>/notes.md`.
+3. If the VRT target does not exist, record that an implementation gate must add
+   it. Do not create application code or a placeholder baseline.
+4. Stop and report changed notes and unresolved questions.
+
+Use this structure when it fits the target:
 
 ```md
 # <design-target>
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/<target>.spec.ts` and its tags
+- test:
 - route:
 - states:
 - snapshots:
-- baseline update: user approval is required before `npm run visual:update`
+- baseline update: explicit user approval is required
 
 ## Target
 
@@ -97,26 +136,13 @@ needed to understand and review the target:
 - ...
 ```
 
-Record the intent in text. Do not rely on a screenshot that is not in the VRT
-baseline to carry a design decision.
+## Approved VRT Baseline Workflow
 
-## Workflow
+Use this workflow only after the user explicitly approves the target baseline.
 
-### Design intent or VRT reference notes
-
-1. Identify the design target and its relationship to the current task.
-2. Read the required SSoT and existing design notes.
-3. Record the route, states, viewports, constraints, and comparison points in
-   `notes.md`.
-4. If the VRT target does not yet exist, record that implementation work must
-   add it; do not create implementation code from this skill.
-5. Stop and report the notes and open questions.
-
-### Approved VRT baseline update
-
-1. Confirm the explicit user approval and the affected target tags.
-2. Build the VRT fixture and use the existing 4321 preview server.
-3. Run the target-only VRT comparison and inspect any difference.
+1. Confirm the affected target, tags, route, states, and snapshot names.
+2. Build the VRT fixture and use the existing `4321` preview server.
+3. Run the target-only VRT comparison and inspect the difference.
 4. Update only the approved target with `npm run visual:update` and its target
    tag.
 5. Run the same target-only comparison without `--update-snapshots`.
@@ -131,8 +157,9 @@ to investigate VRT infrastructure.
 
 Report:
 
-- mode: notes update / approved baseline update
+- mode: initial draft / notes update / approved baseline update
 - design target and changed files
+- draft artifact and capture path when initial draft mode is used
 - VRT target, tags, and snapshots when applicable
 - SSoT and constraints checked
 - commands run and their results

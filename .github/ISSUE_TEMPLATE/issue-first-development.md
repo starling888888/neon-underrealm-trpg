@@ -1,5 +1,15 @@
 # NN-slug
 
+## 最優先のデザイン入力
+
+Gate子issueがUI、CSS、layout、page、Componentを扱う場合は、この節をtitleの直後に残す。
+
+- 実装時に、対象の`.tmp/design/<design-target>/`配下にある承認済みdesign画像を遵守する。
+- ユーザーの最新指示は画像デザインを上書きする。
+- 画像デザインを遵守した実装を基準に、ユーザー指示を受けて微調整を行う。
+- design notes、既存source code、実装結果のscreenshot、reviewer出力を、画像デザインの代わりに画面配置・導線・状態表現を決める入力として扱わない。
+- 画像デザインまたはユーザー指示にない配置・導線・状態表現は実装都合で補完しない。不明点または競合がある場合は、source codeを変更せずに停止してユーザー判断を求める。
+
 ## 目的
 
 このタスクで達成する目的を書く。
@@ -16,6 +26,16 @@
 - `docs/TODO.md` に関連項目がある場合は該当TODO
 - UI、CSS、layout、page、Componentタスクで該当する場合は `docs/design/<design-target>/`
 - design intent / VRT参照情報の作成が必要な場合は `.agents/skills/design-image-generation/SKILL.md`
+
+## Gate関係
+
+親issueでは、専用Gate planへの参照だけを記録する。Gate一覧はここに書かない。
+
+- 親issue: `なし（このissueが親issue）` または `docs/issue/NN-slug.md`
+- Gate plan: `docs/issue/NN-slug/plan.md`
+- Gate: 親issueでは `なし`。子issueでは `G1: Gate名` のように1件だけ記録する。
+
+子issueは、この節と選択したGate briefだけで、新しいsessionから実装準備を開始できなければならない。
 
 ## 対象範囲
 

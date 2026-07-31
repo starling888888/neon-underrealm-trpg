@@ -8,15 +8,15 @@ Use this file as an index only. Do not read every skill by default. Read the ski
 
 ### `issue-first-development`
 
-Use when starting a development task, creating a task branch, creating or validating `docs/issue/*.md`, or drafting an issue from a remote snapshot. Creating or validating an issue requires explicit user authorization; task numbers, skill invocation, and branch preparation do not grant it.
+Use when starting a development task, creating a task branch, creating or validating `docs/issue/*.md`, preparing a per-parent Gate plan, creating a Gate child issue, or drafting an issue from a remote snapshot. Each parent issue has `docs/issue/<parent-issue>/plan.md`; it splits the parent task into implementable Gates and records progress and durable completed-Gate handoffs. The child issue is the self-contained implementation contract. Creating or validating an issue requires explicit user authorization; task numbers, skill invocation, and branch preparation do not grant it.
 
-For scope, requirements, or contents-only instructions, perform only the requested work and do not create an issue or run the issue reviewer. In local repository mode, run the issue reviewer only after creating a user-authorized local issue. Implementation requires explicit user approval.
+For scope, requirements, or contents-only instructions, perform only the requested work and do not create an issue or run an issue review agent. In local repository mode, run an issue review agent only after creating a user-authorized local issue. Parent issues use `issue_reviewer`; Gate child issues use the faster one-pass `gate_issue_reviewer`. Implementation requires explicit user approval.
 
 ### `design-image-generation`
 
-Use when creating or updating design intent and VRT reference notes under `docs/design/<design-target>/`, or when updating an approved VRT baseline.
+Use when creating an HTML and Playwright-captured design draft, creating or updating design intent and VRT reference notes under `docs/design/<design-target>/`, or updating an approved VRT baseline.
 
-This skill maintains design notes and VRT baselines only. It does not implement UI or perform Visual Review.
+This skill keeps temporary design drafts under `.tmp/design/`, design documentation under `docs/design/`, and implemented UI baselines under Playwright VRT snapshots. It does not implement UI or perform Visual Review.
 
 ### `visual-implementation-review`
 
@@ -62,7 +62,7 @@ This skill updates the existing `release-notes` Google Sheet and `contents/<slug
 
 ### `pr-review-draft`
 
-Use when reviewing a remote GitHub PR with local document and technical reviewers, then handing validated findings to `review-to-issue`.
+Use when reviewing a remote GitHub PR with local document and technical reviewers, then handing validated findings to `review-to-issue`. Technical review is mandatory for every PR. Gate child issue PRs use `gate_technical_reviewer`; parent and non-Gate issue PRs use `technical_reviewer`.
 
 The remote PR is the review source. The workflow stores temporary reports under `.tmp/review/<branch-name>/` and stops after `review-to-issue`.
 

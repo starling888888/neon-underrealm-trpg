@@ -1,0 +1,71 @@
+.dialog {
+  composes: pickerDialog from "../CharacterSheetFormList.module.css";
+}
+
+.content {
+  display: grid;
+  gap: 0;
+}
+
+.group {
+  display: grid;
+  gap: 0;
+}
+
+.group h3 {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.selectionGuide {
+  composes: selectionGuide from "../CharacterSheetFormList.module.css";
+}
+
+.headerRow {
+  composes: headerRow from "./PickerTable.module.css";
+  --character-sheet-picker-header-white-space: pre-line;
+  --character-sheet-picker-table-columns: minmax(0, 1fr) 3rem 4rem;
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.5rem 3.25rem;
+}
+
+.firstLine {
+  composes: firstLine from "./PickerTable.module.css";
+  --character-sheet-picker-table-columns: minmax(0, 1fr) 3rem 4rem;
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.5rem 3.25rem;
+}
+
+.candidate {
+  composes: candidate from "../CharacterSheetFormList.module.css";
+}
+
+.candidateName {
+  composes: pickerCandidateName from "../CharacterSheetFormList.module.css";
+}
+
+.firstLine button {
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.firstLine button:hover {
+  background: var(--color-surface-muted);
+}
+
+.candidate p {
+  margin: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+  line-height: var(--line-height-normal);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.candidate p strong {
+  color: var(--color-text-muted);
+}

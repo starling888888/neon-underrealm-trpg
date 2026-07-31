@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { createHash } from "../../src/lib/utils/hash";
-import { visualBaseUrl, visualRoutes, visualViewports } from "./config";
+import { visualRoutes, visualViewports } from "./config";
 
 const basicAttackId = `skill-common-bonus-a-${createHash("基本の一撃")}`;
 const basicAttackResultSelector = `.search-result-link[href*="/data/common-skills/"][href$="#${basicAttackId}"]`;
@@ -94,7 +94,7 @@ test("search panel closes when another mobile overlay opens @search-modal-overla
 test("search panel displays a Pagefind data-card anchor result @search-modal-results", async ({
   page,
 }) => {
-  const index = await page.request.get(`${visualBaseUrl}pagefind/pagefind.js`);
+  const index = await page.request.get("pagefind/pagefind.js");
 
   test.skip(
     !index.ok(),
@@ -178,7 +178,7 @@ test("search panel guides one-character kana and ASCII searches @search-modal-qu
 test("search panel retries Pagefind after an initial load failure @search-modal-retry", async ({
   page,
 }) => {
-  const index = await page.request.get(`${visualBaseUrl}pagefind/pagefind.js`);
+  const index = await page.request.get("pagefind/pagefind.js");
 
   test.skip(
     !index.ok(),

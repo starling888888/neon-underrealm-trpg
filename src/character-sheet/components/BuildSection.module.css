@@ -1,0 +1,275 @@
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+  gap: var(--space-3);
+}
+
+.buildPane,
+.attributePane,
+.referencePane {
+  min-width: 0;
+}
+
+.buildPane,
+.attributePane {
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.attributePane {
+  /* The dense ability grid must retain its established label scale. */
+  --character-sheet-font-label: var(--character-sheet-font-label-dense);
+}
+
+.buildPane[data-invalid],
+.attributePane[data-invalid] {
+  border-color: var(--color-danger);
+  box-shadow: inset 0 0 0 var(--border-width) var(--color-danger);
+}
+
+.choiceRow,
+.otherRow,
+.otherHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.75rem;
+  gap: var(--space-1);
+  align-items: end;
+}
+
+.choiceRow + .choiceRow,
+.otherHeader {
+  margin-top: var(--space-2);
+}
+
+.otherRow,
+.otherHeader {
+  grid-template-columns: minmax(0, 1fr) 2.75rem var(
+      --character-sheet-action-button-size
+    );
+}
+
+.otherRow {
+  margin-top: var(--space-1);
+}
+
+.otherRow + .otherRow {
+  margin-top: var(--space-2);
+}
+
+.label,
+.metricLabel,
+.attributeHeader,
+.pointsHeader,
+.attributeRow > span,
+.otherHeader > span {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--character-sheet-font-label);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+}
+
+.selectField,
+.levelField {
+  min-width: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.select,
+.numberInput {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--character-sheet-control-min-height);
+  margin-top: 0.125rem;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 0.1875rem 0.375rem;
+  font-size: var(--character-sheet-font-control);
+  line-height: var(--line-height-tight);
+}
+
+.numberInput[aria-invalid="true"],
+.select[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.addButton {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.attributeMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--line-height-tight);
+}
+
+.attributeMetaItem {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.attributeGrid {
+  display: grid;
+  grid-template-columns: minmax(2.25rem, 1fr) repeat(7, minmax(2.4rem, 0.8fr));
+  gap: var(--space-1);
+  align-items: end;
+  font-size: var(--character-sheet-font-label-dense);
+}
+
+.attributeHeader,
+.pointsHeader {
+  white-space: nowrap;
+}
+
+.pointsHeader,
+.stackedAttributeHeader {
+  display: grid;
+  line-height: var(--line-height-tight);
+}
+
+.pointsHeader > span,
+.stackedAttributeHeader > span {
+  display: block;
+}
+
+.attributeRow {
+  display: contents;
+}
+
+.attributeRow .numberInput {
+  margin: 0;
+  padding-inline: 0.1875rem;
+}
+
+.referencePane {
+  grid-column: 1 / -1;
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.referenceGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.referenceMetric {
+  min-width: 0;
+}
+
+.referenceLabel {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+  white-space: nowrap;
+}
+
+.referenceValue {
+  margin-top: 0.125rem;
+}
+
+.commonSkillBonuses {
+  margin-top: var(--space-2);
+}
+
+.commonSkillTitle {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+}
+
+.commonSkillBonusGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.commonSkillBonus {
+  min-width: 0;
+  padding: var(--space-1);
+  border: var(--border-width) solid var(--color-example-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-example-soft);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+}
+
+.commonSkillBonusUnlocked {
+  border-color: var(--color-accent);
+  border-width: calc(var(--border-width) * 2);
+}
+
+.commonSkillBonus > span {
+  display: block;
+}
+
+.commonSkillBonus > span:last-child {
+  margin-top: 0.125rem;
+  color: var(--color-text);
+  font-weight: normal;
+  white-space: pre-line;
+}
+
+.commonSkillBonusUnlocked > span:last-child {
+  font-weight: 600;
+}
+
+@media (width < 48rem) {
+  .section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .referencePane {
+    grid-column: auto;
+  }
+
+  .attributeGrid {
+    grid-template-columns: minmax(2rem, 1fr) repeat(7, minmax(0, 0.8fr));
+    gap: 0.1875rem;
+  }
+}
+
+@media (width >= 48rem) and (width < 80rem) {
+  .section {
+    grid-template-columns: minmax(9.5rem, 0.32fr) minmax(0, 0.68fr);
+    gap: var(--space-2);
+  }
+
+  .attributeGrid {
+    grid-template-columns: minmax(1.75rem, 1fr) repeat(
+        7,
+        minmax(1.75rem, 0.75fr)
+      );
+    gap: 0.1875rem;
+  }
+}

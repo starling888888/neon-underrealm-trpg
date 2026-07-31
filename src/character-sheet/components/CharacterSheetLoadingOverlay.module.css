@@ -1,0 +1,35 @@
+.overlay {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: var(--space-3);
+  background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 750;
+  text-align: center;
+}
+
+.indicator {
+  width: 2rem;
+  height: 2rem;
+  justify-self: center;
+  border: 0.1875rem solid var(--color-border-strong);
+  border-top-color: var(--color-link);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    animation: none;
+  }
+}

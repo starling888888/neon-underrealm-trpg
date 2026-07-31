@@ -21,11 +21,77 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 
 ## 未対応
 
+- [x] G22で専用アイテムカテゴリframeへカテゴリ削除buttonを追加する
+  - source: `.tmp/review/ex-02-18-sheet-omamori/human-review-1.md` / `ex-02-18-sheet-omamori` のレビュー指摘 1
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG22
+  - handling plan: G18で追加する非折りたたみのカテゴリframeへ、カテゴリ削除buttonの表示・操作・focus復帰を追加する。G22で行う既定表示、カテゴリ単位の追加・削除、警告表示と整合させ、現在の生き様に対応する既定カテゴリは削除できない契約を適用する。
+
+- [x] G24着手前にキャラクターシート可変行のRHF操作境界を`useFieldArray`契約へ整合する
+  - source: `.tmp/chatgpt-review.md` / `レビュー指摘 1`
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24
+  - handling result: G16で全可変行の追加・削除・移動・置換を`useFieldArray`へ統一し、row IDと`reset`後のuncontrolled input同期を固定した。G24はこの契約に従って復元する。
+
+- [x] G24 / G27着手前にスキルLvの未確定入力、最大Lv超過、復元・JSON入力値の扱いをrequirements / schema契約として確定する
+  - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 2、レビュー指摘 3、G15 レビュー指摘 1・4
+  - classification: requirements and schema follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24、G27
+  - handling result: G16で未確定入力・最大Lv超過を値保持と局所errorへ統一し、G24で構造・identityだけを拒否してゲーム上の不整合値を復元する契約をrequirements / schemaへ反映した。G27は同じrestore adapterを利用する。
+
+- [x] G16で生き様bonusを含む全スキルの最大Lv制約を定義する
+  - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG16
+  - handling result: G16で通常skillと生き様bonusの最大Lv違反を値保持・局所errorとして統一し、経験点集計と保存・復元の契約へ適用した。
+
+- [x] G31でlocator-only Visual Review scenarioの実行経路を分離する
+  - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
+  - handling result: character-sheet専用scenario helperでfull-page、section locator、dialog locatorを分離した。通常VRTはlocator stateを該当locatorのcanonical snapshotとして比較し、full-page baselineを要求しない。全358 targetの再生成・比較を確認した。
+
+- [x] G31のコンテンツレビューでtooltip indicatorの上下揃えに違和感があれば、共通`FormulaTooltip`の配置を再調整する
+  - source: `ex-02-11-sheet-noncombat` のレビュー指摘 6に対するユーザーのpreview確認
+  - classification: visual usability follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
+  - handling result: G31のコンテンツレビューで再調整を要する違和感は指摘されなかったため、共通`FormulaTooltip`は変更しない。
+
+- [x] G31でキャラクターシート全体のVisual Reviewを完了する
+  - source: G11 Gate Tech Reviewに対するユーザー判断
+  - classification: visual review follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
+  - handling result: canonical screenshotを入力にdesktop / tabletとmobileのコンテンツレビューを実施した。固定actionの本文重なり、mobileの情報密度、入力順、破壊的操作の色、icon-only操作はユーザー判断で非対応とした。候補行の選択可能性だけを次のTODOへ後続化した。
+
+- [ ] キャラクターシートの候補行を選択可能に見せるデザインを検討する
+  - source: `.tmp/review/ex-02-31-sheet-integration/contents-review-1.md` とユーザー判断
+  - classification: visual usability follow-up
+  - plan: なし。キャラクターシートの次のdesign改訂taskを計画してから紐付ける。
+  - handling plan: skill・item候補dialogで、候補名または行全体が選択可能であること、選択済み・非選択・選択不可の状態を視覚だけで区別できる表現を検討する。既存designと操作導線への影響を確認し、方針を承認してから実装する。
+
+- [ ] 覚悟から縁へ戻す効果の表現を整理する
+  - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
+  - classification: rule wording follow-up
+  - plan: なし。ルール文言の整理が必要になった時点で独立taskを計画する。
+  - handling plan: `src/pages/rules/battle.mdx`の「入れ替えができなくなる」と、スキル効果の「覚悟を縁に戻す」を、覚悟を解除する効果は許可する意図が明確になる表現へ整理する。生成JSONのスキル本文を変更する場合は、対応する生成元から更新する。
+
+- [ ] JSONのスキーマバージョン差異との互換性を担保する
+  - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
+  - classification: future data compatibility follow-up
+  - plan: なし。複数のJSON形式を継続して扱う必要が明確になった時点で独立taskを計画する。
+  - handling plan: 現在はスキーマバージョンを保存・比較せず、正常に処理できないJSONを一律エラーにする。将来、バージョン番号、受け入れ可能な旧形式、移行処理、エラー表示、テストfixtureを定義して互換性を担保する。
+
 - [ ] Astro Component contract testの基盤を導入する
   - source: `28-2-common-skills-page` の技術レビューにおけるユーザー指示
   - classification: test architecture follow-up
   - plan: なし。費用対効果を再評価してから必要なら計画化する。
   - handling plan: `SkillCard`、`NpcCard`などへ固定propsを渡し、文言、値、fallback、想定タグ、属性をComponent単位で確認できる基盤を検討する。Visual Testはfixture・外部データの内容へ依存させず、画面構造、responsive layout、overflow、ナビゲーション状態、スクリーンショットに限定する。
+
+- [ ] 既存Node testをVitestへ段階的に移行する
+  - source: `ex-02-4-sheet-profile` のテストアーキテクチャレビューにおけるユーザー指示
+  - classification: test architecture follow-up
+  - plan: なし。G4のreview対応とは分離し、Vitest導入後の既存test数・Node固有API・CI実行時間を確認してから独立taskを計画する。
+  - handling plan: 現在の`node --import tsx --test`で動く純粋logic / schema testをVitestの`describe` / `it` / `expect`へ段階的に移す。Component / hook testと同じrunner・coverage・watch設定に統一する一方、移行中はNode testとVitest testを混在させ、各対象の実行結果とCI scriptを確認してから旧scriptを廃止する。E2Eの責務は最終smokeのまま変更しない。
 
 - [ ] 全スキルのsummary整備後に、`SkillCard`でsummaryを再表示する
   - source: `30-2-ryugi-detail-page` 実装後のユーザー指示
@@ -51,23 +117,23 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/plan.md` の `53-content-smoke-test`
   - handling plan: `-local/data-cards`をPagefind indexから除外するか、検索Visual Testのlocatorを公開対象の検索結果へ限定する。GitHub Pagesのsubpath検索と公開ページの検索結果が壊れないことを確認してから、Visual Capture全体をgreenにする。
 
-- [ ] 流儀の共通スキルボーナスを構造化データへ変換する
-  - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
-  - classification: out-of-scope follow-up
-  - plan: なし。共通スキルボーナスを条件や効果種別で検索・集計・比較する要件が明確になった時点で計画する。
-  - handling plan: 現行の`ryugi-list.json`では、2／5／9レベルごとのボーナスを改行を含む表示文字列として保持する。将来、効果種別、対象、増減値などを構造化する必要が生じた場合に、Excel入力列、JSON形状、既存表示との互換性、検索・表示要件、migration方針を定義してから別タスクで変換する。
-
-- [ ] React Islandの導入を検討する
-  - source: ユーザー指示
-  - classification: out-of-scope follow-up
-  - plan: なし。ファーストステップ完了後に必要性と導入範囲を判断する。
-  - handling plan: vanilla JavaScriptでUIロジックとHTMLセレクタの対応を維持する負荷が高まっているため、必要な画面に限定したReact Islandの導入可否を検討する。初期スコープ外のままとし、現時点では実装・`docs/plan.md`への追加を行わない。
-
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
   - source: `28-0-common-skills-data` 実装中のユーザー指示
   - classification: future data compatibility follow-up
   - plan: `ex-02-web-character-sheet` の初期範囲外。永続保存を追加する場合は、別taskを計画する。
   - handling plan: キャラクターシート機能がDBなどへスキルIDと取得レベルを保存する前に、名称、所属、区分、タイミングなどID入力値の変更で同一スキルのIDが変わったことを検出してエラーにする方式を設計する。比較に使う不変キーまたは移行マッピング、既存保存データとの照合時点、エラー表示、移行手順を決定し、ID変更を黙って保存データへ適用しない。
+
+- [ ] CharacterSheet Presenter props custom hookを、Presenterのmemo化と同時に参照安定化する
+  - source: `ex-02-4-sheet-profile` 実装中のユーザー指示
+  - classification: React performance architecture follow-up
+  - plan: `ex-02-web-character-sheet` の後続Gateで`React.memo`するPresenter / section Componentを導入する場合に、同じtaskで扱う。
+  - handling plan: `useCharacterSheetFormPresenterProps`の派生ViewModelを入力primitiveに基づく`useMemo`で安定化し、event callbackも`useCallback`で安定化する。`creditSummary`だけを局所的にmemo化せず、memo化対象Componentのprops境界全体で参照等価性が有効になることを確認する。現時点の軽量な派生計算と非memo化Presenterには先行適用しない。
+
+- [ ] キャラクターシートの派生logicからマスタID解決を分離する
+  - source: ChatGPT review draft (`.tmp/chatgpt-review.md`) のG7 review
+  - classification: architecture follow-up
+  - plan: G24とは別の設計・実装taskとして扱う。
+  - handling plan: `logic/`はマスタIDではなく、`master-data/`またはPresenter adapterが解決した選択中流儀・生き様のview modelを入力として受ける。未知IDの検出・復元時の除外・エラーはpersistence / import境界で明示し、未選択と同じ`undefined`として派生logicへ渡さない。G24は既存`logic/`を変更せず、read-only master-data adapterを入力にした復元境界だけを実装する。この分離taskではfixtureを使うlogic testへ更新する。
 
 - [ ] Footerからクレジット導線を出すか将来検討する
   - source: `phase-2-prep-doc-agent-ops` Group 12

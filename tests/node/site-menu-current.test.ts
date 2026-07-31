@@ -33,6 +33,14 @@ describe("site menu current state", () => {
     assert.ok(labels.indexOf("ルール") < labels.indexOf("データ"));
   });
 
+  it("places the character sheet between advancement and support", () => {
+    const labels = siteMenuItems.map((item) => item.label);
+    const characterSheetIndex = labels.indexOf("キャラクターシート");
+
+    assert.equal(labels[characterSheetIndex - 1], "キャラクター成長");
+    assert.equal(labels[characterSheetIndex + 1], "サポート");
+  });
+
   it("uses generated ryugi data for the ryugi detail menu items", () => {
     const dataMenu = siteMenuItems.find((item) => item.href === "/data");
     const ryugiMenu = dataMenu?.children?.find(

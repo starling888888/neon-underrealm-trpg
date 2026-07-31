@@ -16,6 +16,7 @@ Use when the user asks to:
 - move a fully completed `docs/plan.md` entry to `docs/plan-done.md`
 - mark handled `docs/TODO.md` items complete and move them to `docs/TODO-done.md`
 - move completed issue files to `docs/issue/done/phase-N/` or `docs/issue/done/cross-phase/`
+- return a completed Gate child's durable handoff to its parent Gate plan
 - commit and push tracking updates to `main`
 
 Do not use for:
@@ -48,11 +49,12 @@ Do the cleanup in this order:
 9. Move the completed plan entry from `docs/plan.md` to `docs/plan-done.md` when every checkbox in that entry is checked.
 10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
 11. Confirm that required review information was formalized, then remove only `.tmp/review/<WORK_BRANCH>/`.
-12. If the issue is complete, move the issue file to the correct `docs/issue/done/` archive.
-13. Keep active documents from depending on completed issue files.
-14. Run available validation commands.
-15. Commit only tracking files that were intentionally updated.
-16. Push `main`.
+12. For a completed Gate child issue, return its durable handoff to the parent Gate plan.
+13. If the issue is complete, move the issue file to the correct `docs/issue/done/` archive.
+14. Keep active documents from depending on completed issue files.
+15. Run available validation commands.
+16. Commit only tracking files that were intentionally updated.
+17. Push `main`.
 
 Do not modify source code.
 
@@ -166,6 +168,15 @@ If `docs/TODO.md` still contains a historical `## 完了済み` section, treat i
 ---
 
 ## Moving completed issue files
+
+When the completed issue is a Gate child issue, update its parent Gate plan before moving the issue:
+
+- confirm the parent Gate plan path from the child issue
+- return only durable detailed requirements, confirmed decisions, and follow-up handoff to that Gate's entry
+- set the Gate status to `done`
+- record the child issue's destination archive path
+
+Do not copy implementation logs, temporary review notes, or duplicated background to the parent Gate plan. Do not move the child issue when this handoff is incomplete.
 
 Move an issue file only when all of these are true:
 

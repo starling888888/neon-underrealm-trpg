@@ -1,9 +1,9 @@
 ---
 import {
-  displayText,
-  displayValue,
+  formatDisplayText,
+  formatDisplayValue,
   type DisplayValue,
-} from "./card-display";
+} from "../../lib/utils/display-value";
 
 interface Props {
   anchorId?: string;
@@ -24,24 +24,24 @@ const { anchorId, name, credit, timing, setQuantity, badTripIntensity, effect } 
       <span class="data-card-name">{name}</span>
     </header>
 
-    <p class="data-card-meta"><span class="data-card-credit">信用：{displayValue(credit)}</span></p>
+    <p class="data-card-meta"><span class="data-card-credit">信用：{formatDisplayValue(credit)}</span></p>
     <p class="data-card-meta data-card-meta-secondary">
-      <span>使用タイミング：{displayValue(timing)}</span>
+      <span>使用タイミング：{formatDisplayValue(timing)}</span>
     </p>
 
     <dl class="data-card-details">
       <div class="data-card-detail">
         <dt>1セット数量</dt>
-        <dd>{displayValue(setQuantity)}</dd>
+        <dd>{formatDisplayValue(setQuantity)}</dd>
       </div>
       <div class="data-card-detail drug-card-detail-bad-trip">
         <dt>BT強度</dt>
-        <dd>{displayValue(badTripIntensity)}</dd>
+        <dd>{formatDisplayValue(badTripIntensity)}</dd>
       </div>
     </dl>
 
     <div class="data-card-effect">
-      <p class="data-card-rule">{displayText(effect)}</p>
+      <p class="data-card-rule">{formatDisplayText(effect)}</p>
     </div>
   </div>
 </article>

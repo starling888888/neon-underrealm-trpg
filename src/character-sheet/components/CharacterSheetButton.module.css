@@ -1,0 +1,83 @@
+.button {
+  --character-sheet-button-color: var(--color-link);
+  --character-sheet-button-hover-color: var(--color-link-hover);
+  --character-sheet-button-soft-color: var(--color-example-soft);
+
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.default {
+  --character-sheet-button-color: var(--color-link);
+  --character-sheet-button-hover-color: var(--color-link-hover);
+  --character-sheet-button-soft-color: var(--color-example-soft);
+}
+
+.muted {
+  --character-sheet-button-color: var(--color-text-muted);
+  --character-sheet-button-hover-color: var(--color-text);
+  --character-sheet-button-soft-color: var(--color-surface-muted);
+}
+
+.danger {
+  --character-sheet-button-color: var(--color-danger);
+  --character-sheet-button-hover-color: color-mix(
+    in srgb,
+    var(--color-danger) 88%,
+    black
+  );
+  --character-sheet-button-soft-color: var(--color-danger-soft);
+}
+
+.warning {
+  --character-sheet-button-color: var(--color-warning);
+  --character-sheet-button-hover-color: color-mix(
+    in srgb,
+    var(--color-warning) 88%,
+    black
+  );
+  --character-sheet-button-soft-color: var(--color-warning-soft);
+}
+
+.outline {
+  border: var(--border-width) solid var(--character-sheet-button-color);
+  background: var(--color-surface);
+  color: var(--character-sheet-button-color);
+}
+
+.outline:hover:not(:disabled) {
+  border-color: var(--character-sheet-button-hover-color);
+  background: var(--character-sheet-button-soft-color);
+  color: var(--character-sheet-button-hover-color);
+}
+
+.solid {
+  border: var(--border-width) solid var(--character-sheet-button-color);
+  background: var(--character-sheet-button-color);
+  color: var(--color-text-inverse);
+}
+
+.solid:hover:not(:disabled) {
+  border-color: var(--character-sheet-button-hover-color);
+  background: var(--character-sheet-button-hover-color);
+}
+
+.small {
+  min-height: 1.75rem;
+  padding: 0.1875rem 0.5rem;
+}
+
+.medium {
+  min-height: 2rem;
+  padding: var(--space-2);
+}

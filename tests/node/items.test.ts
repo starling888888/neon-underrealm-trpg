@@ -45,7 +45,7 @@ const nanomachineHeaders = [
 const drugHeaders = ["名称", "信用", "使用T", "1セット数量", "BT強度", "効果"];
 
 describe("item conversion", () => {
-  it("converts all six sheets into grouped generated data", async () => {
+  it("converts all rows from all six sheets into grouped generated data", async () => {
     await using fixture = await createFixture();
     await workbook(fixture.input, fixtureSheets());
 
@@ -56,12 +56,30 @@ describe("item conversion", () => {
     });
 
     assert.equal(result.updatedAt, "2026-07-14T09:00:00+09:00");
-    assert.equal(result.data.weapons.normal?.kenka?.length, 50);
-    assert.equal(result.data.cybernetics.head?.length, 31);
-    assert.equal(result.data.armors.length, 16);
-    assert.equal(result.data.omamori.length, 21);
-    assert.equal(result.data.nanomachines.length, 19);
-    assert.equal(result.data.drugs.length, 18);
+    assert.deepEqual(
+      result.data.weapons.normal?.kenka?.map(({ name }) => name),
+      ["武器1", "武器2"],
+    );
+    assert.deepEqual(
+      result.data.cybernetics.head?.map(({ name }) => name),
+      ["サイバネ1", "サイバネ2"],
+    );
+    assert.deepEqual(
+      result.data.armors.map(({ name }) => name),
+      ["防具1", "防具2"],
+    );
+    assert.deepEqual(
+      result.data.omamori.map(({ name }) => name),
+      ["お守り1", "お守り2"],
+    );
+    assert.deepEqual(
+      result.data.nanomachines.map(({ name }) => name),
+      ["ナノ1", "ナノ2"],
+    );
+    assert.deepEqual(
+      result.data.drugs.map(({ name }) => name),
+      ["ドラッグ1", "ドラッグ2"],
+    );
     assert.equal(
       result.data.weapons.normal?.kenka?.[0]?.id,
       createWeaponId({ group: "normal", check: "喧嘩", name: "武器1" }),
@@ -178,13 +196,11 @@ function fixtureSheets(): Record<string, Array<Array<string | number | null>>> {
   return {
     weapons: [
       weaponHeaders,
-      ...Array.from({ length: 50 }, (_, index) =>
-        weaponRow(`武器${index + 1}`),
-      ),
+      ...Array.from({ length: 2 }, (_, index) => weaponRow(`武器${index + 1}`)),
     ],
     armors: [
       armorHeaders,
-      ...Array.from({ length: 16 }, (_, index) => [
+      ...Array.from({ length: 2 }, (_, index) => [
         `防具${index + 1}`,
         1,
         1,
@@ -195,7 +211,7 @@ function fixtureSheets(): Record<string, Array<Array<string | number | null>>> {
     ],
     omamori: [
       omamoriHeaders,
-      ...Array.from({ length: 21 }, (_, index) => [
+      ...Array.from({ length: 2 }, (_, index) => [
         `お守り${index + 1}`,
         1,
         "効果",
@@ -203,7 +219,7 @@ function fixtureSheets(): Record<string, Array<Array<string | number | null>>> {
     ],
     cybernetics: [
       cyberneticHeaders,
-      ...Array.from({ length: 31 }, (_, index) => [
+      ...Array.from({ length: 2 }, (_, index) => [
         "頭",
         `サイバネ${index + 1}`,
         1,
@@ -213,7 +229,7 @@ function fixtureSheets(): Record<string, Array<Array<string | number | null>>> {
     ],
     nanomachines: [
       nanomachineHeaders,
-      ...Array.from({ length: 19 }, (_, index) => [
+      ...Array.from({ length: 2 }, (_, index) => [
         `ナノ${index + 1}`,
         1,
         1,
@@ -223,7 +239,7 @@ function fixtureSheets(): Record<string, Array<Array<string | number | null>>> {
     ],
     drugs: [
       drugHeaders,
-      ...Array.from({ length: 18 }, (_, index) => [
+      ...Array.from({ length: 2 }, (_, index) => [
         `ドラッグ${index + 1}`,
         1,
         "SU",

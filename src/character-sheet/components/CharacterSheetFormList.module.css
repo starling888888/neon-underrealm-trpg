@@ -1,0 +1,196 @@
+.tableHeader {
+  --character-sheet-table-header-font-size: var(
+    --character-sheet-font-table,
+    0.75rem
+  );
+  --character-sheet-table-header-font-weight: 400;
+
+  color: var(--color-text-muted);
+  font-size: var(--character-sheet-table-header-font-size);
+  font-weight: var(--character-sheet-table-header-font-weight);
+  line-height: 1.1;
+  text-align: center;
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.tableHeader > * {
+  font-size: var(--character-sheet-table-header-font-size);
+  font-weight: var(--character-sheet-table-header-font-weight);
+}
+
+.listTableGrid {
+  display: grid;
+  min-width: 0;
+  min-height: var(--character-sheet-list-row-min-height);
+  align-items: stretch;
+}
+
+.pickerTableFirstLine > *:not(:last-child) {
+  box-shadow: inset calc(var(--border-width) * -1) 0 var(--color-border);
+}
+
+.pickerCandidateName {
+  --character-sheet-picker-name-font-size: var(
+    --character-sheet-font-table,
+    0.75rem
+  );
+
+  font: inherit;
+  font-size: var(--character-sheet-picker-name-font-size);
+  font-weight: 750;
+}
+
+.listRow {
+  min-height: var(--character-sheet-list-row-min-height);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: var(--border-width) solid var(--color-border);
+  border-inline: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.reorderControls {
+  display: grid;
+  min-height: var(--character-sheet-list-row-min-height);
+  align-content: center;
+  gap: 0.0625rem;
+  background: var(--color-surface-muted);
+}
+
+.reorderButton {
+  display: grid;
+  width: 100%;
+  min-height: 0.6875rem;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.5rem;
+  line-height: 1;
+}
+
+.reorderButton:hover {
+  color: var(--color-link);
+}
+
+.rowPicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+  font-size: var(--character-sheet-font-table);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.rowPicker:hover {
+  background: var(--color-surface-muted);
+}
+
+.pickerIcon {
+  flex: 0 0 auto;
+  color: var(--color-link);
+}
+
+.detailsToggle {
+  border: 0;
+  background: var(--color-surface-muted);
+  color: var(--color-link);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-xs);
+}
+
+.detailsToggle:hover {
+  background: var(--color-example-soft);
+}
+
+.tableNumericInput {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: var(--character-sheet-control-min-height);
+  border: var(--border-width) solid var(--color-example-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--character-sheet-font-control);
+  line-height: var(--line-height-tight);
+  padding: 0.125rem;
+  text-align: center;
+}
+
+.pickerDialog {
+  width: min(44rem, calc(100vw - (var(--page-gutter) * 2)));
+  overflow: hidden;
+}
+
+.selectionGuide {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--line-height-normal);
+}
+
+.candidateGroup {
+  display: grid;
+  gap: 0;
+}
+
+.candidateGroupHeading {
+  margin: var(--space-2) 0 var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.candidate {
+  display: grid;
+  min-width: 0;
+  border: 0;
+  border-bottom: var(--border-width) solid var(--color-border);
+  border-inline: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.candidate:hover {
+  background: var(--color-example-soft);
+}
+
+@media (width < 48rem) {
+  .tableHeader,
+  .tableHeader > * {
+    --character-sheet-table-header-font-size: var(
+      --character-sheet-font-table-mobile-label,
+      0.625rem
+    );
+  }
+
+  .pickerCandidateName {
+    --character-sheet-picker-name-font-size: 0.8125rem;
+  }
+
+  .rowPicker {
+    padding: var(--space-1);
+    font-size: var(--character-sheet-font-table-mobile-control);
+  }
+
+  .detailsToggle {
+    padding-inline: 0.125rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
+  }
+
+  .selectionGuide {
+    font-size: var(--character-sheet-font-table);
+  }
+}

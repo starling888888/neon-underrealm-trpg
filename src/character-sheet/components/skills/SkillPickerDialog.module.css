@@ -1,0 +1,149 @@
+.dialog {
+  composes: pickerDialog from "../CharacterSheetFormList.module.css";
+}
+
+.content {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.selectionGuide {
+  composes: selectionGuide from "../CharacterSheetFormList.module.css";
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.headerRow {
+  composes: headerRow from "../dialogs/PickerTable.module.css";
+  --character-sheet-picker-table-columns: minmax(8rem, 1fr) 3.25rem
+    minmax(5.5rem, 6.5rem) 3.6rem 4.8rem;
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.75rem 4.75rem
+    3.25rem 4rem;
+}
+
+.firstLine {
+  composes: firstLine from "../dialogs/PickerTable.module.css";
+  --character-sheet-picker-table-columns: minmax(8rem, 1fr) 3.25rem
+    minmax(5.5rem, 6.5rem) 3.6rem 4.8rem;
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.75rem 4.75rem
+    3.25rem 4rem;
+}
+
+.timing {
+  white-space: nowrap;
+}
+
+.group {
+  composes: candidateGroup from "../CharacterSheetFormList.module.css";
+}
+
+.group h3 {
+  margin: var(--space-2) 0 var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.candidate {
+  composes: candidate from "../CharacterSheetFormList.module.css";
+}
+
+.candidate[data-disabled] {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.candidate[data-disabled]:hover {
+  background: var(--color-surface-muted);
+}
+
+.candidateName {
+  composes: pickerCandidateName from "../CharacterSheetFormList.module.css";
+}
+
+.firstLine button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.firstLine button:hover {
+  background: var(--color-surface-muted);
+}
+
+.firstLine button:disabled {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.candidate[data-disabled] .firstLine > * {
+  color: var(--color-text-muted);
+}
+
+.details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+  line-height: var(--line-height-normal);
+}
+
+.details > span {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.firstLine span > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.effect {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+  line-height: var(--line-height-normal);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.details strong,
+.effect strong {
+  color: var(--color-text-muted);
+}
+
+.candidate[data-disabled] .details strong,
+.candidate[data-disabled] .effect strong {
+  color: var(--color-text-muted);
+}
+
+@media (width < 48rem) {
+  .content {
+    gap: var(--space-1);
+  }
+
+  .selectionGuide {
+    font-size: 0.75rem;
+  }
+
+  .firstLine button {
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+  }
+
+  .firstLine span > span {
+    display: inline;
+    white-space: inherit;
+  }
+}

@@ -1,6 +1,6 @@
 {
   "dataName": "items",
-  "updatedAt": "2026-07-22T20:59:33+09:00",
+  "updatedAt": "2026-07-30T22:45:34+09:00",
   "data": {
     "weapons": {
       "normal": {
@@ -13,7 +13,7 @@
             "range": 0,
             "kind": "近接",
             "check": "喧嘩",
-            "attack": 20,
+            "attack": 19,
             "guard": 5,
             "ammo": null,
             "effect": null,
@@ -30,7 +30,7 @@
             "attack": 15,
             "guard": 6,
             "ammo": null,
-            "effect": "渾身での攻撃時攻撃力+8。",
+            "effect": "基準値が4以下の攻撃時攻撃力+8。",
             "sourceOrder": 2
           },
           {
@@ -92,6 +92,20 @@
             "sourceOrder": 6
           },
           {
+            "id": "item-weapon-normal-ansatsu-3d3defb03949",
+            "group": "normal",
+            "name": "つけ爪",
+            "credit": 2,
+            "range": 0,
+            "kind": "近接",
+            "check": "暗殺",
+            "attack": 4,
+            "guard": null,
+            "ammo": null,
+            "effect": "暗器。シナリオ10回使用可能。",
+            "sourceOrder": 7
+          },
+          {
             "id": "item-weapon-normal-ansatsu-19b327cb34ab",
             "group": "normal",
             "name": "長針",
@@ -103,7 +117,7 @@
             "guard": null,
             "ammo": null,
             "effect": "暗器。シナリオ3回使用可能。",
-            "sourceOrder": 7
+            "sourceOrder": 8
           },
           {
             "id": "item-weapon-normal-ansatsu-6d8e33c72e61",
@@ -117,7 +131,7 @@
             "guard": null,
             "ammo": null,
             "effect": "暗器。ダメージの代わりに出血2を与える。シナリオ3回使用可能。",
-            "sourceOrder": 8
+            "sourceOrder": 9
           },
           {
             "id": "item-weapon-normal-ansatsu-adfc95808ef4",
@@ -131,7 +145,7 @@
             "guard": null,
             "ammo": null,
             "effect": "暗器。ダメージの代わりに毒2を与える。シナリオ3回使用可能。",
-            "sourceOrder": 9
+            "sourceOrder": 10
           },
           {
             "id": "item-weapon-normal-ansatsu-706c7aa8a30e",
@@ -145,7 +159,7 @@
             "guard": null,
             "ammo": null,
             "effect": "暗器。ダメージの代わりに次の味方キャラクターの手番終了時まで命中した対象のリアクション達成値を1下げる。この効果は累積せず、強度2のバッドステータスとして扱う。シナリオ5回使用可能。",
-            "sourceOrder": 10
+            "sourceOrder": 11
           },
           {
             "id": "item-weapon-normal-ansatsu-b816ab5fd406",
@@ -159,7 +173,7 @@
             "guard": null,
             "ammo": null,
             "effect": "暗器。ダメージの代わりに命中した対象の次の手番終了時まで攻撃の達成値を1さげる。この効果は累積せず、強度2のバッドステータスとして扱う。シナリオ5回使用可能。",
-            "sourceOrder": 11
+            "sourceOrder": 12
           }
         ],
         "happou": [
@@ -175,7 +189,7 @@
             "guard": 3,
             "ammo": 6,
             "effect": null,
-            "sourceOrder": 12
+            "sourceOrder": 13
           },
           {
             "id": "item-weapon-normal-happou-7fdfd7476cbe",
@@ -185,11 +199,11 @@
             "range": 1,
             "kind": "射撃",
             "check": "発砲",
-            "attack": 13,
+            "attack": 14,
             "guard": 6,
             "ammo": 3,
             "effect": null,
-            "sourceOrder": 13
+            "sourceOrder": 14
           },
           {
             "id": "item-weapon-normal-happou-94d642d116d5",
@@ -203,13 +217,13 @@
             "guard": 2,
             "ammo": 15,
             "effect": null,
-            "sourceOrder": 14
+            "sourceOrder": 15
           },
           {
             "id": "item-weapon-normal-happou-56e2f49804f8",
             "group": "normal",
             "name": "狙撃銃",
-            "credit": 3,
+            "credit": 4,
             "range": 5,
             "kind": "射撃",
             "check": "発砲",
@@ -217,13 +231,13 @@
             "guard": null,
             "ammo": 3,
             "effect": null,
-            "sourceOrder": 15
+            "sourceOrder": 16
           },
           {
             "id": "item-weapon-normal-happou-ad30ae82438e",
             "group": "normal",
             "name": "グレネードランチャー",
-            "credit": 4,
+            "credit": 3,
             "range": 4,
             "kind": "射撃",
             "check": "発砲",
@@ -231,7 +245,7 @@
             "guard": 8,
             "ammo": 1,
             "effect": null,
-            "sourceOrder": 16
+            "sourceOrder": 17
           }
         ],
         "kakutou": [
@@ -247,7 +261,7 @@
             "guard": 6,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 17
+            "sourceOrder": 18
           },
           {
             "id": "item-weapon-normal-kakutou-364d3e804724",
@@ -261,7 +275,7 @@
             "guard": 4,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 18
+            "sourceOrder": 19
           },
           {
             "id": "item-weapon-normal-kakutou-7f9c30df8490",
@@ -272,10 +286,10 @@
             "kind": "近接",
             "check": "格闘",
             "attack": 12,
-            "guard": 8,
+            "guard": 6,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 19
+            "sourceOrder": 20
           },
           {
             "id": "item-weapon-normal-kakutou-36c9d7bee828",
@@ -286,10 +300,10 @@
             "kind": "近接",
             "check": "格闘",
             "attack": 10,
-            "guard": 12,
+            "guard": 9,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 20
+            "sourceOrder": 21
           }
         ],
         "kanshou": [
@@ -305,7 +319,7 @@
             "guard": 6,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 21
+            "sourceOrder": 22
           },
           {
             "id": "item-weapon-normal-kanshou-fc5e9d061b2e",
@@ -319,7 +333,7 @@
             "guard": null,
             "ammo": null,
             "effect": "リアクションに失敗した対象に出血1を与える。",
-            "sourceOrder": 22
+            "sourceOrder": 23
           },
           {
             "id": "item-weapon-normal-kanshou-7e850bc31c60",
@@ -333,7 +347,7 @@
             "guard": null,
             "ammo": null,
             "effect": "リアクションの成否を問わず、対象の防御力を3点減少させる。この効果は累積しない。バッドステータスとしては扱われない。",
-            "sourceOrder": 23
+            "sourceOrder": 24
           },
           {
             "id": "item-weapon-normal-kanshou-eff8bf6ea2fc",
@@ -347,7 +361,7 @@
             "guard": 5,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 24
+            "sourceOrder": 25
           },
           {
             "id": "item-weapon-normal-kanshou-10c3914c94c2",
@@ -361,7 +375,7 @@
             "guard": null,
             "ammo": null,
             "effect": "判定を2回行い、好きな方の結果を採用できる。",
-            "sourceOrder": 25
+            "sourceOrder": 26
           },
           {
             "id": "item-weapon-normal-kanshou-1352d2fccac8",
@@ -375,7 +389,7 @@
             "guard": 8,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 26
+            "sourceOrder": 27
           },
           {
             "id": "item-weapon-normal-kanshou-3d9edf6ecc4b",
@@ -389,7 +403,7 @@
             "guard": null,
             "ammo": null,
             "effect": "リアクションに失敗した対象に毒1を与える。",
-            "sourceOrder": 27
+            "sourceOrder": 28
           },
           {
             "id": "item-weapon-normal-kanshou-30f6f746924c",
@@ -403,7 +417,7 @@
             "guard": 0,
             "ammo": null,
             "effect": "受けているバッドトリップの強度×3だけ攻撃力が増加する。受けているバッドトリップの強度×2だけガード値が増加する。",
-            "sourceOrder": 28
+            "sourceOrder": 29
           },
           {
             "id": "item-weapon-normal-kanshou-b6f5731ede79",
@@ -417,7 +431,7 @@
             "guard": 7,
             "ammo": null,
             "effect": "タイミング:Mで干渉判定を行い、射程内のキャラクター1体の体力を攻撃力+効果値d6点回復する。気合獲得値は1で気合を獲得できる。",
-            "sourceOrder": 29
+            "sourceOrder": 30
           },
           {
             "id": "item-weapon-normal-kanshou-f97f17745342",
@@ -431,7 +445,7 @@
             "guard": 0,
             "ammo": null,
             "effect": "攻撃の基準値を3から7まで選択できる。防御判定に失敗しても(効果値÷2)d6点ダメージを軽減できる。",
-            "sourceOrder": 30
+            "sourceOrder": 31
           }
         ]
       },
@@ -448,8 +462,8 @@
             "attack": 22,
             "guard": 6,
             "ammo": null,
-            "effect": "サイバネ武器",
-            "sourceOrder": 31
+            "effect": "サイバネ武器。",
+            "sourceOrder": 32
           },
           {
             "id": "item-weapon-cybernetics-kenka-853730005d91",
@@ -462,8 +476,8 @@
             "attack": 15,
             "guard": 10,
             "ammo": null,
-            "effect": "サイバネ武器",
-            "sourceOrder": 32
+            "effect": "サイバネ武器。",
+            "sourceOrder": 33
           },
           {
             "id": "item-weapon-cybernetics-kenka-348a9ee7d8e7",
@@ -477,7 +491,7 @@
             "guard": 20,
             "ammo": null,
             "effect": "サイバネ武器。この武器では攻撃できない。",
-            "sourceOrder": 33
+            "sourceOrder": 34
           },
           {
             "id": "item-weapon-cybernetics-kenka-a6cfd7412944",
@@ -488,10 +502,10 @@
             "kind": "近接",
             "check": "喧嘩",
             "attack": 20,
-            "guard": 14,
+            "guard": 12,
             "ammo": null,
-            "effect": "サイバネ武器。基準値4以下の攻撃の判定数+2。ただし基準値4以下で攻撃を行うと転倒2を受ける。",
-            "sourceOrder": 34
+            "effect": "サイバネ武器。基準値4以下の攻撃時に攻撃力+10してもよい。そうしたなら転倒2を受ける。",
+            "sourceOrder": 35
           }
         ],
         "ansatsu": [
@@ -507,7 +521,7 @@
             "guard": 8,
             "ammo": null,
             "effect": "サイバネ武器",
-            "sourceOrder": 35
+            "sourceOrder": 36
           },
           {
             "id": "item-weapon-cybernetics-ansatsu-4383a446790a",
@@ -521,7 +535,7 @@
             "guard": null,
             "ammo": null,
             "effect": "サイバネ武器。暗器。シナリオ5回使用可能。サイバネを装備していない部位一つに付き攻撃力+4。",
-            "sourceOrder": 36
+            "sourceOrder": 37
           }
         ],
         "happou": [
@@ -537,7 +551,7 @@
             "guard": 10,
             "ammo": 10,
             "effect": "サイバネ武器。",
-            "sourceOrder": 37
+            "sourceOrder": 38
           },
           {
             "id": "item-weapon-cybernetics-happou-903d7a2dc31d",
@@ -551,7 +565,7 @@
             "guard": null,
             "ammo": 2,
             "effect": "サイバネ武器。",
-            "sourceOrder": 38
+            "sourceOrder": 39
           },
           {
             "id": "item-weapon-cybernetics-happou-4e8108d376aa",
@@ -564,8 +578,24 @@
             "attack": 18,
             "guard": 8,
             "ammo": 3,
-            "effect": "サイバネ武器。基準値4以下の攻撃の判定数+2。ただし基準値4以下で攻撃を行うと転倒2を受ける。",
-            "sourceOrder": 39
+            "effect": "サイバネ武器。基準値4以下の攻撃時に攻撃力+10してもよい。そうしたなら転倒2を受ける。",
+            "sourceOrder": 40
+          }
+        ],
+        "kakutou": [
+          {
+            "id": "item-weapon-cybernetics-kakutou-b0f9decf53a3",
+            "group": "cybernetics",
+            "name": "アイアンナックル",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘",
+            "attack": 12,
+            "guard": 10,
+            "ammo": null,
+            "effect": "サイバネ武器。",
+            "sourceOrder": 41
           }
         ],
         "kakutou_kanshou": [
@@ -581,7 +611,7 @@
             "guard": 13,
             "ammo": null,
             "effect": "サイバネ武器。",
-            "sourceOrder": 40
+            "sourceOrder": 42
           }
         ]
       },
@@ -595,11 +625,11 @@
             "range": 0,
             "kind": "近接",
             "check": "喧嘩",
-            "attack": 24,
+            "attack": 22,
             "guard": 4,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 41
+            "sourceOrder": 43
           },
           {
             "id": "item-weapon-nanomachines-kenka-ac88455724ca",
@@ -609,11 +639,11 @@
             "range": 0,
             "kind": "近接",
             "check": "喧嘩",
-            "attack": 17,
+            "attack": 16,
             "guard": 8,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 42
+            "sourceOrder": 44
           },
           {
             "id": "item-weapon-nanomachines-kenka-7eee4320c880",
@@ -627,7 +657,7 @@
             "guard": 8,
             "ammo": null,
             "effect": "攻撃の基準値を3から8まで選択できる。ただし、他の基準値変更の効果を受けれない。",
-            "sourceOrder": 43
+            "sourceOrder": 45
           }
         ],
         "ansatsu": [
@@ -643,7 +673,7 @@
             "guard": null,
             "ammo": null,
             "effect": "暗器。シナリオ3回使用可能。発動するたびに使用回数が復活する。",
-            "sourceOrder": 44
+            "sourceOrder": 46
           },
           {
             "id": "item-weapon-nanomachines-ansatsu-2107912f1997",
@@ -653,11 +683,11 @@
             "range": 0,
             "kind": "近接",
             "check": "暗殺",
-            "attack": 15,
+            "attack": 14,
             "guard": 3,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 45
+            "sourceOrder": 47
           },
           {
             "id": "item-weapon-nanomachines-ansatsu-68a2477920dd",
@@ -671,7 +701,7 @@
             "guard": 7,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 46
+            "sourceOrder": 48
           }
         ],
         "kakutou": [
@@ -684,10 +714,10 @@
             "kind": "近接",
             "check": "格闘",
             "attack": 14,
-            "guard": 10,
+            "guard": 9,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 47
+            "sourceOrder": 49
           },
           {
             "id": "item-weapon-nanomachines-kakutou-3399837c6420",
@@ -701,7 +731,7 @@
             "guard": "特殊",
             "ammo": null,
             "effect": "この武器は素手として扱う。攻撃力とガード値はあなたの肉体に等しい。",
-            "sourceOrder": 48
+            "sourceOrder": 50
           }
         ],
         "happou": [
@@ -717,7 +747,7 @@
             "guard": 4,
             "ammo": 5,
             "effect": "装弾数5。",
-            "sourceOrder": 49
+            "sourceOrder": 51
           },
           {
             "id": "item-weapon-nanomachines-happou-46e456057dc4",
@@ -731,7 +761,7 @@
             "guard": 8,
             "ammo": 2,
             "effect": "弾丸1発消費のかわりに精神力3点を消費してもよい。",
-            "sourceOrder": 50
+            "sourceOrder": 52
           }
         ]
       }
@@ -771,7 +801,7 @@
         "id": "item-armor-c8f1cfc72f2a",
         "name": "防弾ジャケット",
         "credit": 5,
-        "defense": 15,
+        "defense": 14,
         "damageReduction": 0,
         "restriction": "筋力4以上",
         "effect": null,
@@ -903,42 +933,42 @@
         "id": "item-omamori-23c937152e7e",
         "name": "活気のお守り",
         "credit": 2,
-        "effect": "攻撃の判定で2点以上気合いを獲得したならば体力を5点回復する",
+        "effect": "攻撃の判定で2点以上気合いを獲得したならば体力を5点回復する。",
         "sourceOrder": 1
       },
       {
         "id": "item-omamori-dd0e43e590b1",
         "name": "疫病神のお守り",
         "credit": 2,
-        "effect": "1ラウンドに1回与える出血か毒の強度を+1してよい",
+        "effect": "1ラウンドに1回与える出血か毒の強度を+1してよい。",
         "sourceOrder": 2
       },
       {
         "id": "item-omamori-c5341347f6e3",
         "name": "全力のお守り",
         "credit": 2,
-        "effect": "手番最初の攻撃の判定数+1。ただし基準値が6以上なら転倒1を受ける",
+        "effect": "手番最初の攻撃の判定数+1。ただし基準値が6以上なら転倒1を受ける。",
         "sourceOrder": 3
       },
       {
         "id": "item-omamori-215df0c868f5",
         "name": "強運のお守り",
         "credit": 2,
-        "effect": "1シナリオに1回、カウンターに失敗してもダメージを受けない",
+        "effect": "1シナリオに1回、カウンターに失敗してもダメージを受けない。",
         "sourceOrder": 4
       },
       {
         "id": "item-omamori-5c207a38377c",
         "name": "暗がりのお守り",
         "credit": 2,
-        "effect": "隠密中1ラウンドに1回、攻撃またはリアクションの判定数+1",
+        "effect": "隠密中1ラウンドに1回、攻撃またはリアクションの判定数+1。",
         "sourceOrder": 5
       },
       {
         "id": "item-omamori-e2383465b063",
         "name": "援護のお守り",
         "credit": 2,
-        "effect": "攻撃、リアクション以外で効果値が参照されるなら効果値+3",
+        "effect": "攻撃、リアクション以外で効果値が参照されるなら効果値+3。",
         "sourceOrder": 6
       },
       {
@@ -952,7 +982,7 @@
         "id": "item-omamori-02fc78ee4f84",
         "name": "庇護のお守り",
         "credit": 2,
-        "effect": "カバーリングを行った際、ダメージ軽減+3",
+        "effect": "カバーリングを行った際、ダメージ軽減+3。",
         "sourceOrder": 8
       },
       {
@@ -966,28 +996,28 @@
         "id": "item-omamori-96ab7f74fee0",
         "name": "絆のお守り",
         "credit": 2,
-        "effect": "既に他人に覚悟を使っているなら攻撃の気合獲得値+1",
+        "effect": "既に他人に覚悟を使っているなら攻撃の気合獲得値+1。",
         "sourceOrder": 10
       },
       {
         "id": "item-omamori-800d578cec93",
         "name": "金剛のお守り",
         "credit": 3,
-        "effect": "武器のガード値+4",
+        "effect": "武器のガード値+4。",
         "sourceOrder": 11
       },
       {
         "id": "item-omamori-42646d737eac",
         "name": "夜叉のお守り",
         "credit": 3,
-        "effect": "１ラウンドに1回、暗殺武器の攻撃でダメージ軽減を半減してダメージ軽減適用を行っても良い",
+        "effect": "１ラウンドに1回、暗殺武器の攻撃でダメージ軽減を半減してダメージ軽減適用を行っても良い。",
         "sourceOrder": 12
       },
       {
         "id": "item-omamori-ff6762a7514d",
         "name": "如来のお守り",
         "credit": 3,
-        "effect": "あなたがダメージを受けるとき、弾丸を1発消費して4点受けるダメージを減らして良い",
+        "effect": "あなたがダメージを受けるとき、弾丸を1発消費して4点受けるダメージを減らして良い。",
         "sourceOrder": 13
       },
       {
@@ -1022,14 +1052,14 @@
         "id": "item-omamori-eade26e756b7",
         "name": "融通のお守り",
         "credit": 2,
-        "effect": "非戦闘判定の判定数全て+2",
+        "effect": "非戦闘判定の判定数全て+2。",
         "sourceOrder": 18
       },
       {
         "id": "item-omamori-06d6b8adf3a3",
         "name": "長持ちのお守り",
         "credit": 3,
-        "effect": "シナリオ1回ダメージ軽減や防御力を無視する効果を無効化する",
+        "effect": "シナリオ1回ダメージ軽減や防御力を無視する効果を無効化する。",
         "sourceOrder": 19
       },
       {
@@ -1080,7 +1110,7 @@
           "id": "item-cybernetics-head-20dacfd0f36c",
           "part": "頭",
           "name": "イニシアチブブースト",
-          "credit": 7,
+          "credit": 5,
           "implantPoints": 1,
           "effect": "戦闘開始時に精神力を10点まで消費してその点数行動値を上下させられる。",
           "sourceOrder": 4
@@ -1145,7 +1175,7 @@
           "id": "item-cybernetics-torso-0dec8f808077",
           "part": "胴体",
           "name": "ファイティングエンジン",
-          "credit": 6,
+          "credit": 4,
           "implantPoints": 1,
           "effect": "戦闘終了時の気合の保持点数+1。",
           "sourceOrder": 11
@@ -1176,8 +1206,17 @@
           "name": "ガトリングアーム",
           "credit": 3,
           "implantPoints": 3,
-          "effect": "サイバネ武器",
+          "effect": "サイバネ武器。",
           "sourceOrder": 14
+        },
+        {
+          "id": "item-cybernetics-arm-b0f9decf53a3",
+          "part": "腕",
+          "name": "アイアンナックル",
+          "credit": 3,
+          "implantPoints": 3,
+          "effect": "サイバネ武器。",
+          "sourceOrder": 15
         },
         {
           "id": "item-cybernetics-arm-3a3539e9f100",
@@ -1186,7 +1225,7 @@
           "credit": 5,
           "implantPoints": 4,
           "effect": "サイバネ武器。",
-          "sourceOrder": 15
+          "sourceOrder": 16
         },
         {
           "id": "item-cybernetics-arm-7a279385c3dd",
@@ -1195,7 +1234,7 @@
           "credit": 3,
           "implantPoints": 3,
           "effect": "サイバネ武器。",
-          "sourceOrder": 16
+          "sourceOrder": 17
         },
         {
           "id": "item-cybernetics-arm-0a75ad9bcccf",
@@ -1204,34 +1243,34 @@
           "credit": 2,
           "implantPoints": 2,
           "effect": "筋力を用いる判定+1d。",
-          "sourceOrder": 17
+          "sourceOrder": 18
         },
         {
           "id": "item-cybernetics-arm-a6cfd7412944",
           "part": "腕",
           "name": "ハンマーアーム",
-          "credit": 6,
+          "credit": 5,
           "implantPoints": 4,
           "effect": "サイバネ武器。",
-          "sourceOrder": 18
+          "sourceOrder": 19
         },
         {
           "id": "item-cybernetics-arm-4e8108d376aa",
           "part": "腕",
           "name": "グレネードバズーカ",
-          "credit": 7,
+          "credit": 5,
           "implantPoints": 3,
           "effect": "サイバネ武器",
-          "sourceOrder": 19
+          "sourceOrder": 20
         },
         {
           "id": "item-cybernetics-arm-d669f39ace59",
           "part": "腕",
           "name": "ブラストハンド",
-          "credit": 7,
+          "credit": 5,
           "implantPoints": 3,
           "effect": "サイバネ武器。リアクションの判定数+1。",
-          "sourceOrder": 20
+          "sourceOrder": 21
         }
       ],
       "leg": [
@@ -1242,7 +1281,7 @@
           "credit": 3,
           "implantPoints": 3,
           "effect": "サイバネ武器。",
-          "sourceOrder": 21
+          "sourceOrder": 22
         },
         {
           "id": "item-cybernetics-leg-903d7a2dc31d",
@@ -1251,7 +1290,7 @@
           "credit": 3,
           "implantPoints": 3,
           "effect": "サイバネ武器。",
-          "sourceOrder": 22
+          "sourceOrder": 23
         },
         {
           "id": "item-cybernetics-leg-3b15de7bff90",
@@ -1260,7 +1299,7 @@
           "credit": 1,
           "implantPoints": 1,
           "effect": "移動力+1。",
-          "sourceOrder": 23
+          "sourceOrder": 24
         },
         {
           "id": "item-cybernetics-leg-2fcd423ff5d5",
@@ -1269,7 +1308,7 @@
           "credit": 2,
           "implantPoints": 2,
           "effect": "敏捷を用いる判定+1d。",
-          "sourceOrder": 24
+          "sourceOrder": 25
         },
         {
           "id": "item-cybernetics-leg-e117499826cf",
@@ -1278,7 +1317,7 @@
           "credit": 3,
           "implantPoints": 1,
           "effect": "近接攻撃と防御、回避の判定数+1。この効果は移動をしたラウンドには発揮されない。サイバネの埋め込み点数が6点以上ならば転倒を受けない。",
-          "sourceOrder": 25
+          "sourceOrder": 26
         },
         {
           "id": "item-cybernetics-leg-d649ccf78cd7",
@@ -1287,7 +1326,7 @@
           "credit": 4,
           "implantPoints": 1,
           "effect": "戦闘中飛行状態になる。移動力+2。",
-          "sourceOrder": 26
+          "sourceOrder": 27
         }
       ],
       "any": [
@@ -1298,7 +1337,7 @@
           "credit": 4,
           "implantPoints": 1,
           "effect": "あなたが毒によって失う体力は半分になり、出血は一度体力を失ったら解除される。",
-          "sourceOrder": 27
+          "sourceOrder": 28
         },
         {
           "id": "item-cybernetics-any-033a21c90877",
@@ -1307,7 +1346,7 @@
           "credit": 2,
           "implantPoints": 1,
           "effect": "防御力+3。複数埋め込み可能。",
-          "sourceOrder": 28
+          "sourceOrder": 29
         },
         {
           "id": "item-cybernetics-any-bd53326cdf15",
@@ -1316,16 +1355,16 @@
           "credit": 3,
           "implantPoints": 1,
           "effect": "防御力+1。「過負荷攻撃」で破壊するとダメージ+10。（過負荷攻撃の制限は無視する）複数埋め込み可能。",
-          "sourceOrder": 29
+          "sourceOrder": 30
         },
         {
           "id": "item-cybernetics-any-aa7892f5069d",
           "part": "任意",
           "name": "ライトニングブースター",
-          "credit": 7,
+          "credit": 6,
           "implantPoints": 2,
           "effect": "全判定数+1。",
-          "sourceOrder": 30
+          "sourceOrder": 31
         },
         {
           "id": "item-cybernetics-any-bd9db9f504ab",
@@ -1334,7 +1373,7 @@
           "credit": 3,
           "implantPoints": 1,
           "effect": "激痛が与えられるならば、次の手番終了時まで攻撃の効果値がその激痛の強度だけ上昇する。サイバネの埋め込み点数が6以上ならば激痛を受けない。（効果値上昇の効果は適用される）",
-          "sourceOrder": 31
+          "sourceOrder": 32
         }
       ]
     },
@@ -1502,13 +1541,22 @@
         "sourceOrder": 18
       },
       {
+        "id": "item-nanomachine-3e340da9d78a",
+        "name": "ウズムシ",
+        "credit": 3,
+        "implantPoints": 2,
+        "activationMentalCost": 5,
+        "effect": "あなたが受ける体力回復の効果は+5d6される。",
+        "sourceOrder": 19
+      },
+      {
         "id": "item-nanomachine-38fa00be8f64",
         "name": "ヌエ",
-        "credit": 6,
+        "credit": 5,
         "implantPoints": 2,
         "activationMentalCost": 20,
         "effect": "発動したラウンドは行動回数+1。",
-        "sourceOrder": 19
+        "sourceOrder": 20
       }
     ],
     "drugs": [

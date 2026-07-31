@@ -1,0 +1,102 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  vertical-align: middle;
+}
+
+.dismissLayer {
+  display: none;
+}
+
+.trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: help;
+  font: inherit;
+  line-height: inherit;
+  padding: 0;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.triggerContent {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1875rem;
+  max-width: 100%;
+  min-width: 0;
+  padding-right: 0;
+}
+
+.indicator {
+  display: grid;
+  flex: 0 0 0.75rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  place-items: center;
+  border: 0.0625rem solid
+    color-mix(in srgb, var(--color-accent) 58%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  color: var(--color-link);
+  font-size: 0.5625rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.content {
+  position: fixed;
+  z-index: 10;
+  width: max-content;
+  max-width: min(15rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-inverse);
+  color: var(--color-text-inverse);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: var(--line-height-tight);
+  overflow-wrap: anywhere;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  white-space: normal;
+}
+
+.multiline {
+  white-space: pre-line;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .dismissLayer {
+    position: fixed;
+    z-index: 9;
+    inset: 0;
+    display: block;
+    border: 0;
+    background: transparent;
+    cursor: default;
+    padding: 0;
+  }
+
+  .content {
+    width: min(12rem, calc(100vw - var(--space-8)));
+  }
+}

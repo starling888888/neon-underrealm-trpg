@@ -7,5 +7,8 @@ export default defineConfig({
       pathTemplate: "test-results/visual{/projectName}/{arg}{ext}",
     },
   },
+  metadata: {
+    captureLocatorScreenshots: true,
+  },
   use: visualPlaywrightUse,
 });

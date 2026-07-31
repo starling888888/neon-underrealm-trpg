@@ -1,0 +1,954 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
+import CharacterSheetFormPresenter, {
+  type CharacterSheetFormPresenterProps,
+} from "./components/CharacterSheetFormPresenter";
+import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
+import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
+import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
+import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
+import CharacterSheetCcfoliaCopyConfirmDialog from "./components/dialogs/CharacterSheetCcfoliaCopyConfirmDialog";
+import CharacterSheetCcfoliaCopyNoticeDialog from "./components/dialogs/CharacterSheetCcfoliaCopyNoticeDialog";
+import CharacterSheetErrorDialog from "./components/dialogs/CharacterSheetErrorDialog";
+import CharacterSheetHelpDialog from "./components/dialogs/CharacterSheetHelpDialog";
+import CharacterSheetJsonImportConfirmDialog from "./components/dialogs/CharacterSheetJsonImportConfirmDialog";
+import CharacterSheetJsonImportErrorDialog from "./components/dialogs/CharacterSheetJsonImportErrorDialog";
+import CharacterSheetResetConfirmDialog from "./components/dialogs/CharacterSheetResetConfirmDialog";
+import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
+import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
+import DrugsPickerDialog from "./components/dialogs/DrugsPickerDialog";
+import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
+import NanomachinesPickerDialog from "./components/dialogs/NanomachinesPickerDialog";
+import OmamoriPickerDialog from "./components/dialogs/OmamoriPickerDialog";
+import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
+import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
+import SkillSelectionChangeConfirmDialog from "./components/dialogs/SkillSelectionChangeConfirmDialog";
+import SpecialItemCategoryRemoveConfirmDialog from "./components/dialogs/SpecialItemCategoryRemoveConfirmDialog";
+import WeaponPickerDialog from "./components/dialogs/WeaponPickerDialog";
+import type { NanomachinesPickerTarget } from "./components/NanomachinesSection";
+import SkillPickerDialog from "./components/skills/SkillPickerDialog";
+import { characterSheetDictionary } from "./dictionary";
+import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
+import type { SpecialItemCategoryId } from "./form-values";
+import { serializeCcfoliaCharacterClipboardData } from "./logic/ccfolia";
+import { getCyberneticCandidateGroups } from "./master-data/cybernetics";
+import { getDrugs } from "./master-data/drugs";
+import { getNanomachines } from "./master-data/nanomachines";
+import { getOmamori } from "./master-data/omamori";
+import {
+  getArmors,
+  getWeaponCandidateGroups,
+} from "./master-data/weapons-and-armor";
+import useCharacterSheetRootState from "./useCharacterSheetRootState";
+
+/**
+ * React Island root and orchestration boundary for the character sheet.
+ *
+ * It owns form state and cross-cutting UI state. Form layout belongs to the
+ * presenter; dialogs that need root-level coordination are added as direct
+ * siblings of that presenter in later Gates.
+ */
+export default function CharacterSheetContainer() {
+  const rootState = useCharacterSheetRootState();
+  const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
+  const [isErrorSummaryOpen, setIsErrorSummaryOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isCcfoliaCopyConfirmOpen, setIsCcfoliaCopyConfirmOpen] =
+    useState(false);
+  const [ccfoliaCopyNotice, setCcfoliaCopyNotice] = useState<
+    "success" | "failure" | null
+  >(null);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [shouldRestoreResetFocus, setShouldRestoreResetFocus] = useState(false);
+  const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
+    string | null
+  >(null);
+  const [ikizamaSkillPickerRowId, setIkizamaSkillPickerRowId] = useState<
+    string | null
+  >(null);
+  const [commonSkillPickerRowId, setCommonSkillPickerRowId] = useState<
+    string | null
+  >(null);
+  const [otherRyugiSkillPickerRowId, setOtherRyugiSkillPickerRowId] = useState<
+    string | null
+  >(null);
+  const [weaponPickerRowId, setWeaponPickerRowId] = useState<string | null>(
+    null,
+  );
+  const [isArmorPickerOpen, setIsArmorPickerOpen] = useState(false);
+  const [omamoriPickerRowId, setOmamoriPickerRowId] = useState<string | null>(
+    null,
+  );
+  const [drugsPickerRowId, setDrugsPickerRowId] = useState<string | null>(null);
+  const [cyberneticsPickerTarget, setCyberneticsPickerTarget] =
+    useState<CyberneticsPickerTarget | null>(null);
+  const [nanomachinesPickerTarget, setNanomachinesPickerTarget] =
+    useState<NanomachinesPickerTarget | null>(null);
+  const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
+    useState(false);
+  const [isIkizamaChangeConfirmOpen, setIsIkizamaChangeConfirmOpen] =
+    useState(false);
+  const [isOtherRyugiChangeConfirmOpen, setIsOtherRyugiChangeConfirmOpen] =
+    useState(false);
+  const [isOtherRyugiRemoveConfirmOpen, setIsOtherRyugiRemoveConfirmOpen] =
+    useState(false);
+  const [specialItemCategoryToRemove, setSpecialItemCategoryToRemove] =
+    useState<SpecialItemCategoryId | null>(null);
+  const primarySkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const ikizamaSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const commonSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const otherRyugiSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const weaponPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const armorPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const omamoriPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const drugsPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const cyberneticsPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const nanomachinesPickerTriggerRef = useRef<HTMLButtonElement>(null);
+  const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
+  const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
+  const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
+  const otherRyugiRemoveTriggerRef = useRef<HTMLButtonElement>(null);
+  const otherRyugiAddButtonRef = useRef<HTMLButtonElement>(null);
+  const specialItemCategoryRemoveTriggerRef = useRef<HTMLButtonElement>(null);
+  const actionMenuTriggerRef = useRef<HTMLButtonElement>(null);
+  const helpTriggerRef = useRef<HTMLButtonElement>(null);
+  const errorSummaryCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const errorSummaryTriggerRef = useRef<HTMLButtonElement>(null);
+  const resetTriggerRef = useRef<HTMLButtonElement>(null);
+  const ccfoliaCopyTriggerRef = useRef<HTMLButtonElement>(null);
+  const ccfoliaCopyNoticeConfirmButtonRef = useRef<HTMLButtonElement>(null);
+  const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
+  const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
+  const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
+  const pendingOtherRyugiRemoveRef = useRef<(() => void) | null>(null);
+  const pendingSpecialItemCategoryRemoveRef = useRef<(() => void) | null>(null);
+  const clearOtherRyugiSkillsRef = useRef<(rowId: string) => void>(() => {});
+  const removeOtherRyugiSkillsRef = useRef<(rowId: string) => void>(() => {});
+  const form = rootState.form;
+  const formResetKey = rootState.formResetVersion;
+  const imageState = useMemo(
+    () => ({
+      characterImage: rootState.characterImage,
+      isRootOperationInProgress: rootState.isRootOperationInProgress,
+      onCharacterImageCleared: rootState.onCharacterImageCleared,
+      onCharacterImageOperationStarted:
+        rootState.onCharacterImageOperationStarted,
+      onCharacterImageSelected: rootState.onCharacterImageSelected,
+    }),
+    [
+      rootState.characterImage,
+      rootState.isRootOperationInProgress,
+      rootState.onCharacterImageCleared,
+      rootState.onCharacterImageOperationStarted,
+      rootState.onCharacterImageSelected,
+    ],
+  );
+  const onPrimarySkillPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      primarySkillPickerTriggerRef.current = trigger;
+      setPrimarySkillPickerRowId(rowId);
+    },
+    [],
+  );
+  const onIkizamaSkillPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      ikizamaSkillPickerTriggerRef.current = trigger;
+      setIkizamaSkillPickerRowId(rowId);
+    },
+    [],
+  );
+  const onCommonSkillPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      commonSkillPickerTriggerRef.current = trigger;
+      setCommonSkillPickerRowId(rowId);
+    },
+    [],
+  );
+  const onOtherRyugiSkillPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      otherRyugiSkillPickerTriggerRef.current = trigger;
+      setOtherRyugiSkillPickerRowId(rowId);
+    },
+    [],
+  );
+  const onArmorPickerRequested = useCallback((trigger: HTMLButtonElement) => {
+    armorPickerTriggerRef.current = trigger;
+    setIsArmorPickerOpen(true);
+  }, []);
+  const onOmamoriPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      omamoriPickerTriggerRef.current = trigger;
+      setOmamoriPickerRowId(rowId);
+    },
+    [],
+  );
+  const onDrugsPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      drugsPickerTriggerRef.current = trigger;
+      setDrugsPickerRowId(rowId);
+    },
+    [],
+  );
+  const onCyberneticsPickerRequested = useCallback(
+    (target: CyberneticsPickerTarget, trigger: HTMLButtonElement) => {
+      cyberneticsPickerTriggerRef.current = trigger;
+      setCyberneticsPickerTarget(target);
+    },
+    [],
+  );
+  const onNanomachinesPickerRequested = useCallback(
+    (target: NanomachinesPickerTarget, trigger: HTMLButtonElement) => {
+      nanomachinesPickerTriggerRef.current = trigger;
+      setNanomachinesPickerTarget(target);
+    },
+    [],
+  );
+  const onWeaponPickerRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement) => {
+      weaponPickerTriggerRef.current = trigger;
+      setWeaponPickerRowId(rowId);
+    },
+    [],
+  );
+  const onIkizamaChangeRequested = useCallback(
+    (
+      ikizamaId: string | null,
+      trigger: HTMLSelectElement,
+      applyChange: () => void,
+    ) => {
+      const currentIkizamaId = form.getValues("build.ikizamaId");
+      const hasSelectedSkill = form
+        .getValues("ikizamaSkills.rows")
+        .some((row) => row.skillId !== null);
+      if (ikizamaId === currentIkizamaId || !hasSelectedSkill) {
+        applyChange();
+        return;
+      }
+      ikizamaChangeTriggerRef.current = trigger;
+      pendingIkizamaChangeRef.current = applyChange;
+      setIsIkizamaChangeConfirmOpen(true);
+    },
+    [form],
+  );
+  const onPrimaryRyugiChangeRequested = useCallback(
+    (
+      primaryRyugiId: string | null,
+      trigger: HTMLSelectElement,
+      applyChange: () => void,
+    ) => {
+      const currentPrimaryRyugiId = form.getValues("build.primaryRyugiId");
+      const hasSelectedSkill = form
+        .getValues("primarySkills.rows")
+        .some((row) => row.skillId !== null);
+      if (primaryRyugiId === currentPrimaryRyugiId || !hasSelectedSkill) {
+        applyChange();
+        return;
+      }
+      primaryRyugiChangeTriggerRef.current = trigger;
+      pendingPrimaryRyugiChangeRef.current = applyChange;
+      setIsPrimaryRyugiChangeConfirmOpen(true);
+    },
+    [form],
+  );
+  const onOtherRyugiChangeRequested = useCallback(
+    (
+      rowId: string,
+      ryugiId: string | null,
+      trigger: HTMLSelectElement,
+      applyChange: () => void,
+    ) => {
+      const currentRyugiId = form
+        .getValues("build.otherRyugi")
+        .find((row) => row.rowId === rowId)?.ryugiId;
+      if (ryugiId === currentRyugiId) {
+        applyChange();
+        return;
+      }
+      const hasSelectedSkill = form
+        .getValues("otherRyugiSkills.rows")
+        .some((row) => row.ryugiRowId === rowId && row.skillId !== null);
+      const clearAndApply = () => {
+        clearOtherRyugiSkillsRef.current(rowId);
+        applyChange();
+      };
+      if (!hasSelectedSkill) {
+        clearAndApply();
+        return;
+      }
+      otherRyugiChangeTriggerRef.current = trigger;
+      pendingOtherRyugiChangeRef.current = clearAndApply;
+      setIsOtherRyugiChangeConfirmOpen(true);
+    },
+    [form],
+  );
+  const onOtherRyugiRemoveRequested = useCallback(
+    (rowId: string, trigger: HTMLButtonElement, applyChange: () => void) => {
+      const hasSelectedSkill = form
+        .getValues("otherRyugiSkills.rows")
+        .some((row) => row.ryugiRowId === rowId && row.skillId !== null);
+      const removeAndApply = () => {
+        removeOtherRyugiSkillsRef.current(rowId);
+        applyChange();
+      };
+      if (!hasSelectedSkill) {
+        removeAndApply();
+        return;
+      }
+      otherRyugiRemoveTriggerRef.current = trigger;
+      pendingOtherRyugiRemoveRef.current = removeAndApply;
+      setIsOtherRyugiRemoveConfirmOpen(true);
+    },
+    [form],
+  );
+  const onSpecialItemCategoryRemoveRequested = useCallback(
+    (
+      category: SpecialItemCategoryId,
+      trigger: HTMLButtonElement,
+      applyRemoval: () => void,
+    ) => {
+      specialItemCategoryRemoveTriggerRef.current = trigger;
+      pendingSpecialItemCategoryRemoveRef.current = applyRemoval;
+      setSpecialItemCategoryToRemove(category);
+    },
+    [],
+  );
+  const onSpecialItemCategoryRemoved = useCallback(
+    (category: SpecialItemCategoryId) => {
+      requestAnimationFrame(() => {
+        document
+          .querySelector<HTMLButtonElement>(
+            `[data-special-item-category-add="${category}"]`,
+          )
+          ?.focus();
+      });
+    },
+    [],
+  );
+  const presenterProps = useCharacterSheetFormPresenterProps(form, imageState, {
+    formRestoreReturnFocusRef: rootState.formRestoreReturnFocusRef,
+    onIkizamaChangeRequested,
+    onPrimaryRyugiChangeRequested,
+    onPrimarySkillPickerRequested,
+    onIkizamaSkillPickerRequested,
+    onCommonSkillPickerRequested,
+    onOtherRyugiChangeRequested,
+    otherRyugiAddButtonRef,
+    onOtherRyugiRemoveRequested,
+    onOtherRyugiSkillPickerRequested,
+    onArmorPickerRequested,
+    onOmamoriPickerRequested,
+    onDrugsPickerRequested,
+    onCyberneticsPickerRequested,
+    onNanomachinesPickerRequested,
+    onWeaponPickerRequested,
+    onSpecialItemCategoryRemoveRequested,
+    onSpecialItemCategoryRemoved,
+  });
+  clearOtherRyugiSkillsRef.current =
+    presenterProps.otherRyugiSkills.clearSelection;
+  removeOtherRyugiSkillsRef.current =
+    presenterProps.otherRyugiSkills.removeRows;
+  const formPresenterProps = useMemo<CharacterSheetFormPresenterProps>(
+    () => ({
+      bondsSection: presenterProps.bondsSection,
+      buildSection: presenterProps.buildSection,
+      checksSection: presenterProps.checksSection,
+      commonSkillsSection: presenterProps.commonSkillsSection,
+      cyberneticsSection: presenterProps.cyberneticsSection,
+      drugsSection: presenterProps.drugsSection,
+      ikizamaSkillsSection: presenterProps.ikizamaSkillsSection,
+      nanomachinesSection: presenterProps.nanomachinesSection,
+      omamoriSection: presenterProps.omamoriSection,
+      otherRyugiSkillsSection: presenterProps.otherRyugiSkillsSection,
+      primarySkillsSection: presenterProps.primarySkillsSection,
+      profileSection: presenterProps.profileSection,
+      secondaryAttributesSection: presenterProps.secondaryAttributesSection,
+      specialItemsSection: presenterProps.specialItemsSection,
+      weaponsAndArmorSection: presenterProps.weaponsAndArmorSection,
+    }),
+    [
+      presenterProps.bondsSection,
+      presenterProps.buildSection,
+      presenterProps.checksSection,
+      presenterProps.commonSkillsSection,
+      presenterProps.cyberneticsSection,
+      presenterProps.drugsSection,
+      presenterProps.ikizamaSkillsSection,
+      presenterProps.nanomachinesSection,
+      presenterProps.omamoriSection,
+      presenterProps.otherRyugiSkillsSection,
+      presenterProps.primarySkillsSection,
+      presenterProps.profileSection,
+      presenterProps.secondaryAttributesSection,
+      presenterProps.specialItemsSection,
+      presenterProps.weaponsAndArmorSection,
+    ],
+  );
+
+  useEffect(() => {
+    if (!shouldRestoreResetFocus || rootState.isRootOperationInProgress) return;
+
+    setShouldRestoreResetFocus(false);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resetTriggerRef.current?.focus());
+    });
+  }, [rootState.isRootOperationInProgress, shouldRestoreResetFocus]);
+
+  function closeResetConfirm(): void {
+    setIsResetConfirmOpen(false);
+    setShouldRestoreResetFocus(true);
+  }
+
+  function closeCcfoliaCopyConfirm(): void {
+    setIsCcfoliaCopyConfirmOpen(false);
+  }
+
+  async function confirmCcfoliaCopy(): Promise<void> {
+    closeCcfoliaCopyConfirm();
+    const values = rootState.form.getValues();
+    const { derived } = presenterProps.secondaryAttributesSection;
+    const copied = await rootState.onCcfoliaCopy(
+      serializeCcfoliaCharacterClipboardData({
+        actionValue: derived.actionValue,
+        bondLimit: derived.bondLimit,
+        bonds: values.bonds.rows,
+        health: derived.health,
+        mental: derived.mental,
+        pcName: values.profile.pcName,
+      }),
+    );
+    setCcfoliaCopyNotice(copied ? "success" : "failure");
+  }
+
+  useEffect(() => {
+    if (!isActionMenuOpen) {
+      return;
+    }
+
+    function onKeyDown(event: KeyboardEvent): void {
+      if (
+        event.key !== "Escape" ||
+        document.querySelector("dialog[open]") !== null
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      setIsActionMenuOpen(false);
+      requestAnimationFrame(() => actionMenuTriggerRef.current?.focus());
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isActionMenuOpen]);
+
+  function closePrimarySkillPicker(): void {
+    setPrimarySkillPickerRowId(null);
+  }
+
+  function closeIkizamaSkillPicker(): void {
+    setIkizamaSkillPickerRowId(null);
+  }
+
+  function closeCommonSkillPicker(): void {
+    setCommonSkillPickerRowId(null);
+  }
+
+  function closeOtherRyugiSkillPicker(): void {
+    setOtherRyugiSkillPickerRowId(null);
+  }
+  function closeWeaponPicker(): void {
+    setWeaponPickerRowId(null);
+  }
+  function closeArmorPicker(): void {
+    setIsArmorPickerOpen(false);
+  }
+  function closeOmamoriPicker(): void {
+    setOmamoriPickerRowId(null);
+  }
+  function closeDrugsPicker(): void {
+    setDrugsPickerRowId(null);
+  }
+  function closeCyberneticsPicker(): void {
+    setCyberneticsPickerTarget(null);
+  }
+  function closeNanomachinesPicker(): void {
+    setNanomachinesPickerTarget(null);
+  }
+
+  function confirmPrimaryRyugiChange(): void {
+    presenterProps.primarySkillPicker.clearSelection();
+    pendingPrimaryRyugiChangeRef.current?.();
+    pendingPrimaryRyugiChangeRef.current = null;
+    setIsPrimaryRyugiChangeConfirmOpen(false);
+  }
+
+  function closePrimaryRyugiChangeConfirm(): void {
+    pendingPrimaryRyugiChangeRef.current = null;
+    setIsPrimaryRyugiChangeConfirmOpen(false);
+  }
+
+  function confirmIkizamaChange(): void {
+    presenterProps.ikizamaSkillPicker.clearSelection();
+    pendingIkizamaChangeRef.current?.();
+    pendingIkizamaChangeRef.current = null;
+    setIsIkizamaChangeConfirmOpen(false);
+  }
+
+  function closeIkizamaChangeConfirm(): void {
+    pendingIkizamaChangeRef.current = null;
+    setIsIkizamaChangeConfirmOpen(false);
+  }
+
+  function confirmOtherRyugiChange(): void {
+    pendingOtherRyugiChangeRef.current?.();
+    pendingOtherRyugiChangeRef.current = null;
+    setIsOtherRyugiChangeConfirmOpen(false);
+  }
+
+  function closeOtherRyugiChangeConfirm(): void {
+    pendingOtherRyugiChangeRef.current = null;
+    setIsOtherRyugiChangeConfirmOpen(false);
+  }
+
+  function confirmOtherRyugiRemove(): void {
+    pendingOtherRyugiRemoveRef.current?.();
+    pendingOtherRyugiRemoveRef.current = null;
+    otherRyugiRemoveTriggerRef.current = otherRyugiAddButtonRef.current;
+    setIsOtherRyugiRemoveConfirmOpen(false);
+  }
+
+  function closeOtherRyugiRemoveConfirm(): void {
+    pendingOtherRyugiRemoveRef.current = null;
+    setIsOtherRyugiRemoveConfirmOpen(false);
+  }
+
+  function confirmSpecialItemCategoryRemove(): void {
+    pendingSpecialItemCategoryRemoveRef.current?.();
+    pendingSpecialItemCategoryRemoveRef.current = null;
+    setSpecialItemCategoryToRemove(null);
+  }
+
+  function closeSpecialItemCategoryRemoveConfirm(): void {
+    pendingSpecialItemCategoryRemoveRef.current = null;
+    setSpecialItemCategoryToRemove(null);
+  }
+  return (
+    <>
+      <div
+        aria-busy={rootState.isRootOperationInProgress}
+        inert={rootState.isRootOperationInProgress || undefined}
+      >
+        <CharacterSheetActionPane
+          errorReviewButtonRef={errorSummaryTriggerRef}
+          errorSummary={presenterProps.errorSummary}
+          isCcfoliaCopyDisabled={rootState.isRootOperationInProgress}
+          isExportDisabled={rootState.isCharacterImageRestoring}
+          isImportDisabled={
+            rootState.isCharacterImageRestoring ||
+            rootState.isRootOperationInProgress
+          }
+          isResetDisabled={
+            rootState.isCharacterImageRestoring ||
+            rootState.isRootOperationInProgress
+          }
+          isMenuOpen={isActionMenuOpen}
+          menuTriggerRef={actionMenuTriggerRef}
+          onExport={rootState.onJsonExport}
+          onHelp={(trigger) => {
+            helpTriggerRef.current = trigger;
+            setIsHelpOpen(true);
+          }}
+          onCcfoliaCopy={(trigger) => {
+            ccfoliaCopyTriggerRef.current = isActionMenuOpen
+              ? actionMenuTriggerRef.current
+              : trigger;
+            setIsActionMenuOpen(false);
+            setIsCcfoliaCopyConfirmOpen(true);
+          }}
+          onImport={rootState.onJsonImportRequested}
+          onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
+          onReset={(trigger) => {
+            resetTriggerRef.current = isActionMenuOpen
+              ? actionMenuTriggerRef.current
+              : trigger;
+            setIsActionMenuOpen(false);
+            setIsResetConfirmOpen(true);
+          }}
+          onReviewErrors={() => setIsErrorSummaryOpen(true)}
+        />
+        <input
+          accept="application/json,.json"
+          hidden
+          onChange={(event) => {
+            const file = event.currentTarget.files?.[0];
+            event.currentTarget.value = "";
+            if (file !== undefined) {
+              void rootState.onJsonImportFileSelected(file);
+            }
+          }}
+          ref={rootState.jsonImportInputRef}
+          type="file"
+        />
+        <CharacterSheetFormPresenter
+          {...formPresenterProps}
+          key={formResetKey}
+        />
+        <CharacterImageErrorDialog
+          closeButtonRef={rootState.imageErrorCloseButtonRef}
+          errorCode={rootState.imageError?.code ?? null}
+          onRequestClose={() => rootState.setImageError(null)}
+          returnFocusRef={
+            rootState.isImageErrorFromJsonImport
+              ? rootState.jsonImportReturnFocusRef
+              : rootState.isImageErrorFromReset
+                ? resetTriggerRef
+                : rootState.imageReturnFocusRef
+          }
+        />
+        <CharacterSheetRestoreErrorDialog
+          confirmButtonRef={rootState.formRestoreConfirmButtonRef}
+          isOpen={rootState.isFormRestoreErrorOpen}
+          onRequestClose={() => rootState.setIsFormRestoreErrorOpen(false)}
+          returnFocusRef={rootState.formRestoreReturnFocusRef}
+        />
+        <CharacterSheetJsonImportConfirmDialog
+          isOpen={rootState.pendingJsonImport != null}
+          onConfirm={() => void rootState.onJsonImportConfirmed()}
+          onRequestClose={() => rootState.setPendingJsonImport(null)}
+          returnFocusRef={rootState.jsonImportReturnFocusRef}
+        />
+        <CharacterSheetHelpDialog
+          isOpen={isHelpOpen}
+          onRequestClose={() => setIsHelpOpen(false)}
+          returnFocusRef={helpTriggerRef}
+        />
+        <CharacterSheetCcfoliaCopyConfirmDialog
+          isOpen={isCcfoliaCopyConfirmOpen}
+          onConfirm={() => void confirmCcfoliaCopy()}
+          onRequestClose={closeCcfoliaCopyConfirm}
+          returnFocusRef={ccfoliaCopyTriggerRef}
+        />
+        <CharacterSheetCcfoliaCopyNoticeDialog
+          confirmButtonRef={ccfoliaCopyNoticeConfirmButtonRef}
+          dialogLabel={
+            ccfoliaCopyNotice === "success"
+              ? characterSheetDictionary.characterSheet.ccfolia.successLabel
+              : characterSheetDictionary.characterSheet.ccfolia.failureLabel
+          }
+          isOpen={ccfoliaCopyNotice !== null}
+          message={
+            ccfoliaCopyNotice === "success"
+              ? characterSheetDictionary.characterSheet.ccfolia.success
+              : characterSheetDictionary.characterSheet.ccfolia.failure
+          }
+          onRequestClose={() => setCcfoliaCopyNotice(null)}
+          returnFocusRef={ccfoliaCopyTriggerRef}
+        />
+        <CharacterSheetResetConfirmDialog
+          isOpen={isResetConfirmOpen}
+          onConfirm={() => {
+            closeResetConfirm();
+            void rootState.onResetConfirmed();
+          }}
+          onRequestClose={closeResetConfirm}
+          returnFocusRef={resetTriggerRef}
+        />
+        <CharacterSheetJsonImportErrorDialog
+          confirmButtonRef={rootState.jsonImportErrorConfirmButtonRef}
+          dialogLabel={
+            characterSheetDictionary.characterSheet.jsonImport.errorLabel
+          }
+          isOpen={rootState.isJsonImportErrorOpen}
+          message={characterSheetDictionary.characterSheet.jsonImport.error}
+          onRequestClose={() => rootState.setIsJsonImportErrorOpen(false)}
+          returnFocusRef={rootState.jsonImportReturnFocusRef}
+        />
+        <CharacterSheetJsonImportErrorDialog
+          confirmButtonRef={rootState.jsonImportErrorConfirmButtonRef}
+          dialogLabel={
+            characterSheetDictionary.characterSheet.jsonImport.imageErrorLabel
+          }
+          isOpen={rootState.isJsonImportImageErrorOpen}
+          message={
+            characterSheetDictionary.characterSheet.jsonImport.imageError
+          }
+          onRequestClose={() => rootState.setIsJsonImportImageErrorOpen(false)}
+          returnFocusRef={rootState.jsonImportReturnFocusRef}
+        />
+        <CharacterSheetErrorDialog
+          closeButtonRef={errorSummaryCloseButtonRef}
+          errorSummary={presenterProps.errorSummary}
+          isOpen={isErrorSummaryOpen}
+          onRequestClose={() => setIsErrorSummaryOpen(false)}
+          returnFocusRef={errorSummaryTriggerRef}
+        />
+        <PrimarySkillPickerDialog
+          groups={presenterProps.primarySkillPicker.candidateGroups}
+          isOpen={primarySkillPickerRowId !== null}
+          onRequestClose={closePrimarySkillPicker}
+          onSelect={(skillId) => {
+            if (primarySkillPickerRowId !== null) {
+              presenterProps.primarySkillPicker.onSelect(
+                primarySkillPickerRowId,
+                skillId,
+              );
+            }
+            closePrimarySkillPicker();
+          }}
+          returnFocusRef={primarySkillPickerTriggerRef}
+          selectedSkillIds={presenterProps.primarySkillsSection.rows.flatMap(
+            (row) => (row.skillId === null ? [] : [row.skillId]),
+          )}
+        />
+        <IkizamaSkillPickerDialog
+          groups={presenterProps.ikizamaSkillPicker.candidateGroups}
+          isOpen={ikizamaSkillPickerRowId !== null}
+          onRequestClose={closeIkizamaSkillPicker}
+          onSelect={(skillId) => {
+            if (ikizamaSkillPickerRowId !== null) {
+              presenterProps.ikizamaSkillPicker.onSelect(
+                ikizamaSkillPickerRowId,
+                skillId,
+              );
+            }
+            closeIkizamaSkillPicker();
+          }}
+          returnFocusRef={ikizamaSkillPickerTriggerRef}
+        />
+        <SkillPickerDialog
+          groups={[
+            {
+              id: "common-skills",
+              skills: presenterProps.commonSkillPicker.candidates,
+            },
+          ]}
+          isOpen={commonSkillPickerRowId !== null}
+          onRequestClose={closeCommonSkillPicker}
+          onSelect={(skillId) => {
+            if (commonSkillPickerRowId !== null) {
+              presenterProps.commonSkillPicker.onSelect(
+                commonSkillPickerRowId,
+                skillId,
+              );
+            }
+            closeCommonSkillPicker();
+          }}
+          returnFocusRef={commonSkillPickerTriggerRef}
+          selectedSkillIds={presenterProps.commonSkillsSection.rows.flatMap(
+            (row) => (row.skillId === null ? [] : [row.skillId]),
+          )}
+          selectionGuide={
+            characterSheetDictionary.characterSheet.skills.selectionGuide
+          }
+          title={characterSheetDictionary.characterSheet.skills.chooseCommon}
+        />
+        <OtherRyugiSkillPickerDialog
+          groups={
+            otherRyugiSkillPickerRowId === null
+              ? { advanced: [], basic: [] }
+              : presenterProps.otherRyugiSkillPicker.getCandidateGroups(
+                  rootState.form
+                    .getValues("otherRyugiSkills.rows")
+                    .find((row) => row.rowId === otherRyugiSkillPickerRowId)
+                    ?.ryugiRowId ?? "",
+                )
+          }
+          isOpen={otherRyugiSkillPickerRowId !== null}
+          onRequestClose={closeOtherRyugiSkillPicker}
+          onSelect={(skillId) => {
+            if (otherRyugiSkillPickerRowId !== null) {
+              presenterProps.otherRyugiSkillPicker.onSelect(
+                otherRyugiSkillPickerRowId,
+                skillId,
+              );
+            }
+            closeOtherRyugiSkillPicker();
+          }}
+          returnFocusRef={otherRyugiSkillPickerTriggerRef}
+          selectedSkillIds={
+            otherRyugiSkillPickerRowId === null
+              ? []
+              : presenterProps.otherRyugiSkillPicker.getSelectedSkillIds(
+                  rootState.form
+                    .getValues("otherRyugiSkills.rows")
+                    .find((row) => row.rowId === otherRyugiSkillPickerRowId)
+                    ?.ryugiRowId ?? "",
+                )
+          }
+        />
+        <WeaponPickerDialog
+          groups={getWeaponCandidateGroups(
+            rootState.form.getValues("build.ikizamaId"),
+          )}
+          isOpen={weaponPickerRowId !== null}
+          onRequestClose={closeWeaponPicker}
+          onSelect={(weaponId) => {
+            if (weaponPickerRowId !== null) {
+              presenterProps.weaponsAndArmorSection.onWeaponSelect(
+                weaponPickerRowId,
+                weaponId,
+              );
+            }
+            closeWeaponPicker();
+          }}
+          returnFocusRef={weaponPickerTriggerRef}
+        />
+        <ArmorPickerDialog
+          armors={getArmors()}
+          isOpen={isArmorPickerOpen}
+          onRequestClose={closeArmorPicker}
+          onSelect={(armorId) => {
+            presenterProps.weaponsAndArmorSection.onArmorSelect(armorId);
+            closeArmorPicker();
+          }}
+          returnFocusRef={armorPickerTriggerRef}
+        />
+        <OmamoriPickerDialog
+          candidates={getOmamori()}
+          isOpen={omamoriPickerRowId !== null}
+          onRequestClose={closeOmamoriPicker}
+          onSelect={(omamoriId) => {
+            if (omamoriPickerRowId !== null) {
+              presenterProps.omamoriSection.onSelect(
+                omamoriPickerRowId,
+                omamoriId,
+              );
+            }
+            closeOmamoriPicker();
+          }}
+          returnFocusRef={omamoriPickerTriggerRef}
+        />
+        <DrugsPickerDialog
+          candidates={getDrugs()}
+          isOpen={drugsPickerRowId !== null}
+          onRequestClose={closeDrugsPicker}
+          onSelect={(drugId) => {
+            if (drugsPickerRowId !== null) {
+              presenterProps.drugsSection.onSelect(drugsPickerRowId, drugId);
+            }
+            closeDrugsPicker();
+          }}
+          returnFocusRef={drugsPickerTriggerRef}
+          selectedDrugIds={rootState.form
+            .getValues("drugs.rows")
+            .flatMap((row) =>
+              row.rowId === drugsPickerRowId || row.drugId === null
+                ? []
+                : [row.drugId],
+            )}
+        />
+        <CyberneticsPickerDialog
+          groups={getCyberneticCandidateGroups(
+            cyberneticsPickerTarget === null
+              ? "other"
+              : cyberneticsPickerTarget.kind === "fixed"
+                ? cyberneticsPickerTarget.part
+                : "other",
+          )}
+          isOpen={cyberneticsPickerTarget !== null}
+          onRequestClose={closeCyberneticsPicker}
+          onSelect={(cyberneticId) => {
+            if (cyberneticsPickerTarget !== null) {
+              presenterProps.cyberneticsSection.onSelect(
+                cyberneticsPickerTarget,
+                cyberneticId,
+              );
+            }
+            closeCyberneticsPicker();
+          }}
+          returnFocusRef={cyberneticsPickerTriggerRef}
+        />
+        <NanomachinesPickerDialog
+          candidates={getNanomachines()}
+          isOpen={nanomachinesPickerTarget !== null}
+          onRequestClose={closeNanomachinesPicker}
+          onSelect={(nanomachineId) => {
+            if (nanomachinesPickerTarget !== null) {
+              presenterProps.nanomachinesSection.onSelect(
+                nanomachinesPickerTarget,
+                nanomachineId,
+              );
+            }
+            closeNanomachinesPicker();
+          }}
+          returnFocusRef={nanomachinesPickerTriggerRef}
+        />
+        <SkillSelectionChangeConfirmDialog
+          confirmation={
+            characterSheetDictionary.characterSheet.skills
+              .skillSelectionChangeConfirmation
+          }
+          dialogLabel={
+            characterSheetDictionary.characterSheet.skills
+              .primaryRyugiChangeConfirmationLabel
+          }
+          isOpen={isPrimaryRyugiChangeConfirmOpen}
+          onConfirm={confirmPrimaryRyugiChange}
+          onRequestClose={closePrimaryRyugiChangeConfirm}
+          returnFocusRef={primaryRyugiChangeTriggerRef}
+        />
+        <SkillSelectionChangeConfirmDialog
+          confirmation={
+            characterSheetDictionary.characterSheet.skills
+              .skillSelectionChangeConfirmation
+          }
+          dialogLabel={
+            characterSheetDictionary.characterSheet.skills
+              .ikizamaChangeConfirmationLabel
+          }
+          isOpen={isIkizamaChangeConfirmOpen}
+          onConfirm={confirmIkizamaChange}
+          onRequestClose={closeIkizamaChangeConfirm}
+          returnFocusRef={ikizamaChangeTriggerRef}
+        />
+        <SkillSelectionChangeConfirmDialog
+          confirmation={
+            characterSheetDictionary.characterSheet.skills
+              .skillSelectionChangeConfirmation
+          }
+          dialogLabel={
+            characterSheetDictionary.characterSheet.skills
+              .otherRyugiChangeConfirmationLabel
+          }
+          isOpen={isOtherRyugiChangeConfirmOpen}
+          onConfirm={confirmOtherRyugiChange}
+          onRequestClose={closeOtherRyugiChangeConfirm}
+          returnFocusRef={otherRyugiChangeTriggerRef}
+        />
+        <SkillSelectionChangeConfirmDialog
+          confirmLabel={characterSheetDictionary.general.delete}
+          confirmation={
+            characterSheetDictionary.characterSheet.skills
+              .otherRyugiRemoveConfirmation
+          }
+          dialogLabel={
+            characterSheetDictionary.characterSheet.skills
+              .otherRyugiRemoveConfirmationLabel
+          }
+          isOpen={isOtherRyugiRemoveConfirmOpen}
+          onConfirm={confirmOtherRyugiRemove}
+          onRequestClose={closeOtherRyugiRemoveConfirm}
+          returnFocusRef={otherRyugiRemoveTriggerRef}
+        />
+        <SpecialItemCategoryRemoveConfirmDialog
+          category={specialItemCategoryToRemove}
+          isOpen={specialItemCategoryToRemove !== null}
+          onConfirm={confirmSpecialItemCategoryRemove}
+          onRequestClose={closeSpecialItemCategoryRemoveConfirm}
+          returnFocusRef={specialItemCategoryRemoveTriggerRef}
+        />
+      </div>
+      <CharacterSheetLoadingOverlay
+        isOpen={
+          rootState.isRootOperationInProgress || rootState.isFormRestoring
+        }
+        label={
+          rootState.rootOperation?.label ??
+          characterSheetDictionary.characterSheet.persistence.restoring
+        }
+      />
+    </>
+  );
+}

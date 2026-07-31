@@ -23,6 +23,7 @@ export const visualRoutes = {
   support: "support/",
   world: "world/",
   characterMaking: "character-making/",
+  characterSheet: "character-sheet/",
   data: "data/",
   commonSkills: "data/common-skills/",
   dataRyugi: "data/ryugi/",
@@ -50,6 +51,10 @@ export const visualRoutes = {
 export const visualViewports = {
   desktop: {
     width: 1440,
+    height: 1200,
+  },
+  ultrawide: {
+    width: 1920,
     height: 1200,
   },
   tablet: {
