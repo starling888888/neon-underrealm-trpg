@@ -49,8 +49,7 @@
 - VRTは高コストな比較である。Markdownのみの変更、または画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。ローカルで全件VRTを通常実行しない。全件VRTはGitHub Actionsの定期実行または公開直後の実行として別taskで整備する。
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
-- Google Drive上のユーザー編集正本をローカル作業入力として使う場合は、`raw-google-drive.url` と `<repo-root>/.raw/` の扱いを `.agents/skills/drive-to-raw-sync/SKILL.md` と `.agents/rules/data-management.md` で確認する。
-- ローカル`.raw/`からGoogle Driveへ書き込んでよいのは、ユーザーが `$raw-to-drive-sync` または `raw-to-drive-sync を実行して` と明示した場合に限る。このとき `.agents/skills/raw-to-drive-sync/SKILL.md` に従い、`.raw/data/` と `.raw/v1.0/` は明示指示があっても拒否する。
+- Google Spreadsheetをローカル入力へ同期する場合は、`.env`の認証情報を使う`npm run sync:google-sheets`だけを用いる。Google Driveへ書き込んではならず、Google Docsの自動同期は行わない。
 - 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由をissueまたは作業報告に書く。
 - ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、または同種のbuild、test、型検査などの失敗を1回の作業中に2回以上繰り返した場合は `docs/agent-failure-log.md` に記録する。formatterまたはlinterの指摘は、同一作業中に修正して最終確認できれば通常の開発ループとして扱い、failure logへ記録・報告しない。
 
@@ -97,32 +96,15 @@ PRを作成してよいのは、ユーザーが明示的にPR作成を指示し�
 
 PR作成後に、ユーザーがCodexへ既存PR branchへのpushを指示した場合は、`.agents/skills/pr-review-draft/SKILL.md` を使い、前回PR review以降の差分をreviewする。Codex外で実行されたpushは自動検知しない。
 
-Google Drive上のユーザー編集正本をローカル作業入力へ同期する場合は、`.agents/skills/drive-to-raw-sync/SKILL.md` を使う。
-
-Google Drive同期対象フォルダのURLは、リポジトリルート直下の `raw-google-drive.url` で管理する。`raw-google-drive.url` はGit管理しない。
+Google Spreadsheetをローカル作業入力へ同期する場合は、`.env`で指定したDriveフォルダIDを使い、`npm run sync:google-sheets`を手動で実行する。
 
 同期先の `.raw/` は常にリポジトリルート直下の `<repo-root>/.raw/` を指す。OSルート直下の `/.raw/`、カレントディレクトリ基準の `./.raw/`、repo外の `.raw/`、Git管理対象の `raw/` と解釈してはならない。
 
 contents markdownを作成または解釈する場合は、`.agents/skills/contents-markdown-authoring/SKILL.md` と `.agents/rules/contents-markdown.md` を参照する。
 
-対応する`.raw/contents/<slug>.md`があるページでは、ユーザーが編集したMarkdown本文とHTMLコメントを、ページ本文・可視の表示構成に関する最優先の作業指示として扱う。ユーザーの最新指示と本ファイルの安全・workflow規約を除き、issue、requirements、out-of-scope、plan、TODO、design、既存実装より優先する。下位文書に齟齬がある場合はcontentsへ合わせて更新し、更新できない場合は実装を開始しない。
+`.raw/contents/<slug>.md`は、必要に応じてユーザーが手動で置くGit非管理の補助入力である。ページ本文・可視構成のGit管理上の正本は`src/pages/`配下のMDX / Astroとし、contentsが矛盾しても自動的に既存実装やGit管理文書を上書きしない。
 
-`<repo-root>/.raw/` 配下の構造は以下に固定する。
-
-```text
-<repo-root>/.raw/
-├── release-notes.xlsx
-├── data/
-│   └── *.xlsx
-├── contents/
-│   └── *.md
-└── v1.0/
-    └── *.md
-```
-
-Google Drive側は、`release-notes` Google Sheet、`data/`、`contents/`、`v1.0/` を同期対象フォルダ直下に置く。`contents/` のGoogle DocsはMarkdownソースをプレーンテキストとして保持し、`text/plain` exportでファイル名 `<slug>.md` として同期する。`v1.0/` は直下Google Docsだけを旧版参照資料として置き、スタイルをMarkdown化するため `text/markdown` exportで同期し、inline base64画像定義はローカル保存前に除去する。Google SheetsはExcel `.xlsx` としてローカルへ同期する。
-
-Google Driveは `.raw/contents/` と `.raw/release-notes.xlsx` のユーザー編集正本である。Drive書込みは `raw-to-drive-sync` の明示呼び出しだけに限定する。Drive同期はCI/CDでは実行しない。
+Google Spreadsheet同期は、指定Driveフォルダ配下のフォルダ構造をそのまま`.raw/`配下へ再帰的にコピーする。Google Docsその他のファイルは同期しない。同期はローカル開発用の手動scriptだけに閉じ、CI/CD、build、runtimeでは実行しない。
 
 ---
 
@@ -138,10 +120,9 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - design intent / VRT参照情報の作成またはbaseline更新: `.agents/skills/design-image-generation/SKILL.md`
 - UI実装後のVisual Review: `.agents/skills/visual-implementation-review/SKILL.md`
 - `.tmp/*.md` のレビュー指摘取り込み: `.agents/skills/review-to-issue/SKILL.md`
-- Google Drive正本から `<repo-root>/.raw/` への同期: `.agents/skills/drive-to-raw-sync/SKILL.md`
+- Google Spreadsheetから `<repo-root>/.raw/` への同期: `npm run sync:google-sheets`
 - contents markdown草案作成または確認: `.agents/skills/contents-markdown-authoring/SKILL.md`
 - ChatGPTからのcontents markdown草案作成または確認: `.agents/skills/remote-contents-markdown-authoring/SKILL.md`
-- ローカル`.raw/`からGoogle Drive正本への明示同期: `.agents/skills/raw-to-drive-sync/SKILL.md`
 - GitHub PR snapshotからのレビュー草案作成: `.agents/skills/pr-review-draft/SKILL.md`
 - PR作成: `.agents/skills/create-pr/SKILL.md`
 - SKILL作成または更新: `.agents/skills/skill-authoring/SKILL.md`
@@ -179,19 +160,19 @@ project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照す
 
 1. ユーザーの最新指示
 2. この `AGENTS.md`
-3. 対応する`.raw/contents/<slug>.md`の本文とHTMLコメント（ページ本文・可視の表示構成に限る）
-4. 該当する `.agents/skills/*/SKILL.md` と `.agents/rules/*.md` の安全・workflow規約
-5. 現在のissue（Gate実装時は `docs/issue/<child-issue>.md`）
-6. Gate実装時は親issueの `docs/issue/<parent-issue>/plan.md`
-7. `docs/requirements.md`
-8. `docs/out-of-scope.md`
-9. `docs/plan.md`
-10. `docs/TODO.md`
-11. 関連する `docs/design/<design-target>/`
-12. その他のドキュメント
-13. 既存コード
+3. 該当する `.agents/skills/*/SKILL.md` と `.agents/rules/*.md` の安全・workflow規約
+4. 現在のissue（Gate実装時は `docs/issue/<child-issue>.md`）
+5. Gate実装時は親issueの `docs/issue/<parent-issue>/plan.md`
+6. `docs/requirements.md`
+7. `docs/out-of-scope.md`
+8. `docs/plan.md`
+9. `docs/TODO.md`
+10. 関連する `docs/design/<design-target>/`
+11. その他のGit管理ドキュメント
+12. `src/pages/`配下のMDX / Astro実装
+13. 対応する`.raw/contents/<slug>.md`の本文とHTMLコメント（手動の補助入力）
 
-contentsがページ本文・可視の表示構成について下位文書と矛盾する場合は、contentsを採用し、関連するGit管理文書を同じtaskで更新する。ユーザー指示または本ファイルの安全・workflow規約と矛盾する場合は、実装せずユーザーに確認する。
+contentsがGit管理の正本と矛盾する場合は、最新のユーザー指示がない限りGit管理の正本を採用する。ユーザー指示または本ファイルの安全・workflow規約と矛盾する場合は、実装せずユーザーに確認する。
 
 ---
 
@@ -199,7 +180,7 @@ contentsがページ本文・可視の表示構成について下位文書と矛
 
 - 開発タスク開始時: `issue-first-development`、`docs/plan.md`、`docs/TODO.md`、該当するrequirements/designを読む。Gate作成またはGate分割を明示指示された場合だけ、親issueと同時に `docs/issue/<親issue名>/plan.md` を作成し、Gateを列挙する。
 - Gate実装開始時: 親issueの専用Gate planから対象Gateだけを読み、専用子issueを作成または検証する。子issueは新しいsessionで独立して作業できることを確認してから、ユーザー承認を待つ。
-- 実装中: 対応するcontentsがあるページでは、contentsをページ本文・可視の表示構成の正本とし、現在のissue、Gateを使う場合は親issueの専用Gate plan、requirements、out-of-scope、design、既存コードをそれに整合させる。それ以外の実装では現在のissueを正本とし、Gateを使う場合は必要な親issueの専用Gate plan、requirements、out-of-scope、design、既存コードを読む。
+- 実装中: 現在のissueを正本とし、Gateを使う場合は必要な親issueの専用Gate plan、requirements、out-of-scope、design、Git管理のMDX / Astro実装を読む。`.raw/contents/`がある場合は手動の補助入力として参照できるが、Git管理の正本より優先しない。
 - UI系作業: issueで指定された `docs/design/<design-target>/` を確認する。design不足時は実装せずdesign作成へ切り出す。
 - レビュー指摘取り込み: `review-to-issue` を使い、`.tmp/*.md` をローカルSSoTと照合する。`.tmp/` は共有成果物ではないため、必要な情報だけ正式docsまたは報告へ反映する。
 - PRレビュー草案作成: `pr-review-draft` を使う。リモートPRを対象にlocal reviewerを起動し、`review-to-issue`への取り込み後に停止する。

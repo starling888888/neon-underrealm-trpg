@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Repeated a new sync test before reading its assertion diff
+
+#### 2026-07-31
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-06-google-drive-xlsx-sync` の`tests/node/sync-google-sheets.test.ts`
+- 観測した失敗: 新設testを通常実行後、失敗理由を確認せず詳細reporter指定で同じtestを再実行した。原因は実装不備ではなく、再帰先folderを先に処理する実装順序に対してroot Spreadsheetを先にexportする期待値を書いたことだった。
+- 一次対応: 詳細なassertion diffを確認して期待値を実際の処理順序へ修正した。以後、新設testの初回失敗では再実行前にfailure diffを読む。
+
 ### Repeated an unrelated sample-character node test failure during analytics validation
 
 #### 2026-07-31

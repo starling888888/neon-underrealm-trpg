@@ -85,9 +85,7 @@ Excel本体やページ作成前のMarkdown入力は、リポジトリ直下の 
 
 `.raw/` はローカル作業用ディレクトリであり、Git管理しない。
 
-Google Drive上のユーザー編集正本をローカル作業入力として使う場合、Google Drive同期対象フォルダのURLはリポジトリ直下の `raw-google-drive.url` で管理できること。
-
-`raw-google-drive.url` はローカル開発環境ごとの設定ファイルであり、Git管理しない。
+Google Spreadsheetをローカル作業入力として使う場合、Google Drive同期対象フォルダIDとservice account認証情報はリポジトリ直下の`.env`で管理できること。`.env`はローカル開発環境ごとの設定ファイルであり、Git管理しない。
 
 想定するローカル作業領域は以下。
 
@@ -110,17 +108,9 @@ Google Drive上のユーザー編集正本をローカル作業入力として�
 
 `.raw/v1.0/*.md` は、v1.0公開時の旧ルール、テストプレイ、v1.5向け検討を参照するローカル領域とする。現行サイト本文の正本として扱わない。
 
-Drive `v1.0/` 直下のGoogle Docsは、スタイルをMarkdownとして保持するため `text/markdown` exportで `.raw/v1.0/*.md` に同期する。export結果に含まれるinline base64画像定義は、agentのコンテキストとローカル作業入力を肥大化させないため保存前に除去する。これは `contents/` Google Docsを `text/plain` exportする運用とは別である。
-
 contents markdownは、frontmatterをページメタ情報、Markdown本文をページ内容、HTMLコメントをagent向け指示として扱う。
 
-Google Docs上にcontents markdownを置く場合は、Markdownソースをプレーンテキストとして保持し、`text/plain` exportで `.raw/contents/*.md` に同期する。
-
-Google Docsのリッチテキスト書式でレイアウト済み文書を作成し、それを `.raw/contents/*.md` の正本として扱わない。
-
-Google Driveへのローカル変更反映は、ユーザーが明示的に`raw-to-drive-sync`を実行した場合だけ許可する。このとき `.raw/contents/<slug>.md` は同名のGoogle Doc `<slug>.md` へプレーンテキストとして反映し、`.raw/release-notes.xlsx` は既存Google Sheet `release-notes` へ反映する。`.raw/data/` と `.raw/v1.0/` はDrive書込みを許可しない。
-
-`.raw/contents/SLUG.md` はコミットしない作業入力である。対応ページでは、ユーザー編集のMarkdown本文とHTMLコメントを、ページ本文・可視の表示構成の正本とする。ユーザーの最新指示、および `AGENTS.md` と該当skill・ruleの安全・workflow規約を除き、issue、requirements、out-of-scope、plan、TODO、design、既存の `src/pages` 実装より優先する。`src/pages` 配下の `.mdx` または `.astro` は、それらの指示を反映した公開用実装であり、齟齬時に正本として扱わない。
+`.raw/contents/SLUG.md` はコミットしない手動の補助入力である。対応ページの本文と可視構成のGit管理上の正本は`src/pages`配下の`.mdx`または`.astro`とし、contentsは最新のユーザー指示がない限りGit管理の要件、issue、design、実装を上書きしない。
 
 Excel変換スクリプトは、必要に応じて `.raw/` 配下のExcelファイルを読み込めること。
 

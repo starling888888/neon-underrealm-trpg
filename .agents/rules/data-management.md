@@ -2,7 +2,7 @@
 
 ## Local-Only Inputs
 
-Put Google Drive-derived local inputs under `<repo-root>/.raw/`.
+Put local Spreadsheet working inputs under `<repo-root>/.raw/`.
 
 In agent instructions, `.raw/` means the repository root directory `<repo-root>/.raw/`.
 
@@ -19,65 +19,25 @@ Resolve the repository root with:
 git rev-parse --show-toplevel
 ```
 
-Use this fixed local input structure:
+`npm run sync:google-sheets` uses the `.env` root folder ID to recursively export Google Spreadsheets into `.raw/` as XLSX. It preserves the Drive folder hierarchy below the configured root and does not validate a fixed directory structure.
 
-```text
-<repo-root>/.raw/
-├── release-notes.xlsx
-├── data/
-│   └── *.xlsx
-├── contents/
-│   └── *.md
-└── v1.0/
-    └── *.md
-```
+Google Docs and other Drive file types are not synchronized. `.raw/contents/` and `.raw/v1.0/` may be prepared manually when needed, but they are not Google Drive sync targets.
 
-The Google Drive sync root is distinct from the local `.raw/` structure:
-
-```text
-<sync-root>/
-├── release-notes                 # existing Google Sheet
-├── data/
-│   └── Google Sheets
-├── contents/
-│   └── *.md                      # Google Docs with literal Markdown source
-└── v1.0/
-    └── Google Docs only
-```
-
-Map the existing Drive Google Sheet `release-notes` to local `.raw/release-notes.xlsx`. Do not look for or create `release-notes.xlsx` in the Drive root.
-
-Use `<repo-root>/raw-google-drive.url` to store the Google Drive sync folder URL for local development.
-
-`raw-google-drive.url` is local configuration. Do not Git-manage it.
-
-Do not Git-manage `.raw/`.
+Do not Git-manage `.raw/` or `.env`.
 
 Do not commit:
 
 - `.raw/`
-- `raw-google-drive.url`
+- `.env`
 - `*.xlsx`
 - `*.xlsm`
 - `~$*.xlsx`
 
-Google Drive is the user-edited source for these local inputs. The local `.raw/` directory is a working copy for agents.
-
-Google Docs sync to `.raw/contents/*.md`.
-
-Google Sheets sync to `.raw/release-notes.xlsx` or `.raw/data/*.xlsx`.
-
-Google Docs directly under Drive `v1.0/` sync to `.raw/v1.0/*.md` as historical references through `text/markdown` export. Remove inline `data:image/...;base64,...` Markdown image reference definitions before local storage. Do not treat them as current site source of truth. Stop if `v1.0/` contains a subdirectory or a non-Google-Doc file.
+The local `.raw/` directory is an untracked working copy. Its Google Spreadsheet files are read-only local exports; do not write changes back to Google Drive.
 
 Do not write Google Drive-derived files outside `<repo-root>/.raw/`.
 
-Do not create or use `<repo-root>/.raw/sheets/`.
-
-Google Drive remains the user-edited source of truth for `.raw/contents/` and `.raw/release-notes.xlsx`.
-
-Write local `.raw/` changes back to Google Drive only through `raw-to-drive-sync` after the user explicitly says `$raw-to-drive-sync` or `raw-to-drive-sync を実行して`.
-
-`raw-to-drive-sync` may update the existing `release-notes` Google Sheet and existing or new `contents/<slug>.md` Google Docs. It must write Markdown source as plain text, not rich text. It must refuse `.raw/data/` and `.raw/v1.0/` even when the user explicitly requests them.
+`.raw/contents/` is a manual, non-canonical input. Git-managed MDX / Astro remains the page-body and visible-layout source of truth.
 
 ## Generated Data
 
@@ -155,7 +115,7 @@ Keep these ignore rules:
 
 ```gitignore
 .raw/
-raw-google-drive.url
+.env
 .tmp/
 test-results/
 playwright-report/

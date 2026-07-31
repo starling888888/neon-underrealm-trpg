@@ -17,8 +17,8 @@
 ```text
 .github/                 GitHub ActionsとGitHubテンプレート
 .agents/                 agent専用SKILLと常設ルール
-raw-google-drive.url     Git管理しないGoogle Drive同期対象フォルダURL
-.raw/                    Git管理しないGoogle Drive由来ローカル入力
+.env                     Git管理しないGoogle Spreadsheet同期設定
+.raw/                    Git管理しないGoogle Spreadsheetローカル入力
 .tmp/                    Git管理しない一時作業ファイル
 data/generated/          Git管理する生成JSON
 docs/                    プロジェクト文書とtask tracking
@@ -44,7 +44,7 @@ node_modules/
 dist/
 .astro/
 .raw/
-raw-google-drive.url
+.env
 .tmp/
 test-results/
 playwright-report/
@@ -55,20 +55,9 @@ playwright-report/
 
 `data/generated/` 配下のJSONは、Excelから変換された静的サイト用データとしてGit管理する。
 
-`.raw/`、`raw-google-drive.url`、`.tmp/`、Visual Review出力、Excel本体をGit管理しない理由や運用詳細は `AGENTS.md` を参照する。
+`.raw/`、`.env`、`.tmp/`、Visual Review出力、Excel本体をGit管理しない理由や運用詳細は `AGENTS.md` を参照する。
 
-Google Drive由来のローカル入力は以下の構造に固定する。
-
-```text
-.raw/
-├── release-notes.xlsx
-├── data/
-│   └── *.xlsx
-└── contents/
-    └── *.md
-```
-
-`.raw/sheets/`、`raw/`、`contents/`、`data/` をGoogle Drive同期先として追加しない。
+`npm run sync:google-sheets`は、`.env`で指定したDriveフォルダ配下のGoogle Spreadsheetを、同じフォルダ構造のXLSXとして`.raw/`へ保存する。Google Docsは同期しない。`.raw/contents/`が必要な場合は手動で配置し、MDX / Astroをページ本文・可視構成のGit管理上の正本とする。
 
 ## Docs
 

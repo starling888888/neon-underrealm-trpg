@@ -41,38 +41,38 @@ Google Drive MCP経由のSpreadsheet取得は、今後のデータ調整に必�
 
 ## 完了条件
 
-- [ ] Google公式Node.jsライブラリだけでGoogle Drive API認証とSpreadsheet XLSX exportを行う。
-- [ ] `.env`の認証情報と起点フォルダIDを使い、秘密情報をGit管理しない。
-- [ ] 指定フォルダ配下の子フォルダを再帰的にたどり、Google SpreadsheetをXLSXとして同じ相対パスの`.raw/`配下へ保存する。
-- [ ] Google Docsを含むSpreadsheet以外は保存しない。
-- [ ] 個別失敗をログ出力しても、後続Spreadsheetの処理を継続する。
-- [ ] 同期中の個別失敗は対象別のエラー一覧をログに集約し、全対象の処理後に終了コード`1`で終了する。個別失敗がない同期は終了コード`0`で終了する。
-- [ ] `.env`不備、認証失敗、または起点フォルダの列挙失敗は、対象処理を開始せず終了コード`1`で終了する。
-- [ ] 出力先は常に`<repo-root>/.raw/`配下であり、危険な名前・同一同期中の出力パス衝突は書き込まずログ出力して後続処理を継続する。既存XLSXの同一パス上書きは許可する。
-- [ ] 実行方法と必要なローカル設定をREADMEに記載する。
-- [ ] `drive-to-raw-sync`と`raw-to-drive-sync`のskill本体を削除し、参照元の`AGENTS.md`、`.agents/rules/mcp.md`、`.agents/rules/data-management.md`、`docs/plan.md`、`README.md`を、手動contents運用とSpreadsheet専用同期へ整合させる。
-- [ ] `.agents/skills/README.md`、`.agents/skills/contents-markdown-authoring/SKILL.md`、`.agents/rules/contents-markdown.md`、`.agents/rules/file-structure.md`、`docs/requirements/architecture.md`、`docs/content-writing-guide.md`、`docs/development-structure.md`から、削除したworkflow、Connector自動同期、Drive書戻し、`raw-google-drive.url`運用の現行参照を削除または更新する。完了済みissueおよびfailure logの履歴記録は変更しない。
-- [ ] `.raw/contents/`を手動の非正本入力とし、MDX / Astroをページ本文・可視構成のGit管理正本とする優先順位を、`AGENTS.md`、contents関連skill / rule、requirements、READMEへ反映する。
-- [ ] `raw-google-drive.url`の参照とignore規則を削除し、`.env`をignoreする。`.env.example`は値を含めず、必要な3つの環境変数名だけを示す。
-- [ ] Drive clientをstub化したtestでpagination、再帰、Spreadsheet限定、出力相対パス、パス安全性、個別失敗後の継続、終了コードを確認する。
-- [ ] `docs/out-of-scope.md`を、このローカル開発専用のSpreadsheet同期例外と整合させる。
-- [ ] `npm run build` が通る。
-- [ ] `npm run check` が通る。
+- [x] Google公式Node.jsライブラリだけでGoogle Drive API認証とSpreadsheet XLSX exportを行う。
+- [x] `.env`の認証情報と起点フォルダIDを使い、秘密情報をGit管理しない。
+- [x] 指定フォルダ配下の子フォルダを再帰的にたどり、Google SpreadsheetをXLSXとして同じ相対パスの`.raw/`配下へ保存する。
+- [x] Google Docsを含むSpreadsheet以外は保存しない。
+- [x] 個別失敗をログ出力しても、後続Spreadsheetの処理を継続する。
+- [x] 同期中の個別失敗は対象別のエラー一覧をログに集約し、全対象の処理後に終了コード`1`で終了する。個別失敗がない同期は終了コード`0`で終了する。
+- [x] `.env`不備、認証失敗、または起点フォルダの列挙失敗は、対象処理を開始せず終了コード`1`で終了する。
+- [x] 出力先は常に`<repo-root>/.raw/`配下であり、危険な名前・同一同期中の出力パス衝突は書き込まずログ出力して後続処理を継続する。既存XLSXの同一パス上書きは許可する。
+- [x] 実行方法と必要なローカル設定をREADMEに記載する。
+- [x] `drive-to-raw-sync`と`raw-to-drive-sync`のskill本体を削除し、参照元の`AGENTS.md`、`.agents/rules/mcp.md`、`.agents/rules/data-management.md`、`docs/plan.md`、`README.md`を、手動contents運用とSpreadsheet専用同期へ整合させる。
+- [x] `.agents/skills/README.md`、`.agents/skills/contents-markdown-authoring/SKILL.md`、`.agents/rules/contents-markdown.md`、`.agents/rules/file-structure.md`、`docs/requirements/architecture.md`、`docs/content-writing-guide.md`、`docs/development-structure.md`から、削除したworkflow、Connector自動同期、Drive書戻し、`raw-google-drive.url`運用の現行参照を削除または更新する。完了済みissueおよびfailure logの履歴記録は変更しない。
+- [x] `.raw/contents/`を手動の非正本入力とし、MDX / Astroをページ本文・可視構成のGit管理正本とする優先順位を、`AGENTS.md`、contents関連skill / rule、requirements、READMEへ反映する。
+- [x] `raw-google-drive.url`の参照とignore規則を削除し、`.env`をignoreする。`.env.example`は値を含めず、必要な3つの環境変数名だけを示す。
+- [x] Drive clientをstub化したtestでpagination、再帰、Spreadsheet限定、出力相対パス、パス安全性、個別失敗後の継続、終了コードを確認する。
+- [x] `docs/out-of-scope.md`を、このローカル開発専用のSpreadsheet同期例外と整合させる。
+- [x] `npm run build` が通る。
+- [x] `npm run check` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 追加依存はGoogle公式Node.jsライブラリに限定し、追加理由と代替案を記録する。
-- [ ] Google API呼出しは手動同期scriptだけに閉じ、サイトruntime、build、CI/CDで実行されない。
-- [ ] `.env`、`.raw/`、XLSX、認証情報をGit管理しない。
-- [ ] `raw-google-drive.url`を同期設定として併存させない。
-- [ ] 構造validationや同期対象外ファイルを理由に同期全体を停止しない。
-- [ ] Google Docs同期・Driveへの書戻しを行うskill、script、運用参照を残さない。
-- [ ] Google APIを使わないstub testで、致命的失敗と個別失敗の終了コード・集約ログを確認する。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する`docs/TODO.md`項目と矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 追加依存はGoogle公式Node.jsライブラリに限定し、追加理由と代替案を記録する。
+- [x] Google API呼出しは手動同期scriptだけに閉じ、サイトruntime、build、CI/CDで実行されない。
+- [x] `.env`、`.raw/`、XLSX、認証情報をGit管理しない。
+- [x] `raw-google-drive.url`を同期設定として併存させない。
+- [x] 構造validationや同期対象外ファイルを理由に同期全体を停止しない。
+- [x] Google Docs同期・Driveへの書戻しを行うskill、script、運用参照を残さない。
+- [x] Google APIを使わないstub testで、致命的失敗と個別失敗の終了コード・集約ログを確認する。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する`docs/TODO.md`項目と矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -80,7 +80,8 @@ Google Drive MCP経由のSpreadsheet取得は、今後のデータ調整に必�
 - `package-lock.json`
 - `scripts/sync-google-sheets/main.ts`
 - `scripts/sync-google-sheets/lib.ts`
-- `tests/node/sync-google-sheets.test.ts`
+- `scripts/sync-google-sheets/runtime.ts`
+- `tests/scripts/sync-google-sheets.test.ts`
 - `.env.example`
 - `.gitignore`
 - `README.md`
@@ -116,3 +117,31 @@ Google Drive MCP経由のSpreadsheet取得は、今後のデータ調整に必�
 - 依存追加理由: Google Drive APIによるフォルダ列挙とSpreadsheet XLSX exportを公式SDKで扱うため。代替のMCPは性能上の理由で採用しない。`rclone`や独自HTTP実装は、追加の運用負荷またはAPI実装保守を増やすため採用しない。
 - user-directed scope change: 既存のDrive-to-raw / raw-to-Drive workflowを削除し、contentsは手動同期とする。MDXとAstroが最終的なGit管理の正本であり、`.raw/contents/`の厳密な自動同期は不要とする。
 - ここでいうパス安全性は、書込み先を`.raw/`内に閉じ込める最低限の安全条件であり、Drive構造や同期対象の妥当性を検査するディレクトリ構造validationは実装しない。
+- 実service accountによる認証・実Driveからの取得は、秘密情報と共有済みフォルダが必要なため未実行。`.env`未配置時に終了コード`1`となること、およびDrive clientをstub化したtestはローカルで確認した。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 同期testをVitestへ移し、`vi.mock`で`googleapis`を差し替えてGoogle API adapterとCLI境界を確認する。
+- `main.ts`に集まっている設定読込み、service account認証、Drive client adapter、実行結果reportingを分割し、CLI入口を薄くする。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: 現行testは`tests/node/`の`node:test`で純粋な同期logicを確認しているが、`googleapis` adapterおよび`.env`読込みを含むCLI境界を直接確認していない。既存のVitest設定と`vi.mock`の利用実績があり、Vitestへ移すことでSDK module mockを同じtest runner内へ閉じ込められる。現行`main.ts`は設定、認証、adapter生成、実行、reporting、終了状態を一つに持ち、既存の`main.ts`より責務が多い。
+
+### 対応方針
+
+- `sync-google-sheets`専用のVitest testを追加し、`googleapis`、`.env`読込み、出力先をmockして成功・個別失敗・設定失敗のCLI結果を確認する。既存の自前`FakeDrive` classと`node:test` testは削除する。
+- 同期実行の設定読込み、Google Drive client生成、結果reportingをtest可能なmoduleへ分割し、`main.ts`は実行と終了状態だけを担当する。
+- 依存は既存の`vitest`と追加済み`googleapis`だけを使い、新しいpackageは追加しない。
+
+### 対応完了チェックリスト
+
+- [x] VitestでGoogle API adapterとCLI境界をmodule mockして確認する。
+- [x] 自前`FakeDrive` classを含むNode testを削除し、`npm run test`が新しいVitest testを実行する。
+- [x] `main.ts`を薄いCLI入口へ分割する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
