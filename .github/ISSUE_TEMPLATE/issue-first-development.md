@@ -27,9 +27,9 @@ Gate子issueがUI、CSS、layout、page、Componentを扱う場合は、この�
 - UI、CSS、layout、page、Componentタスクで該当する場合は `docs/design/<design-target>/`
 - design intent / VRT参照情報の作成が必要な場合は `.agents/skills/design-image-generation/SKILL.md`
 
-## Gate関係
+## Gate関係（Gate作成またはGate分割を明示指示された場合のみ）
 
-親issueでは、専用Gate planへの参照だけを記録する。Gate一覧はここに書かない。
+通常issueではこの節を削除する。Gateを使う場合、親issueでは専用Gate planへの参照だけを記録し、Gate一覧はここに書かない。
 
 - 親issue: `なし（このissueが親issue）` または `docs/issue/NN-slug.md`
 - Gate plan: `docs/issue/NN-slug/plan.md`
