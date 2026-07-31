@@ -87,7 +87,7 @@ workflowは `main` へのpushで実行します。
 
 mainへのサイト公開対象のpushでは、deploy workflowが同じQualityの成功後に公開用build、Pagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更は、main以外のbranchとPull Requestを含め、Qualityを起動しない。`src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
 
-deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。失敗時にはPlaywright report、test result、screenshot、traceを7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
+deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`playwright-report/`と`test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
 
 ## VRT運用
 

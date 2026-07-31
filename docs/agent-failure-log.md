@@ -1954,3 +1954,13 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-31-sheet-integration` の`SkillPickerDialog`
 - 観測した失敗: スキル行と要件がタイミングを表示する一方、4種のスキル候補dialogを共有する候補表からタイミング列が欠落していた。
 - 一次対応: shared candidate headerとrowへ、最大Lvとコストの間にタイミング列を追加した。全dialog・viewportのactual screenshotを原寸で確認し、Component testでheaderと読み上げ用labelを固定する。
+
+### Marked Public E2E diagnostics as verified without validating generated artifacts
+
+#### 2026-07-31
+
+- source: review
+- failure category: verification accuracy
+- 発生箇所: `56-ci-non-main-branches`のPublic E2E diagnostics完了条件
+- 観測した失敗: workflowが`playwright-report/`と`test-results/`をuploadする記述だけを根拠に、HTML report、failure screenshot、failure traceの生成設定と出力を確認せず、artifact保存の完了条件をチェックした。PR technical reviewで、Playwright configにreporter、screenshot、traceの設定がなく、失敗時にも必要な診断artifactが生成されないことが判明した。
+- 一次対応: 完了条件を未チェックへ戻し、current issueのレビュー指摘へPublic E2E時だけのdiagnostics生成と隔離失敗による出力確認を記録した。workflowでartifact pathを追加するだけでなく、生成側のPlaywright設定と失敗時の出力を確認してから完了扱いにする。

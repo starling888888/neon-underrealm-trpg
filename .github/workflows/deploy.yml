@@ -104,7 +104,7 @@ jobs:
           E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
         run: |
           for attempt in {1..12}; do
-            if curl --fail --silent --show-error "$E2E_BASE_URL"; then
+            if curl --fail --silent --show-error --location --output /dev/null "$E2E_BASE_URL"; then
               exit 0
             fi
             if [ "$attempt" -eq 12 ]; then
@@ -127,5 +127,5 @@ jobs:
           path: |
             playwright-report/
             test-results/
-          if-no-files-found: ignore
+          if-no-files-found: warn
           retention-days: 7

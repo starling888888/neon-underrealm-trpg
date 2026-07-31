@@ -57,8 +57,8 @@ VRTのcanonical baselineはGit管理外のローカル比較入力として維�
 
 ## 完了条件
 
-- [ ] main以外のbranchへのpushとPull Requestで、deployなしQuality CIが実行される
-- [ ] Quality CIで`npm ci`、`npm run check`、`npm run build`、`npm run test`を実行する
+- [x] main以外のbranchへのpushとPull Requestで、deployなしQuality CIが実行される
+- [x] Quality CIで`npm ci`、`npm run check`、`npm run build`、`npm run test`を実行する
 - [x] Quality CIはE2EとVRTを実行しない
 - [x] `npm run test`がE2EとVRTを含まない通常testの入口である
 - [ ] mainのdeployはQuality成功後にのみ、`npm run build:public`、`npm run build:search-index`、artifact upload、GitHub Pages deployを実行する
@@ -168,3 +168,51 @@ main push
 - Public E2E config: with `E2E_BASE_URL`, `playwright.e2e.config.ts` uses that URL and does not define `webServer`.
 - Public E2E selection: `--grep-invert '@local-fixture' --list` selects 30 existing tests; the 13 `-local` fixture-dependent tests are excluded.
 - workflow YAML: `.github/workflows/ci.yml`、`quality.yml`、`deploy.yml` parsed without YAML errors.
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- Public E2Eのworkflowは`playwright-report/`と`test-results/`をuploadするが、HTML reporter、failure screenshot、failure traceを生成するPlaywright設定がない。`if-no-files-found: ignore`のため、診断成果物なしでもartifact stepが終了し得る。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `playwright.e2e.config.ts`に`reporter`、`screenshot`、`trace`がなく、deploy workflowも出力生成を指定していないことを確認した。PR #74の`quality / quality`は成功した。main deployとPublic E2Eはmerge後の外部確認が必要である。
+
+### 対応方針
+
+- Public E2E時だけHTML reporter、`screenshot: "only-on-failure"`、`trace: "retain-on-failure"`を有効にし、artifact対象と出力先を一致させる。
+- 意図的に失敗する隔離検証で生成物を確認してから、該当完了条件を再度確認する。
+
+### 対応完了チェックリスト
+
+- [x] Public E2E失敗時のdiagnostics生成を実装する
+- [x] 意図的な隔離失敗でHTML report、screenshot、traceの出力を確認する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- Public E2E前の到達確認が`curl --fail --silent --show-error "$E2E_BASE_URL"`でresponse bodyを標準出力へ出す。公開HTMLにはCloudflare Web Analyticsのsite tokenが含まれ得るため、deployment docsの「token値をGitHub Actions logへ貼らない」契約と矛盾する。
+- Public E2E diagnosticsの生成不足は`.tmp/chatgpt-review.md`にも記載されているが、レビュー指摘 1と同一のため重複として扱う。
+
+### 判定
+
+- source: browser-draft
+- classification: valid（curlのresponse body出力） / stale（diagnostics生成不足はレビュー指摘 1へ取り込み済み）
+- local validation: deploy workflowの到達確認が`--output /dev/null`を指定しておらず、`docs/deployment.md`はanalytics tokenをGitHub Actions logへ貼らないと明記していることを確認した。
+
+### 対応方針
+
+- 到達確認のcurlへ`--location --output /dev/null`を付与し、HTTP response bodyをGitHub Actions logへ出力しない。
+- diagnostics生成不足はレビュー指摘 1の対応で扱い、重複実装しない。
+
+### 対応完了チェックリスト
+
+- [x] Public E2E到達確認のresponse body出力を抑止する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

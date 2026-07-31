@@ -7,11 +7,25 @@ const localWebServer = {
   url: siteBaseUrl,
   reuseExistingServer: false,
 };
-
 export default defineConfig({
   testDir: "./tests/e2e",
+  ...(isRemote
+    ? {
+        outputDir: "test-results/public-e2e",
+        reporter: [
+          ["dot"],
+          ["html", { open: "never", outputFolder: "playwright-report" }],
+        ],
+      }
+    : {}),
   use: {
     baseURL: siteBaseUrl,
+    ...(isRemote
+      ? {
+          screenshot: "only-on-failure",
+          trace: "retain-on-failure",
+        }
+      : {}),
   },
   ...(isRemote ? {} : { webServer: localWebServer }),
 });
