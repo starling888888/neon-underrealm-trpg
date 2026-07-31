@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { type RefObject, useCallback, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
 import type { SpecialItemsSectionProps } from "../components/SpecialItemsSection";
@@ -30,6 +30,7 @@ type Options = {
     trigger: HTMLButtonElement,
     applyRemoval: () => void,
   ) => void;
+  shouldSynchronizeCyberneticsRef?: RefObject<boolean>;
 };
 
 const fixedPartKeys = ["head", "torso", "arm", "leg"] as const;
@@ -70,7 +71,11 @@ function hasCategoryContent(
 /** Owns serializable special-item category visibility and its derived values. */
 export default function useSpecialItemsSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
-  { onCategoryRemoved, onRemoveRequested }: Options = {},
+  {
+    onCategoryRemoved,
+    onRemoveRequested,
+    shouldSynchronizeCyberneticsRef,
+  }: Options = {},
 ): {
   maximumHealthBonus: number;
   sectionProps: SpecialItemsSectionProps;
@@ -159,6 +164,12 @@ export default function useSpecialItemsSectionProps(
           );
           break;
         case "cybernetics":
+          if (
+            shouldSynchronizeCyberneticsRef !== undefined &&
+            hasCategoryContent(category, values)
+          ) {
+            shouldSynchronizeCyberneticsRef.current = true;
+          }
           setValue(
             "cybernetics",
             {
@@ -190,7 +201,7 @@ export default function useSpecialItemsSectionProps(
           break;
       }
     },
-    [getValues, setValue],
+    [getValues, setValue, shouldSynchronizeCyberneticsRef],
   );
   const onAddCategory = useCallback(
     (category: SpecialItemCategoryId) => {

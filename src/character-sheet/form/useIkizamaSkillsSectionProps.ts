@@ -74,11 +74,15 @@ export default function useIkizamaSkillsSectionProps(
     [build.ikizamaId, ikizamaSkills.rows],
   );
   const bonusSkill = groups.bonus[0] ?? null;
-  const validation = calculateIkizamaSkillsValidation(
-    build.ikizamaLevel,
-    ikizamaSkills.bonusLevel,
-    bonusSkill,
-    rows,
+  const validation = useMemo(
+    () =>
+      calculateIkizamaSkillsValidation(
+        build.ikizamaLevel,
+        ikizamaSkills.bonusLevel,
+        bonusSkill,
+        rows,
+      ),
+    [build.ikizamaLevel, bonusSkill, ikizamaSkills.bonusLevel, rows],
   );
 
   const setRow = useCallback(

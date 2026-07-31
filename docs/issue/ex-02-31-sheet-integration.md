@@ -109,15 +109,16 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [x] キャラクターシートアーキテクチャのE2E責務と全named E2E scenarioを照合し、詳細シナリオの実装過多を解消している。
 - [x] browser-onlyの主要導線だけをE2Eで確認している。
 - [x] dictionaryでゲームドメイン用語と汎用UI文言が整理され、可視文言を変えていない。
-- [ ] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
+- [x] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
 - [x] `canonical-snapshots/visual/**` のGit管理を解除し、local-onlyのignore規則を確認している。
 - [x] 全VRT targetのbaselineを再生成し、全件比較が通る。
 - [x] locator-only stateがcanonical full-page baselineを要求しない。
-- [ ] 最終Tech Reviewを指定の限定観点で完了し、有効な指摘を解消またはユーザー判断へ戻している。
+- [x] 最終Tech Reviewを指定の限定観点で完了し、有効な指摘を解消またはユーザー判断へ戻している。
 - [ ] 最終UI Reviewを指定の限定観点で完了し、結果と未対応の判断を記録している。
 - [ ] 関連TODOを扱った結果または未対応理由が記録されている。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
 - [ ] 整理後の`npm run test:e2e`が通る。
 
 ## チェックポイント
@@ -183,7 +184,7 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 
 - [ ] 指摘1の復元方針を要件変更として確定し、JSON import・端末内復元の期待値を更新する。
 - [x] 未知のその他流儀skillを除外しても、各有効流儀の最低1行を維持する。
-- [ ] 対象section propsが無関係な更新で参照安定を維持する。
+- [x] 対象section propsが無関係な更新で参照安定を維持する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -208,10 +209,10 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 
 ### 対応完了チェックリスト
 
-- [ ] error summaryと影響するsection / profile propsがフォーム外state更新で参照安定を維持する。
-- [ ] Container local state更新を起点とするidentity testを追加する。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] error summaryと影響するsection / profile propsがフォーム外state更新で参照安定を維持する。
+- [x] Container local state更新を起点とするidentity testを追加する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## レビュー指摘 3
 
@@ -241,3 +242,77 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [x] サイバネ段階と個別非戦闘技能修正が端末内復元・JSON importで保持され、ユーザー操作による段階変更時だけ標準修正を再設定する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- 同一のサイバネ埋め込み段階内でユーザー操作を行った後、同期フラグが残留し、JSON importの個別非戦闘技能修正を標準修正で上書きし得る。
+- サイバネカテゴリ削除はサイバネ値を初期値へ直接更新するため、埋め込み段階を跨いでも全非戦闘技能修正を標準修正へ再設定しない。
+- 未知のその他流儀skillを除外した後に追加する空行の`rowId`が、別の既存skill行の`rowId`と衝突し得る。
+
+### 判定
+
+- source: browser-draft (`.tmp/chatgpt-review.md`)
+- classification: valid
+- local validation: `useCyberneticsSectionProps`はユーザー操作で同期フラグを立てる一方、導出された標準修正が同一ならeffectを実行しないため、次の`reset`までフラグが残る。`useSpecialItemsSectionProps`のサイバネカテゴリ削除はcybernetics値を直接初期化し、このユーザー起点の段階変更を同期対象へ伝えない。さらに復元schemaはtransform後の`otherRyugiSkills.rows`全体のrow IDを再検証せず、固定形式の補完IDも既存IDとの衝突を避けていない。いずれも保存・復元とサイバネ段階変更の契約、または可変行identity契約に反する。
+
+### 対応方針
+
+- サイバネ操作の同期要求は、段階が変わらない場合にも消費し、復元処理へ持ち越さない。カテゴリ削除もユーザー起点のサイバネ段階変更として同じ境界へ接続する。
+- 補完するその他流儀skill行は、残る全行の`rowId`と衝突しないIDを生成し、復元結果のidentityをテストで保証する。
+- 同一段階内のサイバネ操作後にJSON importするケース、カテゴリ削除で段階を跨ぐケース、補完ID衝突ケースを追加する。
+
+### 対応完了チェックリスト
+
+- [x] 同一段階内のサイバネ操作後でも、端末内復元・JSON importの個別非戦闘技能修正を保持する。
+- [x] サイバネカテゴリ削除で段階を跨いだ場合、全非戦闘技能修正を標準修正へ再設定する。
+- [x] その他流儀skillの補完行が既存row IDと衝突せず、行操作の対象を取り違えない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- `useIkizamaSkillsSectionProps`が毎renderでvalidation objectを再生成し、その参照をsection propsの依存に含めるため、フォーム外state更新でも生き様スキルpropsとerror summaryが再生成される。
+- ローカルレビューのその他流儀skill補完ID衝突とサイバネ同期フラグ残留は、レビュー指摘4と同一内容として照合済みであり、重複登録しない。
+
+### 判定
+
+- source: local-agent (Sol xhigh)
+- classification: valid
+- local validation: `calculateIkizamaSkillsValidation()`の結果は`useMemo`化されておらず、`sectionProps`の依存配列にobject全体を含めている。`useCharacterSheetErrorSummary`もこの不安定な`ikizamaSkills` stateへ依存するため、G31が求めるフォーム外更新時の参照安定化を満たさない。
+
+### 対応方針
+
+- 生き様スキルvalidationと、memo化済みsectionへ渡すcallbackを、実際に値または処理が変わる依存だけで安定化する。
+- Containerのdialogまたはmenu stateだけを更新する結合テストで、生き様スキルpropsとerror summaryの参照安定を確認する。
+
+### 対応完了チェックリスト
+
+- [x] 生き様スキルpropsとerror summaryがフォーム外state更新で参照安定を維持する。
+- [x] Container local state更新を起点とするidentity testを追加する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 6
+
+### 指摘事項
+
+- 生き様スキルvalidationの毎render再生成により、フォーム外state更新でも生き様スキルpropsとerror summaryが再生成される。
+- サイバネカテゴリ削除がユーザー起点の段階変更として扱われず、閾値を跨いでも非戦闘技能修正を標準修正へ戻さない。
+
+### 判定
+
+- source: browser-draft (`.tmp/chatgpt-review.md`、2件目)
+- classification: valid（レビュー指摘4・5と重複）
+- local validation: `useIkizamaSkillsSectionProps`のvalidation objectはmemo化されておらず、section propsとerror summaryへ参照変化が伝播する。`useSpecialItemsSectionProps`のカテゴリ削除はcybernetics値を直接初期化するため、`useCyberneticsSectionProps`のユーザー起点同期へ接続されない。いずれも既存のレビュー指摘4・5と同一の未解消問題である。
+
+### 対応方針
+
+- 対応とテストはレビュー指摘4・5のチェックリストへ集約する。重複した実装項目は追加しない。
+
+### 対応完了チェックリスト
+
+- [x] レビュー指摘4・5の該当チェックリストを完了する。

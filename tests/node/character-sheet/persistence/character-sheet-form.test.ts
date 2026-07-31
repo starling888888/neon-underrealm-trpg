@@ -168,6 +168,43 @@ describe("character sheet form persistence", () => {
     ]);
   });
 
+  it("assigns a distinct row ID when an other-ryugi skill fallback collides", () => {
+    const values = structuredClone(characterSheetDefaultValues);
+    values.build.otherRyugi = [
+      { level: 1, rowId: "other-a", ryugiId: "kenkaya" },
+      { level: 1, rowId: "other-b", ryugiId: "emono" },
+    ];
+    values.otherRyugiSkills.rows = [
+      {
+        level: 1,
+        rowId: "restore-other-ryugi-skill-other-b",
+        ryugiRowId: "other-a",
+        skillId: null,
+      },
+      {
+        level: 1,
+        rowId: "unknown-other-b-skill",
+        ryugiRowId: "other-b",
+        skillId: "missing-skill",
+      },
+    ];
+
+    const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
+    if (restored === null) throw new Error("Expected a restored form value.");
+
+    assert.deepEqual(
+      new Set(restored.otherRyugiSkills.rows.map((row) => row.rowId)).size,
+      restored.otherRyugiSkills.rows.length,
+    );
+    assert.ok(
+      restored.otherRyugiSkills.rows.some(
+        (row) =>
+          row.ryugiRowId === "other-b" &&
+          row.rowId === "restore-other-ryugi-skill-other-b-1",
+      ),
+    );
+  });
+
   it("retains an incompatible fixed cybernetic for the form error state", () => {
     const armCybernetic = getCybernetics().find(
       (cybernetic) => cybernetic.part === "腕",

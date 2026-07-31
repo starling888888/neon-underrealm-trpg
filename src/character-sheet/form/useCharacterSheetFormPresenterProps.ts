@@ -1,4 +1,4 @@
-import { type RefObject, useCallback, useMemo } from "react";
+import { type RefObject, useCallback, useMemo, useRef } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
 import type { CyberneticsPickerTarget } from "../components/CyberneticsSection";
@@ -143,6 +143,7 @@ export default function useCharacterSheetFormPresenterProps(
     formRestoreReturnFocusRef,
   }: Partial<CharacterSheetPresenterOptions> = {},
 ): CharacterSheetContainerPresenterState {
+  const shouldSynchronizeCyberneticsRef = useRef(false);
   const commonSkillPickerRequest = onCommonSkillPickerRequested ?? noop;
   const otherRyugiSkillPickerRequest = onOtherRyugiSkillPickerRequested ?? noop;
   const primarySkillPickerRequest = onPrimarySkillPickerRequested ?? noop;
@@ -162,6 +163,7 @@ export default function useCharacterSheetFormPresenterProps(
   const specialItems = useSpecialItemsSectionProps(form, {
     onCategoryRemoved: onSpecialItemCategoryRemoved,
     onRemoveRequested: onSpecialItemCategoryRemoveRequested,
+    shouldSynchronizeCyberneticsRef,
   });
   const onIkizamaChange = useCallback(
     (
@@ -219,6 +221,7 @@ export default function useCharacterSheetFormPresenterProps(
   const checksSection = useChecksSectionProps(form, build.derivedBuild);
   const cybernetics = useCyberneticsSectionProps(form, build.derivedBuild, {
     onPickerRequest: cyberneticsPickerRequest,
+    shouldSynchronizeCyberneticsRef,
   });
   const nanomachines = useNanomachinesSectionProps(form, build.derivedBuild, {
     onPickerRequest: nanomachinesPickerRequest,

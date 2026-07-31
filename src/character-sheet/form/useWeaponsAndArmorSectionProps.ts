@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type { WeaponsAndArmorSectionProps } from "../components/WeaponsAndArmorSection";
@@ -32,23 +33,32 @@ export default function useWeaponsAndArmorSectionProps(
   const weapons = useWatch({ control, name: "weapons" });
   const armor = useWatch({ control, name: "armor" });
 
-  function getWeaponRows(): WeaponValues[] {
-    return getValues("weapons.rows");
-  }
-
-  const weaponRows = weapons.rows.map((row) => {
-    const weapon = getWeaponById(row.weaponId);
-    return {
-      ...row,
-      attack: getModifiedItemValue(weapon?.attack ?? null, row.attackModifier),
-      guard: getModifiedItemValue(weapon?.guard ?? null, row.guardModifier),
-      weapon,
-    };
-  });
-  const selectedArmor = getArmorById(armor.armorId);
-
-  return {
-    armor: {
+  const getWeaponRows = useCallback(
+    (): WeaponValues[] => getValues("weapons.rows"),
+    [getValues],
+  );
+  const weaponRows = useMemo(
+    () =>
+      weapons.rows.map((row) => {
+        const weapon = getWeaponById(row.weaponId);
+        return {
+          ...row,
+          attack: getModifiedItemValue(
+            weapon?.attack ?? null,
+            row.attackModifier,
+          ),
+          guard: getModifiedItemValue(weapon?.guard ?? null, row.guardModifier),
+          weapon,
+        };
+      }),
+    [weapons.rows],
+  );
+  const selectedArmor = useMemo(
+    () => getArmorById(armor.armorId),
+    [armor.armorId],
+  );
+  const armorProps = useMemo(
+    () => ({
       ...armor,
       armor: selectedArmor,
       damageReduction: getModifiedItemValue(
@@ -59,33 +69,54 @@ export default function useWeaponsAndArmorSectionProps(
         selectedArmor?.defense ?? null,
         armor.defenseModifier,
       ),
-    },
-    onAddWeapon: () => append(createWeaponRow()),
-    onArmorModifierChange: (field, value) =>
+    }),
+    [armor, selectedArmor],
+  );
+  const onAddWeapon = useCallback(() => append(createWeaponRow()), [append]);
+  const onArmorModifierChange = useCallback(
+    (field: "damageReductionModifier" | "defenseModifier", value: string) =>
       setValue(`armor.${field}`, normalizeOptionalIntegerInput(value), {
         shouldDirty: true,
       }),
-    onArmorPickerRequest: options.onArmorPickerRequest,
-    onArmorSelect: (armorId) =>
+    [setValue],
+  );
+  const onArmorSelect = useCallback(
+    (armorId: string | null) =>
       setValue("armor.armorId", armorId, { shouldDirty: true }),
-    onClearArmor: () =>
+    [setValue],
+  );
+  const onClearArmor = useCallback(
+    () =>
       setValue(
         "armor",
         { armorId: null, damageReductionModifier: null, defenseModifier: null },
         { shouldDirty: true },
       ),
-    onMoveWeapon: (rowId, direction) => {
+    [setValue],
+  );
+  const onMoveWeapon = useCallback(
+    (rowId: string, direction: "up" | "down") => {
       const rows = getWeaponRows();
       const index = rows.findIndex((row) => row.rowId === rowId);
       const next = index + (direction === "up" ? -1 : 1);
       if (index >= 0 && next >= 0 && next < rows.length) move(index, next);
     },
-    onRemoveWeapon: (rowId) => {
+    [getWeaponRows, move],
+  );
+  const onRemoveWeapon = useCallback(
+    (rowId: string) => {
       const rows = getWeaponRows();
       const index = rows.findIndex((row) => row.rowId === rowId);
       if (rows.length > 1 && index >= 0) remove(index);
     },
-    onWeaponModifierChange: (rowId, field, value) => {
+    [getWeaponRows, remove],
+  );
+  const onWeaponModifierChange = useCallback(
+    (
+      rowId: string,
+      field: "attackModifier" | "guardModifier",
+      value: string,
+    ) => {
       const rows = getWeaponRows();
       const index = rows.findIndex((row) => row.rowId === rowId);
       const row = rows[index];
@@ -96,13 +127,46 @@ export default function useWeaponsAndArmorSectionProps(
         });
       }
     },
-    onWeaponPickerRequest: options.onWeaponPickerRequest,
-    onWeaponSelect: (rowId, weaponId) => {
+    [getWeaponRows, update],
+  );
+  const onWeaponSelect = useCallback(
+    (rowId: string, weaponId: string | null) => {
       const rows = getWeaponRows();
       const index = rows.findIndex((row) => row.rowId === rowId);
       const row = rows[index];
       if (row !== undefined && index >= 0) update(index, { ...row, weaponId });
     },
-    weaponRows,
-  };
+    [getWeaponRows, update],
+  );
+
+  return useMemo(
+    () => ({
+      armor: armorProps,
+      onAddWeapon,
+      onArmorModifierChange,
+      onArmorPickerRequest: options.onArmorPickerRequest,
+      onArmorSelect,
+      onClearArmor,
+      onMoveWeapon,
+      onRemoveWeapon,
+      onWeaponModifierChange,
+      onWeaponPickerRequest: options.onWeaponPickerRequest,
+      onWeaponSelect,
+      weaponRows,
+    }),
+    [
+      armorProps,
+      onAddWeapon,
+      onArmorModifierChange,
+      onArmorSelect,
+      onClearArmor,
+      onMoveWeapon,
+      onRemoveWeapon,
+      onWeaponModifierChange,
+      onWeaponSelect,
+      options.onArmorPickerRequest,
+      options.onWeaponPickerRequest,
+      weaponRows,
+    ],
+  );
 }

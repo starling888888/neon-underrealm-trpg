@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { type RefObject, useCallback, useEffect, useMemo, useRef } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type {
@@ -23,6 +23,7 @@ type Options = {
     target: CyberneticsPickerTarget,
     trigger: HTMLButtonElement,
   ) => void;
+  shouldSynchronizeCyberneticsRef?: RefObject<boolean>;
 };
 
 const fixedPartKeys = ["head", "torso", "arm", "leg"] as const;
@@ -68,7 +69,11 @@ export default function useCyberneticsSectionProps(
     ],
   );
   const previousNoncombatModifier = useRef(derived.noncombatModifier);
-  const shouldSynchronizeNoncombatModifierRef = useRef(false);
+  const previousCyberneticsValues = useRef(values);
+  const localSynchronizeNoncombatModifierRef = useRef(false);
+  const shouldSynchronizeNoncombatModifierRef =
+    options.shouldSynchronizeCyberneticsRef ??
+    localSynchronizeNoncombatModifierRef;
 
   useEffect(() => {
     const previousModifier = previousNoncombatModifier.current;
@@ -84,19 +89,35 @@ export default function useCyberneticsSectionProps(
         { shouldValidate: true },
       );
     }
-  }, [derived.noncombatModifier, setValue]);
+  }, [
+    derived.noncombatModifier,
+    setValue,
+    shouldSynchronizeNoncombatModifierRef,
+  ]);
+
+  useEffect(() => {
+    const changed = previousCyberneticsValues.current !== values;
+    previousCyberneticsValues.current = values;
+    if (!changed) return;
+    if (shouldSynchronizeNoncombatModifierRef.current) {
+      shouldSynchronizeNoncombatModifierRef.current = false;
+    }
+  }, [shouldSynchronizeNoncombatModifierRef, values]);
 
   const synchronizeNoncombatModifierAfterUserChange = useCallback(() => {
     shouldSynchronizeNoncombatModifierRef.current = true;
-  }, []);
+  }, [shouldSynchronizeNoncombatModifierRef]);
   const setFixedSelection = useCallback(
     (part: CyberneticFixedPartKey, cyberneticId: string | null): void => {
+      if (getValues(`cybernetics.${getFixedField(part)}`) === cyberneticId) {
+        return;
+      }
       synchronizeNoncombatModifierAfterUserChange();
       setValue(`cybernetics.${getFixedField(part)}`, cyberneticId, {
         shouldValidate: true,
       });
     },
-    [setValue, synchronizeNoncombatModifierAfterUserChange],
+    [getValues, setValue, synchronizeNoncombatModifierAfterUserChange],
   );
 
   const setOtherSelection = useCallback(
@@ -104,7 +125,7 @@ export default function useCyberneticsSectionProps(
       const rows = getValues("cybernetics.otherRows");
       const index = rows.findIndex((row) => row.rowId === rowId);
       const row = rows[index];
-      if (row !== undefined) {
+      if (row !== undefined && row.cyberneticId !== cyberneticId) {
         synchronizeNoncombatModifierAfterUserChange();
         update(index, { ...row, cyberneticId });
       }
@@ -144,7 +165,10 @@ export default function useCyberneticsSectionProps(
   const onModifierChange = useCallback(
     (field: "implantLimitModifier" | "implantTotalModifier", value: string) => {
       const normalizedValue = normalizeIntegerInput(value);
-      if (field === "implantTotalModifier") {
+      if (
+        field === "implantTotalModifier" &&
+        getValues(`cybernetics.${field}`) !== normalizedValue
+      ) {
         synchronizeNoncombatModifierAfterUserChange();
       }
       setValue(`cybernetics.${field}`, normalizedValue, {
@@ -152,7 +176,7 @@ export default function useCyberneticsSectionProps(
       });
       return normalizedValue;
     },
-    [setValue, synchronizeNoncombatModifierAfterUserChange],
+    [getValues, setValue, synchronizeNoncombatModifierAfterUserChange],
   );
   const onRemoveOther = useCallback(
     (rowId: string) => {

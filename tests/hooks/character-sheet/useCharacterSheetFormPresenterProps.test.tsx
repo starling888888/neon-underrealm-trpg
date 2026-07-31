@@ -15,6 +15,14 @@ import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-da
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
+const imageState = {
+  characterImage: null,
+  isRootOperationInProgress: false,
+  onCharacterImageCleared: async () => {},
+  onCharacterImageOperationStarted: () => {},
+  onCharacterImageSelected: async () => {},
+};
+
 function usePresenterHarness() {
   const form = useForm<CharacterSheetFormValues>({
     defaultValues: characterSheetDefaultValues,
@@ -24,17 +32,28 @@ function usePresenterHarness() {
 
   return {
     form,
-    presenterProps: useCharacterSheetFormPresenterProps(form, {
-      characterImage: null,
-      isRootOperationInProgress: false,
-      onCharacterImageCleared: async () => {},
-      onCharacterImageSelected: async () => {},
-      onCharacterImageOperationStarted: () => {},
-    }),
+    presenterProps: useCharacterSheetFormPresenterProps(form, imageState),
   };
 }
 
 describe("useCharacterSheetFormPresenterProps", () => {
+  it("keeps ikizama props and the error summary stable across an unrelated render", () => {
+    const { result, rerender } = renderHook(() => usePresenterHarness());
+    const before = {
+      errorSummary: result.current.presenterProps.errorSummary,
+      ikizamaSkillsSection: result.current.presenterProps.ikizamaSkillsSection,
+    };
+
+    rerender();
+
+    expect(result.current.presenterProps.errorSummary).toBe(
+      before.errorSummary,
+    );
+    expect(result.current.presenterProps.ikizamaSkillsSection).toBe(
+      before.ikizamaSkillsSection,
+    );
+  });
+
   it("keeps unaffected section props and callbacks stable across a profile update", () => {
     const { result } = renderHook(() => usePresenterHarness());
     const before = {

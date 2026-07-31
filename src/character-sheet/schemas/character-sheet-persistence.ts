@@ -102,6 +102,9 @@ export const characterSheetRestoreSchema =
             : [];
         },
       );
+      const otherRyugiSkillRowIds = new Set(
+        values.otherRyugiSkills.rows.map((row) => row.rowId),
+      );
       for (const { rowId } of values.build.otherRyugi) {
         if (
           values.otherRyugiSkills.rows.some((row) => row.ryugiRowId === rowId)
@@ -109,9 +112,17 @@ export const characterSheetRestoreSchema =
           continue;
         }
 
+        const baseRowId = `restore-other-ryugi-skill-${rowId}`;
+        let restoredRowId = baseRowId;
+        let duplicateNumber = 1;
+        while (otherRyugiSkillRowIds.has(restoredRowId)) {
+          restoredRowId = `${baseRowId}-${duplicateNumber}`;
+          duplicateNumber += 1;
+        }
+        otherRyugiSkillRowIds.add(restoredRowId);
         values.otherRyugiSkills.rows.push({
           level: 1,
-          rowId: `restore-other-ryugi-skill-${rowId}`,
+          rowId: restoredRowId,
           ryugiRowId: rowId,
           skillId: null,
         });
