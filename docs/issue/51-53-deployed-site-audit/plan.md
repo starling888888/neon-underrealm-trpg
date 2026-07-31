@@ -18,7 +18,7 @@
 
 ### G1: 公開ページの軽量性
 
-- 確定事項: 通常ページの公開HTMLは静的にカード本文を含む。確認した共通moduleは検索、mobile menu、header制御だけを担い、検索indexは検索panelを開いた後にdynamic importする。キャラクターシートのReact Islandと専用依存は評価対象外とする。
+- 確定事項: 通常ページの公開HTMLは静的にカード本文を含む。確認した共通moduleは検索、mobile menu、header制御だけを担い、検索indexは検索panelを開いた後にdynamic importする。Playwrightで通常35 routeを補完確認し、eager画像はheroだけ、通常ページの実行時JavaScriptは共通2本、外部originへのresource要求は0件だった。キャラクターシートのReact Islandと専用依存は評価対象外とする。
 - 後続Gateへの注意: `curl`限定では動的操作と実画面は確認できない。G2 / G3でもHTTPで判断できる結果と未確認事項を分けて記録する。
 - archive: 子issueなし。調査証跡は `.tmp/review/51-53-deployed-site-audit/g1-performance-report.md`。
 
