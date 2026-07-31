@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/world.spec.ts` の `@vrt @world @<state> @<viewport>`
+- test: `tests/vrt/world.spec.ts` の `@vrt @world @<state> @<viewport>`
 - route: `/world/`
 - state: default
 - snapshots:
@@ -26,7 +26,7 @@
 - states:
   - desktop: SiteMenu、PageToc、本文、hero、NpcCard
   - mobile: Header、MobilePageToc trigger、本文、hero、NpcCard
-- VRT coverage: `tests/visual/vrt/world.spec.ts` のdesktop / tablet / mobile baseline
+- VRT coverage: `tests/vrt/world.spec.ts` のdesktop / tablet / mobile baseline
 
 ## Referenced SSoT
 
@@ -74,7 +74,7 @@
 ## Generation source
 
 - route: `/world/`
-- current VRT: `tests/visual/vrt/world.spec.ts` の`@vrt @world`で、desktop / tablet / mobileを比較する。
+- current VRT: `tests/vrt/world.spec.ts` の`@vrt @world`で、desktop / tablet / mobileを比較する。
 - snapshots: `canonical-snapshots/visual/world/` のdesktop / tablet / mobile baseline
 - user approval: `デザイン正本化。ワールドガイドとローカル用のNPCカード用ページ。`（2026-07-22）。
 

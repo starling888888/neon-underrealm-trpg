@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/global-styles.spec.ts` の `@vrt @global-styles @<state> @<viewport>`
+- test: `tests/vrt/global-styles.spec.ts` の `@vrt @global-styles @<state> @<viewport>`
 - route: `/-local/style-tiles/`
 - state: default
 - snapshots:

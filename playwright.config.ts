@@ -1,5 +1,5 @@
 import { defineConfig } from "@playwright/test";
-import { visualBaseUrl } from "./tests/visual/config";
+import { visualBaseUrl } from "./tests/support/site";
 
 export const visualPlaywrightUse = {
   baseURL: visualBaseUrl,

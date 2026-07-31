@@ -14,7 +14,7 @@
   - tablet: `820x1180`
   - mobile: `390x900`
 - desktop、tablet、mobileを初期scopeに含める。各viewportの具体的なlayoutとVRT状態は、対応するGateで定める。
-- 現在のVRT対象: `tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`。routeは`/character-sheet/`で、full-pageのdefault / tooltip代表、section variation、dialog variationを対象とする。
+- 現在のVRT対象: `tests/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`。routeは`/character-sheet/`で、full-pageのdefault / tooltip代表、section variation、dialog variationを対象とする。
 - 2026-07-29、ユーザー承認により、G17の武器・防具sectionを含む現行画面へ`@character-sheet`のローカルcanonical snapshotを更新した。既存full-page snapshot 51件（desktop、ultrawide、tablet、mobileの既存対応分）を更新し、同じtargetの通常比較は51件成功した。G17の7 state × 3 viewportはlocator-onlyであり、full-page canonical snapshotは作成しない。
 - 2026-07-29、ユーザー承認により、G18のお守りカテゴリと名称選択tooltipを含む現行画面へ`@character-sheet`のcanonical snapshotを更新した。お守りの候補dialog、選択済み行、mobile効果展開、各名称tooltipは、desktop / tablet / mobileのlocator screenshotで確認する。これらの局所状態はfull-page canonical snapshotを増やさない。
 - 2026-07-29、ユーザー承認により、G19のサイバネカテゴリを含む現行画面へ`@character-sheet`の既存canonical snapshotを更新した。`cybernetics-default`、候補dialog、効果展開、その他行追加、名称tooltip、埋め込み点数合計／埋め込み上限tooltip、上限超過errorをdesktop / tablet / mobileのlocator screenshotで確認する。これらの局所状態はfull-page canonical snapshotを増やさない。
@@ -62,7 +62,7 @@
 - setting layout: profile入力群の直下に`設定`とchevronだけを置く。展開時は、同じ位置にlabel付きtextareaを表示する。開閉状態はフォーム値、保存、JSONの対象に含めない。
 - credit layout: 信用は、取得信用、融通した、融通された、合計信用、消費信用、小銭修正、小銭のDOM順を維持する。desktopとtabletでは7列のgrid、mobileでは1行目に取得信用・融通した・融通された、2行目に合計信用・消費信用・小銭修正・小銭を置くresponsive gridとする。編集可能な4入力は短い幅で右揃え、派生値は同じ視覚形式の読み取り専用値として表示する。
 - comparison points: profile slotのG3 frame非適用、5入力のlabel対応と順序、設定の初期非表示と展開後のtextarea、信用の順序・初期値・右揃え、desktop / tablet / mobileでの横overflowなし。
-- VRT: 既存の`tests/visual/vrt/character-sheet.spec.ts`にある`@vrt @character-sheet`のdefault routeを使い、G4ではdesktop、tablet、mobileだけをactual / 比較対象とする。設定の展開、信用の値変更、空欄からの`0`復帰はbrowser behavior testで確認する。canonical baselineの更新には別途ユーザー承認が必要である。
+- VRT: 既存の`tests/vrt/character-sheet.spec.ts`にある`@vrt @character-sheet`のdefault routeを使い、G4ではdesktop、tablet、mobileだけをactual / 比較対象とする。設定の展開、信用の値変更、空欄からの`0`復帰はbrowser behavior testで確認する。canonical baselineの更新には別途ユーザー承認が必要である。
 
 ### G14 common skill summary comparison
 

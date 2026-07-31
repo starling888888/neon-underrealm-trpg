@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail @<ikizamaId> @<viewport>`
+- test: `tests/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail @<ikizamaId> @<viewport>`
 - route: `/data/ikizama/sumi/`
 - state: default
 - snapshots:
@@ -74,7 +74,7 @@
 
 ## Generation source
 
-- baseline source: `tests/visual/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail` 比較結果。baseline更新はユーザー明示指示時だけ行う。
+- baseline source: `tests/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail` 比較結果。baseline更新はユーザー明示指示時だけ行う。
 
 ## Open questions
 

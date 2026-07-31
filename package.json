@@ -34,9 +34,9 @@
     "format": "biome format --write . && npm run format:md",
     "format:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint fmt && markdownlint-cli2 --fix",
     "visual:build": "npm run build && pagefind --site dist",
-    "visual:test": "playwright test tests/visual/vrt --workers=1",
-    "visual:update": "playwright test tests/visual/vrt --workers=1 --update-snapshots",
-    "visual:capture": "playwright test tests/visual/vrt --config playwright.capture.config.ts --workers=1 --update-snapshots",
+    "visual:test": "playwright test tests/vrt --workers=1",
+    "visual:update": "playwright test tests/vrt --workers=1 --update-snapshots",
+    "visual:capture": "playwright test tests/vrt --config playwright.capture.config.ts --workers=1 --update-snapshots",
     "visual:install": "playwright install chromium"
   },
   "dependencies": {

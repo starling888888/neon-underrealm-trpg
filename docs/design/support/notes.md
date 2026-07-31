@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/support.spec.ts` の `@vrt @support @<state> @<viewport>`
+- test: `tests/vrt/support.spec.ts` の `@vrt @support @<state> @<viewport>`
 - route: `/support/`
 - state: default
 - snapshots:

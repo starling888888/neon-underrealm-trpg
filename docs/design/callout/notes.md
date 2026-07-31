@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/callout.spec.ts` の `@vrt @callout @<state> @<viewport>`
+- test: `tests/vrt/callout.spec.ts` の `@vrt @callout @<state> @<viewport>`
 - route: `/-local/callouts/`
 - state: default
 - snapshots:
@@ -46,7 +46,7 @@
 - `src/styles/prose.css`
 - `src/components/_common/Callout.astro`
 - `src/pages/-local/callouts.mdx`
-- `tests/visual/vrt/callout.spec.ts`
+- `tests/vrt/callout.spec.ts`
 
 ## Canonicalization Note
 
@@ -106,7 +106,7 @@
 
 ## Generation Source
 
-- current VRT: `tests/visual/vrt/callout.spec.ts` の`@vrt @callout`で、desktop / tablet / mobileを比較する。
+- current VRT: `tests/vrt/callout.spec.ts` の`@vrt @callout`で、desktop / tablet / mobileを比較する。
 - source branch / commit when applicable: `20-1-common-callout-component` / `51f58d4`
 - route when applicable: `/-local/callouts/`
 - viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`

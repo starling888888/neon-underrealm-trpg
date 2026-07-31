@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/release-notes.spec.ts` の `@vrt @release-notes @<state> @<viewport>`
+- test: `tests/vrt/release-notes.spec.ts` の `@vrt @release-notes @<state> @<viewport>`
 - route: `/release-notes/`
 - state: default
 - snapshots:
@@ -10,13 +10,13 @@
   - tablet `820x1180`: `release-notes-default-tablet.png`
   - mobile `390x900`: `release-notes-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
-- actual review locator: `tests/visual/vrt/release-notes.spec.ts` が更新履歴pageを、`visual:capture`時のみdesktop / tablet / mobileの原寸一時snapshotとして出力する。通常の`visual:test`ではfull-page baselineだけを比較する。
+- actual review locator: `tests/vrt/release-notes.spec.ts` が更新履歴pageを、`visual:capture`時のみdesktop / tablet / mobileの原寸一時snapshotとして出力する。通常の`visual:test`ではfull-page baselineだけを比較する。
 
 ## Mode
 
 - design fix
 - 19-2-release-notes-page の実装後Visual Review結果を正本化する。
-- current VRTは`tests/visual/vrt/release-notes.spec.ts`の`@vrt @release-notes`で、desktop / tablet / mobileを比較する。
+- current VRTは`tests/vrt/release-notes.spec.ts`の`@vrt @release-notes`で、desktop / tablet / mobileを比較する。
 
 ## Target
 
@@ -155,7 +155,7 @@
 
 ## Generation Source
 
-- current VRT: `tests/visual/vrt/release-notes.spec.ts` の`@vrt @release-notes`。
+- current VRT: `tests/vrt/release-notes.spec.ts` の`@vrt @release-notes`。
 - source branch / commit when applicable: `19-2-release-notes-page` / `a9997b0`
 - historical issue: `docs/issue/done/phase-3/19-2-release-notes-page.md`
 - route when applicable: `/release-notes`

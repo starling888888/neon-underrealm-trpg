@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/page-navigation-links.spec.ts` の `@vrt @page-navigation-links @<state> @<viewport>`
+- test: `tests/vrt/page-navigation-links.spec.ts` の `@vrt @page-navigation-links @<state> @<viewport>`
 - route: `/-local/page-navigation/`
 - state: default
 - snapshots:
@@ -75,7 +75,7 @@
 - initial draft source:
   - mobile: `.tmp/design/page-navigation-links/prototype.html`
   - desktop: `.tmp/design/page-navigation-links/prototype-desktop.html`
-- current VRT: `tests/visual/vrt/page-navigation-links.spec.ts` の`@vrt @page-navigation-links`
+- current VRT: `tests/vrt/page-navigation-links.spec.ts` の`@vrt @page-navigation-links`
 
 ## Open questions
 

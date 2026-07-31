@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/items-omamori.spec.ts` の `@vrt @items-omamori @<state> @<viewport>`
+- test: `tests/vrt/items-omamori.spec.ts` の `@vrt @items-omamori @<state> @<viewport>`
 - route: `/data/items/omamori/`
 - state: default
 - snapshots:

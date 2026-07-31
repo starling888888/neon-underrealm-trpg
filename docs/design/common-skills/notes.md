@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/common-skills.spec.ts` の `@vrt @common-skills @<state> @<viewport>`
+- test: `tests/vrt/common-skills.spec.ts` の `@vrt @common-skills @<state> @<viewport>`
 - route: `/data/common-skills/`
 - state: default
 - snapshots:

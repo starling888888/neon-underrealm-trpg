@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/site-menu.spec.ts` の `@vrt @site-menu @<state> @<viewport>`
+- test: `tests/vrt/site-menu.spec.ts` の `@vrt @site-menu @<state> @<viewport>`
 - route: `/world/`
 - state: default
 - snapshots:

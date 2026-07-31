@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/character-making.spec.ts` の `@vrt @character-making @<state> @<viewport>`
+- test: `tests/vrt/character-making.spec.ts` の `@vrt @character-making @<state> @<viewport>`
 - route: `/character-making/`
 - state: default
 - snapshots:
@@ -80,7 +80,7 @@
 
 - source branch: `22-2-character-making-page`
 - source route: `/character-making/`
-- current VRT: `tests/visual/vrt/character-making.spec.ts` の`@vrt @character-making`で、desktop / tablet / mobileを比較する。
+- current VRT: `tests/vrt/character-making.spec.ts` の`@vrt @character-making`で、desktop / tablet / mobileを比較する。
 - snapshots: `canonical-snapshots/visual/character-making/` のdesktop / tablet / mobile baseline
 - hero asset: `public/images/character-making/hero.webp`
 - hero prompt: `.tmp/hero-prompt.md`
