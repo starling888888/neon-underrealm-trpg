@@ -1,5 +1,7 @@
 # ex-02-17-sheet-weapons-armor
 
+> 履歴注記: このissueは、当時の実装・design・仕様を基準に完了済みとする。以後のdesignまたは仕様変更には追従せず、変更が必要な場合は後続issueで扱う。
+
 ## 最優先のデザイン入力
 
 - ユーザーが指定した武器・防具のdesktop / tablet / mobileの列、展開内容、候補dialogのgroupとheaderを、このGateの画面契約とする。`.tmp/design/character-sheet/`の承認済みdraftは、`武器・防具` sectionの位置、既存sheetの情報密度、section frameの見た目だけを参照し、今回の明示指定と競合する旧い列構成は採用しない。
@@ -216,7 +218,7 @@
 ### 対応完了チェックリスト
 
 - [x] 武器の`攻撃力／ガード値`と防具の`防御力／ダメージ軽減`を、2列の入力欄ではない指定の計算式表示へ修正する
-- [ ] mobileで`＝`以降を折り返せ、修正inputが2桁幅に収まり、横overflowがないことをactual screenshotで確認する
+- [x] mobileで`＝`以降を折り返せ、修正inputが2桁幅に収まり、横overflowがないことをactual screenshotで確認する
 - [x] 算出値を既存スキル行と同じaccent-muted領域へ置く
 - [x] npm run check
 - [x] npm run build
@@ -267,10 +269,10 @@
 
 ### 対応完了チェックリスト
 
-- [ ] G17 headerの対象列の左寄せと防具`クリア`の固定高・中央配置を実装する
-- [ ] スキル・武器・防具と候補dialogのheader罫線を除去し、data行の指定境界だけに罫線を残す
-- [ ] npm run check
-- [ ] npm run build
+- [x] G17 headerの対象列の左寄せと防具`クリア`の固定高・中央配置を実装する
+- [x] スキル・武器・防具と候補dialogのheader罫線を除去し、data行の指定境界だけに罫線を残す
+- [x] npm run check
+- [x] npm run build
 
 ## レビュー指摘 7
 

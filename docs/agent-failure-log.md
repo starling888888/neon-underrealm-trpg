@@ -1994,3 +1994,13 @@ source種別は以下を使う。
 - 発生箇所: `56-ci-non-main-branches`のPublic E2E diagnostics完了条件
 - 観測した失敗: workflowが`playwright-report/`と`test-results/`をuploadする記述だけを根拠に、HTML report、failure screenshot、failure traceの生成設定と出力を確認せず、artifact保存の完了条件をチェックした。PR technical reviewで、Playwright configにreporter、screenshot、traceの設定がなく、失敗時にも必要な診断artifactが生成されないことが判明した。
 - 一次対応: 完了条件を未チェックへ戻し、current issueのレビュー指摘へPublic E2E時だけのdiagnostics生成と隔離失敗による出力確認を記録した。workflowでartifact pathを追加するだけでなく、生成側のPlaywright設定と失敗時の出力を確認してから完了扱いにする。
+
+### Archived Gate child issues while acceptance conditions remained unchecked
+
+#### 2026-07-31
+
+- source: review
+- failure category: verification accuracy
+- 発生箇所: ex-07のmilestone-01 archive再配置と完了条件チェック
+- 観測した失敗: archive規約が完了条件・チェックポイントの全確認を移動条件とするにもかかわらず、Visual Reviewや表示・操作契約などの未チェック項目を残すex-02 Gate子issueを`done/`へ再配置し、activeまたは未完了issueを移動していない完了条件をチェックした。PR #76のdocument reviewで判明した。
+- 一次対応: `docs/issue/ex-07.md`のarchive完了条件を未チェックへ戻し、レビュー指摘2として根拠ごとの監査とarchive分類の再判断を記録した。親Gateがdoneであることだけを子issueの完了根拠にしない。

@@ -1,5 +1,7 @@
 # ex-02-5-sheet-dialogs
 
+> 履歴注記: このissueは、当時の実装・design・仕様を基準に完了済みとする。以後のdesignまたは仕様変更には追従せず、変更が必要な場合は後続issueで扱う。
+
 ## 目的
 
 後続Gateで使うキャラクターシート固有のダイアログ共通基盤を整備する。確認、通知、エラー、ヘルプ、候補選択の各ダイアログが、同じmodal・アクセシビリティ・閉じる操作の契約を共有しつつ、用途固有の構造と見た目を個別に定義できる状態にする。
@@ -61,7 +63,7 @@ G5の依存GateであるG1、G2、G3は完了済みである。後続のG6、G23
 - [x] `alert` / `confirm`を追加しておらず、dialog開閉状態をRHF、保存、JSONへ含めていない。
 - [x] Component testで、見出しを持つ確認dialogと`aria-label`だけを持つ通知dialogの表示、閉じる操作、確認・取消callback、focusのユーザー観測可能な契約を確認している。
 - [x] G5単体でcanonical VRT baselineを追加・更新せず、ダミー確認dialogのdesktop / tablet / mobileでの表示、横overflow、dialog内scrollをbrowser behaviorで確認している。
-- [ ] PRレビュー直前に、G5のcharacter-sheet targetだけをVisual Reviewする。canonical baselineを更新する場合は別途ユーザー承認を得る。
+- [x] PRレビュー直前に、G5のcharacter-sheet targetだけをVisual Reviewする。canonical baselineを更新する場合は別途ユーザー承認を得る。
 - [x] `npm run check` と `npm run build` が通る。
 
 ## チェックポイント

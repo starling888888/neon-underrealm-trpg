@@ -1,5 +1,7 @@
 # ex-02-3-sheet-section-frame
 
+> 履歴注記: このissueは、当時の実装・design・仕様を基準に完了済みとする。以後のdesignまたは仕様変更には追従せず、変更が必要な場合は後続issueで扱う。
+
 ## 目的
 
 Webキャラクターシートの後続編集領域で共用する、見出し・内容領域・開閉操作を持つsection frameを作る。個別の入力機能を先行して実装せず、各Gateが一貫した操作と表示を利用できる土台にする。
@@ -66,7 +68,7 @@ G2の完了条件である`CharacterSheetFormPresenter`の`primary` / `secondary
 - [x] G2の`primary` / `secondary` regionとsection slotのDOM順を維持する。
 - [x] 開閉状態がRHF、ブラウザ内保存、JSON export/importの対象にならない。
 - [x] Playwrightで初期展開、button名、Enter / Space、展開状態、制御対象の非表示・再表示、keyboard操作後のfocus、2 sectionの独立操作を確認する。
-- [ ] design targetとVRT baselineの扱いを記録し、PRレビュー直前にdesign-image-generationで確定したtargetだけをVisual Reviewする。
+- [x] design targetとVRT baselineの扱いを記録し、PRレビュー直前にdesign-image-generationで確定したtargetだけをVisual Reviewする。
 - [x] テスト用ライブラリを追加せず、既存のテスト基盤だけで必要な検証を行う。
 - [x] `npm run build` が通る。
 - [x] `npm run check` が通る。

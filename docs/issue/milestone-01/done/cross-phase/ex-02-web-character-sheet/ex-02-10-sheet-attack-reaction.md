@@ -1,5 +1,7 @@
 # ex-02-10-sheet-attack-reaction
 
+> 履歴注記: このissueは、当時の実装・design・仕様を基準に完了済みとする。以後のdesignまたは仕様変更には追従せず、変更が必要な場合は後続issueで扱う。
+
 ## 最優先のデザイン入力
 
 - `/character-sheet/`のdesktop二列layoutでは、`判定`sectionを右カラムの最上段に置く。これは既存design draftの表示領域に優先するユーザー指定であり、既存`CharacterSheetFormPresenter`の`secondary` region先頭の`checks` slotを用いる。
@@ -56,21 +58,21 @@
 
 ## 完了条件
 
-- [ ] `checks` slotに、desktopでは右カラム最上段、tablet / mobileでは縁の後かつ武器・防具の前に`判定`sectionを表示できる。
-- [ ] 攻撃とリアクションがそれぞれ`技能`、`対応能力`、`判定数`をヘッダーに持ち、各`判定数`の横にmute colorの`常時／一時`を表示できる。
-- [ ] `判定数`headerから、指定どおりの計算式と手動修正の説明を含むtooltipを確認できる。
-- [ ] 攻撃とリアクションの各行が、`常時能力値／一時能力値 + 修正入力欄 = 常時判定数／一時判定数`を示し、修正の変更で両判定数を更新できる。
-- [ ] 攻撃は初期1行・1〜5行で追加・削除でき、最後の1行は削除できず、5行目では追加できない。リアクション4行は常時表示され、追加・削除できない。リアクション種別の重複はvalidation errorにしない。
-- [ ] 技能・リアクション種別ごとの指定既定対応を表示し、対応能力を5能力値から変更できる。
+- [x] `checks` slotに、desktopでは右カラム最上段、tablet / mobileでは縁の後かつ武器・防具の前に`判定`sectionを表示できる。
+- [x] 攻撃とリアクションがそれぞれ`技能`、`対応能力`、`判定数`をヘッダーに持ち、各`判定数`の横にmute colorの`常時／一時`を表示できる。
+- [x] `判定数`headerから、指定どおりの計算式と手動修正の説明を含むtooltipを確認できる。
+- [x] 攻撃とリアクションの各行が、`常時能力値／一時能力値 + 修正入力欄 = 常時判定数／一時判定数`を示し、修正の変更で両判定数を更新できる。
+- [x] 攻撃は初期1行・1〜5行で追加・削除でき、最後の1行は削除できず、5行目では追加できない。リアクション4行は常時表示され、追加・削除できない。リアクション種別の重複はvalidation errorにしない。
+- [x] 技能・リアクション種別ごとの指定既定対応を表示し、対応能力を5能力値から変更できる。
 - [x] 判定数の算出、能力値変更・修正変更、攻撃の追加・削除・最低1行、リアクション固定4行、tooltip、desktop / tablet / mobileの表示を、pure logic、schema / hook、Component、browser behavior testの適切な層で確認している。
-- [ ] `@character-sheet` targetのdefaultと、攻撃行追加・対応能力変更・判定数tooltipを開いたstateをVisual Reviewし、canonical VRT baselineを更新していない。
-- [ ] 関連TODOを扱わない理由が記録されている。
+- [x] `@character-sheet` targetのdefaultと、攻撃行追加・対応能力変更・判定数tooltipを開いたstateをVisual Reviewし、canonical VRT baselineを更新していない。
+- [x] 関連TODOを扱わない理由が記録されている。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
+- [x] 既存ルートが壊れていない。
 - [x] GitHub Pagesのサブパス公開に影響しない。
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
@@ -135,13 +137,13 @@
 
 ### 対応完了チェックリスト
 
-- [ ] 変更targetだけをVRT比較した
-- [ ] 変更targetだけの一時snapshotを取得した
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
-- [ ] VRT差分を修正した、または修正不要と判断した
-- [ ] baseline更新が必要な差分を人間判断として記録した
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -166,11 +168,11 @@
 
 ### 対応完了チェックリスト
 
-- [ ] G9の未検証受入条件と表示契約を統合確認で整理する。
-- [ ] 縁の削除callbackがoverflow外の行を削除しないことを保証する。
-- [ ] G24着手前に可変行の`useFieldArray`契約と復元時の行identityを設計・適用する。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] G9の未検証受入条件と表示契約を統合確認で整理する。
+- [x] 縁の削除callbackがoverflow外の行を削除しないことを保証する。
+- [x] G24着手前に可変行の`useFieldArray`契約と復元時の行identityを設計・適用する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## レビュー指摘 2
 
@@ -192,7 +194,7 @@
 ### 対応完了チェックリスト
 
 - [x] 入力クリアを角丸の横長text button `クリア`へ変更し、削除の`×`と形状・文言で区別できる。文字は`0.625rem`かつ折り返さない。
-- [ ] desktop / tablet / mobileでicon、hover / focus表示、disabled状態をVisual Reviewする。
+- [x] desktop / tablet / mobileでicon、hover / focus表示、disabled状態をVisual Reviewする。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -224,12 +226,12 @@
 
 ### 対応完了チェックリスト
 
-- [ ] 変更targetだけをVRT比較した
-- [ ] 変更targetだけの一時snapshotを取得した
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
-- [ ] VRT差分を修正した、または修正不要と判断した
-- [ ] baseline更新が必要な差分を人間判断として記録した
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

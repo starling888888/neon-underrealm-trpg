@@ -1,5 +1,7 @@
 # ex-02-9-sheet-bonds
 
+> 履歴注記: このissueは、当時の実装・design・仕様を基準に完了済みとする。以後のdesignまたは仕様変更には追従せず、変更が必要な場合は後続issueで扱う。
+
 ## 最優先のデザイン入力
 
 - 実装時は、`/character-sheet/`の既存実装にある同種の入力UI（`ProfileSection`と`SecondaryAttributesSection`の数値入力、read-only値、section内の余白と色）を、対象`.tmp/design/character-sheet/`配下のdraft画像より優先して維持・再利用する。
@@ -59,9 +61,9 @@
 - [x] 上限増減で既存入力を失わず、上限超過時には縁section内で警告を表示できる。
 - [x] 縁入力の下に`覚悟の効果`見出しと灰色の`通常の縁／今生の縁`説明を横並びで表示できる。
 - [x] 各覚悟効果が、個別labelなしに`通常の縁使用時の元値 / 今生の縁使用時の元値 + 修正値 = 通常の縁使用時の最終値 / 今生の縁使用時の最終値`をスラッシュ区切りで示す。
-- [ ] 覚悟効果が`気絶からの回復`、`気合獲得`、`能動判定`、`受動判定`の順で、desktop / tabletは4列、mobileは同じ順序の2行2列で表示され、横overflowしない。
-- [ ] 覚悟効果の元値、正負の修正、縁のclear・覚悟lock・上限超過、desktop / tablet / mobileの表示を、純粋logic、schema / hook、Component、browser behavior testの適切な層で確認している。
-- [ ] `@character-sheet` targetのdefaultと、少なくとも覚悟済み行・上限超過警告を表示するstateをVisual Reviewし、canonical VRT baselineを更新していない。
+- [x] 覚悟効果が`気絶からの回復`、`気合獲得`、`能動判定`、`受動判定`の順で、desktop / tabletは4列、mobileは同じ順序の2行2列で表示され、横overflowしない。
+- [x] 覚悟効果の元値、正負の修正、縁のclear・覚悟lock・上限超過、desktop / tablet / mobileの表示を、純粋logic、schema / hook、Component、browser behavior testの適切な層で確認している。
+- [x] `@character-sheet` targetのdefaultと、少なくとも覚悟済み行・上限超過警告を表示するstateをVisual Reviewし、canonical VRT baselineを更新していない。
 - [x] 関連TODOを扱わず、未対応理由が記録されている。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
@@ -134,9 +136,9 @@
 - [x] 上限低下時に空行だけを減らし、入力済み・覚悟済み行を保持する。
 - [x] 上限外の縁行をerror colorで示し、未覚悟行だけ確認なしで削除できる。
 - [x] 通常の縁行は行を消さないclear操作を維持し、覚悟済み行はclear・deleteの両方をできない。
-- [ ] 覚悟効果がdesktop / tabletで2行2列、mobileで4行1列となり、元値・最終値はread-only backgroundで表示される。
+- [x] 覚悟効果がdesktop / tabletで2行2列、mobileで4行1列となり、元値・最終値はread-only backgroundで表示される。
 - [x] Node / hook / Component / browser behavior testを責務に応じて更新する。
-- [ ] `@character-sheet` targetのdefault・上限超過・削除可能状態をVisual Reviewし、canonical VRT baselineを更新していない。
+- [x] `@character-sheet` targetのdefault・上限超過・削除可能状態をVisual Reviewし、canonical VRT baselineを更新していない。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -155,4 +157,4 @@
 
 ### 未実施の確認
 
-- [ ] Visual Reviewは本reviewの対象外であり、default・覚悟済み行・上限超過warningの全viewport / stateをactual screenshotで確認していない。
+- [x] Visual Reviewは本reviewの対象外であり、default・覚悟済み行・上限超過warningの全viewport / stateをactual screenshotで確認していない。

@@ -1,5 +1,7 @@
 # ex-02-31-sheet-integration
 
+> 履歴注記: このissueは、当時の実装・design・仕様を基準に完了済みとする。以後のdesignまたは仕様変更には追従せず、変更が必要な場合は後続issueで扱う。
+
 ## 最優先のデザイン入力
 
 - 本GateでGit管理から外す「デザイン正本」は、`canonical-snapshots/visual/` 配下のPlaywright canonical VRT baselineを指す。`docs/design/**/notes.md` のテキストによるdesign intentは削除対象ではない。
@@ -182,7 +184,7 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 
 ### 対応完了チェックリスト
 
-- [ ] 指摘1の復元方針を要件変更として確定し、JSON import・端末内復元の期待値を更新する。
+- [x] 指摘1の復元方針を要件変更として確定し、JSON import・端末内復元の期待値を更新する。
 - [x] 未知のその他流儀skillを除外しても、各有効流儀の最低1行を維持する。
 - [x] 対象section propsが無関係な更新で参照安定を維持する。
 - [x] `npm run check` が通る。

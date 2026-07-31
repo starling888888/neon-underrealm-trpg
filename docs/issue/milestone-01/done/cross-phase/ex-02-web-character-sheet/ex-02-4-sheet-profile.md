@@ -1,5 +1,7 @@
 # ex-02-4-sheet-profile
 
+> 履歴注記: このissueは、当時の実装・design・仕様を基準に完了済みとする。以後のdesignまたは仕様変更には追従せず、変更が必要な場合は後続issueで扱う。
+
 ## 目的
 
 Webキャラクターシートの`profile` slotに、PC名・PL名・二つ名・年齢・性別の独立した自由入力、開閉式のキャラクター設定、信用の編集値と派生値表示を追加する。文字列の空欄と信用入力の整数制約を両立し、後続Gateが同じRHF formを拡張できる最小の編集値境界を定める。
@@ -134,7 +136,7 @@ G1、G2、G3が完了済みである。G4はこのissueだけで実装でき、G
 - [x] G4時点の消費信用は`0`と表示し、アイテム由来の集計や信用超過エラーを先行実装していない。
 - [x] 合計信用、消費信用、小銭の計算式を、子要素のhover / tapで開くTooltipから確認でき、タップ端末ではコンポーネント外タップとEscで閉じられる。
 - [x] Node schema / logic test、Component / hook test、最小Playwright smokeで、信用の入力境界、派生式、設定の局所開閉、代表的な自由入力・数値入力を責務境界ごとに確認している。
-- [ ] design targetとVRT baselineの扱いを記録し、PRレビュー直前にG4で確定したtargetだけをVisual Reviewする。
+- [x] design targetとVRT baselineの扱いを記録し、PRレビュー直前にG4で確定したtargetだけをVisual Reviewする。
 - [x] 必要な依存だけを追加し、`npm run check` と `npm run build` が通る。
 
 ## チェックポイント

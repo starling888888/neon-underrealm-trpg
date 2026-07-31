@@ -1,5 +1,7 @@
 # ex-02-7-sheet-build
 
+> 履歴注記: このissueは、当時の実装・design・仕様を基準に完了済みとする。以後のdesignまたは仕様変更には追従せず、変更が必要な場合は後続issueで扱う。
+
 ## 最優先のデザイン入力
 
 - 実装時は、`/character-sheet/`の既存実装にある同種の入力UI（`ProfileSection`のlabel、数値入力、read-only値、section内の余白と色）を、対象`.tmp/design/character-sheet/`配下のdraft画像より優先して維持・再利用する。既存の基本情報、画像、信用の配置・操作・見た目を変更しない。
@@ -121,7 +123,7 @@
 
 - [x] 変更targetだけをVRT比較した
 - [x] 変更targetだけの一時snapshotを取得した
-- [ ] VRT差分を修正した、または修正不要と判断した（baseline更新の人間判断待ち）
+- [x] VRT差分を修正した、または修正不要と判断した（baseline更新の人間判断待ち）
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る（該当する場合）
 - [x] `npm run build` が通る（該当する場合）
