@@ -138,3 +138,30 @@
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る（該当する場合）
 - [x] `npm run build` が通る（該当する場合）
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- Gate opt-in化後も、`issue-first-development` のlocal repository modeと`issue_reviewer`定義に、通常issueでGate planを要求または作成できる旧ルールが残っている。
+- サンプルキャラクター表の組み合わせ列が、各JSONの流儀・生き様IDをmaster表示名へ解決した値と一致することを自動testで確認していない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation:
+  - `.agents/skills/issue-first-development/SKILL.md` は、Gate plan作成を通常issueの明示issue作成許可だけで許可する記述を残している。`.codex/agents/issue-reviewer.toml` も通常issueとGate親issueを分けず、親issueのGate planを無条件に確認するよう指示している。これは、ユーザーが明示的にGate作成またはGate分割を指示しない限りGateを作らないという現行`AGENTS.md`および本PRの方針と矛盾する。
+  - `tests/node/character-making-sample-characters.test.ts` はJSONの`primaryRyugiId`と`ikizamaId`をimport結果へ照合するが、MDX表の組み合わせ文字列は照合していない。`getRyugiById`と`getIkizamaById`は既存のID解決APIとして利用できる。
+
+### 対応方針
+
+- Gate planの作成・review要件を、Gate作成またはGate分割の明示指示がある場合だけに統一する。
+- 表のリンクをベタ書きのまま維持しつつ、testではJSONのIDを既存master APIで表示名へ解決し、各table行の組み合わせ列と照合する。
+
+### 対応完了チェックリスト
+
+- [x] `issue-first-development` と`issue_reviewer`のGate opt-in条件を統一する。
+- [x] 10件の表の組み合わせをJSON IDとmaster表示名から回帰検証する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

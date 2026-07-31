@@ -89,7 +89,7 @@ In this mode, the agent may:
 - create a dedicated branch
 - create `.tmp/review/<branch-name>/`
 - create `docs/issue/NN-slug.md` only with explicit user authorization
-- create `docs/issue/NN-slug/plan.md` only with the same explicit parent-issue authorization
+- create `docs/issue/NN-slug/plan.md` only when the user explicitly asks to create or split Gates
 - validate an existing local issue only when the user explicitly asks to validate it
 - check `docs/TODO.md` for related future-work items
 - check local design references under `docs/design/`

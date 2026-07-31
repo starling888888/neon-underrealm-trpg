@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 
 import { parseCharacterSheetJsonImport } from "../../src/character-sheet/schemas/character-sheet-persistence";
+import { getIkizamaById } from "../../src/lib/data/ikizama";
+import { getRyugiById } from "../../src/lib/data/ryugi-list";
 
 const sampleCharacters = [
   ["01_kenkaya_sumi", "入れ墨の切り込み隊長", "kenkaya", "sumi"],
@@ -47,10 +49,26 @@ describe("sample characters", () => {
 
     let previousIndex = -1;
     for (const [slug, pcName] of sampleCharacters) {
-      const link = `<a href={withBase("/sample-charcter/sample-character_${slug}.json")} download>${pcName}</a>`;
-      const index = source.indexOf(link);
+      const file = `public/sample-charcter/sample-character_${slug}.json`;
+      const parsed = parseCharacterSheetJsonImport(readFileSync(file, "utf8"));
 
-      assert.ok(index > previousIndex, `Expected ordered link: ${link}`);
+      assert.ok(parsed, `Expected ${file} to be importable.`);
+
+      const { ikizamaId, primaryRyugiId } = parsed.values.build;
+
+      assert.ok(primaryRyugiId, `Expected primary ryugi ID in ${file}.`);
+      assert.ok(ikizamaId, `Expected ikizama ID in ${file}.`);
+
+      const ryugi = getRyugiById(primaryRyugiId);
+      const ikizama = getIkizamaById(ikizamaId);
+
+      assert.ok(ryugi, `Expected primary ryugi in ${file}.`);
+      assert.ok(ikizama, `Expected ikizama in ${file}.`);
+
+      const row = `| <a href={withBase("/sample-charcter/sample-character_${slug}.json")} download>${pcName}</a> | ${ryugi.name}×${ikizama.name} |`;
+      const index = source.indexOf(row);
+
+      assert.ok(index > previousIndex, `Expected ordered table row: ${row}`);
       previousIndex = index;
     }
   });
