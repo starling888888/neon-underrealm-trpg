@@ -30,7 +30,7 @@
 
 ### G3: 主要ページ、ナビゲーション、検索、データカードの公開smoke test
 
-- 確定事項: Pagefindの公開content数35と、HTTP 200を確認した35 routeが一致する。404 pageとunknown routeの404応答も確認した。公開HTMLにはサイトメニュー、PageToc、検索UI、データカードがある。
+- 確定事項: Pagefindの公開content数35は、トップを含み`/character-sheet/`を除く35検索対象routeに対応する。Pagefind APIで「の」検索の34 routeと「更新」検索の`/release-notes/`を照合し、`/-local/`混入なしを確認した。G3でHTTP 200を確認した35 route一覧は別集合である。404 pageとunknown routeの404応答も確認した。公開HTMLにはサイトメニュー、PageToc、検索UI、データカードがある。
 - 後続Gateへの注意: 追加browser smoke testでdesktop検索、tablet MobilePageToc、mobile menu / 検索、代表検索結果と直接個別アンカー、404を確認済み。全カード・全viewportの網羅的Visual Reviewは実施しない。
 - archive: 子issueなし。調査証跡は `.tmp/review/51-53-deployed-site-audit/g3-content-smoke-report.md`。
 

@@ -159,3 +159,26 @@ package install、任意script実行、削除commandはこのインベントリ�
 - Gateの一覧・状態・依存関係は `docs/issue/51-53-deployed-site-audit/plan.md` のみで管理する。
 - GitHub Pagesへのdeployはmainへの反映で行われる。公開URL再確認が必要な修正は、ユーザーがcommit・push・PR・mergeを明示承認した後のdeploy完了を待つ。
 - 2026-07-31のユーザー承認: G1〜G3の公開ページ調査、各Gateの調査記録とcommit、全Gate完了後にまとめるこのissue内の修正を実施してよい。既存designで判断できないUI変更、current issue外への拡張、GitHub Pagesの外部設定変更は、この承認に含めない。これらはG3後に未実施事項として記録する。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- Pagefindの `page_count: 35` と、G3でHTTP 200を確認した35 routeは同一集合ではない。G3の一覧は`/character-sheet/`を含みトップ`/`を含まない一方、G1の通常35 routeはトップを含み`/character-sheet/`を除くため、件数一致を根拠に`/-local/`混入なしと結論づけられない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `.tmp/review/51-53-deployed-site-audit/g3-content-smoke-report.md` の35 route一覧とG1 browser inventoryを照合し、集合が異なることを確認した。PR #71のremote review・未解決threadはともに0件だった。
+
+### 対応方針
+
+- Pagefind 35件が対応する公開route集合を証跡で確定した。トップを含む34 routeと`/release-notes/`の和集合が35件で、`/character-sheet/`と`/-local/`を含まない。G3のHTTP 200確認一覧とは別集合であることをGate planと証跡へ訂正した。`/-local/`の検索TODOは引き続き完了扱いにしない。
+
+### 対応完了チェックリスト
+
+- [x] Pagefind 35件のroute集合を実ページのindex内容から確認する。
+- [x] G3 report、親issue、Gate planの件数表現を同じ集合にそろえる。
+- [x] `npm run check` が通る（ソース修正を伴う場合だけ）。ソース修正なしのため適用外。
+- [x] `npm run build` が通る（ソース修正を伴う場合だけ）。ソース修正なしのため適用外。
