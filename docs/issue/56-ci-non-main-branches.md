@@ -62,15 +62,15 @@ VRTのcanonical baselineはGit管理外のローカル比較入力として維�
 - [x] Quality CIはE2EとVRTを実行しない
 - [x] `npm run test`がE2EとVRTを含まない通常testの入口である
 - [ ] mainのdeployはQuality成功後にのみ、`npm run build:public`、`npm run build:search-index`、artifact upload、GitHub Pages deployを実行する
-- [ ] main以外のCIがGitHub Pagesを更新せず、Pages deploy権限を持たない
+- [x] main以外のCIがGitHub Pagesを更新せず、Pages deploy権限を持たない
 - [ ] main deploy完了後に、公開URLを対象とするPublic E2Eが実行される
-- [ ] Public E2Eはローカルpreview、`webServer`、`-local` fixture、VRT test、canonical baselineへ依存しない
-- [ ] Public E2Eが公開siteの既存E2E操作、Pagefind検索、subpath、公開データカードanchorを確認する
-- [ ] Public E2Eの失敗時に調査用artifactを保存し、成功済みdeployをrollbackしない
-- [ ] Public E2Eに不要なwrite権限を付与しない
-- [ ] docs-only、AGENTS、SKILL、README、`.github`更新時のQuality CI実行方針が明文化されている
+- [x] Public E2Eはローカルpreview、`webServer`、`-local` fixture、VRT test、canonical baselineへ依存しない
+- [x] Public E2Eが公開siteの既存E2E操作、Pagefind検索、subpath、公開データカードanchorを確認する
+- [x] Public E2Eの失敗時に調査用artifactを保存し、成功済みdeployをrollbackしない
+- [x] Public E2Eに不要なwrite権限を付与しない
+- [x] docs-only、AGENTS、SKILL、README、`.github`更新時のQuality CI実行方針が明文化されている
 - [x] VRTのcanonical baselineがGit管理外で、CIに持ち込まず、ローカルの変更target比較だけに用いる運用が明文化されている
-- [ ] `docs/TODO.md`の全件VRT CI TODOをこのissueで変更していない
+- [x] `docs/TODO.md`の全件VRT CI TODOをこのissueで変更していない
 - [x] CI/CD buildがExcelファイルと`.raw/`へ依存しない
 - [x] `npm run check`が通る
 - [x] `npm run build`が通る
@@ -80,12 +80,12 @@ VRTのcanonical baselineはGit管理外のローカル比較入力として維�
 ## チェックポイント
 
 - [ ] 既存のmain GitHub Pages deploy、environment URL、subpath公開、Pagefind index生成を維持している
-- [ ] Quality処理のNode.js version、npm cache、実行順がmainとnon-mainで重複定義されていない
-- [ ] mainの通常品質確認を重複実行せず、Quality失敗時にdeployとPublic E2Eが開始されない
-- [ ] main以外のbranchとPull Requestで同一commitに重複実行が生じる場合は、明示的な運用判断または安全なconcurrency設定を記録している
+- [x] Quality処理のNode.js version、npm cache、実行順がmainとnon-mainで重複定義されていない
+- [x] mainの通常品質確認を重複実行せず、Quality失敗時にdeployとPublic E2Eが開始されない
+- [x] main以外のbranchとPull Requestで同一commitに重複実行が生じる場合は、明示的な運用判断または安全なconcurrency設定を記録している
 - [x] Public E2E開始前に公開URLの到達を確認し、無制限retryや長時間待機をしない
-- [ ] deployとPublic E2Eの失敗状態を区別できる
-- [ ] package-lockと異なるPlaywright versionをCIで導入していない
+- [x] deployとPublic E2Eの失敗状態を区別できる
+- [x] package-lockと異なるPlaywright versionをCIで導入していない
 - [x] 公開用testは`-local` routeを参照せず、既存のローカルE2E testを不要に移動・renameしていない
 - [x] canonical VRT baseline、`test-results/`、`playwright-report/`をGit管理していない
 - [x] 不要なnpm dependencyを追加していない
