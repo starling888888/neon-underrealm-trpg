@@ -119,7 +119,7 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
-- [ ] 整理後の`npm run test:e2e`が通る。
+- [x] 整理後の`npm run test:e2e`が通る。
 
 ## チェックポイント
 
