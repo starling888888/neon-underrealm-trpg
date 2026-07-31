@@ -1,0 +1,420 @@
+# ex-02-8-sheet-secondary
+
+## 最優先のデザイン入力
+
+- 実装時は、`/character-sheet/`の既存実装にある同種の入力UI（`ProfileSection`のlabel、数値入力、read-only値、section内の余白と色）を、対象`.tmp/design/character-sheet/`配下のdraft画像より優先して維持・再利用する。レビュー指摘1に従う数値表示の共有style移行だけは、基本情報・ビルドにも適用してよい。
+- 既存実装と競合しない範囲では、`.tmp/design/character-sheet/desktop.png`、`tablet.png`、`mobile.png`を、副能力値をビルド直後に置くこと、tabletの3行圧縮、mobileで各項目を1行ずつ置くことを決めるデザイン入力とする。各項目内の計算式はreview指摘1に従い、mobileでも横並びを維持する。
+- ユーザーの最新指示により、副能力値の各項目は`自動算出値 + ユーザー入力欄 = 最終値`の順にする。算出式は項目名のtooltipで表示し、移動力と行動値の一時修正適用checkboxは項目名の右に置く。体力と精神力の最終値は`最大体力`、`最大精神力`とする。この指示は、draft画像および算出式を通常表示する既存design notesを上書きする。
+- design notes、実装結果のscreenshot、reviewer出力で、既存類似UIまたはユーザー指示にない配置・導線・状態表現を補完しない。不明点・競合がある場合はsource codeを変更せず停止して判断を求める。
+
+## 目的
+
+`/character-sheet/`の`secondary` slotへ、副能力値の直接編集UIと、G7までに確定したビルド値から算出できる副能力値を追加する。各項目で自動算出値、手動修正、最終値の関係と算出式を明確にし、desktop、tablet、mobileで横overflowなく確認できる状態にする。
+
+## 背景
+
+- 親issue: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/ex-02-web-character-sheet.md`
+- Gate plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` の `G8`
+- 要件: `docs/requirements/character-sheet.md` の「副能力値、縁、判定」と「副能力値の表示と手動修正」
+- アーキテクチャ: `docs/architectures/character-sheet.md` のContainer / Presenter / form / logic / Component testの責務分離
+- design target: `docs/design/character-sheet/notes.md` の「編集画面の情報architecture」「副能力値、縁、判定」と、最優先のデザイン入力に示したdraft画像
+- 関連TODO: `docs/TODO.md`のReact memo化は、G8で`React.memo`を導入しないため扱わない。JSON schema version、永続Skill ID検出、縁のルール文言はG8の範囲外として維持する。
+
+## Gate関係
+
+- 親issue: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/ex-02-web-character-sheet.md`
+- Gate plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md`
+- Gate: `G8: 副能力値を扱う。`
+
+このissueはG8だけを実装するための自己完結した契約である。G9以降の縁・覚悟、判定、スキル、アイテム、保存・復元、JSON入出力、全体エラー集約は扱わない。
+
+## 対象範囲
+
+- `secondary` slotへ、独立した副能力値Componentを置く。ComponentはPresenterから表示値と操作callbackだけを受け、マスタ検索、派生値算出、永続化、browser APIを直接扱わない。
+- form値とschemaへ、体力修正、精神力修正、移動力修正、行動値修正、行動回数修正、縁最大数修正、移動力・行動値の一時修正適用booleanを追加する。数値入力は整数で、各手動修正は負数を許可し、空欄は`0`として扱う。
+- 純粋logicへ、G7のプライマリ流儀、生き様、常時能力値・一時能力値とユーザー入力から副能力値を導出する責務を追加する。プライマリ流儀または生き様が未選択で基礎式を確定できない値は`-`と表示し、手動修正値は保持する。
+- `基本体力 + 修正 = 最大体力`、`基本精神力 + 修正 = 最大精神力`、`基本移動力 + 移動力修正 = 最終移動力`、`基本行動値 + 行動値修正 = 最終行動値`、`基本行動回数 + 行動回数修正 = 行動回数`、`基本縁最大数 + 縁最大数修正 = 縁最大数`を、各項目内の左から右の順に表示する。体力・精神力の最終値ラベルは必ず`最大体力`、`最大精神力`にする。
+- 基本体力、基本精神力、基本移動力、基本行動値、各最終値のラベルへ既存`FormulaTooltip`を付け、固定式だけを表示する。tooltipはhover、tap、Esc、component外tapの既存操作契約を保ち、数値を代入した計算過程は表示しない。手動修正ラベルに計算式tooltipを追加しない。
+- ユーザーの追加指示により、基本情報の合計信用、消費信用、小銭、格は、数値表示をtooltip triggerに含めずラベルだけをwrapする。副能力値の`最大体力`から`結べる縁`までのtooltip triggerは、表示文字列と`?`indicatorを同じ行に維持して折り返さない。
+- ユーザーの追加指示により、mobileの信用欄は取得信用、融通した、融通されたを1行目、合計信用、消費信用、小銭修正、小銭を2行目に置くresponsive layoutとする。既存labelと`?`indicatorのfont-sizeは変更しない。
+- ユーザーの追加指示により、能力値ポイントと成長点はlabelだけをformula tooltip triggerにし、`:`以降の算出値はtooltipの外へ置く。labelと算出値は一まとまりとして折り返さない。
+- ユーザーの追加指示により、能力値tableの見出しは常に`基礎` / `能力値`、`能力値` / `ポイント`、`常時` / `修正`、`常時` / `能力値`、`一時` / `修正`、`一時` / `能力値`の2行表示にする。
+- ユーザーの追加指示により、能力値tableの`常時` / `修正`と`一時` / `修正`は各2行見出し全体をtooltip triggerにする。tooltip本文はそれぞれ「ブライの「卓越能力」のように常に能力値を補正するスキル、アイテムの効果の値を入力します」「ナノマシンやドラッグのように一時的に能力値を変化させるスキル、アイテムの効果の値を入力します」とする。
+- ユーザーの追加指示により、縦1列のcharacter-sheet formの最小幅を`44rem`とする。`48rem`以上`64rem`未満はtabletレイアウトを維持しつつsite menu railだけを非表示にしてHeaderのmenu drawerを使う。これによりtablet最小幅で能力値tableが圧縮・overflowしないようにする。
+- 移動力・行動値では、項目名の右に一時修正適用checkboxを置く。未チェック時は常時能力値、チェック時は一時能力値を基礎式へ用いる。checkboxの変更で、同じ行の基本値と最終値を再計算する。
+- 最大体力は、G8で利用可能な`基本体力 + 修正`を表示し、スミの選択中ナノマシン由来の`activationMentalCost`最大値はG20が選択状態を接続するまで`0`とする。G20が既存の副能力値logicへこの加算値を渡して最終的な要件式を完成させられる、局所的で明示的な拡張点を残す。
+- 行動回数の基本値は`2`、縁最大数の基本値は`4`とする。共通スキルボーナスを自動加算しない。
+- tabletは、体力系と精神力系、移動力系と行動値系、行動回数と結べる縁の3行へ圧縮する。mobileは各項目を縦に並べるが、各項目の計算式は横並びに保ち、desktop、tablet、mobileのいずれでも全行が横overflowなく操作・閲覧できるようにする。
+- 固定文言と固定式は`src/character-sheet/dictionary.ts`へ置く。既存の`FormulaTooltip`を用途に適合させる必要がある場合は、そのComponentとComponent testを最小範囲で更新する。ユーザーの追加指示により、すべてのFormulaTooltip triggerは対象文字列の直後に、薄いアクセントカラーの小さな丸い`?`indicatorを表示する。indicatorはtooltipの操作対象ではなく、既存triggerの一部として扱い、accessible nameへ重複して含めない。
+
+## 初期スコープ外
+
+- 縁の固定入力行、覚悟効果、縁上限超過の警告はG9で扱う。
+- 攻撃、リアクション、非戦闘判定、スキル、武器・防具、専用アイテムの入力・算出・検証を実装しない。
+- G20より前にナノマシンの選択UI、発動状態、`activationMentalCost`の選択ロジックを実装しない。
+- 共通スキルボーナスや効果文を構造化・解析・自動加算しない。
+- localStorage、IndexedDB、JSON、CCFOLIA、サーバー、DB、追加ライブラリ、キャラクター作成ウィザード、文章ルールを解析する汎用ルールエンジンを追加しない。
+- Header、Footer、サイトメニュー、基本情報、ビルド、section frame、操作ペイン、canonical VRT baselineを再設計・更新しない。
+
+## 完了条件
+
+- [x] `secondary` slotに副能力値を表示し、G7のビルド入力から体力、精神力、移動力、行動値を導出できる。
+- [x] 6項目すべてが`自動算出値 + ユーザー入力欄 = 最終値`の構造で、各入力と最終値を同一項目内に表示する。
+- [x] 体力と精神力の最終値ラベルが`最大体力`、`最大精神力`である。
+- [x] 移動力と行動値の一時修正適用checkboxが項目名の右にあり、常時・一時能力値の選択を正しく反映する。
+- [x] 自動算出値と最終値のラベルから固定算出式をtooltipで確認でき、数値を代入した式を通常表示していない。
+- [x] すべてのFormulaTooltip triggerが、対象文字列の直後に小さな丸い`?`indicatorを表示し、accessible nameへ重複して含めない。
+- [x] 合計信用、消費信用、小銭、格はラベルだけをtooltip triggerにし、副能力値の項目ラベルと`?`indicatorを折り返さず表示する。
+- [x] 未選択状態、正負の手動修正、checkboxの切替、tablet / mobileでの表示を純粋logic、schema / hook、Component、browser behavior testの適切な層で確認している。
+- [x] `@character-sheet` targetだけをVisual Reviewし、canonical VRT baselineを更新していない。
+- [x] 関連TODOを扱わず、未対応理由をこのissueに記録している。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## チェックポイント
+
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない。
+- [x] `docs/design/character-sheet/notes.md`と、ユーザー指示で更新した副能力値の表示契約に矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
+
+## 想定変更ファイル
+
+- `src/character-sheet/components/CharacterSheetFormPresenter.tsx`
+- `src/character-sheet/components/SecondarySection.tsx` と対応するCSS Module
+- `src/character-sheet/components/FormulaTooltip.tsx` と対応するCSS Module（必要な場合のみ）
+- `src/character-sheet/form-values.ts`
+- `src/character-sheet/form/useCharacterSheetFormPresenterProps.ts`
+- `src/character-sheet/schemas/character-sheet-form.ts`
+- `src/character-sheet/logic/` 配下の副能力値用純粋logic
+- `src/character-sheet/dictionary.ts`
+- `tests/components/character-sheet/`、`tests/hooks/character-sheet/`、`tests/node/character-sheet/`、`tests/visual/character-sheet.spec.ts`
+
+## レビュー観点
+
+- 副能力値の各項目が、ユーザー指定どおり自動算出値、手動入力、最終値の関係を横方向に読み取れるか。
+- `最大体力`、`最大精神力`、移動力・行動値の最終値右側checkbox、ラベルの式tooltipが過去draftの常時表示式より優先されているか。
+- 未選択の流儀・生き様、負の修正、スミのナノマシン未接続時の`0`という境界が、G9・G20以降を先取りせず自己完結しているか。
+- tabletの3行圧縮とmobileの縦積みが、既存入力のサイズ・情報密度を保ちつつ横overflowを起こさないか。
+- canonical VRT baseline更新と、TODOにあるmemo化・保存互換性・ルール文言整理を、このGateへ混入させていないか。
+
+## 備考
+
+- VRT targetは`tests/visual/vrt/character-sheet.spec.ts`の`@vrt @character-sheet`、routeは`/character-sheet/`、stateはdefault、viewportはdesktop、ultrawide、tablet、mobileとする。G8では変更targetだけを比較し、baselineの更新はユーザーの明示承認がある場合だけ行う。
+- `FormulaTooltip`の既存の局所open stateと、hover、tap、Esc、component外tapの契約は`docs/architectures/character-sheet.md`を正本とする。後続Gateのためにtooltip以外のグローバルなヘルプUIを追加しない。
+- ユーザーの最新指示に基づき、`docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`の副能力値表示契約を同時に更新した。G8の実装ではこのissueをSSoTとし、後続Gateでは同じ契約を維持する。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt @character-sheet`
+- route / states / viewports: `/character-sheet/` / default / desktop、ultrawide、tablet、mobile
+
+### レビュー結果
+
+| 対象              | 判定       | 差分                                                                                          | 対応                                                                               |
+| ----------------- | ---------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `character-sheet` | 要人間判断 | 副能力値追加により4 viewportのpage screenshot高さと内容が既存canonical baselineから変わった。 | 一時snapshotとactualを確認した。baselineは更新せず、既存UIへの追加だけと判断した。 |
+
+### 自己修正した項目
+
+- なし。副能力値の追加による差分はG8の承認済み範囲であり、UIの追加削除またはglobal style修正は不要と判断した。
+
+### 人間判断が必要な差分
+
+- G8の副能力値追加を反映するcanonical VRT baseline更新の要否。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] VRT差分は承認済みの副能力値追加によるもので、source code修正は不要と判断した。
+- [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 6
+
+### 指摘事項
+
+- 副能力値の手動修正input、移動力・行動値の一時修正適用checkbox、自動算出値outputが、行名と関連付かない重複したaccessible nameを持つ。支援技術では対象の副能力値を判別できない。
+- `SecondaryAttributesSection`のTooltip幅指定が内部のdismiss layerにも一致し、coarse pointer時のcomponent外tap領域をviewport全体でなくす。`FormulaTooltip`の配置も左右・上下のanchor切替だけで、選択後の最終座標をviewport内へ収めていない。
+- `FormulaTooltip`のtooltip本文がtrigger buttonの子孫であるため、`ariaLabel`を省略する能力値ポイント・成長点では、open時にformula本文がbuttonのaccessible nameへ混入し、`aria-describedby`の説明と重複する。
+- 最終UI変更後のVisual Reviewはdefault stateだけでは不足する。G8が変更したtooltipのopen state、共有Tooltipの既存操作（hover、tap、Esc、component外tap、blur）、上下左右端の配置を、Profile、Build、Secondaryの代表triggerで確認・記録する必要がある。
+- Visual Review skillはbranch名の親issueを前提にしており、Gate実装時に子issueの受入条件を選べない。G8のtooltip open stateなど、子issue固有の確認条件を見落とす経路になっている。
+- 最終source stateのactual確認が未完了なのに、上位完了条件のVisual Reviewとbrowser behavior testが完了扱いになっていた。failure logにも、恒久対応の反映先と中間確認が後続変更で無効になった状態が明確に記録されていない。
+
+### 判定
+
+- source: local-agent（Gate Technical Reviewer、CSS / HTML Reviewer、AI Ops Reviewer）
+- classification: valid
+- local validation: `SecondaryAttributesSection`は6行のbase outputへ同じ`aria-label="自動算出値"`を渡し、最大体力・最大精神力の入力と移動力・行動値のcheckboxも行名を含まない重複名である。既存testが配列indexで対象を選ぶことも、nameだけでの識別不能を示している。
+- local validation: `.rowLabelTooltip :global(button)`と`.inlineTooltip :global(button)`はopen時に描画する`button.dismissLayer`にも一致する。`FormulaTooltip`のplacement処理は右端・下端を測定せず、anchor反転後のviewport overflowを防げない。
+- local validation: `FormulaTooltip`はtooltip本文をtrigger buttonの子に描画する。`BuildSection`の能力値ポイント・成長点triggerは`ariaLabel`を渡しておらず、open stateのaccessible nameが利用側により変わる。
+- local validation: G8 issueはtooltipの既存操作と上下左右端の表示確認を契約にしているが、current VRT scenarioはdefault stateだけである。最終UI変更後のactual確認も未完了であるため、上位完了条件を未完了へ訂正した。
+- local validation: `AGENTS.md`はGate実装時のcurrent issueを子issueと定める一方、Visual Review skillはbranch名issueを前提にしている。今回ユーザー指示で変更したagent governanceの補完として、child issue解決とinteractive state列挙を恒久対応へ加える必要がある。
+
+### 対応方針
+
+- 各副能力値rowへ行名をprogrammaticに関連付け、input、output、checkbox、tooltip triggerを一意に識別できるaccessible nameへ整理する。Component / browser testも配列indexではなく一意なnameで対象を選ぶ。
+- `FormulaTooltip`に内部buttonを親CSSから誤選択しないための明示的なAPIまたはclassを設け、dismiss layerのviewport coverageをbrowser testで固定する。placementは最終表示位置をviewport gutter内へ収め、左右・上下端の代表triggerで検証する。
+- tooltip本文をtriggerのaccessible name計算から分離し、`ariaLabel`の有無にかかわらずnameとdescriptionが重複しない構造とtestへ改める。
+- character-sheetのtarget限定Visual Reviewにtooltip open stateを追加し、最終source stateのdefault / open stateをdesktop、tablet、mobileでactual確認する。未完了のbrowser behavior testも修正・実行し、結果に合わせてissueのcheckを更新する。canonical baselineは更新しない。
+- ユーザー指示で変更した`AGENTS.md`、Visual Review skill、failure log、`.tmp/review/ex-02-web-character-sheet/user-directed-changes.md`は、Gate子issueの解決方法、interactive stateを受入条件から列挙する停止条件、恒久対応の反映先・無効化された中間確認・関連commitの記録を整合させる。これはG8機能実装外のuser-directed governance変更として同じtask内で管理する。
+
+### 対応完了チェックリスト
+
+- [x] 副能力値のinput、output、checkbox、tooltip triggerを行名込みで一意に識別できるようにする。
+- [x] Tooltipのdismiss layer、placement、accessible name / descriptionを共有Componentの契約として修正・testする。
+- [x] default / tooltip open stateのtarget限定Visual Reviewを最終source stateで実行し、actual確認記録と完了条件を整合させる。
+- [x] Gate子issueを正しく選ぶVisual Review手順とfailure log / user-directed recordを、ユーザー指示済みgovernance変更として整合させる。
+- [x] `npm run test:component` が通る。
+- [x] `npm run test:e2e` または対象browser behavior testが通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 副能力値を既存の`CharacterSheetSectionFrame`でラップし、基本情報・ビルドと同じsection見出し、背景、border、内側余白の階層に揃える。独自のsection見出しと外枠は残さない。
+- 各演算子の左右に`基本体力`、`修正`などの可視labelを反復表示しない。各項目は`自動算出値 + 修正入力 = 最終値`とcheckboxを一つの枠に入れ、左上に`最大体力`、`最大精神力`、`移動力`、`行動値`、`行動回数`、`結べる縁`の項目名を少し大きく表示する。
+- 項目名をformula tooltipのtriggerにする。自動算出値と修正入力は、accessible nameを保ちながら可視labelを省略する。
+- checkboxの可視labelは`一時修正を適用`とし、そのlabelをtooltip triggerにする。移動力・行動値ではcheckboxを項目名の右に置き、desktop・tabletでも計算式は項目枠の横幅全体を使う。tooltipでは、移動力なら`チェックを入れると一時能力値で移動力を表示します`、行動値なら`チェックを入れると一時能力値で行動値を表示します`を説明する。計算式は、たとえば行動値なら`敏捷 + 感覚 × 2 + 修正`のように簡潔に表示する。最大体力・最大精神力は、算出方法が分かる全体の計算式をtooltipで省略せず表示する。
+- mobileでも各項目の`自動算出値 + 修正入力 = 最終値`を横方向に保つ。幅不足は余白、入力幅、文字サイズ、grid列の調整で解消し、演算子と値を1列の縦積みにしない。
+- プロフィールの自動算出値、流儀・生き様／能力値の自動算出値・数値表示、副能力値の数値表示を、キャラクターシートに閉じた共有styleで揃える。右揃え、入力欄に対する見た目の幅、read-only値のborder/background/typographyを共通化し、各section CSSでの重複を減らす。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `SecondarySection`だけが`CharacterSheetSectionFrame`を使わず、独自のmuted backgroundとborderを持つ。既存の`ProfileSection`と`BuildSection`には数値表示の幅・padding・font-sizeがそれぞれ重複定義され、副能力値のread-only値はプロフィールの自動算出値と揃っていない。共通frameとキャラクターシート専用の共有styleを導入する判断は、G8の表示構成を整える範囲で妥当である。
+- local validation: mobileの縦積みは、現在のissue、requirements、design notesの既存契約だが、今回の人間レビューで明示的に変更された。対応時に3文書の副能力値表示契約を横並び維持へ揃える。
+- local validation: 追加したbrowser E2Eは、page上でのtooltip起動、修正入力、checkbox反映というIsland結線のsmoke testだけを扱う。詳細な行構造・callback・tooltip単体操作はComponent testにあるため、キャラクターシートE2Eの責務を超えていない。E2Eは保持し、レビュー後の表示文言と最終値triggerへselectorを更新する。
+- local validation: 副能力値の独自見出しは小さく、共通frameの見出し階層から外れているため、`副能力値`だけでは主要sectionとして把握しにくい。frameの標準見出しへ統一して解消する。
+
+### 対応方針
+
+- `CharacterSheetFormPresenter`で副能力値を共通frameへ入れ、`SecondarySection`はframe contentだけを描画するComponentへ縮小する。
+- 副能力値の行を、左上の項目名、無labelの自動算出値、修正入力、演算子、最終値、checkboxを含む一つの枠として再構成する。項目名を式tooltip、項目名の右に置く`一時修正を適用`を説明tooltipのtriggerとし、式とcopyをdictionaryで更新する。
+- mobileを含む全viewportで横並びを維持できる列定義へ直し、desktop・tabletではcheckbox用の列を設けず計算式が項目幅全体を使えるようにする。
+- `data-character-sheet-layout`のスコープ内に、入力とread-only数値表示の共有classまたは共有selectorを定義する。Profile、Build、Secondaryの既存数値表示を移行し、section間の見た目を合わせる。
+- `docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`は、レビュー承認後の実装と同じtaskで更新する。VRTは修正後に`character-sheet` targetへ限定して再確認し、baseline更新は別途人間判断として残す。
+
+### 対応完了チェックリスト
+
+- [x] 副能力値を`CharacterSheetSectionFrame`でラップし、標準sectionの見出し・背景・borderへ統一する。
+- [x] 計算式全体とcheckboxを項目枠へまとめ、左上の項目名を式tooltipのtriggerにする。自動算出値と修正入力のaccessible nameは維持する。
+- [x] checkboxの可視labelを`一時修正を適用`に戻し、項目名の右に置くlabelのtooltipで一時能力値を用いる説明を表示する。
+- [x] mobileを含む全viewportで、各項目の計算式を横並びで表示し、横overflowを起こさない。
+- [x] Profile、Build、Secondaryの数値表示をキャラクターシート専用の共有styleへ揃える。
+- [x] Component / hook / browser E2E testを、変更後の構造・文言・操作へ更新する。
+- [x] `character-sheet` targetのVRT比較を実施し、baseline更新の要否を記録する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `FormulaTooltip`がsectionおよびviewportの上下左右端を越えず、全てのtrigger位置で全文を読めるようにする。特に画面左端に近い項目では、現在の右端基準配置によりtooltipが左側へはみ出し、section上端に近い項目では上側が切れる。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: tooltip contentは`right: 0`でtriggerの右端に固定され、max-widthだけをviewport幅で制限している。左端に近い短いtriggerではcontentの左端をviewport内へ戻す配置処理がなく、tooltipが画面外へ出る。`FormulaTooltip`はProfile、Build、Secondaryで共有されるため、局所CSSではなくComponentの配置責務として扱う。
+- local validation: tooltip contentは常にtriggerの上側へ開くため、section frameの`overflow: clip`またはviewport上端に近い副能力値、成長点、能力値ポイントのtriggerでは上端が切れる。副能力値frameにもoverflow許可が必要であり、上側に余白がない場合は共通Componentが下側へ反転する必要がある。
+
+### 対応方針
+
+- open時にtriggerとtooltipのbounding rectを測定し、viewport内に収まる左右alignmentと上下placementを選ぶ。既存のhover、tap、Esc、外側tap、focus操作を維持し、tooltipを読めない位置へ出さない。
+- desktop / tablet / mobileの上下左右端に近いtriggerでは、`FormulaTooltip` Component testでplacement選択を確認する。実際の画面内配置は、tooltipを開いたstateを含むtarget限定VRTで確認する。副能力値だけでなくProfileまたはBuildの既存triggerも対象に含め、共有Componentの回帰を防ぐ。
+
+### 対応完了チェックリスト
+
+- [x] `FormulaTooltip`をsection・viewport境界に応じて配置し、上下左右にはみ出さないようにする。
+- [x] 既存のhover、tap、Esc、component外tap、keyboard focusの操作契約を維持する。
+- [x] tooltipを開いたstateのtarget限定VRTで、上下左右端に近い表示位置を確認する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- ドメイン上の「副能力値」を`secondary`単独で命名しない。`SecondarySection`、`secondarySection`、form値の`secondary`などは意味が曖昧なため、`secondaryAttributes`を用いる。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: UIの表示文言は`副能力値`であり変更不要だが、実装では副能力値を表すComponent、Presenter props、form値、schema、logic、dictionary keyが`secondary`で統一されている。`secondary`は配置上の第2領域や一般的な二次要素にも読め、ゲームの副能力値を表すドメイン名として不十分である。
+- local validation: `secondaryColumn`およびlayout regionの`secondary`は、primary / secondaryの画面配置を表す既存のlayout用語であり、副能力値の訳ではないためrename対象に含めない。
+
+### 対応方針
+
+- 副能力値を表すComponent、props、form値、schema、logic、dictionary key、test名・selectorを`secondaryAttributes`へrenameする。UI表示の`副能力値`と、primary / secondary layoutの既存名称は維持する。
+
+### 対応完了チェックリスト
+
+- [x] 副能力値を表す実装上の`secondary`命名を`secondaryAttributes`へ統一し、layout用語と区別する。
+- [x] Component / hook / logic / schema / browser E2Eをrename後の契約へ更新する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- `副能力値`、`最大体力`、`最大精神力`、`移動力`、`行動値`、`行動回数`、`結べる縁`を、キャラクターシート固有UIの文言ではなくゲーム用語として扱う。`characterSheet.secondary`および`characterSheet.sections`から取り除き、`gameDomain.terms`を唯一の参照先にする。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `dictionary.ts`の冒頭コメントは、固定文言を用語の所有者に合わせて分類する方針を明記している。既に`縁`、能力値名などは`gameDomain.terms`にある一方、今回の副能力値と各最終値名は`characterSheet.secondary.labels`および`characterSheet.sections`に重複して置かれている。これらはキャラクターシート外でも成立するゲーム概念であり、ゲーム用語として集約するのが方針に一致する。
+- local validation: 各修正値、checkboxの説明文、計算式tooltipの文面は、入力・操作・表示に関するキャラクターシート固有UI文言として`characterSheet`側に残す。
+
+### 対応方針
+
+- `gameDomain.terms`へ副能力値と6つの値の名称を移し、`SecondaryAttributesSection`を含む参照側はそこから取得する。レビュー指摘1で最終値名を`移動力`、`行動値`、`結べる縁`へ整理する変更にも同じ用語を使う。
+- 移管後に`characterSheet`配下へ同じゲーム用語を残さず、UI固有文言とゲーム用語の境界をtestとdictionaryの構造で明確にする。
+
+### 対応完了チェックリスト
+
+- [x] 副能力値、最大体力、最大精神力、移動力、行動値、行動回数、結べる縁を`gameDomain.terms`へ移す。
+- [x] 副能力値のComponent・Presenter・testから、移管後のゲーム用語を参照する。
+- [x] `characterSheet`側には入力・操作・tooltipなどのUI固有文言だけを残す。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- マスタ未選択時でも常に表示する成長可能点に対し、成長点の超過・同一能力値への2点以上の成長を、マスタ選択の有無で抑止している。
+- 能力値の表示順が`attributes` objectの挿入順に依存しており、canonicalな能力値順を表す`attributeNames`を使っていない。
+- その他流儀の更新APIが、編集不可の`rowId`を含む`keyof OtherRyugiValues`を受け入れるため、誤ったfield指定が`level`更新として処理され得る。
+- 常に数値を返す`rank`、`growthPoints`、`spentExperience`、`remainingExperience`が`number | null`になっており、未算出値との型上の区別が不正確である。
+
+### 判定
+
+- source: ChatGPT review draft (`.tmp/chatgpt-review.md`)
+- classification: valid
+- local validation: 要件は、流儀・生き様の未選択状態でも格と成長可能点を常に表示すると定めている。したがって成長入力の検証も選択状態へ依存させず、レベルから算出した成長可能点だけで判定する必要がある。
+- local validation: `attributeNames`は能力値のcanonicalな順序として既に定義されている。復元・importで再構築されたobjectのキー順にUIを依存させないため、表示側はこの配列を用いる。
+- local validation: `rowId`は可変行の識別子であり、選択・レベル変更の入力APIに含めない。派生logicの4値は現実装で常にnumberを返しているため、型を狭めることが実装契約と一致する。
+
+### 対応方針
+
+- `calculateBuild`の成長エラー判定からマスタ選択の条件を外し、未選択状態での成長超過をNode testで固定する。
+- `BuildSection`は`attributeNames`の順で能力値行を描画し、異なるobjectキー順でもcanonical順を保つComponent testを追加する。
+- その他流儀の更新fieldを`"ryugiId" | "level"`へ狭め、`rowId`を更新APIの型から除外する。
+- 常時算出する4つの派生値を`number`へ狭め、不要なnull fallbackを除く。
+
+### 対応完了チェックリスト
+
+- [x] マスタ未選択時の成長超過をエラーとして扱い、Node testで確認する。
+- [x] 能力値の表示順を`attributeNames`に固定し、再構築したobjectでも順序を保つComponent testを追加する。
+- [x] その他流儀の更新fieldから`rowId`を除外する。
+- [x] 常時算出する派生値4件を`number`型へ狭める。
+- [x] `npm run test:component` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt.*@character-sheet`
+- route / states / viewports: `/character-sheet/` / default / desktop、ultrawide、tablet、mobile
+
+### レビュー結果
+
+| 対象              | 判定       | 差分                                                                                                   | 対応                                                                                                                   |
+| ----------------- | ---------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `character-sheet` | 要人間判断 | canonical baselineは副能力値追加前のpage高さであり、4 viewportすべてで高さ・追加内容の差分が発生する。 | 基本情報labelとindicatorの既存サイズを復元したため、復元後の表示はユーザーによる確認待ちとする。baselineは更新しない。 |
+
+### 実画面確認
+
+- `/character-sheet/` / default / desktop: 基本情報の7列のlabelと数値欄、副能力値の2列配置、移動力・行動値のcheckbox操作列がframe内に収まることを確認した。
+- `/character-sheet/` / default / ultrawide: desktopと同じ配置契約で横overflowやtooltip indicatorによる行高の変化がないことを確認した。
+- `/character-sheet/` / default / tablet: 基本情報の数値行、能力値ポイント／成長点、副能力値の3行圧縮とcheckbox操作列がframe内に収まることを確認した。
+- `/character-sheet/` / default / mobile: 基本情報の7列の数値行、副能力値のラベルと計算式、能力値gridの最終列がframe内に収まることを確認した。
+- 基本情報labelとindicatorの既存サイズを復元した後のactual screenshotは、上記の確認結果として再利用しない。ユーザーによる表示確認待ちとする。
+
+### 自己修正した項目
+
+- [x] `FormulaTooltip`の文字列wrapperにindicator分の幅を確保し、`?`indicatorは行高へ影響しない絶対配置にした。
+- [x] 基本情報の合計信用、消費信用、小銭、格はラベルだけをtooltip triggerにし、数値を操作対象から分離した。
+- [x] 基本情報tooltipのrootをblock配置して、既存labelと同じ開始位置へ置いた。
+- [x] ユーザー指示に従い、基本情報labelの既存font-sizeと`?`indicatorの既存サイズを復元した。
+- [x] mobileの能力値gridは利用可能幅に収まる最小幅へ修正し、成長点と各能力値欄がsection frame外へ出ないようにした。
+
+### 確認報告の訂正
+
+- tooltip indicatorの初回修正後、actual screenshotに基本情報の数値行の不揃い、副能力値の余白、操作列と能力値gridの枠外表示が残っていたにもかかわらず、確認済みとして報告した。この肯定報告は無効とする。
+- `常時修正`・`一時修正`tooltip追加後のdesktop確認は、表示切れの有無だけを見てtrigger基準位置とhover時の見え方を確認しなかったため無効とする。cell全幅をtriggerにする実装が原因で、tooltipの基準位置が文字列ではなくcell右端になっていた。
+- 上記を修正した後、desktop、ultrawide、tablet、mobileのactual snapshotを個別に開いた。ただし、その後に基本情報labelとindicatorの既存サイズを復元したため、復元後の表示確認は未完了である。
+
+### 人間判断が必要な差分
+
+- 副能力値追加とtooltip indicatorを含む現在の`character-sheet`表示をcanonical baselineへ採用するか。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] 宣言したすべてのroute / state / viewportのactual snapshotを開いて確認した（既存サイズ復元後）。
+- [x] 実画面で確認できたtooltip indicatorの縦積みを修正した。
+- [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ビジュアルレビュー 3
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts` / `@vrt @character-sheet`
+- route / states / viewports: `/character-sheet/` / default（desktop、ultrawide、tablet、mobile）、Profile・Build・Secondaryのtooltip open（desktop、tablet、mobile）
+
+### レビュー結果
+
+| 対象                    | 判定       | 差分                                                                                                         | 対応                                                                       |
+| ----------------------- | ---------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| default 4 viewport      | 要人間判断 | canonical baselineは副能力値実装前のpage高さであり、default 4 viewportで既知の高さ・追加内容差分が発生する。 | actualを確認し、baselineは更新しない。                                     |
+| tooltip open 9 viewport | 要人間判断 | Profile、Build、Secondaryのtooltip open stateにはcanonical snapshotがない。                                  | current sourceのactualを確認し、新規canonical snapshotは作成・保持しない。 |
+
+### 実画面確認
+
+- `test-results/visual/character-sheet/default-{desktop,ultrawide,tablet,mobile}.png`を開いた。通常状態の基本情報、能力値、副能力値の数値列、checkbox操作列はframe内に収まり、mobileでも計算式を縦積みにしていない。
+- `test-results/visual/character-sheet/profile-tooltip-open-default-{desktop,tablet,mobile}.png`を開いた。合計信用のtooltipはtriggerに隣接し、画面左端・上端・右端で切れず、周辺の数値行の高さを変えない。
+- `test-results/visual/character-sheet/build-tooltip-open-default-{desktop,tablet,mobile}.png`を開いた。常時修正のtooltipは文字列trigger基準で表示され、能力値表・副能力値frameをclipしない。
+- `test-results/visual/character-sheet/secondary-tooltip-open-default-{desktop,tablet,mobile}.png`を開いた。最大体力のtooltipは副能力値frame内に閉じずviewport gutter内へ収まり、式全文を読める。
+- `FormulaTooltip` Component testで、左上trigger時の右下配置と右下trigger時の左上配置をviewport gutter内へclampすることを確認した。hover、tap、Esc、blur、component外tapの既存契約も同じtestで確認した。
+
+### 比較結果の扱い
+
+- `npm run visual:test -- --grep 'character-sheet'`はdefault 4件の既知baseline差分とtooltip open 3件のbaseline未作成により終了code 1となった。Build・Secondary tooltip openの一時canonical snapshotが比較中に生成されたが、承認済みbaselineではないため直ちに削除した。canonical snapshotは更新していない。
+- E2E、Component test、型・format・buildは成功し、actual screenshotで見つかったsource側の修正が必要な視覚不備はない。baseline採用は人間判断として残す。
+
+### 対応完了チェックリスト
+
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] 宣言したすべてのroute / state / viewportのactual snapshotを開いて確認した。
+- [x] source修正が必要なVRT差分はないと判断した。
+- [x] canonical baselineを更新せず、採用要否を人間判断として記録した。
+- [x] `npm run test:component` が通る。
+- [x] `npm run test:e2e` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

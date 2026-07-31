@@ -46,7 +46,7 @@
 
 ## Historical source issue
 
-- `docs/issue/done/phase-3/18-2-home-page.md`
+- `docs/issue/milestone-01/done/phase-3/18-2-home-page.md`
 
 ## Design Direction
 

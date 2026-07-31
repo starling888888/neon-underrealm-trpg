@@ -28,7 +28,7 @@ The remote PR is the review source for metadata, diff, and discussion.
 
 Use the local `.codex/agents/*.toml` and local skill definitions when spawning reviewers. They may be unmerged or part of the reviewed PR. Do not stop for that reason.
 
-This skill may write only under `.tmp/review/<branch-name>/` until it invokes `review-to-issue`. Do not update source code, `docs/issue/*.md`, `docs/TODO.md`, `docs/plan.md`, or `docs/agent-failure-log.md` directly.
+This skill may write only under `.tmp/review/<branch-name>/` until it invokes `review-to-issue`. Do not update source code, `docs/issue/*.md`, `docs/TODO.md`, `docs/issue/milestone-<NN>/plan.md`, or `docs/agent-failure-log.md` directly.
 
 Do not review the `User-Directed Changes Outside Current Issue` section of the PR description.
 
@@ -38,7 +38,7 @@ Do not review the `User-Directed Changes Outside Current Issue` section of the P
 2. Confirm the current branch and matching issue file.
 3. Confirm `.tmp/review/<branch-name>/` exists. Create it when absent.
 4. Fetch or inspect the remote PR metadata, diff, discussion, reviews, and unresolved threads.
-5. Read the local `AGENTS.md`, current issue, relevant skills, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/plan.md`, `docs/TODO.md`, relevant design references, and affected local code when available.
+5. Read the local `AGENTS.md`, current issue, relevant skills, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/issue/milestone-<NN>/plan.md`, `docs/TODO.md`, relevant design references, and affected local code when available.
 6. Find the latest `.tmp/review/<branch-name>/pr-review-N.md`.
 
 If no prior `pr-review-N.md` exists, review the full remote PR diff from the PR base commit through the current remote head commit. Use this as `pr-review-1.md`.

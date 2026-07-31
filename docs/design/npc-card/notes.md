@@ -32,12 +32,12 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/done/phase-3/21-2-world-page.md`（historical source）
+- `docs/issue/milestone-01/done/phase-3/21-2-world-page.md`（historical source）
 - `docs/requirements/pages.md`
 - `docs/requirements/components.md`
 - `docs/requirements/data-display.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`

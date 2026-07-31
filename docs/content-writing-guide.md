@@ -29,7 +29,7 @@ MDX対応は導入済みです。本文ページを追加するときは、こ�
 
 実際のファイル配置やルーティングは、ページ骨組みタスクで確定します。
 
-現行計画では、ページ作成は `docs/plan.md` のPhase 3以降で、対象ページごとにデータ整備、必要Component、画面作成、完成画面のdesign更新を進めます。ページ本文・可視構成のGit管理上の正本は、`src/pages` 配下の `.mdx` または `.astro` と、その実装契約であるcurrent issue、requirements、designです。対応するcontentsのMarkdown本文とHTMLコメントは、必要に応じて手動で置くGit非管理の補助入力です。
+現行計画では、ページ作成は `docs/issue/milestone-01/plan.md` のPhase 3以降で、対象ページごとにデータ整備、必要Component、画面作成、完成画面のdesign更新を進めます。ページ本文・可視構成のGit管理上の正本は、`src/pages` 配下の `.mdx` または `.astro` と、その実装契約であるcurrent issue、requirements、designです。対応するcontentsのMarkdown本文とHTMLコメントは、必要に応じて手動で置くGit非管理の補助入力です。
 
 ## 書き方の原則
 

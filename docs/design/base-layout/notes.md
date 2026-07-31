@@ -26,13 +26,13 @@
 
 - `docs/requirements.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 
 ## Historical source issues
 
-- `docs/issue/done/phase-2/09-base-layout.md`
+- `docs/issue/milestone-01/done/phase-2/09-base-layout.md`
 
 ## デザイン方針
 

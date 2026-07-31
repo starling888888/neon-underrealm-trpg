@@ -28,13 +28,13 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `docs/issue/done/phase-3/24-2-scenario-play-page.md`（historical source issue）
+- `docs/issue/milestone-01/done/phase-3/24-2-scenario-play-page.md`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/components.md`
 - `docs/requirements/assets-seo.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`

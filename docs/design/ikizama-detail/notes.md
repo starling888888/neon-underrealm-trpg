@@ -25,11 +25,11 @@
 ## Referenced SSoT
 
 - `.raw/contents/ikizama-detail.md`
-- `docs/issue/done/phase-3/32-2-ikizama-detail-page.md`（履歴）
+- `docs/issue/milestone-01/done/phase-3/32-2-ikizama-detail-page.md`（履歴）
 - `docs/requirements/pages.md` の FR-06
 - `docs/requirements/data-display.md` の FR-04-01、FR-04-04
 - `docs/out-of-scope.md`
-- `docs/plan-done.md` の `32-2-ikizama-detail-page`（履歴）
+- `docs/issue/milestone-01/plan.md` の `32-2-ikizama-detail-page`（履歴）
 - `docs/TODO.md` のサイドメニューへの生き様リスト追加
 - `docs/conversion/ikizama-index.md`
 - `docs/conversion/ikizama-skills.md`

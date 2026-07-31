@@ -21,4 +21,4 @@ Rules do not replace skills.
 
 When a request matches a skill, read the skill first. Then read only the rule files needed for that task.
 
-Rules must not weaken `AGENTS.md`, `docs/issue/*.md`, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/plan.md`, or `docs/TODO.md`.
+Rules must not weaken `AGENTS.md`, `docs/issue/*.md`, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/issue/milestone-<NN>/plan.md`, or `docs/TODO.md`.

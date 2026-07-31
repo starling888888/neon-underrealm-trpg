@@ -34,12 +34,12 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- historical task issue: `docs/issue/done/phase-3/40-2-404-page.md`
+- historical task issue: `docs/issue/milestone-01/done/phase-3/40-2-404-page.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/assets-seo.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`

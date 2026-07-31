@@ -333,7 +333,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 - 発生箇所: `09-base-layout` のdesign画像生成
 - 観測した失敗: design画像が未レビューのドラフトであるにもかかわらず、SiteMenu風の文言やスコープ外導線の混入にこだわって複数回画像生成を行い、最終的にSVGを手作りしてPNGへ変換するという、当初の画像生成手順から逸脱した生成へ進んだ。
-- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
+- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/milestone-01/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
 
 #### 恒久対応
 

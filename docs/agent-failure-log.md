@@ -580,7 +580,7 @@ source種別は以下を使う。
 
 - source: user
 - 発生箇所: `ex-02-6-sheet-image` のG6進行管理
-- 観測した失敗: test、check、buildの成功とagent自身のchecklist更新を、Gate完了およびchild issueのarchive許可と誤認した。ユーザーの完了確認または`docs/issue/done/`への移動指示がないまま、G6 child issueを作業中のpathから`done/`へ移した。
+- 観測した失敗: test、check、buildの成功とagent自身のchecklist更新を、Gate完了およびchild issueのarchive許可と誤認した。ユーザーの完了確認または`docs/issue/milestone-01/done/`への移動指示がないまま、G6 child issueを作業中のpathから`done/`へ移した。
 - 一次対応: child issueを作業中のpathへ戻し、parent Gate planのG6を`in progress`へ戻した。以後、検証成功だけでarchiveせず、ユーザーが完了・archiveを明示した場合だけchild issueを`done/`へ移す。
 
 ### Repeatedly bypassed the approved character-sheet design draft
@@ -1017,13 +1017,13 @@ source種別は以下を使う。
 
 - 発生箇所: `09-base-layout` のissue-first / design準備
 - 観測した失敗: ユーザーが「まずはlayoutにベタ書き」「今回の作成範囲はデスクトップレイアウトのみ」と指示した後、実装前のdesign準備として `docs/design/base-layout/` のdesign artifact作成まで進めた。
-- 一次対応: `docs/issue/done/phase-2/09-base-layout.md` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
+- 一次対応: `docs/issue/milestone-01/done/phase-2/09-base-layout.md` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
 
 #### 2026-07-05
 
 - 発生箇所: `09-base-layout` のdesign画像生成準備
 - 観測した失敗: `docs/design/base-layout/notes.md` のユーザーレビューを挟まずに、`design-desktop.png` の画像生成へ進んだ。
-- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
+- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/milestone-01/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
 
 #### 恒久対応
 
@@ -1066,7 +1066,7 @@ source種別は以下を使う。
 
 #### 2026-07-06
 
-- 発生箇所: `13-page-toc` の `docs/issue/done/phase-2/13-page-toc.md` 完了条件チェック反映後のGit操作
+- 発生箇所: `13-page-toc` の `docs/issue/milestone-01/done/phase-2/13-page-toc.md` 完了条件チェック反映後のGit操作
 - 観測した失敗: ユーザーの指示は「issueの完了条件チェック入ってない」であり、commit / pushの明示許可ではなかったにもかかわらず、`docs: check page toc issue completion` をcommitし、既存PR branchへpushした。
 - 一次対応: ユーザー指示に従い差し戻しは行わず、本ログへ手順逸脱として記録した。以後、直前にcommit / push許可がない修正指示では、作業ツリー上の変更に留めて報告する。
 
@@ -1548,7 +1548,7 @@ source種別は以下を使う。
 
 - source: review
 - 発生箇所: `ex-02-12-sheet-primary-skills` のGate完了・child issue archive
-- 観測した失敗: parent Gate planを`done`としchild issueを`docs/issue/done/`へ移動したが、child issue本体の完了条件、チェックポイント、Visual Reviewに未チェックが残っていた。G6での無許可archive、G9でのvisual acceptance未確認archiveに続く、完了根拠をchild issueへ反映しないままcloseする再発である。
+- 観測した失敗: parent Gate planを`done`としchild issueを`docs/issue/milestone-01/done/`へ移動したが、child issue本体の完了条件、チェックポイント、Visual Reviewに未チェックが残っていた。G6での無許可archive、G9でのvisual acceptance未確認archiveに続く、完了根拠をchild issueへ反映しないままcloseする再発である。
 - 一次対応: `.tmp/chatgpt-review.md`をG13のレビュー指摘2として取り込み、G13では全未チェック項目を実確認結果へ更新するまでclose / archive / parent planの`done`へ変更しない。恒久対応はfailure-log監査でユーザー承認後に行う。
 
 ### Repeated component-test failure after changing the removal callback contract

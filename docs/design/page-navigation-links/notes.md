@@ -28,12 +28,12 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- historical issue (provenance only): `docs/issue/done/cross-phase/ex-01-page-navigation-links.md`
+- historical issue (provenance only): `docs/issue/milestone-01/done/cross-phase/ex-01-page-navigation-links.md`
 - `docs/requirements.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/non-functional.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`

@@ -29,12 +29,12 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- historical issue: `docs/issue/done/phase-4/45-search-pagefind-integration.md`
+- historical issue: `docs/issue/milestone-01/done/phase-4/45-search-pagefind-integration.md`
 - `docs/requirements/search.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/architecture.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/header-footer/notes.md`

@@ -33,12 +33,12 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/done/phase-3/20-1-common-callout-component.md`
+- `docs/issue/milestone-01/done/phase-3/20-1-common-callout-component.md`
 - `docs/requirements.md`
 - `docs/requirements/components.md`
 - `docs/requirements/non-functional.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`

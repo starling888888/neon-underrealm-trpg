@@ -33,7 +33,7 @@
 - `.agents/skills/design-image-generation/SKILL.md`
 - `docs/issue/29-2-ryugi-index-page.md`
 - `.raw/contents/ryugi-index.md`
-- `docs/plan.md` の `29-2-ryugi-index-page`
+- `docs/issue/milestone-01/plan.md` の `29-2-ryugi-index-page`
 - `docs/TODO.md` の流儀・生き様サイドメニュー、および流儀データの参照
 - `docs/requirements/pages.md`
 - `docs/requirements/layout-navigation.md`

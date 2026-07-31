@@ -32,7 +32,7 @@ Use these sources in order:
 2. `src/pages/` files.
 3. Current task issue under `docs/issue/`.
 4. `docs/requirements.md` and relevant `docs/requirements/` files.
-5. `docs/plan.md`.
+5. `docs/issue/milestone-<NN>/plan.md`.
 6. `docs/out-of-scope.md`.
 
 Do not access or infer `.raw/contents/` or `.raw/v1.0/`. They are local-only inputs and must be reported as unverified.
