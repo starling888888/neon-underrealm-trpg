@@ -61,9 +61,9 @@ VRTのcanonical baselineはGit管理外のローカル比較入力として維�
 - [x] Quality CIで`npm ci`、`npm run check`、`npm run build`、`npm run test`を実行する
 - [x] Quality CIはE2EとVRTを実行しない
 - [x] `npm run test`がE2EとVRTを含まない通常testの入口である
-- [ ] mainのdeployはQuality成功後にのみ、`npm run build:public`、`npm run build:search-index`、artifact upload、GitHub Pages deployを実行する
+- [x] mainのdeployはQuality成功後にのみ、`npm run build:public`、`npm run build:search-index`、artifact upload、GitHub Pages deployを実行する
 - [x] main以外のCIがGitHub Pagesを更新せず、Pages deploy権限を持たない
-- [ ] main deploy完了後に、公開URLを対象とするPublic E2Eが実行される
+- [x] main deploy完了後に、公開URLを対象とするPublic E2Eが実行される
 - [x] Public E2Eはローカルpreview、`webServer`、`-local` fixture、VRT test、canonical baselineへ依存しない
 - [x] Public E2Eが公開siteの既存E2E操作、Pagefind検索、subpath、公開データカードanchorを確認する
 - [x] Public E2Eの失敗時に調査用artifactを保存し、成功済みdeployをrollbackしない
@@ -79,7 +79,7 @@ VRTのcanonical baselineはGit管理外のローカル比較入力として維�
 
 ## チェックポイント
 
-- [ ] 既存のmain GitHub Pages deploy、environment URL、subpath公開、Pagefind index生成を維持している
+- [x] 既存のmain GitHub Pages deploy、environment URL、subpath公開、Pagefind index生成を維持している
 - [x] Quality処理のNode.js version、npm cache、実行順がmainとnon-mainで重複定義されていない
 - [x] mainの通常品質確認を重複実行せず、Quality失敗時にdeployとPublic E2Eが開始されない
 - [x] main以外のbranchとPull Requestで同一commitに重複実行が生じる場合は、明示的な運用判断または安全なconcurrency設定を記録している
@@ -168,6 +168,11 @@ main push
 - Public E2E config: with `E2E_BASE_URL`, `playwright.e2e.config.ts` uses that URL and does not define `webServer`.
 - Public E2E selection: `--grep-invert '@local-fixture' --list` selects 30 existing tests; the 13 `-local` fixture-dependent tests are excluded.
 - workflow YAML: `.github/workflows/ci.yml`、`quality.yml`、`deploy.yml` parsed without YAML errors.
+
+## Post-merge Validation
+
+- PR #74 was merged as `8559f4c` on 2026-07-31.
+- ユーザーがmain deploy後のPublic E2Eの正常動作を確認した。これにより、main deploy、GitHub Pages environment URL、subpath公開、Pagefind index生成を含む外部確認の完了条件を完了とする。
 
 ## レビュー指摘 1
 

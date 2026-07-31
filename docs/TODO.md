@@ -63,12 +63,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: なし。`49-50-accessibility-responsive-pass`では再現せず保留としたため、必要性が再確認された時点で独立taskを計画する。
   - handling plan: 成長ページの「生き様係数」表など、本文コンテナ内で横スクロールが必要になり初期表示で全列を確認できない表について、情報の分割、列・見出しの再構成、画面幅に応じた表示、スクロール誘導などを比較する。既存table layout・共通design・アクセシビリティへの影響を確認し、方針を決めてから実装する。
 
-- [ ] main以外のbranch / PRでdeployなしCIを回せるようにする
-  - source: `17-github-actions-deploy-basic` issue review
-  - classification: follow-up
-  - plan: `docs/plan.md` の `56-ci-non-main-branches`
-  - handling plan: GitHub Pages deploy workflowとは分離し、main以外のbranch / pull requestで `npm ci`、`npm run check`、`npm run build`、必要なtestを実行するCIを整備する。deployは行わず、GitHub Pages環境を更新しない。docs-only更新、AGENTS / SKILL更新のみの場合の扱いもCI方針として明確化する。
-
 - [ ] Pagefindが`-local`確認ページをindex化した場合も、検索Visual Testを安定して実行できるようにする
   - source: PR #66 のdocument review
   - classification: follow-up

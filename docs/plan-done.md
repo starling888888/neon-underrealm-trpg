@@ -706,3 +706,15 @@
   - [x] version `0.9.0` を初期release名として決定（GitHub上のtag付与はユーザー担当）
   - [x] 初期公開前の最終build確認
   - [x] 初期スコープ外機能が混入していないことを確認
+
+- [x] `56-ci-non-main-branches` — main以外でdeployなしCIを回すためのテスト / CIを整備する
+  - completed: 2026-07-31 via PR #74 / `8559f4c`
+
+  - [x] branch / pull_request向けのCI workflowをdeploy workflowと分離して作成する
+  - [x] `npm ci` を実行する
+  - [x] `npm run check` を実行する
+  - [x] `npm run build` を実行する
+  - [x] 必要なtestを実行する
+  - [x] GitHub Pages deployは行わない
+  - [x] main以外のbranch / PRで、deployなしに品質確認できることを確認する
+  - [x] docs-only更新、AGENTS / SKILL更新のみの場合にCIを走らせるかどうかの方針を明記する

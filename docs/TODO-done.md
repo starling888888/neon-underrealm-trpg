@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] main以外のbranch / PRでdeployなしCIを回せるようにする
+  - completed: 2026-07-31 via PR #74 / `8559f4c`
+  - source: `17-github-actions-deploy-basic` issue review
+  - classification: follow-up
+  - plan: `docs/plan-done.md` の `56-ci-non-main-branches`
+  - handling result: GitHub Pages deploy workflowとは分離し、main以外のbranch / pull requestで `npm ci`、`npm run check`、`npm run build`、必要なtestを実行するCIを整備した。deployは行わず、GitHub Pages環境を更新しない。docs-only更新、AGENTS / SKILL更新のみの場合の扱いもCI方針として明確化した。
+
 - [x] G22で専用アイテムカテゴリframeへカテゴリ削除buttonを追加する
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `.tmp/review/ex-02-18-sheet-omamori/human-review-1.md` / `ex-02-18-sheet-omamori` のレビュー指摘 1
