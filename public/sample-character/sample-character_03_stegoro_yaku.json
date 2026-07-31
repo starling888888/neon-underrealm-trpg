@@ -1,6 +1,6 @@
 {
   "armor": {
-    "armorId": "item-armor-c8f1cfc72f2a",
+    "armorId": "item-armor-0fa89fb308be",
     "damageReductionModifier": null,
     "defenseModifier": null
   },
@@ -41,100 +41,84 @@
   "build": {
     "acquiredExperience": 50,
     "attributes": {
-      "strength": {
-        "growth": 0,
-        "permanentModifier": 0,
-        "points": 5,
-        "temporaryModifier": 0
-      },
       "agility": {
         "growth": 0,
         "permanentModifier": 0,
-        "points": 0,
-        "temporaryModifier": 0
-      },
-      "perception": {
-        "growth": 0,
-        "permanentModifier": 0,
-        "points": 1,
+        "points": 2,
         "temporaryModifier": 0
       },
       "body": {
         "growth": 0,
         "permanentModifier": 0,
-        "points": 4,
-        "temporaryModifier": 0
+        "points": 5,
+        "temporaryModifier": 2
       },
       "mind": {
         "growth": 0,
         "permanentModifier": 0,
-        "points": 4,
+        "points": 5,
+        "temporaryModifier": 0
+      },
+      "perception": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 0,
+        "temporaryModifier": 0
+      },
+      "strength": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 2,
         "temporaryModifier": 0
       }
     },
-    "ikizamaId": "kejime",
+    "ikizamaId": "yaku",
     "ikizamaLevel": 2,
     "otherRyugi": [],
-    "primaryRyugiId": "kabe",
+    "primaryRyugiId": "sutegoro",
     "primaryRyugiLevel": 4
   },
   "checks": {
     "attacks": [
       {
-        "attribute": "strength",
+        "attribute": "body",
         "modifier": 0,
         "rowId": "attack-1",
-        "skill": "brawl"
+        "skill": "combat"
       }
     ],
     "reactions": [
       {
-        "attribute": "strength",
-        "modifier": 2,
+        "attribute": "body",
+        "modifier": 0,
         "name": "defense",
         "rowId": "reaction-defense"
       },
       {
         "attribute": "strength",
-        "modifier": 2,
+        "modifier": 0,
         "name": "evasion",
         "rowId": "reaction-evasion"
       },
       {
         "attribute": "body",
-        "modifier": 2,
+        "modifier": 0,
         "name": "endurance",
         "rowId": "reaction-endurance"
       },
       {
-        "attribute": "mind",
-        "modifier": 2,
+        "attribute": "body",
+        "modifier": 0,
         "name": "resistance",
         "rowId": "reaction-resistance"
       }
     ],
     "noncombat": {
-      "intimidation": {
-        "isFavorite": true,
-        "modifier": 0
-      },
-      "strengthContest": {
-        "isFavorite": false,
-        "modifier": 0
-      },
-      "willpower": {
-        "isFavorite": false,
-        "modifier": 0
-      },
-      "reconnaissance": {
-        "isFavorite": false,
-        "modifier": 0
-      },
       "acrobatics": {
         "isFavorite": false,
         "modifier": 0
       },
-      "sleightOfHand": {
+      "analysis": {
         "isFavorite": false,
         "modifier": 0
       },
@@ -146,19 +130,7 @@
         "isFavorite": false,
         "modifier": 0
       },
-      "analysis": {
-        "isFavorite": true,
-        "modifier": 0
-      },
       "driving": {
-        "isFavorite": false,
-        "modifier": 0
-      },
-      "survival": {
-        "isFavorite": false,
-        "modifier": 0
-      },
-      "jingi": {
         "isFavorite": true,
         "modifier": 0
       },
@@ -166,11 +138,39 @@
         "isFavorite": false,
         "modifier": 0
       },
-      "negotiation": {
+      "hacking": {
         "isFavorite": false,
         "modifier": 0
       },
-      "hacking": {
+      "intimidation": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "jingi": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "negotiation": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "reconnaissance": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "sleightOfHand": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "strengthContest": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "survival": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "willpower": {
         "isFavorite": true,
         "modifier": 0
       }
@@ -179,14 +179,35 @@
   "commonSkills": {
     "rows": [
       {
-        "level": 2,
+        "level": 1,
         "rowId": "common-skill-1",
-        "skillId": "skill-common-basic-ra-5937541da0e4"
+        "skillId": "skill-common-basic-aa-973990acfcb5"
+      },
+      {
+        "level": 1,
+        "rowId": "c0506b02-6e47-4edf-b35f-cd2a1416574b",
+        "skillId": "skill-common-basic-su-29204f696ac8"
+      }
+    ]
+  },
+  "credit": {
+    "acquired": 10,
+    "changeAdjustment": 0,
+    "provided": 0,
+    "received": 0
+  },
+  "ikizamaSkills": {
+    "bonusLevel": 2,
+    "rows": [
+      {
+        "level": 1,
+        "rowId": "ikizama-skill-1",
+        "skillId": "skill-ikizama-yaku-basic-d-ae8d08fd1ae7"
       }
     ]
   },
   "cybernetics": {
-    "armId": "item-cybernetics-arm-853730005d91",
+    "armId": null,
     "headId": null,
     "implantLimitModifier": 0,
     "implantTotalModifier": 0,
@@ -202,19 +223,19 @@
   "drugs": {
     "rows": [
       {
-        "drugId": null,
-        "quantity": 0,
+        "drugId": "item-drug-su-639a0f245a1f",
+        "quantity": 1,
         "rowId": "drug-1"
       },
       {
-        "drugId": null,
-        "quantity": 0,
-        "rowId": "drug-2"
+        "drugId": "item-drug-su-bf1550168330",
+        "quantity": 1,
+        "rowId": "drug-a0e93779-739d-4463-8dcc-5ef5e249318e"
       },
       {
-        "drugId": null,
-        "quantity": 0,
-        "rowId": "drug-3"
+        "drugId": "item-drug-ini-3ce06b4d1fbf",
+        "quantity": 1,
+        "rowId": "drug-2"
       }
     ]
   },
@@ -225,27 +246,6 @@
     "implantTotalModifier": 0,
     "legId": null,
     "torsoId": null
-  },
-  "credit": {
-    "acquired": 10,
-    "changeAdjustment": 0,
-    "provided": 0,
-    "received": 0
-  },
-  "ikizamaSkills": {
-    "bonusLevel": 1,
-    "rows": [
-      {
-        "level": 1,
-        "rowId": "ikizama-skill-1",
-        "skillId": "skill-ikizama-kejime-basic-pv-c0cd4edd94c9"
-      },
-      {
-        "level": 1,
-        "rowId": "ikizama-skill-2",
-        "skillId": "skill-ikizama-kejime-basic-su-a0a34078cf90"
-      }
-    ]
   },
   "omamori": {
     "rows": []
@@ -258,22 +258,22 @@
       {
         "level": 1,
         "rowId": "primary-skill-1",
-        "skillId": "skill-ryugi-kabe-basic-a-d32a74fe3ec1"
-      },
-      {
-        "level": 2,
-        "rowId": "primary-skill-2",
-        "skillId": "skill-ryugi-kabe-basic-pv-26c4a218756e"
-      },
-      {
-        "level": 1,
-        "rowId": "primary-skill-3",
-        "skillId": "skill-ryugi-kabe-basic-d-7ebddb382a15"
+        "skillId": "skill-ryugi-sutegoro-basic-a-30178e48fb1b"
       },
       {
         "level": 1,
         "rowId": "primary-skill-4",
-        "skillId": null
+        "skillId": "skill-ryugi-sutegoro-basic-a-724568294541"
+      },
+      {
+        "level": 1,
+        "rowId": "primary-skill-2",
+        "skillId": "skill-ryugi-sutegoro-basic-pv-1761671cc5fd"
+      },
+      {
+        "level": 1,
+        "rowId": "primary-skill-3",
+        "skillId": "skill-ryugi-sutegoro-basic-su-c42e9dd9e1bd"
       }
     ]
   },
@@ -281,17 +281,17 @@
     "age": "",
     "gender": "",
     "nickname": "",
-    "pcName": "義体の守護者",
+    "pcName": "裏路地のチャンピオン",
     "playerName": "",
-    "setting": "防御力と仲間を守ることに特化したキャラクターです。パーティの要として他のキャラクターを支え、守ってあげましょう。どれだけ縁を守れるかはあなたにかかっています。"
+    "setting": "ドラッグで体を強化して安定した攻防を得るキャラクターです。ただし、ラウンド終了時に体力と精神力が失われることに注意しましょう。「感染する高揚」で相手にもバッドトリップを与え体力を削りましょう。"
   },
   "secondaryAttributes": {
-    "actionCountModifier": 0,
+    "actionCountModifier": 1,
     "actionModifier": 0,
     "applyTemporaryAction": false,
     "applyTemporaryMovement": false,
     "bondLimitModifier": 0,
-    "healthModifier": 22,
+    "healthModifier": 0,
     "mentalModifier": 0,
     "movementModifier": 0
   },
@@ -301,10 +301,16 @@
   "weapons": {
     "rows": [
       {
-        "attackModifier": 4,
-        "guardModifier": 8,
+        "attackModifier": null,
+        "guardModifier": null,
         "rowId": "weapon-1",
-        "weaponId": "item-weapon-cybernetics-kenka-853730005d91"
+        "weaponId": "item-weapon-normal-kakutou-b185a2a13844"
+      },
+      {
+        "attackModifier": null,
+        "guardModifier": null,
+        "rowId": "125d1e01-a8de-4185-b298-44d112ece28a",
+        "weaponId": "item-weapon-normal-kakutou-364d3e804724"
       }
     ]
   },

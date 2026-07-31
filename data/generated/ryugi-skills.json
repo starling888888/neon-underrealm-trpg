@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-07-31T13:22:39+09:00",
+  "updatedAt": "2026-07-31T16:58:51+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -1258,7 +1258,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "装備しているすべての武器の攻撃力+lv×2、ガード値+lv×4。",
+          "effect": "装備しているすべての武器のガード値+lv×4。",
           "sourceOrder": 11,
           "id": "skill-ryugi-kabe-basic-pv-26c4a218756e"
         },

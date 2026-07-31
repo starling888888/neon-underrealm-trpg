@@ -41,19 +41,7 @@
   "build": {
     "acquiredExperience": 50,
     "attributes": {
-      "strength": {
-        "growth": 0,
-        "permanentModifier": 0,
-        "points": 0,
-        "temporaryModifier": 0
-      },
       "agility": {
-        "growth": 0,
-        "permanentModifier": 0,
-        "points": 2,
-        "temporaryModifier": 0
-      },
-      "perception": {
         "growth": 0,
         "permanentModifier": 0,
         "points": 2,
@@ -62,29 +50,41 @@
       "body": {
         "growth": 0,
         "permanentModifier": 0,
-        "points": 5,
+        "points": 4,
         "temporaryModifier": 0
       },
       "mind": {
         "growth": 0,
         "permanentModifier": 0,
+        "points": 3,
+        "temporaryModifier": 0
+      },
+      "perception": {
+        "growth": 0,
+        "permanentModifier": 1,
         "points": 5,
-        "temporaryModifier": 2
+        "temporaryModifier": 0
+      },
+      "strength": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 0,
+        "temporaryModifier": 0
       }
     },
-    "ikizamaId": "yaku",
+    "ikizamaId": "burai",
     "ikizamaLevel": 2,
     "otherRyugi": [],
-    "primaryRyugiId": "gotoshi",
+    "primaryRyugiId": "shabazou",
     "primaryRyugiLevel": 4
   },
   "checks": {
     "attacks": [
       {
-        "attribute": "mind",
+        "attribute": "perception",
         "modifier": 0,
         "rowId": "attack-1",
-        "skill": "interference"
+        "skill": "shooting"
       }
     ],
     "reactions": [
@@ -107,22 +107,50 @@
         "rowId": "reaction-endurance"
       },
       {
-        "attribute": "mind",
+        "attribute": "body",
         "modifier": 0,
         "name": "resistance",
         "rowId": "reaction-resistance"
       }
     ],
     "noncombat": {
+      "acrobatics": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "analysis": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "cheating": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "dangerSense": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "driving": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "gambling": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "hacking": {
+        "isFavorite": false,
+        "modifier": 0
+      },
       "intimidation": {
         "isFavorite": false,
         "modifier": 0
       },
-      "strengthContest": {
-        "isFavorite": false,
+      "jingi": {
+        "isFavorite": true,
         "modifier": 0
       },
-      "willpower": {
+      "negotiation": {
         "isFavorite": false,
         "modifier": 0
       },
@@ -130,27 +158,11 @@
         "isFavorite": false,
         "modifier": 0
       },
-      "acrobatics": {
-        "isFavorite": false,
-        "modifier": 0
-      },
       "sleightOfHand": {
         "isFavorite": false,
         "modifier": 0
       },
-      "cheating": {
-        "isFavorite": true,
-        "modifier": 0
-      },
-      "dangerSense": {
-        "isFavorite": false,
-        "modifier": 0
-      },
-      "analysis": {
-        "isFavorite": false,
-        "modifier": 0
-      },
-      "driving": {
+      "strengthContest": {
         "isFavorite": false,
         "modifier": 0
       },
@@ -158,19 +170,7 @@
         "isFavorite": false,
         "modifier": 0
       },
-      "jingi": {
-        "isFavorite": false,
-        "modifier": 0
-      },
-      "gambling": {
-        "isFavorite": true,
-        "modifier": 0
-      },
-      "negotiation": {
-        "isFavorite": true,
-        "modifier": 0
-      },
-      "hacking": {
+      "willpower": {
         "isFavorite": false,
         "modifier": 0
       }
@@ -179,14 +179,30 @@
   "commonSkills": {
     "rows": [
       {
-        "level": 1,
+        "level": 2,
         "rowId": "common-skill-1",
-        "skillId": "skill-common-basic-ra-378595018986"
+        "skillId": "skill-common-basic-sp-6cc26ddc498a"
+      }
+    ]
+  },
+  "credit": {
+    "acquired": 10,
+    "changeAdjustment": 0,
+    "provided": 0,
+    "received": 0
+  },
+  "ikizamaSkills": {
+    "bonusLevel": 1,
+    "rows": [
+      {
+        "level": 1,
+        "rowId": "ikizama-skill-1",
+        "skillId": "skill-ikizama-burai-basic-pv-1677b1e83e6c"
       },
       {
         "level": 1,
-        "rowId": "common-skill-2",
-        "skillId": "skill-common-basic-pv-76efb6f481d9"
+        "rowId": "ikizama-skill-2",
+        "skillId": "skill-ikizama-burai-basic-pv-570c394fe082"
       }
     ]
   },
@@ -207,14 +223,19 @@
   "drugs": {
     "rows": [
       {
-        "drugId": "item-drug-su-873856f4ac25",
-        "quantity": 1,
+        "drugId": null,
+        "quantity": 0,
         "rowId": "drug-1"
       },
       {
-        "drugId": "item-drug-su-5bdb005b333a",
-        "quantity": 1,
+        "drugId": null,
+        "quantity": 0,
         "rowId": "drug-2"
+      },
+      {
+        "drugId": null,
+        "quantity": 0,
+        "rowId": "drug-3"
       }
     ]
   },
@@ -226,24 +247,13 @@
     "legId": null,
     "torsoId": null
   },
-  "credit": {
-    "acquired": 10,
-    "changeAdjustment": 0,
-    "provided": 0,
-    "received": 0
-  },
-  "ikizamaSkills": {
-    "bonusLevel": 1,
+  "omamori": {
     "rows": [
       {
-        "level": 2,
-        "rowId": "ikizama-skill-2",
-        "skillId": "skill-ikizama-yaku-basic-pv-37ce0affc87a"
+        "omamoriId": "item-omamori-dd0e43e590b1",
+        "rowId": "088d3d86-211a-4a57-9e46-05ab94d0070b"
       }
     ]
-  },
-  "omamori": {
-    "rows": []
   },
   "otherRyugiSkills": {
     "rows": []
@@ -253,17 +263,17 @@
       {
         "level": 1,
         "rowId": "primary-skill-1",
-        "skillId": "skill-ryugi-gotoshi-basic-a-405fb51c0613"
+        "skillId": "skill-ryugi-shabazou-basic-a-8bd7ea7eac80"
       },
       {
         "level": 2,
         "rowId": "primary-skill-2",
-        "skillId": "skill-ryugi-gotoshi-basic-d-c44a2c4cba5a"
+        "skillId": "skill-ryugi-shabazou-basic-a-390b91644863"
       },
       {
         "level": 1,
         "rowId": "primary-skill-3",
-        "skillId": "skill-ryugi-gotoshi-basic-r-04c5c6e6bc30"
+        "skillId": "skill-ryugi-shabazou-basic-ini-383032ce2312"
       }
     ]
   },
@@ -271,12 +281,12 @@
     "age": "",
     "gender": "",
     "nickname": "",
-    "pcName": "ヤク中のイカサマ師",
+    "pcName": "放浪の狙撃手",
     "playerName": "",
-    "setting": "支援と範囲攻撃を得意とするキャラクターです。特殊範囲攻撃による雑魚の掃討、味方のダメージ上昇、回避の手助けと八面六臂の活躍ができるでしょう。ただし注意。ドラッグは毎ラウンドバッドトリップとしてあなたの体力と精神力を削っていきます。"
+    "setting": "バッドステータス〈出血〉を駆使するテクニカルな射撃キャラクターです。一撃のダメージこそダメージ特化のキャラクターに及ばないもののバッドステータスと「弱体弾」による防御減少を活かした総合火力は決して見劣りません。"
   },
   "secondaryAttributes": {
-    "actionCountModifier": 0,
+    "actionCountModifier": 1,
     "actionModifier": 0,
     "applyTemporaryAction": false,
     "applyTemporaryMovement": false,
@@ -291,16 +301,10 @@
   "weapons": {
     "rows": [
       {
-        "attackModifier": 5,
+        "attackModifier": null,
         "guardModifier": null,
         "rowId": "weapon-1",
-        "weaponId": "item-weapon-normal-kanshou-30f6f746924c"
-      },
-      {
-        "attackModifier": 5,
-        "guardModifier": null,
-        "rowId": "f7aaffba-8a86-4d49-b62f-b573487d210f",
-        "weaponId": "item-weapon-normal-kanshou-3d9edf6ecc4b"
+        "weaponId": "item-weapon-normal-happou-56e2f49804f8"
       }
     ]
   },
