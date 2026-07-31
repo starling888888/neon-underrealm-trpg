@@ -19,7 +19,7 @@
   - completed: 2026-07-31 via PR #76 / `6cbb278`
   - source task: `54-release-docs`
   - expanded responsibility: 公開手順だけでなく、要求、out-of-scope、アーキテクチャ、テスト・実装指針、AI Ops、完了issue配置を現行実装に合わせる。
-  - archive: `docs/issue/milestone-01/done/cross-phase/ex-07.md`
+  - archive: `GitHub Issue #116: ex-07`
   - source code、scripts、tests、workflow、package設定、生成データ、assetは変更しない。
 
 milestone-01はex-07のmergeによりクローズした。milestone-02の計画、issue、実装は、このファイルではなく次のmilestoneの計画としてユーザー指示後に開始する。

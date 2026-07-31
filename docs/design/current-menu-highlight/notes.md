@@ -37,7 +37,7 @@
 
 ## Historical source issues
 
-- `docs/issue/milestone-01/done/phase-2/15-current-menu-highlight.md`
+- `GitHub Issue #141: 15-current-menu-highlight`
 
 ## Design direction
 

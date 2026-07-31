@@ -29,7 +29,7 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `docs/issue/milestone-01/done/phase-3/23-2-rules-page.md`（historical source issue）
+- `GitHub Issue #152: 23-2-rules-page`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/pages.md`
 - `docs/out-of-scope.md`

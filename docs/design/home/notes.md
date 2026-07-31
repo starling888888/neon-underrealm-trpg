@@ -46,7 +46,7 @@
 
 ## Historical source issue
 
-- `docs/issue/milestone-01/done/phase-3/18-2-home-page.md`
+- `GitHub Issue #147: 18-2-home-page`
 
 ## Design Direction
 

@@ -43,7 +43,7 @@
 
 ## Historical source issues
 
-- `docs/issue/milestone-01/done/phase-2/13-page-toc.md`
+- `GitHub Issue #138: 13-page-toc`
 
 ## Design direction
 

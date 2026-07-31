@@ -32,7 +32,7 @@
 
 ## Historical source issues
 
-- `docs/issue/milestone-01/done/phase-2/09-base-layout.md`
+- `GitHub Issue #133: 09-base-layout`
 
 ## デザイン方針
 

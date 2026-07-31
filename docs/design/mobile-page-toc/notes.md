@@ -39,8 +39,8 @@
 
 ## Historical source issues
 
-- `docs/issue/milestone-01/done/phase-2/14-mobile-page-toc.md`
-- `docs/issue/milestone-01/done/phase-2/13-page-toc.md`
+- `GitHub Issue #139: 14-mobile-page-toc`
+- `GitHub Issue #138: 13-page-toc`
 
 ## Design direction
 

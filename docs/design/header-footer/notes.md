@@ -34,7 +34,7 @@
 
 ## Historical source issues
 
-- `docs/issue/milestone-01/done/phase-2/10-header-footer.md`
+- `GitHub Issue #134: 10-header-footer`
 
 ## デザイン方針
 

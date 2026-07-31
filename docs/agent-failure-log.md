@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Reported all archived GitHub Issues closed without verifying a CLI partial failure
+
+#### 2026-08-01
+
+- source: user
+- failure category: verification accuracy
+- 発生箇所: `milestone-02-phase-01-github-issue-archive` の完了済みissue移行
+- 観測した失敗: `gh api`がnetwork errorを返したためIssue作成も失敗したと判断したが、Issue #81の作成は成功しており、close処理だけが実行されなかった。その後、GitHub connectorで同じ元pathのIssue #78を作成してclosedにした。GitHub Issue #81がopenのまま残っていることをユーザーが指摘したにもかかわらず、107件すべてをclosed Issue化したと報告した。
+- 一次対応: GitHub Issue #81をclosedへ訂正し、current issueの「1件だけ作成または再利用」完了条件を未チェックへ戻した。重複した#78と#81の整理は、ユーザー指示を待つ。以後、外部API commandが失敗した場合は、作成・更新それぞれの結果をconnectorで照合してから移行完了を報告する。
+
 ### Marked the Drive sync scope and test contract complete without full validation
 
 #### 2026-07-31
@@ -1017,13 +1027,13 @@ source種別は以下を使う。
 
 - 発生箇所: `09-base-layout` のissue-first / design準備
 - 観測した失敗: ユーザーが「まずはlayoutにベタ書き」「今回の作成範囲はデスクトップレイアウトのみ」と指示した後、実装前のdesign準備として `docs/design/base-layout/` のdesign artifact作成まで進めた。
-- 一次対応: `docs/issue/milestone-01/done/phase-2/09-base-layout.md` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
+- 一次対応: `GitHub Issue #133: 09-base-layout` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
 
 #### 2026-07-05
 
 - 発生箇所: `09-base-layout` のdesign画像生成準備
 - 観測した失敗: `docs/design/base-layout/notes.md` のユーザーレビューを挟まずに、`design-desktop.png` の画像生成へ進んだ。
-- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/milestone-01/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
+- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`GitHub Issue #133: 09-base-layout` から画像生成済み扱いを取り除いた。
 
 #### 恒久対応
 
@@ -1066,7 +1076,7 @@ source種別は以下を使う。
 
 #### 2026-07-06
 
-- 発生箇所: `13-page-toc` の `docs/issue/milestone-01/done/phase-2/13-page-toc.md` 完了条件チェック反映後のGit操作
+- 発生箇所: `13-page-toc` の `GitHub Issue #138: 13-page-toc` 完了条件チェック反映後のGit操作
 - 観測した失敗: ユーザーの指示は「issueの完了条件チェック入ってない」であり、commit / pushの明示許可ではなかったにもかかわらず、`docs: check page toc issue completion` をcommitし、既存PR branchへpushした。
 - 一次対応: ユーザー指示に従い差し戻しは行わず、本ログへ手順逸脱として記録した。以後、直前にcommit / push許可がない修正指示では、作業ツリー上の変更に留めて報告する。
 
@@ -2003,4 +2013,4 @@ source種別は以下を使う。
 - failure category: verification accuracy
 - 発生箇所: ex-07のmilestone-01 archive再配置と完了条件チェック
 - 観測した失敗: archive規約が完了条件・チェックポイントの全確認を移動条件とするにもかかわらず、Visual Reviewや表示・操作契約などの未チェック項目を残すex-02 Gate子issueを`done/`へ再配置し、activeまたは未完了issueを移動していない完了条件をチェックした。PR #76のdocument reviewで判明した。
-- 一次対応: `docs/issue/milestone-01/done/cross-phase/ex-07.md`のarchive完了条件を未チェックへ戻し、レビュー指摘2として根拠ごとの監査とarchive分類の再判断を記録した。親Gateがdoneであることだけを子issueの完了根拠にしない。
+- 一次対応: `GitHub Issue #116: ex-07`のarchive完了条件を未チェックへ戻し、レビュー指摘2として根拠ごとの監査とarchive分類の再判断を記録した。親Gateがdoneであることだけを子issueの完了根拠にしない。

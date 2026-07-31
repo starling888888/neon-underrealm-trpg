@@ -30,7 +30,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/milestone-01/done/phase-3/33-2-items-index-page.md`
+- `GitHub Issue #168: 33-2-items-index-page`
 - `docs/requirements/pages.md`
 - `docs/requirements/assets-seo.md`
 - `docs/out-of-scope.md`

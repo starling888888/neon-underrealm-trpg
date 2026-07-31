@@ -58,7 +58,7 @@
 - [ ] 通常issueごとに、元filenameのslugと同名のGitHub Issueが1件だけ作成または再利用され、元path marker、元Markdown本文、完了時点の記録を保持したclosed状態になっている。
 - [ ] Gate planは `docs/issue/milestone-01/plans/` へ移し、完了Gateの詳細要件・完了条件・引継ぎを削除して、対象issueの名称とGitHub Issue番号だけを保持している。
 - [ ] 各移行対象について、履歴のみ、または現行SSoTへの昇格先と確認根拠がinventoryに記録されている。昇格先を確認できない対象は削除していない。
-- [ ] Git管理文書に残る旧 `docs/issue/milestone-01/done/` path参照を、対応するplain-textのGitHub Issue番号とslugへ置換した、または現行SSoTへ必要な内容を昇格した。
+- [x] Git管理文書に残る旧 `docs/issue/milestone-01/done/` path参照を、対応するplain-textのGitHub Issue番号とslugへ置換した、または現行SSoTへ必要な内容を昇格した。
 - [ ] inventoryの全対象についてGitHub Issue本文、closed状態、参照置換またはSSoT昇格を確認した後に、`docs/issue/milestone-01/done/` とarchive専用READMEを削除した。
 - [ ] 今後の完了issueをGitHub closed Issueへ移す運用が、AGENTS、関連SKILL、テンプレート、運用文書で一貫している。
 - [ ] 今後のmilestone planとGate planをローカルに残し、完了issueの名称とGitHub Issue番号だけを履歴として保持する運用が、AGENTS、関連SKILL、テンプレート、運用文書で一貫している。
@@ -66,14 +66,14 @@
 
 ## チェックポイント
 
-- [ ] GitHub Issue番号はGitHub APIまたはGitHub UIで実在・closed状態を確認し、title、元path、本文の対応がinventoryと一致する。
-- [ ] 移行用の一時inventory、script、認証情報、`.tmp/`成果物をGit管理しない。
+- [x] GitHub Issue番号はGitHub APIまたはGitHub UIで実在・closed状態を確認し、title、元path、本文の対応がinventoryと一致する。
+- [x] 移行用の一時inventory、script、認証情報、`.tmp/`成果物をGit管理しない。
 - [ ] GitHub Issue本文の元path markerで既存Issueを照合し、0件なら新規作成、1件なら再利用、複数件またはinventoryと不整合なら停止する手順で、重複Issueがないことを確認した。途中失敗時は、inventoryを使って未確認対象だけを再開できる。
-- [ ] Git管理対象の旧archive path参照が残っていないことを検索で確認する。ただし、このissue自身および移行方針の説明に必要な一般表記は除く。
-- [ ] GitHub Issue番号なしの「同名issue」参照を作らない。
+- [x] Git管理対象の旧archive path参照が残っていないことを検索で確認する。ただし、このissue自身および移行方針の説明に必要な一般表記は除く。
+- [x] GitHub Issue番号なしの「同名issue」参照を作らない。
 - [ ] closed GitHub Issueが要件、design、TODO、現行issueに対する唯一の参照先になっていない。
 - [ ] milestone planとGate planには、完了issueの詳細要件・完了条件・引継ぎを残さず、対象issueの名称とGitHub Issue番号だけが残っている。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -110,3 +110,25 @@
 - GitHub Issue作成・closeは、このissue承認後にユーザー指示済みの移行範囲で実行する。
 - ユーザーは、将来のpost-mergeで必要なGitHub Issue作成・closeを常設許可した。
 - Markdownのみのtaskのため、`npm run check` と `npm run build` は通常実行しない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- ユーザーが、GitHub Issue #81 がopenのまま残っていることを指摘した。
+
+### 判定
+
+- source: user
+- classification: valid
+- 原因: `gh api` がnetwork errorを返したため失敗と判断したが、Issue #81の作成自体は成功しており、close処理が実行されなかった。その後、GitHub connectorで同じ元pathのIssue #78を作成してclosedにしたため、同一archive元の重複Issueが残った。
+
+### 対応方針
+
+- Issue #81はclosedへ訂正した。
+- #78と#81のどちらを残し、どちらを削除または重複扱いにするかは、ユーザー指示を待つ。
+
+### 対応完了チェックリスト
+
+- [x] GitHub Issue #81をclosedへ更新した。
+- [ ] `55-0-sample-characters` の重複Issueをユーザー指示に従って整理した。

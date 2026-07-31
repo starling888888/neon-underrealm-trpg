@@ -199,7 +199,7 @@
 ## 参照正本と制約
 
 - `docs/requirements/character-sheet.md`は、キャラクターシートの入力、表示、算出、検証、保存、出力要件の正本である。
-- `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/ex-02-web-character-sheet.md`と`docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md`は、デザイン承認、アーキテクチャ、実装Gateの順序を定義する。このノートはその順序を変更しない。
+- `GitHub Issue #113: ex-02-web-character-sheet`と`docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md`は、デザイン承認、アーキテクチャ、実装Gateの順序を定義する。このノートはその順序を変更しない。
 - ゲーム用語、数値ルール、マスタ値は、要件が示す`src/pages/`と`data/generated/`を正本とする。
 - `docs/out-of-scope.md`は、直接編集式のキャラクターシートとブラウザ内の最新1件保存を許可する。作成質問票、サーバーまたはクラウド保存、複数端末同期、汎用的な効果文解析、ダイスロール、セッション状態管理は含めない。
 - 共通スキルボーナスの専用構造化データと文字列解析は追加しない。UIは共通スキルボーナスや自由文のスキル効果が自動算出されるかのように表示してはならない。

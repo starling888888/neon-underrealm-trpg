@@ -52,7 +52,7 @@
 
 ## Historical source issues
 
-- `docs/issue/milestone-01/done/phase-2/16-layout-screenshot-design-refresh.md`
+- `GitHub Issue #142: 16-layout-screenshot-design-refresh`
 
 ## Design direction
 

@@ -32,7 +32,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- 完了issue: `docs/issue/milestone-01/done/phase-3/30-2-ryugi-detail-page.md`
+- 完了issue: `GitHub Issue #163: 30-2-ryugi-detail-page`
 - `docs/requirements/pages.md` の FR-05
 - `docs/requirements/architecture.md` の AC-14
 - `docs/requirements/data-display.md` の FR-04-01、FR-04-04

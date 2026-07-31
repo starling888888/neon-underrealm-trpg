@@ -45,7 +45,7 @@
 
 ## Historical Source Issue
 
-- `docs/issue/milestone-01/done/phase-3/41-2-support-page.md`
+- `GitHub Issue #173: 41-2-support-page`
 
 ## Design Direction
 

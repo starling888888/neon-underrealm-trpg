@@ -157,7 +157,7 @@
 
 - current VRT: `tests/vrt/release-notes.spec.ts` の`@vrt @release-notes`。
 - source branch / commit when applicable: `19-2-release-notes-page` / `a9997b0`
-- historical issue: `docs/issue/milestone-01/done/phase-3/19-2-release-notes-page.md`
+- historical issue: `GitHub Issue #148: 19-2-release-notes-page`
 - route when applicable: `/release-notes`
 - viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
 - prompt summary or capture notes:
