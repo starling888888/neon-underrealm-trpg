@@ -294,14 +294,14 @@ After the child work is complete and the normal archive conditions are met:
 2. Return only durable detailed requirements, confirmed decisions, and follow-up handoff to the selected Gate entry in the parent Gate plan.
 3. Record the child issue's archive path in that Gate entry.
 4. Update the Gate status to `done`.
-5. Move the child issue to the appropriate `docs/issue/milestone-01/done/` directory.
+5. Move the child issue to the appropriate `docs/issue/milestone-<NN>/done/` directory for the current milestone.
 
 Do not archive a child issue before the parent Gate plan has received this compact handoff. Do not retain the child issue as the active source of truth for later Gates.
 
 ### Child completion-record audit
 
 Run this audit immediately before any parent Gate status becomes `done` or the
-child issue moves under `docs/issue/milestone-01/done/`.
+child issue moves under `docs/issue/milestone-<NN>/done/` for the current milestone.
 
 1. Read every checkbox in the child issue's `完了条件`, `チェックポイント`, and each `レビュー指摘` section.
 2. Confirm that every completion condition and checkpoint is checked from current, local evidence. Do not infer completion from a successful command, a prior Gate status, or the archive destination.

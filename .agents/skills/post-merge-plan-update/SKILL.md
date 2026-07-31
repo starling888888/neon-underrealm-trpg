@@ -15,7 +15,7 @@ Use when the user asks to:
 - mark the corresponding `docs/issue/milestone-<NN>/plan.md` task complete
 - keep the completed task entry in the milestone plan with its merge record
 - mark handled `docs/TODO.md` items complete and move them to `docs/TODO-done.md`
-- move completed issue files to `docs/issue/milestone-01/done/phase-N/` or `docs/issue/milestone-01/done/cross-phase/`
+- move completed issue files to `docs/issue/milestone-<NN>/done/phase-N/` or `docs/issue/milestone-<NN>/done/cross-phase/`
 - return a completed Gate child's durable handoff to its parent Gate plan
 - commit and push tracking updates to `main`
 
@@ -50,7 +50,7 @@ Do the cleanup in this order:
 10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
 11. Confirm that required review information was formalized, then remove only `.tmp/review/<WORK_BRANCH>/`.
 12. For a completed Gate child issue, return its durable handoff to the parent Gate plan.
-13. If the issue is complete, move the issue file to the correct `docs/issue/milestone-01/done/` archive.
+13. If the issue is complete, move the issue file to the correct `docs/issue/milestone-<NN>/done/` archive.
 14. Keep active documents from depending on completed issue files.
 15. Run available validation commands.
 16. Commit only tracking files that were intentionally updated.
@@ -191,14 +191,13 @@ If older active issue files have unchecked items because the check update was mi
 
 Do not invent completion evidence. Do not mark an item complete merely because the related plan item is checked.
 
-If an unchecked item cannot be confirmed during post-merge, leave it unchecked, report it, and do not move that issue file to `docs/issue/milestone-01/done/`.
+If an unchecked item cannot be confirmed during post-merge, leave it unchecked, report it, and do not move that issue file to `docs/issue/milestone-<NN>/done/`.
 
 Destination rules:
 
-- Use `docs/issue/milestone-01/done/phase-0/` for Phase 0 issue tasks.
-- Use `docs/issue/milestone-01/done/phase-1/` for Phase 1 issue tasks.
-- Use `docs/issue/milestone-01/done/phase-2/` for Phase 2 issue tasks.
-- Use `docs/issue/milestone-01/done/cross-phase/` for tasks that are not tied to a single numbered plan phase, or for repository/process cleanup spanning multiple phases.
+- Resolve `<NN>` from the current issue's milestone plan. Do not default to a closed milestone.
+- Use `docs/issue/milestone-<NN>/done/phase-<N>/` for issue tasks tied to a numbered phase.
+- Use `docs/issue/milestone-<NN>/done/cross-phase/` for tasks that are not tied to a single numbered plan phase, or for repository/process cleanup spanning multiple phases.
 
 Do not move:
 
@@ -259,7 +258,7 @@ Allowed staged files:
 - `docs/TODO.md` only when TODO items were completed or removed from active TODO
 - `docs/TODO-done.md` only when completed TODO items were moved
 - `docs/issue/*.md` only when moving the completed issue out of active issue storage
-- `docs/issue/milestone-01/done/**/*.md` only when receiving moved completed issue files
+- `docs/issue/milestone-<NN>/done/**/*.md` only when receiving moved completed issue files
 - documentation files whose only change is an internal link update caused by moved issue files
 
 Confirm the staged diff contains only intended tracking files.

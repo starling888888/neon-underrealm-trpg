@@ -1,6 +1,6 @@
 # milestone-01 計画と履歴
 
-このファイルは、初回公開を完了したmilestone-01の計画、進行中のクローズ作業、完了済みtask履歴を一元管理する正本である。旧 `docs/issue/milestone-01/plan.md` と `docs/issue/milestone-01/plan.md` を統合し、旧ファイルは残さない。
+このファイルは、初回公開を完了したmilestone-01の計画、進行中のクローズ作業、完了済みtask履歴を一元管理する正本である。旧 `docs/plan.md` と `docs/plan-done.md` を統合し、旧ファイルは残さない。
 
 `docs/issue/milestone-01/plan.md` はGate planではない。Gateを列挙するplanは通常どおり `docs/issue/<parent-issue>/plan.md` にだけ置く。milestone planは、milestone全体の履歴と現在のクローズtaskを管理する。
 

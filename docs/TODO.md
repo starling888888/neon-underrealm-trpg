@@ -12,10 +12,10 @@ PR merge後のTODO更新は `.agents/skills/post-merge-plan-update/SKILL.md` に
 
 - 現在のissue範囲を超える指摘
 - 後続タスクで対応すべき改善
-- 既存の `docs/issue/milestone-01/plan.md` タスクに紐づく補足対応
-- `docs/issue/milestone-01/plan.md` に新しい計画項目を追加したうえで追跡すべき作業
+- 対象milestoneの `docs/issue/milestone-<NN>/plan.md` タスクに紐づく補足対応
+- 対象milestoneの `docs/issue/milestone-<NN>/plan.md` に新しい計画項目を追加したうえで追跡すべき作業
 
-TODO項目は、可能な限り `docs/issue/milestone-01/plan.md` の計画項目へ紐づける。
+TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/plan.md` の未完了計画項目へ紐づける。クローズ済みmilestoneの完了taskには紐づけず、後続milestoneで計画化する。
 
 ---
 
@@ -66,7 +66,7 @@ TODO項目は、可能な限り `docs/issue/milestone-01/plan.md` の計画項�
 - [ ] Pagefindが`-local`確認ページをindex化した場合も、検索Visual Testを安定して実行できるようにする
   - source: PR #66 のdocument review
   - classification: follow-up
-  - plan: `docs/issue/milestone-01/plan.md` の `53-content-smoke-test`
+  - plan: なし。milestone-01はクローズ中のため、後続milestoneで検索Visual Test安定化taskを計画してから紐づける。
   - handling plan: `-local/data-cards`をPagefind indexから除外するか、検索Visual Testのlocatorを公開対象の検索結果へ限定する。GitHub Pagesのsubpath検索と公開ページの検索結果が壊れないことを確認してから、Visual Capture全体をgreenにする。
 
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
@@ -96,13 +96,13 @@ TODO項目は、可能な限り `docs/issue/milestone-01/plan.md` の計画項�
 - [ ] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
   - source: `design-image-generation` skill 追加時の整合確認
   - classification: follow-up
-  - plan: `docs/issue/milestone-01/plan.md` のdesign / Visual Review / UI実装関連タスクに紐づける。適切な既存planがない場合は、design運用整理タスクを追加する
+  - plan: なし。後続milestoneでdesign運用整理taskを計画してから紐づける。
   - handling plan: 既存design targetごとに、mode / target / referenced SSoT / existing design constraints / out of scope / comparison points / generation source / open questions を必要範囲で追記する。既存design画像そのものは、このTODOだけでは変更しない
 
 - [ ] サイトメニュー順序変更を既存designへ一括反映する
   - source: `24-2-scenario-play-page` 準備中のユーザー指示
   - classification: design follow-up
-  - plan: `docs/issue/milestone-01/plan.md` のdesign / Visual Review / UI実装関連タスクに紐づける。適切な一括design更新タスクを定めてから実施する
+  - plan: なし。後続milestoneで一括design更新taskを計画してから紐づける。
   - handling plan: `ルール`を`データ`の上に置く現行メニュー順序を、関連する既存design画像・notesへまとめて反映する。個別ページ作成中に部分的なdesign更新は行わない。
 
 - [ ] GitHub Actionsで全件VRTを定期実行または公開直後に実行する
@@ -117,6 +117,6 @@ TODO項目は、可能な限り `docs/issue/milestone-01/plan.md` の計画項�
 - [ ] TODO title
   - source: `.tmp/pr-N-review.md`
   - classification: follow-up / out-of-scope
-  - plan: `docs/issue/milestone-01/plan.md` の該当項目
+  - plan: 対象milestoneの `docs/issue/milestone-<NN>/plan.md` の該当項目
   - handling plan: 将来どのタスクでどう扱うか
 -->
