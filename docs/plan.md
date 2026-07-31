@@ -44,13 +44,6 @@ PR merge後の計画更新は `.agents/skills/post-merge-plan-update/SKILL.md` �
   - [ ] 画像固有prompt、公式ロゴ、in-world signage、overlay typographyの利用方針と承認手順を決定する
   - [ ] base promptをsampleとして使う範囲と、生成前に画像固有promptで必ず決める事項を記載する
 
-- [ ] `ex-05-access-analytics` — 初回公開告知前に、Cloudflare Web Analyticsで公開サイトの利用傾向を把握できるようにする
-
-  - Cloudflare Web Analyticsだけをmanual beaconで導入する
-  - GitHub Pagesの本番deployだけでbeaconを出力し、local build、PR検証、Visual Testでは送信しない
-  - Cloudflare側のsite登録、GitHub Actions Repository Variable、公開後の確認手順を運用文書へ記載する
-  - custom event、閲覧者単位の追跡、server-side access log、ほかの解析サービスは導入しない
-
 - [ ] `55-initial-release` — 初期公開用最終調整を行う
 
   - [ ] 初期リリースノートを追加

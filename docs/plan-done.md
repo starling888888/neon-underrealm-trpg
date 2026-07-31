@@ -675,6 +675,14 @@
   - [x] 各アイテムカード個別アンカーの遷移確認
   - [x] データカード個別アンカーがGitHub Pagesサブパス配下でも壊れないことを確認
 
+- [x] `ex-05-access-analytics` — 初回公開告知前に、Cloudflare Web Analyticsで公開サイトの利用傾向を把握できるようにする
+  - completed: 2026-07-31 via PR #72 / `6ddfac8`
+
+  - Cloudflare Web Analyticsだけをmanual beaconで導入する
+  - GitHub Pagesの本番deployだけでbeaconを出力し、local build、PR検証、Visual Testでは送信しない
+  - Cloudflare側のsite登録、GitHub Actions Repository Variable、公開後の確認手順を運用文書へ記載する
+  - custom event、閲覧者単位の追跡、server-side access log、ほかの解析サービスは導入しない
+
 - [x] `53-content-smoke-test` — 主要ページ表示確認を行う
   - completed: 2026-07-31 via PR #71 / `acdb0d7`
 

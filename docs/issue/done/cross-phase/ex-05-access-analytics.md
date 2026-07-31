@@ -345,12 +345,12 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 
 ### ユーザーによる外部設定と公開確認
 
-- [ ] ユーザーがCloudflare Web Analyticsへ `starling888888.github.io` を登録している
-- [ ] ユーザーがGitHub ActionsのRepository Variableを設定している
-- [ ] mainへのmerge後、GitHub Pages deployが成功している
-- [ ] 公開トップページと代表下層ページのPage viewがCloudflare dashboardへ記録されている
-- [ ] Pathが `/neon-underrealm-trpg/` 配下として記録されている
-- [ ] 実beacon送信で恒常的なCORS errorが発生していない
+- [x] ユーザーがCloudflare Web Analyticsへ `starling888888.github.io` を登録している
+- [x] ユーザーがGitHub ActionsのRepository Variableを設定している
+- [x] mainへのmerge後、GitHub Pages deployが成功している
+- [x] 公開トップページと代表下層ページのPage viewがCloudflare dashboardへ記録されている
+- [x] Pathが `/neon-underrealm-trpg/` 配下として記録されている
+- [x] 実beacon送信で恒常的なCORS errorが発生していない
 
 ### スコープ管理
 
@@ -373,7 +373,7 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 - [x] custom eventや閲覧者単位のtrackingを追加していない
 - [x] access countをserver accessの完全な実数として説明していない
 - [x] Cloudflare側hostnameと公開hostnameが一致している
-- [ ] Cloudflare automatic injectionとmanual beaconを重複して有効化していない
+- [x] Cloudflare automatic injectionとmanual beaconを重複して有効化していない
 - [x] CSPが実装時点で存在する場合は、beacon sourceと送信先の許可要否を確認している
 - [x] 関連する `docs/TODO.md` 項目と矛盾していない
 - [x] `docs/design/` を変更していない
