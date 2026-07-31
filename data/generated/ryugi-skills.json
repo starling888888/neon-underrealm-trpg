@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-07-31T16:58:51+09:00",
+  "updatedAt": "2026-07-31T22:24:48+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -3084,13 +3084,13 @@
           "maxLevel": 1,
           "timing": "D",
           "cost": "気1",
-          "proficiency": "発砲",
+          "proficiency": "発砲/干渉",
           "acquisitionRestriction": null,
           "target": "1体",
           "range": "武器",
-          "usageRestriction": null,
+          "usageRestriction": "特殊",
           "summary": "",
-          "effect": "発砲判定を行う。装備している発砲武器の射程内のキャラクター1人が受けるダメージを効果値点減少させる。弾丸を1発消費する。",
+          "effect": "発砲または干渉判定を行う。判定に対応する、装備している武器1つの射程内のキャラクター1人が受けるダメージを効果値点減少させる。キャラクターの手番1回につき1回使用可能。",
           "sourceOrder": 13,
           "id": "skill-ryugi-gotoshi-basic-d-f045ef2b1c02"
         },
@@ -3100,13 +3100,13 @@
           "maxLevel": 3,
           "timing": "D",
           "cost": "気1",
-          "proficiency": "干渉",
+          "proficiency": "発砲/干渉",
           "acquisitionRestriction": null,
           "target": "1体",
           "range": "武器",
-          "usageRestriction": "lv/Sn",
+          "usageRestriction": "lv/R",
           "summary": "",
-          "effect": "干渉判定を行う。使用できる干渉武器の射程内のキャラクターが与えるダメージを効果値点上昇させる。",
+          "effect": "発砲または干渉判定を行う。判定に対応する、装備している武器1つの射程内のキャラクターが与えるダメージを効果値点上昇させる。",
           "sourceOrder": 14,
           "id": "skill-ryugi-gotoshi-basic-d-c44a2c4cba5a"
         }
