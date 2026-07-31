@@ -117,7 +117,7 @@ Google Drive MCP経由のSpreadsheet取得は、今後のデータ調整に必�
 - 依存追加理由: Google Drive APIによるフォルダ列挙とSpreadsheet XLSX exportを公式SDKで扱うため。代替のMCPは性能上の理由で採用しない。`rclone`や独自HTTP実装は、追加の運用負荷またはAPI実装保守を増やすため採用しない。
 - user-directed scope change: 既存のDrive-to-raw / raw-to-Drive workflowを削除し、contentsは手動同期とする。MDXとAstroが最終的なGit管理の正本であり、`.raw/contents/`の厳密な自動同期は不要とする。
 - ここでいうパス安全性は、書込み先を`.raw/`内に閉じ込める最低限の安全条件であり、Drive構造や同期対象の妥当性を検査するディレクトリ構造validationは実装しない。
-- 実service accountによる認証・実Driveからの取得は、秘密情報と共有済みフォルダが必要なため未実行。`.env`未配置時に終了コード`1`となること、およびDrive clientをstub化したtestはローカルで確認した。
+- `.env`を設定し、共有済みの実Driveフォルダから実行する同期はユーザー環境で成功を確認した。`.env`未配置時に終了コード`1`となること、およびDrive clientをstub化したtestはローカルで確認した。
 
 ## レビュー指摘 1
 
@@ -145,3 +145,27 @@ Google Drive MCP経由のSpreadsheet取得は、今後のデータ調整に必�
 - [x] `main.ts`を薄いCLI入口へ分割する。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- READMEに、service accountの作成・鍵取得とGoogle Drive API有効化の公式ドキュメントへの最小限の導線を追加する。
+- READMEに、`GOOGLE_DRIVE_ROOT_FOLDER_ID`がDriveフォルダURLの`/folders/`以降の文字列であることを記載する。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: READMEはservice account、Drive API有効化、`.env`のキー名を記載しているが、認証情報を取得する公式導線とフォルダIDの具体的な取得元を記載していない。現行issueの「README上の最小限の利用手順」に属し、Google Cloud公式のservice account key作成手順とDrive API有効化手順を案内できる。
+
+### 対応方針
+
+- READMEのGoogle Spreadsheet同期手順へ、service account作成・JSON鍵取得、Google Drive API有効化の公式ドキュメントへのリンクを追記する。Google Cloud Consoleの画面操作を詳細化しない。
+- `GOOGLE_DRIVE_ROOT_FOLDER_ID`には、対象フォルダをブラウザで開いたURLの`https://drive.google.com/drive/folders/<folder-id>`における`<folder-id>`だけを設定することを明記する。
+
+### 対応完了チェックリスト
+
+- [x] service account認証情報とGoogle Drive API有効化の公式導線をREADMEに追加する。
+- [x] DriveフォルダURLから`GOOGLE_DRIVE_ROOT_FOLDER_ID`を取得する方法をREADMEに追加する。
+- [x] `npm run check:md` が通る。
