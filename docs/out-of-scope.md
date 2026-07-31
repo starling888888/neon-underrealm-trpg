@@ -6,11 +6,7 @@
 
 1st stepの目的は、ルールサイト公開の初回告知を見た人がなるべく長くサイトを読み、「遊んでみたい」と思えることとする。完了は、初回告知時点でPLが遊ぶ判断と参加準備をするために十分なコンテンツが公開されている状態と定義する。
 
-実装順序、ブランチ分割、作業粒度は `docs/plan.md` を優先する。
-
-要件定義は `docs/requirements.md` を参照する。
-
-本ドキュメントと `docs/plan.md` / `docs/requirements.md` の間に齟齬がある場合、初期開発の作業計画・スコープ判断については `docs/plan.md` を優先し、必要に応じて本ドキュメントを追従修正する。
+要件定義は `docs/requirements.md`、milestone-01の履歴は `docs/issue/milestone-01/plan.md` を参照する。現在のscope判断は最新のユーザー指示、承認済みissue、現行実装と整合させる。
 
 ---
 
@@ -68,7 +64,7 @@ NPC紹介は、`/world`の世界観本文に限り、生成JSONを参照する`N
 
 ## 6. Webキャラクターシートの初期範囲外
 
-ブラウザ上でキャラクターを作成・編集し、遊ぶために必要な情報を確認できるWebキャラクターシートは、`docs/plan.md` の `ex-02-web-character-sheet` として初期スコープ内とする。
+ブラウザ上でキャラクターを作成・編集し、遊ぶために必要な情報を確認できるWebキャラクターシートは初期スコープ内とする。機能の正本は `docs/requirements/character-sheet.md` とする。
 
 ログイン、ユーザー端末に依存しないサーバー・DB・クラウドへのキャラクターデータ保存、URL共有、PDF出力、Google Sheets連携は初期スコープ外とする。
 
@@ -286,9 +282,7 @@ CSS custom property は media query の条件値として使えないため、�
 
 ## 27. アクセス解析
 
-Cloudflare Web Analytics、Plausible、Umamiなどのアクセス解析は初期スコープ外とする。ただし、`docs/plan.md` の `ex-05-access-analytics` に限り、初回公開告知前の独立taskとしてCloudflare Web Analyticsだけを導入してよい。
-
-`ex-05-access-analytics` 以外では、外部サービスのスクリプト、トラッキングID、Secretsを必要とする構成を追加しない。Cloudflare Web Analyticsを導入する場合も、custom event、閲覧者単位の追跡、server-side access log、他providerの併用は初期スコープ外とする。
+Cloudflare Web Analyticsのmanual beaconは、本番deployだけで出力する現行の最小解析としてスコープ内とする。Plausible、Umami、Cloudflareのautomatic injection、custom event、閲覧者単位の追跡、server-side access log、他providerの併用は初期スコープ外とする。
 
 `ex-05-access-analytics` 以外のアクセス解析を追加する場合は、ルールサイト本体が安定した後、独立したタスクとして扱う。
 
@@ -392,4 +386,4 @@ CI/CDではExcel変換を必須工程にしない。
 - ヒーロー画像の表示前からの領域確保と、必要に応じたskeleton表示
 - Webキャラクターシートでのキャラクター作成・編集
 
-これらは `docs/plan.md` および `docs/requirements.md` に従って初期実装対象として扱う。
+これらは `docs/requirements.md` に従って初期実装対象として扱う。

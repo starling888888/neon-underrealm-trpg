@@ -1,6 +1,6 @@
 ---
 name: post-merge-plan-update
-description: Use this skill after a GitHub PR has been merged to return to main, pull merged changes, delete the merged work branch, update docs/plan.md, complete handled docs/TODO.md items, commit tracking updates, and push main.
+description: Use this skill after a GitHub PR has been merged to return to main, pull merged changes, delete the merged work branch, update docs/issue/milestone-<NN>/plan.md, complete handled docs/TODO.md items, commit tracking updates, and push main.
 ---
 
 # Post-merge Plan Update Skill
@@ -12,10 +12,10 @@ Use when the user asks to:
 - return to `main` after a merged PR
 - pull merged changes and confirm the result
 - delete the merged work branch
-- mark the corresponding `docs/plan.md` task complete
-- move a fully completed `docs/plan.md` entry to `docs/plan-done.md`
+- mark the corresponding `docs/issue/milestone-<NN>/plan.md` task complete
+- keep the completed task entry in the milestone plan with its merge record
 - mark handled `docs/TODO.md` items complete and move them to `docs/TODO-done.md`
-- move completed issue files to `docs/issue/done/phase-N/` or `docs/issue/done/cross-phase/`
+- move completed issue files to `docs/issue/milestone-01/done/phase-N/` or `docs/issue/milestone-01/done/cross-phase/`
 - return a completed Gate child's durable handoff to its parent Gate plan
 - commit and push tracking updates to `main`
 
@@ -26,7 +26,7 @@ Do not use for:
 - PR review intake
 - failure-log done cleanup unless the user directly asks for that file
 
-Update `docs/plan.md` checkboxes only because the user is explicitly requesting a post-merge plan update.
+Update `docs/issue/milestone-<NN>/plan.md` checkboxes only because the user is explicitly requesting a post-merge plan update.
 
 Update `docs/TODO.md` only when the merged work actually handled the TODO item.
 
@@ -45,12 +45,12 @@ Do the cleanup in this order:
 5. Confirm the expected merged commits are present.
 6. Confirm the work branch is merged into `main`.
 7. Delete the local work branch only when it is safely merged.
-8. Update only the relevant `docs/plan.md` checkbox block.
-9. Move the completed plan entry from `docs/plan.md` to `docs/plan-done.md` when every checkbox in that entry is checked.
+8. Update only the relevant `docs/issue/milestone-<NN>/plan.md` checkbox block.
+9. Record completion context in the completed milestone plan entry when every checkbox in that entry is checked.
 10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
 11. Confirm that required review information was formalized, then remove only `.tmp/review/<WORK_BRANCH>/`.
 12. For a completed Gate child issue, return its durable handoff to the parent Gate plan.
-13. If the issue is complete, move the issue file to the correct `docs/issue/done/` archive.
+13. If the issue is complete, move the issue file to the correct `docs/issue/milestone-01/done/` archive.
 14. Keep active documents from depending on completed issue files.
 15. Run available validation commands.
 16. Commit only tracking files that were intentionally updated.
@@ -108,9 +108,9 @@ Do not force-delete a local branch unless the user explicitly approves it.
 
 ---
 
-## Updating docs/plan.md
+## Updating docs/issue/milestone-<NN>/plan.md
 
-Find the relevant `docs/plan.md` section by task number, task slug, or `WORK_BRANCH`.
+Find the relevant `docs/issue/milestone-<NN>/plan.md` section by task number, task slug, or `WORK_BRANCH`.
 
 Rules:
 
@@ -118,20 +118,17 @@ Rules:
 - Change direct subtasks from `[ ]` to `[x]` only when the merged work satisfies them.
 - Do not update unrelated tasks.
 - Do not update the `初期スコープ外として維持するもの` checklist unless the user specifically asks.
-- If no matching `docs/plan.md` item exists, do not create a new plan item. Report that there was no plan checkbox to update.
+- If no matching `docs/issue/milestone-<NN>/plan.md` item exists, do not create a new plan item. Report that there was no plan checkbox to update.
 
-After updating the relevant plan entry, check every checkbox in that entry.
-
-Move the entry from `docs/plan.md` to `docs/plan-done.md` when every checkbox in the entry is checked.
+After updating the relevant plan entry, check every checkbox in that entry. Keep the entry in the same milestone plan because it is both the current closure plan and the milestone history.
 
 Rules:
 
-- Move only completed entries.
+- Add completion context only to completed entries.
 - Preserve the original task ID, task title, and relevant subtask context.
 - Add completion context when available: merged PR number, completion date, related commit, or task name.
-- Do not move the entry when any checkbox in the entry remains unchecked.
-- Do not move future or in-progress phase headings if they still provide active planning context.
-- If moving an item would make the active plan hard to understand, keep a concise phase placeholder or summary in `docs/plan.md`.
+- Do not record completion context when any checkbox in the entry remains unchecked.
+- Do not create a future milestone plan from this workflow.
 
 ---
 
@@ -159,7 +156,7 @@ Example completed item shape:
   - completed: YYYY-MM-DD via PR #N / `WORK_BRANCH`
   - source: `.tmp/pr-N-review.md`
   - classification: follow-up
-  - plan: `docs/plan.md` の該当項目
+  - plan: `docs/issue/milestone-<NN>/plan.md` の該当項目
   - handling plan: ...
 ```
 
@@ -194,14 +191,14 @@ If older active issue files have unchecked items because the check update was mi
 
 Do not invent completion evidence. Do not mark an item complete merely because the related plan item is checked.
 
-If an unchecked item cannot be confirmed during post-merge, leave it unchecked, report it, and do not move that issue file to `docs/issue/done/`.
+If an unchecked item cannot be confirmed during post-merge, leave it unchecked, report it, and do not move that issue file to `docs/issue/milestone-01/done/`.
 
 Destination rules:
 
-- Use `docs/issue/done/phase-0/` for Phase 0 issue tasks.
-- Use `docs/issue/done/phase-1/` for Phase 1 issue tasks.
-- Use `docs/issue/done/phase-2/` for Phase 2 issue tasks.
-- Use `docs/issue/done/cross-phase/` for tasks that are not tied to a single numbered plan phase, or for repository/process cleanup spanning multiple phases.
+- Use `docs/issue/milestone-01/done/phase-0/` for Phase 0 issue tasks.
+- Use `docs/issue/milestone-01/done/phase-1/` for Phase 1 issue tasks.
+- Use `docs/issue/milestone-01/done/phase-2/` for Phase 2 issue tasks.
+- Use `docs/issue/milestone-01/done/cross-phase/` for tasks that are not tied to a single numbered plan phase, or for repository/process cleanup spanning multiple phases.
 
 Do not move:
 
@@ -257,12 +254,12 @@ Stage only tracking files that were intentionally updated.
 
 Allowed staged files:
 
-- `docs/plan.md`
-- `docs/plan-done.md` only when plan entries were moved
+- `docs/issue/milestone-<NN>/plan.md`
+- `docs/issue/milestone-<NN>/plan.md` only when plan entries were moved
 - `docs/TODO.md` only when TODO items were completed or removed from active TODO
 - `docs/TODO-done.md` only when completed TODO items were moved
 - `docs/issue/*.md` only when moving the completed issue out of active issue storage
-- `docs/issue/done/**/*.md` only when receiving moved completed issue files
+- `docs/issue/milestone-01/done/**/*.md` only when receiving moved completed issue files
 - documentation files whose only change is an internal link update caused by moved issue files
 
 Confirm the staged diff contains only intended tracking files.

@@ -17,6 +17,7 @@
 ```text
 .github/                 GitHub ActionsとGitHubテンプレート
 .agents/                 agent専用SKILLと常設ルール
+.codex/                  reviewer agent定義
 .env                     Git管理しないGoogle Spreadsheet同期設定
 .raw/                    Git管理しないGoogle Spreadsheetローカル入力
 .tmp/                    Git管理しない一時作業ファイル
@@ -25,6 +26,8 @@ docs/                    プロジェクト文書とtask tracking
 docs/design/             design正本
 public/                  静的アセット
 scripts/                 Node / TypeScriptの保守・変換プログラム
+tests/                   Node、Vitest、E2E、VRT、contract test
+src/character-sheet/     React IslandのWebキャラクターシート
 src/components/          Astro UI Component
 src/layouts/             Astro Layout
 src/lib/                 共通TypeScript helperとdata access
@@ -48,6 +51,7 @@ dist/
 .tmp/
 test-results/
 playwright-report/
+canonical-snapshots/visual/
 *.xlsx
 *.xlsm
 ~$*.xlsx
@@ -104,6 +108,9 @@ src/components/seo/
 src/components/data/
 src/components/_common/
 src/components/search/
+src/components/analytics/
+src/components/character-making/
+src/components/character-sheet/
 ```
 
 新しいComponent分類は、安定した責務がある場合だけ作る。
@@ -125,6 +132,7 @@ src/lib/schemas/conversion/
 src/lib/site/
 src/lib/types/
 src/lib/utils/
+src/lib/search/
 ```
 
 データ駆動ページは、生成JSONへのアクセスを `src/lib/data/` 経由にする。

@@ -25,7 +25,7 @@
 6. `docs/out-of-scope.md`
 7. `docs/conversion/*`
 8. `docs/development-structure.md`
-9. `docs/plan.md`
+9. `docs/issue/milestone-01/plan.md`
 10. `docs/TODO.md`
 11. 関連する `docs/design/<design-target>/`
 12. その他のGit管理ドキュメントと`src/pages/`配下のMDX / Astro実装
@@ -37,7 +37,7 @@ contentsとGit管理の正本が矛盾する場合は、最新のユーザー指
 
 | ファイル                                 | 扱う内容                                                  | 主な参照場面                       |
 | ---------------------------------------- | --------------------------------------------------------- | ---------------------------------- |
-| `docs/requirements/overview.md`          | サイト目的、基本方針、初期スコープ外                      | タスクの前提確認、scope guard      |
+| `docs/requirements/overview.md`          | サイト目的、公開済み機能、初期スコープ外                  | タスクの前提確認、scope guard      |
 | `docs/requirements/architecture.md`      | 静的サイト、コンテンツ管理、Excel由来データ、技術スタック | 基盤、データ変換、ビルド、構成判断 |
 | `docs/requirements/non-functional.md`    | コマンド、アクセシビリティ、レスポンシブ、性能、権利表記  | 品質確認、検証、非機能判断         |
 | `docs/requirements/pages.md`             | 初期公開ページ、トップページ、流儀・生き様詳細、404       | ページ追加・変更                   |
@@ -49,6 +49,8 @@ contentsとGit管理の正本が矛盾する場合は、最新のユーザー指
 | `docs/requirements/assets-seo.md`        | 画像、OGP、SEO                                            | asset、metadata、SEO Component     |
 | `docs/requirements/components.md`        | コールアウトComponent                                     | MDX本文Component                   |
 | `docs/requirements/character-sheet.md`   | Webキャラクターシートの機能、保存、出力、検証             | `ex-02`の要件正本化・実装          |
+| `docs/testing.md`                        | test、CI、Public E2E、VRTの責務分離                       | 検証・CI・Visual Review            |
+| `docs/ai-ops.md`                         | agent文書の役割と正本境界                                 | AI Opsの参照先確認                 |
 
 ## 作業種別ごとの参照先
 

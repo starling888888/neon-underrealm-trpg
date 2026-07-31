@@ -1,15 +1,14 @@
-# done issue archive
+# milestone-01 archive
 
-このディレクトリは、完了済みissueの履歴を保持する。
+このディレクトリは、milestone-01の計画と完了済みissueの履歴を保持する。
 
-activeな `docs/issue/` 直下には、現在作業中または未完了のissueを置く。完了済みissueを移動する場合は、削除ではなくこの配下へ移す。
+activeな `docs/issue/` 直下には、現在作業中または未完了のissueを置く。milestone-01で完了したissueは削除せず `done/` 配下へ移す。
 
 ## 分類
 
-- `phase-0/`: Phase 0に属する完了済みissue
-- `phase-1/`: Phase 1に属する完了済みissue
-- `phase-2/`: Phase 2に属する完了済みissue
-- `cross-phase/`: plan番号に属さない横断整備issue、複数phaseにまたがる運用整備issue
+- `done/phase-X/`: 元のPhaseに属する完了済みissue
+- `done/cross-phase/`: 複数Phaseにまたがる運用整備issueと特別task
+- `plan.md`: milestone-01の計画・履歴。Gate planではない。
 
 ## 移動条件
 
@@ -19,7 +18,7 @@ activeな `docs/issue/` 直下には、現在作業中または未完了のissue
 - 移動先分類が判断できる
 - 移動後に必要な内部リンク更新または過去記録注記を行う
 
-Gate専用の子issueは、移動前に親issueの `docs/issue/<parent-issue>/plan.md` へ、後続Gateに必要な詳細要件・確定判断・引継ぎだけを戻す。子issueのarchive pathとGateの `done` 状態も同じplanへ記録する。
+Gate専用の子issueは、移動前に親issueの `docs/issue/<parent-issue>/plan.md` へ、後続Gateに必要な詳細要件・確定判断・引継ぎだけを戻す。完了済み親Gate planと子issue archiveは、同じ `done/` 配下へ集約する。
 
 未完了issue、現在作業中issue、完了条件・チェックポイントが未確認のissueは移動しない。
 

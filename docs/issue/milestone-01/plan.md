@@ -1,26 +1,46 @@
-# 完了済み計画履歴
+# milestone-01 計画と履歴
 
-このファイルは、`docs/plan.md` から退避した完了済み計画項目の履歴を保持する。
+このファイルは、初回公開を完了したmilestone-01の計画、進行中のクローズ作業、完了済みtask履歴を一元管理する正本である。旧 `docs/issue/milestone-01/plan.md` と `docs/issue/milestone-01/plan.md` を統合し、旧ファイルは残さない。
 
-`docs/plan.md` は未完了・進行対象・直近で参照する計画を中心に保つ。完了済みの計画項目を退避する場合は、削除ではなくこのファイルへ移す。
+`docs/issue/milestone-01/plan.md` はGate planではない。Gateを列挙するplanは通常どおり `docs/issue/<parent-issue>/plan.md` にだけ置く。milestone planは、milestone全体の履歴と現在のクローズtaskを管理する。
 
-## 退避条件
+## milestone-01の目的
 
-- 対象計画がmerge済みである
-- 対応issueの完了条件とチェックポイントが確認済みである
-- 後続作業者がactive plan側で常時読む必要がない
-- ユーザーがplan更新またはpost-merge tracking更新を指示している
+- 静的ルールサイトをGitHub Pagesのサブパスで公開する。
+- PLが遊ぶ判断と参加準備に必要なルール、世界観、キャラクターメイキング、データ、検索、更新履歴を提供する。
+- Webキャラクターシート、Cloudflare Web Analytics、Google Spreadsheetのローカル同期を、初期スコープとして実装済み機能に含める。
+- Excel本体とローカル補助入力は `.raw/` に置き、Git管理済みのMDX / Astro、生成JSON、仕様文書だけでCI/CDと公開を成立させる。
 
-## 記録形式
+初期スコープ外の正本は `docs/out-of-scope.md`、現在の実装要件の正本は `docs/requirements.md` と `docs/requirements/*.md` とする。
 
-退避する項目は、元のphase、task ID、完了日、関連PRまたはcommitが分かる形で残す。
+## 進行中のクローズtask
 
-```md
-## Phase N
+- [ ] `ex-07` — milestone-01の公開・要求・運用文書を現行実装へ正規化する
+  - source task: `54-release-docs`
+  - expanded responsibility: 公開手順だけでなく、要求、out-of-scope、アーキテクチャ、テスト・実装指針、AI Ops、完了issue配置を現行実装に合わせる。
+  - issue: `docs/issue/ex-07.md`
+  - source code、scripts、tests、workflow、package設定、生成データ、assetは変更しない。
 
-- [x] `NN-task-slug` — task summary
-  - completed: YYYY-MM-DD
-  - PR: #N または commit: `<hash>`
+milestone-02の計画、issue、実装はex-07完了後に開始する。このファイルへmilestone-02の内容を追加しない。
+
+## 履歴の扱い
+
+- 完了済みissueは `docs/issue/milestone-01/done/phase-X/` または `docs/issue/milestone-01/done/cross-phase/` に置く。
+- 完了したGate parent planとchild issue archiveは、同じmilestone archive内へ集約する。
+- 移動前に、issue本文の完了条件・チェックポイント、対応PRまたはユーザー承認、後続参照の更新可否を確認する。
+- 未完了issueや現在作業中issueは移動しない。
+- taskの完了チェックとarchiveは、ユーザー承認または `post-merge-plan-update` の対象作業でだけ行う。
+
+## 依存関係
+
+```mermaid id="pl5m29"
+flowchart TD
+  A[01-04 Docs / Init] --> B[05-08 Astro Base]
+  B --> C[09-17 Layout / Navigation / Basic Deploy]
+  C --> D[18-42 Page / Data Creation]
+  D --> E[43-48 Search]
+  E --> F[49-56 Finish / Release]
+  F --> G[ex-07 milestone-01 closure]
 ```
 
 ## 完了済み
