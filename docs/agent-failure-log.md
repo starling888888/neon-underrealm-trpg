@@ -2003,4 +2003,4 @@ source種別は以下を使う。
 - failure category: verification accuracy
 - 発生箇所: ex-07のmilestone-01 archive再配置と完了条件チェック
 - 観測した失敗: archive規約が完了条件・チェックポイントの全確認を移動条件とするにもかかわらず、Visual Reviewや表示・操作契約などの未チェック項目を残すex-02 Gate子issueを`done/`へ再配置し、activeまたは未完了issueを移動していない完了条件をチェックした。PR #76のdocument reviewで判明した。
-- 一次対応: `docs/issue/ex-07.md`のarchive完了条件を未チェックへ戻し、レビュー指摘2として根拠ごとの監査とarchive分類の再判断を記録した。親Gateがdoneであることだけを子issueの完了根拠にしない。
+- 一次対応: `docs/issue/milestone-01/done/cross-phase/ex-07.md`のarchive完了条件を未チェックへ戻し、レビュー指摘2として根拠ごとの監査とarchive分類の再判断を記録した。親Gateがdoneであることだけを子issueの完了根拠にしない。

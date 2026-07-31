@@ -13,15 +13,16 @@
 
 初期スコープ外の正本は `docs/out-of-scope.md`、現在の実装要件の正本は `docs/requirements.md` と `docs/requirements/*.md` とする。
 
-## 進行中のクローズtask
+## 完了したクローズtask
 
-- [ ] `ex-07` — milestone-01の公開・要求・運用文書を現行実装へ正規化する
+- [x] `ex-07` — milestone-01の公開・要求・運用文書を現行実装へ正規化する
+  - completed: 2026-07-31 via PR #76 / `6cbb278`
   - source task: `54-release-docs`
   - expanded responsibility: 公開手順だけでなく、要求、out-of-scope、アーキテクチャ、テスト・実装指針、AI Ops、完了issue配置を現行実装に合わせる。
-  - issue: `docs/issue/ex-07.md`
+  - archive: `docs/issue/milestone-01/done/cross-phase/ex-07.md`
   - source code、scripts、tests、workflow、package設定、生成データ、assetは変更しない。
 
-milestone-02の計画、issue、実装はex-07完了後に開始する。このファイルへmilestone-02の内容を追加しない。
+milestone-01はex-07のmergeによりクローズした。milestone-02の計画、issue、実装は、このファイルではなく次のmilestoneの計画としてユーザー指示後に開始する。
 
 ## 履歴の扱い
 
