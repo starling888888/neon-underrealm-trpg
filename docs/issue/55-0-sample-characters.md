@@ -8,7 +8,7 @@
 
 `docs/plan.md` の `55-initial-release` に対する、ユーザー指定の `55-0` 作業である。`public/sample-charcter/` に未コミットで置かれたJSONを、キャラクターメイキングのサンプルキャラクターとして公開する。
 
-対象ページの既存design targetは `docs/design/character-making/notes.md` である。ユーザー指定の順序なしリストとリンク構成を表示契約とし、既存の本文カラム、prose、PageToc、GitHub Pagesのsubpath対応を維持する。VRT baselineはユーザーの明示指示なしに更新しない。
+対象ページの既存design targetは `docs/design/character-making/notes.md` である。ユーザー指定の2列テーブルとリンク構成を表示契約とし、既存の本文カラム、prose、PageToc、GitHub Pagesのsubpath対応を維持する。VRT baselineはユーザーの明示指示なしに更新しない。
 
 ## 対象範囲
 
@@ -16,8 +16,8 @@
 - `src/pages/character-making.mdx` の「サンプルキャラクター」節を、次の内容へ置き換える。
   - 「以下のファイルをダウンロードして、キャラクターシートにインポートして利用してください。」と表示する。
 - 「キャラクターシート」を `target="_blank"` と `rel="noopener noreferrer"` を持つ `/character-sheet` へのリンクにする。
-- 番号 `01` から `10` の順の順序なしリストにする。
-- 各キャラクター名だけを対応JSONのダウンロードリンクにする。リンク直後に、リンクではないテキストとして `プライマリ流儀名×生き様名` を記載する。
+  - 番号 `01` から `10` の順の2列テーブルにし、ヘッダーを「キャラクター」「組み合わせ」にする。
+  - キャラクター列ではキャラクター名だけを対応JSONのダウンロードリンクにする。組み合わせ列には、リンクではないテキストとして `プライマリ流儀名×生き様名` を記載する。
 - JSONとキャラクターシートURLは `withBase` を通し、JSONリンクにはdownload属性を付ける。
 - 表示する流儀名・生き様名は各JSONの `build.primaryRyugiId` と `build.ikizamaId` から解決する。
 - サンプルキャラクターのPC名・設定文を、`public/sample-charcter/*.json` の `profile.pcName` と `profile.setting` から `contents-review` のbeginner / expert reviewerにレビューさせる。成果物は `.tmp/review/55-0-sample-characters/` に残す。
@@ -32,28 +32,28 @@
 
 ## 完了条件
 
-- [ ] 「サンプルキャラクター」節に指定文と新しい順序なしリストが表示される。
-- [ ] 10件のPC名が、`01` から `10` のJSONへ順番どおりのダウンロードリンクとして表示される。
-- [ ] 各PC名の直後に、リンクではない `プライマリ流儀×生き様` が表示される。
-- [ ] 「キャラクターシート」リンクが新しいタブで開き、GitHub Pagesのsubpathでも正しいURLになる。
-- [ ] JSONダウンロードリンクがGitHub Pagesのsubpathでも正しいURLになる。
-- [ ] 10件すべてが現行のcharacter-sheet JSON import境界で受理され、PC名・プライマリ流儀・生き様が復元されることを、自動testまたはローカル確認で記録している。
-- [ ] contents reviewerがPC名と設定文をレビューし、対応方針または人間確認事項をissueと `.tmp/review/55-0-sample-characters/` に記録している。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
-- [ ] 対象route・default state・desktop/tablet/mobileのactual screenshotを開いて表示契約を確認し、対象限定VRT結果を記録している。
+- [x] 「サンプルキャラクター」節に指定文と、ヘッダーが「キャラクター」「組み合わせ」である2列テーブルが表示される。
+- [x] 10件のPC名が、`01` から `10` のJSONへ順番どおりのダウンロードリンクとしてキャラクター列に表示される。
+- [x] 組み合わせ列に、リンクではない `プライマリ流儀×生き様` が表示される。
+- [x] 「キャラクターシート」リンクが新しいタブで開き、GitHub Pagesのsubpathでも正しいURLになる。
+- [x] JSONダウンロードリンクがGitHub Pagesのsubpathでも正しいURLになる。
+- [x] 10件すべてが現行のcharacter-sheet JSON import境界で受理され、PC名・プライマリ流儀・生き様が復元されることを、自動testまたはローカル確認で記録している。
+- [x] contents reviewerがPC名と設定文をレビューし、対応方針または人間確認事項をissueと `.tmp/review/55-0-sample-characters/` に記録している。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+- [x] 対象route・default state・desktop/tablet/mobileのactual screenshotを開いて表示契約を確認し、対象限定VRT結果を記録している。
 
 ## チェックポイント
 
-- [ ] `public/sample-charcter/` の10件を変更せずに公開対象へ含めている。
-- [ ] 10番が `sample-character_10_kashira_kejime.json` として、JSON本体の `ikizamaId: "kejime"` に一致している。
-- [ ] 既存ルートとキャラクターシートのimport導線が壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] `docs/TODO.md` の「JSONのスキーマバージョン差異との互換性を担保する」と矛盾していない。現行形式の10件を受理する確認だけを扱い、旧形式との互換性はこのissueで実装しない。
-- [ ] `docs/design/character-making/notes.md` の既存layoutと矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] `public/sample-charcter/` の10件を変更せずに公開対象へ含めている。
+- [x] 10番が `sample-character_10_kashira_kejime.json` として、JSON本体の `ikizamaId: "kejime"` に一致している。
+- [x] 既存ルートとキャラクターシートのimport導線が壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] `docs/TODO.md` の「JSONのスキーマバージョン差異との互換性を担保する」と矛盾していない。現行形式の10件を受理する確認だけを扱い、旧形式との互換性はこのissueで実装しない。
+- [x] `docs/design/character-making/notes.md` の既存layoutと矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -98,5 +98,43 @@
 ### 対応完了チェックリスト
 
 - [x] サンプル05の比較表現を、他サンプルを前提にしない説明へ更新している。
-- [ ] 修正する場合は、現行JSON import受理確認を含む `npm run check` が通る。
-- [ ] 修正する場合は、`npm run build` が通る。
+- [x] 修正する場合は、現行JSON import受理確認を含む `npm run check` が通る。
+- [x] 修正する場合は、`npm run build` が通る。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-making/notes.md`
+- VRT test / tags: `tests/visual/vrt/character-making.spec.ts` / `@vrt.*@character-making(?:\s|$)`
+- route / states / viewports: `/character-making/` / default / desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
+
+### レビュー結果
+
+| 対象                      | 判定     | 差分                                                                                                                          | 対応       |
+| ------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| desktop / tablet / mobile | 承認済み | 初回比較時はbaseline未配置。ユーザーが3 viewportの表示を確認・承認後、同一actualをbaselineとして更新し、再比較は3件成功した。 | 対応完了。 |
+
+### 実画面確認
+
+- 確認済み: desktop `1440x1200`、tablet `820x1180`、mobile `390x900` のactual screenshotと、`.tmp/review/55-0-sample-characters/vrt-locators/` の表locator screenshotを開き、ユーザーが表示を確認・承認した。サンプルキャラクター表は各viewportで本文カラム内に収まり、2列・10件のダウンロードリンクとして表示される。mobileでは長い名前・組み合わせがセル内で改行され、横overflowはない。
+
+### 自己修正した項目
+
+- なし。
+
+### 人間判断が必要な差分
+
+- なし。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（該当する場合）
