@@ -223,3 +223,28 @@ Google Drive MCP経由のSpreadsheet取得は、今後のデータ調整に必�
 - [x] `npm run test:script` が通る。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- 現行design notesの一部が`.raw/contents/`を`Referenced SSoT`として残し、手動の非正本入力である優先順位を明記していない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/design/{character-making,common-skills,data,home,ikizama-detail,introduction,items,release-notes,ryugi-detail,support}/notes.md`に`.raw/contents/`が`Referenced SSoT`または直接の表示契約として残る。AGENTS、requirements、out-of-scope、contents ruleは、contentsをGit管理のcurrent issue、requirements、design、MDX / Astroより優先しない手動の補助入力と定めるため、現行design noteも同じ方針へ整合させる必要がある。
+
+### 対応方針
+
+- ユーザー判断により、すでに作成済みで今後の大きな編集を想定しないdesign notesは、このPRでは一括更新しない。既存noteの`.raw/contents/`参照は作成時点の入力記録として維持する。
+- 現行運用の優先順位は、更新済みの`AGENTS.md`、requirements、out-of-scope、contents ruleを正本とする。将来design noteを実質的に編集するtaskでは、必要に応じて手動・非正本の注記を追加する。
+
+### ユーザー判断
+
+- 2026-07-31: 既存design notesを横断して更新する作業は不要と判断し、レビュー指摘の実装修正を行わない。
+
+### 対応完了チェックリスト
+
+- [x] 既存design notesを現行PRで一括更新しないユーザー判断を記録した。
