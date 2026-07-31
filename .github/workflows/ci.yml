@@ -1,0 +1,28 @@
+name: Quality CI
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths-ignore:
+      - "docs/**"
+      - ".agents/**"
+      - "AGENTS.md"
+      - "README.md"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - ".agents/**"
+      - "AGENTS.md"
+      - "README.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    uses: ./.github/workflows/quality.yml

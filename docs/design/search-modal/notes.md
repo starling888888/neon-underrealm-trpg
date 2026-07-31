@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/search-modal.spec.ts` の `@vrt @search-modal @<state> @<viewport>`
+- test: `tests/vrt/search-modal.spec.ts` の `@vrt @search-modal @<state> @<viewport>`
 - route: `/data/common-skills/`
 - states / snapshots:
   - open: `search-modal-search-open-desktop.png`, `search-modal-search-open-tablet.png`, `search-modal-search-open-mobile.png`

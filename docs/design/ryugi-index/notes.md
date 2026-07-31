@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/ryugi-index.spec.ts` の `@vrt @ryugi-index @<state> @<viewport>`
+- test: `tests/vrt/ryugi-index.spec.ts` の `@vrt @ryugi-index @<state> @<viewport>`
 - route: `/data/ryugi/`
 - state: default
 - snapshots:

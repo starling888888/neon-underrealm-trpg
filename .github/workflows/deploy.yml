@@ -21,7 +21,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  quality:
+    uses: ./.github/workflows/quality.yml
+
   build:
+    needs: quality
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,9 +42,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Check
-        run: npm run check
 
       - name: Require Cloudflare Web Analytics token
         env:
@@ -67,6 +68,8 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -74,3 +77,55 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+  public-e2e:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Wait for deployed site
+        env:
+          E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: |
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error --location --output /dev/null "$E2E_BASE_URL"; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 12 ]; then
+              echo "::error::The deployed GitHub Pages site did not become reachable."
+              exit 1
+            fi
+            sleep 5
+          done
+
+      - name: Run Public E2E
+        env:
+          E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: npx playwright test --config playwright.e2e.config.ts --grep-invert '@local-fixture' --workers=1
+
+      - name: Upload Public E2E diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-e2e-diagnostics
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 7

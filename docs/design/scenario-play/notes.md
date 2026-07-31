@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/scenario-play.spec.ts` の `@vrt @scenario-play @<state> @<viewport>`
+- test: `tests/vrt/scenario-play.spec.ts` の `@vrt @scenario-play @<state> @<viewport>`
 - route: `/rules/scenario-play/`
 - state: default
 - snapshots:
@@ -83,7 +83,7 @@
 - source branch / commit when applicable: `24-2-scenario-play-page` / `e190558`
 - route: `/rules/scenario-play/`
 - viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- current VRT: `tests/visual/vrt/scenario-play.spec.ts` の`@vrt @scenario-play`で、desktop / tablet / mobileを比較する。
+- current VRT: `tests/vrt/scenario-play.spec.ts` の`@vrt @scenario-play`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

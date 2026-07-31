@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/home.spec.ts` の `@vrt @home @<state> @<viewport>`
+- test: `tests/vrt/home.spec.ts` の `@vrt @home @<state> @<viewport>`
 - route: `/`
 - state: default
 - snapshots:
@@ -11,7 +11,7 @@
   - mobile `390x900`: `home-default-mobile.png`
 - viewport state: `home-home-viewport-desktop.png`, `home-home-viewport-tablet.png`, `home-home-viewport-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
-- actual review locator: `tests/visual/vrt/home.spec.ts` が「最新リリースノート」sectionを、`visual:capture`時のみdesktop / tablet / mobileの原寸一時snapshotとして出力する。通常の`visual:test`ではfull-page / viewport baselineだけを比較する。
+- actual review locator: `tests/vrt/home.spec.ts` が「最新リリースノート」sectionを、`visual:capture`時のみdesktop / tablet / mobileの原寸一時snapshotとして出力する。通常の`visual:test`ではfull-page / viewport baselineだけを比較する。
 
 ## Mode
 
@@ -31,7 +31,7 @@
   - desktop上から下までのfull-page
   - mobile標準画面に写り切る範囲
   - mobile上から下までのfull-page
-- VRT coverage: `tests/visual/vrt/home.spec.ts`のdefaultとviewport stateをdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`で比較する。
+- VRT coverage: `tests/vrt/home.spec.ts`のdefaultとviewport stateをdesktop `1440x1200`、tablet `820x1180`、mobile `390x900`で比較する。
 
 ## Referenced SSoT
 
@@ -152,7 +152,7 @@
 
 ## Generation Source
 
-- current VRT: `tests/visual/vrt/home.spec.ts` の`@vrt @home`で、desktop / tablet / mobileのdefaultとviewport stateを比較する。
+- current VRT: `tests/vrt/home.spec.ts` の`@vrt @home`で、desktop / tablet / mobileのdefaultとviewport stateを比較する。
 - source branch / commit when applicable: `18-2-home-page` / `f521a11`
 - route when applicable: `/`
 - viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`

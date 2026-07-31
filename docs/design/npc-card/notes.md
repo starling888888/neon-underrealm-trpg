@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/npc-card.spec.ts` の `@vrt @npc-card @<state> @<viewport>`
+- test: `tests/vrt/npc-card.spec.ts` の `@vrt @npc-card @<state> @<viewport>`
 - route: `/-local/npc-cards/`
 - state: default
 - snapshots:
@@ -26,7 +26,7 @@
 - states:
   - desktop landscape card, 1 column
   - mobile landscape card, 1 column
-- VRT coverage: `tests/visual/vrt/npc-card.spec.ts`のdesktop / tablet / mobile baseline
+- VRT coverage: `tests/vrt/npc-card.spec.ts`のdesktop / tablet / mobile baseline
 
 ## Referenced SSoT
 
@@ -94,7 +94,7 @@
 - prototype or generator source: build後の`/-local/npc-cards/`のactual implementation screenshot。
 - route when applicable: `/-local/npc-cards/`
 - viewport: desktop `1440x1200`、mobile `390x900`。いずれもviewport captureでありfull-pageではない。
-- current VRT: `tests/visual/vrt/npc-card.spec.ts` の`@vrt @npc-card`で、desktop / tablet / mobileを比較する。
+- current VRT: `tests/vrt/npc-card.spec.ts` の`@vrt @npc-card`で、desktop / tablet / mobileを比較する。
 
 ## Canonicalization rationale
 

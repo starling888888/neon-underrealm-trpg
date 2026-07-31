@@ -69,7 +69,7 @@ Before doing anything, resolve the current implementation contract and verify:
 2. The user has approved implementation for that current issue.
 3. The change is inside issue scope and affects a VRT-covered UI target.
 4. The target's `docs/design/<design-target>/notes.md` and
-   `tests/visual/vrt/<target>.spec.ts` exist.
+   `tests/vrt/<target>.spec.ts` exist.
 
 Stop and report a missing target, missing design note, or scope conflict. Do
 not create a VRT test or modify implementation from this skill unless the user

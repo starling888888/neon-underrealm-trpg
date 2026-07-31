@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/ikizama-index.spec.ts` の `@vrt @ikizama-index @<state> @<viewport>`
+- test: `tests/vrt/ikizama-index.spec.ts` の `@vrt @ikizama-index @<state> @<viewport>`
 - route: `/data/ikizama/`
 - state: default
 - snapshots:

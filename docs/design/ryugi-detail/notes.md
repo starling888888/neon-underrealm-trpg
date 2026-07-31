@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/ryugi-detail.spec.ts` の `@vrt @ryugi-detail @<ryugiId> @<viewport>`
+- test: `tests/vrt/ryugi-detail.spec.ts` の `@vrt @ryugi-detail @<ryugiId> @<viewport>`
 - route: `/data/ryugi/kenkaya/`
 - state: default
 - snapshots:

@@ -72,6 +72,31 @@ workflowは `main` へのpushで実行します。
 - `AGENTS.md`
 - `README.md`
 
+## CIとPublic E2E
+
+`.github/workflows/quality.yml`は、再利用するQuality処理を定義する。Qualityでは、次を順に実行する。
+
+1. `npm ci`
+2. `npm run check`
+3. `npm run build`
+4. `npm run test`
+
+`npm run test`はNode、Component、build contractなどの通常testを実行する。ローカルpreviewを起動するE2EとVRTは含めない。
+
+`.github/workflows/ci.yml`は、main以外のbranchへのpushとPull RequestでQualityだけを実行する。GitHub Pagesへのdeploy、Pages artifact upload、`pages: write`、`id-token: write`は含めない。pushとPull Requestが同じcommitで同時に起動した場合は、commit SHA単位のconcurrencyで実行中の古いQualityをcancelする。
+
+mainへのサイト公開対象のpushでは、deploy workflowが同じQualityの成功後に公開用build、Pagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更は、main以外のbranchとPull Requestを含め、Qualityを起動しない。`src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
+
+deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`playwright-report/`と`test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
+
+## VRT運用
+
+VRTのcanonical baselineは`canonical-snapshots/visual/`に置くGit管理外のローカル比較入力である。`test-results/`と`playwright-report/`もGit管理しない。
+
+UI、CSS、layout、page、Componentを変更したときだけ、PRレビュー直前に変更targetへ限定してローカルVRTを実行する。baselineの作成・更新は、差分確認後のユーザー明示指示時だけ行う。
+
+このCIではVRTを実行せず、baselineをupload、download、artifact保存、自動更新しない。GitHub Actionsで全件VRTを扱う方法は、Git管理外baselineの比較入力をどう提供するかを含め、`docs/TODO.md`の別taskで判断する。
+
 ## アクセス解析
 
 初回公開告知前の `ex-05-access-analytics` では、Cloudflare Web Analyticsだけをmanual beaconで導入する。GitHub Pages、DNS、hostingの構成は変更しない。

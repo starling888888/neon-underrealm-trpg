@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/battle.spec.ts` の `@vrt @battle @<state> @<viewport>`
+- test: `tests/vrt/battle.spec.ts` の `@vrt @battle @<state> @<viewport>`
 - route: `/rules/battle/`
 - state: default
 - snapshots:
@@ -76,7 +76,7 @@
 - source branch / commit: `25-2-battle-page` / `594448a5b3a0fd8bc3b228505f325b49e00ce544`
 - route: `/rules/battle/`
 - viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- current VRT: `tests/visual/vrt/battle.spec.ts` の`@vrt @battle`で、desktop / tablet / mobileを比較する。
+- current VRT: `tests/vrt/battle.spec.ts` の`@vrt @battle`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

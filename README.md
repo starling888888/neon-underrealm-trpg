@@ -191,7 +191,8 @@ V1.5で処理順を明確化しました。
 - `docs/issue/`: タスクごとの作業定義
 - `docs/TODO.md`: 現在のissueでは対応しないが、将来対応すべきレビュー指摘・改善候補
 - `.agents/skills/`: 生成AIエージェント用の定型workflow
-- `tests/visual/`: Playwright VRTと、VRTでは確認できないUI操作のテスト
+- `tests/e2e/`: Playwright browser behavior E2E
+- `tests/vrt/`: Playwright visual regression tests
 - `data/generated/`: Excelから変換した公開用JSONの配置先
 - `.raw/`: Google Drive由来ファイルを同期するローカル作業入力。Git管理しない
 - `raw-google-drive.url`: Google Drive同期対象フォルダURLを置くローカル設定ファイル。Git管理しない
@@ -207,7 +208,7 @@ V1.5で処理順を明確化しました。
 - [本文作成ガイド](docs/content-writing-guide.md)
 - [ゲーム画像生成用ベースプロンプト](docs/image-generation/base-prompt.md)
 - [生成データ方針](data/generated/README.md)
-- [Visual Review Tests](tests/visual/README.md)
+- [Visual Review Tests](tests/vrt/README.md)
 
 ## 生成AIエージェント運用
 

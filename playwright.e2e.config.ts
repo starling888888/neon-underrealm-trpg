@@ -1,18 +1,31 @@
 import { defineConfig } from "@playwright/test";
-import { visualPlaywrightUse } from "./playwright.config";
+import { siteBaseUrl } from "./tests/support/site";
 
-const e2eBaseUrl = "http://127.0.0.1:4322/neon-underrealm-trpg/";
-
+const isRemote = Boolean(process.env.E2E_BASE_URL);
+const localWebServer = {
+  command: "npm run preview -- --port 4322",
+  url: siteBaseUrl,
+  reuseExistingServer: false,
+};
 export default defineConfig({
-  testDir: "./tests/visual",
-  testIgnore: ["**/vrt/**"],
+  testDir: "./tests/e2e",
+  ...(isRemote
+    ? {
+        outputDir: "test-results/public-e2e",
+        reporter: [
+          ["dot"],
+          ["html", { open: "never", outputFolder: "playwright-report" }],
+        ],
+      }
+    : {}),
   use: {
-    ...visualPlaywrightUse,
-    baseURL: e2eBaseUrl,
+    baseURL: siteBaseUrl,
+    ...(isRemote
+      ? {
+          screenshot: "only-on-failure",
+          trace: "retain-on-failure",
+        }
+      : {}),
   },
-  webServer: {
-    command: "npm run preview -- --port 4322",
-    url: e2eBaseUrl,
-    reuseExistingServer: false,
-  },
+  ...(isRemote ? {} : { webServer: localWebServer }),
 });

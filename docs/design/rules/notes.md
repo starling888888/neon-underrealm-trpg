@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/rules.spec.ts` の `@vrt @rules @<state> @<viewport>`
+- test: `tests/vrt/rules.spec.ts` の `@vrt @rules @<state> @<viewport>`
 - route: `/rules/`
 - state: default
 - snapshots:
@@ -79,7 +79,7 @@
 - source branch / commit when applicable: `23-2-rules-page` / `42f0580`
 - route: `/rules/`
 - viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- current VRT: `tests/visual/vrt/rules.spec.ts` の`@vrt @rules`で、desktop / tablet / mobileを比較する。
+- current VRT: `tests/vrt/rules.spec.ts` の`@vrt @rules`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

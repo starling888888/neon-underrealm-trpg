@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/site-layout.spec.ts` の `@vrt @site-layout @<state> @<viewport>`
+- test: `tests/vrt/site-layout.spec.ts` の `@vrt @site-layout @<state> @<viewport>`
 - route: `/-local/mdx-test/`
 - state: default
 - snapshots:

@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/404.spec.ts` の `@vrt @404 @<state> @<viewport>`
+- test: `tests/vrt/404.spec.ts` の `@vrt @404 @<state> @<viewport>`
 - route: `/not-found/`
 - state: default
 - snapshots:
@@ -28,7 +28,7 @@
 - states:
   - desktop full-page screenshot
   - mobile full-page screenshot
-- VRT coverage: `tests/visual/vrt/404.spec.ts` の default state をdesktop / tablet / mobileで比較する。
+- VRT coverage: `tests/vrt/404.spec.ts` の default state をdesktop / tablet / mobileで比較する。
 
 ## Referenced SSoT
 
@@ -81,7 +81,7 @@
 
 ## Generation Source
 
-- current VRT: `tests/visual/vrt/404.spec.ts` の`@vrt @404`で、desktop / tablet / mobileを比較する。
+- current VRT: `tests/vrt/404.spec.ts` の`@vrt @404`で、desktop / tablet / mobileを比較する。
 - source branch: `40-2-404-page`
 - source commit: `c415aaa908cf964a4177c6cde6177968da235c63`。404実装、Visual Test、検索除外を含む固定済みcommitからcanonicalizeする。
 - route: `/not-found/`

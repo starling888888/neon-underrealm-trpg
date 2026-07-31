@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/advancement.spec.ts` の `@vrt @advancement @<state> @<viewport>`
+- test: `tests/vrt/advancement.spec.ts` の `@vrt @advancement @<state> @<viewport>`
 - route: `/advancement/`
 - state: default
 - snapshots:

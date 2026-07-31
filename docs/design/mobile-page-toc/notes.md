@@ -2,7 +2,7 @@
 
 ## VRT baseline
 
-- test: `tests/visual/vrt/mobile-page-toc.spec.ts` の `@vrt @mobile-page-toc @<state> @<viewport>`
+- test: `tests/vrt/mobile-page-toc.spec.ts` の `@vrt @mobile-page-toc @<state> @<viewport>`
 - route: `/-local/mdx-test/`
 - states / snapshots:
   - closed, mobile `390x900`: `mobile-page-toc-default-mobile.png`
