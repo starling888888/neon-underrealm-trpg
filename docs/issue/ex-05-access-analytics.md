@@ -432,7 +432,7 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 - 法的義務や公開告知の要否は本issueで断定しない。ユーザーが告知を追加すると判断した場合は、contents正本と可視UIを扱う別taskを作成する。
 - ユーザーの明示指示により、current issue外だったsample character JSONの末尾改行を整え、`tests/node/character-making-sample-characters.test.ts`の旧path `public/sample-charcter/` を現行の `public/sample-character/` へ訂正した。JSONの内容、公開ページ本文、Excel変換処理は変更していない。これにより `npm test` と `npm run check` が成功した。詳細は `.tmp/review/ex-05-access-analytics/user-directed-changes.md` を参照する。
 
-## ローカル検証
+## 初期draftのローカル検証履歴
 
 - mode: local repository validation
 - branch: `ex-05-access-analytics`（`main` の `b033948` から作成）
@@ -454,10 +454,38 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
   - `src/layouts/AppContainer.astro`
   - Cloudflare Web Analytics公式documentationのmanual beacon、SPA、FAQ、metrics、data collection
 
-以下は未確認であり、実装または公開後のユーザー確認が必要である。
+以下は、初期draftを検証した時点で未確認だった項目である。現在の実装・検証状態は完了条件および「レビュー指摘 1」を正本とする。
 
 - Cloudflare account、site登録、actual site token、GitHub Actions Repository Variable
 - GitHub Pages公開後の実beacon送信、Cloudflare dashboardへの実データ到達、CORS error
-- `npm test`、`npm run check`、`npm run build`、`npm run build:public`
 
-このissueは既存draftのローカル検証であり、`issue-first-development` の規約によりissue reviewerは実行していない。ユーザー承認までsource実装を開始しない。承認後もGate planや子issueは作成せず、このissueを直接実装する。
+このissueは既存draftのローカル検証を経てユーザー承認後に実装を開始した。初期draft検証では`issue-first-development`の規約によりissue reviewerを実行していない。実装後のPR review結果は「レビュー指摘 1」を参照する。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- [重要] `src/pages/character-sheet.astro` は共通`AppContainer`を使わない独自HTMLだが、Cloudflare beaconを配置していない。そのため、本番でも`/character-sheet`のPage view、Path、Performance指標が計測されない。
+- [重要] current issueが要求するdummy token付きproduction相当の生成HTML検証（トップ、代表下層、`/character-sheet`、404の各1 beacon、`type="module"`、有効な`data-cf-beacon` JSON、token、`spa: false`）を自動testで行っていない。
+- [重要] 「ローカル検証」末尾に実装前時点の未確認・実装停止記録が残り、現在の完了条件および実装済み状態と矛盾している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: PR #72のremote head `efa52eda090225d85c2323374c3681c6220c8c2d`がlocal `HEAD`と一致すること、document / technical reviewer report、current issue、`src/pages/character-sheet.astro`、analytics Component、helper、contract / node testを照合した。`character-sheet.astro`は独自の`<html>`・`<body>`を出力し、`CloudflareWebAnalytics`を含まない。既存testはtokenなしartifactとhelper JSONだけを確認する。issue末尾には実装前の未確認・停止記録が残る。
+
+### 対応方針
+
+- `character-sheet.astro`の終了`</body>`直前へ専用Componentを最大1回配置し、`AppContainer`利用ページと同じproduction / token境界を適用する。
+- 実network requestを発生させないdummy token付きproduction相当buildの検査を追加し、トップ、代表下層、`/character-sheet`、404の生成HTMLを確認する。token未設定buildのbeacon不在確認も維持する。
+- 「ローカル検証」を初期draft検証の履歴として明示し、実装済み状態と矛盾する未確認・停止記述を修正する。
+
+### 対応完了チェックリスト
+
+- [x] `/character-sheet`を含む全公開HTML documentへbeaconが最大1つ出力される
+- [x] dummy token付きproduction相当buildの生成HTMLについて、beacon数、`type="module"`、JSON属性、token、`spa: false`を確認するtestがある
+- [x] issueのローカル検証記録が現在の実装・検証状態と矛盾しない
+- [x] `npm test` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

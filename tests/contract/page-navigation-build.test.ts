@@ -52,7 +52,7 @@ describe("page navigation public build contract", () => {
   });
 
   it("omits the beacon from a public build without a token", () => {
-    for (const route of ["/", "/rules/battle", "/404"]) {
+    for (const route of ["/", "/rules/battle", "/character-sheet", "/404"]) {
       assert.equal(getCloudflareBeaconCount(route), 0, route);
     }
   });
