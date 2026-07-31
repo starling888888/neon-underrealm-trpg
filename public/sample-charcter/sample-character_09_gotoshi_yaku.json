@@ -1,0 +1,308 @@
+{
+  "armor": {
+    "armorId": "item-armor-0fa89fb308be",
+    "damageReductionModifier": null,
+    "defenseModifier": null
+  },
+  "bonds": {
+    "resolveEffectModifiers": {
+      "activeCheck": 0,
+      "morale": 0,
+      "passiveCheck": 0,
+      "recovery": 0
+    },
+    "rows": [
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-1",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-2",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-3",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-4",
+        "target": ""
+      }
+    ]
+  },
+  "build": {
+    "acquiredExperience": 50,
+    "attributes": {
+      "strength": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 0,
+        "temporaryModifier": 0
+      },
+      "agility": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 2,
+        "temporaryModifier": 0
+      },
+      "perception": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 2,
+        "temporaryModifier": 0
+      },
+      "body": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 5,
+        "temporaryModifier": 0
+      },
+      "mind": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 5,
+        "temporaryModifier": 2
+      }
+    },
+    "ikizamaId": "yaku",
+    "ikizamaLevel": 2,
+    "otherRyugi": [],
+    "primaryRyugiId": "gotoshi",
+    "primaryRyugiLevel": 4
+  },
+  "checks": {
+    "attacks": [
+      {
+        "attribute": "mind",
+        "modifier": 0,
+        "rowId": "attack-1",
+        "skill": "interference"
+      }
+    ],
+    "reactions": [
+      {
+        "attribute": "perception",
+        "modifier": 0,
+        "name": "defense",
+        "rowId": "reaction-defense"
+      },
+      {
+        "attribute": "perception",
+        "modifier": 0,
+        "name": "evasion",
+        "rowId": "reaction-evasion"
+      },
+      {
+        "attribute": "body",
+        "modifier": 0,
+        "name": "endurance",
+        "rowId": "reaction-endurance"
+      },
+      {
+        "attribute": "mind",
+        "modifier": 0,
+        "name": "resistance",
+        "rowId": "reaction-resistance"
+      }
+    ],
+    "noncombat": {
+      "intimidation": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "strengthContest": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "willpower": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "reconnaissance": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "acrobatics": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "sleightOfHand": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "cheating": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "dangerSense": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "analysis": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "driving": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "survival": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "jingi": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "gambling": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "negotiation": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "hacking": {
+        "isFavorite": false,
+        "modifier": 0
+      }
+    }
+  },
+  "commonSkills": {
+    "rows": [
+      {
+        "level": 1,
+        "rowId": "common-skill-1",
+        "skillId": "skill-common-basic-ra-378595018986"
+      },
+      {
+        "level": 1,
+        "rowId": "common-skill-2",
+        "skillId": "skill-common-basic-pv-76efb6f481d9"
+      }
+    ]
+  },
+  "cybernetics": {
+    "armId": null,
+    "headId": null,
+    "implantLimitModifier": 0,
+    "implantTotalModifier": 0,
+    "legId": null,
+    "otherRows": [
+      {
+        "cyberneticId": null,
+        "rowId": "cybernetic-other-1"
+      }
+    ],
+    "torsoId": null
+  },
+  "drugs": {
+    "rows": [
+      {
+        "drugId": "item-drug-su-873856f4ac25",
+        "quantity": 1,
+        "rowId": "drug-1"
+      },
+      {
+        "drugId": "item-drug-su-5bdb005b333a",
+        "quantity": 1,
+        "rowId": "drug-2"
+      }
+    ]
+  },
+  "nanomachines": {
+    "armId": null,
+    "headId": null,
+    "implantLimitModifier": 0,
+    "implantTotalModifier": 0,
+    "legId": null,
+    "torsoId": null
+  },
+  "credit": {
+    "acquired": 10,
+    "changeAdjustment": 0,
+    "provided": 0,
+    "received": 0
+  },
+  "ikizamaSkills": {
+    "bonusLevel": 1,
+    "rows": [
+      {
+        "level": 2,
+        "rowId": "ikizama-skill-2",
+        "skillId": "skill-ikizama-yaku-basic-pv-37ce0affc87a"
+      }
+    ]
+  },
+  "omamori": {
+    "rows": []
+  },
+  "otherRyugiSkills": {
+    "rows": []
+  },
+  "primarySkills": {
+    "rows": [
+      {
+        "level": 1,
+        "rowId": "primary-skill-1",
+        "skillId": "skill-ryugi-gotoshi-basic-a-405fb51c0613"
+      },
+      {
+        "level": 2,
+        "rowId": "primary-skill-2",
+        "skillId": "skill-ryugi-gotoshi-basic-d-c44a2c4cba5a"
+      },
+      {
+        "level": 1,
+        "rowId": "primary-skill-3",
+        "skillId": "skill-ryugi-gotoshi-basic-r-04c5c6e6bc30"
+      }
+    ]
+  },
+  "profile": {
+    "age": "",
+    "gender": "",
+    "nickname": "",
+    "pcName": "ヤク中のイカサマ師",
+    "playerName": "",
+    "setting": "支援と範囲攻撃を得意とするキャラクターです。特殊範囲攻撃による雑魚の掃討、味方のダメージ上昇、回避の手助けと八面六臂の活躍ができるでしょう。ただし注意。ドラッグは毎ラウンドバッドトリップとしてあなたの体力と精神力を削っていきます。"
+  },
+  "secondaryAttributes": {
+    "actionCountModifier": 0,
+    "actionModifier": 0,
+    "applyTemporaryAction": false,
+    "applyTemporaryMovement": false,
+    "bondLimitModifier": 0,
+    "healthModifier": 0,
+    "mentalModifier": 0,
+    "movementModifier": 0
+  },
+  "specialItems": {
+    "categories": []
+  },
+  "weapons": {
+    "rows": [
+      {
+        "attackModifier": 5,
+        "guardModifier": null,
+        "rowId": "weapon-1",
+        "weaponId": "item-weapon-normal-kanshou-30f6f746924c"
+      },
+      {
+        "attackModifier": 5,
+        "guardModifier": null,
+        "rowId": "f7aaffba-8a86-4d49-b62f-b573487d210f",
+        "weaponId": "item-weapon-normal-kanshou-3d9edf6ecc4b"
+      }
+    ]
+  },
+  "imageBase64String": null
+}
