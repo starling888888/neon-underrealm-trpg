@@ -284,11 +284,11 @@ CSS custom property は media query の条件値として使えないため、�
 
 ## 27. アクセス解析
 
-Cloudflare Web Analytics、Plausible、Umamiなどのアクセス解析は初期スコープ外とする。
+Cloudflare Web Analytics、Plausible、Umamiなどのアクセス解析は初期スコープ外とする。ただし、`docs/plan.md` の `ex-05-access-analytics` に限り、初回公開告知前の独立taskとしてCloudflare Web Analyticsだけを導入してよい。
 
-初期実装では、外部サービスのスクリプト、トラッキングID、Secretsを必要とする構成を追加しない。
+`ex-05-access-analytics` 以外では、外部サービスのスクリプト、トラッキングID、Secretsを必要とする構成を追加しない。Cloudflare Web Analyticsを導入する場合も、custom event、閲覧者単位の追跡、server-side access log、他providerの併用は初期スコープ外とする。
 
-アクセス解析を追加する場合は、ルールサイト本体が安定した後、独立したタスクとして扱う。
+`ex-05-access-analytics` 以外のアクセス解析を追加する場合は、ルールサイト本体が安定した後、独立したタスクとして扱う。
 
 ---
 

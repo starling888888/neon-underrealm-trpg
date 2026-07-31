@@ -9,7 +9,7 @@ PR merge後の計画更新は `.agents/skills/post-merge-plan-update/SKILL.md` �
 ## 前提
 
 - 初期開発対象は静的ルールサイト本体とする。
-- GMガイド、シナリオ、アクセス解析、ダイスローラー等は初期実装に含めない。Webキャラクターシートは `ex-02-web-character-sheet` に限り初期実装に含める。
+- GMガイド、シナリオ、ダイスローラー等は初期実装に含めない。Webキャラクターシートは `ex-02-web-character-sheet`、Cloudflare Web Analyticsは `ex-05-access-analytics` に限り初期実装に含める。
 - 各branchは原則として単独でbuild可能・review可能な状態でmergeする。
 - branch名は `NN-purpose` 形式を基本とする。`ex-NN-purpose` は、ユーザーが特別taskとして指定した場合に限り使用する。
 - 1st stepの目的は、ルールサイト公開の初回告知を見た人がなるべく長くサイトを読み、「遊んでみたい」と思えることとする。完了は、初回告知時点でPLが遊ぶ判断と参加準備をするために十分なコンテンツが公開されている状態と定義する。
@@ -43,6 +43,13 @@ PR merge後の計画更新は `.agents/skills/post-merge-plan-update/SKILL.md` �
   - [ ] `docs/image-generation/base-prompt.md`を現行hero実績と将来の用途に合わせて改訂する
   - [ ] 画像固有prompt、公式ロゴ、in-world signage、overlay typographyの利用方針と承認手順を決定する
   - [ ] base promptをsampleとして使う範囲と、生成前に画像固有promptで必ず決める事項を記載する
+
+- [ ] `ex-05-access-analytics` — 初回公開告知前に、Cloudflare Web Analyticsで公開サイトの利用傾向を把握できるようにする
+
+  - Cloudflare Web Analyticsだけをmanual beaconで導入する
+  - GitHub Pagesの本番deployだけでbeaconを出力し、local build、PR検証、Visual Testでは送信しない
+  - Cloudflare側のsite登録、GitHub Actions Repository Variable、公開後の確認手順を運用文書へ記載する
+  - custom event、閲覧者単位の追跡、server-side access log、ほかの解析サービスは導入しない
 
 - [ ] `55-initial-release` — 初期公開用最終調整を行う
 
