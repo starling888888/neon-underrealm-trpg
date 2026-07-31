@@ -16,7 +16,6 @@
 
 ### G1: Gate名
 
-- 完了後の引継ぎ: 確定した詳細要件、判断、後続Gateへの注意だけをここに残す。
-- archive: 完了後に対象milestoneの `docs/issue/milestone-<NN>/done/<分類>/NN-1-gate-slug.md` を記録する。
+- GitHub Issue: `GitHub Issue #<number>: NN-1-gate-slug`
 
-plannedまたはin progressのGateには、この節を作らない。各Gateの詳細な目的、範囲、完了条件、参照正本、実装判断は、着手時に作る子issueだけへ記録する。
+plannedまたはin progressのGateには、この節を作らない。完了Gateには子issueの名称とGitHub Issue番号だけを残す。各Gateの詳細な目的、範囲、完了条件、参照正本、実装判断は、着手時に作る子issueだけへ記録し、完了後はローカルに残さない。

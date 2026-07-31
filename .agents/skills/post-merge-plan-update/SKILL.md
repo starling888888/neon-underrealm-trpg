@@ -13,10 +13,10 @@ Use when the user asks to:
 - pull merged changes and confirm the result
 - delete the merged work branch
 - mark the corresponding `docs/issue/milestone-<NN>/plan.md` task complete
-- keep the completed task entry in the milestone plan with its merge record
+- keep the completed task name and GitHub Issue number in the milestone plan
 - mark handled `docs/TODO.md` items complete and move them to `docs/TODO-done.md`
-- move completed issue files to `docs/issue/milestone-<NN>/done/phase-N/` or `docs/issue/milestone-<NN>/done/cross-phase/`
-- return a completed Gate child's durable handoff to its parent Gate plan
+- archive completed issue files as same-name GitHub closed Issues and delete the local files
+- reduce completed issue records in milestone plans and Gate plans to their names and GitHub Issue numbers
 - commit and push tracking updates to `main`
 
 Do not use for:
@@ -49,9 +49,9 @@ Do the cleanup in this order:
 9. Record completion context in the completed milestone plan entry when every checkbox in that entry is checked.
 10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
 11. Confirm that required review information was formalized, then remove only `.tmp/review/<WORK_BRANCH>/`.
-12. For a completed Gate child issue, return its durable handoff to the parent Gate plan.
-13. If the issue is complete, move the issue file to the correct `docs/issue/milestone-<NN>/done/` archive.
-14. Keep active documents from depending on completed issue files.
+12. For a completed Gate child issue, prepare its parent Gate plan for a lightweight GitHub Issue reference.
+13. If the issue is complete, archive it as a GitHub closed Issue and delete the local issue file.
+14. Keep active documents from depending on completed issue files or closed GitHub Issues as implementation SSoT.
 15. Run available validation commands.
 16. Commit only tracking files that were intentionally updated.
 17. Push `main`.
@@ -164,24 +164,16 @@ If `docs/TODO.md` still contains a historical `## 完了済み` section, treat i
 
 ---
 
-## Moving completed issue files
+## Archiving completed issues
 
-When the completed issue is a Gate child issue, update its parent Gate plan before moving the issue:
-
-- confirm the parent Gate plan path from the child issue
-- return only durable detailed requirements, confirmed decisions, and follow-up handoff to that Gate's entry
-- set the Gate status to `done`
-- record the child issue's destination archive path
-
-Do not copy implementation logs, temporary review notes, or duplicated background to the parent Gate plan. Do not move the child issue when this handoff is incomplete.
-
-Move an issue file only when all of these are true:
+Archive an issue only when all of these are true:
 
 - the issue corresponds to the merged work
 - every relevant completion criterion and checkpoint has been checked locally or confirmed by the user
 - the merged PR or commit is present on `main`
 - the issue is not the current in-progress tracking issue
-- the destination classification is clear
+
+For a Gate child issue, confirm the parent Gate plan path from the child issue. After GitHub closure, update that Gate entry to status `done` and retain only `GitHub Issue #<number>: <child-issue-slug>`. Do not copy implementation logs, temporary review notes, background, detailed requirements, or follow-up handoff into the plan.
 
 Before deciding whether an issue is complete, inspect its `完了条件` and `チェックポイント`.
 
@@ -191,28 +183,31 @@ If older active issue files have unchecked items because the check update was mi
 
 Do not invent completion evidence. Do not mark an item complete merely because the related plan item is checked.
 
-If an unchecked item cannot be confirmed during post-merge, leave it unchecked, report it, and do not move that issue file to `docs/issue/milestone-<NN>/done/`.
+If an unchecked item cannot be confirmed during post-merge, leave it unchecked, report it, and do not create or close a GitHub archive Issue or delete the local issue file.
 
-Destination rules:
+Create or reuse the GitHub Issue as follows:
 
-- Resolve `<NN>` from the current issue's milestone plan. Do not default to a closed milestone.
-- Use `docs/issue/milestone-<NN>/done/phase-<N>/` for issue tasks tied to a numbered phase.
-- Use `docs/issue/milestone-<NN>/done/cross-phase/` for tasks that are not tied to a single numbered plan phase, or for repository/process cleanup spanning multiple phases.
+1. Search the issue body for the exact original local issue path marker.
+2. Create a same-name Issue only when the marker has no result. Include the final local issue body, original path, completion record, and related PR or commit.
+3. Reuse exactly one matching Issue. If the marker has multiple results, or a prior inventory says a number exists but marker lookup finds none, stop and request a decision.
+4. Close the Issue only after confirming its title, body, and completion state.
+5. Verify the closed state through GitHub before deleting the local issue file.
 
-Do not move:
+Do not archive:
 
 - unfinished issues
 - the current issue still being worked on
 - issue drafts that were not validated locally
 - issue files with unchecked completion criteria or checkpoints unless the items were confirmed and checked during this post-merge update, or the user explicitly confirms they are complete
+- an issue when GitHub creation or close has not been authorized by the user or approved policy
 
-When moving an issue file:
+Before deleting the local issue file:
 
-- Keep the filename unchanged.
 - Do not make active documents depend on completed issue files.
 - If active docs still need information from a completed issue, promote that information to the appropriate active SSoT: requirements, design notes, TODO, plan, `AGENTS.md`, or a skill.
-- Historical or provenance references may remain only when clearly marked as historical and not used as implementation responsibility.
-- Report every moved issue path in the final report.
+- Historical references must use plain text `GitHub Issue #<number>: <slug>`, not a Markdown link or a local issue path.
+- For a milestone plan, retain only the completed issue name and GitHub Issue number; remove its detailed requirements, completion criteria, and implementation history.
+- For a completed parent Gate plan, move the lightweight plan to `docs/issue/milestone-<NN>/plans/` before deleting its parent issue file.
 
 ---
 
@@ -257,9 +252,9 @@ Allowed staged files:
 - `docs/issue/milestone-<NN>/plan.md` only when plan entries were moved
 - `docs/TODO.md` only when TODO items were completed or removed from active TODO
 - `docs/TODO-done.md` only when completed TODO items were moved
-- `docs/issue/*.md` only when moving the completed issue out of active issue storage
-- `docs/issue/milestone-<NN>/done/**/*.md` only when receiving moved completed issue files
-- documentation files whose only change is an internal link update caused by moved issue files
+- `docs/issue/*.md` only when deleting the completed local issue file
+- `docs/issue/milestone-<NN>/plans/*.md` only when receiving a completed parent Gate plan
+- documentation files whose only change is a GitHub Issue reference or compact plan update caused by archiving a completed issue
 
 Confirm the staged diff contains only intended tracking files.
 
@@ -286,7 +281,7 @@ Report:
 - current branch
 - pull result
 - deleted local branch
-- updated plan item
+- archived GitHub Issue number and deleted local issue path
 - completed TODO items, or explicitly state that no TODO item was completed
 - removed review artifact directory, or explicitly state that it was absent
 - validation commands and results

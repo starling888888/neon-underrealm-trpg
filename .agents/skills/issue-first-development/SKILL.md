@@ -291,26 +291,26 @@ Do not create child issues for every planned Gate in advance. Do not implement m
 After the child work is complete and the normal archive conditions are met:
 
 1. Run the child completion-record audit below.
-2. Return only durable detailed requirements, confirmed decisions, and follow-up handoff to the selected Gate entry in the parent Gate plan.
-3. Record the child issue's archive path in that Gate entry.
-4. Update the Gate status to `done`.
-5. Move the child issue to the appropriate `docs/issue/milestone-<NN>/done/` directory for the current milestone.
+2. Create or reuse one same-name GitHub Issue containing the final local issue body, source path, completion record, and related PR or commit.
+3. Confirm that the GitHub Issue is closed.
+4. Replace the selected Gate entry's completed record with only `GitHub Issue #<number>: <child-issue-slug>` and update the Gate status to `done`.
+5. Delete the child issue file.
 
-Do not archive a child issue before the parent Gate plan has received this compact handoff. Do not retain the child issue as the active source of truth for later Gates.
+Do not close or delete a child issue before GitHub Issue creation and close are authorized by the user or the approved post-merge policy. Do not retain the child issue as the active source of truth for later Gates.
 
 ### Child completion-record audit
 
 Run this audit immediately before any parent Gate status becomes `done` or the
-child issue moves under `docs/issue/milestone-<NN>/done/` for the current milestone.
+child issue is archived to GitHub and deleted locally.
 
 1. Read every checkbox in the child issue's `完了条件`, `チェックポイント`, and each `レビュー指摘` section.
 2. Confirm that every completion condition and checkpoint is checked from current, local evidence. Do not infer completion from a successful command, a prior Gate status, or the archive destination.
-3. For every review finding, record one of the following in the child issue: completed with local evidence, or explicitly handed off to the parent Gate plan or `docs/TODO.md` with the user-approved scope decision. Keep the child issue active when neither record exists.
+3. For every review finding, record one of the following in the child issue: completed with local evidence, or explicitly handed off to an active SSoT or `docs/TODO.md` with the user-approved scope decision. Keep the child issue active when neither record exists.
 4. For a UI Gate, confirm that its Visual Review record identifies the reviewed routes, states, viewports, actual screenshots, and VRT result. Open each required actual screenshot before recording a positive visual conclusion.
-5. Update only the checkboxes supported by this audit. If any required item remains unchecked, do not mark the parent Gate `done` and do not archive the child issue.
+5. Update only the checkboxes supported by this audit. If any required item remains unchecked, do not mark the parent Gate `done`, do not close the GitHub Issue, and do not delete the child issue.
 
-The completion record is a release gate. Parent-plan status and the `done/`
-directory never substitute for it.
+The completion record is a release gate. Parent-plan status and a GitHub Issue
+number never substitute for it.
 
 ---
 

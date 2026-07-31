@@ -19,7 +19,6 @@
 - `.github/ISSUE_TEMPLATE/issue-gate-plan.md`
 - `docs/issue/milestone-02/plan.md`
 - `docs/issue/milestone-01/plan.md`
-- `docs/issue/milestone-01/README.md`
 - `docs/requirements.md`
 - `docs/ai-ops.md`
 - `docs/development-structure.md`
@@ -55,14 +54,14 @@
 ## 完了条件
 
 - [ ] `docs/issue/milestone-01/done/` の通常issue、Gate plan、READMEを分類した一時inventoryを作成し、移行対象漏れがないことを確認する。
-- [ ] 通常issueごとに、元filenameのslugと同名のGitHub Issueが1件だけ作成または再利用され、元path marker、元Markdown本文、完了時点の記録を保持したclosed状態になっている。
-- [ ] Gate planは `docs/issue/milestone-01/plans/` へ移し、完了Gateの詳細要件・完了条件・引継ぎを削除して、対象issueの名称とGitHub Issue番号だけを保持している。
+- [x] 通常issueごとに、元filenameのslugと同名のGitHub Issueが1件だけ作成または再利用され、元path marker、元Markdown本文、完了時点の記録を保持したclosed状態になっている。
+- [x] Gate planは `docs/issue/milestone-01/plans/` へ移し、完了Gateの詳細要件・完了条件・引継ぎを削除して、対象issueの名称とGitHub Issue番号だけを保持している。
 - [ ] 各移行対象について、履歴のみ、または現行SSoTへの昇格先と確認根拠がinventoryに記録されている。昇格先を確認できない対象は削除していない。
 - [x] Git管理文書に残る旧 `docs/issue/milestone-01/done/` path参照を、対応するplain-textのGitHub Issue番号とslugへ置換した、または現行SSoTへ必要な内容を昇格した。
 - [ ] inventoryの全対象についてGitHub Issue本文、closed状態、参照置換またはSSoT昇格を確認した後に、`docs/issue/milestone-01/done/` とarchive専用READMEを削除した。
-- [ ] 今後の完了issueをGitHub closed Issueへ移す運用が、AGENTS、関連SKILL、テンプレート、運用文書で一貫している。
-- [ ] 今後のmilestone planとGate planをローカルに残し、完了issueの名称とGitHub Issue番号だけを履歴として保持する運用が、AGENTS、関連SKILL、テンプレート、運用文書で一貫している。
-- [ ] `npm run check:md` が通る。
+- [x] 今後の完了issueをGitHub closed Issueへ移す運用が、AGENTS、関連SKILL、テンプレート、運用文書で一貫している。
+- [x] 今後のmilestone planとGate planをローカルに残し、完了issueの名称とGitHub Issue番号だけを履歴として保持する運用が、AGENTS、関連SKILL、テンプレート、運用文書で一貫している。
+- [x] `npm run check:md` が通る。
 
 ## チェックポイント
 
@@ -123,12 +122,12 @@
 - classification: valid
 - 原因: `gh api` がnetwork errorを返したため失敗と判断したが、Issue #81の作成自体は成功しており、close処理が実行されなかった。その後、GitHub connectorで同じ元pathのIssue #78を作成してclosedにしたため、同一archive元の重複Issueが残った。
 
-### 対応方針
+### 対応
 
-- Issue #81はclosedへ訂正した。
-- #78と#81のどちらを残し、どちらを削除または重複扱いにするかは、ユーザー指示を待つ。
+- Issue #81はclosedへ訂正した後、ユーザーがGitHub上で削除した。GitHub APIは削除済みIssueに対して410を返すことを確認した。
+- #78を `55-0-sample-characters` の唯一のarchive Issueとして残した。
 
 ### 対応完了チェックリスト
 
 - [x] GitHub Issue #81をclosedへ更新した。
-- [ ] `55-0-sample-characters` の重複Issueをユーザー指示に従って整理した。
+- [x] `55-0-sample-characters` の重複Issueをユーザー指示に従って整理した。

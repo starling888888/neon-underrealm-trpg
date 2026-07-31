@@ -26,11 +26,10 @@ milestone-01はex-07のmergeによりクローズした。milestone-02の計画�
 
 ## 履歴の扱い
 
-- 完了済みissueは `docs/issue/milestone-01/done/phase-X/` または `docs/issue/milestone-01/done/cross-phase/` に置く。
-- 完了したGate parent planとchild issue archiveは、同じmilestone archive内へ集約する。
-- 移動前に、issue本文の完了条件・チェックポイント、対応PRまたはユーザー承認、後続参照の更新可否を確認する。
-- 未完了issueや現在作業中issueは移動しない。
-- taskの完了チェックとarchiveは、ユーザー承認または `post-merge-plan-update` の対象作業でだけ行う。
+- 完了済みissueの最終契約・完了記録は同名のGitHub closed Issueへ残し、ローカルのissue fileは削除する。
+- milestone planには、完了issueの名称とplain-textの `GitHub Issue #<number>: <slug>` だけを履歴として残す。詳細要件、完了条件、実装経緯は残さない。
+- 完了したparent Gate planは `docs/issue/milestone-01/plans/` に置き、各完了Gateを名称とGitHub Issue番号だけに縮約する。
+- GitHub Issueの作成・close・ローカルissue削除は、ユーザー承認または承認済みのpost-merge完了処理でだけ行う。
 
 ## 依存関係
 
