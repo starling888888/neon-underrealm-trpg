@@ -113,25 +113,25 @@ package install、任意script実行、削除commandはこのインベントリ�
 
 ## 完了条件
 
-- [ ] Gate G1〜G3の公開サイト調査結果が、条件ごとの合格・失敗・未確認・適用外と証跡を含めて記録されている。
+- [x] Gate G1〜G3の公開サイト調査結果が、条件ごとの合格・失敗・未確認・適用外と証跡を含めて記録されている。
 - [ ] 調査時点の公開artifactと現在のmainの差異、または差異を確認できなかった理由が記録されている。
-- [ ] 性能、subpath、主要導線・検索・個別アンカーの各失敗が、公開artifact不一致、実装、workflow、外部配信・キャッシュ、調査環境に分類されている。
+- [x] 性能、subpath、主要導線・検索・個別アンカーの各失敗が、公開artifact不一致、実装、workflow、外部配信・キャッシュ、調査環境に分類されている。
 - [ ] 修正が必要な項目は、修正対象・根拠・影響範囲・回帰確認・design判断の要否を含む修正計画として記録され、ユーザーへ報告されている。
-- [ ] ユーザー承認前には、調査目的のソース、テスト、workflow、design正本、VRT baselineを変更していない。
+- [x] ユーザー承認前には、調査目的のソース、テスト、workflow、design正本、VRT baselineを変更していない。
 - [ ] 修正を実施した場合だけ、対象のローカル検証とmain deploy後の公開URL再確認が完了している。
-- [ ] 関連TODOを扱った場合は、対応結果またはこのissueで保留する理由が記録されている。
+- [x] 関連TODOを扱った場合は、対応結果またはこのissueで保留する理由が記録されている。
 - [ ] `npm run check`、`npm run build` は、修正を実施した場合だけ実行結果を記録している。
 
 ## チェックポイント
 
-- [ ] 公開URLは必ず `https://starling888888.github.io/neon-underrealm-trpg/` 配下を使い、ルート直下URLを公開サイトの成功根拠にしていない。
-- [ ] 画像、CSS、JavaScript、OGP、Pagefind index、内部リンク、フラグメントリンクを、公開HTML・network・遷移結果のいずれかで確認している。
+- [x] 公開URLは必ず `https://starling888888.github.io/neon-underrealm-trpg/` 配下を使い、ルート直下URLを公開サイトの成功根拠にしていない。
+- [x] 画像、CSS、JavaScript、OGP、Pagefind index、内部リンク、フラグメントリンクを、公開HTML・network・遷移結果のいずれかで確認している。
 - [ ] 主要ページ、サイトメニュー、ページ内目次、検索、スキル・アイテムの個別アンカーを、公開ページで実際に操作している。
-- [ ] Pagefind検索結果が `-local` routeへ誤って誘導しないこと、または関連TODOとして未解決の事実を記録している。
+- [x] Pagefind検索結果が `-local` routeへ誤って誘導しないこと、または関連TODOとして未解決の事実を記録している。
 - [ ] hero画像の表示領域、非hero画像のlazy loading、キャラクターシート以外で初期表示を妨げる不要なclient JavaScript、カード一覧の過剰なclient描画、外部解析スクリプトを確認している。
 - [ ] 画像・スクリプトなどの外部assetが、混在コンテンツ・CORS・404などにより主要導線を壊していない。
-- [ ] 既存route、GitHub Pagesサブパス、design target、初期スコープ外を回帰させていない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存route、GitHub Pagesサブパス、design target、初期スコープ外を回帰させていない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
