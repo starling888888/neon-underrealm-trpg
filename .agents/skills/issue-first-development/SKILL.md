@@ -272,9 +272,9 @@ The plan must contain:
 
 - a compact parent-issue reference
 - a Gate list with a stable Gate ID, title, status, dependency, and expected child issue path
-- only the durable requirements, decisions, and follow-up handoff returned from completed child issues
+- only `<child-issue-slug> — GitHub Issue #<number>` for each completed Gate
 
-Do not add a detailed brief, implementation plan, or source-of-truth inventory for a planned Gate to the Gate plan. The dedicated child issue is the only implementation contract. Do not put implementation logs, duplicated parent background, temporary review output, or session-specific reasoning in the Gate plan.
+Do not add a detailed brief, implementation plan, source-of-truth inventory, or completed-Gate handoff to the Gate plan. The dedicated child issue is the only implementation contract. Promote any lasting requirement, decision, or follow-up to an active SSoT before archiving the child issue.
 
 ### Child issue lifecycle
 
@@ -291,10 +291,11 @@ Do not create child issues for every planned Gate in advance. Do not implement m
 After the child work is complete and the normal archive conditions are met:
 
 1. Run the child completion-record audit below.
-2. Create or reuse one same-name GitHub Issue containing the final local issue body, source path, completion record, and related PR or commit.
-3. Confirm that the GitHub Issue is closed.
-4. Replace the selected Gate entry's completed record with only `<child-issue-slug> — GitHub Issue #<number>` and update the Gate status to `done`.
-5. Delete the child issue file.
+2. Search GitHub Issue bodies for the exact original local issue path marker.
+3. Create a same-name Issue only when the marker has no result. Reuse exactly one matching Issue. Stop if multiple matching Issues exist, or if an existing inventory number has no marker match.
+4. Confirm that the GitHub Issue contains the final local issue body, source path, completion record, and related PR or commit, then confirm that it is closed.
+5. Replace the selected Gate entry's completed record with only `<child-issue-slug> — GitHub Issue #<number>` and update the Gate status to `done`.
+6. Delete the child issue file.
 
 Do not close or delete a child issue before GitHub Issue creation and close are authorized by the user or the approved post-merge policy. Do not retain the child issue as the active source of truth for later Gates.
 
@@ -336,7 +337,7 @@ Check:
 - existing code paths mentioned in the issue exist or are clearly marked as planned
 - the issue does not contradict `AGENTS.md`, this skill, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, `docs/issue/milestone-<NN>/plan.md`, or relevant `docs/design/` files
 
-For an issue where the user explicitly requested Gate creation or splitting, also check that `docs/issue/NN-slug/plan.md` exists, uses the Gate plan template, is the only Gate enumeration, has an implementable Gate split, and records durable handoffs only after a Gate completes.
+For an issue where the user explicitly requested Gate creation or splitting, also check that `docs/issue/NN-slug/plan.md` exists, uses the Gate plan template, is the only Gate enumeration, has an implementable Gate split, and keeps completed Gate records to the child issue slug and GitHub Issue number.
 
 For a child issue, also check that it maps to exactly one parent Gate and includes all information needed to implement that Gate without previous conversation or other child issue bodies.
 

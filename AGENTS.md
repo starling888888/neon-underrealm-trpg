@@ -38,7 +38,7 @@
 - `docs/issue/milestone-<NN>/plan.md` は、milestoneの計画・履歴専用pathでありGate planではない。Gate一覧やGate固有の引継ぎを置かず、`docs/issue/<parent-issue>/plan.md` のGate planと混同しない。
 - Gateを実装する時は、対象Gate専用の子issueを作成し、その子issueを実装契約とする。子issueは、親issue全体の会話や履歴を前提にせず、新しいsessionだけで作業を開始できる最小限で自己完結した情報を持つ。
 - 完了済みissueの最終契約・完了記録は同名のGitHub closed Issueへ残し、ローカルのissue fileは削除する。GitHub Issueの番号は履歴識別子であり、後続実装のSSoTにはしない。
-- milestone planとGate planはローカルに残す例外である。完了issueのplan記録はissue名と `GitHub Issue #<number>` だけに縮約し、詳細要件・完了条件・実装経緯は残さない。完了した親issueのGate planは `docs/issue/milestone-<NN>/plans/` に置く。
+- milestone planとGate planはローカルに残す例外である。完了issueのplan記録は `<issue-slug> — GitHub Issue #<number>` だけに縮約し、詳細要件・完了条件・実装経緯は残さない。完了した親issueのGate planは `docs/issue/milestone-<NN>/plans/` に置く。
 - Gate完了後は、子issueの完了確認、同名GitHub closed Issueへの記録、Gate planの軽量な履歴更新を済ませてから、子issueを削除する。実装中の経緯、重複した背景、会話依存の情報はplanへ戻さない。
 - 実装範囲は、通常issueでは現在のissue、Gateを使う場合は現在のGate子issueと親issueの専用Gate planに従う。範囲外作業は勝手に混ぜない。
 - ユーザーが「検討して」「確認して」「妥当性を見て」「どうかな」「レビューして」など、判断や意見を求めている場合は実装承認ではない。判断、選択肢、推奨方針を返して停止し、実装、生成、ファイル編集は「修正開始」「実装して」「反映して」などの明示指示を待つ。

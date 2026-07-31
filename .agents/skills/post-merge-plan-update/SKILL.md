@@ -46,7 +46,7 @@ Do the cleanup in this order:
 6. Confirm the work branch is merged into `main`.
 7. Delete the local work branch only when it is safely merged.
 8. Update only the relevant `docs/issue/milestone-<NN>/plan.md` checkbox block.
-9. Record completion context in the completed milestone plan entry when every checkbox in that entry is checked.
+9. Do not retain detailed completion context in a completed milestone plan entry.
 10. If the merged work handled `docs/TODO.md` items, mark them complete and move them to `docs/TODO-done.md`.
 11. Confirm that required review information was formalized, then remove only `.tmp/review/<WORK_BRANCH>/`.
 12. For a completed Gate child issue, prepare its parent Gate plan for a lightweight GitHub Issue reference.
@@ -124,10 +124,9 @@ After updating the relevant plan entry, check every checkbox in that entry. Keep
 
 Rules:
 
-- Add completion context only to completed entries.
-- Preserve the original task ID, task title, and relevant subtask context.
-- Add completion context when available: merged PR number, completion date, related commit, or task name.
-- Do not record completion context when any checkbox in the entry remains unchecked.
+- Before the GitHub Issue is closed, leave the plan entry active and do not add a completion record.
+- After the GitHub Issue is closed, replace the completed entry and its direct subtask block with only `<issue-slug> — GitHub Issue #<number>`.
+- Do not retain merged PR numbers, completion dates, commits, task details, or subtask context in a completed plan entry.
 - Do not create a future milestone plan from this workflow.
 
 ---
