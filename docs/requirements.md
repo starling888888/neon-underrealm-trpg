@@ -11,7 +11,7 @@
 - Excel変換仕様、JSON出力仕様、変換処理の詳細は、作成後の `docs/conversion/*` を正本とする。
 - 実装ファイル、script、Component、補助ドキュメントの配置方針は `docs/development-structure.md` を正本とする。
 - 具体的な作業範囲と完了条件は、承認済みの `docs/issue/<issue-slug>.md` を優先する。
-- 対応する `.raw/contents/<slug>.md` があるページでは、ユーザー編集のMarkdown本文とHTMLコメントを、ページ本文・可視の表示構成に関する正本とする。ユーザーの最新指示、および `AGENTS.md` と該当skill・ruleの安全・workflow規約を除き、issue、要件、out-of-scope、plan、TODO、design、既存実装より優先する。
+- `.raw/contents/<slug>.md`は、必要に応じて手動で置くGit非管理の補助入力である。ページ本文・可視構成のGit管理上の正本はMDX / Astro実装とし、contentsは最新のユーザー指示がない限り、issue、要件、out-of-scope、plan、TODO、design、既存実装を上書きしない。
 
 ## 参照優先順位
 
@@ -19,17 +19,19 @@
 
 1. ユーザーの最新指示
 2. `AGENTS.md`
-3. 対応する `.raw/contents/<slug>.md` のMarkdown本文とHTMLコメント（ページ本文・可視の表示構成に限る）
-4. 該当skill・ruleの安全・workflow規約
-5. 承認済みの `docs/issue/<issue-slug>.md`
-6. この索引と関連する `docs/requirements/*`
-7. `docs/out-of-scope.md`
-8. `docs/conversion/*`
-9. `docs/development-structure.md`
-10. `docs/plan.md`
-11. `docs/TODO.md`
+3. 該当skill・ruleの安全・workflow規約
+4. 承認済みの `docs/issue/<issue-slug>.md`
+5. この索引と関連する `docs/requirements/*`
+6. `docs/out-of-scope.md`
+7. `docs/conversion/*`
+8. `docs/development-structure.md`
+9. `docs/plan.md`
+10. `docs/TODO.md`
+11. 関連する `docs/design/<design-target>/`
+12. その他のGit管理ドキュメントと`src/pages/`配下のMDX / Astro実装
+13. 対応する `.raw/contents/<slug>.md` のMarkdown本文とHTMLコメント（手動の補助入力）
 
-contentsと下位文書が矛盾する場合は、ユーザー承認のもとで下位文書をcontentsへ合わせて修正してから実装する。ユーザーの最新指示または安全・workflow規約と矛盾する場合は、推測で実装せずユーザーに確認する。
+contentsとGit管理の正本が矛盾する場合は、最新のユーザー指示がない限りGit管理の正本を採用する。ユーザーの最新指示または安全・workflow規約と矛盾する場合は、推測で実装せずユーザーに確認する。
 
 ## 要件ファイル一覧
 

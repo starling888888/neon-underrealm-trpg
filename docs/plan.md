@@ -22,9 +22,8 @@ PR merge後の計画更新は `.agents/skills/post-merge-plan-update/SKILL.md` �
 - 対象ページで新規に独立Component計画が存在しない場合は、`NN-1` を追加しない。
 - `NN-1` のComponent作成計画では、実装前にComponent単体のdesignを作成する。
 - 対象ページの画面作成は `NN-2` とする。
-- `NN-2` では、ユーザーがローカル作業領域の `.raw/contents/SLUG.md` にfrontmatter、Markdown本文、HTMLコメント指示を含むcontents markdownを配置する前提で画面を作成する。
-- contents markdownをGoogle Docs上に置く場合は、Markdownソースをプレーンテキストとして保持し、`text/plain` exportで `.raw/contents/*.md` に同期する。
-- `.raw/contents/SLUG.md` はコミットしない作業入力である。対応ページでは、ユーザー編集のMarkdown本文とHTMLコメントを、ページ本文・可視の表示構成の正本とする。ユーザーの最新指示、および `AGENTS.md` と該当skill・ruleの安全・workflow規約を除き、issue、requirements、out-of-scope、plan、TODO、design、既存実装より優先する。
+- `NN-2` では、必要に応じてユーザーがローカル作業領域の `.raw/contents/SLUG.md` にfrontmatter、Markdown本文、HTMLコメント指示を含むcontents markdownを手動で配置できる。
+- `.raw/contents/SLUG.md` はコミットしない補助入力である。ページ本文・可視の表示構成のGit管理上の正本はMDX / Astroとし、contentsは最新のユーザー指示がない限りそれらやissue、requirements、designを上書きしない。
 - `NN-2` の最後に、対象VRTを比較する。design intent、route、状態、viewport、snapshot名は`docs/design/<target>/notes.md`へ記録する。canonical baselineの初回作成・更新は、差分を確認したうえでユーザーが明示指示した場合だけ行う。
 
 ---

@@ -14,24 +14,7 @@ Use `.gitignore` as the source for untracked local inputs, generated reports, an
 
 Use `package.json` as the source for available npm scripts.
 
-Google Drive-derived local inputs belong under `<repo-root>/.raw/`.
-
-Use this fixed structure:
-
-```text
-.raw/
-├── release-notes.xlsx
-├── data/
-│   └── *.xlsx
-├── contents/
-│   └── *.md
-└── v1.0/
-    └── *.md                     # historical reference input only
-```
-
-Do not add alternative raw input roots such as `raw/`, `contents/`, `data/`, or `.raw/sheets/`.
-
-Keep the Google Drive sync folder URL in `raw-google-drive.url` at the repository root. Do not Git-manage it.
+Local Spreadsheet exports belong under `<repo-root>/.raw/`. `npm run sync:google-sheets` preserves the configured Drive root's folder hierarchy there; do not add an alternative raw input root outside `.raw/`.
 
 ## Documentation
 

@@ -4,9 +4,7 @@ This file defines how agents interpret contents markdown from `.raw/contents/*.m
 
 ## Role
 
-`.raw/contents/*.md` files are local working inputs.
-
-They may originate from Google Docs, but Google Docs is only a storage place for Markdown source.
+`.raw/contents/*.md` files are manually prepared local working inputs.
 
 Do not treat `.raw/contents/*.md` as:
 
@@ -15,7 +13,7 @@ Do not treat `.raw/contents/*.md` as:
 - a replacement for safety or workflow rules
 - a source for unrelated page requirements
 
-For a matching page, user-edited Markdown body and HTML comments are the source of truth for the page body and visible display structure. Git-managed page files are the published implementation of those instructions.
+For a matching page, Git-managed MDX / Astro is the source of truth for page body and visible display structure. Contents markdown can be used as supplementary user input but does not override the current issue, requirements, design, or existing Git-managed implementation without a newer explicit user instruction.
 
 ## Format
 
@@ -33,63 +31,29 @@ Every new or updated contents file must include a `矛盾点` section inside an 
 
 Do not use `:::` instruction blocks for contents markdown.
 
-## Google Docs Source Handling
-
-Contents markdown Google Docs must keep Markdown source as plain text.
-
-Do not create a formatted Google Docs document with rich-text headings, lists, tables, or links as the source format.
-
-When syncing Google Docs into `.raw/contents/*.md`, export the Google Doc as:
-
-```text
-text/plain
-```
-
-Save the result as a Markdown `.md` file under:
-
-```text
-<repo-root>/.raw/contents/*.md
-```
-
-Do not use Google Docs `text/markdown` export for contents markdown.
-
-## Noise
-
-Google Docs `text/plain` export may include non-semantic noise.
-
-Treat these as Google Docs-derived noise unless the current approved task says otherwise:
-
-- UTF-8 BOM
-- extra blank lines
-- trailing spaces
-
-Do not rely on trailing-space hard line breaks in contents markdown. Use paragraph breaks, explicit HTML, or an HTML comment instruction when a hard line break is required.
-
-Do not add formatter processing for `.raw/contents/*.md` unless an approved issue changes that policy.
+Do not add formatter processing for `.raw/contents/*.md` unless an approved issue changes this policy.
 
 ## Source Of Truth
 
-Contents markdown helps agents create or update site pages.
-
-For a matching page's body and visible display structure, user-edited Markdown and HTML comments override the current issue, requirements, out-of-scope, plan, TODO, design, and existing implementation. They do not override the latest user instruction, `AGENTS.md`, or applicable skill and rule safety or workflow constraints.
+For a matching page's body and visible display structure, Git-managed MDX / Astro, the current issue, requirements, out-of-scope, plan, TODO, and design take priority over contents markdown. The latest user instruction, `AGENTS.md`, and applicable skill and rule safety or workflow constraints remain higher than all of them.
 
 ## Local Authoring Priority
 
 When `contents-markdown-authoring` creates or reviews a new local contents instruction, use this order:
 
 1. User instruction.
-2. Matching local `.raw/contents/` Markdown body and HTML comments for page body and visible display structure.
-3. Current task issue under `docs/issue/`.
-4. `docs/requirements.md` and relevant `docs/requirements/` files.
-5. `docs/out-of-scope.md`.
-6. `docs/plan.md` and `docs/TODO.md`.
-7. Related `docs/design/<design-target>/`.
-8. Local `src/pages/` implementation.
+2. Current task issue under `docs/issue/`.
+3. `docs/requirements.md` and relevant `docs/requirements/` files.
+4. `docs/out-of-scope.md`.
+5. `docs/plan.md` and `docs/TODO.md`.
+6. Related `docs/design/<design-target>/`.
+7. Local `src/pages/` implementation.
+8. Matching local `.raw/contents/` Markdown body and HTML comments.
 9. Local `.raw/v1.0/` historical reference.
 
 The latest user instruction and the applicable `AGENTS.md`, skill, and rule safety or workflow constraints remain above this local priority.
 
-When matching contents conflicts with a lower-priority source, align the lower-priority Git-managed documents before implementation when the user has authorized the correction. Otherwise, identify the impact and ask the user before implementation changes.
+When matching contents conflicts with a higher-priority Git-managed source, keep the Git-managed source unless the user explicitly instructs a correction.
 
 `v1.0/` is for historical wording, old rules, and ideas. It must not replace the current site source of truth.
 
@@ -102,9 +66,3 @@ When a lower-priority source conflict is resolved, record it in the contents fil
 - the adopted document or user instruction and its priority when applicable
 
 Keep this information agent-facing. Do not render it as page body.
-
-## Drive Write Handling
-
-Only `raw-to-drive-sync` may write a contents source to Google Drive, and only after its explicit user invocation.
-
-Map `.raw/contents/<slug>.md` to a Google Doc named `<slug>.md` in the Drive `contents/` folder. Preserve Markdown source as literal plain text. Do not use Google Docs rich-text formatting or Markdown import behavior.

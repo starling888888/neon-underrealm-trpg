@@ -30,17 +30,11 @@ Use when local `.tmp/*.md` review notes must be validated against local SSoT and
 
 Review intake stops before implementation. Fixes require explicit user approval.
 
-### `drive-to-raw-sync`
-
-Use when syncing Google Drive user-edited sources into the local `<repo-root>/.raw/` working input directory.
-
-This skill reads the Drive folder URL from `<repo-root>/raw-google-drive.url` or an explicit user-provided Drive URL, verifies ignore policy and path safety, downloads or exports files through Google Drive MCP, and never writes back to Google Drive.
-
 ### `contents-markdown-authoring`
 
 Use when drafting or reviewing contents markdown locally for `.raw/contents/*.md`.
 
-For page body and visible display structure, this skill checks user instructions, matching `.raw/contents/`, the current task issue, requirements, out-of-scope, plan and TODO, design, local `src/pages/`, and `.raw/v1.0/` in that priority order. `AGENTS.md` and applicable skill and rule safety or workflow constraints remain above this order. It treats Google Docs as a plain-text storage place for Markdown source, uses frontmatter for page metadata, and uses HTML comments for agent-facing instructions and lower-priority source conflict records. It does not implement pages.
+For page body and visible display structure, this skill checks user instructions, the current task issue, requirements, out-of-scope, plan and TODO, design, local `src/pages/`, then optional `.raw/contents/` and `.raw/v1.0/` in that priority order. `AGENTS.md` and applicable skill and rule safety or workflow constraints remain above this order. It uses frontmatter for page metadata and HTML comments for agent-facing instructions and lower-priority source conflict records. It does not implement pages.
 
 ### `contents-review`
 
@@ -53,12 +47,6 @@ This skill runs the local beginner and expert contents reviewers. They receive n
 Use when ChatGPT drafts or reviews contents markdown from a remote repository snapshot.
 
 This skill checks user instructions, Git-managed `src/pages/`, the current task issue, requirements, plan, and out-of-scope in that priority order. It records remotely observed lower-priority source conflicts in agent-facing HTML comments, reports unavailable Git-managed sources and local `.raw/contents/` / `.raw/v1.0/` as unverified, and does not access `.raw/`, Google Drive, or local files.
-
-### `raw-to-drive-sync`
-
-Use only when the user explicitly says `$raw-to-drive-sync` or `raw-to-drive-sync を実行して`.
-
-This skill updates the existing `release-notes` Google Sheet and `contents/<slug>.md` Google Docs from approved local `.raw/` inputs. It refuses `.raw/data/` and `.raw/v1.0/` writes even with explicit user direction.
 
 ### `pr-review-draft`
 

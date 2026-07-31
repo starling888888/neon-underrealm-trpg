@@ -89,6 +89,36 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Marked the Drive sync scope and test contract complete without full validation
+
+#### 2026-07-31
+
+- source: review
+- failure category: verification accuracy
+- 発生箇所: `ex-06-google-drive-xlsx-sync` の完了条件・チェックポイント更新
+- 観測した失敗: `.raw/contents/`の正本性を変更するscope migrationで、残るGit管理SSoTの旧記述を全件照合せず、関連文書の整合条件を完了扱いにした。また、pagination、MIME限定、出力パス安全性、列挙・書込み失敗を実際にassertしていないVitest testを根拠に、stub testの完了条件をチェックした。PR reviewで不整合と検証不足が判明した。
+- 一次対応: 現行issueのレビュー指摘3へ、残るSSoT更新とtest契約の追加を未完了として記録した。以後、scope migrationの完了前は現行参照の全件検索結果と、issueが列挙する各test契約のassertionを対応付けて確認する。
+
+### Repeated incomplete design-note validation after a contents priority migration
+
+#### 2026-07-31
+
+- source: review
+- failure category: verification accuracy
+- 発生箇所: `ex-06-google-drive-xlsx-sync` のレビュー指摘3完了チェック
+- 観測した失敗: requirements、README、2件のdesign noteを更新してレビュー指摘3を完了扱いにしたが、`.raw/contents/`を`Referenced SSoT`として残す他の現行design notesを確認しなかった。第2回PR document reviewで、contentsがGit管理の正本と同格または上位に見える現行design noteが複数残っていることが判明した。
+- 一次対応: 現行issueのレビュー指摘5へ未更新design noteの整合を記録した。ユーザー判断により、今後の大きな編集を想定しない既存noteの一括更新はこのPRで行わない。scope migrationの完了確認では、変更した代表文書だけでなく、対象キーワードのGit管理現行参照を全件分類してからチェックを更新する。
+
+### Repeated a new sync test before reading its assertion diff
+
+#### 2026-07-31
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-06-google-drive-xlsx-sync` の`tests/node/sync-google-sheets.test.ts`
+- 観測した失敗: 新設testを通常実行後、失敗理由を確認せず詳細reporter指定で同じtestを再実行した。原因は実装不備ではなく、再帰先folderを先に処理する実装順序に対してroot Spreadsheetを先にexportする期待値を書いたことだった。
+- 一次対応: 詳細なassertion diffを確認して期待値を実際の処理順序へ修正した。以後、新設testの初回失敗では再実行前にfailure diffを読む。
+
 ### Repeated an unrelated sample-character node test failure during analytics validation
 
 #### 2026-07-31

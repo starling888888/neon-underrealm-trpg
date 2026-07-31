@@ -10,7 +10,7 @@ Draft or review local contents markdown without conflicting with the current sit
 Use when the user asks to:
 
 - draft contents markdown for `.raw/contents/*.md` locally
-- prepare a local source file for a contents Google Doc
+- prepare a local source file for manual contents editing
 - review a local contents markdown file against local site sources
 - create a local content instruction for a page before implementation
 - update a local contents instruction after an approved page-content change
@@ -31,20 +31,20 @@ This is the local-only content authoring workflow.
 Use the following sources in order:
 
 1. User instruction.
-2. Matching local `.raw/contents/` Markdown body and HTML comments for page body and visible display structure.
-3. Current task issue under `docs/issue/`.
-4. `docs/requirements.md` and relevant `docs/requirements/` files.
-5. `docs/out-of-scope.md`.
-6. `docs/plan.md` and `docs/TODO.md`.
-7. Related `docs/design/<design-target>/`.
-8. Local `src/pages/` implementation.
+2. Current task issue under `docs/issue/`.
+3. `docs/requirements.md` and relevant `docs/requirements/` files.
+4. `docs/out-of-scope.md`.
+5. `docs/plan.md` and `docs/TODO.md`.
+6. Related `docs/design/<design-target>/`.
+7. Local `src/pages/` implementation.
+8. Matching local `.raw/contents/` Markdown body and HTML comments.
 9. Local `.raw/v1.0/` reference documents.
 
 Do not treat a lower-priority source as confirmation that a higher-priority source is correct.
 
 The latest user instruction and applicable `AGENTS.md`, skill, and rule safety or workflow constraints remain above this order.
 
-`.raw/contents/<slug>.md` is Git-ignored working input. For its matching page, user-edited Markdown body and HTML comments are the source of truth for page body and visible display structure. It is not itself the published page source.
+`.raw/contents/<slug>.md` is a manually prepared Git-ignored working input. Git-managed MDX / Astro is the source of truth for its matching page's body and visible display structure.
 
 ## Preconditions
 
@@ -68,16 +68,16 @@ The latest user instruction and applicable `AGENTS.md`, skill, and rule safety o
 
 ## Conflict Handling
 
-When matching contents differs from a lower-priority source:
+When matching contents differs from a higher-priority source:
 
 1. Identify the affected page, internal links, shared Components, and data display.
 2. Explain which source conflicts and its priority.
-3. Align the lower-priority Git-managed source when the user has authorized the correction; otherwise, ask for authorization.
-4. Stop before changing implementation until the documents are aligned.
-5. After the user or an approved higher-priority source resolves the conflict, record it in the target contents file's `矛盾点` HTML-comment section.
+3. Keep the Git-managed source unless the user authorizes its correction.
+4. Stop before changing implementation when the user has not resolved the conflict.
+5. After the user resolves the conflict, record it in the target contents file's `矛盾点` HTML-comment section.
 6. For each record, state the lower-priority source, a concise summary of its conflicting information, and the adopted document or user instruction.
 
-When the user approves an implementation change and that change is completed, update the corresponding local `.raw/contents/<slug>.md` in the same task. Do not write it back to Google Drive automatically. Use `raw-to-drive-sync` only after its explicit user invocation.
+When the user approves an implementation change and asks to update a corresponding local contents file, update it in the same task. Do not synchronize contents with Google Drive.
 
 When a Git-managed source such as requirements, plan, issue, design, or out-of-scope conflicts with matching contents:
 
@@ -143,11 +143,9 @@ When no conflict was found in the sources that were checked, keep the no-conflic
 
 Do not use `:::` instruction blocks.
 
-## Google Docs Compatibility
+## Manual Input Compatibility
 
-The local file is Markdown source for a Google Doc stored as plain text.
-
-When it is later synchronized to Drive, preserve Markdown symbols, frontmatter, and HTML comments as literal text. Do not require Google Docs rich-text headings, lists, tables, or links.
+The local file may be manually copied from another editor. Preserve Markdown symbols, frontmatter, and HTML comments as literal text.
 
 Do not run a formatter over `.raw/contents/*.md` unless an approved issue changes this policy.
 
@@ -163,6 +161,6 @@ Report:
 - confirmation that frontmatter and HTML comments are present when required
 - confirmation that the `矛盾点` comment section records each resolved lower-priority source conflict, or that no checked-source conflict was found
 - confirmation that `:::` instruction blocks and Google Docs rich-text layout are not used
-- whether Drive synchronization remains pending
+- whether a manual contents update remains pending
 
-Do not commit, push, create a PR, write to Google Drive, or implement pages unless the user explicitly asks through the appropriate workflow.
+Do not commit, push, create a PR, or implement pages unless the user explicitly asks through the appropriate workflow.

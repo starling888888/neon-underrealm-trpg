@@ -72,6 +72,8 @@ NPC紹介は、`/world`の世界観本文に限り、生成JSONを参照する`N
 
 ログイン、ユーザー端末に依存しないサーバー・DB・クラウドへのキャラクターデータ保存、URL共有、PDF出力、Google Sheets連携は初期スコープ外とする。
 
+ただし、`ex-06-google-drive-xlsx-sync`で定義する、開発者が手動で実行するGoogle Spreadsheetから`.raw/`へのXLSX取得scriptは、公開サイトやキャラクターシートとは接続しないローカル開発用例外として許可する。
+
 入力項目、作成手順、ユーザー端末内の作業継続用保存・復元を含むブラウザ内状態の扱いは、`ex-02-web-character-sheet` で定義する。
 
 ---
@@ -308,7 +310,7 @@ CI/CDではExcel変換を必須工程にしない。
 
 `.raw/contents` の内容を公開サイトから直接参照する仕組みは初期スコープ外とする。
 
-対応するcontentsのユーザー編集Markdown本文とHTMLコメントは、ページ本文・可視の表示構成の正本とする。`src/pages` 配下の `.mdx` または `.astro` は、その指示を反映する公開用実装とする。
+対応するcontentsのユーザー編集Markdown本文とHTMLコメントは、必要に応じて手動で置くGit非管理の補助入力とする。ページ本文・可視構成のGit管理上の正本は、`src/pages` 配下の `.mdx` または `.astro` と、その実装契約であるcurrent issue、requirements、designとする。
 
 ---
 

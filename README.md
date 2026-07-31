@@ -108,40 +108,31 @@ export CONTEXT7_API_KEY="your-api-key"
 
 Context7 を使わない場合、この環境変数の設定は不要です。
 
-## Google Drive由来のローカル入力
+## Google Spreadsheetのローカル入力
 
-ユーザー編集用の正本はGoogle Drive上で管理し、ローカル作業時に必要なファイルだけリポジトリルート直下の `.raw/` 配下へ同期します。
+Google Spreadsheetをローカル作業入力へ取得する場合は、Google Cloudのservice accountを用意し、同期対象Driveフォルダをそのservice accountのメールアドレスへ閲覧共有します。Google Drive APIを有効化してから、リポジトリルートにGit管理しない`.env`を作成します。
 
-開発時は、リポジトリルート直下に `raw-google-drive.url` を作成し、Google Drive同期対象フォルダのURLを1件だけ書いてください。
+service accountの作成とJSON鍵の取得は、Google公式の[service account作成手順](https://cloud.google.com/iam/docs/service-accounts-create)および[service account key作成手順](https://cloud.google.com/iam/docs/keys-create-delete)に従います。Google Drive APIは[Google公式の有効化手順](https://developers.google.com/workspace/drive/api/guides/enable-sdk)で有効にします。
 
-```text
-https://drive.google.com/drive/folders/...
+```dotenv
+GOOGLE_DRIVE_ROOT_FOLDER_ID=...
+GOOGLE_SERVICE_ACCOUNT_EMAIL=...@....iam.gserviceaccount.com
+GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n"
 ```
 
-Codexから同期するには、ChatGPT / Codexの作業環境でGoogle Drive Connectorを利用でき、接続済みGoogleアカウントが同期対象フォルダを閲覧できる必要があります。
+`.env.example`にはキー名だけを示しています。秘密情報をコミットしてはいけません。
 
-フォルダを「リンクを知っている全員が閲覧者」にする必要はありません。共有設定を変更する場合は、未公開コンテンツを含む可能性を考慮し、ユーザーが明示的に判断します。
+`GOOGLE_DRIVE_ROOT_FOLDER_ID`には、対象フォルダをブラウザで開いたURLの`https://drive.google.com/drive/folders/<folder-id>`に含まれる`<folder-id>`だけを設定します。末尾にクエリ文字列がある場合も、その前までの文字列を使います。
 
-`raw-google-drive.url` と `.raw/` はローカル環境ごとの作業入力です。Git管理しません。
+次のcommandは、指定フォルダ配下を再帰的にたどり、Google SpreadsheetだけをXLSXとして同じフォルダ構造のまま`.raw/`配下へ保存します。
 
-同期後の `.raw/` 配下は以下の構造にします。
-
-```text
-.raw/
-├── release-notes.xlsx
-├── data/
-│   └── *.xlsx
-└── contents/
-    └── *.md
+```sh
+npm run sync:google-sheets
 ```
 
-Google DocsはMarkdownソースをプレーンテキストとして保持し、`text/plain` exportでMarkdown `.md` として `.raw/contents/` へ取得します。Google SheetsはExcel `.xlsx` として `.raw/release-notes.xlsx` または `.raw/data/` へ取得します。
+個別のフォルダ列挙・export・書込みエラーはログ出力し、残りのSpreadsheet処理を継続します。個別エラーが1件でもあれば、すべての処理後に終了コード`1`で終了します。Google Docsその他のファイル、Google Driveへの書込み、差分・削除同期は行いません。
 
-contents markdown用Google Docには、frontmatter、Markdown本文、HTMLコメントによるagent向け指示を、Markdownソースとしてプレーンテキストで貼り付けます。通常貼り付けでGoogle Docsのリッチテキスト変換が発生する環境では、「プレーンテキストとして貼り付け」を使ってください。
-
-Google Docsの見出し、箇条書き、表、リンクなどのリッチテキスト書式でレイアウト済みドキュメントを作らないでください。
-
-contents markdown用Google Docは、agentが解釈する作業入力です。requirements、plan、issue、designの正本ではなく、公開ページ本文そのものでもありません。
+`.raw/`と`.env`はローカル環境ごとの作業入力です。Git管理しません。`.raw/contents/`を使う場合は手動で配置し、公開ページ本文・可視構成のGit管理上の正本は`src/pages/`配下のMDX / Astroとします。
 
 ### contents指示書でのCallout指定例
 
@@ -195,7 +186,7 @@ V1.5で処理順を明確化しました。
 - `tests/vrt/`: Playwright visual regression tests
 - `data/generated/`: Excelから変換した公開用JSONの配置先
 - `.raw/`: Google Drive由来ファイルを同期するローカル作業入力。Git管理しない
-- `raw-google-drive.url`: Google Drive同期対象フォルダURLを置くローカル設定ファイル。Git管理しない
+- `.env`: Google Spreadsheet同期のフォルダIDとservice account認証情報を置くローカル設定ファイル。Git管理しない
 - `.tmp/`: 一次レビュー用ファイルや一時メモの配置先。Git管理しない
 
 ## 主要ドキュメント
@@ -249,9 +240,9 @@ issueのPRがmergeされ、`post-merge-plan-update` workflowまで完了した�
 
 Excel本体やページ作成用Markdown入力は `.raw/` 配下でローカル管理し、Git管理しません。
 
-`.raw/contents/*.md` は、Google Docs上でプレーンテキストとして保持したMarkdownソースを同期した作業入力です。frontmatterをページメタ情報、Markdown本文をページ内容、HTMLコメントをagent向け指示として扱います。
+`.raw/contents/*.md` は、必要に応じて手動で配置するGit非管理の補助入力です。Google Docsから自動同期しません。frontmatter、Markdown本文、HTMLコメントは作業時の参考にできますが、公開ページ本文・可視構成のGit管理上の正本は`src/pages/`配下のMDX / Astroです。
 
-Google Driveからローカル入力を同期する場合、同期対象フォルダのURLは `raw-google-drive.url` に置きます。このファイルもGit管理しません。
+Google Spreadsheetからローカル入力を同期する場合、同期対象フォルダIDとservice account認証情報は`.env`に置きます。このファイルもGit管理しません。
 
 Git管理するのは、Excelから変換された `data/generated/` 配下のJSONです。生成JSONは原則として手編集せず、元のExcelを修正して変換し直します。
 
