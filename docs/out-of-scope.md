@@ -310,7 +310,7 @@ CI/CDではExcel変換を必須工程にしない。
 
 `.raw/contents` の内容を公開サイトから直接参照する仕組みは初期スコープ外とする。
 
-対応するcontentsのユーザー編集Markdown本文とHTMLコメントは、ページ本文・可視の表示構成の正本とする。`src/pages` 配下の `.mdx` または `.astro` は、その指示を反映する公開用実装とする。
+対応するcontentsのユーザー編集Markdown本文とHTMLコメントは、必要に応じて手動で置くGit非管理の補助入力とする。ページ本文・可視構成のGit管理上の正本は、`src/pages` 配下の `.mdx` または `.astro` と、その実装契約であるcurrent issue、requirements、designとする。
 
 ---
 

@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Marked the Drive sync scope and test contract complete without full validation
+
+#### 2026-07-31
+
+- source: review
+- failure category: verification accuracy
+- 発生箇所: `ex-06-google-drive-xlsx-sync` の完了条件・チェックポイント更新
+- 観測した失敗: `.raw/contents/`の正本性を変更するscope migrationで、残るGit管理SSoTの旧記述を全件照合せず、関連文書の整合条件を完了扱いにした。また、pagination、MIME限定、出力パス安全性、列挙・書込み失敗を実際にassertしていないVitest testを根拠に、stub testの完了条件をチェックした。PR reviewで不整合と検証不足が判明した。
+- 一次対応: 現行issueのレビュー指摘3へ、残るSSoT更新とtest契約の追加を未完了として記録した。以後、scope migrationの完了前は現行参照の全件検索結果と、issueが列挙する各test契約のassertionを対応付けて確認する。
+
 ### Repeated a new sync test before reading its assertion diff
 
 #### 2026-07-31

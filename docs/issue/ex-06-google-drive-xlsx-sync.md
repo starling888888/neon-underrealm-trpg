@@ -169,3 +169,57 @@ Google Drive MCP経由のSpreadsheet取得は、今後のデータ調整に必�
 - [x] service account認証情報とGoogle Drive API有効化の公式導線をREADMEに追加する。
 - [x] DriveフォルダURLから`GOOGLE_DRIVE_ROOT_FOLDER_ID`を取得する方法をREADMEに追加する。
 - [x] `npm run check:md` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `.raw/contents/`を手動の非正本入力へ変更した方針と矛盾し、contentsをページ本文・可視構成の正本または最優先としている現行requirements、out-of-scope、content writing guide、design notesが残っている。
+- READMEと`.agents/rules/README.md`に、廃止済みのGoogle Docsからcontentsを自動同期する運用説明が残っている。
+- Vitest testが、issueで完了扱いにしたpagination、再帰、Spreadsheet MIME限定、出力パス安全性、列挙・書込み失敗後の継続を実際には検証していない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/requirements.md`、`docs/requirements/pages.md`、`docs/out-of-scope.md`、`docs/content-writing-guide.md`、`docs/design/ryugi-index/notes.md`、`docs/design/ikizama-index/notes.md`に旧contents正本の記述が残る。`README.md:243`と`.agents/rules/README.md`にもGoogle Docs同期の現行説明が残る。`tests/scripts/sync-google-sheets.test.ts`は出力結果と`listMock`呼出し回数を確認するが、Drive query、page token、MIME除外、危険な名前・衝突、列挙・書込み失敗をassertしていない。
+
+### 対応方針
+
+- 現行issueのcontents手動・非正本方針に従い、残るGit管理SSoTの優先順位と運用説明を更新する。過去issueとfailure logの履歴は変更しない。
+- READMEとrule indexからGoogle Docs自動同期の現行説明を削除し、必要なcontentsは手動配置する補助入力であることを明記する。
+- Google API adapterとCLI境界をVitestで維持したまま、Drive list引数、対象外MIME、パス安全性・衝突、個別列挙・書込み失敗後の継続をfixtureとassertionで確認する。
+
+### 対応完了チェックリスト
+
+- [x] 残るrequirements、out-of-scope、content writing guide、関連design notesをcontents手動・非正本方針へ整合させる。
+- [x] READMEとrule indexからGoogle Docs自動同期の現行説明を除去する。
+- [x] Vitestでpagination、再帰、Spreadsheet MIME限定、出力パス安全性、個別列挙・書込み失敗後の継続を確認する。
+- [x] `npm run test:script` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- DriveフォルダとSpreadsheetが、変換後に同じ`.raw/`出力パスへ解決される場合の衝突を検出できない。
+
+### 判定
+
+- source: chatgpt-review
+- classification: valid
+- local validation: `scripts/sync-google-sheets/lib.ts`はフォルダを`reservedDirectories`、Spreadsheetを`reservedFiles`へ別々に予約する。たとえばDriveフォルダ`data.xlsx`とSpreadsheet`data`はどちらも`.raw/data.xlsx`へ解決されるが、相互の予約を確認しない。列挙順により`EISDIR`、`ENOTDIR`、または空フォルダでは衝突を記録しないまま処理が終わり、issueの「変換後に同一出力パスとなる対象は書き込まずエラー」の契約を満たさない。
+
+### 対応方針
+
+- フォルダとSpreadsheetで共通の出力パス予約を使い、種類を問わず同じ出力先へ解決される後続対象を、書込み前にエラーとして記録する。
+- フォルダ同士、Spreadsheet同士、フォルダとSpreadsheetの相互衝突、および衝突後も別Spreadsheetを同期することをVitestで確認する。
+
+### 対応完了チェックリスト
+
+- [x] フォルダとSpreadsheetで共通の出力パス衝突検出を実装する。
+- [x] 種類をまたぐ出力パス衝突と処理継続をVitestで確認する。
+- [x] `npm run test:script` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

@@ -240,7 +240,7 @@ issueのPRがmergeされ、`post-merge-plan-update` workflowまで完了した�
 
 Excel本体やページ作成用Markdown入力は `.raw/` 配下でローカル管理し、Git管理しません。
 
-`.raw/contents/*.md` は、Google Docs上でプレーンテキストとして保持したMarkdownソースを同期した作業入力です。frontmatterをページメタ情報、Markdown本文をページ内容、HTMLコメントをagent向け指示として扱います。
+`.raw/contents/*.md` は、必要に応じて手動で配置するGit非管理の補助入力です。Google Docsから自動同期しません。frontmatter、Markdown本文、HTMLコメントは作業時の参考にできますが、公開ページ本文・可視構成のGit管理上の正本は`src/pages/`配下のMDX / Astroです。
 
 Google Spreadsheetからローカル入力を同期する場合、同期対象フォルダIDとservice account認証情報は`.env`に置きます。このファイルもGit管理しません。
 

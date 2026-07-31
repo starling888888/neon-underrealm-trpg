@@ -39,7 +39,7 @@
 - `docs/design/page-toc/`
 - `docs/design/ikizama-detail/`（`IkizamaDataSection`の既存表示制約のみ）
 
-対応するcontentsのユーザー編集Markdown本文とHTMLコメントは、ページ本文・可視の表示構成について、ユーザーの最新指示と安全・workflow規約を除く他の参照資料より優先する。
+対応するcontentsのユーザー編集Markdown本文とHTMLコメントは、必要に応じて参照する手動の補助入力であり、ページ本文・可視構成のGit管理上の正本であるcurrent issue、requirements、design、MDX / Astro実装より優先しない。
 
 ## Design direction
 

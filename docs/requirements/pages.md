@@ -90,9 +90,9 @@ Webキャラクターシート。
 
 #### `/data/ryugi`
 
-流儀一覧。対応する `.raw/contents/ryugi-index.md` のMarkdown本文とHTMLコメントを、ページ本文・可視の表示構成の正本とする。
+流儀一覧。ページ本文・可視構成のGit管理上の正本は、対応するMDX / Astro実装とその実装契約であるcurrent issue、requirements、designとする。`.raw/contents/ryugi-index.md`は必要に応じて参照する手動の補助入力である。
 
-現在のcontents指示では、heroと導入文の後に、ケンカヤの `RyugiDataSection` を用いた「流儀データの見方」と、プライマリボーナス、基礎能力値、副能力増加値、共通スキルボーナスの4項目の説明を表示する。流儀一覧は、入力順の流儀名リンクと横に配置する `shortDescription` のみを表示し、説明が長い場合は自然に折り返す。別途「流儀詳細を見る」文言や、全流儀の共通スキルボーナスを並べる表は表示しない。
+現行要件では、heroと導入文の後に、ケンカヤの `RyugiDataSection` を用いた「流儀データの見方」と、プライマリボーナス、基礎能力値、副能力増加値、共通スキルボーナスの4項目の説明を表示する。流儀一覧は、入力順の流儀名リンクと横に配置する `shortDescription` のみを表示し、説明が長い場合は自然に折り返す。別途「流儀詳細を見る」文言や、全流儀の共通スキルボーナスを並べる表は表示しない。
 
 #### `/data/ryugi/[ryugiId]`
 
@@ -120,9 +120,9 @@ Webキャラクターシート。
 
 #### `/data/items`
 
-アイテム説明トップ。対応する `.raw/contents/items.md` のfrontmatterはページmetadataとして使い、H1以下のMarkdown本文とHTMLコメントをページ本文・可視の表示構成の正本とする。H1より前の作業履歴コメントは実装指示として扱わない。
+アイテム説明トップ。ページmetadata、本文、可視構成のGit管理上の正本は、対応するMDX / Astro実装とその実装契約であるcurrent issue、requirements、designとする。`.raw/contents/items.md`は必要に応じて参照する手動の補助入力であり、H1より前の作業履歴コメントは実装指示として扱わない。
 
-現在のcontents指示では、H1直後に装飾画像として空`alt`の`public/images/data/items_hero.webp`を表示し、必要信用、アイテム種別、生き様専用アイテム、同一アイテムの効果が原則重複しないことを説明する。戦闘ルールへのリンクを置く。
+現行要件では、H1直後に装飾画像として空`alt`の`public/images/data/items_hero.webp`を表示し、必要信用、アイテム種別、生き様専用アイテム、同一アイテムの効果が原則重複しないことを説明する。戦闘ルールへのリンクを置く。
 
 「アイテムの種類」は表形式とし、武器、防具、お守り、サイバネ、ナノマシン、ドラッグの順で説明する。各アイテム種別は、対応する`/data/items/`配下の一覧ページへリンクする。お守り、サイバネ、ナノマシン、ドラッグでは、対応する生き様であるブライ、ケジメ、スミ、ヤクを、それぞれ`/data/ikizama/burai`、`/data/ikizama/kejime`、`/data/ikizama/sumi`、`/data/ikizama/yaku`へリンクする。
 

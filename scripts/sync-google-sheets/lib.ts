@@ -60,8 +60,7 @@ export async function syncGoogleSheets(
   const outputRoot = resolve(options.outputRoot);
   const errors: SyncFailure[] = [];
   const exportedFiles: string[] = [];
-  const reservedDirectories = new Map<string, string>();
-  const reservedFiles = new Map<string, string>();
+  const reservedPaths = new Map<string, string>();
 
   await visitFolder(options.rootFolderId, [], true);
 
@@ -106,10 +105,10 @@ export async function syncGoogleSheets(
           recordFailure(file.name, new Error("Output path escapes .raw/."));
           continue;
         }
-        if (!reservePath(reservedDirectories, outputDirectory, file.id)) {
+        if (!reservePath(reservedPaths, outputDirectory, file.id)) {
           recordFailure(
             file.name,
-            new Error("Another Drive folder resolves to the same output path."),
+            new Error("Another Drive item resolves to the same output path."),
           );
           continue;
         }
@@ -136,12 +135,10 @@ export async function syncGoogleSheets(
         recordFailure(file.name, new Error("Output path escapes .raw/."));
         continue;
       }
-      if (!reservePath(reservedFiles, outputPath, file.id)) {
+      if (!reservePath(reservedPaths, outputPath, file.id)) {
         recordFailure(
           file.name,
-          new Error(
-            "Another Drive spreadsheet resolves to the same output path.",
-          ),
+          new Error("Another Drive item resolves to the same output path."),
         );
         continue;
       }

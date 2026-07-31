@@ -10,7 +10,7 @@ Draft or review local contents markdown without conflicting with the current sit
 Use when the user asks to:
 
 - draft contents markdown for `.raw/contents/*.md` locally
-- prepare a local source file for a contents Google Doc
+- prepare a local source file for manual contents editing
 - review a local contents markdown file against local site sources
 - create a local content instruction for a page before implementation
 - update a local contents instruction after an approved page-content change

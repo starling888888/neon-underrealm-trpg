@@ -8,14 +8,26 @@ import {
   XLSX_MIME_TYPE,
 } from "../../scripts/sync-google-sheets/lib";
 
-const { driveMock, exportMock, jwtMock, listMock, loadEnvFileMock } =
-  vi.hoisted(() => ({
-    driveMock: vi.fn(),
-    exportMock: vi.fn(),
-    jwtMock: vi.fn(),
-    listMock: vi.fn(),
-    loadEnvFileMock: vi.fn(),
-  }));
+const {
+  driveMock,
+  exportMock,
+  jwtMock,
+  listMock,
+  loadEnvFileMock,
+  writeFileMock,
+} = vi.hoisted(() => ({
+  driveMock: vi.fn(),
+  exportMock: vi.fn(),
+  jwtMock: vi.fn(),
+  listMock: vi.fn(),
+  loadEnvFileMock: vi.fn(),
+  writeFileMock: vi.fn(),
+}));
+
+vi.mock("node:fs/promises", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("node:fs/promises")>();
+  return { ...actual, writeFile: writeFileMock };
+});
 
 vi.mock("node:process", () => ({ loadEnvFile: loadEnvFileMock }));
 
@@ -29,13 +41,18 @@ vi.mock("googleapis", () => ({
 import { runGoogleSheetsSync } from "../../scripts/sync-google-sheets/runtime";
 
 describe("Google Spreadsheet sync runtime", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    const { writeFile } =
+      await vi.importActual<typeof import("node:fs/promises")>(
+        "node:fs/promises",
+      );
     process.env.GOOGLE_DRIVE_ROOT_FOLDER_ID = "root";
     process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL = "sync@example.test";
     process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY = "line-one\\nline-two";
     driveMock.mockReturnValue({
       files: { export: exportMock, list: listMock },
     });
+    writeFileMock.mockImplementation(writeFile);
   });
 
   afterEach(() => {
@@ -45,7 +62,7 @@ describe("Google Spreadsheet sync runtime", () => {
     vi.clearAllMocks();
   });
 
-  it("uses the official client, paginates, recurses, and exports spreadsheets", async () => {
+  it("uses the official client, paginates, recurses, and exports only spreadsheets", async () => {
     await using fixture = await createFixture();
     listMock
       .mockResolvedValueOnce({
@@ -55,7 +72,16 @@ describe("Google Spreadsheet sync runtime", () => {
         },
       })
       .mockResolvedValueOnce({
-        data: { files: [sheet("release-notes", "release-notes")] },
+        data: {
+          files: [
+            sheet("release-notes", "release-notes"),
+            file(
+              "document",
+              "contents",
+              "application/vnd.google-apps.document",
+            ),
+          ],
+        },
       })
       .mockResolvedValueOnce({
         data: { files: [sheet("skills", "skills")] },
@@ -80,9 +106,34 @@ describe("Google Spreadsheet sync runtime", () => {
       scopes: ["https://www.googleapis.com/auth/drive.readonly"],
     });
     expect(driveMock).toHaveBeenCalledOnce();
-    expect(listMock).toHaveBeenCalledTimes(3);
+    expect(listMock).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        pageToken: undefined,
+        q: "'root' in parents and trashed = false",
+      }),
+    );
+    expect(listMock).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        pageToken: "next-page",
+        q: "'root' in parents and trashed = false",
+      }),
+    );
+    expect(listMock).toHaveBeenNthCalledWith(
+      3,
+      expect.objectContaining({
+        pageToken: undefined,
+        q: "'data' in parents and trashed = false",
+      }),
+    );
+    expect(exportMock).toHaveBeenCalledTimes(2);
     expect(exportMock).toHaveBeenCalledWith(
       { fileId: "skills", mimeType: XLSX_MIME_TYPE },
+      { responseType: "arraybuffer" },
+    );
+    expect(exportMock).toHaveBeenCalledWith(
+      { fileId: "release-notes", mimeType: XLSX_MIME_TYPE },
       { responseType: "arraybuffer" },
     );
     expect(
@@ -95,7 +146,7 @@ describe("Google Spreadsheet sync runtime", () => {
     expect(error).not.toHaveBeenCalled();
   });
 
-  it("reports individual export failures after continuing with later files", async () => {
+  it("reports export failures after continuing with later spreadsheets", async () => {
     await using fixture = await createFixture();
     listMock.mockResolvedValueOnce({
       data: { files: [sheet("bad", "bad"), sheet("good", "good")] },
@@ -118,6 +169,103 @@ describe("Google Spreadsheet sync runtime", () => {
     expect(error).toHaveBeenCalledWith("Completed with 1 error(s).");
   });
 
+  it("reports child listing failures after continuing with later spreadsheets", async () => {
+    await using fixture = await createFixture();
+    listMock
+      .mockResolvedValueOnce({
+        data: { files: [folder("broken", "broken"), sheet("good", "good")] },
+      })
+      .mockRejectedValueOnce(new Error("cannot list broken"));
+    exportMock.mockResolvedValueOnce({ data: Buffer.from("good-xlsx") });
+    const error = vi.fn();
+
+    const exitCode = await runGoogleSheetsSync({
+      error,
+      outputRoot: fixture.outputRoot,
+    });
+
+    expect(exitCode).toBe(1);
+    expect(await readFile(join(fixture.outputRoot, "good.xlsx"), "utf8")).toBe(
+      "good-xlsx",
+    );
+    expect(error).toHaveBeenCalledWith(
+      "[sync error] broken: cannot list broken",
+    );
+  });
+
+  it("reports write failures after continuing with later spreadsheets", async () => {
+    await using fixture = await createFixture();
+    listMock.mockResolvedValueOnce({
+      data: { files: [sheet("bad", "bad"), sheet("good", "good")] },
+    });
+    exportMock
+      .mockResolvedValueOnce({ data: Buffer.from("bad-xlsx") })
+      .mockResolvedValueOnce({ data: Buffer.from("good-xlsx") });
+    writeFileMock.mockRejectedValueOnce(new Error("cannot write bad"));
+    const error = vi.fn();
+
+    const exitCode = await runGoogleSheetsSync({
+      error,
+      outputRoot: fixture.outputRoot,
+    });
+
+    expect(exitCode).toBe(1);
+    expect(await readFile(join(fixture.outputRoot, "good.xlsx"), "utf8")).toBe(
+      "good-xlsx",
+    );
+    expect(error).toHaveBeenCalledWith("[sync error] bad: cannot write bad");
+  });
+
+  it("keeps output paths safe and rejects every kind of path collision", async () => {
+    await using fixture = await createFixture();
+    listMock
+      .mockResolvedValueOnce({
+        data: {
+          files: [
+            folder("folder-one", "directory"),
+            folder("folder-two", "directory"),
+            folder("folder-cross", "data.xlsx"),
+            sheet("sheet-cross", "data"),
+            sheet("sheet-one", "skill"),
+            sheet("sheet-two", "skill.xlsx"),
+            sheet("unsafe", ".."),
+            sheet("good", "good"),
+          ],
+        },
+      })
+      .mockResolvedValueOnce({ data: { files: [] } })
+      .mockResolvedValueOnce({ data: { files: [] } });
+    exportMock
+      .mockResolvedValueOnce({ data: Buffer.from("skill-xlsx") })
+      .mockResolvedValueOnce({ data: Buffer.from("good-xlsx") });
+    const error = vi.fn();
+
+    const exitCode = await runGoogleSheetsSync({
+      error,
+      outputRoot: fixture.outputRoot,
+    });
+
+    expect(exitCode).toBe(1);
+    expect(await readFile(join(fixture.outputRoot, "skill.xlsx"), "utf8")).toBe(
+      "skill-xlsx",
+    );
+    expect(await readFile(join(fixture.outputRoot, "good.xlsx"), "utf8")).toBe(
+      "good-xlsx",
+    );
+    expect(error).toHaveBeenCalledWith(
+      "[sync error] directory: Another Drive item resolves to the same output path.",
+    );
+    expect(error).toHaveBeenCalledWith(
+      "[sync error] data: Another Drive item resolves to the same output path.",
+    );
+    expect(error).toHaveBeenCalledWith(
+      "[sync error] skill.xlsx: Another Drive item resolves to the same output path.",
+    );
+    expect(error).toHaveBeenCalledWith(
+      "[sync error] ..: Spreadsheet name is unsafe.",
+    );
+  });
+
   it("returns a configuration failure before calling the Google client", async () => {
     loadEnvFileMock.mockImplementationOnce(() => {
       throw new Error(".env is missing");
@@ -134,12 +282,16 @@ describe("Google Spreadsheet sync runtime", () => {
   });
 });
 
+function file(id: string, name: string, mimeType: string) {
+  return { id, mimeType, name };
+}
+
 function folder(id: string, name: string) {
-  return { id, mimeType: GOOGLE_FOLDER_MIME_TYPE, name };
+  return file(id, name, GOOGLE_FOLDER_MIME_TYPE);
 }
 
 function sheet(id: string, name: string) {
-  return { id, mimeType: GOOGLE_SPREADSHEET_MIME_TYPE, name };
+  return file(id, name, GOOGLE_SPREADSHEET_MIME_TYPE);
 }
 
 async function createFixture(): Promise<
