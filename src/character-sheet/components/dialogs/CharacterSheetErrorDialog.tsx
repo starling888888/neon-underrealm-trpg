@@ -27,7 +27,11 @@ export default function CharacterSheetErrorDialog({
   return (
     <CharacterSheetDialog
       ariaLabel="エラー"
-      className={styles.dialog}
+      className={
+        errorSummary.hasErrors
+          ? styles.dialog
+          : `${styles.dialog} ${styles.noErrors}`
+      }
       initialFocusRef={closeButtonRef}
       isOpen={isOpen}
       onRequestClose={onRequestClose}

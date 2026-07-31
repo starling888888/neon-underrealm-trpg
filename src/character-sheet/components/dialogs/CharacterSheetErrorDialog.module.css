@@ -2,6 +2,10 @@
   border-color: var(--color-danger);
 }
 
+.noErrors {
+  border-color: var(--color-border-strong);
+}
+
 .count {
   color: var(--color-danger);
   font-weight: 700;

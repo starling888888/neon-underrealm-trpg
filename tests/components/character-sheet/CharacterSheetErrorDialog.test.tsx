@@ -5,6 +5,7 @@ import { createRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import CharacterSheetErrorDialog from "../../../src/character-sheet/components/dialogs/CharacterSheetErrorDialog";
+import styles from "../../../src/character-sheet/components/dialogs/CharacterSheetErrorDialog.module.css";
 import type { CharacterSheetErrorSummary } from "../../../src/character-sheet/logic/error-summary";
 
 const errorSummary: CharacterSheetErrorSummary = {
@@ -82,6 +83,9 @@ describe("CharacterSheetErrorDialog", () => {
 
     expect(screen.getByText("エラーはありません。")).not.toBeNull();
     expect(screen.queryByRole("list")).toBeNull();
+    expect(screen.getByRole("dialog", { name: "エラー" }).className).toContain(
+      styles.noErrors,
+    );
   });
 
   it("uses distinct list keys for row-level errors with the same rule code", () => {

@@ -57,11 +57,17 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
   - handling plan: 個別sectionのlabel styleで補正せず、能力値ポイント、格、常時修正、一時修正、覚悟のactual screenshotとコンテンツレビューの指摘を照合する。違和感が再現する場合だけ、`FormulaTooltip`の共通box / line-height / flex alignmentを調整し、desktop / tablet / mobileで再確認する。
 
-- [ ] G31でキャラクターシート全体のVisual Reviewを完了する
+- [x] G31でキャラクターシート全体のVisual Reviewを完了する
   - source: G11 Gate Tech Reviewに対するユーザー判断
   - classification: visual review follow-up
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
-  - handling plan: canonical VRT baselineはGit管理・比較対象にしない。G31のコンテンツレビューで各Gateの表示に違和感がないか確認し、必要なroute / state / viewportのoriginal-pixel-resolution locator screenshotを、requirements・design・ユーザー指示と照合する。G11の非戦闘技能、G9 / G10の縁・判定、tooltip indicatorを含む未完了のVisual Reviewは、この手順で正式に判断する。
+  - handling result: canonical screenshotを入力にdesktop / tabletとmobileのコンテンツレビューを実施した。固定actionの本文重なり、mobileの情報密度、入力順、破壊的操作の色、icon-only操作はユーザー判断で非対応とした。候補行の選択可能性だけを次のTODOへ後続化した。
+
+- [ ] キャラクターシートの候補行を選択可能に見せるデザインを検討する
+  - source: `.tmp/review/ex-02-31-sheet-integration/contents-review-1.md` とユーザー判断
+  - classification: visual usability follow-up
+  - plan: なし。キャラクターシートの次のdesign改訂taskを計画してから紐付ける。
+  - handling plan: skill・item候補dialogで、候補名または行全体が選択可能であること、選択済み・非選択・選択不可の状態を視覚だけで区別できる表現を検討する。既存designと操作導線への影響を確認し、方針を承認してから実装する。
 
 - [ ] 覚悟から縁へ戻す効果の表現を整理する
   - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答

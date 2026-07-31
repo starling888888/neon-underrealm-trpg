@@ -114,8 +114,8 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [x] 全VRT targetのbaselineを再生成し、全件比較が通る。
 - [x] locator-only stateがcanonical full-page baselineを要求しない。
 - [x] 最終Tech Reviewを指定の限定観点で完了し、有効な指摘を解消またはユーザー判断へ戻している。
-- [ ] 最終UI Reviewを指定の限定観点で完了し、結果と未対応の判断を記録している。
-- [ ] 関連TODOを扱った結果または未対応理由が記録されている。
+- [x] 最終UI Reviewを指定の限定観点で完了し、結果と未対応の判断を記録している。
+- [x] 関連TODOを扱った結果または未対応理由が記録されている。
 - [x] `npm run check` が通る。
 - [x] `npm run build` が通る。
 
@@ -316,3 +316,107 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 ### 対応完了チェックリスト
 
 - [x] レビュー指摘4・5の該当チェックリストを完了する。
+
+## 最終UI Review
+
+- input: `canonical-snapshots/visual/character-sheet/`のdesktop / tablet / mobile screenshot
+- artifacts: `.tmp/review/ex-02-31-sheet-integration/contents-review-1.md`、`contents-expert-review-1.md`、`contents-beginner-review-1.md`
+- 固定actionの本文重なり、mobileの情報密度、入力順、破壊的操作の色、icon-only操作は、ユーザー判断で非対応とする。
+- 候補行の選択可能性はdesignへの影響があるため、`docs/TODO.md`へ後続化する。
+- errorがないdesktop error dialogの枠色は、ユーザー承認により通常のstrong borderへ修正する。
+- HTML、DOM、CSS、link、別route、実操作、keyboard / focus / ARIAは画像reviewの対象外とした。
+
+## ユーザー指摘 1
+
+### 指摘事項
+
+- ドラッグを選択した直後、初期の所持セット数が`0`のため、消費信用の表示が変わらない。
+
+### 判定
+
+- source: preview serverでのユーザー確認と2026-07-31の再現確認
+- classification: valid（仕様変更）
+- local validation: ドラッグの信用計算は`信用 × 所持セット数`であり、選択直後の所持セット数が`0`なら消費信用は増えない。武器、防具、お守り、サイバネ、ナノマシンでは選択直後に消費信用が更新されるため、ドラッグだけが選択済み状態と消費信用表示で乖離して見える。
+
+### 対応方針
+
+- 初期3行と追加行の所持セット数を`1`とする。選択操作で所持セット数を補正しない。
+- 保存・復元された所持セット数は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] 初期3行と追加行の所持セット数が`1`であり、ドラッグ選択後に消費信用と小銭が更新される。
+- [x] 保存・復元された所持セット数を選択操作で上書きしない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## ユーザー指摘 2
+
+### 指摘事項
+
+- スキル選択ダイアログの候補表にタイミングが表示されていない。
+
+### 判定
+
+- source: user
+- classification: valid
+- local validation: `SkillPickerDialog`は4種のスキル候補dialogで共有されるが、headerと候補行は名称、最大Lv、コスト、使用制限だけを表示していた。`Skill.timing`はマスタから取得済みであり、スキル行と要件には表示契約がある。
+
+### 対応方針
+
+- shared `SkillPickerDialog`へタイミング列を追加し、最大Lvとコストの間に置く。
+- 全viewportでタイミング値が折り返さない列幅を確保し、既存の横overflow禁止を維持する。
+
+### 対応完了チェックリスト
+
+- [x] プライマリ流儀、生き様、共通、その他流儀の全スキル候補dialogで、名称・最大Lv・タイミング・コスト・使用制限を同じ順で表示する。
+- [x] タイミング値がdesktop、tablet、mobileで折り返さず、候補dialogに横overflowがない。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+### VRT確認
+
+- capture: `npm run visual:capture -- --grep '@vrt.*@(primary-skill-picker|ikizama-skill-picker|common-skill-picker|other-ryugi-skill-picker)(?:\\s|$)'` は12件通過した。
+- checked actual screenshots: 4種の候補dialogそれぞれでdesktop / tablet / mobileのdialog locator screenshotを原寸で確認した。タイミング列は最大Lvとコストの間にあり、値の折り返し、横overflow、clipはない。
+- comparison: 同じ12 targetの`npm run visual:test`は、旧canonical baselineとの差分として12件失敗した。差分はタイミング列の追加と列幅変更による意図的なもの（primary / ikizama / other ryugi: 3〜4%、common: 5〜6%）である。baseline更新はユーザー明示承認が必要なため実行していない。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `tests/visual/vrt/character-sheet.spec.ts`の`error-dialog-empty`、`@vrt @character-sheet @dialog @desktop @error-dialog-empty`
+- route / states / viewports: `/character-sheet/`、errorなしのerror確認dialog、desktop（1440x1200）
+
+### レビュー結果
+
+| 対象                      | 判定       | 差分                                | 対応                            |
+| ------------------------- | ---------- | ----------------------------------- | ------------------------------- |
+| errorなしerror dialog枠線 | 要人間判断 | canonicalとの差分580 pixels（0.01） | 通常strong borderへ意図的に変更 |
+
+### 実画面確認
+
+- `/character-sheet/` / errorなしerror確認dialog / desktop:
+  - locator screenshot: `getByRole("dialog", { name: "エラー" })` のoriginal-pixel-resolution capture
+  - checked acceptance criteria: 白いsurface、通常strong border、本文・actionのalignment、text wrapping、clipping、overflow、`閉じる`buttonのbounds
+  - result: 通常strong borderで表示され、本文・actionにclippingまたはoverflowはない。
+
+### 自己修正した項目
+
+- [x] `errorSummary.hasErrors`がfalseの時だけ、error dialogのdanger borderを通常strong borderへ切り替えた。
+
+### 人間判断が必要な差分
+
+- canonical baselineは旧danger borderとの差分でVRT比較が失敗する。baseline更新はユーザー明示承認が必要なため、更新していない。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した。
+- [x] 変更targetだけの一時snapshotを取得した。
+- [x] current issueの受入条件と最終diffから対象stateを列挙した。
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した。
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない。
+- [x] VRT差分を修正した、または修正不要と判断した。
+- [x] baseline更新が必要な差分を人間判断として記録した。
+- [x] `npm run check` が通る（該当する場合）。
+- [x] `npm run build` が通る（該当する場合）。

@@ -14,7 +14,7 @@ type Options = {
 function createDrugRow(): DrugRowValues {
   return {
     drugId: null,
-    quantity: 0,
+    quantity: 1,
     rowId: `drug-${crypto.randomUUID()}`,
   };
 }

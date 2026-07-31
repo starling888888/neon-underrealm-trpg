@@ -9,6 +9,7 @@ import useCharacterSheetFormPresenterProps from "../../../src/character-sheet/fo
 import type { CharacterSheetFormValues } from "../../../src/character-sheet/form-values";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { getCommonSkillCandidates } from "../../../src/character-sheet/master-data/common-skills";
+import { getDrugs } from "../../../src/character-sheet/master-data/drugs";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
 import { getOmamori } from "../../../src/character-sheet/master-data/omamori";
 import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-data/other-ryugi-skills";
@@ -147,6 +148,28 @@ describe("useCharacterSheetFormPresenterProps", () => {
     expect(
       result.current.presenterProps.profileSection.creditSummary.change,
     ).toBe(8);
+  });
+
+  it("updates consumed credit when selecting a drug with the default quantity", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const [drug] = getDrugs();
+    const row = result.current.form.getValues("drugs.rows.0");
+    if (drug === undefined || drug.credit === null || row === undefined) {
+      throw new Error("ドラッグ候補または初期行を取得できません。");
+    }
+    const credit = drug.credit;
+
+    act(() => {
+      result.current.presenterProps.drugsSection.onSelect(row.rowId, drug.id);
+    });
+
+    expect(result.current.form.getValues("drugs.rows.0.quantity")).toBe(1);
+    expect(result.current.presenterProps.profileSection.spentCredit).toBe(
+      credit,
+    );
+    expect(
+      result.current.presenterProps.profileSection.creditSummary.change,
+    ).toBe(10 - credit);
   });
 
   it("keeps consecutive build selections instead of overwriting the first one", () => {

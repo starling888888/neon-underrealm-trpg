@@ -1904,3 +1904,23 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-31-sheet-integration` のPresenter再レンダリング防止リファクタ
 - 観測した失敗: 最初の`check`で新規Hook記述の整形差分を見落とし、formatter適用後の再実行でも`ProfileSection`のReact import順がBiome規則に合わず、同じformat検証を再度失敗させた。
 - 一次対応: import順をBiome指定へ修正し、最終検証は`format`後に`check`を単独実行して確認する。
+
+### Left selected drugs visually indistinguishable from zero-set items
+
+#### 2026-07-31
+
+- source: user
+- failure category: character-sheet input / derived-value consistency
+- 発生箇所: `ex-02-31-sheet-integration` のドラッグ選択と信用表示
+- 観測した失敗: ドラッグを選択しても初期所持セット数が`0`だったため、消費信用が変わらず、他アイテムと異なり選択済み状態が信用表示へ反映されないように見えた。初回対応では選択時の補正とinput同期を加えたが、行生成時の既定値を`1`にするだけで済む仕様に対して不要に複雑だった。
+- 一次対応: 初期3行と追加行の所持セット数を`1`とし、選択時補正とinput同期を取り除いた。hookで行生成値・消費信用・小銭、previewで実際の選択後表示を確認する。
+
+### Omitted timing from the shared skill candidate dialog
+
+#### 2026-07-31
+
+- source: user
+- failure category: character-sheet master-data display completeness
+- 発生箇所: `ex-02-31-sheet-integration` の`SkillPickerDialog`
+- 観測した失敗: スキル行と要件がタイミングを表示する一方、4種のスキル候補dialogを共有する候補表からタイミング列が欠落していた。
+- 一次対応: shared candidate headerとrowへ、最大Lvとコストの間にタイミング列を追加した。全dialog・viewportのactual screenshotを原寸で確認し、Component testでheaderと読み上げ用labelを固定する。

@@ -71,6 +71,10 @@ function CandidateRow({
           <span className={styles.visuallyHidden}>{copy.maximumLevel}：</span>
           {skill.maxLevel}
         </span>
+        <span className={styles.timing}>
+          <span className={styles.visuallyHidden}>{copy.timing}：</span>
+          {skill.timing}
+        </span>
         <span>
           <span className={styles.visuallyHidden}>{copy.cost}：</span>
           {formatDisplayValue(skill.cost ?? null)}
@@ -108,6 +112,7 @@ function CandidateTableHeader() {
       cells={[
         { content: copy.name },
         { content: copy.maximumLevel },
+        { className: styles.timing, content: copy.timing },
         { content: copy.cost },
         { content: copy.usageRestriction },
       ]}

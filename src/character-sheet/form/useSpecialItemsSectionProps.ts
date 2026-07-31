@@ -62,9 +62,7 @@ function hasCategoryContent(
         values.nanomachines.implantTotalModifier !== 0
       );
     case "drugs":
-      return values.drugs.rows.some(
-        (row) => row.drugId !== null || row.quantity !== 0,
-      );
+      return values.drugs.rows.some((row) => row.drugId !== null);
   }
 }
 

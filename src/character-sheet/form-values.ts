@@ -319,7 +319,7 @@ function createInitialCyberneticOtherRows(): CyberneticOtherRowValues[] {
 function createInitialDrugRows(): DrugRowValues[] {
   return Array.from({ length: 3 }, (_, index) => ({
     drugId: null,
-    quantity: 0,
+    quantity: 1,
     rowId: `drug-${index + 1}`,
   }));
 }

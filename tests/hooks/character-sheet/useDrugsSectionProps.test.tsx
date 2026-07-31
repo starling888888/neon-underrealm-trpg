@@ -21,7 +21,7 @@ function useDrugsHarness() {
 }
 
 describe("useDrugsSectionProps", () => {
-  it("normalizes quantities, preserves them across selection changes, and restores an empty list with a new row", () => {
+  it("normalizes quantities, preserves them across selection changes, and creates rows with one set", () => {
     const { result } = renderHook(() => useDrugsHarness());
     const drug = getDrugs()[0];
     if (drug === undefined)
@@ -36,6 +36,9 @@ describe("useDrugsSectionProps", () => {
     ) {
       throw new Error("ドラッグ初期行がありません。");
     }
+    expect([firstRow, secondRow, thirdRow].map((row) => row.quantity)).toEqual([
+      1, 1, 1,
+    ]);
 
     act(() => {
       result.current.props.onQuantityChange(firstRow.rowId, "4.8");
@@ -70,7 +73,7 @@ describe("useDrugsSectionProps", () => {
       result.current.props.onAdd();
     });
     const [restoredRow] = result.current.form.getValues("drugs.rows");
-    expect(restoredRow).toMatchObject({ drugId: null, quantity: 0 });
+    expect(restoredRow).toMatchObject({ drugId: null, quantity: 1 });
     expect(restoredRow?.rowId).toBeTruthy();
     expect(restoredRow?.rowId).not.toBe(firstRow.rowId);
   });

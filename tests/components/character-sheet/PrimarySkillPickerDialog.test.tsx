@@ -69,6 +69,7 @@ describe("primary skill dialogs", () => {
     expect(multilineNameButton.textContent).toBe("長い\n候補名");
     expect(screen.getByText(groups.basic[0]?.effect ?? "")).not.toBeNull();
     expect(screen.getAllByText("名称")).toHaveLength(2);
+    expect(screen.getAllByText("タイミング")).toHaveLength(2);
     expect(screen.getAllByText("使用制限")).toHaveLength(2);
     expect(screen.getAllByText("技能：")).toHaveLength(
       groups.basic.length + groups.advanced.length,
@@ -83,6 +84,7 @@ describe("primary skill dialogs", () => {
       (element) => element.textContent,
     );
     expect(hiddenLabels).toContain("最大Lv：");
+    expect(hiddenLabels).toContain("タイミング：");
     expect(hiddenLabels).toContain("コスト：");
     expect(hiddenLabels).toContain("使用制限：");
 

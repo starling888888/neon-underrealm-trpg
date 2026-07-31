@@ -22,18 +22,22 @@
 
 .headerRow {
   composes: headerRow from "../dialogs/PickerTable.module.css";
-  --character-sheet-picker-table-columns: minmax(8rem, 1fr) 3.25rem 3.6rem
-    4.8rem;
-  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.75rem 3.25rem
-    4rem;
+  --character-sheet-picker-table-columns: minmax(8rem, 1fr) 3.25rem
+    minmax(5.5rem, 6.5rem) 3.6rem 4.8rem;
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.75rem 4.75rem
+    3.25rem 4rem;
 }
 
 .firstLine {
   composes: firstLine from "../dialogs/PickerTable.module.css";
-  --character-sheet-picker-table-columns: minmax(8rem, 1fr) 3.25rem 3.6rem
-    4.8rem;
-  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.75rem 3.25rem
-    4rem;
+  --character-sheet-picker-table-columns: minmax(8rem, 1fr) 3.25rem
+    minmax(5.5rem, 6.5rem) 3.6rem 4.8rem;
+  --character-sheet-picker-table-columns-mobile: minmax(0, 1fr) 2.75rem 4.75rem
+    3.25rem 4rem;
+}
+
+.timing {
+  white-space: nowrap;
 }
 
 .group {
