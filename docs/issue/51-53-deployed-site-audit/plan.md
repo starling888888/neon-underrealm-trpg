@@ -25,13 +25,13 @@
 ### G2: GitHub Pagesサブパスと公開asset・個別アンカー
 
 - 確定事項: 代表内部route、CSS、JS、画像、OGP、PagefindがGitHub Pages base path配下でHTTP 200。スキル・アイテムの代表個別IDは公開HTMLに含まれる。
-- 後続Gateへの注意: `curl`では検索・本文リンクからのフラグメント遷移と画面上のスクロール位置を確認できない。G3では全公開routeのHTTP到達性を確認し、動的操作は未確認として残す。
+- 後続Gateへの注意: 初回の`curl`確認では検索・本文リンクからのフラグメント遷移と画面上のスクロール位置を確認できなかったが、G3後の追加browser smoke testで代表検索結果・個別アンカーは確認済み。全カード・全viewportの網羅確認は実施しない。
 - archive: 子issueなし。調査証跡は `.tmp/review/51-53-deployed-site-audit/g2-github-pages-base-report.md`。
 
 ### G3: 主要ページ、ナビゲーション、検索、データカードの公開smoke test
 
 - 確定事項: Pagefindの公開content数35と、HTTP 200を確認した35 routeが一致する。404 pageとunknown routeの404応答も確認した。公開HTMLにはサイトメニュー、PageToc、検索UI、データカードがある。
-- 後続Gateへの注意: `curl`だけでは動的UI、検索結果、実フラグメント遷移、viewport別の実画面を確認できない。これらは未実施として記録し、修正対象にしない。
+- 後続Gateへの注意: 追加browser smoke testでdesktop検索、tablet MobilePageToc、mobile menu / 検索、代表検索結果と直接個別アンカー、404を確認済み。全カード・全viewportの網羅的Visual Reviewは実施しない。
 - archive: 子issueなし。調査証跡は `.tmp/review/51-53-deployed-site-audit/g3-content-smoke-report.md`。
 
 完了後には、各Gateで確定した詳細要件、判断、後続Gateへの注意だけを追記する。調査証跡、

@@ -126,7 +126,7 @@ package install、任意script実行、削除commandはこのインベントリ�
 
 - [x] 公開URLは必ず `https://starling888888.github.io/neon-underrealm-trpg/` 配下を使い、ルート直下URLを公開サイトの成功根拠にしていない。
 - [x] 画像、CSS、JavaScript、OGP、Pagefind index、内部リンク、フラグメントリンクを、公開HTML・network・遷移結果のいずれかで確認している。
-- [ ] 主要ページ、サイトメニュー、ページ内目次、検索、スキル・アイテムの個別アンカーを、公開ページで実際に操作している。
+- [x] 主要ページ、サイトメニュー、ページ内目次、検索、スキル・アイテムの個別アンカーを、公開ページで実際に操作している。
 - [x] Pagefind検索結果が `-local` routeへ誤って誘導しないこと、または関連TODOとして未解決の事実を記録している。
 - [ ] hero画像の表示領域、非hero画像のlazy loading、キャラクターシート以外で初期表示を妨げる不要なclient JavaScript、カード一覧の過剰なclient描画、外部解析スクリプトを確認している。
 - [ ] 画像・スクリプトなどの外部assetが、混在コンテンツ・CORS・404などにより主要導線を壊していない。
