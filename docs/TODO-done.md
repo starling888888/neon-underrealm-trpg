@@ -23,6 +23,55 @@
 
 ## 完了済み
 
+- [x] G22で専用アイテムカテゴリframeへカテゴリ削除buttonを追加する
+  - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
+  - source: `.tmp/review/ex-02-18-sheet-omamori/human-review-1.md` / `ex-02-18-sheet-omamori` のレビュー指摘 1
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG22
+  - handling plan: G18で追加する非折りたたみのカテゴリframeへ、カテゴリ削除buttonの表示・操作・focus復帰を追加する。G22で行う既定表示、カテゴリ単位の追加・削除、警告表示と整合させ、現在の生き様に対応する既定カテゴリは削除できない契約を適用する。
+
+- [x] G24着手前にキャラクターシート可変行のRHF操作境界を`useFieldArray`契約へ整合する
+  - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
+  - source: `.tmp/chatgpt-review.md` / `レビュー指摘 1`
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24
+  - handling result: G16で全可変行の追加・削除・移動・置換を`useFieldArray`へ統一し、row IDと`reset`後のuncontrolled input同期を固定した。G24はこの契約に従って復元する。
+
+- [x] G24 / G27着手前にスキルLvの未確定入力、最大Lv超過、復元・JSON入力値の扱いをrequirements / schema契約として確定する
+  - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
+  - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 2、レビュー指摘 3、G15 レビュー指摘 1・4
+  - classification: requirements and schema follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24、G27
+  - handling result: G16で未確定入力・最大Lv超過を値保持と局所errorへ統一し、G24で構造・identityだけを拒否してゲーム上の不整合値を復元する契約をrequirements / schemaへ反映した。G27は同じrestore adapterを利用する。
+
+- [x] G16で生き様bonusを含む全スキルの最大Lv制約を定義する
+  - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
+  - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG16
+  - handling result: G16で通常skillと生き様bonusの最大Lv違反を値保持・局所errorとして統一し、経験点集計と保存・復元の契約へ適用した。
+
+- [x] G31でlocator-only Visual Review scenarioの実行経路を分離する
+  - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
+  - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
+  - classification: follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
+  - handling result: character-sheet専用scenario helperでfull-page、section locator、dialog locatorを分離した。通常VRTはlocator stateを該当locatorのcanonical snapshotとして比較し、full-page baselineを要求しない。全358 targetの再生成・比較を確認した。
+
+- [x] G31のコンテンツレビューでtooltip indicatorの上下揃えに違和感があれば、共通`FormulaTooltip`の配置を再調整する
+  - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
+  - source: `ex-02-11-sheet-noncombat` のレビュー指摘 6に対するユーザーのpreview確認
+  - classification: visual usability follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
+  - handling result: G31のコンテンツレビューで再調整を要する違和感は指摘されなかったため、共通`FormulaTooltip`は変更しない。
+
+- [x] G31でキャラクターシート全体のVisual Reviewを完了する
+  - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
+  - source: G11 Gate Tech Reviewに対するユーザー判断
+  - classification: visual review follow-up
+  - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
+  - handling result: canonical screenshotを入力にdesktop / tabletとmobileのコンテンツレビューを実施した。固定actionの本文重なり、mobileの情報密度、入力順、破壊的操作の色、icon-only操作はユーザー判断で非対応とした。候補行の選択可能性だけを次のTODOへ後続化した。
+
 - [x] G17着手時にCharacterSheetContainerのdialog orchestrationをhookへ分離する要否を判断する
   - completed: 2026-07-29 via user-directed Gate close
   - source: `.tmp/chatgpt-review.md` / G15 レビュー指摘 2
