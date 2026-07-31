@@ -1,0 +1,22 @@
+---
+import {
+  cloudflareWebAnalyticsScriptSource,
+  getCloudflareWebAnalyticsBeacon,
+} from "../../lib/site/web-analytics";
+
+const beacon = getCloudflareWebAnalyticsBeacon({
+  isProduction: import.meta.env.PROD,
+  token: import.meta.env.CLOUDFLARE_WEB_ANALYTICS_TOKEN,
+});
+---
+
+{
+  beacon && (
+    <script
+      is:inline
+      type="module"
+      src={cloudflareWebAnalyticsScriptSource}
+      data-cf-beacon={beacon.dataCfBeacon}
+    ></script>
+  )
+}

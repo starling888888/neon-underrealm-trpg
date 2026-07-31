@@ -313,35 +313,35 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 
 ### ドキュメントと実装
 
-- [ ] `docs/plan.md` に `ex-05-access-analytics` が登録されている
-- [ ] `docs/out-of-scope.md` に、本issueがアクセス解析の明示承認された例外として記録されている
-- [ ] `docs/requirements/non-functional.md` に、外部解析scriptの性能・privacy・環境分離要件が記録されている
-- [ ] Cloudflare Web Analyticsが唯一のアクセス解析サービスとして記録されている
-- [ ] beaconの出力責務が専用Astro Componentへ分離されている
-- [ ] `AppContainer.astro` から全公開ページへbeaconが最大1つだけ出力される
-- [ ] beacon scriptが `type="module"` を持つ
-- [ ] `data-cf-beacon` が安全にJSON serializationされている
-- [ ] `data-cf-beacon` に `spa: false` が設定されている
-- [ ] actual site tokenがsource code、Git管理ファイル、test fixture、snapshot、logへ記録されていない
-- [ ] development modeではbeaconを出力しない
-- [ ] token未設定の通常local buildおよびPR用CIが成功し、beaconを出力しない
-- [ ] GitHub Pages deployだけがRepository Variableを受け取る
-- [ ] deploy時にRepository Variableが空なら、値を表示せずartifact upload前に失敗する
-- [ ] deploy workflowの既存check、public build、Pagefind index生成、artifact upload、deployが維持されている
-- [ ] npm packageを追加していない
-- [ ] `docs/deployment.md` に、ユーザーがコード外で行う設定と本番確認手順が記載されている
-- [ ] 解析値が広告ブロッカー等の影響を受けるclient-side集計であることが運用文書に明記されている
-- [ ] UTM、custom event、長期保存が対象外であることが運用文書に明記されている
+- [x] `docs/plan.md` に `ex-05-access-analytics` が登録されている
+- [x] `docs/out-of-scope.md` に、本issueがアクセス解析の明示承認された例外として記録されている
+- [x] `docs/requirements/non-functional.md` に、外部解析scriptの性能・privacy・環境分離要件が記録されている
+- [x] Cloudflare Web Analyticsが唯一のアクセス解析サービスとして記録されている
+- [x] beaconの出力責務が専用Astro Componentへ分離されている
+- [x] `AppContainer.astro` から全公開ページへbeaconが最大1つだけ出力される
+- [x] beacon scriptが `type="module"` を持つ
+- [x] `data-cf-beacon` が安全にJSON serializationされている
+- [x] `data-cf-beacon` に `spa: false` が設定されている
+- [x] actual site tokenがsource code、Git管理ファイル、test fixture、snapshot、logへ記録されていない
+- [x] development modeではbeaconを出力しない
+- [x] token未設定の通常local buildおよびPR用CIが成功し、beaconを出力しない
+- [x] GitHub Pages deployだけがRepository Variableを受け取る
+- [x] deploy時にRepository Variableが空なら、値を表示せずartifact upload前に失敗する
+- [x] deploy workflowの既存check、public build、Pagefind index生成、artifact upload、deployが維持されている
+- [x] npm packageを追加していない
+- [x] `docs/deployment.md` に、ユーザーがコード外で行う設定と本番確認手順が記載されている
+- [x] 解析値が広告ブロッカー等の影響を受けるclient-side集計であることが運用文書に明記されている
+- [x] UTM、custom event、長期保存が対象外であることが運用文書に明記されている
 
 ### 自動検証
 
-- [ ] 自動testがtoken未設定、development、production相当、重複script、JSON属性を確認している
-- [ ] testがCloudflareへ実network requestを送信しない
-- [ ] GitHub Pagesの `/neon-underrealm-trpg` base path配下で既存ページが壊れていない
+- [x] 自動testがtoken未設定、development、production相当、重複script、JSON属性を確認している
+- [x] testがCloudflareへ実network requestを送信しない
+- [x] GitHub Pagesの `/neon-underrealm-trpg` base path配下で既存ページが壊れていない
 - [ ] `npm test` が通る
 - [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
-- [ ] `npm run build:public` が通る
+- [x] `npm run build` が通る
+- [x] `npm run build:public` が通る
 
 ### ユーザーによる外部設定と公開確認
 
@@ -354,30 +354,30 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 
 ### スコープ管理
 
-- [ ] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
-- [ ] 本issueが可視UIを変更しないため、design targetとVRT baselineを追加・更新していない
+- [x] 関連TODOを扱った場合は、対応結果または未対応理由が記録されている
+- [x] 本issueが可視UIを変更しないため、design targetとVRT baselineを追加・更新していない
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない
-- [ ] GitHub Pagesのサブパス公開に影響しない
-- [ ] 公開HTMLの各documentにbeaconが複数出力されていない
-- [ ] tokenをconsole、GitHub Actions log、error messageへ出力していない
-- [ ] production以外から実計測を送信していない
-- [ ] testからCloudflareへ実通信していない
-- [ ] 現行のPagefind、404、Webキャラクターシートを壊していない
-- [ ] 外部scriptが初期表示を同期的にblockする構成になっていない
-- [ ] 不要なnpm dependencyを追加していない
-- [ ] server、DB、authentication、SSRを追加していない
-- [ ] Cookie、`localStorage`、個人識別用storageを追加していない
-- [ ] custom eventや閲覧者単位のtrackingを追加していない
-- [ ] access countをserver accessの完全な実数として説明していない
-- [ ] Cloudflare側hostnameと公開hostnameが一致している
+- [x] 既存ルートが壊れていない
+- [x] GitHub Pagesのサブパス公開に影響しない
+- [x] 公開HTMLの各documentにbeaconが複数出力されていない
+- [x] tokenをconsole、GitHub Actions log、error messageへ出力していない
+- [x] production以外から実計測を送信していない
+- [x] testからCloudflareへ実通信していない
+- [x] 現行のPagefind、404、Webキャラクターシートを壊していない
+- [x] 外部scriptが初期表示を同期的にblockする構成になっていない
+- [x] 不要なnpm dependencyを追加していない
+- [x] server、DB、authentication、SSRを追加していない
+- [x] Cookie、`localStorage`、個人識別用storageを追加していない
+- [x] custom eventや閲覧者単位のtrackingを追加していない
+- [x] access countをserver accessの完全な実数として説明していない
+- [x] Cloudflare側hostnameと公開hostnameが一致している
 - [ ] Cloudflare automatic injectionとmanual beaconを重複して有効化していない
-- [ ] CSPが実装時点で存在する場合は、beacon sourceと送信先の許可要否を確認している
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-- [ ] `docs/design/` を変更していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] CSPが実装時点で存在する場合は、beacon sourceと送信先の許可要否を確認している
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] `docs/design/` を変更していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -389,7 +389,7 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 - `.github/workflows/deploy.yml`
 - `src/components/analytics/CloudflareWebAnalytics.astro`
 - `src/layouts/AppContainer.astro`
-- 環境値取得またはserializationを分離する場合のみ `src/lib/site/webAnalytics.ts`
+- 環境値取得またはserializationを分離する場合のみ `src/lib/site/web-analytics.ts`
 - 必要最小限の `tests/node/` または `tests/contract/`
 - test command追加が必要な場合のみ `package.json`
 
@@ -430,6 +430,7 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 - `ex-02-web-character-sheet` がmainへmergeされる前に本issueへ着手する場合、branch baseと `AppContainer.astro` の最新状態をローカルで再確認する。
 - Cloudflare dashboardとGitHub repository settingsを参照できないエージェントは、production確認を推測で完了扱いしない。
 - 法的義務や公開告知の要否は本issueで断定しない。ユーザーが告知を追加すると判断した場合は、contents正本と可視UIを扱う別taskを作成する。
+- local validationでは、current issue外の`tests/node/character-making-sample-characters.test.ts`が`public/sample-charcter/`という旧pathを参照して`npm test`を失敗させる。`npm run check`も、同じcurrent issue外の`public/sample-character/*.json` 10件の末尾改行で失敗する。どちらも`docs/agent-failure-log.md`へ記録し、本issueでは変更しない。
 
 ## ローカル検証
 

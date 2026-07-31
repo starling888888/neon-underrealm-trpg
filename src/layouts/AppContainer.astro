@@ -7,6 +7,7 @@ import MobileSiteMenuDrawer from "../components/layout/MobileSiteMenuDrawer.astr
 import PageNavigation from "../components/layout/PageNavigation.astro";
 import SearchModal from "../components/search/SearchModal.astro";
 import Seo from "../components/seo/Seo.astro";
+import CloudflareWebAnalytics from "../components/analytics/CloudflareWebAnalytics.astro";
 import { getSiteMenuLink } from "../lib/site/menu";
 import type { SeoProps } from "../lib/site/seo";
 import { defaultSeo } from "../lib/site/seo";
@@ -82,6 +83,8 @@ const searchTypeLabel = getSearchTypeLabel(
 
       <Footer />
     </div>
+
+    <CloudflareWebAnalytics />
   </body>
 </html>
 

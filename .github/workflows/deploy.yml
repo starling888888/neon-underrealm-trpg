@@ -42,7 +42,18 @@ jobs:
       - name: Check
         run: npm run check
 
+      - name: Require Cloudflare Web Analytics token
+        env:
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_WEB_ANALYTICS_TOKEN" ]; then
+            echo "::error::CLOUDFLARE_WEB_ANALYTICS_TOKEN repository variable must be set before deployment."
+            exit 1
+          fi
+
       - name: Build
+        env:
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
         run: npm run build:public
 
       - name: Build search index

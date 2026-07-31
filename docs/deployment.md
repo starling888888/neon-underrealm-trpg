@@ -72,6 +72,43 @@ workflowは `main` へのpushで実行します。
 - `AGENTS.md`
 - `README.md`
 
+## アクセス解析
+
+初回公開告知前の `ex-05-access-analytics` では、Cloudflare Web Analyticsだけをmanual beaconで導入する。GitHub Pages、DNS、hostingの構成は変更しない。
+
+beaconは本番deployのbuild時だけ、各公開HTML documentへ最大1つ出力する。通常のlocal build、PR検証、Visual Testではtokenを渡さないため、beaconは出力されず、Cloudflareへの実計測も発生しない。
+
+### deploy前の設定
+
+1. Cloudflare Web Analyticsで `starling888888.github.io` をsite hostnameとして登録する。`/neon-underrealm-trpg` はhostnameとして登録しない。
+2. Cloudflareが表示したmanual snippetからsite tokenだけを取得する。
+3. GitHub repositoryの `Settings` → `Secrets and variables` → `Actions` → `Variables` に、次のRepository Variableを作成する。
+
+   ```text
+   Name: CLOUDFLARE_WEB_ANALYTICS_TOKEN
+   Value: Cloudflareから取得したsite token
+   ```
+
+4. token値をsource code、Git管理ファイル、commit message、PR本文、review comment、GitHub Actions log、ChatGPTやCodexとの会話へ貼らない。
+
+deploy workflowはbuild前にこのRepository Variableが空でないことを確認する。未設定ならtoken値を表示せず、artifact uploadより前に失敗する。tokenは認証用の秘密鍵ではなく公開HTMLへ出力されるsite識別子だが、環境ごとの設定分離と誤設定防止のためRepository Variableで管理する。
+
+### 計測範囲と公開後の確認
+
+Cloudflare Web Analyticsは、Visits、Page views、Path、Referer host、Device type、Browser、Operating system、Country、Page load time、Core Web Vitalsを確認するために使う。`spa: false` とし、document loadだけをPage viewとして扱う。
+
+公開後は、広告ブロッカーまたはtracking防止機能を無効にしたブラウザーでトップページと下層ページを開き、Cloudflare dashboardで以下を確認する。
+
+- Page viewが記録されている
+- Pathが `/neon-underrealm-trpg/` 配下である
+- beacon scriptまたは計測送信で恒常的なCORS errorが出ていない
+
+manual beaconは広告ブロッカー、tracking防止機能、network errorの影響を受ける。そのため解析値は、serverへ到達した全HTTP requestの正確な件数ではなく、傾向把握に用いる。UTM query parameter、custom event、閲覧者単位の追跡、長期保存、raw log exportは扱わない。
+
+Cloudflareのautomatic injectionは有効化しない。manual beaconと同一ページへ複数のsnippetを出力しない。CSPを将来導入する場合だけ、`https://static.cloudflareinsights.com/beacon.min.js` と `cloudflareinsights.com` への許可要否を別taskで確認する。
+
+参照: [Cloudflare Web Analytics FAQ](https://developers.cloudflare.com/web-analytics/faq/)、[SPA measurement](https://developers.cloudflare.com/web-analytics/get-started/web-analytics-spa/)
+
 ## サブパス公開
 
 GitHub Pagesでは、以下のようなサブパス配下で公開される可能性があります。
