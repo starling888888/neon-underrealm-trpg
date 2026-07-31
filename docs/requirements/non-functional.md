@@ -73,7 +73,8 @@ CI/CDでは、Excel変換を必須工程にしない。
 - ヒーロー画像の表示中にskeletonを用いる場合は、画像の表示領域を確保する目的に限る
 - 不要に大きなUIライブラリを導入しない
 - カード一覧表示は、過剰なクライアントサイド描画に依存しすぎない
-- 外部解析スクリプトは初期実装では導入しない
+- 外部解析スクリプトは `ex-05-access-analytics` のCloudflare Web Analytics manual beaconに限り許容する。beaconは本番deployだけで出力し、local development、通常build、PR検証、Visual Testでは出力または実送信しない
+- 許容された外部解析scriptは初期表示を同期的にblockせず、Cookie、`localStorage`、閲覧者単位の永続識別子を追加しない
 
 ### NFR-05. ライセンス・権利表記
 

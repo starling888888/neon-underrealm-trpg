@@ -50,6 +50,43 @@ describe("page navigation public build contract", () => {
 
     assert.equal(existsSync(path.resolve("dist/-local")), false);
   });
+
+  it("omits the beacon from a public build without a token", () => {
+    for (const route of ["/", "/rules/battle", "/character-sheet", "/404"]) {
+      assert.equal(getCloudflareBeaconCount(route), 0, route);
+    }
+  });
+
+  it("places the single shared analytics component before the closing body", () => {
+    const layout = readFileSync("src/layouts/AppContainer.astro", "utf8");
+    const component = readFileSync(
+      "src/components/analytics/CloudflareWebAnalytics.astro",
+      "utf8",
+    );
+
+    assert.equal(
+      [...layout.matchAll(/<CloudflareWebAnalytics\s*\/>/g)].length,
+      1,
+    );
+    assert.ok(
+      layout.indexOf("<CloudflareWebAnalytics />") < layout.indexOf("</body>"),
+    );
+    assert.match(component, /isProduction: import\.meta\.env\.PROD/);
+    assert.match(component, /data-cf-beacon=\{beacon\.dataCfBeacon\}/);
+  });
+
+  it("passes the token only to the deployment build after a non-empty check", () => {
+    const workflow = readFileSync(".github/workflows/deploy.yml", "utf8");
+
+    assert.match(
+      workflow,
+      /name: Require Cloudflare Web Analytics token[\s\S]*?CLOUDFLARE_WEB_ANALYTICS_TOKEN: \$\{\{ vars\.CLOUDFLARE_WEB_ANALYTICS_TOKEN \}\}[\s\S]*?if \[ -z "\$CLOUDFLARE_WEB_ANALYTICS_TOKEN" \]/,
+    );
+    assert.match(
+      workflow,
+      /name: Build[\s\S]*?CLOUDFLARE_WEB_ANALYTICS_TOKEN: \$\{\{ vars\.CLOUDFLARE_WEB_ANALYTICS_TOKEN \}\}[\s\S]*?run: npm run build:public/,
+    );
+  });
 });
 
 function getPageNavigationHrefs(route: string): string[] | undefined {
@@ -77,4 +114,13 @@ function getOutputPath(route: string): string {
     route === "/" ? "index.html" : route.slice(1),
     route === "/" ? "" : "index.html",
   );
+}
+
+function getCloudflareBeaconCount(route: string): number {
+  const html = readFileSync(getOutputPath(route), "utf8");
+  return [
+    ...html.matchAll(
+      /<script\b[^>]*\bsrc="https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js"[^>]*><\/script>/g,
+    ),
+  ].length;
 }
