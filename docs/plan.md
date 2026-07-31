@@ -36,7 +36,7 @@ PR merge後の計画更新は `.agents/skills/post-merge-plan-update/SKILL.md` �
   - [ ] 不要なクライアントJSを削減
   - [ ] 画像lazy loadingを確認
   - [ ] カード一覧が過剰なクライアント描画に依存していないか確認
-  - [ ] 大規模UIライブラリを導入していないことを確認
+  - [ ] キャラクターシートのReact Islandとその専用依存を除き、大規模UIライブラリを導入していないことを確認
   - [ ] 外部解析スクリプトを導入していないことを確認
 
 - [ ] `52-github-pages-base-check` — GitHub Pagesサブパス確認を行う
