@@ -13,7 +13,7 @@ milestone-01の履歴は `docs/issue/milestone-01/plan.md`、現在のスコー�
 
 ## Phase 1: milestone-01後の整理
 
-- issue管理を改善する。
+- milestone-02-phase-01-github-issue-archive — GitHub Issue #186
 - `docs/TODO.md` の対応方針を整理する。
 - `docs/agent-failure-log.md` の未反映項目を監査し、必要な恒久対応を計画する。
 
