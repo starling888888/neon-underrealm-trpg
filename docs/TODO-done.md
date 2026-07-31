@@ -23,6 +23,13 @@
 
 ## 完了済み
 
+- [x] CharacterSheet Presenter props custom hookを、Presenterのmemo化と同時に参照安定化する
+  - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
+  - source: `ex-02-4-sheet-profile` 実装中のユーザー指示
+  - classification: React performance architecture follow-up
+  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG31
+  - handling result: G31で`useCharacterSheetFormPresenterProps`を含むPresenter / section propsの派生ViewModelとcallbackを、実際にmemo化するprops境界で参照安定化し、無関係なUI state更新で対象propsが不要に変わらないことをhook / Component testで確認した。
+
 - [x] main以外のbranch / PRでdeployなしCIを回せるようにする
   - completed: 2026-07-31 via PR #74 / `8559f4c`
   - source: `17-github-actions-deploy-basic` issue review
