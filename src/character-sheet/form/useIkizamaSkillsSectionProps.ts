@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useMemo } from "react";
 import {
   type UseFormReturn,
   useFieldArray,
@@ -44,9 +44,6 @@ export default function useIkizamaSkillsSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,
   { onPickerRequest }: IkizamaSkillsSectionOptions,
 ): IkizamaSkillsSectionPresenterState {
-  const previousIkizamaIdRef = useRef<string | null>(
-    getValues("build.ikizamaId"),
-  );
   const { append, move, remove, replace, update } = useFieldArray({
     control,
     keyName: "fieldKey",
@@ -64,18 +61,18 @@ export default function useIkizamaSkillsSectionProps(
     name: "ikizamaSkills",
   });
 
-  useEffect(() => {
-    if (previousIkizamaIdRef.current === build.ikizamaId) return;
-
-    previousIkizamaIdRef.current = build.ikizamaId;
-    setValue("ikizamaSkills.bonusLevel", 1, { shouldValidate: true });
-  }, [build.ikizamaId, setValue]);
-
-  const groups = getIkizamaSkillGroups(build.ikizamaId, build.ikizamaLevel);
-  const rows = ikizamaSkills.rows.map((row) => ({
-    ...row,
-    skill: getIkizamaSkillById(build.ikizamaId, row.skillId),
-  }));
+  const groups = useMemo(
+    () => getIkizamaSkillGroups(build.ikizamaId, build.ikizamaLevel),
+    [build.ikizamaId, build.ikizamaLevel],
+  );
+  const rows = useMemo(
+    () =>
+      ikizamaSkills.rows.map((row) => ({
+        ...row,
+        skill: getIkizamaSkillById(build.ikizamaId, row.skillId),
+      })),
+    [build.ikizamaId, ikizamaSkills.rows],
+  );
   const bonusSkill = groups.bonus[0] ?? null;
   const validation = calculateIkizamaSkillsValidation(
     build.ikizamaLevel,
@@ -84,22 +81,24 @@ export default function useIkizamaSkillsSectionProps(
     rows,
   );
 
-  function setRow(rowId: string, nextRow: SkillSelectionRowValues): void {
-    const index = getValues("ikizamaSkills.rows").findIndex(
-      (row) => row.rowId === rowId,
-    );
-    if (index < 0) return;
+  const setRow = useCallback(
+    (rowId: string, nextRow: SkillSelectionRowValues): void => {
+      const index = getValues("ikizamaSkills.rows").findIndex(
+        (row) => row.rowId === rowId,
+      );
+      if (index < 0) return;
 
-    update(index, nextRow);
-  }
-
-  return {
-    candidateGroups: groups,
-    clearSelection: () => {
-      const rows = getValues("ikizamaSkills.rows");
-      replace(rows.map((row) => ({ ...row, level: 1, skillId: null })));
+      update(index, nextRow);
     },
-    onSelect: (rowId, skillId) => {
+    [getValues, update],
+  );
+
+  const clearSelection = useCallback(() => {
+    const rows = getValues("ikizamaSkills.rows");
+    replace(rows.map((row) => ({ ...row, level: 1, skillId: null })));
+  }, [getValues, replace]);
+  const onSelect = useCallback(
+    (rowId: string, skillId: string) => {
       const current = getValues("ikizamaSkills.rows").find(
         (row) => row.rowId === rowId,
       );
@@ -107,7 +106,10 @@ export default function useIkizamaSkillsSectionProps(
         setRow(rowId, { ...current, level: 1, skillId });
       }
     },
-    sectionProps: {
+    [getValues, setRow],
+  );
+  const sectionProps = useMemo<IkizamaSkillsSectionProps>(
+    () => ({
       bonusLevel: ikizamaSkills.bonusLevel,
       bonusSkill,
       hasIkizamaSkillLevelTotalError: validation.hasIkizamaSkillLevelTotalError,
@@ -152,6 +154,26 @@ export default function useIkizamaSkillsSectionProps(
       },
       rows,
       synchronizationKey: defaultValues?.ikizamaSkills,
-    },
-  };
+    }),
+    [
+      append,
+      bonusSkill,
+      build.ikizamaId,
+      getValues,
+      ikizamaSkills.bonusLevel,
+      move,
+      onPickerRequest,
+      remove,
+      rows,
+      setRow,
+      setValue,
+      validation,
+      defaultValues?.ikizamaSkills,
+    ],
+  );
+
+  return useMemo(
+    () => ({ candidateGroups: groups, clearSelection, onSelect, sectionProps }),
+    [clearSelection, groups, onSelect, sectionProps],
+  );
 }

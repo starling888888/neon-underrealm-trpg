@@ -73,6 +73,7 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - 明示承認済みの全件実行として、全VRT targetを`npm run visual:update`で再生成する。新しいbaselineはlocal-onlyの比較入力として保持し、更新後に全件`npm run visual:test`を実行する。
 - Playwrightのsnapshot参照先、target / state / viewportの対応、locator-only stateのcapture-only経路を確認し、locator-only stateがfull-page baselineを要求しないことを確認する。
 - baseline運用の変更を`docs/design/README.md`、`.agents/rules/data-management.md`、`tests/visual/README.md`、必要最小限の関連design notesへ反映する。テキストのdesign intentとactual screenshotの役割を混同しない。
+- VRT比較はglobalな`maxDiffPixelRatio`を持たず厳密に行う。環境由来の差分が再現する場合だけ、該当targetへ実測に基づく最小の`maxDiffPixels`または動的領域のmaskを設定し、根拠をcurrent issueまたはdesign notesへ残す。
 
 ### 3. 最終Tech Review
 
@@ -108,7 +109,7 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [x] キャラクターシートアーキテクチャのE2E責務と全named E2E scenarioを照合し、詳細シナリオの実装過多を解消している。
 - [x] browser-onlyの主要導線だけをE2Eで確認している。
 - [x] dictionaryでゲームドメイン用語と汎用UI文言が整理され、可視文言を変えていない。
-- [x] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
+- [ ] FormValue周辺のmemo化対象propsとcallbackが参照安定化され、無関係な更新に対する契約をテストしている。
 - [x] `canonical-snapshots/visual/**` のGit管理を解除し、local-onlyのignore規則を確認している。
 - [x] 全VRT targetのbaselineを再生成し、全件比較が通る。
 - [x] locator-only stateがcanonical full-page baselineを要求しない。
@@ -156,3 +157,87 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 
 - branchは既存の`ex-02-web-character-sheet`を継続使用する。新規branchは作成しない。
 - Git操作、削除、baseline再生成、実装、reviewer起動は、ユーザーがこのissueを承認した後に行う。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `otherRyugiSkills.rows`が存在しない`ryugiRowId`を参照する復元データを、行の除外だけで部分復元している。
+- その他流儀の唯一のスキル行が未知IDの場合、除外後に最低1行を補っていない。
+- `BondsSection`、`CyberneticsSection`、`IkizamaSkillsSection`、`OtherRyugiSkillsSection`、`WeaponsAndArmorSection`へ渡す派生propsとcallbackが、無関係な更新でも再生成される。
+
+### 判定
+
+- source: local-agent
+- classification: valid（指摘1は仕様変更候補）
+- local validation: `docs/requirements/character-sheet.md`の保存・復元契約は、関連行参照を保てない場合の全体失敗と、その他流儀ごとの最低1行を定める。`character-sheet-persistence.ts`は前者を除外して成功させ、後者を補完していない。各section props hookは`memo`化済みComponentへ渡すobject・callbackを無条件に新規生成しており、G31の参照安定化契約と矛盾する。
+- 指摘1のユーザー判断: 一部の関連行参照を保てないだけで復元全体を失敗させると使いにくいため、行を除外して残りを復元する現行動作を許容する仕様変更候補とする。要件本文を変更する場合だけ、対応方針とテストを確定する。
+
+### 対応方針
+
+- 指摘1は仕様変更候補として保留し、現行の部分復元を変更しない。要件変更の承認後に、JSON importと端末内復元の期待値を更新する。
+- 未知のその他流儀skill IDを除外した後、各有効なその他流儀に空行を最低1行補う。
+- 実際に`memo`化済みsectionへ渡すprops境界だけを`useMemo` / `useCallback`で安定化し、無関係な更新でidentityが変わらないhook testを追加する。
+
+### 対応完了チェックリスト
+
+- [ ] 指摘1の復元方針を要件変更として確定し、JSON import・端末内復元の期待値を更新する。
+- [x] 未知のその他流儀skillを除外しても、各有効流儀の最低1行を維持する。
+- [ ] 対象section propsが無関係な更新で参照安定を維持する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- `useCharacterSheetErrorSummary`が毎renderで新しいsummary objectとerrors配列を返す。
+- `DrugsSection`を含むsection props hook、画像callback、`imageState`、`profileSection`が、Containerのdialog・menuなどフォーム外stateだけを更新しても再生成される。
+- 既存のidentity testは一部のskill sectionだけを対象とし、error summary、profile、Bonds、Ikizama、Other Ryugi、Drugsと、Container local state更新を確認していない。
+
+### 判定
+
+- source: browser-draft
+- classification: valid
+- local validation: `useCharacterSheetErrorSummary`は集計関数を直接returnし、`useDrugsSectionProps`はrenderごとに作る重複IDの`Set`へ依存する。root stateの画像操作は通常関数として返され、Containerの`imageState`とprofile propsへ伝播する。これはG31が完了条件とする、無関係なUI state更新に対するPresenter propsの参照安定化と一致しない。
+
+### 対応方針
+
+- `memo`化済みComponentへ渡る実際の境界だけを対象に、error summary、section props、画像stateを安定化する。全hookへの機械的なmemo化は行わない。
+- Containerのdialogまたはmenu stateだけを変更するtestで、影響を受けないPresenter propsとerror summaryのidentityを確認する。
+
+### 対応完了チェックリスト
+
+- [ ] error summaryと影響するsection / profile propsがフォーム外state更新で参照安定を維持する。
+- [ ] Container local state更新を起点とするidentity testを追加する。
+- [ ] `npm run check` が通る。
+- [ ] `npm run build` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `form.reset()`後、`defaultValue`だけを渡すuncontrolledな数値入力がRHFの復元値へ同期せず、画面表示と内部状態が乖離する。
+- 端末内復元またはJSON importが生き様IDを変えると、`useIkizamaSkillsSectionProps`の監視effectが復元済みの生き様bonus Lvを`1`へ上書きする。
+- 端末内復元またはJSON importがサイバネの埋め込み段階を変えると、`useCyberneticsSectionProps`の監視effectが復元済みの非戦闘技能修正を標準値で上書きする。
+
+### 判定
+
+- source: browser-draft
+- classification: valid
+- local validation: reviewのsource commit `3608d50`以降は文書・VRT設定だけが変更されており、対象sourceは一致する。`BuildSection`、`ProfileSection`、`BondsSection`、副能力値・判定・アイテム修正欄などは`defaultValue`を使うuncontrolled inputで、`form.reset()`の値変更をDOMへ同期しない。生き様skills hookは初期の生き様IDと復元後のID差分を区別せずbonus Lvを`1`へsetする。サイバネhookも初期導出値との差分を区別せず全非戦闘技能修正をsetする。いずれも保存・復元要件の全入力復元および自動補正禁止に反する。
+
+### 対応方針
+
+- reset、端末内復元、JSON import後に数値入力のDOM値とRHF値が同じになる共通境界を定め、既存のuncontrolled inputであっても復元値を表示できるようにする。
+- 生き様bonus Lvと非戦闘技能修正の再設定は、復元ではなくユーザーによる対応入力の変更時だけに限定する。
+- 端末内復元、JSON import、全初期化後の表示値と、復元後に編集した値がRHFへ反映されることをテストで固定する。
+
+### 対応完了チェックリスト
+
+- [x] 端末内復元、JSON import、全初期化後の数値input表示とRHF値が一致する。
+- [x] 復元後の数値input再編集が旧表示値をRHFへ戻さない。
+- [x] 生き様bonus Lvが端末内復元・JSON importで保持され、ユーザー操作の生き様変更時だけ`1`へ戻る。
+- [x] サイバネ段階と個別非戦闘技能修正が端末内復元・JSON importで保持され、ユーザー操作による段階変更時だけ標準修正を再設定する。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。

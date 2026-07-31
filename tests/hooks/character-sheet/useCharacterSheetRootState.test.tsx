@@ -28,6 +28,12 @@ describe("useCharacterSheetRootState", () => {
   it("restores a valid saved form before starting automatic saves", async () => {
     const values = structuredClone(characterSheetDefaultValues);
     values.profile.pcName = "復元されたPC";
+    values.build.ikizamaId = "burai";
+    values.ikizamaSkills.bonusLevel = 3;
+    values.cybernetics.implantTotalModifier = 100;
+    for (const noncombat of Object.values(values.checks.noncombat)) {
+      noncombat.modifier = 7;
+    }
     const writeCharacterSheetForm = vi.fn();
     const { result } = renderHook(() =>
       useCharacterSheetRootState({
@@ -42,6 +48,10 @@ describe("useCharacterSheetRootState", () => {
     expect(result.current.form.getValues("profile.pcName")).toBe(
       "復元されたPC",
     );
+    expect(result.current.form.getValues("ikizamaSkills.bonusLevel")).toBe(3);
+    expect(
+      result.current.form.getValues("checks.noncombat.acrobatics.modifier"),
+    ).toBe(7);
     expect(writeCharacterSheetForm).not.toHaveBeenCalled();
   });
 
@@ -128,6 +138,12 @@ describe("useCharacterSheetRootState", () => {
   it("confirms JSON form replacement and clears an image-less import", async () => {
     const values = structuredClone(characterSheetDefaultValues);
     values.profile.pcName = "JSONから復元したPC";
+    values.build.ikizamaId = "burai";
+    values.ikizamaSkills.bonusLevel = 3;
+    values.cybernetics.implantTotalModifier = 100;
+    for (const noncombat of Object.values(values.checks.noncombat)) {
+      noncombat.modifier = 7;
+    }
     const deleteCharacterImage = vi.fn(async () => {});
     const { result } = renderHook(() =>
       useCharacterSheetRootState({
@@ -157,6 +173,10 @@ describe("useCharacterSheetRootState", () => {
     expect(result.current.form.getValues("profile.pcName")).toBe(
       "JSONから復元したPC",
     );
+    expect(result.current.form.getValues("ikizamaSkills.bonusLevel")).toBe(3);
+    expect(
+      result.current.form.getValues("checks.noncombat.acrobatics.modifier"),
+    ).toBe(7);
     expect(deleteCharacterImage).toHaveBeenCalledOnce();
     expect(result.current.characterImage).toBeNull();
   });

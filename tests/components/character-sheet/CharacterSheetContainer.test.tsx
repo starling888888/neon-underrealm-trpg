@@ -30,6 +30,9 @@ import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/c
 
 const { useRootStateMock } = vi.hoisted(() => ({ useRootStateMock: vi.fn() }));
 const { onCcfoliaCopy } = vi.hoisted(() => ({ onCcfoliaCopy: vi.fn() }));
+let resetHarnessForm: ReturnType<
+  typeof useForm<CharacterSheetFormValues>
+> | null = null;
 
 vi.mock("../../../src/character-sheet/useCharacterSheetRootState", () => ({
   default: useRootStateMock,
@@ -101,6 +104,29 @@ function useResetImageErrorHarness() {
   };
 }
 
+function useFormResetHarness() {
+  const rootState = useRootStateHarness();
+  const [formResetVersion, setFormResetVersion] = useState(0);
+  resetHarnessForm = rootState.form;
+  const restoredValues = structuredClone(characterSheetDefaultValues);
+  restoredValues.build.acquiredExperience = 42;
+  restoredValues.build.ikizamaId = "burai";
+  restoredValues.ikizamaSkills.bonusLevel = 3;
+  restoredValues.cybernetics.implantTotalModifier = 100;
+  for (const noncombat of Object.values(restoredValues.checks.noncombat)) {
+    noncombat.modifier = 7;
+  }
+
+  return {
+    ...rootState,
+    formResetVersion,
+    onResetConfirmed: async () => {
+      rootState.form.reset(restoredValues);
+      setFormResetVersion((version) => version + 1);
+    },
+  };
+}
+
 function useCcfoliaCopyHarness() {
   const rootState = useRootStateHarness();
 
@@ -145,6 +171,7 @@ afterEach(() => {
   cleanup();
   useRootStateMock.mockReset();
   onCcfoliaCopy.mockReset();
+  resetHarnessForm = null;
 });
 
 describe("CharacterSheetContainer", () => {
@@ -271,6 +298,44 @@ describe("CharacterSheetContainer", () => {
     );
     expect(onResetConfirmed).toHaveBeenCalledOnce();
     await waitFor(() => expect(document.activeElement).toBe(trigger));
+  });
+
+  it("synchronizes reset values and preserves imported derived inputs until the user changes their source", async () => {
+    const user = userEvent.setup();
+    useRootStateMock.mockImplementation(useFormResetHarness);
+    render(<CharacterSheetContainer />);
+
+    const getExperience = () => {
+      const experience = document.querySelector<HTMLInputElement>(
+        "#character-sheet-experience",
+      );
+      if (experience === null) throw new Error("取得経験点inputがありません。");
+      return experience;
+    };
+    expect(getExperience().value).toBe("50");
+
+    const resetTrigger = screen.getAllByRole("button", { name: "初期化" })[0];
+    if (resetTrigger === undefined)
+      throw new Error("初期化buttonがありません。");
+    await user.click(resetTrigger);
+    await user.click(
+      within(
+        screen.getByRole("dialog", { name: "入力内容を初期化" }),
+      ).getByRole("button", { name: "初期化" }),
+    );
+
+    await waitFor(() => expect(getExperience().value).toBe("42"));
+    expect(resetHarnessForm?.getValues("ikizamaSkills.bonusLevel")).toBe(3);
+    expect(
+      resetHarnessForm?.getValues("checks.noncombat.acrobatics.modifier"),
+    ).toBe(7);
+
+    await user.clear(getExperience());
+    await user.type(getExperience(), "43");
+    expect(resetHarnessForm?.getValues("build.acquiredExperience")).toBe(43);
+
+    await user.selectOptions(screen.getByLabelText("生き様"), "kejime");
+    expect(resetHarnessForm?.getValues("ikizamaSkills.bonusLevel")).toBe(1);
   });
 
   it("returns a JSON-import image persistence error to the import trigger", async () => {

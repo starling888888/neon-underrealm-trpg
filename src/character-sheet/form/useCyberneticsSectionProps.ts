@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type {
@@ -43,26 +43,40 @@ export default function useCyberneticsSectionProps(
     name: "cybernetics.otherRows",
   });
   const values = useWatch({ control, name: "cybernetics" });
-  const selectedCybernetics = [
-    ...fixedPartKeys.map((part) =>
-      getCyberneticById(values[getFixedField(part)]),
-    ),
-    ...values.otherRows.map((row) => getCyberneticById(row.cyberneticId)),
-  ];
-  const derived = calculateCybernetics(
-    selectedCybernetics,
-    values.implantTotalModifier,
-    derivedBuild.attributes.mind.permanent,
-    values.implantLimitModifier,
+  const selectedCybernetics = useMemo(
+    () => [
+      ...fixedPartKeys.map((part) =>
+        getCyberneticById(values[getFixedField(part)]),
+      ),
+      ...values.otherRows.map((row) => getCyberneticById(row.cyberneticId)),
+    ],
+    [values],
+  );
+  const derived = useMemo(
+    () =>
+      calculateCybernetics(
+        selectedCybernetics,
+        values.implantTotalModifier,
+        derivedBuild.attributes.mind.permanent,
+        values.implantLimitModifier,
+      ),
+    [
+      derivedBuild.attributes.mind.permanent,
+      selectedCybernetics,
+      values.implantLimitModifier,
+      values.implantTotalModifier,
+    ],
   );
   const previousNoncombatModifier = useRef(derived.noncombatModifier);
+  const shouldSynchronizeNoncombatModifierRef = useRef(false);
 
   useEffect(() => {
-    if (previousNoncombatModifier.current === derived.noncombatModifier) {
-      return;
-    }
-
+    const previousModifier = previousNoncombatModifier.current;
     previousNoncombatModifier.current = derived.noncombatModifier;
+    if (!shouldSynchronizeNoncombatModifierRef.current) return;
+
+    shouldSynchronizeNoncombatModifierRef.current = false;
+    if (previousModifier === derived.noncombatModifier) return;
     for (const skill of noncombatSkills) {
       setValue(
         `checks.noncombat.${skill.id}.modifier`,
@@ -72,69 +86,126 @@ export default function useCyberneticsSectionProps(
     }
   }, [derived.noncombatModifier, setValue]);
 
-  function setFixedSelection(
-    part: CyberneticFixedPartKey,
-    cyberneticId: string | null,
-  ): void {
-    setValue(`cybernetics.${getFixedField(part)}`, cyberneticId, {
-      shouldValidate: true,
-    });
-  }
-
-  function setOtherSelection(rowId: string, cyberneticId: string | null): void {
-    const rows = getValues("cybernetics.otherRows");
-    const index = rows.findIndex((row) => row.rowId === rowId);
-    const row = rows[index];
-    if (row !== undefined) update(index, { ...row, cyberneticId });
-  }
-
-  return {
-    derived,
-    fixedRows: fixedPartKeys.map((part) => ({
-      cybernetic: getCyberneticById(values[getFixedField(part)]),
-      hasPartError: !isCyberneticCompatibleWithFixedPart(
-        part,
-        values[getFixedField(part)],
-      ),
-      part,
-      rowId: `cybernetic-${part}`,
-    })),
-    onAddOther: () => {
-      const rows = getValues("cybernetics.otherRows");
-      if (rows.length >= 4) return;
-      append({
-        cyberneticId: null,
-        rowId: `cybernetic-other-${crypto.randomUUID()}`,
+  const synchronizeNoncombatModifierAfterUserChange = useCallback(() => {
+    shouldSynchronizeNoncombatModifierRef.current = true;
+  }, []);
+  const setFixedSelection = useCallback(
+    (part: CyberneticFixedPartKey, cyberneticId: string | null): void => {
+      synchronizeNoncombatModifierAfterUserChange();
+      setValue(`cybernetics.${getFixedField(part)}`, cyberneticId, {
+        shouldValidate: true,
       });
     },
-    onClearFixed: (part) => setFixedSelection(part, null),
-    onClearOther: (rowId) => setOtherSelection(rowId, null),
-    onModifierChange: (field, value) => {
+    [setValue, synchronizeNoncombatModifierAfterUserChange],
+  );
+
+  const setOtherSelection = useCallback(
+    (rowId: string, cyberneticId: string | null): void => {
+      const rows = getValues("cybernetics.otherRows");
+      const index = rows.findIndex((row) => row.rowId === rowId);
+      const row = rows[index];
+      if (row !== undefined) {
+        synchronizeNoncombatModifierAfterUserChange();
+        update(index, { ...row, cyberneticId });
+      }
+    },
+    [getValues, synchronizeNoncombatModifierAfterUserChange, update],
+  );
+
+  const fixedRows = useMemo(
+    () =>
+      fixedPartKeys.map((part) => ({
+        cybernetic: getCyberneticById(values[getFixedField(part)]),
+        hasPartError: !isCyberneticCompatibleWithFixedPart(
+          part,
+          values[getFixedField(part)],
+        ),
+        part,
+        rowId: `cybernetic-${part}`,
+      })),
+    [values],
+  );
+  const otherRows = useMemo(
+    () =>
+      values.otherRows.map((row) => ({
+        cybernetic: getCyberneticById(row.cyberneticId),
+        rowId: row.rowId,
+      })),
+    [values.otherRows],
+  );
+  const onAddOther = useCallback(() => {
+    const rows = getValues("cybernetics.otherRows");
+    if (rows.length >= 4) return;
+    append({
+      cyberneticId: null,
+      rowId: `cybernetic-other-${crypto.randomUUID()}`,
+    });
+  }, [append, getValues]);
+  const onModifierChange = useCallback(
+    (field: "implantLimitModifier" | "implantTotalModifier", value: string) => {
       const normalizedValue = normalizeIntegerInput(value);
+      if (field === "implantTotalModifier") {
+        synchronizeNoncombatModifierAfterUserChange();
+      }
       setValue(`cybernetics.${field}`, normalizedValue, {
         shouldValidate: true,
       });
       return normalizedValue;
     },
-    onPickerRequest: options.onPickerRequest,
-    onRemoveOther: (rowId) => {
+    [setValue, synchronizeNoncombatModifierAfterUserChange],
+  );
+  const onRemoveOther = useCallback(
+    (rowId: string) => {
       const rows = getValues("cybernetics.otherRows");
       if (rows.length <= 1) return;
       const index = rows.findIndex((row) => row.rowId === rowId);
-      if (index >= 0) remove(index);
+      if (index >= 0) {
+        synchronizeNoncombatModifierAfterUserChange();
+        remove(index);
+      }
     },
-    onSelect: (target, cyberneticId) => {
+    [getValues, remove, synchronizeNoncombatModifierAfterUserChange],
+  );
+  const onSelect = useCallback(
+    (target: CyberneticsPickerTarget, cyberneticId: string | null) => {
       if (target.kind === "fixed") {
         setFixedSelection(target.part, cyberneticId);
       } else {
         setOtherSelection(target.rowId, cyberneticId);
       }
     },
-    implantLimitModifier: values.implantLimitModifier,
-    implantTotalModifier: values.implantTotalModifier,
-    otherRows: values.otherRows.map((row) => ({
-      cybernetic: getCyberneticById(row.cyberneticId),
-      rowId: row.rowId,
-    })),
-  };
+    [setFixedSelection, setOtherSelection],
+  );
+
+  return useMemo(
+    () => ({
+      derived,
+      fixedRows,
+      onAddOther,
+      onClearFixed: (part: CyberneticFixedPartKey) =>
+        setFixedSelection(part, null),
+      onClearOther: (rowId: string) => setOtherSelection(rowId, null),
+      onModifierChange,
+      onPickerRequest: options.onPickerRequest,
+      onRemoveOther,
+      onSelect,
+      implantLimitModifier: values.implantLimitModifier,
+      implantTotalModifier: values.implantTotalModifier,
+      otherRows,
+    }),
+    [
+      derived,
+      fixedRows,
+      onAddOther,
+      onModifierChange,
+      onRemoveOther,
+      onSelect,
+      options.onPickerRequest,
+      otherRows,
+      setFixedSelection,
+      setOtherSelection,
+      values.implantLimitModifier,
+      values.implantTotalModifier,
+    ],
+  );
 }

@@ -102,6 +102,20 @@ export const characterSheetRestoreSchema =
             : [];
         },
       );
+      for (const { rowId } of values.build.otherRyugi) {
+        if (
+          values.otherRyugiSkills.rows.some((row) => row.ryugiRowId === rowId)
+        ) {
+          continue;
+        }
+
+        values.otherRyugiSkills.rows.push({
+          level: 1,
+          rowId: `restore-other-ryugi-skill-${rowId}`,
+          ryugiRowId: rowId,
+          skillId: null,
+        });
+      }
       values.weapons.rows = ensureMinimumRows(
         values.weapons.rows.filter(
           (row) =>

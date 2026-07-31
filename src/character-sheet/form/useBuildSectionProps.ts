@@ -139,6 +139,11 @@ export default function useBuildSectionProps(
       onAttributeCommit: setAttributeValue,
       onIkizamaChange: (ikizamaId, trigger) => {
         const applyChange = () => {
+          if (getValues("build.ikizamaId") !== ikizamaId) {
+            setValue("ikizamaSkills.bonusLevel", 1, {
+              shouldValidate: true,
+            });
+          }
           setValue("build.ikizamaId", ikizamaId, { shouldValidate: true });
         };
         if (trigger !== undefined && onIkizamaChangeRequested !== undefined) {

@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import {
   type UseFormReturn,
   useFieldArray,
@@ -67,36 +68,48 @@ export default function useOtherRyugiSkillsSectionProps(
     defaultValue: characterSheetDefaultValues.otherRyugiSkills,
     name: "otherRyugiSkills",
   });
-  const rowsWithSkills = otherRyugiSkills.rows.map((row) => {
-    const ryugi = build.otherRyugi.find(
-      (otherRyugi) => otherRyugi.rowId === row.ryugiRowId,
-    );
+  const rowsWithSkills = useMemo(
+    () =>
+      otherRyugiSkills.rows.map((row) => {
+        const ryugi = build.otherRyugi.find(
+          (otherRyugi) => otherRyugi.rowId === row.ryugiRowId,
+        );
 
-    return {
-      ...row,
-      skill: getOtherRyugiSkillById(ryugi?.ryugiId ?? null, row.skillId),
-    };
-  });
-  const validation = calculateOtherRyugiSkillsValidation(
-    build.otherRyugi,
-    rowsWithSkills,
+        return {
+          ...row,
+          skill: getOtherRyugiSkillById(ryugi?.ryugiId ?? null, row.skillId),
+        };
+      }),
+    [build.otherRyugi, otherRyugiSkills.rows],
+  );
+  const validation = useMemo(
+    () => calculateOtherRyugiSkillsValidation(build.otherRyugi, rowsWithSkills),
+    [build.otherRyugi, rowsWithSkills],
   );
 
-  function getRows(): OtherRyugiSkillValues[] {
-    return getValues("otherRyugiSkills.rows");
-  }
+  const getRows = useCallback(
+    (): OtherRyugiSkillValues[] => getValues("otherRyugiSkills.rows"),
+    [getValues],
+  );
 
-  function findRowIndex(rowId: string): number {
-    return getRows().findIndex((row) => row.rowId === rowId);
-  }
+  const findRowIndex = useCallback(
+    (rowId: string): number =>
+      getRows().findIndex((row) => row.rowId === rowId),
+    [getRows],
+  );
 
-  function getRowsForRyugi(ryugiRowId: string): OtherRyugiSkillValues[] {
-    return getRows().filter((row) => row.ryugiRowId === ryugiRowId);
-  }
+  const getRowsForRyugi = useCallback(
+    (ryugiRowId: string): OtherRyugiSkillValues[] =>
+      getRows().filter((row) => row.ryugiRowId === ryugiRowId),
+    [getRows],
+  );
 
-  return {
-    addInitialRow: (ryugiRowId) => append(createOtherRyugiSkillRow(ryugiRowId)),
-    clearSelection: (ryugiRowId) => {
+  const addInitialRow = useCallback(
+    (ryugiRowId: string) => append(createOtherRyugiSkillRow(ryugiRowId)),
+    [append],
+  );
+  const clearSelection = useCallback(
+    (ryugiRowId: string) => {
       replace(
         getRows().map((row) =>
           row.ryugiRowId === ryugiRowId
@@ -105,82 +118,88 @@ export default function useOtherRyugiSkillsSectionProps(
         ),
       );
     },
-    getCandidateGroups: (ryugiRowId) => {
+    [getRows, replace],
+  );
+  const getCandidateGroups = useCallback(
+    (ryugiRowId: string) => {
       const ryugi = build.otherRyugi.find(
         (otherRyugi) => otherRyugi.rowId === ryugiRowId,
       );
-
       return getOtherRyugiSkillGroups(
         ryugi?.ryugiId ?? null,
         ryugi?.level ?? 0,
       );
     },
-    getSelectedSkillIds: (ryugiRowId) =>
+    [build.otherRyugi],
+  );
+  const getSelectedSkillIds = useCallback(
+    (ryugiRowId: string) =>
       getRowsForRyugi(ryugiRowId).flatMap((row) =>
         row.skillId === null ? [] : [row.skillId],
       ),
-    onSelect: (rowId, skillId) => {
+    [getRowsForRyugi],
+  );
+  const onSelect = useCallback(
+    (rowId: string, skillId: string) => {
       const index = findRowIndex(rowId);
       const row = getRows()[index];
-      if (row === undefined) return;
-
-      update(index, { ...row, level: 1, skillId });
+      if (row !== undefined) update(index, { ...row, level: 1, skillId });
     },
-    removeRows: (ryugiRowId) => {
+    [findRowIndex, getRows, update],
+  );
+  const removeRows = useCallback(
+    (ryugiRowId: string) => {
       const indexes = getRows().flatMap((row, index) =>
         row.ryugiRowId === ryugiRowId ? [index] : [],
       );
       if (indexes.length > 0) remove(indexes);
     },
-    sectionProps: {
-      maximumSkillNameLength,
-      onAdd: (ryugiRowId) => append(createOtherRyugiSkillRow(ryugiRowId)),
-      onLevelChange: (rowId, value) => {
-        const index = findRowIndex(rowId);
-        const row = getRows()[index];
-        if (row === undefined) return normalizeIntegerInput(value);
-
-        const level = normalizeIntegerInput(value);
-        update(index, { ...row, level });
-        return level;
-      },
-      onMove: (rowId, direction) => {
-        const row = getRows().find((current) => current.rowId === rowId);
-        if (row === undefined) return;
-
-        const ownerRows = getRowsForRyugi(row.ryugiRowId);
-        const currentIndex = ownerRows.findIndex(
-          (current) => current.rowId === rowId,
-        );
-        const targetOwnerIndex = currentIndex + (direction === "up" ? -1 : 1);
-        if (
-          currentIndex < 0 ||
-          targetOwnerIndex < 0 ||
-          targetOwnerIndex >= ownerRows.length
-        ) {
-          return;
-        }
-
-        const targetRow = ownerRows[targetOwnerIndex];
-        if (targetRow === undefined) return;
-
-        const currentFieldIndex = findRowIndex(rowId);
-        const targetFieldIndex = findRowIndex(targetRow.rowId);
-        if (currentFieldIndex < 0 || targetFieldIndex < 0) return;
-
+    [getRows, remove],
+  );
+  const onLevelChange = useCallback(
+    (rowId: string, value: string) => {
+      const index = findRowIndex(rowId);
+      const row = getRows()[index];
+      if (row === undefined) return normalizeIntegerInput(value);
+      const level = normalizeIntegerInput(value);
+      update(index, { ...row, level });
+      return level;
+    },
+    [findRowIndex, getRows, update],
+  );
+  const onMove = useCallback(
+    (rowId: string, direction: "up" | "down") => {
+      const row = getRows().find((current) => current.rowId === rowId);
+      if (row === undefined) return;
+      const ownerRows = getRowsForRyugi(row.ryugiRowId);
+      const currentIndex = ownerRows.findIndex(
+        (current) => current.rowId === rowId,
+      );
+      const targetOwnerIndex = currentIndex + (direction === "up" ? -1 : 1);
+      if (targetOwnerIndex < 0 || targetOwnerIndex >= ownerRows.length) return;
+      const targetRow = ownerRows[targetOwnerIndex];
+      if (targetRow === undefined) return;
+      const currentFieldIndex = findRowIndex(rowId);
+      const targetFieldIndex = findRowIndex(targetRow.rowId);
+      if (currentFieldIndex >= 0 && targetFieldIndex >= 0) {
         move(currentFieldIndex, targetFieldIndex);
-      },
-      onPickerRequest,
-      onRemove: (rowId) => {
-        const row = getRows().find((current) => current.rowId === rowId);
-        if (row === undefined || getRowsForRyugi(row.ryugiRowId).length <= 1) {
-          return;
-        }
-
-        const index = findRowIndex(rowId);
-        if (index >= 0) remove(index);
-      },
-      sections: build.otherRyugi.map((ryugi) => ({
+      }
+    },
+    [findRowIndex, getRows, getRowsForRyugi, move],
+  );
+  const onRemove = useCallback(
+    (rowId: string) => {
+      const row = getRows().find((current) => current.rowId === rowId);
+      if (row === undefined || getRowsForRyugi(row.ryugiRowId).length <= 1)
+        return;
+      const index = findRowIndex(rowId);
+      if (index >= 0) remove(index);
+    },
+    [findRowIndex, getRows, getRowsForRyugi, remove],
+  );
+  const sections = useMemo(
+    () =>
+      build.otherRyugi.map((ryugi) => ({
         hasSkillLevelTotalError: validation.invalidRyugiRowIds.includes(
           ryugi.rowId,
         ),
@@ -195,7 +214,48 @@ export default function useOtherRyugiSkillsSectionProps(
         ryugiRowId: ryugi.rowId,
         ryugiSelected: ryugi.ryugiId !== null,
       })),
+    [build.otherRyugi, rowsWithSkills, validation],
+  );
+  const sectionProps = useMemo(
+    () => ({
+      maximumSkillNameLength,
+      onAdd: addInitialRow,
+      onLevelChange,
+      onMove,
+      onPickerRequest,
+      onRemove,
+      sections,
       synchronizationKey: defaultValues?.otherRyugiSkills,
-    },
-  };
+    }),
+    [
+      addInitialRow,
+      defaultValues?.otherRyugiSkills,
+      onLevelChange,
+      onMove,
+      onPickerRequest,
+      onRemove,
+      sections,
+    ],
+  );
+
+  return useMemo(
+    () => ({
+      addInitialRow,
+      clearSelection,
+      getCandidateGroups,
+      getSelectedSkillIds,
+      onSelect,
+      removeRows,
+      sectionProps,
+    }),
+    [
+      addInitialRow,
+      clearSelection,
+      getCandidateGroups,
+      getSelectedSkillIds,
+      onSelect,
+      removeRows,
+      sectionProps,
+    ],
+  );
 }

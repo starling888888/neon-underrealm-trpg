@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { writeTextToClipboard } from "./browser/ccfolia-clipboard";
 import {
@@ -116,6 +116,7 @@ export default function useCharacterSheetRootState(
   const [isJsonImportErrorOpen, setIsJsonImportErrorOpen] = useState(false);
   const [isJsonImportImageErrorOpen, setIsJsonImportImageErrorOpen] =
     useState(false);
+  const [formResetVersion, setFormResetVersion] = useState(0);
   const formRestoreConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const formRestoreReturnFocusRef = useRef<HTMLInputElement>(null);
   const imageReturnFocusRef = useRef<HTMLButtonElement>(null);
@@ -127,6 +128,13 @@ export default function useCharacterSheetRootState(
   const isJsonImportReadingRef = useRef(false);
   const [shouldRestoreJsonImportFocus, setShouldRestoreJsonImportFocus] =
     useState(false);
+  const resetForm = useCallback(
+    (values: CharacterSheetFormValues) => {
+      form.reset(values);
+      setFormResetVersion((version) => version + 1);
+    },
+    [form],
+  );
 
   useEffect(() => {
     if (!shouldRestoreJsonImportFocus || rootOperation !== null) return;
@@ -170,7 +178,7 @@ export default function useCharacterSheetRootState(
         if (values === null) {
           setIsFormRestoreErrorOpen(true);
         } else {
-          form.reset(values);
+          resetForm(values);
         }
       }
     } catch (error) {
@@ -178,7 +186,7 @@ export default function useCharacterSheetRootState(
     } finally {
       setIsFormRestoring(false);
     }
-  }, [form, operations]);
+  }, [operations, resetForm]);
 
   useEffect(() => {
     if (isFormRestoring) return;
@@ -216,45 +224,51 @@ export default function useCharacterSheetRootState(
     };
   }, [form, isFormRestoring, operations]);
 
-  function onCharacterImageOperationStarted(trigger: HTMLButtonElement): void {
-    imageReturnFocusRef.current = trigger;
-  }
+  const onCharacterImageOperationStarted = useCallback(
+    (trigger: HTMLButtonElement): void => {
+      imageReturnFocusRef.current = trigger;
+    },
+    [],
+  );
 
-  async function runRootOperation<T>(
-    label: string,
-    operation: () => Promise<T>,
-  ): Promise<T> {
-    setRootOperation({ label });
+  const runRootOperation = useCallback(
+    async <T>(label: string, operation: () => Promise<T>): Promise<T> => {
+      setRootOperation({ label });
 
-    try {
-      return await operation();
-    } finally {
-      setRootOperation(null);
-    }
-  }
+      try {
+        return await operation();
+      } finally {
+        setRootOperation(null);
+      }
+    },
+    [],
+  );
 
-  async function onCharacterImageSelected(file: File): Promise<void> {
-    setIsImageErrorFromJsonImport(false);
-    setIsImageErrorFromReset(false);
-    try {
-      await runRootOperation(
-        characterSheetDictionary.characterSheet.image.loading,
-        async () => {
-          const record = await operations.convertCharacterImage(file);
-
-          await operations.writeCharacterImage(record);
-          hasCommittedImageRef.current = true;
-          setCharacterImage(record);
-        },
-      );
-    } catch (error) {
+  const onCharacterImageSelected = useCallback(
+    async (file: File): Promise<void> => {
       setIsImageErrorFromJsonImport(false);
       setIsImageErrorFromReset(false);
-      setImageError(toImageErrorState(error));
-    }
-  }
+      try {
+        await runRootOperation(
+          characterSheetDictionary.characterSheet.image.loading,
+          async () => {
+            const record = await operations.convertCharacterImage(file);
 
-  async function onCharacterImageCleared(): Promise<void> {
+            await operations.writeCharacterImage(record);
+            hasCommittedImageRef.current = true;
+            setCharacterImage(record);
+          },
+        );
+      } catch (error) {
+        setIsImageErrorFromJsonImport(false);
+        setIsImageErrorFromReset(false);
+        setImageError(toImageErrorState(error));
+      }
+    },
+    [operations, runRootOperation],
+  );
+
+  const onCharacterImageCleared = useCallback(async (): Promise<void> => {
     setIsImageErrorFromJsonImport(false);
     setIsImageErrorFromReset(false);
     try {
@@ -271,7 +285,7 @@ export default function useCharacterSheetRootState(
       setIsImageErrorFromReset(false);
       setImageError(toImageErrorState(error));
     }
-  }
+  }, [operations, runRootOperation]);
 
   async function onResetConfirmed(): Promise<void> {
     if (isCharacterImageRestoring || rootOperation !== null) return;
@@ -305,7 +319,7 @@ export default function useCharacterSheetRootState(
 
           hasCommittedImageRef.current = true;
           setCharacterImage(null);
-          form.reset(structuredClone(characterSheetDefaultValues));
+          resetForm(structuredClone(characterSheetDefaultValues));
         },
       );
     } catch (error) {
@@ -389,7 +403,7 @@ export default function useCharacterSheetRootState(
     await runRootOperation(
       characterSheetDictionary.characterSheet.jsonImport.loading,
       async () => {
-        form.reset(imported.values);
+        resetForm(imported.values);
 
         if (
           imported.imageBase64String === null ||
@@ -444,6 +458,7 @@ export default function useCharacterSheetRootState(
   return {
     characterImage,
     form,
+    formResetVersion,
     imageError,
     isImageErrorFromJsonImport,
     isImageErrorFromReset,

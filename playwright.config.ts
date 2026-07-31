@@ -8,7 +8,6 @@ export const visualPlaywrightUse = {
 export default defineConfig({
   expect: {
     toHaveScreenshot: {
-      maxDiffPixelRatio: 0.01,
       pathTemplate: "canonical-snapshots/visual{/projectName}/{arg}{ext}",
     },
   },

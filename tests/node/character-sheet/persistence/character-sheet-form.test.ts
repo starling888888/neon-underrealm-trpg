@@ -141,6 +141,33 @@ describe("character sheet form persistence", () => {
     assert.equal(restored.drugs.rows.length, values.drugs.rows.length - 1);
   });
 
+  it("retains a blank other-ryugi skill row after removing an unknown skill", () => {
+    const values = structuredClone(characterSheetDefaultValues);
+    values.build.otherRyugi = [
+      { level: 1, rowId: "other-ryugi", ryugiId: "kenkaya" },
+    ];
+    values.otherRyugiSkills.rows = [
+      {
+        level: 1,
+        rowId: "unknown-other-ryugi-skill",
+        ryugiRowId: "other-ryugi",
+        skillId: "missing-skill",
+      },
+    ];
+
+    const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
+    if (restored === null) throw new Error("Expected a restored form value.");
+
+    assert.deepEqual(restored.otherRyugiSkills.rows, [
+      {
+        level: 1,
+        rowId: "restore-other-ryugi-skill-other-ryugi",
+        ryugiRowId: "other-ryugi",
+        skillId: null,
+      },
+    ]);
+  });
+
   it("retains an incompatible fixed cybernetic for the form error state", () => {
     const armCybernetic = getCybernetics().find(
       (cybernetic) => cybernetic.part === "腕",

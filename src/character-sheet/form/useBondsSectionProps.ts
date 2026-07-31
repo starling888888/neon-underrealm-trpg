@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
 import type { BondsSectionProps } from "../components/BondsSection";
@@ -27,9 +27,9 @@ export default function useBondsSectionProps(
     defaultValue: characterSheetDefaultValues.bonds,
     name: "bonds",
   });
-  const derivedBonds = calculateBonds(
-    bonds,
-    derivedSecondaryAttributes.bondLimit,
+  const derivedBonds = useMemo(
+    () => calculateBonds(bonds, derivedSecondaryAttributes.bondLimit),
+    [bonds, derivedSecondaryAttributes.bondLimit],
   );
 
   useEffect(() => {
@@ -74,38 +74,39 @@ export default function useBondsSectionProps(
     replace,
   ]);
 
-  function setBondRowValue<K extends BondEditableFieldName>(
-    rowId: string,
-    field: K,
-    value: BondValues[K],
-  ): void {
-    const rows = getValues("bonds.rows");
-    const index = rows.findIndex((row) => row.rowId === rowId);
-    const row = rows[index];
-    if (row === undefined) return;
-    if (field === "target") {
-      setValue(`bonds.rows.${index}.target`, value as string, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-      return;
-    }
+  const setBondRowValue = useCallback(
+    <K extends BondEditableFieldName>(
+      rowId: string,
+      field: K,
+      value: BondValues[K],
+    ): void => {
+      const rows = getValues("bonds.rows");
+      const index = rows.findIndex((row) => row.rowId === rowId);
+      const row = rows[index];
+      if (row === undefined) return;
+      if (field === "target") {
+        setValue(`bonds.rows.${index}.target`, value as string, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+        return;
+      }
 
-    if (field === "relation") {
-      setValue(`bonds.rows.${index}.relation`, value as string, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-      return;
-    }
+      if (field === "relation") {
+        setValue(`bonds.rows.${index}.relation`, value as string, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+        return;
+      }
 
-    update(index, { ...row, [field]: value } as BondValues);
-  }
+      update(index, { ...row, [field]: value } as BondValues);
+    },
+    [getValues, setValue, update],
+  );
 
-  return {
-    bonds: bonds.rows,
-    derived: derivedBonds,
-    onEffectModifierChange: (field: ResolveEffectName, value: string) => {
+  const onEffectModifierChange = useCallback(
+    (field: ResolveEffectName, value: string) => {
       const normalizedValue = normalizeResolveEffectInput(field, value);
 
       setValue(`bonds.resolveEffectModifiers.${field}`, normalizedValue, {
@@ -114,15 +115,20 @@ export default function useBondsSectionProps(
 
       return normalizedValue;
     },
-    onRowChange: setBondRowValue,
-    onRowClear: (rowId) => {
+    [setValue],
+  );
+  const onRowClear = useCallback(
+    (rowId: string) => {
       const rows = getValues("bonds.rows");
       const index = rows.findIndex((row) => row.rowId === rowId);
       const row = rows[index];
       if (row === undefined || row.isResolved) return;
       update(index, { ...row, isResolved: false, relation: "", target: "" });
     },
-    onRowDelete: (rowId) => {
+    [getValues, update],
+  );
+  const onRowDelete = useCallback(
+    (rowId: string) => {
       const bonds = getValues("bonds");
       const row = bonds.rows.find((entry) => entry.rowId === rowId);
       const currentDerived = calculateBonds(
@@ -137,11 +143,36 @@ export default function useBondsSectionProps(
       const index = bonds.rows.findIndex((entry) => entry.rowId === rowId);
       if (index >= 0) remove(index);
     },
-    onRowMove: (rowId, direction) => {
+    [derivedSecondaryAttributes.bondLimit, getValues, remove],
+  );
+  const onRowMove = useCallback(
+    (rowId: string, direction: "up" | "down") => {
       const rows = getValues("bonds.rows");
       const index = rows.findIndex((row) => row.rowId === rowId);
       const next = index + (direction === "up" ? -1 : 1);
       if (index >= 0 && next >= 0 && next < rows.length) move(index, next);
     },
-  };
+    [getValues, move],
+  );
+
+  return useMemo(
+    () => ({
+      bonds: bonds.rows,
+      derived: derivedBonds,
+      onEffectModifierChange,
+      onRowChange: setBondRowValue,
+      onRowClear,
+      onRowDelete,
+      onRowMove,
+    }),
+    [
+      bonds.rows,
+      derivedBonds,
+      onEffectModifierChange,
+      onRowClear,
+      onRowDelete,
+      onRowMove,
+      setBondRowValue,
+    ],
+  );
 }

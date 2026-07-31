@@ -126,6 +126,7 @@ export default function CharacterSheetContainer() {
   const clearOtherRyugiSkillsRef = useRef<(rowId: string) => void>(() => {});
   const removeOtherRyugiSkillsRef = useRef<(rowId: string) => void>(() => {});
   const form = rootState.form;
+  const formResetKey = rootState.formResetVersion;
   const imageState = useMemo(
     () => ({
       characterImage: rootState.characterImage,
@@ -590,7 +591,10 @@ export default function CharacterSheetContainer() {
           ref={rootState.jsonImportInputRef}
           type="file"
         />
-        <CharacterSheetFormPresenter {...formPresenterProps} />
+        <CharacterSheetFormPresenter
+          {...formPresenterProps}
+          key={formResetKey}
+        />
         <CharacterImageErrorDialog
           closeButtonRef={rootState.imageErrorCloseButtonRef}
           errorCode={rootState.imageError?.code ?? null}

@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import {
   type CharacterSheetErrorFact,
   type CharacterSheetErrorSummary,
@@ -328,8 +330,43 @@ function createCharacterSheetErrorSummary({
 }
 
 /** Derives the root error-summary ViewModel from existing section state. */
-export default function useCharacterSheetErrorSummary(
-  sources: ErrorSummarySources,
-): CharacterSheetErrorSummary {
-  return createCharacterSheetErrorSummary(sources);
+export default function useCharacterSheetErrorSummary({
+  bondsSection,
+  build,
+  commonSkills,
+  cybernetics,
+  drugs,
+  ikizamaSkills,
+  nanomachines,
+  otherRyugiSkills,
+  primarySkills,
+  profileSection,
+}: ErrorSummarySources): CharacterSheetErrorSummary {
+  return useMemo(
+    () =>
+      createCharacterSheetErrorSummary({
+        bondsSection,
+        build,
+        commonSkills,
+        cybernetics,
+        drugs,
+        ikizamaSkills,
+        nanomachines,
+        otherRyugiSkills,
+        primarySkills,
+        profileSection,
+      }),
+    [
+      bondsSection,
+      build,
+      commonSkills,
+      cybernetics,
+      drugs,
+      ikizamaSkills,
+      nanomachines,
+      otherRyugiSkills,
+      primarySkills,
+      profileSection,
+    ],
+  );
 }

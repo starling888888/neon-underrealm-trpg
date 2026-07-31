@@ -56,6 +56,8 @@ character-sheetは`tests/visual/vrt/character-sheet-scenarios.ts`の専用helper
 
 VRTは高コストなため、Markdownのみの変更や画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。
 
+画像差分の許容値はglobal設定しない。差分が環境由来か確認するため同じtargetを再captureし、それでも再現する場合だけ、対象testへ実測に基づく最小の`maxDiffPixels`または動的領域のmaskを設定する。許容対象、理由、実測値はcurrent issueまたはdesign notesへ記録する。
+
 `test:e2e`はVRTと別のbrowser behavior testである。Header、SiteMenu、MobilePageToc、layout、検索、画像load前後の契約を変更した場合は、PRレビュー前に実行する。buildとPagefind index生成を含むため、開発中の反復実行には使わない。
 
 たとえば`site-layout`だけを確認する場合は次を使う。

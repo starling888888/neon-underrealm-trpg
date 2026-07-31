@@ -341,7 +341,13 @@ Excel変換は、ローカル実行用のNode.js / TypeScriptスクリプトと�
 
 CI/CDではExcelファイルに依存せず、Git管理されたMarkdown / MDX、変換済みJSON、サイトコードのみでビルド・公開できること。
 
-### 3.2 採用しない技術
+### 3.2 VRTの差分許容ポリシー
+
+Playwright VRTは既定で厳密に比較する。`maxDiffPixelRatio`、`maxDiffPixels`、`threshold`などの画像差分許容値をPlaywright全体の既定値へ設定してはならない。
+
+環境由来の差分が疑われる場合は、同じtargetを再captureして一過性のlayout変動でないことを先に確認する。それでも再現する場合だけ、該当targetに実測値を根拠とする最小の`maxDiffPixels`、または動的領域だけの明示的なmaskを設定してよい。対象、許容理由、実測値はcurrent issueまたはdesign notesへ記録し、globalな許容値へ広げない。
+
+### 3.3 採用しない技術
 
 初期実装では以下を採用しない。
 

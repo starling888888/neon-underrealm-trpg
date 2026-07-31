@@ -29,7 +29,10 @@ export default function useDrugsSectionProps(
     name: "drugs.rows",
   });
   const drugs = useWatch({ control, name: "drugs" });
-  const duplicateRowIds = getDuplicateDrugRowIds(drugs.rows);
+  const duplicateRowIds = useMemo(
+    () => getDuplicateDrugRowIds(drugs.rows),
+    [drugs.rows],
+  );
 
   const getRows = useCallback(
     (): DrugRowValues[] => getValues("drugs.rows"),
