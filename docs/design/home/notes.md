@@ -11,6 +11,7 @@
   - mobile `390x900`: `home-default-mobile.png`
 - viewport state: `home-home-viewport-desktop.png`, `home-home-viewport-tablet.png`, `home-home-viewport-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+- actual review locator: `tests/visual/vrt/home.spec.ts` が「最新リリースノート」sectionを、`visual:capture`時のみdesktop / tablet / mobileの原寸一時snapshotとして出力する。通常の`visual:test`ではfull-page / viewport baselineだけを比較する。
 
 ## Mode
 
@@ -167,7 +168,7 @@
 - キャッチコピーは `＿近未来`、`＿裏社会`、`＿抗争` に変更し、02b相当の明朝寄りフォントと薄めの文字色を反映した。
 - desktopは `03-balanced-compact` 方針に寄せ、初期draftより上部とロゴ周辺の余白を詰めた。
 - `はじめに` 導線は更新履歴リンク横ではなく、濃色背景の中央配置リンクとして扱う。
-- リリースノートは現行生成データ由来の1件表示になっている。実装仕様は最大5件表示であり、データ追加時に増える。
+- リリースノートは現行生成データ由来の1件表示になっている。`2026-07-31` の「Web版 バージョン 0.9を公開しました。」を表示する。実装仕様は最大5件表示であり、データ追加時に増える。
 - Headerの検索UIは既存layout由来として写っている。このissueで新規追加したものではない。
 
 ## Canonicalization Rationale

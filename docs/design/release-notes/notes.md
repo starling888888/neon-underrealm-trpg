@@ -10,6 +10,7 @@
   - tablet `820x1180`: `release-notes-default-tablet.png`
   - mobile `390x900`: `release-notes-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
+- actual review locator: `tests/visual/vrt/release-notes.spec.ts` が更新履歴pageを、`visual:capture`時のみdesktop / tablet / mobileの原寸一時snapshotとして出力する。通常の`visual:test`ではfull-page baselineだけを比較する。
 
 ## Mode
 
@@ -77,9 +78,9 @@
 - 画像生成時は、H1直下に説明文を表示しない。タイトルの下にそのまま更新履歴一覧を置く。
 - `data/generated/release-notes.json` 由来のリリースノート全件表示を前提にする。
 - 現在の生成JSONには以下の1件がある。
-  - date: `2026-07-07`
-  - summary: `仮公開しました。`
-  - body: `仮公開しました。\n現在作成中です。`
+  - date: `2026-07-31`
+  - summary: `Web版 バージョン 0.9を公開しました。`
+  - body: `Web版 バージョン 0.9を公開しました。\n・一部戦闘ルールを見直した上で、成長ルールを含め全ルールを公開。\n・サイト上でのキャラクターシート機能を公開。\n現在、バージョンは0.9です。スキル、アイテムデータは調整中です。予告なく追加、変更、削除される可能性があります。`
 - bodyが `null` または空文字相当の場合は、summaryを本文位置にfallback表示する。ただし、通常状態でsummaryを本文とは別に表示しない。
 - canonical design imageでは、現行生成JSONの正確な件数である1件を表示する。
 - 実装では0件でも壊れない簡潔な空状態を持つが、通常運用では1件以上ある想定のため、空状態のdesign画像は作成しない。
