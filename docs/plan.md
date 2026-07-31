@@ -44,13 +44,6 @@ PR merge後の計画更新は `.agents/skills/post-merge-plan-update/SKILL.md` �
   - [ ] 画像固有prompt、公式ロゴ、in-world signage、overlay typographyの利用方針と承認手順を決定する
   - [ ] base promptをsampleとして使う範囲と、生成前に画像固有promptで必ず決める事項を記載する
 
-- [ ] `55-initial-release` — 初期公開用最終調整を行う
-
-  - [ ] 初期リリースノートを追加
-  - [ ] version tag または初期release名を決定
-  - [ ] 初期公開前の最終build確認
-  - [ ] 初期スコープ外機能が混入していないことを確認
-
 - [ ] `56-ci-non-main-branches` — main以外でdeployなしCIを回すためのテスト / CIを整備する
 
   - [ ] branch / pull_request向けのCI workflowをdeploy workflowと分離して作成する
