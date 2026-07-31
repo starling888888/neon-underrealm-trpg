@@ -1,4 +1,4 @@
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { visualViewports } from "../config";
 
 type ViewportName = keyof typeof visualViewports;
@@ -16,6 +16,9 @@ export type VrtState =
 export type VrtScenario = {
   fullPage?: boolean;
   id?: string;
+  locator?: {
+    resolve: (page: Page) => Locator;
+  };
   route: string;
   state?: VrtState;
   viewports?: readonly ViewportName[];
@@ -50,6 +53,20 @@ export function registerVrtScenarios(
             fullPage: scenario.fullPage ?? true,
           },
         );
+
+        if (
+          scenario.locator !== undefined &&
+          test.info().config.metadata.captureLocatorScreenshots === true
+        ) {
+          await expect(scenario.locator.resolve(page)).toHaveScreenshot(
+            [
+              target,
+              "sections",
+              `${snapshotPrefix}${state}-${viewportName}.png`,
+            ],
+            { animations: "disabled" },
+          );
+        }
       });
     }
   }
