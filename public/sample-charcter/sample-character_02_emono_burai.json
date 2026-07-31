@@ -1,0 +1,307 @@
+{
+  "armor": {
+    "armorId": "item-armor-c8f1cfc72f2a",
+    "damageReductionModifier": null,
+    "defenseModifier": null
+  },
+  "bonds": {
+    "resolveEffectModifiers": {
+      "activeCheck": 0,
+      "morale": 0,
+      "passiveCheck": 0,
+      "recovery": 0
+    },
+    "rows": [
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-1",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-2",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-3",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-4",
+        "target": ""
+      }
+    ]
+  },
+  "build": {
+    "acquiredExperience": 50,
+    "attributes": {
+      "agility": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 0,
+        "temporaryModifier": 0
+      },
+      "body": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 4,
+        "temporaryModifier": 0
+      },
+      "mind": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 3,
+        "temporaryModifier": 0
+      },
+      "perception": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 2,
+        "temporaryModifier": 0
+      },
+      "strength": {
+        "growth": 0,
+        "permanentModifier": 1,
+        "points": 5,
+        "temporaryModifier": 0
+      }
+    },
+    "ikizamaId": "burai",
+    "ikizamaLevel": 2,
+    "otherRyugi": [],
+    "primaryRyugiId": "emono",
+    "primaryRyugiLevel": 4
+  },
+  "checks": {
+    "attacks": [
+      {
+        "attribute": "strength",
+        "modifier": 2,
+        "rowId": "attack-1",
+        "skill": "brawl"
+      }
+    ],
+    "reactions": [
+      {
+        "attribute": "strength",
+        "modifier": 0,
+        "name": "defense",
+        "rowId": "reaction-defense"
+      },
+      {
+        "attribute": "strength",
+        "modifier": 0,
+        "name": "evasion",
+        "rowId": "reaction-evasion"
+      },
+      {
+        "attribute": "body",
+        "modifier": 0,
+        "name": "endurance",
+        "rowId": "reaction-endurance"
+      },
+      {
+        "attribute": "mind",
+        "modifier": 0,
+        "name": "resistance",
+        "rowId": "reaction-resistance"
+      }
+    ],
+    "noncombat": {
+      "acrobatics": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "analysis": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "cheating": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "dangerSense": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "driving": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "gambling": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "hacking": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "intimidation": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "jingi": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "negotiation": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "reconnaissance": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "sleightOfHand": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "strengthContest": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "survival": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "willpower": {
+        "isFavorite": false,
+        "modifier": 0
+      }
+    }
+  },
+  "commonSkills": {
+    "rows": [
+      {
+        "level": 2,
+        "rowId": "common-skill-1",
+        "skillId": "skill-common-basic-pv-295f21fcb9ef"
+      }
+    ]
+  },
+  "credit": {
+    "acquired": 10,
+    "changeAdjustment": 0,
+    "provided": 0,
+    "received": 0
+  },
+  "ikizamaSkills": {
+    "bonusLevel": 1,
+    "rows": [
+      {
+        "level": 1,
+        "rowId": "ikizama-skill-1",
+        "skillId": "skill-ikizama-burai-basic-pv-1677b1e83e6c"
+      },
+      {
+        "level": 1,
+        "rowId": "ikizama-skill-2",
+        "skillId": "skill-ikizama-burai-basic-pv-a6d99ecbc3e3"
+      }
+    ]
+  },
+  "cybernetics": {
+    "armId": null,
+    "headId": null,
+    "implantLimitModifier": 0,
+    "implantTotalModifier": 0,
+    "legId": null,
+    "otherRows": [
+      {
+        "cyberneticId": null,
+        "rowId": "cybernetic-other-1"
+      }
+    ],
+    "torsoId": null
+  },
+  "drugs": {
+    "rows": [
+      {
+        "drugId": null,
+        "quantity": 0,
+        "rowId": "drug-1"
+      },
+      {
+        "drugId": null,
+        "quantity": 0,
+        "rowId": "drug-2"
+      },
+      {
+        "drugId": null,
+        "quantity": 0,
+        "rowId": "drug-3"
+      }
+    ]
+  },
+  "nanomachines": {
+    "armId": null,
+    "headId": null,
+    "implantLimitModifier": 0,
+    "implantTotalModifier": 0,
+    "legId": null,
+    "torsoId": null
+  },
+  "omamori": {
+    "rows": []
+  },
+  "otherRyugiSkills": {
+    "rows": []
+  },
+  "primarySkills": {
+    "rows": [
+      {
+        "level": 1,
+        "rowId": "primary-skill-3",
+        "skillId": "skill-ryugi-emono-basic-a-9370c62b44c6"
+      },
+      {
+        "level": 1,
+        "rowId": "60b3e6c0-1bab-421c-8674-1bc9e332f00b",
+        "skillId": "skill-ryugi-emono-basic-a-3b71d89e78d9"
+      },
+      {
+        "level": 2,
+        "rowId": "primary-skill-4",
+        "skillId": "skill-ryugi-emono-basic-m-0d87a4b5c48b"
+      }
+    ]
+  },
+  "profile": {
+    "age": "",
+    "gender": "",
+    "nickname": "",
+    "pcName": "一撃必殺の乱暴者",
+    "playerName": "",
+    "setting": "一撃の火力に長けたキャラクターです。「狩人の体捌き」でダメージを上げつつ「怒り」を叩き込みましょう。雑魚が多いときは「なぎ払い」で一掃できます。"
+  },
+  "secondaryAttributes": {
+    "actionCountModifier": 0,
+    "actionModifier": 0,
+    "applyTemporaryAction": false,
+    "applyTemporaryMovement": false,
+    "bondLimitModifier": 0,
+    "healthModifier": 0,
+    "mentalModifier": 0,
+    "movementModifier": 0
+  },
+  "specialItems": {
+    "categories": []
+  },
+  "weapons": {
+    "rows": [
+      {
+        "attackModifier": 5,
+        "guardModifier": 3,
+        "rowId": "weapon-1",
+        "weaponId": "item-weapon-normal-kenka-5e8b3c40289d"
+      }
+    ]
+  },
+  "imageBase64String": null
+}

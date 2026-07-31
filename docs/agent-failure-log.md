@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Chromium failed before sample-character VRT capture
+
+#### 2026-07-31
+
+- source: self
+- failure category: repeated Playwright environment failure
+- 発生箇所: `55-0-sample-characters` の`@character-making` target限定Visual Review
+- 観測した失敗: `npm run visual:capture -- --grep '@vrt.*@character-making(?:\s|$)'`でdesktop、tablet、mobileの3 targetが、Chromiumの`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`により起動前に失敗した。snapshot、VRT差分、actual screenshotは取得していない。
+- 一次対応: 再試行や代替browser captureを行わず、current issueのVisual Reviewを未確認として記録した。browser環境が利用可能な場所で対象限定VRTと原寸locator screenshotを再実行する。
+
 ### Omitted the Pagefind build step from VRT baseline instructions
 
 #### 2026-07-31

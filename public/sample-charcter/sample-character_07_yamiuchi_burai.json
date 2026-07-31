@@ -1,0 +1,318 @@
+{
+  "armor": {
+    "armorId": "item-armor-0fa89fb308be",
+    "damageReductionModifier": null,
+    "defenseModifier": null
+  },
+  "bonds": {
+    "resolveEffectModifiers": {
+      "activeCheck": 0,
+      "morale": 0,
+      "passiveCheck": 0,
+      "recovery": 0
+    },
+    "rows": [
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-1",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-2",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-3",
+        "target": ""
+      },
+      {
+        "isResolved": false,
+        "relation": "",
+        "rowId": "bond-4",
+        "target": ""
+      }
+    ]
+  },
+  "build": {
+    "acquiredExperience": 50,
+    "attributes": {
+      "strength": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 0,
+        "temporaryModifier": 0
+      },
+      "agility": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 5,
+        "temporaryModifier": 0
+      },
+      "perception": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 2,
+        "temporaryModifier": 0
+      },
+      "body": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 4,
+        "temporaryModifier": 0
+      },
+      "mind": {
+        "growth": 0,
+        "permanentModifier": 0,
+        "points": 3,
+        "temporaryModifier": 0
+      }
+    },
+    "ikizamaId": "burai",
+    "ikizamaLevel": 2,
+    "otherRyugi": [],
+    "primaryRyugiId": "yamiuchi",
+    "primaryRyugiLevel": 4
+  },
+  "checks": {
+    "attacks": [
+      {
+        "attribute": "agility",
+        "modifier": 1,
+        "rowId": "attack-1",
+        "skill": "assassination"
+      }
+    ],
+    "reactions": [
+      {
+        "attribute": "agility",
+        "modifier": 1,
+        "name": "defense",
+        "rowId": "reaction-defense"
+      },
+      {
+        "attribute": "agility",
+        "modifier": 1,
+        "name": "evasion",
+        "rowId": "reaction-evasion"
+      },
+      {
+        "attribute": "body",
+        "modifier": 1,
+        "name": "endurance",
+        "rowId": "reaction-endurance"
+      },
+      {
+        "attribute": "mind",
+        "modifier": 1,
+        "name": "resistance",
+        "rowId": "reaction-resistance"
+      }
+    ],
+    "noncombat": {
+      "intimidation": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "strengthContest": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "willpower": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "reconnaissance": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "acrobatics": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "sleightOfHand": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "cheating": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "dangerSense": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "analysis": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "driving": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "survival": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "jingi": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "gambling": {
+        "isFavorite": false,
+        "modifier": 0
+      },
+      "negotiation": {
+        "isFavorite": true,
+        "modifier": 0
+      },
+      "hacking": {
+        "isFavorite": false,
+        "modifier": 0
+      }
+    }
+  },
+  "commonSkills": {
+    "rows": [
+      {
+        "level": 2,
+        "rowId": "common-skill-1",
+        "skillId": "skill-common-basic-aa-973990acfcb5"
+      }
+    ]
+  },
+  "cybernetics": {
+    "armId": null,
+    "headId": null,
+    "implantLimitModifier": 0,
+    "implantTotalModifier": 0,
+    "legId": null,
+    "otherRows": [
+      {
+        "cyberneticId": null,
+        "rowId": "cybernetic-other-1"
+      }
+    ],
+    "torsoId": null
+  },
+  "drugs": {
+    "rows": [
+      {
+        "drugId": null,
+        "quantity": 1,
+        "rowId": "drug-1"
+      },
+      {
+        "drugId": null,
+        "quantity": 1,
+        "rowId": "drug-2"
+      },
+      {
+        "drugId": null,
+        "quantity": 1,
+        "rowId": "drug-3"
+      }
+    ]
+  },
+  "nanomachines": {
+    "armId": null,
+    "headId": null,
+    "implantLimitModifier": 0,
+    "implantTotalModifier": 0,
+    "legId": null,
+    "torsoId": null
+  },
+  "credit": {
+    "acquired": 10,
+    "changeAdjustment": 0,
+    "provided": 0,
+    "received": 0
+  },
+  "ikizamaSkills": {
+    "bonusLevel": 1,
+    "rows": [
+      {
+        "level": 1,
+        "rowId": "ikizama-skill-1",
+        "skillId": "skill-ikizama-burai-basic-pv-570c394fe082"
+      },
+      {
+        "level": 1,
+        "rowId": "ikizama-skill-2",
+        "skillId": "skill-ikizama-burai-basic-ini-35d0064cb993"
+      }
+    ]
+  },
+  "omamori": {
+    "rows": [
+      {
+        "omamoriId": "item-omamori-5c207a38377c",
+        "rowId": "6fc36a32-ece4-4427-818d-7ff533e2634d"
+      }
+    ]
+  },
+  "otherRyugiSkills": {
+    "rows": []
+  },
+  "primarySkills": {
+    "rows": [
+      {
+        "level": 2,
+        "rowId": "primary-skill-1",
+        "skillId": "skill-ryugi-yamiuchi-basic-a-c7b7e5b170e9"
+      },
+      {
+        "level": 1,
+        "rowId": "primary-skill-2",
+        "skillId": "skill-ryugi-yamiuchi-basic-aa_ra-26989494424b"
+      },
+      {
+        "level": 1,
+        "rowId": "primary-skill-3",
+        "skillId": "skill-ryugi-yamiuchi-basic-pv-141e80b6c86b"
+      }
+    ]
+  },
+  "profile": {
+    "age": "",
+    "gender": "",
+    "nickname": "",
+    "pcName": "闇に溶ける暗殺者",
+    "playerName": "",
+    "setting": "隠密からのコンボを叩き込むキャラクターです。行動で隠密になったあと「基本の一撃」でコンボ増加値を稼ぎ、「暗撃」で大ダメージを出しましょう。「目くらまし」は気合消費が大きいものの相手の達成値を下げる強力なスキルです。機会を見て使いましょう。"
+  },
+  "secondaryAttributes": {
+    "actionCountModifier": 0,
+    "actionModifier": 0,
+    "applyTemporaryAction": false,
+    "applyTemporaryMovement": false,
+    "bondLimitModifier": 0,
+    "healthModifier": 0,
+    "mentalModifier": 0,
+    "movementModifier": 0
+  },
+  "specialItems": {
+    "categories": []
+  },
+  "weapons": {
+    "rows": [
+      {
+        "attackModifier": null,
+        "guardModifier": null,
+        "rowId": "weapon-1",
+        "weaponId": "item-weapon-normal-ansatsu-6ded6d695d9a"
+      },
+      {
+        "attackModifier": null,
+        "guardModifier": null,
+        "rowId": "d241d54d-a5a1-429e-bae6-81b7bda23e68",
+        "weaponId": "item-weapon-normal-ansatsu-19b327cb34ab"
+      }
+    ]
+  },
+  "imageBase64String": null
+}
