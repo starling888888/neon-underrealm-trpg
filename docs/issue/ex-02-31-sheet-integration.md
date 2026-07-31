@@ -128,8 +128,8 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 - [x] 不要な依存関係を追加していない。
 - [x] 初期スコープ外の機能を実装していない。
 - [x] baseline運用の記述が`docs/design/`、data-management rule、Visual Test READMEで矛盾していない。
-- [ ] 関連する`docs/TODO.md`項目と矛盾していない。
-- [ ] 画面変更があれば、actual screenshotを開いて表示契約を確認している。
+- [x] 関連する`docs/TODO.md`項目と矛盾していない。
+- [x] 画面変更があれば、actual screenshotを開いて表示契約を確認している。
 
 ## 想定変更ファイル
 
@@ -378,7 +378,8 @@ E2E整理の変更対象は`tests/visual/character-sheet.spec.ts`だけとする
 
 - capture: `npm run visual:capture -- --grep '@vrt.*@(primary-skill-picker|ikizama-skill-picker|common-skill-picker|other-ryugi-skill-picker)(?:\\s|$)'` は12件通過した。
 - checked actual screenshots: 4種の候補dialogそれぞれでdesktop / tablet / mobileのdialog locator screenshotを原寸で確認した。タイミング列は最大Lvとコストの間にあり、値の折り返し、横overflow、clipはない。
-- comparison: 同じ12 targetの`npm run visual:test`は、旧canonical baselineとの差分として12件失敗した。差分はタイミング列の追加と列幅変更による意図的なもの（primary / ikizama / other ryugi: 3〜4%、common: 5〜6%）である。baseline更新はユーザー明示承認が必要なため実行していない。
+- comparison: 同じ12 targetの`npm run visual:test`は、旧canonical baselineとの差分として12件失敗した。差分はタイミング列の追加と列幅変更による意図的なもの（primary / ikizama / other ryugi: 3〜4%、common: 5〜6%）である。
+- baseline update: ユーザー明示承認後に同じ12 targetを更新し、通常比較も12件通過した。ドラッグの既定所持数変更を含め、4種のスキル候補dialogとドラッグの5 state（表示、入力、展開、候補、重複候補）のdesktop / tablet / mobileを再captureし、27件すべてのactual screenshotを原寸で確認した。タイミング列の位置・折り返し・横overflow、ドラッグの既定所持数`1`、選択後の所持数と効果展開、候補dialogの表示に問題はない。
 
 ## ビジュアルレビュー 1
 
