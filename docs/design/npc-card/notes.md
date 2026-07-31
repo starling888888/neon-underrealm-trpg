@@ -32,7 +32,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/milestone-01/done/phase-3/21-2-world-page.md`（historical source）
+- `GitHub Issue #151: 21-2-world-page`（historical source）
 - `docs/requirements/pages.md`
 - `docs/requirements/components.md`
 - `docs/requirements/data-display.md`

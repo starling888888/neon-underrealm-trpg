@@ -25,7 +25,7 @@
 ## Referenced SSoT
 
 - `.raw/contents/ikizama-detail.md`
-- `docs/issue/milestone-01/done/phase-3/32-2-ikizama-detail-page.md`（履歴）
+- `GitHub Issue #167: 32-2-ikizama-detail-page`（履歴）
 - `docs/requirements/pages.md` の FR-06
 - `docs/requirements/data-display.md` の FR-04-01、FR-04-04
 - `docs/out-of-scope.md`

@@ -36,8 +36,8 @@
 
 ## Historical source issues
 
-- `docs/issue/milestone-01/done/phase-2/11-site-menu.md`
-- `docs/issue/milestone-01/done/phase-2/12-1-site-menu-layout-copy.md`
+- `GitHub Issue #135: 11-site-menu`
+- `GitHub Issue #136: 12-1-site-menu-layout-copy`
 
 ## Design direction
 

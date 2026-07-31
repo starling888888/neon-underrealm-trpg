@@ -72,7 +72,7 @@ This skill standardizes SKILL.md format, controlled English, safety sections, re
 
 Use after a PR has been merged and the user asks to return to `main`, pull merged changes, delete the merged branch, update tracking files, commit, and push.
 
-This skill may update `docs/issue/milestone-<NN>/plan.md` checkboxes only because the user explicitly requested post-merge tracking work.
+This skill may update `docs/issue/milestone-<NN>/plan.md` checkboxes only because the user explicitly requested post-merge tracking work. It archives a completed local issue as a same-name GitHub closed Issue, retains only its name and Issue number in the plan, and then deletes the local issue file.
 
 ### `failure-log-audit`
 

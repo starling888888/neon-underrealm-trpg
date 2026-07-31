@@ -33,7 +33,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/milestone-01/done/phase-3/20-1-common-callout-component.md`
+- `GitHub Issue #149: 20-1-common-callout-component`
 - `docs/requirements.md`
 - `docs/requirements/components.md`
 - `docs/requirements/non-functional.md`

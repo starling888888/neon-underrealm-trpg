@@ -37,7 +37,9 @@
 - Gate planとGate子issueを使うのは、ユーザーがGate作成またはGate分割を明示指示した場合だけとする。通常のissue作成では、`docs/issue/<issue名>.md` を単独の実装契約とし、`docs/issue/<issue名>/plan.md` を作成しない。
 - `docs/issue/milestone-<NN>/plan.md` は、milestoneの計画・履歴専用pathでありGate planではない。Gate一覧やGate固有の引継ぎを置かず、`docs/issue/<parent-issue>/plan.md` のGate planと混同しない。
 - Gateを実装する時は、対象Gate専用の子issueを作成し、その子issueを実装契約とする。子issueは、親issue全体の会話や履歴を前提にせず、新しいsessionだけで作業を開始できる最小限で自己完結した情報を持つ。
-- Gate完了後は、継続して必要な詳細要件・確定判断・後続Gateへの引継ぎだけを親issueの専用Gate planへ戻してから、子issueを対象milestoneの `done/` へ移す。実装中の経緯、重複した背景、会話依存の情報は親planへ戻さない。
+- 完了済みissueの最終契約・完了記録は同名のGitHub closed Issueへ残し、ローカルのissue fileは削除する。GitHub Issueの番号は履歴識別子であり、後続実装のSSoTにはしない。
+- milestone planとGate planはローカルに残す例外である。完了issueのplan記録は `<issue-slug> — GitHub Issue #<number>` だけに縮約し、詳細要件・完了条件・実装経緯は残さない。完了した親issueのGate planは `docs/issue/milestone-<NN>/plans/` に置く。
+- Gate完了後は、子issueの完了確認、同名GitHub closed Issueへの記録、Gate planの軽量な履歴更新を済ませてから、子issueを削除する。実装中の経緯、重複した背景、会話依存の情報はplanへ戻さない。
 - 実装範囲は、通常issueでは現在のissue、Gateを使う場合は現在のGate子issueと親issueの専用Gate planに従う。範囲外作業は勝手に混ぜない。
 - ユーザーが「検討して」「確認して」「妥当性を見て」「どうかな」「レビューして」など、判断や意見を求めている場合は実装承認ではない。判断、選択肢、推奨方針を返して停止し、実装、生成、ファイル編集は「修正開始」「実装して」「反映して」などの明示指示を待つ。
 - ユーザーの明示指示によりcurrent issue外のGit管理ファイルを変更する場合は、`.tmp/review/<branch-name>/user-directed-changes.md` に指示、分類、変更対象、変更前後、issueとの関係、関連commitまたはPRを記録する。要求または初期スコープ外SSoTを変更する場合は、変更元SSoTとcurrent issueも同じtaskで更新する。通常のcurrent issue内作業とGit操作は記録しない。
@@ -46,7 +48,7 @@
 - UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign intentとVRT参照情報を確認する。必要なdesign notesがない場合は `design-image-generation` に切り出す。
 - Visual Review screenshotは実装結果であり、design正本ではない。actual screenshotを直接 `docs/design/` にコピーしない。
 - Visual Reviewで`確認済み`、`問題なし`、`枠内に収まる`などの肯定報告をしてよいのは、対象route・state・viewportごとのactual screenshotを実際に開き、issueの表示契約に対して確認した後だけである。対象stateはVRT specだけでなく、current issueの受入条件と最終diffから列挙する。tooltip、dialog、drawer、validationのように表示状態を変えるUIを変更した場合、defaultだけで肯定報告してはならない。`visual:capture`の成功、snapshotの生成、VRT commandの終了出力だけを実画面確認の根拠にしてはならない。
-- 肯定報告後にユーザーまたはagentが視覚上の失敗を発見した場合は、実装不備と分けて「未確認または誤った確認結果を報告した失敗」として`docs/agent-failure-log.md`とcurrent issueを訂正する。対象Gate / issueをdoneへ移さず、各対象actual screenshotを再確認してから未完了チェックを更新する。
+- 肯定報告後にユーザーまたはagentが視覚上の失敗を発見した場合は、実装不備と分けて「未確認または誤った確認結果を報告した失敗」として`docs/agent-failure-log.md`とcurrent issueを訂正する。対象issueをGitHubへcloseしてローカルから削除せず、各対象actual screenshotを再確認してから未完了チェックを更新する。
 - VRTは高コストな比較である。Markdownのみの変更、または画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。ローカルで全件VRTを通常実行しない。全件VRTはGitHub Actionsの定期実行または公開直後の実行として別taskで整備する。
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
@@ -89,7 +91,7 @@ Git / GitHub CLI / PR作成 / 破壊的操作の詳細は `.agents/rules/git-ope
 - 「計画の次を進めて」と言った
 - 開発作業の開始を指示した
 
-`issueを作って` は、GitHub Issueではなくローカルの `docs/issue/*.md` 作成を意味する。GitHub Issueを作成してよいのは、ユーザーが明示的に「GitHub Issueを作って」「GitHub上にissueを発行して」「gh issue createして」などと指示した場合だけである。
+`issueを作って` は、GitHub Issueではなくローカルの `docs/issue/*.md` 作成を意味する。GitHub Issueを作成してよいのは、ユーザーが明示的に「GitHub Issueを作って」「GitHub上にissueを発行して」「gh issue createして」などと指示した場合、またはユーザー承認済みのpost-merge完了処理である場合だけである。
 
 `docs/issue/milestone-<NN>/plan.md` のタスク番号指定、`$issue-first-development` の呼び出し、task開始、branch作成は、該当skillを参照してユーザー指示を安全に実行する契機であり、ローカルissue作成の許可ではない。issueを作成しないと明示された場合、またはscope、requirements、contentsだけが指示された場合は、issue作成とissue review agentを行わない。
 
@@ -186,7 +188,7 @@ contentsがGit管理の正本と矛盾する場合は、最新のユーザー指
 - レビュー指摘取り込み: `review-to-issue` を使い、`.tmp/*.md` をローカルSSoTと照合する。`.tmp/` は共有成果物ではないため、必要な情報だけ正式docsまたは報告へ反映する。
 - PRレビュー草案作成: `pr-review-draft` を使う。リモートPRを対象にlocal reviewerを起動し、`review-to-issue`への取り込み後に停止する。
 - PR作成: `create-pr` を使う。未チェック項目が残る場合はユーザー承認なしにPRを作らない。
-- merge後tracking更新: `post-merge-plan-update` を使う。merge後に最新issueまたは過去issueの未チェック項目を確認できた場合は、チェックを入れてからdone移動可否を判定する。
+- merge後tracking更新: `post-merge-plan-update` を使う。merge後にissueの未チェック項目を確認できた場合は、GitHub closed Issueへの記録とローカルissue削除の可否を判定する。
 - ファイル移動や構造整理: `docs/development-structure.md` と `.agents/rules/file-structure.md` を参照する。
 - Markdown作成・編集: `.agents/rules/markdown-style.md` を参照し、作業終了前にMarkdown formatterを実行する。
 - MCP利用: `.agents/rules/mcp.md` を参照する。

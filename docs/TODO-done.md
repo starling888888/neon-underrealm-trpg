@@ -27,7 +27,7 @@
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `ex-02-4-sheet-profile` 実装中のユーザー指示
   - classification: React performance architecture follow-up
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG31
+  - plan: `GitHub Issue #106: ex-02-31-sheet-integration`
   - handling result: G31で`useCharacterSheetFormPresenterProps`を含むPresenter / section propsの派生ViewModelとcallbackを、実際にmemo化するprops境界で参照安定化し、無関係なUI state更新で対象propsが不要に変わらないことをhook / Component testで確認した。
 
 - [x] main以外のbranch / PRでdeployなしCIを回せるようにする
@@ -41,70 +41,70 @@
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `.tmp/review/ex-02-18-sheet-omamori/human-review-1.md` / `ex-02-18-sheet-omamori` のレビュー指摘 1
   - classification: follow-up
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG22
+  - plan: `GitHub Issue #96: ex-02-22-sheet-special-items-integration`
   - handling plan: G18で追加する非折りたたみのカテゴリframeへ、カテゴリ削除buttonの表示・操作・focus復帰を追加する。G22で行う既定表示、カテゴリ単位の追加・削除、警告表示と整合させ、現在の生き様に対応する既定カテゴリは削除できない契約を適用する。
 
 - [x] G24着手前にキャラクターシート可変行のRHF操作境界を`useFieldArray`契約へ整合する
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `.tmp/chatgpt-review.md` / `レビュー指摘 1`
   - classification: follow-up
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG24
+  - plan: `GitHub Issue #98: ex-02-24-sheet-persistence`
   - handling result: G16で全可変行の追加・削除・移動・置換を`useFieldArray`へ統一し、row IDと`reset`後のuncontrolled input同期を固定した。G24はこの契約に従って復元する。
 
 - [x] G24 / G27着手前にスキルLvの未確定入力、最大Lv超過、復元・JSON入力値の扱いをrequirements / schema契約として確定する
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 2、レビュー指摘 3、G15 レビュー指摘 1・4
   - classification: requirements and schema follow-up
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG24、G27
+  - plan: `GitHub Issue #98: ex-02-24-sheet-persistence`、`GitHub Issue #101: ex-02-27-sheet-json-import`
   - handling result: G16で未確定入力・最大Lv超過を値保持と局所errorへ統一し、G24で構造・identityだけを拒否してゲーム上の不整合値を復元する契約をrequirements / schemaへ反映した。G27は同じrestore adapterを利用する。
 
 - [x] G16で生き様bonusを含む全スキルの最大Lv制約を定義する
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
   - classification: follow-up
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG16
+  - plan: `GitHub Issue #89: ex-02-16-sheet-experience-consistency`
   - handling result: G16で通常skillと生き様bonusの最大Lv違反を値保持・局所errorとして統一し、経験点集計と保存・復元の契約へ適用した。
 
 - [x] G31でlocator-only Visual Review scenarioの実行経路を分離する
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
   - classification: follow-up
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG31
+  - plan: `GitHub Issue #106: ex-02-31-sheet-integration`
   - handling result: character-sheet専用scenario helperでfull-page、section locator、dialog locatorを分離した。通常VRTはlocator stateを該当locatorのcanonical snapshotとして比較し、full-page baselineを要求しない。全358 targetの再生成・比較を確認した。
 
 - [x] G31のコンテンツレビューでtooltip indicatorの上下揃えに違和感があれば、共通`FormulaTooltip`の配置を再調整する
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `ex-02-11-sheet-noncombat` のレビュー指摘 6に対するユーザーのpreview確認
   - classification: visual usability follow-up
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG31
+  - plan: `GitHub Issue #106: ex-02-31-sheet-integration`
   - handling result: G31のコンテンツレビューで再調整を要する違和感は指摘されなかったため、共通`FormulaTooltip`は変更しない。
 
 - [x] G31でキャラクターシート全体のVisual Reviewを完了する
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: G11 Gate Tech Reviewに対するユーザー判断
   - classification: visual review follow-up
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG31
+  - plan: `GitHub Issue #106: ex-02-31-sheet-integration`
   - handling result: canonical screenshotを入力にdesktop / tabletとmobileのコンテンツレビューを実施した。固定actionの本文重なり、mobileの情報密度、入力順、破壊的操作の色、icon-only操作はユーザー判断で非対応とした。候補行の選択可能性だけを次のTODOへ後続化した。
 
 - [x] G17着手時にCharacterSheetContainerのdialog orchestrationをhookへ分離する要否を判断する
   - completed: 2026-07-29 via user-directed Gate close
   - source: `.tmp/chatgpt-review.md` / G15 レビュー指摘 2
   - classification: resolved architecture decision
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG17
+  - plan: `GitHub Issue #90: ex-02-17-sheet-weapons-armor`
   - handling: 既存のpicker、確認dialog、pending action、focus復帰を列挙した。武器・防具で増える候補dialogは既存Containerの状態とrefで扱い、共通hookへ移しても責務が単純化しないためroot orchestration hookは導入しない。
 
 - [x] React Islandの導入を検討する
   - completed: 2026-07-24 via user direction / adopted for `ex-02-web-character-sheet`
   - source: ユーザー指示
   - classification: resolved architecture decision
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md` のG1
+  - plan: `GitHub Issue #82: ex-02-1-sheet-runtime`
   - handling plan: キャラクターシートに限定したReact Islandを採用し、サイト全体をSPA化しない。導入と実装の詳細はG1の子issueで扱う。
 
 - [x] 流儀の共通スキルボーナスを構造化データへ変換する
   - completed: 2026-07-24 via user direction / not adopted
   - source: `29-0-ryugi-index-data` の変換仕様レビュー中のユーザー指示
   - classification: canceled current issue prerequisite
-  - plan: `docs/issue/milestone-01/done/cross-phase/ex-02-web-character-sheet/plan.md`
+  - plan: `GitHub Issue #113: ex-02-web-character-sheet`
   - handling plan: 表示用データを維持し、構造化データ、文字列解析、自動算出を追加しない方針へ変更した。
 
 - [x] 1024px以上1360px未満で3レールlayoutの横overflowを解消する

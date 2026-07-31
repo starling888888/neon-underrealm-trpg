@@ -28,7 +28,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- historical issue (provenance only): `docs/issue/milestone-01/done/cross-phase/ex-01-page-navigation-links.md`
+- historical issue (provenance only): `GitHub Issue #79: ex-01-page-navigation-links`
 - `docs/requirements.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/non-functional.md`

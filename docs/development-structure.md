@@ -75,6 +75,8 @@ canonical-snapshots/visual/
 
 agentが全詳細ファイルを常時読む構造にしない。
 
+`docs/issue/` には進行中または未完了の実装契約だけを置く。完了済みissueは同名のGitHub closed Issueへ記録してローカルから削除する。`docs/issue/milestone-<NN>/plan.md` と `docs/issue/milestone-<NN>/plans/` は軽量なローカル履歴として残し、完了issueの名称とGitHub Issue番号だけを記録する。
+
 ## Scripts
 
 scriptが小さな単一ファイルを超えて大きくなる場合は、プログラム単位のディレクトリに分ける。

@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Reported all archived GitHub Issues closed without verifying a CLI partial failure
+
+#### 2026-08-01
+
+- source: user
+- failure category: verification accuracy
+- 発生箇所: `milestone-02-phase-01-github-issue-archive` の完了済みissue移行
+- 観測した失敗: `gh api`がnetwork errorを返したためIssue作成も失敗したと判断したが、Issue #81の作成は成功しており、close処理だけが実行されなかった。その後、GitHub connectorで同じ元pathのIssue #78を作成してclosedにした。GitHub Issue #81がopenのまま残っていることをユーザーが指摘したにもかかわらず、107件すべてをclosed Issue化したと報告した。
+- 一次対応: GitHub Issue #81をclosedへ訂正し、current issueの「1件だけ作成または再利用」完了条件を未チェックへ戻した。重複した#78と#81の整理は、ユーザー指示を待つ。以後、外部API commandが失敗した場合は、作成・更新それぞれの結果をconnectorで照合してから移行完了を報告する。
+
 ### Marked the Drive sync scope and test contract complete without full validation
 
 #### 2026-07-31
@@ -580,8 +590,8 @@ source種別は以下を使う。
 
 - source: user
 - 発生箇所: `ex-02-6-sheet-image` のG6進行管理
-- 観測した失敗: test、check、buildの成功とagent自身のchecklist更新を、Gate完了およびchild issueのarchive許可と誤認した。ユーザーの完了確認または`docs/issue/milestone-01/done/`への移動指示がないまま、G6 child issueを作業中のpathから`done/`へ移した。
-- 一次対応: child issueを作業中のpathへ戻し、parent Gate planのG6を`in progress`へ戻した。以後、検証成功だけでarchiveせず、ユーザーが完了・archiveを明示した場合だけchild issueを`done/`へ移す。
+- 観測した失敗: test、check、buildの成功とagent自身のchecklist更新を、Gate完了およびchild issueのarchive許可と誤認した。ユーザーの完了確認なしに、G6 child issueを当時のローカルarchiveへ移した。
+- 一次対応: child issueを作業中のpathへ戻し、parent Gate planのG6を`in progress`へ戻した。以後、検証成功だけでarchiveせず、ユーザーが完了・archiveを明示した場合だけ処理する。
 
 ### Repeatedly bypassed the approved character-sheet design draft
 
@@ -1017,13 +1027,13 @@ source種別は以下を使う。
 
 - 発生箇所: `09-base-layout` のissue-first / design準備
 - 観測した失敗: ユーザーが「まずはlayoutにベタ書き」「今回の作成範囲はデスクトップレイアウトのみ」と指示した後、実装前のdesign準備として `docs/design/base-layout/` のdesign artifact作成まで進めた。
-- 一次対応: `docs/issue/milestone-01/done/phase-2/09-base-layout.md` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
+- 一次対応: `GitHub Issue #133: 09-base-layout` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
 
 #### 2026-07-05
 
 - 発生箇所: `09-base-layout` のdesign画像生成準備
 - 観測した失敗: `docs/design/base-layout/notes.md` のユーザーレビューを挟まずに、`design-desktop.png` の画像生成へ進んだ。
-- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`docs/issue/milestone-01/done/phase-2/09-base-layout.md` から画像生成済み扱いを取り除いた。
+- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`GitHub Issue #133: 09-base-layout` から画像生成済み扱いを取り除いた。
 
 #### 恒久対応
 
@@ -1066,7 +1076,7 @@ source種別は以下を使う。
 
 #### 2026-07-06
 
-- 発生箇所: `13-page-toc` の `docs/issue/milestone-01/done/phase-2/13-page-toc.md` 完了条件チェック反映後のGit操作
+- 発生箇所: `13-page-toc` の `GitHub Issue #138: 13-page-toc` 完了条件チェック反映後のGit操作
 - 観測した失敗: ユーザーの指示は「issueの完了条件チェック入ってない」であり、commit / pushの明示許可ではなかったにもかかわらず、`docs: check page toc issue completion` をcommitし、既存PR branchへpushした。
 - 一次対応: ユーザー指示に従い差し戻しは行わず、本ログへ手順逸脱として記録した。以後、直前にcommit / push許可がない修正指示では、作業ツリー上の変更に留めて報告する。
 
@@ -1340,8 +1350,8 @@ source種別は以下を使う。
 #### 2026-07-28
 
 - source: review
-- 発生箇所: `ex-02-9-sheet-bonds` のGate完了・child issueの`done/`移動
-- 観測した失敗: G9 child issueにはresponsive表示、層別確認、Visual Reviewの未完了チェックが残り、後続レビューでもactual screenshotによる確認未実施を記録していた。それにもかかわらず親Gate planを`done`とし、child issueを`done/`へ移動した。さらに初期完了条件と後続レビューの覚悟効果表示契約が同一issue内で矛盾したまま残った。
+- 発生箇所: `ex-02-9-sheet-bonds` のGate完了・child issue archive
+- 観測した失敗: G9 child issueにはresponsive表示、層別確認、Visual Reviewの未完了チェックが残り、後続レビューでもactual screenshotによる確認未実施を記録していた。それにもかかわらず親Gate planを`done`とし、child issueを当時のローカルarchiveへ移動した。さらに初期完了条件と後続レビューの覚悟効果表示契約が同一issue内で矛盾したまま残った。
 - 一次対応: `.tmp/chatgpt-review.md`をSSoTと現行実装へ照合し、G10のレビュー指摘1へout-of-scopeとして記録した。G9の受入確認、表示契約、削除callbackはG31統合確認へTODOとして振り分け、G10では実装・完了扱いを変更しない。
 
 ### Repeated validation failures while implementing review 2
@@ -1548,7 +1558,7 @@ source種別は以下を使う。
 
 - source: review
 - 発生箇所: `ex-02-12-sheet-primary-skills` のGate完了・child issue archive
-- 観測した失敗: parent Gate planを`done`としchild issueを`docs/issue/milestone-01/done/`へ移動したが、child issue本体の完了条件、チェックポイント、Visual Reviewに未チェックが残っていた。G6での無許可archive、G9でのvisual acceptance未確認archiveに続く、完了根拠をchild issueへ反映しないままcloseする再発である。
+- 観測した失敗: parent Gate planを`done`としchild issueを当時のローカルarchiveへ移動したが、child issue本体の完了条件、チェックポイント、Visual Reviewに未チェックが残っていた。G6での無許可archive、G9でのvisual acceptance未確認archiveに続く、完了根拠をchild issueへ反映しないままcloseする再発である。
 - 一次対応: `.tmp/chatgpt-review.md`をG13のレビュー指摘2として取り込み、G13では全未チェック項目を実確認結果へ更新するまでclose / archive / parent planの`done`へ変更しない。恒久対応はfailure-log監査でユーザー承認後に行う。
 
 ### Repeated component-test failure after changing the removal callback contract
@@ -2002,5 +2012,5 @@ source種別は以下を使う。
 - source: review
 - failure category: verification accuracy
 - 発生箇所: ex-07のmilestone-01 archive再配置と完了条件チェック
-- 観測した失敗: archive規約が完了条件・チェックポイントの全確認を移動条件とするにもかかわらず、Visual Reviewや表示・操作契約などの未チェック項目を残すex-02 Gate子issueを`done/`へ再配置し、activeまたは未完了issueを移動していない完了条件をチェックした。PR #76のdocument reviewで判明した。
-- 一次対応: `docs/issue/milestone-01/done/cross-phase/ex-07.md`のarchive完了条件を未チェックへ戻し、レビュー指摘2として根拠ごとの監査とarchive分類の再判断を記録した。親Gateがdoneであることだけを子issueの完了根拠にしない。
+- 観測した失敗: 当時のarchive規約が完了条件・チェックポイントの全確認を移動条件とするにもかかわらず、Visual Reviewや表示・操作契約などの未チェック項目を残すex-02 Gate子issueをローカルarchiveへ再配置し、activeまたは未完了issueを移動していない完了条件をチェックした。PR #76のdocument reviewで判明した。
+- 一次対応: `GitHub Issue #116: ex-07`のarchive完了条件を未チェックへ戻し、レビュー指摘2として根拠ごとの監査とarchive分類の再判断を記録した。親Gateがdoneであることだけを子issueの完了根拠にしない。

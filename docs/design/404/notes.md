@@ -34,7 +34,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- historical task issue: `docs/issue/milestone-01/done/phase-3/40-2-404-page.md`
+- historical task issue: `GitHub Issue #172: 40-2-404-page`
 - `docs/requirements/pages.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/assets-seo.md`

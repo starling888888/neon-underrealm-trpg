@@ -28,7 +28,7 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `docs/issue/milestone-01/done/phase-3/24-2-scenario-play-page.md`（historical source issue）
+- `GitHub Issue #153: 24-2-scenario-play-page`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/components.md`

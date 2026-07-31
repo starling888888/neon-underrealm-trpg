@@ -28,7 +28,7 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `docs/issue/milestone-01/done/phase-3/25-2-battle-page.md`（historical source issue）
+- `GitHub Issue #154: 25-2-battle-page`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/pages.md`
 - `docs/out-of-scope.md`
