@@ -17,7 +17,7 @@ G0で `/character-sheet/` の静的ページ、G1でReact IslandとRHFの実行�
 
 関連する正本:
 
-- `docs/issue/ex-02-web-character-sheet.md`
+- `docs/issue/done/ex-02-web-character-sheet.md`
 - `docs/issue/ex-02-web-character-sheet/plan.md`
 - `docs/requirements/character-sheet.md`
 - `docs/architectures/character-sheet.md`
@@ -29,7 +29,7 @@ G0で `/character-sheet/` の静的ページ、G1でReact IslandとRHFの実行�
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G2: desktop、tablet、mobileの基本レイアウト`
 - 依存Gate: G0（`docs/issue/done/ex-02-web-character-sheet/ex-02-0-sheet-page-header.md`）、G1（`docs/issue/done/ex-02-web-character-sheet/ex-02-1-sheet-runtime.md`）

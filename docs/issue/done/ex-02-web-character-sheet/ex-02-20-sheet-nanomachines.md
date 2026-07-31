@@ -30,7 +30,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G20: ナノマシンの固定個別行の選択・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。`
 - branch: ユーザー指定により、子branchは作成せず、現在の`ex-02-web-character-sheet`で実装する。子issue名はGate planの予定パスを維持する。

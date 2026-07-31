@@ -30,7 +30,7 @@
 
 ## 背景
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` の`G17: 武器と防具を扱う。`
 - 要件: `docs/requirements/character-sheet.md`の「アイテム」「経験点と信用」「エラーと警告」「共通動作」
 - ゲームデータ: `data/generated/items.json`、`src/lib/types/item.ts`、`src/pages/data/items/weapons.mdx`、`src/pages/data/items/armors.mdx`
@@ -40,7 +40,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G17: 武器と防具を扱う。`
 

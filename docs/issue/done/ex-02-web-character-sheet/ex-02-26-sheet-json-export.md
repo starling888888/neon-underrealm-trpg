@@ -30,7 +30,7 @@ G23で表示だけを作成した既存の`エクスポート`buttonは、まだ
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G26: JSON出力`
 

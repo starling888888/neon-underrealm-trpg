@@ -39,23 +39,23 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG24、G27
   - handling result: G16で未確定入力・最大Lv超過を値保持と局所errorへ統一し、G24で構造・identityだけを拒否してゲーム上の不整合値を復元する契約をrequirements / schemaへ反映した。G27は同じrestore adapterを利用する。
 
-- [ ] G16で生き様bonusを含む全スキルの最大Lv制約を定義する
+- [x] G16で生き様bonusを含む全スキルの最大Lv制約を定義する
   - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
   - classification: follow-up
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG16
-  - handling plan: 通常skillだけでなく生き様bonusについても、browser入力、schema、局所error、経験点集計のどこで最大Lv超過を検出するかを定義する。G24 / G27で確定する未確定入力・復元値の契約と矛盾させない。
+  - handling result: G16で通常skillと生き様bonusの最大Lv違反を値保持・局所errorとして統一し、経験点集計と保存・復元の契約へ適用した。
 
-- [ ] G31でlocator-only Visual Review scenarioの実行経路を分離する
+- [x] G31でlocator-only Visual Review scenarioの実行経路を分離する
   - source: `.tmp/chatgpt-review.md` / G13 レビュー指摘 3
   - classification: follow-up
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
-  - handling plan: locator screenshotだけを受入根拠とするstateは、通常のfull-page VRT比較へ登録しない。capture-only optionまたは専用specを設計し、canonical snapshot未作成時に通常VRTがmissing snapshotで失敗しないことを確認する。
+  - handling result: character-sheet専用scenario helperでfull-page、section locator、dialog locatorを分離した。通常VRTはlocator stateを該当locatorのcanonical snapshotとして比較し、full-page baselineを要求しない。全358 targetの再生成・比較を確認した。
 
-- [ ] G31のコンテンツレビューでtooltip indicatorの上下揃えに違和感があれば、共通`FormulaTooltip`の配置を再調整する
+- [x] G31のコンテンツレビューでtooltip indicatorの上下揃えに違和感があれば、共通`FormulaTooltip`の配置を再調整する
   - source: `ex-02-11-sheet-noncombat` のレビュー指摘 6に対するユーザーのpreview確認
   - classification: visual usability follow-up
   - plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG31
-  - handling plan: 個別sectionのlabel styleで補正せず、能力値ポイント、格、常時修正、一時修正、覚悟のactual screenshotとコンテンツレビューの指摘を照合する。違和感が再現する場合だけ、`FormulaTooltip`の共通box / line-height / flex alignmentを調整し、desktop / tablet / mobileで再確認する。
+  - handling result: G31のコンテンツレビューで再調整を要する違和感は指摘されなかったため、共通`FormulaTooltip`は変更しない。
 
 - [x] G31でキャラクターシート全体のVisual Reviewを完了する
   - source: G11 Gate Tech Reviewに対するユーザー判断

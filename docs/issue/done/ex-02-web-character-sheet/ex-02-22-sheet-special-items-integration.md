@@ -15,7 +15,7 @@
 
 G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ドラッグの個別編集を実装した。G22はそれらを生き様の`exclusiveItem`と接続し、カテゴリ表示・削除・並べ替え、信用の合計、スミ固有の最大体力補正を定義するGateである。
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - 親Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG22
 - 要件: `docs/requirements/character-sheet.md` の「経験点と信用」「副能力値、縁、判定」「アイテム」
 - アーキテクチャ: `docs/architectures/character-sheet.md` の「実装時のアーキテクチャ遵守」「可変行のデザイン指針」「Container / Presenterの責務」「状態と派生値の境界」「データ境界」「HTML / CSSの構造と責務」「テストアーキテクチャ」
@@ -24,7 +24,7 @@ G17–G21で武器・防具、お守り、サイバネ、ナノマシン、ド�
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G22: 専用アイテム統合`
 

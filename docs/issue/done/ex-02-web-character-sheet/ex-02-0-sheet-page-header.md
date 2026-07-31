@@ -6,7 +6,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G0: Astro pageとページ固有のサイトメニュー表示`
 - 依存Gate: なし

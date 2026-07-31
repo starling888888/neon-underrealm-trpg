@@ -22,7 +22,7 @@ Webキャラクターシートの`profile` slotに、PC名・PL名・二つ名�
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G4: 基本情報、キャラクター設定、信用`
 

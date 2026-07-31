@@ -16,7 +16,7 @@ G30を含むキャラクターシート実装を最終統合し、責務を守�
 
 参照正本:
 
-- `docs/issue/ex-02-web-character-sheet.md`
+- `docs/issue/done/ex-02-web-character-sheet.md`
 - `docs/issue/ex-02-web-character-sheet/plan.md`
 - `docs/requirements/character-sheet.md`
 - `docs/architectures/character-sheet.md`
@@ -29,7 +29,7 @@ G30を含むキャラクターシート実装を最終統合し、責務を守�
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G31: 最終統合`
 

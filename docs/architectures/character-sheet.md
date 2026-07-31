@@ -10,7 +10,7 @@
 
 - 機能要件: `docs/requirements/character-sheet.md`
 - 画面design: `docs/design/character-sheet/notes.md`
-- 実装の契約とゲート管理: `docs/issue/ex-02-web-character-sheet.md`
+- 実装の契約とゲート管理: `docs/issue/done/ex-02-web-character-sheet.md`
 - ゲーム仕様と選択肢: `src/pages/`配下のゲーム仕様と`data/generated/`配下の生成JSON
 - 初期対象viewportはdesktop、tablet、mobileである。
 - 画面はフルスクラッチのReact Componentで実装する。UIライブラリ、デザインシステム、Component固定型のフォームライブラリは導入しない。React ComponentのスタイルはCSS Modulesを使い、追加依存は導入しない。

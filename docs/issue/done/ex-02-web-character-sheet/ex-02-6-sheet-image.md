@@ -20,7 +20,7 @@ WebPへ変換した画像のbase64エンコード文字列をIndexedDBへ保存�
 
 関連する正本:
 
-- `docs/issue/ex-02-web-character-sheet.md`
+- `docs/issue/done/ex-02-web-character-sheet.md`
 - `docs/issue/ex-02-web-character-sheet/plan.md`
 - `docs/requirements/character-sheet.md`
 - `docs/architectures/character-sheet.md`
@@ -39,7 +39,7 @@ WebPへ変換した画像のbase64エンコード文字列をIndexedDBへ保存�
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G6: キャラクター画像を扱う`
 - 依存Gate: `G4`（基本情報・キャラクター設定）、`G5`（ダイアログの共通基盤）

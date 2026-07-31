@@ -23,7 +23,7 @@ G12はプライマリ流儀スキルだけを接続し、再利用可能な`comp
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G13: 生き様のスキルを扱う`
 

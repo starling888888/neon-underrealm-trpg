@@ -15,7 +15,7 @@
 
 ## 背景
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`の`G9`
 - 要件: `docs/requirements/character-sheet.md`の「副能力値、縁、判定」と「縁と覚悟」
 - アーキテクチャ: `docs/architectures/character-sheet.md`のContainer / Presenter / form / logic / Component testの責務分離
@@ -24,7 +24,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G9: 縁と覚悟を扱う。`
 

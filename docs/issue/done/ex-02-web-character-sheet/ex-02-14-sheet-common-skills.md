@@ -23,7 +23,7 @@ G7は共通スキルボーナスを表示専用で参照している。G14は共
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G14: 共通スキルを扱う`
 

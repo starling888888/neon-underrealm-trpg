@@ -2,7 +2,7 @@
 
 ## 親issue
 
-- `docs/issue/ex-02-web-character-sheet.md`
+- `docs/issue/done/ex-02-web-character-sheet.md`
 
 ## 共通の境界
 

@@ -15,7 +15,7 @@ Webキャラクターシートの後続編集領域で共用する、見出し�
 - `docs/design/character-sheet/notes.md`
 - `docs/out-of-scope.md`
 - `docs/plan.md`
-- `docs/issue/ex-02-web-character-sheet.md`
+- `docs/issue/done/ex-02-web-character-sheet.md`
 - `docs/issue/ex-02-web-character-sheet/plan.md`
 
 テストは既存のNode `node:test`と`tsx`、および`@playwright/test`を使う。G3はユーザー操作として確認できる開閉のみを追加するため、React Component / Hook単体test runnerなどのテスト用ライブラリは追加しない。これは`docs/architectures/character-sheet.md`のテスト用依存選定境界に従う。
@@ -24,7 +24,7 @@ section frameの枠、見出し、展開アイコン、開閉時の外観、visi
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G3: 編集セクションの共通枠と開閉操作`
 

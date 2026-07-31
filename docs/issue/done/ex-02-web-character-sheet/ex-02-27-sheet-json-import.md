@@ -12,7 +12,7 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 
 ## 背景
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - 親Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG27。依存Gate G5、G24、G25、G26は`done`である。
 - 要件正本: `docs/requirements/character-sheet.md` の「保存、復元、出力」。JSON入力は確認後に現在の編集内容と端末内保存を置換し、不正なJSONは現在の状態を変更せず部分復元しない。
 - architecture: `docs/architectures/character-sheet.md` の「実装時のアーキテクチャ遵守」「自動保存と復元」「JSON入出力フォーマット」「テストアーキテクチャ」。RHFを唯一の編集stateとし、G24の`reset` / `useFieldArray` / read-only master-data lookupを使うshared restore adapterを再利用する。
@@ -22,7 +22,7 @@ JSON入力を、G26で出力した現行形式とG24のshared restore adapterへ
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G27: JSON入力を扱う`
 

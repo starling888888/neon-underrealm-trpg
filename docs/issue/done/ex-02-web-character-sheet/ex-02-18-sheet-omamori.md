@@ -14,7 +14,7 @@
 
 ## 背景
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` の `G18: お守りの個別行の選択・追加・削除・並べ替え・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。`
 - 要件: `docs/requirements/character-sheet.md` の「アイテム」「共通動作」
 - ゲームデータ: `data/generated/items.json`の`omamori`、`src/lib/types/item.ts`、`src/pages/data/items/omamori.mdx`
@@ -24,7 +24,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G18: お守りの個別行の選択・追加・削除・並べ替え・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。`
 

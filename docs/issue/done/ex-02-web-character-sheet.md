@@ -87,14 +87,14 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] `docs/requirements/character-sheet.md`が既存コンテンツ・データ・初回実装仕様を参照して正本化され、`docs/requirements.md`から参照できる。
 - [x] 要件・`src/pages/`配下のゲーム仕様・生成JSON・初期スコープ文書の競合と不明点が、ユーザーとの対話によって解消または明示的に初期スコープ外へ分類されている。
 - [x] `docs/requirements/character-sheet.md`に定義する全機能を、初期scopeとして採用する。
-- [ ] desktop、tablet、mobileのdesign draftと`docs/design/character-sheet/notes.md`がユーザー確認済みである。
-- [ ] `docs/architectures/character-sheet.md`の配置可否、アーキテクチャ、データ境界、依存ライブラリ、scoped CSS方針がユーザー承認済みである。
-- [ ] 実装ゲートが縦方向・1コミット相当・単独で確認可能な単位に列挙され、順序とレビュー手順がユーザー承認済みである。
-- [ ] 各実装ゲートで必要なdesign targetとVRT baselineの扱いが記録されている。
-- [ ] 対話用design draftをHTML prototypeとlocal captureで作成でき、承認後に`design-image-generation`でdesign intentとVRT参照情報を記録する手順が定義されている。draftはGit管理・`docs/design/`・canonical VRT baselineの正本にしない。
-- [ ] 関連TODOごとに、承認済み実装ゲートで回収するか、将来TODOとして維持するか、不採用にするかを理由とともに記録している。
-- [ ] 実装を開始した各ゲートで、`npm run check`、`npm run build`、対象テスト、必要な限定VRTの確認結果を記録している。
-- [ ] 承認済みの実装ゲートをすべて実装・ユーザーレビューし、初めて本作に触れるPLが作成を始められる導線、モバイルでの入力・閲覧、遊ぶために必要な情報の確認、対象VRTの比較を完了している。
+- [x] desktop、tablet、mobileのdesign draftと`docs/design/character-sheet/notes.md`がユーザー確認済みである。
+- [x] `docs/architectures/character-sheet.md`の配置可否、アーキテクチャ、データ境界、依存ライブラリ、scoped CSS方針がユーザー承認済みである。
+- [x] 実装ゲートが縦方向・1コミット相当・単独で確認可能な単位に列挙され、順序とレビュー手順がユーザー承認済みである。
+- [x] 各実装ゲートで必要なdesign targetとVRT baselineの扱いが記録されている。
+- [x] 対話用design draftをHTML prototypeとlocal captureで作成でき、承認後に`design-image-generation`でdesign intentとVRT参照情報を記録する手順が定義されている。draftはGit管理・`docs/design/`・canonical VRT baselineの正本にしない。
+- [x] 関連TODOごとに、承認済み実装ゲートで回収するか、将来TODOとして維持するか、不採用にするかを理由とともに記録している。
+- [x] 実装を開始した各ゲートで、`npm run check`、`npm run build`、対象テスト、必要な限定VRTの確認結果を記録している。
+- [x] 承認済みの実装ゲートをすべて実装・ユーザーレビューし、初めて本作に触れるPLが作成を始められる導線、モバイルでの入力・閲覧、遊ぶために必要な情報の確認、対象VRTの比較を完了している。
 
 ## チェックポイント
 
@@ -105,13 +105,13 @@ Webキャラクターシートを一括実装せず、既存サイトのルー�
 - [x] フルスクラッチにおけるプライマリ流儀・生き様の初期1レベル無料と、消費経験点の算出式を整合させている。
 - [x] `docs/requirements/overview.md`と`docs/out-of-scope.md`で、キャラクター作成ウィザードは初期スコープ外とし、`ex-02-web-character-sheet`の直接編集式キャラクターシートは初期scopeであることを明確化している。
 - [x] React Islandを`ex-02`の承認済み範囲として採用し、関連TODOの検討事項を解消している。
-- [ ] GitHub Pagesのサブパス公開、静的ホスティング、不要な依存ライブラリを追加しない方針に適合している。
-- [ ] 各タスクで変更対象のUIに限定したVRTを実施し、全件VRTを通常実行しない方針を維持している。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] GitHub Pagesのサブパス公開、静的ホスティング、不要な依存ライブラリを追加しない方針に適合している。
+- [x] 各タスクで変更対象のUIに限定したVRTを実施し、全件VRTを通常実行しない方針を維持している。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
-- `docs/issue/ex-02-web-character-sheet.md`
+- `docs/issue/done/ex-02-web-character-sheet.md`
 - `docs/issue/ex-02-web-character-sheet/plan.md`
 - `docs/requirements/character-sheet.md`
 - `docs/requirements.md`

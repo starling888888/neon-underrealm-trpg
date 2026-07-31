@@ -28,7 +28,7 @@
 
 ## 背景
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` の `G11`
 - 要件: `docs/requirements/character-sheet.md` の「副能力値、縁、判定」「攻撃、リアクション、非戦闘判定の行」
 - アーキテクチャ: `docs/architectures/character-sheet.md` の Container / Presenter / form / logic / Component test の責務分離、固定表示文言の `dictionary.ts` 所有、読み取り専用ゲームデータの `master-data/` 境界
@@ -38,7 +38,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G11: 非戦闘技能を扱う。`
 

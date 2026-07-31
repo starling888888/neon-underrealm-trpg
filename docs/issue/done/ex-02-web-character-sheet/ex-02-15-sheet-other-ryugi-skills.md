@@ -23,7 +23,7 @@ G7はその他流儀の可変入力を提供している。G15は、その各行
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G15: その他流儀のスキルを扱う`
 

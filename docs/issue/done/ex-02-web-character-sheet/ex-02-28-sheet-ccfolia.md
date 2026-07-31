@@ -13,13 +13,13 @@ Webキャラクターシートの`CCFOLIAコピー`操作で、現在の入力�
 
 ## 背景
 
-親issue `docs/issue/ex-02-web-character-sheet.md` のGate planで、G28はCCFOLIA出力を扱う。`docs/requirements/character-sheet.md`はClipboard API用JSONの生成・コピーと、成功または失敗のdialog通知を初期scopeに含めている。
+親issue `docs/issue/done/ex-02-web-character-sheet.md` のGate planで、G28はCCFOLIA出力を扱う。`docs/requirements/character-sheet.md`はClipboard API用JSONの生成・コピーと、成功または失敗のdialog通知を初期scopeに含めている。
 
 CCFOLIAの形式・出力項目・数値の扱い・必要なテストは、ユーザー指定の`.tmp/ccfolia_copy.md`をこのGateの正本とする。そこにある実装例は参照せず、仕様節（目的、出力JSON、未入力値・異常値、テスト要件）だけを適用する。
 
 関連参照:
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - 親Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` のG28
 - 要件: `docs/requirements/character-sheet.md` の「保存、復元、出力」
 - アーキテクチャ: `docs/architectures/character-sheet.md` のContainer / Presenter責務、`logic/`、`browser/`、Clipboardのテスト境界
@@ -29,7 +29,7 @@ CCFOLIAの形式・出力項目・数値の扱い・必要なテストは、ユ�
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G28: CCFOLIA出力を扱う。`
 

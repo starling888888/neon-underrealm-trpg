@@ -13,7 +13,7 @@
 
 ## 背景
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` の`G25`
 - 要件: `docs/requirements/character-sheet.md`の「エラーと警告」「共通動作」「非機能要件」
 - architecture: `docs/architectures/character-sheet.md`の「Feature境界」「Container / Presenterの責務」「状態と派生値の境界」「データ境界」「HTML / CSSの構造と責務」「テストアーキテクチャ」
@@ -22,7 +22,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G25: エラーの集約表示を扱う。現在の生き様では通常使用不可の専用アイテムカテゴリのwarningは既存の局所フィードバックに留める。`
 

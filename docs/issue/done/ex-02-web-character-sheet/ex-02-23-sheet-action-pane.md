@@ -26,7 +26,7 @@ Gate 22完了後には、`CharacterSheetFormPresenter`配下のフォーム共�
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G23: 操作ペイン`
 

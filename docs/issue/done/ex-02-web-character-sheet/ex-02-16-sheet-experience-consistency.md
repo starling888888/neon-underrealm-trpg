@@ -12,7 +12,7 @@
 
 ## 背景
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` の`G16`
 - 要件: `docs/requirements/character-sheet.md`の「共通動作」「経験点と信用」「スキル」「エラー・警告表示」
 - ルール正本: `src/pages/advancement.mdx`の経験点使用規則と、`src/pages/character-making.mdx`のフルスクラッチ規則
@@ -25,7 +25,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G16: 消費経験点の算出整合性を確認する。`
 

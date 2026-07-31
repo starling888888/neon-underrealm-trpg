@@ -12,7 +12,7 @@
 
 ## 背景
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md` の `G7`
 - 要件: `docs/requirements/character-sheet.md` の「PC基本ビルドと能力値」「経験点と信用」「エラーと警告」
 - ルール参照: `.raw/v1.0/01.ルールブック.md` の「フルスクラッチ」。プライマリ流儀と生き様は1レベル取得済みで、追加成長に使う経験点は50点である。
@@ -22,7 +22,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G7: 流儀、生き様、能力値、経験点を扱う。`
 

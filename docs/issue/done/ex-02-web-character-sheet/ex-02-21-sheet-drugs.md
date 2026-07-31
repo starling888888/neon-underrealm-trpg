@@ -17,7 +17,7 @@
 
 関連する正本は以下とする。
 
-- `docs/issue/ex-02-web-character-sheet.md`
+- `docs/issue/done/ex-02-web-character-sheet.md`
 - `docs/issue/ex-02-web-character-sheet/plan.md`
 - `docs/requirements/character-sheet.md` のアイテム、経験点と信用
 - `docs/architectures/character-sheet.md` の実装時のアーキテクチャ遵守
@@ -29,7 +29,7 @@
 
 ## Gate関係
 
-- 親issue: `docs/issue/ex-02-web-character-sheet.md`
+- 親issue: `docs/issue/done/ex-02-web-character-sheet.md`
 - Gate plan: `docs/issue/ex-02-web-character-sheet/plan.md`
 - Gate: `G21: ドラッグの個別行の選択・追加・削除・並べ替え・候補dialogを実装する。生き様連動とカテゴリ操作は扱わない。`
 
