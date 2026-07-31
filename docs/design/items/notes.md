@@ -30,11 +30,11 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/done/phase-3/33-2-items-index-page.md`
+- `docs/issue/milestone-01/done/phase-3/33-2-items-index-page.md`
 - `docs/requirements/pages.md`
 - `docs/requirements/assets-seo.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `.raw/contents/items.md` のH1以下
 - `docs/design/global-styles/notes.md`

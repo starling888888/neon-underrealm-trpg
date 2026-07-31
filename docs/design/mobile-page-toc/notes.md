@@ -30,7 +30,7 @@
 - `.agents/skills/design-image-generation/SKILL.md`
 - `docs/requirements.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
@@ -39,8 +39,8 @@
 
 ## Historical source issues
 
-- `docs/issue/done/phase-2/14-mobile-page-toc.md`
-- `docs/issue/done/phase-2/13-page-toc.md`
+- `docs/issue/milestone-01/done/phase-2/14-mobile-page-toc.md`
+- `docs/issue/milestone-01/done/phase-2/13-page-toc.md`
 
 ## Design direction
 

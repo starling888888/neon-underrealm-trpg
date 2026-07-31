@@ -22,7 +22,7 @@ Gate子issueがUI、CSS、layout、page、Componentを扱う場合は、この�
 
 - `docs/requirements.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-<NN>/plan.md`
 - `docs/TODO.md` に関連項目がある場合は該当TODO
 - UI、CSS、layout、page、Componentタスクで該当する場合は `docs/design/<design-target>/`
 - design intent / VRT参照情報の作成が必要な場合は `.agents/skills/design-image-generation/SKILL.md`
@@ -36,6 +36,8 @@ Gate子issueがUI、CSS、layout、page、Componentを扱う場合は、この�
 - Gate: 親issueでは `なし`。子issueでは `G1: Gate名` のように1件だけ記録する。
 
 子issueは、この節と選択したGate briefだけで、新しいsessionから実装準備を開始できなければならない。
+
+`docs/issue/milestone-<NN>/plan.md` はmilestoneの計画・履歴専用pathであり、このGate関係のplanではない。通常issueのGate一覧をmilestone planへ書かない。
 
 ## 対象範囲
 

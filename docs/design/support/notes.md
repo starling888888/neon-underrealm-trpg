@@ -33,7 +33,7 @@
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/assets-seo.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `.raw/contents/support.md`
 - `docs/design/global-styles/notes.md`
@@ -45,7 +45,7 @@
 
 ## Historical Source Issue
 
-- `docs/issue/done/phase-3/41-2-support-page.md`
+- `docs/issue/milestone-01/done/phase-3/41-2-support-page.md`
 
 ## Design Direction
 

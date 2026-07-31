@@ -27,7 +27,7 @@
 - `docs/issue/34-2-items-pages.md`
 - `docs/requirements.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`

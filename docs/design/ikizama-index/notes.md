@@ -28,7 +28,7 @@
 - `.agents/skills/design-image-generation/SKILL.md`
 - `docs/issue/31-2-ikizama-index-page.md`
 - `.raw/contents/ikizama-index.md`
-- `docs/plan.md` の `31-2-ikizama-index-page`
+- `docs/issue/milestone-01/plan.md` の `31-2-ikizama-index-page`
 - `docs/requirements/pages.md` の `/data/ikizama`
 - `docs/conversion/ikizama-index.md`
 - `docs/conversion/ikizama-skills.md`

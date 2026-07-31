@@ -26,7 +26,7 @@ This skill reviews VRT results. It must not update VRT baselines.
 
 ### `review-to-issue`
 
-Use when local `.tmp/*.md` review notes must be validated against local SSoT and routed into the current issue, `docs/TODO.md`, or `docs/plan.md`.
+Use when local `.tmp/*.md` review notes must be validated against local SSoT and routed into the current issue, `docs/TODO.md`, or `docs/issue/milestone-<NN>/plan.md`.
 
 Review intake stops before implementation. Fixes require explicit user approval.
 
@@ -72,7 +72,7 @@ This skill standardizes SKILL.md format, controlled English, safety sections, re
 
 Use after a PR has been merged and the user asks to return to `main`, pull merged changes, delete the merged branch, update tracking files, commit, and push.
 
-This skill may update `docs/plan.md` checkboxes only because the user explicitly requested post-merge tracking work.
+This skill may update `docs/issue/milestone-<NN>/plan.md` checkboxes only because the user explicitly requested post-merge tracking work.
 
 ### `failure-log-audit`
 

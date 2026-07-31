@@ -38,7 +38,7 @@
 - `docs/requirements/components.md`
 - `docs/requirements/non-functional.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`

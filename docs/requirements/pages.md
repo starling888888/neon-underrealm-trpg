@@ -76,7 +76,7 @@ Webキャラクターシート。
 
 初めて本作に触れるPLが、ルールを通読する前でも試しにキャラクターを作成・編集し、遊ぶために必要な情報を確認できるようにする。
 
-入力項目、作成手順、具体的な表示構成は `docs/plan.md` の `ex-02-web-character-sheet` で定義する。ログイン、サーバー保存、共有、PDF出力、Google Sheets連携は初期スコープ外とする。
+入力項目、作成手順、具体的な表示構成は `docs/requirements/character-sheet.md` を正本とする。ログイン、サーバー保存、共有、PDF出力、Google Sheets連携は初期スコープ外とする。
 
 #### `/data`
 

@@ -1,6 +1,6 @@
 ---
 name: issue-first-development
-description: Use this skill when the user asks to start a task from docs/plan.md, create a task branch, prepare docs/issue/*.md before implementation, validate an existing issue, create an explicitly requested Gate plan or child issue, or draft an issue from a remote GitHub snapshot. This skill must stop before code implementation and wait for human review.
+description: Use this skill when the user asks to start a task from docs/issue/milestone-<NN>/plan.md, create a task branch, prepare docs/issue/*.md before implementation, validate an existing issue, create an explicitly requested Gate plan or child issue, or draft an issue from a remote GitHub snapshot. This skill must stop before code implementation and wait for human review.
 ---
 
 # Issue-first Development Skill
@@ -9,7 +9,7 @@ Prepare a development task before implementation.
 
 Use when the user asks to:
 
-- start a task from `docs/plan.md`
+- start a task from `docs/issue/milestone-<NN>/plan.md`
 - create a branch for a planned task
 - prepare an issue file before development
 - draft an issue from a GitHub repository snapshot
@@ -37,6 +37,8 @@ Create a dedicated Gate plan only when the user explicitly asks to create or spl
 docs/issue/<parent-issue-slug>/plan.md
 ```
 
+`docs/issue/milestone-<NN>/plan.md` is a milestone plan and history path, not a Gate plan. Do not enumerate Gates there.
+
 The Gate plan is the only place that enumerates Gates. It keeps the parent task split into implementable Gates and records their progress. Do not duplicate the Gate list in the parent issue body. A normal issue has no Gate plan and is its own implementation contract.
 
 ---
@@ -57,7 +59,7 @@ Run an issue review agent only after this workflow has created a user-authorized
 
 After explicit local issue creation authorization, the local workflow is:
 
-1. Read the requested task from `docs/plan.md`.
+1. Read the requested task from `docs/issue/milestone-<NN>/plan.md`.
 2. Determine the branch name.
 3. Check the current local repository state.
 4. Check whether a matching `docs/issue/NN-slug.md` already exists.
@@ -100,7 +102,7 @@ In this mode, the agent must not:
 - create, draft, validate, or review an issue without explicit user authorization
 - run an issue review agent before this workflow creates a user-authorized local issue
 - overwrite user changes
-- update `docs/plan.md` checkboxes
+- update `docs/issue/milestone-<NN>/plan.md` checkboxes
 - treat a remote draft as final before local validation
 - create design notes unless the user explicitly asks to run `design-image-generation`
 
@@ -111,7 +113,7 @@ Use this mode when the agent can read repository files through GitHub or another
 In this mode, the agent may:
 
 - fetch repository files from a remote source
-- read `AGENTS.md`, this skill, `docs/plan.md`, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, relevant design docs, relevant existing issues, and relevant existing code
+- read `AGENTS.md`, this skill, `docs/issue/milestone-<NN>/plan.md`, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, relevant design docs, relevant existing issues, and relevant existing code
 - produce an issue markdown draft in chat
 - validate an existing issue against a remote snapshot
 - cite or list the exact files and refs used to generate the draft
@@ -125,7 +127,7 @@ In this mode, the agent must not:
 - treat the draft as a final issue
 - implement code
 - update repository files
-- update `docs/plan.md`
+- update `docs/issue/milestone-<NN>/plan.md`
 - claim design notes or VRT baselines were generated or verified locally
 - create `.tmp/review/` files
 - run reviewer subagents
@@ -184,7 +186,7 @@ If automatic context compaction happened during the same issue, do not treat tha
 
 ## Branch naming
 
-Use the task number and slug from `docs/plan.md`.
+Use the task number and slug from `docs/issue/milestone-<NN>/plan.md`.
 
 Normal task:
 
@@ -292,14 +294,14 @@ After the child work is complete and the normal archive conditions are met:
 2. Return only durable detailed requirements, confirmed decisions, and follow-up handoff to the selected Gate entry in the parent Gate plan.
 3. Record the child issue's archive path in that Gate entry.
 4. Update the Gate status to `done`.
-5. Move the child issue to the appropriate `docs/issue/done/` directory.
+5. Move the child issue to the appropriate `docs/issue/milestone-<NN>/done/` directory for the current milestone.
 
 Do not archive a child issue before the parent Gate plan has received this compact handoff. Do not retain the child issue as the active source of truth for later Gates.
 
 ### Child completion-record audit
 
 Run this audit immediately before any parent Gate status becomes `done` or the
-child issue moves under `docs/issue/done/`.
+child issue moves under `docs/issue/milestone-<NN>/done/` for the current milestone.
 
 1. Read every checkbox in the child issue's `完了条件`, `チェックポイント`, and each `レビュー指摘` section.
 2. Confirm that every completion condition and checkpoint is checked from current, local evidence. Do not infer completion from a successful command, a prior Gate status, or the archive destination.
@@ -320,7 +322,7 @@ Validate it against the relevant SSoT.
 
 Check:
 
-- the task exists in `docs/plan.md`
+- the task exists in `docs/issue/milestone-<NN>/plan.md`
 - the branch / issue name matches the plan task
 - the issue goal matches the plan task
 - the scope is neither broader nor narrower than the task requires
@@ -332,7 +334,7 @@ Check:
 - when design intent or VRT reference notes are missing, `design-image-generation` is recorded as a pre-implementation prerequisite
 - related `docs/TODO.md` items are referenced or deliberately left for later
 - existing code paths mentioned in the issue exist or are clearly marked as planned
-- the issue does not contradict `AGENTS.md`, this skill, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, `docs/plan.md`, or relevant `docs/design/` files
+- the issue does not contradict `AGENTS.md`, this skill, `docs/requirements.md`, `docs/out-of-scope.md`, `docs/TODO.md`, `docs/issue/milestone-<NN>/plan.md`, or relevant `docs/design/` files
 
 For an issue where the user explicitly requested Gate creation or splitting, also check that `docs/issue/NN-slug/plan.md` exists, uses the Gate plan template, is the only Gate enumeration, has an implementable Gate split, and records durable handoffs only after a Gate completes.
 
@@ -591,7 +593,7 @@ Remote snapshot approval is not sufficient for implementation unless local valid
 
 Never run forbidden actions defined in `AGENTS.md` unless the user explicitly instructs it.
 
-Never update `docs/plan.md` checkboxes by yourself.
+Never update `docs/issue/milestone-<NN>/plan.md` checkboxes by yourself.
 
 Never mark a task complete without human review.
 
@@ -630,7 +632,7 @@ Follow this priority order:
 5. The parent Gate plan when preparing or implementing a Gate
 6. `docs/requirements.md`
 7. `docs/out-of-scope.md`
-8. `docs/plan.md`
+8. `docs/issue/milestone-<NN>/plan.md`
 9. `docs/TODO.md`
 10. `.agents/skills/design-image-generation/SKILL.md` when design notes or a VRT baseline update are required
 11. Relevant `docs/design/<design-target>/`

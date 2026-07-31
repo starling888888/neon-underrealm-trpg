@@ -56,7 +56,7 @@ https://username.github.io/repository-name/
 
 構造化データの一覧表示、カード表示、凡例表示、関連リンク表示など、通常Markdownでは表現しづらいUIはComponentとして埋め込めること。
 
-実装候補として、MDX、Astro Components、または同等の仕組みを利用する。
+AstroのMDX integrationとAstro Componentを使い、MDXから必要なComponentを参照する。
 
 ### AC-06. 初期対象データはExcel起点で管理できること
 
@@ -295,6 +295,15 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 各アイテム種別のスキーマは、共通項目を再利用しつつ、種別固有項目を明示的に検証できることが望ましい。
 
 ---
+
+## 現在の実装構成
+
+- 公開ページは `src/pages/` のAstro / MDX、共通レイアウトは `src/layouts/`、UI部品は `src/components/` に置く。
+- 生成JSONへのアクセスは `src/lib/data/`、site metadata・menu・path helperは `src/lib/site/` と `src/lib/utils/` に分ける。
+- 変換scriptは `scripts/`、ブラウザ上の小さなcontrollerは `src/scripts/` に置く。
+- Webキャラクターシートだけは `src/character-sheet/` のReact Islandとして実装し、static site全体をSPAにはしない。端末内の永続化はlocalStorageとIndexedDBだけを使う。
+- 検索はPagefindの静的indexを公開用build成果物へ生成し、外部検索サービスを使わない。
+- Cloudflare Web Analyticsのmanual beaconは本番deploy buildだけでHTMLへ出力する。通常build、PR検証、Visual Testでは出力しない。
 
 ## 3. 技術スタック
 

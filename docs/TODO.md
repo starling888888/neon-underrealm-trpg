@@ -12,10 +12,10 @@ PR merge後のTODO更新は `.agents/skills/post-merge-plan-update/SKILL.md` に
 
 - 現在のissue範囲を超える指摘
 - 後続タスクで対応すべき改善
-- 既存の `docs/plan.md` タスクに紐づく補足対応
-- `docs/plan.md` に新しい計画項目を追加したうえで追跡すべき作業
+- 対象milestoneの `docs/issue/milestone-<NN>/plan.md` タスクに紐づく補足対応
+- 対象milestoneの `docs/issue/milestone-<NN>/plan.md` に新しい計画項目を追加したうえで追跡すべき作業
 
-TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
+TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/plan.md` の未完了計画項目へ紐づける。クローズ済みmilestoneの完了taskには紐づけず、後続milestoneで計画化する。
 
 ---
 
@@ -66,7 +66,7 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] Pagefindが`-local`確認ページをindex化した場合も、検索Visual Testを安定して実行できるようにする
   - source: PR #66 のdocument review
   - classification: follow-up
-  - plan: `docs/plan.md` の `53-content-smoke-test`
+  - plan: なし。milestone-01はクローズ中のため、後続milestoneで検索Visual Test安定化taskを計画してから紐づける。
   - handling plan: `-local/data-cards`をPagefind indexから除外するか、検索Visual Testのlocatorを公開対象の検索結果へ限定する。GitHub Pagesのsubpath検索と公開ページの検索結果が壊れないことを確認してから、Visual Capture全体をgreenにする。
 
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
@@ -74,12 +74,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
   - classification: future data compatibility follow-up
   - plan: `ex-02-web-character-sheet` の初期範囲外。永続保存を追加する場合は、別taskを計画する。
   - handling plan: キャラクターシート機能がDBなどへスキルIDと取得レベルを保存する前に、名称、所属、区分、タイミングなどID入力値の変更で同一スキルのIDが変わったことを検出してエラーにする方式を設計する。比較に使う不変キーまたは移行マッピング、既存保存データとの照合時点、エラー表示、移行手順を決定し、ID変更を黙って保存データへ適用しない。
-
-- [ ] CharacterSheet Presenter props custom hookを、Presenterのmemo化と同時に参照安定化する
-  - source: `ex-02-4-sheet-profile` 実装中のユーザー指示
-  - classification: React performance architecture follow-up
-  - plan: `ex-02-web-character-sheet` の後続Gateで`React.memo`するPresenter / section Componentを導入する場合に、同じtaskで扱う。
-  - handling plan: `useCharacterSheetFormPresenterProps`の派生ViewModelを入力primitiveに基づく`useMemo`で安定化し、event callbackも`useCallback`で安定化する。`creditSummary`だけを局所的にmemo化せず、memo化対象Componentのprops境界全体で参照等価性が有効になることを確認する。現時点の軽量な派生計算と非memo化Presenterには先行適用しない。
 
 - [ ] キャラクターシートの派生logicからマスタID解決を分離する
   - source: ChatGPT review draft (`.tmp/chatgpt-review.md`) のG7 review
@@ -96,13 +90,13 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
   - source: `design-image-generation` skill 追加時の整合確認
   - classification: follow-up
-  - plan: `docs/plan.md` のdesign / Visual Review / UI実装関連タスクに紐づける。適切な既存planがない場合は、design運用整理タスクを追加する
+  - plan: なし。後続milestoneでdesign運用整理taskを計画してから紐づける。
   - handling plan: 既存design targetごとに、mode / target / referenced SSoT / existing design constraints / out of scope / comparison points / generation source / open questions を必要範囲で追記する。既存design画像そのものは、このTODOだけでは変更しない
 
 - [ ] サイトメニュー順序変更を既存designへ一括反映する
   - source: `24-2-scenario-play-page` 準備中のユーザー指示
   - classification: design follow-up
-  - plan: `docs/plan.md` のdesign / Visual Review / UI実装関連タスクに紐づける。適切な一括design更新タスクを定めてから実施する
+  - plan: なし。後続milestoneで一括design更新taskを計画してから紐づける。
   - handling plan: `ルール`を`データ`の上に置く現行メニュー順序を、関連する既存design画像・notesへまとめて反映する。個別ページ作成中に部分的なdesign更新は行わない。
 
 - [ ] GitHub Actionsで全件VRTを定期実行または公開直後に実行する
@@ -117,6 +111,6 @@ TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づける。
 - [ ] TODO title
   - source: `.tmp/pr-N-review.md`
   - classification: follow-up / out-of-scope
-  - plan: `docs/plan.md` の該当項目
+  - plan: 対象milestoneの `docs/issue/milestone-<NN>/plan.md` の該当項目
   - handling plan: 将来どのタスクでどう扱うか
 -->

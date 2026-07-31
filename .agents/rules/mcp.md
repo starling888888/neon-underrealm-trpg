@@ -16,7 +16,7 @@ Validate MCP output against:
 - current task issue
 - `docs/requirements.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-<NN>/plan.md`
 - `docs/TODO.md`
 - existing code
 

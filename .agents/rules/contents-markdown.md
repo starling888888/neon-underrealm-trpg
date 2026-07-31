@@ -45,7 +45,7 @@ When `contents-markdown-authoring` creates or reviews a new local contents instr
 2. Current task issue under `docs/issue/`.
 3. `docs/requirements.md` and relevant `docs/requirements/` files.
 4. `docs/out-of-scope.md`.
-5. `docs/plan.md` and `docs/TODO.md`.
+5. `docs/issue/milestone-<NN>/plan.md` and `docs/TODO.md`.
 6. Related `docs/design/<design-target>/`.
 7. Local `src/pages/` implementation.
 8. Matching local `.raw/contents/` Markdown body and HTML comments.

@@ -2,7 +2,7 @@
 
 このディレクトリは、Playwright VRTを置く場所です。VRTだけでは確認できないUI操作は`tests/e2e/`に置きます。
 
-Visual Reviewは、承認済みUI実装後に `visual-implementation-review` skill から実行します。branch作成、issue作成、`docs/plan.md` 更新、commit、pushは行いません。
+Visual Reviewは、承認済みUI実装後に `visual-implementation-review` skill から実行します。branch作成、issue作成、milestone plan更新、commit、pushは行いません。
 
 ## 実行前提
 

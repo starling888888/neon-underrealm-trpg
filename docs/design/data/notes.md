@@ -33,7 +33,7 @@
 - `docs/requirements/data-display.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `.raw/contents/data.md`
 - `docs/design/global-styles/notes.md`

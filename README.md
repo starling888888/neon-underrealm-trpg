@@ -193,7 +193,9 @@ V1.5で処理順を明確化しました。
 
 - [要件定義](docs/requirements.md)
 - [初期スコープ外](docs/out-of-scope.md)
-- [開発計画](docs/plan.md)
+- [開発計画](docs/issue/milestone-01/plan.md)
+- [テストと検証方針](docs/testing.md)
+- [AI Ops方針](docs/ai-ops.md)
 - [TODO](docs/TODO.md)
 - [公開手順](docs/deployment.md)
 - [本文作成ガイド](docs/content-writing-guide.md)
@@ -210,7 +212,7 @@ V1.5で処理順を明確化しました。
 
 - `issue-first-development`: 実装前にbranch / issue contractを作成または検証する
 - `contents-markdown-authoring`: `.raw/contents/*.md` 用のMarkdownソース草案を作成または確認する
-- `review-to-issue`: `.tmp/*.md` のレビュー指摘をローカルSSoTで検証し、current issue / `docs/TODO.md` / `docs/plan.md` へ振り分ける
+- `review-to-issue`: `.tmp/*.md` のレビュー指摘をローカルSSoTで検証し、current issue / `docs/TODO.md` / `docs/issue/milestone-01/plan.md` へ振り分ける
 - `pr-review-draft`: GitHub PR snapshotから、ローカル検証前のPRレビュー草案を作る
 - `design-image-generation`: `docs/design/<design-target>/` のdesign intent・VRT参照情報を作成または更新し、明示承認時だけbaselineを更新する
 - `visual-implementation-review`: 変更targetのVRTをbaselineと比較し、issue内にVisual Review結果を記録する
@@ -231,7 +233,7 @@ issueのPRがmergeされ、`post-merge-plan-update` workflowまで完了した�
 1. 対象issueのPR mergeと `post-merge-plan-update` 完了を確認する。
 2. 現在のCodexセッションを終了する。
 3. 次のissueを開始するときは、新しいCodexセッションで開始する。
-4. 新しいセッションでは、旧issueの会話要約を引き継がず、`AGENTS.md`、該当SKILL、`docs/plan.md`、`docs/TODO.md`、対象issueを改めて参照する。
+4. 新しいセッションでは、旧issueの会話要約を引き継がず、`AGENTS.md`、該当SKILL、`docs/issue/milestone-01/plan.md`、`docs/TODO.md`、対象issueを改めて参照する。
 
 クリアしてよいのは、旧issue由来の会話文脈、判断、作業仮定だけです。`AGENTS.md`、`.agents/skills/*`、`.agents/rules/*`、MCPサーバー接続情報、repository設定はクリア対象ではありません。
 
@@ -259,7 +261,7 @@ Git管理するのは、Excelから変換された `data/generated/` 配下のJS
 
 current issueで対応すべき修正をTODOへ逃がしてはいけません。
 
-TODO項目は、可能な限り `docs/plan.md` の計画項目へ紐づけます。適切な計画がない場合は、`review-to-issue` workflowで `docs/plan.md` の適切な箇所に未完了タスクを追加したうえでTODOへ紐づけます。
+TODO項目は、可能な限り `docs/issue/milestone-01/plan.md` の計画項目へ紐づけます。適切な計画がない場合は、`review-to-issue` workflowで `docs/issue/milestone-01/plan.md` の適切な箇所に未完了タスクを追加したうえでTODOへ紐づけます。
 
 merge済みPRでTODO項目まで対応した場合は、`post-merge-plan-update` workflowでそのTODOを完了済みに移動します。
 
@@ -292,6 +294,6 @@ Visual Reviewの失敗を隠す目的でbaselineを更新してはいけませ�
 
 ## 初期スコープ外
 
-GMガイド、シナリオ本文、キャラクター作成ウィザード、ダイスローラー、CMS、認証、DB、サーバーサイド処理、アクセス解析などは初期実装に含めません。Webキャラクターシートのログイン、サーバー保存、共有、PDF出力も初期スコープ外です。
+GMガイド、シナリオ本文、キャラクター作成ウィザード、ダイスローラー、CMS、認証、DB、サーバーサイド処理、外部解析providerの追加などは初期スコープ外です。Cloudflare Web Analyticsのmanual beaconは本番deployだけで出力する現行の最小解析として含めます。Webキャラクターシートのログイン、サーバー保存、共有、PDF出力も初期スコープ外です。
 
 詳細は [初期スコープ外](docs/out-of-scope.md) を参照してください。

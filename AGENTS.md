@@ -35,13 +35,14 @@
 - 実装を開始してよいのは、ユーザーがissue内容を明示承認した後だけである。
 - 開発タスクは専用branchで行う。branch名は原則 `NN-slug` または `NN-M-slug` とする。承認済みissueが別名を明示する場合はそれに従う。
 - Gate planとGate子issueを使うのは、ユーザーがGate作成またはGate分割を明示指示した場合だけとする。通常のissue作成では、`docs/issue/<issue名>.md` を単独の実装契約とし、`docs/issue/<issue名>/plan.md` を作成しない。
+- `docs/issue/milestone-<NN>/plan.md` は、milestoneの計画・履歴専用pathでありGate planではない。Gate一覧やGate固有の引継ぎを置かず、`docs/issue/<parent-issue>/plan.md` のGate planと混同しない。
 - Gateを実装する時は、対象Gate専用の子issueを作成し、その子issueを実装契約とする。子issueは、親issue全体の会話や履歴を前提にせず、新しいsessionだけで作業を開始できる最小限で自己完結した情報を持つ。
-- Gate完了後は、継続して必要な詳細要件・確定判断・後続Gateへの引継ぎだけを親issueの専用Gate planへ戻してから、子issueを `docs/issue/done/` へ移す。実装中の経緯、重複した背景、会話依存の情報は親planへ戻さない。
+- Gate完了後は、継続して必要な詳細要件・確定判断・後続Gateへの引継ぎだけを親issueの専用Gate planへ戻してから、子issueを対象milestoneの `done/` へ移す。実装中の経緯、重複した背景、会話依存の情報は親planへ戻さない。
 - 実装範囲は、通常issueでは現在のissue、Gateを使う場合は現在のGate子issueと親issueの専用Gate planに従う。範囲外作業は勝手に混ぜない。
 - ユーザーが「検討して」「確認して」「妥当性を見て」「どうかな」「レビューして」など、判断や意見を求めている場合は実装承認ではない。判断、選択肢、推奨方針を返して停止し、実装、生成、ファイル編集は「修正開始」「実装して」「反映して」などの明示指示を待つ。
 - ユーザーの明示指示によりcurrent issue外のGit管理ファイルを変更する場合は、`.tmp/review/<branch-name>/user-directed-changes.md` に指示、分類、変更対象、変更前後、issueとの関係、関連commitまたはPRを記録する。要求または初期スコープ外SSoTを変更する場合は、変更元SSoTとcurrent issueも同じtaskで更新する。通常のcurrent issue内作業とGit操作は記録しない。
 - 実装中は、完了条件・チェックポイントを実際にローカル確認した時点で現在のissueへチェックを入れる。未確認項目や人間確認が必要な項目は未チェックのまま残す。
-- `docs/plan.md` のチェックボックスは、人間レビュー後のユーザー指示なしに完了扱いしない。
+- `docs/issue/milestone-<NN>/plan.md` のチェックボックスは、人間レビュー後のユーザー指示なしに完了扱いしない。
 - UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign intentとVRT参照情報を確認する。必要なdesign notesがない場合は `design-image-generation` に切り出す。
 - Visual Review screenshotは実装結果であり、design正本ではない。actual screenshotを直接 `docs/design/` にコピーしない。
 - Visual Reviewで`確認済み`、`問題なし`、`枠内に収まる`などの肯定報告をしてよいのは、対象route・state・viewportごとのactual screenshotを実際に開き、issueの表示契約に対して確認した後だけである。対象stateはVRT specだけでなく、current issueの受入条件と最終diffから列挙する。tooltip、dialog、drawer、validationのように表示状態を変えるUIを変更した場合、defaultだけで肯定報告してはならない。`visual:capture`の成功、snapshotの生成、VRT commandの終了出力だけを実画面確認の根拠にしてはならない。
@@ -81,7 +82,7 @@ Git / GitHub CLI / PR作成 / 破壊的操作の詳細は `.agents/rules/git-ope
 
 ユーザーが以下を指示した場合は、必ず `.agents/skills/issue-first-development/SKILL.md` を使う。
 
-- `docs/plan.md` のタスク番号を指定した
+- `docs/issue/milestone-<NN>/plan.md` のタスク番号を指定した
 - 「タスク開始」と言った
 - 「branchを切って」と言った
 - 「issueを作って」と言った
@@ -90,7 +91,7 @@ Git / GitHub CLI / PR作成 / 破壊的操作の詳細は `.agents/rules/git-ope
 
 `issueを作って` は、GitHub Issueではなくローカルの `docs/issue/*.md` 作成を意味する。GitHub Issueを作成してよいのは、ユーザーが明示的に「GitHub Issueを作って」「GitHub上にissueを発行して」「gh issue createして」などと指示した場合だけである。
 
-`docs/plan.md` のタスク番号指定、`$issue-first-development` の呼び出し、task開始、branch作成は、該当skillを参照してユーザー指示を安全に実行する契機であり、ローカルissue作成の許可ではない。issueを作成しないと明示された場合、またはscope、requirements、contentsだけが指示された場合は、issue作成とissue review agentを行わない。
+`docs/issue/milestone-<NN>/plan.md` のタスク番号指定、`$issue-first-development` の呼び出し、task開始、branch作成は、該当skillを参照してユーザー指示を安全に実行する契機であり、ローカルissue作成の許可ではない。issueを作成しないと明示された場合、またはscope、requirements、contentsだけが指示された場合は、issue作成とissue review agentを行わない。
 
 PRを作成してよいのは、ユーザーが明示的にPR作成を指示した場合だけである。PR作成時は `.agents/skills/create-pr/SKILL.md` と `.github/pull_request_template.md` を使い、GitHub connector経由でPRを作成する。
 
@@ -165,7 +166,7 @@ project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照す
 5. Gate実装時は親issueの `docs/issue/<parent-issue>/plan.md`
 6. `docs/requirements.md`
 7. `docs/out-of-scope.md`
-8. `docs/plan.md`
+8. `docs/issue/milestone-<NN>/plan.md`
 9. `docs/TODO.md`
 10. 関連する `docs/design/<design-target>/`
 11. その他のGit管理ドキュメント
@@ -178,7 +179,7 @@ contentsがGit管理の正本と矛盾する場合は、最新のユーザー指
 
 ## 作業種別ごとの参照方針
 
-- 開発タスク開始時: `issue-first-development`、`docs/plan.md`、`docs/TODO.md`、該当するrequirements/designを読む。Gate作成またはGate分割を明示指示された場合だけ、親issueと同時に `docs/issue/<親issue名>/plan.md` を作成し、Gateを列挙する。
+- 開発タスク開始時: `issue-first-development`、`docs/issue/milestone-<NN>/plan.md`、`docs/TODO.md`、該当するrequirements/designを読む。Gate作成またはGate分割を明示指示された場合だけ、親issueと同時に `docs/issue/<親issue名>/plan.md` を作成し、Gateを列挙する。
 - Gate実装開始時: 親issueの専用Gate planから対象Gateだけを読み、専用子issueを作成または検証する。子issueは新しいsessionで独立して作業できることを確認してから、ユーザー承認を待つ。
 - 実装中: 現在のissueを正本とし、Gateを使う場合は必要な親issueの専用Gate plan、requirements、out-of-scope、design、Git管理のMDX / Astro実装を読む。`.raw/contents/`がある場合は手動の補助入力として参照できるが、Git管理の正本より優先しない。
 - UI系作業: issueで指定された `docs/design/<design-target>/` を確認する。design不足時は実装せずdesign作成へ切り出す。

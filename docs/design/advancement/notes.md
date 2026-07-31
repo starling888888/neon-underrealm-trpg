@@ -26,7 +26,7 @@
 
 - `docs/requirements/pages.md`
 - `docs/out-of-scope.md`
-- `docs/plan.md`
+- `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/issue/26-2-advancement-page.md`
 - `docs/design/global-styles/notes.md`
