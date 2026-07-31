@@ -97,7 +97,7 @@ source種別は以下を使う。
 - failure category: validation command targeting
 - 発生箇所: `ex-05-access-analytics` の `npm test` / `npm run test:node`
 - 観測した失敗: analytics変更と無関係な`tests/node/character-making-sample-characters.test.ts`が2回失敗した。testは`public/sample-charcter/`を参照するが、公開assetと`src/pages/character-making.mdx`は`public/sample-character/`を参照しており、最初のJSON fileを開けず`ENOENT`になる。analyticsのnode testは成功している。
-- 一次対応: current issue外のsample character test / contentsを変更せず、個別実行で原因を確認してanalytics validationの失敗と区別した。別taskでtestの参照pathを現行assetと整合させる必要がある。
+- 一次対応: current issue外のsample character test / contentsを変更せず、個別実行で原因を確認してanalytics validationの失敗と区別した。後続のユーザー明示指示により、testの参照pathを現行assetへ訂正し、2026-07-31に`npm test`成功を確認した。
 
 ### Retried a contract test that attempted a sandbox-blocked nested build
 

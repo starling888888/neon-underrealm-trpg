@@ -22,7 +22,7 @@ const sampleCharacters = [
 describe("sample characters", () => {
   it("keeps every published JSON importable with its expected identity", () => {
     for (const [slug, pcName, primaryRyugiId, ikizamaId] of sampleCharacters) {
-      const file = `public/sample-charcter/sample-character_${slug}.json`;
+      const file = `public/sample-character/sample-character_${slug}.json`;
       const parsed = parseCharacterSheetJsonImport(readFileSync(file, "utf8"));
 
       if (parsed === null)
@@ -49,7 +49,7 @@ describe("sample characters", () => {
 
     let previousIndex = -1;
     for (const [slug, pcName] of sampleCharacters) {
-      const file = `public/sample-charcter/sample-character_${slug}.json`;
+      const file = `public/sample-character/sample-character_${slug}.json`;
       const parsed = parseCharacterSheetJsonImport(readFileSync(file, "utf8"));
 
       assert.ok(parsed, `Expected ${file} to be importable.`);
@@ -65,7 +65,7 @@ describe("sample characters", () => {
       assert.ok(ryugi, `Expected primary ryugi in ${file}.`);
       assert.ok(ikizama, `Expected ikizama in ${file}.`);
 
-      const row = `| <a href={withBase("/sample-charcter/sample-character_${slug}.json")} download>${pcName}</a> | ${ryugi.name}×${ikizama.name} |`;
+      const row = `| <a href={withBase("/sample-character/sample-character_${slug}.json")} download>${pcName}</a> | ${ryugi.name}×${ikizama.name} |`;
       const index = source.indexOf(row);
 
       assert.ok(index > previousIndex, `Expected ordered table row: ${row}`);

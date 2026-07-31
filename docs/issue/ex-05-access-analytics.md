@@ -338,8 +338,8 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 - [x] 自動testがtoken未設定、development、production相当、重複script、JSON属性を確認している
 - [x] testがCloudflareへ実network requestを送信しない
 - [x] GitHub Pagesの `/neon-underrealm-trpg` base path配下で既存ページが壊れていない
-- [ ] `npm test` が通る
-- [ ] `npm run check` が通る
+- [x] `npm test` が通る
+- [x] `npm run check` が通る
 - [x] `npm run build` が通る
 - [x] `npm run build:public` が通る
 
@@ -402,7 +402,7 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 - `docs/design/`
 - canonical VRT snapshots
 - 画像asset
-- 生成JSON
+- 生成JSONの内容
 - Excel変換処理
 
 ## レビュー観点
@@ -430,7 +430,7 @@ Repository Variableの設定はsource実装とlocal testには不要だが、mai
 - `ex-02-web-character-sheet` がmainへmergeされる前に本issueへ着手する場合、branch baseと `AppContainer.astro` の最新状態をローカルで再確認する。
 - Cloudflare dashboardとGitHub repository settingsを参照できないエージェントは、production確認を推測で完了扱いしない。
 - 法的義務や公開告知の要否は本issueで断定しない。ユーザーが告知を追加すると判断した場合は、contents正本と可視UIを扱う別taskを作成する。
-- local validationでは、current issue外の`tests/node/character-making-sample-characters.test.ts`が`public/sample-charcter/`という旧pathを参照して`npm test`を失敗させる。`npm run check`も、同じcurrent issue外の`public/sample-character/*.json` 10件の末尾改行で失敗する。どちらも`docs/agent-failure-log.md`へ記録し、本issueでは変更しない。
+- ユーザーの明示指示により、current issue外だったsample character JSONの末尾改行を整え、`tests/node/character-making-sample-characters.test.ts`の旧path `public/sample-charcter/` を現行の `public/sample-character/` へ訂正した。JSONの内容、公開ページ本文、Excel変換処理は変更していない。これにより `npm test` と `npm run check` が成功した。詳細は `.tmp/review/ex-05-access-analytics/user-directed-changes.md` を参照する。
 
 ## ローカル検証
 
