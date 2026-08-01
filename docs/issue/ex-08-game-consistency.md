@@ -28,20 +28,20 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 
 ## 完了条件
 
-- [ ] 新規キャラクターシートの抵抗判定の初期能力値が肉体である
-- [ ] 判定の既定能力値定義で、抵抗が肉体へ対応付けられている
-- [ ] 既存のユーザー選択済み能力値を上書きしない
-- [ ] 既定値を確認する自動テストがある
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] 新規キャラクターシートの抵抗判定の初期能力値が肉体である
+- [x] 判定の既定能力値定義で、抵抗が肉体へ対応付けられている
+- [x] 既存のユーザー選択済み能力値を上書きしない
+- [x] 既定値を確認する自動テストがある
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
 - [ ] `/character-sheet/` の既存ルートと判定行の編集操作が壊れていない
 - [ ] GitHub Pagesのサブパス公開に影響しない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない
 - [ ] `docs/design/character-sheet/notes.md` の能力値選択UIと矛盾していない
 - [ ] PRレビュー直前に、`@character-sheet` の`default`と`combat-default`をdesktop、tablet、mobileでVisual Reviewする
 - [ ] Visual Reviewでは既存のlocal-only canonical baselineと比較し、design契約への適合をactual screenshotで確認する。baselineの追加・更新はユーザー承認なしに行わない

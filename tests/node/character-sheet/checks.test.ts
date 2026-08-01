@@ -51,8 +51,14 @@ test("check defaults map every attack skill and reaction type to the specified a
     defense: "strength",
     endurance: "body",
     evasion: "strength",
-    resistance: "mind",
+    resistance: "body",
   });
+  assert.equal(
+    characterSheetDefaultValues.checks.reactions.find(
+      ({ name }) => name === "resistance",
+    )?.attribute,
+    "body",
+  );
 });
 
 test("calculateChecks derives all noncombat checks from fixed attributes and doubles only favorite attributes", () => {
