@@ -107,6 +107,16 @@ describe("item conversion", () => {
     assert.equal(reordered.normal?.kenka?.[0]?.sourceOrder, 1);
   });
 
+  it("accepts slash-separated weapon kinds", () => {
+    const weapon = weaponRow("複合武器");
+    weapon[4] = "近接/特殊";
+
+    assert.equal(
+      convertWeapons([weaponHeaders, weapon]).normal?.kenka?.[0]?.kind,
+      "近接/特殊",
+    );
+  });
+
   it("rejects invalid headers, empty weapon ranges, dashes, and enum values", () => {
     assert.throws(
       () => convertWeapons([[...weaponHeaders, "ID"], weaponRow("刀")]),
@@ -130,6 +140,14 @@ describe("item conversion", () => {
       () => convertWeapons([weaponHeaders, invalidCheck]),
       /判定 is invalid at row 2, column F/,
     );
+    for (const kind of ["近接/不正", "近接//特殊", "近接/近接"]) {
+      const invalidKind = weaponRow("刀");
+      invalidKind[4] = kind;
+      assert.throws(
+        () => convertWeapons([weaponHeaders, invalidKind]),
+        /種別 is invalid at row 2, column E/,
+      );
+    }
   });
 
   it("rejects renamed nanomachine headers, non-numeric values, and invalid drug timing", () => {

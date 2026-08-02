@@ -17,6 +17,8 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - `src/character-sheet/form-values.ts` の新規フォーム用・抵抗判定行の初期能力値
 - `src/character-sheet/logic/checks.ts` の抵抗判定の既定能力値定義
 - 上記の既定値を検証する既存または追加のテスト
+- `scripts/convert-items/weapons.ts` と関連する型・schemaで、武器種別のスラッシュ区切り複数値を検証・保持する処理
+- 武器種別の複数値を確認する変換テスト
 
 ## 初期スコープ外
 
@@ -32,8 +34,10 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - [x] 判定の既定能力値定義で、抵抗が肉体へ対応付けられている
 - [x] 既存のユーザー選択済み能力値を上書きしない
 - [x] 既定値を確認する自動テストがある
-- [x] `npm run check` が通る
+- [ ] `npm run check` が通る
 - [x] `npm run build` が通る
+- [x] `近接/特殊` のように、許可済み武器種別をスラッシュ区切りで複数指定できる
+- [x] 空要素、未定義種別、重複種別を含む武器種別を変換時に拒否する
 
 ## チェックポイント
 
@@ -42,6 +46,7 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - [x] 不要な依存関係を追加していない
 - [x] 初期スコープ外の機能を実装していない
 - [x] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] 既存の単一武器種別と生成済みデータを変更せずに扱える
 - [ ] `docs/design/character-sheet/notes.md` の能力値選択UIと矛盾していない
 - [ ] PRレビュー直前に、`@character-sheet` の`default`と`combat-default`をdesktop、tablet、mobileでVisual Reviewする
 - [ ] Visual Reviewでは既存のlocal-only canonical baselineと比較し、design契約への適合をactual screenshotで確認する。baselineの追加・更新はユーザー承認なしに行わない
@@ -53,6 +58,10 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - `src/character-sheet/logic/checks.ts`
 - `tests/node/character-sheet/checks.test.ts`
 - `tests/node/character-sheet/persistence/character-sheet-form.test.ts`
+- `scripts/convert-items/weapons.ts`
+- `src/lib/types/item.ts`
+- `src/lib/schemas/conversion/item.ts`
+- `tests/node/items.test.ts`
 
 ## レビュー観点
 
@@ -65,3 +74,5 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 
 - milestone外のメンテナンスタスクとして扱う。`docs/issue/milestone-02/plan.md` は更新しない。
 - design targetは既存の `docs/design/character-sheet/notes.md` を参照する。画面構造・表示状態の追加やbaseline更新はこのissueの前提にしない。
+- 2026-08-02のユーザー明示指示により、武器種別の変換契約をこのissueへ追加した。入力・生成値は`近接/特殊`のように`/`で連結した文字列として保持し、既存の表示Componentはその文字列を表示するだけとする。
+- `npm run check` は、ユーザーの未追跡 `docs/game-design/2026-08-02_game-review.md` が未整形であるためMarkdown検査に失敗した。対象コードのAstro型検査とBiome検査は成功しており、このissueでは当該ファイルを変更しない。

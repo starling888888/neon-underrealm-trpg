@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-07-31T22:24:48+09:00",
+  "updatedAt": "2026-08-02T11:37:55+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -407,7 +407,7 @@
           "proficiency": "喧嘩",
           "acquisitionRestriction": null,
           "target": "1体",
-          "range": "特殊",
+          "range": "武器",
           "usageRestriction": null,
           "summary": "巨大な武器で力強い一撃を繰り出す。この攻撃に集中すると攻撃を強力にできる。",
           "effect": "攻撃を行う。ダメージ+効果値×2。この手番最初の攻撃ならば判定数+lv×2。",
@@ -474,7 +474,7 @@
           "range": "武器",
           "usageRestriction": "1/Sc",
           "summary": "敵の体勢を大きく崩し、次の味方の攻撃を強力にする必殺攻撃。",
-          "effect": "次の味方の最初の攻撃の判定数はこの攻撃のコンボ増加値点増加する。",
+          "effect": "攻撃を行う。次の味方の最初の攻撃の判定数はこの攻撃のコンボ増加値点増加する。",
           "sourceOrder": 7,
           "id": "skill-ryugi-emono-basic-a-f1bc53ae13df"
         },
@@ -996,7 +996,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "戦闘中同じ武器で攻撃、リアクションをし続ける限り、1lvごとに以下の効果を得られる。\n・攻撃の判定数+1d\n・近接・射撃攻撃に対するリアクションの判定数+1d\n・血まみれの手足の上限が+1される。",
+          "effect": "1lv取得するごとに以下の効果を一つ選択する。同じものは選択できない。\n・攻撃の判定数+1d\n・近接・射撃攻撃に対するリアクションの判定数+1d\n・血まみれの手足の上限が+1される。\n戦闘中同じ武器で攻撃、リアクションをし続ける選択した効果全てが発揮される。",
           "sourceOrder": 17,
           "id": "skill-ryugi-sutegoro-advanced-pv-e6167e11886b"
         },
@@ -1456,7 +1456,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "暗殺、発砲判定の基準値が5から8になる。",
+          "effect": "暗殺、発砲判定の攻撃基準値を5から8から選択する。",
           "sourceOrder": 1,
           "id": "skill-ryugi-shabazou-bonus-pv-e4bac528ca55"
         }
@@ -1882,7 +1882,7 @@
           "range": null,
           "usageRestriction": "1/Sc",
           "summary": "",
-          "effect": "攻撃を行う。この攻撃で対象のキャラクターのの現在体力の半分以上のダメージを与えた場合、対象の体力を0にする。この攻撃で対象の体力を0以下にできなかった場合、このスキルは「☆-○」になり、この手番中攻撃力+10。",
+          "effect": "攻撃を行う。この攻撃で対象のキャラクターの現在体力の半分以上のダメージを与えた場合、対象の体力を0にする。この攻撃で対象の体力を0以下にできなかった場合、このスキルは「☆-○」になり、この手番中攻撃力+10。",
           "sourceOrder": 5,
           "id": "skill-ryugi-teppoudama-basic-a-9393392c0afe"
         },
@@ -2076,7 +2076,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "覚悟を使用するとき、判定数上昇が+lv個、体力回復が+lv×3個される。",
+          "effect": "覚悟を使用するとき、判定数上昇が+lv個、体力回復量が+lv×3d6点される。",
           "sourceOrder": 17,
           "id": "skill-ryugi-teppoudama-advanced-pv-a4f22e97cc81"
         },
@@ -2194,7 +2194,7 @@
           "range": "武器",
           "usageRestriction": null,
           "summary": "",
-          "effect": "攻撃を行う。次の手番対象は可能ならばあなたを1回は攻撃しなければならない。",
+          "effect": "攻撃を行う。次の対象の手番中、対象は可能な限りあなたを1回は攻撃しなければならない。",
           "sourceOrder": 2,
           "id": "skill-ryugi-yamiuchi-basic-a-3e0f6f064d63"
         },
@@ -2226,7 +2226,7 @@
           "range": "武器",
           "usageRestriction": "1/Sc",
           "summary": "",
-          "effect": "次に行動する味方キャラクターは隠密状態になる。そのキャラクターは次の手番中攻撃力+5。",
+          "effect": "攻撃を行う。次に行動する味方キャラクターは隠密状態になる。そのキャラクターは次の手番中攻撃力+5。",
           "sourceOrder": 4,
           "id": "skill-ryugi-yamiuchi-basic-a-aef210e353c8"
         },
@@ -2586,7 +2586,7 @@
           "range": "武器",
           "usageRestriction": "1/Sc",
           "summary": "",
-          "effect": "攻撃を行う。対象の次の攻撃の行動回数を2減少させる。この効果は強度5のBSとして扱う。",
+          "effect": "攻撃を行う。対象の次の手番の行動回数を2減少させる。この効果は強度5のBSとして扱う。",
           "sourceOrder": 4,
           "id": "skill-ryugi-kaeshi-basic-a-a5a30ca1c156"
         },
@@ -2634,7 +2634,7 @@
           "range": "武器",
           "usageRestriction": "1/Sc",
           "summary": "",
-          "effect": "対象に強度3の放心を与える。この効果で与えた放心は次のクリンナップに解除されない。",
+          "effect": "攻撃を行う。対象に強度3の放心を与える。この効果で与えた放心は次のクリンナップに解除されない。",
           "sourceOrder": 7,
           "id": "skill-ryugi-kaeshi-basic-a-10d551fd60d0"
         },
@@ -2696,7 +2696,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R&1/Sn",
+          "usageRestriction": "1/R&lv/Sn",
           "summary": "",
           "effect": "可能なリアクションを行う。基準値+1。気合いを追加で2点消費することで、基準値をさらに+1できる。他の「タイミング:R」のスキルと同時に使用できる。",
           "sourceOrder": 11,
@@ -3204,7 +3204,7 @@
           "range": null,
           "usageRestriction": "1/R",
           "summary": "",
-          "effect": "タイミング「A-A」「Aa」「Aa」「Ra」「D」のスキルを使用する直前に使用する。掛け合いの間、任意の流儀の「A-☆」「☆-A」以外のタイミング「A-A」「Aa」「Ra」「D」スキルを1レベルで取得する。ただし、スキルの技能は変わらない。",
+          "effect": "タイミング「A-A」「Aa」「Ra」「D」のスキルを使用する直前に使用する。掛け合いの間、任意の流儀の「A-☆」「☆-A」以外のタイミング「A-A」「Aa」「Ra」「D」スキルを1レベルで取得する。ただし、スキルの技能は変わらない。",
           "sourceOrder": 20,
           "id": "skill-ryugi-gotoshi-advanced-sp-758830accaf9"
         },
@@ -3434,7 +3434,7 @@
           "range": "シーン",
           "usageRestriction": null,
           "summary": "",
-          "effect": "ラウンド終了時まで合計lv×5点分あなたを含む味方キャラクターのイニシアチブを好きに割り振って上昇させる。",
+          "effect": "ラウンド終了時まで合計lv×5点分あなたを含む味方キャラクターの行動値を好きに割り振って上昇させる。",
           "sourceOrder": 12,
           "id": "skill-ryugi-kashira-basic-su-d04ca3870c6c"
         },
