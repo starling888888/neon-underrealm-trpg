@@ -127,7 +127,7 @@
         "modifier": 0
       },
       "dangerSense": {
-        "isFavorite": false,
+        "isFavorite": true,
         "modifier": 0
       },
       "driving": {
@@ -155,7 +155,7 @@
         "modifier": 0
       },
       "reconnaissance": {
-        "isFavorite": true,
+        "isFavorite": false,
         "modifier": 0
       },
       "sleightOfHand": {

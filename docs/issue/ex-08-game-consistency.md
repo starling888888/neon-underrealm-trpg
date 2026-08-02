@@ -125,3 +125,27 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 
 - `npx vitest run tests/components/character-sheet/ChecksSection.test.tsx`で、判定行の能力値選択を含む5件のcomponent testが成功した。
 - `npm run build`と、GitHub Pagesと同じサブパスを使うpreview上のVRTで、公開pathへの影響がないことを確認した。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/game-design/2026-08-02_game-review.md`で、今回反映済みのCHAR-02、CHAR-03、SHA-01が未完了のまま残っている。
+- 同ゲーム設計レビューに残る高優先度・GM項目はcurrent issueの範囲外であり、後続のトリアージTODOへrouteする。
+
+### 判定
+
+- source: local-pr-review（`.tmp/review/ex-08-game-consistency/pr-review-1.md`）
+- classification: valid（CHAR-02、CHAR-03、SHA-01の完了記録） / follow-up（未解決のゲーム設計項目）
+- local validation: CHAR-02の最大体力・最大精神力の本文、CHAR-03の成長ルール・character-sheet logic、SHA-01の生成データはPR #187の対象commit rangeで反映済みであることを確認した。未解決項目のうちGM-01、GM-02はmilestone-02のPhase 2と整合するが、個別issueの範囲は未確定である。
+
+### 対応方針
+
+- CHAR-02、CHAR-03、SHA-01の評価表を完了へ更新し、未解決項目との区別を明確にする。
+- 未解決の高優先度・GM項目は実装せず、`docs/TODO.md`のトリアージ項目で後続の個別issueまたはPhase 2へ分ける。
+
+### 対応完了チェックリスト
+
+- [x] `docs/game-design/2026-08-02_game-review.md` のCHAR-02、CHAR-03、SHA-01を完了記録へ更新する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

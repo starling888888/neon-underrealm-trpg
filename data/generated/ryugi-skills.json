@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-08-02T11:37:55+09:00",
+  "updatedAt": "2026-08-02T13:29:29+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -1456,7 +1456,7 @@
           "range": null,
           "usageRestriction": null,
           "summary": "",
-          "effect": "暗殺、発砲判定の攻撃基準値を5から8から選択する。",
+          "effect": "暗殺、発砲判定の攻撃基準値を5から8までの範囲で選択する。",
           "sourceOrder": 1,
           "id": "skill-ryugi-shabazou-bonus-pv-e4bac528ca55"
         }
