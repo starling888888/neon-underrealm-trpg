@@ -52,15 +52,15 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 
 ## チェックポイント
 
-- [ ] `/character-sheet/` の既存ルートと判定行の編集操作が壊れていない
-- [ ] GitHub Pagesのサブパス公開に影響しない
+- [x] `/character-sheet/` の既存ルートと判定行の編集操作が壊れていない
+- [x] GitHub Pagesのサブパス公開に影響しない
 - [x] 不要な依存関係を追加していない
 - [x] 初期スコープ外の機能を実装していない
 - [x] 関連する `docs/TODO.md` 項目と矛盾していない
 - [x] 既存の単一武器種別と生成済みデータを変更せずに扱える
-- [ ] `docs/design/character-sheet/notes.md` の能力値選択UIと矛盾していない
-- [ ] PRレビュー直前に、`@character-sheet` の`default`と`combat-default`をdesktop、tablet、mobileでVisual Reviewする
-- [ ] Visual Reviewでは既存のlocal-only canonical baselineと比較し、design契約への適合をactual screenshotで確認する。baselineの追加・更新はユーザー承認なしに行わない
+- [x] `docs/design/character-sheet/notes.md` の能力値選択UIと矛盾していない
+- [x] PRレビュー直前に、`@character-sheet` の`default`と`combat-default`をdesktop、tablet、mobileでVisual Reviewする
+- [x] Visual Reviewでは既存のlocal-only canonical baselineと比較し、design契約への適合をactual screenshotで確認する。baselineの追加・更新はユーザー承認なしに行わない
 - [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
@@ -77,6 +77,7 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - `tests/node/character-sheet/build.test.ts`
 - `src/character-sheet/dictionary.ts`
 - `docs/requirements/character-sheet.md`
+- `docs/design/character-sheet/notes.md`
 - `src/pages/advancement.mdx`
 - `src/pages/data/index.mdx`
 - `src/pages/character-making.mdx`
@@ -95,5 +96,32 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - milestone外のメンテナンスタスクとして扱う。`docs/issue/milestone-02/plan.md` は更新しない。
 - design targetは既存の `docs/design/character-sheet/notes.md` を参照する。画面構造・表示状態の追加やbaseline更新はこのissueの前提にしない。
 - 2026-08-02のユーザー明示指示により、武器種別の変換契約をこのissueへ追加した。入力・生成値は`近接/特殊`のように`/`で連結した文字列として保持し、既存の表示Componentはその文字列を表示するだけとする。
-- `npm run check` は、ユーザーの未追跡 `docs/game-design/2026-08-02_game-review.md` が未整形であるためMarkdown検査に失敗した。対象コードのAstro型検査とBiome検査は成功しており、このissueでは当該ファイルを変更しない。
+- 2026-08-02に`npm run check`が成功し、Astro、Biome、Markdownを確認した。
 - 2026-08-02のユーザー明示指示により、能力値成長は格15ごとの追加獲得とする。格15、30、45における累計成長点はそれぞれ1、3、6点であり、各能力値へは各成長機会で1点だけ割り振れるため、現在の格における能力値ごとの成長値は`floor(格 ÷ 15)`を超えない。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/vrt/character-sheet.spec.ts` / `@character-sheet`、`@default`、`@combat-default`
+- route / states / viewports: `/character-sheet/`のdefault（full-page）とcombat-default（`判定` section）を、desktop（`1440x1200`）、tablet（`820x1180`）、mobile（`390x900`）で確認
+
+### レビュー結果
+
+| 対象                             | 結果                                                                                                                                                                              |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| default（full-page）             | 3 viewportで通常比較が成功。baseline更新前の差分は抵抗の選択値が精神から肉体へ変わった163 pixel（0.01%）だけであることを確認後、ユーザー承認済みのlocal-only baselineを更新した。 |
+| combat-default（`判定` section） | 3 viewportで通常比較が成功。抵抗の使用能力値が肉体であり、判定sectionの行揃え、clip、横overflowに問題がない。                                                                     |
+
+### actual screenshotの確認
+
+| state                            | desktop                                                        | tablet | mobile |
+| -------------------------------- | -------------------------------------------------------------- | ------ | ------ |
+| default（full-page）             | 抵抗が肉体であり、ページ全体にclipや横overflowがないことを確認 | 同左   | 同左   |
+| combat-default（`判定` section） | 抵抗が肉体であり、行揃え、clip、横overflowがないことを確認     | 同左   | 同左   |
+
+### 補足
+
+- `npx vitest run tests/components/character-sheet/ChecksSection.test.tsx`で、判定行の能力値選択を含む5件のcomponent testが成功した。
+- `npm run build`と、GitHub Pagesと同じサブパスを使うpreview上のVRTで、公開pathへの影響がないことを確認した。
