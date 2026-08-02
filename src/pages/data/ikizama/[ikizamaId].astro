@@ -52,7 +52,6 @@ const dataByIkizamaId = {
     secondaryAttributeCoefficients: ikizama.secondaryAttributeCoefficients,
   },
 };
-const heroAlt = `${ikizama.name}のイメージ`;
 const prevPath =
   ikizamaIndex === 0
     ? "/data/ikizama"
@@ -80,7 +79,7 @@ const skillCategories = [
     <img
       class="ikizama-hero"
       src={withBase(`/images/data/ikizama/${ikizamaId}_hero.webp`)}
-      alt={heroAlt}
+      alt=""
       loading="eager"
       width={heroImageDimensions.width}
       height={heroImageDimensions.height}
