@@ -291,8 +291,8 @@
     "applyTemporaryAction": false,
     "applyTemporaryMovement": false,
     "bondLimitModifier": 0,
-    "healthModifier": 0,
-    "mentalModifier": 0,
+    "healthModifier": 10,
+    "mentalModifier": 10,
     "movementModifier": 0
   },
   "specialItems": {
