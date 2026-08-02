@@ -159,6 +159,35 @@ describe("character sheet build", () => {
     assert.equal(growthDerived.hasGrowthError, true);
   });
 
+  it("adds growth points at each rank milestone and caps each attribute", () => {
+    const rank15 = selectedBuild();
+    rank15.primaryRyugiLevel = 14;
+    assert.equal(calculateBuild(rank15).growthPoints, 1);
+
+    const rank30 = selectedBuild();
+    rank30.primaryRyugiLevel = 29;
+    rank30.attributes.strength.growth = 2;
+    rank30.attributes.mind.growth = 1;
+    const rank30Derived = calculateBuild(rank30);
+    assert.equal(rank30Derived.growthPoints, 3);
+    assert.equal(rank30Derived.hasGrowthError, false);
+
+    rank30.attributes.strength.growth = 3;
+    assert.equal(calculateBuild(rank30).hasGrowthError, true);
+
+    const rank45 = selectedBuild();
+    rank45.primaryRyugiLevel = 44;
+    rank45.attributes.strength.growth = 3;
+    rank45.attributes.mind.growth = 3;
+    const rank45Derived = calculateBuild(rank45);
+    assert.equal(rank45Derived.growthPoints, 6);
+    assert.equal(rank45Derived.hasGrowthError, false);
+
+    rank45.attributes.strength.growth = 4;
+    rank45.attributes.mind.growth = 2;
+    assert.equal(calculateBuild(rank45).hasGrowthError, true);
+  });
+
   it("keeps an invalid acquired experience value visible before both selections", () => {
     const build = {
       ...characterSheetDefaultValues.build,

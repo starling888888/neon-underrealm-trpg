@@ -19,6 +19,9 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - 上記の既定値を検証する既存または追加のテスト
 - `scripts/convert-items/weapons.ts` と関連する型・schemaで、武器種別のスラッシュ区切り複数値を検証・保持する処理
 - 武器種別の複数値を確認する変換テスト
+- 能力値成長の累計成長点と能力値ごとの上限を、格15ごとの追加獲得ルールへ一致させるキャラクターシートlogic・テスト・説明文
+- 戦闘ルールのリアクション説明から攻撃スキルの効果へリンクし、参照先のCallout titleを見出しとして出力する
+- 戦闘ルールからキャラクターメイキングの戦闘技能表へ、ASCII idで安定してリンクする
 
 ## 初期スコープ外
 
@@ -38,6 +41,12 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - [x] `npm run build` が通る
 - [x] `近接/特殊` のように、許可済み武器種別をスラッシュ区切りで複数指定できる
 - [x] 空要素、未定義種別、重複種別を含む武器種別を変換時に拒否する
+- [x] 格15で累計1点、格30で累計3点、格45で累計6点の成長点を表示・検証する
+- [x] 能力値ごとの成長値を、`floor(格 ÷ 15)`以下に制限する
+- [x] 成長点の算出と制限を、キャラクターシート要件および成長ルール本文で説明する
+- [x] リアクション説明から、`/data`の攻撃スキルの効果へリンクできる
+- [x] 攻撃スキルの効果のCallout titleが見出しとして出力される
+- [x] リアクション説明から、`/character-making#combat-skills`の戦闘技能表へリンクできる
 
 ## チェックポイント
 
@@ -50,7 +59,7 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - [ ] `docs/design/character-sheet/notes.md` の能力値選択UIと矛盾していない
 - [ ] PRレビュー直前に、`@character-sheet` の`default`と`combat-default`をdesktop、tablet、mobileでVisual Reviewする
 - [ ] Visual Reviewでは既存のlocal-only canonical baselineと比較し、design契約への適合をactual screenshotで確認する。baselineの追加・更新はユーザー承認なしに行わない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -62,6 +71,14 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - `src/lib/types/item.ts`
 - `src/lib/schemas/conversion/item.ts`
 - `tests/node/items.test.ts`
+- `src/character-sheet/logic/build.ts`
+- `tests/node/character-sheet/build.test.ts`
+- `src/character-sheet/dictionary.ts`
+- `docs/requirements/character-sheet.md`
+- `src/pages/advancement.mdx`
+- `src/pages/data/index.mdx`
+- `src/pages/character-making.mdx`
+- `src/pages/rules/battle.mdx`
 
 ## レビュー観点
 
@@ -76,3 +93,4 @@ Webキャラクターシートで新規作成するキャラクターの抵抗�
 - design targetは既存の `docs/design/character-sheet/notes.md` を参照する。画面構造・表示状態の追加やbaseline更新はこのissueの前提にしない。
 - 2026-08-02のユーザー明示指示により、武器種別の変換契約をこのissueへ追加した。入力・生成値は`近接/特殊`のように`/`で連結した文字列として保持し、既存の表示Componentはその文字列を表示するだけとする。
 - `npm run check` は、ユーザーの未追跡 `docs/game-design/2026-08-02_game-review.md` が未整形であるためMarkdown検査に失敗した。対象コードのAstro型検査とBiome検査は成功しており、このissueでは当該ファイルを変更しない。
+- 2026-08-02のユーザー明示指示により、能力値成長は格15ごとの追加獲得とする。格15、30、45における累計成長点はそれぞれ1、3、6点であり、各能力値へは各成長機会で1点だけ割り振れるため、現在の格における能力値ごとの成長値は`floor(格 ÷ 15)`を超えない。

@@ -16,6 +16,7 @@ import { heroImageDimensions } from "../../lib/site/imageDimensions";
 import { createHeadingId } from "../../lib/utils/heading-id";
 
 export const kakugoHeadingId = createHeadingId(2, "覚悟");
+export const attackSkillEffectsHeadingId = createHeadingId(3, "攻撃スキルの効果");
 
 # データ
 
@@ -73,7 +74,7 @@ export const kakugoHeadingId = createHeadingId(2, "覚悟");
 
 「スキル名：XX」という記載があった場合、XXには任意の文字が入ります。それらは同名のスキルとして扱います。例えば「命中強化：清林」と「命中強化：大山」という名称のスキルは同名のスキルとして扱い、同時に取得できません。別のスキルとして扱う場合は効果に記載があります。
 
-<Callout type="warning" title="攻撃スキルの効果">
+<Callout type="warning" title="攻撃スキルの効果" titleHeadingLevel={3}>
 攻撃スキルの効果でダメージ決定以降に効果を発揮するものは、リアクションに成功された場合に効果を発揮しません。
 
 - 判定数を上昇させたり、気合獲得値を上昇させる効果は、攻撃の成否にかかわらず発揮されます。
@@ -137,7 +138,7 @@ export const kakugoHeadingId = createHeadingId(2, "覚悟");
 | `自身` | スキルを使用するキャラクター自身を対象とする。 |
 | `N体` | N体までのキャラクターを対象とする。 |
 | `範囲N` | 範囲Nを対象とする。 |
-| `シーン` | シーンに登場している任意のキャラクター1体を対象とする。 |
+| `シーン` | シーンに登場している任意のキャラクターを対象とする。 |
 | `特殊` | 対象を効果本文に記載する。 |
 
 `N体` および `範囲N` の `N` には、数値の代わりに `LV` と記載できる。
