@@ -1,6 +1,6 @@
 {
   "dataName": "common-skills",
-  "updatedAt": "2026-08-02T11:29:48+09:00",
+  "updatedAt": "2026-08-02T11:43:59+09:00",
   "data": {
     "bonus": [
       {
@@ -449,7 +449,7 @@
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
         "summary": "特殊攻撃の抵抗に失敗した際でもダメージを減少させる。",
-        "effect": "抵抗判定に失敗した掛け合い時に使用。受けるダメージを「精神」点減少する。",
+        "effect": "抵抗判定を行った掛け合い時に使用。（成否不問）。受けるダメージを追加で「精神」点減少する。（成功時は半減した上で「精神」点減少させる。）",
         "sourceOrder": 28,
         "id": "skill-common-basic-d-ffa609deb8b8"
       },
