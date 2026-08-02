@@ -130,7 +130,8 @@ export function calculateBuild(
     otherRyugiLevelInvalidRowIds.length > 0;
   const hasInvalidAcquiredExperience = build.acquiredExperience < 0;
   const rank = build.primaryRyugiLevel + build.ikizamaLevel;
-  const growthPoints = Math.max(0, Math.floor(rank / 15));
+  const growthOpportunities = Math.max(0, Math.floor(rank / 15));
+  const growthPoints = (growthOpportunities * (growthOpportunities + 1)) / 2;
   const usedGrowthPoints = attributeNames.reduce(
     (total, attribute) => total + build.attributes[attribute].growth,
     0,
@@ -143,7 +144,11 @@ export function calculateBuild(
       ));
   const hasGrowthError =
     usedGrowthPoints > growthPoints ||
-    attributeNames.some((attribute) => build.attributes[attribute].growth < 0);
+    attributeNames.some(
+      (attribute) =>
+        build.attributes[attribute].growth < 0 ||
+        build.attributes[attribute].growth > growthOpportunities,
+    );
   const hasAttributeError = hasPointAllocationError || hasGrowthError;
   const spentExperience =
     (primaryRyugi === undefined

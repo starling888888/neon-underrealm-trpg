@@ -30,7 +30,6 @@ if (ryugiIndex < 0) {
 
 const detailsByRyugiId: Record<string, RyugiDetail> = { [ryugiId]: detail };
 const { ryugi, skills } = detail;
-const heroAlt = `${ryugi.name}のイメージ`;
 const prevPath =
   ryugiIndex === 0 ? "/data/ryugi" : `/data/ryugi/${ryugiList[ryugiIndex - 1].id}`;
 const nextPath =
@@ -56,7 +55,7 @@ const skillCategories = [
     <img
       class="ryugi-hero"
       src={withBase(`/images/data/ryugi/${ryugiId}_hero.webp`)}
-      alt={heroAlt}
+      alt=""
       loading="eager"
       width={heroImageDimensions.width}
       height={heroImageDimensions.height}

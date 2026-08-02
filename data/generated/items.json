@@ -1,6 +1,6 @@
 {
   "dataName": "items",
-  "updatedAt": "2026-07-30T22:45:34+09:00",
+  "updatedAt": "2026-08-02T11:29:48+09:00",
   "data": {
     "weapons": {
       "normal": {
@@ -346,7 +346,7 @@
             "attack": 7,
             "guard": null,
             "ammo": null,
-            "effect": "リアクションの成否を問わず、対象の防御力を3点減少させる。この効果は累積しない。バッドステータスとしては扱われない。",
+            "effect": "リアクションの成否を問わず、対象の防御力をシーン終了時まで3点減少させる。この効果は累積しない。バッドステータスとしては扱われない。",
             "sourceOrder": 24
           },
           {
@@ -605,12 +605,12 @@
             "name": "ブラストハンド",
             "credit": null,
             "range": 0,
-            "kind": "近接",
+            "kind": "近接/特殊",
             "check": "格闘/干渉",
             "attack": 16,
             "guard": 13,
             "ammo": null,
-            "effect": "サイバネ武器。",
+            "effect": "サイバネ武器。格闘判定で攻撃する際は近接攻撃、干渉判定で攻撃する際は特殊攻撃となる。",
             "sourceOrder": 42
           }
         ]
@@ -656,7 +656,7 @@
             "attack": 21,
             "guard": 8,
             "ammo": null,
-            "effect": "攻撃の基準値を3から8まで選択できる。ただし、他の基準値変更の効果を受けれない。",
+            "effect": "攻撃の基準値を3から8まで選択できる。ただし、他の基準値変更の効果を受けられない。",
             "sourceOrder": 45
           }
         ],
@@ -697,7 +697,7 @@
             "range": 0,
             "kind": "近接",
             "check": "暗殺",
-            "attack": 9,
+            "attack": 11,
             "guard": 7,
             "ammo": null,
             "effect": null,
@@ -784,7 +784,7 @@
         "defense": 9,
         "damageReduction": 0,
         "restriction": "肉体4以上",
-        "effect": "気合いを3点以上所持しているとダメージ軽減+3。",
+        "effect": "気合を3点以上所持しているとダメージ軽減+3。",
         "sourceOrder": 2
       },
       {
@@ -830,11 +830,11 @@
       {
         "id": "item-armor-935d3f1ef739",
         "name": "刺繍入り特攻服",
-        "credit": 7,
+        "credit": 8,
         "defense": 12,
         "damageReduction": 0,
         "restriction": "肉体7以上",
-        "effect": "気合いを3点以上所持しているとダメージ軽減+5。",
+        "effect": "気合を3点以上所持しているとダメージ軽減+5。",
         "sourceOrder": 7
       },
       {
@@ -1073,7 +1073,7 @@
         "id": "item-omamori-06ed93f2302e",
         "name": "明王のお守り",
         "credit": 4,
-        "effect": "シナリオ開始時に選択した技能の判定数+1d。",
+        "effect": "シナリオ開始時に選択した技能の判定数+1。",
         "sourceOrder": 21
       }
     ],
@@ -1219,9 +1219,9 @@
           "sourceOrder": 15
         },
         {
-          "id": "item-cybernetics-arm-3a3539e9f100",
+          "id": "item-cybernetics-arm-348a9ee7d8e7",
           "part": "腕",
-          "name": "ヘヴィーハンド",
+          "name": "ヘビーハンド",
           "credit": 5,
           "implantPoints": 4,
           "effect": "サイバネ武器。",
@@ -1447,7 +1447,7 @@
         "credit": 4,
         "implantPoints": 3,
         "activationMentalCost": 15,
-        "effect": "精神+1「幻影」と「力壁」を使えるようになる。",
+        "effect": "精神+1。「幻影」と「力壁」を使えるようになる。",
         "sourceOrder": 8
       },
       {
@@ -1617,7 +1617,7 @@
         "timing": "SU",
         "setQuantity": 3,
         "badTripIntensity": 1,
-        "effect": "「毒息」「幻覚」で攻撃できるようになる。",
+        "effect": "シーン終了まで「毒息」「幻覚」で攻撃できるようになる。",
         "sourceOrder": 6
       },
       {
@@ -1657,7 +1657,7 @@
         "timing": "SU",
         "setQuantity": 3,
         "badTripIntensity": 2,
-        "effect": "「圧力」で攻撃できるようになる。",
+        "effect": "シーン終了まで「圧力」で攻撃できるようになる。",
         "sourceOrder": 10
       },
       {
@@ -1697,7 +1697,7 @@
         "timing": "INI",
         "setQuantity": 1,
         "badTripIntensity": 1,
-        "effect": "シーン終了時まで攻撃の判定数+1。また、激痛と放心を受けず、現在受けている激痛と放心を解除する。",
+        "effect": "シーン終了まで攻撃の判定数+1。また、激痛と放心を受けず、現在受けている激痛と放心を解除する。",
         "sourceOrder": 14
       },
       {

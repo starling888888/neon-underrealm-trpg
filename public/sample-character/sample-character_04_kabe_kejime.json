@@ -286,7 +286,7 @@
     "applyTemporaryAction": false,
     "applyTemporaryMovement": false,
     "bondLimitModifier": 0,
-    "healthModifier": 22,
+    "healthModifier": 20,
     "mentalModifier": 0,
     "movementModifier": 0
   },

@@ -119,6 +119,24 @@ describe("character sheet form persistence", () => {
     );
   });
 
+  it("retains an explicitly selected reaction attribute while restoring", () => {
+    const values = structuredClone(characterSheetDefaultValues);
+    const resistance = values.checks.reactions.find(
+      ({ name }) => name === "resistance",
+    );
+    if (resistance === undefined) throw new Error("Expected a resistance row.");
+    resistance.attribute = "mind";
+
+    const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
+    if (restored === null) throw new Error("Expected a restored form value.");
+
+    assert.equal(
+      restored.checks.reactions.find(({ name }) => name === "resistance")
+        ?.attribute,
+      "mind",
+    );
+  });
+
   it("unselects unknown master-data IDs while retaining the rest of the draft", () => {
     const values = structuredClone(characterSheetDefaultValues);
     values.profile.pcName = "復元されるPC";

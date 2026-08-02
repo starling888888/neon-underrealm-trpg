@@ -131,8 +131,8 @@
         "modifier": -2
       },
       "driving": {
-        "isFavorite": false,
-        "modifier": -2
+        "isFavorite": true,
+        "modifier": -1
       },
       "gambling": {
         "isFavorite": false,
@@ -148,7 +148,7 @@
       },
       "jingi": {
         "isFavorite": false,
-        "modifier": -2
+        "modifier": -1
       },
       "negotiation": {
         "isFavorite": false,
@@ -159,7 +159,7 @@
         "modifier": -2
       },
       "sleightOfHand": {
-        "isFavorite": false,
+        "isFavorite": true,
         "modifier": -2
       },
       "strengthContest": {
@@ -167,8 +167,8 @@
         "modifier": -2
       },
       "survival": {
-        "isFavorite": false,
-        "modifier": -2
+        "isFavorite": true,
+        "modifier": -1
       },
       "willpower": {
         "isFavorite": false,

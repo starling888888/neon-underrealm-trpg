@@ -20,7 +20,7 @@ export const defaultAttributeByReaction = {
   defense: "strength",
   endurance: "body",
   evasion: "strength",
-  resistance: "mind",
+  resistance: "body",
 } as const satisfies Record<ReactionCheckName, AttributeName>;
 
 export type CheckAttributeValues = Record<

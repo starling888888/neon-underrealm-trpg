@@ -20,12 +20,15 @@ import {
   type WeaponCheck,
   type WeaponCheckKey,
   type WeaponGroup,
+  type WeaponKind,
   type WeaponsByGroup,
 } from "../../types/item";
 import { createNameHash } from "../../utils/hash";
 
 export const WeaponGroupSchema = z.enum(WEAPON_GROUPS);
-export const WeaponKindSchema = z.enum(WEAPON_KINDS);
+export const WeaponKindSchema = z
+  .string()
+  .refine(isWeaponKind, "Weapon kind must use distinct valid values.");
 export const WeaponCheckSchema = z.enum(WEAPON_CHECKS);
 export const WeaponCheckKeySchema = z.enum(WEAPON_CHECK_KEYS);
 export const CyberneticPartSchema = z.enum(CYBERNETIC_PARTS);
@@ -43,6 +46,18 @@ const optionalText = z
   .refine((value) => !value.includes("\r"), "Line breaks must use LF.")
   .nullable();
 const nonNegativeInteger = z.number().int().nonnegative();
+
+function isWeaponKind(value: string): value is WeaponKind {
+  const kinds = value.split("/");
+  return (
+    kinds.length > 0 &&
+    kinds.length <= WEAPON_KINDS.length &&
+    kinds.every((kind) =>
+      WEAPON_KINDS.includes(kind as (typeof WEAPON_KINDS)[number]),
+    ) &&
+    new Set(kinds).size === kinds.length
+  );
+}
 
 const weaponCheckKeys = {
   喧嘩: "kenka",

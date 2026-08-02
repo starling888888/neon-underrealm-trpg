@@ -29,7 +29,11 @@ export const CYBERNETIC_PART_KEYS = [
 export const DRUG_TIMINGS = ["SU", "INI", "CU", "SP"] as const;
 
 export type WeaponGroup = (typeof WEAPON_GROUPS)[number];
-export type WeaponKind = (typeof WEAPON_KINDS)[number];
+export type WeaponKindPart = (typeof WEAPON_KINDS)[number];
+export type WeaponKind =
+  | WeaponKindPart
+  | `${WeaponKindPart}/${WeaponKindPart}`
+  | `${WeaponKindPart}/${WeaponKindPart}/${WeaponKindPart}`;
 export type WeaponCheck = (typeof WEAPON_CHECKS)[number];
 export type WeaponCheckKey = (typeof WEAPON_CHECK_KEYS)[number];
 export type CyberneticPart = (typeof CYBERNETIC_PARTS)[number];

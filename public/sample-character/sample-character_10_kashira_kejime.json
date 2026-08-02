@@ -108,7 +108,7 @@
       },
       {
         "attribute": "mind",
-        "modifier": 0,
+        "modifier": 1,
         "name": "endurance",
         "rowId": "reaction-endurance"
       },

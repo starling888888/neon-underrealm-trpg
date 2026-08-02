@@ -428,7 +428,7 @@ export const characterSheetDefaultValues: CharacterSheetFormValues = {
         rowId: "reaction-endurance",
       },
       {
-        attribute: "mind",
+        attribute: "body",
         modifier: 0,
         name: "resistance",
         rowId: "reaction-resistance",
