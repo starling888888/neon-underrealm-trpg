@@ -22,7 +22,7 @@ TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/pla
 ## 未対応
 
 - [ ] ゲーム設計レビューの未解決高優先度・GM項目をトリアージする
-  - source: PR #187の`.tmp/review/ex-08-game-consistency/document-review-1.md`
+  - source: PR #187の文書レビュー
   - classification: follow-up
   - plan: `docs/issue/milestone-02/plan.md`のPhase 1（TODO方針整理）とPhase 2（GMセクション）。
   - handling plan: `docs/game-design/2026-08-02_game-review.md`の未解決項目を、対応しない判断、FAQ候補、公開ルールの個別issue、GM-01/GM-02を含むPhase 2へ分類する。個別の実装・文言修正は、分類後に承認したissueだけで扱う。
