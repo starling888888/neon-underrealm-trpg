@@ -2024,3 +2024,13 @@ source種別は以下を使う。
 - 発生箇所: `milestone-02-phase-01-todo-resolution` G5のPagefind除外
 - 観測した失敗: `-local`配下の確認ページだけをPagefindから除外する要件に対し、最初に`AppContainer`へpath判定を追加した。個別fixtureの明示的な属性追加で足りる範囲へ共通layoutの責務を広げ、ユーザーから訂正を受けた。続く除外testでも、fixture固有語句が公開本文に部分一致することを確認せず、結果0を期待して同じ確認を再度失敗させた。
 - 一次対応: `AppContainer`の変更を撤回し、7つの`src/pages/-local/`ページ本体へ`data-pagefind-ignore`を明示した。Pagefind APIを使うtestは検索結果が空であることではなく、結果URLに`/-local/`が含まれないことを検証する。局所的な除外・表示制御では、共通layoutの変更前に対象ページだけで完結できるかを確認する。
+
+### Repeated test-fixture mistakes while separating build master-data resolution
+
+#### 2026-08-04
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `milestone-02-phase-01-todo-resolution` G6のbuild logic fixture更新
+- 観測した失敗: 生成JSON依存を除いたlogic test用fixtureで、元の流儀・生き様の能力値と係数を正確に写さず、対象testを失敗させた。訂正後も、Component / Hook testの補助関数の引数を`Pick<BuildValues, ...>`として、純粋logicが要求する完全な`BuildValues`へ渡したため、unit testは通る一方で全体`check`のTypeScript検査を失敗させた。
+- 一次対応: fixtureを既存testの期待値と一致する固定マスタ値へ訂正し、補助関数の入力を完全な`BuildValues`へ固定した。logic testのfixture化では、既存期待値と各参照値を先に対応付け、対象unit testの後に`npm run check`で型検査まで確認する。

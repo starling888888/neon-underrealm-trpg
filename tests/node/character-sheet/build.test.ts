@@ -1,7 +1,19 @@
 import { describe, expect, it } from "vitest";
 
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
-import { calculateBuild } from "../../../src/character-sheet/logic/build";
+import {
+  type BuildValues,
+  characterSheetDefaultValues,
+} from "../../../src/character-sheet/form-values";
+import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
+import { buildSourcesFixture, emptyBuildSources } from "./fixtures/build";
+
+function calculateBuild(
+  build: BuildValues,
+  sources = emptyBuildSources,
+  commonSkillLevelTotal = 0,
+) {
+  return calculateBuildFromSources(build, sources, commonSkillLevelTotal);
+}
 
 function selectedBuild() {
   return {
@@ -28,12 +40,27 @@ function selectedBuild() {
         points: 5,
       },
     },
-    ikizamaId: "burai",
-    primaryRyugiId: "kenkaya",
+    ikizamaId: "fixture-ikizama",
+    primaryRyugiId: "fixture-primary-ryugi",
   };
 }
 
 describe("character sheet build", () => {
+  it("derives from supplied master data instead of resolving form IDs", () => {
+    const selected = selectedBuild();
+    const derived = calculateBuildFromSources(
+      {
+        ...selected,
+        ikizamaId: "unknown-ikizama",
+        primaryRyugiId: "unknown-ryugi",
+      },
+      buildSourcesFixture,
+    );
+
+    expect(derived.attributes.strength.base).toBe(5);
+    expect(derived.ikizamaAttributePoints).toEqual([5, 4, 3, 2]);
+  });
+
   it("keeps only master-dependent values unavailable until selections exist", () => {
     const derived = calculateBuild(characterSheetDefaultValues.build);
 
@@ -48,7 +75,11 @@ describe("character sheet build", () => {
   });
 
   it("adds common-skill levels to experience without changing build validation", () => {
-    const derived = calculateBuild(characterSheetDefaultValues.build, 2);
+    const derived = calculateBuild(
+      characterSheetDefaultValues.build,
+      undefined,
+      2,
+    );
 
     expect(derived.spentExperience).toBe(10);
     expect(derived.remainingExperience).toBe(40);
@@ -78,9 +109,12 @@ describe("character sheet build", () => {
   it("derives independent primary and ikizama values before both are selected", () => {
     const primaryOnly = {
       ...characterSheetDefaultValues.build,
-      primaryRyugiId: "kenkaya",
+      primaryRyugiId: "fixture-primary-ryugi",
     };
-    const primaryDerived = calculateBuild(primaryOnly);
+    const primaryDerived = calculateBuild(primaryOnly, {
+      ...emptyBuildSources,
+      primaryRyugi: buildSourcesFixture.primaryRyugi,
+    });
 
     expect(primaryDerived.attributes.strength.base).toBe(5);
     expect(primaryDerived.attributes.strength.permanent).toBe(null);
@@ -92,9 +126,12 @@ describe("character sheet build", () => {
 
     const ikizamaOnly = {
       ...characterSheetDefaultValues.build,
-      ikizamaId: "burai",
+      ikizamaId: "fixture-ikizama",
     };
-    const ikizamaDerived = calculateBuild(ikizamaOnly);
+    const ikizamaDerived = calculateBuild(ikizamaOnly, {
+      ...emptyBuildSources,
+      ikizama: buildSourcesFixture.ikizama,
+    });
 
     expect(ikizamaDerived.ikizamaAttributePoints).toEqual([5, 4, 3, 2]);
     expect(ikizamaDerived.reference.ikizamaHealthCoefficient).toBe(11);
@@ -102,7 +139,7 @@ describe("character sheet build", () => {
   });
 
   it("derives rank, experience, and attributes from selected data", () => {
-    const derived = calculateBuild(selectedBuild());
+    const derived = calculateBuild(selectedBuild(), buildSourcesFixture);
 
     expect(derived.rank).toBe(2);
     expect(derived.growthPoints).toBe(0);
@@ -132,7 +169,7 @@ describe("character sheet build", () => {
     build.acquiredExperience = 0;
     build.primaryRyugiLevel = 2;
 
-    const derived = calculateBuild(build);
+    const derived = calculateBuild(build, buildSourcesFixture);
 
     expect(derived.hasAttributeError).toBe(true);
     expect(derived.hasExperienceError).toBe(true);
@@ -143,7 +180,7 @@ describe("character sheet build", () => {
     const pointMismatch = selectedBuild();
     pointMismatch.attributes.strength.points = 4;
 
-    const pointDerived = calculateBuild(pointMismatch);
+    const pointDerived = calculateBuild(pointMismatch, buildSourcesFixture);
 
     expect(pointDerived.hasPointAllocationError).toBe(true);
     expect(pointDerived.hasGrowthError).toBe(false);
@@ -151,7 +188,7 @@ describe("character sheet build", () => {
     const excessGrowth = selectedBuild();
     excessGrowth.attributes.strength.growth = 1;
 
-    const growthDerived = calculateBuild(excessGrowth);
+    const growthDerived = calculateBuild(excessGrowth, buildSourcesFixture);
 
     expect(growthDerived.hasPointAllocationError).toBe(false);
     expect(growthDerived.hasGrowthError).toBe(true);
@@ -160,30 +197,34 @@ describe("character sheet build", () => {
   it("adds growth points at each rank milestone and caps each attribute", () => {
     const rank15 = selectedBuild();
     rank15.primaryRyugiLevel = 14;
-    expect(calculateBuild(rank15).growthPoints).toBe(1);
+    expect(calculateBuild(rank15, buildSourcesFixture).growthPoints).toBe(1);
 
     const rank30 = selectedBuild();
     rank30.primaryRyugiLevel = 29;
     rank30.attributes.strength.growth = 2;
     rank30.attributes.mind.growth = 1;
-    const rank30Derived = calculateBuild(rank30);
+    const rank30Derived = calculateBuild(rank30, buildSourcesFixture);
     expect(rank30Derived.growthPoints).toBe(3);
     expect(rank30Derived.hasGrowthError).toBe(false);
 
     rank30.attributes.strength.growth = 3;
-    expect(calculateBuild(rank30).hasGrowthError).toBe(true);
+    expect(calculateBuild(rank30, buildSourcesFixture).hasGrowthError).toBe(
+      true,
+    );
 
     const rank45 = selectedBuild();
     rank45.primaryRyugiLevel = 44;
     rank45.attributes.strength.growth = 3;
     rank45.attributes.mind.growth = 3;
-    const rank45Derived = calculateBuild(rank45);
+    const rank45Derived = calculateBuild(rank45, buildSourcesFixture);
     expect(rank45Derived.growthPoints).toBe(6);
     expect(rank45Derived.hasGrowthError).toBe(false);
 
     rank45.attributes.strength.growth = 4;
     rank45.attributes.mind.growth = 2;
-    expect(calculateBuild(rank45).hasGrowthError).toBe(true);
+    expect(calculateBuild(rank45, buildSourcesFixture).hasGrowthError).toBe(
+      true,
+    );
   });
 
   it("keeps an invalid acquired experience value visible before both selections", () => {
@@ -203,13 +244,17 @@ describe("character sheet build", () => {
     const build = {
       ...selectedBuild(),
       otherRyugi: [
-        { level: 1, rowId: "first", ryugiId: "kenkaya" },
+        {
+          level: 1,
+          rowId: "first",
+          ryugiId: "fixture-primary-ryugi",
+        },
         { level: -1, rowId: "second", ryugiId: "emono" },
         { level: 1, rowId: "third", ryugiId: "emono" },
       ],
     };
 
-    const derived = calculateBuild(build);
+    const derived = calculateBuild(build, buildSourcesFixture);
 
     expect(derived.primaryRyugiDuplicate).toBe(true);
     expect(derived.otherRyugiDuplicateRowIds).toEqual([

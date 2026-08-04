@@ -9,8 +9,20 @@ import BuildSection, {
 } from "../../../src/character-sheet/components/BuildSection";
 import styles from "../../../src/character-sheet/components/BuildSection.module.css";
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
-import { calculateBuild } from "../../../src/character-sheet/logic/build";
+import {
+  type BuildValues,
+  characterSheetDefaultValues,
+} from "../../../src/character-sheet/form-values";
+import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
+import { getBuildSources } from "../../../src/character-sheet/master-data/build";
+
+function calculateBuild(build: BuildValues, commonSkillLevelTotal = 0) {
+  return calculateBuildFromSources(
+    build,
+    getBuildSources(build),
+    commonSkillLevelTotal,
+  );
+}
 
 function createProps(): BuildSectionProps {
   const build = characterSheetDefaultValues.build;
