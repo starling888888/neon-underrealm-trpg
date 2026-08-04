@@ -23,6 +23,41 @@
 
 ## 完了済み
 
+- [x] Astro Component contract testの基盤を導入する
+  - completed: 2026-08-04 via PR #189 / `milestone-02-phase-01-todo-resolution`
+  - source: `28-2-common-skills-page` の技術レビューにおけるユーザー指示
+  - classification: test architecture follow-up
+  - plan: なし。費用対効果を再評価してから必要なら計画化する。
+  - handling result: `SkillCard`、6種のitem card、`NpcCard`、`Callout`へ固定propsを渡す9件のAstro Component contract testを追加し、Visual Testと責務を分離した。
+
+- [x] 既存Node testをVitestへ段階的に移行する
+  - completed: 2026-08-04 via PR #189 / `milestone-02-phase-01-todo-resolution`
+  - source: `ex-02-4-sheet-profile` のテストアーキテクチャレビューにおけるユーザー指示
+  - classification: test architecture follow-up
+  - plan: なし。G4のreview対応とは分離し、Vitest導入後の既存test数・Node固有API・CI実行時間を確認してから独立taskを計画する。
+  - handling result: `tests/node/`と`tests/contract/`をVitestへ全面移行し、Node test runnerと`node:assert/strict`を除去した。
+
+- [x] 全スキルのsummary整備後に、`SkillCard`でsummaryを再表示する
+  - completed: 2026-08-04 via PR #189 / `milestone-02-phase-01-todo-resolution`
+  - source: `30-2-ryugi-detail-page` 実装後のユーザー指示
+  - classification: data quality follow-up
+  - plan: なし。全スキルのsummaryを確認できるデータ整備タスクを計画した時点で紐付ける。
+  - handling result: ユーザー判断によりsummaryの再表示ではなく、スキル用summary列・保持・propsを削除した。再表示は行わない。
+
+- [x] Pagefindが`-local`確認ページをindex化した場合も、検索Visual Testを安定して実行できるようにする
+  - completed: 2026-08-04 via PR #189 / `milestone-02-phase-01-todo-resolution`
+  - source: PR #66 のdocument review
+  - classification: follow-up
+  - plan: なし。milestone-01はクローズ中のため、後続milestoneで検索Visual Test安定化taskを計画してから紐づける。
+  - handling result: `-local` routeでは`data-pagefind-body`を出力せず、Pagefind indexにfixture URLが含まれない検索E2Eを追加した。
+
+- [x] キャラクターシートの派生logicからマスタID解決を分離する
+  - completed: 2026-08-04 via PR #189 / `milestone-02-phase-01-todo-resolution`
+  - source: ChatGPT review draft (`.tmp/chatgpt-review.md`) のG7 review
+  - classification: architecture follow-up
+  - plan: G24とは別の設計・実装taskとして扱う。
+  - handling result: `logic/`は解決済み`BuildSources`を入力にし、ID解決を`master-data/build.ts`へ分離した。未知IDの扱いは既存persistence / import境界に維持した。
+
 - [x] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
   - completed: 2026-08-04 via user decision / `milestone-02-phase-01-todo-resolution` G7
   - source: `design-image-generation` skill 追加時の整合確認

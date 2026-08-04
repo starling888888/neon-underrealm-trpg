@@ -14,7 +14,7 @@ milestone-01の履歴は `docs/issue/milestone-01/plan.md`、現在のスコー�
 ## Phase 1: milestone-01後の整理
 
 - milestone-02-phase-01-github-issue-archive — GitHub Issue #186
-- [ ] `milestone-02-phase-01-todo-resolution` — `docs/TODO.md` の対応方針を整理し、Phase 1で回収する技術的TODOをGate単位で実装する。
+- milestone-02-phase-01-todo-resolution — GitHub Issue #190
 - `docs/agent-failure-log.md` の未反映項目を監査し、必要な恒久対応を計画する。
 
 ## Phase 2: GMセクション
