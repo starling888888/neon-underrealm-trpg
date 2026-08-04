@@ -58,7 +58,7 @@ milestone-02 Phase 1で実施する技術的なTODOを回収し、実施しな�
 - [x] `tests/node/`と`tests/contract/`の全testがVitestのrunnerとassertion APIで実行され、Node test runnerまたは`node:assert/strict`を使うtestが残っていない。
 - [x] Google Spreadsheetの`summary`列を人間が手動削除し、完了を共有している。
 - [ ] スキルの`summary`列・変換仕様・型・生成JSON・`SkillCard` props・関連testおよび正本記述を、Spreadsheet削除確認後に互換期間を設けず切り替える。リリースノートなど別用途の`summary`は変更しない。
-- [ ] `-local`確認ページがPagefind indexに含まれず、公開検索と検索Visual Testが安定して通る。
+- [x] `-local`確認ページがPagefind indexに含まれず、公開検索と検索Visual Testが安定して通る。
 - [ ] キャラクターシートの派生logicがマスタID解決に依存せず、未知IDの扱いをpersistence / import境界で明示できる。
 - [ ] `docs/TODO.md`、`docs/TODO-done.md`、milestone-02計画が今回のユーザー判断と矛盾しない。
 - [ ] 各Gateが、その対象TODO、変更内容、完了条件、検証方法に従って単独commitできる。
@@ -71,7 +71,7 @@ milestone-02 Phase 1で実施する技術的なTODOを回収し、実施しな�
 - [ ] Astro Component contract testとVisual Testの責務が混在していない。
 - [ ] Vitest移行後もscript conversion test、React Component / hook test、build contract test、E2Eの責務が維持されている。
 - [ ] スキルsummary削除がリリースノート、SEO、キャラクターシート内の別用途summaryを変更していない。
-- [ ] GitHub Pagesのsubpath公開とPagefindの公開検索結果に影響しない。
+- [x] GitHub Pagesのsubpath公開とPagefindの公開検索結果に影響しない。
 - [ ] キャラクターシートの表示・保存済みJSONの復元契約を意図せず変更していない。
 - [ ] 不要な依存関係を追加していない。
 - [ ] 初期スコープ外の機能を実装していない。
@@ -156,6 +156,7 @@ Gate IDと状態は`docs/issue/milestone-02-phase-01-todo-resolution/plan.md`だ
 
 ### Pagefindから`-local`を除外
 
+- [x] G5の`-local`確認ページをPagefind indexから除外する。
 - 変更: `-local`確認ページをPagefind indexから除外し、検索Visual Testの対象を公開検索結果へ固定する。
 - 完了条件: `-local`がindexに含まれず、公開検索とVisual Testが安定して通る。
 - 検証: Pagefind index、対象検索test、`npm run build`。
