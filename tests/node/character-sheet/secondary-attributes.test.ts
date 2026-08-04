@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { calculateBuild } from "../../../src/character-sheet/logic/build";
@@ -42,14 +41,14 @@ describe("character sheet secondary attributes", () => {
       characterSheetDefaultValues.secondaryAttributes,
     );
 
-    assert.equal(derived.baseHealth, null);
-    assert.equal(derived.health, null);
-    assert.equal(derived.baseMovement, null);
-    assert.equal(derived.actionValue, null);
-    assert.equal(derived.baseActionCount, 2);
-    assert.equal(derived.actionCount, 2);
-    assert.equal(derived.baseBondLimit, 4);
-    assert.equal(derived.bondLimit, 4);
+    expect(derived.baseHealth).toBe(null);
+    expect(derived.health).toBe(null);
+    expect(derived.baseMovement).toBe(null);
+    expect(derived.actionValue).toBe(null);
+    expect(derived.baseActionCount).toBe(2);
+    expect(derived.actionCount).toBe(2);
+    expect(derived.baseBondLimit).toBe(4);
+    expect(derived.bondLimit).toBe(4);
   });
 
   it("derives the specified values with signed manual modifiers", () => {
@@ -68,16 +67,16 @@ describe("character sheet secondary attributes", () => {
       secondaryAttributes,
     );
 
-    assert.equal(derived.baseHealth, 60);
-    assert.equal(derived.health, 62);
-    assert.equal(derived.baseMental, 16);
-    assert.equal(derived.mental, 13);
-    assert.equal(derived.baseMovement, 6);
-    assert.equal(derived.movement, 7);
-    assert.equal(derived.baseActionValue, 17);
-    assert.equal(derived.actionValue, 15);
-    assert.equal(derived.actionCount, 1);
-    assert.equal(derived.bondLimit, 6);
+    expect(derived.baseHealth).toBe(60);
+    expect(derived.health).toBe(62);
+    expect(derived.baseMental).toBe(16);
+    expect(derived.mental).toBe(13);
+    expect(derived.baseMovement).toBe(6);
+    expect(derived.movement).toBe(7);
+    expect(derived.baseActionValue).toBe(17);
+    expect(derived.actionValue).toBe(15);
+    expect(derived.actionCount).toBe(1);
+    expect(derived.bondLimit).toBe(6);
   });
 
   it("uses the specified ikizama coefficient boundaries and primary level", () => {
@@ -123,8 +122,8 @@ describe("character sheet secondary attributes", () => {
         characterSheetDefaultValues.secondaryAttributes,
       );
 
-      assert.equal(derived.baseHealth, expectedHealth);
-      assert.equal(derived.baseMental, expectedMental);
+      expect(derived.baseHealth).toBe(expectedHealth);
+      expect(derived.baseMental).toBe(expectedMental);
     }
   });
 
@@ -145,10 +144,10 @@ describe("character sheet secondary attributes", () => {
       applyTemporaryMovement: true,
     });
 
-    assert.equal(permanent.baseMovement, 6);
-    assert.equal(permanent.baseActionValue, 17);
-    assert.equal(temporary.baseMovement, 7);
-    assert.equal(temporary.baseActionValue, 23);
+    expect(permanent.baseMovement).toBe(6);
+    expect(permanent.baseActionValue).toBe(17);
+    expect(temporary.baseMovement).toBe(7);
+    expect(temporary.baseActionValue).toBe(23);
   });
 
   it("includes a nanomachine bonus in the displayed automatic health value", () => {
@@ -158,7 +157,7 @@ describe("character sheet secondary attributes", () => {
       4,
     );
 
-    assert.equal(derived.baseHealth, 64);
-    assert.equal(derived.health, 64);
+    expect(derived.baseHealth).toBe(64);
+    expect(derived.health).toBe(64);
   });
 });

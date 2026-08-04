@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   cloudflareWebAnalyticsScriptSource,
   getCloudflareWebAnalyticsBeacon,
@@ -7,27 +6,24 @@ import {
 
 describe("Cloudflare Web Analytics beacon", () => {
   it("does not render without a token or outside a production build", () => {
-    assert.equal(
+    expect(
       getCloudflareWebAnalyticsBeacon({
         isProduction: true,
         token: undefined,
       }),
-      undefined,
-    );
-    assert.equal(
+    ).toBe(undefined);
+    expect(
       getCloudflareWebAnalyticsBeacon({
         isProduction: true,
         token: "   ",
       }),
-      undefined,
-    );
-    assert.equal(
+    ).toBe(undefined);
+    expect(
       getCloudflareWebAnalyticsBeacon({
         isProduction: false,
         token: "test-token",
       }),
-      undefined,
-    );
+    ).toBe(undefined);
   });
 
   it("serializes the production beacon configuration as JSON", () => {
@@ -37,11 +33,10 @@ describe("Cloudflare Web Analytics beacon", () => {
       token,
     });
 
-    assert.equal(
-      cloudflareWebAnalyticsScriptSource,
+    expect(cloudflareWebAnalyticsScriptSource).toBe(
       "https://static.cloudflareinsights.com/beacon.min.js",
     );
-    assert.deepEqual(JSON.parse(beacon?.dataCfBeacon ?? ""), {
+    expect(JSON.parse(beacon?.dataCfBeacon ?? "")).toEqual({
       token,
       spa: false,
     });

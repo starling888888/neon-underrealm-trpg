@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { test } from "vitest";
+import { expect, test } from "vitest";
 
 import { downloadJsonFile } from "../../../src/character-sheet/browser/json-download";
 import { characterImageMimeType } from "../../../src/character-sheet/character-image";
@@ -25,16 +24,15 @@ test("creates JSON export with the selected image base64 string", () => {
     mimeType: characterImageMimeType,
   });
 
-  assert.equal(exported.imageBase64String, "image-base64");
-  assert.equal(exported.profile.pcName, "テストPC");
-  assert.equal(
-    serializeCharacterSheetJsonExport(values, null),
+  expect(exported.imageBase64String).toBe("image-base64");
+  expect(exported.profile.pcName).toBe("テストPC");
+  expect(serializeCharacterSheetJsonExport(values, null)).toBe(
     JSON.stringify({ ...values, imageBase64String: null }, null, 2),
   );
 });
 
 test("uses the specified date, player name, and PC name for JSON filenames", () => {
-  assert.equal(
+  expect(
     createCharacterSheetJsonFilename(
       {
         profile: {
@@ -45,8 +43,7 @@ test("uses the specified date, player name, and PC name for JSON filenames", () 
       },
       new Date(2026, 6, 30),
     ),
-    "neon-underrealm_character-sheet_2026-07-30_PL名_PC名.json",
-  );
+  ).toBe("neon-underrealm_character-sheet_2026-07-30_PL名_PC名.json");
 });
 
 test("downloads JSON through replaceable browser dependencies and revokes its URL", async () => {
@@ -70,14 +67,14 @@ test("downloads JSON through replaceable browser dependencies and revokes its UR
     revokeObjectUrl: (url) => revokedUrls.push(url),
   });
 
-  assert.equal(clicked, true);
-  assert.equal(anchor.href, "blob:test");
-  assert.equal(anchor.download, "character.json");
-  assert.deepEqual(revokedUrls, ["blob:test"]);
+  expect(clicked).toBe(true);
+  expect(anchor.href).toBe("blob:test");
+  expect(anchor.download).toBe("character.json");
+  expect(revokedUrls).toEqual(["blob:test"]);
   const createdBlob = createdBlobs[0];
-  assert.notEqual(createdBlob, undefined);
-  assert.equal(await createdBlob.text(), '{"test":true}');
-  assert.equal(createdBlob.type, "application/json;charset=utf-8");
+  expect(createdBlob).not.toBe(undefined);
+  expect(await createdBlob.text()).toBe('{"test":true}');
+  expect(createdBlob.type).toBe("application/json;charset=utf-8");
 });
 
 test("revokes the object URL when starting the download throws", () => {
@@ -91,15 +88,13 @@ test("revokes the object URL when starting the download throws", () => {
     href: "",
   } as unknown as HTMLAnchorElement;
 
-  assert.throws(
-    () =>
-      downloadJsonFile('{"test":true}', "character.json", {
-        createAnchor: () => anchor,
-        createObjectUrl: () => "blob:test",
-        revokeObjectUrl: (url) => revokedUrls.push(url),
-      }),
-    error,
-  );
+  expect(() =>
+    downloadJsonFile('{"test":true}', "character.json", {
+      createAnchor: () => anchor,
+      createObjectUrl: () => "blob:test",
+      revokeObjectUrl: (url) => revokedUrls.push(url),
+    }),
+  ).toThrow(error);
 
-  assert.deepEqual(revokedUrls, ["blob:test"]);
+  expect(revokedUrls).toEqual(["blob:test"]);
 });

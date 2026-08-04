@@ -1,6 +1,5 @@
-import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { parseCharacterSheetJsonImport } from "../../src/character-sheet/schemas/character-sheet-persistence";
 import { getIkizamaById } from "../../src/lib/data/ikizama";
@@ -28,48 +27,57 @@ describe("sample characters", () => {
       if (parsed === null)
         throw new Error(`Expected ${file} to be importable.`);
 
-      assert.equal(parsed.values.profile.pcName, pcName, file);
-      assert.equal(parsed.values.build.primaryRyugiId, primaryRyugiId, file);
-      assert.equal(parsed.values.build.ikizamaId, ikizamaId, file);
+      expect(parsed.values.profile.pcName, file).toBe(pcName);
+      expect(parsed.values.build.primaryRyugiId, file).toBe(primaryRyugiId);
+      expect(parsed.values.build.ikizamaId, file).toBe(ikizamaId);
     }
   });
 
   it("lists the sample JSON downloads in an ordered character table", () => {
     const source = readFileSync("src/pages/character-making.mdx", "utf8");
 
-    assert.match(
-      source,
+    expect(source).toMatch(
       /キャラクターシート<\/a>にインポートして利用してください。/,
     );
-    assert.match(
-      source,
+    expect(source).toMatch(
       /href=\{withBase\("\/character-sheet"\)\} target="_blank" rel="noopener noreferrer"/,
     );
-    assert.match(source, /\| キャラクター \| 組み合わせ \|/);
+    expect(source).toMatch(/\| キャラクター \| 組み合わせ \|/);
 
     let previousIndex = -1;
     for (const [slug, pcName] of sampleCharacters) {
       const file = `public/sample-character/sample-character_${slug}.json`;
       const parsed = parseCharacterSheetJsonImport(readFileSync(file, "utf8"));
 
-      assert.ok(parsed, `Expected ${file} to be importable.`);
+      expectPresent(parsed, `Expected ${file} to be importable.`);
 
       const { ikizamaId, primaryRyugiId } = parsed.values.build;
 
-      assert.ok(primaryRyugiId, `Expected primary ryugi ID in ${file}.`);
-      assert.ok(ikizamaId, `Expected ikizama ID in ${file}.`);
+      expectPresent(primaryRyugiId, `Expected primary ryugi ID in ${file}.`);
+      expectPresent(ikizamaId, `Expected ikizama ID in ${file}.`);
 
       const ryugi = getRyugiById(primaryRyugiId);
       const ikizama = getIkizamaById(ikizamaId);
 
-      assert.ok(ryugi, `Expected primary ryugi in ${file}.`);
-      assert.ok(ikizama, `Expected ikizama in ${file}.`);
+      expectPresent(ryugi, `Expected primary ryugi in ${file}.`);
+      expectPresent(ikizama, `Expected ikizama in ${file}.`);
 
       const row = `| <a href={withBase("/sample-character/sample-character_${slug}.json")} download>${pcName}</a> | ${ryugi.name}×${ikizama.name} |`;
       const index = source.indexOf(row);
 
-      assert.ok(index > previousIndex, `Expected ordered table row: ${row}`);
+      expect(
+        index > previousIndex,
+        `Expected ordered table row: ${row}`,
+      ).toBeTruthy();
       previousIndex = index;
     }
   });
 });
+
+function expectPresent<T>(
+  value: T,
+  message: string,
+): asserts value is NonNullable<T> {
+  expect(value, message).toBeTruthy();
+  if (!value) throw new Error(message);
+}

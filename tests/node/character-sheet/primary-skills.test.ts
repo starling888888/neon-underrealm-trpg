@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { calculatePrimarySkillsValidation } from "../../../src/character-sheet/logic/primary-skills";
 import {
   getMaximumSkillNameLength,
@@ -13,34 +12,32 @@ describe("character sheet primary skills", () => {
     const initial = getPrimarySkillGroups("kenkaya", 1);
     const advanced = getPrimarySkillGroups("kenkaya", 6);
 
-    assert.deepEqual(unselected, { advanced: [], basic: [], bonus: [] });
-    assert.equal(initial.bonus.length, 1);
-    assert.equal(initial.basic.length > 0, true);
-    assert.deepEqual(initial.advanced, []);
-    assert.equal(advanced.advanced.length > 0, true);
-    assert.equal(
+    expect(unselected).toEqual({ advanced: [], basic: [], bonus: [] });
+    expect(initial.bonus.length).toBe(1);
+    expect(initial.basic.length > 0).toBe(true);
+    expect(initial.advanced).toEqual([]);
+    expect(advanced.advanced.length > 0).toBe(true);
+    expect(
       advanced.bonus.some((skill) => skill.id === advanced.basic[0]?.id),
-      false,
-    );
+    ).toBe(false);
   });
 
   it("resolves selected IDs only inside the current primary ryugi", () => {
     const groups = getPrimarySkillGroups("kenkaya", 6);
     const skill = groups.basic[0];
 
-    assert.notEqual(skill, undefined);
-    assert.equal(
-      getPrimarySkillById("kenkaya", skill?.id ?? null)?.id,
+    expect(skill).not.toBe(undefined);
+    expect(getPrimarySkillById("kenkaya", skill?.id ?? null)?.id).toBe(
       skill?.id,
     );
-    assert.equal(getPrimarySkillById("emono", skill?.id ?? null), null);
+    expect(getPrimarySkillById("emono", skill?.id ?? null)).toBe(null);
   });
 
   it("uses a positive maximum name length across every skill master", () => {
     const maximumNameLength = getMaximumSkillNameLength();
     const knownSkillLength = Array.from("気合込め強化").length;
 
-    assert.equal(maximumNameLength >= knownSkillLength, true);
+    expect(maximumNameLength >= knownSkillLength).toBe(true);
   });
 
   it("identifies duplicate and maximum-level rows and an insufficient primary skill total", () => {
@@ -59,14 +56,13 @@ describe("character sheet primary skills", () => {
       { level: 1, rowId: "empty", skill: null, skillId: null },
     ]);
 
-    assert.deepEqual(validation.invalidMaximumLevelRowIds, ["over-limit"]);
-    assert.deepEqual(validation.invalidDuplicateSkillRowIds, [
+    expect(validation.invalidMaximumLevelRowIds).toEqual(["over-limit"]);
+    expect(validation.invalidDuplicateSkillRowIds).toEqual([
       "over-limit",
       "duplicate",
     ]);
-    assert.equal(validation.selectedLevelTotal, skill.maxLevel + 2);
-    assert.equal(
-      validation.hasPrimarySkillLevelTotalError,
+    expect(validation.selectedLevelTotal).toBe(skill.maxLevel + 2);
+    expect(validation.hasPrimarySkillLevelTotalError).toBe(
       skill.maxLevel + 2 > 1,
     );
   });
@@ -80,7 +76,7 @@ describe("character sheet primary skills", () => {
       { level: 1, rowId: "advanced", skill, skillId: skill.id },
     ]);
 
-    assert.deepEqual(validation.invalidAdvancedSkillRowIds, ["advanced"]);
+    expect(validation.invalidAdvancedSkillRowIds).toEqual(["advanced"]);
   });
 
   it("does not let a negative selected level cancel the primary total", () => {
@@ -93,9 +89,9 @@ describe("character sheet primary skills", () => {
       { level: -1, rowId: "negative", skill, skillId: skill.id },
     ]);
 
-    assert.equal(validation.selectedLevelTotal, 2);
-    assert.equal(validation.hasPrimarySkillLevelTotalError, true);
-    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+    expect(validation.selectedLevelTotal).toBe(2);
+    expect(validation.hasPrimarySkillLevelTotalError).toBe(true);
+    expect(validation.invalidMaximumLevelRowIds).toEqual([
       "positive",
       "negative",
     ]);

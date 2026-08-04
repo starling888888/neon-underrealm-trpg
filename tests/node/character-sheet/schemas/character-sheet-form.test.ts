@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { characterSheetDefaultValues } from "../../../../src/character-sheet/form-values";
 import {
@@ -11,21 +10,19 @@ import {
 
 describe("character sheet form schema", () => {
   it("accepts the non-null defaults", () => {
-    assert.deepEqual(
-      characterSheetFormSchema.parse(characterSheetDefaultValues),
+    expect(characterSheetFormSchema.parse(characterSheetDefaultValues)).toEqual(
       characterSheetDefaultValues,
     );
   });
 
   it("rejects null profile values and invalid stored credit values", () => {
-    assert.equal(
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         profile: null,
       }).success,
-      false,
-    );
-    assert.equal(
+    ).toBe(false);
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         credit: {
@@ -33,9 +30,8 @@ describe("character sheet form schema", () => {
           acquired: -1,
         },
       }).success,
-      false,
-    );
-    assert.equal(
+    ).toBe(false);
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         credit: {
@@ -43,12 +39,11 @@ describe("character sheet form schema", () => {
           changeAdjustment: 1.5,
         },
       }).success,
-      false,
-    );
+    ).toBe(false);
   });
 
   it("requires one to five attack rows and a stable reaction identity", () => {
-    assert.equal(
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         checks: {
@@ -56,9 +51,8 @@ describe("character sheet form schema", () => {
           attacks: [],
         },
       }).success,
-      false,
-    );
-    assert.equal(
+    ).toBe(false);
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         checks: {
@@ -69,9 +63,8 @@ describe("character sheet form schema", () => {
           })),
         },
       }).success,
-      false,
-    );
-    assert.equal(
+    ).toBe(false);
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         checks: {
@@ -81,9 +74,8 @@ describe("character sheet form schema", () => {
           ),
         },
       }).success,
-      false,
-    );
-    assert.equal(
+    ).toBe(false);
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         checks: {
@@ -93,8 +85,7 @@ describe("character sheet form schema", () => {
           ),
         },
       }).success,
-      false,
-    );
+    ).toBe(false);
   });
 
   it("rejects empty or duplicate row IDs in every field array", () => {
@@ -192,12 +183,12 @@ describe("character sheet form schema", () => {
     ];
 
     for (const values of invalidValues) {
-      assert.equal(characterSheetFormSchema.safeParse(values).success, false);
+      expect(characterSheetFormSchema.safeParse(values).success).toBe(false);
     }
   });
 
   it("requires every reaction name once and the matching deterministic row ID", () => {
-    assert.equal(
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         checks: {
@@ -208,9 +199,8 @@ describe("character sheet form schema", () => {
           ],
         },
       }).success,
-      true,
-    );
-    assert.equal(
+    ).toBe(true);
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         checks: {
@@ -220,12 +210,11 @@ describe("character sheet form schema", () => {
           ),
         },
       }).success,
-      false,
-    );
+    ).toBe(false);
   });
 
   it("allows zero ikizama rows while retaining the primary minimum row", () => {
-    assert.equal(
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         ikizamaSkills: {
@@ -233,15 +222,13 @@ describe("character sheet form schema", () => {
           rows: [],
         },
       }).success,
-      true,
-    );
-    assert.equal(
+    ).toBe(true);
+    expect(
       characterSheetFormSchema.safeParse({
         ...characterSheetDefaultValues,
         primarySkills: { rows: [] },
       }).success,
-      false,
-    );
+    ).toBe(false);
   });
 
   it("normalizes browser inputs through their field schemas", () => {
@@ -254,18 +241,18 @@ describe("character sheet form schema", () => {
     ];
 
     for (const { expected, field, input } of cases) {
-      assert.equal(normalizeCreditInput(field, input), expected);
+      expect(normalizeCreditInput(field, input)).toBe(expected);
     }
   });
 
   it("normalizes shared integer inputs without applying field constraints", () => {
-    assert.equal(normalizeIntegerInput(""), 0);
-    assert.equal(normalizeIntegerInput("-3.8"), -3);
-    assert.equal(normalizeIntegerInput("invalid"), 0);
+    expect(normalizeIntegerInput("")).toBe(0);
+    expect(normalizeIntegerInput("-3.8")).toBe(-3);
+    expect(normalizeIntegerInput("invalid")).toBe(0);
   });
 
   it("preserves an empty item modifier while normalizing explicit values", () => {
-    assert.equal(normalizeOptionalIntegerInput(""), null);
-    assert.equal(normalizeOptionalIntegerInput("-3.8"), -3);
+    expect(normalizeOptionalIntegerInput("")).toBe(null);
+    expect(normalizeOptionalIntegerInput("-3.8")).toBe(-3);
   });
 });

@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { test } from "vitest";
+import { expect, test } from "vitest";
 
 import { writeTextToClipboard } from "../../../../src/character-sheet/browser/ccfolia-clipboard";
 
@@ -12,19 +11,17 @@ test("writes the serialized CCFOLIA payload through a replaceable clipboard writ
     },
   });
 
-  assert.deepEqual(written, ['{"kind":"character"}']);
+  expect(written).toEqual(['{"kind":"character"}']);
 });
 
 test("keeps clipboard writer failures observable to the caller", async () => {
   const error = new Error("denied");
 
-  await assert.rejects(
-    () =>
-      writeTextToClipboard("test", {
-        writeText: async () => {
-          throw error;
-        },
-      }),
-    error,
-  );
+  await expect(
+    writeTextToClipboard("test", {
+      writeText: async () => {
+        throw error;
+      },
+    }),
+  ).rejects.toThrow(error);
 });

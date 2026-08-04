@@ -1,9 +1,8 @@
-import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { strToU8, zipSync } from "fflate";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import generated from "../../data/generated/items.json";
 import { convertDrugs } from "../../scripts/convert-items/drugs";
 import { convertItems } from "../../scripts/convert-items/lib";
@@ -55,40 +54,36 @@ describe("item conversion", () => {
       now: new Date("2026-07-14T00:00:00Z"),
     });
 
-    assert.equal(result.updatedAt, "2026-07-14T09:00:00+09:00");
-    assert.deepEqual(
-      result.data.weapons.normal?.kenka?.map(({ name }) => name),
-      ["武器1", "武器2"],
-    );
-    assert.deepEqual(
-      result.data.cybernetics.head?.map(({ name }) => name),
-      ["サイバネ1", "サイバネ2"],
-    );
-    assert.deepEqual(
-      result.data.armors.map(({ name }) => name),
-      ["防具1", "防具2"],
-    );
-    assert.deepEqual(
-      result.data.omamori.map(({ name }) => name),
-      ["お守り1", "お守り2"],
-    );
-    assert.deepEqual(
-      result.data.nanomachines.map(({ name }) => name),
-      ["ナノ1", "ナノ2"],
-    );
-    assert.deepEqual(
-      result.data.drugs.map(({ name }) => name),
-      ["ドラッグ1", "ドラッグ2"],
-    );
-    assert.equal(
-      result.data.weapons.normal?.kenka?.[0]?.id,
+    expect(result.updatedAt).toBe("2026-07-14T09:00:00+09:00");
+    expect(result.data.weapons.normal?.kenka?.map(({ name }) => name)).toEqual([
+      "武器1",
+      "武器2",
+    ]);
+    expect(result.data.cybernetics.head?.map(({ name }) => name)).toEqual([
+      "サイバネ1",
+      "サイバネ2",
+    ]);
+    expect(result.data.armors.map(({ name }) => name)).toEqual([
+      "防具1",
+      "防具2",
+    ]);
+    expect(result.data.omamori.map(({ name }) => name)).toEqual([
+      "お守り1",
+      "お守り2",
+    ]);
+    expect(result.data.nanomachines.map(({ name }) => name)).toEqual([
+      "ナノ1",
+      "ナノ2",
+    ]);
+    expect(result.data.drugs.map(({ name }) => name)).toEqual([
+      "ドラッグ1",
+      "ドラッグ2",
+    ]);
+    expect(result.data.weapons.normal?.kenka?.[0]?.id).toBe(
       createWeaponId({ group: "normal", check: "喧嘩", name: "武器1" }),
     );
-    assert.doesNotThrow(() => assertItemsJson(result));
-    assert.deepEqual(
-      JSON.parse(await readFile(fixture.output, "utf8")),
-      result,
-    );
+    expect(() => assertItemsJson(result)).not.toThrow();
+    expect(JSON.parse(await readFile(fixture.output, "utf8"))).toEqual(result);
   });
 
   it("keeps name-hash weapon IDs when rows are reordered", () => {
@@ -100,51 +95,44 @@ describe("item conversion", () => {
       items: Array<{ name: string; id: string }> | undefined,
     ) => new Map((items ?? []).map((item) => [item.name, item.id]));
 
-    assert.deepEqual(
-      idsByName(reordered.normal?.kenka),
+    expect(idsByName(reordered.normal?.kenka)).toEqual(
       idsByName(initial.normal?.kenka),
     );
-    assert.equal(reordered.normal?.kenka?.[0]?.sourceOrder, 1);
+    expect(reordered.normal?.kenka?.[0]?.sourceOrder).toBe(1);
   });
 
   it("accepts slash-separated weapon kinds", () => {
     const weapon = weaponRow("複合武器");
     weapon[4] = "近接/特殊";
 
-    assert.equal(
+    expect(
       convertWeapons([weaponHeaders, weapon]).normal?.kenka?.[0]?.kind,
-      "近接/特殊",
-    );
+    ).toBe("近接/特殊");
   });
 
   it("rejects invalid headers, empty weapon ranges, dashes, and enum values", () => {
-    assert.throws(
-      () => convertWeapons([[...weaponHeaders, "ID"], weaponRow("刀")]),
-      /Unexpected header at row 1, column K: "ID"/,
-    );
+    expect(() =>
+      convertWeapons([[...weaponHeaders, "ID"], weaponRow("刀")]),
+    ).toThrow(/Unexpected header at row 1, column K: "ID"/);
     const emptyRange = weaponRow("刀");
     emptyRange[3] = null;
-    assert.throws(
-      () => convertWeapons([weaponHeaders, emptyRange]),
+    expect(() => convertWeapons([weaponHeaders, emptyRange])).toThrow(
       /射程 is required at row 2, column D/,
     );
     const dashCredit = weaponRow("刀");
     dashCredit[2] = "-";
-    assert.throws(
-      () => convertWeapons([weaponHeaders, dashCredit]),
+    expect(() => convertWeapons([weaponHeaders, dashCredit])).toThrow(
       /信用 must not use "-" at row 2, column C/,
     );
     const invalidCheck = weaponRow("刀");
     invalidCheck[5] = "不正";
-    assert.throws(
-      () => convertWeapons([weaponHeaders, invalidCheck]),
+    expect(() => convertWeapons([weaponHeaders, invalidCheck])).toThrow(
       /判定 is invalid at row 2, column F/,
     );
     for (const kind of ["近接/不正", "近接//特殊", "近接/近接"]) {
       const invalidKind = weaponRow("刀");
       invalidKind[4] = kind;
-      assert.throws(
-        () => convertWeapons([weaponHeaders, invalidKind]),
+      expect(() => convertWeapons([weaponHeaders, invalidKind])).toThrow(
         /種別 is invalid at row 2, column E/,
       );
     }
@@ -155,54 +143,51 @@ describe("item conversion", () => {
       ["名称", "信用", "点数", "発動精神力", "効果"],
       ["マシラ", 1, 1, 1, "効果"],
     ];
-    assert.throws(
-      () => convertNanomachines(invalidHeader),
+    expect(() => convertNanomachines(invalidHeader)).toThrow(
       /expected "埋め込み点数", received "点数"/,
     );
     const invalidPoints: ItemRows = [
       nanomachineHeaders,
       ["マシラ", 1, "3", 1, "効果"],
     ];
-    assert.throws(
-      () => convertNanomachines(invalidPoints),
+    expect(() => convertNanomachines(invalidPoints)).toThrow(
       /埋め込み点数 must be a non-negative integer at row 2, column C/,
     );
     const invalidTiming: ItemRows = [
       drugHeaders,
       ["ドラッグ", 1, "M", 1, 1, "効果"],
     ];
-    assert.throws(
-      () => convertDrugs(invalidTiming),
+    expect(() => convertDrugs(invalidTiming)).toThrow(
       /使用T is invalid at row 2, column C/,
     );
   });
 
   it("validates generated IDs, source orders, and static data accessors", () => {
-    assert.doesNotThrow(() => assertItemsJson(generated));
-    assert.equal(getItemsData(), generated.data);
-    assert.equal(getWeapons("normal", "kenka")?.[0]?.name, "刀");
-    assert.equal(getWeapons("unknown", "kenka"), undefined);
-    assert.equal(getCybernetics("head")?.[0]?.part, "頭");
-    assert.equal(getCybernetics("unknown"), undefined);
+    expect(() => assertItemsJson(generated)).not.toThrow();
+    expect(getItemsData()).toBe(generated.data);
+    expect(getWeapons("normal", "kenka")?.[0]?.name).toBe("刀");
+    expect(getWeapons("unknown", "kenka")).toBe(undefined);
+    expect(getCybernetics("head")?.[0]?.part).toBe("頭");
+    expect(getCybernetics("unknown")).toBe(undefined);
     for (const key of ["toString", "constructor", "__proto__"]) {
-      assert.equal(getWeapons("normal", key), undefined);
-      assert.equal(getWeapons(key, "kenka"), undefined);
-      assert.equal(getCybernetics(key), undefined);
+      expect(getWeapons("normal", key)).toBe(undefined);
+      expect(getWeapons(key, "kenka")).toBe(undefined);
+      expect(getCybernetics(key)).toBe(undefined);
     }
 
     const malformedId = structuredClone(generated);
     malformedId.data.armors[0].id = "item-armor-malformed";
-    assert.throws(() => assertItemsJson(malformedId), /does not match/);
+    expect(() => assertItemsJson(malformedId)).toThrow(/does not match/);
 
     const sourceOrderGap = structuredClone(generated);
     sourceOrderGap.data.nanomachines[0].sourceOrder = 2;
-    assert.throws(() => assertItemsJson(sourceOrderGap), /consecutive/);
+    expect(() => assertItemsJson(sourceOrderGap)).toThrow(/consecutive/);
 
     const groupMismatch = structuredClone(generated);
     const firstWeapon = groupMismatch.data.weapons.normal?.kenka?.[0];
-    assert.ok(firstWeapon);
+    expect(firstWeapon).toBeTruthy();
     firstWeapon.group = "cybernetics";
-    assert.throws(() => assertItemsJson(groupMismatch), /must be grouped/);
+    expect(() => assertItemsJson(groupMismatch)).toThrow(/must be grouped/);
   });
 });
 

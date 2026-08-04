@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   createHeadingId,
   processPageTocHtml,
@@ -12,8 +11,8 @@ describe("page toc postprocess", () => {
     const source = html`<!doctype html><main data-page-content><h2>見出し</h2></main>`;
     const result = processPageTocHtml(source);
 
-    assert.equal(result.processed, false);
-    assert.equal(result.html, source);
+    expect(result.processed).toBe(false);
+    expect(result.html).toBe(source);
   });
 
   it("generates toc items from h2 and h3 headings", () => {
@@ -28,14 +27,11 @@ describe("page toc postprocess", () => {
       `),
     );
 
-    assert.equal(result.processed, true);
-    assert.deepEqual(
-      result.tocItems.map((item) => item.depth),
-      [2, 3, 2],
-    );
-    assert.match(result.html, /<ol class="page-toc-list">/);
-    assert.match(result.html, /class="page-toc-item page-toc-item-depth-3"/);
-    assert.doesNotMatch(result.html, /対象外<\/a>/);
+    expect(result.processed).toBe(true);
+    expect(result.tocItems.map((item) => item.depth)).toEqual([2, 3, 2]);
+    expect(result.html).toMatch(/<ol class="page-toc-list">/);
+    expect(result.html).toMatch(/class="page-toc-item page-toc-item-depth-3"/);
+    expect(result.html).not.toMatch(/対象外<\/a>/);
   });
 
   it("generates the same toc items for multiple enabled slots", () => {
@@ -51,12 +47,11 @@ describe("page toc postprocess", () => {
       ),
     );
 
-    assert.equal(result.processed, true);
-    assert.equal(result.tocItems.length, 3);
-    assert.equal(countMatches(result.html, /<ol class="page-toc-list">/g), 2);
-    assert.equal(countMatches(result.html, /href="#h-[a-f0-9]{8}"/g), 6);
-    assert.match(
-      result.html,
+    expect(result.processed).toBe(true);
+    expect(result.tocItems.length).toBe(3);
+    expect(countMatches(result.html, /<ol class="page-toc-list">/g)).toBe(2);
+    expect(countMatches(result.html, /href="#h-[a-f0-9]{8}"/g)).toBe(6);
+    expect(result.html).toMatch(
       /<div class="mobile-page-heading" data-mobile-page-heading=""><h1>ページタイトル<\/h1><section data-page-toc-slot="" data-page-toc-enabled="true" data-mobile-page-toc="">/,
     );
   });
@@ -64,21 +59,19 @@ describe("page toc postprocess", () => {
   it("generates stable ascii hash ids", () => {
     const id = createHeadingId(2, " コンボ  中の リアクション ");
 
-    assert.match(id, /^h-[a-f0-9]{8}$/);
-    assert.equal(id, createHeadingId(2, "コンボ 中の リアクション"));
+    expect(id).toMatch(/^h-[a-f0-9]{8}$/);
+    expect(id).toBe(createHeadingId(2, "コンボ 中の リアクション"));
   });
 
   it("fails on duplicate generated ids instead of suffixing silently", () => {
-    assert.throws(
-      () =>
-        processPageTocHtml(
-          pageWithHeadings(html`
+    expect(() =>
+      processPageTocHtml(
+        pageWithHeadings(html`
             <h2>重複</h2>
             <h2>重複</h2>
           `),
-        ),
-      /Duplicate PageToc heading id/,
-    );
+      ),
+    ).toThrow(/Duplicate PageToc heading id/);
   });
 
   it("accepts explicit data-anchor-id", () => {
@@ -89,8 +82,8 @@ describe("page toc postprocess", () => {
       `),
     );
 
-    assert.match(result.html, /id="reaction-check"/);
-    assert.match(result.html, /href="#reaction-check"/);
+    expect(result.html).toMatch(/id="reaction-check"/);
+    expect(result.html).toMatch(/href="#reaction-check"/);
   });
 
   it("replaces non-ascii generated html ids with ascii hash ids", () => {
@@ -101,9 +94,9 @@ describe("page toc postprocess", () => {
       `),
     );
 
-    assert.match(result.warnings[0], /Replaced non-ASCII heading id/);
-    assert.doesNotMatch(result.html, /id="判定"/);
-    assert.match(result.html, /id="h-[a-f0-9]{8}"/);
+    expect(result.warnings[0]).toMatch(/Replaced non-ASCII heading id/);
+    expect(result.html).not.toMatch(/id="判定"/);
+    expect(result.html).toMatch(/id="h-[a-f0-9]{8}"/);
   });
 
   it("excludes data-toc-exclude headings", () => {
@@ -115,8 +108,8 @@ describe("page toc postprocess", () => {
       `),
     );
 
-    assert.equal(result.tocItems.length, 2);
-    assert.doesNotMatch(result.html, /除外する見出し<\/a>/);
+    expect(result.tocItems.length).toBe(2);
+    expect(result.html).not.toMatch(/除外する見出し<\/a>/);
   });
 
   it("renders a toc link for a single toc item", () => {
@@ -126,10 +119,10 @@ describe("page toc postprocess", () => {
       `),
     );
 
-    assert.equal(result.tocItems.length, 1);
-    assert.doesNotMatch(result.html, /data-page-toc-empty="true"/);
-    assert.match(result.html, /<ol class="page-toc-list">/);
-    assert.match(result.html, /単独見出し<\/a>/);
+    expect(result.tocItems.length).toBe(1);
+    expect(result.html).not.toMatch(/data-page-toc-empty="true"/);
+    expect(result.html).toMatch(/<ol class="page-toc-list">/);
+    expect(result.html).toMatch(/単独見出し<\/a>/);
   });
 
   it("renders every enabled toc shell for a single toc item", () => {
@@ -142,9 +135,9 @@ describe("page toc postprocess", () => {
       ),
     );
 
-    assert.equal(result.tocItems.length, 1);
-    assert.equal(countMatches(result.html, /<ol class="page-toc-list">/g), 2);
-    assert.equal(countMatches(result.html, /単独見出し<\/a>/g), 2);
+    expect(result.tocItems.length).toBe(1);
+    expect(countMatches(result.html, /<ol class="page-toc-list">/g)).toBe(2);
+    expect(countMatches(result.html, /単独見出し<\/a>/g)).toBe(2);
   });
 
   it("renders an empty message in every enabled toc shell without toc items", () => {
@@ -154,11 +147,11 @@ describe("page toc postprocess", () => {
       }),
     );
 
-    assert.equal(result.tocItems.length, 0);
-    assert.equal(countMatches(result.html, /data-page-toc-empty="true"/g), 2);
-    assert.equal(countMatches(result.html, /見出しがありません/g), 2);
-    assert.equal(countMatches(result.html, /hidden=""/g), 0);
-    assert.doesNotMatch(result.html, /page-toc-list/);
+    expect(result.tocItems.length).toBe(0);
+    expect(countMatches(result.html, /data-page-toc-empty="true"/g)).toBe(2);
+    expect(countMatches(result.html, /見出しがありません/g)).toBe(2);
+    expect(countMatches(result.html, /hidden=""/g)).toBe(0);
+    expect(result.html).not.toMatch(/page-toc-list/);
   });
 });
 

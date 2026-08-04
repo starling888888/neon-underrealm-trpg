@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { calculateBuild } from "../../../src/character-sheet/logic/build";
@@ -38,22 +37,22 @@ describe("character sheet build", () => {
   it("keeps only master-dependent values unavailable until selections exist", () => {
     const derived = calculateBuild(characterSheetDefaultValues.build);
 
-    assert.equal(derived.rank, 2);
-    assert.equal(derived.growthPoints, 0);
-    assert.equal(derived.spentExperience, 0);
-    assert.equal(derived.remainingExperience, 50);
-    assert.equal(derived.attributes.strength.permanent, null);
-    assert.equal(derived.ikizamaAttributePoints, null);
-    assert.equal(derived.reference.primaryHealthIncrease, null);
-    assert.equal(derived.hasAttributeError, false);
+    expect(derived.rank).toBe(2);
+    expect(derived.growthPoints).toBe(0);
+    expect(derived.spentExperience).toBe(0);
+    expect(derived.remainingExperience).toBe(50);
+    expect(derived.attributes.strength.permanent).toBe(null);
+    expect(derived.ikizamaAttributePoints).toBe(null);
+    expect(derived.reference.primaryHealthIncrease).toBe(null);
+    expect(derived.hasAttributeError).toBe(false);
   });
 
   it("adds common-skill levels to experience without changing build validation", () => {
     const derived = calculateBuild(characterSheetDefaultValues.build, 2);
 
-    assert.equal(derived.spentExperience, 10);
-    assert.equal(derived.remainingExperience, 40);
-    assert.equal(derived.hasBuildError, false);
+    expect(derived.spentExperience).toBe(10);
+    expect(derived.remainingExperience).toBe(40);
+    expect(derived.hasBuildError).toBe(false);
   });
 
   it("reports growth overages before master data is selected", () => {
@@ -70,10 +69,10 @@ describe("character sheet build", () => {
 
     const derived = calculateBuild(build);
 
-    assert.equal(derived.growthPoints, 0);
-    assert.equal(derived.hasGrowthError, true);
-    assert.equal(derived.hasAttributeError, true);
-    assert.equal(derived.hasBuildError, true);
+    expect(derived.growthPoints).toBe(0);
+    expect(derived.hasGrowthError).toBe(true);
+    expect(derived.hasAttributeError).toBe(true);
+    expect(derived.hasBuildError).toBe(true);
   });
 
   it("derives independent primary and ikizama values before both are selected", () => {
@@ -83,14 +82,13 @@ describe("character sheet build", () => {
     };
     const primaryDerived = calculateBuild(primaryOnly);
 
-    assert.equal(primaryDerived.attributes.strength.base, 5);
-    assert.equal(primaryDerived.attributes.strength.permanent, null);
-    assert.equal(primaryDerived.reference.primaryHealthIncrease, 5);
-    assert.equal(
-      primaryDerived.reference.commonSkillBonuses?.level2,
+    expect(primaryDerived.attributes.strength.base).toBe(5);
+    expect(primaryDerived.attributes.strength.permanent).toBe(null);
+    expect(primaryDerived.reference.primaryHealthIncrease).toBe(5);
+    expect(primaryDerived.reference.commonSkillBonuses?.level2).toBe(
       "攻撃判定数+1\n攻撃力+3",
     );
-    assert.equal(primaryDerived.ikizamaAttributePoints, null);
+    expect(primaryDerived.ikizamaAttributePoints).toBe(null);
 
     const ikizamaOnly = {
       ...characterSheetDefaultValues.build,
@@ -98,20 +96,20 @@ describe("character sheet build", () => {
     };
     const ikizamaDerived = calculateBuild(ikizamaOnly);
 
-    assert.deepEqual(ikizamaDerived.ikizamaAttributePoints, [5, 4, 3, 2]);
-    assert.equal(ikizamaDerived.reference.ikizamaHealthCoefficient, 11);
-    assert.equal(ikizamaDerived.attributes.strength.base, null);
+    expect(ikizamaDerived.ikizamaAttributePoints).toEqual([5, 4, 3, 2]);
+    expect(ikizamaDerived.reference.ikizamaHealthCoefficient).toBe(11);
+    expect(ikizamaDerived.attributes.strength.base).toBe(null);
   });
 
   it("derives rank, experience, and attributes from selected data", () => {
     const derived = calculateBuild(selectedBuild());
 
-    assert.equal(derived.rank, 2);
-    assert.equal(derived.growthPoints, 0);
-    assert.equal(derived.spentExperience, 0);
-    assert.equal(derived.remainingExperience, 50);
-    assert.deepEqual(derived.ikizamaAttributePoints, [5, 4, 3, 2]);
-    assert.deepEqual(derived.reference, {
+    expect(derived.rank).toBe(2);
+    expect(derived.growthPoints).toBe(0);
+    expect(derived.spentExperience).toBe(0);
+    expect(derived.remainingExperience).toBe(50);
+    expect(derived.ikizamaAttributePoints).toEqual([5, 4, 3, 2]);
+    expect(derived.reference).toEqual({
       commonSkillBonuses: {
         level2: "攻撃判定数+1\n攻撃力+3",
         level5: "行動回数+1",
@@ -122,10 +120,10 @@ describe("character sheet build", () => {
       primaryHealthIncrease: 5,
       primaryMindIncrease: 2,
     });
-    assert.equal(derived.attributes.strength.base, 5);
-    assert.equal(derived.attributes.strength.permanent, 10);
-    assert.equal(derived.attributes.strength.temporary, 10);
-    assert.equal(derived.hasBuildError, false);
+    expect(derived.attributes.strength.base).toBe(5);
+    expect(derived.attributes.strength.permanent).toBe(10);
+    expect(derived.attributes.strength.temporary).toBe(10);
+    expect(derived.hasBuildError).toBe(false);
   });
 
   it("preserves mismatches and over-budget values as local error states", () => {
@@ -136,9 +134,9 @@ describe("character sheet build", () => {
 
     const derived = calculateBuild(build);
 
-    assert.equal(derived.hasAttributeError, true);
-    assert.equal(derived.hasExperienceError, true);
-    assert.equal(derived.hasBuildError, true);
+    expect(derived.hasAttributeError).toBe(true);
+    expect(derived.hasExperienceError).toBe(true);
+    expect(derived.hasBuildError).toBe(true);
   });
 
   it("keeps point allocation and growth errors local to their own inputs", () => {
@@ -147,45 +145,45 @@ describe("character sheet build", () => {
 
     const pointDerived = calculateBuild(pointMismatch);
 
-    assert.equal(pointDerived.hasPointAllocationError, true);
-    assert.equal(pointDerived.hasGrowthError, false);
+    expect(pointDerived.hasPointAllocationError).toBe(true);
+    expect(pointDerived.hasGrowthError).toBe(false);
 
     const excessGrowth = selectedBuild();
     excessGrowth.attributes.strength.growth = 1;
 
     const growthDerived = calculateBuild(excessGrowth);
 
-    assert.equal(growthDerived.hasPointAllocationError, false);
-    assert.equal(growthDerived.hasGrowthError, true);
+    expect(growthDerived.hasPointAllocationError).toBe(false);
+    expect(growthDerived.hasGrowthError).toBe(true);
   });
 
   it("adds growth points at each rank milestone and caps each attribute", () => {
     const rank15 = selectedBuild();
     rank15.primaryRyugiLevel = 14;
-    assert.equal(calculateBuild(rank15).growthPoints, 1);
+    expect(calculateBuild(rank15).growthPoints).toBe(1);
 
     const rank30 = selectedBuild();
     rank30.primaryRyugiLevel = 29;
     rank30.attributes.strength.growth = 2;
     rank30.attributes.mind.growth = 1;
     const rank30Derived = calculateBuild(rank30);
-    assert.equal(rank30Derived.growthPoints, 3);
-    assert.equal(rank30Derived.hasGrowthError, false);
+    expect(rank30Derived.growthPoints).toBe(3);
+    expect(rank30Derived.hasGrowthError).toBe(false);
 
     rank30.attributes.strength.growth = 3;
-    assert.equal(calculateBuild(rank30).hasGrowthError, true);
+    expect(calculateBuild(rank30).hasGrowthError).toBe(true);
 
     const rank45 = selectedBuild();
     rank45.primaryRyugiLevel = 44;
     rank45.attributes.strength.growth = 3;
     rank45.attributes.mind.growth = 3;
     const rank45Derived = calculateBuild(rank45);
-    assert.equal(rank45Derived.growthPoints, 6);
-    assert.equal(rank45Derived.hasGrowthError, false);
+    expect(rank45Derived.growthPoints).toBe(6);
+    expect(rank45Derived.hasGrowthError).toBe(false);
 
     rank45.attributes.strength.growth = 4;
     rank45.attributes.mind.growth = 2;
-    assert.equal(calculateBuild(rank45).hasGrowthError, true);
+    expect(calculateBuild(rank45).hasGrowthError).toBe(true);
   });
 
   it("keeps an invalid acquired experience value visible before both selections", () => {
@@ -196,9 +194,9 @@ describe("character sheet build", () => {
 
     const derived = calculateBuild(build);
 
-    assert.equal(derived.hasExperienceError, true);
-    assert.equal(derived.hasBuildError, true);
-    assert.equal(derived.remainingExperience, -1);
+    expect(derived.hasExperienceError).toBe(true);
+    expect(derived.hasBuildError).toBe(true);
+    expect(derived.remainingExperience).toBe(-1);
   });
 
   it("locates duplicate ryugi selections separately from level errors", () => {
@@ -213,12 +211,12 @@ describe("character sheet build", () => {
 
     const derived = calculateBuild(build);
 
-    assert.equal(derived.primaryRyugiDuplicate, true);
-    assert.deepEqual(derived.otherRyugiDuplicateRowIds, [
+    expect(derived.primaryRyugiDuplicate).toBe(true);
+    expect(derived.otherRyugiDuplicateRowIds).toEqual([
       "first",
       "second",
       "third",
     ]);
-    assert.deepEqual(derived.otherRyugiLevelInvalidRowIds, ["second"]);
+    expect(derived.otherRyugiLevelInvalidRowIds).toEqual(["second"]);
   });
 });

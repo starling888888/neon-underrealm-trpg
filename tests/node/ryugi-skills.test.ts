@@ -1,9 +1,8 @@
-import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { strToU8, zipSync } from "fflate";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import generated from "../../data/generated/ryugi-skills.json";
 import { convertRyugiSkills } from "../../scripts/convert-ryugi-skills/lib";
 import { getRyugiDetail } from "../../src/lib/data/ryugi-detail";
@@ -43,15 +42,14 @@ describe("ryugi skill conversion", () => {
       now: new Date("2026-07-21T00:00:00Z"),
     });
 
-    assert.equal(initial.updatedAt, "2026-07-21T09:00:00+09:00");
-    assert.equal(
-      initial.data.kenkaya.basic[0]?.id,
+    expect(initial.updatedAt).toBe("2026-07-21T09:00:00+09:00");
+    expect(initial.data.kenkaya.basic[0]?.id).toBe(
       `skill-ryugi-kenkaya-basic-aa_ra-${createHash("連携\n斬撃")}`,
     );
-    assert.equal(initial.data.kenkaya.basic[0]?.name, "連携\n斬撃");
-    assert.equal(initial.data.kenkaya.basic[0]?.target, null);
-    assert.equal(initial.data.kenkaya.basic[0]?.summary, "");
-    assert.equal(initial.data.kenkaya.basic[0]?.sourceOrder, 1);
+    expect(initial.data.kenkaya.basic[0]?.name).toBe("連携\n斬撃");
+    expect(initial.data.kenkaya.basic[0]?.target).toBe(null);
+    expect(initial.data.kenkaya.basic[0]?.summary).toBe("");
+    expect(initial.data.kenkaya.basic[0]?.sourceOrder).toBe(1);
 
     await workbook(fixture.input, [
       { name: "kenkaya", rows: [headers, kenkaya] },
@@ -63,8 +61,8 @@ describe("ryugi skill conversion", () => {
       ryugiIds: ["kenkaya", "emono"],
       now: new Date("2026-07-22T00:00:00Z"),
     });
-    assert.equal(added.updatedAt, "2026-07-22T09:00:00+09:00");
-    assert.equal(added.data.emono.bonus[0]?.sourceOrder, 1);
+    expect(added.updatedAt).toBe("2026-07-22T09:00:00+09:00");
+    expect(added.data.emono.bonus[0]?.sourceOrder).toBe(1);
 
     const unchanged = await convertRyugiSkills({
       inputPath: fixture.input,
@@ -72,7 +70,7 @@ describe("ryugi skill conversion", () => {
       ryugiIds: ["kenkaya", "emono"],
       now: new Date("2026-07-23T00:00:00Z"),
     });
-    assert.equal(unchanged.updatedAt, "2026-07-22T09:00:00+09:00");
+    expect(unchanged.updatedAt).toBe("2026-07-22T09:00:00+09:00");
 
     await workbook(fixture.input, [
       { name: "kenkaya", rows: [headers, kenkaya] },
@@ -83,9 +81,9 @@ describe("ryugi skill conversion", () => {
       ryugiIds: ["kenkaya"],
       now: new Date("2026-07-24T00:00:00Z"),
     });
-    assert.equal(removed.updatedAt, "2026-07-24T09:00:00+09:00");
-    assert.deepEqual(Object.keys(removed.data), ["kenkaya"]);
-    assert.doesNotThrow(() => assertRyugiSkillsJson(removed, ["kenkaya"]));
+    expect(removed.updatedAt).toBe("2026-07-24T09:00:00+09:00");
+    expect(Object.keys(removed.data)).toEqual(["kenkaya"]);
+    expect(() => assertRyugiSkillsJson(removed, ["kenkaya"])).not.toThrow();
   });
 
   it("rejects missing and unexpected owner sheets", async () => {
@@ -95,25 +93,23 @@ describe("ryugi skill conversion", () => {
       { name: "other", rows: [headers, row("basic", "二撃", "Pv")] },
     ]);
 
-    await assert.rejects(
-      () =>
-        convertRyugiSkills({
-          inputPath: fixture.input,
-          outputPath: fixture.output,
-          ryugiIds: ["kenkaya", "emono"],
-        }),
-      /Worksheet "emono" was not found/,
-    );
+    await expect(
+      convertRyugiSkills({
+        inputPath: fixture.input,
+        outputPath: fixture.output,
+        ryugiIds: ["kenkaya", "emono"],
+      }),
+    ).rejects.toThrow(/Worksheet "emono" was not found/);
   });
 
   it("validates the generated data and combines ryugi data with its skills", () => {
     const ryugiIds = getRyugiList().map((ryugi) => ryugi.id);
-    assert.doesNotThrow(() => assertRyugiSkillsJson(generated, ryugiIds));
+    expect(() => assertRyugiSkillsJson(generated, ryugiIds)).not.toThrow();
 
     const detail = getRyugiDetail("kenkaya");
-    assert.equal(detail?.ryugi.id, "kenkaya");
-    assert.ok(detail?.skills.basic.length);
-    assert.equal(getRyugiDetail("unknown"), undefined);
+    expect(detail?.ryugi.id).toBe("kenkaya");
+    expect(detail?.skills.basic.length).toBeTruthy();
+    expect(getRyugiDetail("unknown")).toBe(undefined);
   });
 });
 

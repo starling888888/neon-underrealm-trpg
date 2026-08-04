@@ -1,6 +1,5 @@
-import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { getIkizamaList } from "../../src/lib/data/ikizama";
 import { getRyugiList } from "../../src/lib/data/ryugi-list";
 import {
@@ -122,8 +121,7 @@ describe("page navigation", () => {
     );
     const end = siteMenuLinks.findIndex((link) => link.href === "/advancement");
 
-    assert.deepEqual(
-      siteMenuLinks.slice(start, end + 1),
+    expect(siteMenuLinks.slice(start, end + 1)).toEqual(
       readingPaths.map((href) => getSiteMenuLink(href)),
     );
   });
@@ -132,24 +130,24 @@ describe("page navigation", () => {
     for (const { file, prevPath, nextPath } of staticPageNavigation) {
       const source = readFileSync(file, "utf8");
 
-      assert.equal(getFrontmatterValue(source, "prevPath"), prevPath, file);
-      assert.equal(getFrontmatterValue(source, "nextPath"), nextPath, file);
+      expect(getFrontmatterValue(source, "prevPath"), file).toBe(prevPath);
+      expect(getFrontmatterValue(source, "nextPath"), file).toBe(nextPath);
     }
   });
 
   it("resolves labels from the site menu", () => {
-    assert.deepEqual(getSiteMenuLink("/character-making"), {
+    expect(getSiteMenuLink("/character-making")).toEqual({
       href: "/character-making",
       label: "キャラクターメイキング",
     });
-    assert.deepEqual(getSiteMenuLink("/advancement"), {
+    expect(getSiteMenuLink("/advancement")).toEqual({
       href: "/advancement",
       label: "キャラクター成長",
     });
   });
 
   it("rejects unknown and duplicate site menu paths", () => {
-    assert.throws(() => getSiteMenuLink("/unknown"), /Unknown site menu path/);
+    expect(() => getSiteMenuLink("/unknown")).toThrow(/Unknown site menu path/);
 
     const duplicateMenu: SiteMenuItem[] = [
       { href: "/duplicate", label: "A" },
@@ -160,8 +158,7 @@ describe("page navigation", () => {
       },
     ];
 
-    assert.throws(
-      () => flattenSiteMenuItems(duplicateMenu),
+    expect(() => flattenSiteMenuItems(duplicateMenu)).toThrow(
       /Duplicate site menu path/,
     );
   });

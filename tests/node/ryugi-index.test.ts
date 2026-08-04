@@ -1,9 +1,8 @@
-import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { strToU8, zipSync } from "fflate";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import generated from "../../data/generated/ryugi-list.json";
 import { convertRyugiList } from "../../scripts/convert-ryugi-index/lib";
 import { getRyugiById, getRyugiList } from "../../src/lib/data/ryugi-list";
@@ -64,23 +63,20 @@ describe("ryugi-list conversion", () => {
       sheetName: "ryugi-list",
       now: new Date("2026-07-15T00:00:00Z"),
     });
-    assert.deepEqual(
-      result.data.map((ryugi) => [ryugi.id, ryugi.sourceOrder]),
-      [
-        ["kenkaya", 1],
-        ["emono", 2],
-      ],
-    );
-    assert.equal(result.data[0]?.description, "説明\n詳細");
-    assert.equal(result.data[0]?.note?.content, "注意\n補足");
-    assert.equal(result.data[0]?.commonSkillBonuses.level2, "攻撃+1\n防御+1");
-    assert.equal(result.data[1]?.note, null);
-    assert.equal(result.updatedAt, "2026-07-15T09:00:00+09:00");
-    assert.doesNotThrow(() => assertRyugiJson(result));
-    assert.doesNotThrow(() => assertRyugiJson(generated));
-    assert.equal(getRyugiList()[0]?.id, "kenkaya");
-    assert.equal(getRyugiById("kenkaya")?.id, "kenkaya");
-    assert.equal(getRyugiById("unknown"), undefined);
+    expect(result.data.map((ryugi) => [ryugi.id, ryugi.sourceOrder])).toEqual([
+      ["kenkaya", 1],
+      ["emono", 2],
+    ]);
+    expect(result.data[0]?.description).toBe("説明\n詳細");
+    expect(result.data[0]?.note?.content).toBe("注意\n補足");
+    expect(result.data[0]?.commonSkillBonuses.level2).toBe("攻撃+1\n防御+1");
+    expect(result.data[1]?.note).toBe(null);
+    expect(result.updatedAt).toBe("2026-07-15T09:00:00+09:00");
+    expect(() => assertRyugiJson(result)).not.toThrow();
+    expect(() => assertRyugiJson(generated)).not.toThrow();
+    expect(getRyugiList()[0]?.id).toBe("kenkaya");
+    expect(getRyugiById("kenkaya")?.id).toBe("kenkaya");
+    expect(getRyugiById("unknown")).toBe(undefined);
   });
 
   it("keeps updatedAt for unchanged data", async () => {
@@ -103,7 +99,7 @@ describe("ryugi-list conversion", () => {
       outputPath: fixture.output,
       sheetName: "ryugi-list",
     });
-    assert.equal(result.updatedAt, "2026-01-01T00:00:00+09:00");
+    expect(result.updatedAt).toBe("2026-01-01T00:00:00+09:00");
   });
 
   it("rejects existing ryugi changes and allows additions", async () => {
@@ -124,8 +120,7 @@ describe("ryugi-list conversion", () => {
       headers,
       renamed,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /name for ID "kenkaya" must not change/,
     );
 
@@ -134,8 +129,7 @@ describe("ryugi-list conversion", () => {
       headers,
       row("kenka-ya"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /ID must not change from "kenkaya" to "kenka-ya"/,
     );
 
@@ -146,8 +140,7 @@ describe("ryugi-list conversion", () => {
       headers,
       replacement,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /ID "kenkaya" must not be removed/,
     );
 
@@ -160,7 +153,7 @@ describe("ryugi-list conversion", () => {
       added,
     ]);
     const result = await convert(fixture);
-    assert.equal(result.data.length, 2);
+    expect(result.data.length).toBe(2);
   });
 
   it("rejects IDs, missing fields, partial rows, note pairs, and numeric values", async () => {
@@ -170,8 +163,7 @@ describe("ryugi-list conversion", () => {
       headers,
       row("Invalid"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /ID is invalid at row 3, column A \(ID\)/,
     );
 
@@ -182,8 +174,7 @@ describe("ryugi-list conversion", () => {
       headers,
       missingName,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /名称 is required at row 3, column B \(名称\)/,
     );
 
@@ -194,8 +185,7 @@ describe("ryugi-list conversion", () => {
       headers,
       partial,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /精神力増加値 must be a positive integer at row 3, column H \(精神力増加値\)/,
     );
 
@@ -204,8 +194,7 @@ describe("ryugi-list conversion", () => {
       headers,
       row("kenkaya", "warning", ""),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /補足タイプ and 補足本文 must both be set at row 3, column F \(補足本文\)/,
     );
 
@@ -214,8 +203,7 @@ describe("ryugi-list conversion", () => {
       headers,
       row("kenkaya", "unknown", "本文"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /補足タイプ is invalid at row 3, column E \(補足タイプ\)/,
     );
 
@@ -226,8 +214,7 @@ describe("ryugi-list conversion", () => {
       headers,
       decimal,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /筋力 must be a positive integer at row 3, column I \(筋力\)/,
     );
 
@@ -237,8 +224,7 @@ describe("ryugi-list conversion", () => {
       row("kenkaya"),
       row("kenkaya"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Duplicate ID at row 4, column A \(ID\)/,
     );
 
@@ -250,8 +236,7 @@ describe("ryugi-list conversion", () => {
       row("kenkaya"),
       duplicateName,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Duplicate 名称 at row 4, column B \(名称\)/,
     );
   });
@@ -263,8 +248,7 @@ describe("ryugi-list conversion", () => {
       [...headers, "余分な列"],
       row("kenkaya"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Unexpected header at row 2, column Q: "余分な列"/,
     );
 
@@ -275,8 +259,7 @@ describe("ryugi-list conversion", () => {
       headers,
       row("kenkaya"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Invalid header at row 1, column I: expected "基礎能力値", received "基礎能力"/,
     );
 
@@ -287,8 +270,7 @@ describe("ryugi-list conversion", () => {
       Array(16).fill(""),
       row("emono"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Blank row found at row 4, column A \(ID\) before data row 5/,
     );
   });
@@ -299,27 +281,30 @@ describe("ryugi-list conversion", () => {
       ...duplicateId.data[1],
       id: duplicateId.data[0].id,
     };
-    assert.throws(() => assertRyugiJson(duplicateId), /Duplicate ryugi id/);
+    expect(() => assertRyugiJson(duplicateId)).toThrow(/Duplicate ryugi id/);
 
     const duplicateName = structuredClone(generated);
     duplicateName.data[1] = {
       ...duplicateName.data[1],
       name: duplicateName.data[0].name,
     };
-    assert.throws(() => assertRyugiJson(duplicateName), /Duplicate ryugi name/);
+    expect(() => assertRyugiJson(duplicateName)).toThrow(
+      /Duplicate ryugi name/,
+    );
 
     const sourceOrder = structuredClone(generated);
     sourceOrder.data[0].sourceOrder = 2;
-    assert.throws(() => assertRyugiJson(sourceOrder), /must match input order/);
+    expect(() => assertRyugiJson(sourceOrder)).toThrow(
+      /must match input order/,
+    );
 
     const untrimmedId = structuredClone(generated);
     untrimmedId.data[0].id = "kenkaya\n";
-    assert.throws(() => assertRyugiJson(untrimmedId), /Value must be trimmed/);
+    expect(() => assertRyugiJson(untrimmedId)).toThrow(/Value must be trimmed/);
 
     const unnormalizedDescription = structuredClone(generated);
     unnormalizedDescription.data[0].description = "説明\r";
-    assert.throws(
-      () => assertRyugiJson(unnormalizedDescription),
+    expect(() => assertRyugiJson(unnormalizedDescription)).toThrow(
       /Value must be trimmed/,
     );
   });

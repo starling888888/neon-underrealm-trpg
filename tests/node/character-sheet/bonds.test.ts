@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { test } from "vitest";
+import { expect, test } from "vitest";
 
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import {
@@ -10,14 +9,16 @@ import {
 test("calculateBonds keeps four initial rows and orders resolve effects", () => {
   const result = calculateBonds(characterSheetDefaultValues.bonds, 4);
 
-  assert.equal(result.requiredRowCount, 4);
-  assert.equal(result.occupiedCount, 0);
-  assert.equal(result.isOverLimit, false);
-  assert.deepEqual(
-    result.effects.map((effect) => effect.id),
-    ["recovery", "morale", "activeCheck", "passiveCheck"],
-  );
-  assert.deepEqual(result.effects[0]?.baseValues, ["10d6", "15d6"]);
+  expect(result.requiredRowCount).toBe(4);
+  expect(result.occupiedCount).toBe(0);
+  expect(result.isOverLimit).toBe(false);
+  expect(result.effects.map((effect) => effect.id)).toEqual([
+    "recovery",
+    "morale",
+    "activeCheck",
+    "passiveCheck",
+  ]);
+  expect(result.effects[0]?.baseValues).toEqual(["10d6", "15d6"]);
 });
 
 test("calculateBonds counts resolved rows and clamps a negative limit to zero", () => {
@@ -28,11 +29,11 @@ test("calculateBonds counts resolved rows and clamps a negative limit to zero", 
 
   const result = calculateBonds(bonds, -1);
 
-  assert.equal(result.effectiveLimit, 0);
-  assert.equal(result.occupiedCount, 2);
-  assert.equal(result.isOverLimit, true);
-  assert.equal(result.requiredRowCount, 2);
-  assert.deepEqual(result.overflowRowIds, ["bond-1", "bond-2"]);
+  expect(result.effectiveLimit).toBe(0);
+  expect(result.occupiedCount).toBe(2);
+  expect(result.isOverLimit).toBe(true);
+  expect(result.requiredRowCount).toBe(2);
+  expect(result.overflowRowIds).toEqual(["bond-1", "bond-2"]);
 });
 
 test("retainBondRows removes only empty placeholders after a limit decrease", () => {
@@ -42,10 +43,7 @@ test("retainBondRows removes only empty placeholders after a limit decrease", ()
 
   const retainedRows = retainBondRows(rows, 1);
 
-  assert.deepEqual(
-    retainedRows.map((row) => row.rowId),
-    ["bond-2", "bond-4"],
-  );
+  expect(retainedRows.map((row) => row.rowId)).toEqual(["bond-2", "bond-4"]);
 });
 
 test("calculateBonds applies modifiers to dice counts except for morale gain", () => {
@@ -61,7 +59,7 @@ test("calculateBonds applies modifiers to dice counts except for morale gain", (
     (effect) => effect.id === "activeCheck",
   );
 
-  assert.deepEqual(recovery?.finalValues, ["12d6", "17d6"]);
-  assert.deepEqual(morale?.finalValues, ["2", "1d6+1"]);
-  assert.deepEqual(activeCheck?.finalValues, ["4d", "5d"]);
+  expect(recovery?.finalValues).toEqual(["12d6", "17d6"]);
+  expect(morale?.finalValues).toEqual(["2", "1d6+1"]);
+  expect(activeCheck?.finalValues).toEqual(["4d", "5d"]);
 });

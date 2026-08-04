@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { characterSheetDefaultValues } from "../../../../src/character-sheet/form-values";
 import { getCybernetics } from "../../../../src/character-sheet/master-data/cybernetics";
@@ -29,10 +28,9 @@ describe("character sheet form persistence", () => {
     };
 
     writeCharacterSheetForm(storage, values);
-    assert.deepEqual(
+    expect(
       parseCharacterSheetRestoreJson(readCharacterSheetForm(storage) ?? ""),
-      values,
-    );
+    ).toEqual(values);
   });
 
   it("removes the stored form snapshot", () => {
@@ -45,15 +43,14 @@ describe("character sheet form persistence", () => {
 
     deleteCharacterSheetForm(storage);
 
-    assert.equal(readCharacterSheetForm(storage), null);
+    expect(readCharacterSheetForm(storage)).toBe(null);
   });
 
   it("rejects malformed snapshots without a partial value", () => {
-    assert.equal(parseCharacterSheetRestoreJson("{invalid"), null);
-    assert.equal(
+    expect(parseCharacterSheetRestoreJson("{invalid")).toBe(null);
+    expect(
       parseCharacterSheetRestoreJson(JSON.stringify({ profile: null })),
-      null,
-    );
+    ).toBe(null);
   });
 
   it("extracts an import image without including it in form validation", () => {
@@ -69,8 +66,8 @@ describe("character sheet form persistence", () => {
     const parsed = parseCharacterSheetJsonImport(JSON.stringify(snapshot));
     if (parsed === null) throw new Error("Expected a parsed JSON import.");
 
-    assert.equal(parsed.values.profile.pcName, "JSON入力PC");
-    assert.deepEqual(parsed.imageBase64String, { unexpected: "image value" });
+    expect(parsed.values.profile.pcName).toBe("JSON入力PC");
+    expect(parsed.imageBase64String).toEqual({ unexpected: "image value" });
   });
 
   it("accepts a missing image property as an image-less JSON import", () => {
@@ -79,31 +76,28 @@ describe("character sheet form persistence", () => {
     );
     if (parsed === null) throw new Error("Expected a parsed JSON import.");
 
-    assert.equal(parsed.imageBase64String, undefined);
+    expect(parsed.imageBase64String).toBe(undefined);
   });
 
   it("rejects snapshots with broken row identity", () => {
     const duplicateRowId = structuredClone(characterSheetDefaultValues);
     duplicateRowId.primarySkills.rows[1].rowId =
       duplicateRowId.primarySkills.rows[0].rowId;
-    assert.equal(
-      parseCharacterSheetRestoreJson(JSON.stringify(duplicateRowId)),
+    expect(parseCharacterSheetRestoreJson(JSON.stringify(duplicateRowId))).toBe(
       null,
     );
 
     const invalidReactionRow = structuredClone(characterSheetDefaultValues);
     invalidReactionRow.checks.reactions[0].rowId = "wrong-reaction-row";
-    assert.equal(
+    expect(
       parseCharacterSheetRestoreJson(JSON.stringify(invalidReactionRow)),
-      null,
-    );
+    ).toBe(null);
 
     const duplicateCategories = structuredClone(characterSheetDefaultValues);
     duplicateCategories.specialItems.categories = ["omamori", "omamori"];
-    assert.equal(
+    expect(
       parseCharacterSheetRestoreJson(JSON.stringify(duplicateCategories)),
-      null,
-    );
+    ).toBe(null);
   });
 
   it("keeps game-rule errors while restoring a structurally valid draft", () => {
@@ -113,8 +107,7 @@ describe("character sheet form persistence", () => {
     values.drugs.rows[0].drugId = drugId;
     values.drugs.rows[1].drugId = drugId;
 
-    assert.deepEqual(
-      parseCharacterSheetRestoreJson(JSON.stringify(values)),
+    expect(parseCharacterSheetRestoreJson(JSON.stringify(values))).toEqual(
       values,
     );
   });
@@ -130,11 +123,10 @@ describe("character sheet form persistence", () => {
     const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
     if (restored === null) throw new Error("Expected a restored form value.");
 
-    assert.equal(
+    expect(
       restored.checks.reactions.find(({ name }) => name === "resistance")
         ?.attribute,
-      "mind",
-    );
+    ).toBe("mind");
   });
 
   it("unselects unknown master-data IDs while retaining the rest of the draft", () => {
@@ -150,13 +142,13 @@ describe("character sheet form persistence", () => {
 
     const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
     if (restored === null) throw new Error("Expected a restored form value.");
-    assert.equal(restored.profile.pcName, "復元されるPC");
-    assert.equal(restored.build.primaryRyugiId, null);
-    assert.equal(restored.primarySkills.rows.length, 1);
-    assert.equal(restored.primarySkills.rows[0].skillId, null);
-    assert.equal(restored.weapons.rows[0].weaponId, null);
-    assert.equal(restored.weapons.rows[0].rowId, "restore-weapon-1");
-    assert.equal(restored.drugs.rows.length, values.drugs.rows.length - 1);
+    expect(restored.profile.pcName).toBe("復元されるPC");
+    expect(restored.build.primaryRyugiId).toBe(null);
+    expect(restored.primarySkills.rows.length).toBe(1);
+    expect(restored.primarySkills.rows[0].skillId).toBe(null);
+    expect(restored.weapons.rows[0].weaponId).toBe(null);
+    expect(restored.weapons.rows[0].rowId).toBe("restore-weapon-1");
+    expect(restored.drugs.rows.length).toBe(values.drugs.rows.length - 1);
   });
 
   it("retains a blank other-ryugi skill row after removing an unknown skill", () => {
@@ -176,7 +168,7 @@ describe("character sheet form persistence", () => {
     const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
     if (restored === null) throw new Error("Expected a restored form value.");
 
-    assert.deepEqual(restored.otherRyugiSkills.rows, [
+    expect(restored.otherRyugiSkills.rows).toEqual([
       {
         level: 1,
         rowId: "restore-other-ryugi-skill-other-ryugi",
@@ -210,17 +202,16 @@ describe("character sheet form persistence", () => {
     const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
     if (restored === null) throw new Error("Expected a restored form value.");
 
-    assert.deepEqual(
+    expect(
       new Set(restored.otherRyugiSkills.rows.map((row) => row.rowId)).size,
-      restored.otherRyugiSkills.rows.length,
-    );
-    assert.ok(
+    ).toEqual(restored.otherRyugiSkills.rows.length);
+    expect(
       restored.otherRyugiSkills.rows.some(
         (row) =>
           row.ryugiRowId === "other-b" &&
           row.rowId === "restore-other-ryugi-skill-other-b-1",
       ),
-    );
+    ).toBeTruthy();
   });
 
   it("retains an incompatible fixed cybernetic for the form error state", () => {
@@ -236,7 +227,7 @@ describe("character sheet form persistence", () => {
     const restored = parseCharacterSheetRestoreJson(JSON.stringify(values));
     if (restored === null) throw new Error("Expected a restored form value.");
 
-    assert.equal(restored.cybernetics.headId, armCybernetic.id);
-    assert.equal(characterSheetFormSchema.safeParse(restored).success, false);
+    expect(restored.cybernetics.headId).toBe(armCybernetic.id);
+    expect(characterSheetFormSchema.safeParse(restored).success).toBe(false);
   });
 });
