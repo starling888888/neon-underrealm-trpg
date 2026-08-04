@@ -49,7 +49,7 @@
 
 - `site-layout` のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。
 - `page-toc` に従い、H1を目次に含めず、H2 / H3の見出し階層を維持する。目次の現在位置ハイライトを描かない。
-- `skill-card` のdesktop 3列・mobile 2列、情報の順序、可変高さ、summary非表示を維持する。
+- `skill-card` のdesktop 3列・mobile 2列、情報の順序、可変高さを維持する。
 - 生き様データComponentは、hero、説明、基本・上級スキル、専用アイテムに依存しない。desktopでは生き様ボーナス、能力値ポイント、副能力係数の順で1行3列、mobileでは前2者を上段2列、副能力係数を下段全幅とする。
 - heroは `public/images/data/ikizama/sumi_hero.webp` を表示し、altは`スミのイメージ`とする。実装時は静的公開のbase pathを考慮する。
 

@@ -27,10 +27,6 @@ const requiredLf = z
   .trim()
   .min(1)
   .refine((value) => !value.includes("\r"), "Line breaks must use LF.");
-const optionalLf = z
-  .string()
-  .refine((value) => !value.includes("\r"), "Line breaks must use LF.");
-
 export const SkillTimingSchema = z
   .string()
   .refine(isSkillTiming, "Timing must use permitted timing notation.");
@@ -48,7 +44,6 @@ export const SkillSchema = z
     target: optionalOneLine,
     range: optionalOneLine,
     usageRestriction: optionalOneLine,
-    summary: optionalLf,
     effect: requiredLf,
     sourceOrder: z.number().int().positive(),
   })

@@ -21,7 +21,6 @@ const headers = [
   "対象",
   "射程",
   "使用制限",
-  "概要",
   "効果",
 ];
 
@@ -30,7 +29,6 @@ describe("ryugi skill conversion", () => {
     await using fixture = await createFixture();
     const kenkaya = row("basic", "連携\r\n斬撃", "Aa/Ra");
     kenkaya[7] = "";
-    kenkaya[10] = "";
     await workbook(fixture.input, [
       { name: "kenkaya", rows: [headers, kenkaya] },
     ]);
@@ -48,7 +46,6 @@ describe("ryugi skill conversion", () => {
     );
     expect(initial.data.kenkaya.basic[0]?.name).toBe("連携\n斬撃");
     expect(initial.data.kenkaya.basic[0]?.target).toBe(null);
-    expect(initial.data.kenkaya.basic[0]?.summary).toBe("");
     expect(initial.data.kenkaya.basic[0]?.sourceOrder).toBe(1);
 
     await workbook(fixture.input, [
@@ -114,20 +111,7 @@ describe("ryugi skill conversion", () => {
 });
 
 function row(category: string, name: string, timing: string): string[] {
-  return [
-    category,
-    name,
-    "1",
-    timing,
-    "",
-    "能動",
-    "",
-    "自身",
-    "",
-    "",
-    "概要\r\n詳細",
-    "効果",
-  ];
+  return [category, name, "1", timing, "", "能動", "", "自身", "", "", "効果"];
 }
 
 async function createFixture() {

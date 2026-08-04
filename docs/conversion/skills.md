@@ -64,7 +64,6 @@ Excelのヘッダー・行・値を検証し、カテゴリ分割、名称hash�
 | `対象`       | `target`                 |     任意 | 1行の文字列。空欄は `null`。                                          |
 | `射程`       | `range`                  |     任意 | 1行の文字列。空欄は `null`。                                          |
 | `使用制限`   | `usageRestriction`       |     任意 | 1行の文字列。空欄は `null`。                                          |
-| `概要`       | `summary`                |     任意 | 任意の文字列とLF改行を許可する。空欄は空文字列 `""` として出力する。  |
 | `効果`       | `effect`                 |     必須 | 空文字列はエラー。任意の文字列とLF改行を許可する。                    |
 
 `概要` は、画面で表示する任意テキストであり、空欄を含めて常にstringとして扱う。
@@ -157,7 +156,7 @@ Skill IDには`nameHash`を採用する。`nameHash`の生成規則とIDの重�
 各カテゴリ配列は、同じ所属ID・カテゴリ内のExcel入力順を保持する。`sourceOrder` は各入力シートの
 2行目を1とする、同じ所属ID内で一意な正の連番とする。`Skill` は `id`、`category`、`name`、
 `maxLevel`、`timing`、`cost`、`proficiency`、`acquisitionRestriction`、`target`、`range`、
-`usageRestriction`、`summary`、`effect`、`sourceOrder` を持つ。所属IDを各 `Skill` に重複出力しない。
+`usageRestriction`、`effect`、`sourceOrder` を持つ。所属IDを各 `Skill` に重複出力しない。
 
 `updatedAt` はISO 8601かつJSTオフセット `+09:00` を持つ。既存JSONが比較に必要な形状であり、
 既存JSONの `data` と今回の `data` が同一なら既存値を維持する。異なる場合は、所有者ID集合の変更を

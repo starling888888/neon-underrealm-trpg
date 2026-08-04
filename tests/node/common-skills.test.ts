@@ -20,7 +20,6 @@ const headers = [
   "対象",
   "射程",
   "使用制限",
-  "概要",
   "効果",
 ];
 const contract = { dataName: "common-skills", idPrefix: "skill-common" };
@@ -48,7 +47,6 @@ describe("skill conversion", () => {
       skillId("skill-common", "bonus", "a", "終撃"),
     ]);
     expect(result.data.basic[0]?.proficiency).toBe(null);
-    expect(result.data.bonus[0]?.summary).toBe("概要\n詳細");
     expect(result.updatedAt).toBe("2026-07-14T09:00:00+09:00");
     expect(warnings[0] ?? "").toMatch(/previous group "Pv".*timing "R"/);
     expect(() => assertSkillsJson(result, contract)).not.toThrow();
@@ -83,7 +81,6 @@ describe("skill conversion", () => {
               target: "自身",
               range: null,
               usageRestriction: null,
-              summary: "概要\n詳細",
               effect: "効果",
               sourceOrder: 1,
             },
@@ -116,11 +113,10 @@ describe("skill conversion", () => {
     );
   });
 
-  it("accepts multiline names, nullable targets, empty summaries, and combined timings", async () => {
+  it("accepts multiline names, nullable targets, and combined timings", async () => {
     await using fixture = await createFixture();
     const skill = row("basic", "連携\r\n行動", "Ra / Aa");
     skill[7] = "";
-    skill[10] = "";
     await workbook(fixture.input, "skills", [headers, skill]);
 
     const result = await convertCommonSkills({
@@ -141,7 +137,6 @@ describe("skill conversion", () => {
       target: null,
       range: null,
       usageRestriction: null,
-      summary: "",
       effect: "効果",
       sourceOrder: 1,
     });
@@ -159,7 +154,7 @@ describe("skill conversion", () => {
         sheetName: "skills",
         outputPath: fixture.output,
       }),
-    ).rejects.toThrow(/Unexpected header at row 1, column M: "ID"/);
+    ).rejects.toThrow(/Unexpected header at row 1, column L: "ID"/);
     await workbook(fixture.input, "skills", [
       headers,
       [...row("bonus", "一撃", "Pv"), "余分な値"],
@@ -170,7 +165,7 @@ describe("skill conversion", () => {
         sheetName: "skills",
         outputPath: fixture.output,
       }),
-    ).rejects.toThrow(/Unexpected value at row 2, column M: "余分な値"/);
+    ).rejects.toThrow(/Unexpected value at row 2, column L: "余分な値"/);
   });
 
   it("rejects missing fields and invalid categories", async () => {
@@ -275,7 +270,6 @@ function row(
     "自身",
     "",
     "",
-    "概要\r\n詳細",
     "効果",
   ];
 }

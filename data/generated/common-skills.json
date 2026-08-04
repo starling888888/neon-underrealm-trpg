@@ -1,6 +1,6 @@
 {
   "dataName": "common-skills",
-  "updatedAt": "2026-08-02T11:43:59+09:00",
+  "updatedAt": "2026-08-04T22:17:46+09:00",
   "data": {
     "bonus": [
       {
@@ -14,7 +14,6 @@
         "target": "1体",
         "range": "武器",
         "usageRestriction": null,
-        "summary": "仕事人が最初に身につける攻撃。",
         "effect": "攻撃を行う。",
         "sourceOrder": 1,
         "id": "skill-common-bonus-a-82c112996f93"
@@ -32,7 +31,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "基礎の攻撃を鍛錬し続けて使えるようになる。",
         "effect": "一手番に基本の一撃をlv+1回使用して良い。（行動回数そのものは増加しない。）ただし、このスキルを習得したら基本の一撃だけに効果があるスキル、アイテムの効果はすべて発揮されない。",
         "sourceOrder": 2,
         "id": "skill-common-basic-pv-f2cf28459e4f"
@@ -48,7 +46,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "基本の一撃を強化し、次の攻撃を強力にする。",
         "effect": "基本の一撃の効果に、コンボ増加値+1を加える。他の基本の一撃強化と同時に効果は発揮しない。他の基本の一撃強化とは別のスキルとして扱う。",
         "sourceOrder": 3,
         "id": "skill-common-basic-pv-4bb6bf2fcae7"
@@ -64,7 +61,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "基本の一撃を強化し、より強い一撃にする。",
         "effect": "基本の一撃の効果に、効果値+1を加える。他の基本の一撃強化と同時に効果は発揮しない。他の基本の一撃強化とは別のスキルとして扱う。",
         "sourceOrder": 4,
         "id": "skill-common-basic-pv-76efb6f481d9"
@@ -80,7 +76,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "基本の一撃を強化し、より精密な一撃にする。",
         "effect": "基本の一撃の効果に、判定数+1を加える。他の基本の一撃強化と同時に効果は発揮しない。他の基本の一撃強化とは別のスキルとして扱う。",
         "sourceOrder": 5,
         "id": "skill-common-basic-pv-d85f0e921ea4"
@@ -96,7 +91,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "体力を増加させる。",
         "effect": "最大体力を+lv×5点する。",
         "sourceOrder": 6,
         "id": "skill-common-basic-pv-b43ace1f7206"
@@ -112,7 +106,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "lv/Sn",
-        "summary": "精神力の代わりに体力を消費できるようになる。",
         "effect": "スキルのコストとして精神力を支払う際に使用。そのコストのすべてまたは一部を体力で支払っても良い。体力が0未満になるように支払うことはできない。",
         "sourceOrder": 7,
         "id": "skill-common-basic-sp-549ceabb5010"
@@ -128,7 +121,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "精神力を増加させる。",
         "effect": "最大精神力を+lv×5点する。",
         "sourceOrder": 8,
         "id": "skill-common-basic-pv-eb11f526b15e"
@@ -144,7 +136,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "lv/Sn",
-        "summary": "ダメージを精神力で肩代わりできるようになる。",
         "effect": "攻撃のダメージを体力ではなく精神力に受けることができる。ただし体力と精神力に分割して受けることはできず、精神力が0未満になる場合も使用できない。",
         "sourceOrder": 9,
         "id": "skill-common-basic-d-51a99f798b24"
@@ -160,7 +151,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "防御力を上昇させる。",
         "effect": "防御力+lv×2。",
         "sourceOrder": 10,
         "id": "skill-common-basic-pv-ecd9118c07ec"
@@ -176,7 +166,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "ダメージ軽減を上昇させる。",
         "effect": "ダメージ軽減+lv。",
         "sourceOrder": 11,
         "id": "skill-common-basic-pv-4e86815b7a31"
@@ -192,7 +181,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "覚悟で立ち上がるときの回復量を増やす。",
         "effect": "覚悟を使用した際の体力回復量+lv×2d6点。他の覚悟増強とは別のスキルとして扱う。",
         "sourceOrder": 12,
         "id": "skill-common-basic-pv-3f26aebf68c5"
@@ -208,7 +196,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "覚悟で攻撃を強化するときの強化量を増やす。",
         "effect": "覚悟を使用した際の能動判定数+lv÷2。他の覚悟増強とは別のスキルとして扱う。",
         "sourceOrder": 13,
         "id": "skill-common-basic-pv-809f880285ea"
@@ -224,7 +211,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "覚悟でリアクションを強化するときの強化量を増やす。",
         "effect": "覚悟を使用した際の受動判定数+lv。他の覚悟増強とは別のスキルとして扱う。",
         "sourceOrder": 14,
         "id": "skill-common-basic-pv-33718016fb39"
@@ -240,7 +226,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "覚悟で気合を獲得するときの獲得量を増やす。",
         "effect": "覚悟を使用した際の気合獲得量+lv÷2。ただし気合を獲得する「覚悟の力」には効果を発揮しない。他の覚悟増強とは別のスキルとして扱う。",
         "sourceOrder": 15,
         "id": "skill-common-basic-pv-5f2dff99a4b4"
@@ -256,7 +241,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "より多くの人と縁を結べるようになる。",
         "effect": "結べる縁の数が+1される。",
         "sourceOrder": 16,
         "id": "skill-common-basic-pv-9ffdfb2c40a5"
@@ -272,7 +256,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R",
-        "summary": "攻撃の軌跡を見て、命中を助ける。",
         "effect": "攻撃の達成値+lv。",
         "sourceOrder": 17,
         "id": "skill-common-basic-aa-973990acfcb5"
@@ -288,7 +271,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "攻撃の命中を安定させる。",
         "effect": "基準値が3+lv以下の攻撃の達成値+1。",
         "sourceOrder": 18,
         "id": "skill-common-basic-pv-215d2e89dc07"
@@ -304,7 +286,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "重い攻撃の命中を安定させる。",
         "effect": "lv1: 基準値が4以下の攻撃の達成値+1。\nlv2: 基準値が5以下の攻撃の達成値が+1されるようになる。\nlv3: 基準値が4以下の攻撃の達成値が更に+1される。（合計+2）",
         "sourceOrder": 19,
         "id": "skill-common-basic-pv-295f21fcb9ef"
@@ -320,7 +301,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "summary": "相手の反応を見て即座に攻撃の軌道を変える。",
         "effect": "攻撃の達成値+3。",
         "sourceOrder": 20,
         "id": "skill-common-basic-ra-378595018986"
@@ -336,7 +316,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "自分を鼓舞し、気合を獲得する。",
         "effect": "気合をlv点獲得する。",
         "sourceOrder": 21,
         "id": "skill-common-basic-m-001b752e398b"
@@ -352,7 +331,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "戦況を観察し、行動順を遅らせる。",
         "effect": "ラウンド終了時まで行動値が0になる。同じラウンド中に複数のキャラクターがこのスキルを使用した場合、もともとの行動値が低い順から手番を行う。",
         "sourceOrder": 22,
         "id": "skill-common-basic-ini-5abb716b4f16"
@@ -368,7 +346,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sc",
-        "summary": "攻撃に対する反応を瞬間的に上昇させる。",
         "effect": "リアクションの達成値+2。",
         "sourceOrder": 23,
         "id": "skill-common-basic-ra-5bcca788afc0"
@@ -384,7 +361,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "lv/Sc",
-        "summary": "無理やり行動の結果を変える。",
         "effect": "あなたが攻撃側でもリアクション側でも使用可能。判定の出目1つを気合獲得値より大きい任意の出目に変更できる。このスキルは1回のタイミングで複数回使用でき、他のタイミング「リアクション直後」のスキルと同時に使用できる。",
         "sourceOrder": 24,
         "id": "skill-common-basic-ra-5937541da0e4"
@@ -400,7 +376,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R",
-        "summary": "次の攻撃に対して防御を備える。",
         "effect": "防御判定に失敗した掛け合い時に使用。次の攻撃時、ガード値+3、防御判定数+1される。\nlv2: このスキルのコストが0になる。 \nlv3: 次の攻撃時ではなく、敵対キャラクターの手番中、ガード値+3、防御判定数+1される。",
         "sourceOrder": 25,
         "id": "skill-common-basic-d-ff601b9fb608"
@@ -416,7 +391,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R",
-        "summary": "次の攻撃に対して回避を備える。",
         "effect": "回避判定に失敗した掛け合い時に使用。次の回避の基準値は+1される。\nlv2: このスキルのコストが0になる。\nlv3: 次の回避ではなく、敵対キャラクターの手番中、回避の基準値が+1される。",
         "sourceOrder": 26,
         "id": "skill-common-basic-d-0dcae301437e"
@@ -432,7 +406,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "summary": "特殊攻撃を耐えた際にダメージを更に減少させる。",
         "effect": "耐え判定を行った掛け合い時に使用。（成否不問）。受けるダメージを追加で「肉体」点減少する。",
         "sourceOrder": 27,
         "id": "skill-common-basic-d-41d8f35dc165"
@@ -448,7 +421,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "summary": "特殊攻撃の抵抗に失敗した際でもダメージを減少させる。",
         "effect": "抵抗判定を行った掛け合い時に使用。（成否不問）。受けるダメージを追加で「精神」点減少する。（成功時は半減した上で「精神」点減少させる。）",
         "sourceOrder": 28,
         "id": "skill-common-basic-d-ffa609deb8b8"
@@ -464,7 +436,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "summary": "素早く射撃武器に弾丸を装填する。",
         "effect": "戦闘移動のかわりに使用する。装備している射撃武器一つに装填する。\nlv2: このスキルのコストは0になる。\nlv3: このスキルを「タイミング：INI」で使用しても良い。",
         "sourceOrder": 29,
         "id": "skill-common-basic-sp-6cc26ddc498a"
@@ -480,7 +451,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "summary": "攻撃以外の行動を素早く2回行う。",
         "effect": "ただちに「タイミング：M」のスキルまたは行動を追加で2つ使用する。",
         "sourceOrder": 30,
         "id": "skill-common-basic-m-e16dbadf047f"
@@ -496,7 +466,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "summary": "そのラウンドの戦闘準備を2回行う。",
         "effect": "ただちに「タイミング：SU」のスキルまたは行動を追加で2つ使用する。",
         "sourceOrder": 31,
         "id": "skill-common-basic-su-29204f696ac8"
@@ -512,7 +481,6 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "summary": "",
         "effect": "ただちに「タイミング：D」のスキルまたは行動を追加で2つ使用する。",
         "sourceOrder": 32,
         "id": "skill-common-basic-d-f5c506096925"

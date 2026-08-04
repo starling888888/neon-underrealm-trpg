@@ -56,7 +56,7 @@ milestone-02 Phase 1で実施する技術的なTODOを回収し、実施しな�
 
 - [ ] Astro Component contract testの対象・責務・実行scriptが定義され、代表Componentで固定propsの契約を検証できる。
 - [x] `tests/node/`と`tests/contract/`の全testがVitestのrunnerとassertion APIで実行され、Node test runnerまたは`node:assert/strict`を使うtestが残っていない。
-- [ ] Google Spreadsheetの`summary`列を人間が手動削除し、完了を共有している。
+- [x] Google Spreadsheetの`summary`列を人間が手動削除し、完了を共有している。
 - [ ] スキルの`summary`列・変換仕様・型・生成JSON・`SkillCard` props・関連testおよび正本記述を、Spreadsheet削除確認後に互換期間を設けず切り替える。リリースノートなど別用途の`summary`は変更しない。
 - [ ] `-local`確認ページがPagefind indexに含まれず、公開検索と検索Visual Testが安定して通る。
 - [ ] キャラクターシートの派生logicがマスタID解決に依存せず、未知IDの扱いをpersistence / import境界で明示できる。
@@ -148,6 +148,7 @@ Gate IDと状態は`docs/issue/milestone-02-phase-01-todo-resolution/plan.md`だ
 
 ### スキルsummary列の削除
 
+- [x] G4のスキル`summary`列・変換・型・生成JSON・props・test・正本記述を削除する。
 - 開始条件: 人間がGoogle Spreadsheetの`summary`列を手動削除し、完了を共有している。確認前はconverter・生成JSONを変更せず停止する。
 - 変更: 開始条件の確認後、スキル用`summary`の変換仕様、型、生成JSON、props、test、正本記述を互換期間なしで削除する。
 - 完了条件: スキルのsummary保持がなく、リリースノート、SEO、キャラクターシートなど別用途のsummaryを変更していない。
