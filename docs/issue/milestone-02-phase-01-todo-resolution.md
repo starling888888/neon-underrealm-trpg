@@ -54,28 +54,28 @@ milestone-02 Phase 1で実施する技術的なTODOを回収し、実施しな�
 
 ## 完了条件
 
-- [ ] Astro Component contract testの対象・責務・実行scriptが定義され、代表Componentで固定propsの契約を検証できる。
+- [x] Astro Component contract testの対象・責務・実行scriptが定義され、代表Componentで固定propsの契約を検証できる。
 - [x] `tests/node/`と`tests/contract/`の全testがVitestのrunnerとassertion APIで実行され、Node test runnerまたは`node:assert/strict`を使うtestが残っていない。
 - [x] Google Spreadsheetの`summary`列を人間が手動削除し、完了を共有している。
-- [ ] スキルの`summary`列・変換仕様・型・生成JSON・`SkillCard` props・関連testおよび正本記述を、Spreadsheet削除確認後に互換期間を設けず切り替える。リリースノートなど別用途の`summary`は変更しない。
+- [x] スキルの`summary`列・変換仕様・型・生成JSON・`SkillCard` props・関連testおよび正本記述を、Spreadsheet削除確認後に互換期間を設けず切り替える。リリースノートなど別用途の`summary`は変更しない。
 - [x] `-local`確認ページがPagefind indexに含まれず、公開検索と検索Visual Testが安定して通る。
-- [ ] キャラクターシートの派生logicがマスタID解決に依存せず、未知IDの扱いをpersistence / import境界で明示できる。
-- [ ] `docs/TODO.md`、`docs/TODO-done.md`、milestone-02計画が今回のユーザー判断と矛盾しない。
-- [ ] 各Gateが、その対象TODO、変更内容、完了条件、検証方法に従って単独commitできる。
-- [ ] `npm run check`が通る。
-- [ ] `npm run test`が通る。
-- [ ] `npm run build`が通る。
+- [x] キャラクターシートの派生logicがマスタID解決に依存せず、未知IDの扱いをpersistence / import境界で明示できる。
+- [x] `docs/TODO.md`、`docs/TODO-done.md`、milestone-02計画が今回のユーザー判断と矛盾しない。
+- [x] 各Gateが、その対象TODO、変更内容、完了条件、検証方法に従って単独commitできる。
+- [x] `npm run check`が通る。
+- [x] `npm run test`が通る。
+- [x] `npm run build`が通る。
 
 ## チェックポイント
 
-- [ ] Astro Component contract testとVisual Testの責務が混在していない。
-- [ ] Vitest移行後もscript conversion test、React Component / hook test、build contract test、E2Eの責務が維持されている。
-- [ ] スキルsummary削除がリリースノート、SEO、キャラクターシート内の別用途summaryを変更していない。
+- [x] Astro Component contract testとVisual Testの責務が混在していない。
+- [x] Vitest移行後もscript conversion test、React Component / hook test、build contract test、E2Eの責務が維持されている。
+- [x] スキルsummary削除がリリースノート、SEO、キャラクターシート内の別用途summaryを変更していない。
 - [x] GitHub Pagesのsubpath公開とPagefindの公開検索結果に影響しない。
-- [ ] キャラクターシートの表示・保存済みJSONの復元契約を意図せず変更していない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] キャラクターシートの表示・保存済みJSONの復元契約を意図せず変更していない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
