@@ -134,8 +134,9 @@ Gate IDと状態は`docs/issue/milestone-02-phase-01-todo-resolution/plan.md`だ
 
 ### Astro Component contract test
 
-- 変更: Astro Componentの固定props契約を検証するtest基盤と代表testを追加する。
-- 完了条件: Visual Testと別のscriptで、代表Componentの文言、値、fallback、想定タグまたは属性を確認できる。
+- [x] G2のAstro Component contract test基盤と対象9 Componentのtestを追加する。
+- 変更: `SkillCard`、6種のitem card、`NpcCard`、`Callout`を対象に、Astro Componentの固定props契約を検証するtest基盤を追加する。各Componentは1 test fileに分け、既存の`test:component`で実行する。
+- 完了条件: Visual Testと別のscriptで、対象9 Componentの文言、値、fallback、想定タグまたは属性を確認できる。
 - 検証: 対象test、`npm run check`、`npm run test`。
 
 ### Vitest全面移行
