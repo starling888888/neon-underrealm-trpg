@@ -2,6 +2,7 @@
 layout: ../../layouts/MDXLayout.astro
 title: MDX表示確認
 description: Markdown本文として見出しや段落を書けることを確認するための最小ページです。
+pagefindIgnore: true
 ---
 
 import InternalLink from "../../components/_common/InternalLink.astro";
@@ -9,8 +10,6 @@ import Callout from "../../components/_common/Callout.astro";
 import ImageBlock from "../../components/_common/ImageBlock.astro";
 import MdxExample from "../../components/_common/MdxExample.astro";
 import { topLogoImageDimensions } from "../../lib/site/imageDimensions";
-
-<div data-pagefind-ignore>
 
 # MDX表示確認
 
@@ -61,5 +60,3 @@ CalloutをMDX本文内から表示しています。詳しい一覧確認はロ�
 />
 
 <InternalLink href="/">トップページへ戻る</InternalLink>
-
-</div>

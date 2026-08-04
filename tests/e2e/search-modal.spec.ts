@@ -4,6 +4,15 @@ import { siteBaseUrl, siteRoutes, siteViewports } from "../support/site";
 
 const basicAttackId = `skill-common-bonus-a-${createHash("基本の一撃")}`;
 const basicAttackResultSelector = `.search-result-link[href*="/data/common-skills/"][href$="#${basicAttackId}"]`;
+const localFixtureSearchTerms = [
+  "Callout一覧確認",
+  "データカード カタログ",
+  "Header / Footer確認",
+  "MDX表示確認",
+  "NPCカード カタログ",
+  "前後ナビゲーション確認",
+  "Global styles確認",
+];
 
 test("search panel desktop @search-modal-desktop", async ({ page }) => {
   await page.setViewportSize(siteViewports.desktop);
@@ -164,24 +173,32 @@ test("search panel excludes -local fixture pages from Pagefind @search-modal-res
 
   await page.goto(siteRoutes.commonSkills);
 
-  const resultUrls = await page.evaluate(async (baseUrl) => {
-    const bundlePath = new URL("pagefind/", baseUrl).pathname;
-    const pagefind = (await import(`${bundlePath}pagefind.js`)) as {
-      init: () => Promise<void>;
-      options: (options: { bundlePath: string }) => Promise<void>;
-      search: (term: string) => Promise<{
-        results: Array<{ data: () => Promise<{ url: string }> }>;
-      }>;
-    };
+  const resultUrls = await page.evaluate(
+    async ({ baseUrl, terms }) => {
+      const bundlePath = new URL("pagefind/", baseUrl).pathname;
+      const pagefind = (await import(`${bundlePath}pagefind.js`)) as {
+        init: () => Promise<void>;
+        options: (options: { bundlePath: string }) => Promise<void>;
+        search: (term: string) => Promise<{
+          results: Array<{ data: () => Promise<{ url: string }> }>;
+        }>;
+      };
 
-    await pagefind.options({ bundlePath });
-    await pagefind.init();
-    const response = await pagefind.search("ローカル確認用カタログ");
+      await pagefind.options({ bundlePath });
+      await pagefind.init();
+      const searchResults = await Promise.all(
+        terms.map(async (term) => {
+          const response = await pagefind.search(term);
+          return Promise.all(
+            response.results.map(async (result) => (await result.data()).url),
+          );
+        }),
+      );
 
-    return Promise.all(
-      response.results.map(async (result) => (await result.data()).url),
-    );
-  }, siteBaseUrl);
+      return searchResults.flat();
+    },
+    { baseUrl: siteBaseUrl, terms: localFixtureSearchTerms },
+  );
 
   expect(resultUrls).not.toContainEqual(expect.stringContaining("/-local/"));
 });

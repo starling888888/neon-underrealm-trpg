@@ -3,13 +3,12 @@ layout: ../../layouts/MDXLayout.astro
 title: Callout一覧確認
 description: Callout Componentの6種表示を確認するためのローカル確認ページです。
 noindex: true
+pagefindIgnore: true
 showPageToc: true
 ---
 
 import Callout from "../../components/_common/Callout.astro";
 import InternalLink from "../../components/_common/InternalLink.astro";
-
-<div data-pagefind-ignore>
 
 # Callout一覧確認
 
@@ -67,5 +66,3 @@ H4〜H6は見出し構造として出力しますが、ページ内目次には�
 <Callout type="note" title="H6見出し" titleHeadingLevel={6}>
 既存のPageTocはH2とH3だけを対象にします。
 </Callout>
-
-</div>

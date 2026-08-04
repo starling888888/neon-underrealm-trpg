@@ -1,5 +1,11 @@
 ---
 import SiteMenu from "../components/layout/SiteMenu.astro";
+
+export interface Props {
+  pagefindIgnore?: boolean;
+}
+
+const { pagefindIgnore = false } = Astro.props;
 ---
 
 <div class="desktop-layout-no-toc">
@@ -7,7 +13,11 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
     <SiteMenu />
   </aside>
 
-  <main class="site-main" data-page-content data-pagefind-body>
+  <main
+    class="site-main"
+    data-page-content
+    data-pagefind-body={pagefindIgnore ? undefined : ""}
+  >
     <div class="no-toc-page">
       <slot />
     </div>

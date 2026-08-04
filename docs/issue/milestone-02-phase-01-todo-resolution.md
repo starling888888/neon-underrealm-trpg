@@ -177,3 +177,34 @@ Gate IDと状態は`docs/issue/milestone-02-phase-01-todo-resolution/plan.md`だ
   - サイトメニュー順序変更の既存design反映: 最新canonical screenshotを取得する現行方針により完了済み。
 - 完了条件: 3件がactive TODOから除かれ、非対応理由または完了根拠が`handling result`に記録されている。
 - 検証: `docs/TODO.md`と`docs/TODO-done.md`に重複・矛盾がない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- スキル変換仕様が、削除済みの`概要`（`summary`）列を12列の入力契約と画面表示用stringとして残している。
+- `data-pagefind-ignore`は`-local`ページ本文だけを除外し、ページのmetadata・title・外側の`data-pagefind-body`を残すため、ページ単位のPagefind除外になっていない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation:
+  - `docs/conversion/skills.md`は12列のヘッダーと`概要`の保持規定を残す一方、converter・型・生成JSONは11列・`summary`なしへ切り替わっている。
+  - Pagefind公式仕様では、`data-pagefind-ignore`の既定値`index`は本文を除外してもmetadata・デフォルトtitleを処理し続ける。`-local` routeには`data-pagefind-body`とmetadataの出力経路が残る。
+  - 実装済みG2-G6 TODOのactive TODOからの退避は、`docs/TODO-done.md`のmerge済み条件とAGENTS.mdのpost-merge tracking更新に従う。merge前の本PRでは追跡更新を行わず、今回のレビュー指摘としては対応対象にしない。
+
+### 対応方針
+
+- スキル変換仕様を現行の11列・`summary`なしの契約へ修正し、関連testを更新する。
+- `-local` routeをPagefindページ単位で対象外にし、生成indexに`/-local/` URLがないことを検証する。
+- 実装済みTODOの`TODO-done`退避は、PR merge後に`post-merge-plan-update`で扱う。
+
+### 対応完了チェックリスト
+
+- [x] `docs/conversion/skills.md`の入力列・検証仕様を現行converterへ整合する。
+- [x] `-local` routeをPagefind indexからページ単位で除外する。
+- [x] Pagefind indexに`/-local/` URLが含まれないtestを追加する。
+- [x] `npm run check`が通る。
+- [x] `npm run test`が通る。
+- [x] `npm run build`が通る。
