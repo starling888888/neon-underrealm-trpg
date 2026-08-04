@@ -14,7 +14,7 @@ milestone-01の履歴は `docs/issue/milestone-01/plan.md`、現在のスコー�
 ## Phase 1: milestone-01後の整理
 
 - milestone-02-phase-01-github-issue-archive — GitHub Issue #186
-- `docs/TODO.md` の対応方針を整理する。
+- [ ] `milestone-02-phase-01-todo-resolution` — `docs/TODO.md` の対応方針を整理し、Phase 1で回収する技術的TODOをGate単位で実装する。
 - `docs/agent-failure-log.md` の未反映項目を監査し、必要な恒久対応を計画する。
 
 ## Phase 2: GMセクション
@@ -28,6 +28,9 @@ milestone-01の履歴は `docs/issue/milestone-01/plan.md`、現在のスコー�
 
 - 専用の用語集ページを追加する。
 - データとスキルを探すための絞り込みを追加する。
+- キャラクターシートの候補行が選択可能であることを視覚的に伝えるdesignを検討する。
+- 覚悟から縁へ戻す効果が許可される意図を、ルール本文とスキル効果で明確にする。
+- 初期表示で収まらない表の情報設計とresponsive表示を検討する。
 - 対象ページ、条件、モバイルでの操作性、検索との役割分担を個別issueで定義する。
 
 ## Phase 4: サイト体験の改善
