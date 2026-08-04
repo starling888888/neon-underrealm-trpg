@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import test from "node:test";
+import { expect, test } from "vitest";
 
 import {
   createCcfoliaCharacterClipboardData,
@@ -23,7 +22,7 @@ const input = {
 test("creates the minimal CCFOLIA character payload in its required status order", () => {
   const data = createCcfoliaCharacterClipboardData(input);
 
-  assert.deepEqual(data, {
+  expect(data).toEqual({
     kind: "character",
     data: {
       name: "クロガネ",
@@ -40,9 +39,8 @@ test("creates the minimal CCFOLIA character payload in its required status order
       ],
     },
   });
-  assert.equal("commands" in data.data, false);
-  assert.deepEqual(
-    JSON.parse(serializeCcfoliaCharacterClipboardData(input)),
+  expect("commands" in data.data).toBe(false);
+  expect(JSON.parse(serializeCcfoliaCharacterClipboardData(input))).toEqual(
     data,
   );
 });
@@ -61,9 +59,9 @@ test("does not clamp entered bonds and converts unset or non-finite derived valu
     pcName: "",
   });
 
-  assert.equal(data.data.name, "");
-  assert.equal(data.data.initiative, 0);
-  assert.deepEqual(data.data.status.slice(0, 5), [
+  expect(data.data.name).toBe("");
+  expect(data.data.initiative).toBe(0);
+  expect(data.data.status.slice(0, 5)).toEqual([
     { label: "体力", max: 0, value: 0 },
     { label: "精神力", max: 0, value: 0 },
     { label: "気合", max: 0, value: 0 },

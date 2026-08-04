@@ -1,5 +1,3 @@
-import { getIkizamaById } from "../../lib/data/ikizama";
-import { getRyugiById } from "../../lib/data/ryugi-list";
 import type { Ikizama } from "../../lib/types/ikizama";
 import type { Ryugi } from "../../lib/types/ryugi";
 import {
@@ -8,9 +6,9 @@ import {
   type BuildValues,
 } from "../form-values";
 
-type BuildSources = {
-  ikizama: Ikizama | undefined;
-  primaryRyugi: Ryugi | undefined;
+export type BuildSources = {
+  ikizama: Ikizama | null;
+  primaryRyugi: Ryugi | null;
 };
 
 export type AttributeDerivedValues = {
@@ -49,17 +47,6 @@ export type BuildDerivedValues = {
   spentExperience: number;
 };
 
-function getSources(build: BuildValues): BuildSources {
-  return {
-    ikizama:
-      build.ikizamaId === null ? undefined : getIkizamaById(build.ikizamaId),
-    primaryRyugi:
-      build.primaryRyugiId === null
-        ? undefined
-        : getRyugiById(build.primaryRyugiId),
-  };
-}
-
 function isSamePointAllocation(build: BuildValues, ikizama: Ikizama): boolean {
   const actual = attributeNames
     .map((attribute) => build.attributes[attribute].points)
@@ -87,12 +74,12 @@ function getIkizamaCoefficients(ikizama: Ikizama, level: number) {
   return ikizama.secondaryAttributeCoefficients.level10;
 }
 
-/** Derives G7-only build values without depending on React or form state. */
+/** Derives build values from form values and already-resolved master data. */
 export function calculateBuild(
   build: BuildValues,
+  { ikizama, primaryRyugi }: BuildSources,
   commonSkillLevelTotal = 0,
 ): BuildDerivedValues {
-  const { ikizama, primaryRyugi } = getSources(build);
   const primaryLevelInvalid = build.primaryRyugiLevel < 1;
   const ikizamaLevelInvalid = build.ikizamaLevel < 1;
   const otherRyugiIds = build.otherRyugi.flatMap((otherRyugi) =>
@@ -137,7 +124,7 @@ export function calculateBuild(
     0,
   );
   const hasPointAllocationError =
-    ikizama !== undefined &&
+    ikizama !== null &&
     (!isSamePointAllocation(build, ikizama) ||
       attributeNames.some(
         (attribute) => build.attributes[attribute].points < 0,
@@ -151,10 +138,10 @@ export function calculateBuild(
     );
   const hasAttributeError = hasPointAllocationError || hasGrowthError;
   const spentExperience =
-    (primaryRyugi === undefined
+    (primaryRyugi === null
       ? 0
       : Math.max(0, build.primaryRyugiLevel - 1) * 10) +
-    (ikizama === undefined ? 0 : Math.max(0, build.ikizamaLevel - 1) * 10) +
+    (ikizama === null ? 0 : Math.max(0, build.ikizamaLevel - 1) * 10) +
     build.otherRyugi.reduce(
       (total, otherRyugi) =>
         total +
@@ -170,7 +157,7 @@ export function calculateBuild(
       const values = build.attributes[attribute];
       const base = primaryRyugi?.baseAttributes[attribute] ?? null;
       const permanent =
-        base === null || ikizama === undefined
+        base === null || ikizama === null
           ? null
           : base + values.points + values.growth + values.permanentModifier;
 
@@ -186,7 +173,7 @@ export function calculateBuild(
     }),
   ) as Record<AttributeName, AttributeDerivedValues>;
   const ikizamaCoefficients =
-    ikizama === undefined
+    ikizama === null
       ? null
       : getIkizamaCoefficients(ikizama, build.ikizamaLevel);
 
@@ -200,7 +187,7 @@ export function calculateBuild(
     hasPointAllocationError,
     hasRyugiError,
     ikizamaAttributePoints:
-      ikizama === undefined ? null : [...ikizama.attributePoints],
+      ikizama === null ? null : [...ikizama.attributePoints],
     ikizamaLevelInvalid,
     otherRyugiDuplicateRowIds,
     otherRyugiLevelInvalidRowIds,

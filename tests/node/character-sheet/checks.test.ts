@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import test from "node:test";
+import { expect, test } from "vitest";
 
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
@@ -24,7 +23,7 @@ test("calculateChecks derives permanent and temporary counts without persisting 
 
   const result = calculateChecks(checks, attributes);
 
-  assert.deepEqual(result.attacks[0], {
+  expect(result.attacks[0]).toEqual({
     attribute: "strength",
     modifier: -2,
     permanentAttribute: 10,
@@ -34,31 +33,30 @@ test("calculateChecks derives permanent and temporary counts without persisting 
     temporaryAttribute: 11,
     temporaryCheck: 9,
   });
-  assert.equal(result.reactions[2]?.permanentCheck, 7);
-  assert.equal(result.reactions[2]?.temporaryCheck, 8);
-  assert.equal("permanentCheck" in checks.attacks[0], false);
+  expect(result.reactions[2]?.permanentCheck).toBe(7);
+  expect(result.reactions[2]?.temporaryCheck).toBe(8);
+  expect("permanentCheck" in checks.attacks[0]).toBe(false);
 });
 
 test("check defaults map every attack skill and reaction type to the specified attribute", () => {
-  assert.deepEqual(defaultAttributeByAttackSkill, {
+  expect(defaultAttributeByAttackSkill).toEqual({
     assassination: "agility",
     brawl: "strength",
     combat: "body",
     interference: "mind",
     shooting: "perception",
   });
-  assert.deepEqual(defaultAttributeByReaction, {
+  expect(defaultAttributeByReaction).toEqual({
     defense: "strength",
     endurance: "body",
     evasion: "strength",
     resistance: "body",
   });
-  assert.equal(
+  expect(
     characterSheetDefaultValues.checks.reactions.find(
       ({ name }) => name === "resistance",
     )?.attribute,
-    "body",
-  );
+  ).toBe("body");
 });
 
 test("calculateChecks derives all noncombat checks from fixed attributes and doubles only favorite attributes", () => {
@@ -68,31 +66,29 @@ test("calculateChecks derives all noncombat checks from fixed attributes and dou
 
   const result = calculateChecks(checks, attributes);
 
-  assert.deepEqual(
+  expect(
     result.noncombat.map(({ attribute, id }) => ({
       attribute,
       id,
     })),
-    [
-      { attribute: "strength", id: "intimidation" },
-      { attribute: "strength", id: "strengthContest" },
-      { attribute: "strength", id: "willpower" },
-      { attribute: "agility", id: "reconnaissance" },
-      { attribute: "agility", id: "acrobatics" },
-      { attribute: "agility", id: "sleightOfHand" },
-      { attribute: "perception", id: "cheating" },
-      { attribute: "perception", id: "dangerSense" },
-      { attribute: "perception", id: "analysis" },
-      { attribute: "body", id: "driving" },
-      { attribute: "body", id: "survival" },
-      { attribute: "body", id: "jingi" },
-      { attribute: "mind", id: "gambling" },
-      { attribute: "mind", id: "negotiation" },
-      { attribute: "mind", id: "hacking" },
-    ],
-  );
-  assert.deepEqual(
-    characterSheetDictionary.gameDomain.terms.noncombatSkillNames,
+  ).toEqual([
+    { attribute: "strength", id: "intimidation" },
+    { attribute: "strength", id: "strengthContest" },
+    { attribute: "strength", id: "willpower" },
+    { attribute: "agility", id: "reconnaissance" },
+    { attribute: "agility", id: "acrobatics" },
+    { attribute: "agility", id: "sleightOfHand" },
+    { attribute: "perception", id: "cheating" },
+    { attribute: "perception", id: "dangerSense" },
+    { attribute: "perception", id: "analysis" },
+    { attribute: "body", id: "driving" },
+    { attribute: "body", id: "survival" },
+    { attribute: "body", id: "jingi" },
+    { attribute: "mind", id: "gambling" },
+    { attribute: "mind", id: "negotiation" },
+    { attribute: "mind", id: "hacking" },
+  ]);
+  expect(characterSheetDictionary.gameDomain.terms.noncombatSkillNames).toEqual(
     {
       acrobatics: "軽業",
       analysis: "分析",
@@ -111,7 +107,7 @@ test("calculateChecks derives all noncombat checks from fixed attributes and dou
       willpower: "根性",
     },
   );
-  assert.deepEqual(result.noncombat[0], {
+  expect(result.noncombat[0]).toEqual({
     attribute: "strength",
     id: "intimidation",
     isFavorite: true,
@@ -119,7 +115,7 @@ test("calculateChecks derives all noncombat checks from fixed attributes and dou
     permanentCheck: 18,
     temporaryCheck: 20,
   });
-  assert.deepEqual(result.noncombat.at(-1), {
+  expect(result.noncombat.at(-1)).toEqual({
     attribute: "mind",
     id: "hacking",
     isFavorite: false,
@@ -127,5 +123,5 @@ test("calculateChecks derives all noncombat checks from fixed attributes and dou
     permanentCheck: 9,
     temporaryCheck: 10,
   });
-  assert.equal("permanentCheck" in checks.noncombat.intimidation, false);
+  expect("permanentCheck" in checks.noncombat.intimidation).toBe(false);
 });

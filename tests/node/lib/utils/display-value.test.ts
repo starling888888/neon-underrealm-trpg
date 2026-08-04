@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 
 import {
   formatDisplayText,
@@ -8,20 +7,20 @@ import {
 
 describe("formatDisplayValue", () => {
   it("uses the shared unavailable marker for nullish and blank values", () => {
-    assert.equal(formatDisplayValue(null), "-");
-    assert.equal(formatDisplayValue(undefined), "-");
-    assert.equal(formatDisplayValue(""), "-");
-    assert.equal(formatDisplayValue("  "), "-");
-    assert.equal(formatDisplayValue(0), "0");
+    expect(formatDisplayValue(null)).toBe("-");
+    expect(formatDisplayValue(undefined)).toBe("-");
+    expect(formatDisplayValue("")).toBe("-");
+    expect(formatDisplayValue("  ")).toBe("-");
+    expect(formatDisplayValue(0)).toBe("0");
   });
 });
 
 describe("formatDisplayText", () => {
   it("keeps optional prose empty when it is absent or blank", () => {
-    assert.equal(formatDisplayText(null), "");
-    assert.equal(formatDisplayText(undefined), "");
-    assert.equal(formatDisplayText(""), "");
-    assert.equal(formatDisplayText("  "), "");
-    assert.equal(formatDisplayText(" 効果 "), "効果");
+    expect(formatDisplayText(null)).toBe("");
+    expect(formatDisplayText(undefined)).toBe("");
+    expect(formatDisplayText("")).toBe("");
+    expect(formatDisplayText("  ")).toBe("");
+    expect(formatDisplayText(" 効果 ")).toBe("効果");
   });
 });

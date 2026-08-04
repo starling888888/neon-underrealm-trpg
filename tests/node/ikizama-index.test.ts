@@ -1,9 +1,8 @@
-import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, it } from "node:test";
 import { strToU8, zipSync } from "fflate";
+import { describe, expect, it } from "vitest";
 import generated from "../../data/generated/ikizama.json";
 import { convertIkizama } from "../../scripts/convert-ikizama-index/lib";
 import { getIkizamaById, getIkizamaList } from "../../src/lib/data/ikizama";
@@ -65,26 +64,25 @@ describe("ikizama conversion", () => {
       now: new Date("2026-07-15T00:00:00Z"),
     });
 
-    assert.deepEqual(
+    expect(
       result.data.map((ikizama) => [ikizama.id, ikizama.sourceOrder]),
-      [
-        ["first", 1],
-        ["another", 2],
-      ],
-    );
-    assert.deepEqual(result.data[0]?.exclusiveItem, {
+    ).toEqual([
+      ["first", 1],
+      ["another", 2],
+    ]);
+    expect(result.data[0]?.exclusiveItem).toEqual({
       id: "omamori",
       name: "お守り",
     });
-    assert.equal(result.data[0]?.description, "説明\n詳細");
-    assert.equal(result.data[0]?.note?.content, "注意\n補足");
-    assert.deepEqual(result.data[0]?.attributePoints, [5, 4, 3, 2]);
-    assert.equal(result.updatedAt, "2026-07-15T09:00:00+09:00");
-    assert.doesNotThrow(() => assertIkizamaJson(result));
-    assert.doesNotThrow(() => assertIkizamaJson(generated));
-    assert.equal(getIkizamaList()[0]?.id, "burai");
-    assert.equal(getIkizamaById("burai")?.exclusiveItem.id, "omamori");
-    assert.equal(getIkizamaById("unknown"), undefined);
+    expect(result.data[0]?.description).toBe("説明\n詳細");
+    expect(result.data[0]?.note?.content).toBe("注意\n補足");
+    expect(result.data[0]?.attributePoints).toEqual([5, 4, 3, 2]);
+    expect(result.updatedAt).toBe("2026-07-15T09:00:00+09:00");
+    expect(() => assertIkizamaJson(result)).not.toThrow();
+    expect(() => assertIkizamaJson(generated)).not.toThrow();
+    expect(getIkizamaList()[0]?.id).toBe("burai");
+    expect(getIkizamaById("burai")?.exclusiveItem.id).toBe("omamori");
+    expect(getIkizamaById("unknown")).toBe(undefined);
   });
 
   it("keeps updatedAt for unchanged data", async () => {
@@ -103,7 +101,7 @@ describe("ikizama conversion", () => {
       }),
     );
     const result = await convert(fixture);
-    assert.equal(result.updatedAt, "2026-01-01T00:00:00+09:00");
+    expect(result.updatedAt).toBe("2026-01-01T00:00:00+09:00");
   });
 
   it("rejects existing identity changes and allows additions", async () => {
@@ -124,8 +122,7 @@ describe("ikizama conversion", () => {
       headers,
       renamed,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /name for ID "first" must not change/,
     );
 
@@ -135,8 +132,7 @@ describe("ikizama conversion", () => {
       headers,
       changedId,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /ID must not change from "first" to "changed"/,
     );
 
@@ -147,8 +143,7 @@ describe("ikizama conversion", () => {
       headers,
       removed,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Existing ikizama ID "first" must not be removed/,
     );
 
@@ -160,7 +155,7 @@ describe("ikizama conversion", () => {
       row("first"),
       added,
     ]);
-    assert.equal((await convert(fixture)).data.length, 2);
+    expect((await convert(fixture)).data.length).toBe(2);
   });
 
   it("rejects required fields, item mappings, note pairs, and numeric values", async () => {
@@ -170,8 +165,7 @@ describe("ikizama conversion", () => {
       headers,
       row("Invalid"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /ID is invalid at row 3, column A \(ID\)/,
     );
 
@@ -182,8 +176,7 @@ describe("ikizama conversion", () => {
       headers,
       missingItem,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /専用アイテムID is required at row 3, column E \(専用アイテムID\)/,
     );
 
@@ -194,8 +187,7 @@ describe("ikizama conversion", () => {
       headers,
       missingItemName,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /専用アイテム名称 is required at row 3, column F \(専用アイテム名称\)/,
     );
 
@@ -206,8 +198,7 @@ describe("ikizama conversion", () => {
       headers,
       invalidItemType,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /専用アイテムIDと専用アイテム名称 are invalid at row 3, column E \(専用アイテムID\): Unsupported exclusive item type "cybanetics"/,
     );
 
@@ -219,8 +210,7 @@ describe("ikizama conversion", () => {
       headers,
       nonExclusiveItemType,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Unsupported exclusive item type "weapons"/,
     );
 
@@ -231,8 +221,7 @@ describe("ikizama conversion", () => {
       headers,
       mismatchedItemName,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Exclusive item type "omamori" must use name "お守り"/,
     );
 
@@ -241,8 +230,7 @@ describe("ikizama conversion", () => {
       headers,
       row("first", "warning", ""),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /補足タイプ and 補足本文 must both be set at row 3, column H \(補足本文\)/,
     );
 
@@ -251,8 +239,7 @@ describe("ikizama conversion", () => {
       headers,
       row("first", "unknown", "本文"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /補足タイプ is invalid at row 3, column G \(補足タイプ\)/,
     );
 
@@ -263,8 +250,7 @@ describe("ikizama conversion", () => {
       headers,
       decimal,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /体力係数 must be a positive integer at row 3, column I \(体力係数\)/,
     );
 
@@ -275,8 +261,7 @@ describe("ikizama conversion", () => {
       headers,
       invalidPoints,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /能力値ポイント must contain four positive integers at row 3, column O \(能力値ポイント\)/,
     );
   });
@@ -289,8 +274,7 @@ describe("ikizama conversion", () => {
       row("first"),
       row("first"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Duplicate ID at row 4, column A \(ID\)/,
     );
 
@@ -301,8 +285,7 @@ describe("ikizama conversion", () => {
       row("first"),
       duplicateName,
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Duplicate 名称 at row 4, column B \(名称\)/,
     );
 
@@ -311,8 +294,7 @@ describe("ikizama conversion", () => {
       [...headers, "余分な列"],
       row("first"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Unexpected header at row 2, column P: "余分な列"/,
     );
 
@@ -323,8 +305,7 @@ describe("ikizama conversion", () => {
       headers,
       row("first"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Invalid header at row 1, column E: expected "専用アイテム", received "専用"/,
     );
 
@@ -333,8 +314,7 @@ describe("ikizama conversion", () => {
       headers.slice(0, -1),
       row("first"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Invalid header at row 2, column O: expected "能力値ポイント", received ""/,
     );
 
@@ -345,8 +325,7 @@ describe("ikizama conversion", () => {
       Array(15).fill(""),
       row("another"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Blank row found at row 4, column A \(ID\) before data row 5/,
     );
   });
@@ -357,29 +336,28 @@ describe("ikizama conversion", () => {
       ...duplicateId.data[1],
       id: duplicateId.data[0].id,
     };
-    assert.throws(() => assertIkizamaJson(duplicateId), /Duplicate ikizama id/);
+    expect(() => assertIkizamaJson(duplicateId)).toThrow(
+      /Duplicate ikizama id/,
+    );
 
     const duplicateName = structuredClone(generated);
     duplicateName.data[1] = {
       ...duplicateName.data[1],
       name: duplicateName.data[0].name,
     };
-    assert.throws(
-      () => assertIkizamaJson(duplicateName),
+    expect(() => assertIkizamaJson(duplicateName)).toThrow(
       /Duplicate ikizama name/,
     );
 
     const sourceOrder = structuredClone(generated);
     sourceOrder.data[0].sourceOrder = 2;
-    assert.throws(
-      () => assertIkizamaJson(sourceOrder),
+    expect(() => assertIkizamaJson(sourceOrder)).toThrow(
       /must match input order/,
     );
 
     const untrimmedItem = structuredClone(generated);
     untrimmedItem.data[0].exclusiveItem.name = "お守り\n";
-    assert.throws(
-      () => assertIkizamaJson(untrimmedItem),
+    expect(() => assertIkizamaJson(untrimmedItem)).toThrow(
       /Value must be trimmed/,
     );
   });

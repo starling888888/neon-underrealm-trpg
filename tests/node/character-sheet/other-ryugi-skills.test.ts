@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 import { calculateOtherRyugiSkillsValidation } from "../../../src/character-sheet/logic/other-ryugi-skills";
 import {
   getOtherRyugiSkillById,
@@ -21,21 +20,19 @@ describe("character sheet other ryugi skills", () => {
             (skill) => skill.acquisitionRestriction === "プライマリ限定",
           );
 
-    assert.deepEqual(unselected, { advanced: [], basic: [] });
-    assert.equal(initial.basic.length > 0, true);
-    assert.deepEqual(initial.advanced, []);
-    assert.equal(advanced.advanced.length > 0, true);
-    assert.equal(
+    expect(unselected).toEqual({ advanced: [], basic: [] });
+    expect(initial.basic.length > 0).toBe(true);
+    expect(initial.advanced).toEqual([]);
+    expect(advanced.advanced.length > 0).toBe(true);
+    expect(
       allCandidates.every(
         (skill) => skill.acquisitionRestriction !== "プライマリ限定",
       ),
-      true,
-    );
-    assert.notEqual(primaryOnlySkill, undefined);
-    assert.equal(
+    ).toBe(true);
+    expect(primaryOnlySkill).not.toBe(undefined);
+    expect(
       getOtherRyugiSkillById("kenkaya", primaryOnlySkill?.id ?? null),
-      null,
-    );
+    ).toBe(null);
   });
 
   it("marks only other-ryugi rows whose selected skill totals exceed their own level", () => {
@@ -61,7 +58,7 @@ describe("character sheet other ryugi skills", () => {
       ],
     );
 
-    assert.deepEqual(validation.invalidRyugiRowIds, ["other-a"]);
+    expect(validation.invalidRyugiRowIds).toEqual(["other-a"]);
   });
 
   it("reports an other-ryugi skill above its maximum level", () => {
@@ -82,7 +79,7 @@ describe("character sheet other ryugi skills", () => {
       ],
     );
 
-    assert.deepEqual(validation.invalidMaximumLevelRowIds, ["other-a-skill"]);
+    expect(validation.invalidMaximumLevelRowIds).toEqual(["other-a-skill"]);
   });
 
   it("identifies advanced and duplicate skills within their owning ryugi row", () => {
@@ -125,8 +122,8 @@ describe("character sheet other ryugi skills", () => {
       ],
     );
 
-    assert.deepEqual(validation.invalidAdvancedSkillRowIds, ["advanced"]);
-    assert.deepEqual(validation.invalidDuplicateSkillRowIds, [
+    expect(validation.invalidAdvancedSkillRowIds).toEqual(["advanced"]);
+    expect(validation.invalidDuplicateSkillRowIds).toEqual([
       "duplicate-a",
       "duplicate-b",
     ]);
@@ -146,8 +143,8 @@ describe("character sheet other ryugi skills", () => {
       ],
     );
 
-    assert.deepEqual(validation.invalidRyugiRowIds, ["other"]);
-    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+    expect(validation.invalidRyugiRowIds).toEqual(["other"]);
+    expect(validation.invalidMaximumLevelRowIds).toEqual([
       "positive",
       "negative",
     ]);

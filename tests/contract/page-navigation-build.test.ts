@@ -1,7 +1,6 @@
-import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 import { getIkizamaList } from "../../src/lib/data/ikizama";
 import { getRyugiList } from "../../src/lib/data/ryugi-list";
 
@@ -39,21 +38,21 @@ describe("page navigation public build contract", () => {
           : []),
       ];
 
-      assert.deepEqual(getPageNavigationHrefs(route), expectedHrefs, route);
+      expect(getPageNavigationHrefs(route), route).toEqual(expectedHrefs);
     }
   });
 
   it("omits navigation from pages outside the reading order", () => {
     for (const route of ["/", "/release-notes", "/404"]) {
-      assert.equal(getPageNavigationHrefs(route), undefined, route);
+      expect(getPageNavigationHrefs(route), route).toBe(undefined);
     }
 
-    assert.equal(existsSync(path.resolve("dist/-local")), false);
+    expect(existsSync(path.resolve("dist/-local"))).toBe(false);
   });
 
   it("omits the beacon from a public build without a token", () => {
     for (const route of ["/", "/rules/battle", "/character-sheet", "/404"]) {
-      assert.equal(getCloudflareBeaconCount(route), 0, route);
+      expect(getCloudflareBeaconCount(route), route).toBe(0);
     }
   });
 
@@ -64,26 +63,23 @@ describe("page navigation public build contract", () => {
       "utf8",
     );
 
-    assert.equal(
-      [...layout.matchAll(/<CloudflareWebAnalytics\s*\/>/g)].length,
+    expect([...layout.matchAll(/<CloudflareWebAnalytics\s*\/>/g)].length).toBe(
       1,
     );
-    assert.ok(
+    expect(
       layout.indexOf("<CloudflareWebAnalytics />") < layout.indexOf("</body>"),
-    );
-    assert.match(component, /isProduction: import\.meta\.env\.PROD/);
-    assert.match(component, /data-cf-beacon=\{beacon\.dataCfBeacon\}/);
+    ).toBeTruthy();
+    expect(component).toMatch(/isProduction: import\.meta\.env\.PROD/);
+    expect(component).toMatch(/data-cf-beacon=\{beacon\.dataCfBeacon\}/);
   });
 
   it("passes the token only to the deployment build after a non-empty check", () => {
     const workflow = readFileSync(".github/workflows/deploy.yml", "utf8");
 
-    assert.match(
-      workflow,
+    expect(workflow).toMatch(
       /name: Require Cloudflare Web Analytics token[\s\S]*?CLOUDFLARE_WEB_ANALYTICS_TOKEN: \$\{\{ vars\.CLOUDFLARE_WEB_ANALYTICS_TOKEN \}\}[\s\S]*?if \[ -z "\$CLOUDFLARE_WEB_ANALYTICS_TOKEN" \]/,
     );
-    assert.match(
-      workflow,
+    expect(workflow).toMatch(
       /name: Build[\s\S]*?CLOUDFLARE_WEB_ANALYTICS_TOKEN: \$\{\{ vars\.CLOUDFLARE_WEB_ANALYTICS_TOKEN \}\}[\s\S]*?run: npm run build:public/,
     );
   });

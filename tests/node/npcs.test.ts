@@ -1,9 +1,8 @@
-import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, it } from "node:test";
 import { strToU8, zipSync } from "fflate";
+import { describe, expect, it } from "vitest";
 import generated from "../../data/generated/npcs.json";
 import { convertNpcs } from "../../scripts/convert-npcs/lib";
 import {
@@ -26,34 +25,32 @@ describe("npcs conversion", () => {
     ]);
 
     const result = await convert(fixture, new Date("2026-07-22T00:00:00Z"));
-    assert.deepEqual(
+    expect(
       result.data.map((npc) => [npc.id, npc.group, npc.sourceOrder]),
-      [
-        ["alpha", "第一勢力", 1],
-        ["beta", "第二勢力", 2],
-      ],
-    );
-    assert.deepEqual(result.data[0]?.epithet, {
+    ).toEqual([
+      ["alpha", "第一勢力", 1],
+      ["beta", "第二勢力", 2],
+    ]);
+    expect(result.data[0]?.epithet).toEqual({
       text: "異名",
       reading: "イミョウ",
     });
-    assert.equal(result.data[1]?.epithet, null);
-    assert.equal(result.data[0]?.description, "説明\n詳細");
-    assert.equal(result.updatedAt, "2026-07-22T09:00:00+09:00");
-    assert.doesNotThrow(() => assertNpcJson(result));
-    assert.doesNotThrow(() => assertNpcJson(generated));
-    assert.equal(getNpcList().length, 11);
-    assert.equal(getNpcById("sanjai")?.name, "サンジャイ");
-    assert.equal(getNpcById("unknown"), undefined);
-    assert.deepEqual(
+    expect(result.data[1]?.epithet).toBe(null);
+    expect(result.data[0]?.description).toBe("説明\n詳細");
+    expect(result.updatedAt).toBe("2026-07-22T09:00:00+09:00");
+    expect(() => assertNpcJson(result)).not.toThrow();
+    expect(() => assertNpcJson(generated)).not.toThrow();
+    expect(getNpcList().length).toBe(11);
+    expect(getNpcById("sanjai")?.name).toBe("サンジャイ");
+    expect(getNpcById("unknown")).toBe(undefined);
+    expect(
       getNpcGroups().map(({ group, npcs }) => [group, npcs.length]),
-      [
-        ["ヤクザ", 4],
-        ["企業勢力", 2],
-        ["独立勢力", 5],
-      ],
-    );
-    assert.equal(getNpcPortraitPath("touryou"), "/images/npc/no_image.webp");
+    ).toEqual([
+      ["ヤクザ", 4],
+      ["企業勢力", 2],
+      ["独立勢力", 5],
+    ]);
+    expect(getNpcPortraitPath("touryou")).toBe("/images/npc/no_image.webp");
   });
 
   it("keeps updatedAt for unchanged data and rejects identity changes", async () => {
@@ -72,14 +69,13 @@ describe("npcs conversion", () => {
       row("第一勢力", "alpha", "アルファ"),
     ]);
     const unchanged = await convert(fixture);
-    assert.equal(unchanged.updatedAt, "2026-01-01T00:00:00+09:00");
+    expect(unchanged.updatedAt).toBe("2026-01-01T00:00:00+09:00");
 
     await workbook(fixture.input, "npcs", [
       headers,
       row("第一勢力", "alpha", "改名"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Name for ID "alpha" must not change/,
     );
 
@@ -87,8 +83,7 @@ describe("npcs conversion", () => {
       headers,
       row("第一勢力", "beta", "ベータ"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Existing NPC ID "alpha" must not be removed/,
     );
   });
@@ -99,20 +94,17 @@ describe("npcs conversion", () => {
       headers,
       row("勢力", "Invalid", "名前"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /ID is invalid at row 2, column B \(ID\)/,
     );
 
     await workbook(fixture.input, "npcs", [headers, row("", "alpha", "名前")]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /グループ is required at row 2, column A \(グループ\)/,
     );
 
     await workbook(fixture.input, "npcs", [headers, row("勢力", "alpha", "")]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /名前 is required at row 2, column C \(名前\)/,
     );
 
@@ -120,8 +112,7 @@ describe("npcs conversion", () => {
       headers,
       row("勢力", "alpha", "名前", "異名", ""),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /二つ名 and ルビ must both be set at row 2, column E \(ルビ\)/,
     );
 
@@ -129,8 +120,7 @@ describe("npcs conversion", () => {
       [...headers, "余分な列"],
       row("勢力", "alpha", "名前"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Unexpected header at row 1, column H: "余分な列"/,
     );
 
@@ -140,8 +130,7 @@ describe("npcs conversion", () => {
       Array(7).fill(""),
       row("勢力", "beta", "別名"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Blank row found at row 3, column A \(グループ\) before data row 4/,
     );
 
@@ -151,24 +140,21 @@ describe("npcs conversion", () => {
       row("第二勢力", "beta", "名前B"),
       row("第一勢力", "gamma", "名前C"),
     ]);
-    await assert.rejects(
-      () => convert(fixture),
+    await expect(convert(fixture)).rejects.toThrow(
       /Group "第一勢力" must be contiguous at row 4, column A \(グループ\)/,
     );
 
-    assert.throws(
-      () =>
-        assertNpcJson({
-          dataName: "npcs",
-          updatedAt: "2026-07-22T09:00:00+09:00",
-          data: [
-            { ...expectedNpc("alpha", "名前A", 1), group: "第一勢力" },
-            { ...expectedNpc("beta", "名前B", 2), group: "第二勢力" },
-            { ...expectedNpc("gamma", "名前C", 3), group: "第一勢力" },
-          ],
-        }),
-      /NPC groups must be contiguous: "第一勢力"/,
-    );
+    expect(() =>
+      assertNpcJson({
+        dataName: "npcs",
+        updatedAt: "2026-07-22T09:00:00+09:00",
+        data: [
+          { ...expectedNpc("alpha", "名前A", 1), group: "第一勢力" },
+          { ...expectedNpc("beta", "名前B", 2), group: "第二勢力" },
+          { ...expectedNpc("gamma", "名前C", 3), group: "第一勢力" },
+        ],
+      }),
+    ).toThrow(/NPC groups must be contiguous: "第一勢力"/);
   });
 });
 

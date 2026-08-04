@@ -2,6 +2,12 @@
 import MobilePageToc from "../components/layout/MobilePageToc.astro";
 import PageToc from "../components/layout/PageToc.astro";
 import SiteMenu from "../components/layout/SiteMenu.astro";
+
+export interface Props {
+  pagefindIgnore?: boolean;
+}
+
+const { pagefindIgnore = false } = Astro.props;
 ---
 
 <MobilePageToc />
@@ -11,7 +17,11 @@ import SiteMenu from "../components/layout/SiteMenu.astro";
     <SiteMenu />
   </aside>
 
-  <main class="site-main" data-page-content data-pagefind-body>
+  <main
+    class="site-main"
+    data-page-content
+    data-pagefind-body={pagefindIgnore ? undefined : ""}
+  >
     <slot />
   </main>
 

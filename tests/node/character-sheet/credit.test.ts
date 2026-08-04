@@ -1,10 +1,9 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 import { calculateCredit } from "../../../src/character-sheet/logic/credit";
 
 describe("character sheet credit", () => {
   it("calculates total credit and change", () => {
-    assert.deepEqual(
+    expect(
       calculateCredit({
         acquiredCredit: 10,
         creditProvided: 3,
@@ -12,16 +11,15 @@ describe("character sheet credit", () => {
         changeAdjustment: -2,
         spentCredit: 0,
       }),
-      {
-        hasCreditError: false,
-        totalCredit: 12,
-        change: 10,
-      },
-    );
+    ).toEqual({
+      hasCreditError: false,
+      totalCredit: 12,
+      change: 10,
+    });
   });
 
   it("keeps a credit overage error independent from the change adjustment", () => {
-    assert.equal(
+    expect(
       calculateCredit({
         acquiredCredit: 10,
         creditProvided: 0,
@@ -29,9 +27,8 @@ describe("character sheet credit", () => {
         changeAdjustment: 5,
         spentCredit: 12,
       }).hasCreditError,
-      true,
-    );
-    assert.equal(
+    ).toBe(true);
+    expect(
       calculateCredit({
         acquiredCredit: 10,
         creditProvided: 0,
@@ -39,7 +36,6 @@ describe("character sheet credit", () => {
         changeAdjustment: -10,
         spentCredit: 5,
       }).hasCreditError,
-      false,
-    );
+    ).toBe(false);
   });
 });

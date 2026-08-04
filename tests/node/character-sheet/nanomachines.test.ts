@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 
 import { calculateNanomachines } from "../../../src/character-sheet/logic/nanomachines";
 import {
@@ -16,13 +15,12 @@ describe("character sheet nanomachines", () => {
       throw new Error("ナノマシンmaster dataがありません。");
     }
 
-    assert.deepEqual(
-      nanomachines.map((item) => item.id),
+    expect(nanomachines.map((item) => item.id)).toEqual(
       getItemsData().nanomachines.map((item) => item.id),
     );
-    assert.equal(getNanomachineById(first.id)?.id, first.id);
-    assert.equal(getNanomachineById(null), null);
-    assert.equal(getNanomachineById("unknown-nanomachine"), null);
+    expect(getNanomachineById(first.id)?.id).toBe(first.id);
+    expect(getNanomachineById(null)).toBe(null);
+    expect(getNanomachineById("unknown-nanomachine")).toBe(null);
   });
 
   it("derives total, body-based limit, and error from the final total", () => {
@@ -31,13 +29,13 @@ describe("character sheet nanomachines", () => {
       throw new Error("ナノマシンmaster dataが不足しています。");
     }
 
-    assert.deepEqual(calculateNanomachines([first, second], 1, 9, -2), {
+    expect(calculateNanomachines([first, second], 1, 9, -2)).toEqual({
       hasImplantLimitError: false,
       implantLimit: 7,
       implantPoints: first.implantPoints + second.implantPoints,
       implantPointTotal: first.implantPoints + second.implantPoints + 1,
     });
-    assert.equal(calculateNanomachines([], 4, 3, 0).hasImplantLimitError, true);
-    assert.equal(calculateNanomachines([], 0, null, 0).implantLimit, null);
+    expect(calculateNanomachines([], 4, 3, 0).hasImplantLimitError).toBe(true);
+    expect(calculateNanomachines([], 0, null, 0).implantLimit).toBe(null);
   });
 });

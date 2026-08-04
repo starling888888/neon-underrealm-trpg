@@ -1,7 +1,6 @@
-import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 
 const dummyToken = "cloudflare-web-analytics-test-token";
 const scriptSource = "https://static.cloudflareinsights.com/beacon.min.js";
@@ -11,12 +10,14 @@ describe("Cloudflare Web Analytics production build contract", () => {
     for (const route of ["/", "/rules/battle", "/character-sheet", "/404"]) {
       const scripts = getBeaconScripts(route);
 
-      assert.equal(scripts.length, 1, route);
-      assert.match(scripts[0], /\btype="module"/);
+      expect(scripts.length, route).toBe(1);
+      expect(scripts[0]).toMatch(/\btype="module"/);
 
       const attribute = scripts[0].match(/\bdata-cf-beacon="([^"]*)"/);
-      assert.ok(attribute, `Expected data-cf-beacon on ${route}.`);
-      assert.deepEqual(JSON.parse(decodeHtmlAttribute(attribute[1])), {
+      expect(attribute, `Expected data-cf-beacon on ${route}.`).toBeTruthy();
+      if (attribute === null)
+        throw new Error(`Expected data-cf-beacon on ${route}.`);
+      expect(JSON.parse(decodeHtmlAttribute(attribute[1]))).toEqual({
         token: dummyToken,
         spa: false,
       });

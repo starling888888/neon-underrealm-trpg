@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import test from "node:test";
+import { expect, test } from "vitest";
 
 import {
   CharacterImageError,
@@ -9,38 +8,49 @@ import {
 } from "../../../../src/character-sheet/browser/character-image";
 
 test("accepts an image file at the configured size limit", () => {
-  assert.doesNotThrow(() => {
+  expect(() => {
     validateCharacterImageFile({
       size: characterImageMaximumBytes,
       type: "image/png",
     });
-  });
+  }).not.toThrow();
 });
 
 test("rejects a non-image file and an image above the size limit", () => {
-  assert.throws(
+  expectCharacterImageError(
     () => validateCharacterImageFile({ size: 1, type: "text/plain" }),
-    (error: unknown) =>
-      error instanceof CharacterImageError && error.code === "invalid-type",
+    "invalid-type",
   );
-  assert.throws(
+  expectCharacterImageError(
     () =>
       validateCharacterImageFile({
         size: characterImageMaximumBytes + 1,
         type: "image/png",
       }),
-    (error: unknown) =>
-      error instanceof CharacterImageError && error.code === "file-too-large",
+    "file-too-large",
   );
 });
 
 test("recognizes WebP base64 and rejects malformed or non-WebP data", () => {
-  assert.equal(
+  expect(
     isWebpBase64(
       "UklGRiIAAABXRUJQVlA4IBYAAADQAQCdASoBAAEALmk0mk0iIiIiIgBoSywA",
     ),
-    true,
-  );
-  assert.equal(isWebpBase64("not base64"), false);
-  assert.equal(isWebpBase64("cG5nIGJ5dGVz"), false);
+  ).toBe(true);
+  expect(isWebpBase64("not base64")).toBe(false);
+  expect(isWebpBase64("cG5nIGJ5dGVz")).toBe(false);
 });
+
+function expectCharacterImageError(
+  operation: () => void,
+  code: CharacterImageError["code"],
+): void {
+  try {
+    operation();
+  } catch (error) {
+    expect(error).toBeInstanceOf(CharacterImageError);
+    expect(error).toMatchObject({ code });
+    return;
+  }
+  throw new Error("Expected CharacterImageError.");
+}

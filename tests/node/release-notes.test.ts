@@ -1,9 +1,8 @@
-import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, it } from "node:test";
 import { strToU8, zipSync } from "fflate";
+import { describe, expect, it } from "vitest";
 import releaseNotesJson from "../../data/generated/release-notes.json";
 import {
   convertReleaseNotes,
@@ -37,17 +36,18 @@ describe("release notes conversion", () => {
       now: new Date("2026-07-08T03:04:05Z"),
     });
 
-    assert.equal(result.dataName, "release-notes");
-    assert.equal(result.updatedAt, "2026-07-08T12:04:05+09:00");
-    assert.deepEqual(
-      result.data.map((note) => note.id),
-      ["2026-07-07-002", "2026-07-07-001", "2026-07-01-001"],
-    );
-    assert.equal(result.data[1]?.body, "本文1\n次行");
-    assert.equal(result.data[2]?.body, null);
+    expect(result.dataName).toBe("release-notes");
+    expect(result.updatedAt).toBe("2026-07-08T12:04:05+09:00");
+    expect(result.data.map((note) => note.id)).toEqual([
+      "2026-07-07-002",
+      "2026-07-07-001",
+      "2026-07-01-001",
+    ]);
+    expect(result.data[1]?.body).toBe("本文1\n次行");
+    expect(result.data[2]?.body).toBe(null);
 
     const written = JSON.parse(await readFile(fixture.outputPath, "utf8"));
-    assert.doesNotThrow(() => parseReleaseNotesJson(written));
+    expect(() => parseReleaseNotesJson(written)).not.toThrow();
   });
 
   it("keeps updatedAt when generated data is unchanged", async () => {
@@ -76,7 +76,7 @@ describe("release notes conversion", () => {
       now: new Date("2026-07-08T03:04:05Z"),
     });
 
-    assert.equal(result.updatedAt, "2026-07-07T00:00:00+09:00");
+    expect(result.updatedAt).toBe("2026-07-07T00:00:00+09:00");
   });
 
   it("updates updatedAt when generated data changes", async () => {
@@ -105,7 +105,7 @@ describe("release notes conversion", () => {
       now: new Date("2026-07-08T03:04:05Z"),
     });
 
-    assert.equal(result.updatedAt, "2026-07-08T12:04:05+09:00");
+    expect(result.updatedAt).toBe("2026-07-08T12:04:05+09:00");
   });
 
   it("rejects invalid headers", async () => {
@@ -115,14 +115,12 @@ describe("release notes conversion", () => {
       ["2026-07-07", "仮公開しました。", ""],
     ]);
 
-    await assert.rejects(
-      () =>
-        convertReleaseNotes({
-          inputPath: fixture.inputPath,
-          outputPath: fixture.outputPath,
-        }),
-      /Invalid release notes headers/,
-    );
+    await expect(
+      convertReleaseNotes({
+        inputPath: fixture.inputPath,
+        outputPath: fixture.outputPath,
+      }),
+    ).rejects.toThrow(/Invalid release notes headers/);
   });
 
   it("rejects blank rows in the middle of data", async () => {
@@ -134,14 +132,12 @@ describe("release notes conversion", () => {
       ["2026-07-07", "次回", ""],
     ]);
 
-    await assert.rejects(
-      () =>
-        convertReleaseNotes({
-          inputPath: fixture.inputPath,
-          outputPath: fixture.outputPath,
-        }),
-      /Blank row found/,
-    );
+    await expect(
+      convertReleaseNotes({
+        inputPath: fixture.inputPath,
+        outputPath: fixture.outputPath,
+      }),
+    ).rejects.toThrow(/Blank row found/);
   });
 
   it("rejects descending source dates", async () => {
@@ -152,14 +148,12 @@ describe("release notes conversion", () => {
       ["2026-07-01", "古い", ""],
     ]);
 
-    await assert.rejects(
-      () =>
-        convertReleaseNotes({
-          inputPath: fixture.inputPath,
-          outputPath: fixture.outputPath,
-        }),
-      /must be ascending/,
-    );
+    await expect(
+      convertReleaseNotes({
+        inputPath: fixture.inputPath,
+        outputPath: fixture.outputPath,
+      }),
+    ).rejects.toThrow(/must be ascending/);
   });
 
   it("converts Excel serial date cells to YYYY-MM-DD", async () => {
@@ -175,11 +169,11 @@ describe("release notes conversion", () => {
       now: new Date("2026-07-08T03:04:05Z"),
     });
 
-    assert.equal(result.data[0]?.date, "2026-07-07");
+    expect(result.data[0]?.date).toBe("2026-07-07");
   });
 
   it("returns summary when body is null or blank", () => {
-    assert.equal(
+    expect(
       getReleaseNoteBody({
         id: "2026-07-07-001",
         date: "2026-07-07",
@@ -187,9 +181,8 @@ describe("release notes conversion", () => {
         body: null,
         sourceOrder: 1,
       }),
-      "概要",
-    );
-    assert.equal(
+    ).toBe("概要");
+    expect(
       getReleaseNoteBody({
         id: "2026-07-07-001",
         date: "2026-07-07",
@@ -197,50 +190,46 @@ describe("release notes conversion", () => {
         body: "  ",
         sourceOrder: 1,
       }),
-      "概要",
-    );
+    ).toBe("概要");
   });
 
   it("loads generated release notes through the data access layer", () => {
-    assert.equal(getReleaseNotesJson().dataName, "release-notes");
-    assert.equal(getReleaseNotes().length, 1);
-    assert.deepEqual(getLatestReleaseNotes(1), getReleaseNotes().slice(0, 1));
+    expect(getReleaseNotesJson().dataName).toBe("release-notes");
+    expect(getReleaseNotes().length).toBe(1);
+    expect(getLatestReleaseNotes(1)).toEqual(getReleaseNotes().slice(0, 1));
   });
 
   it("validates the committed generated release notes JSON contract", () => {
-    assert.doesNotThrow(() => assertReleaseNotesJson(releaseNotesJson));
+    expect(() => assertReleaseNotesJson(releaseNotesJson)).not.toThrow();
   });
 
   it("rejects duplicate ids in generated JSON", () => {
-    assert.throws(
-      () =>
-        parseReleaseNotesJson({
-          dataName: "release-notes",
-          updatedAt: "2026-07-07T00:00:00+09:00",
-          data: [
-            {
-              id: "2026-07-07-001",
-              date: "2026-07-07",
-              summary: "概要1",
-              body: null,
-              sourceOrder: 2,
-            },
-            {
-              id: "2026-07-07-001",
-              date: "2026-07-07",
-              summary: "概要2",
-              body: null,
-              sourceOrder: 1,
-            },
-          ],
-        }),
-      /Duplicate release note id/,
-    );
+    expect(() =>
+      parseReleaseNotesJson({
+        dataName: "release-notes",
+        updatedAt: "2026-07-07T00:00:00+09:00",
+        data: [
+          {
+            id: "2026-07-07-001",
+            date: "2026-07-07",
+            summary: "概要1",
+            body: null,
+            sourceOrder: 2,
+          },
+          {
+            id: "2026-07-07-001",
+            date: "2026-07-07",
+            summary: "概要2",
+            body: null,
+            sourceOrder: 1,
+          },
+        ],
+      }),
+    ).toThrow(/Duplicate release note id/);
   });
 
   it("formats updatedAt in JST", () => {
-    assert.equal(
-      formatDateTimeJst(new Date("2026-07-07T15:30:00Z")),
+    expect(formatDateTimeJst(new Date("2026-07-07T15:30:00Z"))).toBe(
       "2026-07-08T00:30:00+09:00",
     );
   });

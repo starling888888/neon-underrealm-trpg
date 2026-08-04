@@ -1,9 +1,8 @@
-import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, it } from "node:test";
 import { strToU8, zipSync } from "fflate";
+import { describe, expect, it } from "vitest";
 import generated from "../../data/generated/ikizama-skills.json";
 import { convertIkizamaSkills } from "../../scripts/convert-ikizama-skills/lib";
 import { getIkizamaList } from "../../src/lib/data/ikizama";
@@ -22,7 +21,6 @@ const headers = [
   "対象",
   "射程",
   "使用制限",
-  "概要",
   "効果",
 ];
 
@@ -31,7 +29,6 @@ describe("ikizama skill conversion", () => {
     await using fixture = await createFixture();
     const burai = row("basic", "連携\r\n生存術", "Aa/Ra");
     burai[7] = "";
-    burai[10] = "";
     await workbook(fixture.input, [{ name: "burai", rows: [headers, burai] }]);
 
     const initial = await convertIkizamaSkills({
@@ -41,15 +38,13 @@ describe("ikizama skill conversion", () => {
       now: new Date("2026-07-21T00:00:00Z"),
     });
 
-    assert.equal(initial.updatedAt, "2026-07-21T09:00:00+09:00");
-    assert.equal(
-      initial.data.burai.basic[0]?.id,
+    expect(initial.updatedAt).toBe("2026-07-21T09:00:00+09:00");
+    expect(initial.data.burai.basic[0]?.id).toBe(
       `skill-ikizama-burai-basic-aa_ra-${createHash("連携\n生存術")}`,
     );
-    assert.equal(initial.data.burai.basic[0]?.name, "連携\n生存術");
-    assert.equal(initial.data.burai.basic[0]?.target, null);
-    assert.equal(initial.data.burai.basic[0]?.summary, "");
-    assert.equal(initial.data.burai.basic[0]?.sourceOrder, 1);
+    expect(initial.data.burai.basic[0]?.name).toBe("連携\n生存術");
+    expect(initial.data.burai.basic[0]?.target).toBe(null);
+    expect(initial.data.burai.basic[0]?.sourceOrder).toBe(1);
 
     await workbook(fixture.input, [
       { name: "burai", rows: [headers, burai] },
@@ -61,8 +56,8 @@ describe("ikizama skill conversion", () => {
       ikizamaIds: ["burai", "kejime"],
       now: new Date("2026-07-22T00:00:00Z"),
     });
-    assert.equal(added.updatedAt, "2026-07-22T09:00:00+09:00");
-    assert.equal(added.data.kejime.bonus[0]?.sourceOrder, 1);
+    expect(added.updatedAt).toBe("2026-07-22T09:00:00+09:00");
+    expect(added.data.kejime.bonus[0]?.sourceOrder).toBe(1);
 
     const unchanged = await convertIkizamaSkills({
       inputPath: fixture.input,
@@ -70,7 +65,7 @@ describe("ikizama skill conversion", () => {
       ikizamaIds: ["burai", "kejime"],
       now: new Date("2026-07-23T00:00:00Z"),
     });
-    assert.equal(unchanged.updatedAt, "2026-07-22T09:00:00+09:00");
+    expect(unchanged.updatedAt).toBe("2026-07-22T09:00:00+09:00");
 
     await workbook(fixture.input, [{ name: "burai", rows: [headers, burai] }]);
     const removed = await convertIkizamaSkills({
@@ -79,9 +74,9 @@ describe("ikizama skill conversion", () => {
       ikizamaIds: ["burai"],
       now: new Date("2026-07-24T00:00:00Z"),
     });
-    assert.equal(removed.updatedAt, "2026-07-24T09:00:00+09:00");
-    assert.deepEqual(Object.keys(removed.data), ["burai"]);
-    assert.doesNotThrow(() => assertIkizamaSkillsJson(removed, ["burai"]));
+    expect(removed.updatedAt).toBe("2026-07-24T09:00:00+09:00");
+    expect(Object.keys(removed.data)).toEqual(["burai"]);
+    expect(() => assertIkizamaSkillsJson(removed, ["burai"])).not.toThrow();
   });
 
   it("rejects missing and unexpected owner sheets", async () => {
@@ -91,43 +86,28 @@ describe("ikizama skill conversion", () => {
       { name: "other", rows: [headers, row("basic", "二撃", "Pv")] },
     ]);
 
-    await assert.rejects(
-      () =>
-        convertIkizamaSkills({
-          inputPath: fixture.input,
-          outputPath: fixture.output,
-          ikizamaIds: ["burai", "kejime"],
-        }),
-      /Worksheet "kejime" was not found/,
-    );
+    await expect(
+      convertIkizamaSkills({
+        inputPath: fixture.input,
+        outputPath: fixture.output,
+        ikizamaIds: ["burai", "kejime"],
+      }),
+    ).rejects.toThrow(/Worksheet "kejime" was not found/);
   });
 
   it("validates generated data and combines ikizama data with its skills", () => {
     const ikizamaIds = getIkizamaList().map((ikizama) => ikizama.id);
-    assert.doesNotThrow(() => assertIkizamaSkillsJson(generated, ikizamaIds));
+    expect(() => assertIkizamaSkillsJson(generated, ikizamaIds)).not.toThrow();
 
     const detail = getIkizamaDetail("burai");
-    assert.equal(detail?.ikizama.id, "burai");
-    assert.ok(detail?.skills.basic.length);
-    assert.equal(getIkizamaDetail("unknown"), undefined);
+    expect(detail?.ikizama.id).toBe("burai");
+    expect(detail?.skills.basic.length).toBeTruthy();
+    expect(getIkizamaDetail("unknown")).toBe(undefined);
   });
 });
 
 function row(category: string, name: string, timing: string): string[] {
-  return [
-    category,
-    name,
-    "1",
-    timing,
-    "",
-    "能動",
-    "",
-    "自身",
-    "",
-    "",
-    "概要\r\n詳細",
-    "効果",
-  ];
+  return [category, name, "1", timing, "", "能動", "", "自身", "", "", "効果"];
 }
 
 async function createFixture() {

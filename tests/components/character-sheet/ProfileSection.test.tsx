@@ -7,8 +7,20 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import ProfileSection, {
   type ProfileSectionProps,
 } from "../../../src/character-sheet/components/ProfileSection";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
-import { calculateBuild } from "../../../src/character-sheet/logic/build";
+import {
+  type BuildValues,
+  characterSheetDefaultValues,
+} from "../../../src/character-sheet/form-values";
+import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
+import { getBuildSources } from "../../../src/character-sheet/master-data/build";
+
+function calculateBuild(build: BuildValues, commonSkillLevelTotal = 0) {
+  return calculateBuildFromSources(
+    build,
+    getBuildSources(build),
+    commonSkillLevelTotal,
+  );
+}
 
 function createProps(): ProfileSectionProps {
   return {

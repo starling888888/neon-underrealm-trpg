@@ -59,7 +59,6 @@ export interface Skill {
   target: string | null;
   range: string | null;
   usageRestriction: string | null;
-  summary: string;
   effect: string;
   sourceOrder: number;
 }

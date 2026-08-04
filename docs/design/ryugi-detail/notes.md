@@ -58,7 +58,7 @@
 - `global-styles` の白寄り背景、暗いHeader / Footer、system font、低彩度border、spacing rhythmを維持する。
 - `site-layout` のHeader、Footer、SiteMenu、PageToc、MobilePageTocを再設計しない。desktopは左右レールと中央本文の3カラム、mobileは既存の本文幅とH1周辺のMobilePageToc triggerを前提とする。
 - `page-toc` の方針に従い、H1は目次に含めない。H2 / H3から抽出されるページ内目次を妨げる空見出しや見出し階層の飛びを作らない。
-- `skill-card` の密度、情報順、可変高さ、desktop 3列 / mobile 2列を維持する。summaryは全スキル分の内容が完成するまで表示せず、効果本文だけを表示する。`CardContainer`や`SkillCard`へ流儀詳細専用の表示仕様を足さない。
+- `skill-card` の密度、情報順、可変高さ、desktop 3列 / mobile 2列を維持する。効果本文だけを表示する。`CardContainer`や`SkillCard`へ流儀詳細専用の表示仕様を足さない。
 - heroは `public/images/data/ryugi/<ryugiId>_hero.webp` を使う。画像内に焼き込まれた要素以外のoverlay、caption、別の装飾画像は追加しない。初期表示のheroは `loading="eager"` とし、altは流儀名から導く汎用表現にする。
 - `ryugi.note` がある流儀だけ既存 `Callout` のtypeと本文を表示する。Calloutがない流儀に空の領域を残さない。
 
@@ -97,7 +97,7 @@
     - VRT baselineは、流儀スキル一覧の前で終える状態を比較する。
 - baseline update: reviewed implementationとの差分を確認し、ユーザーが明示指示した場合だけ更新する。
 
-- implementation state: `8327e05`後の未コミット変更。summaryを非表示にする共有`SkillCard`の表示方針を含む。
+- implementation state: `8327e05`後の未コミット変更。共有`SkillCard`の表示方針を含む。
 
 ## Differences from initial design references
 

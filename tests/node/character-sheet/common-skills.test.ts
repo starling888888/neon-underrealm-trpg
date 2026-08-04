@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 
 import {
   calculateCommonSkillsValidation,
@@ -15,13 +14,9 @@ describe("character sheet common skills", () => {
     const basicAttack = getBasicAttackSkill();
     const candidates = getCommonSkillCandidates();
 
-    assert.equal(basicAttack?.name, "基本の一撃");
-    assert.equal(
-      candidates.some((skill) => skill.category === "bonus"),
-      false,
-    );
-    assert.deepEqual(
-      candidates.map((skill) => skill.sourceOrder),
+    expect(basicAttack?.name).toBe("基本の一撃");
+    expect(candidates.some((skill) => skill.category === "bonus")).toBe(false);
+    expect(candidates.map((skill) => skill.sourceOrder)).toEqual(
       [...candidates.map((skill) => skill.sourceOrder)].sort(
         (left, right) => left - right,
       ),
@@ -38,23 +33,22 @@ describe("character sheet common skills", () => {
       { level: 4, rowId: "empty", skill: null },
     ]);
 
-    assert.equal(validation.selectedLevelTotal, 2);
-    assert.equal(validation.levelLimit, 2);
-    assert.equal(validation.hasCommonSkillLevelError, false);
+    expect(validation.selectedLevelTotal).toBe(2);
+    expect(validation.levelLimit).toBe(2);
+    expect(validation.hasCommonSkillLevelError).toBe(false);
 
-    assert.equal(
+    expect(
       calculateCommonSkillsValidation(3, [
         { level: 3, rowId: "over-limit", skill },
       ]).hasCommonSkillLevelError,
-      true,
-    );
+    ).toBe(true);
   });
 
   it("unlocks bonus highlights at common-skill levels 2, 5, and 9", () => {
-    assert.deepEqual(getUnlockedCommonSkillBonusLevels(1), []);
-    assert.deepEqual(getUnlockedCommonSkillBonusLevels(2), [2]);
-    assert.deepEqual(getUnlockedCommonSkillBonusLevels(5), [2, 5]);
-    assert.deepEqual(getUnlockedCommonSkillBonusLevels(9), [2, 5, 9]);
+    expect(getUnlockedCommonSkillBonusLevels(1)).toEqual([]);
+    expect(getUnlockedCommonSkillBonusLevels(2)).toEqual([2]);
+    expect(getUnlockedCommonSkillBonusLevels(5)).toEqual([2, 5]);
+    expect(getUnlockedCommonSkillBonusLevels(9)).toEqual([2, 5, 9]);
   });
 
   it("reports selected rows below one or above their maximum level", () => {
@@ -67,7 +61,7 @@ describe("character sheet common skills", () => {
       { level: skill.maxLevel + 1, rowId: "above-maximum", skill },
     ]);
 
-    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+    expect(validation.invalidMaximumLevelRowIds).toEqual([
       "below-minimum",
       "above-maximum",
     ]);
@@ -85,8 +79,8 @@ describe("character sheet common skills", () => {
       { level: skill.maxLevel + 1, rowId: "above-maximum", skill },
     ]);
 
-    assert.equal(validation.selectedLevelTotal, 2 + skill.maxLevel + 1);
-    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+    expect(validation.selectedLevelTotal).toBe(2 + skill.maxLevel + 1);
+    expect(validation.invalidMaximumLevelRowIds).toEqual([
       "zero",
       "negative",
       "above-maximum",
@@ -103,7 +97,7 @@ describe("character sheet common skills", () => {
       { level: 1, rowId: "duplicate-b", skill },
     ]);
 
-    assert.deepEqual(validation.invalidDuplicateSkillRowIds, [
+    expect(validation.invalidDuplicateSkillRowIds).toEqual([
       "duplicate-a",
       "duplicate-b",
     ]);

@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 import { getIkizamaList } from "../../src/lib/data/ikizama";
 import { getRyugiList } from "../../src/lib/data/ryugi-list";
 import {
@@ -30,15 +29,15 @@ describe("site menu current state", () => {
   it("places rules before data in the root menu", () => {
     const labels = siteMenuItems.map((item) => item.label);
 
-    assert.ok(labels.indexOf("ルール") < labels.indexOf("データ"));
+    expect(labels.indexOf("ルール") < labels.indexOf("データ")).toBeTruthy();
   });
 
   it("places the character sheet between advancement and support", () => {
     const labels = siteMenuItems.map((item) => item.label);
     const characterSheetIndex = labels.indexOf("キャラクターシート");
 
-    assert.equal(labels[characterSheetIndex - 1], "キャラクター成長");
-    assert.equal(labels[characterSheetIndex + 1], "サポート");
+    expect(labels[characterSheetIndex - 1]).toBe("キャラクター成長");
+    expect(labels[characterSheetIndex + 1]).toBe("サポート");
   });
 
   it("uses generated ryugi data for the ryugi detail menu items", () => {
@@ -47,8 +46,9 @@ describe("site menu current state", () => {
       (item) => item.href === "/data/ryugi",
     );
 
-    assert.deepEqual(
+    expect(
       ryugiMenu?.children?.map(({ label, href }) => ({ label, href })),
+    ).toEqual(
       getRyugiList().map((ryugi) => ({
         label: ryugi.name,
         href: `/data/ryugi/${ryugi.id}`,
@@ -62,8 +62,9 @@ describe("site menu current state", () => {
       (item) => item.href === "/data/ikizama",
     );
 
-    assert.deepEqual(
+    expect(
       ikizamaMenu?.children?.map(({ label, href }) => ({ label, href })),
+    ).toEqual(
       getIkizamaList().map((ikizama) => ({
         label: ikizama.name,
         href: `/data/ikizama/${ikizama.id}`,
@@ -78,88 +79,76 @@ describe("site menu current state", () => {
     );
     const detailPath = `/data/ryugi/${getRyugiList()[0]?.id ?? "kenkaya"}`;
 
-    assert.equal(
-      getSiteMenuItemState(dataMenu ?? menu, detailPath),
+    expect(getSiteMenuItemState(dataMenu ?? menu, detailPath)).toBe("ancestor");
+    expect(getSiteMenuItemState(ryugiMenu ?? menu, detailPath)).toBe(
       "ancestor",
     );
-    assert.equal(
-      getSiteMenuItemState(ryugiMenu ?? menu, detailPath),
-      "ancestor",
-    );
-    assert.equal(
-      getSiteMenuItemInitialExpanded(dataMenu ?? menu, detailPath),
+    expect(getSiteMenuItemInitialExpanded(dataMenu ?? menu, detailPath)).toBe(
       true,
     );
-    assert.equal(
-      getSiteMenuItemInitialExpanded(ryugiMenu ?? menu, detailPath),
+    expect(getSiteMenuItemInitialExpanded(ryugiMenu ?? menu, detailPath)).toBe(
       true,
     );
   });
 
   it("marks exact matching menu items as current", () => {
-    assert.equal(
+    expect(
       getSiteMenuItemState(
         menu.children?.[0]?.children?.[0] ?? menu,
         "/data/items/weapons",
       ),
-      "current",
-    );
+    ).toBe("current");
   });
 
   it("marks parent items as ancestors of the current menu item", () => {
-    assert.equal(getSiteMenuItemState(menu, "/data/items/weapons"), "ancestor");
-    assert.equal(
+    expect(getSiteMenuItemState(menu, "/data/items/weapons")).toBe("ancestor");
+    expect(
       getSiteMenuItemState(menu.children?.[0] ?? menu, "/data/items/weapons"),
-      "ancestor",
-    );
+    ).toBe("ancestor");
   });
 
   it("uses the nearest menu item as ancestor for detail pages", () => {
-    assert.equal(
+    expect(
       getSiteMenuItemState(
         menu.children?.[0]?.children?.[0] ?? menu,
         "/data/items/weapons/sample-id",
       ),
-      "ancestor",
-    );
+    ).toBe("ancestor");
   });
 
   it("does not mark root as ancestor for every page", () => {
-    assert.equal(
+    expect(
       getSiteMenuItemState({ label: "トップ", href: "/" }, "/data/items"),
-      "none",
-    );
+    ).toBe("none");
   });
 
   it("normalizes trailing slashes, query strings, hashes, and base paths", () => {
-    assert.equal(
+    expect(
       getSiteMenuItemState(
         menu.children?.[0]?.children?.[0] ?? menu,
         "/neon-underrealm-trpg/data/items/weapons/?view=list#section",
         "/neon-underrealm-trpg/",
       ),
-      "current",
-    );
+    ).toBe("current");
   });
 
   it("does not match sibling paths by prefix alone", () => {
-    assert.equal(getSiteMenuItemState(menu, "/database"), "none");
+    expect(getSiteMenuItemState(menu, "/database")).toBe("none");
   });
 });
 
 describe("site menu initial expansion", () => {
   it("does not expand the current parent item itself", () => {
-    assert.equal(getSiteMenuItemInitialExpanded(menu, "/data"), false);
+    expect(getSiteMenuItemInitialExpanded(menu, "/data")).toBe(false);
   });
 
   it("expands a current item when its configuration requests it", () => {
-    assert.equal(
+    expect(
       getSiteMenuItemInitialExpanded(
         { ...menu, expandWhenCurrent: true },
         "/data",
       ),
-      true,
-    );
+    ).toBe(true);
   });
 
   it("expands the configured category when its own page is current", () => {
@@ -168,45 +157,41 @@ describe("site menu initial expansion", () => {
     for (const expectedPath of expectedPaths) {
       const item = findSiteMenuItemByHref(siteMenuItems, expectedPath);
 
-      assert.equal(item?.expandWhenCurrent, true, expectedPath);
-      assert.equal(
+      expect(item?.expandWhenCurrent, expectedPath).toBe(true);
+      expect(
         getSiteMenuItemInitialExpanded(item ?? menu, expectedPath),
-        true,
         expectedPath,
-      );
+      ).toBe(true);
     }
   });
 
   it("expands parent items of the current child item", () => {
-    assert.equal(getSiteMenuItemInitialExpanded(menu, "/data/items"), true);
+    expect(getSiteMenuItemInitialExpanded(menu, "/data/items")).toBe(true);
   });
 
   it("expands all parent items leading to the current descendant item", () => {
-    assert.equal(
-      getSiteMenuItemInitialExpanded(menu, "/data/items/weapons"),
+    expect(getSiteMenuItemInitialExpanded(menu, "/data/items/weapons")).toBe(
       true,
     );
-    assert.equal(
+    expect(
       getSiteMenuItemInitialExpanded(
         menu.children?.[0] ?? menu,
         "/data/items/weapons",
       ),
-      true,
-    );
+    ).toBe(true);
   });
 
   it("expands the nearest menu item for detail pages without direct links", () => {
-    assert.equal(
+    expect(
       getSiteMenuItemInitialExpanded(
         menu.children?.[0]?.children?.[0] ?? menu,
         "/data/items/weapons/sample-id",
       ),
-      true,
-    );
+    ).toBe(true);
   });
 
   it("does not expand unrelated parent items", () => {
-    assert.equal(getSiteMenuItemInitialExpanded(menu, "/rules/battle"), false);
+    expect(getSiteMenuItemInitialExpanded(menu, "/rules/battle")).toBe(false);
   });
 });
 

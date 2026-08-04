@@ -5,10 +5,12 @@ import type { SeoProps } from "../lib/site/seo";
 export interface Props extends SeoProps {
   title?: string;
   description?: string;
+  pagefindIgnore?: boolean;
   showPageToc?: boolean;
   prevPath?: string;
   nextPath?: string;
   frontmatter?: SeoProps & {
+    pagefindIgnore?: boolean;
     showPageToc?: boolean;
     prevPath?: string;
     nextPath?: string;
@@ -26,6 +28,7 @@ const {
   ogUrl: propOgUrl,
   twitterCard: propTwitterCard,
   noindex: propNoindex,
+  pagefindIgnore: propPagefindIgnore,
   showPageToc: propShowPageToc,
   prevPath: propPrevPath,
   nextPath: propNextPath,
@@ -40,6 +43,7 @@ const ogImage = propOgImage ?? frontmatter?.ogImage;
 const ogUrl = propOgUrl ?? frontmatter?.ogUrl;
 const twitterCard = propTwitterCard ?? frontmatter?.twitterCard;
 const noindex = propNoindex ?? frontmatter?.noindex;
+const pagefindIgnore = propPagefindIgnore ?? frontmatter?.pagefindIgnore ?? false;
 const showPageToc = propShowPageToc ?? frontmatter?.showPageToc ?? true;
 const prevPath = propPrevPath ?? frontmatter?.prevPath;
 const nextPath = propNextPath ?? frontmatter?.nextPath;
@@ -55,6 +59,7 @@ const nextPath = propNextPath ?? frontmatter?.nextPath;
   ogUrl={ogUrl}
   twitterCard={twitterCard}
   noindex={noindex}
+  pagefindIgnore={pagefindIgnore}
   showPageToc={showPageToc}
   prevPath={prevPath}
   nextPath={nextPath}

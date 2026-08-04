@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 
 import {
   getCharacterSheetErrorSummary,
@@ -8,7 +7,7 @@ import {
 
 describe("character sheet error summary", () => {
   it("does not create an entry for local warnings or valid values", () => {
-    assert.deepEqual(getCharacterSheetErrorSummary({ facts: [] }), {
+    expect(getCharacterSheetErrorSummary({ facts: [] })).toEqual({
       errors: [],
       hasErrors: false,
     });
@@ -40,21 +39,17 @@ describe("character sheet error summary", () => {
       ],
     });
 
-    assert.equal(summary.hasErrors, true);
-    assert.deepEqual(
-      summary.errors.map((error) => error.code),
-      [
-        "experience",
-        "primary-skill-maximum-level",
-        "primary-skill-maximum-level",
-        "drugs-duplicate",
-      ],
-    );
-    assert.equal(
-      summary.errors[1]?.message,
+    expect(summary.hasErrors).toBe(true);
+    expect(summary.errors.map((error) => error.code)).toEqual([
+      "experience",
+      "primary-skill-maximum-level",
+      "primary-skill-maximum-level",
+      "drugs-duplicate",
+    ]);
+    expect(summary.errors[1]?.message).toBe(
       "プライマリ流儀スキル「ブレード」（Lv 3）：取得可能レベル外の値があります。",
     );
-    assert.equal(summary.errors[2]?.rowId, "primary-1");
+    expect(summary.errors[2]?.rowId).toBe("primary-1");
   });
 
   it("translates one primary and other ryugi conflict as one named fact", () => {
@@ -65,21 +60,19 @@ describe("character sheet error summary", () => {
     };
     const summary = getCharacterSheetErrorSummary({ facts: [fact] });
 
-    assert.equal(summary.errors.length, 1);
-    assert.equal(
-      summary.errors[0]?.message,
-      translateCharacterSheetError(fact),
-    );
+    expect(summary.errors.length).toBe(1);
+    expect(summary.errors[0]?.message).toBe(translateCharacterSheetError(fact));
   });
 
   it("uses an explicit rule condition instead of a skill-row level", () => {
-    assert.equal(
+    expect(
       translateCharacterSheetError({
         code: "primary-skill-advanced",
         condition: "流儀Lv 6以上が必要です（現在Lv 1）。",
         level: 4,
         subject: "プライマリ流儀スキル「ブレード」",
       }),
+    ).toBe(
       "プライマリ流儀スキル「ブレード」：流儀Lv 6以上が必要です（現在Lv 1）。",
     );
   });

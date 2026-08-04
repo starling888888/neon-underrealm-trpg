@@ -6,11 +6,21 @@ import { describe, expect, it, vi } from "vitest";
 
 import useNanomachinesSectionProps from "../../../src/character-sheet/form/useNanomachinesSectionProps";
 import {
+  type BuildValues,
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "../../../src/character-sheet/form-values";
-import { calculateBuild } from "../../../src/character-sheet/logic/build";
+import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
+import { getBuildSources } from "../../../src/character-sheet/master-data/build";
 import { getNanomachines } from "../../../src/character-sheet/master-data/nanomachines";
+
+function calculateBuild(build: BuildValues, commonSkillLevelTotal = 0) {
+  return calculateBuildFromSources(
+    build,
+    getBuildSources(build),
+    commonSkillLevelTotal,
+  );
+}
 
 function useNanomachinesHarness() {
   const form = useForm<CharacterSheetFormValues>({

@@ -1,9 +1,8 @@
-import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, it } from "node:test";
 import { strToU8, zipSync } from "fflate";
+import { describe, expect, it } from "vitest";
 import generated from "../../data/generated/common-skills.json";
 import { convertCommonSkills } from "../../scripts/convert-common-skills/lib";
 import { getCommonSkills } from "../../src/lib/data/common-skills";
@@ -21,7 +20,6 @@ const headers = [
   "対象",
   "射程",
   "使用制限",
-  "概要",
   "効果",
 ];
 const contract = { dataName: "common-skills", idPrefix: "skill-common" };
@@ -44,21 +42,16 @@ describe("skill conversion", () => {
       now: new Date("2026-07-14T00:00:00Z"),
       onWarning: (warning) => warnings.push(warning),
     });
-    assert.deepEqual(
-      result.data.bonus.map((skill) => skill.id),
-      [
-        skillId("skill-common", "bonus", "a", "一撃"),
-        skillId("skill-common", "bonus", "a", "終撃"),
-      ],
-    );
-    assert.equal(result.data.basic[0]?.proficiency, null);
-    assert.equal(result.data.bonus[0]?.summary, "概要\n詳細");
-    assert.equal(result.updatedAt, "2026-07-14T09:00:00+09:00");
-    assert.match(warnings[0] ?? "", /previous group "Pv".*timing "R"/);
-    assert.doesNotThrow(() => assertSkillsJson(result, contract));
-    assert.doesNotThrow(() => assertSkillsJson(generated, contract));
-    assert.equal(
-      getCommonSkills("bonus")[0]?.id,
+    expect(result.data.bonus.map((skill) => skill.id)).toEqual([
+      skillId("skill-common", "bonus", "a", "一撃"),
+      skillId("skill-common", "bonus", "a", "終撃"),
+    ]);
+    expect(result.data.basic[0]?.proficiency).toBe(null);
+    expect(result.updatedAt).toBe("2026-07-14T09:00:00+09:00");
+    expect(warnings[0] ?? "").toMatch(/previous group "Pv".*timing "R"/);
+    expect(() => assertSkillsJson(result, contract)).not.toThrow();
+    expect(() => assertSkillsJson(generated, contract)).not.toThrow();
+    expect(getCommonSkills("bonus")[0]?.id).toBe(
       skillId("skill-common", "bonus", "a", "基本の一撃"),
     );
   });
@@ -88,7 +81,6 @@ describe("skill conversion", () => {
               target: "自身",
               range: null,
               usageRestriction: null,
-              summary: "概要\n詳細",
               effect: "効果",
               sourceOrder: 1,
             },
@@ -104,31 +96,27 @@ describe("skill conversion", () => {
       sheetName: "skills",
       outputPath: fixture.output,
     });
-    assert.equal(result.updatedAt, "2026-01-01T00:00:00+09:00");
+    expect(result.updatedAt).toBe("2026-01-01T00:00:00+09:00");
     await workbook(fixture.input, "skills", [
       headers,
       row("bonus", "不正", "A-A"),
     ]);
-    await assert.rejects(
-      () =>
-        convertCommonSkills({
-          inputPath: fixture.input,
-          sheetName: "skills",
-          outputPath: fixture.output,
-        }),
-      /タイミング is invalid at row 2, column D/,
-    );
-    assert.equal(
-      JSON.parse(await readFile(fixture.output, "utf8")).dataName,
+    await expect(
+      convertCommonSkills({
+        inputPath: fixture.input,
+        sheetName: "skills",
+        outputPath: fixture.output,
+      }),
+    ).rejects.toThrow(/タイミング is invalid at row 2, column D/);
+    expect(JSON.parse(await readFile(fixture.output, "utf8")).dataName).toBe(
       "common-skills",
     );
   });
 
-  it("accepts multiline names, nullable targets, empty summaries, and combined timings", async () => {
+  it("accepts multiline names, nullable targets, and combined timings", async () => {
     await using fixture = await createFixture();
     const skill = row("basic", "連携\r\n行動", "Ra / Aa");
     skill[7] = "";
-    skill[10] = "";
     await workbook(fixture.input, "skills", [headers, skill]);
 
     const result = await convertCommonSkills({
@@ -137,7 +125,7 @@ describe("skill conversion", () => {
       outputPath: fixture.output,
     });
 
-    assert.deepEqual(result.data.basic[0], {
+    expect(result.data.basic[0]).toEqual({
       id: skillId("skill-common", "basic", "aa_ra", "連携\n行動"),
       category: "basic",
       name: "連携\n行動",
@@ -149,7 +137,6 @@ describe("skill conversion", () => {
       target: null,
       range: null,
       usageRestriction: null,
-      summary: "",
       effect: "効果",
       sourceOrder: 1,
     });
@@ -161,56 +148,48 @@ describe("skill conversion", () => {
       [...headers, "ID"],
       row("bonus", "一撃", "Pv"),
     ]);
-    await assert.rejects(
-      () =>
-        convertCommonSkills({
-          inputPath: fixture.input,
-          sheetName: "skills",
-          outputPath: fixture.output,
-        }),
-      /Unexpected header at row 1, column M: "ID"/,
-    );
+    await expect(
+      convertCommonSkills({
+        inputPath: fixture.input,
+        sheetName: "skills",
+        outputPath: fixture.output,
+      }),
+    ).rejects.toThrow(/Unexpected header at row 1, column L: "ID"/);
     await workbook(fixture.input, "skills", [
       headers,
       [...row("bonus", "一撃", "Pv"), "余分な値"],
     ]);
-    await assert.rejects(
-      () =>
-        convertCommonSkills({
-          inputPath: fixture.input,
-          sheetName: "skills",
-          outputPath: fixture.output,
-        }),
-      /Unexpected value at row 2, column M: "余分な値"/,
-    );
+    await expect(
+      convertCommonSkills({
+        inputPath: fixture.input,
+        sheetName: "skills",
+        outputPath: fixture.output,
+      }),
+    ).rejects.toThrow(/Unexpected value at row 2, column L: "余分な値"/);
   });
 
   it("rejects missing fields and invalid categories", async () => {
     await using fixture = await createFixture();
     const missingName = row("bonus", "", "Pv");
     await workbook(fixture.input, "skills", [headers, missingName]);
-    await assert.rejects(
-      () =>
-        convertCommonSkills({
-          inputPath: fixture.input,
-          sheetName: "skills",
-          outputPath: fixture.output,
-        }),
-      /名称 is required at row 2, column B/,
-    );
+    await expect(
+      convertCommonSkills({
+        inputPath: fixture.input,
+        sheetName: "skills",
+        outputPath: fixture.output,
+      }),
+    ).rejects.toThrow(/名称 is required at row 2, column B/);
     await workbook(fixture.input, "skills", [
       headers,
       row("unknown", "不正区分", "Pv"),
     ]);
-    await assert.rejects(
-      () =>
-        convertCommonSkills({
-          inputPath: fixture.input,
-          sheetName: "skills",
-          outputPath: fixture.output,
-        }),
-      /区分 is invalid at row 2, column A/,
-    );
+    await expect(
+      convertCommonSkills({
+        inputPath: fixture.input,
+        sheetName: "skills",
+        outputPath: fixture.output,
+      }),
+    ).rejects.toThrow(/区分 is invalid at row 2, column A/);
   });
 
   it("rejects malformed IDs, category mismatches, duplicate IDs, and source-order gaps", () => {
@@ -221,15 +200,13 @@ describe("skill conversion", () => {
       "a",
       "different name",
     );
-    assert.throws(
-      () => assertSkillsJson(malformedId, contract),
+    expect(() => assertSkillsJson(malformedId, contract)).toThrow(
       /does not match/,
     );
 
     const categoryMismatch = structuredClone(generated);
     categoryMismatch.data.bonus[0].category = "basic";
-    assert.throws(
-      () => assertSkillsJson(categoryMismatch, contract),
+    expect(() => assertSkillsJson(categoryMismatch, contract)).toThrow(
       /must belong/,
     );
 
@@ -238,15 +215,13 @@ describe("skill conversion", () => {
       ...duplicateId.data.bonus[0],
       sourceOrder: 2,
     });
-    assert.throws(
-      () => assertSkillsJson(duplicateId, contract),
+    expect(() => assertSkillsJson(duplicateId, contract)).toThrow(
       /Duplicate skill id/,
     );
 
     const sourceOrderGap = structuredClone(generated);
     sourceOrderGap.data.bonus[0].sourceOrder = 2;
-    assert.throws(
-      () => assertSkillsJson(sourceOrderGap, contract),
+    expect(() => assertSkillsJson(sourceOrderGap, contract)).toThrow(
       /consecutive/,
     );
   });
@@ -271,8 +246,7 @@ describe("skill conversion", () => {
 
     const idsByName = (skills: typeof initial.data.bonus) =>
       new Map(skills.map((skill) => [skill.name, skill.id]));
-    assert.deepEqual(
-      idsByName(reordered.data.bonus),
+    expect(idsByName(reordered.data.bonus)).toEqual(
       idsByName(initial.data.bonus),
     );
   });
@@ -296,7 +270,6 @@ function row(
     "自身",
     "",
     "",
-    "概要\r\n詳細",
     "効果",
   ];
 }

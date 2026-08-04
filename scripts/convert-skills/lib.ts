@@ -40,7 +40,6 @@ const HEADERS = [
   "対象",
   "射程",
   "使用制限",
-  "概要",
   "効果",
 ] as const;
 const GROUPS = [
@@ -187,8 +186,7 @@ function collectRows(rows: Rows): RawSkill[] {
       target: optionalOneLine(values[7], "対象", rowNumber, 7),
       range: optionalOneLine(values[8], "射程", rowNumber, 8),
       usageRestriction: optionalOneLine(values[9], "使用制限", rowNumber, 9),
-      summary: optionalMultiline(values[10]),
-      effect: requiredMultiline(values[11], "効果", rowNumber, 11),
+      effect: requiredMultiline(values[10], "効果", rowNumber, 10),
       sourceOrder: rowIndex,
       rowNumber,
     });
@@ -312,10 +310,6 @@ function requiredMultiline(
     throw new Error(`${label} is required at ${cellLocation(row, column)}.`);
   }
   return result;
-}
-
-function optionalMultiline(value: CellValue | null | undefined): string {
-  return text(value).trim();
 }
 
 function cellLocation(row: number, column: number): string {

@@ -19,6 +19,7 @@ import NoTocPageLayout from "./NoTocPageLayout.astro";
 export interface Props extends SeoProps {
   title?: string;
   description?: string;
+  pagefindIgnore?: boolean;
   showPageToc?: boolean;
   prevPath?: string;
   nextPath?: string;
@@ -34,6 +35,7 @@ const {
   ogUrl,
   twitterCard,
   noindex,
+  pagefindIgnore = false,
   showPageToc = false,
   prevPath,
   nextPath,
@@ -76,7 +78,7 @@ const searchTypeLabel = getSearchTypeLabel(
 
       <MobileSiteMenuDrawer />
 
-      <PageLayout>
+      <PageLayout pagefindIgnore={pagefindIgnore}>
         <slot />
         <PageNavigation prevPage={prevPage} nextPage={nextPage} />
       </PageLayout>

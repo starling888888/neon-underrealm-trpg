@@ -7,9 +7,21 @@ import SecondaryAttributesSection, {
   type SecondaryAttributesSectionProps,
 } from "../../../src/character-sheet/components/SecondaryAttributesSection";
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
-import { calculateBuild } from "../../../src/character-sheet/logic/build";
+import {
+  type BuildValues,
+  characterSheetDefaultValues,
+} from "../../../src/character-sheet/form-values";
+import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
 import { calculateSecondaryAttributes } from "../../../src/character-sheet/logic/secondary-attributes";
+import { getBuildSources } from "../../../src/character-sheet/master-data/build";
+
+function calculateBuild(build: BuildValues, commonSkillLevelTotal = 0) {
+  return calculateBuildFromSources(
+    build,
+    getBuildSources(build),
+    commonSkillLevelTotal,
+  );
+}
 
 function createProps(): SecondaryAttributesSectionProps {
   const derivedBuild = calculateBuild(characterSheetDefaultValues.build);

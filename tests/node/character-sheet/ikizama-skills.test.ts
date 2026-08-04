@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 import { calculateIkizamaSkillsValidation } from "../../../src/character-sheet/logic/ikizama-skills";
 import {
   getIkizamaSkillById,
@@ -12,15 +11,14 @@ describe("character sheet ikizama skills", () => {
     const initial = getIkizamaSkillGroups("burai", 1);
     const advanced = getIkizamaSkillGroups("burai", 4);
 
-    assert.deepEqual(unselected, { advanced: [], basic: [], bonus: [] });
-    assert.equal(initial.bonus.length, 1);
-    assert.equal(initial.basic.length > 0, true);
-    assert.deepEqual(initial.advanced, []);
-    assert.equal(advanced.advanced.length > 0, true);
-    assert.equal(
+    expect(unselected).toEqual({ advanced: [], basic: [], bonus: [] });
+    expect(initial.bonus.length).toBe(1);
+    expect(initial.basic.length > 0).toBe(true);
+    expect(initial.advanced).toEqual([]);
+    expect(advanced.advanced.length > 0).toBe(true);
+    expect(
       advanced.bonus.some((skill) => skill.id === advanced.basic[0]?.id),
-      false,
-    );
+    ).toBe(false);
   });
 
   it("resolves IDs only from the selected ikizama", () => {
@@ -28,8 +26,8 @@ describe("character sheet ikizama skills", () => {
     if (skill === undefined)
       throw new Error("ブライの基本スキルがありません。");
 
-    assert.equal(getIkizamaSkillById("burai", skill.id)?.id, skill.id);
-    assert.equal(getIkizamaSkillById("kage", skill.id), null);
+    expect(getIkizamaSkillById("burai", skill.id)?.id).toBe(skill.id);
+    expect(getIkizamaSkillById("kage", skill.id)).toBe(null);
   });
 
   it("counts selected normal rows and bonus levels above the free first level", () => {
@@ -43,15 +41,15 @@ describe("character sheet ikizama skills", () => {
       { level: 99, rowId: "unselected", skill: null },
     ]);
 
-    assert.equal(validation.selectedLevelTotal, 4);
-    assert.equal(validation.hasIkizamaSkillLevelTotalError, true);
+    expect(validation.selectedLevelTotal).toBe(4);
+    expect(validation.hasIkizamaSkillLevelTotalError).toBe(true);
   });
 
   it("does not count the free first bonus level", () => {
     const validation = calculateIkizamaSkillsValidation(1, 1, null, []);
 
-    assert.equal(validation.selectedLevelTotal, 0);
-    assert.equal(validation.hasIkizamaSkillLevelTotalError, false);
+    expect(validation.selectedLevelTotal).toBe(0);
+    expect(validation.hasIkizamaSkillLevelTotalError).toBe(false);
   });
 
   it("keeps maximum-level violations for normal and bonus skills", () => {
@@ -75,7 +73,7 @@ describe("character sheet ikizama skills", () => {
       ],
     );
 
-    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+    expect(validation.invalidMaximumLevelRowIds).toEqual([
       `ikizama-bonus-${bonusSkill.id}`,
       "normal-over-limit",
     ]);
@@ -94,8 +92,8 @@ describe("character sheet ikizama skills", () => {
       { level: 1, rowId: "duplicate-b", skill: basicSkill },
     ]);
 
-    assert.deepEqual(validation.invalidAdvancedSkillRowIds, ["advanced"]);
-    assert.deepEqual(validation.invalidDuplicateSkillRowIds, [
+    expect(validation.invalidAdvancedSkillRowIds).toEqual(["advanced"]);
+    expect(validation.invalidDuplicateSkillRowIds).toEqual([
       "duplicate-a",
       "duplicate-b",
     ]);
@@ -111,9 +109,9 @@ describe("character sheet ikizama skills", () => {
       { level: -1, rowId: "negative", skill },
     ]);
 
-    assert.equal(validation.selectedLevelTotal, 2);
-    assert.equal(validation.hasIkizamaSkillLevelTotalError, true);
-    assert.deepEqual(validation.invalidMaximumLevelRowIds, [
+    expect(validation.selectedLevelTotal).toBe(2);
+    expect(validation.hasIkizamaSkillLevelTotalError).toBe(true);
+    expect(validation.invalidMaximumLevelRowIds).toEqual([
       "positive",
       "negative",
     ]);

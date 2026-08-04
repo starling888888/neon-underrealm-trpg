@@ -23,6 +23,27 @@
 
 ## 完了済み
 
+- [x] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
+  - completed: 2026-08-04 via user decision / `milestone-02-phase-01-todo-resolution` G7
+  - source: `design-image-generation` skill 追加時の整合確認
+  - classification: canceled follow-up
+  - plan: なし
+  - handling result: 既存design notesを全件正規化する費用対効果が低いため、対応しない方針を明記した。必要なdesign notesは個別のUI taskでのみ整備する。
+
+- [x] サイトメニュー順序変更を既存designへ一括反映する
+  - completed: 2026-08-04 via user decision / `milestone-02-phase-01-todo-resolution` G7
+  - source: `24-2-scenario-play-page` 準備中のユーザー指示
+  - classification: completed follow-up
+  - plan: なし
+  - handling result: 最新canonical screenshotを取得する現行方針により、旧design artifactを一括更新する必要は解消済みとする。
+
+- [x] GitHub Actionsで全件VRTを定期実行または公開直後に実行する
+  - completed: 2026-08-04 via user decision / `milestone-02-phase-01-todo-resolution` G7
+  - source: 2026-07-23のユーザー指示
+  - classification: canceled follow-up
+  - plan: なし
+  - handling result: 費用対効果が低いため対応しない。UI変更時は対象targetに限定したVRTを実行し、全件比較はGitHub Actionsへ追加しない。
+
 - [x] CharacterSheet Presenter props custom hookを、Presenterのmemo化と同時に参照安定化する
   - completed: 2026-07-31 via PR #69 / `ex-02-web-character-sheet`
   - source: `ex-02-4-sheet-profile` 実装中のユーザー指示

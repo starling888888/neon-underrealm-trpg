@@ -224,13 +224,13 @@ tests/
         └── character-sheet-scenarios.ts
 ```
 
-- `tests/node/character-sheet/`: 既存のNode `node:test`と`tsx`で、`logic/`、`schemas/`、`master-data/`、serializableな`persistence/`、test doubleへ差し替えた`browser/` adapterの契約を表形式中心で確認する。正常値、上限前後、負値、`null`、空欄、明示的な`0`、重複、未知のマスタIDを必要範囲で含める。
+- `tests/node/character-sheet/`: Vitestで、`logic/`、`schemas/`、`master-data/`、serializableな`persistence/`、test doubleへ差し替えた`browser/` adapterの契約を表形式中心で確認する。正常値、上限前後、負値、`null`、空欄、明示的な`0`、重複、未知のマスタIDを必要範囲で含める。
 - `tests/components/character-sheet/`: Vitest、jsdom、React Testing Library、user-eventで、Presenter / 表示Componentのprops表示、局所UI state、callback通知、Tooltipなどを確認する。RHF、ドメイン計算、browser viewportは持ち込まない。
 - `tests/hooks/character-sheet/`: VitestとReact Testing Libraryの`renderHook`で、RHF adapter hookのschema接続、RHF valueからViewModel / Actionsへの変換、入力境界を確認する。Presenter DOMやPlaywrightを持ち込まない。
 - `tests/e2e/character-sheet.spec.ts`: Playwrightで各Gateの最終smokeだけを確認する。領域表示と2〜3個の代表的なbrowser操作に限定し、routeまたはresponsiveなページ固有UIを必要最小限で確認する。入力制約・派生式・Tooltip・read-only表現・DOM属性・固定データ全件の網羅はここへ置かない。
 - `tests/vrt/character-sheet.spec.ts`: `docs/design/character-sheet/notes.md`で確定したroute、viewport、fixture、表示状態だけをsnapshot比較する。VRTは文言・データ件数・計算式の正しさを担わない。
 
-React Component / Hook単体testは、Vitest、jsdom、React Testing Library、user-eventを使う。`@vitejs/plugin-react`はVitestのReact TSX変換だけを担い、production bundleへ機能を追加しない。ComponentまたはHookをbrowser E2Eより小さい単位で検証する必要が生じたGateでは、必要性、代替案、既存のNode / Playwrightとの役割分担を子issueへ記録し、ユーザー承認のもとで採用する。test-onlyのproduction Componentや状態をその代替にしない。
+React Component / Hook単体testは、Vitest、jsdom、React Testing Library、user-eventを使う。`@vitejs/plugin-react`はVitestのReact TSX変換だけを担い、production bundleへ機能を追加しない。ComponentまたはHookをbrowser E2Eより小さい単位で検証する必要が生じたGateでは、必要性、代替案、既存のVitest / Playwrightとの役割分担を子issueへ記録し、ユーザー承認のもとで採用する。test-onlyのproduction Componentや状態をその代替にしない。
 
 ### Character-sheet E2E / VRTの境界
 

@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, expect, it } from "vitest";
 
 import {
   getOmamori,
@@ -13,12 +12,11 @@ describe("character sheet omamori", () => {
     const first = omamori[0];
     if (first === undefined) throw new Error("お守りmaster dataがありません。");
 
-    assert.deepEqual(
-      omamori.map((item) => item.id),
+    expect(omamori.map((item) => item.id)).toEqual(
       getItemsData().omamori.map((item) => item.id),
     );
-    assert.equal(getOmamoriById(first.id)?.id, first.id);
-    assert.equal(getOmamoriById(null), null);
-    assert.equal(getOmamoriById("unknown-omamori"), null);
+    expect(getOmamoriById(first.id)?.id).toBe(first.id);
+    expect(getOmamoriById(null)).toBe(null);
+    expect(getOmamoriById("unknown-omamori")).toBe(null);
   });
 });

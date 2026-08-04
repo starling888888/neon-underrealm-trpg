@@ -6,14 +6,14 @@
 
 - `npm run check`: Astroの検査、Biome、Git管理Markdownの検査を実行する。
 - `npm run build`: 静的サイトをbuildし、ページ内目次のpostprocessを実行する。
-- `npm run test`: Node test、script test、React Component / hook test、build contract test、production analytics contract testを実行する。
+- `npm run test`: Vitestのlogic / schema / data test、script test、React Component / hook test、build contract test、production analytics contract testを実行する。
 - `npm run test:e2e`: Pagefindを含むローカルfixtureをbuildして、公開routeのbrowser behaviorを確認する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。
 
 ## テストの層とランナー選択
 
-新規テストはVitestを標準とする。UI、hook、pure logic、データ変換、scriptのいずれも、まずVitestで最小の責務を検証できるか判断する。既存の`tests/node/**`と`node --test`で動くbuild contractは維持するが、新規に`node:test`を採用したり、既存Node testをこの方針だけを理由に移行したりしない。
+Vitestをすべてのunit / contract testの標準とする。UI、hook、pure logic、データ変換、script、build contractのいずれも、まずVitestで最小の責務を検証できるか判断する。
 
 テストの置き場所が既存のVitest対象（`tests/components`、`tests/hooks`、`tests/scripts`）に収まらない場合は、責務が分かるVitest用directoryを追加し、同じtaskで`npm run test`の実行対象に含める。テストを実行されないdirectoryへ置いてはならない。
 
@@ -23,11 +23,9 @@ Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md
 | React hookとuse case                                | Vitest + Testing Libraryのhook test      | 永続化、clipboard、file readなどはadapterを差し替え、状態と副作用の契約を個別に確認できる。                          |
 | React Component                                     | Vitest + Testing LibraryのComponent test | props、表示、accessible name、入力、callback、error stateを速く局所的に確認できる。                                  |
 | scriptとNode入出力境界                              | Vitest                                   | fixtureを使い、入力・出力・異常系の契約を確認する。                                                                  |
-| 既存`tests/node/**`、既存build contract             | 現在のNode testを維持                    | 新規追加先ではない。変更時は既存runnerで対象契約を保守する。                                                         |
+| `tests/node/**`、build contract                     | Vitestのlogic / contract test            | browserを起動せず、計算・schema・生成物・公開buildの契約を確認する。                                                 |
 | route、実ブラウザAPI、複数Componentをまたぐ代表操作 | Playwright E2E                           | 実際のbuild、navigation、overlay、download/upload、clipboard、Pagefindなど、下位層で代替できない境界だけを確認する。 |
 | 見た目、viewport、responsive layout                 | Playwright VRT                           | UIの意味・状態遷移・値の正しさを画像比較だけに委ねない。                                                             |
-
-`node:test`を新規実装の選択肢として使わない。Node testを残すのは既存のtest suiteと実行契約を保守するためであり、Vitestの採用を妨げる理由にはしない。ランナー構成を変える必要がある場合は、その変更と対象テストを同じissueで扱う。
 
 ## 複雑な対話機能の分解
 
@@ -38,7 +36,7 @@ Webキャラクターシートは、複雑な対話機能の基準例とする�
 3. Componentへ表示、アクセシブルな操作名、入力、callback、dialogやerror stateを置き、Vitestで確認する。
 4. Playwright E2Eは、公開routeからの代表フローと実ブラウザに依存する境界だけを確認する。全てのvalidation分岐、計算規則、状態遷移をE2Eで網羅しない。
 
-character-sheetの現行構成では、`tests/hooks/character-sheet/`が復元、保存、画像・JSON・clipboardの状態管理を、`tests/components/character-sheet/`が表示と操作部品を、`tests/e2e/character-sheet.spec.ts`がexport/import、responsive action pane、dialog、clipboard、file inputなどの代表的な実ブラウザ操作を確認している。既存の`tests/node/character-sheet/`は維持対象であり、今後の新規テストの配置・ランナー選択を決める正本ではない。
+character-sheetの現行構成では、`tests/node/character-sheet/`がlogic、schema、master-data、serializableなpersistence、browser adapterの契約を、`tests/hooks/character-sheet/`が復元、保存、画像・JSON・clipboardの状態管理を、`tests/components/character-sheet/`が表示と操作部品を、`tests/e2e/character-sheet.spec.ts`がexport/import、responsive action pane、dialog、clipboard、file inputなどの代表的な実ブラウザ操作を確認している。unit testはすべてVitestで実行する。
 
 ## テスト実装とレビューの判断基準
 

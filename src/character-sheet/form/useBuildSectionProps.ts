@@ -11,6 +11,7 @@ import {
 } from "../form-values";
 import { type BuildDerivedValues, calculateBuild } from "../logic/build";
 import {
+  getBuildSources,
   getCharacterSheetIkizamaOptions,
   getCharacterSheetRyugiOptions,
 } from "../master-data/build";
@@ -71,9 +72,10 @@ export default function useBuildSectionProps(
     defaultValue: characterSheetDefaultValues.build,
     name: "build",
   });
+  const buildSources = useMemo(() => getBuildSources(build), [build]);
   const derivedBuild = useMemo(
-    () => calculateBuild(build, commonSkillLevelTotal),
-    [build, commonSkillLevelTotal],
+    () => calculateBuild(build, buildSources, commonSkillLevelTotal),
+    [build, buildSources, commonSkillLevelTotal],
   );
 
   const setAttributeValue = useCallback(
