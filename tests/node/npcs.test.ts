@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, it } from "node:test";
 import { strToU8, zipSync } from "fflate";
+import { describe, it } from "vitest";
 import generated from "../../data/generated/npcs.json";
 import { convertNpcs } from "../../scripts/convert-npcs/lib";
 import {

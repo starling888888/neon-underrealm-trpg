@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 import { calculateIkizamaSkillsValidation } from "../../../src/character-sheet/logic/ikizama-skills";
 import {
   getIkizamaSkillById,

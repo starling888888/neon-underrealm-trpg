@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 
 import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
 import { getDuplicateDrugRowIds } from "../../../src/character-sheet/logic/drugs";

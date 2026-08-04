@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 import { calculateCredit } from "../../../src/character-sheet/logic/credit";
 
 describe("character sheet credit", () => {

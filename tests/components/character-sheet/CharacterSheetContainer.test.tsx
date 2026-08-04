@@ -332,7 +332,9 @@ describe("CharacterSheetContainer", () => {
 
     await user.clear(getExperience());
     await user.type(getExperience(), "43");
-    expect(resetHarnessForm?.getValues("build.acquiredExperience")).toBe(43);
+    await waitFor(() =>
+      expect(resetHarnessForm?.getValues("build.acquiredExperience")).toBe(43),
+    );
 
     await user.selectOptions(screen.getByLabelText("生き様"), "kejime");
     expect(resetHarnessForm?.getValues("ikizamaSkills.bonusLevel")).toBe(1);

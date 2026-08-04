@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 
 const dummyToken = "cloudflare-web-analytics-test-token";
 const scriptSource = "https://static.cloudflareinsights.com/beacon.min.js";

@@ -1,4 +1,4 @@
-import test from "node:test";
+import { test } from "vitest";
 import type { z } from "zod";
 import type { IkizamaJsonSchema } from "../../src/lib/schemas/conversion/ikizama";
 import type { IkizamaSkillsJsonSchema } from "../../src/lib/schemas/conversion/ikizama-skills";

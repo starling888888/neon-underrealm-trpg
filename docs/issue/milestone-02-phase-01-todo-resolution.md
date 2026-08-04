@@ -55,7 +55,7 @@ milestone-02 Phase 1で実施する技術的なTODOを回収し、実施しな�
 ## 完了条件
 
 - [ ] Astro Component contract testの対象・責務・実行scriptが定義され、代表Componentで固定propsの契約を検証できる。
-- [ ] `tests/node/`と`tests/contract/`の全testがVitestで実行され、Node test runnerを使うpackage scriptが残っていない。
+- [x] `tests/node/`と`tests/contract/`の全testがVitestで実行され、Node test runnerを使うpackage scriptが残っていない。
 - [ ] Google Spreadsheetの`summary`列を人間が手動削除し、完了を共有している。
 - [ ] スキルの`summary`列・変換仕様・型・生成JSON・`SkillCard` props・関連testおよび正本記述を、Spreadsheet削除確認後に互換期間を設けず切り替える。リリースノートなど別用途の`summary`は変更しない。
 - [ ] `-local`確認ページがPagefind indexに含まれず、公開検索と検索Visual Testが安定して通る。
@@ -141,7 +141,8 @@ Gate IDと状態は`docs/issue/milestone-02-phase-01-todo-resolution/plan.md`だ
 
 ### Vitest全面移行
 
-- 変更: `tests/node/`と`tests/contract/`をVitest形式・scriptへ移行し、Node test runnerをpackage scriptから除去する。
+- [x] G3の`tests/node/`と`tests/contract/`をVitestへ移行する。
+- 変更: `tests/node/`と`tests/contract/`をVitest形式・scriptへ移行し、Node test runnerをpackage scriptから除去する。既存Component testの非同期form値確認は待機条件を明示する。
 - 完了条件: 全logic / schema / build contract testがVitestで実行され、各test層の責務が維持されている。
 - 検証: `npm run test`、関連するbuild contract。
 

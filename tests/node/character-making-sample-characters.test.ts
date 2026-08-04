@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 
 import { parseCharacterSheetJsonImport } from "../../src/character-sheet/schemas/character-sheet-persistence";
 import { getIkizamaById } from "../../src/lib/data/ikizama";

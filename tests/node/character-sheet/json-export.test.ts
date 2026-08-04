@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { test } from "vitest";
 
 import { downloadJsonFile } from "../../../src/character-sheet/browser/json-download";
 import { characterImageMimeType } from "../../../src/character-sheet/character-image";

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 import { getIkizamaList } from "../../src/lib/data/ikizama";
 import { getRyugiList } from "../../src/lib/data/ryugi-list";
 import {
