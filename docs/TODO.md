@@ -24,26 +24,26 @@ TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/pla
 - [ ] ゲーム設計レビューの未解決高優先度・GM項目をトリアージする
   - source: PR #187の文書レビュー
   - classification: follow-up
-  - plan: `docs/issue/milestone-02/plan.md`のPhase 1（TODO方針整理）とPhase 2（GMセクション）。
-  - handling plan: `docs/game-design/2026-08-02_game-review.md`の未解決項目を、対応しない判断、FAQ候補、公開ルールの個別issue、GM-01/GM-02を含むPhase 2へ分類する。個別の実装・文言修正は、分類後に承認したissueだけで扱う。
+  - plan: `docs/issue/milestone-02/plan.md`のPhase 2（GMセクション）。
+  - handling plan: GMセクションを作成してから、`docs/game-design/2026-08-02_game-review.md`の未解決項目を、対応しない判断、FAQ候補、公開ルールの個別issue、GM-01/GM-02を含むPhase 2へ分類する。Phase 1ではトリアージ、FAQ、ルール実装を行わない。
 
 - [ ] キャラクターシートの候補行を選択可能に見せるデザインを検討する
   - source: `.tmp/review/ex-02-31-sheet-integration/contents-review-1.md` とユーザー判断
   - classification: visual usability follow-up
-  - plan: なし。キャラクターシートの次のdesign改訂taskを計画してから紐付ける。
+  - plan: `docs/issue/milestone-02/plan.md`のPhase 3。キャラクターシートのdesign改訂を対象とする独立taskを計画してから実装する。
   - handling plan: skill・item候補dialogで、候補名または行全体が選択可能であること、選択済み・非選択・選択不可の状態を視覚だけで区別できる表現を検討する。既存designと操作導線への影響を確認し、方針を承認してから実装する。
 
 - [ ] 覚悟から縁へ戻す効果の表現を整理する
   - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
   - classification: rule wording follow-up
-  - plan: なし。ルール文言の整理が必要になった時点で独立taskを計画する。
+  - plan: `docs/issue/milestone-02/plan.md`のPhase 3。ルール文言整理の独立taskを計画してから実装する。
   - handling plan: `src/pages/rules/battle.mdx`の「入れ替えができなくなる」と、スキル効果の「覚悟を縁に戻す」を、覚悟を解除する効果は許可する意図が明確になる表現へ整理する。生成JSONのスキル本文を変更する場合は、対応する生成元から更新する。
 
 - [ ] JSONのスキーマバージョン差異との互換性を担保する
   - source: `ex-02-web-character-sheet` の要件レビューに対するユーザー回答
   - classification: future data compatibility follow-up
-  - plan: なし。複数のJSON形式を継続して扱う必要が明確になった時点で独立taskを計画する。
-  - handling plan: 現在はスキーマバージョンを保存・比較せず、正常に処理できないJSONを一律エラーにする。将来、バージョン番号、受け入れ可能な旧形式、移行処理、エラー表示、テストfixtureを定義して互換性を担保する。
+  - plan: なし。複数のJSON形式を継続して扱う必要が明確になるまで計画化しない。
+  - handling plan: 2026-08-04のユーザー判断により当面保留する。現在はスキーマバージョンを保存・比較せず、正常に処理できないJSONを一律エラーにする。将来、バージョン番号、受け入れ可能な旧形式、移行処理、エラー表示、テストfixtureを定義して互換性を担保する。
 
 - [ ] Astro Component contract testの基盤を導入する
   - source: `28-2-common-skills-page` の技術レビューにおけるユーザー指示
@@ -66,7 +66,7 @@ TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/pla
 - [ ] 表全体が初期表示で収まらない場合のレイアウト対策を検討する
   - source: `26-2-advancement-page` のcontents review 3 とユーザー指示
   - classification: visual usability follow-up
-  - plan: なし。`49-50-accessibility-responsive-pass`では再現せず保留としたため、必要性が再確認された時点で独立taskを計画する。
+  - plan: `docs/issue/milestone-02/plan.md`のPhase 3。情報設計とresponsive表示を検討する独立taskを計画してから実装する。
   - handling plan: 成長ページの「生き様係数」表など、本文コンテナ内で横スクロールが必要になり初期表示で全列を確認できない表について、情報の分割、列・見出しの再構成、画面幅に応じた表示、スクロール誘導などを比較する。既存table layout・共通design・アクセシビリティへの影響を確認し、方針を決めてから実装する。
 
 - [ ] Pagefindが`-local`確認ページをindex化した場合も、検索Visual Testを安定して実行できるようにする
@@ -78,8 +78,8 @@ TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/pla
 - [ ] キャラクターシートの永続スキル参照でID変更を検出してエラーにする
   - source: `28-0-common-skills-data` 実装中のユーザー指示
   - classification: future data compatibility follow-up
-  - plan: `ex-02-web-character-sheet` の初期範囲外。永続保存を追加する場合は、別taskを計画する。
-  - handling plan: キャラクターシート機能がDBなどへスキルIDと取得レベルを保存する前に、名称、所属、区分、タイミングなどID入力値の変更で同一スキルのIDが変わったことを検出してエラーにする方式を設計する。比較に使う不変キーまたは移行マッピング、既存保存データとの照合時点、エラー表示、移行手順を決定し、ID変更を黙って保存データへ適用しない。
+  - plan: なし。永続保存を追加する必要が明確になるまで計画化しない。
+  - handling plan: 2026-08-04のユーザー判断により当面保留する。キャラクターシート機能がDBなどへスキルIDと取得レベルを保存する前に、名称、所属、区分、タイミングなどID入力値の変更で同一スキルのIDが変わったことを検出してエラーにする方式を設計する。比較に使う不変キーまたは移行マッピング、既存保存データとの照合時点、エラー表示、移行手順を決定し、ID変更を黙って保存データへ適用しない。
 
 - [ ] キャラクターシートの派生logicからマスタID解決を分離する
   - source: ChatGPT review draft (`.tmp/chatgpt-review.md`) のG7 review
@@ -90,8 +90,8 @@ TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/pla
 - [ ] Footerからクレジット導線を出すか将来検討する
   - source: `phase-2-prep-doc-agent-ops` Group 12
   - classification: low-priority follow-up
-  - plan: 初期実装の必須タスクには紐づけない。クレジット情報が増え、Footerからの常設導線が必要になった時点で独立タスクとして計画する
-  - handling plan: 初期実装ではFooterをコピーライト、GitHub、X、Discordに絞る。クレジット本文はトップページや将来の専用ページで扱い、Footer導線は必要性が明確になってから追加する。
+  - plan: なし。Footerからの常設導線が必要になるまで計画化しない。
+  - handling plan: 2026-08-04のユーザー判断により当面保留する。初期実装ではFooterをコピーライト、GitHub、X、Discordに絞る。クレジット本文はトップページや将来の専用ページで扱い、Footer導線は必要性が明確になってから追加する。
 
 - [ ] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
   - source: `design-image-generation` skill 追加時の整合確認

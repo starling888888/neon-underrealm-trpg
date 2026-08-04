@@ -124,6 +124,7 @@ Gate IDと状態は`docs/issue/milestone-02-phase-01-todo-resolution/plan.md`だ
 
 ### 対応予定なし・対象Phase明記TODO
 
+- [x] G1のTODOのplan / handling planを、2026-08-04のユーザー判断へ更新する。
 - 変更: 次のTODOを1つのGateで現在のユーザー判断へ更新する。
   - ゲーム設計レビューはGMセクションを作成してからトリアージする。
   - 候補行design、覚悟から縁へ戻す効果の文言、responsive table対策はPhase 3へ紐付ける。
