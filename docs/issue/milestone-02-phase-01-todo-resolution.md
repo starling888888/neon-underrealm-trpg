@@ -163,12 +163,14 @@ Gate IDと状態は`docs/issue/milestone-02-phase-01-todo-resolution/plan.md`だ
 
 ### 派生logicからのマスタID解決分離
 
+- [x] G6の派生logicからマスタID解決を分離する。
 - 変更: 解決済みview modelをlogicへ渡す境界へ整理し、未知ID検出・復元時の扱いをpersistence / import境界に残す。
 - 完了条件: 派生logicがマスタIDを直接解決せず、UI・保存済みJSONの挙動を意図せず変更していない。
 - 検証: logic / schema test、`npm run check`、`npm run test`。
 
 ### TODO-doneへの退避
 
+- [x] G7の3件を`docs/TODO-done.md`へ退避する。
 - 変更: 次のTODOを`docs/TODO-done.md`へ移す。
   - 既存design notesの全件正規化: 費用対効果が低いため対応しない。
   - GitHub Actionsで全件VRT: 費用対効果が低いため対応しない。

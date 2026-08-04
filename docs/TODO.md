@@ -93,24 +93,6 @@ TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/pla
   - plan: なし。Footerからの常設導線が必要になるまで計画化しない。
   - handling plan: 2026-08-04のユーザー判断により当面保留する。初期実装ではFooterをコピーライト、GitHub、X、Discordに絞る。クレジット本文はトップページや将来の専用ページで扱い、Footer導線は必要性が明確になってから追加する。
 
-- [ ] 既存 `docs/design/*/notes.md` を `design-image-generation` のnotes構造へ寄せる
-  - source: `design-image-generation` skill 追加時の整合確認
-  - classification: follow-up
-  - plan: なし。後続milestoneでdesign運用整理taskを計画してから紐づける。
-  - handling plan: 既存design targetごとに、mode / target / referenced SSoT / existing design constraints / out of scope / comparison points / generation source / open questions を必要範囲で追記する。既存design画像そのものは、このTODOだけでは変更しない
-
-- [ ] サイトメニュー順序変更を既存designへ一括反映する
-  - source: `24-2-scenario-play-page` 準備中のユーザー指示
-  - classification: design follow-up
-  - plan: なし。後続milestoneで一括design更新taskを計画してから紐づける。
-  - handling plan: `ルール`を`データ`の上に置く現行メニュー順序を、関連する既存design画像・notesへまとめて反映する。個別ページ作成中に部分的なdesign更新は行わない。
-
-- [ ] GitHub Actionsで全件VRTを定期実行または公開直後に実行する
-  - source: 2026-07-23のユーザー指示
-  - classification: CI / visual regression follow-up
-  - plan: なし。CIと公開workflowの責務を整理するtaskを追加してから紐付ける。
-  - handling plan: buildとPagefind index作成後に全`@vrt` targetを比較できるGitHub Actions workflowを整備する。定期実行と公開直後実行のどちらか、または両方を選び、GitHub Pages公開時の実行順序、失敗時の通知、snapshot更新の扱いを定義する。PR前のローカル確認は、UI変更時だけ変更targetに限定する。
-
 <!--
 例:
 
