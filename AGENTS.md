@@ -44,6 +44,7 @@
 - ユーザーが「検討して」「確認して」「妥当性を見て」「どうかな」「レビューして」など、判断や意見を求めている場合は実装承認ではない。判断、選択肢、推奨方針を返して停止し、実装、生成、ファイル編集は「修正開始」「実装して」「反映して」などの明示指示を待つ。
 - ユーザーの明示指示によりcurrent issue外のGit管理ファイルを変更する場合は、`.tmp/review/<branch-name>/user-directed-changes.md` に指示、分類、変更対象、変更前後、issueとの関係、関連commitまたはPRを記録する。要求または初期スコープ外SSoTを変更する場合は、変更元SSoTとcurrent issueも同じtaskで更新する。通常のcurrent issue内作業とGit操作は記録しない。
 - 実装中は、完了条件・チェックポイントを実際にローカル確認した時点で現在のissueへチェックを入れる。未確認項目や人間確認が必要な項目は未チェックのまま残す。
+- レビューと完了チェックの前に、対象条件ごとの現在の根拠を照合する。根拠が不足する場合は完了扱いにせず停止し、ユーザーの指示を受けて修正する。
 - `docs/issue/milestone-<NN>/plan.md` のチェックボックスは、人間レビュー後のユーザー指示なしに完了扱いしない。
 - UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign intentとVRT参照情報を確認する。必要なdesign notesがない場合は `design-image-generation` に切り出す。
 - Visual Review screenshotは実装結果であり、design正本ではない。actual screenshotを直接 `docs/design/` にコピーしない。

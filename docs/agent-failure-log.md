@@ -99,36 +99,6 @@ source種別は以下を使う。
 - 観測した失敗: ローカルissueを削除する際、GitHub Issue #190の本文へ削除直前の`docs/issue/milestone-02-phase-01-todo-resolution.md`全文ではなく、英語の要約だけを登録した。closed Issueは完了済みissueの最終契約・完了記録であるため、原文を失わせる登録になった。
 - 一次対応: 削除commit `0f218f0`の親commitからローカルissue原文を取得し、GitHub Issue #190の本文を原文へ復元した。以後、ローカルissueをGitHubへ記録してから削除する作業では、Issue本文と削除直前のファイル内容を照合してから完了を報告する。
 
-### Reported all archived GitHub Issues closed without verifying a CLI partial failure
-
-#### 2026-08-01
-
-- source: user
-- failure category: verification accuracy
-- 発生箇所: `milestone-02-phase-01-github-issue-archive` の完了済みissue移行
-- 観測した失敗: `gh api`がnetwork errorを返したためIssue作成も失敗したと判断したが、Issue #81の作成は成功しており、close処理だけが実行されなかった。その後、GitHub connectorで同じ元pathのIssue #78を作成してclosedにした。GitHub Issue #81がopenのまま残っていることをユーザーが指摘したにもかかわらず、107件すべてをclosed Issue化したと報告した。
-- 一次対応: GitHub Issue #81をclosedへ訂正し、current issueの「1件だけ作成または再利用」完了条件を未チェックへ戻した。重複した#78と#81の整理は、ユーザー指示を待つ。以後、外部API commandが失敗した場合は、作成・更新それぞれの結果をconnectorで照合してから移行完了を報告する。
-
-### Marked the Drive sync scope and test contract complete without full validation
-
-#### 2026-07-31
-
-- source: review
-- failure category: verification accuracy
-- 発生箇所: `ex-06-google-drive-xlsx-sync` の完了条件・チェックポイント更新
-- 観測した失敗: `.raw/contents/`の正本性を変更するscope migrationで、残るGit管理SSoTの旧記述を全件照合せず、関連文書の整合条件を完了扱いにした。また、pagination、MIME限定、出力パス安全性、列挙・書込み失敗を実際にassertしていないVitest testを根拠に、stub testの完了条件をチェックした。PR reviewで不整合と検証不足が判明した。
-- 一次対応: 現行issueのレビュー指摘3へ、残るSSoT更新とtest契約の追加を未完了として記録した。以後、scope migrationの完了前は現行参照の全件検索結果と、issueが列挙する各test契約のassertionを対応付けて確認する。
-
-### Repeated incomplete design-note validation after a contents priority migration
-
-#### 2026-07-31
-
-- source: review
-- failure category: verification accuracy
-- 発生箇所: `ex-06-google-drive-xlsx-sync` のレビュー指摘3完了チェック
-- 観測した失敗: requirements、README、2件のdesign noteを更新してレビュー指摘3を完了扱いにしたが、`.raw/contents/`を`Referenced SSoT`として残す他の現行design notesを確認しなかった。第2回PR document reviewで、contentsがGit管理の正本と同格または上位に見える現行design noteが複数残っていることが判明した。
-- 一次対応: 現行issueのレビュー指摘5へ未更新design noteの整合を記録した。ユーザー判断により、今後の大きな編集を想定しない既存noteの一括更新はこのPRで行わない。scope migrationの完了確認では、変更した代表文書だけでなく、対象キーワードのGit管理現行参照を全件分類してからチェックを更新する。
-
 ### Repeated an unrelated sample-character node test failure during analytics validation
 
 #### 2026-07-31
@@ -1824,26 +1794,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-31-sheet-integration` の`SkillPickerDialog`
 - 観測した失敗: スキル行と要件がタイミングを表示する一方、4種のスキル候補dialogを共有する候補表からタイミング列が欠落していた。
 - 一次対応: shared candidate headerとrowへ、最大Lvとコストの間にタイミング列を追加した。全dialog・viewportのactual screenshotを原寸で確認し、Component testでheaderと読み上げ用labelを固定する。
-
-### Marked Public E2E diagnostics as verified without validating generated artifacts
-
-#### 2026-07-31
-
-- source: review
-- failure category: verification accuracy
-- 発生箇所: `56-ci-non-main-branches`のPublic E2E diagnostics完了条件
-- 観測した失敗: workflowが`playwright-report/`と`test-results/`をuploadする記述だけを根拠に、HTML report、failure screenshot、failure traceの生成設定と出力を確認せず、artifact保存の完了条件をチェックした。PR technical reviewで、Playwright configにreporter、screenshot、traceの設定がなく、失敗時にも必要な診断artifactが生成されないことが判明した。
-- 一次対応: 完了条件を未チェックへ戻し、current issueのレビュー指摘へPublic E2E時だけのdiagnostics生成と隔離失敗による出力確認を記録した。workflowでartifact pathを追加するだけでなく、生成側のPlaywright設定と失敗時の出力を確認してから完了扱いにする。
-
-### Archived Gate child issues while acceptance conditions remained unchecked
-
-#### 2026-07-31
-
-- source: review
-- failure category: verification accuracy
-- 発生箇所: ex-07のmilestone-01 archive再配置と完了条件チェック
-- 観測した失敗: 当時のarchive規約が完了条件・チェックポイントの全確認を移動条件とするにもかかわらず、Visual Reviewや表示・操作契約などの未チェック項目を残すex-02 Gate子issueをローカルarchiveへ再配置し、activeまたは未完了issueを移動していない完了条件をチェックした。PR #76のdocument reviewで判明した。
-- 一次対応: `GitHub Issue #116: ex-07`のarchive完了条件を未チェックへ戻し、レビュー指摘2として根拠ごとの監査とarchive分類の再判断を記録した。親Gateがdoneであることだけを子issueの完了根拠にしない。
 
 ### Put a local fixture policy into a shared layout
 
