@@ -439,40 +439,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーの「全部無視でいいや」を、直前に報告したコンテンツレビューの指摘だけでなく、先行するPRレビュー指摘にも適用した。PRレビューの未コミット`レビュー指摘 3`をissueから削除したが、ユーザーはコンテンツレビューだけを見送る意図だった。
 - 一次対応: `レビュー指摘 3`を元の内容で復元した。複数のレビュー結果が並行している場合、「全部」などの参照範囲は直前の成果物に限定して確認し、既存の別レビュー記録を変更する前には対象を明示的に照合する。
 
-### review-workflow order
-
-#### Started review-feedback implementation before issue intake
-
-- date: 2026-07-28
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` のユーザーレビュー指摘1
-- 観測した失敗: ユーザーがレビュー指摘を伝えただけで実装修正を指示していない段階で、current issueへ指摘を取り込む前にComponentのCSS / JSX修正を開始した。
-- 一次対応: 直前の未確定コード変更を元へ戻した。レビュー指摘はcurrent issueの未実装項目として記録し、以後はユーザーの明示的な実装再開指示を受けるまでコードを変更しない。
-
-#### PR review draft was not routed through review-to-issue
-
-- date: 2026-07-12
-- source: user
-- 発生箇所: `24-2-scenario-play-page` のPR #38初回レビュー
-- 観測した失敗: `pr-review-draft`でdocument / technical review記録を作成した後、必須の`review-to-issue`を実行せず、レビューの検証・issueへの正式取り込みを行わなかった。
-- 一次対応: ユーザーがPRレビューを無視すると指定したため、当該指摘はissueへ取り込まない。以後のPR reviewでは、結果報告前に`review-to-issue`の完了を確認する。
-
-#### Began implementation before completing the requested review-intake update
-
-- date: 2026-07-28
-- source: agent self-report
-- 発生箇所: `ex-02-13-sheet-ikizama-skills` のレビュー指摘3取り込み後
-- 観測した失敗: ユーザーがdictionary修正をレビュー指摘へ先に反映するよう求めたにもかかわらず、その記録更新を完了・報告する前に確認dialogのrename作業へ進もうとした。レビュー取り込みと実装の順序を混同した。
-- 一次対応: レビュー指摘3へdictionary共通文言、`SkillSelectionRowValues`、`SkillSelectionChangeConfirmDialog`の対応方針と未完了チェックを追記してから実装を再開した。review-to-issue中の追記要求は、追記結果を確認してから次段階へ移る。
-
-#### Stopped after reporting review results without review-to-issue intake
-
-- date: 2026-07-28
-- source: review
-- 発生箇所: `ex-02-16-sheet-experience-consistency` の通常Doc Review / Tech Review後
-- 観測した失敗: ユーザーがG16全範囲のreviewを指示した後、review結果をcurrent issueの番号付きレビュー指摘へ取り込まず、結果報告だけで停止した。レビュー指摘の修正範囲と未完了状態が正式trackingに残らなかった。
-- 一次対応: `.tmp/review/ex-02-web-character-sheet/document-review-2.md`と`technical-review-4.md`を作成し、ローカルSSoT照合済みの6件をG16のレビュー指摘3へ取り込んだ。実装はユーザー承認まで開始しない。
-
 ### scope and SSoT precedence
 
 #### Changed canonical-baseline tracking against the parent Gate plan

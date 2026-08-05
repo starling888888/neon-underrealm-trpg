@@ -55,6 +55,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] 4カテゴリの対応・移動後にactive failure logの行数を計測し、単発失敗を減らす次の整理方針を報告した。
 - [x] `component-test assertion discipline`のmatcher確認手順をユーザー承認後に`docs/testing.md`へ追加し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
 - [x] `responsive layout measurement`の寸法確認手順をユーザー承認後にVisual Review skillへ追加し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
+- [x] `review-workflow order`の既存規約を恒久対応として記録し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
 - [x] `npm run format:md` と `npm run check:md` が通る。
 
 ## チェックポイント
