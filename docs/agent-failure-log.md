@@ -89,6 +89,16 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Registered a GitHub Issue completion record with a summary instead of the final local issue body
+
+#### 2026-08-05
+
+- source: user
+- failure category: completion-record accuracy
+- 発生箇所: `milestone-02-phase-01-todo-resolution` のGitHub Issue #190への完了記録
+- 観測した失敗: ローカルissueを削除する際、GitHub Issue #190の本文へ削除直前の`docs/issue/milestone-02-phase-01-todo-resolution.md`全文ではなく、英語の要約だけを登録した。closed Issueは完了済みissueの最終契約・完了記録であるため、原文を失わせる登録になった。
+- 一次対応: 削除commit `0f218f0`の親commitからローカルissue原文を取得し、GitHub Issue #190の本文を原文へ復元した。以後、ローカルissueをGitHubへ記録してから削除する作業では、Issue本文と削除直前のファイル内容を照合してから完了を報告する。
+
 ### Reported all archived GitHub Issues closed without verifying a CLI partial failure
 
 #### 2026-08-01
