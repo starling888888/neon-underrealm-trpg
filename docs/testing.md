@@ -57,10 +57,14 @@ character-sheetの現行構成では、`tests/node/character-sheet/`がlogic、s
 
 ## CI/CD
 
-`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test` を再利用可能なQuality jobとして定義する。
+`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test` を再利用可能なQuality jobとして定義する。`.github/workflows/markdown-check.yml` は、`npm ci`と`npm run check:md`だけを実行する再利用可能なMarkdown Check jobを定義する。
 
-`.github/workflows/ci.yml` はmain以外のbranch pushとPull RequestでQualityだけを実行する。deploy権限やGitHub Pages artifactは持たない。
+`.github/workflows/ci.yml` はmain以外のbranch pushとPull Requestで変更pathを分類し、deploy権限やGitHub Pages artifactを持たない。
 
-`.github/workflows/deploy.yml` はmainへの公開対象変更でQuality後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。docs、AI Ops、READMEだけの変更はQualityとdeployを起動しない。
+- Markdown-onlyの変更ではMarkdown Checkを実行する。
+- 実装、設定、workflow、`.mdx`を含む変更、またはMarkdownとの混在ではQualityを実行する。
+- `.codex/**/*.toml`だけの変更ではCI workflowを起動しない。
+
+`.github/workflows/deploy.yml` はmainへの公開対象変更でQuality後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。deployのpath filterはCIとは別であり、`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更では起動しない。`.codex/**/*.toml`はdeployの除外対象ではない。
 
 詳細な公開順序は `docs/deployment.md`、UI変更時のVisual Review手順は `.agents/skills/visual-implementation-review/SKILL.md` を参照する。

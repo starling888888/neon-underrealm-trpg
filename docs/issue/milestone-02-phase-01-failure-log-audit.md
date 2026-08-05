@@ -8,7 +8,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 `docs/agent-failure-log/active.md`には、カテゴリごとの発生数だけでは再発性を判定できないtest / command失敗と、完了根拠の不足を示す記録が混在している。
 
-`docs/issue/milestone-02/plan.md`のPhase 1にある`milestone-02-phase-01-failure-log-audit` entryを、このissueの作業契約とする。
+`docs/issue/milestone-02/plan.md`のPhase 1にある`milestone-02-phase-01-failure-log-audit` entryは、この対応を計画上で識別する項目である。本issueを作業契約とする。
 
 関連TODOは確認したが、failure log auditに対応する項目はない。
 
@@ -32,7 +32,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 ## 初期スコープ外
 
-- サイトのUI、アプリケーションコード、test実装を変更しない。CI設定は、レビュー指摘2で承認されたMarkdown-only checkと`.codex` TOML除外に必要な最小限の変更だけを行う。
+- サイトのUI、アプリケーションコード、test実装を変更しない。CI設定は、レビュー指摘2で承認されたMarkdown-only checkと`.codex` TOML除外に必要な最小限の変更だけを行う。ただし、ユーザー指示により`CharacterSheetContainer.test.tsx`の不安定な単一testのtimeoutを20秒へ延長する。
 - 新しいnpm packageを追加しない。
 - failure logの原文を削除しない。
 - ユーザーが指定していないカテゴリへ恒久対応を広げない。
@@ -206,5 +206,30 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 - [x] current issueの背景を現行milestone plan entryへ整合した。
 - [x] deployment文書のCI分岐とreusable workflow説明を現行実装へ整合した。
+- [x] `npm run check:md` が通った。
+- [x] `git diff --check` が通った。
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- `docs/testing.md`が、Markdown Check導入前のCI挙動を説明している。
+- current issue背景がmilestone plan entryを作業契約としており、個別issueを実装契約とするrepository規約と役割が逆転している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/testing.md`はQualityだけを実行し、docs／AI Ops／READMEだけの変更ではQualityとdeployを起動しないと説明する。現行`ci.yml`はMarkdown-onlyで`markdown-check.yml`を実行し、`.codex/**/*.toml` onlyだけをworkflow triggerから除外する。`docs/issue/milestone-02/plan.md`は大まかな計画、current issueは個別の作業契約として定義されている。
+
+### 対応方針
+
+- `docs/testing.md`のCI/CD説明を、Markdown-only、implementationまたは混在、`.codex/**/*.toml` only、deployの別path filterへ更新する。
+- issue背景を、milestone plan entryは計画上の対応項目、本issueは作業契約であると役割を分けて記述する。
+
+### 対応完了チェックリスト
+
+- [x] `docs/testing.md`のCI/CD説明を現行CI分岐へ整合した。
+- [x] current issue背景のplan entryと作業契約の役割を整合した。
 - [x] `npm run check:md` が通った。
 - [x] `git diff --check` が通った。
