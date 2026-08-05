@@ -13,6 +13,88 @@
 
 ## 対応不要
 
++### Omitted the Pagefind build step from VRT baseline instructions
+
+#### 2026-07-31
+
+- source: user
+- 発生箇所: G31のbaseline全件再生成手順の案内
+- 観測した失敗: `npm run build`だけを案内したため、Pagefind indexが生成されず、`search-modal`の`search-results` VRTが`[data-search-results-list]`の非表示で3 viewportとも失敗した。`/pagefind/pagefind.js`が404であることを確認した。
+- 一次対応: 正しい前提commandを`npm run visual:build`へ訂正する。これは`npm run build && pagefind --site dist`を実行してindexを生成する。
+
+- disposition: user-directed classification（再発しなそうだからno-action）
+- moved: 2026-08-05
+
+### Conflated one JSON output with one Excel sheet
+
+#### 2026-07-21
+
+- source: user
+- 発生箇所: `30-0-ryugi-detail-data` の変換仕様草案
+- 観測した失敗: ユーザーの「1jsonにまとめる」という出力形式の決定を、Excel入力を1シートへ統合する指示と誤読した。既存の流儀別シートを所属の判断根拠として使う明示指示がないまま、`流儀ID`列の追加と単一シートへの移行を仕様へ記述した。
+- 一次対応: 草案はレビューで止め、コード・Excel・issueを変更していない。以後、入力構造と生成物構造に関する指示は別々に復唱し、入力変更を伴う提案を仕様へ反映する前に明示承認を確認する。
+
+- disposition: user-directed classification（no-action）
+- moved: 2026-08-05
+
+### Repository documentation written in wrong language
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-2-home-page` の `docs/design/home/notes.md`
+- 観測した失敗: リポジトリ内の設計文書として作成する `docs/design/home/notes.md` を、既存docsの日本語運用に合わせず英語で作成した。ユーザーから「docだから日本語で書け」と指摘された。
+- 一次対応: `docs/design/home/notes.md` を日本語へ全面修正し、本ログへ記録した。以後、リポジトリ内docs / issue / design notes / rule / skill本文は、既存文書の言語に合わせ、原則日本語で作成する。
+
+- disposition: user-directed classification（再発を確認してないのでno-action）
+- moved: 2026-08-05
+
+### Uncommitted work disappeared despite editor history
+
+#### 2026-07-05
+
+- 発生箇所: `.mcp.json`、`AGENTS.md`、`README.md` のContext7関連作業
+- 観測した失敗: VS Code HistoryやCodexセッション履歴にはContext7関連の `.mcp.json` 作成、`AGENTS.md` 追記、`README.md` 追記の作業記録が残っていたが、該当変更がcommitされておらず、現在の作業ツリーから消えていた。
+- 一次対応: 履歴に残っていた内容を参照し、`.mcp.json`、`AGENTS.md` のMCP / Context7利用方針、`README.md` の任意開発支援設定を再作成した。
+
+- disposition: user-directed classification（再発確認してないのでno-action）
+- moved: 2026-08-05
+
+### Error page exposed as normal navigation
+
+#### 2026-07-06
+
+- 発生箇所: `11-site-menu` の `src/lib/site/menu.ts`
+- 観測した失敗: 404ページを通常のサイドメニュー導線に含め、ユーザーから不要であると指摘された。
+- 一次対応: `src/lib/site/menu.ts` から404リンクを削除した。
+
+- disposition: user-directed classification（no-action）
+- moved: 2026-08-05
+
+### Repeated Playwright locator ambiguity
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` の `tests/visual/character-sheet.spec.ts`
+- 観測した失敗: `getByLabel("プライマリ流儀")`がselectだけでなく`プライマリ流儀Lv`のnumber inputにも部分一致し、strict mode violationで対象Visual testを複数回失敗させた。実行出力が完了行を省略する条件を成功と誤認し、失敗artifactを先に確認しなかった。
+- 一次対応: selectのlocatorを`{ exact: true }`へ変更し、Visual test後は終了出力だけでなく`test-results/.last-run.json`も確認する。
+
+- disposition: user-directed classification（no-action）
+- moved: 2026-08-05
+
+### Recorded local VRT snapshots as if they were Git-managed baselines
+
+#### 2026-07-29
+
+- source: user
+- 発生箇所: `ex-02-21-sheet-drugs` のVRT baseline更新・review報告
+- 観測した失敗: 親Gate planがG31までcanonical VRT snapshotをlocal専用としてGit管理しないと定めているにもかかわらず、G21 issueとdesign notesを「canonical baseline更新」とだけ記録し、review時にGit管理すべきbaselineとして扱われる余地を残した。
+- 一次対応: G21 issueとdesign notesへ、target限定のlocal canonical snapshot更新とG31までの非Git管理を明記した。VRTの記録・レビューでは、snapshotのlocal更新とGit管理の可否を親Gate planへ照合して分けて記録する。
+
+- disposition: user-directed classification（もう関係ないのでno-action）
+- moved: 2026-08-05
+
 ### Page navigation contract test ran before and then misread the 404 output path
 
 #### 2026-07-23

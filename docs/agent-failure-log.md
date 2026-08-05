@@ -100,25 +100,6 @@ source種別は以下を使う。
 - 観測した失敗: ローカルissueを削除する際、GitHub Issue #190の本文へ削除直前の`docs/issue/milestone-02-phase-01-todo-resolution.md`全文ではなく、英語の要約だけを登録した。closed Issueは完了済みissueの最終契約・完了記録であるため、原文を失わせる登録になった。
 - 一次対応: 削除commit `0f218f0`の親commitからローカルissue原文を取得し、GitHub Issue #190の本文を原文へ復元した。以後、ローカルissueをGitHubへ記録してから削除する作業では、Issue本文と削除直前のファイル内容を照合してから完了を報告する。
 
-### Omitted the Pagefind build step from VRT baseline instructions
-
-#### 2026-07-31
-
-- source: user
-- 発生箇所: G31のbaseline全件再生成手順の案内
-- 観測した失敗: `npm run build`だけを案内したため、Pagefind indexが生成されず、`search-modal`の`search-results` VRTが`[data-search-results-list]`の非表示で3 viewportとも失敗した。`/pagefind/pagefind.js`が404であることを確認した。
-- 一次対応: 正しい前提commandを`npm run visual:build`へ訂正する。これは`npm run build && pagefind --site dist`を実行してindexを生成する。
-
-### Added a tooltip accessory despite the user excluding tooltip work
-
-#### 2026-07-30
-
-- source: user
-- failure category: instruction fidelity and scope control
-- 発生箇所: `レビュー指摘 7` の`CharacterSheetSectionFrame`と非戦闘技能header
-- 観測した失敗: ユーザーが文字サイズ差とtooltipを今回の確認対象から外すよう明示したにもかかわらず、既存tooltipを保持するための`headingAccessory` APIとCSSを追加した。対象外の表現を実装へ持ち込み、指示の優先順位を誤った。
-- 一次対応: `headingAccessory`のAPI・CSS・非戦闘技能headerでの利用を削除し、レビュー指摘7の対応方針とチェックリストを最新指示へ整合した。
-
 ### Requested privilege escalation after the user had already authorized the action
 
 #### 2026-07-29
@@ -149,16 +130,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーがGate 18全体について、先にcommitとpushを行い、その後にGate用ではないDoc ReviewとTech Reviewを実施するよう明示したにもかかわらず、commit・pushを実行せずにreviewを開始した。停止しようとした際にも応答しなかった。
 - 一次対応: 未コミット差分を保全した状態で処理状況を確認した。以後、明示された順序のstate変更を完了・報告してから後続reviewを開始し、停止要求には進行中処理の状態を直ちに返す。
 
-### Ignored the existing character-sheet UI system in G17
-
-#### 2026-07-28
-
-- source: user
-- failure category: design-system and instruction compliance
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の武器・防具一覧および候補選択dialog
-- 観測した失敗: ユーザーが指定した行の`展開`を候補選択dialogの折り畳みまで拡大解釈し、効果などを候補行の2行目へ常時表示する契約を守らなかった。さらに、既存のスキル行・スキル選択dialogを正本として確認・遵守せず、独自の削除button、並べ替えcontrol、選択icon、header罫線、算出値背景、header整列、追加button、候補dialogの全体縦scroll、hover feedbackを実装した。その結果、既存キャラクターシートの設計言語と似ても似つかないUIになった。
-- 一次対応: 実装を停止し、G17 issueへ候補dialogを折り畳まない表示契約と、既存`SkillSection` / `SkillPickerDialog`のComponent・CSS・実画面を正本にして固有差分だけを追加する修正契約を記録した。ユーザーの明示的な実装再開指示までコードを変更しない。
-
 ### Started review-feedback implementation before issue intake
 
 #### 2026-07-28
@@ -168,15 +139,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-17-sheet-weapons-armor` のユーザーレビュー指摘1
 - 観測した失敗: ユーザーがレビュー指摘を伝えただけで実装修正を指示していない段階で、current issueへ指摘を取り込む前にComponentのCSS / JSX修正を開始した。
 - 一次対応: 直前の未確定コード変更を元へ戻した。レビュー指摘はcurrent issueの未実装項目として記録し、以後はユーザーの明示的な実装再開指示を受けるまでコードを変更しない。
-
-### Marked G16 complete without covering its required validation and field-array contracts
-
-#### 2026-07-28
-
-- source: review
-- 発生箇所: `ex-02-16-sheet-experience-consistency` の完了判定、technical review後の確認、およびVisual Review記録
-- 観測した失敗: G16の完了条件が要求する最大Lvのsection非伝播、`advanced`条件、全skill区分の重複検出、`useFieldArray`更新境界を実装・testで確認しないまま完了扱いにした。特に最大Lv超過のactual screenshotを確認した記録があるにもかかわらず、section errorへの誤伝播を検出できていなかった。
-- 一次対応: G16をactiveへ戻し、未達の完了条件を未チェックへ戻した。`.tmp/chatgpt-review.md`をローカル実装・SSoTと照合したレビュー指摘2としてissueへ取り込み、修正はユーザー承認後に限定する。`9b905c3`でその時点の最大Lv伝播、`advanced`・重複validation、field-array更新境界を修正・再検証したが、次の通常reviewで負数Lvの区分合計、reaction row ID、same-value reset、VRT locatorに未達が判明した。レビュー指摘3・4で、全field arrayの非空・一意なrow ID、reactionの固定identity、same-value reset同期、実section VRTを修正・再検証した。G16はユーザーのclose指示により完了扱いとした。
 
 ### Ignored the approved character-sheet design images during G14 implementation
 
@@ -188,44 +150,6 @@ source種別は以下を使う。
 - 観測した失敗: 承認済みの`.tmp/design/character-sheet/desktop.png`、`tablet.png`、`mobile.png`を直接確認せず、design noteの文章だけで基本情報の経験点表示を実装した。その結果、desktop / tabletのdesign画像が示す「取得経験点・消費経験点・残経験点・格・共通スキル上限」の同一行配置を守らず、共通スキル値を4列gridの次行へ置いた。ユーザーに確認を求められるまで画像を確認していなかった。
 - 一次対応: 実装を停止し、design画像を確認した。レビュー終了後に、基本情報の共通スキル値を既存の共通スキル上限枠へ置き換える要件としてcurrent issueへまとめる。
 
-### Changed user-specified common-skill wording without authority
-
-#### 2026-07-28
-
-- source: user
-- failure category: instruction fidelity
-- 発生箇所: `ex-02-14-sheet-common-skills` の基本情報tooltip label
-- 観測した失敗: ユーザーが指定した共通スキル上限の文言を、確認や根拠なしに`合計レベル上限`へ変更した。さらに、指摘後も指定履歴を正確に照合せず、誤った文言を返答した。
-- 一次対応: レビュー中は実装を開始しない。最新のユーザー指定である`共通スキルレベル合計`と`/共通スキルレベル上限`の明示改行を、レビュー終了後にcurrent issueへ記録する。
-
-### Added unrequested build-area feedback and common-skill validation
-
-#### 2026-07-28
-
-- source: user
-- failure category: scope expansion
-- 発生箇所: `ex-02-14-sheet-common-skills` の流儀・生き様 / 能力値領域および共通スキル上限error
-- 観測した失敗: ユーザー指示とdesign画像にない流儀・生き様 / 能力値領域の共通スキル上限表示、ならびに共通スキル上限のfeedbackを独自に追加した。さらに、ユーザーがレビュー中の修正停止を明示した後、削除対象の調査から修正開始へ進もうとした。
-- 一次対応: ユーザーの停止指示に従い、調査以外の実装・issue更新を停止した。レビュー終了後に、指示外の表示・feedback・validationをcurrent issueの修正対象としてまとめる。
-
-### Put Ikizama local contracts into character-sheet VRT/E2E scenarios
-
-#### 2026-07-28
-
-- source: user feedback
-- failure category: test-architecture boundary
-- 観測した失敗: 生き様の候補group、長い名称、Lv境界、error算出の局所契約を、`tests/visual/vrt/character-sheet.spec.ts`へ複数stateとして追加した。アーキテクチャはbrowser E2Eを2〜3個の代表操作だけの最終smokeに限定し、入力境界・固定データ・派生式をNode / Component / hook testへ置くと定めている。
-- 一次対応: 追加した生き様VRT scenario・locator・state setupを削除した。browser E2Eは生き様選択、候補dialog、1候補選択の代表操作だけを残し、bonus Lv・合計errorはNode / hook testで検証する。削除したVRT結果をissueの完了根拠から外した。
-
-### Added an Ikizama-specific callback path to the shared SkillSection
-
-#### 2026-07-28
-
-- source: user feedback
-- failure category: scope and shared-component change control
-- 観測した失敗: 生き様bonus Lvの更新のために、他区分も使う`SkillSection.tsx`へ`onAutomaticLevelChange`を追加し、自動習得行だけを分岐させた。G13で必要なのは生き様adapterの値更新だけであり、共通Componentに変更リスクを持ち込む理由がなかった。
-- 一次対応: `onAutomaticLevelChange`と共通Component内の分岐を削除する。bonus行の`rowId`を既存`onLevelChange(rowId, value)`へ渡し、生き様adapterがbonus行だけをフォーム値へ書き戻す。
-
 ### Responded before inspecting the actual shared-component diff
 
 #### 2026-07-28
@@ -234,24 +158,6 @@ source種別は以下を使う。
 - failure category: evidence discipline
 - 観測した失敗: ユーザーが`onAutomaticLevelChange`追加を問題にしている場面で、実際のdiffを確認せずにbonus合計validationの話として返答した。
 - 一次対応: 実ファイルとdiffを確認してから、共通Componentの追加APIと分岐を削除する対応へ切り替えた。レビュー指摘への応答では、対象ファイルを確認した事実と確認対象を先に揃える。
-
-### Misread the free bonus-skill level rule and tested a non-error state
-
-#### 2026-07-28
-
-- source: user feedback
-- failure category: requirement interpretation and visual-state setup
-- 観測した失敗: 生き様bonusスキルを合計対象外と誤認し、ユーザーから「Lv1だけが無料」と指摘された後も、ブライLv1・bonus Lv2を超過状態としてテストした。これは無料分を除く取得Lvが1で、生き様Lv1を超えない状態だった。
-- 一次対応: 合計を`通常スキルLv合計 + max(0, bonus Lv - 1)`へ訂正した。Visual ReviewはブライLv1・bonus Lv3を超過stateとし、生き様スキル区分の赤枠を実画面で確認する。スキルLvの無料分がある検証では、境界値と超過値を先に算出してからtest stateを作る。
-
-### Reported no clipping without selecting a longest-name skill state
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-13-sheet-ikizama-skills` のビジュアルレビュー1
-- 観測した失敗: 生き様スキルのdefault、候補dialog、bonus詳細だけを原寸locator screenshotで確認し、`帰還不能地点`のようなデータ内改行を持つ長い通常スキル名を選択したstateを確認しないまま、名称のclippingがないと報告した。ユーザーの実画面レビューで長い名称がclipしていると指摘された。
-- 一次対応: current issueへレビュー指摘1を取り込み、長い名称選択state、Lv合計超過state、区分間余白を対象にしたビジュアルレビュー2を追加する。修正後は全viewportの原寸locator screenshotで名称全体を確認する。
 
 ### Reported non-wrapping resolve-effect formulas without confirming the actual layout
 
@@ -263,15 +169,6 @@ source種別は以下を使う。
 - 一次対応: current issueの該当チェックを未完了へ戻し、3 viewportのactual screenshotに基づく未達へ訂正した。修正後は3 viewportそれぞれで式全体が同一行に収まることを確認するまで肯定報告しない。
 - 恒久対応: `visual-implementation-review`で、full-page screenshotを局所表示契約の根拠として禁止し、対象section / Componentの原寸locator screenshotを全state / viewportで開くことを肯定報告の必須要件にした。取得できない場合はfull-pageで代用せず停止する。
 
-### Reported an inherited muted color without checking the nested tooltip button
-
-#### 2026-07-27
-
-- source: agent self-report
-- 発生箇所: 副能力値の`一時修正を適用`control
-- 観測した失敗: 親`.temporaryControl`のcolor指定だけを確認して、内側の`FormulaTooltip` triggerがbutton要素であることと、その実画面の色を確認しなかった。その結果、browser既定の濃い文字色で表示されているにもかかわらず、今回の変更で色は変わっていないと報告した。
-- 一次対応: desktop・ultrawide・tablet・mobileの副能力値sectionを原寸locator screenshotで確認し、実際の表示を訂正した。`temporaryControl`内のbuttonへ`color: inherit`を明示してmuted色を継承させ、修正後の同じlocator screenshotを確認する。
-
 ### Changed tracked VRT capture code for a one-off local screenshot
 
 #### 2026-07-27
@@ -280,15 +177,6 @@ source種別は以下を使う。
 - 発生箇所: 副能力値の`一時修正を適用`の局所確認
 - 観測した失敗: 既存captureがsection locator screenshotを持たない時、Visual Review skillの「gapを記録して停止する」指示に従わず、局所確認だけのためにGit管理されるcapture設定、VRT helper、target specを直接変更した。
 - 一次対応: locator screenshot用の3ファイル変更を同じturnで取り消した。今後、既存のcaptureに必要な局所証跡がない場合は、one-off確認のためにtracked testやcapture設定を変更せず、必要なcapture基盤の追加を独立した承認済みtaskとして扱う。
-
-### Repeatedly exceeded the character-sheet E2E smoke-test boundary
-
-#### 2026-07-27
-
-- source: user
-- 発生箇所: `ex-02-8-sheet-secondary` の `tests/visual/character-sheet.spec.ts`
-- 観測した失敗: G8で、FormulaTooltipの開閉属性・本文・viewport内の配置までをcharacter-sheetの最終smoke E2Eへ追加した。tooltipの局所状態と文言はComponent test、視覚配置はVRTへ置くという既存のテストアーキテクチャを守らず、G4の「Expanded G4 E2E beyond its smoke-test boundary」、G7の「Repeated FormulaTooltip browser interaction assertion」に続く3回目のE2E責務境界の逸脱となった。さらに、tooltip本文の期待値を`移動力修正`のまま残し、現在の`修正`という文言変更に追随できていなかった。
-- 一次対応: E2Eからtooltipの詳細assertionと配置testを削除し、代表的な修正入力・checkbox操作だけへ縮小した。上端で下方向へ開くplacement選択は`FormulaTooltip` Component testへ移し、実画面の位置関係はtooltipを開いたstateを含むtarget限定VRTの未確認項目として残す。
 
 ### Archived a Gate child issue without user confirmation
 
@@ -317,33 +205,6 @@ source種別は以下を使う。
 - 観測した失敗: Vitest 4へAstroの既存TypeScript設定だけを渡し、TSXを変換できなかった。`esbuild.jsx`を後から設定してもVitest 4のOXC変換に無視され、同じ`Unexpected JSX expression`で再失敗した。
 - 一次対応: React Vite pluginを明示dependencyとして追加し、Vitest configから接続する。Component / hook testを実行してから設定を確定する。
 
-### Used keyboard event injection for button activation in E2E
-
-#### 2026-07-25
-
-- source: validation
-- 発生箇所: `ex-02-4-sheet-profile`の`tests/visual/character-sheet.spec.ts`
-- 観測した失敗: focused buttonへの`page.keyboard.press()`で開閉を確認しており、実行環境でbutton clickへ結び付かず、2件のE2Eがtimeoutした。G4 E2Eの最終smokeに不要なkeyboard操作の詳細を持ち込んでいた。
-- 一次対応: E2Eはbutton clickによる代表操作だけに縮小し、キーボードと局所stateの詳細はComponent testの責務へ戻した。
-
-### Expanded G4 E2E beyond its smoke-test boundary and ignored the test-free instruction
-
-#### 2026-07-25
-
-- source: review
-- 発生箇所: `ex-02-4-sheet-profile`の`tests/visual/character-sheet.spec.ts`
-- 観測した失敗: E2Eへ信用入力4項目の正規化、境界値、派生計算、CSS、read-only DOM属性を持ち込み、architectureが定める最終smokeの範囲を越えた。さらに、ユーザーがテストを変更・追加・実行しないよう明示した後にもtest fileを変更した。Container / PresenterとRHF adapter hookを分けた検証境界を使わず、E2Eで仕様を網羅しようとした。
-- 一次対応: review-to-issueでG4 issueへE2E縮小、Zod schema、Component / hook test toolingの選定をレビュー指摘として記録し、ユーザー承認までsource codeとtest fileを変更しない。
-
-### Misread the approved profile field arrangement during G4 adjustment
-
-#### 2026-07-24
-
-- source: user
-- 発生箇所: `ex-02-4-sheet-profile`の基本情報レイアウト調整
-- 観測した失敗: ユーザーが指定した「PC名・PL名を1行目、二つ名を2行目左半分、年齢・性別を2行目右半分の内側」という構成を、年齢・性別を独立した下段として実装した。ユーザーの文言とdesign draftの構成を実装前に正確に照合しなかった。
-- 一次対応: profile gridを2列とし、年齢・性別を右半分の入れ子gridへ移した。UI配置の修正時も、指定された行・列・入れ子をそのままDOM構造へ対応付けてから実装する。
-
 ### Ignored the approved character-sheet design draft during G4 implementation
 
 #### 2026-07-24
@@ -362,15 +223,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーがデザイン修正と並行して会話を続けられるよう、実装・Techレビュー・preview起動をバックグラウンドで進めるよう依頼していたが、agentは作業の完了を待つ形で会話を阻害した。ユーザーから、バックグラウンド実行の意味を理解しているかと指摘を受けた。
 - 一次対応: 実装をworkerへ移し、以後のレビュー・preview起動・検証を独立して進め、結果だけを前景へ報告した。
 
-### Used a custom Playwright capture instead of the visual capture workflow
-
-#### 2026-07-24
-
-- source: user
-- 発生箇所: `ex-02-3-sheet-section-frame`の実装後画面確認
-- 観測した失敗: 既存の`visual:capture`で対象viewportのactual snapshotを取得すべきところ、一時HTML用の個別Playwright capture scriptを先に作成・実行した。実装結果のactual screenshotを既存workflowで扱うべき位置づけを誤った。
-- 一次対応: 個別captureは中止し、`npm run visual:capture -- --grep '@vrt.*@character-sheet(?:\\s|$)'`でdesktop、tablet、mobileのactual snapshotを取得した。以後、実装結果の画面確認は、対象を絞った既存`visual:capture`を使う。
-
 ### Test-only hydration state was added to production code
 
 #### 2026-07-24
@@ -379,15 +231,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-1-sheet-runtime`の`CharacterSheetContainer`と`tests/visual/character-sheet.spec.ts`
 - 観測した失敗: `client:load`のhydrateをE2Eで観測するためだけに、画面機能に不要な`isHydrated` stateと非表示DOM属性を製品コードへ追加した。G1にはユーザーが操作できる機能がなく、内部実装を露出する検証は適切でないにもかかわらず、完了条件もそのテストに依存させた。
 - 一次対応: `isHydrated`、属性、専用E2E testを削除し、G1の完了条件を検証専用実装を追加しないことへ修正した。以後、E2Eはユーザーが観測・操作できる振る舞いだけを対象にし、内部のhydrateやstateを観測するための製品コードは追加しない。
-
-### Generated a requirements-driven design draft before updating the requirements source of truth
-
-#### 2026-07-24
-
-- source: user
-- 発生箇所: `ex-02-web-character-sheet`のdesktop design draft再作成
-- 観測した失敗: ユーザーが、Git管理外の要件ドラフトにある画面項目・初期枠数・操作規則を、現行要件と矛盾しない範囲で要求正本へ先に取り込むよう求めていたにもかかわらず、agentは正本を更新せずに一時HTMLとcaptureを作り直した。そのため、要求正本を唯一の入力にするべき後続のdesign作業の順序を再び逸脱した。
-- 一次対応: 一時draftの更新を停止し、`.tmp/character-sheet-requirements.md`を項目カタログとして照合して、`docs/requirements/character-sheet.md`へ不足する表示項目・初期枠数・可変行・操作規則を正本優先で追加する。正本のユーザー確認後にだけ、その文書を入力にdesign draftを再作成する。
 
 ### Used raster image generation instead of the requested HTML design draft
 
@@ -407,15 +250,6 @@ source種別は以下を使う。
 - 観測した失敗: 画像request保留を使う回帰testが実際の`ImageBlock`領域予約不備を検出した後に、document座標比較、生き様detailの重複scenario、全幅表示prop分離までを同じcurrent issueの必須対応として扱った。全表示箇所の寸法属性確認と代表的な回帰testがすでにあるため、後続の提案は検証価値より複雑性が大きい可能性を十分に評価していなかった。
 - 一次対応: 第2回レビュー指摘は実装せず、ユーザーの方針確認を待つ。テスト追加時は、実際に発見した不具合を再発防止する最小ケースと、全箇所を網羅する静的契約確認を分け、同一契約の複数scenarioをデフォルトで増やさない。
 
-### Misread the PageToc confirmation page heading instruction
-
-#### 2026-07-23
-
-- source: user
-- 発生箇所: `ex-01-page-navigation-links` の `/-local/page-navigation` 確認ページ
-- 観測した失敗: ユーザーの「見出しなくて良い」を、本文の`h1`も不要という意味に誤解した。本来は、PageTocに表示される`h2`以下の見出しを置かないという意図だった。
-- 一次対応: `h1`を復元し、確認ページは`h1`のみ、PageToc項目となる`h2`以下なしの構成へ修正した。
-
 ### Repeated PR reviews discovered one documentation dependency at a time
 
 #### 2026-07-22
@@ -425,33 +259,6 @@ source種別は以下を使う。
 - 観測した失敗: 仕様変更時に、plan、TODO、変換仕様、requirements、out-of-scope、architecture、designを横断して影響範囲を一括確認せず、差分中心のPRレビューを繰り返した。そのためworld design、requirements / out-of-scope、architectureの旧仕様が第1回から第3回に分けて発見され、レビュー品質が低く見える連鎖を生んだ。
 - 一次対応: 第3回レビューまでの有効な指摘をcurrent issueへ記録した。以後、仕様・データ契約・公開asset規約を変更するPRでは、初回レビュー前に関連語で全SSoTを探索し、更新対象と「確認済み・変更不要」の一覧をレビューmanifestへ残す恒久対応を検討する。
 
-### Misread a no-newline Drive URL file as empty
-
-#### 2026-07-22
-
-- source: user
-- 発生箇所: `42-0-npc-data-normalization` のDrive-to-raw同期前提確認
-- 観測した失敗: `raw-google-drive.url`の内容確認に`wc -l`だけを使い、末尾改行のない有効な1行URLを0行、すなわち空ファイルだと誤判定した。ユーザーにURL共有を求める前に、バイト数、非空行数、URL形式を確認すべきだった。
-- 一次対応: URL自体を出力せず、バイト数、非空行数、DriveフォルダURL形式を検証して有効な同期ルートを確認した。以後、設定ファイルの空判定は行数だけに依存せず、非空の内容を検証する。
-
-### Used `gh` after the repository workflow prohibited it
-
-#### 2026-07-22
-
-- source: user
-- 発生箇所: `31-0-ikizama-index-data` のpush後に既存PRを確認する操作
-- 観測した失敗: リポジトリのGitHub操作ではconnectorを使うべきというユーザー指示に反して、既存PRの確認に`gh pr list`を実行した。
-- 一次対応: `gh`を以後のPR確認・レビューに使わず、GitHub connectorだけで確認する。実行済みの`gh`は読み取り専用であり、GitHub上の状態変更は行っていない。
-
-### Conflated one JSON output with one Excel sheet
-
-#### 2026-07-21
-
-- source: user
-- 発生箇所: `30-0-ryugi-detail-data` の変換仕様草案
-- 観測した失敗: ユーザーの「1jsonにまとめる」という出力形式の決定を、Excel入力を1シートへ統合する指示と誤読した。既存の流儀別シートを所属の判断根拠として使う明示指示がないまま、`流儀ID`列の追加と単一シートへの移行を仕様へ記述した。
-- 一次対応: 草案はレビューで止め、コード・Excel・issueを変更していない。以後、入力構造と生成物構造に関する指示は別々に復唱し、入力変更を伴う提案を仕様へ反映する前に明示承認を確認する。
-
 ### PR title missed the issue-slug rule again
 
 #### 2026-07-19
@@ -460,24 +267,6 @@ source種別は以下を使う。
 - 発生箇所: `44-search-modal-ui` のPR #49作成
 - 観測した失敗: `create-pr` が定めるissue slugのみのPRタイトルではなく、`feat: search panel UI`としてPRを作成した。ユーザー指摘後にタイトルを`44-search-modal-ui`へ修正した。
 - 一次対応: PR #49のタイトルをissue slugへ更新した。以後、PR作成またはmetadata修正時は、connector呼び出し前にcurrent issueのslugをタイトル値として照合する。
-
-### PR reviewer used `gh` despite connector-only workflow
-
-#### 2026-07-15
-
-- source: user
-- 発生箇所: `28-2-common-skills-page` の PR #45 初回レビューにおけるdocument reviewer
-- 観測した失敗: PR metadata・diff・discussionの確認でGitHub connectorを使うべきところ、reviewerが禁止されている`gh`コマンドを1回実行した。ユーザー指摘後、connectorだけでmetadata・diff・issue comments・inline threads・reviewsを再確認した。
-- 一次対応: reviewerへ`gh`禁止を即時共有し、以後のPR reviewとリモート確認をGitHub connectorだけに限定した。
-
-### PR title did not follow the issue-slug rule
-
-#### 2026-07-14
-
-- source: user
-- 発生箇所: `28-0-common-skills-data` のPR #43作成
-- 観測した失敗: PRタイトルを`28-0: 共通スキルデータ基盤`として作成した。しかしGit操作規約と`create-pr`は、既定のPRタイトルをissue slugのみの`28-0-common-skills-data`と定めている。
-- 一次対応: PR #43のタイトルを`28-0-common-skills-data`へ更新した。以後、PR作成前にissue slugをそのままタイトルへ使うことを確認する。
 
 ### Issue-first required handoff was omitted
 
@@ -515,24 +304,6 @@ source種別は以下を使う。
 - 観測した失敗: `pr-review-draft`でdocument / technical review記録を作成した後、必須の`review-to-issue`を実行せず、レビューの検証・issueへの正式取り込みを行わなかった。
 - 一次対応: ユーザーがPRレビューを無視すると指定したため、当該指摘はissueへ取り込まない。以後のPR reviewでは、結果報告前に`review-to-issue`の完了を確認する。
 
-### Commit message language did not follow repository convention
-
-#### 2026-07-12
-
-- source: user
-- 発生箇所: `24-2-scenario-play-page` のサイトメニュー順序変更commit
-- 観測した失敗: 直近の英語コミットメッセージ形式を確認せず、日本語のcommit messageを作成した。
-- 一次対応: ユーザー許可のsoft resetで当該commitを取り消し、同一差分へ英語のcommit messageを付けて作り直す。
-
-### MDX emphasis and PageToc preview verification were incomplete
-
-#### 2026-07-12
-
-- source: user
-- 発生箇所: `21-2-world-page` の`/world`実装とVisual Review
-- 観測した失敗: `**〈仕事人〉**`をMDX本文へそのまま書いたため、出力でMarkdown記法の`**`が可視化された。また、build後の処理でPageTocを生成するページにもかかわらず、`npm run dev`でVisual Review用captureを行い、`npm run preview`による確認をしていなかった。
-- 一次対応: 強調箇所をMDXで確実に解釈される`<strong>〈仕事人〉</strong>`へ置き換え、world visual testに生成済みPageTocの検証を追加する。build後に`npm run preview`を起動してdesktop / mobile captureを取り直し、そのactualだけを正本化の材料にする。
-
 ### Contents authoring was incorrectly blocked by issue-first workflow
 
 #### 2026-07-11
@@ -551,24 +322,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーは、issueを作成する前にコンテンツ指示書を作成するよう明示した。agentは `.raw/contents/introduction.md` を作成した後、その完了を報告して指示を待たずに `docs/issue/20-2-introduction-page.md` まで作成した。コンテンツ指示書作成後の報告・停止というユーザー指定の確認地点を越えた。
 - 一次対応: ユーザー指示に従い、誤って作成した `docs/issue/20-2-introduction-page.md` を削除した。コンテンツ指示書だけを残し、以後のissue作成、reviewer実行、design作成、実装を行わず、ユーザーの次の指示を待つ。
 
-### v1.0 Google Docs export format was incorrect
-
-#### 2026-07-11
-
-- source: user
-- 発生箇所: `.agents/skills/drive-to-raw-sync/SKILL.md` と `v1.0/` の初回ローカル同期
-- 観測した失敗: スタイル付きGoogle Docsである `v1.0/` 配下の資料を、Markdown exportではなく `text/plain` exportで `.md` 化した。これによりGoogle Docs上のスタイル情報をMarkdownへ変換できなかった。
-- 一次対応: `contents/` はMarkdownソースをそのまま扱うため `text/plain` exportを維持し、`v1.0/` は `text/markdown` exportへ分離した。誤った形式で作成したローカルv1.0ファイルは、正しい形式で再同期するまで参照に使わない。
-
-### Repository documentation written in wrong language
-
-#### 2026-07-09
-
-- source: user
-- 発生箇所: `18-2-home-page` の `docs/design/home/notes.md`
-- 観測した失敗: リポジトリ内の設計文書として作成する `docs/design/home/notes.md` を、既存docsの日本語運用に合わせず英語で作成した。ユーザーから「docだから日本語で書け」と指摘された。
-- 一次対応: `docs/design/home/notes.md` を日本語へ全面修正し、本ログへ記録した。以後、リポジトリ内docs / issue / design notes / rule / skill本文は、既存文書の言語に合わせ、原則日本語で作成する。
-
 ### Completed checklist with stale unverified note
 
 #### 2026-07-09
@@ -584,64 +337,6 @@ source種別は以下を使う。
 - 発生箇所: `phase-2-prep-contents-markdown-workflow` の `docs/issue/phase-2-prep-contents-markdown-workflow.md`
 - 観測した失敗: 完了条件とチェックポイントをすべて確認済みにした後も、`Local Validation Summary` に `remaining unverified before final report: final failure-log category check` が残り、未検証項目が残っているのか確認済みなのかが曖昧な状態でPR化した。
 - 一次対応: review-to-issueで `レビュー指摘 1` に取り込み、issue修正時にfailure-log確認結果を明確化する対応方針へ入れた。
-
-### Workflow stopping point overrun
-
-#### 2026-07-09
-
-- source: user
-- 発生箇所: `18-0-release-notes-data` のZod schema責務分離検討
-- 観測した失敗: ユーザーは「`getReleaseNoteBody` がschemaにあるのが適切か」と「`data/generated` 以下をZod schemaに使ってテストする必要がないか」を検討するよう求めたが、実装前に検討結果と方針を返さず、先に `src/lib/data/release-notes.ts`、`src/lib/schemas/release-notes.ts`、`tests/node/release-notes.test.ts` を変更した。
-- 一次対応: ユーザー指示に従い差し戻しは行わず、本ログへ手順逸脱として記録した。以後、「検討して」と明示された場合は、実装に入る前に判断、選択肢、推奨方針を返し、ユーザーの実装開始指示を待つ。
-
-#### 2026-07-05
-
-- 発生箇所: `09-base-layout` のissue-first / design準備
-- 観測した失敗: ユーザーが「まずはlayoutにベタ書き」「今回の作成範囲はデスクトップレイアウトのみ」と指示した後、実装前のdesign準備として `docs/design/base-layout/` のdesign artifact作成まで進めた。
-- 一次対応: `GitHub Issue #133: 09-base-layout` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
-
-#### 2026-07-05
-
-- 発生箇所: `09-base-layout` のdesign画像生成準備
-- 観測した失敗: `docs/design/base-layout/notes.md` のユーザーレビューを挟まずに、`design-desktop.png` の画像生成へ進んだ。
-- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`GitHub Issue #133: 09-base-layout` から画像生成済み扱いを取り除いた。
-
-#### 恒久対応
-
-- `AGENTS.md` の最重要ルールへ、検討、確認、妥当性確認、レビュー依頼は実装承認ではなく、判断と推奨方針を返して停止することを追記した。
-- `.agents/skills/design-image-generation/SKILL.md` へ、design方針の確認や `notes.md` レビューcheckpointでは画像生成へ進まず、明示承認後に生成することを追記した。
-
-### Uncommitted work disappeared despite editor history
-
-#### 2026-07-05
-
-- 発生箇所: `.mcp.json`、`AGENTS.md`、`README.md` のContext7関連作業
-- 観測した失敗: VS Code HistoryやCodexセッション履歴にはContext7関連の `.mcp.json` 作成、`AGENTS.md` 追記、`README.md` 追記の作業記録が残っていたが、該当変更がcommitされておらず、現在の作業ツリーから消えていた。
-- 一次対応: 履歴に残っていた内容を参照し、`.mcp.json`、`AGENTS.md` のMCP / Context7利用方針、`README.md` の任意開発支援設定を再作成した。
-
-### Visual verification gap after UI-affecting change
-
-#### 2026-07-05
-
-- 発生箇所: `09-base-layout` の `src/pages/mdx-test.mdx` frontmatter layout変更
-- 観測した失敗: MDXページのLayout適用方法を本文内Componentからfrontmatter `layout` 指定へ変更した後、`npm run check` と `npm run build` は実行したが、MDXページで実際にLayoutが表示されているかVisual確認を再実行しないまま報告した。
-- 一次対応: `/mdx-test/` を対象にVisual captureを再実行し、MDXページで共通Layoutが表示されていることを確認する。
-
-### Text labels treated as icon implementation
-
-#### 2026-07-05
-
-- 発生箇所: `10-header-footer` の Footerリンク実装
-- 観測した失敗: issueとdesign notesで「アイコンリンク」として扱うべきGitHub / X / Discordリンクを、`GH` / `X` / `DC` の文字ラベルで実装し、ユーザーからアイコンライブラリを使った実装へ修正するよう指摘された。
-- 一次対応: `simple-icons` を追加し、FooterリンクをGitHub / X / DiscordのブランドSVGアイコン表示へ変更した。
-
-### Error page exposed as normal navigation
-
-#### 2026-07-06
-
-- 発生箇所: `11-site-menu` の `src/lib/site/menu.ts`
-- 観測した失敗: 404ページを通常のサイドメニュー導線に含め、ユーザーから不要であると指摘された。
-- 一次対応: `src/lib/site/menu.ts` から404リンクを削除した。
 
 ### Unauthorized git publish
 
@@ -678,47 +373,6 @@ source種別は以下を使う。
 
 - `AGENTS.md` の最重要ルールへ、承認済みcommand prefixに一致するコマンドで `require_escalated` を明示指定して不要な追加承認を要求しないことを追加した。
 - `AGENTS.md` の最重要ルールへ、承認済みの状態変更Git操作を`&&`、`;`、pipe、subshellで連結せず、1つずつ実行することを追加した。
-
-### Local dev server port left running
-
-#### 2026-07-09
-
-- source: user
-- 発生箇所: `18-1-common-image-block-component` の表示確認
-- 観測した失敗: Astro dev server / preview serverのport管理で、`4322` と `4325` に既存serverが残っていた。`4321` で起動できない原因確認中に、ユーザーから「4322以降4329までは動いてたら全部止めて」と指示されるまで、使われたportを確実に停止しきれていなかった。
-- 一次対応: ホスト側の `lsof -nP -iTCP:4321-4329 -sTCP:LISTEN` で `4322`、`4325` のAstro processを特定し、ユーザー許可範囲に従って停止した。作業終了時にも `4321-4329` にLISTENが残っていないことを確認した。
-
-### Mobile horizontal overflow missed after UI implementation
-
-#### 2026-07-06
-
-- 発生箇所: `14-mobile-page-toc` の `MobilePageToc.astro` / `BaseLayout.astro`
-- 観測した失敗: 実装後のPlaywright確認で開閉挙動とスクリーンショットは確認したが、document全体の横方向overflowを数値確認しておらず、mobile PageTocのgrid item自動最小幅により右側余白が崩れた状態を見落とした。
-- 一次対応: `MobilePageToc`、`desktop-layout`、`site-main` に `min-width: 0` / `width: 100%` を追加し、390px viewportで `documentElement.scrollWidth` が390pxに収まることを確認した。
-
-### Excessive CSS added during targeted UI fix
-
-#### 2026-07-07
-
-- 発生箇所: `16-layout-screenshot-design-refresh` の `src/components/layout/MobilePageToc.astro`
-- 観測した失敗: H1とMobilePageToc triggerをstickyにする修正で、必要な位置指定を超えて背景色、border、box-shadow、負margin、paddingを追加し、既存本文面と異なる背景ブロックを発生させた。
-- 一次対応: stickyに必要な `position` / `top` / `z-index` だけを残し、追加した背景色、border、box-shadow、負margin、paddingを削除した。
-
-### Sticky heading transparent background missed
-
-#### 2026-07-07
-
-- 発生箇所: `16-layout-screenshot-design-refresh` の `src/components/layout/MobilePageToc.astro`
-- 観測した失敗: H1とMobilePageToc triggerをstickyにした際、背景を透過のままにしていたため、スクロール中の本文がH1背面に重なって読みにくくなる状態を見落とした。
-- 一次対応: sticky heading rowに白背景を追加して上端の透過を防ぎ、通常H1位置を崩しにくい範囲で上paddingと同量の負marginを使ってsticky時の上余白と目次triggerの縦位置を調整した。
-
-### Repeated validation failure in one implementation task
-
-#### 2026-07-11
-
-- 発生箇所: `20-2-introduction-page` のVisual Reviewテスト追加後の `npm run check`
-- 観測した失敗: 使用できないPlaywright matcherによるTypeScriptエラー、同じテストファイルのBiome整形不一致、リスト項目の一部を完全一致テキストとして探したPlaywright assertionの3件により、同一タスク内で検証失敗を繰り返した。
-- 一次対応: matcherをこのプロジェクトのPlaywright型定義で利用可能なlocator評価へ置き換え、Visual Review前のテスト編集後にBiome formatを実行する。本文の一部は親要素に対する部分一致で確認する。修正後に `npm run check`、`npm run build`、対象Visual testを再実行する。
 
 ### Unauthorized git publish
 
@@ -772,24 +426,6 @@ source種別は以下を使う。
 - 観測した失敗: 追加承認を減らす目的で、複数のGit状態変更操作を`&&`で連結した。各Git操作の対象と結果を個別に確認するリポジトリ規約に反していた。
 - 一次対応: 状態変更を伴う`git add`、`git commit`、`git push`は、それぞれ独立したcommandとして実行する。以後、承認済みprefixであってもGit操作をshell演算子で連結しない。
 
-### Repeated validation failure in one implementation task
-
-#### 2026-07-22
-
-- source: agent self-report
-- 発生箇所: `33-2-items-index-page` の`tests/visual/items-index.spec.ts`追加後の`npm run check`
-- 観測した失敗: 初回に`HTMLElement`へのtable cell参照とtest閉じ括弧のTypeScriptエラーが発生し、修正後の再実行ではBiomeの整形不一致、Visual Review記録追加後にはMarkdown表の整形不一致が発生した。Markdown表を手動整形した再実行でも同じ整形不一致が残り、同一タスクでvalidation failureを複数回発生させた。
-- 一次対応: Visual testを追加する際は、Playwright callbackのDOM型を事前に確認し、`npm run check`が示す整形差分を`apply_patch`で反映してから再実行する。
-
-### Hero image dimension inventory was reported too late
-
-#### 2026-07-23
-
-- source: user
-- 発生箇所: `ex-03-hero-layout-stability` のissueレビュー
-- 観測した失敗: hero画像の寸法を固定する案を提示する前に、全hero素材の実寸一覧を確認・報告しなかった。そのため、アイテムheroの統一後に流儀hero 3枚が`1671x941`のまま残ることを後から伝え、ユーザーに画像サイズの差異を先に報告すべきだったと指摘された。
-- 一次対応: 通常heroを`1672x941`へ統一することをissueの入力契約に明記した。以後、画像寸法・データ形式・asset配置を設計判断の根拠に使う前に、対象全件を一覧化し、差異を先に報告する。
-
 ### Repeated Playwright Chromium sandbox launch failure
 
 #### 2026-07-24
@@ -798,15 +434,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-web-character-sheet` の全VRT実行とdesktop/tablet baseline更新
 - 観測した失敗: `npm run visual:test`、`npm run visual:update`、targetを分割した`npx playwright test`で、Chromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動に失敗した。同一作業で複数回再現し、更新後のVRT比較を完了できなかった。
 - 一次対応: baseline更新と比較を区別して記録し、Chromiumが起動できた時点で書き込まれたdesktop/tablet snapshotは未コミットのまま保持した。以後、このsandbox条件ではPlaywrightの成功を前提にせず、実行可否と未検証範囲を明示して報告する。
-
-### Repeated Playwright locator ambiguity
-
-#### 2026-07-27
-
-- source: agent self-report
-- 発生箇所: `ex-02-7-sheet-build` の `tests/visual/character-sheet.spec.ts`
-- 観測した失敗: `getByLabel("プライマリ流儀")`がselectだけでなく`プライマリ流儀Lv`のnumber inputにも部分一致し、strict mode violationで対象Visual testを複数回失敗させた。実行出力が完了行を省略する条件を成功と誤認し、失敗artifactを先に確認しなかった。
-- 一次対応: selectのlocatorを`{ exact: true }`へ変更し、Visual test後は終了出力だけでなく`test-results/.last-run.json`も確認する。
 
 ### Character-sheet requirement omission marked complete
 
@@ -826,24 +453,6 @@ source種別は以下を使う。
 - 観測した失敗: 同じcharacter-sheet browser testで、`縁`の開閉buttonをclickした直後も`aria-expanded`が`true`のままとなる失敗を再度観測した。今回のG7変更はframe実装を変更しておらず、同一commandの他8件は成功したため、既存のclient hydrationまたは操作同期の不安定さとして切り分ける。
 - 一次対応: G7のDOM変更を原因とみなしてframe実装へ変更を加えず、対象testを単独で再実行して再現性を確認する。frameを変更する必要がある場合は、別scopeで操作同期の契約を明確にして対応する。
 
-### Repeated VRT capture invocation error
-
-#### 2026-07-27
-
-- source: agent self-report
-- 発生箇所: `ex-02-7-sheet-build` の対象限定Visual Review
-- 観測した失敗: `character-sheet` VRTにtagがないことを確認せずtag grepを渡して`No tests found`にし、その後も`visual:capture` script内の`--update-snapshots`との引数順を確認せずspec pathを渡してPlaywright option parse errorにした。同一Visual Reviewでcapture commandを2回失敗させた。
-- 一次対応: `tests/visual/vrt/character-sheet.spec.ts`のscenario名をgrep対象として、既存`visual:capture` scriptへ`--grep character-sheet`だけを渡す。package scriptの固定引数がある場合は、追加引数がどのoptionに結び付くかを先に確認する。
-
-### Repeated FormulaTooltip browser interaction assertion
-
-#### 2026-07-27
-
-- source: agent self-report
-- 発生箇所: `ex-02-7-sheet-build` の成長点Tooltip browser test
-- 観測した失敗: FormulaTooltipはpointer hoverで開くため、Playwrightのclickがhover直後の開状態を再度toggleして閉じることを確認せず、tooltipを待つtestを失敗させた。続くkeyboard操作の試行でもbrowser実行条件でtooltipを開けず、同じ確認を2回失敗させた。
-- 一次対応: mouseの実際の表示契約に合わせ、target buttonへ`hover()`した後のtooltip可視性と位置を確認するtestへ置き換えた。Tooltipのkeyboard開閉を確認する場合は、hoverと独立した操作状態を先に設計・検証する。
-
 ### Repeated unavailable DOM matcher in Component test
 
 #### 2026-07-27
@@ -861,15 +470,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-7-sheet-build` の `ProfileSection` Component test
 - 観測した失敗: `npm run check`が示したインデント差分を手動で反映した際、対象行をさらに深くインデントして同じformatter errorを再発させた。
 - 一次対応: formatter出力の空白数をそのまま適用し、修正後は再実行前に対象行だけを読み返す。formatterが対象fileを検出しない場合に別の整形コマンドで代替せず、`npm run check`の差分を正本として扱う。
-
-### Repeated flaky section-frame browser test during Review 4
-
-#### 2026-07-27
-
-- source: agent self-report
-- 発生箇所: `ex-02-7-sheet-build` のレビュー指摘4後の `tests/visual/character-sheet.spec.ts`
-- 観測した失敗: 変更対象外の縁section frame開閉testが全体実行と単独再実行で連続して失敗し、click後も`aria-expanded`が`true`のままとなった。プロフィール入力testは単独再実行で通過した。
-- 一次対応: Review 4のBuildSection・number input変更を原因とみなしてframe実装を変更せず、browser smokeの当該1件を未確認として報告する。frameの操作同期は別scopeで扱う。
 
 ### Tooltip indicator alignment was changed without visual confirmation
 
@@ -925,33 +525,6 @@ source種別は以下を使う。
 - 観測した失敗: 最初のComponent testで、消しゴムSVGをclear buttonではなくdelete buttonへ配置し、利用できない`toHaveTextContent` matcherも追加した。修正後の`npm run check`では、同じJSX箇所のBiome整形違反を再度出した。さらに`lucide-react`への切替後も同じ属性インデントを手動で崩し、整形違反を繰り返した。
 - 一次対応: 条件分岐の両buttonを再読してiconの所属を確認し、既存test環境で提供済みのDOM APIだけを使う。JSX属性は手動で合わせず、対象fileへBiome formatterを直接適用してから、Component test・`npm run check`を再実行する。
 
-### Repeated G11 noncombat browser-test failures
-
-#### 2026-07-28
-
-- source: agent self-report
-- 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/character-sheet.spec.ts`
-- 観測した失敗: 非戦闘技能の初期折りたたみbrowser testを、1回目はCSS generated contentがbuttonのaccessible nameへ混ざることを見落として失敗させ、2回目は`.noncombatRow`の`display: grid`がHTMLの`hidden`属性を上書きすることを見落として失敗させた。
-- 一次対応: 折りたたみ記号を`aria-hidden`の実DOM要素へ移し、`.noncombatRow[hidden] { display: none; }`を明示した。以後、CSS generated contentを操作名へ使わず、`hidden`を使う表示状態ではcomponent CSSとのdisplay競合をbrowser testで先に確認する。
-
-### Exceeded the G11 character-sheet final-smoke E2E boundary
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/character-sheet.spec.ts`
-- 観測した失敗: G11の最終smoke E2Eへ、開閉の`aria-expanded`属性とhidden状態の確認を追加した。これは領域表示と2〜3個の代表操作だけに限定する`docs/architectures/character-sheet.md`の責務境界を越え、Component testと重複する局所UI・DOM属性の検証である。
-- 一次対応: current issueへE2Eの縮小方針を記録した。開閉状態・hidden・tooltipはComponent testへ、計算はNode testへ置き、E2Eは代表的なbrowser操作だけに戻す。
-
-### Reported noncombat tooltip line breaks without verifying CSS whitespace handling
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-11-sheet-noncombat` の`非戦闘技能` tooltip
-- 観測した失敗: tooltip文字列へ改行文字を追加しただけで、`.content`の`white-space: normal`が改行を空白として処理することを見落とした。temporary captureを開いたにもかかわらず、改行表示を確認したとissueへ誤って記録した。
-- 一次対応: `FormulaTooltip`へ必要なtooltipだけ`white-space: pre-line`で改行を保持するoptionを追加し、非戦闘技能tooltipへ適用した。改行の有無を表示契約とするtooltipでは、text contentではなくactual screenshotで段落境界を確認してから報告する。
-
 ### Replaced a native number-input control without design authority
 
 #### 2026-07-28
@@ -960,24 +533,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-11-sheet-noncombat` の修正number input
 - 観測した失敗: 符号付き2桁を狭いinputに収めようとして、既存character sheetのnumber inputにはないspinner非表示styleを追加した。ユーザーは既存実装と異なるデザインを許可しておらず、この変更は要求された幅調整の代替になっていなかった。
 - 一次対応: spinner非表示styleを撤去し、既存inputの見た目とpaddingを維持した。サイズ要件とmobile 2列／1行の物理的な幅不足は、別デザインを仮定せずissueへ未決定として記録する。
-
-### Left visible skill names outside GameDomain across G10 and G11
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-10-sheet-attack-reaction` と `ex-02-11-sheet-noncombat` の技能名・リアクション名のowner
-- 観測した失敗: GameDomainへゲーム用語を集約する方針があるにもかかわらず、攻撃技能名・リアクション名を`characterSheet.checks`へ、非戦闘技能名をmaster dataへ追加した。前の2 Gateで表示名とID・対応能力・順序を分離して棚卸ししなかった。
-- 一次対応: 可視の攻撃技能、リアクション、非戦闘技能名を`gameDomain.terms`へ移し、master dataとformにはID・順序・対応能力だけを残す。新しいゲーム用語を追加するGateでは、表示名、識別子、ゲーム計算データのownerをissue review時に分けて確認する。
-
-### Repeated G9 tooltip capture failures
-
-#### 2026-07-28
-
-- source: agent self-report
-- 発生箇所: `ex-02-11-sheet-noncombat` のG9 `bond-resolved` Visual Review capture
-- 観測した失敗: `覚悟`tooltipをhoverで開いたあとにsection locatorを先に撮影したため、tooltip locatorの撮影時にはopen stateが失われた。原因確認前にclickで開く実装へ変更し、tooltipがhover専用であるためdesktop / tablet / mobileで再度失敗させた。
-- 一次対応: tooltipの既存hover契約を維持し、open stateを保ったままtooltip locatorをsection locatorより先に撮影する順序へ戻す。tooltip stateを含むcaptureでは、triggerのinteraction契約と複数locatorの撮影順を先に確認する。
 
 ### Reported tooltip indicator alignment as accepted without the user's visual confirmation
 
@@ -1014,24 +569,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-12-sheet-primary-skills` の重複スキルvalidation Component test
 - 観測した失敗: 未導入のTesting Library matcherを使い、続く修正でもReactがbooleanの`data-*`属性を`"true"`として出力することを確認せず空文字列を期待したため、同じテストを2回失敗させた。
 - 一次対応: 追加matcherに依存せず、DOMの`disabled`プロパティと属性の実際の文字列値を確認するテストへ統一した。新しいattribute assertionを書く前に、React出力の値を確認する。
-
-### Repeated G12 shared-component refactor test failures
-
-#### 2026-07-28
-
-- source: agent self-report
-- 発生箇所: `ex-02-12-sheet-primary-skills` のshared `SkillSection`抽出
-- 観測した失敗: 初回はautomatic行へ不要な`legend`を追加し既存の名称表示契約を壊した。続く訂正では新設した`ariaLabel` Propsをdestructureせず、section Component test全件を失敗させた。
-- 一次対応: automatic行はform入力がないため`legend`を出さず、section見出しとaccessible nameを別Propsで明示した。shared Componentを抽出する場合は、既存Component testを最初の型検査前に通し、追加したPropsの宣言・destructure・利用を同時に確認する。
-
-### Started a character-sheet browser check before client hydration
-
-#### 2026-07-28
-
-- source: agent self-report
-- 発生箇所: `ex-02-13-sheet-ikizama-skills` の生き様通常スキル最低0行確認
-- 観測した失敗: dev serverへ遷移直後に生き様selectを1回だけ変更し、React Islandのhydrate完了後にselect値が初期値へ戻る状態を、削除buttonが表示されない実装不備と誤って切り分けた。
-- 一次対応: form再描画を伴う実ブラウザ操作では、対象sectionの表示状態が更新済みになるまで同じ操作と可視確認を短い再試行境界へ置く。今回も生き様選択済みを確認してから、通常行を2行、1行、0行へ順に削除し、bonus Lvだけが残ることを確認した。
 
 ### Archived or closed a Gate while its child issue remained incomplete
 
@@ -1077,15 +614,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-16-sheet-experience-consistency` の最大Lv超過を保持するRHF hook / Component test
 - 観測した失敗: 最大Lv超過値をclampする旧契約を前提にしたexpectationを残したまま、full testとcomponent testで同じ失敗を連続して確認した。さらに、レベルを1桁前提へそろえる際にexpectationだけを`9`へ更新し、テスト操作値`999`を残して同じhook testを再度失敗させた。
 - 一次対応: expectationとテスト操作値をともに「1桁の超過値を保持し、行・sectionの局所errorを示す」契約へ更新し、修正後にfull testを通した。入力規則を変更するGateでは、実装より先に既存の正規化期待とtest操作値を検索して同じ変更で更新する。
-
-### G16 maximum-level VRT fixture also caused a total-limit error
-
-#### 2026-07-28
-
-- source: agent self-report
-- 発生箇所: `ex-02-16-sheet-experience-consistency` のその他流儀スキル最大Lv超過VRT
-- 観測した失敗: 最大Lv超過だけを確認すべきfixtureで、その他流儀Lvを`1`のままスキルLvを`9`にしたため、区分合計超過も同時に発生した。section errorの否定assertionがdesktop / tablet / mobileで失敗したが、実装の最大Lv伝播不備と誤認し得る状態だった。
-- 一次対応: fixtureでその他流儀Lvを`9`へ設定し、区分合計を上限内にしてからスキルLv`9`を入力する状態へ訂正した。対象4 state・3 viewportを`visual:capture`で再実行し、12件通過後にactual screenshotを開いて確認した。
 
 ### Stopped after reporting review results without review-to-issue intake
 
@@ -1186,33 +714,6 @@ source種別は以下を使う。
 - 観測した失敗: Vitestにない`--runInBand` optionを渡してComponent test commandを失敗させた後、既存test setupにない`toHaveValue` matcherを使い、同じtest確認を続けて失敗させた。
 - 一次対応: package scriptのVitest optionを変更せず実行し、Component testでは既存規約どおり`HTMLInputElement.value`と標準Chai assertionで確認する。
 
-### Repeated armor-clear E2E assertion failures during G17 review response
-
-#### 2026-07-29
-
-- source: agent self-report
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の防具クリアE2E
-- 観測した失敗: 自前previewとE2E設定のweb serverを同時に起動してport競合にした後、クリア後に名称が未選択へ変わることとdesktop / mobileで同名inputが2つ存在することを考慮せず、同じ防具修正input assertionを連続して失敗させた。
-- 一次対応: E2Eでは設定が起動するserverだけを使い、クリア後の未選択labelで2つのinput数と各値を明示して確認する。
-
-### Repeated G17 VRT picker-locator failures after accessibility-name changes
-
-#### 2026-07-29
-
-- source: agent self-report
-- 発生箇所: `ex-02-17-sheet-weapons-armor` のtarget限定Visual Review
-- 観測した失敗: 武器pickerのaccessible nameを行番号付きへ変更した後、旧完全一致locatorを使ってcaptureを失敗させた。続く正規表現では詳細・削除buttonまで一致することを確認せず、9 stateを再び失敗させた。
-- 一次対応: picker buttonだけに一致する`/^武器\\d+：武器を選択$/`を使い、VRT再実行前にPlaywright error contextの候補一覧でlocatorの対象を確認する。
-
-### Repeated E2E assertions based on an unverified rendered state
-
-#### 2026-07-29
-
-- source: agent self-report
-- 発生箇所: `ex-02-19-sheet-cybernetics` のサイバネE2E
-- 観測した失敗: 非戦闘技能の修正inputをサイバネsection内にあるものとして参照し、次に非戦闘技能が閉じている状態でも入力が描画されると仮定した。さらに、選択済み`その他`行の削除button数を、未選択の削除行と同じ名前で数えたため、同じE2Eを連続して失敗させた。
-- 一次対応: error contextのaccessibility treeで実際の描画範囲とbutton名を確認し、非戦闘技能を開いてから修正inputを検証する。可変行では選択済みと未選択のaccessible nameを区別し、操作前後の行数をその状態ごとにassertする。非戦闘技能inputはuncontrolledのため、form値の再設定はsectionを閉じて開き直した描画で確認する。
-
 ### Repeated character-sheet VRT setup failures during scenario-helper migration
 
 #### 2026-07-29
@@ -1240,51 +741,6 @@ source種別は以下を使う。
 - 観測した失敗: 既存setupにない`toHaveAttribute` matcherを使用した後、集計tooltipのlabelを最終値`output`のaccessible nameと取り違えた。さらに、hover中のtooltipへEscapeを送ればpointer stateにかかわらず閉じると仮定した。そのため、上限超過とtooltip操作を確認するtestを連続して失敗させた。
 - 一次対応: 標準Chaiで属性値を比較し、最終値は実際の`output[aria-label]`で明示的に特定する。表示Componentに近い文言の操作と値が併存する場合、testの対象roleまたはelement typeと実際のaccessible nameを先に確認する。共通Componentで担保済みのkeyboard操作を個別browser testへ複製せず、個別testはpointer移動を含む固有の表示契約だけを確認する。
 
-### Recorded local VRT snapshots as if they were Git-managed baselines
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-21-sheet-drugs` のVRT baseline更新・review報告
-- 観測した失敗: 親Gate planがG31までcanonical VRT snapshotをlocal専用としてGit管理しないと定めているにもかかわらず、G21 issueとdesign notesを「canonical baseline更新」とだけ記録し、review時にGit管理すべきbaselineとして扱われる余地を残した。
-- 一次対応: G21 issueとdesign notesへ、target限定のlocal canonical snapshot更新とG31までの非Git管理を明記した。VRTの記録・レビューでは、snapshotのlocal更新とGit管理の可否を親Gate planへ照合して分けて記録する。
-
-### Omitted a derived credit value when composing profile props
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-22-sheet-special-items-integration` の`useProfileSectionProps`
-- 観測した失敗: アイテム信用の合計は`creditSummary.change`へ渡していたが、`ProfileSection`が表示する`spentCredit`をpropsへ返していなかった。そのため、小銭は選択済みアイテムを差し引いた値になる一方、消費信用の表示だけ既定値`0`に留まった。
-- 一次対応: `spentCredit`をProfile section propsへ明示的に返し、お守り選択後に消費信用`2`が表示されるE2Eとpresenter hook testを追加した。派生値を別sectionへ渡す場合は、計算結果だけでなく表示に使う元値もprops契約へ含まれることを確認する。
-
-### Repeatedly misread the target of a dialog-header review
-
-#### 2026-07-30
-
-- source: user
-- 発生箇所: `ex-02-web-character-sheet` の選択dialog column header review intake
-- 観測した失敗: ユーザーが選択dialog内の`名称`、`最大Lv`、`コスト`、`使用制限`などの列headerを指摘したにもかかわらず、dialog titleとして解釈し、その後も列headerとtitleを往復して要件を取り違えた。
-- 一次対応: Review 9を候補表の列headerだけを対象とする契約へ訂正した。UIの「header」指摘では、対象の可視文言とDOM要素を先に対応付けてからissueへ記録し、実装対象外のtitleや本文を明示する。
-
-### Reported a CSS-only dialog-header fix without inspecting the rendered labels
-
-#### 2026-07-30
-
-- source: user
-- 発生箇所: `ex-02-web-character-sheet` のpicker列header修正報告
-- 観測した失敗: `tableHeader`の親へfallbackを追加しただけで、実際の`名称`、`最大Lv`、`コスト`、`使用制限`のlabel要素へstyleが適用されることを画面で確認せず、修正済みと報告した。ユーザー画面では未修正だった。
-- 一次対応: `tableHeader`と直下の列labelへ同じfont size・font weightを明示する。CSSの親継承に依存する表示修正は、実際の対象要素のcomputed styleまたはactual screenshotを確認してから完了報告する。
-
-### Repeated browser-test locator mistakes while adding a restored cybernetic error state
-
-#### 2026-07-30
-
-- source: agent self-report
-- 発生箇所: `ex-02-24-sheet-persistence` のサイバネ部位不一致E2E / VRT
-- 観測した失敗: VRTで候補groupの見出しを経由するlocatorが解決できず、続くE2Eでは`/^頭：.+$/`がpicker、詳細、clear buttonの3要素へ一致してstrict mode違反になった。
-- 一次対応: `data/generated/items.json`とpicker Componentを確認し、テストで選ぶ既知の腕サイバネ`ガードアーム`と、対応するpicker buttonの完全一致accessible nameを使った。新規の復元state testは、候補選択と最終assertionの両方で実際のDOM上の一意なrole / nameを確認してから全viewportへ展開する。
-
 ### Repeatedly ran a broad Container test before isolating its existing dialog-focus contract
 
 #### 2026-07-30
@@ -1303,26 +759,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-30-sheet-help` のHelp dialog contents review報告
 - 観測した失敗: 先に作成されたVRT captureで最下部のヘッダーと閉じる操作が見えないことを、現行preview・現行buildで再captureせず、実装の外側scroll不備として報告した。ユーザーからVRT側の問題ではないかと指摘された。
 - 一次対応: VRT scenarioのscroll対象が`header + div`の本文要素だけであることを確認し、実行時にdialogの`scrollTop`が`0`、本文の`scrollTop`だけが最大値へ移動することをdesktop / tablet / mobileで確認した。現行4321 previewに対して9状態を再captureし、すべてでheaderと閉じる操作が残ることを原寸画像で確認した。VRT captureをreview入力へ渡す前に、現行build由来であることと対象stateを再確認する。
-
-### Left selected drugs visually indistinguishable from zero-set items
-
-#### 2026-07-31
-
-- source: user
-- failure category: character-sheet input / derived-value consistency
-- 発生箇所: `ex-02-31-sheet-integration` のドラッグ選択と信用表示
-- 観測した失敗: ドラッグを選択しても初期所持セット数が`0`だったため、消費信用が変わらず、他アイテムと異なり選択済み状態が信用表示へ反映されないように見えた。初回対応では選択時の補正とinput同期を加えたが、行生成時の既定値を`1`にするだけで済む仕様に対して不要に複雑だった。
-- 一次対応: 初期3行と追加行の所持セット数を`1`とし、選択時補正とinput同期を取り除いた。hookで行生成値・消費信用・小銭、previewで実際の選択後表示を確認する。
-
-### Omitted timing from the shared skill candidate dialog
-
-#### 2026-07-31
-
-- source: user
-- failure category: character-sheet master-data display completeness
-- 発生箇所: `ex-02-31-sheet-integration` の`SkillPickerDialog`
-- 観測した失敗: スキル行と要件がタイミングを表示する一方、4種のスキル候補dialogを共有する候補表からタイミング列が欠落していた。
-- 一次対応: shared candidate headerとrowへ、最大Lvとコストの間にタイミング列を追加した。全dialog・viewportのactual screenshotを原寸で確認し、Component testでheaderと読み上げ用labelを固定する。
 
 ### Put a local fixture policy into a shared layout
 

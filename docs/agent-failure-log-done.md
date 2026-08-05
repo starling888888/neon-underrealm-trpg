@@ -31,6 +31,191 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 ## 対応済み
 
++### Put Ikizama local contracts into character-sheet VRT/E2E scenarios
+
+#### 2026-07-28
+
+- source: user feedback
+- failure category: test-architecture boundary
+- 観測した失敗: 生き様の候補group、長い名称、Lv境界、error算出の局所契約を、`tests/visual/vrt/character-sheet.spec.ts`へ複数stateとして追加した。アーキテクチャはbrowser E2Eを2〜3個の代表操作だけの最終smokeに限定し、入力境界・固定データ・派生式をNode / Component / hook testへ置くと定めている。
+- 一次対応: 追加した生き様VRT scenario・locator・state setupを削除した。browser E2Eは生き様選択、候補dialog、1候補選択の代表操作だけを残し、bonus Lv・合計errorはNode / hook testで検証する。削除したVRT結果をissueの完了根拠から外した。
+
+- handled basis: ユーザー指定の分類（testing.mdで再発しないのでdone）
+- moved: 2026-08-05
+
+### Used keyboard event injection for button activation in E2E
+
+#### 2026-07-25
+
+- source: validation
+- 発生箇所: `ex-02-4-sheet-profile`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: focused buttonへの`page.keyboard.press()`で開閉を確認しており、実行環境でbutton clickへ結び付かず、2件のE2Eがtimeoutした。G4 E2Eの最終smokeに不要なkeyboard操作の詳細を持ち込んでいた。
+- 一次対応: E2Eはbutton clickによる代表操作だけに縮小し、キーボードと局所stateの詳細はComponent testの責務へ戻した。
+
+- handled basis: ユーザー指定の分類（e2eの責務が明示されたのでdone）
+- moved: 2026-08-05
+
+### Expanded G4 E2E beyond its smoke-test boundary and ignored the test-free instruction
+
+#### 2026-07-25
+
+- source: review
+- 発生箇所: `ex-02-4-sheet-profile`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: E2Eへ信用入力4項目の正規化、境界値、派生計算、CSS、read-only DOM属性を持ち込み、architectureが定める最終smokeの範囲を越えた。さらに、ユーザーがテストを変更・追加・実行しないよう明示した後にもtest fileを変更した。Container / PresenterとRHF adapter hookを分けた検証境界を使わず、E2Eで仕様を網羅しようとした。
+- 一次対応: review-to-issueでG4 issueへE2E縮小、Zod schema、Component / hook test toolingの選定をレビュー指摘として記録し、ユーザー承認までsource codeとtest fileを変更しない。
+
+- handled basis: ユーザー指定の分類（e2eの正規無我明示されたのでdone）
+- moved: 2026-08-05
+
+### Used a custom Playwright capture instead of the visual capture workflow
+
+#### 2026-07-24
+
+- source: user
+- 発生箇所: `ex-02-3-sheet-section-frame`の実装後画面確認
+- 観測した失敗: 既存の`visual:capture`で対象viewportのactual snapshotを取得すべきところ、一時HTML用の個別Playwright capture scriptを先に作成・実行した。実装結果のactual screenshotを既存workflowで扱うべき位置づけを誤った。
+- 一次対応: 個別captureは中止し、`npm run visual:capture -- --grep '@vrt.*@character-sheet(?:\\s|$)'`でdesktop、tablet、mobileのactual snapshotを取得した。以後、実装結果の画面確認は、対象を絞った既存`visual:capture`を使う。
+
+- handled basis: ユーザー指定の分類（もう発生しないのでdone）
+- moved: 2026-08-05
+
+### Misread a no-newline Drive URL file as empty
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `42-0-npc-data-normalization` のDrive-to-raw同期前提確認
+- 観測した失敗: `raw-google-drive.url`の内容確認に`wc -l`だけを使い、末尾改行のない有効な1行URLを0行、すなわち空ファイルだと誤判定した。ユーザーにURL共有を求める前に、バイト数、非空行数、URL形式を確認すべきだった。
+- 一次対応: URL自体を出力せず、バイト数、非空行数、DriveフォルダURL形式を検証して有効な同期ルートを確認した。以後、設定ファイルの空判定は行数だけに依存せず、非空の内容を検証する。
+
+- handled basis: ユーザー指定の分類（もう発生しない仕組みなのでdone）
+- moved: 2026-08-05
+
+### Used `gh` after the repository workflow prohibited it
+
+#### 2026-07-22
+
+- source: user
+- 発生箇所: `31-0-ikizama-index-data` のpush後に既存PRを確認する操作
+- 観測した失敗: リポジトリのGitHub操作ではconnectorを使うべきというユーザー指示に反して、既存PRの確認に`gh pr list`を実行した。
+- 一次対応: `gh`を以後のPR確認・レビューに使わず、GitHub connectorだけで確認する。実行済みの`gh`は読み取り専用であり、GitHub上の状態変更は行っていない。
+
+- handled basis: ユーザー指定の分類（もう発生しない仕組みなのでdone）
+- moved: 2026-08-05
+
+### PR reviewer used `gh` despite connector-only workflow
+
+#### 2026-07-15
+
+- source: user
+- 発生箇所: `28-2-common-skills-page` の PR #45 初回レビューにおけるdocument reviewer
+- 観測した失敗: PR metadata・diff・discussionの確認でGitHub connectorを使うべきところ、reviewerが禁止されている`gh`コマンドを1回実行した。ユーザー指摘後、connectorだけでmetadata・diff・issue comments・inline threads・reviewsを再確認した。
+- 一次対応: reviewerへ`gh`禁止を即時共有し、以後のPR reviewとリモート確認をGitHub connectorだけに限定した。
+
+- handled basis: ユーザー指定の分類（もう発生しない仕組みなのでdone）
+- moved: 2026-08-05
+
+### PR title did not follow the issue-slug rule
+
+#### 2026-07-14
+
+- source: user
+- 発生箇所: `28-0-common-skills-data` のPR #43作成
+- 観測した失敗: PRタイトルを`28-0: 共通スキルデータ基盤`として作成した。しかしGit操作規約と`create-pr`は、既定のPRタイトルをissue slugのみの`28-0-common-skills-data`と定めている。
+- 一次対応: PR #43のタイトルを`28-0-common-skills-data`へ更新した。以後、PR作成前にissue slugをそのままタイトルへ使うことを確認する。
+
+- handled basis: ユーザー指定の分類（再発してないのでdone）
+- moved: 2026-08-05
+
+### Commit message language did not follow repository convention
+
+#### 2026-07-12
+
+- source: user
+- 発生箇所: `24-2-scenario-play-page` のサイトメニュー順序変更commit
+- 観測した失敗: 直近の英語コミットメッセージ形式を確認せず、日本語のcommit messageを作成した。
+- 一次対応: ユーザー許可のsoft resetで当該commitを取り消し、同一差分へ英語のcommit messageを付けて作り直す。
+
+- handled basis: ユーザー指定の分類（再発確認してないのでdone）
+- moved: 2026-08-05
+
+### v1.0 Google Docs export format was incorrect
+
+#### 2026-07-11
+
+- source: user
+- 発生箇所: `.agents/skills/drive-to-raw-sync/SKILL.md` と `v1.0/` の初回ローカル同期
+- 観測した失敗: スタイル付きGoogle Docsである `v1.0/` 配下の資料を、Markdown exportではなく `text/plain` exportで `.md` 化した。これによりGoogle Docs上のスタイル情報をMarkdownへ変換できなかった。
+- 一次対応: `contents/` はMarkdownソースをそのまま扱うため `text/plain` exportを維持し、`v1.0/` は `text/markdown` exportへ分離した。誤った形式で作成したローカルv1.0ファイルは、正しい形式で再同期するまで参照に使わない。
+
+- handled basis: ユーザー指定の分類（もう発生しない仕組みなのでdone）
+- moved: 2026-08-05
+
+### Workflow stopping point overrun
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-0-release-notes-data` のZod schema責務分離検討
+- 観測した失敗: ユーザーは「`getReleaseNoteBody` がschemaにあるのが適切か」と「`data/generated` 以下をZod schemaに使ってテストする必要がないか」を検討するよう求めたが、実装前に検討結果と方針を返さず、先に `src/lib/data/release-notes.ts`、`src/lib/schemas/release-notes.ts`、`tests/node/release-notes.test.ts` を変更した。
+- 一次対応: ユーザー指示に従い差し戻しは行わず、本ログへ手順逸脱として記録した。以後、「検討して」と明示された場合は、実装に入る前に判断、選択肢、推奨方針を返し、ユーザーの実装開始指示を待つ。
+
+#### 2026-07-05
+
+- 発生箇所: `09-base-layout` のissue-first / design準備
+- 観測した失敗: ユーザーが「まずはlayoutにベタ書き」「今回の作成範囲はデスクトップレイアウトのみ」と指示した後、実装前のdesign準備として `docs/design/base-layout/` のdesign artifact作成まで進めた。
+- 一次対応: `GitHub Issue #133: 09-base-layout` を画像未生成前提へ戻し、そのissueファイルだけをcommitした。
+
+#### 2026-07-05
+
+- 発生箇所: `09-base-layout` のdesign画像生成準備
+- 観測した失敗: `docs/design/base-layout/notes.md` のユーザーレビューを挟まずに、`design-desktop.png` の画像生成へ進んだ。
+- 一次対応: 生成済みdesign artifactはcommitせず未追跡に残し、`GitHub Issue #133: 09-base-layout` から画像生成済み扱いを取り除いた。
+
+#### 恒久対応
+
+- `AGENTS.md` の最重要ルールへ、検討、確認、妥当性確認、レビュー依頼は実装承認ではなく、判断と推奨方針を返して停止することを追記した。
+- `.agents/skills/design-image-generation/SKILL.md` へ、design方針の確認や `notes.md` レビューcheckpointでは画像生成へ進まず、明示承認後に生成することを追記した。
+
+- handled basis: ユーザー指定の分類（あんまり再発しなくなったのでdone(恒久対応済み)）
+- moved: 2026-08-05
+
+### Local dev server port left running
+
+#### 2026-07-09
+
+- source: user
+- 発生箇所: `18-1-common-image-block-component` の表示確認
+- 観測した失敗: Astro dev server / preview serverのport管理で、`4322` と `4325` に既存serverが残っていた。`4321` で起動できない原因確認中に、ユーザーから「4322以降4329までは動いてたら全部止めて」と指示されるまで、使われたportを確実に停止しきれていなかった。
+- 一次対応: ホスト側の `lsof -nP -iTCP:4321-4329 -sTCP:LISTEN` で `4322`、`4325` のAstro processを特定し、ユーザー許可範囲に従って停止した。作業終了時にも `4321-4329` にLISTENが残っていないことを確認した。
+
+- handled basis: ユーザー指定の分類（恒久対応済みなのでdone）
+- moved: 2026-08-05
+
+### Repeated VRT capture invocation error
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-7-sheet-build` の対象限定Visual Review
+- 観測した失敗: `character-sheet` VRTにtagがないことを確認せずtag grepを渡して`No tests found`にし、その後も`visual:capture` script内の`--update-snapshots`との引数順を確認せずspec pathを渡してPlaywright option parse errorにした。同一Visual Reviewでcapture commandを2回失敗させた。
+- 一次対応: `tests/visual/vrt/character-sheet.spec.ts`のscenario名をgrep対象として、既存`visual:capture` scriptへ`--grep character-sheet`だけを渡す。package scriptの固定引数がある場合は、追加引数がどのoptionに結び付くかを先に確認する。
+
+- handled basis: ユーザー指定の分類（もう発生しない仕組みなのでdone）
+- moved: 2026-08-05
+
+### Exceeded the G11 character-sheet final-smoke E2E boundary
+
+#### 2026-07-28
+
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/character-sheet.spec.ts`
+- 観測した失敗: G11の最終smoke E2Eへ、開閉の`aria-expanded`属性とhidden状態の確認を追加した。これは領域表示と2〜3個の代表操作だけに限定する`docs/architectures/character-sheet.md`の責務境界を越え、Component testと重複する局所UI・DOM属性の検証である。
+- 一次対応: current issueへE2Eの縮小方針を記録した。開閉状態・hidden・tooltipはComponent testへ、計算はNode testへ置き、E2Eは代表的なbrowser操作だけに戻す。
+
+- handled basis: ユーザー指定の分類（testing.mdに明記したのでdone）
+- moved: 2026-08-05
+
 ### Repeated formatter feedback during implementation
 
 #### 2026-07-09

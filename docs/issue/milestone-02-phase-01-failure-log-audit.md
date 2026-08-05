@@ -39,7 +39,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 ## 完了条件
 
-- [ ] active entryの分類基準と移動対象を、ユーザー承認済みの基準で一覧化した。
+- [x] active entryの分類基準と移動対象を、ユーザー承認済みの基準で一覧化した。
 - [x] no-action候補一覧を提示し、対象entryのno-action扱いについてユーザーの明示確認を得た。
 - [x] 単発または再現条件を満たさないno-action対象entryのうち、明示確認済みentryだけを4カテゴリの恒久対応より先に移し、原文・disposition・移動日を保持した。
 - [x] no-action移動を、ユーザーのレビューと明示的なcommit指示を受けた専用commitにした。
@@ -93,3 +93,4 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - Chromium sandbox起動失敗は、カテゴリの恒久対応後も`done`ではなく`no-action`へ移す。
 - `validation command targeting`は、カテゴリ1で反映した同一commandの3回連続失敗基準を適用し、追加の恒久指示を置かず`no-action`へ移す。
 - この監査時点でactiveに残る`source: self`の同一test 3回連続失敗entryは、カテゴリ1の恒久対応で許容回数を定義したため、ユーザー指示により`no-action`へ移す。
+- 2026-08-05に、ユーザー指定の`.tmp/user-failed-log-classification.md`に従い、active entryを`done` 14件、`archive` 40件、`no-action` 7件へ移した。分類titleの`xcessive`はactive titleの`Excessive`への明白な脱字として対応し、同名の`Repeated validation failure in one implementation task`は2 entryとも同じ分類を適用した。
