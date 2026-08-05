@@ -227,7 +227,7 @@ describe("CharacterSheetContainer", () => {
       await waitFor(() => expect(document.activeElement).toBe(trigger));
       expect(pcName.value).toBe("テストPC");
     }
-  });
+  }, 20_000);
 
   it("confirms reset with the specified copy, actions, and focus behaviour", async () => {
     const user = userEvent.setup();

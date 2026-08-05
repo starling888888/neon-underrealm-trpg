@@ -1,0 +1,235 @@
+# milestone-02-phase-01-failure-log-audit
+
+## 目的
+
+active failure logを監査し、再発した失敗だけに軽量な恒久対応を置く。単発または再現性のないagent起因の記録は適切にno-actionへ移し、機能固有で将来の観測頻度が低いuser / review由来の記録は第三のarchiveへ分け、active logの可読性を回復する。
+
+## 背景
+
+`docs/agent-failure-log/active.md`には、カテゴリごとの発生数だけでは再発性を判定できないtest / command失敗と、完了根拠の不足を示す記録が混在している。
+
+`docs/issue/milestone-02/plan.md`のPhase 1にある`milestone-02-phase-01-failure-log-audit` entryは、この対応を計画上で識別する項目である。本issueを作業契約とする。
+
+関連TODOは確認したが、failure log auditに対応する項目はない。
+
+## 対象範囲
+
+- `docs/agent-failure-log/active.md`のactive entryを、ユーザー承認済みの基準で分類する。
+- active entryすべてを、同じ現象と一次対応を将来参照できるcategoryのH3で分類する。
+- `docs/agent-failure-log/done.md`と`docs/agent-failure-log/no-action.md`へ、原文・移動理由・移動日を保持してentryを移す。
+- ユーザーが指定した機能固有のuser / review由来entryは、原文・archive理由・移動日を保持して`docs/agent-failure-log/archive.md`へ移す。このarchiveは`done`でも`no-action`でもなく、workflow、承認、review運用、検証手順、権限、Git操作に関するentryは移さない。
+- まず、`source: self`または非human review由来と確認できる`source: review`のうち、3回連続の再現条件を満たさないno-action候補をtitle、source、判定根拠とともに一覧化する。ユーザーが対象entryのno-action扱いを明示確認した後に移す。カテゴリ未記入の`source: self` entryは、active logでH3 titleの重複がない場合にno-action候補とする。`source: user`、`agent self-report`、human review由来か判定不能な`source: review`は機械移動の対象外とする。
+- no-action移動は4カテゴリの恒久対応と`done`移動より先に行い、ユーザーのレビューと明示的なcommit指示を受けて専用commitにする。
+- 次の4カテゴリへ、長文ではない最小の恒久対応を追加する。
+  1. `test authoring discipline`
+  2. `verification accuracy`
+  3. `repeated Playwright environment failure`
+  4. `validation command targeting`
+- `verification accuracy`では、レビューと完了チェックの前に条件ごとの根拠を照合し、根拠不足なら完了扱いにせず停止してユーザー指示を待つ規約を追加する。
+- test失敗とcommand失敗は、agent自身が観測した通常の失敗に限り、同一作業中に同一testまたは同一commandを3回以上連続で失敗した場合だけfailure logへ記録する規約へ変更する。カテゴリ件数は記録条件に使わない。ユーザー指摘、承認逸脱、workflow違反、scope drift、未検証完了はこの閾値の対象外とする。
+- 各カテゴリでは、active occurrence count、代表的な対象task / file、リスク、具体的な変更先、軽量な対応案、`done`移動候補を提示して停止する。ユーザーがその具体案を明示承認した後だけ、該当カテゴリの恒久対応を編集する。
+- 4カテゴリの対応と移動後、active failure logの行数を計測し、再現性のない単発失敗をさらに減らすための整理方針を検討してユーザーへ報告する。
+
+## 初期スコープ外
+
+- サイトのUI、アプリケーションコード、test実装を変更しない。CI設定は、レビュー指摘2で承認されたMarkdown-only checkと`.codex` TOML除外に必要な最小限の変更だけを行う。ただし、ユーザー指示により`CharacterSheetContainer.test.tsx`の不安定な単一testのtimeoutを20秒へ延長する。
+- 新しいnpm packageを追加しない。
+- failure logの原文を削除しない。
+- ユーザーが指定していないカテゴリへ恒久対応を広げない。
+- human review前にissue reviewerを起動しない。
+
+## 完了条件
+
+- [x] active entryの分類基準と移動対象を、ユーザー承認済みの基準で一覧化した。
+- [x] active entryすべてを、同じ現象と有効な一次対応を参照できるcategoryのH3で分類した。
+- [x] no-action候補一覧を提示し、対象entryのno-action扱いについてユーザーの明示確認を得た。
+- [x] 単発または再現条件を満たさないno-action対象entryのうち、明示確認済みentryだけを4カテゴリの恒久対応より先に移し、原文・disposition・移動日を保持した。
+- [x] no-action移動を、ユーザーのレビューと明示的なcommit指示を受けた専用commitにした。
+- [x] `test authoring discipline`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
+- [x] `verification accuracy`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
+- [x] `repeated Playwright environment failure`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。Chromium sandbox起動失敗4件はno-actionへ移した。
+- [x] `validation command targeting`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。3件はno-actionへ移した。
+- [x] 各カテゴリは、原文・恒久対応先・移動日を保持して対応済みentryを`done`へ、またはユーザー判断により`no-action`へ移した。
+- [x] 各カテゴリの`done`または`no-action`移動は、ユーザーの明示的なcommit指示を受けた同じカテゴリcommitへ含めた。
+- [x] ユーザー指示により、機能固有のuser / review由来entryだけを、`done`／`no-action`と異なるarchiveへ原文を保持して移した。
+- [x] 4カテゴリの対応・移動後にactive failure logの行数を計測し、単発失敗を減らす次の整理方針を報告した。
+- [x] `component-test assertion discipline`のmatcher確認手順をユーザー承認後に`docs/testing.md`へ追加し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
+- [x] `responsive layout measurement`の寸法確認手順をユーザー承認後にVisual Review skillへ追加し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
+- [x] `review-workflow order`の既存規約を恒久対応として記録し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
+- [x] `visual implementation verification`の既存規約を恒久対応として記録し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
+- [x] 日常taskではactive failure log全文を読まず、失敗追記時のcategory検索と作業後の3回以上category集計だけを行い、明示的なfailure-log audit時だけ全文を読む運用を記録した。
+- [x] failure logの4記録を`docs/agent-failure-log/`へ集約し、agent規約、skill、rule、template、plan、履歴本文の参照を新pathへ更新した。
+- [x] `npm run format:md` と `npm run check:md` が通る。
+
+## チェックポイント
+
+- [x] test / command失敗は、カテゴリの合計件数ではなく、同一testまたは同一commandの連続失敗回数で分類した。
+- [x] 4カテゴリごとのactive occurrence countと代表的な対象task / fileを、no-action移動前に報告した。
+- [x] 3回連続の閾値を、agent自身が観測した通常のtest / command失敗だけに適用した。
+- [x] sourceが`self`または非human review由来と確認できる`review`で、再現条件を満たさないentryをno-action候補として確認した。
+- [x] `source: user`、`agent self-report`、human review由来か判定不能な`source: review`を、機械的なno-action移動の対象から除外した。カテゴリ未記入の`source: self` entryはH3 titleの重複を確認して分類した。
+- [x] 根拠照合規約は、既存の強い規約を重複させず短く追加した。
+- [x] 1カテゴリごとに、具体的な対応案と移動候補をユーザーへ提示し、編集前の明示承認と実装後のhandled確認を得た。
+- [x] 1カテゴリごとに、ユーザーが明示指示した場合だけ承認済みの変更を独立したcommitにした。
+- [x] failure logのentryを削除せず、done、no-action、またはarchiveへ追跡可能な形で移した。
+- [x] 機能固有archiveは、workflow由来のreview指摘を含めず、`done`／`no-action`と区別した。
+- [x] ユーザーの未コミット変更を破壊していない。
+
+## 想定変更ファイル
+
+- `docs/agent-failure-log/active.md`
+- `docs/agent-failure-log/done.md`
+- `docs/agent-failure-log/no-action.md`
+- `docs/agent-failure-log/archive.md`
+- `docs/development-structure.md`
+- `docs/testing.md`
+- `AGENTS.md`、`.agents/skills/*/SKILL.md`、`.agents/rules/*.md`、`.github/pull_request_template.md`のうち、各カテゴリの軽量な恒久対応とfailure log path更新に必要な最小限のファイル
+
+## レビュー観点
+
+- 「同一testまたは同一commandの3回以上連続失敗」という記録基準が、test / Playwright環境 / command選択の各カテゴリに正しく適用されるか。
+- no-action候補の固定条件と除外対象が、current active entryへ安全に適用できるか。
+- 単発entryの`no-action`移動が、4カテゴリの恒久対応と`done`移動より先に完了する契約になっているか。
+- `verification accuracy`の根拠照合・停止規約が、必要十分で長文化していないか。
+- 各カテゴリで、具体案の編集前承認、実装後のユーザーによるhandled確認、明示的なcommit指示を分けられているか。
+- issue reviewerは、このhuman reviewでの指示後に起動すること。
+
+## 備考
+
+- Gate作成またはGate分割は行わない。このissue単体を実装契約とする。
+- issue reviewerは、ユーザーがこのissueをhuman reviewした後に明示指示した場合だけ実行する。
+- no-action対象は、ユーザーが明示したsource / 再現条件に一致するentryだけとする。カテゴリ未記入の`source: self` entryはactive logでH3 titleが重複しない場合に対象とする。`source: review`のhuman review由来を機械判定できない場合は、移動せずユーザー判断を待つ。
+- 4カテゴリのentryを`done`または`no-action`へ移す範囲は、no-action移動の結果を前提にカテゴリごとの具体案で確定する。
+- Chromium sandbox起動失敗は、カテゴリの恒久対応後も`done`ではなく`no-action`へ移す。
+- `validation command targeting`は、カテゴリ1で反映した同一commandの3回連続失敗基準を適用し、追加の恒久指示を置かず`no-action`へ移す。
+- この監査時点でactiveに残る`source: self`の同一test 3回連続失敗entryは、カテゴリ1の恒久対応で許容回数を定義したため、ユーザー指示により`no-action`へ移す。
+- 2026-08-05に、ユーザー指定の`.tmp/user-failed-log-classification.md`に従い、active entryを`done` 14件、`archive` 40件、`no-action` 7件へ移した。分類titleの`xcessive`はactive titleの`Excessive`への明白な脱字として対応し、同名の`Repeated validation failure in one implementation task`は2 entryとも同じ分類を適用した。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- failure logの4文書に、Markdown見出しを通常テキスト化する先頭`+`が10箇所、active logの空リスト項目が1箇所ある。
+- `failure-log-audit` skillは`archive`への移動条件、保存内容、停止条件、報告項目を定義していない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `rg '^\\+' docs/agent-failure-log/{active,archive,done,no-action}.md`で10箇所を確認した。`active.md:96`の空リスト項目も確認した。`failure-log-audit` skillには`done` / `no-action`だけが定義されている。archive内のsource不一致はユーザー指定の分類に基づくため、このレビュー指摘の対応対象から除外する。
+
+### 対応方針
+
+- 先頭`+`と空リスト項目を除去し、4文書の見出し階層を確認する。
+- `failure-log-audit` skillに、archive移動はユーザーの明示指示による例外処理であり、原文・archive reason・移動日を保持して報告することを追加する。archive済みentryのsource分類は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] failure log 4文書の見出し先頭`+` 10箇所とactive logの空リスト項目を除去した。
+- [x] archiveの個別ユーザー分類・保存内容・停止条件・報告項目を`failure-log-audit` skillへ記録した。
+- [x] `rg '^\\+' docs/agent-failure-log/{active,archive,done,no-action}.md`が出力なしであることを確認した。
+- [x] `npm run check:md` が通った。
+- [x] `git diff --check` が通った。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- Markdown文書だけを変更したPRでも、CIがテストを実行している。
+
+### 判定
+
+- source: user
+- classification: valid
+- local validation: PR #191の変更範囲はMarkdown文書とagent運用文書であり、サイト実装・test実装・依存関係・CI workflowの変更は含まない。GitHub Actions run `31005754125`（Quality CI）は`Check`、`Build`、`Test`をすべて成功させた。`.github/workflows/ci.yml`の`paths-ignore`は`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけであり、今回変更した`.github/pull_request_template.md`は対象外である。その1ファイルによりpull request triggerが発火した。`quality.yml`はpath分岐を持たず、発火後は常に`npm ci`、`npm run check`、`npm run build`、`npm run test`を実行する。
+
+### 対応方針
+
+- Markdown-onlyの変更では`npm run check:md`だけを実行し、既存のCheck・Build・Testはskipする。`.github/pull_request_template.md`を含むMarkdown文書はこの対象とする。
+- `.codex/*.toml`だけの変更は、Quality CIの対象外にする。
+- Markdown以外の変更を含む場合は、既存のQuality CIを実行する。path判定とjob依存は、workflowの実装前に確認する。
+
+### 対応完了チェックリスト
+
+- [x] 現行CI workflowのtrigger、job依存、変更path判定を確認した。
+- [x] Markdown-only変更では`npm run check:md`だけを実行し、`.codex/*.toml`だけの変更をQuality CIから除外する方針をユーザー確認した。
+- [x] 承認後にCI workflowを最小限修正した。
+- [x] workflow YAMLのparseと、Markdown-only、`.codex` TOML-only、implementation-only、mixed変更のjob条件をローカルで検証した。GitHub Actions上の実行確認はpush後に残る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- milestone planのPhase 1に、current issueのslugと未完了checkboxを持つentryがないため、post-merge workflowが対象を一意に特定できない。
+- Chromium sandbox起動失敗をfailure logへ残さないユーザー方針に反して、active logの`browser execution environment` categoryに2 entryが残っている。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）
+- classification: valid
+- local validation: `docs/issue/milestone-02/plan.md`には一般的な監査説明だけがあり、`milestone-02-phase-01-failure-log-audit`のslug・checkboxはない。`post-merge-plan-update` skillはtask slugまたは`WORK_BRANCH`でplan entryを探し、一致がない場合は新規entryを作らない。`active.md:100`と`:108`にはChromium sandbox launch failureの2 entryが残り、現行`AGENTS.md`は同種の起動失敗をfailure logへ記録しないと定める。
+- duplicate / ignored: 見出しの先頭`+`とfailure-log-audit skillのarchive未対応はレビュー指摘1に統合する。archive内のsource不一致はユーザー指定の分類であるため対応対象外とする。
+
+### 対応方針
+
+- Phase 1の一般説明を、current issue slugを含む未完了checkboxのplan entryへ置き換える。
+- activeに残る2件のChromium sandbox起動失敗を、原文とユーザー指定のno-action disposition・移動日を保持して`no-action.md`へ移す。
+
+### 対応完了チェックリスト
+
+- [x] milestone planのcurrent issue entryをpost-mergeで検索可能なslug・checkbox形式にした。
+- [x] activeのChromium sandbox起動失敗2 entryをno-actionへ移し、activeから除外した。
+- [x] activeにChromium sandbox起動失敗を主題とするentryが残っていないことを確認した。
+- [x] `npm run check:md` が通った。
+- [x] `git diff --check` が通った。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- current issueの背景が、review指摘3で置換済みのmilestone planの旧一般説明を引用している。
+- `docs/deployment.md`が、Markdown-onlyではQuality CIを起動しない旧運用を説明しており、Markdown Checkと`.codex/**/*.toml`除外を含む現行CI分岐と一致しない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/issue/milestone-02/plan.md`はslug付きの未完了entryへ更新済みである。`docs/deployment.md`は`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけを除外してQualityのみ実行すると記載する一方、`ci.yml`はMarkdown-onlyでMarkdown Checkを実行し、`.codex/**/*.toml`だけをworkflow triggerから除外する。
+- not routed: `dorny/paths-filter`の`some-with-excludes`は公式v4 READMEで有効なpredicateとして確認でき、head commitの`changes` jobもsuccessしたため、blocker指摘はinvalidとした。archiveのsource混在はユーザー指定として対応対象外とする。third-party actionのSHA固定とbranch protectionへの影響はリポジトリ全体のCI security policyに関する判断が必要なため、今回のcurrent-issue fixへは取り込まない。
+
+### 対応方針
+
+- issue背景をslug付きmilestone plan entry参照へ更新する。
+- deployment文書を、Markdown-only、implementation-only、mixed、`.codex/**/*.toml` onlyのCI分岐とreusable workflow構成へ更新する。
+
+### 対応完了チェックリスト
+
+- [x] current issueの背景を現行milestone plan entryへ整合した。
+- [x] deployment文書のCI分岐とreusable workflow説明を現行実装へ整合した。
+- [x] `npm run check:md` が通った。
+- [x] `git diff --check` が通った。
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- `docs/testing.md`が、Markdown Check導入前のCI挙動を説明している。
+- current issue背景がmilestone plan entryを作業契約としており、個別issueを実装契約とするrepository規約と役割が逆転している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/testing.md`はQualityだけを実行し、docs／AI Ops／READMEだけの変更ではQualityとdeployを起動しないと説明する。現行`ci.yml`はMarkdown-onlyで`markdown-check.yml`を実行し、`.codex/**/*.toml` onlyだけをworkflow triggerから除外する。`docs/issue/milestone-02/plan.md`は大まかな計画、current issueは個別の作業契約として定義されている。
+
+### 対応方針
+
+- `docs/testing.md`のCI/CD説明を、Markdown-only、implementationまたは混在、`.codex/**/*.toml` only、deployの別path filterへ更新する。
+- issue背景を、milestone plan entryは計画上の対応項目、本issueは作業契約であると役割を分けて記述する。
+
+### 対応完了チェックリスト
+
+- [x] `docs/testing.md`のCI/CD説明を現行CI分岐へ整合した。
+- [x] current issue背景のplan entryと作業契約の役割を整合した。
+- [x] `npm run check:md` が通った。
+- [x] `git diff --check` が通った。

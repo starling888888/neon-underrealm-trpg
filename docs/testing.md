@@ -47,6 +47,7 @@ character-sheetの現行構成では、`tests/node/character-sheet/`がlogic、s
 - E2Eは公開route、実ブラウザAPI、複数層をまたぐ代表フローなど、下位層で置き換えられない理由を持つこと。
 - E2Eのlocatorはtest-only属性の追加ではなく、既存のrole、accessible name、label、実際の構造を優先すること。
 - VRTは視覚契約、E2Eはbrowser behavior、Vitestは局所的な振る舞いを担当し、同じ分岐を目的なく重複させていないこと。
+- matcherが未提供または不明でtestが失敗した場合は、実装・再実行の前にContext7でVitestまたはPlaywrightの公式APIを確認する。使用可否はContext7だけで判断せず、このリポジトリの依存関係、test setup、既存testを照合する。
 
 ## E2E、VRT、Public E2Eの責務
 
@@ -56,10 +57,14 @@ character-sheetの現行構成では、`tests/node/character-sheet/`がlogic、s
 
 ## CI/CD
 
-`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test` を再利用可能なQuality jobとして定義する。
+`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test` を再利用可能なQuality jobとして定義する。`.github/workflows/markdown-check.yml` は、`npm ci`と`npm run check:md`だけを実行する再利用可能なMarkdown Check jobを定義する。
 
-`.github/workflows/ci.yml` はmain以外のbranch pushとPull RequestでQualityだけを実行する。deploy権限やGitHub Pages artifactは持たない。
+`.github/workflows/ci.yml` はmain以外のbranch pushとPull Requestで変更pathを分類し、deploy権限やGitHub Pages artifactを持たない。
 
-`.github/workflows/deploy.yml` はmainへの公開対象変更でQuality後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。docs、AI Ops、READMEだけの変更はQualityとdeployを起動しない。
+- Markdown-onlyの変更ではMarkdown Checkを実行する。
+- 実装、設定、workflow、`.mdx`を含む変更、またはMarkdownとの混在ではQualityを実行する。
+- `.codex/**/*.toml`だけの変更ではCI workflowを起動しない。
+
+`.github/workflows/deploy.yml` はmainへの公開対象変更でQuality後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。deployのpath filterはCIとは別であり、`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更では起動しない。`.codex/**/*.toml`はdeployの除外対象ではない。
 
 詳細な公開順序は `docs/deployment.md`、UI変更時のVisual Review手順は `.agents/skills/visual-implementation-review/SKILL.md` を参照する。

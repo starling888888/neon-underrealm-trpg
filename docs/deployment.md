@@ -83,9 +83,15 @@ workflowは `main` へのpushで実行します。
 
 `npm run test`はNode、Component、build contractなどの通常testを実行する。ローカルpreviewを起動するE2EとVRTは含めない。
 
-`.github/workflows/ci.yml`は、main以外のbranchへのpushとPull RequestでQualityだけを実行する。GitHub Pagesへのdeploy、Pages artifact upload、`pages: write`、`id-token: write`は含めない。pushとPull Requestが同じcommitで同時に起動した場合は、commit SHA単位のconcurrencyで実行中の古いQualityをcancelする。
+`.github/workflows/ci.yml`は、main以外のbranchへのpushとPull Requestで変更pathを分類する。GitHub Pagesへのdeploy、Pages artifact upload、`pages: write`、`id-token: write`は含めない。pushとPull Requestが同じcommitで同時に起動した場合は、commit SHA単位のconcurrencyで実行中の古いworkflowをcancelする。
 
-mainへのサイト公開対象のpushでは、deploy workflowが同じQualityの成功後に公開用build、Pagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更は、main以外のbranchとPull Requestを含め、Qualityを起動しない。`src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
+- Markdown-onlyの変更では、`.github/workflows/markdown-check.yml`を呼び出し、`npm ci`と`npm run check:md`だけを実行する。
+- 実装、設定、workflow、`.mdx`を含む変更、またはMarkdownとそれらの混在では、`.github/workflows/quality.yml`を呼び出し、Qualityを実行する。
+- `.codex/**/*.toml`だけの変更ではworkflowを起動しない。
+
+Qualityでは、`npm ci`、`npm run check`、`npm run build`、`npm run test`を順に実行する。Markdown CheckはQualityを代替せず、Markdown-only変更だけを対象にする。
+
+mainへのサイト公開対象のpushでは、deploy workflowが同じQualityの成功後に公開用build、Pagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
 
 deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`playwright-report/`と`test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
 

@@ -48,7 +48,7 @@ in the current issue and stop for direction. Do not substitute a full-page
 screenshot or create an ad hoc browser script.
 
 If a positive visual report is later shown to be false, treat it as a material
-reporting failure. Record the failure in `docs/agent-failure-log.md`, correct
+reporting failure. Record the failure in `docs/agent-failure-log/active.md`, correct
 the current issue review record, keep the issue active, and repeat actual
 snapshot inspection before reporting again.
 
@@ -94,6 +94,10 @@ already approved that work in the current issue.
    page-level relationships; never use it to satisfy a local acceptance
    condition. Check at least alignment, wrapping, clipping, overflow, and
    interactive control bounds when they are relevant to the change.
+   For fixed-width or inline responsive adjustments, confirm the total required
+   row width (content, padding, and gaps), existing type scale, and minimum
+   control height at the affected viewport before concluding that overflow is
+   resolved.
 7. Run only the changed target with `npm run visual:test -- --grep`.
 8. Inspect Playwright's diff artifact when the target comparison fails.
 9. Fix only clear, local mismatches that are inside the approved issue scope.
