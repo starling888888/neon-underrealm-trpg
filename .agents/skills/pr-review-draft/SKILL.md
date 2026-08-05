@@ -28,7 +28,7 @@ The remote PR is the review source for metadata, diff, and discussion.
 
 Use the local `.codex/agents/*.toml` and local skill definitions when spawning reviewers. They may be unmerged or part of the reviewed PR. Do not stop for that reason.
 
-This skill may write only under `.tmp/review/<branch-name>/` until it invokes `review-to-issue`. Do not update source code, `docs/issue/*.md`, `docs/TODO.md`, `docs/issue/milestone-<NN>/plan.md`, or `docs/agent-failure-log.md` directly.
+This skill may write only under `.tmp/review/<branch-name>/` until it invokes `review-to-issue`. Do not update source code, `docs/issue/*.md`, `docs/TODO.md`, `docs/issue/milestone-<NN>/plan.md`, or `docs/agent-failure-log/active.md` directly.
 
 Do not review the `User-Directed Changes Outside Current Issue` section of the PR description.
 

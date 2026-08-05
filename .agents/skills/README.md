@@ -76,7 +76,7 @@ This skill may update `docs/issue/milestone-<NN>/plan.md` checkboxes only becaus
 
 ### `failure-log-audit`
 
-Use when auditing `docs/agent-failure-log.md` for repeated failure categories, especially categories with three or more occurrences.
+Use when auditing `docs/agent-failure-log/active.md` for repeated failure categories, especially categories with three or more occurrences.
 
 This skill reports repeated failures and proposes permanent countermeasures. It stops for user approval before editing rules, skills, or done archives.
 

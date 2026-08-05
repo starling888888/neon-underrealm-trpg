@@ -16,7 +16,7 @@ Use when the user asks to:
 - create a numbered review section in `docs/issue/*.md`
 - route review items that do not belong to the current issue into `docs/TODO.md`
 - add a missing future task to `docs/issue/milestone-<NN>/plan.md` when a TODO item has no appropriate plan entry
-- record review-identified agent failures in `docs/agent-failure-log.md`
+- record review-identified agent failures in `docs/agent-failure-log/active.md`
 - pause for user confirmation before addressing review feedback
 - implement approved review fixes and update the corresponding checklist
 
@@ -118,7 +118,7 @@ Do not perform version-control write operations unless the user explicitly asks.
     - current-issue items go to `docs/issue/*.md`
     - valid but not-current-issue items go to `docs/TODO.md`
     - if a not-current-issue item has no suitable plan entry, add a plan entry to `docs/issue/milestone-<NN>/plan.md`
-    - agent failure candidates go to `docs/agent-failure-log.md`
+    - agent failure candidates go to `docs/agent-failure-log/active.md`
 11. Report the validity and routing assessment to the user.
 12. Stop and wait for user confirmation.
 
@@ -176,7 +176,7 @@ Examples that usually stay out of failure-log:
 - a design mismatch that does not involve process failure or misrepresentation
 - a valid follow-up that belongs in `docs/TODO.md`
 
-If a review item is both a current-issue fix and an agent failure, route the fix to the issue and record the process failure in `docs/agent-failure-log.md`.
+If a review item is both a current-issue fix and an agent failure, route the fix to the issue and record the process failure in `docs/agent-failure-log/active.md`.
 
 Use `source: review` for failure-log entries created from review-to-issue.
 
@@ -288,7 +288,7 @@ During review intake, allowed write targets are limited to:
 - the relevant `docs/issue/*.md` file for current-issue valid items
 - `docs/TODO.md` for useful items that should not be handled by the current issue
 - `docs/issue/milestone-<NN>/plan.md` only when a routed TODO has no suitable existing plan entry
-- `docs/agent-failure-log.md` only when a review item meets the failure-log routing criteria
+- `docs/agent-failure-log/active.md` only when a review item meets the failure-log routing criteria
 
 During review intake:
 

@@ -30,7 +30,7 @@ Update `docs/issue/milestone-<NN>/plan.md` checkboxes only because the user is e
 
 Update `docs/TODO.md` only when the merged work actually handled the TODO item.
 
-Do not move `docs/agent-failure-log.md` entries from this skill. Failure-log done cleanup belongs to failure-log audit or a direct user instruction for that file.
+Do not move `docs/agent-failure-log/active.md` entries from this skill. Failure-log done cleanup belongs to failure-log audit or a direct user instruction for that file.
 
 ---
 

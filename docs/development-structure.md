@@ -75,6 +75,8 @@ canonical-snapshots/visual/
 
 agentが全詳細ファイルを常時読む構造にしない。
 
+`docs/agent-failure-log/`はagent failureの記録を用途別に分ける。日常taskで参照・追記する正本は`active.md`とし、`done.md`、`no-action.md`、`archive.md`はfailure-log auditまたは明示的な履歴確認時だけ読む。
+
 `docs/issue/` には進行中または未完了の実装契約だけを置く。完了済みissueは同名のGitHub closed Issueへ記録してローカルから削除する。`docs/issue/milestone-<NN>/plan.md` と `docs/issue/milestone-<NN>/plans/` は軽量なローカル履歴として残し、完了issueの名称とGitHub Issue番号だけを記録する。
 
 ## Scripts

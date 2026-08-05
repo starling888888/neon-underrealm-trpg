@@ -48,7 +48,7 @@ in the current issue and stop for direction. Do not substitute a full-page
 screenshot or create an ad hoc browser script.
 
 If a positive visual report is later shown to be false, treat it as a material
-reporting failure. Record the failure in `docs/agent-failure-log.md`, correct
+reporting failure. Record the failure in `docs/agent-failure-log/active.md`, correct
 the current issue review record, keep the issue active, and repeat actual
 snapshot inspection before reporting again.
 

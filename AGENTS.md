@@ -49,13 +49,13 @@
 - UI、CSS、layout、page、Componentタスクでは、実装前に必要なdesign intentとVRT参照情報を確認する。必要なdesign notesがない場合は `design-image-generation` に切り出す。
 - Visual Review screenshotは実装結果であり、design正本ではない。actual screenshotを直接 `docs/design/` にコピーしない。
 - Visual Reviewで`確認済み`、`問題なし`、`枠内に収まる`などの肯定報告をしてよいのは、対象route・state・viewportごとのactual screenshotを実際に開き、issueの表示契約に対して確認した後だけである。対象stateはVRT specだけでなく、current issueの受入条件と最終diffから列挙する。tooltip、dialog、drawer、validationのように表示状態を変えるUIを変更した場合、defaultだけで肯定報告してはならない。`visual:capture`の成功、snapshotの生成、VRT commandの終了出力だけを実画面確認の根拠にしてはならない。
-- 肯定報告後にユーザーまたはagentが視覚上の失敗を発見した場合は、実装不備と分けて「未確認または誤った確認結果を報告した失敗」として`docs/agent-failure-log.md`とcurrent issueを訂正する。対象issueをGitHubへcloseしてローカルから削除せず、各対象actual screenshotを再確認してから未完了チェックを更新する。
+- 肯定報告後にユーザーまたはagentが視覚上の失敗を発見した場合は、実装不備と分けて「未確認または誤った確認結果を報告した失敗」として`docs/agent-failure-log/active.md`とcurrent issueを訂正する。対象issueをGitHubへcloseしてローカルから削除せず、各対象actual screenshotを再確認してから未完了チェックを更新する。
 - VRTは高コストな比較である。Markdownのみの変更、または画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。ローカルで全件VRTを通常実行しない。全件VRTはGitHub Actionsの定期実行または公開直後の実行として別taskで整備する。
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
 - Google Spreadsheetをローカル入力へ同期する場合は、`.env`の認証情報を使う`npm run sync:google-sheets`だけを用いる。Google Driveへ書き込んではならず、Google Docsの自動同期は行わない。
 - 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由をissueまたは作業報告に書く。
-- ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、またはagent自身が通常のbuild、test、型検査で同一testまたは同一commandの失敗を1回の作業中に3回以上連続して観測した場合は `docs/agent-failure-log.md` に記録する。formatterまたはlinterの指摘は、同一作業中に修正して最終確認できれば通常の開発ループとして扱い、failure logへ記録・報告しない。
+- ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、またはagent自身が通常のbuild、test、型検査で同一testまたは同一commandの失敗を1回の作業中に3回以上連続して観測した場合は `docs/agent-failure-log/active.md` に記録する。formatterまたはlinterの指摘は、同一作業中に修正して最終確認できれば通常の開発ループとして扱い、failure logへ記録・報告しない。
 - Chromiumのsandbox起動失敗はfailure logへ記録せず、必要な権限手順を経てsandbox外で同じbrowser testを再実行する。sandbox外でも失敗した場合は通常の検証失敗として扱う。
 
 理由と背景は `.agents/rules/core-rules-rationale.md` を参照する。
@@ -227,7 +227,7 @@ npm run build
 
 報告形式は `.agents/rules/work-report.md` を参照する。issueにGroup単位の報告形式がある場合は、それに従う。
 
-作業後は `docs/agent-failure-log.md` の全文を常時コンテキストへ載せず、3回以上のactive categoryを集計して確認・報告する。失敗を追記する時は、関連するcategoryとtitleだけを検索する。`failure-log-audit`を明示された時だけactive log全文を読む。
+作業後は `docs/agent-failure-log/active.md` の全文を常時コンテキストへ載せず、3回以上のactive categoryを集計して確認・報告する。失敗を追記する時は、関連するcategoryとtitleだけを検索する。`failure-log-audit`を明示された時だけactive log全文を読む。
 
 ---
 

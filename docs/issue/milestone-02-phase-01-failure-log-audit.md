@@ -6,18 +6,18 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 ## 背景
 
-`docs/agent-failure-log.md`には、カテゴリごとの発生数だけでは再発性を判定できないtest / command失敗と、完了根拠の不足を示す記録が混在している。
+`docs/agent-failure-log/active.md`には、カテゴリごとの発生数だけでは再発性を判定できないtest / command失敗と、完了根拠の不足を示す記録が混在している。
 
-`docs/issue/milestone-02/plan.md`のPhase 1にある「`docs/agent-failure-log.md` の未反映項目を監査し、必要な恒久対応を計画する。」を、このissueの作業契約とする。
+`docs/issue/milestone-02/plan.md`のPhase 1にある「`docs/agent-failure-log/active.md` の未反映項目を監査し、必要な恒久対応を計画する。」を、このissueの作業契約とする。
 
 関連TODOは確認したが、failure log auditに対応する項目はない。
 
 ## 対象範囲
 
-- `docs/agent-failure-log.md`のactive entryを、ユーザー承認済みの基準で分類する。
+- `docs/agent-failure-log/active.md`のactive entryを、ユーザー承認済みの基準で分類する。
 - active entryすべてを、同じ現象と一次対応を将来参照できるcategoryのH3で分類する。
-- `docs/agent-failure-log-done.md`と`docs/agent-failure-log-no-action.md`へ、原文・移動理由・移動日を保持してentryを移す。
-- ユーザーが指定した機能固有のuser / review由来entryは、原文・archive理由・移動日を保持して`docs/agent-failure-log-archive.md`へ移す。このarchiveは`done`でも`no-action`でもなく、workflow、承認、review運用、検証手順、権限、Git操作に関するentryは移さない。
+- `docs/agent-failure-log/done.md`と`docs/agent-failure-log/no-action.md`へ、原文・移動理由・移動日を保持してentryを移す。
+- ユーザーが指定した機能固有のuser / review由来entryは、原文・archive理由・移動日を保持して`docs/agent-failure-log/archive.md`へ移す。このarchiveは`done`でも`no-action`でもなく、workflow、承認、review運用、検証手順、権限、Git操作に関するentryは移さない。
 - まず、`source: self`または非human review由来と確認できる`source: review`のうち、3回連続の再現条件を満たさないno-action候補をtitle、source、判定根拠とともに一覧化する。ユーザーが対象entryのno-action扱いを明示確認した後に移す。カテゴリ未記入の`source: self` entryは、active logでH3 titleの重複がない場合にno-action候補とする。`source: user`、`agent self-report`、human review由来か判定不能な`source: review`は機械移動の対象外とする。
 - no-action移動は4カテゴリの恒久対応と`done`移動より先に行い、ユーザーのレビューと明示的なcommit指示を受けて専用commitにする。
 - 次の4カテゴリへ、長文ではない最小の恒久対応を追加する。
@@ -58,6 +58,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] `review-workflow order`の既存規約を恒久対応として記録し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
 - [x] `visual implementation verification`の既存規約を恒久対応として記録し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
 - [x] 日常taskではactive failure log全文を読まず、失敗追記時のcategory検索と作業後の3回以上category集計だけを行い、明示的なfailure-log audit時だけ全文を読む運用を記録した。
+- [x] failure logの4記録を`docs/agent-failure-log/`へ集約し、agent規約、skill、rule、template、plan、履歴本文の参照を新pathへ更新した。
 - [x] `npm run format:md` と `npm run check:md` が通る。
 
 ## チェックポイント
@@ -76,12 +77,13 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 ## 想定変更ファイル
 
-- `docs/agent-failure-log.md`
-- `docs/agent-failure-log-done.md`
-- `docs/agent-failure-log-no-action.md`
-- `docs/agent-failure-log-archive.md`
+- `docs/agent-failure-log/active.md`
+- `docs/agent-failure-log/done.md`
+- `docs/agent-failure-log/no-action.md`
+- `docs/agent-failure-log/archive.md`
+- `docs/development-structure.md`
 - `docs/testing.md`
-- `AGENTS.md`、`.agents/skills/*/SKILL.md`、`.agents/rules/*.md`のうち、各カテゴリの軽量な恒久対応に必要な最小限のファイル
+- `AGENTS.md`、`.agents/skills/*/SKILL.md`、`.agents/rules/*.md`、`.github/pull_request_template.md`のうち、各カテゴリの軽量な恒久対応とfailure log path更新に必要な最小限のファイル
 
 ## レビュー観点
 

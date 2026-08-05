@@ -1,8 +1,8 @@
 # 対応済みAgent Failure履歴
 
-このファイルは、`docs/agent-failure-log.md` から退避した対応済みfailureの履歴を保持する。
+このファイルは、`docs/agent-failure-log/active.md` から退避した対応済みfailureの履歴を保持する。
 
-`docs/agent-failure-log.md` は未反映・未確認failureを中心に保つ。failureを退避する場合は、削除ではなくこのファイルへ移す。
+`docs/agent-failure-log/active.md` は未反映・未確認failureを中心に保つ。failureを退避する場合は、削除ではなくこのファイルへ移す。
 
 退避判断と恒久対応案の監査は `.agents/skills/failure-log-audit/SKILL.md` に従う。
 
@@ -481,7 +481,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 - source: user
 - 発生箇所: `phase-2-prep-markdown-formatting` のPR #25作成
-- 観測した失敗: `gh pr create --body "..."` にMarkdown本文を直接渡したため、shellがバッククォート内をコマンド置換として解釈し、PR本文の `docs/issue/...`、`review-to-issue`、`docs/agent-failure-log.md` が壊れた。さらに `gh pr edit` はGitHub側GraphQLのclassic Projectsフィールドエラーで失敗し、REST API fallbackが必要になった。
+- 観測した失敗: `gh pr create --body "..."` にMarkdown本文を直接渡したため、shellがバッククォート内をコマンド置換として解釈し、PR本文の `docs/issue/...`、`review-to-issue`、`docs/agent-failure-log/active.md` が壊れた。さらに `gh pr edit` はGitHub側GraphQLのclassic Projectsフィールドエラーで失敗し、REST API fallbackが必要になった。
 - 一次対応: PR本文をREST APIで修正した。
 - 恒久対応: PR作成とPR metadata更新をGitHub connector経由で行い、`gh pr create` / `gh pr edit` / `gh api` を標準のPR書き込み経路にしないよう `AGENTS.md`、`.agents/skills/create-pr/SKILL.md`、`.agents/skills/README.md`、`.agents/rules/git-operations.md` へ反映した。
 - moved: 2026-07-08
@@ -539,7 +539,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Visual capture used dev server without page-TOC postprocessing
@@ -567,7 +567,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Design draft overrode contents instructions
@@ -595,7 +595,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Common skills visual test formatting needed a second correction
@@ -609,7 +609,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Skill conversion formatter diff was applied with incorrect indentation
@@ -623,7 +623,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Initial data design draft ignored existing layout and card designs
@@ -679,7 +679,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Ambiguous remote source placeholder replaced an explicit source list
@@ -870,7 +870,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Markdown formatter check was rerun after a cache write failure
@@ -884,7 +884,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Page-specific content was invented from agent-authored assumptions
@@ -940,7 +940,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 ### Canonical design was captured before its implementation was committed
@@ -982,7 +982,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
+- formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
 +### Repeated a new sync test before reading its assertion diff
@@ -997,7 +997,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1013,7 +1013,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1029,7 +1029,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1045,7 +1045,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1061,7 +1061,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1077,7 +1077,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1093,7 +1093,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1109,7 +1109,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1125,7 +1125,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1141,7 +1141,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1157,7 +1157,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1173,7 +1173,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1189,7 +1189,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
@@ -1205,7 +1205,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 #### 恒久対応
 
-- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log/active.md`へ反映した。
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 

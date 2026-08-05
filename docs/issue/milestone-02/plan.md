@@ -15,7 +15,7 @@ milestone-01の履歴は `docs/issue/milestone-01/plan.md`、現在のスコー�
 
 - milestone-02-phase-01-github-issue-archive — GitHub Issue #186
 - milestone-02-phase-01-todo-resolution — GitHub Issue #190
-- `docs/agent-failure-log.md` の未反映項目を監査し、必要な恒久対応を計画する。
+- `docs/agent-failure-log/active.md` の未反映項目を監査し、必要な恒久対応を計画する。
 
 ## Phase 2: GMセクション
 

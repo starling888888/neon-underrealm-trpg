@@ -70,7 +70,7 @@ Canonical design updates require the design-image-generation workflow and explic
 
 ## Failure Log
 
-`docs/agent-failure-log.md` captures agent procedure failures, repeated validation failures, and user-identified judgment errors.
+`docs/agent-failure-log/active.md` captures agent procedure failures, repeated validation failures, and user-identified judgment errors.
 
 The log is not a general TODO list, and it is not a place for ordinary implementation review feedback.
 
