@@ -4,7 +4,7 @@
 
 同種失敗の監査と恒久対応案の整理は `.agents/skills/failure-log-audit/SKILL.md` に従う。
 
-このファイルは未反映・未確認failureを中心に管理するactive failure logである。対応済みfailureは `docs/agent-failure-log-done.md` へ、ユーザーが恒久対応不要と判断した記録は `docs/agent-failure-log-no-action.md` へ移す。
+このファイルは未反映・未確認failureを中心に管理するactive failure logである。対応済みfailureは `docs/agent-failure-log-done.md` へ、ユーザーが恒久対応不要と判断した記録は `docs/agent-failure-log-no-action.md` へ移す。ユーザー指示によりactive auditから分ける機能固有のuser / review由来failureは、どちらにも分類せず `docs/agent-failure-log-archive.md` へ移す。
 
 failureのdone退避は、恒久対応が完了し、反映先が記録され、ユーザー確認を受けた場合に限る。plan / TODOの完了退避とは条件を混ぜない。
 
@@ -65,6 +65,7 @@ source種別は以下を使う。
 - 通常の後続開発TODOは `docs/TODO.md` で管理する。
 - 対応済みfailureは、ユーザー確認後に `docs/agent-failure-log-done.md` へ退避できる。
 - ユーザーが恒久対応不要と判断したentryは、active auditの対象から外し `docs/agent-failure-log-no-action.md` へ移す。
+- ユーザーが指定した機能固有のuser / review由来failureは、未対応の意味を保ったまま `docs/agent-failure-log-archive.md` へ移せる。これは`done`でも`no-action`でもない。
 - review-to-issueでfailure-log候補を記録しても、review-to-issueの停止地点は変えない。記録後はユーザー確認を待つ。
 - 同じfailureカテゴリに3回以上の発生詳細が積み重なっている場合は、作業報告でユーザーに通知し、恒久対応候補として明示する。formatterまたはlinterのみの既存記録は、この集計と通知の対象外とする。
 
@@ -108,35 +109,6 @@ source種別は以下を使う。
 - 観測した失敗: `npm run build`だけを案内したため、Pagefind indexが生成されず、`search-modal`の`search-results` VRTが`[data-search-results-list]`の非表示で3 viewportとも失敗した。`/pagefind/pagefind.js`が404であることを確認した。
 - 一次対応: 正しい前提commandを`npm run visual:build`へ訂正する。これは`npm run build && pagefind --site dist`を実行してindexを生成する。
 
-### Bond target and relation inputs remounted on every character
-
-#### 2026-07-30
-
-- source: user
-- failure category: user-observed input lock
-- 発生箇所: `ex-02-26-sheet-json-export` のpreview中に確認された縁セクション
-- 観測した失敗: ユーザーが縁の「対象」と「関係」へ入力できないと報告した。`useBondsSectionProps`は各inputの`onChange`で`useFieldArray.update()`を呼ぶため、React Hook Formが行をunmount / remountし、キー入力ごとにfocusを失う。`isResolved`、画面上の「覚悟」が選択済みなら意図的にdisabledになる別契約もあるが、今回の原因ではなかった。G26のJSON出力差分は入力更新を持たず、この挙動を変更していない。
-- 一次対応: previewを停止し、先の覚悟による入力ロックという誤った切り分けを訂正した。ユーザーの明示指示後、`update()`ではなく対象fieldへの`setValue()`を使う実装修正と、連続キー入力後の値・focusを確認するComponent testを追加し、`fcefd86 fix: preserve bond input focus`としてcommitした。
-
-### Omitted bond-limit errors and styled the wrong mobile control
-
-#### 2026-07-30
-
-- source: user
-- 発生箇所: `ex-02-25-sheet-error-summary` のerror集約とtablet / mobile操作pane
-- 観測した失敗: 縁の入力済み件数が結べる縁の上限を超える既存errorを集約ViewModelへ渡さず、error時の`danger` classを右下menu buttonではなくヘルプbuttonへ付与した。ユーザーのdev server確認で発見された。
-- 一次対応: 縁上限超過をerror集約と既存の局所error表示へ統一し、`danger` classをmenu buttonへ移す。Node / Component testへ両条件を追加し、E2E・VRT実装前のユーザー確認をやり直す。
-
-### Implemented a Container layout exception without reconciling the architecture SSoT
-
-#### 2026-07-30
-
-- source: review
-- failure category: scope and SSoT precedence
-- 発生箇所: `ex-02-23-sheet-action-pane`の`CharacterSheetActionPane`配置
-- 観測した失敗: 子issueがarchitecture正本を適用対象として列挙していたにもかかわらず、`CharacterSheetContainer`直下をForm Presenterとroot dialogに限定する契約と矛盾するActionPane直下配置を実装・完了扱いにした。
-- 一次対応: PR #69 Review 6の有効指摘としてG23 issueへ記録した。ユーザー判断により、ActionPaneをForm Presenterへ移さず、form外のroot-level表示Componentとしてarchitecture正本へ明記して境界を整合させた。関連するbrowser E2Eとtarget VRTを確認した。
-
 ### Added a tooltip accessory despite the user excluding tooltip work
 
 #### 2026-07-30
@@ -166,15 +138,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-19-sheet-cybernetics` のDocument Review指摘対応
 - 観測した失敗: Document Reviewの再現性提案とユーザーの「他の指摘内容も修正」を、親issueのGate planが定める「G31までcanonical VRT baselineを管理しない」制約より優先した。`canonical-snapshots/visual/character-sheet/`のignoreを外し、Git管理する運用へ変更しようとした。
 - 一次対応: ユーザー指摘後、`.gitignore`とdesign noteをローカル専用baselineの運用へ戻した。G19 issueには、baselineのGit管理・再現性判断をG31へ残すことを明記した。今後はDocument Reviewの提案を実装する前に、親Gate planの後続Gateへの割当てを確認する。
-
-### Reintroduced the known armor clear-button border cascade defect
-
-#### 2026-07-29
-
-- source: review
-- 発生箇所: `ex-02-19-sheet-cybernetics` の共通クリアbutton CSS適用後の防具clear button
-- 観測した失敗: 右側罫線の欠落について既存failure logが求めるcomputed styleとwinning selectorの確認をせず、共通classへの置換後に表示完了としたため、防具clear buttonで同じ欠落を再発させた。
-- 一次対応: G19のレビュー指摘3へ、desktopのcomputed `border-right`とcascade確認を修正の先行条件として記録した。
 
 ### Started Gate 18 reviews before the explicitly instructed commit and push
 
@@ -372,42 +335,6 @@ source種別は以下を使う。
 - 観測した失敗: E2Eへ信用入力4項目の正規化、境界値、派生計算、CSS、read-only DOM属性を持ち込み、architectureが定める最終smokeの範囲を越えた。さらに、ユーザーがテストを変更・追加・実行しないよう明示した後にもtest fileを変更した。Container / PresenterとRHF adapter hookを分けた検証境界を使わず、E2Eで仕様を網羅しようとした。
 - 一次対応: review-to-issueでG4 issueへE2E縮小、Zod schema、Component / hook test toolingの選定をレビュー指摘として記録し、ユーザー承認までsource codeとtest fileを変更しない。
 
-### Used one document listener per open FormulaTooltip for outside-tap dismissal
-
-#### 2026-07-25
-
-- source: user
-- 発生箇所: `FormulaTooltip`のmobile閉鎖処理
-- 観測した失敗: mobileの外側タップを検出するため、開いている各Tooltipが`document.addEventListener`を登録する設計にした。Tooltipが複数あれば同じdocumentへlistenerが増え、局所UI状態に対して広すぎるイベント境界だった。
-- 一次対応: document listenerを削除し、touch環境でだけ表示する透明なdismiss layerをTooltip自身の外側に置いた。数値に近いabsolute配置を維持し、layerのタップで閉じる。
-
-### Misinterpreted an icon-alignment correction as container-spacing work
-
-#### 2026-07-25
-
-- source: user
-- 発生箇所: `ex-02-4-sheet-profile`の設定トグル
-- 観測した失敗: ユーザーが指摘したのは`設定`文字列に対するトグルアイコンの縦ずれだったが、agentはトグル全体のmarginとpaddingを詰める修正を行った。対象要素を画面上で分離して確認せず、アイコンの光学位置とコンテナ余白を混同した。
-- 一次対応: トグルのmargin・paddingを元へ戻し、矢印アイコン自体へ相対位置の上方向補正を加えた。
-
-### Left the setting toggle vertically detached from its profile fields
-
-#### 2026-07-25
-
-- source: user
-- 発生箇所: `ex-02-4-sheet-profile`の基本情報レイアウト
-- 観測した失敗: profile gridの直後に配置する設定トグルへ不要な上marginと大きい縦paddingを残し、直前の入力行から下へずれた表示にした。
-- 一次対応: 設定コンテナの上marginを除き、トグルの縦paddingを`--space-1`へ縮めて入力群直後の操作として揃えた。
-
-### Applied derived-value background to its label despite the requested boundary
-
-#### 2026-07-24
-
-- source: user
-- 発生箇所: `ex-02-4-sheet-profile`の信用表示スタイル調整
-- 観測した失敗: ユーザーが自動算出「数値」の見た目だけを入力欄から区別するよう求めたのに、agentはラベルを含む算出セル全体へ白背景を適用した。表示上の対象範囲を要素単位で確認せず、ラベルまで入力欄のように見せた。
-- 一次対応: 背景・角丸・余白を`.metricValue`だけへ移し、ラベルは入力欄と同じ信用カード背景へ戻した。
-
 ### Misread the approved profile field arrangement during G4 adjustment
 
 #### 2026-07-24
@@ -452,24 +379,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-1-sheet-runtime`の`CharacterSheetContainer`と`tests/visual/character-sheet.spec.ts`
 - 観測した失敗: `client:load`のhydrateをE2Eで観測するためだけに、画面機能に不要な`isHydrated` stateと非表示DOM属性を製品コードへ追加した。G1にはユーザーが操作できる機能がなく、内部実装を露出する検証は適切でないにもかかわらず、完了条件もそのテストに依存させた。
 - 一次対応: `isHydrated`、属性、専用E2E testを削除し、G1の完了条件を検証専用実装を追加しないことへ修正した。以後、E2Eはユーザーが観測・操作できる振る舞いだけを対象にし、内部のhydrateやstateを観測するための製品コードは追加しない。
-
-### Character-sheet Headerのbreakpoint表示条件を誤った
-
-#### 2026-07-24
-
-- source: user
-- 発生箇所: `ex-02-0-sheet-page-header`の`CharacterSheetHeader.astro`
-- 観測した失敗: desktop・mobileのサイトメニューボタンを追加する際、mobile専用検索操作もdesktop・tabletで表示するCSSにしてHeader gridの暗黙行を発生させ、内部要素が上へずれるデグレを作った。あわせて、Headerの大きなgrid gapでメニューボタンとタイトルロゴの間隔を広げすぎた。
-- 一次対応: mobile検索操作をmobile breakpointだけに限定し、Header gridの暗黙行を解消した。desktop・tabletのタイトルロゴを2.5remへ縮め、メニューボタンとの間隔を`--space-3`へ縮めた。
-
-### Character-sheetのサイトメニュー表示範囲を誤って拡大した
-
-#### 2026-07-24
-
-- source: user
-- 発生箇所: `ex-02-0-sheet-page-header`のcharacter-sheet専用layout
-- 観測した失敗: tabletのみで表示する指定だったサイトメニューを、desktopにも表示する実装・検証として扱った。
-- 一次対応: 専用layoutのmenu railをtabletのmedia query内だけで表示するようにし、desktop・tablet・mobileの表示条件をbrowser testとcaptureで確認した。
 
 ### Generated a requirements-driven design draft before updating the requirements source of truth
 
@@ -989,15 +898,6 @@ source種別は以下を使う。
 - 観測した失敗: actual screenshotには、基本情報の数値行の縦不揃い、副能力値ラベル下の余白、成長点・一時修正の操作列とmobile能力値gridのframe外表示が残っていた。にもかかわらず、agentは「画面を確認し、問題は解消した」と肯定報告した。これはtooltip実装の不備とは別に、可視の失敗を検出せず確認済みと虚偽の検証結果をユーザーへ伝えた重大な報告失敗である。
 - 一次対応: `AGENTS.md`と`visual-implementation-review` skillへ、capture成功やsnapshot生成を確認の根拠にせず、宣言した全route・state・viewportのactual snapshotを開き、issueの受入条件ごとに確認する停止条件を追加した。後続reviewで、Gate子issueではbranch名からcurrent issueを推測できず、interactive UIのopen stateを既存VRT specだけから列挙すると漏れることも確認した。skillはparent Gate planからchild issueを解決し、current issueの受入条件と最終diffからstateを列挙するよう補完する。誤った肯定報告が判明した場合は、failure logとcurrent issueを訂正し、issueをdoneへ移さず、capture・実画面確認・VRT比較をやり直す。
 
-### Inherited no-wrap style clipped a formula tooltip
-
-#### 2026-07-27
-
-- source: user
-- 発生箇所: `ex-02-8-sheet-secondary` の能力値ポイント・成長点tooltip
-- 観測した失敗: labelと算出値を一まとまりとして折り返さないために`attributeMetaItem`へ`white-space: nowrap`を追加したが、tooltip本文がその子孫であることを確認しなかった。その結果、長いformula本文もnowrapとなり、tooltip背景の幅を超えて全文を読めなくなった。
-- 一次対応: `FormulaTooltip`のtooltip本文へ`white-space: normal`を明示し、trigger周辺のnowrapを継承しないようにした。tooltip本文は既存の`overflow-wrap: anywhere`で幅内に折り返す。
-
 ### Reported desktop tooltip review without checking trigger anchoring
 
 #### 2026-07-27
@@ -1034,15 +934,6 @@ source種別は以下を使う。
 - 観測した失敗: 非戦闘技能の初期折りたたみbrowser testを、1回目はCSS generated contentがbuttonのaccessible nameへ混ざることを見落として失敗させ、2回目は`.noncombatRow`の`display: grid`がHTMLの`hidden`属性を上書きすることを見落として失敗させた。
 - 一次対応: 折りたたみ記号を`aria-hidden`の実DOM要素へ移し、`.noncombatRow[hidden] { display: none; }`を明示した。以後、CSS generated contentを操作名へ使わず、`hidden`を使う表示状態ではcomponent CSSとのdisplay競合をbrowser testで先に確認する。
 
-### Ignored the approved noncombat responsive layout
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-11-sheet-noncombat` の`ChecksSection`実装
-- 観測した失敗: `.tmp/design/character-sheet/desktop.png`、`tablet.png`、`mobile.png`を実装入力として確認していたにもかかわらず、非戦闘技能を全viewport共通の5列gridとして実装した。design画像が指定するdesktop / tabletの3列とmobileの2列の情報密度を守らず、Visual Review前に未達を検出できなかった。
-- 一次対応: current issueへ3列／2列の表示契約と未達を記録した。修正ではdesign画像を直接比較し、各viewportの非戦闘技能を要素単位のactual screenshotで確認するまで完了報告しない。
-
 ### Exceeded the G11 character-sheet final-smoke E2E boundary
 
 #### 2026-07-28
@@ -1051,15 +942,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/character-sheet.spec.ts`
 - 観測した失敗: G11の最終smoke E2Eへ、開閉の`aria-expanded`属性とhidden状態の確認を追加した。これは領域表示と2〜3個の代表操作だけに限定する`docs/architectures/character-sheet.md`の責務境界を越え、Component testと重複する局所UI・DOM属性の検証である。
 - 一次対応: current issueへE2Eの縮小方針を記録した。開閉状態・hidden・tooltipはComponent testへ、計算はNode testへ置き、E2Eは代表的なbrowser操作だけに戻す。
-
-### Used a fixed-width noncombat row after the layout no longer had room
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-11-sheet-noncombat` の非戦闘技能3列／2列responsive表示
-- 観測した失敗: desktop / tabletを3列、mobileを2列へ変更した後も、得意技能、技能、対応能力、修正、常時／一時を一つの横行へ保持した。その結果、技能名の大きな折り返し、常時／一時のoverflow、2桁の修正値のclipを残した。各cardの利用可能幅と内容の最小幅を設計段階で見積もらず、列数だけを正本へ合わせた。
-- 一次対応: 列ヘッダーと行内の対応能力値を削除し、対応能力別の小見出しと二段cardへ組み替える。各viewportの実画面で技能名、判定数、符号付き2桁修正を確認するまで完了報告しない。
 
 ### Reported noncombat tooltip line breaks without verifying CSS whitespace handling
 
@@ -1070,15 +952,6 @@ source種別は以下を使う。
 - 観測した失敗: tooltip文字列へ改行文字を追加しただけで、`.content`の`white-space: normal`が改行を空白として処理することを見落とした。temporary captureを開いたにもかかわらず、改行表示を確認したとissueへ誤って記録した。
 - 一次対応: `FormulaTooltip`へ必要なtooltipだけ`white-space: pre-line`で改行を保持するoptionを追加し、非戦闘技能tooltipへ適用した。改行の有無を表示契約とするtooltipでは、text contentではなくactual screenshotで段落境界を確認してから報告する。
 
-### Let card-local checkbox styling diverge from the character sheet standard
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-11-sheet-noncombat` の得意技能checkbox
-- 観測した失敗: 非戦闘技能card用にcheckboxの寸法を個別指定した一方、縁sectionは別の`accent-color`指定を持つ状態を見落とした。そのため同じcharacter sheet内のcheckboxが異なる色・寸法で描画された。
-- 一次対応: checkboxの基本寸法、accent color、marginを`CharacterSheetFormPresenter`のform scopeへ移し、section CSSには個別のgrid配置だけを残した。checkboxを新設するUIでは、component CSSへ基本styleを複製せずform scopeの共通styleを使う。
-
 ### Replaced a native number-input control without design authority
 
 #### 2026-07-28
@@ -1087,24 +960,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-11-sheet-noncombat` の修正number input
 - 観測した失敗: 符号付き2桁を狭いinputに収めようとして、既存character sheetのnumber inputにはないspinner非表示styleを追加した。ユーザーは既存実装と異なるデザインを許可しておらず、この変更は要求された幅調整の代替になっていなかった。
 - 一次対応: spinner非表示styleを撤去し、既存inputの見た目とpaddingを維持した。サイズ要件とmobile 2列／1行の物理的な幅不足は、別デザインを仮定せずissueへ未決定として記録する。
-
-### Claimed to compact the check-count output without accounting for the shared style selector
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-11-sheet-noncombat` の非戦闘技能判定数output
-- 観測した失敗: 非戦闘技能CSSへ判定数の高さ・padding・文字サイズを記述したが、`CharacterSheetFormPresenter`のform共通`character-sheet-number-value` selectorのspecificityに負けていた。mobile captureで判定数だけ標準サイズのまま残ったにもかかわらず、card全体を縮小したかのように作業を進めた。
-- 一次対応: `noncombatRows`／`noncombatCollapsedRows`を含むselectorで判定数outputへcompactな幅、高さ、padding、文字サイズを明示し、共通styleより優先させる。共有styleを局所overrideする場合は、capture前にcomputed styleまたはactual screenshotで各値が適用済みか確認する。
-
-### Changed check-count padding based on inference instead of an actual clip result
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-11-sheet-noncombat` のmobile判定数output
-- 観測した失敗: 左右paddingと枠幅のトレードオフを実画面で確認しないまま変更し、判定数がclipする状態をユーザーが先に発見した。数値の最小幅を推定しただけで、実際のfont metrics、padding、spinnerとの組み合わせを確認していなかった。
-- 一次対応: 既存paddingのclipを実画面で確認した後にだけ、左右paddingを縮める変更を行った。寸法を変更する反復では、各変更後のactual screenshotを開き、次の変更はその結果が得られてから行う。
 
 ### Left visible skill names outside GameDomain across G10 and G11
 
@@ -1142,15 +997,6 @@ source種別は以下を使う。
 - 観測した失敗: test-owned locator screenshotが必要なVisual Reviewで、`npm run visual:capture`の経路を使わず、独自の`.tmp` Playwright scriptでfull-page screenshotを撮ろうとした。これは局所表示契約の確認根拠にならず、capture基盤が不足する場合は記録して停止するというskillの規約にも反していた。
 - 一次対応: 独自scriptは削除し、正規の`visual:capture`を対象tagへ限定して実行した。fixtureのselect操作timeoutによりlocator screenshotを取得できなかったため、issueのVisual Reviewへ未確認として記録し、代替screenshotは使わない。
 
-### Omitted G12 validation feedback and nested skill folding
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-12-sheet-primary-skills` のプライマリ流儀スキル
-- 観測した失敗: 要件にある最大レベル超過と流儀レベル対スキル合計の赤枠フィードバック、およびプライマリ流儀スキル区分の独立した折りたたみを実装せず、ユーザーの表示確認で欠落が判明した。
-- 一次対応: 最大レベルを入力とhookの両方で上限化し、既存超過値の行、流儀枠、スキル区分に`aria-invalid`と赤枠を追加した。スキル区分も初期展開の独立開閉にし、局所Component / hook / logic testへ追加した。
-
 ### Repeated multiline-name component-test matcher failures
 
 #### 2026-07-28
@@ -1159,15 +1005,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-12-sheet-primary-skills` の`PrimarySkillPickerDialog` Component test
 - 観測した失敗: 改行を含む候補名の表示確認で、通常text matcherと空白正規化したaccessible nameを順に使い、同じtestを2回失敗させた。Testing Libraryのbutton accessible nameが改行を保持することを先に確認していなかった。
 - 一次対応: 改行を許容する正規表現でbuttonを取得し、`textContent`で元の改行を確認するテストへ修正した。
-
-### Misread the mobile expanded-detail row order
-
-#### 2026-07-28
-
-- source: user
-- 発生箇所: `ex-02-12-sheet-primary-skills` のmobile展開詳細
-- 観測した失敗: ユーザーが指定した「コスト・使用制限」「技能・取得制限」「効果」の3行構成を、後続指摘の一部だけを取り違えて「コスト」「技能・使用制限」「取得制限」「効果」へ変更した。
-- 一次対応: requirementsとcurrent issueを正しい3行構成へ訂正した。実装の訂正はユーザーの明示指示を待つ。
 
 ### Repeated G12 Component-test assertion mistakes
 
@@ -1268,51 +1105,6 @@ source種別は以下を使う。
 - 観測した失敗: session分割後の実装で、ユーザー指示により作成したcurrent issueの計算式表示、mobileの`＝`以降の折り返し、算出値のaccent-muted領域という画面契約を確認せず、design draftに引きずられた値と修正inputの2列構成を実装した。
 - 一次対応: G17のレビュー指摘4へ、current issueがdesign draftより優先することと、式表示・mobile改行・算出値背景の修正要件を記録した。以後の修正では、実装対象のcurrent issueにある画面契約を先に読み、draftは競合しない参考情報だけに限定する。
 
-### Repaired the formula layout without preserving paired-value semantics
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の武器・防具の性能値表示
-- 観測した失敗: 指摘4の「計算式で表現する」を、性能列内で攻撃力・ガード値または防御力・ダメージ軽減を縦に並べた2本の式として解釈した。ユーザー指定の`元値／元値 + 修正値／修正値 = 最終値／最終値`というペアの1本の式、元値のread-only枠、未算出時の`-`表示を満たしていなかった。
-- 一次対応: G17のレビュー指摘5へ単一式・枠・`-`フォールバック・mobile改行の契約を記録した。式の構造を変更する時は、演算子の前後だけでなく、`／`で結ぶ値ペアと表示状態をComponent構造へ直接対応させる。
-
-### Applied requested table dividers to header rows and unrelated columns
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` とshared skill UIのheader・候補dialog
-- 観測した失敗: ユーザー指定の列罫線を、data行のスキル名称／Lv入力、武器・防具名称／信用という限定された境界ではなく、header行、候補dialog header、他の全列境界へ広げた。また、G17 headerの指定列の左寄せと、防具clear buttonの折り返し時の固定高・中央配置を満たしていなかった。
-- 一次対応: G17のレビュー指摘6へ罫線の対象範囲、header左寄せ、clear buttonの寸法・配置を記録した。table罫線の指示では、対象state（header / data行 / 候補行）と対象列境界をCSS selectorへ一対一で対応させる。
-
-### Removed existing data-row dividers while correcting header dividers
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` とshared skill UIのdata行
-- 観測した失敗: header行から罫線を外す訂正で、data行の既存の全列境界も削除し、名称／Lv入力と名称／信用だけを残す実装へ狭めた。ユーザー指定はheaderのみ罫線なし、data行は全列境界を維持することであった。
-- 一次対応: G17のレビュー指摘7へheaderとdata行の罫線を分離する契約を記録した。table CSSの変更では、headerとdata行のselectorが重ならないこと、既存の境界を削除していないことを差分で確認する。
-
-### Fixed only one of the two requested derived-value boxes
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の性能式の元値・最終値
-- 観測した失敗: ユーザーが「算出値」を固定幅にするよう求めた際、最終値だけを対象にし、同じread-only算出値である元値を可変幅のまま残した。
-- 一次対応: G17のレビュー指摘9へ元値・最終値の両方を同一固定幅にする契約を記録した。複数の同種表示を含む指示では、対象要素を列挙してからCSS selectorとgrid列へ対応させる。
-
-### Fixed individual widths without correcting the formula alignment
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の性能式
-- 観測した失敗: 算出値枠を固定幅へそろえる修正で、性能列全体へ伸びる計算式のlayoutを残した。ユーザーは枠内の値ではなく、計算式全体を左寄せにするよう求めていた。
-- 一次対応: G17のレビュー指摘10へ、内容幅の式全体を性能列の左端へ置く契約を記録した。個別要素の幅と親layoutのalignmentを別々に確認する。
-
 ### Estimated the paired-value width too narrowly
 
 #### 2026-07-29
@@ -1357,33 +1149,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
 - 観測した失敗: 可読性を戻す修正で各算出値枠を`2.125rem`に広げ、left paddingもright paddingより広くした。その結果、式全体が再び横overflowし、枠の余白も不自然に見えた。
 - 一次対応: G17のレビュー指摘16へ、mobile式全体の幅と左右対称のpaddingを含めた`1.875rem`固定枠を記録した。個別枠を調整する際は、mobile式の合計幅と余白の対称性を同時に確認する。
-
-### Kept a button's minimum width wider than its mobile grid column
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の防具clear button
-- 観測した失敗: mobileのclear button列を`2.75rem`にしたまま、button自身の`min-width: 3rem`を残したため、明確な横overflowを起こした。button高も性能inputより大きかった。
-- 一次対応: G17のレビュー指摘17へ、desktopとmobileのbutton寸法、mobile列幅、input高との整合を記録した。固定幅controlでは、min-widthと親grid列を同じviewportごとに照合する。
-
-### Reduced the button without accounting for its three-character label
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile防具clear button
-- 観測した失敗: overflowを直すためbuttonを縮めた後、mobile共通ruleによって「クリア」の文字を`.6875rem`へ上書きし、buttonの幅も列に明示的に合わせなかった。そのため、右端が描画されていないように見える状態になった。
-- 一次対応: G17のレビュー指摘18へ、列幅いっぱいのbutton、`min-width: 0`、既定の`.625rem`ラベルを記録した。controlを縮小する時は、実ラベルの文字数・font-size・borderを含めた内容幅と、親列への確実な収まりを確認する。
-
-### Treated a cross-viewport button defect as mobile-only
-
-#### 2026-07-29
-
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の防具clear button
-- 観測した失敗: 右側が表示されない問題をmobileだけのものと決めつけ、`width: 100%`を追加した。desktopの同じbuttonの表示を直さず、mobileのbuttonも不要に列幅いっぱいになった。
-- 一次対応: G17のレビュー指摘19へ、desktop／mobile両方の明示button幅、最大幅、中央配置を記録した。viewport限定の修正をする前に、同じComponentの全breakpointで共通の表示契約を確認する。
 
 ### Adjusted button sizing without inspecting the border cascade
 
@@ -1528,26 +1293,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-28-sheet-ccfolia` の`CharacterSheetContainer` Component test
 - 観測した失敗: G28の確認・Clipboard通知結線を追加した直後、既存のresponsive reset / image errorのfocus復帰testを含むContainer全体を2回実行した。1回目はjsdomでnative Escapeを再現できない既存assertion、2回目は同じ既存testの画像エラーdialogからmenu triggerへのfocus復帰assertionで失敗し、CCFOLIA対象testを切り分ける前に同じ広いtest実行を繰り返した。
 - 一次対応: CCFOLIAのContainer結線は対象test名で単独実行し、ActionPane、CCFOLIA dialog、root-state hook、Node logic / Clipboard adapterを別々に確認した。reset test harnessがerrorを閉じた直後に本番root stateでは保持される`isImageErrorFromReset`までfalseにしていたため、本番と同じ保持契約へ修正した。対象Component / hook testは55件すべて通過した。
-
-### Broke the Help dialog body scroll while correcting outer scroll
-
-#### 2026-07-30
-
-- source: user
-- failure category: visual implementation verification
-- 発生箇所: `ex-02-30-sheet-help` の`CharacterSheetDialog` shared CSS
-- 観測した失敗: ヘルプdialogの外側scrollを抑える調整で、surfaceの最大高を誤って内側の高さへ計算し直した。その結果、本文領域が内容高まで広がり、本文自体をscrollできなくなったとユーザーから指摘された。
-- 一次対応: surfaceには既存の最大高継承を戻し、native dialog側を`overflow: clip`として外側scrollだけを禁止した。実行時にdialogの`scrollTop`が`0`のまま、本文領域の`scrollTop`が移動できることを確認してから、ユーザーレビューへ戻す。
-
-### Applied the example treatment to the calculated-value explanation
-
-#### 2026-07-30
-
-- source: user
-- failure category: implementation accuracy
-- 発生箇所: `ex-02-30-sheet-help` の`CharacterSheetHelpDialog`
-- 観測した失敗: 「例」のCallout対応色を追加する際、直前にある「算出値」の説明paragraphへ`example` classを付与し、実際の例文へ付与しなかった。
-- 一次対応: classを例文のparagraphへ移した。class追加時は、可視ラベルと同じparagraphであることをDOM上で確認する。
 
 ### Reported an obsolete VRT capture as a current dialog defect
 

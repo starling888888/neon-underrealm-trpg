@@ -2,7 +2,7 @@
 
 ## 目的
 
-active failure logを監査し、再発した失敗だけに軽量な恒久対応を置く。単発または再現性のないagent起因の記録は適切にno-actionへ移し、active logの可読性を回復する。
+active failure logを監査し、再発した失敗だけに軽量な恒久対応を置く。単発または再現性のないagent起因の記録は適切にno-actionへ移し、機能固有で将来の観測頻度が低いuser / review由来の記録は第三のarchiveへ分け、active logの可読性を回復する。
 
 ## 背景
 
@@ -16,6 +16,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 - `docs/agent-failure-log.md`のactive entryを、ユーザー承認済みの基準で分類する。
 - `docs/agent-failure-log-done.md`と`docs/agent-failure-log-no-action.md`へ、原文・移動理由・移動日を保持してentryを移す。
+- ユーザーが指定した機能固有のuser / review由来entryは、原文・archive理由・移動日を保持して`docs/agent-failure-log-archive.md`へ移す。このarchiveは`done`でも`no-action`でもなく、workflow、承認、review運用、検証手順、権限、Git操作に関するentryは移さない。
 - まず、`source: self`または非human review由来と確認できる`source: review`のうち、3回連続の再現条件を満たさないno-action候補をtitle、source、判定根拠とともに一覧化する。ユーザーが対象entryのno-action扱いを明示確認した後に移す。カテゴリ未記入の`source: self` entryは、active logでH3 titleの重複がない場合にno-action候補とする。`source: user`、`agent self-report`、human review由来か判定不能な`source: review`は機械移動の対象外とする。
 - no-action移動は4カテゴリの恒久対応と`done`移動より先に行い、ユーザーのレビューと明示的なcommit指示を受けて専用commitにする。
 - 次の4カテゴリへ、長文ではない最小の恒久対応を追加する。
@@ -48,20 +49,22 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] `validation command targeting`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。3件はno-actionへ移した。
 - [x] 各カテゴリは、原文・恒久対応先・移動日を保持して対応済みentryを`done`へ、またはユーザー判断により`no-action`へ移した。
 - [x] 各カテゴリの`done`または`no-action`移動は、ユーザーの明示的なcommit指示を受けた同じカテゴリcommitへ含めた。
-- [ ] 4カテゴリの対応・移動後にactive failure logの行数を計測し、単発失敗を減らす次の整理方針を報告した。
-- [ ] `npm run format:md` と `npm run check:md` が通る。
+- [x] ユーザー指示により、機能固有のuser / review由来entryだけを、`done`／`no-action`と異なるarchiveへ原文を保持して移した。
+- [x] 4カテゴリの対応・移動後にactive failure logの行数を計測し、単発失敗を減らす次の整理方針を報告した。
+- [x] `npm run format:md` と `npm run check:md` が通る。
 
 ## チェックポイント
 
 - [x] test / command失敗は、カテゴリの合計件数ではなく、同一testまたは同一commandの連続失敗回数で分類した。
 - [x] 4カテゴリごとのactive occurrence countと代表的な対象task / fileを、no-action移動前に報告した。
-- [ ] 3回連続の閾値を、agent自身が観測した通常のtest / command失敗だけに適用した。
+- [x] 3回連続の閾値を、agent自身が観測した通常のtest / command失敗だけに適用した。
 - [x] sourceが`self`または非human review由来と確認できる`review`で、再現条件を満たさないentryをno-action候補として確認した。
 - [x] `source: user`、`agent self-report`、human review由来か判定不能な`source: review`を、機械的なno-action移動の対象から除外した。カテゴリ未記入の`source: self` entryはH3 titleの重複を確認して分類した。
-- [ ] 根拠照合規約は、既存の強い規約を重複させず短く追加した。
-- [ ] 1カテゴリごとに、具体的な対応案と移動候補をユーザーへ提示し、編集前の明示承認と実装後のhandled確認を得た。
-- [ ] 1カテゴリごとに、ユーザーが明示指示した場合だけ承認済みの変更を独立したcommitにした。
-- [ ] failure logのentryを削除せず、doneまたはno-actionへ追跡可能な形で移した。
+- [x] 根拠照合規約は、既存の強い規約を重複させず短く追加した。
+- [x] 1カテゴリごとに、具体的な対応案と移動候補をユーザーへ提示し、編集前の明示承認と実装後のhandled確認を得た。
+- [x] 1カテゴリごとに、ユーザーが明示指示した場合だけ承認済みの変更を独立したcommitにした。
+- [x] failure logのentryを削除せず、done、no-action、またはarchiveへ追跡可能な形で移した。
+- [x] 機能固有archiveは、workflow由来のreview指摘を含めず、`done`／`no-action`と区別した。
 - [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
@@ -69,6 +72,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - `docs/agent-failure-log.md`
 - `docs/agent-failure-log-done.md`
 - `docs/agent-failure-log-no-action.md`
+- `docs/agent-failure-log-archive.md`
 - `AGENTS.md`、`.agents/skills/*/SKILL.md`、`.agents/rules/*.md`のうち、各カテゴリの軽量な恒久対応に必要な最小限のファイル
 
 ## レビュー観点
