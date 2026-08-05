@@ -39,9 +39,9 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 ## 完了条件
 
 - [ ] active entryの分類基準と移動対象を、ユーザー承認済みの基準で一覧化した。
-- [ ] no-action候補一覧を提示し、対象entryのno-action扱いについてユーザーの明示確認を得た。
-- [ ] 単発または再現条件を満たさないno-action対象entryのうち、明示確認済みentryだけを4カテゴリの恒久対応より先に移し、原文・disposition・移動日を保持した。
-- [ ] no-action移動を、ユーザーのレビューと明示的なcommit指示を受けた専用commitにした。
+- [x] no-action候補一覧を提示し、対象entryのno-action扱いについてユーザーの明示確認を得た。
+- [x] 単発または再現条件を満たさないno-action対象entryのうち、明示確認済みentryだけを4カテゴリの恒久対応より先に移し、原文・disposition・移動日を保持した。
+- [x] no-action移動を、ユーザーのレビューと明示的なcommit指示を受けた専用commitにした。
 - [ ] `test authoring discipline`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
 - [ ] `verification accuracy`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
 - [ ] `repeated Playwright environment failure`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
@@ -53,16 +53,16 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 ## チェックポイント
 
-- [ ] test / command失敗は、カテゴリの合計件数ではなく、同一testまたは同一commandの連続失敗回数で分類した。
+- [x] test / command失敗は、カテゴリの合計件数ではなく、同一testまたは同一commandの連続失敗回数で分類した。
 - [ ] 4カテゴリごとのactive occurrence countと代表的な対象task / fileを、no-action移動前に報告した。
 - [ ] 3回連続の閾値を、agent自身が観測した通常のtest / command失敗だけに適用した。
-- [ ] sourceが`self`または非human review由来と確認できる`review`で、再現条件を満たさないentryをno-action候補として確認した。
-- [ ] `source: user`、`agent self-report`、human review由来か判定不能な`source: review`、カテゴリ未記入entryを、機械的なno-action移動の対象から除外した。
+- [x] sourceが`self`または非human review由来と確認できる`review`で、再現条件を満たさないentryをno-action候補として確認した。
+- [x] `source: user`、`agent self-report`、human review由来か判定不能な`source: review`、カテゴリ未記入entryを、機械的なno-action移動の対象から除外した。
 - [ ] 根拠照合規約は、既存の強い規約を重複させず短く追加した。
 - [ ] 1カテゴリごとに、具体的な対応案と移動候補をユーザーへ提示し、編集前の明示承認と実装後のhandled確認を得た。
 - [ ] 1カテゴリごとに、ユーザーが明示指示した場合だけ承認済みの変更を独立したcommitにした。
 - [ ] failure logのentryを削除せず、doneまたはno-actionへ追跡可能な形で移した。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 

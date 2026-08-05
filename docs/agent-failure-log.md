@@ -257,16 +257,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーが縁の「対象」と「関係」へ入力できないと報告した。`useBondsSectionProps`は各inputの`onChange`で`useFieldArray.update()`を呼ぶため、React Hook Formが行をunmount / remountし、キー入力ごとにfocusを失う。`isResolved`、画面上の「覚悟」が選択済みなら意図的にdisabledになる別契約もあるが、今回の原因ではなかった。G26のJSON出力差分は入力更新を持たず、この挙動を変更していない。
 - 一次対応: previewを停止し、先の覚悟による入力ロックという誤った切り分けを訂正した。ユーザーの明示指示後、`update()`ではなく対象fieldへの`setValue()`を使う実装修正と、連続キー入力後の値・focusを確認するComponent testを追加し、`fcefd86 fix: preserve bond input focus`としてcommitした。
 
-### E2E search-modal tests used the visual server port during the G26 run
-
-#### 2026-07-30
-
-- source: self
-- failure category: repeated Playwright test-configuration failure
-- 発生箇所: `ex-02-26-sheet-json-export` の`npm run test:e2e:run`
-- 観測した失敗: G26のcharacter-sheet E2Eは成功したが、同じe2e command内でsearch-modalの4件が`http://127.0.0.1:4321`へPagefindを要求して`ECONNREFUSED`になった。e2e configのweb serverは`4322`であり、search testが`visualBaseUrl`を参照していた。
-- 一次対応: G26の範囲外の既存テスト設定不整合として修正せず、JSON出力の対象browser behavior成功と区別して記録した。検索modalのE2E server URL統一は別taskで扱う。
-
 ### Omitted bond-limit errors and styled the wrong mobile control
 
 #### 2026-07-30
@@ -325,16 +315,6 @@ source種別は以下を使う。
 - 発生箇所: `レビュー指摘 7` の`ChecksSection` component test
 - 観測した失敗: `CharacterSheetSectionFrame`が折りたたみ時も子contentをmountしたままにする実装へ変えた後、旧来のDOM不在assertionを可視性assertionへ置き換えた。しかし、このVitest設定で導入されていない`toBeVisible` matcherを確認せずに再実行し、同じ対象testを2回失敗させた。
 - 一次対応: 依存するmatcherを使わず、折りたたみwrapperの標準`hidden`属性を確認するassertionへ変更する。以後、matcherを新たに使う前にtest setupの導入状況を確認する。
-
-### Reported G22 visual and requirement checks as complete without covering required states
-
-#### 2026-07-29
-
-- source: review
-- failure category: unverified completion and visual review coverage
-- 発生箇所: `ex-02-22-sheet-special-items-integration` のVisual Review 1と完了条件
-- 観測した失敗: 未選択で手動追加したカテゴリのwarning frame stateをE2E / VRTへ含めず、スミの最大体力actual screenshotで`自動算出値 + 修正 = 最終値`が成立していないことも見落とした。また、信用超過を小銭修正から独立して判定する要件をtestで固定せず、完了条件を確認済みと記録した。
-- 一次対応: レビュー指摘4としてcurrent issueへ再open条件、実装方針、未完了checklistを記録し、該当完了条件・Visual Review checkpointを未チェックへ戻した。修正と再検証はユーザー承認後に限定する。
 
 ### Requested privilege escalation after the user had already authorized the action
 
@@ -1905,16 +1885,6 @@ source種別は以下を使う。
 - 観測した失敗: `@ccfolia-copy`を完全tagとして扱う正規表現を2回指定したが、実際のtagは`@ccfolia-copy-confirm`、`@ccfolia-copy-success`、`@ccfolia-copy-failure`であり、Playwrightが対象なしで終了した。
 - 一次対応: VRT scenarioの実際のtagを先に確認し、3 stateをまとめて選ぶprefix `@ccfolia-copy`でtarget限定capture・baseline更新・通常比較を実行した。
 
-### Chained two Git staging operations in one shell command
-
-#### 2026-07-30
-
-- source: self
-- failure category: Git operation discipline
-- 発生箇所: `ex-02-28-sheet-ccfolia`のcommit準備
-- 観測した失敗: repository ruleが状態変更Git操作を1件ずつ実行するよう定めるなか、通常ファイルのstageとignoreされたcanonical snapshotのforce stageを`&&`で連結した。
-- 一次対応: stage対象がCCFOLIA Gateとユーザー承認済みの9枚のbaselineだけであることを確認し、手順逸脱を本logへ記録した。以後のstatus確認、staged diff確認、commit、pushはすべて単独のGit操作として実行する。
-
 ### Repeatedly failed the CCFOLIA Container test while changing its fixture
 
 #### 2026-07-30
@@ -1945,16 +1915,6 @@ source種別は以下を使う。
 - 観測した失敗: ヘルプdialogの外側scrollを抑える調整で、surfaceの最大高を誤って内側の高さへ計算し直した。その結果、本文領域が内容高まで広がり、本文自体をscrollできなくなったとユーザーから指摘された。
 - 一次対応: surfaceには既存の最大高継承を戻し、native dialog側を`overflow: clip`として外側scrollだけを禁止した。実行時にdialogの`scrollTop`が`0`のまま、本文領域の`scrollTop`が移動できることを確認してから、ユーザーレビューへ戻す。
 
-### Chained local validation commands
-
-#### 2026-07-30
-
-- source: self
-- failure category: command execution discipline
-- 発生箇所: `ex-02-30-sheet-help` のformatterとMarkdown check
-- 観測した失敗: shell commandを`&&`で連結しないrepository ruleに反して、Biome formatterと`npm run check:md`を一つのcommandとして実行した。
-- 一次対応: 以後のformatter、test、check、buildはそれぞれ個別のcommandとして実行する。
-
 ### Applied the example treatment to the calculated-value explanation
 
 #### 2026-07-30
@@ -1974,16 +1934,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-30-sheet-help` のHelp dialog contents review報告
 - 観測した失敗: 先に作成されたVRT captureで最下部のヘッダーと閉じる操作が見えないことを、現行preview・現行buildで再captureせず、実装の外側scroll不備として報告した。ユーザーからVRT側の問題ではないかと指摘された。
 - 一次対応: VRT scenarioのscroll対象が`header + div`の本文要素だけであることを確認し、実行時にdialogの`scrollTop`が`0`、本文の`scrollTop`だけが最大値へ移動することをdesktop / tablet / mobileで確認した。現行4321 previewに対して9状態を再captureし、すべてでheaderと閉じる操作が残ることを原寸画像で確認した。VRT captureをreview入力へ渡す前に、現行build由来であることと対象stateを再確認する。
-
-### Repeated formatting check failure during Presenter memoization
-
-#### 2026-07-30
-
-- source: self
-- failure category: validation formatting discipline
-- 発生箇所: `ex-02-31-sheet-integration` のPresenter再レンダリング防止リファクタ
-- 観測した失敗: 最初の`check`で新規Hook記述の整形差分を見落とし、formatter適用後の再実行でも`ProfileSection`のReact import順がBiome規則に合わず、同じformat検証を再度失敗させた。
-- 一次対応: import順をBiome指定へ修正し、最終検証は`format`後に`check`を単独実行して確認する。
 
 ### Left selected drugs visually indistinguishable from zero-set items
 

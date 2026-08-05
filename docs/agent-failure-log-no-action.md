@@ -180,3 +180,68 @@
 
 - disposition: user judged no permanent countermeasure necessary
 - moved: 2026-07-23
+
+### E2E search-modal tests used the visual server port during the G26 run
+
+#### 2026-07-30
+
+- source: self
+- failure category: repeated Playwright test-configuration failure
+- 発生箇所: `ex-02-26-sheet-json-export` の`npm run test:e2e:run`
+- 観測した失敗: G26のcharacter-sheet E2Eは成功したが、同じe2e command内でsearch-modalの4件が`http://127.0.0.1:4321`へPagefindを要求して`ECONNREFUSED`になった。e2e configのweb serverは`4322`であり、search testが`visualBaseUrl`を参照していた。
+- 一次対応: G26の範囲外の既存テスト設定不整合として修正せず、JSON出力の対象browser behavior成功と区別して記録した。検索modalのE2E server URL統一は別taskで扱う。
+
+- disposition: user-directed no-action; one self-reported command configuration incident
+- moved: 2026-08-05
+
+### Reported G22 visual and requirement checks as complete without covering required states
+
+#### 2026-07-29
+
+- source: review
+- failure category: unverified completion and visual review coverage
+- 発生箇所: `ex-02-22-sheet-special-items-integration` のVisual Review 1と完了条件
+- 観測した失敗: 未選択で手動追加したカテゴリのwarning frame stateをE2E / VRTへ含めず、スミの最大体力actual screenshotで`自動算出値 + 修正 = 最終値`が成立していないことも見落とした。また、信用超過を小銭修正から独立して判定する要件をtestで固定せず、完了条件を確認済みと記録した。
+- 一次対応: レビュー指摘4としてcurrent issueへ再open条件、実装方針、未完了checklistを記録し、該当完了条件・Visual Review checkpointを未チェックへ戻した。修正と再検証はユーザー承認後に限定する。
+
+- disposition: user-directed no-action; one non-human-review entry
+- moved: 2026-08-05
+
+### Chained two Git staging operations in one shell command
+
+#### 2026-07-30
+
+- source: self
+- failure category: Git operation discipline
+- 発生箇所: `ex-02-28-sheet-ccfolia`のcommit準備
+- 観測した失敗: repository ruleが状態変更Git操作を1件ずつ実行するよう定めるなか、通常ファイルのstageとignoreされたcanonical snapshotのforce stageを`&&`で連結した。
+- 一次対応: stage対象がCCFOLIA Gateとユーザー承認済みの9枚のbaselineだけであることを確認し、手順逸脱を本logへ記録した。以後のstatus確認、staged diff確認、commit、pushはすべて単独のGit操作として実行する。
+
+- disposition: user-directed no-action; one self-reported incident
+- moved: 2026-08-05
+
+### Chained local validation commands
+
+#### 2026-07-30
+
+- source: self
+- failure category: command execution discipline
+- 発生箇所: `ex-02-30-sheet-help` のformatterとMarkdown check
+- 観測した失敗: shell commandを`&&`で連結しないrepository ruleに反して、Biome formatterと`npm run check:md`を一つのcommandとして実行した。
+- 一次対応: 以後のformatter、test、check、buildはそれぞれ個別のcommandとして実行する。
+
+- disposition: user-directed no-action; one self-reported incident
+- moved: 2026-08-05
+
+### Repeated formatting check failure during Presenter memoization
+
+#### 2026-07-30
+
+- source: self
+- failure category: validation formatting discipline
+- 発生箇所: `ex-02-31-sheet-integration` のPresenter再レンダリング防止リファクタ
+- 観測した失敗: 最初の`check`で新規Hook記述の整形差分を見落とし、formatter適用後の再実行でも`ProfileSection`のReact import順がBiome規則に合わず、同じformat検証を再度失敗させた。
+- 一次対応: import順をBiome指定へ修正し、最終検証は`format`後に`check`を単独実行して確認する。
+
+- disposition: user-directed no-action; fewer than three consecutive formatting-check failures
+- moved: 2026-08-05
