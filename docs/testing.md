@@ -47,6 +47,7 @@ character-sheetの現行構成では、`tests/node/character-sheet/`がlogic、s
 - E2Eは公開route、実ブラウザAPI、複数層をまたぐ代表フローなど、下位層で置き換えられない理由を持つこと。
 - E2Eのlocatorはtest-only属性の追加ではなく、既存のrole、accessible name、label、実際の構造を優先すること。
 - VRTは視覚契約、E2Eはbrowser behavior、Vitestは局所的な振る舞いを担当し、同じ分岐を目的なく重複させていないこと。
+- matcherが未提供または不明でtestが失敗した場合は、実装・再実行の前にContext7でVitestまたはPlaywrightの公式APIを確認する。使用可否はContext7だけで判断せず、このリポジトリの依存関係、test setup、既存testを照合する。
 
 ## E2E、VRT、Public E2Eの責務
 

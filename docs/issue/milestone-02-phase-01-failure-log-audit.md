@@ -53,6 +53,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] 各カテゴリの`done`または`no-action`移動は、ユーザーの明示的なcommit指示を受けた同じカテゴリcommitへ含めた。
 - [x] ユーザー指示により、機能固有のuser / review由来entryだけを、`done`／`no-action`と異なるarchiveへ原文を保持して移した。
 - [x] 4カテゴリの対応・移動後にactive failure logの行数を計測し、単発失敗を減らす次の整理方針を報告した。
+- [x] `component-test assertion discipline`のmatcher確認手順をユーザー承認後に`docs/testing.md`へ追加し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
 - [x] `npm run format:md` と `npm run check:md` が通る。
 
 ## チェックポイント
@@ -75,6 +76,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - `docs/agent-failure-log-done.md`
 - `docs/agent-failure-log-no-action.md`
 - `docs/agent-failure-log-archive.md`
+- `docs/testing.md`
 - `AGENTS.md`、`.agents/skills/*/SKILL.md`、`.agents/rules/*.md`のうち、各カテゴリの軽量な恒久対応に必要な最小限のファイル
 
 ## レビュー観点
