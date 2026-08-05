@@ -8,7 +8,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 `docs/agent-failure-log/active.md`には、カテゴリごとの発生数だけでは再発性を判定できないtest / command失敗と、完了根拠の不足を示す記録が混在している。
 
-`docs/issue/milestone-02/plan.md`のPhase 1にある「`docs/agent-failure-log/active.md` の未反映項目を監査し、必要な恒久対応を計画する。」を、このissueの作業契約とする。
+`docs/issue/milestone-02/plan.md`のPhase 1にある`milestone-02-phase-01-failure-log-audit` entryを、このissueの作業契約とする。
 
 関連TODOは確認したが、failure log auditに対応する項目はない。
 
@@ -180,5 +180,31 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] milestone planのcurrent issue entryをpost-mergeで検索可能なslug・checkbox形式にした。
 - [x] activeのChromium sandbox起動失敗2 entryをno-actionへ移し、activeから除外した。
 - [x] activeにChromium sandbox起動失敗を主題とするentryが残っていないことを確認した。
+- [x] `npm run check:md` が通った。
+- [x] `git diff --check` が通った。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- current issueの背景が、review指摘3で置換済みのmilestone planの旧一般説明を引用している。
+- `docs/deployment.md`が、Markdown-onlyではQuality CIを起動しない旧運用を説明しており、Markdown Checkと`.codex/**/*.toml`除外を含む現行CI分岐と一致しない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `docs/issue/milestone-02/plan.md`はslug付きの未完了entryへ更新済みである。`docs/deployment.md`は`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけを除外してQualityのみ実行すると記載する一方、`ci.yml`はMarkdown-onlyでMarkdown Checkを実行し、`.codex/**/*.toml`だけをworkflow triggerから除外する。
+- not routed: `dorny/paths-filter`の`some-with-excludes`は公式v4 READMEで有効なpredicateとして確認でき、head commitの`changes` jobもsuccessしたため、blocker指摘はinvalidとした。archiveのsource混在はユーザー指定として対応対象外とする。third-party actionのSHA固定とbranch protectionへの影響はリポジトリ全体のCI security policyに関する判断が必要なため、今回のcurrent-issue fixへは取り込まない。
+
+### 対応方針
+
+- issue背景をslug付きmilestone plan entry参照へ更新する。
+- deployment文書を、Markdown-only、implementation-only、mixed、`.codex/**/*.toml` onlyのCI分岐とreusable workflow構成へ更新する。
+
+### 対応完了チェックリスト
+
+- [x] current issueの背景を現行milestone plan entryへ整合した。
+- [x] deployment文書のCI分岐とreusable workflow説明を現行実装へ整合した。
 - [x] `npm run check:md` が通った。
 - [x] `git diff --check` が通った。
