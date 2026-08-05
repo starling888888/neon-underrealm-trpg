@@ -44,4 +44,8 @@ npx biome check --write <changed-code-files>
 
 If `.md` files were created or edited, run the Markdown formatter before reporting, unless the current issue explicitly says not to. If Markdown-only changes were made, `npm run build` may be skipped when no `.mdx`, Astro, TypeScript, CSS, config, package, generated data, image, or workflow files changed.
 
-After work, inspect `docs/agent-failure-log.md` for categories with 3 or more active entries, excluding formatter- or linter-only entries, and report whether such categories exist.
+After work, count categories with 3 or more active entries in
+`docs/agent-failure-log.md`, excluding formatter- or linter-only entries, and
+report whether such categories exist. Do not load the full log for this check;
+read only a matching category when reporting a new failure. Read the full
+active log only for an explicit failure-log audit.

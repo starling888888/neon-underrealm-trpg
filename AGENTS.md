@@ -227,7 +227,7 @@ npm run build
 
 報告形式は `.agents/rules/work-report.md` を参照する。issueにGroup単位の報告形式がある場合は、それに従う。
 
-作業後は `docs/agent-failure-log.md` を確認し、同じ失敗カテゴリに3回以上の発生詳細が積み重なっていないか報告する。
+作業後は `docs/agent-failure-log.md` の全文を常時コンテキストへ載せず、3回以上のactive categoryを集計して確認・報告する。失敗を追記する時は、関連するcategoryとtitleだけを検索する。`failure-log-audit`を明示された時だけactive log全文を読む。
 
 ---
 

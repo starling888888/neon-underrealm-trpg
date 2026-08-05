@@ -57,6 +57,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] `responsive layout measurement`の寸法確認手順をユーザー承認後にVisual Review skillへ追加し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
 - [x] `review-workflow order`の既存規約を恒久対応として記録し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
 - [x] `visual implementation verification`の既存規約を恒久対応として記録し、ユーザーのdone指示に従ってcategory全体を対応済み履歴へ移した。
+- [x] 日常taskではactive failure log全文を読まず、失敗追記時のcategory検索と作業後の3回以上category集計だけを行い、明示的なfailure-log audit時だけ全文を読む運用を記録した。
 - [x] `npm run format:md` と `npm run check:md` が通る。
 
 ## チェックポイント

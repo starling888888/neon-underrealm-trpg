@@ -68,6 +68,8 @@ source種別は以下を使う。
 - ユーザーが指定した機能固有のuser / review由来failureは、未対応の意味を保ったまま `docs/agent-failure-log-archive.md` へ移せる。これは`done`でも`no-action`でもない。
 - review-to-issueでfailure-log候補を記録しても、review-to-issueの停止地点は変えない。記録後はユーザー確認を待つ。
 - 同じfailureカテゴリに3回以上の発生詳細が積み重なっている場合は、作業報告でユーザーに通知し、恒久対応候補として明示する。formatterまたはlinterのみの既存記録は、この集計と通知の対象外とする。
+- 日常taskではactive log全文をコンテキストへ載せない。失敗を追記する時は、関連するcategoryとtitleを検索して既存entryを照合する。作業後は3回以上のactive categoryを集計し、該当categoryだけを読む。
+- `failure-log-audit`を明示された時だけactive log全文を読み、カテゴリの再分類、恒久対応の検討、done / no-action / archiveへの移動を行う。
 
 この方針の適用前に記録されたformatterまたはlinterのみのentryは、ユーザー確認と明示的な整理指示を受けて`docs/agent-failure-log-done.md`へ移す。
 
