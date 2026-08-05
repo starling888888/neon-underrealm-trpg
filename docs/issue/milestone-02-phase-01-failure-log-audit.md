@@ -45,16 +45,16 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] `test authoring discipline`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
 - [x] `verification accuracy`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
 - [x] `repeated Playwright environment failure`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。Chromium sandbox起動失敗4件はno-actionへ移した。
-- [ ] `validation command targeting`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
-- [ ] 各カテゴリは、原文・恒久対応先・移動日を保持して対応済みentryを`done`へ移した。
-- [ ] 各カテゴリの`done`移動は、ユーザーの明示的なcommit指示を受けた同じカテゴリcommitへ含めた。
+- [x] `validation command targeting`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。3件はno-actionへ移した。
+- [x] 各カテゴリは、原文・恒久対応先・移動日を保持して対応済みentryを`done`へ、またはユーザー判断により`no-action`へ移した。
+- [x] 各カテゴリの`done`または`no-action`移動は、ユーザーの明示的なcommit指示を受けた同じカテゴリcommitへ含めた。
 - [ ] 4カテゴリの対応・移動後にactive failure logの行数を計測し、単発失敗を減らす次の整理方針を報告した。
 - [ ] `npm run format:md` と `npm run check:md` が通る。
 
 ## チェックポイント
 
 - [x] test / command失敗は、カテゴリの合計件数ではなく、同一testまたは同一commandの連続失敗回数で分類した。
-- [ ] 4カテゴリごとのactive occurrence countと代表的な対象task / fileを、no-action移動前に報告した。
+- [x] 4カテゴリごとのactive occurrence countと代表的な対象task / fileを、no-action移動前に報告した。
 - [ ] 3回連続の閾値を、agent自身が観測した通常のtest / command失敗だけに適用した。
 - [x] sourceが`self`または非human review由来と確認できる`review`で、再現条件を満たさないentryをno-action候補として確認した。
 - [x] `source: user`、`agent self-report`、human review由来か判定不能な`source: review`、カテゴリ未記入entryを、機械的なno-action移動の対象から除外した。
@@ -85,5 +85,6 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - Gate作成またはGate分割は行わない。このissue単体を実装契約とする。
 - issue reviewerは、ユーザーがこのissueをhuman reviewした後に明示指示した場合だけ実行する。
 - no-action対象は、ユーザーが明示したsource / 再現条件に一致するentryだけとする。`source: review`のhuman review由来を機械判定できない場合は、移動せずユーザー判断を待つ。
-- 4カテゴリのentryを`done`へ移す範囲は、no-action移動の結果を前提にカテゴリごとの具体案で確定する。
+- 4カテゴリのentryを`done`または`no-action`へ移す範囲は、no-action移動の結果を前提にカテゴリごとの具体案で確定する。
 - Chromium sandbox起動失敗は、カテゴリの恒久対応後も`done`ではなく`no-action`へ移す。
+- `validation command targeting`は、カテゴリ1で反映した同一commandの3回連続失敗基準を適用し、追加の恒久指示を置かず`no-action`へ移す。

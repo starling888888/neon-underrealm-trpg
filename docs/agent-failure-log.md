@@ -99,26 +99,6 @@ source種別は以下を使う。
 - 観測した失敗: ローカルissueを削除する際、GitHub Issue #190の本文へ削除直前の`docs/issue/milestone-02-phase-01-todo-resolution.md`全文ではなく、英語の要約だけを登録した。closed Issueは完了済みissueの最終契約・完了記録であるため、原文を失わせる登録になった。
 - 一次対応: 削除commit `0f218f0`の親commitからローカルissue原文を取得し、GitHub Issue #190の本文を原文へ復元した。以後、ローカルissueをGitHubへ記録してから削除する作業では、Issue本文と削除直前のファイル内容を照合してから完了を報告する。
 
-### Repeated an unrelated sample-character node test failure during analytics validation
-
-#### 2026-07-31
-
-- source: self
-- failure category: validation command targeting
-- 発生箇所: `ex-05-access-analytics` の `npm test` / `npm run test:node`
-- 観測した失敗: analytics変更と無関係な`tests/node/character-making-sample-characters.test.ts`が2回失敗した。testは`public/sample-charcter/`を参照するが、公開assetと`src/pages/character-making.mdx`は`public/sample-character/`を参照しており、最初のJSON fileを開けず`ENOENT`になる。analyticsのnode testは成功している。
-- 一次対応: current issue外のsample character test / contentsを変更せず、個別実行で原因を確認してanalytics validationの失敗と区別した。後続のユーザー明示指示により、testの参照pathを現行assetへ訂正し、2026-07-31に`npm test`成功を確認した。
-
-### Retried a contract test that attempted a sandbox-blocked nested build
-
-#### 2026-07-31
-
-- source: self
-- failure category: validation command targeting
-- 発生箇所: `ex-05-access-analytics` の`tests/contract/page-navigation-build.test.ts`
-- 観測した失敗: dummy token付きのHTMLを確認するため、Node contract test内から`npm run build:public`を子process起動した。sandboxで`spawnSync npm EPERM`となる失敗を、package script経由と個別詳細取得で2回確認した。また、dummy token build後の`dist/`を直接再実行に再利用し、tokenなし検証がその生成物に依存した。
-- 一次対応: nested buildを削除し、tokenなしpublic buildのHTML contract、layoutの単一配置contract、dummy tokenのJSON serializationを純粋node testへ分離した。以後、build済みartifactを前提にするcontract testから再buildを起動しない。
-
 ### Omitted the Pagefind build step from VRT baseline instructions
 
 #### 2026-07-31
@@ -1694,16 +1674,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-28-sheet-ccfolia` の`CharacterSheetContainer` Component test
 - 観測した失敗: G28の確認・Clipboard通知結線を追加した直後、既存のresponsive reset / image errorのfocus復帰testを含むContainer全体を2回実行した。1回目はjsdomでnative Escapeを再現できない既存assertion、2回目は同じ既存testの画像エラーdialogからmenu triggerへのfocus復帰assertionで失敗し、CCFOLIA対象testを切り分ける前に同じ広いtest実行を繰り返した。
 - 一次対応: CCFOLIAのContainer結線は対象test名で単独実行し、ActionPane、CCFOLIA dialog、root-state hook、Node logic / Clipboard adapterを別々に確認した。reset test harnessがerrorを閉じた直後に本番root stateでは保持される`isImageErrorFromReset`までfalseにしていたため、本番と同じ保持契約へ修正した。対象Component / hook testは55件すべて通過した。
-
-### Retried VRT capture with an unmatched tag expression
-
-#### 2026-07-30
-
-- source: self
-- failure category: validation command targeting
-- 発生箇所: `ex-02-28-sheet-ccfolia`のCCFOLIA dialog VRT capture
-- 観測した失敗: `@ccfolia-copy`を完全tagとして扱う正規表現を2回指定したが、実際のtagは`@ccfolia-copy-confirm`、`@ccfolia-copy-success`、`@ccfolia-copy-failure`であり、Playwrightが対象なしで終了した。
-- 一次対応: VRT scenarioの実際のtagを先に確認し、3 stateをまとめて選ぶprefix `@ccfolia-copy`でtarget限定capture・baseline更新・通常比較を実行した。
 
 ### Broke the Help dialog body scroll while correcting outer scroll
 

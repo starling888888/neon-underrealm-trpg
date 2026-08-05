@@ -297,3 +297,42 @@
 
 - disposition: user-directed no-action; Chromium sandbox launch constraint is retried outside the sandbox
 - moved: 2026-08-05
+
++### Repeated an unrelated sample-character node test failure during analytics validation
+
+#### 2026-07-31
+
+- source: self
+- failure category: validation command targeting
+- 発生箇所: `ex-05-access-analytics` の `npm test` / `npm run test:node`
+- 観測した失敗: analytics変更と無関係な`tests/node/character-making-sample-characters.test.ts`が2回失敗した。testは`public/sample-charcter/`を参照するが、公開assetと`src/pages/character-making.mdx`は`public/sample-character/`を参照しており、最初のJSON fileを開けず`ENOENT`になる。analyticsのnode testは成功している。
+- 一次対応: current issue外のsample character test / contentsを変更せず、個別実行で原因を確認してanalytics validationの失敗と区別した。後続のユーザー明示指示により、testの参照pathを現行assetへ訂正し、2026-07-31に`npm test`成功を確認した。
+
+- disposition: user-directed no-action; fewer than three consecutive failures of the same command
+- moved: 2026-08-05
+
+### Retried a contract test that attempted a sandbox-blocked nested build
+
+#### 2026-07-31
+
+- source: self
+- failure category: validation command targeting
+- 発生箇所: `ex-05-access-analytics` の`tests/contract/page-navigation-build.test.ts`
+- 観測した失敗: dummy token付きのHTMLを確認するため、Node contract test内から`npm run build:public`を子process起動した。sandboxで`spawnSync npm EPERM`となる失敗を、package script経由と個別詳細取得で2回確認した。また、dummy token build後の`dist/`を直接再実行に再利用し、tokenなし検証がその生成物に依存した。
+- 一次対応: nested buildを削除し、tokenなしpublic buildのHTML contract、layoutの単一配置contract、dummy tokenのJSON serializationを純粋node testへ分離した。以後、build済みartifactを前提にするcontract testから再buildを起動しない。
+
+- disposition: user-directed no-action; fewer than three consecutive failures of the same command
+- moved: 2026-08-05
+
+### Retried VRT capture with an unmatched tag expression
+
+#### 2026-07-30
+
+- source: self
+- failure category: validation command targeting
+- 発生箇所: `ex-02-28-sheet-ccfolia`のCCFOLIA dialog VRT capture
+- 観測した失敗: `@ccfolia-copy`を完全tagとして扱う正規表現を2回指定したが、実際のtagは`@ccfolia-copy-confirm`、`@ccfolia-copy-success`、`@ccfolia-copy-failure`であり、Playwrightが対象なしで終了した。
+- 一次対応: VRT scenarioの実際のtagを先に確認し、3 stateをまとめて選ぶprefix `@ccfolia-copy`でtarget限定capture・baseline更新・通常比較を実行した。
+
+- disposition: user-directed no-action; fewer than three consecutive failures of the same command
+- moved: 2026-08-05
