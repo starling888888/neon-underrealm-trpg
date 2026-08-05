@@ -245,3 +245,55 @@
 
 - disposition: user-directed no-action; fewer than three consecutive formatting-check failures
 - moved: 2026-08-05
+
++### Chromium failed before sample-character VRT capture
+
+#### 2026-07-31
+
+- source: self
+- failure category: repeated Playwright environment failure
+- 発生箇所: `55-0-sample-characters` の`@character-making` target限定Visual Review
+- 観測した失敗: `npm run visual:capture -- --grep '@vrt.*@character-making(?:\s|$)'`でdesktop、tablet、mobileの3 targetが、Chromiumの`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`により起動前に失敗した。snapshot、VRT差分、actual screenshotは取得していない。
+- 一次対応: 再試行や代替browser captureを行わず、current issueのVisual Reviewを未確認として記録した。browser環境が利用可能な場所で対象限定VRTと原寸locator screenshotを再実行する。
+
+- disposition: user-directed no-action; Chromium sandbox launch constraint is retried outside the sandbox
+- moved: 2026-08-05
+
+### Chromium failed before the G24 restore-dialog VRT capture
+
+#### 2026-07-30
+
+- source: self
+- failure category: repeated Playwright environment failure
+- 発生箇所: `ex-02-24-sheet-persistence`の`@persistence-restore-error` target限定VRT capture
+- 観測した失敗: desktop、tablet、mobileの3 targetでChromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動できなかった。captureとbaseline比較には到達していない。
+- 一次対応: 同一command内で3回発生したため再試行せず、Node・hook・browser E2Eの結果とは区別してissueへ未確認として記録した。
+
+- disposition: user-directed no-action; Chromium sandbox launch constraint is retried outside the sandbox
+- moved: 2026-08-05
+
+### Chromium failed to launch for a target-limited VRT comparison
+
+#### 2026-07-30
+
+- source: self
+- failure category: repeated Playwright environment failure
+- 発生箇所: `g22-special-items-warning`のdesktop / tablet / mobile VRT比較
+- 観測した失敗: `visual:capture`では3 viewportのlocator screenshotを取得できたが、後続の通常比較では各viewportでChromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動できなかった。snapshot差分の比較処理には到達していない。
+- 一次対応: 原寸captureと既存canonical snapshotを開いて警告frameの二重線を確認した。browser起動環境が回復するまで通常VRT比較は未確認として扱う。
+
+- disposition: user-directed no-action; Chromium sandbox launch constraint is retried outside the sandbox
+- moved: 2026-08-05
+
+### Repeated Chromium sandbox launch failures while adding G20 tooltip VRT
+
+#### 2026-07-29
+
+- source: self
+- failure category: repeated Playwright environment failure
+- 発生箇所: `ex-02-20-sheet-nanomachines` のtooltip VRT 6 state
+- 観測した失敗: 同じtarget限定VRT command内でChromiumが6回連続して`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出し、browser contextを起動できなかった。テストfixtureやsnapshot比較に到達していない。
+- 一次対応: 既存の成功済みナノマシン15 state、E2E、baseline更新とは区別してissueへ未確認範囲を残した。preview serverを維持した直接の`visual:update`再試行ではChromiumが起動し、6 stateのbaseline作成・通常比較・captureを完了した。その後の21 state一括比較では同じ環境障害が再発したため、成功済みの15 stateと6 stateの個別比較結果を保持し、一括再試行はここで停止した。環境起因の発生自体は残し、恒久対応の要否はユーザー確認後に判断する。
+
+- disposition: user-directed no-action; Chromium sandbox launch constraint is retried outside the sandbox
+- moved: 2026-08-05

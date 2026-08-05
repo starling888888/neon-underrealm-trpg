@@ -119,16 +119,6 @@ source種別は以下を使う。
 - 観測した失敗: dummy token付きのHTMLを確認するため、Node contract test内から`npm run build:public`を子process起動した。sandboxで`spawnSync npm EPERM`となる失敗を、package script経由と個別詳細取得で2回確認した。また、dummy token build後の`dist/`を直接再実行に再利用し、tokenなし検証がその生成物に依存した。
 - 一次対応: nested buildを削除し、tokenなしpublic buildのHTML contract、layoutの単一配置contract、dummy tokenのJSON serializationを純粋node testへ分離した。以後、build済みartifactを前提にするcontract testから再buildを起動しない。
 
-### Chromium failed before sample-character VRT capture
-
-#### 2026-07-31
-
-- source: self
-- failure category: repeated Playwright environment failure
-- 発生箇所: `55-0-sample-characters` の`@character-making` target限定Visual Review
-- 観測した失敗: `npm run visual:capture -- --grep '@vrt.*@character-making(?:\s|$)'`でdesktop、tablet、mobileの3 targetが、Chromiumの`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`により起動前に失敗した。snapshot、VRT差分、actual screenshotは取得していない。
-- 一次対応: 再試行や代替browser captureを行わず、current issueのVisual Reviewを未確認として記録した。browser環境が利用可能な場所で対象限定VRTと原寸locator screenshotを再実行する。
-
 ### Omitted the Pagefind build step from VRT baseline instructions
 
 #### 2026-07-31
@@ -176,16 +166,6 @@ source種別は以下を使う。
 - 観測した失敗: 縁の入力済み件数が結べる縁の上限を超える既存errorを集約ViewModelへ渡さず、error時の`danger` classを右下menu buttonではなくヘルプbuttonへ付与した。ユーザーのdev server確認で発見された。
 - 一次対応: 縁上限超過をerror集約と既存の局所error表示へ統一し、`danger` classをmenu buttonへ移す。Node / Component testへ両条件を追加し、E2E・VRT実装前のユーザー確認をやり直す。
 
-### Chromium failed before the G24 restore-dialog VRT capture
-
-#### 2026-07-30
-
-- source: self
-- failure category: repeated Playwright environment failure
-- 発生箇所: `ex-02-24-sheet-persistence`の`@persistence-restore-error` target限定VRT capture
-- 観測した失敗: desktop、tablet、mobileの3 targetでChromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動できなかった。captureとbaseline比較には到達していない。
-- 一次対応: 同一command内で3回発生したため再試行せず、Node・hook・browser E2Eの結果とは区別してissueへ未確認として記録した。
-
 ### Implemented a Container layout exception without reconciling the architecture SSoT
 
 #### 2026-07-30
@@ -195,16 +175,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-23-sheet-action-pane`の`CharacterSheetActionPane`配置
 - 観測した失敗: 子issueがarchitecture正本を適用対象として列挙していたにもかかわらず、`CharacterSheetContainer`直下をForm Presenterとroot dialogに限定する契約と矛盾するActionPane直下配置を実装・完了扱いにした。
 - 一次対応: PR #69 Review 6の有効指摘としてG23 issueへ記録した。ユーザー判断により、ActionPaneをForm Presenterへ移さず、form外のroot-level表示Componentとしてarchitecture正本へ明記して境界を整合させた。関連するbrowser E2Eとtarget VRTを確認した。
-
-### Chromium failed to launch for a target-limited VRT comparison
-
-#### 2026-07-30
-
-- source: self
-- failure category: repeated Playwright environment failure
-- 発生箇所: `g22-special-items-warning`のdesktop / tablet / mobile VRT比較
-- 観測した失敗: `visual:capture`では3 viewportのlocator screenshotを取得できたが、後続の通常比較では各viewportでChromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動できなかった。snapshot差分の比較処理には到達していない。
-- 一次対応: 原寸captureと既存canonical snapshotを開いて警告frameの二重線を確認した。browser起動環境が回復するまで通常VRT比較は未確認として扱う。
 
 ### Added a tooltip accessory despite the user excluding tooltip work
 
@@ -245,16 +215,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-19-sheet-cybernetics` のDocument Review指摘対応
 - 観測した失敗: Document Reviewの再現性提案とユーザーの「他の指摘内容も修正」を、親issueのGate planが定める「G31までcanonical VRT baselineを管理しない」制約より優先した。`canonical-snapshots/visual/character-sheet/`のignoreを外し、Git管理する運用へ変更しようとした。
 - 一次対応: ユーザー指摘後、`.gitignore`とdesign noteをローカル専用baselineの運用へ戻した。G19 issueには、baselineのGit管理・再現性判断をG31へ残すことを明記した。今後はDocument Reviewの提案を実装する前に、親Gate planの後続Gateへの割当てを確認する。
-
-### Repeated Chromium sandbox launch failures while adding G20 tooltip VRT
-
-#### 2026-07-29
-
-- source: self
-- failure category: repeated Playwright environment failure
-- 発生箇所: `ex-02-20-sheet-nanomachines` のtooltip VRT 6 state
-- 観測した失敗: 同じtarget限定VRT command内でChromiumが6回連続して`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出し、browser contextを起動できなかった。テストfixtureやsnapshot比較に到達していない。
-- 一次対応: 既存の成功済みナノマシン15 state、E2E、baseline更新とは区別してissueへ未確認範囲を残した。preview serverを維持した直接の`visual:update`再試行ではChromiumが起動し、6 stateのbaseline作成・通常比較・captureを完了した。その後の21 state一括比較では同じ環境障害が再発したため、成功済みの15 stateと6 stateの個別比較結果を保持し、一括再試行はここで停止した。環境起因の発生自体は残し、恒久対応の要否はユーザー確認後に判断する。
 
 ### Reintroduced the known armor clear-button border cascade defect
 

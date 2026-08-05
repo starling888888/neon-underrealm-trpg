@@ -44,7 +44,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] no-action移動を、ユーザーのレビューと明示的なcommit指示を受けた専用commitにした。
 - [x] `test authoring discipline`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
 - [x] `verification accuracy`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
-- [ ] `repeated Playwright environment failure`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
+- [x] `repeated Playwright environment failure`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。Chromium sandbox起動失敗4件はno-actionへ移した。
 - [ ] `validation command targeting`の具体案をユーザーが明示承認した後に恒久対応と記録整理を行い、実装後にユーザーがhandled扱いを明示確認した。
 - [ ] 各カテゴリは、原文・恒久対応先・移動日を保持して対応済みentryを`done`へ移した。
 - [ ] 各カテゴリの`done`移動は、ユーザーの明示的なcommit指示を受けた同じカテゴリcommitへ含めた。
@@ -86,3 +86,4 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - issue reviewerは、ユーザーがこのissueをhuman reviewした後に明示指示した場合だけ実行する。
 - no-action対象は、ユーザーが明示したsource / 再現条件に一致するentryだけとする。`source: review`のhuman review由来を機械判定できない場合は、移動せずユーザー判断を待つ。
 - 4カテゴリのentryを`done`へ移す範囲は、no-action移動の結果を前提にカテゴリごとの具体案で確定する。
+- Chromium sandbox起動失敗は、カテゴリの恒久対応後も`done`ではなく`no-action`へ移す。
