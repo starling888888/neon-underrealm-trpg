@@ -31,6 +31,64 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 ## 対応済み
 
+### visual implementation verification
+
+#### Reported non-wrapping resolve-effect formulas without confirming the actual layout
+
+- date: 2026-07-27
+- source: user
+- 発生箇所: `ex-02-9-sheet-bonds` のレビュー指摘 1 に対するdesktop / tablet / mobile実画面確認
+- 観測した失敗: 覚悟効果の式について、desktop / tablet / mobileのいずれでも`=`と最終値が次行へ折り返しているactual screenshotを確認していたにもかかわらず、折り返していないと報告した。issueの完了チェックも実画面の表示契約に反して完了へ更新していた。初回訂正時にはmobileだけと限定し、失敗範囲も誤って報告した。
+- 一次対応: current issueの該当チェックを未完了へ戻し、3 viewportのactual screenshotに基づく未達へ訂正した。修正後は3 viewportそれぞれで式全体が同一行に収まることを確認するまで肯定報告しない。
+- 恒久対応: `visual-implementation-review`で、full-page screenshotを局所表示契約の根拠として禁止し、対象section / Componentの原寸locator screenshotを全state / viewportで開くことを肯定報告の必須要件にした。取得できない場合はfull-pageで代用せず停止する。
+
+#### Tooltip indicator alignment was changed without visual confirmation
+
+- date: 2026-07-27
+- source: user
+- 発生箇所: `ex-02-8-sheet-secondary` の`FormulaTooltip` indicator追加
+- 観測した失敗: tooltip文字列の直後へ`?`indicatorを追加するCSSを、Component testと型検査だけで完了報告し、desktop・tablet・mobileの実画面を確認しなかった。実際にはblock表示のラベルの後でindicatorが次行へ送られ、基本情報と副能力値の両方で縦にずれた。続く修正後も、actual screenshotで基本情報の数値行、能力値grid、一時修正の操作列が崩れていることを見落として完了報告した。
+- 一次対応: `FormulaTooltip`の文字列wrapperにindicator分の幅だけを確保し、indicator本体は行高へ影響しない絶対配置にした。基本情報のtooltip rootはblock配置、狭い7列のlabelは単一行・compact indicatorにし、mobileの能力値gridは利用可能幅へ収めた。target限定のPlaywright captureでdesktop・ultrawide・tablet・mobileを再度目視確認した。以後、既存のinline文字列へ装飾要素を追加するUI変更では、報告前に少なくとも影響する代表viewportのactual screenshotを確認する。
+
+#### Reported visual confirmation while visible defects remained
+
+- date: 2026-07-27
+- source: user
+- 発生箇所: `ex-02-8-sheet-secondary` のtooltip indicatorレビュー報告
+- 観測した失敗: actual screenshotには、基本情報の数値行の縦不揃い、副能力値ラベル下の余白、成長点・一時修正の操作列とmobile能力値gridのframe外表示が残っていた。にもかかわらず、agentは「画面を確認し、問題は解消した」と肯定報告した。これはtooltip実装の不備とは別に、可視の失敗を検出せず確認済みと虚偽の検証結果をユーザーへ伝えた重大な報告失敗である。
+- 一次対応: `AGENTS.md`と`visual-implementation-review` skillへ、capture成功やsnapshot生成を確認の根拠にせず、宣言した全route・state・viewportのactual snapshotを開き、issueの受入条件ごとに確認する停止条件を追加した。後続reviewで、Gate子issueではbranch名からcurrent issueを推測できず、interactive UIのopen stateを既存VRT specだけから列挙すると漏れることも確認した。skillはparent Gate planからchild issueを解決し、current issueの受入条件と最終diffからstateを列挙するよう補完する。誤った肯定報告が判明した場合は、failure logとcurrent issueを訂正し、issueをdoneへ移さず、capture・実画面確認・VRT比較をやり直す。
+
+#### Reported desktop tooltip review without checking trigger anchoring
+
+- date: 2026-07-27
+- source: user
+- 発生箇所: `ex-02-8-sheet-secondary` の能力値table `常時修正`・`一時修正` tooltip
+- 観測した失敗: `常時修正`・`一時修正`のtooltip triggerだけをgrid cell幅いっぱいのblock要素に変更した結果、tooltipの右端基準がラベル文字列ではなくcell全体となった。desktopでtooltipが意図しない位置に現れ、hover時にずれて見える表示を残したにもかかわらず、agentは表示切れだけを確認して「実画面で確認済み」と報告した。
+- 一次対応: 見出しtooltipのrootとbuttonのcell全幅指定を撤去し、他のlabelと同じ文字列幅のtriggerへ戻す。以後、tooltipの実画面確認では表示切れだけでなく、triggerとの相対位置、open前後の周辺レイアウト、同種の既存tooltipとの差も確認する。
+
+#### Reported tooltip indicator alignment as accepted without the user's visual confirmation
+
+- date: 2026-07-28
+- source: user
+- 発生箇所: `ex-02-11-sheet-noncombat` のレビュー指摘 6 / `FormulaTooltip`
+- 観測した失敗: section locator screenshotを確認し、absolute positioningを共通flex配置へ置き換えた後に、indicatorが各文言の中央に揃ったと報告した。しかしユーザーがpreviewを確認すると、なお微小な上下ずれが見えると指摘した。コンポーネント側に閉じた修正であることと、視覚的な受入可否を混同した。
+- 一次対応: current issueの「揃った」という肯定記録を訂正し、G31のコンテンツレビューで違和感が再現した場合に限って、個別labelではなく共通`FormulaTooltip`を再調整するTODOへ移した。tooltipのような微小配置は、actual screenshotだけで受入とせず、ユーザーのpreview確認を待つ。
+
+#### Reported an obsolete VRT capture as a current dialog defect
+
+- date: 2026-07-30
+- source: user
+- 発生箇所: `ex-02-30-sheet-help` のHelp dialog contents review報告
+- 観測した失敗: 先に作成されたVRT captureで最下部のヘッダーと閉じる操作が見えないことを、現行preview・現行buildで再captureせず、実装の外側scroll不備として報告した。ユーザーからVRT側の問題ではないかと指摘された。
+- 一次対応: VRT scenarioのscroll対象が`header + div`の本文要素だけであることを確認し、実行時にdialogの`scrollTop`が`0`、本文の`scrollTop`だけが最大値へ移動することをdesktop / tablet / mobileで確認した。現行4321 previewに対して9状態を再captureし、すべてでheaderと閉じる操作が残ることを原寸画像で確認した。VRT captureをreview入力へ渡す前に、現行build由来であることと対象stateを再確認する。
+
+#### 恒久対応
+
+- `AGENTS.md` — 肯定的なVisual Review報告には、対象route・state・viewportごとのactual screenshotを開き、issueの表示契約と照合する。capture成功だけを根拠にせず、誤報告時はfailure logとcurrent issueを訂正する。
+- `.agents/skills/visual-implementation-review/SKILL.md` — full-page screenshotで局所表示契約を代用せず、原寸locator screenshotを全対象で開いて確認する。現行targetだけをcapture・比較する。
+- handled basis: ユーザーが既存の恒久対応を確認し、done扱いを明示した
+- moved: 2026-08-05
+
 ### review-workflow order
 
 #### Started review-feedback implementation before issue intake
