@@ -1,4 +1,4 @@
-++# Agent Failure Log
+# Agent Failure Log
 
 このファイルは、生成AIエージェントの暴走、手順逸脱、実装中に観測した失敗を蓄積し、将来の恒久対応へ取り込むための記録である。
 
@@ -92,26 +92,6 @@ source種別は以下を使う。
 ---
 
 ## 未反映
-
--
-
-### browser execution environment
-
-#### Repeated Playwright Chromium sandbox launch failure
-
-- date: 2026-07-24
-- source: agent self-report
-- 発生箇所: `ex-02-web-character-sheet` の全VRT実行とdesktop/tablet baseline更新
-- 観測した失敗: `npm run visual:test`、`npm run visual:update`、targetを分割した`npx playwright test`で、Chromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動に失敗した。同一作業で複数回再現し、更新後のVRT比較を完了できなかった。
-- 一次対応: baseline更新と比較を区別して記録し、Chromiumが起動できた時点で書き込まれたdesktop/tablet snapshotは未コミットのまま保持した。以後、このsandbox条件ではPlaywrightの成功を前提にせず、実行可否と未検証範囲を明示して報告する。
-
-#### Repeated Playwright sandbox launch failures during G8 layout inspection
-
-- date: 2026-07-27
-- source: agent self-report
-- 発生箇所: `ex-02-8-sheet-secondary` の実画面寸法確認用Playwright script
-- 観測した失敗: layoutの実寸を取得するために通常sandboxでChromiumを起動したところ、`sandbox_host_linux.cc`の終了権限エラーで起動に失敗した。同じG8作業中の先行captureでも同種のsandbox起動失敗があり、browser計測を通常sandboxで再試行して同じ環境制約を繰り返した。
-- 一次対応: 実画面のスクリーンショットはtarget限定captureで確認し、要素寸法の取得が必要なときだけ承認済みのsandbox外実行へ切り替えた。以後、この環境で同じChromium sandbox failureを確認した後は通常sandboxで再試行せず、必要性を明示して一度だけsandbox外実行を依頼する。
 
 ### browser-test flake diagnosis
 
@@ -560,3 +540,13 @@ source種別は以下を使う。
 - 発生箇所: `tests/visual/vrt/character-sheet.spec.ts` の専用scenario helperへの移行後のtarget限定VRT
 - 観測した失敗: React hydration前のselect操作を一度だけ行いdesktop / tabletでstateを反映できなかった。続いて、変更確認dialogがselect値を即時変更しない既存契約へ、値変更を待つ汎用helperを誤用した。sandbox内のChromium起動失敗も同じ再実行中に重なった。
 - 一次対応: select値を反映するstateは`toPass`で再試行し、確認dialog stateはdialog表示を待機条件に分離した。Chromiumがsandbox内で起動できない場合は、理由を確認して許可済みtarget限定VRTだけをsandbox外で実行する。新しいVRT scenarioは、入力後のDOM stateと確認dialogのstate遷移を別契約として先に確認する。
+
+### failure-log workflow consistency
+
+#### Omitted archive movement rules from the failure-log audit skill
+
+- date: 2026-08-05
+- source: review
+- 発生箇所: failure logのarchive導入と`.agents/skills/failure-log-audit/SKILL.md`の整合確認
+- 観測した失敗: `docs/agent-failure-log/archive.md`とactive logにarchiveの分類・移動を記録したが、監査skillにarchiveの個別ユーザー分類、保存内容、停止条件、報告項目を追加しなかった。また、archiveの説明を`user / review`由来に限定したまま、ユーザーが個別指定したagent self-report entryをarchiveした。
+- 一次対応: PR #191のレビュー指摘1としてcurrent issueへ取り込み、ユーザー承認後にarchiveを個別のユーザー分類だけで扱う契約へ文書とskillを整合する。

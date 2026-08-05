@@ -257,7 +257,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 - handled basis: ユーザーが既存の恒久対応を確認し、done扱いを明示した
 - moved: 2026-08-05
 
-+### Put Ikizama local contracts into character-sheet VRT/E2E scenarios
+### Put Ikizama local contracts into character-sheet VRT/E2E scenarios
 
 #### 2026-07-28
 
@@ -985,7 +985,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 - formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log/active.md`へ反映した。
 - moved: 2026-07-23
 
-+### Repeated a new sync test before reading its assertion diff
+### Repeated a new sync test before reading its assertion diff
 
 #### 2026-07-31
 
@@ -1209,7 +1209,7 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 - user confirmed handled: 2026-08-05
 - moved: 2026-08-05
 
-+### Reported all archived GitHub Issues closed without verifying a CLI partial failure
+### Reported all archived GitHub Issues closed without verifying a CLI partial failure
 
 #### 2026-08-01
 

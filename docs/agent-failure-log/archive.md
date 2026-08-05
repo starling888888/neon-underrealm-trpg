@@ -8,7 +8,7 @@ workflow、承認、review運用、検証手順、権限、Git操作に関する
 
 ## 機能固有アーカイブ
 
-+### Added a tooltip accessory despite the user excluding tooltip work
+### Added a tooltip accessory despite the user excluding tooltip work
 
 #### 2026-07-30
 

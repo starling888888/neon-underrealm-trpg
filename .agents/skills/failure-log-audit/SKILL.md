@@ -15,6 +15,7 @@ Use when the user asks to:
 - propose permanent rule, SKILL, checklist, or docs updates for repeated failures
 - move handled failure entries to `docs/agent-failure-log/done.md` after approved countermeasures are complete
 - move entries the user judges to need no permanent countermeasure to `docs/agent-failure-log/no-action.md`
+- move function-specific entries to `docs/agent-failure-log/archive.md` only when the user explicitly directs that disposition
 
 Do not use for:
 
@@ -40,7 +41,7 @@ Do not move entries to `docs/agent-failure-log/done.md` until:
 
 1. Inspect the current branch and working tree.
 2. Read `docs/agent-failure-log/active.md`.
-3. Read `docs/agent-failure-log/done.md` if it exists.
+3. Read `docs/agent-failure-log/done.md`, `docs/agent-failure-log/no-action.md`, and `docs/agent-failure-log/archive.md` when they exist, only to confirm prior dispositions and avoid duplicate proposals.
 4. Identify failure categories and occurrence counts.
 5. Identify categories with three or more active occurrences.
 6. For each repeated category, summarize:
@@ -111,6 +112,18 @@ When the user explicitly judges an entry to need no permanent countermeasure, mo
 - do not require a permanent countermeasure or post-fix observation
 - do not move an entry automatically merely because it is self-reported or has one occurrence; wait for the user's judgment
 
+## User-Directed Archive Movement
+
+Move an entry from `docs/agent-failure-log/active.md` to
+`docs/agent-failure-log/archive.md` only when the user explicitly identifies the
+entry or entries as archive targets. Archive is neither `done` nor `no-action`.
+
+- preserve the original occurrence details
+- record the user-directed archive reason and move date
+- exclude the moved entry from active audit counts
+- do not infer archive eligibility from source, category, recurrence, or a similar past entry
+- do not use archive to resolve an entry without the user's explicit disposition
+
 ## Required Report
 
 Report:
@@ -121,6 +134,7 @@ Report:
 - proposed countermeasure summary
 - whether implementation was performed
 - whether any done movement was performed
+- whether any no-action or user-directed archive movement was performed
 - validation commands and results if files were edited
 
 If implementation was not approved, explicitly state that no countermeasure was implemented.

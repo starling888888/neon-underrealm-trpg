@@ -32,7 +32,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 ## 初期スコープ外
 
-- サイトのUI、アプリケーションコード、test実装、CI設定を変更しない。
+- サイトのUI、アプリケーションコード、test実装を変更しない。CI設定は、レビュー指摘2で承認されたMarkdown-only checkと`.codex` TOML除外に必要な最小限の変更だけを行う。
 - 新しいnpm packageを追加しない。
 - failure logの原文を削除しない。
 - ユーザーが指定していないカテゴリへ恒久対応を広げない。
@@ -104,3 +104,81 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - `validation command targeting`は、カテゴリ1で反映した同一commandの3回連続失敗基準を適用し、追加の恒久指示を置かず`no-action`へ移す。
 - この監査時点でactiveに残る`source: self`の同一test 3回連続失敗entryは、カテゴリ1の恒久対応で許容回数を定義したため、ユーザー指示により`no-action`へ移す。
 - 2026-08-05に、ユーザー指定の`.tmp/user-failed-log-classification.md`に従い、active entryを`done` 14件、`archive` 40件、`no-action` 7件へ移した。分類titleの`xcessive`はactive titleの`Excessive`への明白な脱字として対応し、同名の`Repeated validation failure in one implementation task`は2 entryとも同じ分類を適用した。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- failure logの4文書に、Markdown見出しを通常テキスト化する先頭`+`が10箇所、active logの空リスト項目が1箇所ある。
+- `failure-log-audit` skillは`archive`への移動条件、保存内容、停止条件、報告項目を定義していない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `rg '^\\+' docs/agent-failure-log/{active,archive,done,no-action}.md`で10箇所を確認した。`active.md:96`の空リスト項目も確認した。`failure-log-audit` skillには`done` / `no-action`だけが定義されている。archive内のsource不一致はユーザー指定の分類に基づくため、このレビュー指摘の対応対象から除外する。
+
+### 対応方針
+
+- 先頭`+`と空リスト項目を除去し、4文書の見出し階層を確認する。
+- `failure-log-audit` skillに、archive移動はユーザーの明示指示による例外処理であり、原文・archive reason・移動日を保持して報告することを追加する。archive済みentryのsource分類は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] failure log 4文書の見出し先頭`+` 10箇所とactive logの空リスト項目を除去した。
+- [x] archiveの個別ユーザー分類・保存内容・停止条件・報告項目を`failure-log-audit` skillへ記録した。
+- [x] `rg '^\\+' docs/agent-failure-log/{active,archive,done,no-action}.md`が出力なしであることを確認した。
+- [x] `npm run check:md` が通った。
+- [x] `git diff --check` が通った。
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- Markdown文書だけを変更したPRでも、CIがテストを実行している。
+
+### 判定
+
+- source: user
+- classification: valid
+- local validation: PR #191の変更範囲はMarkdown文書とagent運用文書であり、サイト実装・test実装・依存関係・CI workflowの変更は含まない。GitHub Actions run `31005754125`（Quality CI）は`Check`、`Build`、`Test`をすべて成功させた。`.github/workflows/ci.yml`の`paths-ignore`は`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけであり、今回変更した`.github/pull_request_template.md`は対象外である。その1ファイルによりpull request triggerが発火した。`quality.yml`はpath分岐を持たず、発火後は常に`npm ci`、`npm run check`、`npm run build`、`npm run test`を実行する。
+
+### 対応方針
+
+- Markdown-onlyの変更では`npm run check:md`だけを実行し、既存のCheck・Build・Testはskipする。`.github/pull_request_template.md`を含むMarkdown文書はこの対象とする。
+- `.codex/*.toml`だけの変更は、Quality CIの対象外にする。
+- Markdown以外の変更を含む場合は、既存のQuality CIを実行する。path判定とjob依存は、workflowの実装前に確認する。
+
+### 対応完了チェックリスト
+
+- [x] 現行CI workflowのtrigger、job依存、変更path判定を確認した。
+- [x] Markdown-only変更では`npm run check:md`だけを実行し、`.codex/*.toml`だけの変更をQuality CIから除外する方針をユーザー確認した。
+- [x] 承認後にCI workflowを最小限修正した。
+- [x] workflow YAMLのparseと、Markdown-only、`.codex` TOML-only、implementation-only、mixed変更のjob条件をローカルで検証した。GitHub Actions上の実行確認はpush後に残る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- milestone planのPhase 1に、current issueのslugと未完了checkboxを持つentryがないため、post-merge workflowが対象を一意に特定できない。
+- Chromium sandbox起動失敗をfailure logへ残さないユーザー方針に反して、active logの`browser execution environment` categoryに2 entryが残っている。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`）
+- classification: valid
+- local validation: `docs/issue/milestone-02/plan.md`には一般的な監査説明だけがあり、`milestone-02-phase-01-failure-log-audit`のslug・checkboxはない。`post-merge-plan-update` skillはtask slugまたは`WORK_BRANCH`でplan entryを探し、一致がない場合は新規entryを作らない。`active.md:100`と`:108`にはChromium sandbox launch failureの2 entryが残り、現行`AGENTS.md`は同種の起動失敗をfailure logへ記録しないと定める。
+- duplicate / ignored: 見出しの先頭`+`とfailure-log-audit skillのarchive未対応はレビュー指摘1に統合する。archive内のsource不一致はユーザー指定の分類であるため対応対象外とする。
+
+### 対応方針
+
+- Phase 1の一般説明を、current issue slugを含む未完了checkboxのplan entryへ置き換える。
+- activeに残る2件のChromium sandbox起動失敗を、原文とユーザー指定のno-action disposition・移動日を保持して`no-action.md`へ移す。
+
+### 対応完了チェックリスト
+
+- [x] milestone planのcurrent issue entryをpost-mergeで検索可能なslug・checkbox形式にした。
+- [x] activeのChromium sandbox起動失敗2 entryをno-actionへ移し、activeから除外した。
+- [x] activeにChromium sandbox起動失敗を主題とするentryが残っていないことを確認した。
+- [x] `npm run check:md` が通った。
+- [x] `git diff --check` が通った。

@@ -13,7 +13,7 @@
 
 ## 対応不要
 
-+### Omitted the Pagefind build step from VRT baseline instructions
+### Omitted the Pagefind build step from VRT baseline instructions
 
 #### 2026-07-31
 
@@ -328,7 +328,7 @@
 - disposition: user-directed no-action; fewer than three consecutive formatting-check failures
 - moved: 2026-08-05
 
-+### Chromium failed before sample-character VRT capture
+### Chromium failed before sample-character VRT capture
 
 #### 2026-07-31
 
@@ -380,7 +380,7 @@
 - disposition: user-directed no-action; Chromium sandbox launch constraint is retried outside the sandbox
 - moved: 2026-08-05
 
-+### Repeated an unrelated sample-character node test failure during analytics validation
+### Repeated an unrelated sample-character node test failure during analytics validation
 
 #### 2026-07-31
 
@@ -419,7 +419,7 @@
 - disposition: user-directed no-action; fewer than three consecutive failures of the same command
 - moved: 2026-08-05
 
-+### Let an optional mocked root-state value open a dialog during component tests
+### Let an optional mocked root-state value open a dialog during component tests
 
 #### 2026-07-30
 
@@ -587,7 +587,7 @@
 - disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
 - moved: 2026-08-05
 
-+### Retried responsive reset focus E2E against a stale preview build
+### Retried responsive reset focus E2E against a stale preview build
 
 #### 2026-07-30
 
@@ -598,6 +598,30 @@
 - 一次対応: preview E2Eの前に対象sourceをbuildし、失敗時はconfigのweb server commandとserved artifactを確認してから再実行する。
 
 - disposition: user-directed no-action; the three-retry test-failure rule now handles this recurrence
+- moved: 2026-08-05
+
+### Repeated Playwright Chromium sandbox launch failure
+
+#### 2026-07-24
+
+- source: agent self-report
+- 発生箇所: `ex-02-web-character-sheet` の全VRT実行とdesktop/tablet baseline更新
+- 観測した失敗: `npm run visual:test`、`npm run visual:update`、targetを分割した`npx playwright test`で、Chromiumが`FATAL:content/browser/sandbox_host_linux.cc:41`と`shutdown: Operation not permitted`を出して起動に失敗した。同一作業で複数回再現し、更新後のVRT比較を完了できなかった。
+- 一次対応: baseline更新と比較を区別して記録し、Chromiumが起動できた時点で書き込まれたdesktop/tablet snapshotは未コミットのまま保持した。以後、このsandbox条件ではPlaywrightの成功を前提にせず、実行可否と未検証範囲を明示して報告する。
+
+- disposition: user-directed no-action; Chromium sandbox launch failures are retried outside the sandbox
+- moved: 2026-08-05
+
+### Repeated Playwright sandbox launch failures during G8 layout inspection
+
+#### 2026-07-27
+
+- source: agent self-report
+- 発生箇所: `ex-02-8-sheet-secondary` の実画面寸法確認用Playwright script
+- 観測した失敗: layoutの実寸を取得するために通常sandboxでChromiumを起動したところ、`sandbox_host_linux.cc`の終了権限エラーで起動に失敗した。同じG8作業中の先行captureでも同種のsandbox起動失敗があり、browser計測を通常sandboxで再試行して同じ環境制約を繰り返した。
+- 一次対応: 実画面のスクリーンショットはtarget限定captureで確認し、要素寸法の取得が必要なときだけ承認済みのsandbox外実行へ切り替えた。以後、この環境で同じChromium sandbox failureを確認した後は通常sandboxで再試行せず、必要性を明示して一度だけsandbox外実行を依頼する。
+
+- disposition: user-directed no-action; Chromium sandbox launch failures are retried outside the sandbox
 - moved: 2026-08-05
 
 ### Repeated a new Node test before reading its assertion diff
