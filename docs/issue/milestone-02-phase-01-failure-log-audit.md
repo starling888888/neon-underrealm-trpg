@@ -15,6 +15,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 ## 対象範囲
 
 - `docs/agent-failure-log.md`のactive entryを、ユーザー承認済みの基準で分類する。
+- active entryすべてを、同じ現象と一次対応を将来参照できるcategoryのH3で分類する。
 - `docs/agent-failure-log-done.md`と`docs/agent-failure-log-no-action.md`へ、原文・移動理由・移動日を保持してentryを移す。
 - ユーザーが指定した機能固有のuser / review由来entryは、原文・archive理由・移動日を保持して`docs/agent-failure-log-archive.md`へ移す。このarchiveは`done`でも`no-action`でもなく、workflow、承認、review運用、検証手順、権限、Git操作に関するentryは移さない。
 - まず、`source: self`または非human review由来と確認できる`source: review`のうち、3回連続の再現条件を満たさないno-action候補をtitle、source、判定根拠とともに一覧化する。ユーザーが対象entryのno-action扱いを明示確認した後に移す。カテゴリ未記入の`source: self` entryは、active logでH3 titleの重複がない場合にno-action候補とする。`source: user`、`agent self-report`、human review由来か判定不能な`source: review`は機械移動の対象外とする。
@@ -40,6 +41,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 ## 完了条件
 
 - [x] active entryの分類基準と移動対象を、ユーザー承認済みの基準で一覧化した。
+- [x] active entryすべてを、同じ現象と有効な一次対応を参照できるcategoryのH3で分類した。
 - [x] no-action候補一覧を提示し、対象entryのno-action扱いについてユーザーの明示確認を得た。
 - [x] 単発または再現条件を満たさないno-action対象entryのうち、明示確認済みentryだけを4カテゴリの恒久対応より先に移し、原文・disposition・移動日を保持した。
 - [x] no-action移動を、ユーザーのレビューと明示的なcommit指示を受けた専用commitにした。
