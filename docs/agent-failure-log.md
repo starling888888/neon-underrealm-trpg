@@ -419,48 +419,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーが画面draftの作成を指示した際、対話用にHTMLを作成してローカルcaptureで確認する既存の作業方法を確認せず、raster画像生成を実行した。生成画像をGit管理・design正本・VRT baselineにはしていないが、ユーザーが期待した確認可能なHTML draftではなかった。
 - 一次対応: 生成画像はpreview扱いとして採用せず、`.tmp/design/character-sheet/index.html`とcapture scriptを作成し、desktop `1440x1200`のlocal captureへ切り替えた。今後、対話用の画面draftでは、画像生成を先行させず、ユーザーが指定するHTML / local captureの方法を確認する。
 
-### responsive layout measurement
-
-#### Estimated the paired-value width too narrowly
-
-- date: 2026-07-29
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の性能式の元値・最終値
-- 観測した失敗: `2桁／2桁`に共通right paddingを含めて必要な表示幅を測らず、`3.75rem`を固定幅として採用したため、文字列が枠内に収まらなかった。
-- 一次対応: G17のレビュー指摘11へ必要な固定幅とmobile性能列の最小幅を記録した。固定幅のUIは、表示文字列とpaddingを合算してから寸法を定める。
-
-#### Changed the mobile formula structure without rechecking its box metrics
-
-- date: 2026-07-29
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
-- 観測した失敗: mobileを性能ごとの2行式へ変更した後も、共通算出値枠のright padding、font-size、minimum heightを残したため、性能列で横overflowし、修正inputより高いままだった。
-- 一次対応: G17のレビュー指摘13へmobile限定のfont-size、padding、inputと同一高を記録した。responsive構造を変更した後は、共通Component由来のpaddingとminimum sizeを対象viewportごとに再確認する。
-
-#### Overcorrected mobile overflow with undersized text and oversized boxes
-
-- date: 2026-07-29
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
-- 観測した失敗: overflowを避けるため算出値フォントを`.625rem`まで縮小した一方、right paddingを削除した後も`2.5rem`の枠幅を維持した。可読性を不必要に下げ、縮小後の文字に対して枠も過大だった。
-- 一次対応: G17のレビュー指摘14へ既存mobileセル相当のfont-sizeと二桁用最小幅を記録した。overflow修正では、font-sizeとbox widthを同時に最小化せず、既存のmobile type scaleを基準にする。
-
-#### Removed all right padding and retained an overly small mobile type size
-
-- date: 2026-07-29
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
-- 観測した失敗: 算出値のoverflowを直す際、right paddingを0にし、文字を`.6875rem`へ下げた。枠幅を縮められたものの、数値の視認性と枠内余白を過度に犠牲にした。
-- 一次対応: G17のレビュー指摘15へ最小right padding、`.75rem`の文字、二桁を収める`2.125rem`幅を記録した。overflowの是正では、数値の可読性と余白を先に維持し、その必要寸法に枠を合わせる。
-
-#### Expanded the boxes again without accounting for the formula's total mobile width
-
-- date: 2026-07-29
-- source: user
-- 発生箇所: `ex-02-17-sheet-weapons-armor` のmobile性能式
-- 観測した失敗: 可読性を戻す修正で各算出値枠を`2.125rem`に広げ、left paddingもright paddingより広くした。その結果、式全体が再び横overflowし、枠の余白も不自然に見えた。
-- 一次対応: G17のレビュー指摘16へ、mobile式全体の幅と左右対称のpaddingを含めた`1.875rem`固定枠を記録した。個別枠を調整する際は、mobile式の合計幅と余白の対称性を同時に確認する。
-
 ### review context isolation
 
 #### Contents reviewers received current conversation history
