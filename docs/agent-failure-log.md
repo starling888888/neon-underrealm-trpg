@@ -108,16 +108,6 @@ source種別は以下を使う。
 - 観測した失敗: `npm run build`だけを案内したため、Pagefind indexが生成されず、`search-modal`の`search-results` VRTが`[data-search-results-list]`の非表示で3 viewportとも失敗した。`/pagefind/pagefind.js`が404であることを確認した。
 - 一次対応: 正しい前提commandを`npm run visual:build`へ訂正する。これは`npm run build && pagefind --site dist`を実行してindexを生成する。
 
-### Retried responsive reset focus E2E against a stale preview build
-
-#### 2026-07-30
-
-- source: self
-- failure category: validation command ordering
-- 発生箇所: `ex-02-29-sheet-reset`のresponsive reset dialog browser E2E
-- 観測した失敗: `playwright.e2e.config.ts`が直前の`dist/`をpreviewすることを確認せず、source修正後のbuildを実行しないまま同じresponsive reset focus E2Eを3回再実行した。
-- 一次対応: preview E2Eの前に対象sourceをbuildし、失敗時はconfigのweb server commandとserved artifactを確認してから再実行する。
-
 ### Bond target and relation inputs remounted on every character
 
 #### 2026-07-30
@@ -166,16 +156,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-22-sheet-special-items-integration` のE2E再実行前の一時preview確認
 - 観測した失敗: E2Eが残した`4322`の一時previewを停止する必要はユーザーの「e2eとvrtを実装してbaseライン更新。devサーバ停止してpreviewに切り替えてよい」で明示済みだった。それにもかかわらず、process確認のために権限昇格を要求した。
 - 一次対応: ユーザー指摘後、この作業では以後の権限昇格を行わず、通常権限で既知のE2E child processだけを扱った。今後はユーザーが対象操作を明示許可している場合、既存の通常権限手段で先に実行し、追加の昇格確認は要求しない。
-
-### Repeated a new Node test before reading its assertion diff
-
-#### 2026-07-29
-
-- source: self
-- failure category: repeated test failure
-- 発生箇所: `ex-02-20-sheet-nanomachines` の`tests/node/character-sheet/nanomachines.test.ts`
-- 観測した失敗: 新規Node testで、二つのナノマシンと修正後の埋め込み点数合計`7`に対して上限`6`でもerrorなしと誤って期待した。最初のtest commandが失敗詳細を出さなかった後、同じtestをspec reporterで再実行してからassertion diffを確認した。fixtureの常時肉体を`9`へ変更した後も、期待する上限値を`6`のまま残し、同じtestを再び失敗させた。
-- 一次対応: test fixtureの常時肉体と期待する上限をともに`9`・`7`へ修正し、errorなし状態を明示した。以後、新規Node testが失敗した場合は、再実行前にTAP出力または個別importでassertion diffを取得し、変更した入力値と期待値を同時に見直す。
 
 ### Changed canonical-baseline tracking against the parent Gate plan
 

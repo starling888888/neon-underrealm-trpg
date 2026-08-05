@@ -88,3 +88,4 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - 4カテゴリのentryを`done`または`no-action`へ移す範囲は、no-action移動の結果を前提にカテゴリごとの具体案で確定する。
 - Chromium sandbox起動失敗は、カテゴリの恒久対応後も`done`ではなく`no-action`へ移す。
 - `validation command targeting`は、カテゴリ1で反映した同一commandの3回連続失敗基準を適用し、追加の恒久指示を置かず`no-action`へ移す。
+- この監査時点でactiveに残る`source: self`の同一test 3回連続失敗entryは、カテゴリ1の恒久対応で許容回数を定義したため、ユーザー指示により`no-action`へ移す。
