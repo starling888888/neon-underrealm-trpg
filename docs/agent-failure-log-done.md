@@ -573,3 +573,227 @@ plan / TODOの完了退避とは条件が異なる。単に作業が終わった
 
 - formatter / linterの指摘を、修正後の最終確認が通ればfailureとして記録・報告しない方針を`AGENTS.md`、`.agents/rules/work-report.md`、`docs/agent-failure-log.md`へ反映した。
 - moved: 2026-07-23
+
++### Repeated a new sync test before reading its assertion diff
+
+#### 2026-07-31
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-06-google-drive-xlsx-sync` の`tests/node/sync-google-sheets.test.ts`
+- 観測した失敗: 新設testを通常実行後、失敗理由を確認せず詳細reporter指定で同じtestを再実行した。原因は実装不備ではなく、再帰先folderを先に処理する実装順序に対してroot Spreadsheetを先にexportする期待値を書いたことだった。
+- 一次対応: 詳細なassertion diffを確認して期待値を実際の処理順序へ修正した。以後、新設testの初回失敗では再実行前にfailure diffを読む。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeatedly used unscoped Testing Library queries in a typed component test
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-29-sheet-reset`のresponsive reset error focus Component test
+- 観測した失敗: scoped dialog / menu queryを追加する際、HTMLElementへ`getByRole`を直接呼ぶ型エラーを2回出した。
+- 一次対応: HTMLElement配下のrole queryは`within(element).getByRole()`へ統一し、source編集後に`npm run check`を実行する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Retried reset-dialog component test with broad text queries
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-29-sheet-reset`の`CharacterSheetContainer`確認dialogcomponent test
+- 観測した失敗: 改行を含む本文をTesting Libraryの既定text正規化で検索して失敗した後、dialog外の操作paneとdialog内で重複する`初期化`buttonを広域queryして再度失敗させた。
+- 一次対応: 本文はtext nodeの改行を直接確認し、actionは対象dialog配下のbuttonへscopeを限定する。新しいmatcherは使わず、既存testのDOM queryと標準assertionだけで確認する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Let JSON import hook fixtures leak form state into later tests
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-27-sheet-json-import`の`useCharacterSheetRootState`追加hook test
+- 観測した失敗: JSON importで`form.reset()`したfixtureに`writeCharacterSheetForm`のtest doubleを渡さず、実localStorageへ非同期保存した。後続の画像復元testが前fixtureのフォーム値を読む失敗を2回繰り返した。
+- 一次対応: JSON import fixtureの保存adapterをすべてmockし、初期フォームを確認する既存testにも`readCharacterSheetForm: () => null`を明示した。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Re-ran the JSON download test after fixing the wrong fixture cast
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-26-sheet-json-export`のレビュー指摘1対応におけるJSON download例外test
+- 観測した失敗: `HTMLAnchorElement`へ直接castした例外用test doubleが型検査を失敗させた後、最初の修正で同じfile内の成功用test doubleを修正し、例外用test doubleは未修正のまま`npm run check`を再実行した。
+- 一次対応: 型検査の行番号を確認し、例外用test doubleを`unknown`経由の明示castへ修正する。複数の同形fixtureがある場合、修正後は対象行と差分を確認してから全体checkを再実行する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Used an unavailable DOM matcher while testing the bond focus fix
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-26-sheet-json-export`中の縁input focus回帰test
+- 観測した失敗: このVitest設定に導入されていない`toHaveValue` matcherを使い、Component testを失敗させた。既存failure logと同じく、matcher利用可否をtest setupから確認していなかった。
+- 一次対応: `HTMLInputElement.value`と`document.activeElement`の標準assertionへ置き換える。以後、このtaskでは新しいmatcherを追加せず、既存testで利用を確認できるものだけを使う。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeated the noncombat section test with an unavailable matcher
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `レビュー指摘 7` の`ChecksSection` component test
+- 観測した失敗: `CharacterSheetSectionFrame`が折りたたみ時も子contentをmountしたままにする実装へ変えた後、旧来のDOM不在assertionを可視性assertionへ置き換えた。しかし、このVitest設定で導入されていない`toBeVisible` matcherを確認せずに再実行し、同じ対象testを2回失敗させた。
+- 一次対応: 依存するmatcherを使わず、折りたたみwrapperの標準`hidden`属性を確認するassertionへ変更する。以後、matcherを新たに使う前にtest setupの導入状況を確認する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeated incomplete cybernetics component-test selectors
+
+#### 2026-07-29
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-19-sheet-cybernetics` の`CyberneticsSection` component test
+- 観測した失敗: 強制改行を含む埋め込み点数ヘッダーと、複数行へ意図して置く`クリア`buttonについて、Testing Libraryの正規化と複数一致を事前確認せずに単一要素selectorで検証した。修正後の再実行でも同じtestが別のselector不足で失敗した。
+- 一次対応: 改行headerは空白を許容するmatcher、`クリア`は期待される5行の全件matcherへ変更する。今後は可変行の表示testで、同名操作が複数行に現れる前提をDOMとアクセシビリティツリーで確認してからselectorを決める。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeated cybernetics formula selector failure after adding responsive markup
+
+#### 2026-07-29
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-19-sheet-cybernetics` の`CyberneticsSection` component test
+- 観測した失敗: desktop／mobileのpair表示を追加した後、同じaria-labelを持つ修正inputが二組描画されることを考慮せず、単一要素queryのまま実行してtestを失敗させた。
+- 一次対応: 既存の武器・防具と同じresponsive DOMであることを確認し、testではdesktop側のinputを明示して操作するよう更新した。responsive UIのtestでは、CSSで非表示になる要素もDOM上は重複する前提でselectorを設計する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeatedly ran an incomplete omamori E2E test
+
+#### 2026-07-29
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-18-sheet-omamori` の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: 新規のお守り操作E2Eで、mobile時に同じ効果文を持つdesktop用非表示本文と展開済み本文を区別しないlocatorを実行した。修正後も、tooltipのopen stateを行操作E2Eへ混在させたため、専用VRT状態で扱うべきtooltip検証を再度失敗させた。
+- 一次対応: 効果本文は展開本文のIDへ限定し、tooltip検証を行操作E2Eから外した。名称tooltipは`tests/visual/vrt/character-sheet.spec.ts`の専用locator stateでdesktop / tablet / mobileごとに確認する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeatedly ran an incomplete new component test
+
+#### 2026-07-28
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-17-sheet-weapons-armor` の `WeaponsAndArmorSection` component test
+- 観測した失敗: 新規Component testを追加した際、headerの`aria-hidden`、matcher設定、同名の詳細操作、重複テキストを事前に確認しないまま実行し、同一テストの失敗を複数回繰り返した。
+- 一次対応: テスト対象DOMの実際のアクセシビリティツリーを確認し、tooltip headerをアクセシブルに修正したうえで、安定した識別子と標準Vitest matcherだけを使うテストへ修正する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeatedly failed the CCFOLIA Container test while changing its fixture
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-28-sheet-ccfolia`のContainerからCCFOLIA payloadへの結線test
+- 観測した失敗: UI操作で複数の入力を設定してtest timeoutを起こした後、fixture設定へ切り替える際に既存environmentにない`toHaveValue` matcherを使い、同じtestを再度失敗させた。
+- 一次対応: test目的をContainer入力結線だけに戻してfixtureでRHF値を設定し、inputは標準Chaiの`value` propertyで待機する。修正後は対象test単体と関連testを確認する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeated unavailable DOM matcher usage in the Help dialog Component test
+
+#### 2026-07-30
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `ex-02-30-sheet-help` の`CharacterSheetHelpDialog` Component test
+- 観測した失敗: `@testing-library/jest-dom`をsetupしていないtest環境で`toBeInTheDocument`を使った後、それを`not.toBeNull()`へ置き換えたにもかかわらず、続けて同じく未提供の`toHaveTextContent` matcherを使った。そのため、同じ対象testを2回失敗させた。
+- 一次対応: DOMの存在と本文は標準Chaiの`not.toBeNull()`および`element.textContent`に対する`toContain()`で確認する。testを追加・変更する前に、既存testのmatcher利用かtest setupを確認する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05
+
+### Repeated test-fixture mistakes while separating build master-data resolution
+
+#### 2026-08-04
+
+- source: self
+- failure category: test authoring discipline
+- 発生箇所: `milestone-02-phase-01-todo-resolution` G6のbuild logic fixture更新
+- 観測した失敗: 生成JSON依存を除いたlogic test用fixtureで、元の流儀・生き様の能力値と係数を正確に写さず、対象testを失敗させた。訂正後も、Component / Hook testの補助関数の引数を`Pick<BuildValues, ...>`として、純粋logicが要求する完全な`BuildValues`へ渡したため、unit testは通る一方で全体`check`のTypeScript検査を失敗させた。
+- 一次対応: fixtureを既存testの期待値と一致する固定マスタ値へ訂正し、補助関数の入力を完全な`BuildValues`へ固定した。logic testのfixture化では、既存期待値と各参照値を先に対応付け、対象unit testの後に`npm run check`で型検査まで確認する。
+
+#### 恒久対応
+
+- agent自身が観測した通常のtest失敗は、同一testまたは同一commandを3回以上連続して失敗した場合だけ記録する規約を、`AGENTS.md`と`docs/agent-failure-log.md`へ反映した。
+- user confirmed handled: 2026-08-05
+- moved: 2026-08-05

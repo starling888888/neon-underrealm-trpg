@@ -44,7 +44,7 @@ review-to-issueでレビュー指摘を扱う場合も、以下のいずれか�
 - current issueの範囲を誤って拡大した作業
 - 検証していない内容を検証済みとして扱った作業
 - remote snapshot、review draft、actual screenshot、design正本などの位置づけを混同した作業
-- 同じbuild、test、型検査などのエラーを同一作業中に2回以上繰り返した作業
+- agent自身が観測した通常のbuild、test、型検査で、同一testまたは同一commandの失敗を同一作業中に3回以上連続して繰り返した作業
 - 恒久的なrules / SKILL / checklist更新が必要になりうる判断ミス
 
 source種別は以下を使う。
@@ -129,16 +129,6 @@ source種別は以下を使う。
 - 観測した失敗: requirements、README、2件のdesign noteを更新してレビュー指摘3を完了扱いにしたが、`.raw/contents/`を`Referenced SSoT`として残す他の現行design notesを確認しなかった。第2回PR document reviewで、contentsがGit管理の正本と同格または上位に見える現行design noteが複数残っていることが判明した。
 - 一次対応: 現行issueのレビュー指摘5へ未更新design noteの整合を記録した。ユーザー判断により、今後の大きな編集を想定しない既存noteの一括更新はこのPRで行わない。scope migrationの完了確認では、変更した代表文書だけでなく、対象キーワードのGit管理現行参照を全件分類してからチェックを更新する。
 
-### Repeated a new sync test before reading its assertion diff
-
-#### 2026-07-31
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-06-google-drive-xlsx-sync` の`tests/node/sync-google-sheets.test.ts`
-- 観測した失敗: 新設testを通常実行後、失敗理由を確認せず詳細reporter指定で同じtestを再実行した。原因は実装不備ではなく、再帰先folderを先に処理する実装順序に対してroot Spreadsheetを先にexportする期待値を書いたことだった。
-- 一次対応: 詳細なassertion diffを確認して期待値を実際の処理順序へ修正した。以後、新設testの初回失敗では再実行前にfailure diffを読む。
-
 ### Repeated an unrelated sample-character node test failure during analytics validation
 
 #### 2026-07-31
@@ -178,16 +168,6 @@ source種別は以下を使う。
 - 観測した失敗: `npm run build`だけを案内したため、Pagefind indexが生成されず、`search-modal`の`search-results` VRTが`[data-search-results-list]`の非表示で3 viewportとも失敗した。`/pagefind/pagefind.js`が404であることを確認した。
 - 一次対応: 正しい前提commandを`npm run visual:build`へ訂正する。これは`npm run build && pagefind --site dist`を実行してindexを生成する。
 
-### Repeatedly used unscoped Testing Library queries in a typed component test
-
-#### 2026-07-30
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-29-sheet-reset`のresponsive reset error focus Component test
-- 観測した失敗: scoped dialog / menu queryを追加する際、HTMLElementへ`getByRole`を直接呼ぶ型エラーを2回出した。
-- 一次対応: HTMLElement配下のrole queryは`within(element).getByRole()`へ統一し、source編集後に`npm run check`を実行する。
-
 ### Retried responsive reset focus E2E against a stale preview build
 
 #### 2026-07-30
@@ -198,26 +178,6 @@ source種別は以下を使う。
 - 観測した失敗: `playwright.e2e.config.ts`が直前の`dist/`をpreviewすることを確認せず、source修正後のbuildを実行しないまま同じresponsive reset focus E2Eを3回再実行した。
 - 一次対応: preview E2Eの前に対象sourceをbuildし、失敗時はconfigのweb server commandとserved artifactを確認してから再実行する。
 
-### Retried reset-dialog component test with broad text queries
-
-#### 2026-07-30
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-29-sheet-reset`の`CharacterSheetContainer`確認dialogcomponent test
-- 観測した失敗: 改行を含む本文をTesting Libraryの既定text正規化で検索して失敗した後、dialog外の操作paneとdialog内で重複する`初期化`buttonを広域queryして再度失敗させた。
-- 一次対応: 本文はtext nodeの改行を直接確認し、actionは対象dialog配下のbuttonへscopeを限定する。新しいmatcherは使わず、既存testのDOM queryと標準assertionだけで確認する。
-
-### Let JSON import hook fixtures leak form state into later tests
-
-#### 2026-07-30
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-27-sheet-json-import`の`useCharacterSheetRootState`追加hook test
-- 観測した失敗: JSON importで`form.reset()`したfixtureに`writeCharacterSheetForm`のtest doubleを渡さず、実localStorageへ非同期保存した。後続の画像復元testが前fixtureのフォーム値を読む失敗を2回繰り返した。
-- 一次対応: JSON import fixtureの保存adapterをすべてmockし、初期フォームを確認する既存testにも`readCharacterSheetForm: () => null`を明示した。
-
 ### Let an optional mocked root-state value open a dialog during component tests
 
 #### 2026-07-30
@@ -226,26 +186,6 @@ source種別は以下を使う。
 - 発生箇所: `CharacterSheetContainer`のG27 JSON入力確認dialogのopen判定、および`npm run test` / `npm run test:component`
 - 観測した失敗: 新設した`pendingJsonImport !== null`は既存Component test harnessの`undefined`をopenとして扱い、操作menuのEscape testと既存の変更確認dialog testを失敗させた。同じComponent test失敗を全体testと個別testで2回実行した。
 - 一次対応: open判定を`pendingJsonImport != null`へ変更し、optionalな旧test harnessをclosed stateとして扱うようにした。再実行前にfailure logとcurrent Gate issueへ記録した。
-
-### Re-ran the JSON download test after fixing the wrong fixture cast
-
-#### 2026-07-30
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-26-sheet-json-export`のレビュー指摘1対応におけるJSON download例外test
-- 観測した失敗: `HTMLAnchorElement`へ直接castした例外用test doubleが型検査を失敗させた後、最初の修正で同じfile内の成功用test doubleを修正し、例外用test doubleは未修正のまま`npm run check`を再実行した。
-- 一次対応: 型検査の行番号を確認し、例外用test doubleを`unknown`経由の明示castへ修正する。複数の同形fixtureがある場合、修正後は対象行と差分を確認してから全体checkを再実行する。
-
-### Used an unavailable DOM matcher while testing the bond focus fix
-
-#### 2026-07-30
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-26-sheet-json-export`中の縁input focus回帰test
-- 観測した失敗: このVitest設定に導入されていない`toHaveValue` matcherを使い、Component testを失敗させた。既存failure logと同じく、matcher利用可否をtest setupから確認していなかった。
-- 一次対応: `HTMLInputElement.value`と`document.activeElement`の標準assertionへ置き換える。以後、このtaskでは新しいmatcherを追加せず、既存testで利用を確認できるものだけを使う。
 
 ### Bond target and relation inputs remounted on every character
 
@@ -306,16 +246,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーが文字サイズ差とtooltipを今回の確認対象から外すよう明示したにもかかわらず、既存tooltipを保持するための`headingAccessory` APIとCSSを追加した。対象外の表現を実装へ持ち込み、指示の優先順位を誤った。
 - 一次対応: `headingAccessory`のAPI・CSS・非戦闘技能headerでの利用を削除し、レビュー指摘7の対応方針とチェックリストを最新指示へ整合した。
 
-### Repeated the noncombat section test with an unavailable matcher
-
-#### 2026-07-30
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `レビュー指摘 7` の`ChecksSection` component test
-- 観測した失敗: `CharacterSheetSectionFrame`が折りたたみ時も子contentをmountしたままにする実装へ変えた後、旧来のDOM不在assertionを可視性assertionへ置き換えた。しかし、このVitest設定で導入されていない`toBeVisible` matcherを確認せずに再実行し、同じ対象testを2回失敗させた。
-- 一次対応: 依存するmatcherを使わず、折りたたみwrapperの標準`hidden`属性を確認するassertionへ変更する。以後、matcherを新たに使う前にtest setupの導入状況を確認する。
-
 ### Requested privilege escalation after the user had already authorized the action
 
 #### 2026-07-29
@@ -346,26 +276,6 @@ source種別は以下を使う。
 - 観測した失敗: Document Reviewの再現性提案とユーザーの「他の指摘内容も修正」を、親issueのGate planが定める「G31までcanonical VRT baselineを管理しない」制約より優先した。`canonical-snapshots/visual/character-sheet/`のignoreを外し、Git管理する運用へ変更しようとした。
 - 一次対応: ユーザー指摘後、`.gitignore`とdesign noteをローカル専用baselineの運用へ戻した。G19 issueには、baselineのGit管理・再現性判断をG31へ残すことを明記した。今後はDocument Reviewの提案を実装する前に、親Gate planの後続Gateへの割当てを確認する。
 
-### Repeated incomplete cybernetics component-test selectors
-
-#### 2026-07-29
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-19-sheet-cybernetics` の`CyberneticsSection` component test
-- 観測した失敗: 強制改行を含む埋め込み点数ヘッダーと、複数行へ意図して置く`クリア`buttonについて、Testing Libraryの正規化と複数一致を事前確認せずに単一要素selectorで検証した。修正後の再実行でも同じtestが別のselector不足で失敗した。
-- 一次対応: 改行headerは空白を許容するmatcher、`クリア`は期待される5行の全件matcherへ変更する。今後は可変行の表示testで、同名操作が複数行に現れる前提をDOMとアクセシビリティツリーで確認してからselectorを決める。
-
-### Repeated cybernetics formula selector failure after adding responsive markup
-
-#### 2026-07-29
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-19-sheet-cybernetics` の`CyberneticsSection` component test
-- 観測した失敗: desktop／mobileのpair表示を追加した後、同じaria-labelを持つ修正inputが二組描画されることを考慮せず、単一要素queryのまま実行してtestを失敗させた。
-- 一次対応: 既存の武器・防具と同じresponsive DOMであることを確認し、testではdesktop側のinputを明示して操作するよう更新した。responsive UIのtestでは、CSSで非表示になる要素もDOM上は重複する前提でselectorを設計する。
-
 ### Repeated Chromium sandbox launch failures while adding G20 tooltip VRT
 
 #### 2026-07-29
@@ -395,16 +305,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーがGate 18全体について、先にcommitとpushを行い、その後にGate用ではないDoc ReviewとTech Reviewを実施するよう明示したにもかかわらず、commit・pushを実行せずにreviewを開始した。停止しようとした際にも応答しなかった。
 - 一次対応: 未コミット差分を保全した状態で処理状況を確認した。以後、明示された順序のstate変更を完了・報告してから後続reviewを開始し、停止要求には進行中処理の状態を直ちに返す。
 
-### Repeatedly ran an incomplete omamori E2E test
-
-#### 2026-07-29
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-18-sheet-omamori` の`tests/visual/character-sheet.spec.ts`
-- 観測した失敗: 新規のお守り操作E2Eで、mobile時に同じ効果文を持つdesktop用非表示本文と展開済み本文を区別しないlocatorを実行した。修正後も、tooltipのopen stateを行操作E2Eへ混在させたため、専用VRT状態で扱うべきtooltip検証を再度失敗させた。
-- 一次対応: 効果本文は展開本文のIDへ限定し、tooltip検証を行操作E2Eから外した。名称tooltipは`tests/visual/vrt/character-sheet.spec.ts`の専用locator stateでdesktop / tablet / mobileごとに確認する。
-
 ### Ignored the existing character-sheet UI system in G17
 
 #### 2026-07-28
@@ -424,16 +324,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-17-sheet-weapons-armor` のユーザーレビュー指摘1
 - 観測した失敗: ユーザーがレビュー指摘を伝えただけで実装修正を指示していない段階で、current issueへ指摘を取り込む前にComponentのCSS / JSX修正を開始した。
 - 一次対応: 直前の未確定コード変更を元へ戻した。レビュー指摘はcurrent issueの未実装項目として記録し、以後はユーザーの明示的な実装再開指示を受けるまでコードを変更しない。
-
-### Repeatedly ran an incomplete new component test
-
-#### 2026-07-28
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-17-sheet-weapons-armor` の `WeaponsAndArmorSection` component test
-- 観測した失敗: 新規Component testを追加した際、headerの`aria-hidden`、matcher設定、同名の詳細操作、重複テキストを事前に確認しないまま実行し、同一テストの失敗を複数回繰り返した。
-- 一次対応: テスト対象DOMの実際のアクセシビリティツリーを確認し、tooltip headerをアクセシブルに修正したうえで、安定した識別子と標準Vitest matcherだけを使うテストへ修正する。
 
 ### Marked G16 complete without covering its required validation and field-array contracts
 
@@ -1885,26 +1775,6 @@ source種別は以下を使う。
 - 観測した失敗: `@ccfolia-copy`を完全tagとして扱う正規表現を2回指定したが、実際のtagは`@ccfolia-copy-confirm`、`@ccfolia-copy-success`、`@ccfolia-copy-failure`であり、Playwrightが対象なしで終了した。
 - 一次対応: VRT scenarioの実際のtagを先に確認し、3 stateをまとめて選ぶprefix `@ccfolia-copy`でtarget限定capture・baseline更新・通常比較を実行した。
 
-### Repeatedly failed the CCFOLIA Container test while changing its fixture
-
-#### 2026-07-30
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-28-sheet-ccfolia`のContainerからCCFOLIA payloadへの結線test
-- 観測した失敗: UI操作で複数の入力を設定してtest timeoutを起こした後、fixture設定へ切り替える際に既存environmentにない`toHaveValue` matcherを使い、同じtestを再度失敗させた。
-- 一次対応: test目的をContainer入力結線だけに戻してfixtureでRHF値を設定し、inputは標準Chaiの`value` propertyで待機する。修正後は対象test単体と関連testを確認する。
-
-### Repeated unavailable DOM matcher usage in the Help dialog Component test
-
-#### 2026-07-30
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `ex-02-30-sheet-help` の`CharacterSheetHelpDialog` Component test
-- 観測した失敗: `@testing-library/jest-dom`をsetupしていないtest環境で`toBeInTheDocument`を使った後、それを`not.toBeNull()`へ置き換えたにもかかわらず、続けて同じく未提供の`toHaveTextContent` matcherを使った。そのため、同じ対象testを2回失敗させた。
-- 一次対応: DOMの存在と本文は標準Chaiの`not.toBeNull()`および`element.textContent`に対する`toContain()`で確認する。testを追加・変更する前に、既存testのmatcher利用かtest setupを確認する。
-
 ### Broke the Help dialog body scroll while correcting outer scroll
 
 #### 2026-07-30
@@ -1984,13 +1854,3 @@ source種別は以下を使う。
 - 発生箇所: `milestone-02-phase-01-todo-resolution` G5のPagefind除外
 - 観測した失敗: `-local`配下の確認ページだけをPagefindから除外する要件に対し、最初に`AppContainer`へpath判定を追加した。個別fixtureの明示的な属性追加で足りる範囲へ共通layoutの責務を広げ、ユーザーから訂正を受けた。続く除外testでも、fixture固有語句が公開本文に部分一致することを確認せず、結果0を期待して同じ確認を再度失敗させた。
 - 一次対応: `AppContainer`の変更を撤回し、7つの`src/pages/-local/`ページ本体へ`data-pagefind-ignore`を明示した。Pagefind APIを使うtestは検索結果が空であることではなく、結果URLに`/-local/`が含まれないことを検証する。局所的な除外・表示制御では、共通layoutの変更前に対象ページだけで完結できるかを確認する。
-
-### Repeated test-fixture mistakes while separating build master-data resolution
-
-#### 2026-08-04
-
-- source: self
-- failure category: test authoring discipline
-- 発生箇所: `milestone-02-phase-01-todo-resolution` G6のbuild logic fixture更新
-- 観測した失敗: 生成JSON依存を除いたlogic test用fixtureで、元の流儀・生き様の能力値と係数を正確に写さず、対象testを失敗させた。訂正後も、Component / Hook testの補助関数の引数を`Pick<BuildValues, ...>`として、純粋logicが要求する完全な`BuildValues`へ渡したため、unit testは通る一方で全体`check`のTypeScript検査を失敗させた。
-- 一次対応: fixtureを既存testの期待値と一致する固定マスタ値へ訂正し、補助関数の入力を完全な`BuildValues`へ固定した。logic testのfixture化では、既存期待値と各参照値を先に対応付け、対象unit testの後に`npm run check`で型検査まで確認する。

@@ -54,7 +54,7 @@
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
 - Google Spreadsheetをローカル入力へ同期する場合は、`.env`の認証情報を使う`npm run sync:google-sheets`だけを用いる。Google Driveへ書き込んではならず、Google Docsの自動同期は行わない。
 - 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由をissueまたは作業報告に書く。
-- ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、または同種のbuild、test、型検査などの失敗を1回の作業中に2回以上繰り返した場合は `docs/agent-failure-log.md` に記録する。formatterまたはlinterの指摘は、同一作業中に修正して最終確認できれば通常の開発ループとして扱い、failure logへ記録・報告しない。
+- ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、またはagent自身が通常のbuild、test、型検査で同一testまたは同一commandの失敗を1回の作業中に3回以上連続して観測した場合は `docs/agent-failure-log.md` に記録する。formatterまたはlinterの指摘は、同一作業中に修正して最終確認できれば通常の開発ループとして扱い、failure logへ記録・報告しない。
 
 理由と背景は `.agents/rules/core-rules-rationale.md` を参照する。
 
