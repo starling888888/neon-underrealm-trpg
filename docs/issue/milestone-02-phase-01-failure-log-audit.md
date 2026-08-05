@@ -16,7 +16,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 - `docs/agent-failure-log.md`のactive entryを、ユーザー承認済みの基準で分類する。
 - `docs/agent-failure-log-done.md`と`docs/agent-failure-log-no-action.md`へ、原文・移動理由・移動日を保持してentryを移す。
-- まず、`source: self`または非human review由来と確認できる`source: review`のうち、3回連続の再現条件を満たさないno-action候補をtitle、source、判定根拠とともに一覧化する。ユーザーが対象entryのno-action扱いを明示確認した後に移す。`source: user`、`agent self-report`、human review由来か判定不能な`source: review`、カテゴリ未記入entryは機械移動の対象外とする。
+- まず、`source: self`または非human review由来と確認できる`source: review`のうち、3回連続の再現条件を満たさないno-action候補をtitle、source、判定根拠とともに一覧化する。ユーザーが対象entryのno-action扱いを明示確認した後に移す。カテゴリ未記入の`source: self` entryは、active logでH3 titleの重複がない場合にno-action候補とする。`source: user`、`agent self-report`、human review由来か判定不能な`source: review`は機械移動の対象外とする。
 - no-action移動は4カテゴリの恒久対応と`done`移動より先に行い、ユーザーのレビューと明示的なcommit指示を受けて専用commitにする。
 - 次の4カテゴリへ、長文ではない最小の恒久対応を追加する。
   1. `test authoring discipline`
@@ -57,7 +57,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 - [x] 4カテゴリごとのactive occurrence countと代表的な対象task / fileを、no-action移動前に報告した。
 - [ ] 3回連続の閾値を、agent自身が観測した通常のtest / command失敗だけに適用した。
 - [x] sourceが`self`または非human review由来と確認できる`review`で、再現条件を満たさないentryをno-action候補として確認した。
-- [x] `source: user`、`agent self-report`、human review由来か判定不能な`source: review`、カテゴリ未記入entryを、機械的なno-action移動の対象から除外した。
+- [x] `source: user`、`agent self-report`、human review由来か判定不能な`source: review`を、機械的なno-action移動の対象から除外した。カテゴリ未記入の`source: self` entryはH3 titleの重複を確認して分類した。
 - [ ] 根拠照合規約は、既存の強い規約を重複させず短く追加した。
 - [ ] 1カテゴリごとに、具体的な対応案と移動候補をユーザーへ提示し、編集前の明示承認と実装後のhandled確認を得た。
 - [ ] 1カテゴリごとに、ユーザーが明示指示した場合だけ承認済みの変更を独立したcommitにした。
@@ -84,7 +84,7 @@ active failure logを監査し、再発した失敗だけに軽量な恒久対�
 
 - Gate作成またはGate分割は行わない。このissue単体を実装契約とする。
 - issue reviewerは、ユーザーがこのissueをhuman reviewした後に明示指示した場合だけ実行する。
-- no-action対象は、ユーザーが明示したsource / 再現条件に一致するentryだけとする。`source: review`のhuman review由来を機械判定できない場合は、移動せずユーザー判断を待つ。
+- no-action対象は、ユーザーが明示したsource / 再現条件に一致するentryだけとする。カテゴリ未記入の`source: self` entryはactive logでH3 titleが重複しない場合に対象とする。`source: review`のhuman review由来を機械判定できない場合は、移動せずユーザー判断を待つ。
 - 4カテゴリのentryを`done`または`no-action`へ移す範囲は、no-action移動の結果を前提にカテゴリごとの具体案で確定する。
 - Chromium sandbox起動失敗は、カテゴリの恒久対応後も`done`ではなく`no-action`へ移す。
 - `validation command targeting`は、カテゴリ1で反映した同一commandの3回連続失敗基準を適用し、追加の恒久指示を置かず`no-action`へ移す。

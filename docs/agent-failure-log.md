@@ -118,15 +118,6 @@ source種別は以下を使う。
 - 観測した失敗: `playwright.e2e.config.ts`が直前の`dist/`をpreviewすることを確認せず、source修正後のbuildを実行しないまま同じresponsive reset focus E2Eを3回再実行した。
 - 一次対応: preview E2Eの前に対象sourceをbuildし、失敗時はconfigのweb server commandとserved artifactを確認してから再実行する。
 
-### Let an optional mocked root-state value open a dialog during component tests
-
-#### 2026-07-30
-
-- source: self
-- 発生箇所: `CharacterSheetContainer`のG27 JSON入力確認dialogのopen判定、および`npm run test` / `npm run test:component`
-- 観測した失敗: 新設した`pendingJsonImport !== null`は既存Component test harnessの`undefined`をopenとして扱い、操作menuのEscape testと既存の変更確認dialog testを失敗させた。同じComponent test失敗を全体testと個別testで2回実行した。
-- 一次対応: open判定を`pendingJsonImport != null`へ変更し、optionalな旧test harnessをclosed stateとして扱うようにした。再実行前にfailure logとcurrent Gate issueへ記録した。
-
 ### Bond target and relation inputs remounted on every character
 
 #### 2026-07-30
@@ -356,24 +347,6 @@ source種別は以下を使う。
 - 観測した失敗: G8で、FormulaTooltipの開閉属性・本文・viewport内の配置までをcharacter-sheetの最終smoke E2Eへ追加した。tooltipの局所状態と文言はComponent test、視覚配置はVRTへ置くという既存のテストアーキテクチャを守らず、G4の「Expanded G4 E2E beyond its smoke-test boundary」、G7の「Repeated FormulaTooltip browser interaction assertion」に続く3回目のE2E責務境界の逸脱となった。さらに、tooltip本文の期待値を`移動力修正`のまま残し、現在の`修正`という文言変更に追随できていなかった。
 - 一次対応: E2Eからtooltipの詳細assertionと配置testを削除し、代表的な修正入力・checkbox操作だけへ縮小した。上端で下方向へ開くplacement選択は`FormulaTooltip` Component testへ移し、実画面の位置関係はtooltipを開いたstateを含むtarget限定VRTの未確認項目として残す。
 
-### Repeated component-test failures while revising G8 accessibility names
-
-#### 2026-07-27
-
-- source: self
-- 発生箇所: `tests/components/character-sheet/SecondaryAttributesSection.test.tsx`
-- 観測した失敗: G8レビュー対応でtooltip triggerとcheckboxのaccessible nameを変更した際、最初はtooltip buttonのaccessible nameに最終値が加わることをtestへ反映し忘れた。続く修正では同じ`一時修正を適用`をcheckboxとtooltip buttonの両方へ付けたため、単一要素を前提にしたlabel queryを再度失敗させた。
-- 一次対応: tooltip buttonには明示的な`aria-label`を渡し、checkboxの操作確認はroleを`checkbox`へ限定する。tooltip triggerはbutton roleで別に確認し、Component testとbrowser E2Eのselectorを同じ責務境界へ揃える。
-
-### Repeated test failures while adding G6 root orchestration coverage
-
-#### 2026-07-27
-
-- source: self
-- 発生箇所: `tests/hooks/character-sheet/useCharacterSheetRootState.test.tsx`、`tests/node/character-sheet/persistence/character-image.test.ts`
-- 観測した失敗: G6のTechReview指摘に対するRoot結線test追加で、非同期変換完了前にwrite呼出を検証する待機不足によりcomponent testを失敗させた。修正後のnode testでも、`CharacterImageError`を移動後の共有moduleではなくpersistence moduleからimportして2回目のtest失敗を起こした。さらに、競合testへ毎renderで新しい依存objectを渡してrestore effectを再始動させ、timeoutを起こした。最後に共有契約へ移した`CharacterImageErrorCode`のimport元をRootで取り残し、全体type checkを失敗させた。
-- 一次対応: 非同期write呼出は`waitFor`で開始を待ってから検証し、例外型とcode型は`character-image.ts`の共有契約からimportするよう訂正した。Rootは起動時の依存をrefで固定してeffectの再始動を防いだ。対象component test、node test、全体checkを再実行して成功を確認する。
-
 ### Archived a Gate child issue without user confirmation
 
 #### 2026-07-27
@@ -391,42 +364,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-6-sheet-image` の画像入力レビュー対応
 - 観測した失敗: 基本情報・設定・信用を含む承認済みcharacter-sheet design draftを実装入力として確認せず、画像入力だけを独立したcardとして再設計した。さらに、実装結果の個別screenshotをdesign判断に使い、未承認の配置をdesign notesへ確定事項として記録した。既存failure logの「Ignored the approved character-sheet design draft during G4 implementation」と同じ判断ミスを繰り返した。
 - 一次対応: G6を作業中へ戻し、review節を破棄して、design draftが定めるdesktop・tablet・mobileのprofile / setting / image / creditの位置関係を子issueの直接契約として再構成する。ユーザー承認までsource codeを変更しない。
-
-### Repeated a component test before checking the available matcher setup
-
-#### 2026-07-27
-
-- source: self
-- 発生箇所: `tests/components/character-sheet/ProfileSection.test.tsx`
-- 観測した失敗: loading中のdisabled状態を確認するtestで、このrepositoryに導入されていないjest-domの`toBeDisabled` matcherを使った。全体testと対象component testで同じmatcher不足による失敗を2回確認した。
-- 一次対応: repositoryで利用可能なChai matcherへ切り替え、HTMLButtonElement / HTMLInputElementの`disabled` propertyを直接確認する。
-
-### Repeated the full check before resolving all image-gate static analysis findings
-
-#### 2026-07-27
-
-- source: self
-- 発生箇所: `ex-02-6-sheet-image`の`src/character-sheet/components/ProfileSection.tsx`、関連testとimport整列
-- 観測した失敗: 画像Gateの初回`npm run check`で型エラー3件を確認・修正した後、全体checkを再実行してa11y lintとBiome整列・formatの残件により2回目も失敗させた。drag and drop領域をstaticな`div`へ置いたことがa11y lintの主因だった。
-- 一次対応: drop領域をfile pickerを開けるnative `button`へ変更し、対象ファイルへBiomeのfixを適用する。画像のdrop・button操作は同じhandlerへ渡す。
-
-### Repeated a TypeScript check failure while renaming dictionary keys
-
-#### 2026-07-27
-
-- source: self
-- 発生箇所: `src/character-sheet/dictionary.ts`と`src/character-sheet/components/ProfileSection.tsx`
-- 観測した失敗: `sections`から`terms`への辞書構造のリネーム時に、最初は同名キーのうち誤った側を変更し、次は辞書の`credit`とフォーム値の`credit`を同一scopeで衝突させた。同一作業中のTypeScript checkが2回失敗した。
-- 一次対応: リネーム対象を`gameDomain`配下へ限定し、辞書由来の参照は`creditTerms`としてフォーム値と明確に区別する。変更後に型検査、build、関連Component testを実行する。
-
-### Retried a browser interaction before Astro client hydration completed
-
-#### 2026-07-25
-
-- source: self
-- 発生箇所: `ex-02-5-sheet-dialogs`の`tests/visual/character-sheet.spec.ts`
-- 観測した失敗: `page.goto()`直後にReact Island内の確認dialog openerをclickしたため、client hydration前のclickがstate更新へ届かず、dialogが見つからないPlaywright失敗を繰り返した。入力値の保持確認もhydration前の入力では安定しなかった。
-- 一次対応: dialogを開くユーザー操作を短い`expect(...).toPass()`で再試行し、client側の操作が有効になった後に確認を開始するようtestを修正した。test-onlyのhydration stateやDOM属性は追加していない。
 
 ### Configured Vitest without the React TSX transform
 
@@ -463,15 +400,6 @@ source種別は以下を使う。
 - 発生箇所: `FormulaTooltip`のmobile閉鎖処理
 - 観測した失敗: mobileの外側タップを検出するため、開いている各Tooltipが`document.addEventListener`を登録する設計にした。Tooltipが複数あれば同じdocumentへlistenerが増え、局所UI状態に対して広すぎるイベント境界だった。
 - 一次対応: document listenerを削除し、touch環境でだけ表示する透明なdismiss layerをTooltip自身の外側に置いた。数値に近いabsolute配置を維持し、layerのタップで閉じる。
-
-### Repeated an accessibility lint failure while wiring FormulaTooltip hover behavior
-
-#### 2026-07-25
-
-- source: self
-- 発生箇所: `FormulaTooltip`のhover領域
-- 観測した失敗: hoverを維持するためのstatic要素へevent handlerを置き、a11y lintを実行後にARIA roleだけを足して同じlint失敗を2回繰り返した。要素の入れ子とpointer移動を先に整理せず、lint出力への局所的な対応を試みた。
-- 一次対応: Tooltipをtrigger buttonの子要素へ移し、hover handlerもbuttonへ限定した。これによりTooltip上へのpointer移動もbuttonの領域内に保ち、static要素へのhandlerを不要にした。
 
 ### Misinterpreted an icon-alignment correction as container-spacing work
 
@@ -527,15 +455,6 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーがデザイン修正と並行して会話を続けられるよう、実装・Techレビュー・preview起動をバックグラウンドで進めるよう依頼していたが、agentは作業の完了を待つ形で会話を阻害した。ユーザーから、バックグラウンド実行の意味を理解しているかと指摘を受けた。
 - 一次対応: 実装をworkerへ移し、以後のレビュー・preview起動・検証を独立して進め、結果だけを前景へ報告した。
 
-### Repeated an E2E invocation while the preview server occupied its port
-
-#### 2026-07-24
-
-- source: self
-- 発生箇所: `ex-02-4-sheet-profile`のPlaywright最終確認
-- 観測した失敗: `playwright.e2e.config.ts`が`reuseExistingServer: false`で自身のpreview serverを起動する契約を確認せず、すでに4321でpreviewを起動した状態で同じE2Eを実行した。workerの同種失敗に続き、port使用中でE2Eが開始できない失敗を繰り返した。
-- 一次対応: Techレビュー完了後に自分で起動したpreviewだけを停止し、`npm run build`後にE2E configへserver起動を任せて再実行した。以後、Playwright configの`webServer`と既存previewの共存可否を確認してから実行する。
-
 ### Used a custom Playwright capture instead of the visual capture workflow
 
 #### 2026-07-24
@@ -545,15 +464,6 @@ source種別は以下を使う。
 - 観測した失敗: 既存の`visual:capture`で対象viewportのactual snapshotを取得すべきところ、一時HTML用の個別Playwright capture scriptを先に作成・実行した。実装結果のactual screenshotを既存workflowで扱うべき位置づけを誤った。
 - 一次対応: 個別captureは中止し、`npm run visual:capture -- --grep '@vrt.*@character-sheet(?:\\s|$)'`でdesktop、tablet、mobileのactual snapshotを取得した。以後、実装結果の画面確認は、対象を絞った既存`visual:capture`を使う。
 
-### Repeated a focus-style assertion with an unstable focus-visible setup
-
-#### 2026-07-24
-
-- source: self
-- 発生箇所: `ex-02-3-sheet-section-frame`のPlaywright focus確認
-- 観測した失敗: Techレビュー後に追加したfocus ringのbrowser testで、programmatic focusの後に`:focus-visible`が適用されると仮定し、同じ`box-shadow: none`失敗を2回繰り返した。Playwrightのfocus modalityとCSS selectorの関係を確認せず、keyboard操作の検証方法を十分に切り分けていなかった。
-- 一次対応: frame内で切れないfocus ringを`:focus`で明示し、ユーザー操作としてのEnter / Space・focus保持を既存browser testで確認する。focusの見た目を自動検証する場合は、最初にselectorが実際のbrowser focus modalityで適用されることを確認する。
-
 ### Test-only hydration state was added to production code
 
 #### 2026-07-24
@@ -562,15 +472,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-1-sheet-runtime`の`CharacterSheetContainer`と`tests/visual/character-sheet.spec.ts`
 - 観測した失敗: `client:load`のhydrateをE2Eで観測するためだけに、画面機能に不要な`isHydrated` stateと非表示DOM属性を製品コードへ追加した。G1にはユーザーが操作できる機能がなく、内部実装を露出する検証は適切でないにもかかわらず、完了条件もそのテストに依存させた。
 - 一次対応: `isHydrated`、属性、専用E2E testを削除し、G1の完了条件を検証専用実装を追加しないことへ修正した。以後、E2Eはユーザーが観測・操作できる振る舞いだけを対象にし、内部のhydrateやstateを観測するための製品コードは追加しない。
-
-### Parallel Playwright capture exhausted the Chromium sandbox
-
-#### 2026-07-24
-
-- source: self
-- 発生箇所: `character-sheet` design draftの既存capture一括更新
-- 観測した失敗: 独立したPlaywright Chromium起動を9本並列実行し、2本がsandbox hostの`Operation not permitted`で起動直後に終了した。直後のsandbox内逐次再試行も同じ制約で失敗した。prototypeまたはcapture scriptの失敗として扱うべきではない実行競合・sandbox制約を作った。
-- 一次対応: 失敗したcaptureは並列実行を避け、sandbox外の承認済み逐次実行で再生成した。複数のローカルcaptureを更新する際は、Chromiumを同時起動せず、必要時は最初から承認済みのcapture commandを使う。
 
 ### Character-sheet Headerのbreakpoint表示条件を誤った
 
@@ -607,15 +508,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-web-character-sheet`のdesktop初期画面design draft作成
 - 観測した失敗: ユーザーが画面draftの作成を指示した際、対話用にHTMLを作成してローカルcaptureで確認する既存の作業方法を確認せず、raster画像生成を実行した。生成画像をGit管理・design正本・VRT baselineにはしていないが、ユーザーが期待した確認可能なHTML draftではなかった。
 - 一次対応: 生成画像はpreview扱いとして採用せず、`.tmp/design/character-sheet/index.html`とcapture scriptを作成し、desktop `1440x1200`のlocal captureへ切り替えた。今後、対話用の画面draftでは、画像生成を先行させず、ユーザーが指定するHTML / local captureの方法を確認する。
-
-### Repeated direct Playwright listing bypassed the VRT script
-
-#### 2026-07-23
-
-- source: self
-- 発生箇所: PR #68 第2回Technical Reviewのtarget filter検証
-- 観測した失敗: `npx playwright test --config playwright.config.ts --list`を2回実行し、VRT専用の`tests/visual/vrt`指定を持つ`npm run visual:test`を経由しなかった。そのため無関係なtest fileも読み込み、Node ESMのJSON import attribute errorでtest listを作れなかった。
-- 一次対応: `npm run visual:test -- --list --grep ...`へ切り替え、`@items`が`items-*`を含む21件に一致することを確認した。VRT scriptの対象directoryと既定configを手作業で再現せず、package scriptから検証する。
 
 ### Over-scoped hero layout test follow-up after PR review
 
@@ -1180,15 +1072,6 @@ source種別は以下を使う。
 - 観測した失敗: G11の最終smoke E2Eへ、開閉の`aria-expanded`属性とhidden状態の確認を追加した。これは領域表示と2〜3個の代表操作だけに限定する`docs/architectures/character-sheet.md`の責務境界を越え、Component testと重複する局所UI・DOM属性の検証である。
 - 一次対応: current issueへE2Eの縮小方針を記録した。開閉状態・hidden・tooltipはComponent testへ、計算はNode testへ置き、E2Eは代表的なbrowser操作だけに戻す。
 
-### Repeated VRT state-preparation failures before client hydration
-
-#### 2026-07-28
-
-- source: self
-- 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/vrt/character-sheet.spec.ts`
-- 観測した失敗: locator screenshot captureの初回実行で、非戦闘技能を開くclickとheader tooltipのhoverをclient hydration完了前に一度だけ実行した。tablet / mobileを中心に同じ状態準備が6件失敗し、`脅迫を得意技能にする`がhiddenのまま、またはtooltipが存在しない状態でtimeoutした。
-- 一次対応: open stateは可視になるまでの短い`expect(...).toPass()`内で、閉じている場合だけclickする。tooltip stateもhoverとvisible確認を同じ再試行境界へ置く。VRTのstate準備はこの範囲に留め、最終smoke E2Eへ局所UIの再試行を持ち込まない。
-
 ### Used a fixed-width noncombat row after the layout no longer had room
 
 #### 2026-07-28
@@ -1269,15 +1152,6 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-11-sheet-noncombat` のレビュー指摘 6 / `FormulaTooltip`
 - 観測した失敗: section locator screenshotを確認し、absolute positioningを共通flex配置へ置き換えた後に、indicatorが各文言の中央に揃ったと報告した。しかしユーザーがpreviewを確認すると、なお微小な上下ずれが見えると指摘した。コンポーネント側に閉じた修正であることと、視覚的な受入可否を混同した。
 - 一次対応: current issueの「揃った」という肯定記録を訂正し、G31のコンテンツレビューで違和感が再現した場合に限って、個別labelではなく共通`FormulaTooltip`を再調整するTODOへ移した。tooltipのような微小配置は、actual screenshotだけで受入とせず、ユーザーのpreview確認を待つ。
-
-### Repeated G12 primary-ryugi browser-operation timeouts
-
-#### 2026-07-28
-
-- source: self
-- 発生箇所: `ex-02-12-sheet-primary-skills` のprimary ryugi select操作とVisual Review capture
-- 観測した失敗: Playwrightの実ブラウザでプライマリ流儀または生き様のselect変更を行うと、変更後のフォーム再描画を待つ操作がtimeoutした。同じ失敗を原因確定前に複数回繰り返し、G12のlocator captureも完了できなかった。
-- 一次対応: 一時的な切り分け変更はすべて戻し、dev serverを既定portで再起動した。今後は既存form更新経路の最小再現を先に作り、再描画を伴わないdialog操作と区別してから、G12 UIまたはform stateへ修正を加える。
 
 ### Attempted to substitute an ad hoc browser script for the VRT capture path
 

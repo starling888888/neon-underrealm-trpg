@@ -336,3 +336,171 @@
 
 - disposition: user-directed no-action; fewer than three consecutive failures of the same command
 - moved: 2026-08-05
+
++### Let an optional mocked root-state value open a dialog during component tests
+
+#### 2026-07-30
+
+- source: self
+- 発生箇所: `CharacterSheetContainer`のG27 JSON入力確認dialogのopen判定、および`npm run test` / `npm run test:component`
+- 観測した失敗: 新設した`pendingJsonImport !== null`は既存Component test harnessの`undefined`をopenとして扱い、操作menuのEscape testと既存の変更確認dialog testを失敗させた。同じComponent test失敗を全体testと個別testで2回実行した。
+- 一次対応: open判定を`pendingJsonImport != null`へ変更し、optionalな旧test harnessをclosed stateとして扱うようにした。再実行前にfailure logとcurrent Gate issueへ記録した。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated component-test failures while revising G8 accessibility names
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `tests/components/character-sheet/SecondaryAttributesSection.test.tsx`
+- 観測した失敗: G8レビュー対応でtooltip triggerとcheckboxのaccessible nameを変更した際、最初はtooltip buttonのaccessible nameに最終値が加わることをtestへ反映し忘れた。続く修正では同じ`一時修正を適用`をcheckboxとtooltip buttonの両方へ付けたため、単一要素を前提にしたlabel queryを再度失敗させた。
+- 一次対応: tooltip buttonには明示的な`aria-label`を渡し、checkboxの操作確認はroleを`checkbox`へ限定する。tooltip triggerはbutton roleで別に確認し、Component testとbrowser E2Eのselectorを同じ責務境界へ揃える。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated test failures while adding G6 root orchestration coverage
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `tests/hooks/character-sheet/useCharacterSheetRootState.test.tsx`、`tests/node/character-sheet/persistence/character-image.test.ts`
+- 観測した失敗: G6のTechReview指摘に対するRoot結線test追加で、非同期変換完了前にwrite呼出を検証する待機不足によりcomponent testを失敗させた。修正後のnode testでも、`CharacterImageError`を移動後の共有moduleではなくpersistence moduleからimportして2回目のtest失敗を起こした。さらに、競合testへ毎renderで新しい依存objectを渡してrestore effectを再始動させ、timeoutを起こした。最後に共有契約へ移した`CharacterImageErrorCode`のimport元をRootで取り残し、全体type checkを失敗させた。
+- 一次対応: 非同期write呼出は`waitFor`で開始を待ってから検証し、例外型とcode型は`character-image.ts`の共有契約からimportするよう訂正した。Rootは起動時の依存をrefで固定してeffectの再始動を防いだ。対象component test、node test、全体checkを再実行して成功を確認する。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated a component test before checking the available matcher setup
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `tests/components/character-sheet/ProfileSection.test.tsx`
+- 観測した失敗: loading中のdisabled状態を確認するtestで、このrepositoryに導入されていないjest-domの`toBeDisabled` matcherを使った。全体testと対象component testで同じmatcher不足による失敗を2回確認した。
+- 一次対応: repositoryで利用可能なChai matcherへ切り替え、HTMLButtonElement / HTMLInputElementの`disabled` propertyを直接確認する。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated the full check before resolving all image-gate static analysis findings
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `ex-02-6-sheet-image`の`src/character-sheet/components/ProfileSection.tsx`、関連testとimport整列
+- 観測した失敗: 画像Gateの初回`npm run check`で型エラー3件を確認・修正した後、全体checkを再実行してa11y lintとBiome整列・formatの残件により2回目も失敗させた。drag and drop領域をstaticな`div`へ置いたことがa11y lintの主因だった。
+- 一次対応: drop領域をfile pickerを開けるnative `button`へ変更し、対象ファイルへBiomeのfixを適用する。画像のdrop・button操作は同じhandlerへ渡す。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated a TypeScript check failure while renaming dictionary keys
+
+#### 2026-07-27
+
+- source: self
+- 発生箇所: `src/character-sheet/dictionary.ts`と`src/character-sheet/components/ProfileSection.tsx`
+- 観測した失敗: `sections`から`terms`への辞書構造のリネーム時に、最初は同名キーのうち誤った側を変更し、次は辞書の`credit`とフォーム値の`credit`を同一scopeで衝突させた。同一作業中のTypeScript checkが2回失敗した。
+- 一次対応: リネーム対象を`gameDomain`配下へ限定し、辞書由来の参照は`creditTerms`としてフォーム値と明確に区別する。変更後に型検査、build、関連Component testを実行する。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Retried a browser interaction before Astro client hydration completed
+
+#### 2026-07-25
+
+- source: self
+- 発生箇所: `ex-02-5-sheet-dialogs`の`tests/visual/character-sheet.spec.ts`
+- 観測した失敗: `page.goto()`直後にReact Island内の確認dialog openerをclickしたため、client hydration前のclickがstate更新へ届かず、dialogが見つからないPlaywright失敗を繰り返した。入力値の保持確認もhydration前の入力では安定しなかった。
+- 一次対応: dialogを開くユーザー操作を短い`expect(...).toPass()`で再試行し、client側の操作が有効になった後に確認を開始するようtestを修正した。test-onlyのhydration stateやDOM属性は追加していない。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated an accessibility lint failure while wiring FormulaTooltip hover behavior
+
+#### 2026-07-25
+
+- source: self
+- 発生箇所: `FormulaTooltip`のhover領域
+- 観測した失敗: hoverを維持するためのstatic要素へevent handlerを置き、a11y lintを実行後にARIA roleだけを足して同じlint失敗を2回繰り返した。要素の入れ子とpointer移動を先に整理せず、lint出力への局所的な対応を試みた。
+- 一次対応: Tooltipをtrigger buttonの子要素へ移し、hover handlerもbuttonへ限定した。これによりTooltip上へのpointer移動もbuttonの領域内に保ち、static要素へのhandlerを不要にした。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated an E2E invocation while the preview server occupied its port
+
+#### 2026-07-24
+
+- source: self
+- 発生箇所: `ex-02-4-sheet-profile`のPlaywright最終確認
+- 観測した失敗: `playwright.e2e.config.ts`が`reuseExistingServer: false`で自身のpreview serverを起動する契約を確認せず、すでに4321でpreviewを起動した状態で同じE2Eを実行した。workerの同種失敗に続き、port使用中でE2Eが開始できない失敗を繰り返した。
+- 一次対応: Techレビュー完了後に自分で起動したpreviewだけを停止し、`npm run build`後にE2E configへserver起動を任せて再実行した。以後、Playwright configの`webServer`と既存previewの共存可否を確認してから実行する。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated a focus-style assertion with an unstable focus-visible setup
+
+#### 2026-07-24
+
+- source: self
+- 発生箇所: `ex-02-3-sheet-section-frame`のPlaywright focus確認
+- 観測した失敗: Techレビュー後に追加したfocus ringのbrowser testで、programmatic focusの後に`:focus-visible`が適用されると仮定し、同じ`box-shadow: none`失敗を2回繰り返した。Playwrightのfocus modalityとCSS selectorの関係を確認せず、keyboard操作の検証方法を十分に切り分けていなかった。
+- 一次対応: frame内で切れないfocus ringを`:focus`で明示し、ユーザー操作としてのEnter / Space・focus保持を既存browser testで確認する。focusの見た目を自動検証する場合は、最初にselectorが実際のbrowser focus modalityで適用されることを確認する。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Parallel Playwright capture exhausted the Chromium sandbox
+
+#### 2026-07-24
+
+- source: self
+- 発生箇所: `character-sheet` design draftの既存capture一括更新
+- 観測した失敗: 独立したPlaywright Chromium起動を9本並列実行し、2本がsandbox hostの`Operation not permitted`で起動直後に終了した。直後のsandbox内逐次再試行も同じ制約で失敗した。prototypeまたはcapture scriptの失敗として扱うべきではない実行競合・sandbox制約を作った。
+- 一次対応: 失敗したcaptureは並列実行を避け、sandbox外の承認済み逐次実行で再生成した。複数のローカルcaptureを更新する際は、Chromiumを同時起動せず、必要時は最初から承認済みのcapture commandを使う。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated direct Playwright listing bypassed the VRT script
+
+#### 2026-07-23
+
+- source: self
+- 発生箇所: PR #68 第2回Technical Reviewのtarget filter検証
+- 観測した失敗: `npx playwright test --config playwright.config.ts --list`を2回実行し、VRT専用の`tests/visual/vrt`指定を持つ`npm run visual:test`を経由しなかった。そのため無関係なtest fileも読み込み、Node ESMのJSON import attribute errorでtest listを作れなかった。
+- 一次対応: `npm run visual:test -- --list --grep ...`へ切り替え、`@items`が`items-*`を含む21件に一致することを確認した。VRT scriptの対象directoryと既定configを手作業で再現せず、package scriptから検証する。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated VRT state-preparation failures before client hydration
+
+#### 2026-07-28
+
+- source: self
+- 発生箇所: `ex-02-11-sheet-noncombat` の `tests/visual/vrt/character-sheet.spec.ts`
+- 観測した失敗: locator screenshot captureの初回実行で、非戦闘技能を開くclickとheader tooltipのhoverをclient hydration完了前に一度だけ実行した。tablet / mobileを中心に同じ状態準備が6件失敗し、`脅迫を得意技能にする`がhiddenのまま、またはtooltipが存在しない状態でtimeoutした。
+- 一次対応: open stateは可視になるまでの短い`expect(...).toPass()`内で、閉じている場合だけclickする。tooltip stateもhoverとvisible確認を同じ再試行境界へ置く。VRTのstate準備はこの範囲に留め、最終smoke E2Eへ局所UIの再試行を持ち込まない。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
+
+### Repeated G12 primary-ryugi browser-operation timeouts
+
+#### 2026-07-28
+
+- source: self
+- 発生箇所: `ex-02-12-sheet-primary-skills` のprimary ryugi select操作とVisual Review capture
+- 観測した失敗: Playwrightの実ブラウザでプライマリ流儀または生き様のselect変更を行うと、変更後のフォーム再描画を待つ操作がtimeoutした。同じ失敗を原因確定前に複数回繰り返し、G12のlocator captureも完了できなかった。
+- 一次対応: 一時的な切り分け変更はすべて戻し、dev serverを既定portで再起動した。今後は既存form更新経路の最小再現を先に作り、再描画を伴わないdialog操作と区別してから、G12 UIまたはform stateへ修正を加える。
+
+- disposition: user-directed no-action; uncategorized self entry with no duplicate title in the active log
+- moved: 2026-08-05
