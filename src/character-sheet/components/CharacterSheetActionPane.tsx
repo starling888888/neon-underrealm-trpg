@@ -1,11 +1,10 @@
 import { ArrowDown, Menu, X } from "lucide-react";
 import { memo, type RefObject } from "react";
-
+import type { CharacterSheetSectionId } from "../constants/section-navigation";
 import { characterSheetDictionary } from "../dictionary";
 import type { CharacterSheetErrorSummary } from "../logic/error-summary";
-import type { CharacterSheetSectionId } from "../section-navigation";
+import CharacterSheetButton from "./_common/CharacterSheetButton";
 import styles from "./CharacterSheetActionPane.module.css";
-import CharacterSheetButton from "./CharacterSheetButton";
 
 type CharacterSheetActionPaneProps = {
   errorReviewButtonRef: RefObject<HTMLButtonElement | null>;

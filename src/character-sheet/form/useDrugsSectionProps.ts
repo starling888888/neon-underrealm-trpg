@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
-import type { DrugsSectionProps } from "../components/DrugsSection";
-import type { CharacterSheetFormValues, DrugRowValues } from "../form-values";
+import type { DrugsSectionProps } from "../components/sections/DrugsSection";
 import { getDuplicateDrugRowIds } from "../logic/drugs";
 import { getDrugById } from "../master-data/drugs";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import type { CharacterSheetFormValues, DrugRowValues } from "./values";
 
 type Options = {
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;

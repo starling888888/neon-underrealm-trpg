@@ -1,4 +1,4 @@
-import type { SecondaryAttributeValues } from "../form-values";
+import type { SecondaryAttributeValues } from "../form/values";
 import type { AttributeDerivedValues, BuildReferenceValues } from "./build";
 
 export type SecondaryAttributeDerivedValues = {

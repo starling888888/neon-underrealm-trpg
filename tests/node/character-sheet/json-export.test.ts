@@ -1,13 +1,13 @@
 import { expect, test } from "vitest";
 
 import { downloadJsonFile } from "../../../src/character-sheet/browser/json-download";
-import { characterImageMimeType } from "../../../src/character-sheet/character-image";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form/values";
 import {
   createCharacterSheetJsonExport,
   createCharacterSheetJsonFilename,
   serializeCharacterSheetJsonExport,
-} from "../../../src/character-sheet/json-export";
+} from "../../../src/character-sheet/logic/json-export";
+import { characterImageMimeType } from "../../../src/character-sheet/schemas/character-image";
 
 test("creates JSON export with the selected image base64 string", () => {
   const values = {

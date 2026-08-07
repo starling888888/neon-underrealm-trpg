@@ -1,6 +1,6 @@
 import { getIkizamaById, getIkizamaList } from "../../lib/data/ikizama";
 import { getRyugiById, getRyugiList } from "../../lib/data/ryugi-list";
-import type { BuildValues } from "../form-values";
+import type { BuildValues } from "../form/values";
 import type { BuildSources } from "../logic/build";
 
 export type CharacterSheetSelectOption = {

@@ -1,4 +1,4 @@
-import type { CharacterImageRecord } from "../character-image";
+import type { CharacterImageRecord } from "../schemas/character-image";
 
 export type CharacterImagePresenterState = {
   characterImage: CharacterImageRecord | null;

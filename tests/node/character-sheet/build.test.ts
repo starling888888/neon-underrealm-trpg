@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   type BuildValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
 import { buildSourcesFixture, emptyBuildSources } from "./fixtures/build";
 

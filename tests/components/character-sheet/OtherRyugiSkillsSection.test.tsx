@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import OtherRyugiSkillsSection, {
   type OtherRyugiSkillsSectionProps,
-} from "../../../src/character-sheet/components/OtherRyugiSkillsSection";
+} from "../../../src/character-sheet/components/sections/OtherRyugiSkillsSection";
 import { getOtherRyugiSkillGroups } from "../../../src/character-sheet/master-data/other-ryugi-skills";
 
 function createProps(): OtherRyugiSkillsSectionProps {

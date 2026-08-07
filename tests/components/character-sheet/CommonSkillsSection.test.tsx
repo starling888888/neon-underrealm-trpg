@@ -3,7 +3,7 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import CommonSkillsSection from "../../../src/character-sheet/components/CommonSkillsSection";
+import CommonSkillsSection from "../../../src/character-sheet/components/sections/CommonSkillsSection";
 import { getBasicAttackSkill } from "../../../src/character-sheet/master-data/common-skills";
 import { getMaximumSkillNameLength } from "../../../src/character-sheet/master-data/primary-skills";
 

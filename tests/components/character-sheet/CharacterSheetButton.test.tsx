@@ -4,7 +4,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { createRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import CharacterSheetButton from "../../../src/character-sheet/components/CharacterSheetButton";
+import CharacterSheetButton from "../../../src/character-sheet/components/_common/CharacterSheetButton";
 
 afterEach(cleanup);
 

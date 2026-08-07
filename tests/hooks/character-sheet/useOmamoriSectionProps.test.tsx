@@ -8,7 +8,7 @@ import useOmamoriSectionProps from "../../../src/character-sheet/form/useOmamori
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { getOmamori } from "../../../src/character-sheet/master-data/omamori";
 
 function useOmamoriHarness() {

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import PrimarySkillsSection, {
   type PrimarySkillsSectionProps,
-} from "../../../src/character-sheet/components/PrimarySkillsSection";
+} from "../../../src/character-sheet/components/sections/PrimarySkillsSection";
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 
 function createProps(): PrimarySkillsSectionProps {

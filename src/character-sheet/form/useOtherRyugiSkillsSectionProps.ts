@@ -7,12 +7,7 @@ import {
 } from "react-hook-form";
 
 import { getRyugiById } from "../../lib/data/ryugi-list";
-import type { OtherRyugiSkillsSectionProps } from "../components/OtherRyugiSkillsSection";
-import {
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
-  type OtherRyugiSkillValues,
-} from "../form-values";
+import type { OtherRyugiSkillsSectionProps } from "../components/sections/OtherRyugiSkillsSection";
 import { calculateOtherRyugiSkillsValidation } from "../logic/other-ryugi-skills";
 import type { OtherRyugiSkillGroups } from "../master-data/other-ryugi-skills";
 import {
@@ -21,6 +16,11 @@ import {
 } from "../master-data/other-ryugi-skills";
 import { getMaximumSkillNameLength } from "../master-data/primary-skills";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+  type OtherRyugiSkillValues,
+} from "./values";
 
 type OtherRyugiSkillsSectionOptions = {
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;

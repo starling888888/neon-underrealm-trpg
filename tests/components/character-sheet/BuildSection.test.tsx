@@ -6,13 +6,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import BuildSection, {
   type BuildSectionProps,
-} from "../../../src/character-sheet/components/BuildSection";
-import styles from "../../../src/character-sheet/components/BuildSection.module.css";
+} from "../../../src/character-sheet/components/sections/BuildSection";
+import styles from "../../../src/character-sheet/components/sections/BuildSection.module.css";
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 import {
   type BuildValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
 import { getBuildSources } from "../../../src/character-sheet/master-data/build";
 

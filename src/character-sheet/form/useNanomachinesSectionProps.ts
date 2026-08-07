@@ -4,15 +4,15 @@ import { type UseFormReturn, useWatch } from "react-hook-form";
 import type {
   NanomachinesPickerTarget,
   NanomachinesSectionProps,
-} from "../components/NanomachinesSection";
-import type {
-  CharacterSheetFormValues,
-  NanomachineFixedPartKey,
-} from "../form-values";
+} from "../components/sections/NanomachinesSection";
 import type { BuildDerivedValues } from "../logic/build";
 import { calculateNanomachines } from "../logic/nanomachines";
 import { getNanomachineById } from "../master-data/nanomachines";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import type {
+  CharacterSheetFormValues,
+  NanomachineFixedPartKey,
+} from "./values";
 
 type Options = {
   onPickerRequest: (

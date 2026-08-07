@@ -1,12 +1,11 @@
 import { expect, test } from "vitest";
-
-import { CharacterImageError } from "../../../../src/character-sheet/character-image";
 import {
   type CharacterImagePersistence,
   deleteCharacterImage,
   readCharacterImage,
   writeCharacterImage,
 } from "../../../../src/character-sheet/persistence/character-image";
+import { CharacterImageError } from "../../../../src/character-sheet/schemas/character-image";
 
 const record = {
   base64: "UklGRiIAAABXRUJQVlA4IBYAAADQAQCdASoBAAEALmk0mk0iIiIiIgBoSywA",

@@ -1,4 +1,4 @@
-import type { AttributeName } from "../form-values";
+import type { AttributeName } from "../form/values";
 
 export const noncombatSkills = [
   { attribute: "strength", id: "intimidation" },

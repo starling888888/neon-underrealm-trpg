@@ -1,4 +1,4 @@
-import type { SpecialItemCategoryId } from "../form-values";
+import type { SpecialItemCategoryId } from "../form/values";
 
 export function getVisibleSpecialItemCategories(
   exclusiveCategory: SpecialItemCategoryId | null,

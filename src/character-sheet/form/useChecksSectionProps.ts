@@ -1,17 +1,14 @@
 import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
-import type { ChecksSectionProps } from "../components/ChecksSection";
-import type {
-  AttackCheckValues,
-  CharacterSheetFormValues,
-} from "../form-values";
+import type { ChecksSectionProps } from "../components/sections/ChecksSection";
 import type { BuildDerivedValues } from "../logic/build";
 import {
   calculateChecks,
   defaultAttributeByAttackSkill,
 } from "../logic/checks";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import type { AttackCheckValues, CharacterSheetFormValues } from "./values";
 
 export default function useChecksSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,

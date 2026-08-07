@@ -1,0 +1,184 @@
+.section {
+  display: grid;
+  min-width: 0;
+  gap: 0;
+}
+
+.line {
+  composes: listTableGrid from "../CharacterSheetFormList.module.css";
+  grid-template-columns: 1.25rem minmax(7rem, 1.1fr) 2.5rem minmax(14rem, 2.3fr) 0 var(
+      --character-sheet-action-button-size
+    );
+}
+
+.headerRow {
+  composes: tableHeader from "../CharacterSheetFormList.module.css";
+}
+
+.headerRow > * {
+  display: grid;
+  min-width: 0;
+  min-height: var(--character-sheet-list-row-min-height);
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  white-space: nowrap;
+}
+
+.headerRow > :nth-child(2),
+.headerRow > :nth-child(4) {
+  justify-items: start;
+  text-align: left;
+}
+
+.row {
+  composes: listRow from "../CharacterSheetFormList.module.css";
+}
+
+.row > .line > * {
+  min-width: 0;
+  border-right: var(--border-width) solid var(--color-border);
+}
+
+.row > .line > :last-child {
+  border-right: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.reorderControls {
+  composes: reorderControls from "../CharacterSheetFormList.module.css";
+}
+
+.reorderButton {
+  composes: reorderButton from "../CharacterSheetFormList.module.css";
+}
+
+.itemPicker {
+  composes: rowPicker from "../CharacterSheetFormList.module.css";
+}
+
+.chooseIcon {
+  composes: pickerIcon from "../CharacterSheetFormList.module.css";
+}
+
+.cell,
+.detailsToggle {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
+}
+
+.effect,
+.mobileEffect {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.mobileEffect strong {
+  color: var(--color-text-muted);
+}
+
+.effect {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--line-height-normal);
+}
+
+.detailsToggle {
+  composes: detailsToggle from "../CharacterSheetFormList.module.css";
+  display: none;
+}
+
+.mobileEffect {
+  display: none;
+}
+
+.mobileEffectHeader {
+  display: none;
+}
+
+.removeCell {
+  display: grid;
+  grid-column: 6;
+  min-width: 0;
+  place-items: center;
+}
+
+.addButton {
+  justify-self: start;
+  margin-top: var(--space-3);
+}
+
+@media (width < 48rem) {
+  .line {
+    grid-template-columns: 1.25rem minmax(0, 1.1fr) 2.25rem 1.5rem var(
+        --character-sheet-action-button-size
+      );
+  }
+
+  .line > :nth-child(4) {
+    display: none;
+  }
+
+  .desktopEffectHeader {
+    display: none;
+  }
+
+  .mobileEffectHeader {
+    display: grid;
+  }
+
+  .headerRow > *,
+  .cell,
+  .detailsToggle {
+    padding-inline: 0.125rem;
+  }
+
+  .headerRow > * {
+    font-size: var(--character-sheet-table-header-font-size);
+    font-weight: var(--character-sheet-table-header-font-weight);
+  }
+
+  .cell,
+  .detailsToggle {
+    font-size: var(--character-sheet-font-table-mobile-control);
+  }
+
+  .itemPicker {
+    padding: var(--space-1);
+    font-size: var(--character-sheet-font-table-mobile-control);
+  }
+
+  .chooseIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .detailsToggle {
+    display: grid;
+  }
+
+  .removeCell {
+    grid-column: 5;
+  }
+
+  .mobileEffect {
+    display: block;
+    border-top: var(--border-width) solid var(--color-border);
+    padding: var(--space-2);
+    font-size: var(--character-sheet-font-table);
+    line-height: var(--line-height-normal);
+  }
+}

@@ -4,7 +4,7 @@ import {
   CharacterImageError,
   type CharacterImageRecord,
   characterImageRecordSchema,
-} from "../character-image";
+} from "../schemas/character-image";
 
 const characterImageStore = createStore(
   "neon-underrealm-character-sheet",

@@ -11,7 +11,7 @@ import type { CharacterSheetFormPresenterProps } from "../../../src/character-sh
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
 const { actionPaneSpy, presenterSpy, useRootStateMock } = vi.hoisted(() => ({
@@ -20,9 +20,12 @@ const { actionPaneSpy, presenterSpy, useRootStateMock } = vi.hoisted(() => ({
   useRootStateMock: vi.fn(),
 }));
 
-vi.mock("../../../src/character-sheet/useCharacterSheetRootState", () => ({
-  default: useRootStateMock,
-}));
+vi.mock(
+  "../../../src/character-sheet/hooks/useCharacterSheetRootState",
+  () => ({
+    default: useRootStateMock,
+  }),
+);
 
 vi.mock(
   "../../../src/character-sheet/components/CharacterSheetFormPresenter",

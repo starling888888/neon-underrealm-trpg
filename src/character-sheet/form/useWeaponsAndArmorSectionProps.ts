@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
-import type { WeaponsAndArmorSectionProps } from "../components/WeaponsAndArmorSection";
-import type { CharacterSheetFormValues, WeaponValues } from "../form-values";
+import type { WeaponsAndArmorSectionProps } from "../components/sections/WeaponsAndArmorSection";
 import { getModifiedItemValue } from "../logic/item-values";
 import { getArmorById, getWeaponById } from "../master-data/weapons-and-armor";
 import { normalizeOptionalIntegerInput } from "../schemas/character-sheet-form";
+import type { CharacterSheetFormValues, WeaponValues } from "./values";
 
 type Options = {
   onArmorPickerRequest: (trigger: HTMLButtonElement) => void;

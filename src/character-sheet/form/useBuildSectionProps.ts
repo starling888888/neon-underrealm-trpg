@@ -1,14 +1,7 @@
 import { type RefObject, useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
-import type { BuildSectionProps } from "../components/BuildSection";
-import {
-  type AttributeName,
-  type AttributeValues,
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
-  type OtherRyugiEditableFieldName,
-} from "../form-values";
+import type { BuildSectionProps } from "../components/sections/BuildSection";
 import { type BuildDerivedValues, calculateBuild } from "../logic/build";
 import {
   getBuildSources,
@@ -16,6 +9,13 @@ import {
   getCharacterSheetRyugiOptions,
 } from "../master-data/build";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import {
+  type AttributeName,
+  type AttributeValues,
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+  type OtherRyugiEditableFieldName,
+} from "./values";
 
 export type BuildSectionPresenterState = {
   derivedBuild: BuildDerivedValues;

@@ -8,7 +8,7 @@ import useSpecialItemsSectionProps from "../../../src/character-sheet/form/useSp
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 
 describe("useSpecialItemsSectionProps", () => {
   it("does not treat an unselected drug row's default quantity as category content", () => {

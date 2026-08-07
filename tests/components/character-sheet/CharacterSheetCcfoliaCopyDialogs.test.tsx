@@ -5,8 +5,8 @@ import userEvent from "@testing-library/user-event";
 import { useRef, useState } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import CharacterSheetCcfoliaCopyConfirmDialog from "../../../src/character-sheet/components/dialogs/CharacterSheetCcfoliaCopyConfirmDialog";
-import CharacterSheetCcfoliaCopyNoticeDialog from "../../../src/character-sheet/components/dialogs/CharacterSheetCcfoliaCopyNoticeDialog";
+import CharacterSheetCcfoliaCopyConfirmDialog from "../../../src/character-sheet/components/dialogs/action-pane/CharacterSheetCcfoliaCopyConfirmDialog";
+import CharacterSheetCcfoliaCopyNoticeDialog from "../../../src/character-sheet/components/dialogs/action-pane/CharacterSheetCcfoliaCopyNoticeDialog";
 
 beforeEach(() => {
   Object.defineProperties(HTMLDialogElement.prototype, {

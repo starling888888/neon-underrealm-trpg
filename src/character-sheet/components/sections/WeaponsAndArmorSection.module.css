@@ -1,0 +1,265 @@
+.section,
+.itemSection {
+  display: grid;
+  min-width: 0;
+}
+
+.section {
+  gap: var(--space-4);
+}
+.itemSection {
+  gap: 0;
+}
+
+.headerRow,
+.weaponLine,
+.armorLine {
+  composes: listTableGrid from "../CharacterSheetFormList.module.css";
+}
+
+.weaponLine {
+  grid-template-columns: 1.25rem minmax(7rem, 1.1fr) 2.5rem minmax(14rem, 2.3fr) 2rem var(
+      --character-sheet-action-button-size
+    );
+}
+.armorLine {
+  grid-template-columns: minmax(7rem, 1.1fr) 2.5rem minmax(14rem, 2.3fr) 2rem var(
+      --character-sheet-action-button-size
+    );
+}
+
+.headerRow {
+  composes: tableHeader from "../CharacterSheetFormList.module.css";
+}
+.headerRow > * {
+  display: grid;
+  min-width: 0;
+  min-height: var(--character-sheet-list-row-min-height);
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  white-space: nowrap;
+}
+
+.weaponLine.headerRow > :nth-child(2),
+.weaponLine.headerRow > :nth-child(4),
+.armorLine.headerRow > :first-child,
+.armorLine.headerRow > :nth-child(3) {
+  justify-items: start;
+  text-align: left;
+}
+
+.row {
+  composes: listRow from "../CharacterSheetFormList.module.css";
+}
+.row > .weaponLine > *,
+.row > .armorLine > * {
+  min-width: 0;
+  border-right: var(--border-width) solid var(--color-border);
+}
+
+.row > .weaponLine > :last-child,
+.row > .armorLine > :last-child {
+  border-right: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.reorderControls {
+  composes: reorderControls from "../CharacterSheetFormList.module.css";
+}
+
+.reorderButton {
+  composes: reorderButton from "../CharacterSheetFormList.module.css";
+}
+
+.itemPicker {
+  composes: rowPicker from "../CharacterSheetFormList.module.css";
+}
+.chooseIcon {
+  composes: pickerIcon from "../CharacterSheetFormList.module.css";
+}
+.cell,
+.detailsToggle {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  color: var(--color-text);
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
+  text-align: center;
+}
+
+.valueExpressions {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  padding: 0.1875rem 0.25rem;
+}
+
+.pairedValueExpression {
+  min-width: 0;
+}
+
+.desktopValueExpression {
+  display: grid;
+  width: max-content;
+  max-width: 100%;
+  min-width: 0;
+  grid-template-columns: 5.25rem auto minmax(4.75rem, auto) auto 5.25rem;
+  align-items: center;
+  justify-self: start;
+  justify-content: start;
+  gap: 0.125rem;
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
+  text-align: right;
+}
+
+.pairedValueExpression .baseValue,
+.pairedValueExpression .finalValue {
+  box-sizing: border-box;
+  min-width: 0;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expressionOperator {
+  color: var(--color-text-muted);
+  font-weight: 750;
+}
+
+.modifierValues {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 2.25rem auto 2.25rem;
+  align-items: center;
+  gap: 0.125rem;
+  color: var(--color-text-muted);
+  font-weight: 750;
+}
+
+.modifierInput {
+  composes: tableNumericInput from "../CharacterSheetFormList.module.css";
+  width: 2.25rem;
+}
+
+.mobileValueExpressions {
+  display: none;
+}
+
+.removeButton {
+  align-self: center;
+  justify-self: center;
+}
+.detailsToggle {
+  composes: detailsToggle from "../CharacterSheetFormList.module.css";
+}
+.details {
+  display: grid;
+  gap: var(--space-1);
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-2);
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--line-height-normal);
+}
+.details p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.details strong {
+  color: var(--color-text-muted);
+}
+.detailMeta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+.detailMeta span {
+  min-width: 0;
+  white-space: nowrap;
+}
+.addButton {
+  justify-self: start;
+  margin-top: var(--space-3);
+}
+
+@media (width < 48rem) {
+  .weaponLine {
+    grid-template-columns: 1.25rem minmax(0, 1.1fr) 2.25rem minmax(
+        7.75rem,
+        1.25fr
+      ) 1.5rem var(--character-sheet-action-button-size);
+  }
+  .armorLine {
+    grid-template-columns: minmax(0, 1.1fr) 2.25rem minmax(7.75rem, 1.25fr) 1.5rem var(
+        --character-sheet-action-button-size
+      );
+  }
+  .headerRow > *,
+  .cell,
+  .detailsToggle {
+    padding-inline: 0.125rem;
+  }
+
+  .headerRow > * {
+    font-size: var(--character-sheet-table-header-font-size);
+    font-weight: var(--character-sheet-table-header-font-weight);
+  }
+
+  .cell,
+  .detailsToggle {
+    font-size: var(--character-sheet-font-table-mobile-control);
+  }
+  .itemPicker {
+    padding: var(--space-1);
+    font-size: var(--character-sheet-font-table-mobile-control);
+  }
+  .chooseIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  .valueExpressions {
+    padding-inline: 0.125rem;
+  }
+  .desktopValueExpression {
+    display: none;
+  }
+  .mobileValueExpressions {
+    display: grid;
+    gap: 0.125rem;
+  }
+  .mobileValueExpression {
+    display: grid;
+    grid-template-columns: 1.875rem auto 1.75rem auto 1.875rem;
+    align-items: center;
+    gap: 0.125rem;
+    font-size: var(--character-sheet-font-table);
+    line-height: 1.25;
+  }
+  .mobileValueExpression .baseValue,
+  .mobileValueExpression .finalValue {
+    min-height: var(--character-sheet-control-min-height);
+    min-width: 0;
+    padding: 0.125rem;
+    font-size: var(--character-sheet-font-control);
+    text-align: right;
+  }
+  .mobileValueExpression .modifierInput {
+    min-height: var(--character-sheet-control-min-height);
+    width: 1.75rem;
+  }
+  .detailMeta {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}

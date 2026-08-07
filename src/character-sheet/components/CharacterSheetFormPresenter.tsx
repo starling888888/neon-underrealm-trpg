@@ -1,40 +1,46 @@
 import { memo, useMemo } from "react";
 import { characterSheetDictionary } from "../dictionary";
-import BondsSection, { type BondsSectionProps } from "./BondsSection";
-import BuildSection, { type BuildSectionProps } from "./BuildSection";
 import styles from "./CharacterSheetFormPresenter.module.css";
-import CharacterSheetSectionFrame from "./CharacterSheetSectionFrame";
-import ChecksSection, { type ChecksSectionProps } from "./ChecksSection";
+import BondsSection, { type BondsSectionProps } from "./sections/BondsSection";
+import BuildSection, { type BuildSectionProps } from "./sections/BuildSection";
+import CharacterSheetSectionFrame from "./sections/CharacterSheetSectionFrame";
+import ChecksSection, {
+  type ChecksSectionProps,
+} from "./sections/ChecksSection";
 import CommonSkillsSection, {
   type CommonSkillsSectionProps,
-} from "./CommonSkillsSection";
+} from "./sections/CommonSkillsSection";
 import CyberneticsSection, {
   type CyberneticsSectionProps,
-} from "./CyberneticsSection";
-import DrugsSection, { type DrugsSectionProps } from "./DrugsSection";
+} from "./sections/CyberneticsSection";
+import DrugsSection, { type DrugsSectionProps } from "./sections/DrugsSection";
 import IkizamaSkillsSection, {
   type IkizamaSkillsSectionProps,
-} from "./IkizamaSkillsSection";
+} from "./sections/IkizamaSkillsSection";
 import NanomachinesSection, {
   type NanomachinesSectionProps,
-} from "./NanomachinesSection";
-import OmamoriSection, { type OmamoriSectionProps } from "./OmamoriSection";
+} from "./sections/NanomachinesSection";
+import OmamoriSection, {
+  type OmamoriSectionProps,
+} from "./sections/OmamoriSection";
 import OtherRyugiSkillsSection, {
   type OtherRyugiSkillsSectionProps,
-} from "./OtherRyugiSkillsSection";
+} from "./sections/OtherRyugiSkillsSection";
 import PrimarySkillsSection, {
   type PrimarySkillsSectionProps,
-} from "./PrimarySkillsSection";
-import ProfileSection, { type ProfileSectionProps } from "./ProfileSection";
+} from "./sections/PrimarySkillsSection";
+import ProfileSection, {
+  type ProfileSectionProps,
+} from "./sections/ProfileSection";
 import SecondaryAttributesSection, {
   type SecondaryAttributesSectionProps,
-} from "./SecondaryAttributesSection";
+} from "./sections/SecondaryAttributesSection";
 import SpecialItemsSection, {
   type SpecialItemsSectionProps,
-} from "./SpecialItemsSection";
+} from "./sections/SpecialItemsSection";
 import WeaponsAndArmorSection, {
   type WeaponsAndArmorSectionProps,
-} from "./WeaponsAndArmorSection";
+} from "./sections/WeaponsAndArmorSection";
 
 /**
  * Presentational form shell for the character sheet.

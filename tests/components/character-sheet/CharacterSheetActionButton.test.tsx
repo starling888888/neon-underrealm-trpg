@@ -3,8 +3,8 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import ClearButton from "../../../src/character-sheet/components/ClearButton";
-import DeleteButton from "../../../src/character-sheet/components/DeleteButton";
+import ClearButton from "../../../src/character-sheet/components/_common/ClearButton";
+import DeleteButton from "../../../src/character-sheet/components/_common/DeleteButton";
 
 afterEach(cleanup);
 

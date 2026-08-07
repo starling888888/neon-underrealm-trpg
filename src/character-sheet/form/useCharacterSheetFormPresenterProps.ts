@@ -1,9 +1,8 @@
 import { type RefObject, useCallback, useMemo, useRef } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { CharacterSheetFormPresenterProps } from "../components/CharacterSheetFormPresenter";
-import type { CyberneticsPickerTarget } from "../components/CyberneticsSection";
-import type { NanomachinesPickerTarget } from "../components/NanomachinesSection";
-import type { CharacterSheetFormValues } from "../form-values";
+import type { CyberneticsPickerTarget } from "../components/sections/CyberneticsSection";
+import type { NanomachinesPickerTarget } from "../components/sections/NanomachinesSection";
 import type { CharacterSheetErrorSummary } from "../logic/error-summary";
 import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
 import type { OtherRyugiSkillGroups } from "../master-data/other-ryugi-skills";
@@ -25,6 +24,7 @@ import useProfileSectionProps from "./useProfileSectionProps";
 import useSecondaryAttributesSectionProps from "./useSecondaryAttributesSectionProps";
 import useSpecialItemsSectionProps from "./useSpecialItemsSectionProps";
 import useWeaponsAndArmorSectionProps from "./useWeaponsAndArmorSectionProps";
+import type { CharacterSheetFormValues } from "./values";
 
 type CharacterSheetPresenterOptions = {
   formRestoreReturnFocusRef: RefObject<HTMLInputElement | null>;
@@ -79,12 +79,12 @@ type CharacterSheetPresenterOptions = {
   ) => void;
   onWeaponPickerRequested: (rowId: string, trigger: HTMLButtonElement) => void;
   onSpecialItemCategoryRemoveRequested: (
-    category: import("../form-values").SpecialItemCategoryId,
+    category: import("./values").SpecialItemCategoryId,
     trigger: HTMLButtonElement,
     applyRemoval: () => void,
   ) => void;
   onSpecialItemCategoryRemoved: (
-    category: import("../form-values").SpecialItemCategoryId,
+    category: import("./values").SpecialItemCategoryId,
   ) => void;
 };
 

@@ -4,8 +4,8 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import PrimarySkillPickerDialog from "../../../src/character-sheet/components/dialogs/PrimarySkillPickerDialog";
-import SkillSelectionChangeConfirmDialog from "../../../src/character-sheet/components/dialogs/SkillSelectionChangeConfirmDialog";
+import SkillSelectionChangeConfirmDialog from "../../../src/character-sheet/components/dialogs/character-change-warning/SkillSelectionChangeConfirmDialog";
+import PrimarySkillPickerDialog from "../../../src/character-sheet/components/dialogs/pickers/PrimarySkillPickerDialog";
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 import { getPrimarySkillGroups } from "../../../src/character-sheet/master-data/primary-skills";
 

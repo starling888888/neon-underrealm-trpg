@@ -1,4 +1,4 @@
-import type { BondsValues, ResolveEffectName } from "../form-values";
+import type { BondsValues, ResolveEffectName } from "../form/values";
 
 export type ResolveEffectDefinition = {
   baseValues: readonly [string, string];

@@ -1,6 +1,6 @@
 import { getItemsData } from "../../lib/data/items";
 import type { Cybernetic, CyberneticPartKey } from "../../lib/types/item";
-import type { CyberneticFixedPartKey } from "../form-values";
+import type { CyberneticFixedPartKey } from "../form/values";
 
 export const cyberneticPartKeys = [
   "head",

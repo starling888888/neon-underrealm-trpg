@@ -8,11 +8,11 @@ import { describe, expect, it, vi } from "vitest";
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
-import usePickerStates from "../../../src/character-sheet/usePickerStates";
+} from "../../../src/character-sheet/form/values";
+import usePickerStates from "../../../src/character-sheet/hooks/usePickerStates";
 import usePickers, {
   type PickerPresenterState,
-} from "../../../src/character-sheet/usePickers";
+} from "../../../src/character-sheet/hooks/usePickers";
 
 describe("usePickers", () => {
   it("connects a picker selection to its presenter operation and closes that picker", () => {

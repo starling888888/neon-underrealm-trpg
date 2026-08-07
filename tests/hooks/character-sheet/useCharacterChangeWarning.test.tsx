@@ -7,8 +7,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
-import useCharacterChangeWarning from "../../../src/character-sheet/useCharacterChangeWarning";
+} from "../../../src/character-sheet/form/values";
+import useCharacterChangeWarning from "../../../src/character-sheet/hooks/useCharacterChangeWarning";
 
 describe("useCharacterChangeWarning", () => {
   it("confirms a dependent primary ryugi change before clearing skills and applying it", () => {

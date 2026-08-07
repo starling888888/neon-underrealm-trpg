@@ -5,7 +5,7 @@ import {
   type CyberneticFixedPartKey,
   type ResolveEffectName,
   specialItemCategoryIds,
-} from "../form-values";
+} from "../form/values";
 import { isCyberneticCompatibleWithFixedPart } from "../master-data/cybernetics";
 
 const nonNegativeIntegerSchema = z.number().int().nonnegative();

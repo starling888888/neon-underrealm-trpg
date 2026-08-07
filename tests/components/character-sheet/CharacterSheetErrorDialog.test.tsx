@@ -4,8 +4,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { createRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import CharacterSheetErrorDialog from "../../../src/character-sheet/components/dialogs/CharacterSheetErrorDialog";
-import styles from "../../../src/character-sheet/components/dialogs/CharacterSheetErrorDialog.module.css";
+import CharacterSheetErrorDialog from "../../../src/character-sheet/components/dialogs/action-pane/CharacterSheetErrorDialog";
+import styles from "../../../src/character-sheet/components/dialogs/action-pane/CharacterSheetErrorDialog.module.css";
 import type { CharacterSheetErrorSummary } from "../../../src/character-sheet/logic/error-summary";
 
 const errorSummary: CharacterSheetErrorSummary = {

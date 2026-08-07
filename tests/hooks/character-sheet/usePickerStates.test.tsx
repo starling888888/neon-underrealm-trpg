@@ -3,7 +3,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import usePickerStates from "../../../src/character-sheet/usePickerStates";
+import usePickerStates from "../../../src/character-sheet/hooks/usePickerStates";
 
 describe("usePickerStates", () => {
   it("keeps every picker target and focus trigger independent", () => {

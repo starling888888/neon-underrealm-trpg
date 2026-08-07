@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form/values";
 import {
   calculateChecks,
   defaultAttributeByAttackSkill,

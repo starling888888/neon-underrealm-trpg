@@ -6,11 +6,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import ProfileSection, {
   type ProfileSectionProps,
-} from "../../../src/character-sheet/components/ProfileSection";
+} from "../../../src/character-sheet/components/sections/ProfileSection";
 import {
   type BuildValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
 import { getBuildSources } from "../../../src/character-sheet/master-data/build";
 

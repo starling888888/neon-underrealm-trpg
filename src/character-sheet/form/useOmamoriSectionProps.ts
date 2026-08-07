@@ -1,12 +1,9 @@
 import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
-import type { OmamoriSectionProps } from "../components/OmamoriSection";
-import type {
-  CharacterSheetFormValues,
-  OmamoriRowValues,
-} from "../form-values";
+import type { OmamoriSectionProps } from "../components/sections/OmamoriSection";
 import { getOmamoriById } from "../master-data/omamori";
+import type { CharacterSheetFormValues, OmamoriRowValues } from "./values";
 
 type Options = {
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;

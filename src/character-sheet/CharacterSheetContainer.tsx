@@ -1,23 +1,23 @@
 import { useCallback, useMemo } from "react";
 import styles from "./CharacterSheetContainer.module.css";
-import ActionPaneDialogs from "./components/ActionPaneDialogs";
-import CharacterChangeWarningDialogs from "./components/CharacterChangeWarningDialogs";
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
 import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
 } from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
+import ActionPaneDialogs from "./components/dialogs/action-pane";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
-import PickerDialogs from "./components/PickerDialogs";
+import CharacterChangeWarningDialogs from "./components/dialogs/character-change-warning";
+import PickerDialogs from "./components/dialogs/pickers";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
+import useActionPane from "./hooks/useActionPane";
+import useCharacterChangeWarning from "./hooks/useCharacterChangeWarning";
+import useCharacterSheetRootState from "./hooks/useCharacterSheetRootState";
+import usePickerStates from "./hooks/usePickerStates";
+import usePickers from "./hooks/usePickers";
 import { serializeCcfoliaCharacterClipboardData } from "./logic/ccfolia";
-import useActionPane from "./useActionPane";
-import useCharacterChangeWarning from "./useCharacterChangeWarning";
-import useCharacterSheetRootState from "./useCharacterSheetRootState";
-import usePickerStates from "./usePickerStates";
-import usePickers from "./usePickers";
 
 /**
  * React Island root and orchestration boundary for the character sheet.

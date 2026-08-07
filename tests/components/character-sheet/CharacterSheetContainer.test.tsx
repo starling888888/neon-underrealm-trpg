@@ -19,7 +19,7 @@ import CharacterSheetContainer from "../../../src/character-sheet/CharacterSheet
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { getCybernetics } from "../../../src/character-sheet/master-data/cybernetics";
 import { getDrugs } from "../../../src/character-sheet/master-data/drugs";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
@@ -34,9 +34,12 @@ let resetHarnessForm: ReturnType<
   typeof useForm<CharacterSheetFormValues>
 > | null = null;
 
-vi.mock("../../../src/character-sheet/useCharacterSheetRootState", () => ({
-  default: useRootStateMock,
-}));
+vi.mock(
+  "../../../src/character-sheet/hooks/useCharacterSheetRootState",
+  () => ({
+    default: useRootStateMock,
+  }),
+);
 
 function useRootStateHarness() {
   const form = useForm<CharacterSheetFormValues>({

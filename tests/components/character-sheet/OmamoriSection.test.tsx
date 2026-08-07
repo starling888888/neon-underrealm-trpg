@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import OmamoriSection, {
   type OmamoriSectionProps,
-} from "../../../src/character-sheet/components/OmamoriSection";
+} from "../../../src/character-sheet/components/sections/OmamoriSection";
 import { getOmamori } from "../../../src/character-sheet/master-data/omamori";
 
 function createProps(): OmamoriSectionProps {

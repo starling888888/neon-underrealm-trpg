@@ -2,7 +2,7 @@ import type {
   AttributeName,
   ChecksValues,
   ReactionCheckName,
-} from "../form-values";
+} from "../form/values";
 import { noncombatSkills } from "../master-data/noncombat-skills";
 
 export const defaultAttributeByAttackSkill = {

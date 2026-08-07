@@ -4,7 +4,7 @@ import {
   type AttributeName,
   attributeNames,
   type BuildValues,
-} from "../form-values";
+} from "../form/values";
 
 export type BuildSources = {
   ikizama: Ikizama | null;

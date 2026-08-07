@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import BondsSection, {
   type BondsSectionProps,
-} from "../../../src/character-sheet/components/BondsSection";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/components/sections/BondsSection";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form/values";
 import { calculateBonds } from "../../../src/character-sheet/logic/bonds";
 
 function createProps(): BondsSectionProps {
