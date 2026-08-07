@@ -1,5 +1,5 @@
 import { ArrowDown, Menu, X } from "lucide-react";
-import { memo, type RefObject } from "react";
+import { type CSSProperties, memo, type RefObject } from "react";
 import type { CharacterSheetSectionId } from "../constants/section-navigation";
 import { characterSheetDictionary } from "../dictionary";
 import type { CharacterSheetErrorSummary } from "../logic/error-summary";
@@ -29,6 +29,10 @@ type CharacterSheetActionPaneProps = {
 };
 
 const menuId = "character-sheet-actions-menu";
+const errorListStyle = {
+  "--character-sheet-error-list-max-block-size": "12rem",
+  overflowY: "auto",
+} as CSSProperties;
 
 function CharacterSheetActionPane({
   errorReviewButtonRef,
@@ -248,7 +252,7 @@ function ErrorSummary({
           <p className={styles.errorCount}>
             エラーが{errorSummary.errors.length}件あります。
           </p>
-          <ul className={styles.errorList}>
+          <ul className={styles.errorList} style={errorListStyle}>
             {errorSummary.errors.map((error, index) => (
               <li key={`${error.code}-${error.rowId ?? index}`}>
                 {error.message}

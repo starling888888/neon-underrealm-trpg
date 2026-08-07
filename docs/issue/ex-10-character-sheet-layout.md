@@ -510,30 +510,68 @@
 
 ### レビュー結果
 
-| 対象                              | 判定   | 差分                                                                                | 対応                                       |
-| --------------------------------- | ------ | ----------------------------------------------------------------------------------- | ------------------------------------------ |
-| tablet / mobile action menu error | 未確認 | 最終CSS調整後にChromium sandboxが起動できず、actual captureと通常比較を実行できない | 権限昇格なしの指示に従い、未確認のまま残す |
+| 対象                              | 判定 | 差分                           | 対応             |
+| --------------------------------- | ---- | ------------------------------ | ---------------- |
+| tablet / mobile action menu error | OK   | canonical baselineとの差分なし | baseline更新なし |
 
 ### 実画面確認
 
-- 最終CSS調整前のtablet / mobile locator captureは開いたが、error countとerror listの間隔を既存表示へ戻した後のcaptureではない。最終表示の確認根拠に使わない。
+- `/character-sheet/` / action menu error / tablet（`820x1180`）:
+  - locator screenshot: action menu（`352x491`、original pixel resolution）
+  - checked: 2列section navigation、縦並びのaction button、一覧外のerror count、2件のerror文の折返し、clipping / overflowの有無
+  - result: 全要素が枠内に収まり、error countとerror listの間隔はcanonical baselineと一致する。
+- `/character-sheet/` / action menu error / mobile（`390x900`）:
+  - locator screenshot: action menu（`352x491`、original pixel resolution）
+  - checked: tabletと同じ局所表示契約
+  - result: 全要素が枠内に収まり、canonical baselineとの差分はない。
 
 ### 自己修正した項目
 
-- error countとerror listの間に不要な4pxのgapを追加してVRT差分を生じさせたため、そのgapを除去した。
+- [x] error countとerror listの間に不要な4pxのgapを追加してVRT差分を生じさせたため、そのgapを除去した。
 
 ### 人間判断が必要な差分
 
-- 権限昇格なしではChromiumのsandbox起動失敗を再実行できない。最終Visual Reviewは、browser実行可能な環境でactual screenshotとtarget限定VRT比較を実施する必要がある。
+- なし
 
 ### 対応完了チェックリスト
 
-- [ ] 変更targetだけをVRT比較した（Chromium sandbox起動失敗）
-- [ ] 変更targetだけの一時snapshotを取得した（最終CSS調整後は未取得）
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
-- [ ] VRT差分を修正した、または修正不要と判断した（最終比較未実行）
+- [x] VRT差分を修正した、または修正不要と判断した
 - [x] baseline更新が必要な差分を人間判断として記録した（baseline更新は行わない）
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 10
+
+### 指摘事項
+
+- レビュー指摘9で変更したaction-menu-errorの最終Visual Reviewが未確認である一方、issue全体のVisual Review / VRT完了条件が完了のまま残っている。
+- 追加E2Eはerrorのない初期DOMへerror listを追加しようとするが、初期状態には`ul`が存在しない。長大なerror listの高さ上限はbrowser E2Eの責務ではなく、Componentへ多数のerrorを渡して検証する。
+- reset focus testも即時resolve mockと手動rerenderに留まり、非同期root operationの成功・失敗との連動を検証しない。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation:
+  - `ビジュアルレビュー 2`は最終CSS調整後のactual screenshot・target限定VRT比較を未確認としている。集約完了条件も未チェックへ戻し、同じ最終確認で完了させる必要がある。
+  - `ErrorSummary`は`hasErrors`がfalseの時に`ul`をrenderしない。追加E2Eは`エラーはありません。`状態で`section[aria-live] ul`をlocatorにしている。
+  - `useActionPane` testはroot operation propの分岐を確認するが、deferred Promiseを通じてoperationの開始・完了・失敗とfocusを連動させない。
+
+### 対応方針
+
+- browser実行可能な環境で、最終CSSのaction-menu-errorをtablet / mobileでcapture・実画面確認・target限定VRT比較し、`ビジュアルレビュー 2`と集約完了条件を同時に更新する。
+- DOMを注入する追加E2Eは削除する。Component testで16件以上のerrorを渡し、件数表示が一覧の外にあり、全件を描画し、error listだけが`max-block-size: 12rem`かつ`overflow-y: auto`であることを確認する。
+- deferred Promiseとroot operation状態を連動するhook testへ直し、処理中はreset triggerへfocusを戻さず、成功後だけ復帰することを確認する。失敗時はimage error dialogがfocusを管理するため、action paneはそのfocusを奪わない。
+
+### 対応完了チェックリスト
+
+- [x] 最終action-menu-errorのtablet / mobile actual screenshotを開き、target限定VRT比較を通す
+- [x] Component testが多数error時のerror listの高さ上限とscroll設定を確認する
+- [x] reset focusが非同期root operationの処理中・成功後に正しく動作し、失敗時にerror dialogのfocusを奪わない
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

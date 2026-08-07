@@ -198,7 +198,7 @@
   .errorList {
     display: grid;
     gap: var(--space-1);
-    max-block-size: 12rem;
+    max-block-size: var(--character-sheet-error-list-max-block-size);
     margin: var(--space-2) 0 0;
     overflow-y: auto;
     overscroll-behavior: contain;

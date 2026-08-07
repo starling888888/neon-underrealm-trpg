@@ -182,6 +182,12 @@ describe("CharacterSheetActionPane", () => {
 
     expect(errorCount.parentElement).not.toBe(errorList);
     expect(within(errorList).getAllByRole("listitem")).toHaveLength(16);
+    expect(
+      errorList.style.getPropertyValue(
+        "--character-sheet-error-list-max-block-size",
+      ),
+    ).toBe("12rem");
+    expect(errorList.style.overflowY).toBe("auto");
   });
 
   it("includes the empty error state in the closed menu button name", () => {

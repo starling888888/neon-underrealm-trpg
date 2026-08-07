@@ -4,58 +4,6 @@ import { expect, test } from "@playwright/test";
 import { siteBaseUrl, siteViewports } from "../support/site";
 
 test.describe("character sheet page", () => {
-  test("scrolls only a long responsive error list on mobile", async ({
-    page,
-  }) => {
-    await page.setViewportSize(siteViewports.mobile);
-    await page.goto("character-sheet/");
-    const menuTrigger = page.getByRole("button", {
-      exact: true,
-      name: "操作メニューを開く、エラーはありません。",
-    });
-    await menuTrigger.click();
-
-    const menu = page.getByRole("region", {
-      name: "キャラクターシートの操作メニュー",
-    });
-    const errorSummary = menu.locator("section[aria-live]");
-    const errorList = errorSummary.locator("ul");
-    await errorList.evaluate((list) => {
-      for (let index = 0; index < 24; index += 1) {
-        const item = document.createElement("li");
-        item.textContent = `テストエラー ${index + 1}`;
-        list.append(item);
-      }
-    });
-
-    const errorCountBefore = await errorSummary
-      .getByText("エラーはありません。")
-      .boundingBox();
-    const resetButtonBefore = await menu
-      .getByRole("button", { exact: true, name: "初期化" })
-      .boundingBox();
-    const scrolled = await errorList.evaluate((list) => {
-      list.scrollTop = list.scrollHeight;
-      return {
-        overflowY: getComputedStyle(list).overflowY,
-        scrollHeight: list.scrollHeight,
-        scrollTop: list.scrollTop,
-      };
-    });
-
-    expect(scrolled.overflowY).toBe("auto");
-    expect(scrolled.scrollHeight).toBeGreaterThan(scrolled.scrollTop);
-    expect(scrolled.scrollTop).toBeGreaterThan(0);
-    expect(
-      await errorSummary.getByText("エラーはありません。").boundingBox(),
-    ).toEqual(errorCountBefore);
-    expect(
-      await menu
-        .getByRole("button", { exact: true, name: "初期化" })
-        .boundingBox(),
-    ).toEqual(resetButtonBefore);
-  });
-
   test("exports JSON from desktop and responsive action buttons", async ({
     page,
   }) => {
