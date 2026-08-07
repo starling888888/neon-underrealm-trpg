@@ -57,7 +57,7 @@ G2以降のエネミー情報、キャンペーンフック、サンプルシナ
 - [x] サイトメニューにPL/GMの区分見出し、GMガイド、GMセクション後の区切り線がある。
 - [x] 詳細なGMガイド作成が`docs/TODO.md`で後続taskとして追跡されている。
 - [x] 新規design notes、design画像、VRT baselineを作成または更新していない。
-- [ ] desktop、tablet、mobileの対象route・menu状態を実画面で確認している。
+- [x] desktop、tablet、mobileの対象route・menu状態を実画面で確認している。
 - [x] 対象test、`npm run check`、`npm run build`が通る。
 
 ## チェックポイント
@@ -105,12 +105,23 @@ G2以降のエネミー情報、キャンペーンフック、サンプルシナ
 
 - `@vrt @site-menu`: default / desktop / tablet / mobile
 - `@vrt @site-layout`: default / desktop / tablet / mobile、mobile-menu-open / mobile、mobile-page-toc-open / mobile
+- `@vrt @site-menu @gm`: default / desktop / tablet / mobile
 
 ### レビュー結果
 
 - `npm run visual:capture -- --grep '@vrt.*@site-menu(?:\s|$)'`: 3件成功
 - `npm run visual:capture -- --grep '@vrt.*@site-layout(?:\s|$)'`: 5件成功
-- captureは一時snapshotの作成だけを確認する。既存scenarioに`/gm/`のlocator screenshotはなく、canonical comparisonも実施していないため、G1の実画面確認完了条件は未チェックのままとする。
+- `/gm/`のdesktop / tablet / mobileは、既存`site-menu` targetのpage-level scenarioとして追加し、一時snapshotを取得して確認する。個別controlの局所表示契約は追加していないため、ユーザー指示に従いlocator screenshotは作成しない。
+- canonical comparisonは実施しない。baseline更新はG6で扱う。
+
+### 実画面確認
+
+- `/gm/` / default / desktop・tablet・mobile:
+  - `test-results/visual/site-menu/gm-default-<viewport>.png`を開き、hero画像、案内文、PL/GM区分、GMガイド、区切り線下のキャラクターシートとサポートの順序を確認した。
+  - desktop・tablet・mobileのいずれでも画像・本文にclipやoverflowはない。
+- `/-local/data-cards/` / mobile-menu-open / mobile:
+  - `test-results/visual/site-layout/mobile-menu-open-mobile.png`を開き、drawer内でGMガイドの下の区切り線、続くキャラクターシートを確認した。
+  - 今回は個別controlの局所表示契約を変更していないため、ユーザー指示に従いlocator screenshotは作成していない。
 
 ## 備考
 
