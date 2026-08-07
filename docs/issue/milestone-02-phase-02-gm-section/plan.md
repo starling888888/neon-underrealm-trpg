@@ -6,14 +6,14 @@
 
 ## Gate一覧
 
-| Gate | 状態        | 依存Gate | 子issue                                                             | 概要                                                                                    |
-| ---- | ----------- | -------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| G1   | in progress | なし     | `docs/issue/milestone-02-phase-02-gm-section-g01-gm-guide.md`       | GMセクション開始の案内と初回公開用メニュー構造を完成させる。                            |
-| G2   | planned     | G1       | `docs/issue/milestone-02-phase-02-gm-section-g02-enemy-data.md`     | 提供後のエネミー入力を用い、4形式の読み方と表示Componentを完成させる。                  |
-| G3   | planned     | G2       | `docs/issue/milestone-02-phase-02-gm-section-g03-bosses.md`         | ボスデータの作り方と外道スキルの表示を完成させる。                                      |
-| G4   | planned     | G2       | `docs/issue/milestone-02-phase-02-gm-section-g04-sanshita.md`       | 三下・徒党データの作り方を完成させる。                                                  |
-| G5   | planned     | G1       | `docs/issue/milestone-02-phase-02-gm-section-g05-campaign-hooks.md` | キャンペーンフックページを完成させる。                                                  |
-| G6   | planned     | G1〜G5   | `docs/issue/milestone-02-phase-02-gm-section-g06-first-scenario.md` | サンプルシナリオ1本とGMセクション初回公開を完成させ、全canonical screenshotを更新する。 |
+| Gate | 状態    | 依存Gate | 子issue                                                             | 概要                                                                                    |
+| ---- | ------- | -------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| G1   | done    | なし     | milestone-02-phase-02-gm-section-g01-gm-guide — GitHub Issue #194   | —                                                                                       |
+| G2   | planned | G1       | `docs/issue/milestone-02-phase-02-gm-section-g02-enemy-data.md`     | 提供後のエネミー入力を用い、4形式の読み方と表示Componentを完成させる。                  |
+| G3   | planned | G2       | `docs/issue/milestone-02-phase-02-gm-section-g03-bosses.md`         | ボスデータの作り方と外道スキルの表示を完成させる。                                      |
+| G4   | planned | G2       | `docs/issue/milestone-02-phase-02-gm-section-g04-sanshita.md`       | 三下・徒党データの作り方を完成させる。                                                  |
+| G5   | planned | G1       | `docs/issue/milestone-02-phase-02-gm-section-g05-campaign-hooks.md` | キャンペーンフックページを完成させる。                                                  |
+| G6   | planned | G1〜G5   | `docs/issue/milestone-02-phase-02-gm-section-g06-first-scenario.md` | サンプルシナリオ1本とGMセクション初回公開を完成させ、全canonical screenshotを更新する。 |
 
 状態は`planned`、`in progress`、`done`を使う。
 
