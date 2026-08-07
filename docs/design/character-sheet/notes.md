@@ -88,20 +88,18 @@
 ### 操作領域
 
 - 対象操作は、細かな説明を開く`?`、JSON出力、JSON入力、初期化、CCFOLIAコピーである。`?`は操作領域の左端に丸いボタンとして置き、説明モーダルを開く。
-- tabletとmobileでは、右下にメニューボタンを配置し、クリックすると各操作ボタンを表示する。
-- tabletとmobileの右下メニューボタンは、scroll中も操作できるsticky controlとする。
-- tabletとmobileでは、編集領域の末尾に右下のfloating操作と重ならない十分な下余白を設ける。最下部までscrollしたときも、最後の入力・追加・削除操作をfloating操作の下へ隠さない。
-- tabletでは、右下のメニューアイコンの上に、独立した青緑の丸い`?`ヘルプアイコンを置く。ヘルプアイコンを操作すると、メニュー内ではなく独立したヘルプダイアログを開く。
-- tabletでメニューを開くと、2行2列のJSON出力、JSON入力、初期化、CCFOLIAコピーbuttonを表示する。
-- tabletの開いたメニューでは、エラー欄に個別のエラーを直接表示する。エラー確認のために別のダイアログを開かない。
-- tabletの右下メニューアイコンは、エラーがあるときエラーカラーで表示する。
-- mobileの展開メニューはtabletと同じく2行2列の操作buttonと直接表示するエラー一覧を持つ。外側クリック時の扱いとキーボード操作は実装Gateでアクセシビリティ要件とともに定める。
+- desktopでは、form本文右の補助領域に操作を縦に配置する。操作領域の先頭には第一階層sectionへの`セクション` navigationを置き、その下に`?`、JSON出力、JSON入力、CCFOLIAコピー、初期化、エラー状態を縦に並べる。ページ見出し横の横並び操作menuは廃止する。
+- 狭幅レイアウトでは、右下にメニューボタンを配置し、クリックすると第一階層sectionへの`セクション` navigation、各操作button、エラー一覧の順に表示する。section navigationはbutton群の上に置き、子section・行・入力項目へのジャンプは置かない。
+- 狭幅レイアウトの右下メニューボタンは、scroll中も操作できるsticky controlとする。編集領域の末尾にはfloating操作と重ならない十分な下余白を設け、最下部までscrollしたときも最後の入力・追加・削除操作を隠さない。
+- 狭幅レイアウトでは、右下のメニューアイコンの上に、独立した青緑の丸い`?`ヘルプアイコンを置く。ヘルプアイコンを操作すると、menu内ではなく独立したヘルプdialogを開く。
+- 開いたmenuの操作buttonは縦に配置し、エラー欄に個別のエラーを直接表示する。エラー確認のために別のdialogを開かない。menu iconはエラーがあるときエラーカラーで表示する。外側click時の扱いとキーボード操作は実装taskでアクセシビリティ要件とともに定める。
 - 初期scopeでは、画面内に段階式の作成順ガイドや必須項目チェックリストを追加しない。最低限ヘルプへ書く内容と本文の統一は後続のdesign対話で決める。
 
 ### ページとナビゲーション
 
 - 公開routeは`/character-sheet/`とする。
 - ページtitleは「キャラクターシート」とする。
+- `h1`はReact Islandの外でAstro pageが表示する。Island内には同じtitleを置かない。
 - サイトナビゲーションでは「キャラクター成長」の下、「サポート」の上に配置する。
 
 ### 画像選択
@@ -114,16 +112,16 @@
 ### ページlayoutとサイトメニュー
 
 - このページにはPageToc / MobilePageTocを表示しない。
-- キャラクターシート固有のsection navigationは設けない。
-- character-sheetでは、既存ページのサイトメニュー表示をそのまま適用しない。`64rem`以上`80rem`未満では常設のサイトメニューrailを表示し、キャラクターシート領域はスキル以降のセクションを下へ移す配置とする。desktop、`48rem`以上`64rem`未満、mobileでは、ロゴの左に置くHeaderのサイトメニューボタンからdrawerを開く。
-- desktopとtabletのHeaderは、タイトルロゴを高さ3remのままとし、メニューボタンとロゴの間を`--space-3`にする。mobileでは既存の小さいタイトルロゴと左右のHeader操作を維持する。
-- キャラクターシートのmain領域は利用可能な横幅を使い、main自身の左右paddingは均等にする。desktopではsheet本文を最大`90rem`（1440px）に制限し、それを超える横幅では中央寄せにする。縦1列のsheet formの最小幅は`44rem`とし、`64rem`以上`80rem`未満では15remのサイトメニューrailの右側の残り幅をmainに使う。`48rem`以上`64rem`未満ではmobile用のレイアウトへ切り替えず、site menu railだけを隠す。
+- character-sheet固有のsection navigationは、desktopの右補助領域と狭幅操作menuだけに置く。どちらもformの第一階層sectionだけを対象にする。
+- character-sheetは通常のサイトlayoutへ寄せる。site menu railは、sheet formの最小幅と右補助領域を保ったまま表示できる広いdesktop幅だけで表示する。必要幅を下回るとsite menu railを隠し、Headerのサイトメニューボタンからdrawerを開く。固定の`64rem`から`80rem`だけをrail表示にする例外は廃止する。
+- desktopと狭幅layoutの境界は、sheet本文最小幅、右補助領域、site menu rail、mainの左右gutterの合計から定める。狭幅layoutを従来の`48rem`未満へ限定せず、tabletから適用する。Headerのロゴとmenu buttonの寸法は既存site layoutの対応する幅を維持する。
+- character-sheetのmain領域は利用可能な横幅を使い、main自身の左右paddingは均等にする。desktopではsheet本文と右補助領域を合わせたcontentを最大`90rem`（1440px）に制限し、それを超える横幅では中央寄せにする。formは全viewportで1列に積み、従来のleft / right section columnへの振り分けは行わない。
 - sheet本文の`h1`はbrowser既定marginを使わない。main上端から直接置き、下余白だけを`12px`にする。page固有のheading余白はAstro page側で扱い、React Islandへglobal heading styleを追加しない。
-- tabletとmobileの基本レイアウトでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
+- 狭幅layoutでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
 
 ### 編集画面の情報architecture
 
-- tabletは、基本情報（経験点・信用を含む）、流儀・生き様と能力値、副能力値、縁、判定、武器・防具、スキル、専用アイテムの順に縦積みする。
+- desktop、tablet、mobileは、基本情報（経験点・信用を含む）、流儀・生き様と能力値、副能力値、縁、判定、スキル、武器・防具、専用アイテムのDOM順で1列に積む。
 - 信用は経験点と近接して配置する。消費信用と合計信用超過のエラーはキャラクター情報側で確認できるようにする。
 - 信用の入力・派生値は、流儀・生き様の下へ置かず、基本情報内で取得経験点の隣または直下にまとめる。
 - 共通スキルレベル合計と合計レベル上限は、共通スキルの取得可否と経験点消費を確認するための値として、基本情報の経験点表示に置く。`共通スキルレベル合計／合計レベル上限`は、上限式を説明する`FormulaTooltip`のlabelとする。これは算出値の一般的なsummaryを増やさない原則の、要件で指定された例外である。
