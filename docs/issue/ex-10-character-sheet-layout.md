@@ -299,3 +299,39 @@
 - [x] picker hook、`PickerDialogs`、Container memo境界のtarget testを追加・更新する
 - [ ] `npm run check` が通る
 - [ ] `npm run build` が通る
+
+## レビュー指摘 6
+
+### 指摘事項
+
+- primary流儀変更、ikizama変更、other流儀の変更・削除、専用item category削除の確認state、pending callback、focus復帰ref、request / confirm / close callbackを、変更警告ごとのhookへ分離する。
+- `useCharacterChangeWarning`を集約地点とし、form presenterへ渡す変更request callback、各dialogの操作、return focusをContainerから外す。
+- 変更確認dialogのJSXを`CharacterChangeWarningDialogs`へ集約する。
+
+### 判定
+
+- source: human review in the active Codex conversation
+- classification: valid
+- local validation:
+  - Containerには上記5フローのopen state、trigger ref、pending apply callback、confirm / close callbackが残り、候補pickerのrefactor前と同じ責務集中がある。
+  - primary流儀とikizamaは選択済みskillがある場合だけ確認し、承認時にskillを初期化する。other流儀の変更・削除は対応するskillをclear / removeしてから変更を適用し、削除後は追加buttonへfocusを戻す。専用item category削除は保留したremove callbackを承認時に適用する。
+  - request callbackはform presenter生成時に必要だが、confirm時のclear / removeはpresenter props生成後に得られる。この生成順をそのままContainerへ残す必要はない。
+  - 現在のissueでは候補pickerだけを`PickerDialogs`へ集約している。ユーザーの追加指示により、変更警告dialogも同じ内部refactor範囲としてcurrent issueで扱う。
+
+### 対応方針
+
+- primary流儀、ikizama、other流儀変更、other流儀削除、専用item category削除の各hookは、それぞれのwarning state、trigger ref、pending apply callback、request / confirm / closeを所有する。
+- `useCharacterChangeWarning`は各hookを合成し、`presenterOptions`（form presenterへ渡すrequest callbackとother流儀追加button ref）、`dialogsProps`、最新のpresenter操作を受けるbinderを返す。binderはhook内のrefだけを更新し、primary / ikizama skillのclear、other流儀skillのclear / removeをconfirm・直接適用時に正しく実行する。
+- Containerは`useCharacterChangeWarning`をform presenter生成前に一度だけ呼び、`presenterOptions`を渡す。presenter props生成後にbinderへ必要なclear / remove操作を渡し、個別warning state・callback・refを保持しない。
+- `CharacterChangeWarningDialogs`は5つのconfirm dialogを集約して`memo`化する。dialog props、hookのrequest / confirm / close、Containerとのbinder境界は`useCallback` / `useMemo`で安定化する。既存dialog componentのfocus復帰、copy、confirm labelは維持する。
+- 各warning hookと集約hookを単体テストし、変更確認が必要な場合・不要な場合、confirm後の依存skill整理、other流儀削除後のfocus復帰を検証する。
+
+### 対応完了チェックリスト
+
+- [x] 5変更警告のstate、trigger ref、pending callback、request / confirm / closeをhookへ分離する
+- [x] `useCharacterChangeWarning`がpresenter request callback・最新操作ref・dialog propsを集約し、Containerが個別warning state・操作を直接持たない
+- [x] `CharacterChangeWarningDialogs`へ5確認dialogを集約し、既存のcopy、confirm、focus復帰を維持する
+- [x] 有効な境界に`memo`と`useCallback` / `useMemo`を適用し、不要な再renderを避ける
+- [x] warning hook、集約hook、dialog / Container境界のtarget testを追加・更新する
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
