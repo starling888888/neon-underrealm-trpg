@@ -17,6 +17,7 @@ type UseActionPaneArgs = {
   isCcfoliaCopyDisabled: boolean;
   isExportDisabled: boolean;
   isImportDisabled: boolean;
+  isRootOperationInProgress: boolean;
   isResetDisabled: boolean;
   onCcfoliaCopyConfirmed: () => Promise<boolean>;
   onExport: () => void;
@@ -56,6 +57,7 @@ export default function useActionPane({
   isCcfoliaCopyDisabled,
   isExportDisabled,
   isImportDisabled,
+  isRootOperationInProgress,
   isResetDisabled,
   onCcfoliaCopyConfirmed,
   onExport,
@@ -64,6 +66,7 @@ export default function useActionPane({
 }: UseActionPaneArgs) {
   const sectionJump = useSectionJump();
   const actions = useActionPaneActions({
+    isRootOperationInProgress,
     onCcfoliaCopyConfirmed,
     onResetConfirmed,
   });
@@ -134,9 +137,13 @@ function useSectionJump() {
 }
 
 function useActionPaneActions({
+  isRootOperationInProgress,
   onCcfoliaCopyConfirmed,
   onResetConfirmed,
-}: Pick<UseActionPaneArgs, "onCcfoliaCopyConfirmed" | "onResetConfirmed">) {
+}: Pick<
+  UseActionPaneArgs,
+  "isRootOperationInProgress" | "onCcfoliaCopyConfirmed" | "onResetConfirmed"
+>) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isCcfoliaCopyConfirmOpen, setIsCcfoliaCopyConfirmOpen] =
@@ -153,12 +160,12 @@ function useActionPaneActions({
   const ccfoliaCopyNoticeConfirmButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!shouldRestoreResetFocus) return;
+    if (!shouldRestoreResetFocus || isRootOperationInProgress) return;
     setShouldRestoreResetFocus(false);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => resetTriggerRef.current?.focus());
     });
-  }, [shouldRestoreResetFocus]);
+  }, [isRootOperationInProgress, shouldRestoreResetFocus]);
 
   useEffect(() => {
     if (!isMenuOpen) return;

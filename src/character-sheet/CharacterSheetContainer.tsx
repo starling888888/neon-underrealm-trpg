@@ -122,6 +122,7 @@ export default function CharacterSheetContainer() {
     isImportDisabled:
       rootState.isCharacterImageRestoring ||
       rootState.isRootOperationInProgress,
+    isRootOperationInProgress: rootState.isRootOperationInProgress,
     isResetDisabled:
       rootState.isCharacterImageRestoring ||
       rootState.isRootOperationInProgress,

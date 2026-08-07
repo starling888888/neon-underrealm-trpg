@@ -198,7 +198,10 @@
   .errorList {
     display: grid;
     gap: var(--space-1);
+    max-block-size: 12rem;
     margin: var(--space-2) 0 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding-inline-start: 1.25rem;
     color: var(--color-text);
     font-size: var(--text-xs);

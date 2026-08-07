@@ -2,8 +2,8 @@
 
 ## モード
 
-- 要件の復元とデザイン準備
-- このノートは、承認済み要件から復元した画面内容、制約、将来の比較観点を記録する。最終レイアウトのドラフトでも、ページ実装の承認でもない。
+- 承認・実装済みlayout intentとVRT参照情報
+- このノートは、`/character-sheet/`の現在の画面内容、制約、比較観点を記録するdesign正本である。`ex-10-character-sheet-layout`のdesktop、tablet、mobileのlayoutは2026-08-08にユーザー承認を得て実装済みである。新しいlayoutまたはVRT baselineの変更は、別途のユーザー承認を必要とする。
 
 ## 対象とVRT参照情報
 
@@ -293,6 +293,6 @@
 
 - 必須状態を表す入力済みfixtureデータと、正確なVRTシナリオ
 
-## design承認の境界
+## 今後のdesign変更の境界
 
-このノートは、これから行うデザイン対話の出発点である。後続のdesktop、tablet、mobileに関するユーザー要望が実際のドラフトを定める。ドラフト承認後に限り、このノートを最終layout intentとVRT scenarioで更新し、その後に`ex-02`が求めるアーキテクチャと実装Gateの計画へ進む。
+現在のdesktop、tablet、mobileのlayout intentとVRT scenarioは、このノートの記録を正本とする。後続のユーザー要望で画面構成、操作導線、breakpoint、VRT対象を変更する場合は、実装前にdesign draftとユーザー承認を得て、このノートを更新する。

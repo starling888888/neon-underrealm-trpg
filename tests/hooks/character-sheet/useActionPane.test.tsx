@@ -12,23 +12,26 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function renderActionPane() {
+function renderActionPane(isRootOperationInProgress = false) {
   const onCcfoliaCopyConfirmed = vi.fn(async () => true);
   const onExport = vi.fn();
   const onImport = vi.fn();
   const onResetConfirmed = vi.fn(async () => {});
-  const hook = renderHook(() =>
-    useActionPane({
-      errorSummary: emptyErrorSummary,
-      isCcfoliaCopyDisabled: false,
-      isExportDisabled: false,
-      isImportDisabled: false,
-      isResetDisabled: false,
-      onCcfoliaCopyConfirmed,
-      onExport,
-      onImport,
-      onResetConfirmed,
-    }),
+  const hook = renderHook(
+    ({ isRootOperationInProgress }) =>
+      useActionPane({
+        errorSummary: emptyErrorSummary,
+        isCcfoliaCopyDisabled: false,
+        isExportDisabled: false,
+        isImportDisabled: false,
+        isRootOperationInProgress,
+        isResetDisabled: false,
+        onCcfoliaCopyConfirmed,
+        onExport,
+        onImport,
+        onResetConfirmed,
+      }),
+    { initialProps: { isRootOperationInProgress } },
   );
 
   return {
@@ -94,6 +97,29 @@ describe("useActionPane", () => {
     expect(result.current.actionPaneProps.isMenuOpen).toBe(false);
     await waitFor(() => expect(document.activeElement).toBe(trigger));
     trigger.remove();
+  });
+
+  it("waits for the root reset operation before restoring reset trigger focus", async () => {
+    const trigger = document.createElement("button");
+    const fallback = document.createElement("button");
+    document.body.append(trigger);
+    document.body.append(fallback);
+    fallback.focus();
+    const { result, rerender, onResetConfirmed } = renderActionPane();
+
+    act(() => result.current.actionPaneProps.onReset(trigger));
+    act(() => {
+      result.current.dialogs.actions.confirmReset();
+      rerender({ isRootOperationInProgress: true });
+    });
+    expect(onResetConfirmed).toHaveBeenCalledOnce();
+    expect(document.activeElement).toBe(fallback);
+
+    rerender({ isRootOperationInProgress: false });
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
+
+    trigger.remove();
+    fallback.remove();
   });
 
   it("reports CCFOLIA copy success and failure after closing its confirmation", async () => {

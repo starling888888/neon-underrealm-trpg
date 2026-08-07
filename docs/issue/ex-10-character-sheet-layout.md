@@ -466,3 +466,74 @@
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 9
+
+### 指摘事項
+
+- design notesのモードが、`ex-10`で承認・実装済みのlayout intentとVRT参照情報を含む正本であることを示さず、未承認の準備資料として残っている。
+- 狭幅action menuは、section navigation、縦並びaction button、可変長の全errorを含む一方、viewport高さを超えた時の最大高さと縦scrollを持たない。
+- 初期化confirmを閉じた直後のfocus復帰が、root operationの完了より先に行われうる。処理中のContainerは`inert`であり、完了後にtriggerへ戻らない可能性がある。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation:
+  - `docs/design/character-sheet/notes.md`の`## モード`は「要件の復元とデザイン準備」「最終レイアウトのドラフトでも、ページ実装の承認でもない」とする一方、同ファイルには`ex-10`のユーザー承認済み最終表示とcanonical baseline更新を記録している。current issueもdesign承認・実装を完了としている。
+  - `CharacterSheetActionPane.module.css`の`.menu`はfixed positionと幅を指定するが、`max-block-size`と`overflow-y`を指定しない。menuには8件のsection navigation、4つの縦並び操作、可変長error listが入る。
+  - `useActionPane`はreset dialogのclose後に二重`requestAnimationFrame`でfocus復帰する。`CharacterSheetContainer`は`onResetConfirmed`中にrootを`inert`にするが、hookへroot operation状態を渡していない。抽出前にはroot operation完了後までfocus復帰を保留する処理があった。
+  - GitHub connectorでPR #197のtop-level comment、submitted review、inline review threadはいずれも0件である。
+
+### 対応方針
+
+- design notesのモードを、承認・実装済みのcharacter-sheet layout intentとVRT参照情報を含む正本へ更新する。将来の未決定事項だけを明示する。
+- mobile縦長では、狭幅action menuのsection navigation、action button群、`エラーがN件あります。`は固定表示に保つ。可変長のerror一覧だけを最大`12rem`で縦scrollできるようにし、多数error時に一覧末尾へ到達できるbrowser testを追加する。極端に低いviewportへの追加設計は行わない。
+- resetのreturn focusをroot operation完了後まで保留する。deferred Promiseを用いるtestで、処理中はfocusせず、成功完了後にtriggerへ復帰し、error dialogのfocus契約を妨げないことを確認する。
+
+### 対応完了チェックリスト
+
+- [x] design notesのモードを承認・実装済みlayoutの正本として更新する
+- [ ] mobile縦長で、狭幅action menuのerror一覧だけが多数error時に縦scrollし、section navigation、action button群、`エラーがN件あります。`は固定表示される
+- [x] reset成功時のfocusをroot operation完了後にtriggerへ復帰する
+- [ ] 上記の狭幅menu到達性とreset focus復帰のtarget testを追加・更新する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/vrt/character-sheet.spec.ts`の`@character-sheet.*@action-menu-error`
+- route / states / viewports: `/character-sheet/`のaction menu error state、tablet（`820x1180`）とmobile（`390x900`）
+
+### レビュー結果
+
+| 対象                              | 判定   | 差分                                                                                | 対応                                       |
+| --------------------------------- | ------ | ----------------------------------------------------------------------------------- | ------------------------------------------ |
+| tablet / mobile action menu error | 未確認 | 最終CSS調整後にChromium sandboxが起動できず、actual captureと通常比較を実行できない | 権限昇格なしの指示に従い、未確認のまま残す |
+
+### 実画面確認
+
+- 最終CSS調整前のtablet / mobile locator captureは開いたが、error countとerror listの間隔を既存表示へ戻した後のcaptureではない。最終表示の確認根拠に使わない。
+
+### 自己修正した項目
+
+- error countとerror listの間に不要な4pxのgapを追加してVRT差分を生じさせたため、そのgapを除去した。
+
+### 人間判断が必要な差分
+
+- 権限昇格なしではChromiumのsandbox起動失敗を再実行できない。最終Visual Reviewは、browser実行可能な環境でactual screenshotとtarget限定VRT比較を実施する必要がある。
+
+### 対応完了チェックリスト
+
+- [ ] 変更targetだけをVRT比較した（Chromium sandbox起動失敗）
+- [ ] 変更targetだけの一時snapshotを取得した（最終CSS調整後は未取得）
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [ ] VRT差分を修正した、または修正不要と判断した（最終比較未実行）
+- [x] baseline更新が必要な差分を人間判断として記録した（baseline更新は行わない）
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
