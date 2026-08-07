@@ -2,12 +2,12 @@
 import {
   getSiteMenuItemInitialExpanded,
   getSiteMenuItemState,
-  type SiteMenuItem,
+  type SiteMenuLinkItem,
 } from "../../lib/site/menu";
 import { withBase } from "../../lib/utils/paths";
 
 type Props = {
-  item: SiteMenuItem;
+  item: SiteMenuLinkItem;
   indexPath: string;
   level: number;
   idPrefix: string;

@@ -1,6 +1,6 @@
 ---
 import SiteMenuItem from "./SiteMenuItem.astro";
-import { siteMenuItems } from "../../lib/site/menu";
+import { isSiteMenuLinkItem, siteMenuItems } from "../../lib/site/menu";
 
 type Props = {
   idPrefix?: string;
@@ -15,16 +15,34 @@ const basePath = import.meta.env.BASE_URL;
 <nav class={`site-menu site-menu-${variant}`} aria-label="サイトメニュー">
   <ul class="site-menu-list site-menu-list-root">
     {
-      siteMenuItems.map((item, index) => (
-        <SiteMenuItem
-          item={item}
-          indexPath={String(index + 1)}
-          level={1}
-          idPrefix={idPrefix}
-          currentPath={currentPath}
-          basePath={basePath}
-        />
-      ))
+      siteMenuItems.map((item, index) => {
+        if (item.kind === "section") {
+          return (
+            <li class="site-menu-section" role="presentation">
+              <span class="site-menu-section-label">{item.label}</span>
+            </li>
+          );
+        }
+
+        if (item.kind === "separator") {
+          return <li class="site-menu-separator" aria-hidden="true" />;
+        }
+
+        if (isSiteMenuLinkItem(item)) {
+          return (
+            <SiteMenuItem
+              item={item}
+              indexPath={String(index + 1)}
+              level={1}
+              idPrefix={idPrefix}
+              currentPath={currentPath}
+              basePath={basePath}
+            />
+          );
+        }
+
+        return null;
+      })
     }
   </ul>
 </nav>
@@ -66,6 +84,24 @@ const basePath = import.meta.env.BASE_URL;
 
   .site-menu :global(.site-menu-item) {
     min-width: 0;
+  }
+
+  .site-menu :global(.site-menu-section) {
+    margin-block: var(--space-3) var(--space-1);
+  }
+
+  .site-menu :global(.site-menu-section-label) {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    line-height: var(--line-height-tight);
+    padding-inline: var(--space-2);
+  }
+
+  .site-menu :global(.site-menu-separator) {
+    border-block-start: 1px solid var(--color-border);
+    margin-block: var(--space-3) var(--space-1);
   }
 
   .site-menu :global(.site-menu-item .site-menu-list) {
