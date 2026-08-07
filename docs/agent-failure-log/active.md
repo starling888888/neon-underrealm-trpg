@@ -570,3 +570,11 @@ source種別は以下を使う。
 - 発生箇所: `ex-10-character-sheet-layout` の`useActionPane`と`ActionPaneDialogs`へのrefactor
 - 観測した失敗: 3 hookを合成するfacadeのprops型とdialog state型を一度に移し、`onImport` callbackの引数、不要なobject property、error dialogのfocus refの型を3回の`npm run check:astro`で段階的に失敗させた。
 - 一次対応: facadeの外部callback型をActionPane propsと一致させ、dialog stateを明示型へ揃える。次回の同種refactorではhookのreturn typeと消費componentのpropsを先に確定してからContainerの配線を置き換える。
+
+#### Repeated Astro type-check failures while extracting picker hooks
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の`usePickerStates`と`usePickers`へのrefactor
+- 観測した失敗: picker hookのtest fixtureをfull presenter型へcastし、`npm run check:astro`を3回連続で失敗させた。fixtureが欠くpicker外のprops、続いてpicker型に必要な`clearSelection`、最後にcandidate groupの形状を段階的に補っていた。
+- 一次対応: `usePickers`の入力を必要なpicker操作だけの構造型へ狭め、fixtureはmaster dataのgroup型に一致させる。次回はhookの最小入力型とtest fixtureを先に並べて型検査してから実装配線を進める。

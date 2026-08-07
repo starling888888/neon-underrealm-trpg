@@ -6,36 +6,19 @@ import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
 } from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
-import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
-import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
-import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
-import DrugsPickerDialog from "./components/dialogs/DrugsPickerDialog";
-import IkizamaSkillPickerDialog from "./components/dialogs/IkizamaSkillPickerDialog";
-import NanomachinesPickerDialog from "./components/dialogs/NanomachinesPickerDialog";
-import OmamoriPickerDialog from "./components/dialogs/OmamoriPickerDialog";
-import OtherRyugiSkillPickerDialog from "./components/dialogs/OtherRyugiSkillPickerDialog";
-import PrimarySkillPickerDialog from "./components/dialogs/PrimarySkillPickerDialog";
 import SkillSelectionChangeConfirmDialog from "./components/dialogs/SkillSelectionChangeConfirmDialog";
 import SpecialItemCategoryRemoveConfirmDialog from "./components/dialogs/SpecialItemCategoryRemoveConfirmDialog";
-import WeaponPickerDialog from "./components/dialogs/WeaponPickerDialog";
-import type { NanomachinesPickerTarget } from "./components/NanomachinesSection";
-import SkillPickerDialog from "./components/skills/SkillPickerDialog";
+import PickerDialogs from "./components/PickerDialogs";
 import { characterSheetDictionary } from "./dictionary";
 import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPresenterProps";
 import type { SpecialItemCategoryId } from "./form-values";
 import { serializeCcfoliaCharacterClipboardData } from "./logic/ccfolia";
-import { getCyberneticCandidateGroups } from "./master-data/cybernetics";
-import { getDrugs } from "./master-data/drugs";
-import { getNanomachines } from "./master-data/nanomachines";
-import { getOmamori } from "./master-data/omamori";
-import {
-  getArmors,
-  getWeaponCandidateGroups,
-} from "./master-data/weapons-and-armor";
 import useActionPane from "./useActionPane";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
+import usePickerStates from "./usePickerStates";
+import usePickers from "./usePickers";
 
 /**
  * React Island root and orchestration boundary for the character sheet.
@@ -46,30 +29,6 @@ import useCharacterSheetRootState from "./useCharacterSheetRootState";
  */
 export default function CharacterSheetContainer() {
   const rootState = useCharacterSheetRootState();
-  const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
-    string | null
-  >(null);
-  const [ikizamaSkillPickerRowId, setIkizamaSkillPickerRowId] = useState<
-    string | null
-  >(null);
-  const [commonSkillPickerRowId, setCommonSkillPickerRowId] = useState<
-    string | null
-  >(null);
-  const [otherRyugiSkillPickerRowId, setOtherRyugiSkillPickerRowId] = useState<
-    string | null
-  >(null);
-  const [weaponPickerRowId, setWeaponPickerRowId] = useState<string | null>(
-    null,
-  );
-  const [isArmorPickerOpen, setIsArmorPickerOpen] = useState(false);
-  const [omamoriPickerRowId, setOmamoriPickerRowId] = useState<string | null>(
-    null,
-  );
-  const [drugsPickerRowId, setDrugsPickerRowId] = useState<string | null>(null);
-  const [cyberneticsPickerTarget, setCyberneticsPickerTarget] =
-    useState<CyberneticsPickerTarget | null>(null);
-  const [nanomachinesPickerTarget, setNanomachinesPickerTarget] =
-    useState<NanomachinesPickerTarget | null>(null);
   const [isPrimaryRyugiChangeConfirmOpen, setIsPrimaryRyugiChangeConfirmOpen] =
     useState(false);
   const [isIkizamaChangeConfirmOpen, setIsIkizamaChangeConfirmOpen] =
@@ -80,16 +39,6 @@ export default function CharacterSheetContainer() {
     useState(false);
   const [specialItemCategoryToRemove, setSpecialItemCategoryToRemove] =
     useState<SpecialItemCategoryId | null>(null);
-  const primarySkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const ikizamaSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const commonSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const otherRyugiSkillPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const weaponPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const armorPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const omamoriPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const drugsPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const cyberneticsPickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const nanomachinesPickerTriggerRef = useRef<HTMLButtonElement>(null);
   const primaryRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const ikizamaChangeTriggerRef = useRef<HTMLSelectElement>(null);
   const otherRyugiChangeTriggerRef = useRef<HTMLSelectElement>(null);
@@ -105,6 +54,7 @@ export default function CharacterSheetContainer() {
   const removeOtherRyugiSkillsRef = useRef<(rowId: string) => void>(() => {});
   const form = rootState.form;
   const formResetKey = rootState.formResetVersion;
+  const pickerStates = usePickerStates();
   const imageState = useMemo(
     () => ({
       characterImage: rootState.characterImage,
@@ -121,73 +71,6 @@ export default function CharacterSheetContainer() {
       rootState.onCharacterImageOperationStarted,
       rootState.onCharacterImageSelected,
     ],
-  );
-  const onPrimarySkillPickerRequested = useCallback(
-    (rowId: string, trigger: HTMLButtonElement) => {
-      primarySkillPickerTriggerRef.current = trigger;
-      setPrimarySkillPickerRowId(rowId);
-    },
-    [],
-  );
-  const onIkizamaSkillPickerRequested = useCallback(
-    (rowId: string, trigger: HTMLButtonElement) => {
-      ikizamaSkillPickerTriggerRef.current = trigger;
-      setIkizamaSkillPickerRowId(rowId);
-    },
-    [],
-  );
-  const onCommonSkillPickerRequested = useCallback(
-    (rowId: string, trigger: HTMLButtonElement) => {
-      commonSkillPickerTriggerRef.current = trigger;
-      setCommonSkillPickerRowId(rowId);
-    },
-    [],
-  );
-  const onOtherRyugiSkillPickerRequested = useCallback(
-    (rowId: string, trigger: HTMLButtonElement) => {
-      otherRyugiSkillPickerTriggerRef.current = trigger;
-      setOtherRyugiSkillPickerRowId(rowId);
-    },
-    [],
-  );
-  const onArmorPickerRequested = useCallback((trigger: HTMLButtonElement) => {
-    armorPickerTriggerRef.current = trigger;
-    setIsArmorPickerOpen(true);
-  }, []);
-  const onOmamoriPickerRequested = useCallback(
-    (rowId: string, trigger: HTMLButtonElement) => {
-      omamoriPickerTriggerRef.current = trigger;
-      setOmamoriPickerRowId(rowId);
-    },
-    [],
-  );
-  const onDrugsPickerRequested = useCallback(
-    (rowId: string, trigger: HTMLButtonElement) => {
-      drugsPickerTriggerRef.current = trigger;
-      setDrugsPickerRowId(rowId);
-    },
-    [],
-  );
-  const onCyberneticsPickerRequested = useCallback(
-    (target: CyberneticsPickerTarget, trigger: HTMLButtonElement) => {
-      cyberneticsPickerTriggerRef.current = trigger;
-      setCyberneticsPickerTarget(target);
-    },
-    [],
-  );
-  const onNanomachinesPickerRequested = useCallback(
-    (target: NanomachinesPickerTarget, trigger: HTMLButtonElement) => {
-      nanomachinesPickerTriggerRef.current = trigger;
-      setNanomachinesPickerTarget(target);
-    },
-    [],
-  );
-  const onWeaponPickerRequested = useCallback(
-    (rowId: string, trigger: HTMLButtonElement) => {
-      weaponPickerTriggerRef.current = trigger;
-      setWeaponPickerRowId(rowId);
-    },
-    [],
   );
   const onIkizamaChangeRequested = useCallback(
     (
@@ -307,26 +190,18 @@ export default function CharacterSheetContainer() {
     formRestoreReturnFocusRef: rootState.formRestoreReturnFocusRef,
     onIkizamaChangeRequested,
     onPrimaryRyugiChangeRequested,
-    onPrimarySkillPickerRequested,
-    onIkizamaSkillPickerRequested,
-    onCommonSkillPickerRequested,
     onOtherRyugiChangeRequested,
     otherRyugiAddButtonRef,
     onOtherRyugiRemoveRequested,
-    onOtherRyugiSkillPickerRequested,
-    onArmorPickerRequested,
-    onOmamoriPickerRequested,
-    onDrugsPickerRequested,
-    onCyberneticsPickerRequested,
-    onNanomachinesPickerRequested,
-    onWeaponPickerRequested,
     onSpecialItemCategoryRemoveRequested,
     onSpecialItemCategoryRemoved,
+    ...pickerStates.requests,
   });
   clearOtherRyugiSkillsRef.current =
     presenterProps.otherRyugiSkills.clearSelection;
   removeOtherRyugiSkillsRef.current =
     presenterProps.otherRyugiSkills.removeRows;
+  const pickers = usePickers({ form, pickerStates, presenterProps });
   const formPresenterProps = useMemo<CharacterSheetFormPresenterProps>(
     () => ({
       bondsSection: presenterProps.bondsSection,
@@ -408,40 +283,6 @@ export default function CharacterSheetContainer() {
   const onJsonImportPendingClose = useCallback(() => {
     rootState.setPendingJsonImport(null);
   }, [rootState.setPendingJsonImport]);
-
-  function closePrimarySkillPicker(): void {
-    setPrimarySkillPickerRowId(null);
-  }
-
-  function closeIkizamaSkillPicker(): void {
-    setIkizamaSkillPickerRowId(null);
-  }
-
-  function closeCommonSkillPicker(): void {
-    setCommonSkillPickerRowId(null);
-  }
-
-  function closeOtherRyugiSkillPicker(): void {
-    setOtherRyugiSkillPickerRowId(null);
-  }
-  function closeWeaponPicker(): void {
-    setWeaponPickerRowId(null);
-  }
-  function closeArmorPicker(): void {
-    setIsArmorPickerOpen(false);
-  }
-  function closeOmamoriPicker(): void {
-    setOmamoriPickerRowId(null);
-  }
-  function closeDrugsPicker(): void {
-    setDrugsPickerRowId(null);
-  }
-  function closeCyberneticsPicker(): void {
-    setCyberneticsPickerTarget(null);
-  }
-  function closeNanomachinesPicker(): void {
-    setNanomachinesPickerTarget(null);
-  }
 
   function confirmPrimaryRyugiChange(): void {
     presenterProps.primarySkillPicker.clearSelection();
@@ -559,197 +400,7 @@ export default function CharacterSheetContainer() {
           onJsonImportPendingClose={onJsonImportPendingClose}
           state={actionPane.dialogs}
         />
-        <PrimarySkillPickerDialog
-          groups={presenterProps.primarySkillPicker.candidateGroups}
-          isOpen={primarySkillPickerRowId !== null}
-          onRequestClose={closePrimarySkillPicker}
-          onSelect={(skillId) => {
-            if (primarySkillPickerRowId !== null) {
-              presenterProps.primarySkillPicker.onSelect(
-                primarySkillPickerRowId,
-                skillId,
-              );
-            }
-            closePrimarySkillPicker();
-          }}
-          returnFocusRef={primarySkillPickerTriggerRef}
-          selectedSkillIds={presenterProps.primarySkillsSection.rows.flatMap(
-            (row) => (row.skillId === null ? [] : [row.skillId]),
-          )}
-        />
-        <IkizamaSkillPickerDialog
-          groups={presenterProps.ikizamaSkillPicker.candidateGroups}
-          isOpen={ikizamaSkillPickerRowId !== null}
-          onRequestClose={closeIkizamaSkillPicker}
-          onSelect={(skillId) => {
-            if (ikizamaSkillPickerRowId !== null) {
-              presenterProps.ikizamaSkillPicker.onSelect(
-                ikizamaSkillPickerRowId,
-                skillId,
-              );
-            }
-            closeIkizamaSkillPicker();
-          }}
-          returnFocusRef={ikizamaSkillPickerTriggerRef}
-        />
-        <SkillPickerDialog
-          groups={[
-            {
-              id: "common-skills",
-              skills: presenterProps.commonSkillPicker.candidates,
-            },
-          ]}
-          isOpen={commonSkillPickerRowId !== null}
-          onRequestClose={closeCommonSkillPicker}
-          onSelect={(skillId) => {
-            if (commonSkillPickerRowId !== null) {
-              presenterProps.commonSkillPicker.onSelect(
-                commonSkillPickerRowId,
-                skillId,
-              );
-            }
-            closeCommonSkillPicker();
-          }}
-          returnFocusRef={commonSkillPickerTriggerRef}
-          selectedSkillIds={presenterProps.commonSkillsSection.rows.flatMap(
-            (row) => (row.skillId === null ? [] : [row.skillId]),
-          )}
-          selectionGuide={
-            characterSheetDictionary.characterSheet.skills.selectionGuide
-          }
-          title={characterSheetDictionary.characterSheet.skills.chooseCommon}
-        />
-        <OtherRyugiSkillPickerDialog
-          groups={
-            otherRyugiSkillPickerRowId === null
-              ? { advanced: [], basic: [] }
-              : presenterProps.otherRyugiSkillPicker.getCandidateGroups(
-                  rootState.form
-                    .getValues("otherRyugiSkills.rows")
-                    .find((row) => row.rowId === otherRyugiSkillPickerRowId)
-                    ?.ryugiRowId ?? "",
-                )
-          }
-          isOpen={otherRyugiSkillPickerRowId !== null}
-          onRequestClose={closeOtherRyugiSkillPicker}
-          onSelect={(skillId) => {
-            if (otherRyugiSkillPickerRowId !== null) {
-              presenterProps.otherRyugiSkillPicker.onSelect(
-                otherRyugiSkillPickerRowId,
-                skillId,
-              );
-            }
-            closeOtherRyugiSkillPicker();
-          }}
-          returnFocusRef={otherRyugiSkillPickerTriggerRef}
-          selectedSkillIds={
-            otherRyugiSkillPickerRowId === null
-              ? []
-              : presenterProps.otherRyugiSkillPicker.getSelectedSkillIds(
-                  rootState.form
-                    .getValues("otherRyugiSkills.rows")
-                    .find((row) => row.rowId === otherRyugiSkillPickerRowId)
-                    ?.ryugiRowId ?? "",
-                )
-          }
-        />
-        <WeaponPickerDialog
-          groups={getWeaponCandidateGroups(
-            rootState.form.getValues("build.ikizamaId"),
-          )}
-          isOpen={weaponPickerRowId !== null}
-          onRequestClose={closeWeaponPicker}
-          onSelect={(weaponId) => {
-            if (weaponPickerRowId !== null) {
-              presenterProps.weaponsAndArmorSection.onWeaponSelect(
-                weaponPickerRowId,
-                weaponId,
-              );
-            }
-            closeWeaponPicker();
-          }}
-          returnFocusRef={weaponPickerTriggerRef}
-        />
-        <ArmorPickerDialog
-          armors={getArmors()}
-          isOpen={isArmorPickerOpen}
-          onRequestClose={closeArmorPicker}
-          onSelect={(armorId) => {
-            presenterProps.weaponsAndArmorSection.onArmorSelect(armorId);
-            closeArmorPicker();
-          }}
-          returnFocusRef={armorPickerTriggerRef}
-        />
-        <OmamoriPickerDialog
-          candidates={getOmamori()}
-          isOpen={omamoriPickerRowId !== null}
-          onRequestClose={closeOmamoriPicker}
-          onSelect={(omamoriId) => {
-            if (omamoriPickerRowId !== null) {
-              presenterProps.omamoriSection.onSelect(
-                omamoriPickerRowId,
-                omamoriId,
-              );
-            }
-            closeOmamoriPicker();
-          }}
-          returnFocusRef={omamoriPickerTriggerRef}
-        />
-        <DrugsPickerDialog
-          candidates={getDrugs()}
-          isOpen={drugsPickerRowId !== null}
-          onRequestClose={closeDrugsPicker}
-          onSelect={(drugId) => {
-            if (drugsPickerRowId !== null) {
-              presenterProps.drugsSection.onSelect(drugsPickerRowId, drugId);
-            }
-            closeDrugsPicker();
-          }}
-          returnFocusRef={drugsPickerTriggerRef}
-          selectedDrugIds={rootState.form
-            .getValues("drugs.rows")
-            .flatMap((row) =>
-              row.rowId === drugsPickerRowId || row.drugId === null
-                ? []
-                : [row.drugId],
-            )}
-        />
-        <CyberneticsPickerDialog
-          groups={getCyberneticCandidateGroups(
-            cyberneticsPickerTarget === null
-              ? "other"
-              : cyberneticsPickerTarget.kind === "fixed"
-                ? cyberneticsPickerTarget.part
-                : "other",
-          )}
-          isOpen={cyberneticsPickerTarget !== null}
-          onRequestClose={closeCyberneticsPicker}
-          onSelect={(cyberneticId) => {
-            if (cyberneticsPickerTarget !== null) {
-              presenterProps.cyberneticsSection.onSelect(
-                cyberneticsPickerTarget,
-                cyberneticId,
-              );
-            }
-            closeCyberneticsPicker();
-          }}
-          returnFocusRef={cyberneticsPickerTriggerRef}
-        />
-        <NanomachinesPickerDialog
-          candidates={getNanomachines()}
-          isOpen={nanomachinesPickerTarget !== null}
-          onRequestClose={closeNanomachinesPicker}
-          onSelect={(nanomachineId) => {
-            if (nanomachinesPickerTarget !== null) {
-              presenterProps.nanomachinesSection.onSelect(
-                nanomachinesPickerTarget,
-                nanomachineId,
-              );
-            }
-            closeNanomachinesPicker();
-          }}
-          returnFocusRef={nanomachinesPickerTriggerRef}
-        />
+        <PickerDialogs {...pickers.dialogsProps} />
         <SkillSelectionChangeConfirmDialog
           confirmation={
             characterSheetDictionary.characterSheet.skills

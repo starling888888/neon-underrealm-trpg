@@ -262,3 +262,40 @@
 - [x] ActionPaneのunit testと対象E2Eを更新する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- `CharacterSheetContainer`に残る候補pickerごとの開閉state、focus復帰ref、request / close callbackを、picker dialog単位のhookへ分離する。
+- `usePickers`をfacadeとして各picker hookを集約し、Containerは候補pickerについてこのhookだけを呼び出す。
+- 候補picker dialogのJSXを`PickerDialogs`へ集約する。
+- `PickerDialogs`、候補picker dialogとContainerの境界で、効果がある範囲の`memo`と`useCallback`を適用する。
+
+### 判定
+
+- source: human review in the active Codex conversation
+- classification: valid
+- local validation:
+  - Containerには、primary / ikizama / common / other ryugi skill、weapon、armor、omamori、drugs、cybernetics、nanomachinesの10候補pickerについて、個別のstate、trigger ref、request callback、close callbackが残る。
+  - request callbackはすでに個別に`useCallback`化されているが、Picker dialogのJSXではselectionとcloseのinline callbackが混在し、ActionPaneと同様の責務境界になっていない。
+  - 候補の選択操作は`useCharacterSheetFormPresenterProps`が返すsection操作へ依存する。そのためpicker hookがform操作まで直接所有すると、presenter callbackとpicker request callbackの循環依存を作る。
+  - この整理はcharacter-sheetの既存操作・layoutを変えない内部refactorであり、ユーザーの追加指示によりレビュー指摘4の「picker dialogの状態は移動しない」という前提を置き換えてcurrent issueで扱う。
+
+### 対応方針
+
+- `usePickerStates`は10個のpicker state hookを合成し、form presenterへ渡すrequest callback、開閉対象、trigger ref、`close`を返す。targetを持つpickerはtarget型を維持し、focus復帰と既存のdialog open / close契約を変えない。
+- Containerは`usePickerStates`を最初に呼び、そのrequest callbackをform presenterへ渡す。presenter propsの生成後に`usePickers({ pickerStates, form, presenterProps })`を呼び、form選択・候補絞り込み・dialog propsをhook内へまとめる。これにより依存循環を作らず、pickerの業務操作もContainerから外す。
+- `PickerDialogs`は候補picker dialogだけを集約する。流儀変更・削除・専用アイテム削除のconfirm dialogは候補pickerではないため、本指摘では移動しない。
+- `PickerDialogs`を`memo`化し、Containerから渡すselection / close callbackとdialog propsを`useCallback` / `useMemo`で安定させる。既存の候補picker dialog componentは、propsが安定するものだけ`memo`化する。内部だけで完結し再利用されない短いcallbackは機械的に追加しない。
+- 各hookと`PickerDialogs`を単体テスト可能な入力・出力へし、Container testでpicker dialog stateの更新が無関係なform presenter propsを変えないことを確認する。
+
+### 対応完了チェックリスト
+
+- [x] 10候補pickerのstate、trigger ref、request / closeをpicker単位のhookへ分離する
+- [x] `usePickerStates`と`usePickers`がpicker stateと操作を集約し、Containerが候補picker state・操作を直接持たない
+- [x] 候補picker dialogを`PickerDialogs`へ集約し、既存の選択、候補絞り込み、focus復帰を維持する
+- [x] 有効な境界に`memo`と`useCallback` / `useMemo`を適用し、不要な再renderを避ける
+- [x] picker hook、`PickerDialogs`、Container memo境界のtarget testを追加・更新する
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
