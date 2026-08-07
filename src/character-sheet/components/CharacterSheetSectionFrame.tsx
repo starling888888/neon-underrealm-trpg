@@ -42,6 +42,7 @@ export default function CharacterSheetSectionFrame({
     <section
       aria-labelledby={headingId}
       className={`${styles.frame} ${allowOverflow ? styles.allowOverflow : ""}`}
+      id={id}
     >
       <Heading className={styles.heading}>
         {expandable ? (

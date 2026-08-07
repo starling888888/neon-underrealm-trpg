@@ -6,7 +6,7 @@ type CharacterSheetMenuElements = {
   focusableElements: () => HTMLElement[];
 };
 
-const menuRailMediaQuery = "(width >= 64rem) and (width < 80rem)";
+const menuRailMediaQuery = "(width >= 64rem)";
 const layoutOverlayChangeEvent = "layout-overlay-change";
 
 type OverlayChangeDetail = {

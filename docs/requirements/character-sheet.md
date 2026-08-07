@@ -217,11 +217,13 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 
 - 画面の具体的な構成、レスポンシブレイアウト、入力部品、ダイアログ、通知、エラー表示、アクセシビリティはdesignで定義する。
 - ページタイトルの`h1`はReact Islandの外でAstro pageが出力する。Island内の操作領域はページタイトルを重複表示しない。
-- formのsectionはdesktopを含めてDOM順どおりの1列に積む。複数columnへsectionを振り分けるlayoutは用いない。desktopではform本文の右に、通常のPageTocと同じ幅の補助領域を置ける。
+- formのsectionはdesktopを含めてDOM順どおりの1列に積む。複数columnへsectionを振り分けるlayoutは用いない。`48rem`以上ではform本文を最大`44rem`にして中央寄せし、desktopではmain右端に通常のPageTocと同じ`15rem`幅の補助領域を置く。form本文は、この補助領域を除いた領域内で中央寄せする。
 - desktopの補助領域には、formの第一階層sectionへ移動するページ内リンクだけを置く。子section、行、入力項目へのリンクは置かない。補助領域のsection navigationの下には、ヘルプ、JSON出力、JSON入力、CCFOLIAコピー、初期化、エラー状態を縦に配置する。既存のページ見出し横の横並び操作menuは用いない。
-- 狭幅レイアウトの操作menuは、action button群の上に第一階層sectionだけのページ内ジャンプを置く。sectionリンクを選んだ後は、通常のアンカー移動として利用できる。子sectionへのジャンプ、現在位置追跡、scroll連動表示は含めない。
-- character-sheetのサイトメニューは、sheet本文の最小幅、desktop右補助領域、常設site menu rail、mainの左右gutterを同時に確保できるときだけrail表示にする。確保できない幅ではrailを隠し、Headerのサイトメニューボタンからdrawerを開く。character-sheet固有のtablet / mobile切替は、従来の`48rem`固定ではなく、この必要幅に合わせて広い範囲へ適用する。
+- 狭幅レイアウトの操作menuは、action button群の上に第一階層sectionだけのページ内ジャンプを置く。section linkを選ぶと、固定Headerを避けて対象sectionへsmooth scrollする。section navigationの各buttonは下向きiconと下線でジャンプ操作だと分かるようにし、現在位置またはクリック対象のaccent表示は行わない。子section、行、入力項目へのジャンプや強調は含めない。
+- character-sheetのsite menu railは`64rem`以上で表示する。`64rem`未満ではrailを隠し、Headerのサイトメニューボタンからdrawerを開く。desktopのtext action railは`84rem`以上だけで表示し、`84rem`未満でもtablet / mobile用のfloating action icon controlsを維持する。
 - `/character-sheet/`を静的公開routeとして提供する。ページ固有のサイトメニュー表示、section navigation、レイアウトはdesignで定義する。
+- desktopのaction railは本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを変更しない。
+- section navigationは第一階層sectionだけを対象にする。各navigation buttonは下向きiconと下線を持つが、現在のscroll位置またはクリック対象に応じたaccent表示は行わない。section frame自体、子section、行、入力項目の色は変えない。
 - キャラクターシートのrouteと入力内容はPagefind検索indexの対象外とする。
 - 静的ホスティングで完結し、サーバー側処理やDBを必要としない。
 - 画像の端末内保存方式、保存先間の責務分離、ブラウザAPIの失敗時の共通方針はアーキテクチャで定義する。JSONの構造、CCFOLIA Clipboard JSONの具体的なオブジェクト形状、実行時schemaの具体形は、対応する実装Gateの着手直前にこの要件と整合する形で確定する。

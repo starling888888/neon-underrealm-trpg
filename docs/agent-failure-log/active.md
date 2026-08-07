@@ -543,6 +543,16 @@ source種別は以下を使う。
 
 ### failure-log workflow consistency
 
+### browser-test scroll-state diagnosis
+
+#### Repeated active-section E2E failures before validating document-position semantics
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の `tests/e2e/character-sheet.spec.ts` に追加したsection navigationのactive state確認
+- 観測した失敗: IntersectionObserver callbackのentriesだけで現在sectionを決める実装を、scroll位置ベースの確認へ置き換える際、jump後の末尾sectionとHeader直下の境界を先にモデル化しなかった。同じE2E commandを3回連続で失敗させてから、section全体のdocument位置と末尾scroll位置を基準にする実装へ修正した。
+- 一次対応: active sectionはHeader直下の位置を越えた第一階層sectionから決め、末尾sectionへjumpした直後は最大scroll位置でも選択状態を維持する。追加するscroll連動testは、実装前に通常scroll・section jump・末尾sectionの3状態を契約として列挙する。
+
 #### Omitted archive movement rules from the failure-log audit skill
 
 - date: 2026-08-05

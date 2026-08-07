@@ -31,7 +31,7 @@
 
 - `.tmp/design/character-sheet/`に、application sourceから独立したdesktop、tablet、mobileのlayout draftとcaptureを作成する。
 - 1列form、Astro側の`h1`、desktop右補助領域、section navigation、縦並び操作、狭幅floating menu、site menu rail / Header drawerの切替を確認できるstateをdraftへ含める。
-- desktop `1440x1200`、ultrawide `1920x1200`（actualの中央寄せ確認）、tablet `820x1180`、mobile `390x900`について、layout境界とVRT scenarioを確定する。
+- desktop `1440x1200`、tablet `820x1180`、mobile `390x900`について、layout境界とVRT scenarioを確定する。
 - ユーザー承認後に`docs/design/character-sheet/notes.md`へ最終layout intent、対象state、VRT比較対象を記録する。canonical VRT baselineは別途の明示承認なしに更新しない。
 
 ## 対象範囲
@@ -40,14 +40,13 @@
 - `CharacterSheetContainer`、`CharacterSheetActionPane`、form presenterを、Astro側の`h1`、1列section、desktop補助領域、狭幅のsection navigationへ対応させる。
 - section navigationは、基本情報、流儀・生き様と能力値、副能力値、縁、判定、スキル、武器・防具、専用アイテムの第一階層sectionだけを対象にする。
 - desktopでは右補助領域を通常のPageTocと同じ幅にし、section navigationの下に操作とエラー状態を縦に置く。
-- sheet本文最小幅、desktop右補助領域、site menu rail、main左右gutterの合計を切替条件とし、従来のcharacter-sheet固有`64rem`〜`80rem`例外と`48rem`固定の狭幅境界を廃止する。採用したbreakpointと各構成要素の幅は実装記録へ残す。
+- site menu railは`64rem`以上、desktopのtext action railは`84rem`以上で表示する。`64rem`から`84rem`ではsite menu railとfloating action icon controlsを併用し、`64rem`未満ではHeader drawerとfloating action icon controlsを用いる。
 - 狭幅layoutではfloating action menu内のbutton群の上にsection navigationを置き、action buttonを縦に置く。既存のhelp dialog、error表示、JSON入出力、CCFOLIAコピー、初期化の振る舞いは維持する。
 - `docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`を実装と整合する範囲で維持し、対象VRT・E2E・component testsを更新する。
 
 ## 初期スコープ外
 
 - section navigationから子section、行、入力項目へ移動する機能
-- 現在位置の追跡、scroll連動、IntersectionObserverによる強調
 - character sheet以外のPageToc / MobilePageTocの再設計
 - 新たなcharacter sheet機能、保存形式、ゲームルール、マスタデータの変更
 - `docs/TODO.md`の候補行の選択可能性を示すvisual design（本taskでは回収しない）
@@ -62,12 +61,12 @@
 - [ ] PageToc / MobilePageTocを表示せず、character-sheet固有navigationはdesktop補助領域と狭幅action menuだけにある
 - [ ] site menu railはsheet最小幅、補助領域、rail、main左右gutterを確保できる幅だけで表示され、それ以外ではHeader buttonからdrawerを開ける。採用したbreakpointと構成要素の幅を実装記録へ残す
 - [ ] 狭幅layoutがtabletから適用され、独立した`?`がmenu iconの上にあり、開いたfloating menuでは第一階層section navigation、縦並びaction button、error一覧の順にある
-- [ ] child sectionへのリンク、現在位置追跡、scroll連動を追加していない
+- [ ] child section、行、入力項目へのリンク・強調を追加していない
 - [ ] help、JSON出力・入力、CCFOLIAコピー、初期化、エラー一覧の既存機能が各layoutで利用できる
 - [ ] `docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`が実装と整合している
 - [ ] 関連TODOを本taskでは扱わない理由が記録されている
 - [ ] `design-image-generation`でlayout draft、VRT scenario、ユーザー承認を得て、`docs/design/character-sheet/notes.md`へ記録している
-- [ ] `/character-sheet/`のdefault desktop、tablet、mobile、ultrawide中央寄せ、desktop補助領域、tablet / mobileのfloating menu開閉、Header drawerとaction menuが競合しない状態について、actual screenshotを開いたVisual Review記録と必要なtarget限定VRT比較結果を残している
+- [ ] `/character-sheet/`のdefault desktop、tablet、mobile、desktop補助領域、tablet / mobileのfloating menu開閉、Header drawerとaction menuが競合しない状態について、actual screenshotを開いたVisual Review記録と必要なtarget限定VRT比較結果を残している
 - [ ] canonical VRT baselineを更新する場合は、別途ユーザーの明示承認を得ている
 - [ ] `npm run check`と`npm run build`が通る
 
@@ -105,7 +104,7 @@
 ## レビュー観点
 
 - 1列formと右補助領域が、左右columnの高さ差を解消しながら入力幅を不自然に狭めていないか。
-- site menu railを隠す境界がsheet最小幅、右補助領域、rail、main左右gutterを根拠にしており、tabletでmenu railと入力領域が競合しないか。
+- `64rem`と`84rem`の境界でsite menu rail、desktop text action rail、floating action icon controlsが競合しないか。
 - desktopと狭幅のsection navigationが、第一階層だけを示し、PageToc / MobilePageTocと併存・誤認しないか。
 - 狭幅menuで独立した`?`、section navigation、縦並び操作、エラーが指定順序で指により到達しやすく、最後の操作を覆わないか。
 - `docs/TODO.md`の候補行選択のvisual designを、このlayout taskへ混ぜない判断が妥当か。
@@ -115,3 +114,116 @@
 
 - `docs/TODO.md`の候補行を選択可能に見せるdesignは、候補dialog・選択状態の視覚表現を対象とする別taskであり、今回のlayout・navigation改訂には含めない。
 - 実装開始前に、`docs/design/character-sheet/notes.md`の設計意図とVRT対象を再確認する。design draftの作成とユーザー承認を必須とし、canonical VRT baselineの更新には別途ユーザーの明示承認を必要とする。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- site menu railが消えた後も右操作領域が残るresponsive解釈を修正する。
+- desktopからmobileまでを、site menu railとaction controlsの表示役割が一致する段階へ分ける。site menuのないdesktop幅ではtext action railを表示せず、tablet / mobileのaction icon controlsは維持する。
+- desktopのright action railを本文scrollから独立してsticky表示にする。既存のpage shell、main、Footerのscroll構造は変更しない。
+- navigationの可視labelを`セクションにジャンプ`へ変更し、muted boldの表現にする。
+- section jumpを確実に動作させ、現在scroll中の第一階層sectionに対応する操作menu内のlinkだけをaccentで示す。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation:
+  - `src/pages/character-sheet.astro`のsite menu railと`CharacterSheetActionPane`のdesktop action railの境界がずれており、site menu railだけが先に消える。
+  - `CharacterSheetActionPane`は`セクション`というlabelと通常anchorに依存しており、section移動後のactive stateを持たない。
+  - current issueの`現在位置追跡、scroll連動`の初期scope外は、今回のユーザー指示によりcharacter-sheetの第一階層section navigationに限って変更する必要がある。
+
+### 対応方針
+
+- requirementsとdesign notesを、以下のresponsive段階とdesktop action railのsticky表示へ更新してから実装する。
+  1. desktop: site menu railとtext action railを表示する。
+  2. site menu railを維持するtablet: action railをicon controlsへ縮小する。
+  3. site menu railを持たないdesktop / tablet: right text action railを表示せず、tablet / mobileのaction icon controlsを維持する。
+  4. mobile: floating action menuを表示する。
+- tabletでは既存のfloating action icon controlsを維持する。操作を到達不能にする実装は行わない。
+- 第一階層sectionだけをIntersectionObserverで観測し、操作menu内navigationの対応linkへaccentを与える。section frame、子section、行、入力項目の色・追跡は変更しない。
+- section jumpは固定Headerの高さを考慮して移動し、menuを閉じた後にも移動を失わない実装へ置き換える。
+
+### 対応完了チェックリスト
+
+- [ ] requirementsとdesign notesへresponsive段階、desktop action railのsticky表示、active section jumpを反映する
+- [ ] desktop、site-menuありtablet、site-menuなしdesktop / tablet、mobileの各表示状態を実装・確認する
+- [ ] section jumpと、操作menu内の第一階層section linkだけへのactive accentを確認する
+- [ ] desktop、tablet、mobile、ultrawideのactual screenshotを開いて確認する
+- [ ] 対象VRTを更新し、target限定比較を通す
+- [ ] `npm run check` が通る
+- [ ] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- desktopの操作レールがscroll時に追従していない。
+- section jump後のsection先頭に、Header高さ以上の余分な余白がある。
+- character-sheet本文がtablet以上で広がりすぎる。tablet以上は本文の最小幅を上限として中央寄せする。
+
+### 判定
+
+- source: human review in the active Codex conversation
+- classification: valid
+- local validation:
+  - `CharacterSheetActionPane`のsticky指定は、grid itemである操作領域の子`.desktopRail`に置かれている。親gridは`align-items: start`で子の高さに収まるため、sticky要素がscrollできる親blockの高さを得られず、実画面で追従しない。
+  - global CSSは`scroll-padding-top: var(--site-header-height)`を指定している。`CharacterSheetSectionFrame`のscroll marginを併用するとHeader高さが二重に加わり、余分な余白を作る。
+  - `CharacterSheetContainer`のdesktop form columnは`minmax(44rem, 1fr)`で利用可能幅まで拡大する。`character-sheet-page`の`90rem`上限だけでは、tablet以上で本文幅を固定できない。
+
+### 対応方針
+
+- desktopではgrid itemである操作領域自体をstickyにし、本文・Header・Footerの既存scroll構造には手を入れない。
+- section jumpはContainerのnavigation hookでHeader実高さを引いたscroll位置を計算し、共通scroll paddingの影響を受けずに、可能な範囲で対象sectionをHeader直下へ置く。末尾sectionは最大scroll位置で止まることを許容する。
+- `48rem`以上ではform本文を`min(100%, 44rem)`に制限して中央寄せする。desktop action railが表示される`84rem`以上では、固定幅formと`15rem`のaction railを一つの中央寄せgroupにする。site menu railが表示される`64rem`から`84rem`では、本文最小幅を維持できるmain gutterへ調整する。
+
+### 対応完了チェックリスト
+
+- [x] desktop操作レールが本文scroll中もHeader下へsticky表示される
+- [ ] section jump後の対象sectionがHeader直下に表示される
+- [x] tablet以上でform本文が最大`44rem`となり、desktopのaction railを含むgroupが中央寄せされる
+- [ ] `64rem`、`84rem`の各境界でsite menu rail、form、action controlsに横overflowがない
+- [ ] desktop、tablet、mobileのactual screenshotを開いて確認する
+- [ ] 対象VRTを更新し、target限定比較を通す
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- desktopの操作メニューは右端へ固定し、中央寄せはキャラクターシート本文だけへ適用する。
+- scroll中の第一階層sectionに対して、操作メニュー内navigationのactive accentが追従しない。
+- `セクションにジャンプ`の上にある区切り線を外し、区切るならsection navigationと操作button群の間に置く。
+
+### 判定
+
+- source: human review in the active Codex conversation
+- classification: valid
+- local validation:
+  - `CharacterSheetContainer.module.css`はdesktopでformとaction railを固定幅の一つの中央寄せgroupにしており、action railはmain右端へ寄らない。
+  - `useCharacterSheetSectionNavigation`は`IntersectionObserver` callbackへ渡されたentriesだけからactive sectionを決めている。現在viewportに交差しているsection全体を比較しないため、scroll中のcurrent sectionを安定して反映できない。これは要件化済みのactive accentに対する実装bugであり、仕様解釈ではない。
+  - `CharacterSheetActionPane.module.css`はdesktopの`.sectionNavigation`自身へborder-topを設定しており、labelの上に区切り線が出る。
+
+### 対応方針
+
+- desktopのcontainerを、中央寄せの最大`44rem` form columnと、main右端に置く`15rem` action railへ分離する。action railは現在どおり本文scrollに対してstickyとする。
+- section navigation hookを、Header直下のscroll位置を基準に第一階層section全体からactive sectionを決めるscroll連動処理へ置き換える。action paneは状態を持たず、Containerから渡されたactive IDだけを表示する。
+- desktopのborderをsection navigationから外し、action button群の上へ移す。
+
+### 対応完了チェックリスト
+
+- [x] desktopのform本文だけが中央寄せされ、action railはmain右端でsticky表示される
+- [x] manual scrollとsection jumpの双方で、現在の第一階層sectionのnavigation linkだけがaccentになる
+- [x] section navigation labelの上にborderがなく、action button群の上にborderがある
+- [ ] desktop、tablet、mobileのactual screenshotを開いて確認する
+- [ ] 対象VRTを更新し、target限定比較を通す
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## 要求調整（2026-08-08）
+
+- section navigationの現在位置追跡と、クリック対象のaccent表示は廃止する。
+- 第一階層sectionへジャンプする各buttonは、下向きiconと下線で操作の意味を示す。
+- section jump、第一階層だけを対象にする範囲、section frame・子section・行・入力項目へ色を付けない制約は維持する。

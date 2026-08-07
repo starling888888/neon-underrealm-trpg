@@ -1,0 +1,28 @@
+.layout {
+  min-width: 0;
+}
+
+.layout > form {
+  min-width: 0;
+}
+
+@media (width >= 48rem) {
+  .layout > form {
+    width: min(100%, var(--character-sheet-single-column-min-width));
+    margin-inline: auto;
+  }
+}
+
+@media (width >= 84rem) {
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--character-sheet-menu-rail-width);
+    width: 100%;
+    align-items: start;
+    gap: var(--space-6);
+  }
+  .layout > form {
+    grid-column: 1;
+    justify-self: center;
+  }
+}

@@ -88,8 +88,8 @@
 ### 操作領域
 
 - 対象操作は、細かな説明を開く`?`、JSON出力、JSON入力、初期化、CCFOLIAコピーである。`?`は操作領域の左端に丸いボタンとして置き、説明モーダルを開く。
-- desktopでは、form本文右の補助領域に操作を縦に配置する。操作領域の先頭には第一階層sectionへの`セクション` navigationを置き、その下に`?`、JSON出力、JSON入力、CCFOLIAコピー、初期化、エラー状態を縦に並べる。ページ見出し横の横並び操作menuは廃止する。
-- 狭幅レイアウトでは、右下にメニューボタンを配置し、クリックすると第一階層sectionへの`セクション` navigation、各操作button、エラー一覧の順に表示する。section navigationはbutton群の上に置き、子section・行・入力項目へのジャンプは置かない。
+- desktopでは、form本文右の補助領域に操作を縦に配置する。操作領域の先頭には第一階層sectionへの`セクションにジャンプ` navigationを置き、その下に`?`、JSON出力、JSON入力、CCFOLIAコピー、初期化、エラー状態を縦に並べる。ページ見出し横の横並び操作menuは廃止する。
+- 狭幅レイアウトでは、右下にメニューボタンを配置し、クリックすると第一階層sectionへの`セクションにジャンプ` navigation、各操作button、エラー一覧の順に表示する。section navigationはbutton群の上に置き、子section・行・入力項目へのジャンプは置かない。
 - 狭幅レイアウトの右下メニューボタンは、scroll中も操作できるsticky controlとする。編集領域の末尾にはfloating操作と重ならない十分な下余白を設け、最下部までscrollしたときも最後の入力・追加・削除操作を隠さない。
 - 狭幅レイアウトでは、右下のメニューアイコンの上に、独立した青緑の丸い`?`ヘルプアイコンを置く。ヘルプアイコンを操作すると、menu内ではなく独立したヘルプdialogを開く。
 - 開いたmenuの操作buttonは縦に配置し、エラー欄に個別のエラーを直接表示する。エラー確認のために別のdialogを開かない。menu iconはエラーがあるときエラーカラーで表示する。外側click時の扱いとキーボード操作は実装taskでアクセシビリティ要件とともに定める。
@@ -115,7 +115,10 @@
 - character-sheet固有のsection navigationは、desktopの右補助領域と狭幅操作menuだけに置く。どちらもformの第一階層sectionだけを対象にする。
 - character-sheetは通常のサイトlayoutへ寄せる。site menu railは、sheet formの最小幅と右補助領域を保ったまま表示できる広いdesktop幅だけで表示する。必要幅を下回るとsite menu railを隠し、Headerのサイトメニューボタンからdrawerを開く。固定の`64rem`から`80rem`だけをrail表示にする例外は廃止する。
 - desktopと狭幅layoutの境界は、sheet本文最小幅、右補助領域、site menu rail、mainの左右gutterの合計から定める。狭幅layoutを従来の`48rem`未満へ限定せず、tabletから適用する。Headerのロゴとmenu buttonの寸法は既存site layoutの対応する幅を維持する。
-- character-sheetのmain領域は利用可能な横幅を使い、main自身の左右paddingは均等にする。desktopではsheet本文と右補助領域を合わせたcontentを最大`90rem`（1440px）に制限し、それを超える横幅では中央寄せにする。formは全viewportで1列に積み、従来のleft / right section columnへの振り分けは行わない。
+- 2026-08-08のレビュー指摘により、site menu railは`64rem`以上で表示し、desktopのtext action railは`84rem`以上で表示する。`64rem`から`84rem`ではsite menu railとfloating action icon controlsを併用する。`64rem`未満ではsite menu railを隠し、Header drawerとfloating action icon controlsを用いる。
+- desktopのtext action railは、grid itemである操作領域自体を本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを維持する。
+- section navigationの見出しは`セクションにジャンプ`とし、muted boldで表示する。第一階層sectionの各buttonには下向きiconと下線を付け、ジャンプ操作であることを示す。現在位置またはクリック対象に応じたaccentは付けず、section frame自体の色も変えない。
+- character-sheetのmain領域とFooterのscroll構造は既存layoutを維持する。`48rem`以上のform本文は最大`44rem`で中央寄せし、`84rem`以上ではmain右端の`15rem` desktop action railを除いた領域で中央寄せする。desktopのtext action railだけをstickyにし、formは全viewportで1列に積む。従来のleft / right section columnへの振り分けは行わない。
 - sheet本文の`h1`はbrowser既定marginを使わない。main上端から直接置き、下余白だけを`12px`にする。page固有のheading余白はAstro page側で扱い、React Islandへglobal heading styleを追加しない。
 - 狭幅layoutでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
 

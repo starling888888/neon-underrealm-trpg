@@ -1,8 +1,9 @@
-import { Menu, X } from "lucide-react";
+import { ArrowDown, Menu, X } from "lucide-react";
 import type { RefObject } from "react";
 
 import { characterSheetDictionary } from "../dictionary";
 import type { CharacterSheetErrorSummary } from "../logic/error-summary";
+import type { CharacterSheetSectionId } from "../section-navigation";
 import styles from "./CharacterSheetActionPane.module.css";
 import CharacterSheetButton from "./CharacterSheetButton";
 
@@ -22,15 +23,14 @@ type CharacterSheetActionPaneProps = {
   onMenuToggle: () => void;
   onReset: (trigger: HTMLButtonElement) => void;
   onReviewErrors: () => void;
+  onSectionJump: (id: CharacterSheetSectionId) => void;
+  sectionNavigation: {
+    items: readonly { id: CharacterSheetSectionId; label: string }[];
+  };
 };
 
 const menuId = "character-sheet-actions-menu";
 
-/**
- * Presents root-level character-sheet actions and the current error summary
- * without coupling them to future export, import, clipboard, reset, or help
- * behaviour.
- */
 export default function CharacterSheetActionPane({
   errorReviewButtonRef,
   errorSummary,
@@ -47,58 +47,43 @@ export default function CharacterSheetActionPane({
   onMenuToggle,
   onReset,
   onReviewErrors,
+  onSectionJump,
+  sectionNavigation,
 }: CharacterSheetActionPaneProps) {
   const { actions } = characterSheetDictionary.characterSheet;
   const errorStatusText = errorSummary.hasErrors
     ? `エラーが${errorSummary.errors.length}件あります。`
     : actions.noErrors;
-
   return (
-    <section aria-label={actions.regionLabel} className={styles.root}>
-      <div className={styles.desktopHeader}>
-        <h1 className={styles.heading}>{actions.title}</h1>
-        <div className={styles.desktopActions}>
+    <aside aria-label={actions.regionLabel} className={styles.root}>
+      <div className={styles.desktopRail}>
+        <SectionNavigation
+          {...sectionNavigation}
+          onSectionJump={onSectionJump}
+        />
+        <div className={styles.operations}>
           <CharacterSheetButton
             onClick={(event) => onHelp(event.currentTarget)}
             size="medium"
           >
             {actions.help}
           </CharacterSheetButton>
-          <CharacterSheetButton
-            disabled={isExportDisabled}
-            onClick={onExport}
-            size="medium"
-          >
-            {actions.export}
-          </CharacterSheetButton>
-          <CharacterSheetButton
-            disabled={isImportDisabled}
-            onClick={(event) => onImport(event.currentTarget)}
-            size="medium"
-          >
-            {actions.import}
-          </CharacterSheetButton>
-          <CharacterSheetButton
-            disabled={isCcfoliaCopyDisabled}
-            onClick={(event) => onCcfoliaCopy(event.currentTarget)}
-            size="medium"
-          >
-            {actions.ccfoliaCopy}
-          </CharacterSheetButton>
-          <CharacterSheetButton
-            color="danger"
-            disabled={isResetDisabled}
-            onClick={(event) => onReset(event.currentTarget)}
-            size="medium"
-          >
-            {actions.reset}
-          </CharacterSheetButton>
-          <DesktopErrorStatus
-            errorReviewButtonRef={errorReviewButtonRef}
-            errorSummary={errorSummary}
-            onReviewErrors={onReviewErrors}
+          <ActionButtons
+            isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
+            isExportDisabled={isExportDisabled}
+            isImportDisabled={isImportDisabled}
+            isResetDisabled={isResetDisabled}
+            onCcfoliaCopy={onCcfoliaCopy}
+            onExport={onExport}
+            onImport={onImport}
+            onReset={onReset}
           />
         </div>
+        <DesktopErrorStatus
+          errorReviewButtonRef={errorReviewButtonRef}
+          errorSummary={errorSummary}
+          onReviewErrors={onReviewErrors}
+        />
       </div>
 
       <div
@@ -142,45 +127,108 @@ export default function CharacterSheetActionPane({
           className={styles.menu}
           id={menuId}
         >
-          <div className={styles.menuActions}>
-            <CharacterSheetButton
-              className={styles.menuActionButton}
-              disabled={isExportDisabled}
-              onClick={onExport}
-              size="medium"
-            >
-              {actions.export}
-            </CharacterSheetButton>
-            <CharacterSheetButton
-              className={styles.menuActionButton}
-              disabled={isImportDisabled}
-              onClick={(event) => onImport(event.currentTarget)}
-              size="medium"
-            >
-              {actions.import}
-            </CharacterSheetButton>
-            <CharacterSheetButton
-              className={styles.menuActionButton}
-              disabled={isCcfoliaCopyDisabled}
-              onClick={(event) => onCcfoliaCopy(event.currentTarget)}
-              size="medium"
-            >
-              {actions.ccfoliaCopy}
-            </CharacterSheetButton>
-            <CharacterSheetButton
-              className={styles.menuActionButton}
-              color="danger"
-              disabled={isResetDisabled}
-              onClick={(event) => onReset(event.currentTarget)}
-              size="medium"
-            >
-              {actions.reset}
-            </CharacterSheetButton>
-          </div>
+          <SectionNavigation
+            {...sectionNavigation}
+            onSectionJump={onSectionJump}
+          />
+          <ActionButtons
+            isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
+            isExportDisabled={isExportDisabled}
+            isImportDisabled={isImportDisabled}
+            isResetDisabled={isResetDisabled}
+            onCcfoliaCopy={onCcfoliaCopy}
+            onExport={onExport}
+            onImport={onImport}
+            onReset={onReset}
+          />
           <ErrorSummary errorSummary={errorSummary} className={styles.errors} />
         </section>
       ) : null}
-    </section>
+    </aside>
+  );
+}
+
+function SectionNavigation({
+  items,
+  onSectionJump,
+}: CharacterSheetActionPaneProps["sectionNavigation"] & {
+  onSectionJump: CharacterSheetActionPaneProps["onSectionJump"];
+}) {
+  return (
+    <nav aria-label="セクションにジャンプ" className={styles.sectionNavigation}>
+      <p>セクションにジャンプ</p>
+      <ul>
+        {items.map(({ id, label }) => (
+          <li key={id}>
+            <button onClick={() => onSectionJump(id)} type="button">
+              <ArrowDown
+                aria-hidden="true"
+                className={styles.sectionJumpIcon}
+                size={14}
+                strokeWidth={2}
+              />
+              {label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+function ActionButtons({
+  isCcfoliaCopyDisabled,
+  isExportDisabled,
+  isImportDisabled,
+  isResetDisabled,
+  onCcfoliaCopy,
+  onExport,
+  onImport,
+  onReset,
+}: Pick<
+  CharacterSheetActionPaneProps,
+  | "isCcfoliaCopyDisabled"
+  | "isExportDisabled"
+  | "isImportDisabled"
+  | "isResetDisabled"
+  | "onCcfoliaCopy"
+  | "onExport"
+  | "onImport"
+  | "onReset"
+>) {
+  const { actions } = characterSheetDictionary.characterSheet;
+  return (
+    <div className={styles.actionButtons}>
+      <CharacterSheetButton
+        disabled={isExportDisabled}
+        onClick={onExport}
+        size="medium"
+      >
+        {actions.export}
+      </CharacterSheetButton>
+      <CharacterSheetButton
+        disabled={isImportDisabled}
+        onClick={(event) => onImport(event.currentTarget)}
+        size="medium"
+      >
+        {actions.import}
+      </CharacterSheetButton>
+      <CharacterSheetButton
+        disabled={isCcfoliaCopyDisabled}
+        onClick={(event) => onCcfoliaCopy(event.currentTarget)}
+        size="medium"
+      >
+        {actions.ccfoliaCopy}
+      </CharacterSheetButton>
+      <CharacterSheetButton
+        color="danger"
+        disabled={isResetDisabled}
+        onClick={(event) => onReset(event.currentTarget)}
+        size="medium"
+      >
+        {actions.reset}
+      </CharacterSheetButton>
+    </div>
   );
 }
 
@@ -192,7 +240,6 @@ function ErrorSummary({
   errorSummary: CharacterSheetErrorSummary;
 }) {
   const { actions } = characterSheetDictionary.characterSheet;
-
   return (
     <section aria-live="polite" className={className}>
       {errorSummary.hasErrors ? (
@@ -219,13 +266,11 @@ function DesktopErrorStatus({
   errorReviewButtonRef,
   errorSummary,
   onReviewErrors,
-}: {
-  errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
-  errorSummary: CharacterSheetErrorSummary;
-  onReviewErrors: () => void;
-}) {
+}: Pick<
+  CharacterSheetActionPaneProps,
+  "errorReviewButtonRef" | "errorSummary" | "onReviewErrors"
+>) {
   const { actions } = characterSheetDictionary.characterSheet;
-
   return (
     <div
       aria-label={actions.errorStatusLabel}

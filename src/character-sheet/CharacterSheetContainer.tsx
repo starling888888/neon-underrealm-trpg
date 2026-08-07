@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
+import styles from "./CharacterSheetContainer.module.css";
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
 import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
@@ -40,6 +40,10 @@ import {
   getArmors,
   getWeaponCandidateGroups,
 } from "./master-data/weapons-and-armor";
+import {
+  type CharacterSheetSectionId,
+  characterSheetSectionNavigationItems,
+} from "./section-navigation";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
 
 /**
@@ -175,6 +179,22 @@ export default function CharacterSheetContainer() {
   const onArmorPickerRequested = useCallback((trigger: HTMLButtonElement) => {
     armorPickerTriggerRef.current = trigger;
     setIsArmorPickerOpen(true);
+  }, []);
+  const onSectionJump = useCallback((id: CharacterSheetSectionId) => {
+    const target = document.getElementById(id);
+    if (target === null) return;
+    setIsActionMenuOpen(false);
+    requestAnimationFrame(() => {
+      const header = document.querySelector<HTMLElement>("[data-site-header]");
+      const headerHeight = header?.getBoundingClientRect().height ?? 0;
+      window.scrollTo({
+        behavior: "smooth",
+        top: Math.max(
+          0,
+          window.scrollY + target.getBoundingClientRect().top - headerHeight,
+        ),
+      });
+    });
   }, []);
   const onOmamoriPickerRequested = useCallback(
     (rowId: string, trigger: HTMLButtonElement) => {
@@ -540,44 +560,52 @@ export default function CharacterSheetContainer() {
         aria-busy={rootState.isRootOperationInProgress}
         inert={rootState.isRootOperationInProgress || undefined}
       >
-        <CharacterSheetActionPane
-          errorReviewButtonRef={errorSummaryTriggerRef}
-          errorSummary={presenterProps.errorSummary}
-          isCcfoliaCopyDisabled={rootState.isRootOperationInProgress}
-          isExportDisabled={rootState.isCharacterImageRestoring}
-          isImportDisabled={
-            rootState.isCharacterImageRestoring ||
-            rootState.isRootOperationInProgress
-          }
-          isResetDisabled={
-            rootState.isCharacterImageRestoring ||
-            rootState.isRootOperationInProgress
-          }
-          isMenuOpen={isActionMenuOpen}
-          menuTriggerRef={actionMenuTriggerRef}
-          onExport={rootState.onJsonExport}
-          onHelp={(trigger) => {
-            helpTriggerRef.current = trigger;
-            setIsHelpOpen(true);
-          }}
-          onCcfoliaCopy={(trigger) => {
-            ccfoliaCopyTriggerRef.current = isActionMenuOpen
-              ? actionMenuTriggerRef.current
-              : trigger;
-            setIsActionMenuOpen(false);
-            setIsCcfoliaCopyConfirmOpen(true);
-          }}
-          onImport={rootState.onJsonImportRequested}
-          onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
-          onReset={(trigger) => {
-            resetTriggerRef.current = isActionMenuOpen
-              ? actionMenuTriggerRef.current
-              : trigger;
-            setIsActionMenuOpen(false);
-            setIsResetConfirmOpen(true);
-          }}
-          onReviewErrors={() => setIsErrorSummaryOpen(true)}
-        />
+        <div className={styles.layout}>
+          <CharacterSheetFormPresenter
+            {...formPresenterProps}
+            key={formResetKey}
+          />
+          <CharacterSheetActionPane
+            errorReviewButtonRef={errorSummaryTriggerRef}
+            errorSummary={presenterProps.errorSummary}
+            isCcfoliaCopyDisabled={rootState.isRootOperationInProgress}
+            isExportDisabled={rootState.isCharacterImageRestoring}
+            isImportDisabled={
+              rootState.isCharacterImageRestoring ||
+              rootState.isRootOperationInProgress
+            }
+            isResetDisabled={
+              rootState.isCharacterImageRestoring ||
+              rootState.isRootOperationInProgress
+            }
+            isMenuOpen={isActionMenuOpen}
+            menuTriggerRef={actionMenuTriggerRef}
+            sectionNavigation={{ items: characterSheetSectionNavigationItems }}
+            onExport={rootState.onJsonExport}
+            onHelp={(trigger) => {
+              helpTriggerRef.current = trigger;
+              setIsHelpOpen(true);
+            }}
+            onCcfoliaCopy={(trigger) => {
+              ccfoliaCopyTriggerRef.current = isActionMenuOpen
+                ? actionMenuTriggerRef.current
+                : trigger;
+              setIsActionMenuOpen(false);
+              setIsCcfoliaCopyConfirmOpen(true);
+            }}
+            onImport={rootState.onJsonImportRequested}
+            onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
+            onSectionJump={onSectionJump}
+            onReset={(trigger) => {
+              resetTriggerRef.current = isActionMenuOpen
+                ? actionMenuTriggerRef.current
+                : trigger;
+              setIsActionMenuOpen(false);
+              setIsResetConfirmOpen(true);
+            }}
+            onReviewErrors={() => setIsErrorSummaryOpen(true)}
+          />
+        </div>
         <input
           accept="application/json,.json"
           hidden
@@ -590,10 +618,6 @@ export default function CharacterSheetContainer() {
           }}
           ref={rootState.jsonImportInputRef}
           type="file"
-        />
-        <CharacterSheetFormPresenter
-          {...formPresenterProps}
-          key={formResetKey}
         />
         <CharacterImageErrorDialog
           closeButtonRef={rootState.imageErrorCloseButtonRef}

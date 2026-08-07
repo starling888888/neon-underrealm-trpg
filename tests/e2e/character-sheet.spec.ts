@@ -196,17 +196,101 @@ test.describe("character sheet page", () => {
     await expect(menu).toBeHidden();
   });
 
-  test("uses a menu rail only when the one-column sheet has enough width", async ({
+  test("keeps tablet actions available after the desktop action rail is hidden", async ({
     page,
   }) => {
     await page.setViewportSize(siteViewports.desktop);
     await page.goto("character-sheet/");
-    await expect(page.locator(".character-sheet-menu-rail")).toBeHidden();
+    await expect(page.locator(".character-sheet-menu-rail")).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "セクションにジャンプ" }),
+    ).toBeVisible();
+
     await page.setViewportSize({ width: 1024, height: 1180 });
     await expect(page.locator(".character-sheet-menu-rail")).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "キャラクターシート", exact: true }),
-    ).toHaveAttribute("aria-current", "page");
+      page.getByRole("button", {
+        name: "操作メニューを開く、エラーはありません。",
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { exact: true, name: "キャラクターシート" }),
+    ).toHaveCount(1);
+  });
+
+  test("jumps to a first-level section from the action menu", async ({
+    page,
+  }) => {
+    await page.setViewportSize(siteViewports.mobile);
+    await page.goto("character-sheet/");
+    const menu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    await page
+      .getByRole("button", {
+        name: "操作メニューを開く、エラーはありません。",
+      })
+      .click();
+    await menu.getByRole("button", { name: "武器・防具" }).click();
+
+    await expect(menu).toBeHidden();
+    await page.waitForFunction(() => window.scrollY > 50);
+    await expect(page.locator("#weapons-and-armor")).toBeInViewport();
+  });
+
+  test("keeps the desktop action rail at the right and centers the form column", async ({
+    page,
+  }) => {
+    await page.setViewportSize(siteViewports.desktop);
+    await page.goto("character-sheet/");
+    const actionPane = page.locator('[aria-label="キャラクターシートの操作"]');
+    const form = page.locator("[data-character-sheet-layout]");
+    const layout = form.locator("xpath=..");
+
+    await expect(actionPane).toBeVisible();
+    await expect
+      .poll(() => form.evaluate((element) => element.clientWidth))
+      .toBe(704);
+    await expect
+      .poll(() =>
+        actionPane.evaluate((element) => element.getBoundingClientRect().width),
+      )
+      .toBe(240);
+    await expect
+      .poll(async () => {
+        const [formBox, layoutBox, actionPaneBox] = await Promise.all([
+          form.boundingBox(),
+          layout.boundingBox(),
+          actionPane.boundingBox(),
+        ]);
+        if (formBox === null || layoutBox === null || actionPaneBox === null) {
+          return Number.NaN;
+        }
+        const formColumnWidth = layoutBox.width - actionPaneBox.width - 24;
+        return Math.max(
+          Math.abs(
+            formBox.x + formBox.width / 2 - (layoutBox.x + formColumnWidth / 2),
+          ),
+          Math.abs(
+            actionPaneBox.x +
+              actionPaneBox.width -
+              (layoutBox.x + layoutBox.width),
+          ),
+        );
+      })
+      .toBeLessThan(1);
+
+    await page.evaluate(() => window.scrollTo(0, 1600));
+    await expect
+      .poll(() =>
+        actionPane.evaluate((element) => element.getBoundingClientRect().top),
+      )
+      .toBeGreaterThan(0);
+
+    await page.setViewportSize(siteViewports.tablet);
+    await expect
+      .poll(() => form.evaluate((element) => element.clientWidth))
+      .toBe(704);
   });
 
   test("uses a header menu on mobile and keeps subpath links", async ({
