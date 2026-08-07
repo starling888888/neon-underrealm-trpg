@@ -6,11 +6,11 @@
 }
 
 .headerRow {
-  composes: tableHeader from "../CharacterSheetFormList.module.css";
+  composes: tableHeader from "../../CharacterSheetFormList.module.css";
 }
 
 .firstLine {
-  composes: pickerTableFirstLine from "../CharacterSheetFormList.module.css";
+  composes: pickerTableFirstLine from "../../CharacterSheetFormList.module.css";
 }
 
 .headerRow > span,

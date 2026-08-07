@@ -1,12 +1,12 @@
 .dialog {
-  composes: pickerDialog from "../CharacterSheetFormList.module.css";
+  composes: pickerDialog from "../../CharacterSheetFormList.module.css";
 }
 .content {
   display: grid;
   gap: 0;
 }
 .selectionGuide {
-  composes: selectionGuide from "../CharacterSheetFormList.module.css";
+  composes: selectionGuide from "../../CharacterSheetFormList.module.css";
   margin-bottom: var(--space-2);
 }
 .headerRow {
@@ -30,10 +30,10 @@
 }
 
 .candidate {
-  composes: candidate from "../CharacterSheetFormList.module.css";
+  composes: candidate from "../../CharacterSheetFormList.module.css";
 }
 .candidateName {
-  composes: pickerCandidateName from "../CharacterSheetFormList.module.css";
+  composes: pickerCandidateName from "../../CharacterSheetFormList.module.css";
 }
 .firstLine > * {
   overflow-wrap: anywhere;

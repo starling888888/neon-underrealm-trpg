@@ -1,5 +1,5 @@
 .dialog {
-  composes: pickerDialog from "../CharacterSheetFormList.module.css";
+  composes: pickerDialog from "../../CharacterSheetFormList.module.css";
 }
 
 .content {
@@ -8,7 +8,7 @@
 }
 
 .selectionGuide {
-  composes: selectionGuide from "../CharacterSheetFormList.module.css";
+  composes: selectionGuide from "../../CharacterSheetFormList.module.css";
 }
 
 .headerRow {
@@ -24,11 +24,11 @@
 }
 
 .candidate {
-  composes: candidate from "../CharacterSheetFormList.module.css";
+  composes: candidate from "../../CharacterSheetFormList.module.css";
 }
 
 .candidateName {
-  composes: pickerCandidateName from "../CharacterSheetFormList.module.css";
+  composes: pickerCandidateName from "../../CharacterSheetFormList.module.css";
 }
 
 .firstLine button {
