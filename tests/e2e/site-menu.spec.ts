@@ -61,3 +61,38 @@ test("site menu marks the current page in desktop and mobile navigation @site-me
     drawer.getByRole("link", { name: "サポート", exact: true }),
   ).toHaveAttribute("aria-current", "page");
 });
+
+test("site menu presents PL and GM section labels without fake links @site-menu-sections", async ({
+  page,
+}) => {
+  await page.setViewportSize(siteViewports.desktop);
+  await page.goto(siteRoutes.gm);
+
+  const desktopMenu = page.locator(".site-menu-desktop");
+  await expect(
+    desktopMenu.getByText("PLセクション", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    desktopMenu.getByText("GMセクション", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    desktopMenu.getByRole("link", { name: "PLセクション", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    desktopMenu.getByRole("link", { name: "GMセクション", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    desktopMenu.getByRole("link", { name: "GMガイド", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  await expect(desktopMenu.locator(".site-menu-separator")).toHaveCount(1);
+
+  await page.setViewportSize(siteViewports.mobile);
+  await page.locator("[data-mobile-menu-open]").click();
+  const drawer = page.locator("#mobile-site-menu-drawer");
+  await expect(drawer.getByText("PLセクション", { exact: true })).toBeVisible();
+  await expect(drawer.getByText("GMセクション", { exact: true })).toBeVisible();
+  await expect(
+    drawer.getByRole("link", { name: "GMガイド", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  await expect(drawer.locator(".site-menu-separator")).toHaveCount(1);
+});
