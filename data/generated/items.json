@@ -1,6 +1,6 @@
 {
   "dataName": "items",
-  "updatedAt": "2026-08-02T11:29:48+09:00",
+  "updatedAt": "2026-08-08T00:55:48+09:00",
   "data": {
     "weapons": {
       "normal": {
@@ -1024,13 +1024,13 @@
         "id": "item-omamori-bb77b7820699",
         "name": "仁王のお守り",
         "credit": 3,
-        "effect": "シナリオ1回、格闘判定で任意の攻撃にリアクションを行える。成功した場合ダメージは0となる。",
+        "effect": "シナリオ1回、格闘判定で任意の攻撃にリアクションを行える。リアクションの判定数をあげる効果に加え、攻撃の判定数を上昇させる効果も適用される。成功した場合ダメージは0となる。",
         "sourceOrder": 14
       },
       {
         "id": "item-omamori-778e3d533dbf",
         "name": "阿修羅のお守り",
-        "credit": 3,
+        "credit": 2,
         "effect": "シナリオ1回、干渉判定の判定数+3。",
         "sourceOrder": 15
       },
@@ -1059,7 +1059,7 @@
         "id": "item-omamori-06d6b8adf3a3",
         "name": "長持ちのお守り",
         "credit": 3,
-        "effect": "シナリオ1回ダメージ軽減や防御力を無視する効果を無効化する。",
+        "effect": "シナリオ1回、ダメージ軽減や防御力を減少したり無視したりする効果を無効化する。",
         "sourceOrder": 19
       },
       {
@@ -1085,7 +1085,7 @@
           "name": "サイバーアイ",
           "credit": 2,
           "implantPoints": 2,
-          "effect": "感覚を用いる判定+1d。",
+          "effect": "感覚を用いる判定の判定数+1。",
           "sourceOrder": 1
         },
         {
@@ -1103,7 +1103,7 @@
           "name": "マインドコネクタ",
           "credit": 2,
           "implantPoints": 2,
-          "effect": "精神を用いる判定+1d。",
+          "effect": "精神を用いる判定の判定数+1。",
           "sourceOrder": 3
         },
         {
@@ -1150,7 +1150,7 @@
           "name": "アーティフィシャルマッスル",
           "credit": 2,
           "implantPoints": 2,
-          "effect": "肉体を用いる判定+1d。",
+          "effect": "肉体を用いる判定の判定数+1。",
           "sourceOrder": 8
         },
         {
@@ -1242,7 +1242,7 @@
           "name": "アームブースター",
           "credit": 2,
           "implantPoints": 2,
-          "effect": "筋力を用いる判定+1d。",
+          "effect": "筋力を用いる判定の判定数+1。",
           "sourceOrder": 18
         },
         {
@@ -1307,7 +1307,7 @@
           "name": "ジャンピングサポーター",
           "credit": 2,
           "implantPoints": 2,
-          "effect": "敏捷を用いる判定+1d。",
+          "effect": "敏捷を用いる判定の判定数+1。",
           "sourceOrder": 25
         },
         {

@@ -1,6 +1,6 @@
 {
   "dataName": "ikizama-skills",
-  "updatedAt": "2026-08-04T22:17:48+09:00",
+  "updatedAt": "2026-08-08T00:55:49+09:00",
   "data": {
     "burai": {
       "bonus": [
@@ -9,7 +9,7 @@
           "name": "気合注入",
           "maxLevel": 3,
           "timing": "SU",
-          "cost": "精10",
+          "cost": "精5",
           "proficiency": null,
           "acquisitionRestriction": "自動習得",
           "target": "自身",

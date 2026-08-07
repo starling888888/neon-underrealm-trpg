@@ -17,6 +17,7 @@
 ## 対象範囲
 
 - 調整済みの `data/generated/ikizama-skills.json`、`data/generated/items.json`、`data/generated/release-notes.json`、`data/generated/ryugi-skills.json` を公開データとして反映する。
+- リリースノート追加に合わせて、生成データ件数を固定している既存Node testの期待値を更新する。
 - `src/pages/rules/battle.mdx` のカウンタールールを調整する。
 - `src/pages/support.mdx` にCCFOLIA専用ダイスボットの判定コマンド説明と例を反映する。
 - 影響ページを対象に、ユーザー承認済みのcanonical VRT baselineを更新し、実画面を確認する。対象とdesign参照は「VRT対象契約」に固定する。
@@ -31,21 +32,21 @@
 
 ## 完了条件
 
-- [ ] 4件の生成JSONが既存schemaで読み込め、調整済みのスキル・アイテム・リリースノートを公開ページへ表示できる。
-- [ ] 戦闘とサポートの本文調整がMDXとして正常にbuildされる。
-- [ ] 対象ページのcanonical VRT baselineを更新し、「VRT対象契約」のroute・state・viewportごとのactual screenshotを表示契約と照合して確認する。
-- [ ] `npm run format:md` と `npm run check` が通る。
-- [ ] `npm run build` が通る。
-- [ ] `npm run test` が通り、生成JSONのschema・取得層の契約を確認できる。
+- [x] 4件の生成JSONが既存schemaで読み込め、調整済みのスキル・アイテム・リリースノートを公開ページへ表示できる。
+- [x] 戦闘とサポートの本文調整がMDXとして正常にbuildされる。
+- [x] 対象ページのcanonical VRT baselineを更新し、「VRT対象契約」のroute・state・viewportごとのactual screenshotを表示契約と照合して確認する。
+- [x] `npm run format:md` と `npm run check` が通る。
+- [x] `npm run build` が通る。
+- [x] `npm run test` が通り、生成JSONのschema・取得層の契約を確認できる。
 
 ## チェックポイント
 
-- [ ] 既存ルートと、ID変更のないスキル・アイテムの個別アンカーが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートと、ID変更のないスキル・アイテムの個別アンカーが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -55,6 +56,7 @@
 - `data/generated/ryugi-skills.json`
 - `src/pages/rules/battle.mdx`
 - `src/pages/support.mdx`
+- `tests/node/release-notes.test.ts`
 - `canonical-snapshots/visual/` 配下の該当baseline（Git非管理）
 
 ## VRT対象契約

@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-08-04T22:17:47+09:00",
+  "updatedAt": "2026-08-08T01:07:15+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -32,7 +32,7 @@
           "target": "特殊",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。この攻撃の対象は、範囲「消費気合-1」である。",
+          "effect": "攻撃を行う。この攻撃の対象は、範囲「消費気合」である。",
           "sourceOrder": 2,
           "id": "skill-ryugi-kenkaya-basic-a-9d9ac8229787"
         },
@@ -427,10 +427,10 @@
           "cost": "気2",
           "proficiency": "発砲",
           "acquisitionRestriction": null,
-          "target": "範囲4",
+          "target": "範囲2",
           "range": "武器",
           "usageRestriction": "lv/Sn",
-          "effect": "攻撃を行う。ただし、自身以外のキャラクターを任意に攻撃対象から外すことはできない。この手番最初の攻撃ならば任意のキャラクターを攻撃対象から外すことができる。",
+          "effect": "攻撃を行う。この手番最初の攻撃ならばダメージを1点でも与えた任意の三下の体力を0にする。",
           "sourceOrder": 6,
           "id": "skill-ryugi-emono-basic-a-acac70e7585f"
         },
@@ -1061,7 +1061,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。このダメージ-10。次の攻撃のダメージ+15。",
+          "effect": "攻撃を行う。この攻撃のダメージ-10。次の攻撃のダメージ+15。",
           "sourceOrder": 3,
           "id": "skill-ryugi-kabe-basic-a-65b5b47e8fdd"
         },
@@ -1408,7 +1408,7 @@
           "name": "弱体弾",
           "maxLevel": 3,
           "timing": "○-○",
-          "cost": "気2",
+          "cost": "気1",
           "proficiency": "発砲",
           "acquisitionRestriction": null,
           "target": "1体",
@@ -1438,7 +1438,7 @@
           "name": "重ね舞い",
           "maxLevel": 3,
           "timing": "○-×",
-          "cost": "気2",
+          "cost": "気1",
           "proficiency": "暗殺/発砲",
           "acquisitionRestriction": null,
           "target": "1体",
@@ -1635,7 +1635,7 @@
           "name": "血毒活性",
           "maxLevel": 3,
           "timing": "D",
-          "cost": "気2",
+          "cost": "気1",
           "proficiency": null,
           "acquisitionRestriction": null,
           "target": "特殊",
@@ -1782,7 +1782,7 @@
           "target": "範囲0",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。",
+          "effect": "攻撃を行う。この攻撃でコンボ対象の体力が0以下になった場合、他のキャラクターにコンボ対象を変更して良い。",
           "sourceOrder": 6,
           "id": "skill-ryugi-teppoudama-basic-a-cf6ee345820a"
         },
@@ -1851,7 +1851,7 @@
           "name": "迎撃",
           "maxLevel": 3,
           "timing": "R",
-          "cost": "気2",
+          "cost": "気1",
           "proficiency": "暗殺/格闘",
           "acquisitionRestriction": null,
           "target": "自身",
@@ -2331,8 +2331,8 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R&lv/Sn",
-          "effect": "自身の攻撃がリアクションに成功された直後に使用する。同じ基準値で判定数+2して判定を振り直す。コンボは継続する。",
+          "usageRestriction": "1/R",
+          "effect": "自身の攻撃がリアクションに成功された直後に使用する。同じ基準値で判定数を+lvして判定を振り直す。コンボは継続する。",
           "sourceOrder": 20,
           "id": "skill-ryugi-yamiuchi-advanced-sp-7ecf0d4f5ccc"
         },
@@ -2733,7 +2733,7 @@
           "cost": "気2",
           "proficiency": "発砲",
           "acquisitionRestriction": null,
-          "target": "範囲0",
+          "target": "範囲1",
           "range": "武器",
           "usageRestriction": "lv/R",
           "effect": "攻撃を行う。",
@@ -2853,7 +2853,7 @@
           "cost": "気2",
           "proficiency": "発砲/干渉",
           "acquisitionRestriction": null,
-          "target": "範囲1",
+          "target": "範囲2",
           "range": "武器",
           "usageRestriction": "lv/Sn",
           "effect": "攻撃を行う。",
@@ -3038,7 +3038,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": "1/Sc",
-          "effect": "手番開始時に使用する。この手番の攻撃はすべて「対象：シーン」となる。もともと複数体を対象とする攻撃は判定数が4点増加する。",
+          "effect": "手番開始時に使用する。この手番の攻撃はすべて「対象：シーン」となる。もともと複数体を対象とする攻撃は判定数が+5される。",
           "sourceOrder": 22,
           "id": "skill-ryugi-gotoshi-advanced-sp-9dddca773ec0"
         }
@@ -3148,8 +3148,8 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R",
-          "effect": "基準値+1して、防御判定を行う。この防御判定は肉体または精神の能力値で行って良い。",
+          "usageRestriction": null,
+          "effect": "基準値+1して、防御判定を行う。この防御判定は肉体または精神の能力値で行って良い。同じキャラクターの手番中の2回目以降の使用では基準値+1の効果を得られない。",
           "sourceOrder": 7,
           "id": "skill-ryugi-kashira-basic-r-63a328c2188b"
         },
@@ -3292,21 +3292,6 @@
         },
         {
           "category": "advanced",
-          "name": "合気合一",
-          "maxLevel": 3,
-          "timing": "Pv",
-          "cost": null,
-          "proficiency": null,
-          "acquisitionRestriction": null,
-          "target": "自身",
-          "range": null,
-          "usageRestriction": null,
-          "effect": "気合1点を精神力5点で消費できる。同時に2点以上使用できない。この効果は1ラウンドにlv回使用可能。",
-          "sourceOrder": 17,
-          "id": "skill-ryugi-kashira-advanced-pv-73627e11069b"
-        },
-        {
-          "category": "advanced",
           "name": "大将の心構え",
           "maxLevel": 3,
           "timing": "INI",
@@ -3317,8 +3302,23 @@
           "range": "シーン",
           "usageRestriction": "1/R&lv/Sc",
           "effect": "キャラクター1人の覚悟を縁に戻す。ただし、今生の縁は元に戻せない。",
-          "sourceOrder": 18,
+          "sourceOrder": 17,
           "id": "skill-ryugi-kashira-advanced-ini-0be5d3568e31"
+        },
+        {
+          "category": "advanced",
+          "name": "合気合一",
+          "maxLevel": 3,
+          "timing": "SP",
+          "cost": "気0",
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "自身",
+          "range": null,
+          "usageRestriction": "lv/R",
+          "effect": "気合を消費するスキルの使用時に使用する。気合1点を精神力5点で消費しても良い。同時に気合2点以上を精神力で消費することはできない。",
+          "sourceOrder": 18,
+          "id": "skill-ryugi-kashira-advanced-sp-73627e11069b"
         },
         {
           "category": "advanced",
@@ -3376,7 +3376,7 @@
           "target": "特殊",
           "range": "シーン",
           "usageRestriction": "1/Sc",
-          "effect": "あなたを含むすべての味方キャラクターは即座に気合を5点獲得する。",
+          "effect": "あなたを含むすべての味方キャラクターは即座に気合を5点獲得し、望むのであれば任意の順番で即座に手番を行っても良い。手番を行ったキャラクターは、行動済みになる。",
           "sourceOrder": 22,
           "id": "skill-ryugi-kashira-advanced-su-a199db46bf26"
         }
