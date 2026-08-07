@@ -21,6 +21,12 @@ TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/pla
 
 ## 未対応
 
+- [ ] 詳細なGMガイドを作成する
+  - source: milestone-02-phase-02-gm-section G1のユーザー指示
+  - classification: content follow-up
+  - plan: `docs/issue/milestone-02/plan.md`のPhase 2（GMセクション）。
+  - handling plan: 初回公開の`/gm/`には短い案内だけを掲載する。GMの役割、セッション準備、ハンドアウト、シーン進行、NPC、判定、縁、覚悟、気合、裁定を説明する詳細なGMガイドは、内容を決められる段階で独立issueとして作成する。
+
 - [ ] ゲーム設計レビューの未解決高優先度・GM項目をトリアージする
   - source: PR #187の文書レビュー
   - classification: follow-up
