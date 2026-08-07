@@ -561,6 +561,14 @@ source種別は以下を使う。
 - 観測した失敗: IntersectionObserver callbackのentriesだけで現在sectionを決める実装を、scroll位置ベースの確認へ置き換える際、jump後の末尾sectionとHeader直下の境界を先にモデル化しなかった。同じE2E commandを3回連続で失敗させてから、section全体のdocument位置と末尾scroll位置を基準にする実装へ修正した。
 - 一次対応: active sectionはHeader直下の位置を越えた第一階層sectionから決め、末尾sectionへjumpした直後は最大scroll位置でも選択状態を維持する。追加するscroll連動testは、実装前に通常scroll・section jump・末尾sectionの3状態を契約として列挙する。
 
+#### Repeated broad character-sheet E2E runs while updating responsive action tests
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の `tests/e2e/character-sheet.spec.ts`
+- 観測した失敗: responsive action railの境界testを追加した後、既存のclipboardとJSON入出力testが`84rem`未満でもdesktop action buttonを直接操作する旧前提を持つことを1件ずつ発見した。さらに新規のheading件数、末尾近傍sectionのHeader位置、drawer close buttonのlocatorを広いE2E commandで同時に失敗させ、同一commandを3回連続で失敗させた。
+- 一次対応: action buttonを使う既存E2Eは可視のresponsive menuを開く共通前提へ揃える。section jumpは末尾到達でclampされないsectionを選び、headingは構造順だけを確認し、同名drawer buttonはfocus対象を明示する。以後、広いcharacter-sheet E2Eを再実行する前に、変更したresponsive前提に依存する既存操作を検索して単独確認する。
+
 #### Omitted archive movement rules from the failure-log audit skill
 
 - date: 2026-08-05
@@ -586,3 +594,13 @@ source種別は以下を使う。
 - 発生箇所: `ex-10-character-sheet-layout` の`usePickerStates`と`usePickers`へのrefactor
 - 観測した失敗: picker hookのtest fixtureをfull presenter型へcastし、`npm run check:astro`を3回連続で失敗させた。fixtureが欠くpicker外のprops、続いてpicker型に必要な`clearSelection`、最後にcandidate groupの形状を段階的に補っていた。
 - 一次対応: `usePickers`の入力を必要なpicker操作だけの構造型へ狭め、fixtureはmaster dataのgroup型に一致させる。次回はhookの最小入力型とtest fixtureを先に並べて型検査してから実装配線を進める。
+
+### command approval discipline
+
+#### Requested unnecessary escalation for an already approved Playwright command
+
+- date: 2026-08-08
+- source: user
+- 発生箇所: `ex-10-character-sheet-layout` のcharacter-sheet E2E再確認
+- 観測した失敗: `npx playwright test`は承認済みcommand prefixに一致するにもかかわらず、前回のport競合を理由として`require_escalated`を付け、不要な承認dialogを表示した。
+- 一次対応: この作業では既存の承認prefixに一致するcommandへ昇格指定を付けない。sandbox内で実行不能な明確な権限失敗だけを確認してから、必要な場合に限って昇格を求める。

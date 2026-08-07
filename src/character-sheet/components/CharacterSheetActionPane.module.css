@@ -17,7 +17,6 @@
     top: calc(var(--site-header-height) + var(--space-3));
     align-self: start;
     justify-self: end;
-    border-inline-start: var(--border-width) solid var(--color-border);
     padding-inline: var(--space-3) var(--space-2);
   }
   .desktopRail {

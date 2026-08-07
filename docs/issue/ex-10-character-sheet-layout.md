@@ -55,35 +55,35 @@
 
 ## 完了条件
 
-- [ ] `h1`がReact Islandの外でAstro pageから表示され、Island内に重複titleがない
-- [ ] formの第一階層sectionがdesktop、tablet、mobileでDOM順の1列に積まれ、2列section layoutがない
-- [ ] desktop右補助領域が通常のPageTocと同じ幅で表示され、第一階層sectionへのリンクと縦並び操作を持つ
-- [ ] PageToc / MobilePageTocを表示せず、character-sheet固有navigationはdesktop補助領域と狭幅action menuだけにある
-- [ ] site menu railはsheet最小幅、補助領域、rail、main左右gutterを確保できる幅だけで表示され、それ以外ではHeader buttonからdrawerを開ける。採用したbreakpointと構成要素の幅を実装記録へ残す
-- [ ] 狭幅layoutがtabletから適用され、独立した`?`がmenu iconの上にあり、開いたfloating menuでは第一階層section navigation、縦並びaction button、error一覧の順にある
-- [ ] child section、行、入力項目へのリンク・強調を追加していない
-- [ ] help、JSON出力・入力、CCFOLIAコピー、初期化、エラー一覧の既存機能が各layoutで利用できる
-- [ ] `docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`が実装と整合している
-- [ ] 関連TODOを本taskでは扱わない理由が記録されている
-- [ ] `design-image-generation`でlayout draft、VRT scenario、ユーザー承認を得て、`docs/design/character-sheet/notes.md`へ記録している
-- [ ] `/character-sheet/`のdefault desktop、tablet、mobile、desktop補助領域、tablet / mobileのfloating menu開閉、Header drawerとaction menuが競合しない状態について、actual screenshotを開いたVisual Review記録と必要なtarget限定VRT比較結果を残している
-- [ ] canonical VRT baselineを更新する場合は、別途ユーザーの明示承認を得ている
-- [ ] `npm run check`と`npm run build`が通る
+- [x] `h1`がReact Islandの外でAstro pageから表示され、Island内に重複titleがない
+- [x] formの第一階層sectionがdesktop、tablet、mobileでDOM順の1列に積まれ、2列section layoutがない
+- [x] desktop右補助領域が通常のPageTocと同じ幅で表示され、第一階層sectionへのリンクと縦並び操作を持つ
+- [x] PageToc / MobilePageTocを表示せず、character-sheet固有navigationはdesktop補助領域と狭幅action menuだけにある
+- [x] site menu railはsheet最小幅、補助領域、rail、main左右gutterを確保できる幅だけで表示され、それ以外ではHeader buttonからdrawerを開ける。採用したbreakpointと構成要素の幅を実装記録へ残す
+- [x] 狭幅layoutがtabletから適用され、独立した`?`がmenu iconの上にあり、開いたfloating menuでは第一階層section navigation、縦並びaction button、error一覧の順にある
+- [x] child section、行、入力項目へのリンク・強調を追加していない
+- [x] help、JSON出力・入力、CCFOLIAコピー、初期化、エラー一覧の既存機能が各layoutで利用できる
+- [x] `docs/requirements/character-sheet.md`と`docs/design/character-sheet/notes.md`が実装と整合している
+- [x] 関連TODOを本taskでは扱わない理由が記録されている
+- [x] `design-image-generation`でlayout draft、VRT scenario、ユーザー承認を得て、`docs/design/character-sheet/notes.md`へ記録している
+- [x] `/character-sheet/`のdefault desktop、tablet、mobile、desktop補助領域、tablet / mobileのfloating menu開閉、Header drawerとaction menuが競合しない状態について、actual screenshotを開いたVisual Review記録と必要なtarget限定VRT比較結果を残している
+- [x] canonical VRT baselineを更新する場合は、別途ユーザーの明示承認を得ている
+- [x] `npm run check`と`npm run build`が通る
 
 ## チェックポイント
 
-- [ ] `/character-sheet/`のdesktop、tablet、mobileに横overflowがない
-- [ ] 採用breakpointの直前・直後で、site menu rail、Header drawer、desktop補助領域、floating menuの表示条件が競合しない
-- [ ] section linkがGitHub Pagesのsubpath配下で動作する
-- [ ] floating controlsが最後の入力・操作を隠さない
-- [ ] `h1`から`h2`への見出し順序とsection navigationのaccessible nameを確認する
-- [ ] Header menu drawerとaction menuのfocus、Escape、overlay状態が競合しない
-- [ ] 既存route、保存、JSON、CCFOLIA、error表示の動作を壊していない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] `docs/TODO.md`の候補行design taskと矛盾していない
-- [ ] `docs/design/character-sheet/notes.md`と矛盾していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] `/character-sheet/`のdesktop、tablet、mobileに横overflowがない
+- [x] 採用breakpointの直前・直後で、site menu rail、Header drawer、desktop補助領域、floating menuの表示条件が競合しない
+- [x] section jump buttonがGitHub Pagesのsubpath配下でもroute遷移を行わずに動作する
+- [x] floating controlsが最後の入力・操作を隠さない
+- [x] `h1`から`h2`への見出し順序とsection navigationのaccessible nameを確認する
+- [x] Header menu drawerとaction menuのfocus、Escape、overlay状態が競合しない
+- [x] 既存route、保存、JSON、CCFOLIA、error表示の動作を壊していない
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] `docs/TODO.md`の候補行design taskと矛盾していない
+- [x] `docs/design/character-sheet/notes.md`と矛盾していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -147,13 +147,13 @@
 
 ### 対応完了チェックリスト
 
-- [ ] requirementsとdesign notesへresponsive段階、desktop action railのsticky表示、active section jumpを反映する
-- [ ] desktop、site-menuありtablet、site-menuなしdesktop / tablet、mobileの各表示状態を実装・確認する
-- [ ] section jumpと、操作menu内の第一階層section linkだけへのactive accentを確認する
-- [ ] desktop、tablet、mobile、ultrawideのactual screenshotを開いて確認する
-- [ ] 対象VRTを更新し、target限定比較を通す
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] requirementsとdesign notesへresponsive段階、desktop action railのsticky表示を反映する。active accentは後続の要求調整で廃止した
+- [x] desktop、site-menuありtablet、site-menuなしdesktop / tablet、mobileの各表示状態を実装・確認する
+- [x] section jumpを確認する。操作menu内の第一階層section linkへのactive accentは後続の要求調整で廃止した
+- [x] desktop、tablet、mobile、ultrawideのactual screenshotを開いて確認する
+- [x] 対象VRTを更新し、target限定比較を通す
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## レビュー指摘 2
 
@@ -181,11 +181,11 @@
 ### 対応完了チェックリスト
 
 - [x] desktop操作レールが本文scroll中もHeader下へsticky表示される
-- [ ] section jump後の対象sectionがHeader直下に表示される
+- [x] section jump後の対象sectionがHeader直下に表示される
 - [x] tablet以上でform本文が最大`44rem`となり、desktopのaction railを含むgroupが中央寄せされる
-- [ ] `64rem`、`84rem`の各境界でsite menu rail、form、action controlsに横overflowがない
-- [ ] desktop、tablet、mobileのactual screenshotを開いて確認する
-- [ ] 対象VRTを更新し、target限定比較を通す
+- [x] `64rem`、`84rem`の各境界でsite menu rail、form、action controlsに横overflowがない
+- [x] desktop、tablet、mobileのactual screenshotを開いて確認する
+- [x] 対象VRTを更新し、target限定比較を通す
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -217,8 +217,8 @@
 - [x] desktopのform本文だけが中央寄せされ、action railはmain右端でsticky表示される
 - [x] manual scrollとsection jumpの双方で、現在の第一階層sectionのnavigation linkだけがaccentになる
 - [x] section navigation labelの上にborderがなく、action button群の上にborderがある
-- [ ] desktop、tablet、mobileのactual screenshotを開いて確認する
-- [ ] 対象VRTを更新し、target限定比較を通す
+- [x] desktop、tablet、mobileのactual screenshotを開いて確認する
+- [x] 対象VRTを更新し、target限定比較を通す
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -297,8 +297,8 @@
 - [x] 候補picker dialogを`PickerDialogs`へ集約し、既存の選択、候補絞り込み、focus復帰を維持する
 - [x] 有効な境界に`memo`と`useCallback` / `useMemo`を適用し、不要な再renderを避ける
 - [x] picker hook、`PickerDialogs`、Container memo境界のtarget testを追加・更新する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## レビュー指摘 6
 
@@ -333,8 +333,8 @@
 - [x] `CharacterChangeWarningDialogs`へ5確認dialogを集約し、既存のcopy、confirm、focus復帰を維持する
 - [x] 有効な境界に`memo`と`useCallback` / `useMemo`を適用し、不要な再renderを避ける
 - [x] warning hook、集約hook、dialog / Container境界のtarget testを追加・更新する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## レビュー指摘 7
 
@@ -371,5 +371,98 @@
 - [x] `ActionPaneDialogs`の集約固有のcallback/notice mappingをtestし、純粋なprops展開componentへ不要なtestを追加しない
 - [x] Container testを配線・root操作の代表フローへ縮小し、memo testをprops shallow equalityへ変更する
 - [x] 変更対象のVitestが通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 8
+
+### 指摘事項
+
+- `/character-sheet/`のE2Eがdesktop、tablet、mobileの代表viewportだけを確認しており、`64rem`と`84rem`の直前・直後でsite menu rail、desktop text action rail、floating action controlsの表示条件と横overflowを検証していない。
+- desktopのsection navigationと、Header drawerとaction menuを同時に開いた後のEscapeによるoverlay解消を、実ブラウザで確認していない。
+- character-sheet VRTはdefault、desktop action rail、tablet / mobile action controlsとaction menuを持つが、character-sheet routeでmobile Header drawerを開くstateがない。共通site-menu VRTは別routeのため、floating controlsとdrawerの同居を確認できない。
+
+### 判定
+
+- source: local-agent self-review in the active Codex conversation
+- classification: valid
+- local validation:
+  - `tests/e2e/character-sheet.spec.ts`は`1440px`、`1024px`、`390px`を確認するが、`1023/1024px`と`1343/1344px`の境界を網羅しない。
+  - 同E2Eはsection jumpをtablet / mobileから、Header drawerをmobileで個別に確認するだけであり、desktop navigationとdrawer/action menuの競合を確認していない。
+  - `tests/vrt/character-sheet.spec.ts`にはdesktop action rail、tablet / mobile action controls・open action menuのsection targetがある。一方、mobile Header drawerを開くcharacter-sheet固有stateはない。
+  - `docs/requirements/character-sheet.md`とdesign notesは、上記breakpoint、Header drawerとの競合回避、最終操作への到達をcurrent issueの契約としている。
+
+### 対応方針
+
+- 既存のcharacter-sheet E2Eを拡張し、`1023/1024px`と`1343/1344px`のrail / controls表示と横overflow、desktop section jump、mobile drawer/action menuを同時に開いた後のEscapeによるoverlay解消を確認する。既存のJSON、clipboard、picker、warningの局所stateをE2Eへ重複して追加しない。
+- `h1` / `h2`、PageToc / MobilePageToc非表示、各controlの個別focus復帰は、それぞれstatic page contract、component / hook testの責務としてE2Eへ追加しない。
+- character-sheet VRTへmobile Header drawer-open stateを1件追加する。最終操作とfloating controlsの重なりはVRT / Visual Reviewで確認し、breakpoint境界とsticky scrollの利用可能性はE2Eで確認する。ultrawideはdesign notesどおりactual visual reviewだけでcanonical VRTを増やさない。
+- ユーザーが許可済みのcharacter-sheet VRT targetに限り、追加stateのcanonical snapshotを更新し、target限定比較を行う。
+
+### 対応完了チェックリスト
+
+- [x] E2Eで`64rem`・`84rem`の直前 / 直後のrail・controls・横overflowを確認する
+- [x] E2Eでdesktop section jumpと、Header drawer/action menuのoverlay解消を確認する
+- [x] character-sheet VRTへmobile Header drawer-open stateを追加する
+- [x] 追加VRT stateのactual screenshotを確認し、許可済みtargetのcanonical snapshotを更新してtarget限定比較を通す
+- [x] 変更対象のE2E / VRTが通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## VRT baseline更新（2026-08-08）
+
+- user approval: character-sheetの全VRT更新を明示承認。
+- target: `tests/vrt/character-sheet.spec.ts` の`@character-sheet` 224件。mobile Header drawerを開いた`site-menu-open`を含む。
+- result: `npm run visual:update -- --grep '@character-sheet'`で224件を更新し、同じtargetの`npm run visual:test -- --grep '@character-sheet'`で224件成功。
+- baseline policy: `canonical-snapshots/visual/character-sheet/`はlocal-only artifactであり、Git管理へ追加しない。
+- acceptance: 起点`3deecdb`とのCSS比較ではsection CSSに意図しないrule変更はなく、mobile sectionの局所的な文字rasterization差分はユーザー判断により許容する。全ページの高さ差は、見出しをvisually hidden化し、1列layoutへ変更した意図した差分である。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `character-sheet`
+- VRT test / tags: `tests/vrt/character-sheet.spec.ts`の`@character-sheet`。captureは最終diffの操作領域を対象に、`@character-sheet.*@(default|action-pane-desktop|action-controls|action-menu-open|site-menu-open|action-pane-error|action-menu-error)`を使用した。
+- route / states / viewports: `/character-sheet/`のdefault（desktop / tablet / mobile）、desktop action rail、tablet / mobileのfloating controls・action menu・error state、mobile Header drawer-open。
+
+### レビュー結果
+
+| 対象                                         | 判定 | 差分                                          | 対応                                       |
+| -------------------------------------------- | ---- | --------------------------------------------- | ------------------------------------------ |
+| desktop action rail                          | OK   | 罫線をFooter直前まで連続する表示へ修正        | desktop full-page canonical snapshotを更新 |
+| tablet / mobile controls・action menu・error | OK   | 意図した狭幅操作導線                          | なし                                       |
+| mobile Header drawer-open                    | OK   | 新規VRT state                                 | なし                                       |
+| default desktop / tablet / mobile            | OK   | 1列layout・見出し非表示による意図した全体差分 | なし                                       |
+
+### 実画面確認
+
+- `/character-sheet/` default desktop / tablet / mobile:
+  - full-page overview: 1列section、desktopの右端action rail、tablet / mobileのfloating controls、Footerまでのpage-level配置を確認。
+  - checked acceptance criteria: 横overflowなし、desktopでは本文のみ中央寄せ、tablet / mobileではsite menu railとdesktop text action railを出さない。
+- `/character-sheet/` desktop action rail、tablet / mobile controls・action menu・error:
+  - locator screenshot（`CharacterSheetActionPane` owner / original pixel resolution）: action railのsection jump、button境界、divider、error表示、狭幅menu内のsection navigationから縦並び操作・errorへの順序を確認。
+  - checked acceptance criteria: clip・overflowなし、buttonの操作可能な境界、第一階層だけのsection navigation、最後の操作を覆わない表示。
+- `/character-sheet/` mobile Header drawer-open:
+  - locator screenshot（`#character-sheet-site-menu-drawer` / original pixel resolution）: drawer、scrim、下層のfloating controlsの重なりを確認。
+  - checked acceptance criteria: drawer内のsite menu、action controlsとのoverlay競合なし。
+
+### 自己修正した項目
+
+- desktop操作レールの左罫線をsticky要素からdesktop grid layoutの疑似要素へ移し、操作内容の末尾ではなくFooter直前で止まるようにした。
+- 修正後に`@character-sheet @full-page @desktop @default`のcanonical snapshotだけを更新し、通常比較の1件成功を確認した。
+
+### 人間判断が必要な差分
+
+- なし。mobile section screenshotの局所的な文字rasterization差分は、baseline更新前にユーザーが許容済みと判断した。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

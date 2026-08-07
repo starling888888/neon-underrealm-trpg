@@ -20,6 +20,15 @@
     width: 100%;
     align-items: start;
     gap: var(--space-6);
+    position: relative;
+  }
+  .layout::after {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: var(--character-sheet-menu-rail-width);
+    border-inline-start: var(--border-width) solid var(--color-border);
+    content: "";
+    pointer-events: none;
   }
   .layout > form {
     grid-column: 1;

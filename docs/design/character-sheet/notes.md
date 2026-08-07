@@ -42,6 +42,7 @@
 - 同日、ユーザーは`@character-sheet`の全canonical baseline更新を明示承認した。`profile-image-selected`を含む対象stateは、修正後にdesktop / tablet / mobileで更新・通常比較する。
 - 2026-07-31、G31の方針として`canonical-snapshots/visual/**`をGit管理から全削除した。以後のcanonical baselineは同じpathへlocal-onlyで再生成し、Gitへ追加しない。
 - 2026-08-02、ユーザー明示承認により、抵抗の既定使用能力値を肉体へ変更した現行画面へ、`default`（full-page）と`combat-default`（判定section）をdesktop、tablet、mobileで更新した。6件のtarget限定通常比較が通り、actual screenshotで各viewportの抵抗が肉体であること、判定sectionにclipや横overflowがないことを確認した。canonical baselineはlocal-onlyであり、Gitへ追加しない。
+- 2026-08-08、ユーザー明示承認により、`ex-10-character-sheet-layout`の最終表示へ`@character-sheet`の全canonical baselineを更新した。mobile Header drawerを開いた`site-menu-open` stateを追加し、local canonical snapshotは224枚となった。`npm run visual:update -- --grep '@character-sheet'`および更新後の同target通常比較は、いずれも224件成功した。snapshotは`canonical-snapshots/visual/`のlocal-only artifactであり、Git管理へ追加しない。起点からのCSS比較では、profileを含むsection CSSは移動または`composes`参照の相対path修正だけであり、desktop操作レール・1列form・tablet以上の幅制約以外の意図しないstyle変更は確認されなかった。mobile section screenshotに残る局所的な文字rasterization差分は、ユーザー判断により許容する。
 - 同日のGate外レビュー修正として、font familyは既存の`--font-sans`継承を保つ。field label、直接入力、重要な算出値、一覧本文、mobileの密集一覧をそれぞれ専用文字tokenで統一する。`体力増加`〜`精神力係数`、`共通スキルボーナス`、副能力値の`最大体力`〜`結べる縁`、覚悟効果の`気絶からの回復`〜`受動判定`は、`--text-xs`、muted color、bold（750）へ揃える。共通スキルボーナスを除く読み取り専用の数値枠と、文字・数値・selectの直接入力は`--text-xs`と共通の最小高を使う。縁の`対象`・`関係`・`覚悟`header、section見出し、dialog固有の情報密度は変更しない。
 - スキル、武器・防具、各専用アイテムの一覧rowと列headerは、並べ替えcontrolsを収める`2.25rem`の共通最小高を使う。項目名・数値input・icon操作は同じrow高の中で配置する。
 
