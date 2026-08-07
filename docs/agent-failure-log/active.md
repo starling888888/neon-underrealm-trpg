@@ -533,6 +533,14 @@ source種別は以下を使う。
 
 ### VRT capture workflow
 
+#### Attempted an ad hoc GM-page screenshot after canonical VRT comparison was unavailable
+
+- date: 2026-08-07
+- source: agent self-report
+- 発生箇所: `milestone-02-phase-02-gm-section-g01-gm-guide` のVisual Review
+- 観測した失敗: `@site-menu`と`@site-layout @mobile-menu-open`のcanonical snapshotが存在せず比較不能と分かった後、`/gm/`の画面確認を補うため独自のPlaywright scriptで`.tmp`へスクリーンショットを作成した。Visual Review skillは、必要な既存VRT targetまたはlocator screenshotがない場合にgapをcurrent issueへ記録して停止することを求めており、この代替captureは許可されない。
+- 一次対応: 独自scriptで作成した画像を削除し、G1 issueへcanonical snapshotと`/gm/` targetの不足を記録した。新規target、locator capture、baselineは本Gateで追加・更新せず、別途承認されたtaskで整備する。
+
 #### Changed tracked VRT capture code for a one-off local screenshot
 
 - date: 2026-07-27

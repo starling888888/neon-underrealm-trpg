@@ -1,14 +1,29 @@
 import { getIkizamaList } from "../data/ikizama";
 import { getRyugiList } from "../data/ryugi-list";
 
-export type SiteMenuItem = {
+export type SiteMenuLinkItem = {
+  kind?: "link";
   label: string;
   href: string;
-  children?: SiteMenuItem[];
+  children?: SiteMenuLinkItem[];
   expandWhenCurrent?: boolean;
 };
 
-export type SiteMenuLink = Pick<SiteMenuItem, "href" | "label">;
+export type SiteMenuSectionItem = {
+  kind: "section";
+  label: string;
+};
+
+export type SiteMenuSeparatorItem = {
+  kind: "separator";
+};
+
+export type SiteMenuItem =
+  | SiteMenuLinkItem
+  | SiteMenuSectionItem
+  | SiteMenuSeparatorItem;
+
+export type SiteMenuLink = Pick<SiteMenuLinkItem, "href" | "label">;
 
 export type SiteMenuItemState = "current" | "ancestor" | "none";
 
@@ -20,6 +35,10 @@ export const siteMenuItems: SiteMenuItem[] = [
   {
     label: "はじめに",
     href: "/introduction",
+  },
+  {
+    kind: "section",
+    label: "PLセクション",
   },
   {
     label: "ワールドガイド",
@@ -109,6 +128,17 @@ export const siteMenuItems: SiteMenuItem[] = [
     href: "/advancement",
   },
   {
+    kind: "section",
+    label: "GMセクション",
+  },
+  {
+    label: "GMガイド",
+    href: "/gm",
+  },
+  {
+    kind: "separator",
+  },
+  {
     label: "キャラクターシート",
     href: "/character-sheet",
   },
@@ -137,10 +167,16 @@ export function getSiteMenuLink(href: string): SiteMenuLink {
 export function flattenSiteMenuItems(
   items: readonly SiteMenuItem[],
 ): SiteMenuLink[] {
-  const links = items.flatMap(({ href, label, children }) => [
-    { href, label },
-    ...(children ? flattenSiteMenuItems(children) : []),
-  ]);
+  const links = items.flatMap((item) => {
+    if (!isSiteMenuLinkItem(item)) {
+      return [];
+    }
+
+    return [
+      { href: item.href, label: item.label },
+      ...(item.children ? flattenSiteMenuItems(item.children) : []),
+    ];
+  });
   const hrefs = new Set<string>();
 
   for (const { href } of links) {
@@ -155,7 +191,7 @@ export function flattenSiteMenuItems(
 }
 
 export function getSiteMenuItemState(
-  item: SiteMenuItem,
+  item: SiteMenuLinkItem,
   currentPath: string,
   basePath = "/",
 ): SiteMenuItemState {
@@ -182,7 +218,7 @@ export function getSiteMenuItemState(
 }
 
 export function getSiteMenuItemInitialExpanded(
-  item: SiteMenuItem,
+  item: SiteMenuLinkItem,
   currentPath: string,
   basePath = "/",
 ): boolean {
@@ -191,6 +227,12 @@ export function getSiteMenuItemInitialExpanded(
     state === "ancestor" ||
     (item.expandWhenCurrent === true && state === "current")
   );
+}
+
+export function isSiteMenuLinkItem(
+  item: SiteMenuItem,
+): item is SiteMenuLinkItem {
+  return item.kind !== "section" && item.kind !== "separator";
 }
 
 function normalizeCurrentPath(currentPath: string, basePath: string): string {

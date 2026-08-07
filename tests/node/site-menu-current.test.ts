@@ -4,11 +4,13 @@ import { getRyugiList } from "../../src/lib/data/ryugi-list";
 import {
   getSiteMenuItemInitialExpanded,
   getSiteMenuItemState,
+  isSiteMenuLinkItem,
   type SiteMenuItem,
+  type SiteMenuLinkItem,
   siteMenuItems,
 } from "../../src/lib/site/menu";
 
-const menu: SiteMenuItem = {
+const menu: SiteMenuLinkItem = {
   label: "データ",
   href: "/data",
   children: [
@@ -27,21 +29,48 @@ const menu: SiteMenuItem = {
 
 describe("site menu current state", () => {
   it("places rules before data in the root menu", () => {
-    const labels = siteMenuItems.map((item) => item.label);
+    const labels = siteMenuItems
+      .filter(isSiteMenuLinkItem)
+      .map((item) => item.label);
 
     expect(labels.indexOf("ルール") < labels.indexOf("データ")).toBeTruthy();
   });
 
-  it("places the character sheet between advancement and support", () => {
-    const labels = siteMenuItems.map((item) => item.label);
-    const characterSheetIndex = labels.indexOf("キャラクターシート");
+  it("places the PL and GM sections in the requested root menu order", () => {
+    const introductionIndex = siteMenuItems.findIndex(
+      (item) => isSiteMenuLinkItem(item) && item.href === "/introduction",
+    );
+    const advancementIndex = siteMenuItems.findIndex(
+      (item) => isSiteMenuLinkItem(item) && item.href === "/advancement",
+    );
 
-    expect(labels[characterSheetIndex - 1]).toBe("キャラクター成長");
-    expect(labels[characterSheetIndex + 1]).toBe("サポート");
+    expect(siteMenuItems[introductionIndex + 1]).toEqual({
+      kind: "section",
+      label: "PLセクション",
+    });
+    expect(siteMenuItems[advancementIndex + 1]).toEqual({
+      kind: "section",
+      label: "GMセクション",
+    });
+    expect(siteMenuItems[advancementIndex + 2]).toMatchObject({
+      label: "GMガイド",
+      href: "/gm",
+    });
+    expect(siteMenuItems[advancementIndex + 3]).toEqual({
+      kind: "separator",
+    });
+    expect(siteMenuItems[advancementIndex + 4]).toMatchObject({
+      label: "キャラクターシート",
+      href: "/character-sheet",
+    });
+    expect(siteMenuItems[advancementIndex + 5]).toMatchObject({
+      label: "サポート",
+      href: "/support",
+    });
   });
 
   it("uses generated ryugi data for the ryugi detail menu items", () => {
-    const dataMenu = siteMenuItems.find((item) => item.href === "/data");
+    const dataMenu = findSiteMenuItemByHref(siteMenuItems, "/data");
     const ryugiMenu = dataMenu?.children?.find(
       (item) => item.href === "/data/ryugi",
     );
@@ -57,7 +86,7 @@ describe("site menu current state", () => {
   });
 
   it("uses generated ikizama data for the ikizama detail menu items", () => {
-    const dataMenu = siteMenuItems.find((item) => item.href === "/data");
+    const dataMenu = findSiteMenuItemByHref(siteMenuItems, "/data");
     const ikizamaMenu = dataMenu?.children?.find(
       (item) => item.href === "/data/ikizama",
     );
@@ -73,7 +102,7 @@ describe("site menu current state", () => {
   });
 
   it("keeps the data and ryugi menu ancestors expanded for ryugi detail pages", () => {
-    const dataMenu = siteMenuItems.find((item) => item.href === "/data");
+    const dataMenu = findSiteMenuItemByHref(siteMenuItems, "/data");
     const ryugiMenu = dataMenu?.children?.find(
       (item) => item.href === "/data/ryugi",
     );
@@ -198,8 +227,12 @@ describe("site menu initial expansion", () => {
 function findSiteMenuItemByHref(
   items: readonly SiteMenuItem[],
   href: string,
-): SiteMenuItem | undefined {
+): SiteMenuLinkItem | undefined {
   for (const item of items) {
+    if (!isSiteMenuLinkItem(item)) {
+      continue;
+    }
+
     if (item.href === href) {
       return item;
     }
