@@ -131,6 +131,14 @@ source種別は以下を使う。
 - 観測した失敗: 完了条件と備考の実装確認では `npm run test`、`npm run check`、`npm run build` が検証済みになっていたが、末尾の `ローカル検証メモ` に同じコマンドが `not yet verified` として残り、検証済みなのか未検証なのかが矛盾する状態でPR化した。
 - 一次対応: review-to-issueで `レビュー指摘 1` に取り込み、レビュー対応時にローカル検証メモを実際の検証済み状態へ整理する方針へ入れた。
 
+#### Left superseded review checklist items unchecked
+
+- date: 2026-08-08
+- source: user
+- 発生箇所: `ex-10-character-sheet-layout`のレビュー指摘9・10への修正とPR再レビュー
+- 観測した失敗: Review 10で、長大error一覧のbrowser E2EをComponent testへ置き換え、target testとVRT確認を完了した。しかし、Review 9に残る同じ到達性・target testの2 checkboxを最終方針と実施結果へ更新しなかったため、remote PR reviewでチェック漏れとして再指摘された。
+- 一次対応: Review 9の方針をComponent testへ訂正し、実施済みの2 checkboxを完了へ更新した。以後、後続reviewで前のreview sectionの方針や検証経路を置き換える場合は、commit前に置換元sectionの未チェック項目を解消済み・未対応・人間判断のいずれかへ明示更新する。
+
 - date: 2026-07-09
 - source: review
 - 発生箇所: `phase-2-prep-contents-markdown-workflow` の `docs/issue/phase-2-prep-contents-markdown-workflow.md`
@@ -448,6 +456,14 @@ source種別は以下を使う。
 - 発生箇所: `42-0-npc-data-normalization`の`no_image.webp` fallback仕様を正式化した後のPRレビュー
 - 観測した失敗: 仕様変更時に、plan、TODO、変換仕様、requirements、out-of-scope、architecture、designを横断して影響範囲を一括確認せず、差分中心のPRレビューを繰り返した。そのためworld design、requirements / out-of-scope、architectureの旧仕様が第1回から第3回に分けて発見され、レビュー品質が低く見える連鎖を生んだ。
 - 一次対応: 第3回レビューまでの有効な指摘をcurrent issueへ記録した。以後、仕様・データ契約・公開asset規約を変更するPRでは、初回レビュー前に関連語で全SSoTを探索し、更新対象と「確認済み・変更不要」の一覧をレビューmanifestへ残す恒久対応を検討する。
+
+#### Corrective PR omitted design-source alignment
+
+- date: 2026-08-08
+- source: user
+- 発生箇所: `ex-10-character-sheet-layout`のレビュー指摘9・10への修正とPR再レビュー
+- 観測した失敗: action menuの可変長error一覧について、実装、Component test、current issueだけを更新し、承認済みdesign正本への影響を修正前に横断確認しなかった。そのため、修正後のPRレビューで同じ表示契約の記録漏れが追加指摘となった。
+- 一次対応: レビュー指摘11へdesign正本の更新を記録した。以後、UI表示契約を修正する前に、関連するdesign正本を含むSSoTを検索し、更新対象または変更不要の判断を先に確認する。
 
 ### test environment configuration
 

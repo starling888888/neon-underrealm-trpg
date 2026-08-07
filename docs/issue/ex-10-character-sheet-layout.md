@@ -488,15 +488,15 @@
 ### 対応方針
 
 - design notesのモードを、承認・実装済みのcharacter-sheet layout intentとVRT参照情報を含む正本へ更新する。将来の未決定事項だけを明示する。
-- mobile縦長では、狭幅action menuのsection navigation、action button群、`エラーがN件あります。`は固定表示に保つ。可変長のerror一覧だけを最大`12rem`で縦scrollできるようにし、多数error時に一覧末尾へ到達できるbrowser testを追加する。極端に低いviewportへの追加設計は行わない。
+- mobile縦長では、狭幅action menuのsection navigation、action button群、`エラーがN件あります。`は固定表示に保つ。可変長のerror一覧だけを最大`12rem`で縦scrollできるようにし、多数error時の高さ上限とscroll設定はComponent testで確認する。極端に低いviewportへの追加設計は行わない。
 - resetのreturn focusをroot operation完了後まで保留する。deferred Promiseを用いるtestで、処理中はfocusせず、成功完了後にtriggerへ復帰し、error dialogのfocus契約を妨げないことを確認する。
 
 ### 対応完了チェックリスト
 
 - [x] design notesのモードを承認・実装済みlayoutの正本として更新する
-- [ ] mobile縦長で、狭幅action menuのerror一覧だけが多数error時に縦scrollし、section navigation、action button群、`エラーがN件あります。`は固定表示される
+- [x] mobile縦長で、狭幅action menuのerror一覧だけが多数error時に縦scrollし、section navigation、action button群、`エラーがN件あります。`は固定表示される
 - [x] reset成功時のfocusをroot operation完了後にtriggerへ復帰する
-- [ ] 上記の狭幅menu到達性とreset focus復帰のtarget testを追加・更新する
+- [x] 上記の狭幅menu到達性とreset focus復帰のtarget testを追加・更新する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -575,3 +575,33 @@
 - [x] reset focusが非同期root operationの処理中・成功後に正しく動作し、失敗時にerror dialogのfocusを奪わない
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 11
+
+### 指摘事項
+
+- 狭幅action menuの可変長error一覧について、一覧だけを最大`12rem`で縦scrollし、section navigation・action button・error countを一覧外に固定する表示契約がcurrent issueにしかなく、承認済みdesign正本へ残っていない。
+- reset失敗時、`isImageErrorFromReset`がerror dialogを閉じた後も残るため、`useActionPane`の保留されたfocus復帰要求が後続の画像操作で発火し、古いreset triggerへfocusを奪う経路がある。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation:
+  - `docs/design/character-sheet/notes.md`は狭幅menuのerror一覧を記録するが、可変長一覧だけの高さ上限・scroll・固定要素・全errorへの到達性を記録していない。
+  - `useCharacterSheetRootState`はreset失敗時に`isImageErrorFromReset`をtrueへする。`CharacterImageErrorDialog`のcloseでは`imageError`だけをnullへするため、`useActionPane`の`shouldRestoreResetFocus`は保留されたままになる。
+  - PR #197のremote head `abe9d10`、GitHub connectorのtop-level comment、submitted review、inline review threadはいずれも追加なしである。
+
+### 対応方針
+
+- design正本へ、狭幅action menuでは可変長error listだけを最大`12rem`で縦scrollし、section navigation・action button・error countをscroll領域外に置き、全errorへ到達可能にすることを追記する。
+
+### ユーザー判断
+
+- 2026-08-08: reset失敗からのfocus復帰は発生頻度に対して修正コストが高いため、対応しない。focus周辺の追加修正・testは本issueで行わない。
+
+### 対応完了チェックリスト
+
+- [x] design正本が可変長error listの表示契約を記録する
+- [x] `npm run check` が通る（Review 10のsource変更後に実行済み。本対応はMarkdownのみ）
+- [x] `npm run build` が通る（Review 10のsource変更後に実行済み。本対応はMarkdownのみ）
