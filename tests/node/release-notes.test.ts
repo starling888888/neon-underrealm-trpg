@@ -195,7 +195,7 @@ describe("release notes conversion", () => {
 
   it("loads generated release notes through the data access layer", () => {
     expect(getReleaseNotesJson().dataName).toBe("release-notes");
-    expect(getReleaseNotes().length).toBe(1);
+    expect(getReleaseNotes().length).toBe(2);
     expect(getLatestReleaseNotes(1)).toEqual(getReleaseNotes().slice(0, 1));
   });
 
