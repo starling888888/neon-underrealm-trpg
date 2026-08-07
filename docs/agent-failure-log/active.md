@@ -543,6 +543,14 @@ source種別は以下を使う。
 
 ### failure-log workflow consistency
 
+#### Repeated new hook-test failure while assuming requestAnimationFrame focus timing
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の新規 `useActionPane` hook test
+- 観測した失敗: reset confirm後のfocus復帰を直接確認する新規testで、DOM外のtriggerをDOMへ追加する修正、同期`requestAnimationFrame` stubの追加を順に行ったが、同じfocus assertionを3回連続で失敗させた。hookのstate遷移とtest環境におけるanimation frame / focusの実行契約を切り分ける前に、fixtureだけを段階的に修正していた。
+- 一次対応: focus callbackの呼び出しとjsdom上のactiveElementを同一視せず、既存`CharacterSheetDialog`のfocus契約とhookが返すreturn refの境界を確認する。hook testでは状態遷移とref保持を確認し、requestAnimationFrameを含む実focus復帰はdialog integration testへ置く。
+
 ### browser-test scroll-state diagnosis
 
 #### Repeated active-section E2E failures before validating document-position semantics

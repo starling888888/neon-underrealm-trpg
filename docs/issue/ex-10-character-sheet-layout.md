@@ -335,3 +335,41 @@
 - [x] warning hook、集約hook、dialog / Container境界のtarget testを追加・更新する
 - [ ] `npm run check` が通る
 - [ ] `npm run build` が通る
+
+## レビュー指摘 7
+
+### 指摘事項
+
+- ActionPane、picker、character change warningをhookとdialog componentへ分割した後、状態遷移と表示契約のVitestが不足している。
+- `CharacterSheetContainer.test.tsx`が、分割済みのsection、picker、warning、action menuの細部までDOM経由で検証しており、Containerの配線境界を越えて内部実装を知っている。
+- `CharacterSheetContainerMemo.test.tsx`がform presenterのsection propsを個別列挙しており、presenter内部の構成変更に不要に追随する。
+
+### 判定
+
+- source: local-agent self-review in the active Codex conversation
+- classification: valid
+- local validation:
+  - `useActionPane`には直接のhook testがなく、menuのEscape/focus復帰、help/reset/CCFOLIAの状態遷移、copy notice、error dialog、section jumpはContainer testへ依存している。
+  - `usePickerStates`はrow pickerの一部だけ、`usePickers`はprimary skillの選択だけを直接確認している。armorのboolean state、target picker、各selection callback、drug・other ryugi・weapon等の候補導出は直接検証されていない。
+  - `useCharacterChangeWarning`は2ケースだけであり、ikizama、other ryugi変更・削除、cancel、category削除後focusの状態遷移がContainer testに残っている。
+  - `PrimarySkillPickerDialog`以外のpicker dialogの固有表示・候補選択は、ほぼContainer testだけで確認している。
+  - `PickerDialogs`と`CharacterChangeWarningDialogs`は型付きpropsをそのまま展開するだけの集約componentであり、専用snapshot testを追加する価値は低い。`ActionPaneDialogs`はcopy noticeの分岐とconfirm callbackを持つため直接test対象とする。
+
+### 対応方針
+
+- `useActionPane`へ状態遷移とreturn focus ref、section jump、CCFOLIA成功/失敗通知、error dialogのunit testを追加する。実際のfocus復帰は既存の共通dialog component testが所有する。
+- `usePickerStates`と`usePickers`を、picker種別を網羅するtable-driven testへ拡張する。各pickerのtarget/row、選択通知、close、候補・選択済み導出をhookで確認する。
+- `useCharacterChangeWarning`へ5 warning flowのconfirm/cancel・依存skill整理・focus復帰を追加し、各picker dialogには固有の表示、disabled、selection callbackを確認するcomponent testを置く。`ActionPaneDialogs`だけはその集約固有のcallback/notice mappingをtestする。
+- Containerにはroot state、form presenter、picker/warning/action paneの配線と代表的なroot操作だけを残す。section編集、picker選択、warning状態遷移、action menu細部は下位層のtestへ移す。
+- memo境界のtestは個別section propの列挙をやめ、form presenter propsとaction pane propsのshallow equalityを確認する。props wrapperのobject identity自体はReactのmemoization契約に含めない。
+
+### 対応完了チェックリスト
+
+- [x] `useActionPane`の状態遷移、return focus ref、section jump、notice/errorを直接testする
+- [x] `usePickerStates`と`usePickers`の全picker state・selection・候補導出を直接testする
+- [x] `useCharacterChangeWarning`の5 flowと各picker dialogの固有表示・操作を直接testする
+- [x] `ActionPaneDialogs`の集約固有のcallback/notice mappingをtestし、純粋なprops展開componentへ不要なtestを追加しない
+- [x] Container testを配線・root操作の代表フローへ縮小し、memo testをprops shallow equalityへ変更する
+- [x] 変更対象のVitestが通る
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

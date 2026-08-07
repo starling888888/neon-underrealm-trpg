@@ -163,36 +163,7 @@ describe("CharacterSheetContainer memo boundaries", () => {
     const afterActionPane = actionPaneSpy.mock
       .lastCall?.[0] as typeof beforeActionPane;
 
-    expect(afterActionPane.errorSummary).toBe(beforeActionPane.errorSummary);
-    expect(afterActionPane.onCcfoliaCopy).toBe(beforeActionPane.onCcfoliaCopy);
-    expect(afterActionPane.onExport).toBe(beforeActionPane.onExport);
-    expect(afterActionPane.onHelp).toBe(beforeActionPane.onHelp);
-    expect(afterActionPane.onImport).toBe(beforeActionPane.onImport);
-    expect(afterActionPane.onMenuToggle).toBe(beforeActionPane.onMenuToggle);
-    expect(afterActionPane.onReset).toBe(beforeActionPane.onReset);
-    expect(afterActionPane.onReviewErrors).toBe(
-      beforeActionPane.onReviewErrors,
-    );
-    expect(afterActionPane.onSectionJump).toBe(beforeActionPane.onSectionJump);
-    expect(afterActionPane.sectionNavigation).toBe(
-      beforeActionPane.sectionNavigation,
-    );
-    expect(after.bondsSection).toBe(before.bondsSection);
-    expect(after.buildSection).toBe(before.buildSection);
-    expect(after.checksSection).toBe(before.checksSection);
-    expect(after.commonSkillsSection).toBe(before.commonSkillsSection);
-    expect(after.cyberneticsSection).toBe(before.cyberneticsSection);
-    expect(after.drugsSection).toBe(before.drugsSection);
-    expect(after.ikizamaSkillsSection).toBe(before.ikizamaSkillsSection);
-    expect(after.nanomachinesSection).toBe(before.nanomachinesSection);
-    expect(after.omamoriSection).toBe(before.omamoriSection);
-    expect(after.otherRyugiSkillsSection).toBe(before.otherRyugiSkillsSection);
-    expect(after.primarySkillsSection).toBe(before.primarySkillsSection);
-    expect(after.profileSection).toBe(before.profileSection);
-    expect(after.secondaryAttributesSection).toBe(
-      before.secondaryAttributesSection,
-    );
-    expect(after.specialItemsSection).toBe(before.specialItemsSection);
-    expect(after.weaponsAndArmorSection).toBe(before.weaponsAndArmorSection);
+    expect(afterActionPane).toStrictEqual(beforeActionPane);
+    expect(after).toStrictEqual(before);
   });
 });
