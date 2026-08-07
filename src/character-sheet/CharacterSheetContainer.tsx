@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import styles from "./CharacterSheetContainer.module.css";
+import ActionPaneDialogs from "./components/ActionPaneDialogs";
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
 import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
@@ -8,13 +9,6 @@ import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOver
 import type { CyberneticsPickerTarget } from "./components/CyberneticsSection";
 import ArmorPickerDialog from "./components/dialogs/ArmorPickerDialog";
 import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
-import CharacterSheetCcfoliaCopyConfirmDialog from "./components/dialogs/CharacterSheetCcfoliaCopyConfirmDialog";
-import CharacterSheetCcfoliaCopyNoticeDialog from "./components/dialogs/CharacterSheetCcfoliaCopyNoticeDialog";
-import CharacterSheetErrorDialog from "./components/dialogs/CharacterSheetErrorDialog";
-import CharacterSheetHelpDialog from "./components/dialogs/CharacterSheetHelpDialog";
-import CharacterSheetJsonImportConfirmDialog from "./components/dialogs/CharacterSheetJsonImportConfirmDialog";
-import CharacterSheetJsonImportErrorDialog from "./components/dialogs/CharacterSheetJsonImportErrorDialog";
-import CharacterSheetResetConfirmDialog from "./components/dialogs/CharacterSheetResetConfirmDialog";
 import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
 import CyberneticsPickerDialog from "./components/dialogs/CyberneticsPickerDialog";
 import DrugsPickerDialog from "./components/dialogs/DrugsPickerDialog";
@@ -40,10 +34,7 @@ import {
   getArmors,
   getWeaponCandidateGroups,
 } from "./master-data/weapons-and-armor";
-import {
-  type CharacterSheetSectionId,
-  characterSheetSectionNavigationItems,
-} from "./section-navigation";
+import useActionPane from "./useActionPane";
 import useCharacterSheetRootState from "./useCharacterSheetRootState";
 
 /**
@@ -55,16 +46,6 @@ import useCharacterSheetRootState from "./useCharacterSheetRootState";
  */
 export default function CharacterSheetContainer() {
   const rootState = useCharacterSheetRootState();
-  const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
-  const [isErrorSummaryOpen, setIsErrorSummaryOpen] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const [isCcfoliaCopyConfirmOpen, setIsCcfoliaCopyConfirmOpen] =
-    useState(false);
-  const [ccfoliaCopyNotice, setCcfoliaCopyNotice] = useState<
-    "success" | "failure" | null
-  >(null);
-  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const [shouldRestoreResetFocus, setShouldRestoreResetFocus] = useState(false);
   const [primarySkillPickerRowId, setPrimarySkillPickerRowId] = useState<
     string | null
   >(null);
@@ -115,13 +96,6 @@ export default function CharacterSheetContainer() {
   const otherRyugiRemoveTriggerRef = useRef<HTMLButtonElement>(null);
   const otherRyugiAddButtonRef = useRef<HTMLButtonElement>(null);
   const specialItemCategoryRemoveTriggerRef = useRef<HTMLButtonElement>(null);
-  const actionMenuTriggerRef = useRef<HTMLButtonElement>(null);
-  const helpTriggerRef = useRef<HTMLButtonElement>(null);
-  const errorSummaryCloseButtonRef = useRef<HTMLButtonElement>(null);
-  const errorSummaryTriggerRef = useRef<HTMLButtonElement>(null);
-  const resetTriggerRef = useRef<HTMLButtonElement>(null);
-  const ccfoliaCopyTriggerRef = useRef<HTMLButtonElement>(null);
-  const ccfoliaCopyNoticeConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const pendingPrimaryRyugiChangeRef = useRef<(() => void) | null>(null);
   const pendingIkizamaChangeRef = useRef<(() => void) | null>(null);
   const pendingOtherRyugiChangeRef = useRef<(() => void) | null>(null);
@@ -179,22 +153,6 @@ export default function CharacterSheetContainer() {
   const onArmorPickerRequested = useCallback((trigger: HTMLButtonElement) => {
     armorPickerTriggerRef.current = trigger;
     setIsArmorPickerOpen(true);
-  }, []);
-  const onSectionJump = useCallback((id: CharacterSheetSectionId) => {
-    const target = document.getElementById(id);
-    if (target === null) return;
-    setIsActionMenuOpen(false);
-    requestAnimationFrame(() => {
-      const header = document.querySelector<HTMLElement>("[data-site-header]");
-      const headerHeight = header?.getBoundingClientRect().height ?? 0;
-      window.scrollTo({
-        behavior: "smooth",
-        top: Math.max(
-          0,
-          window.scrollY + target.getBoundingClientRect().top - headerHeight,
-        ),
-      });
-    });
   }, []);
   const onOmamoriPickerRequested = useCallback(
     (rowId: string, trigger: HTMLButtonElement) => {
@@ -405,30 +363,10 @@ export default function CharacterSheetContainer() {
       presenterProps.weaponsAndArmorSection,
     ],
   );
-
-  useEffect(() => {
-    if (!shouldRestoreResetFocus || rootState.isRootOperationInProgress) return;
-
-    setShouldRestoreResetFocus(false);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => resetTriggerRef.current?.focus());
-    });
-  }, [rootState.isRootOperationInProgress, shouldRestoreResetFocus]);
-
-  function closeResetConfirm(): void {
-    setIsResetConfirmOpen(false);
-    setShouldRestoreResetFocus(true);
-  }
-
-  function closeCcfoliaCopyConfirm(): void {
-    setIsCcfoliaCopyConfirmOpen(false);
-  }
-
-  async function confirmCcfoliaCopy(): Promise<void> {
-    closeCcfoliaCopyConfirm();
-    const values = rootState.form.getValues();
+  const onCcfoliaCopyConfirmed = useCallback(async () => {
+    const values = form.getValues();
     const { derived } = presenterProps.secondaryAttributesSection;
-    const copied = await rootState.onCcfoliaCopy(
+    return rootState.onCcfoliaCopy(
       serializeCcfoliaCharacterClipboardData({
         actionValue: derived.actionValue,
         bondLimit: derived.bondLimit,
@@ -438,30 +376,38 @@ export default function CharacterSheetContainer() {
         pcName: values.profile.pcName,
       }),
     );
-    setCcfoliaCopyNotice(copied ? "success" : "failure");
-  }
-
-  useEffect(() => {
-    if (!isActionMenuOpen) {
-      return;
-    }
-
-    function onKeyDown(event: KeyboardEvent): void {
-      if (
-        event.key !== "Escape" ||
-        document.querySelector("dialog[open]") !== null
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-      setIsActionMenuOpen(false);
-      requestAnimationFrame(() => actionMenuTriggerRef.current?.focus());
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isActionMenuOpen]);
+  }, [
+    form,
+    presenterProps.secondaryAttributesSection,
+    rootState.onCcfoliaCopy,
+  ]);
+  const actionPane = useActionPane({
+    errorSummary: presenterProps.errorSummary,
+    isCcfoliaCopyDisabled: rootState.isRootOperationInProgress,
+    isExportDisabled: rootState.isCharacterImageRestoring,
+    isImportDisabled:
+      rootState.isCharacterImageRestoring ||
+      rootState.isRootOperationInProgress,
+    isResetDisabled:
+      rootState.isCharacterImageRestoring ||
+      rootState.isRootOperationInProgress,
+    onCcfoliaCopyConfirmed,
+    onExport: rootState.onJsonExport,
+    onImport: rootState.onJsonImportRequested,
+    onResetConfirmed: rootState.onResetConfirmed,
+  });
+  const onJsonImportConfirmed = useCallback(() => {
+    void rootState.onJsonImportConfirmed();
+  }, [rootState.onJsonImportConfirmed]);
+  const onJsonImportErrorClose = useCallback(() => {
+    rootState.setIsJsonImportErrorOpen(false);
+  }, [rootState.setIsJsonImportErrorOpen]);
+  const onJsonImportImageErrorClose = useCallback(() => {
+    rootState.setIsJsonImportImageErrorOpen(false);
+  }, [rootState.setIsJsonImportImageErrorOpen]);
+  const onJsonImportPendingClose = useCallback(() => {
+    rootState.setPendingJsonImport(null);
+  }, [rootState.setPendingJsonImport]);
 
   function closePrimarySkillPicker(): void {
     setPrimarySkillPickerRowId(null);
@@ -565,46 +511,7 @@ export default function CharacterSheetContainer() {
             {...formPresenterProps}
             key={formResetKey}
           />
-          <CharacterSheetActionPane
-            errorReviewButtonRef={errorSummaryTriggerRef}
-            errorSummary={presenterProps.errorSummary}
-            isCcfoliaCopyDisabled={rootState.isRootOperationInProgress}
-            isExportDisabled={rootState.isCharacterImageRestoring}
-            isImportDisabled={
-              rootState.isCharacterImageRestoring ||
-              rootState.isRootOperationInProgress
-            }
-            isResetDisabled={
-              rootState.isCharacterImageRestoring ||
-              rootState.isRootOperationInProgress
-            }
-            isMenuOpen={isActionMenuOpen}
-            menuTriggerRef={actionMenuTriggerRef}
-            sectionNavigation={{ items: characterSheetSectionNavigationItems }}
-            onExport={rootState.onJsonExport}
-            onHelp={(trigger) => {
-              helpTriggerRef.current = trigger;
-              setIsHelpOpen(true);
-            }}
-            onCcfoliaCopy={(trigger) => {
-              ccfoliaCopyTriggerRef.current = isActionMenuOpen
-                ? actionMenuTriggerRef.current
-                : trigger;
-              setIsActionMenuOpen(false);
-              setIsCcfoliaCopyConfirmOpen(true);
-            }}
-            onImport={rootState.onJsonImportRequested}
-            onMenuToggle={() => setIsActionMenuOpen((isOpen) => !isOpen)}
-            onSectionJump={onSectionJump}
-            onReset={(trigger) => {
-              resetTriggerRef.current = isActionMenuOpen
-                ? actionMenuTriggerRef.current
-                : trigger;
-              setIsActionMenuOpen(false);
-              setIsResetConfirmOpen(true);
-            }}
-            onReviewErrors={() => setIsErrorSummaryOpen(true)}
-          />
+          <CharacterSheetActionPane {...actionPane.actionPaneProps} />
         </div>
         <input
           accept="application/json,.json"
@@ -627,7 +534,7 @@ export default function CharacterSheetContainer() {
             rootState.isImageErrorFromJsonImport
               ? rootState.jsonImportReturnFocusRef
               : rootState.isImageErrorFromReset
-                ? resetTriggerRef
+                ? actionPane.dialogs.actions.resetTriggerRef
                 : rootState.imageReturnFocusRef
           }
         />
@@ -637,76 +544,20 @@ export default function CharacterSheetContainer() {
           onRequestClose={() => rootState.setIsFormRestoreErrorOpen(false)}
           returnFocusRef={rootState.formRestoreReturnFocusRef}
         />
-        <CharacterSheetJsonImportConfirmDialog
-          isOpen={rootState.pendingJsonImport != null}
-          onConfirm={() => void rootState.onJsonImportConfirmed()}
-          onRequestClose={() => rootState.setPendingJsonImport(null)}
-          returnFocusRef={rootState.jsonImportReturnFocusRef}
-        />
-        <CharacterSheetHelpDialog
-          isOpen={isHelpOpen}
-          onRequestClose={() => setIsHelpOpen(false)}
-          returnFocusRef={helpTriggerRef}
-        />
-        <CharacterSheetCcfoliaCopyConfirmDialog
-          isOpen={isCcfoliaCopyConfirmOpen}
-          onConfirm={() => void confirmCcfoliaCopy()}
-          onRequestClose={closeCcfoliaCopyConfirm}
-          returnFocusRef={ccfoliaCopyTriggerRef}
-        />
-        <CharacterSheetCcfoliaCopyNoticeDialog
-          confirmButtonRef={ccfoliaCopyNoticeConfirmButtonRef}
-          dialogLabel={
-            ccfoliaCopyNotice === "success"
-              ? characterSheetDictionary.characterSheet.ccfolia.successLabel
-              : characterSheetDictionary.characterSheet.ccfolia.failureLabel
-          }
-          isOpen={ccfoliaCopyNotice !== null}
-          message={
-            ccfoliaCopyNotice === "success"
-              ? characterSheetDictionary.characterSheet.ccfolia.success
-              : characterSheetDictionary.characterSheet.ccfolia.failure
-          }
-          onRequestClose={() => setCcfoliaCopyNotice(null)}
-          returnFocusRef={ccfoliaCopyTriggerRef}
-        />
-        <CharacterSheetResetConfirmDialog
-          isOpen={isResetConfirmOpen}
-          onConfirm={() => {
-            closeResetConfirm();
-            void rootState.onResetConfirmed();
-          }}
-          onRequestClose={closeResetConfirm}
-          returnFocusRef={resetTriggerRef}
-        />
-        <CharacterSheetJsonImportErrorDialog
-          confirmButtonRef={rootState.jsonImportErrorConfirmButtonRef}
-          dialogLabel={
-            characterSheetDictionary.characterSheet.jsonImport.errorLabel
-          }
-          isOpen={rootState.isJsonImportErrorOpen}
-          message={characterSheetDictionary.characterSheet.jsonImport.error}
-          onRequestClose={() => rootState.setIsJsonImportErrorOpen(false)}
-          returnFocusRef={rootState.jsonImportReturnFocusRef}
-        />
-        <CharacterSheetJsonImportErrorDialog
-          confirmButtonRef={rootState.jsonImportErrorConfirmButtonRef}
-          dialogLabel={
-            characterSheetDictionary.characterSheet.jsonImport.imageErrorLabel
-          }
-          isOpen={rootState.isJsonImportImageErrorOpen}
-          message={
-            characterSheetDictionary.characterSheet.jsonImport.imageError
-          }
-          onRequestClose={() => rootState.setIsJsonImportImageErrorOpen(false)}
-          returnFocusRef={rootState.jsonImportReturnFocusRef}
-        />
-        <CharacterSheetErrorDialog
-          closeButtonRef={errorSummaryCloseButtonRef}
+        <ActionPaneDialogs
           errorSummary={presenterProps.errorSummary}
-          isOpen={isErrorSummaryOpen}
-          onRequestClose={() => setIsErrorSummaryOpen(false)}
-          returnFocusRef={errorSummaryTriggerRef}
+          isJsonImportErrorOpen={rootState.isJsonImportErrorOpen}
+          isJsonImportImageErrorOpen={rootState.isJsonImportImageErrorOpen}
+          isJsonImportPending={rootState.pendingJsonImport !== null}
+          jsonImportErrorConfirmButtonRef={
+            rootState.jsonImportErrorConfirmButtonRef
+          }
+          jsonImportReturnFocusRef={rootState.jsonImportReturnFocusRef}
+          onJsonImportConfirmed={onJsonImportConfirmed}
+          onJsonImportErrorClose={onJsonImportErrorClose}
+          onJsonImportImageErrorClose={onJsonImportImageErrorClose}
+          onJsonImportPendingClose={onJsonImportPendingClose}
+          state={actionPane.dialogs}
         />
         <PrimarySkillPickerDialog
           groups={presenterProps.primarySkillPicker.candidateGroups}

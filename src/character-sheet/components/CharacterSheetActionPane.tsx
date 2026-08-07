@@ -1,5 +1,5 @@
 import { ArrowDown, Menu, X } from "lucide-react";
-import type { RefObject } from "react";
+import { memo, type RefObject } from "react";
 
 import { characterSheetDictionary } from "../dictionary";
 import type { CharacterSheetErrorSummary } from "../logic/error-summary";
@@ -31,7 +31,7 @@ type CharacterSheetActionPaneProps = {
 
 const menuId = "character-sheet-actions-menu";
 
-export default function CharacterSheetActionPane({
+function CharacterSheetActionPane({
   errorReviewButtonRef,
   errorSummary,
   isCcfoliaCopyDisabled,
@@ -147,6 +147,8 @@ export default function CharacterSheetActionPane({
     </aside>
   );
 }
+
+export default memo(CharacterSheetActionPane);
 
 function SectionNavigation({
   items,

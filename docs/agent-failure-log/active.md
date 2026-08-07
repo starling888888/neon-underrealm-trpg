@@ -560,3 +560,13 @@ source種別は以下を使う。
 - 発生箇所: failure logのarchive導入と`.agents/skills/failure-log-audit/SKILL.md`の整合確認
 - 観測した失敗: `docs/agent-failure-log/archive.md`とactive logにarchiveの分類・移動を記録したが、監査skillにarchiveの個別ユーザー分類、保存内容、停止条件、報告項目を追加しなかった。また、archiveの説明を`user / review`由来に限定したまま、ユーザーが個別指定したagent self-report entryをarchiveした。
 - 一次対応: PR #191のレビュー指摘1としてcurrent issueへ取り込み、ユーザー承認後にarchiveを個別のユーザー分類だけで扱う契約へ文書とskillを整合する。
+
+### action-pane hook contract checks
+
+#### Repeated Astro type-check failures while extracting ActionPane state
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の`useActionPane`と`ActionPaneDialogs`へのrefactor
+- 観測した失敗: 3 hookを合成するfacadeのprops型とdialog state型を一度に移し、`onImport` callbackの引数、不要なobject property、error dialogのfocus refの型を3回の`npm run check:astro`で段階的に失敗させた。
+- 一次対応: facadeの外部callback型をActionPane propsと一致させ、dialog stateを明示型へ揃える。次回の同種refactorではhookのreturn typeと消費componentのpropsを先に確定してからContainerの配線を置き換える。

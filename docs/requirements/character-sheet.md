@@ -216,7 +216,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 ## 非機能要件
 
 - 画面の具体的な構成、レスポンシブレイアウト、入力部品、ダイアログ、通知、エラー表示、アクセシビリティはdesignで定義する。
-- ページタイトルの`h1`はReact Islandの外でAstro pageが出力する。Island内の操作領域はページタイトルを重複表示しない。
+- ページタイトルの`h1`はReact Islandの外でAstro pageが出力する。heading構造を保つためvisually hiddenにし、Island内の操作領域はページタイトルを重複表示しない。
 - formのsectionはdesktopを含めてDOM順どおりの1列に積む。複数columnへsectionを振り分けるlayoutは用いない。`48rem`以上ではform本文を最大`44rem`にして中央寄せし、desktopではmain右端に通常のPageTocと同じ`15rem`幅の補助領域を置く。form本文は、この補助領域を除いた領域内で中央寄せする。
 - desktopの補助領域には、formの第一階層sectionへ移動するページ内リンクだけを置く。子section、行、入力項目へのリンクは置かない。補助領域のsection navigationの下には、ヘルプ、JSON出力、JSON入力、CCFOLIAコピー、初期化、エラー状態を縦に配置する。既存のページ見出し横の横並び操作menuは用いない。
 - 狭幅レイアウトの操作menuは、action button群の上に第一階層sectionだけのページ内ジャンプを置く。section linkを選ぶと、固定Headerを避けて対象sectionへsmooth scrollする。section navigationの各buttonは下向きiconと下線でジャンプ操作だと分かるようにし、現在位置またはクリック対象のaccent表示は行わない。子section、行、入力項目へのジャンプや強調は含めない。

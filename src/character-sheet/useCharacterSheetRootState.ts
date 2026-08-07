@@ -287,7 +287,7 @@ export default function useCharacterSheetRootState(
     }
   }, [operations, runRootOperation]);
 
-  async function onResetConfirmed(): Promise<void> {
+  const onResetConfirmed = useCallback(async (): Promise<void> => {
     if (isCharacterImageRestoring || rootOperation !== null) return;
 
     setIsImageErrorFromJsonImport(false);
@@ -327,9 +327,16 @@ export default function useCharacterSheetRootState(
       setIsImageErrorFromReset(true);
       setImageError(toImageErrorState(error));
     }
-  }
+  }, [
+    form,
+    isCharacterImageRestoring,
+    operations,
+    resetForm,
+    rootOperation,
+    runRootOperation,
+  ]);
 
-  function onJsonExport(): void {
+  const onJsonExport = useCallback((): void => {
     if (isCharacterImageRestoring) return;
 
     const values = form.getValues();
@@ -338,63 +345,72 @@ export default function useCharacterSheetRootState(
       serializeCharacterSheetJsonExport(values, characterImage),
       createCharacterSheetJsonFilename(values, new Date()),
     );
-  }
+  }, [characterImage, form, isCharacterImageRestoring, operations]);
 
-  async function onCcfoliaCopy(json: string): Promise<boolean> {
-    if (rootOperation !== null) return false;
+  const onCcfoliaCopy = useCallback(
+    async (json: string): Promise<boolean> => {
+      if (rootOperation !== null) return false;
 
-    try {
-      await runRootOperation(
-        characterSheetDictionary.characterSheet.ccfolia.loading,
-        () => operations.writeTextToClipboard(json),
-      );
-      return true;
-    } catch {
-      return false;
-    }
-  }
+      try {
+        await runRootOperation(
+          characterSheetDictionary.characterSheet.ccfolia.loading,
+          () => operations.writeTextToClipboard(json),
+        );
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [operations, rootOperation, runRootOperation],
+  );
 
-  function onJsonImportRequested(trigger: HTMLButtonElement): void {
-    if (
-      isCharacterImageRestoring ||
-      rootOperation !== null ||
-      isJsonImportReadingRef.current
-    )
-      return;
+  const onJsonImportRequested = useCallback(
+    (trigger: HTMLButtonElement): void => {
+      if (
+        isCharacterImageRestoring ||
+        rootOperation !== null ||
+        isJsonImportReadingRef.current
+      )
+        return;
 
-    jsonImportReturnFocusRef.current = trigger;
-    jsonImportInputRef.current?.click();
-  }
+      jsonImportReturnFocusRef.current = trigger;
+      jsonImportInputRef.current?.click();
+    },
+    [isCharacterImageRestoring, rootOperation],
+  );
 
-  async function onJsonImportFileSelected(file: File): Promise<void> {
-    if (rootOperation !== null || isJsonImportReadingRef.current) return;
+  const onJsonImportFileSelected = useCallback(
+    async (file: File): Promise<void> => {
+      if (rootOperation !== null || isJsonImportReadingRef.current) return;
 
-    isJsonImportReadingRef.current = true;
-    setPendingJsonImport(null);
-    setIsJsonImportErrorOpen(false);
-    try {
-      await runRootOperation(
-        characterSheetDictionary.characterSheet.jsonImport.loading,
-        async () => {
-          const parsed = parseCharacterSheetJsonImport(
-            await operations.readCharacterSheetJsonFile(file),
-          );
-          if (parsed === null) {
-            setIsJsonImportErrorOpen(true);
-            return;
-          }
+      isJsonImportReadingRef.current = true;
+      setPendingJsonImport(null);
+      setIsJsonImportErrorOpen(false);
+      try {
+        await runRootOperation(
+          characterSheetDictionary.characterSheet.jsonImport.loading,
+          async () => {
+            const parsed = parseCharacterSheetJsonImport(
+              await operations.readCharacterSheetJsonFile(file),
+            );
+            if (parsed === null) {
+              setIsJsonImportErrorOpen(true);
+              return;
+            }
 
-          setPendingJsonImport(parsed);
-        },
-      );
-    } catch {
-      setIsJsonImportErrorOpen(true);
-    } finally {
-      isJsonImportReadingRef.current = false;
-    }
-  }
+            setPendingJsonImport(parsed);
+          },
+        );
+      } catch {
+        setIsJsonImportErrorOpen(true);
+      } finally {
+        isJsonImportReadingRef.current = false;
+      }
+    },
+    [operations, rootOperation, runRootOperation],
+  );
 
-  async function onJsonImportConfirmed(): Promise<void> {
+  const onJsonImportConfirmed = useCallback(async (): Promise<void> => {
     const imported = pendingJsonImport;
     if (imported === null) return;
 
@@ -453,7 +469,7 @@ export default function useCharacterSheetRootState(
     if (shouldRestoreFocus) {
       setShouldRestoreJsonImportFocus(true);
     }
-  }
+  }, [operations, pendingJsonImport, resetForm, runRootOperation]);
 
   return {
     characterImage,

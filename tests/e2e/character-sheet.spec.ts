@@ -213,9 +213,20 @@ test.describe("character sheet page", () => {
         name: "操作メニューを開く、エラーはありません。",
       }),
     ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { exact: true, name: "キャラクターシート" }),
-    ).toHaveCount(1);
+    await expect(page.locator("[data-character-sheet-page] > h1")).toHaveClass(
+      /visually-hidden/,
+    );
+    const actionMenu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    await page
+      .getByRole("button", {
+        name: "操作メニューを開く、エラーはありません。",
+      })
+      .click();
+    await actionMenu.getByRole("button", { name: "武器・防具" }).click();
+    await expect(actionMenu).toBeVisible();
+    await page.waitForFunction(() => window.scrollY > 50);
   });
 
   test("jumps to a first-level section from the action menu", async ({
@@ -233,7 +244,7 @@ test.describe("character sheet page", () => {
       .click();
     await menu.getByRole("button", { name: "武器・防具" }).click();
 
-    await expect(menu).toBeHidden();
+    await expect(menu).toBeVisible();
     await page.waitForFunction(() => window.scrollY > 50);
     await expect(page.locator("#weapons-and-armor")).toBeInViewport();
   });

@@ -227,3 +227,38 @@
 - section navigationの現在位置追跡と、クリック対象のaccent表示は廃止する。
 - 第一階層sectionへジャンプする各buttonは、下向きiconと下線で操作の意味を示す。
 - section jump、第一階層だけを対象にする範囲、section frame・子section・行・入力項目へ色を付けない制約は維持する。
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- mobile / tabletのsection jump後にaction menuを閉じず、jump先を確認しながら続けて操作できるようにする。
+- Astro page側へ出した`h1`は、visual layoutをずらさないよう非表示にする。
+- `CharacterSheetContainer`に集まったActionPane関連のcallback、ref、stateを、section jump、action button群、errorの3つのhookへ分ける。
+- action button群とerror表示に続くdialog群を`ActionPaneDialogs`へ集約し、Containerのdialog配置を整理する。
+
+### 判定
+
+- source: human review in the active Codex conversation
+- classification: valid
+- local validation:
+  - `CharacterSheetContainer`の`onSectionJump`は、desktop / 狭幅を区別せず`setIsActionMenuOpen(false)`を先に実行するため、mobile / tabletでjump後にaction menuが閉じる。
+  - `src/pages/character-sheet.astro`はReact Island外の`h1`へ表示marginを与えており、formだけを中央寄せするlayoutと視覚上の開始位置がずれる。
+  - ContainerはActionPaneのsection jump、help、CCFOLIA、reset、error summaryと、それらのdialogを同じrootに保持している。Form section picker等とは責務を分けたまま、ActionPane関連だけをhookとdialog componentへ局所化できる。
+
+### 対応方針
+
+- 狭幅のsection jumpではaction menuを閉じず、desktopでは現行のnavigation buttonから同じjump callbackを使う。固定Headerを避けるsmooth scrollは維持する。
+- `h1`はAstro page側に残しつつvisually hiddenにして、heading構造を保ちながら見出し分のvisual spaceをなくす。requirementsとdesign notesのheading記述も更新する。
+- ActionPane関連のContainer stateを、section jump、action button群、errorの3 hookへ分離する。`useActionPane`がこの3 hookを合成するfacadeとなり、ContainerはActionPane関連でこのhookだけを呼び出す。各hookが必要なcallback・ref・stateだけを返し、Form sectionとpicker dialogの状態は移動しない。
+- `ActionPaneDialogs`はActionPane操作から開くconfirm / notice dialogとerror dialogをまとめ、個別dialogの既存componentとfocus復帰・操作契約を維持する。どのrestore errorを含めるかは既存発火元を確認してActionPane責務に限る。
+
+### 対応完了チェックリスト
+
+- [x] mobile / tabletでsection jump後もaction menuを開いたままにし、desktopを含むjump動作を確認する
+- [x] `h1`をvisually hiddenにしてlayout余白をなくし、requirementsとdesign notesを更新する
+- [x] section jump、action button群、errorのActionPane関連stateを3 hookへ分離する
+- [x] ActionPane操作とerror表示に属するdialogを`ActionPaneDialogs`へ集約し、既存操作・focus復帰を維持する
+- [x] ActionPaneのunit testと対象E2Eを更新する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

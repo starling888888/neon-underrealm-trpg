@@ -119,7 +119,7 @@
 - desktopのtext action railは、grid itemである操作領域自体を本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを維持する。
 - section navigationの見出しは`セクションにジャンプ`とし、muted boldで表示する。第一階層sectionの各buttonには下向きiconと下線を付け、ジャンプ操作であることを示す。現在位置またはクリック対象に応じたaccentは付けず、section frame自体の色も変えない。
 - character-sheetのmain領域とFooterのscroll構造は既存layoutを維持する。`48rem`以上のform本文は最大`44rem`で中央寄せし、`84rem`以上ではmain右端の`15rem` desktop action railを除いた領域で中央寄せする。desktopのtext action railだけをstickyにし、formは全viewportで1列に積む。従来のleft / right section columnへの振り分けは行わない。
-- sheet本文の`h1`はbrowser既定marginを使わない。main上端から直接置き、下余白だけを`12px`にする。page固有のheading余白はAstro page側で扱い、React Islandへglobal heading styleを追加しない。
+- sheet本文の`h1`はAstro page側でvisually hiddenにし、heading構造を保ちながらvisual layoutの余白を作らない。React Islandへglobal heading styleを追加しない。
 - 狭幅layoutでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
 
 ### 編集画面の情報architecture

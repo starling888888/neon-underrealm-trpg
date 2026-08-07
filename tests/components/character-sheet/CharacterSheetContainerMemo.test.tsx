@@ -133,12 +133,23 @@ afterEach(() => {
   useRootStateMock.mockReset();
 });
 
-describe("CharacterSheetContainer presenter props", () => {
-  it("keeps every presenter prop stable when its help dialog state changes", () => {
+describe("CharacterSheetContainer memo boundaries", () => {
+  it("keeps presenter and action pane props stable when its help dialog state changes", () => {
     render(<CharacterSheetContainer />);
     const before = presenterSpy.mock
       .lastCall?.[0] as CharacterSheetFormPresenterProps;
-    const beforeErrorSummary = actionPaneSpy.mock.lastCall?.[0]?.errorSummary;
+    const beforeActionPane = actionPaneSpy.mock.lastCall?.[0] as {
+      errorSummary: unknown;
+      onCcfoliaCopy: unknown;
+      onExport: unknown;
+      onHelp: unknown;
+      onImport: unknown;
+      onMenuToggle: unknown;
+      onReset: unknown;
+      onReviewErrors: unknown;
+      onSectionJump: unknown;
+      sectionNavigation: unknown;
+    };
 
     act(() => {
       screen.getAllByRole("button", { name: "ヘルプ" })[0]?.click();
@@ -146,9 +157,23 @@ describe("CharacterSheetContainer presenter props", () => {
 
     const after = presenterSpy.mock
       .lastCall?.[0] as CharacterSheetFormPresenterProps;
-    const afterErrorSummary = actionPaneSpy.mock.lastCall?.[0]?.errorSummary;
+    const afterActionPane = actionPaneSpy.mock
+      .lastCall?.[0] as typeof beforeActionPane;
 
-    expect(afterErrorSummary).toBe(beforeErrorSummary);
+    expect(afterActionPane.errorSummary).toBe(beforeActionPane.errorSummary);
+    expect(afterActionPane.onCcfoliaCopy).toBe(beforeActionPane.onCcfoliaCopy);
+    expect(afterActionPane.onExport).toBe(beforeActionPane.onExport);
+    expect(afterActionPane.onHelp).toBe(beforeActionPane.onHelp);
+    expect(afterActionPane.onImport).toBe(beforeActionPane.onImport);
+    expect(afterActionPane.onMenuToggle).toBe(beforeActionPane.onMenuToggle);
+    expect(afterActionPane.onReset).toBe(beforeActionPane.onReset);
+    expect(afterActionPane.onReviewErrors).toBe(
+      beforeActionPane.onReviewErrors,
+    );
+    expect(afterActionPane.onSectionJump).toBe(beforeActionPane.onSectionJump);
+    expect(afterActionPane.sectionNavigation).toBe(
+      beforeActionPane.sectionNavigation,
+    );
     expect(after.bondsSection).toBe(before.bondsSection);
     expect(after.buildSection).toBe(before.buildSection);
     expect(after.checksSection).toBe(before.checksSection);
