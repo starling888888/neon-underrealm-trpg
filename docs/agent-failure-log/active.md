@@ -189,6 +189,16 @@ source種別は以下を使う。
 - 観測した失敗: 削除確認dialogのfocus復帰のため、その他流儀削除callbackへ操作元buttonを追加したが、既存testのcallback引数期待を更新しなかった。同じ失敗をfull testとcomponent testで2回確認した。
 - 一次対応: callback契約に合わせてtest expectationを更新し、`npm run test:component`で16 files・78 testsの通過を確認した。callbackへ操作元を追加する変更では、呼び出し側とtest doubleの引数契約を同時に確認する。
 
+### generated-data test discipline
+
+#### Coupled a release-notes test to a mutable data count
+
+- date: 2026-08-08
+- source: user
+- 発生箇所: `tests/node/release-notes.test.ts`のgenerated release notes取得test
+- 観測した失敗: release notesの追加で件数が2件から3件になっただけなのに、固定件数を期待するtestが失敗した。初回対応でもdata access layerの直接実装をなぞる比較testへ置き換えようとし、ユーザーから意味のないtestだと指摘された。
+- 一次対応: 固定件数と直接pass-throughの両方を確認するtestを削除した。変換結果の順序・改行はfixture test、committed JSONの形式はschema testで確認する。
+
 #### Repeated test failure from obsolete skill-level clamp expectations
 
 - date: 2026-07-28
