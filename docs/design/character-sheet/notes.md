@@ -3,7 +3,7 @@
 ## モード
 
 - 承認・実装済みlayout intentとVRT参照情報
-- このノートは、`/character-sheet/`の現在の画面内容、制約、比較観点を記録するdesign正本である。`ex-10-character-sheet-layout`のdesktop、tablet、mobileのlayoutは2026-08-08にユーザー承認を得て実装済みである。新しいlayoutまたはVRT baselineの変更は、別途のユーザー承認を必要とする。
+- このノートは、`/character-sheet/`の現在の画面内容、制約、比較観点を記録するdesign正本である。ex-10-character-sheet-layout — GitHub Issue #198のdesktop、tablet、mobileのlayoutは2026-08-08にユーザー承認を得て実装済みである。新しいlayoutまたはVRT baselineの変更は、別途のユーザー承認を必要とする。
 
 ## 対象とVRT参照情報
 
