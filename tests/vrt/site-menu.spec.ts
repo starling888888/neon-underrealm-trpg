@@ -3,5 +3,5 @@ import { registerVrtScenarios } from "./helpers/vrt";
 
 registerVrtScenarios("site-menu", [
   { route: siteRoutes.world },
-  { id: "gm", route: siteRoutes.gm },
+  { id: "gm-guide", route: siteRoutes.gmGuide },
 ]);

@@ -54,7 +54,7 @@ describe("site menu current state", () => {
     });
     expect(siteMenuItems[advancementIndex + 2]).toMatchObject({
       label: "GMガイド",
-      href: "/gm",
+      href: "/gm-guide",
     });
     expect(siteMenuItems[advancementIndex + 3]).toEqual({
       kind: "separator",

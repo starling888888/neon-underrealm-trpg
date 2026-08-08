@@ -133,7 +133,7 @@ export const siteMenuItems: SiteMenuItem[] = [
   },
   {
     label: "GMガイド",
-    href: "/gm",
+    href: "/gm-guide",
   },
   {
     kind: "separator",

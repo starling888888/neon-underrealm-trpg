@@ -28,7 +28,7 @@ export const siteRoutes = {
   world: "world/",
   characterMaking: "character-making/",
   characterSheet: "character-sheet/",
-  gm: "gm/",
+  gmGuide: "gm-guide/",
   data: "data/",
   commonSkills: "data/common-skills/",
   dataRyugi: "data/ryugi/",

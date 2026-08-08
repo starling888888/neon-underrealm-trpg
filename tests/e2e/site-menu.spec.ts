@@ -66,7 +66,7 @@ test("site menu presents PL and GM section labels without fake links @site-menu-
   page,
 }) => {
   await page.setViewportSize(siteViewports.desktop);
-  await page.goto(siteRoutes.gm);
+  await page.goto(siteRoutes.gmGuide);
 
   const desktopMenu = page.locator(".site-menu-desktop");
   await expect(
