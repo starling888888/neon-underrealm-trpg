@@ -5,11 +5,6 @@ import { configDefaults } from "vitest/config";
 
 export default getViteConfig({
   test: {
-    exclude: [
-      ...configDefaults.exclude,
-      "tests/contract/**",
-      "tests/e2e/**",
-      "tests/vrt/**",
-    ],
+    exclude: [...configDefaults.exclude, "tests/e2e/**", "tests/vrt/**"],
   },
 });

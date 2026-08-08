@@ -57,9 +57,9 @@ character-sheetの現行構成では、`tests/node/character-sheet/`がlogic、s
 
 ## CI/CD
 
-`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test` を再利用可能なQuality jobとして定義する。`.github/workflows/markdown-check.yml` は、`npm ci`と`npm run check:md`だけを実行する再利用可能なMarkdown Check jobを定義する。
+`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test:coverage` を再利用可能なQuality jobとして定義する。`test` は通常の Vitest 自動検出を実行し、Playwright の E2E / VRT と前処理が必要な contract test は除外する。`test:coverage` は通常 test と既存の前処理付き contract test を coverage 有効で実行し、各 Vitest 実行単位のV8 coverage text summaryをCI logへ出す。HTML、JSON、artifactなどのcoverage reportは保存しない。`.github/workflows/markdown-check.yml` は、`npm ci`と`npm run check:md`だけを実行する再利用可能なMarkdown Check jobを定義する。
 
-`.github/workflows/ci.yml` はmain以外のbranch pushとPull Requestで変更pathを分類し、deploy権限やGitHub Pages artifactを持たない。
+`.github/workflows/ci.yml` はmain以外のrepository branch pushで変更pathを分類し、deploy権限やGitHub Pages artifactを持たない。Pull Request eventでは起動しないため、同じcommitでpushとPull RequestのQuality CIが二重に実行されない。fork由来Pull Requestは対象外とする。
 
 - Markdown-onlyの変更ではMarkdown Checkを実行する。
 - 実装、設定、workflow、`.mdx`を含む変更、またはMarkdownとの混在ではQualityを実行する。

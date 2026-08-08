@@ -44,30 +44,30 @@ coverage summary を確認できるようにする。
 
 ## 完了条件
 
-- [ ] `ci.yml` は main 以外の branch push でのみ起動し、Pull Request event では起動しない
-- [ ] 同じ branch commit に対して push / Pull Request 起因の Quality CI が二重に作成されない
-- [ ] Quality job が coverage を有効にした全既存 test suite を実行し、成功後に完了する
-- [ ] 新設する coverage 用 test script がローカルで成功する
+- [x] `ci.yml` は main 以外の branch push でのみ起動し、Pull Request event では起動しない
+- [x] 同じ branch commit に対して push / Pull Request 起因の Quality CI が二重に作成されない
+- [x] Quality job が coverage を有効にした全既存 test suite を実行し、成功後に完了する
+- [x] 新設する coverage 用 test script がローカルで成功する
 - [ ] 既存の Vitest 実行単位ごとに、GitHub Actions log へ text coverage summary が出力される
-- [ ] coverage の HTML、JSON、artifact などの filesystem report を生成・保存しない
-- [ ] coverage provider の追加理由、代替案、初期スコープに必要な理由が issue または作業報告に記録されている
-- [ ] coverage 閾値・外部 service・artifact upload を追加していない
-- [ ] `docs/testing.md` と `docs/deployment.md` が実装後の CI 方針と一致する
-- [ ] `npm run check` が通る
-- [ ] `npm run build` が通る
+- [x] coverage の HTML、JSON、artifact などの filesystem report を生成・保存しない
+- [x] coverage provider の追加理由、代替案、初期スコープに必要な理由が issue または作業報告に記録されている
+- [x] coverage 閾値・外部 service・artifact upload を追加していない
+- [x] `docs/testing.md` と `docs/deployment.md` が実装後の CI 方針と一致する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ## チェックポイント
 
 - [ ] Markdown-only の変更では Markdown Check だけが実行される
 - [ ] 実装、設定、workflow、`.mdx`、または Markdown との混在では Quality が実行される
 - [ ] `.codex/**/*.toml` だけの変更では CI workflow を起動しない
-- [ ] main への公開対象 push の deploy workflow は従来どおり Quality の後に実行される
-- [ ] GitHub Pages のサブパス公開に影響しない
-- [ ] 不要な依存関係を追加していない
-- [ ] 初期スコープ外の機能を実装していない
-- [ ] 関連する `docs/TODO.md` 項目と矛盾していない
-- [ ] 関連する `docs/design/` と矛盾していない
-- [ ] ユーザーの未コミット変更を破壊していない
+- [x] main への公開対象 push の deploy workflow は従来どおり Quality の後に実行される
+- [x] GitHub Pages のサブパス公開に影響しない
+- [x] 不要な依存関係を追加していない
+- [x] 初期スコープ外の機能を実装していない
+- [x] 関連する `docs/TODO.md` 項目と矛盾していない
+- [x] 関連する `docs/design/` と矛盾していない
+- [x] ユーザーの未コミット変更を破壊していない
 
 ## 想定変更ファイル
 
@@ -93,3 +93,35 @@ coverage summary を確認できるようにする。
 - 予定する `@vitest/coverage-v8` は Vitest の V8 coverage を有効にするために必要である。別ツールを追加せず既存の Vitest に揃える。閾値を設けないため、coverage は品質状況の可視化であり merge gate にはしない。
 - 関連する active TODO はない。`docs/TODO-done.md` の Vitest 移行済み項目は再オープンしない。
 - fork 由来 Pull Request では fork branch の push がこの repository の CI を起動しない。fork PR を CI 対象外とするかは、ユーザー確認後に実装契約へ確定する。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `test:node:coverage` など通常 test と coverage test の重複 script をなくす。
+- Vitest の自動検出から Playwright の E2E / VRT を除外し、通常 test は `vitest run` を起点に対象 directory を引数で指定できるようにする。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: 現在の `test` は Node、script、component、hook を個別 script で列挙し、coverage 用にも同じ実行対象を重複定義している。`tests/e2e/**` と `tests/vrt/**` は Playwright の `.spec.ts` である。`tests/contract/**` は `dist/`、または Cloudflare token を前提にするため、前処理なしの `vitest run` へ混在させられない。
+
+### 対応方針
+
+- `vitest.config.ts` で E2E、VRT、および前処理が必要な contract test を通常の Vitest 自動検出から除外する。
+- `test` を `vitest run` に集約し、対象を絞るときは npm の引数転送で directory または test file を渡す。
+- contract test は既存の前処理付き script を維持する。
+- `test:coverage` は、通常 test と contract script へ `--coverage`、V8 provider、text summary reporter を引数転送し、`test:XXX:coverage` の個別定義は削除する。coverage の計測オーバーヘッドで既定の5秒を超える既存component testに限り、通常 test 実行へ10秒の timeout を渡す。
+- `package.json`、`vitest.config.ts`、`vitest.contract.config.ts`、`docs/testing.md`、`docs/deployment.md`、およびこの issue を実装時に更新する。E2E、VRT、contract test の内容や Quality の対象範囲は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] `test:XXX:coverage` の重複 script を削除している
+- [x] `npm run test` が通常の Vitest test を実行する
+- [x] `npm run test -- <directory-or-file>` で対象を絞れる
+- [x] E2E、VRT、contract test が通常の Vitest 自動検出から除外される
+- [x] Quality が coverage 有効で通常 test と既存 contract test の両方を実行する
+- [x] `npm run test:coverage` が成功し、text coverage summary を出す
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
