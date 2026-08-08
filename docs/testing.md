@@ -57,7 +57,7 @@ character-sheetの現行構成では、`tests/node/character-sheet/`がlogic、s
 
 ## CI/CD
 
-`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test:coverage` を再利用可能なQuality jobとして定義する。`test` は通常の Vitest 自動検出を実行し、Playwright の E2E / VRT と前処理が必要な contract test は除外する。`test:coverage` は通常 test と既存の前処理付き contract test を coverage 有効で実行し、各 Vitest 実行単位のV8 coverage text summaryをCI logへ出す。HTML、JSON、artifactなどのcoverage reportは保存しない。`.github/workflows/markdown-check.yml` は、`npm ci`と`npm run check:md`だけを実行する再利用可能なMarkdown Check jobを定義する。
+`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test:coverage` を再利用可能なQuality jobとして定義する。`test` は通常の Vitest 自動検出を実行し、Playwright の E2E / VRT と前処理が必要な contract test は除外する。`test:contract` は環境変数を設定せずに一回の public build 後、contract test をまとめて実行する。coverage provider と text summary reporter は Vitest config に固定し、`test:coverage` は通常 test と `test:contract` の計測だけを有効にする。各 Vitest 実行単位のV8 coverage text summaryをCI logへ出し、HTML、JSON、artifactなどのcoverage reportは保存しない。`.github/workflows/markdown-check.yml` は、`npm ci`と`npm run check:md`だけを実行する再利用可能なMarkdown Check jobを定義する。
 
 `.github/workflows/ci.yml` はmain以外のrepository branch pushで変更pathを分類し、deploy権限やGitHub Pages artifactを持たない。Pull Request eventでは起動しないため、同じcommitでpushとPull RequestのQuality CIが二重に実行されない。fork由来Pull Requestは対象外とする。
 

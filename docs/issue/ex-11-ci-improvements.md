@@ -125,3 +125,36 @@ coverage summary を確認できるようにする。
 - [x] `npm run test:coverage` が成功し、text coverage summary を出す
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- 本番かつ token ありで Cloudflare Web Analytics beacon を表示する条件は、contract test ではなく既存のユニットテストで担保する。
+- token を設定する analytics 専用の追加 build をなくし、contract test は環境変数を設定しない一回の public build に集約する。
+- 固定の coverage provider と reporter は Vitest config に置き、coverage script は計測の有効化だけを担う。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `tests/node/web-analytics.test.ts` は token 未設定、空白 token、本番以外、本番かつ token ありの各条件と beacon 設定を検証している。`tests/contract/web-analytics-production-build.test.ts` は同条件を実ビルド結果でも検証するため、coverage 実行時に token 付きの二回目の build が必要になる。`tests/contract/page-navigation-build.test.ts` は token なしの公開 build を前提に実行できる。coverage provider と reporter は CI 固有ではなく固定方針であり、`test:coverage` の各実行引数に重複している。
+
+### 対応方針
+
+- `tests/contract/web-analytics-production-build.test.ts` と、その token を設定する専用 npm script を削除する。
+- `test:contract` を新設し、環境変数を設定せず `build:public` を一回実行した後、残る `tests/contract/` をまとめて実行する。
+- `test:coverage` は通常 test と `test:contract` に coverage 用引数を転送し、contract build を一回だけ実行する。
+- coverage provider と text summary reporter は通常用・contract用の Vitest config に固定し、script には `--coverage` と coverage 計測時だけ必要な timeout だけを残す。
+- `docs/testing.md`、`docs/deployment.md`、およびこの issue を実装に合わせて更新する。Cloudflare Web Analytics の表示条件を検証する既存ユニットテストは維持する。
+
+### 対応完了チェックリスト
+
+- [x] 本番 token 付き beacon の contract test と専用 script を削除している
+- [x] `test:contract` が環境変数を設定せず、一回の public build 後に残る contract test を実行する
+- [x] `test:coverage` が通常 test と `test:contract` を coverage 有効で実行する
+- [x] coverage provider と text summary reporter を Vitest config に固定し、script から重複指定を除去している
+- [x] Cloudflare Web Analytics の表示条件を検証するユニットテストを維持している
+- [x] `npm run test:coverage` が成功し、text coverage summary を出す
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る

@@ -81,7 +81,7 @@ workflowは `main` へのpushで実行します。
 3. `npm run build`
 4. `npm run test:coverage`
 
-`npm run test:coverage`は通常の Vitest test と、前処理付きの Node、Component、build contract test をcoverage有効で実行する。通常の Vitest 自動検出からはcontract、ローカルpreviewを起動するE2E、VRTを除外する。各 Vitest 実行単位のV8 coverage text summaryをCI logへ出し、HTML、JSON、artifactなどのcoverage reportは保存しない。
+`npm run test:coverage`は通常の Vitest test と、環境変数を設定しない一回の public build 後に実行する contract test をcoverage有効で実行する。通常の Vitest 自動検出からはcontract、ローカルpreviewを起動するE2E、VRTを除外する。各 Vitest 実行単位のV8 coverage text summaryをCI logへ出し、HTML、JSON、artifactなどのcoverage reportは保存しない。
 
 `.github/workflows/ci.yml`は、main以外のrepository branchへのpushで変更pathを分類する。Pull Request eventでは起動しないため、同じcommitでpushとPull Requestのworkflowを二重に作成しない。fork由来Pull Requestは対象外とする。GitHub Pagesへのdeploy、Pages artifact upload、`pages: write`、`id-token: write`は含めない。
 

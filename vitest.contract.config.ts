@@ -5,6 +5,10 @@ import { configDefaults } from "vitest/config";
 
 export default getViteConfig({
   test: {
+    coverage: {
+      provider: "v8",
+      reporter: ["text-summary"],
+    },
     exclude: [...configDefaults.exclude, "tests/e2e/**", "tests/vrt/**"],
   },
 });
