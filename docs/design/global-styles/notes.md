@@ -14,9 +14,9 @@
 
 ## 目的
 
-07-global-styles で実装するCSS基盤のデザイン方針を定義する。
+CSS基盤のデザイン方針を定義する。
 
-このメモは、`src/styles/tokens.css`、`src/styles/global.css`、`src/styles/prose.css` の判断材料として使う。完成デザインを固定するものではなく、後続のレイアウト、ナビゲーション、本文ページ、Visual Reviewで調整するための初期基準とする。
+このノートは、`src/styles/tokens.css`、`src/styles/global.css`、`src/styles/prose.css` に適用する共通design intentとVisual Reviewの基準を定義する。
 
 ## サイトの役割
 
@@ -75,7 +75,7 @@
 - danger / warning: ルール上の注意や警告に使う暖色
 - focus: キーボード操作で見失わない明確な輪郭
 
-07で決める色はCSS variables化し、後続タスクで調整しやすくする。
+色はCSS variables化し、共通Componentから同じ意味で利用できるようにする。
 
 ## タイポグラフィ方針
 
@@ -119,7 +119,7 @@
 
 ## 基本要素の方針
 
-07では、以下のHTML要素が破綻しない状態を作る。
+以下のHTML要素が破綻しない状態を維持する。
 
 - `body`
 - `main`
@@ -133,7 +133,7 @@
 - `hr`
 - `strong`, `em`
 
-高度なComponent見た目は後続タスクで扱う。
+個別Componentの表示仕様は対応するdesign targetで定義する。
 
 ## VRT fixtureに含める内容
 
@@ -165,9 +165,9 @@ fixtureには以下を含める。
 - 箇条書き、コールアウト、コード、表が画面幅で破綻しないこと
 - 横スクロールが必要な要素と、ページ全体が横に溢れないこと
 
-## 07実装で使う判断基準
+## 実装時の判断基準
 
-07-global-styles では、このメモとstyle-tile VRT fixtureをもとに、以下を実装する。
+style-tile VRT fixtureを使い、以下の共通CSSを確認する。
 
 - `src/styles/tokens.css`
 - `src/styles/global.css`

@@ -11,10 +11,6 @@
   - mobile `390x900`: `items-armors-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: 防具一覧ページ
@@ -52,8 +48,6 @@
 
 - Hero、導入、凡例、カード一覧の構成と余白が保たれる。
 - desktop／mobileとも横overflowやカードの重なりを生まない。
-
-## Generation source
 
 ## Open questions
 

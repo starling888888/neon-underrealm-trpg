@@ -11,10 +11,6 @@
   - mobile `390x900`: `base-layout-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## モード
-
-- initial draft
-
 ## 対象
 
 - page / component: `BaseLayout.astro` と `ContentLayout.astro`
@@ -29,10 +25,6 @@
 - `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
 - `docs/design/global-styles/notes.md`
-
-## Historical source issues
-
-- `GitHub Issue #133: 09-base-layout`
 
 ## デザイン方針
 
@@ -73,14 +65,6 @@
 - Header / Footer / rail は、後続タスクで置き換えやすい単純さに留まっている。
 - モバイル専用挙動を実装または示唆していない。
 
-## 生成元
-
-- generator or capture source: SVGモックをImageMagickでPNGへ変換
-- source branch / commit when applicable: `09-base-layout`
-- route when applicable: `/`
-- viewport: デスクトップ、1440px幅の参照画像
-- prompt summary or capture notes: デスクトップ専用のルールサイトLayout基盤。Header / Footer / rail のプレースホルダーをlayout内ベタ書き前提で示し、global style tileの方向性を守る。スコープ外のナビゲーション機能は描き込まない。元SVGは `.tmp/` 配下で生成したもので、design正本ではない。
-
 ## 未決事項
 
 - 左レールをすべてのデスクトップ幅で表示し続けるか、後続のbreakpointで折りたたむかは、後続のナビゲーションタスクで扱う。
@@ -88,7 +72,7 @@
 
 ## site-layout正本化後の扱い
 
-- `base-layout` は初期draftとして、Header / Footer / left rail / main content / right railの構造を確認するためのdesign targetとして維持する。
-- `16-layout-screenshot-design-refresh` 以降の完成状態の横断正本は `docs/design/site-layout/` を参照する。
+- `base-layout` は、Header / Footer / left rail / main content / right railの構造を確認するdesign targetとして維持する。
+- 完成状態の横断正本は `docs/design/site-layout/` を参照する。
 - `docs/design/site-layout/` では、left railはSiteMenu、right railはPageTocとして実装済み状態を扱う。
 - mobile / tabletを含む現在のlayout全体、MobileMenu、MobilePageToc、現在ページハイライトを確認する場合も `docs/design/site-layout/` を参照する。

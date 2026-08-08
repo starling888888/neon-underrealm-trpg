@@ -11,10 +11,6 @@
   - mobile `390x900`: `data-cards-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix; reviewed implementation images are canonicalized
-
 ## Target
 
 - page / component: `SkillCard`、`WeaponCard`、`ArmorCard`、`OmamoriCard`、`CyberneticCard`、`NanomachineCard`、`DrugCard`を並べるローカルCardカタログ
@@ -95,7 +91,5 @@
 - desktop 3列、mobile 2列で横overflowせず、同じgrid行のCard高が揃う。
 - 短文Cardは過度に縦長にならず、長文だけが自然に伸長する。
 - `null`由来の`-`と空の効果領域を区別して確認できる。
-
-## Generation source
 
 - previous design targets: `skill-card`と`item-card`のnotesを統合した。

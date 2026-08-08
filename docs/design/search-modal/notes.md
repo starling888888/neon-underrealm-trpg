@@ -10,10 +10,6 @@
 - viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
 - baseline update: 通常実行では比較のみ行う。ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: `SearchModal.astro`、`SearchButton.astro`、`Header.astro` と `AppContainer.astro` の検索UI接続
@@ -29,7 +25,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- historical issue: `GitHub Issue #177: 45-search-pagefind-integration`
 - `docs/requirements/search.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/architecture.md`
@@ -69,11 +64,6 @@
 - mobile初期状態ではHeader下の全高panel、検索入力と送信button、案内枠を示す。検索結果状態では同じpanel内に結果カードを並べる。
 - desktop / mobileともに結果カードは種別ラベル、ページタイトル、該当セクション、抜粋を表示し、検索語を黄色で明確に示す。
 - 違いがレビュー対象: Headerを覆い隠すmobile panel、desktopで背景本文がscrollする状態、desktop結果時の二重枠・内側scrollbar、検索結果のページタイトル重複、黄色以外で見分けにくい検索語highlight。
-
-## Generation source
-
-- implementation source: reviewed task 45 implementation on `45-search-pagefind-integration`.
-- VRT states: desktop / tablet / mobileで、search openとsearch resultsを比較する。
 
 ## Open questions
 

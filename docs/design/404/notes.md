@@ -11,11 +11,6 @@
   - mobile `390x900`: `404-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-- `40-2-404-page` の実装後Visual Reviewで確認したactual screenshotを、ユーザー承認により404ページのdesign正本として採用する。
-
 ## Target
 
 - page / component: 存在しないURLで表示する404ページ
@@ -34,7 +29,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- historical task issue: `GitHub Issue #172: 40-2-404-page`
 - `docs/requirements/pages.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/assets-seo.md`
@@ -78,15 +72,6 @@
 - 画像、CSS、トップリンクがGitHub Pagesのサブパス配下で壊れない。
 - standard viewportで横overflowが出ない。
 - reviewが必要な差分: 追加のナビゲーション、検索UI、パンくず、PageToc、画像の加工、強い装飾の追加。
-
-## Generation Source
-
-- current VRT: `tests/vrt/404.spec.ts` の`@vrt @404`で、desktop / tablet / mobileを比較する。
-- source branch: `40-2-404-page`
-- source commit: `c415aaa908cf964a4177c6cde6177968da235c63`。404実装、Visual Test、検索除外を含む固定済みcommitからcanonicalizeする。
-- route: `/not-found/`
-- viewport: desktop `1440x1200`、mobile `390x900`
-- capture notes: ユーザーが2026-07-23に、Visual Review済みの404 actualをdesign正本化することを明示承認した。Visual Reviewの不備を隠すためではなく、ユーザー指定の簡潔な404画面を後続比較の基準にするためにcanonicalizeする。PR #63のレビュー指摘を受け、実装を含む固定済みcommitから再生成する。
 
 ## Open Questions
 

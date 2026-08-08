@@ -12,12 +12,6 @@
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 - actual review locator: `tests/vrt/release-notes.spec.ts` が更新履歴pageを、`visual:capture`時のみdesktop / tablet / mobileの原寸一時snapshotとして出力する。通常の`visual:test`ではfull-page baselineだけを比較する。
 
-## Mode
-
-- design fix
-- 19-2-release-notes-page の実装後Visual Review結果を正本化する。
-- current VRTは`tests/vrt/release-notes.spec.ts`の`@vrt @release-notes`で、desktop / tablet / mobileを比較する。
-
 ## Target
 
 - page / component: 更新履歴ページ `/release-notes`
@@ -152,21 +146,6 @@
   - summaryが本文とは別の概要見出しとして表示されている。
   - トップページと別サイトのような色、余白、見出し処理になっている。
   - 標準画面内で横overflowが出ている。
-
-## Generation Source
-
-- current VRT: `tests/vrt/release-notes.spec.ts` の`@vrt @release-notes`。
-- source branch / commit when applicable: `19-2-release-notes-page` / `a9997b0`
-- historical issue: `GitHub Issue #148: 19-2-release-notes-page`
-- route when applicable: `/release-notes`
-- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- prompt summary or capture notes:
-  - `19-2-release-notes-page` の実装後Visual Review結果を、ユーザー指示によりdesign fix modeで正本化した。
-  - 旧design draftは複数件の代表更新履歴を描いていたが、現行実装と生成JSONは1件であるため、canonical imageは現行データ1件の表示を正とする。
-  - カード風の囲みを使わず、上に日付、下に本文を置くシンプルな罫線区切りを維持する。
-  - summaryは独立表示しない。bodyが空欄の場合のみ本文位置へfallback表示する。
-  - H1直下に説明文を表示しない。
-  - 初期スコープ外UIや新しいアプリ機能は描かない。
 
 ## Open Questions
 

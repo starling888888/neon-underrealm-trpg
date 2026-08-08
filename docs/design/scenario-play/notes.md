@@ -11,10 +11,6 @@
   - mobile `390x900`: `scenario-play-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: `/rules/scenario-play` のPL向けシナリオ進行ルール本文。`MDXLayout`、`ImageBlock`、Callout、PageToc、MobilePageTocを含む。
@@ -28,7 +24,6 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `GitHub Issue #153: 24-2-scenario-play-page`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/components.md`
@@ -76,14 +71,6 @@
 - 小銭の算出、非戦闘判定後の消費、クライマックス前の装備変更での範囲が段階的に読める。
 - 許容差分: hero画像の具体的な描写、本文改稿、本文量によるfull-page高さ。
 - 要レビュー差分: heroの本文幅超過、captionまたは追加overlay、global layoutの変更、画像により本文可読性が低下する状態。
-
-## Generation Source
-
-- prototype or generator source: ユーザー承認済みの現行実装をdesign fix modeで正本化した。
-- source branch / commit when applicable: `24-2-scenario-play-page` / `e190558`
-- route: `/rules/scenario-play/`
-- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- current VRT: `tests/vrt/scenario-play.spec.ts` の`@vrt @scenario-play`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

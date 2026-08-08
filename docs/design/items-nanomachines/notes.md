@@ -11,10 +11,6 @@
   - mobile `390x900`: `items-nanomachines-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: ナノマシン一覧ページ
@@ -52,8 +48,6 @@
 
 - 導入、warning、身体強化、凡例、2種の一覧の階層を保つ。
 - desktop／mobileとも横overflowやカードの重なりを生まない。
-
-## Generation source
 
 ## Open questions
 

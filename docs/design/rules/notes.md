@@ -11,10 +11,6 @@
   - mobile `390x900`: `rules-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: `/rules` のルールトップ本文。`MDXLayout`、`ImageBlock`、Callout、PageToc、MobilePageTocを含む。
@@ -29,7 +25,6 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `GitHub Issue #152: 23-2-rules-page`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/pages.md`
 - `docs/out-of-scope.md`
@@ -72,14 +67,6 @@
 - hero内のロゴは画像内容であり、ページ側のUIや追加overlayと誤認させない。
 - 許容差分: hero画像の具体的な人物・背景描写、本文の改稿、本文の長さによるfull-page高さ。
 - 要レビュー差分: heroの本文幅を超える表示、captionまたは追加overlay、global layoutの変更、画像により本文可読性が低下する状態。
-
-## Generation Source
-
-- prototype or generator source: ユーザー承認済みの現行実装をdesign fix modeで正本化した。
-- source branch / commit when applicable: `23-2-rules-page` / `42f0580`
-- route: `/rules/`
-- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- current VRT: `tests/vrt/rules.spec.ts` の`@vrt @rules`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

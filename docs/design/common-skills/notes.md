@@ -11,10 +11,6 @@
   - mobile `390x900`: `common-skills-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: 共通スキルをカテゴリごとに表示する `/data/common-skills` ページ。`CardContainer` 内へ `SkillCard` を配置する。
@@ -73,12 +69,6 @@
 - H1・H2、PageToc、MobilePageToc、個別アンカーが既存レイアウトの役割を保つ。
 - 許容差分: スキルデータの追加に伴うカード数・本文量・ページ高の変化。
 - 要レビュー差分: desktop 3列 / mobile 2列以外の配置、カード内の表示順変更、上級スキルの空表示、ページ全体の横overflow。
-
-## Generation source
-
-- canonicalization source: ユーザーレビュー済みの`/data/common-skills/`実装を、approved visual capture workflowでdesktop・mobileともにfull-page captureする。tabletは同じcaptureで確認するが、canonical imageはdesktop／mobileの2枚に限定する。
-
-- implementation state: `8327e05`後の未コミット変更。共有`SkillCard`の表示方針を含む。
 
 ## Open questions
 

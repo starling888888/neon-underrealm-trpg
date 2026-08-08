@@ -12,10 +12,6 @@
 - hidden state snapshots: `page-toc-no-toc-home-desktop.png`, `page-toc-no-toc-not-found-desktop.png`, `page-toc-no-toc-release-notes-desktop.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- initial draft
-
 ## Target
 
 - page / component: `PageToc.astro` または同等のPC右サイドページ内目次
@@ -40,10 +36,6 @@
 - `docs/design/header-footer/notes.md`
 - `docs/design/site-menu/notes.md`
 - `docs/design/mobile-menu/notes.md`
-
-## Historical source issues
-
-- `GitHub Issue #138: 13-page-toc`
 
 ## Design direction
 
@@ -103,13 +95,6 @@
 - 差分として許容できるもの: 目次項目の代表ラベル、項目数、インデント量の微調整、右レール内余白の微調整、枠線や薄いsection markerの濃度調整。
 - レビューが必要な差分: 現在位置ハイライトに見える強調、検索UIやパンくずの追加、トップページや404ページへの空TOC表示、スマホ用TOCの描き込み、右レール幅の大幅変更、本文幅を大きく狭める変更。
 
-## Generation source
-
-- source branch / commit when applicable: `13-page-toc` / `03f3dd0`
-- route: 本文ページまたは検証用本文ページ、`/`、`/release-notes`、`/404`
-- viewport: desktop `1440x1200`
-- comparison notes: PC右サイドページ内目次では、SiteMenuとの役割差を保つ。表示状態ではH2 / H3のページ内リンク階層が分かることを優先した。非表示状態ではトップページ、更新履歴ページ、404ページにPageToc枠や空状態メッセージを出していない。スマホ用TOC、現在位置ハイライト、検索、パンくず、前後ナビゲーションは対象外である。
-
 ## Open questions
 
 - 見出し1件だけの本文ページを、VRT targetへ追加する必要があるか。
@@ -119,7 +104,7 @@
 
 ## site-layout正本化後の扱い
 
-- `page-toc` はPC右サイドページ内目次単体の初期draftとして維持する。
-- `16-layout-screenshot-design-refresh` 時点では `/release-notes` と `/404` は未実装routeであり、`site-layout` では扱わない。現在の `/release-notes` の非表示確認は `docs/design/release-notes/` で扱う。
-- `site-layout`のdesktop VRT baselineは、実装済み本文ページ `/-local/mdx-test/` でPC右PageTocが表示される横断状態を確認する。
-- `docs/design/site-layout/` では、非表示確認は実装済みの `/` を対象とする。現在の `/release-notes` の非表示確認は `docs/design/release-notes/` で扱い、`/404` は該当ページ実装後に必要に応じて扱う。
+- `page-toc` はPC右サイドページ内目次単体のdesign targetとして維持する。
+- `/release-notes` の非表示確認は `docs/design/release-notes/` で扱う。
+- `site-layout`のdesktop VRT baselineは、本文ページ `/-local/mdx-test/` でPC右PageTocが表示される横断状態を確認する。
+- `docs/design/site-layout/` では非表示確認に `/` を使い、`/404` の非表示状態は必要に応じて追加する。

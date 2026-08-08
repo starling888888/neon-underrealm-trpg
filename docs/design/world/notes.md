@@ -11,11 +11,6 @@
   - mobile `390x900`: `world-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-- ユーザー承認済みの`/world`実装actualをdesign正本として採用した。
-
 ## Target
 
 - page / component: オオサカ副都の世界観、強大な敵、勢力、NPC紹介を載せるワールドガイド
@@ -32,7 +27,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `GitHub Issue #151: 21-2-world-page`（historical source）
 - `docs/requirements/pages.md`
 - `docs/out-of-scope.md`
 - `docs/issue/milestone-01/plan.md`
@@ -54,7 +48,7 @@
 - `npc-card`の横長1列、`4:5`個別画像領域、shadowなし、二つ名のruby / 文字色、セリフの薄い斜体を維持する。
 - H1直後に`ImageBlock`を置き、heroには意味のあるaltを持たせる。
 - build後のPageToc生成を前提に、正本のcaptureは`npm run preview`で確認する。
-- hero内の公式ゲームロゴは、world heroで明示承認された合成ブランディングである。in-world signageと混同せず、他のoverlay typographyを追加しない。
+- hero内の公式ゲームロゴは、in-world signageと混同せず、他のoverlay typographyを追加しない。
 
 ## Out of scope
 
@@ -70,18 +64,6 @@
 - desktopのPageTocとmobileのMobilePageTocが、build後に生成された見出しを含む。
 - `〈仕事人〉`の強調記法が文字として露出せず、太字として表示される。
 - NPCカードがdesktop / mobileとも横長1列を保ち、11件のNPC画像、セリフ、グループ内の左右交互を表示し、同IDの個別`.webp`がない場合は`public/images/npc/no_image.webp`を表示して横overflowしない。
-
-## Generation source
-
-- route: `/world/`
-- current VRT: `tests/vrt/world.spec.ts` の`@vrt @world`で、desktop / tablet / mobileを比較する。
-- snapshots: `canonical-snapshots/visual/world/` のdesktop / tablet / mobile baseline
-- user approval: `デザイン正本化。ワールドガイドとローカル用のNPCカード用ページ。`（2026-07-22）。
-
-## Canonicalization rationale
-
-- build後のpreviewでPageTocを含めて確認済みのactualを採用し、個別NPC画像、セリフ、左右交互を含むpage-level正本を作る。
-- Visual Reviewの不備を隠すためではなく、ユーザーが明示承認した現行実装の状態を比較基準にするための正本化である。
 
 ## Open questions
 

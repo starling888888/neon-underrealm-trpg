@@ -11,10 +11,6 @@
   - mobile `390x900`: `current-menu-highlight-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- initial draft
-
 ## Target
 
 - page / component: `SiteMenu.astro` / `SiteMenuItem.astro`
@@ -34,10 +30,6 @@
 - `docs/design/base-layout/notes.md`
 - `docs/design/site-menu/notes.md`
 - `docs/design/mobile-menu/notes.md`
-
-## Historical source issues
-
-- `GitHub Issue #141: 15-current-menu-highlight`
 
 ## Design direction
 
@@ -83,13 +75,6 @@
 - 背景本文、Header、Footer、PageToc予定領域が現在地表示より目立ちすぎない。
 - 差分として許容できるもの: active / ancestorの色濃度、薄背景の濃度、drawer幅に合わせた余白微調整。
 - レビューが必要な差分: active / ancestorに外枠や左線を追加する、activeとancestorが見分けにくい、active表示がhover/focusに見える、祖先カテゴリが現在ページそのものに見える、検索やパンくずなど別機能が混入している。
-
-## Generation source
-
-- source branch / commit when applicable: `15-current-menu-highlight`
-- route when applicable: `/data/items/weapons`
-- viewport: desktop `1440x1200`, mobile `390x900`
-- comparison notes: 既存SiteMenuとmobile drawerの構造を維持し、`/data/items/weapons` を代表例として `DATA` と `ITEMS` をancestor、`WEAPONS` をactive current pageとして扱う。ページ内目次の現在位置ハイライト、検索、パンくず、前後ナビゲーション、生成JSON由来の追加子項目は対象外である。
 
 ## Open questions
 

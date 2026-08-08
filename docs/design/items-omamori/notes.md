@@ -11,10 +11,6 @@
   - mobile `390x900`: `items-omamori-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: お守り一覧ページ
@@ -52,8 +48,6 @@
 
 - Hero、warning、凡例、カード一覧の順序と余白が保たれる。
 - desktop／mobileとも横overflowやカードの重なりを生まない。
-
-## Generation source
 
 ## Open questions
 
