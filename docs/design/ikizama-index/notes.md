@@ -11,10 +11,6 @@
   - mobile `390x900`: `ikizama-index-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: 生き様一覧ページ、`IkizamaDataSection`による「生き様データの見方」
@@ -26,9 +22,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/31-2-ikizama-index-page.md`
 - `.raw/contents/ikizama-index.md`
-- `docs/issue/milestone-01/plan.md` の `31-2-ikizama-index-page`
 - `docs/requirements/pages.md` の `/data/ikizama`
 - `docs/conversion/ikizama-index.md`
 - `docs/conversion/ikizama-skills.md`
@@ -76,19 +70,11 @@
 - 許容差分: 実データの説明文による行数、一覧の縦方向の長さ、heroの自然な表示比率。
 - 要レビュー差分: heroへの文字overlayまたはcaption、詳細ページ情報の過剰重複、入力順変更、SiteMenu / PageTocの役割混同、mobileの横overflow。
 
-## Generation source
+## 現行構成
 
-- canonicalization source: ユーザー承認済みの`/data/ikizama/`実装を、公式visual capture workflowでdesktop / mobileともにfull-page captureする。初期draftとの差分は、実装済みの検索Header、SiteMenuの生き様第3階層、専用アイテム種別リンク、実データによる本文密度とFooterであり、いずれも現行のlayoutおよびcurrent issueと整合する。
-
-## Differences from previous design references
-
-- 初期draftでは対象外としていたSiteMenuの生き様詳細子項目を、`getIkizamaList()`由来の第3階層リンクとして含める。
-- 初期draftで生き様詳細へ向けていた専用アイテム名称を、対応する専用アイテム種別ページへのリンクとして含める。
-- 現行の横断layoutに合わせ、検索Header、Footer、実データによる一覧の高さを含むfull-page screenshotを採用する。
-
-## Canonicalization rationale
-
-- PRレビューで確認したdesign正本とcurrent issueのscope不整合を解消し、ユーザー確認済み実装を以後のVisual Review基準とする。
+- SiteMenuに`getIkizamaList()`由来の生き様詳細への第3階層リンクを含める。
+- 専用アイテム名称は、対応する専用アイテム種別ページへのリンクとして含める。
+- VRTでは、検索Header、Footer、実データによる一覧の高さを含むfull-pageを比較する。
 
 ## Open questions
 

@@ -11,14 +11,10 @@
   - mobile `390x900`: `page-navigation-links-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: `AppContainer` がページ本文末尾に表示する前後ページナビゲーション
-- route: `/-local/page-navigation/`。キャラクターメイキングとキャラクター成長を同時に表示する公開対象外の確認routeを、design正本化のcaptureに使う。
+- route: `/-local/page-navigation/`。キャラクターメイキングとキャラクター成長を同時に表示する公開対象外のVRT fixtureである。
 - viewport:
   - mobile: `390x900`
   - desktop: `1440x1200`
@@ -28,7 +24,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- historical issue (provenance only): `GitHub Issue #79: ex-01-page-navigation-links`
 - `docs/requirements.md`
 - `docs/requirements/layout-navigation.md`
 - `docs/requirements/non-functional.md`
@@ -69,13 +64,6 @@
 - 枠なしのテキストリンクでも、少なくとも44px相当のタップ領域を持つ。
 - 片側だけのページでは存在しないリンクとその空枠を表示しない。
 - 矢印または横向き三角が前後の方向を示し、本文の装飾記号と混同しない。
-
-## Generation source
-
-- initial draft source:
-  - mobile: `.tmp/design/page-navigation-links/prototype.html`
-  - desktop: `.tmp/design/page-navigation-links/prototype-desktop.html`
-- current VRT: `tests/vrt/page-navigation-links.spec.ts` の`@vrt @page-navigation-links`
 
 ## Open questions
 

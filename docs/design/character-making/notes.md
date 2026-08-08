@@ -11,10 +11,6 @@
   - mobile `390x900`: `character-making-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: 仕事人を作成する手順を示すキャラクターメイキングページ
@@ -76,22 +72,12 @@
 - CalloutタイトルがH2 / H3として出力されず、PageTocへ混入しない。
 - 内部リンクがGitHub Pagesのbase pathを通り、本文と既存navigationが混同されない。
 
-## Generation source
-
-- source branch: `22-2-character-making-page`
-- source route: `/character-making/`
-- current VRT: `tests/vrt/character-making.spec.ts` の`@vrt @character-making`で、desktop / tablet / mobileを比較する。
-- snapshots: `canonical-snapshots/visual/character-making/` のdesktop / tablet / mobile baseline
-- hero asset: `public/images/character-making/hero.webp`
-- hero prompt: `.tmp/hero-prompt.md`
-- canonicalization: ユーザーは2026-07-12に、contents review後のdesktop / mobile Visual Review actualをdesign正本へ反映することを明示承認した。ページ固有のinitial draftは作成せず、既存layoutとCallout designに整合する実装actualをdesign正本として採用する。
-
-## Differences from previous design references
+## 現行ページ構成
 
 - 初期縁一覧は横長の4列tableから、対象ごとにポジティブとネガティブを対にしたカードへ変更した。長い関係説明を各感情のラベルとともに読めるようにし、mobileでは縦積みにする。
 - 最大体力・最大精神力の決定要素を基本説明へ追加した。構成や既存Calloutの見た目は変更していない。
 - tabletは既存`site-layout`の正本と同じbreakpoint・MobilePageToc挙動を確認するためのVisual Review対象とし、ページ固有のcanonical imageはdesktopとmobileだけを維持する。
-- ユーザー提供のheroをH1直後へ追加した。画像内の公式ゲームロゴをそのまま用い、追加のoverlayやcaptionは設けていない。
+- heroをH1直後へ置き、画像内の公式ゲームロゴをそのまま用いる。追加のoverlayやcaptionは設けない。
 - 導入直後にコンストラクションとフルスクラッチの選び方を置き、手順を先に進めながら基本要素を参照できることを明記した。
 - 得意技能を選んだ非戦闘判定での判定数増加と、キャラクターシートへの記録を両作成方式に明記した。
 

@@ -11,10 +11,6 @@
   - mobile `390x900`: `advancement-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: 成長ルールページ
@@ -28,7 +24,6 @@
 - `docs/out-of-scope.md`
 - `docs/issue/milestone-01/plan.md`
 - `docs/TODO.md`
-- `docs/issue/26-2-advancement-page.md`
 - `docs/design/global-styles/notes.md`
 - `docs/design/site-layout/notes.md`
 - `docs/design/page-toc/notes.md`
@@ -61,8 +56,6 @@
 - desktop / mobileの本文幅、余白、見出し、hero、表、Callout、PageToc / MobilePageTocが既存共通designと整合する。
 - 画面全体の横overflowを発生させない。
 - 表の横スクロールが必要な場合は、ページ全体ではなく本文コンテナ内に限定する。
-
-## Generation source
 
 ## Open questions
 

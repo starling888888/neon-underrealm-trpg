@@ -11,10 +11,6 @@
   - mobile `390x900`: `callout-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: `src/components/_common/Callout.astro`
@@ -33,7 +29,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `GitHub Issue #149: 20-1-common-callout-component`
 - `docs/requirements.md`
 - `docs/requirements/components.md`
 - `docs/requirements/non-functional.md`
@@ -48,10 +43,8 @@
 - `src/pages/-local/callouts.mdx`
 - `tests/vrt/callout.spec.ts`
 
-## Canonicalization Note
+## 現行マーカー仕様
 
-- このdesignは、initial draftの `simple-icons` / 破線border案を、実装レビュー後の現行実装に合わせて正本化したもの。
-- 旧initial draft画像では `simple-icons` 由来のマーカーと `example` の破線borderを使っていたが、現在の正本では新規依存を追加しない記号マーカーを採用する。
 - 現行マーカーは `note`: `i`、`tip`: `?`、`warning`: `!`、`danger`: `!!`、`example`: `#`、`version`: `v` とする。
 - `example` は破線borderではなく、青灰色系の背景、実線border、左線、ラベル、記号マーカーで識別する。
 
@@ -103,14 +96,6 @@
 - slot内の段落、箇条書き、リンク、inline code、`strong` を置いても余白が破綻しない方向になっている。
 - 実装時に既存 `.prose .callout*` とComponent scoped styleの責務が重複しない。
 - Playwright actual screenshotをこのdesign画像へ直接上書きしない。
-
-## Generation Source
-
-- current VRT: `tests/vrt/callout.spec.ts` の`@vrt @callout`で、desktop / tablet / mobileを比較する。
-- source branch / commit when applicable: `20-1-common-callout-component` / `51f58d4`
-- route when applicable: `/-local/callouts/`
-- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- comparison notes: 6種のCalloutとtitle指定例を実ページの本文カラム条件で比較する。global stylesの白寄り背景、低彩度border、neutral / teal / warning / danger token方向を守り、色だけに依存しないラベルと記号マーカーを配置した。`titleHeadingLevel`の追加はHTML構造だけを変え、H2とH3の指定時だけ既存PageToc階層へ反映する。Calloutの視覚的なtitle密度はVRT baselineで維持する。
 
 ## Open Questions
 

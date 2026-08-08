@@ -11,11 +11,6 @@
   - mobile `390x900`: Calloutを持つ`kenkaya-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-- initial draftでは、ケンカヤの実データと個別hero画像を使ったdesktop / mobile design画像を作成した。流儀スキル一覧はユーザー指示により画像へ含めない。
-
 ## Target
 
 - page / component: 流儀詳細ページ。`src/pages/data/ryugi/[ryugiId].astro` で共通テンプレートから静的生成する。
@@ -32,13 +27,11 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- 完了issue: `GitHub Issue #163: 30-2-ryugi-detail-page`
 - `docs/requirements/pages.md` の FR-05
 - `docs/requirements/architecture.md` の AC-14
 - `docs/requirements/data-display.md` の FR-04-01、FR-04-04
 - `docs/requirements/non-functional.md`
 - `docs/out-of-scope.md`
-- 完了plan: `docs/issue/milestone-01/plan.md` の `30-2-ryugi-detail-page`
 - `docs/TODO.md` の流儀サイドメニューと共通スキルボーナス構造化の未対応項目
 - `.raw/contents/ryugi-detail.md`
 - `docs/design/global-styles/notes.md`
@@ -82,34 +75,6 @@
 - 許容差分: 実データによる説明文・ボーナス文・スキル本文の行数、各データ枠の高さ、画像の自然なトリミング。
 - 要レビュー差分: heroへの文字overlayまたはcaption、プライマリボーナス・基礎能力値・副能力増加値のdesktop 1行3列を崩す変更、共通スキルボーナスをdesktopの2行目から動かす変更、mobileの2列2行を崩す変更、既存`SkillCard`の情報順・色・高さの変更、PageTocを空表示または現在位置ハイライトのように見せる変更。
 
-## Generation source
-
-- initial draft: standalone HTML/CSS prototypeをPlaywrightでcaptureした。実装済みサイトやVisual Review成果物は画像源に使っていない。
-  - source branch / commit: `30-2-ryugi-detail-page` / `4a8d344`
-  - route: `/data/ryugi/[ryugiId]`
-  - viewport: desktop `1440x1200`（full page `1440x1659`）、mobile `390x900`（full page `390x1469`）
-  - prototype path / prompt summary / capture notes:
-    - `.tmp/design/ryugi-detail/prototype.html`
-    - `.tmp/design/ryugi-detail/capture.mjs`
-    - `data/generated/ryugi-list.json` のケンカヤの説明、補足、基礎能力値、副能力増加値、共通スキルボーナスを表示した。
-    - `data/generated/ryugi-skills.json` のケンカヤのプライマリボーナス `気合十分` を表示した。
-    - `public/images/data/ryugi/kenkaya_hero.webp` をprototypeへ埋め込んでcaptureした。
-    - VRT baselineは、流儀スキル一覧の前で終える状態を比較する。
-- baseline update: reviewed implementationとの差分を確認し、ユーザーが明示指示した場合だけ更新する。
-
-- implementation state: `8327e05`後の未コミット変更。共有`SkillCard`の表示方針を含む。
-
-## Differences from initial design references
-
-- 正本画像は、初期draftで比較対象外だった流儀スキル一覧まで含むfull-page screenshotへ更新した。
-- `最大LV`は名称行の下の独立行とし、流儀データgridはdesktopの3列＋下段全幅、`1024px`未満の2列2行を現行実装どおり記録する。
-- hero altの文言は画像に描画されないため、流儀名由来の汎用表現という方針をnotesの比較条件として維持する。
-
-## Canonicalization rationale
-
-- 実装後のVisual ReviewとPRレビューで、初期designとの差分とscope内であることを確認した。
-- Visual Reviewのactual screenshotを、差分を隠す目的ではなく、レビュー済みの流儀詳細ページ全体を後続比較の正本として採用する。
-
 ## Open questions
 
-- なし。正本画像では流儀スキル一覧を含め、既存の`SkillCard` designを比較基準として維持する。
+- なし。VRTでは流儀スキル一覧を含め、既存の`SkillCard` designを比較基準として維持する。

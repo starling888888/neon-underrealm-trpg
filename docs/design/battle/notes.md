@@ -11,10 +11,6 @@
   - mobile `390x900`: `battle-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: `/rules/battle` のPL向け戦闘ルール本文。`MDXLayout`、`ImageBlock`、Callout、PageToc、MobilePageTocを含む。
@@ -28,7 +24,6 @@
 ## Referenced SSoT
 
 - `AGENTS.md`
-- `GitHub Issue #154: 25-2-battle-page`（historical source issue）
 - `docs/requirements.md`
 - `docs/requirements/pages.md`
 - `docs/out-of-scope.md`
@@ -69,14 +64,6 @@
 - Heroの色彩が本文UIの色や装飾へ波及しない。
 - 許容差分: 戦闘用Hero、本文量、表・Calloutの縦方向の長さ。
 - 要レビュー差分: 本文幅を超えるHero・表、captionや追加overlay、共通layoutの変更、画像が原因の可読性低下。
-
-## Generation Source
-
-- prototype or generator source: ユーザーが明示承認した現行実装をdesign fixとして正本化した。
-- source branch / commit: `25-2-battle-page` / `594448a5b3a0fd8bc3b228505f325b49e00ce544`
-- route: `/rules/battle/`
-- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- current VRT: `tests/vrt/battle.spec.ts` の`@vrt @battle`で、desktop / tablet / mobileを比較する。
 
 ## Open Questions
 

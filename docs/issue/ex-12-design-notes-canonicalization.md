@@ -39,24 +39,24 @@
 
 ## 完了条件
 
-- [ ] すべての `docs/design/**/notes.md` を確認し、現行デザイン仕様に必要な内容だけを残している。
-- [ ] ユーザーの発言・承認・判断、日付付き変更履歴、過去作業の経緯を記録する文章を、現行仕様の文章へ置き換えるか削除している。
-- [ ] 残した各記載は、現在どのように実装・表示されるべきか、現行の制約・対象外・参照SSoT・比較観点、現行VRT参照条件、または未解決の判断事項を示している。
-- [ ] 現行の画面構成、導線、状態、breakpoint、制約、対象外、参照SSoT、比較観点を意図せず削除・改変していない。
-- [ ] 各targetで既存のVRT参照情報を、route、state、viewport、test、tag、snapshot、comparison points、VRT statusの観点で`tests/vrt/**`および必要な既存実装と照合している。VRT未整備のtargetは、その状態と後続実装で必要になる条件を維持している。
-- [ ] VRT test coverageとlocal canonical baselineの存在・未配置・確認不能を区別している。baselineがない、または確認できないtargetでは、baselineを生成せず、その現行statusをnotesへ維持している。
-- [ ] 未決事項は、現行SSoTまたは最新のユーザー指示で解決済みと確認できる場合だけ削除・仕様化し、判断不能なものは現行の判断保留として残している。
-- [ ] 関連TODOをこのissueで扱わない理由を記録している。
-- [ ] `npm run check:md` が通る。
+- [x] すべての `docs/design/**/notes.md` を確認し、現行デザイン仕様に必要な内容だけを残している。
+- [x] ユーザーの発言・承認・判断、日付付き変更履歴、過去作業の経緯を記録する文章を、現行仕様の文章へ置き換えるか削除している。
+- [x] 残した各記載は、現在どのように実装・表示されるべきか、現行の制約・対象外・参照SSoT・比較観点、現行VRT参照条件、または未解決の判断事項を示している。
+- [x] 現行の画面構成、導線、状態、breakpoint、制約、対象外、参照SSoT、比較観点を意図せず削除・改変していない。
+- [x] 各targetで既存のVRT参照情報を、route、state、viewport、test、tag、snapshot、comparison points、VRT statusの観点で`tests/vrt/**`および必要な既存実装と照合している。VRT未整備のtargetは、その状態と後続実装で必要になる条件を維持している。
+- [x] VRT test coverageとlocal canonical baselineの存在・未配置・確認不能を区別している。baselineがない、または確認できないtargetでは、baselineを生成せず、その現行statusをnotesへ維持している。
+- [x] 未決事項は、現行SSoTまたは最新のユーザー指示で解決済みと確認できる場合だけ削除・仕様化し、判断不能なものは現行の判断保留として残している。
+- [x] 関連TODOをこのissueで扱わない理由を記録している。
+- [x] `npm run check:md` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルート、GitHub Pagesのサブパス公開、依存関係に影響していない。
-- [ ] 初期スコープ外の機能、design、VRT baseline更新を追加していない。
-- [ ] `docs/TODO.md` の未対応項目と矛盾していない。
-- [ ] `docs/design/README.md` が定めるdesign正本とVRT参照情報の役割と矛盾していない。
-- [ ] 現行notesの意味を、既存実装だけに合わせて無断で変更していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルート、GitHub Pagesのサブパス公開、依存関係に影響していない。
+- [x] 初期スコープ外の機能、design、VRT baseline更新を追加していない。
+- [x] `docs/TODO.md` の未対応項目と矛盾していない。
+- [x] `docs/design/README.md` が定めるdesign正本とVRT参照情報の役割と矛盾していない。
+- [x] 現行notesの意味を、既存実装だけに合わせて無断で変更していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 

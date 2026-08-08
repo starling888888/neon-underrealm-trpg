@@ -11,10 +11,6 @@
   - mobile `390x900`: `data-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix（reviewed implementationからcanonicalize）
-
 ## Target
 
 - page / component: `/data` の「スキルの見方」内に置くSkillCard凡例と、その右側の項目説明領域。
@@ -71,11 +67,6 @@
 - SkillCardの既存の情報順、最小高さ、色・borderの扱いを変えない。
 - 許容差分: 静的propsで表示する凡例の文言、説明文の行数、セクションの高さ。
 - 要レビュー差分: Headerやlayout railsを省いたcapture、既存gridと異なるdesktop 2列・mobile 1列、右側リストへの丸囲み番号装飾、Card内の既存表示順の変更。
-
-## Generation source
-
-- initial draft source: standalone HTML/CSS prototype。`.tmp/design/data/prototype.html` と `.tmp/design/data/capture.mjs`を使い、既存Headerとlayout文脈を含むviewport screenshotで初期画像を生成した。
-- canonicalization source: reviewed implementationの`/data`を、approved visual capture workflowでdesktop・mobileともにcaptureする。heroを含むページ全体はcaptureしない。
 
 ## Open questions
 

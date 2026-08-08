@@ -11,10 +11,6 @@
   - mobile `390x900`: `items-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- initial draft
-
 ## Target
 
 - page / component: アイテムトップページ
@@ -30,7 +26,6 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `GitHub Issue #168: 33-2-items-index-page`
 - `docs/requirements/pages.md`
 - `docs/requirements/assets-seo.md`
 - `docs/out-of-scope.md`
@@ -73,17 +68,7 @@
 - 許容差分: 段落・表セルの改行位置、導入文と表の高さ。
 - 要レビュー差分: heroへのcaptionやoverlayの追加、表の順序変更、表をカード一覧へ置換、検索・操作UIの追加、global navigationの再設計。
 
-## Generation source
-
-- prototype or generator source: standalone HTML/CSS prototype
-- source branch / commit: `33-2-items-index-page` / `911967bad6c6db1bb5b6443aca69d77031e7f116`
-- route: `/data/items/`
-- viewport: desktop `1440x1200`、mobile `390x900`、いずれもfull-page
-- prototype path: `.tmp/design/items/prototype.html`
-- capture path: `.tmp/design/items/capture.mjs`
-- capture notes: `public/images/data/items_hero.webp`をprototype内へdata URLとして読み込み、アプリケーションrouteを使わずにcaptureした。
-
 ## Open questions
 
-- 初期draftの表を、実装時も通常のHTML tableとして維持するか。contentsの表形式指定に従うため、現時点ではtableを採用している。
+- 表は通常のHTML tableとして扱う。表形式の変更が必要な場合は別taskで検討する。
 - PageTocには「アイテムの種類」のみを表示する。H1はPageToc対象外であり、contentsに追加のH2はない。

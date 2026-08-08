@@ -10,10 +10,6 @@
 - desktop / tablet: mobile-only Componentのため対象外。
 - baseline update: 通常実行では比較のみ行う。ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- initial draft
-
 ## Target
 
 - page / component: `MobilePageToc.astro` または同等のスマホ / タブレット幅向けページ内目次UI
@@ -36,11 +32,6 @@
 - `docs/design/base-layout/notes.md`
 - `docs/design/page-toc/notes.md`
 - `docs/design/mobile-menu/notes.md`
-
-## Historical source issues
-
-- `GitHub Issue #139: 14-mobile-page-toc`
-- `GitHub Issue #138: 13-page-toc`
 
 ## Design direction
 
@@ -102,13 +93,6 @@
 - H1横trigger + H1直下overlay案を正式採用する。
 - 差分として許容できるもの: buttonの細かな高さ、border濃度、iconの向き、H3インデント量、項目数、本文上部内での縦位置の微調整。
 - レビューが必要な差分: Header内へのTOC導線追加、常時floating / sticky化、drawer化してmobile-menuに似すぎる表現、現在位置ハイライトに見える強調、検索UIやパンくずの追加、空TOC表示、本文幅やHeader挙動を大きく変える変更。
-
-## Generation source
-
-- source branch / commit when applicable: branch `14-mobile-page-toc`, issue commit `1d2adae`
-- route when applicable: first draft should use a representative long-form content page with page TOC enabled; non-display checks should include `/`, `/release-notes`, and `/404`
-- viewport: mobile `390x900`
-- prompt summary or capture notes: Updated initial design draft for the mobile page table-of-contents design target. The adopted direction places a subtle TOC trigger beside the page H1 and opens a lightweight overlay directly below that H1 area. Search, breadcrumbs, current-position highlighting, previous / next navigation, and tool-like app features are not drawn.
 
 ## Open questions
 

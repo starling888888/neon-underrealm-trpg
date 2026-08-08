@@ -13,12 +13,6 @@
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 - actual review locator: `tests/vrt/home.spec.ts` が「最新リリースノート」sectionを、`visual:capture`時のみdesktop / tablet / mobileの原寸一時snapshotとして出力する。通常の`visual:test`ではfull-page / viewport baselineだけを比較する。
 
-## Mode
-
-- design fix
-- `18-2-home-page` の実装結果を、ユーザー承認に基づきトップページdesign正本として正本化した。
-- 初期draftとの差分を隠す目的ではなく、人間レビュー後の現行実装を今後のVisual Review基準にする。
-
 ## Target
 
 - page / component: トップページ `/`
@@ -44,10 +38,6 @@
 - `docs/design/site-layout/notes.md`
 - `.raw/contents/home.md`
 
-## Historical source issue
-
-- `GitHub Issue #147: 18-2-home-page`
-
 ## Design Direction
 
 - visual direction:
@@ -66,7 +56,7 @@
   - トップページではPageToc / MobilePageTocを表示しない。
   - Header、本文領域、Footerは `docs/design/site-layout/` と一貫したリズムにする。
   - desktopでは `03-balanced-compact` 方針に寄せ、first viewportでロゴ、最新リリースノート、はじめに導線までのつながりを強める。
-  - mobileでは、人間レビューで良いと判断された余白とロゴサイズを維持する。
+  - mobileでは、ロゴと周辺余白がfirst viewportで読みやすく収まるサイズを維持する。
 - typography direction:
   - `.raw/contents/home.md` のページタイトルは、通常の可視H1として表示しない。
   - HTML構造上H1が必要な場合は、視覚的に非表示にする。
@@ -150,32 +140,14 @@
   - logoがfirst viewportを支配し、release notesとのつながりが弱くなっている。
   - `/` にPageToc / MobilePageTocが表示されている。
 
-## Generation Source
+## 現行表示仕様
 
-- current VRT: `tests/vrt/home.spec.ts` の`@vrt @home`で、desktop / tablet / mobileのdefaultとviewport stateを比較する。
-- source branch / commit when applicable: `18-2-home-page` / `f521a11`
-- route when applicable: `/`
-- viewport: desktop `1440x1200`、tablet `820x1180`、mobile `390x900`
-- prompt summary or capture notes:
-  - `18-2-home-page` の実装結果を、人間レビュー後のdesign正本として採用した。
-  - desktop / tablet / mobileのVRT baselineで、標準状態とviewport stateを比較する。
-  - 初期スコープ外UIや新しいアプリ機能は描いていない。
-  - baseline更新は、差分を確認したうえでユーザーが明示指示した場合だけ行う。
-
-## Differences From Initial Draft
-
-- 実装済みHeader / SiteMenu / Footerを含む現行site-layoutとして正本化した。
-- キャッチコピーは `＿近未来`、`＿裏社会`、`＿抗争` に変更し、02b相当の明朝寄りフォントと薄めの文字色を反映した。
-- desktopは `03-balanced-compact` 方針に寄せ、初期draftより上部とロゴ周辺の余白を詰めた。
+- Header / SiteMenu / Footerを含む現行site-layoutを表示する。
+- キャッチコピーは `＿近未来`、`＿裏社会`、`＿抗争` とし、明朝寄りフォントと薄めの文字色を用いる。
+- desktopの上部とロゴ周辺は、本文とのつながりを保つコンパクトな余白にする。
 - `はじめに` 導線は更新履歴リンク横ではなく、濃色背景の中央配置リンクとして扱う。
 - リリースノートは現行生成データ由来の1件表示になっている。`2026-07-31` の「Web版 バージョン 0.9を公開しました。」を表示する。実装仕様は最大5件表示であり、データ追加時に増える。
-- Headerの検索UIは既存layout由来として写っている。このissueで新規追加したものではない。
-
-## Canonicalization Rationale
-
-- `18-2-home-page` の実装とレビュー指摘 1 / 2 の対応が完了し、ユーザーからdesign正本化の明示指示があった。
-- 初期draftより現行実装のほうが、実際のHeader / SiteMenu / Footer、生成リリースノート、トップページ導線の状態を正確に示す。
-- 今後のVisual Reviewでは、この正本画像を基準にトップページの見た目差分を評価する。
+- Headerの検索UIは既存layoutの仕様に従う。
 
 ## Open Questions
 

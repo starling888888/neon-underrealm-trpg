@@ -10,10 +10,6 @@
 - desktop / tablet: mobile-only Componentのため対象外。
 - baseline update: 通常実行では比較のみ行う。ユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- initial draft
-
 ## Target
 
 - page / component: `Header.astro` の左メニューボタンから開閉するスマホ版サイトメニューdrawer。既存 `SiteMenu.astro` / `SiteMenuItem.astro` / `siteMenuItems` を共用する前提。
@@ -33,12 +29,6 @@
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/notes.md`
 - `docs/design/site-menu/notes.md`
-
-## Historical source issues
-
-- `GitHub Issue #137: 12-mobile-menu`
-- `GitHub Issue #135: 11-site-menu`
-- `GitHub Issue #136: 12-1-site-menu-layout-copy`
 
 ## Design direction
 
@@ -93,13 +83,6 @@
 - 差分として許容できるもの: drawer幅、overlay濃度、閉じるボタン位置、短い代表ラベル、階層項目数、右端トグルの共通ラインを保った範囲での微調整、インデント量の微調整。
 - レビューが必要な差分: drawerヘッダーの `メニュー` を別文言に変える、drawer内に `SITE MENU` / `サイトメニュー` の可視見出しを戻す、スマホ専用の別メニュー定義に見える構造、検索dialogに見える右側panel、現在ページハイライトに見える強調、背景本文を操作可能に見せる表現、tap targetが小さすぎる配置。
 
-## Generation source
-
-- source branch / commit when applicable: initial version `12-mobile-menu`; updated for `12-1-site-menu-layout-copy`
-- route when applicable: `/`
-- viewport: mobile `390x900`
-- comparison notes: closed stateでは既存mobile Headerと本文1カラムを表示した。open stateでは左menu buttonから開いたサイトメニューdrawer、閉じる操作、既存SiteMenuを再利用した階層リンク、背景本文の操作抑止、drawer内スクロール可能性を示した。`12-1-site-menu-layout-copy` 向けに、drawerヘッダーの可視テキストを `メニュー` にし、drawer内SiteMenu本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、disclosure indicatorを階層レベルに関係なく同じ右端ラインへ移動した。検索dialog、ページ内目次、現在ページハイライト、パンくず、前後ナビゲーション、データ駆動の流儀・生き様子項目は対象外である。
-
 ## Open questions
 
 - drawer幅は、`390px` viewportで階層リンクと閉じる操作が読める範囲を見て判断する。
@@ -109,7 +92,7 @@
 
 ## site-layout正本化後の扱い
 
-- `mobile-menu` はスマホ版サイトメニューdrawer単体の初期draftとして維持する。
+- `mobile-menu` はスマホ版サイトメニューdrawer単体のdesign targetとして維持する。
 - 現在ページハイライト、ancestor表示、親カテゴリ自動展開を含む現行実装状態は、`docs/design/current-menu-highlight/` と `docs/design/site-layout/` を参照する。
 - `site-layout`のmobile menu open VRT stateは、`/-local/data-cards/`を代表routeとして、現在ページハイライトを含むMobileMenu open stateを確認する。
-- `mobile-menu` のout of scopeにある現在ページハイライトは、`12-mobile-menu` 時点の初期draft範囲を示すものであり、後続 `15-current-menu-highlight` と `16-layout-screenshot-design-refresh` の正本化を否定しない。
+- 現在ページハイライトを含む完成状態は、`docs/design/current-menu-highlight/` と `docs/design/site-layout/` を参照する。

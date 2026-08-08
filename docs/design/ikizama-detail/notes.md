@@ -11,10 +11,6 @@
   - mobile `390x900`: Calloutを持つ`sumi-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: 生き様詳細ページ / 生き様データComponent
@@ -25,11 +21,9 @@
 ## Referenced SSoT
 
 - `.raw/contents/ikizama-detail.md`
-- `GitHub Issue #167: 32-2-ikizama-detail-page`（履歴）
 - `docs/requirements/pages.md` の FR-06
 - `docs/requirements/data-display.md` の FR-04-01、FR-04-04
 - `docs/out-of-scope.md`
-- `docs/issue/milestone-01/plan.md` の `32-2-ikizama-detail-page`（履歴）
 - `docs/TODO.md` のサイドメニューへの生き様リスト追加
 - `docs/conversion/ikizama-index.md`
 - `docs/conversion/ikizama-skills.md`
@@ -71,10 +65,6 @@
 - 専用アイテムは種別リンクだけを表示し、個別アイテムや個別アンカーを追加しない。
 - 許容差分: 実データによる説明文・スキル本文の行数、カードの高さ、heroの自然なトリミング。
 - 要レビュー差分: heroのoverlay / caption、データgridのdesktopでの1行3列またはmobileでの上段2列・下段全幅の崩れ、`SkillCard`の情報順・色・密度の変更、空カテゴリの見出し表示。
-
-## Generation source
-
-- baseline source: `tests/vrt/ikizama-detail.spec.ts` の `@vrt @ikizama-detail` 比較結果。baseline更新はユーザー明示指示時だけ行う。
 
 ## Open questions
 

@@ -1,9 +1,8 @@
 # character-sheet
 
-## モード
+## ノートの役割
 
-- 承認・実装済みlayout intentとVRT参照情報
-- このノートは、`/character-sheet/`の現在の画面内容、制約、比較観点を記録するdesign正本である。ex-10-character-sheet-layout — GitHub Issue #198のdesktop、tablet、mobileのlayoutは2026-08-08にユーザー承認を得て実装済みである。新しいlayoutまたはVRT baselineの変更は、別途のユーザー承認を必要とする。
+- このノートは、`/character-sheet/`の現在の画面内容、制約、比較観点、VRT参照情報を記録するdesign正本である。新しいlayoutまたはVRT baselineの変更には明示承認を必要とする。
 
 ## 対象とVRT参照情報
 
@@ -116,7 +115,7 @@
 - character-sheet固有のsection navigationは、desktopの右補助領域と狭幅操作menuだけに置く。どちらもformの第一階層sectionだけを対象にする。
 - character-sheetは通常のサイトlayoutへ寄せる。site menu railは、sheet formの最小幅と右補助領域を保ったまま表示できる広いdesktop幅だけで表示する。必要幅を下回るとsite menu railを隠し、Headerのサイトメニューボタンからdrawerを開く。固定の`64rem`から`80rem`だけをrail表示にする例外は廃止する。
 - desktopと狭幅layoutの境界は、sheet本文最小幅、右補助領域、site menu rail、mainの左右gutterの合計から定める。狭幅layoutを従来の`48rem`未満へ限定せず、tabletから適用する。Headerのロゴとmenu buttonの寸法は既存site layoutの対応する幅を維持する。
-- 2026-08-08のレビュー指摘により、site menu railは`64rem`以上で表示し、desktopのtext action railは`84rem`以上で表示する。`64rem`から`84rem`ではsite menu railとfloating action icon controlsを併用する。`64rem`未満ではsite menu railを隠し、Header drawerとfloating action icon controlsを用いる。
+- site menu railは`64rem`以上で表示し、desktopのtext action railは`84rem`以上で表示する。`64rem`から`84rem`ではsite menu railとfloating action icon controlsを併用する。`64rem`未満ではsite menu railを隠し、Header drawerとfloating action icon controlsを用いる。
 - desktopのtext action railは、grid itemである操作領域自体を本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを維持する。
 - section navigationの見出しは`セクションにジャンプ`とし、muted boldで表示する。第一階層sectionの各buttonには下向きiconと下線を付け、ジャンプ操作であることを示す。現在位置またはクリック対象に応じたaccentは付けず、section frame自体の色も変えない。
 - character-sheetのmain領域とFooterのscroll構造は既存layoutを維持する。`48rem`以上のform本文は最大`44rem`で中央寄せし、`84rem`以上ではmain右端の`15rem` desktop action railを除いた領域で中央寄せする。desktopのtext action railだけをstickyにし、formは全viewportで1列に積む。従来のleft / right section columnへの振り分けは行わない。

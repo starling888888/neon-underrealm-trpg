@@ -11,11 +11,6 @@
   - mobile `390x900`: `ryugi-index-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-- `29-2-ryugi-index-page`のレビュー済み実装を、ユーザー承認に基づき流儀一覧のdesign正本として更新する。
-
 ## Target
 
 - page / component: 流儀一覧ページ、`RyugiDataSection`による「流儀データの見方」、流儀詳細項目が展開されたSiteMenu
@@ -31,9 +26,7 @@
 
 - `AGENTS.md`
 - `.agents/skills/design-image-generation/SKILL.md`
-- `docs/issue/29-2-ryugi-index-page.md`
 - `.raw/contents/ryugi-index.md`
-- `docs/issue/milestone-01/plan.md` の `29-2-ryugi-index-page`
 - `docs/TODO.md` の流儀・生き様サイドメニュー、および流儀データの参照
 - `docs/requirements/pages.md`
 - `docs/requirements/layout-navigation.md`
@@ -61,7 +54,7 @@
 - `page-toc`の方針に従い、H1を目次に含めず、H2だけをPageTocに表示する。現在位置ハイライトは描かない。
 - `ryugi-detail`のデータgridと`SkillCard`の情報密度を、一覧の「流儀データの見方」にあるケンカヤの代表例へ使う。流儀一覧そのものへ流儀スキル一覧や個別heroを重複表示しない。
 - SiteMenuは既存の`データ`→`流儀`の階層を維持し、流儀詳細は`流儀`の子項目として入力順に表示する。生き様詳細は表示しない。
-- heroにはユーザーが明示承認してcommitした`public/images/data/ryugi_hero.webp`を使う。画像内の既存ロゴ以外に、ページ側の文字を重ねない。
+- heroには`public/images/data/ryugi_hero.webp`を使う。画像内の既存ロゴ以外に、ページ側の文字を重ねない。
 
 ## Out of scope
 
@@ -83,19 +76,6 @@
 - 許容差分: 実データの説明文・ボーナス文による行数、一覧の縦方向の長さ、heroの自然な表示比率。
 - 要レビュー差分: heroへの文字overlayまたはcaption、流儀詳細を一覧に過剰重複する変更、流儀の入力順変更、生き様詳細の追加、SiteMenu / PageTocの役割混同、mobileの横overflow。
 
-## Generation source
-
-- initial draft source: standalone HTML/CSS prototypeをPlaywrightでcaptureした。実装済みサイトやVisual Review成果物は画像源に使っていない。
-- source branch / commit: `29-2-ryugi-index-page` / `8388c86`
-- route: `/data/ryugi`（未実装のためprototypeで表現）
-- viewport: desktop `1440x1200`、mobile `390x900`。両方ともfull-page screenshot。
-- prototype path / capture notes:
-  - `.tmp/design/ryugi-index/prototype.html`
-  - `.tmp/design/ryugi-index/capture.mjs`
-  - `public/images/data/ryugi_hero.webp` をdata URLとしてprototypeへ埋め込み、ページ側の文字overlayやcaptionは追加していない。
-  - 流儀一覧は入力順の代表6件を表示し、名称リンクとshortDescriptionだけを示す。実装時は全件を生成データから表示する。
-- canonicalization source: review済み実装の`/data/ryugi`を、ユーザー承認後に公式visual capture workflowでdesktop / mobileともにcaptureする。
-
 ## Open questions
 
-- なし。current時のカテゴリ初期展開と実データでの余白・表示密度は、レビュー済み実装を正本とする。
+- なし。カテゴリ初期展開と実データでの余白・表示密度を比較基準とする。

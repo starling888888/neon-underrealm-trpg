@@ -11,10 +11,6 @@
   - mobile `390x900`: `support-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- design fix
-
 ## Target
 
 - page / component: オンラインセッションの準備と問い合わせを案内するサポートページ
@@ -42,10 +38,6 @@
 - `docs/design/mobile-page-toc/notes.md`
 - `docs/design/callout/notes.md`
 - `docs/design/page-navigation-links/notes.md`
-
-## Historical Source Issue
-
-- `GitHub Issue #173: 41-2-support-page`
 
 ## Design Direction
 
@@ -76,10 +68,6 @@
 - 箇条書きと2つの`example` Calloutが、オンラインセッション準備の順序を妨げずに区別できる。
 - マップとお問い合わせの外部導線が、既存のリンク色と余白に沿って本文内に収まる。
 - `/support` に前後ナビゲーションやダイスローラーなどの初期スコープ外機能を描かない。
-
-## Generation Source
-
-実装済み `/support/` のPlaywright Visual Reviewを、ユーザー承認済みのdesign fixとして正本化する。
 
 ## Open Questions
 

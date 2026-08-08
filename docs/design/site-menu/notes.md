@@ -11,10 +11,6 @@
   - mobile `390x900`: `site-menu-default-mobile.png`
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
-## Mode
-
-- initial draft
-
 ## Target
 
 - page / component: `SiteMenu.astro`
@@ -33,11 +29,6 @@
 - `docs/design/global-styles/notes.md`
 - `docs/design/base-layout/notes.md`
 - `docs/design/header-footer/notes.md`
-
-## Historical source issues
-
-- `GitHub Issue #135: 11-site-menu`
-- `GitHub Issue #136: 12-1-site-menu-layout-copy`
 
 ## Design direction
 
@@ -103,13 +94,6 @@
 - 差分として許容できるもの: メニュー項目名の最終文言、リンク数、セクション分割、右端トグルの共通ラインを保った範囲での微調整、インデント量の微調整、項目表示の正確性。
 - レビューが必要な差分: `SITE MENU` / `サイトメニュー` の可視見出しを戻す、未作成ページを目立つ無効状態にする、現在地ハイライトに見える強調を入れる、mobile drawerやPageTocを描き込む、左レール幅を大きく変える、折りたたみ可能性が分からない階層表現にする。
 
-## Generation source
-
-- source branch / commit when applicable: initial version `11-site-menu`; updated for `12-1-site-menu-layout-copy`
-- route when applicable: `/`
-- viewport: desktop `1440x1200`
-- comparison notes: PC左サイド常設サイトメニューでは、`base-layout` の左レールをSiteMenuへ置き換える前提で、global stylesとHeader / Footerの方向性を維持する。サイドバー本体から `SITE MENU` / `サイトメニュー` 相当の可視見出しを削除し、メニュー項目を上に詰めた。親カテゴリもリンクとして扱い、最大3階層の親子階層が分かることを優先する。階層を持つ項目には、折りたたみ可能であることが分かる disclosure indicator を階層レベルに関係なく同じ右端ラインへ表示する。サイドメニュー幅は3階層表示の読みやすさを見て判断する。mobile drawer、現在地ハイライト、PageToc、検索、パンくず、前後ナビゲーションなど、このdesignの対象外である後続taskの機能は含めない。
-
 ## Open questions
 
 - PC左サイドメニューの幅は、最大3階層が読めるVRT baselineを確認して判断する。
@@ -117,7 +101,7 @@
 
 ## site-layout正本化後の扱い
 
-- `site-menu` はPC左サイトメニュー単体の初期draftとして維持する。
+- `site-menu` はPC左サイトメニュー単体のdesign targetとして維持する。
 - 現在ページハイライトを含む完成状態は、`docs/design/current-menu-highlight/` と `docs/design/site-layout/` を参照する。
 - `site-layout`のdesktop VRT baselineは、Header / Footer / SiteMenu / PageTocを含む横断layout内でのPC左サイトメニューを確認する。
 - `site-layout`のmobile menu open VRT stateは、スマホdrawer内SiteMenuで現在ページとancestor表示を含む状態を確認する。
