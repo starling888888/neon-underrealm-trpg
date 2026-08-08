@@ -9,11 +9,6 @@ export default getViteConfig({
       provider: "v8",
       reporter: ["text-summary"],
     },
-    exclude: [
-      ...configDefaults.exclude,
-      "tests/contract/**",
-      "tests/e2e/**",
-      "tests/vrt/**",
-    ],
+    exclude: [...configDefaults.exclude, "tests/e2e/**", "tests/vrt/**"],
   },
 });

@@ -6,7 +6,9 @@
 
 - `npm run check`: Astroの検査、Biome、Git管理Markdownの検査を実行する。
 - `npm run build`: 静的サイトをbuildし、ページ内目次のpostprocessを実行する。
-- `npm run test`: Vitestのlogic / schema / data test、script test、React Component / hook test、build contract test、production analytics contract testを実行する。
+- `npm run test`: Vitestの通常 test（logic / schema / data、script、React Component / hook）を実行する。前処理が必要なcontract test、E2E、VRTは実行しない。
+- `npm run test:contract`: public buildを一回実行した後、Vitestのbuild contract testを実行する。
+- `npm run test:coverage`: `test` と `test:contract` をcoverage有効で実行する。CIのQuality jobと同じテスト範囲を確認するときに使う。
 - `npm run test:e2e`: Pagefindを含むローカルfixtureをbuildして、公開routeのbrowser behaviorを確認する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。
@@ -15,7 +17,7 @@ Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md
 
 Vitestをすべてのunit / contract testの標準とする。UI、hook、pure logic、データ変換、script、build contractのいずれも、まずVitestで最小の責務を検証できるか判断する。
 
-テストの置き場所が既存のVitest対象（`tests/components`、`tests/hooks`、`tests/scripts`）に収まらない場合は、責務が分かるVitest用directoryを追加し、同じtaskで`npm run test`の実行対象に含める。テストを実行されないdirectoryへ置いてはならない。
+テストの置き場所が既存のVitest対象（`tests/components`、`tests/hooks`、`tests/scripts`）に収まらない場合は、責務が分かるVitest用directoryを追加し、同じtaskで`npm run test`の実行対象に含める。public buildを前提にするcontract testは`tests/contract/`へ置き、`npm run test:contract`の実行対象に含める。テストを実行されないdirectoryへ置いてはならない。
 
 | 対象                                                | 標準の検証                               | E2Eへ持ち込まない理由                                                                                                |
 | --------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -57,9 +59,9 @@ character-sheetの現行構成では、`tests/node/character-sheet/`がlogic、s
 
 ## CI/CD
 
-`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test` を再利用可能なQuality jobとして定義する。`.github/workflows/markdown-check.yml` は、`npm ci`と`npm run check:md`だけを実行する再利用可能なMarkdown Check jobを定義する。
+`.github/workflows/quality.yml` は `npm ci`、`npm run check`、`npm run build`、`npm run test:coverage` を再利用可能なQuality jobとして定義する。`test` は通常の Vitest 自動検出を実行し、Playwright の E2E / VRT と前処理が必要な contract test は除外する。`test:contract` は環境変数を設定せずに一回の public build 後、contract test をまとめて実行する。coverage provider は Vitest config に固定し、`test:coverage` は通常 test と `test:contract` の計測を有効にする。HTML、JSON、artifactなどのcoverage reportは保存しない。`.github/workflows/markdown-check.yml` は、`npm ci`と`npm run check:md`だけを実行する再利用可能なMarkdown Check jobを定義する。
 
-`.github/workflows/ci.yml` はmain以外のbranch pushとPull Requestで変更pathを分類し、deploy権限やGitHub Pages artifactを持たない。
+`.github/workflows/ci.yml` はmain以外のrepository branch pushで変更pathを分類し、deploy権限やGitHub Pages artifactを持たない。Pull Request eventでは起動しないため、同じcommitでpushとPull RequestのQuality CIが二重に実行されない。fork由来Pull Requestは対象外とする。
 
 - Markdown-onlyの変更ではMarkdown Checkを実行する。
 - 実装、設定、workflow、`.mdx`を含む変更、またはMarkdownとの混在ではQualityを実行する。

@@ -79,17 +79,17 @@ workflowは `main` へのpushで実行します。
 1. `npm ci`
 2. `npm run check`
 3. `npm run build`
-4. `npm run test`
+4. `npm run test:coverage`
 
-`npm run test`はNode、Component、build contractなどの通常testを実行する。ローカルpreviewを起動するE2EとVRTは含めない。
+`npm run test:coverage`は通常の Vitest test と、環境変数を設定しない一回の public build 後に実行する contract test をcoverage有効で実行する。通常の Vitest 自動検出からはcontract、ローカルpreviewを起動するE2E、VRTを除外する。HTML、JSON、artifactなどのcoverage reportは保存しない。
 
-`.github/workflows/ci.yml`は、main以外のbranchへのpushとPull Requestで変更pathを分類する。GitHub Pagesへのdeploy、Pages artifact upload、`pages: write`、`id-token: write`は含めない。pushとPull Requestが同じcommitで同時に起動した場合は、commit SHA単位のconcurrencyで実行中の古いworkflowをcancelする。
+`.github/workflows/ci.yml`は、main以外のrepository branchへのpushで変更pathを分類する。Pull Request eventでは起動しないため、同じcommitでpushとPull Requestのworkflowを二重に作成しない。fork由来Pull Requestは対象外とする。GitHub Pagesへのdeploy、Pages artifact upload、`pages: write`、`id-token: write`は含めない。
 
 - Markdown-onlyの変更では、`.github/workflows/markdown-check.yml`を呼び出し、`npm ci`と`npm run check:md`だけを実行する。
 - 実装、設定、workflow、`.mdx`を含む変更、またはMarkdownとそれらの混在では、`.github/workflows/quality.yml`を呼び出し、Qualityを実行する。
 - `.codex/**/*.toml`だけの変更ではworkflowを起動しない。
 
-Qualityでは、`npm ci`、`npm run check`、`npm run build`、`npm run test`を順に実行する。Markdown CheckはQualityを代替せず、Markdown-only変更だけを対象にする。
+Qualityでは、`npm ci`、`npm run check`、`npm run build`、`npm run test:coverage`を順に実行する。Markdown CheckはQualityを代替せず、Markdown-only変更だけを対象にする。
 
 mainへのサイト公開対象のpushでは、deploy workflowが同じQualityの成功後に公開用build、Pagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
 
