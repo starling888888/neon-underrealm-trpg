@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import IkizamaSkillsSection, {
   type IkizamaSkillsSectionProps,
-} from "../../../src/character-sheet/components/IkizamaSkillsSection";
+} from "../../../src/character-sheet/components/sections/IkizamaSkillsSection";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";
 
 function createProps(): IkizamaSkillsSectionProps {

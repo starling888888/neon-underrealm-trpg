@@ -7,12 +7,7 @@ import {
 } from "react-hook-form";
 
 import { getRyugiById } from "../../lib/data/ryugi-list";
-import type { PrimarySkillsSectionProps } from "../components/PrimarySkillsSection";
-import {
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
-  type SkillSelectionRowValues,
-} from "../form-values";
+import type { PrimarySkillsSectionProps } from "../components/sections/PrimarySkillsSection";
 import { calculatePrimarySkillsValidation } from "../logic/primary-skills";
 import type { PrimarySkillGroups } from "../master-data/primary-skills";
 import {
@@ -21,6 +16,11 @@ import {
   getPrimarySkillGroups,
 } from "../master-data/primary-skills";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+  type SkillSelectionRowValues,
+} from "./values";
 
 type PrimarySkillsSectionOptions = {
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;

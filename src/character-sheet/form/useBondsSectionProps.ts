@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 
-import type { BondsSectionProps } from "../components/BondsSection";
+import type { BondsSectionProps } from "../components/sections/BondsSection";
+import { calculateBonds, retainBondRows } from "../logic/bonds";
+import type { SecondaryAttributeDerivedValues } from "../logic/secondary-attributes";
+import { normalizeResolveEffectInput } from "../schemas/character-sheet-form";
 import {
   type BondEditableFieldName,
   type BondValues,
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
   type ResolveEffectName,
-} from "../form-values";
-import { calculateBonds, retainBondRows } from "../logic/bonds";
-import type { SecondaryAttributeDerivedValues } from "../logic/secondary-attributes";
-import { normalizeResolveEffectInput } from "../schemas/character-sheet-form";
+} from "./values";
 
 export default function useBondsSectionProps(
   { control, getValues, setValue }: UseFormReturn<CharacterSheetFormValues>,

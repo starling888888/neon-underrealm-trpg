@@ -1,15 +1,15 @@
 import { type RefObject, useCallback, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
-import type { ProfileSectionProps } from "../components/ProfileSection";
-import {
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
-} from "../form-values";
+import type { ProfileSectionProps } from "../components/sections/ProfileSection";
 import type { BuildDerivedValues } from "../logic/build";
 import { calculateCredit } from "../logic/credit";
 import { normalizeCreditInput } from "../schemas/character-sheet-form";
 import type { CharacterImagePresenterState } from "./presenter-state";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+} from "./values";
 
 export default function useProfileSectionProps(
   { control, setValue }: UseFormReturn<CharacterSheetFormValues>,

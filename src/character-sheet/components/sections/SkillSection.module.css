@@ -1,0 +1,363 @@
+.section {
+  display: grid;
+  max-width: 100%;
+  min-width: 0;
+  overflow: clip;
+  position: relative;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.section h3 {
+  margin: 0;
+}
+
+.invalid {
+  composes: emphasisOverlay from "./CharacterSheetSectionFrameBase.module.css";
+  --character-sheet-section-frame-emphasis-color: var(--color-danger);
+}
+
+.toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--sheet-section-toggle-height, 2.25rem);
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  text-align: left;
+}
+
+.chevron {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: 0 0 auto;
+  border-right: 0.125rem solid var(--color-link);
+  border-bottom: 0.125rem solid var(--color-link);
+  color: var(--color-link);
+  transform: rotate(45deg) translateY(-0.125rem);
+  transition: transform 120ms ease-out;
+}
+
+.toggle[aria-expanded="false"] .chevron {
+  transform: rotate(-45deg) translate(-0.125rem, 0.125rem);
+}
+
+.toggle:focus-visible {
+  outline: 0;
+  box-shadow: inset 0 0 0 var(--focus-ring-width) var(--color-focus);
+}
+
+.content {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  padding: var(--sheet-section-content-padding, var(--space-3));
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.content[hidden] {
+  display: none;
+}
+
+.headerRow,
+.firstLine {
+  composes: listTableGrid from "../CharacterSheetFormList.module.css";
+  grid-template-columns: 1.25rem minmax(var(--primary-skill-name-width), 1fr) 3.25rem 2.35rem 4.5rem 3.4rem 4.4rem 2rem var(
+      --character-sheet-action-button-size
+    );
+}
+
+.headerRow {
+  composes: tableHeader from "../CharacterSheetFormList.module.css";
+}
+
+.headerRow > * {
+  display: grid;
+  min-width: 0;
+  min-height: var(--character-sheet-list-row-min-height);
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  white-space: nowrap;
+}
+
+.headerRow > :nth-child(2) {
+  justify-items: start;
+  text-align: left;
+}
+
+.row {
+  composes: listRow from "../CharacterSheetFormList.module.css";
+  display: grid;
+  overflow: visible;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.row[data-skill-row-kind="automatic"] {
+  background: var(--color-example-soft);
+}
+
+.row[data-invalid] {
+  outline: var(--border-width) solid var(--color-danger);
+  outline-offset: calc(var(--border-width) * -1);
+}
+
+.firstLine > * {
+  min-width: 0;
+  border-right: var(--border-width) solid var(--color-border);
+}
+
+.firstLine > :last-child {
+  border-right: 0;
+}
+
+.removeButton {
+  align-self: center;
+  justify-self: center;
+}
+
+.handlePlaceholder {
+  display: grid;
+  min-height: 2.25rem;
+  place-items: center;
+}
+
+.reorderControls {
+  composes: reorderControls from "../CharacterSheetFormList.module.css";
+}
+
+.reorderButton {
+  composes: reorderButton from "../CharacterSheetFormList.module.css";
+}
+
+.skillName {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text);
+  font-size: var(--character-sheet-font-table);
+  font-weight: 750;
+  line-height: var(--line-height-tight);
+  text-align: left;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.skillPicker {
+  composes: rowPicker from "../CharacterSheetFormList.module.css";
+  white-space: pre-wrap;
+}
+
+.chooseIcon {
+  composes: pickerIcon from "../CharacterSheetFormList.module.css";
+}
+
+.levelInput,
+.levelValue,
+.cell,
+.detailsToggle,
+.removePlaceholder {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  padding: 0.125rem 0.25rem;
+  color: var(--color-text);
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--character-sheet-line-height-table);
+  text-align: center;
+}
+
+.levelNumericInput {
+  composes: tableNumericInput from "../CharacterSheetFormList.module.css";
+  width: 100%;
+  padding: 0.125rem 0.1875rem;
+}
+
+.levelNumericInput[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.cell > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.cell {
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.actionDescription {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 750;
+}
+
+.actionDescription[aria-invalid="true"] {
+  color: var(--color-danger);
+}
+
+@media (width < 48rem) {
+  .actions {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+.detailsToggle {
+  composes: detailsToggle from "../CharacterSheetFormList.module.css";
+}
+
+.details {
+  contain: inline-size;
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--character-sheet-font-table);
+  line-height: var(--line-height-normal);
+  white-space: pre-wrap;
+}
+
+.detailMeta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-2);
+}
+
+.mobileMetadata {
+  display: none;
+}
+
+.details p {
+  margin: 0;
+}
+
+.detailMeta p {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.effect {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-1);
+}
+
+.details p > span {
+  color: var(--color-text-muted);
+  font-weight: 750;
+}
+
+.effect {
+  min-width: 0;
+}
+
+.detailMeta,
+.effect {
+  margin: 0;
+}
+
+.addButton {
+  justify-self: start;
+  margin-top: var(--space-3);
+}
+
+.unselected {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+@media (width < 48rem) {
+  .content {
+    padding: var(--space-2);
+  }
+
+  .headerRow,
+  .firstLine {
+    grid-template-columns: 1.25rem minmax(0, 1fr) 2.25rem 2rem 4rem 2rem var(
+        --character-sheet-action-button-size
+      );
+  }
+
+  .headerRow > :nth-child(6),
+  .headerRow > :nth-child(7),
+  .firstLine > [data-skill-metadata="cost"],
+  .firstLine > [data-skill-metadata="usage"] {
+    display: none;
+  }
+
+  .skillName,
+  .skillPicker {
+    align-items: center;
+    padding: var(--space-1);
+    font-size: var(--character-sheet-font-table-mobile-control);
+    white-space: pre-wrap;
+  }
+
+  .chooseIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .levelInput,
+  .levelValue,
+  .cell,
+  .detailsToggle,
+  .removePlaceholder {
+    padding-inline: 0.125rem;
+    font-size: var(--character-sheet-font-table-mobile-control);
+  }
+
+  .details {
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+
+  .mobileMetadata {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+
+  .mobileMetadata p {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-1);
+    white-space: nowrap;
+  }
+
+  .detailMeta {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}

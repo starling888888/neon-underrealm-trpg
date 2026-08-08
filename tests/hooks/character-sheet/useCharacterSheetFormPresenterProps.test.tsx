@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { describe, expect, it } from "vitest";
 
 import useCharacterSheetFormPresenterProps from "../../../src/character-sheet/form/useCharacterSheetFormPresenterProps";
-import type { CharacterSheetFormValues } from "../../../src/character-sheet/form-values";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import type { CharacterSheetFormValues } from "../../../src/character-sheet/form/values";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form/values";
 import { getCommonSkillCandidates } from "../../../src/character-sheet/master-data/common-skills";
 import { getDrugs } from "../../../src/character-sheet/master-data/drugs";
 import { getIkizamaSkillGroups } from "../../../src/character-sheet/master-data/ikizama-skills";

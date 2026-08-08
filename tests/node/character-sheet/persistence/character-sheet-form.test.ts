@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { characterSheetDefaultValues } from "../../../../src/character-sheet/form-values";
+import { characterSheetDefaultValues } from "../../../../src/character-sheet/form/values";
 import { getCybernetics } from "../../../../src/character-sheet/master-data/cybernetics";
 import { getDrugs } from "../../../../src/character-sheet/master-data/drugs";
 import {

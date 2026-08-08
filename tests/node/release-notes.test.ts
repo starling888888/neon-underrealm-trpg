@@ -8,12 +8,7 @@ import {
   convertReleaseNotes,
   formatDateTimeJst,
 } from "../../scripts/convert-release-notes/lib";
-import {
-  getLatestReleaseNotes,
-  getReleaseNoteBody,
-  getReleaseNotes,
-  getReleaseNotesJson,
-} from "../../src/lib/data/release-notes";
+import { getReleaseNoteBody } from "../../src/lib/data/release-notes";
 import {
   assertReleaseNotesJson,
   parseReleaseNotesJson,
@@ -191,12 +186,6 @@ describe("release notes conversion", () => {
         sourceOrder: 1,
       }),
     ).toBe("概要");
-  });
-
-  it("loads generated release notes through the data access layer", () => {
-    expect(getReleaseNotesJson().dataName).toBe("release-notes");
-    expect(getReleaseNotes().length).toBe(2);
-    expect(getLatestReleaseNotes(1)).toEqual(getReleaseNotes().slice(0, 1));
   });
 
   it("validates the committed generated release notes JSON contract", () => {

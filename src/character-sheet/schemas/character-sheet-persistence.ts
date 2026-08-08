@@ -1,4 +1,4 @@
-import type { CharacterSheetFormValues } from "../form-values";
+import type { CharacterSheetFormValues } from "../form/values";
 import {
   getCharacterSheetIkizamaOptions,
   getCharacterSheetRyugiOptions,

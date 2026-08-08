@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form/values";
 import { getDuplicateDrugRowIds } from "../../../src/character-sheet/logic/drugs";
 import {
   getDrugById,

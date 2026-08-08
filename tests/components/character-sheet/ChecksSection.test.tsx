@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import ChecksSection, {
   type ChecksSectionProps,
-} from "../../../src/character-sheet/components/ChecksSection";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/components/sections/ChecksSection";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form/values";
 import { calculateChecks } from "../../../src/character-sheet/logic/checks";
 
 const attributes = {

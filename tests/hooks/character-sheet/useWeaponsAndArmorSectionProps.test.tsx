@@ -8,7 +8,7 @@ import useWeaponsAndArmorSectionProps from "../../../src/character-sheet/form/us
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import {
   getArmors,
   getWeaponCandidateGroups,

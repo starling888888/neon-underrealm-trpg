@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form/values";
 import {
   calculateBonds,
   retainBondRows,

@@ -3,13 +3,13 @@ import {
   type CharacterImageRecord,
   characterImageDataUrl,
   characterImageMimeType,
-} from "../character-image";
+} from "../schemas/character-image";
 
 export const characterImageMaximumBytes = 5_242_880;
 export const characterImageMaximumSide = 500;
 export const characterImageWebpQuality = 0.8;
 
-export { CharacterImageError } from "../character-image";
+export { CharacterImageError } from "../schemas/character-image";
 
 type ImageFile = Pick<File, "size" | "type">;
 

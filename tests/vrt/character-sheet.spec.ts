@@ -447,6 +447,11 @@ async function openActionMenu(
   ).toBeVisible();
 }
 
+async function openCharacterSheetSiteMenu(page: Page): Promise<void> {
+  await page.locator("[data-character-sheet-menu-open]:visible").click();
+  await expect(page.locator("#character-sheet-site-menu-drawer")).toBeVisible();
+}
+
 async function openErrorDialog(page: Page): Promise<void> {
   await prepareRepresentativeErrors(page);
   await page.getByRole("button", { exact: true, name: "確認" }).click();
@@ -538,6 +543,9 @@ const actionMenu = {
   resolve: (page: Page) =>
     page.getByRole("region", { name: "キャラクターシートの操作メニュー" }),
 };
+const characterSheetSiteMenuDrawer = section(
+  "#character-sheet-site-menu-drawer",
+);
 
 registerCharacterSheetVrtScenarios([
   {
@@ -583,6 +591,14 @@ registerCharacterSheetVrtScenarios([
     prepare: openActionMenu,
     route: siteRoutes.characterSheet,
     viewports: ["tablet", "mobile"],
+  },
+  {
+    id: "site-menu-open",
+    kind: "section",
+    locator: characterSheetSiteMenuDrawer,
+    prepare: openCharacterSheetSiteMenu,
+    route: siteRoutes.characterSheet,
+    viewports: characterSheetMobileViewport,
   },
   {
     id: "action-pane-error",

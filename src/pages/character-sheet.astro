@@ -71,6 +71,7 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
 
         <main class="character-sheet-main" data-page-content>
           <article class="character-sheet-page" data-character-sheet-page>
+            <h1 class="visually-hidden">キャラクターシート</h1>
             <CharacterSheetContainer client:load />
           </article>
         </main>
@@ -130,9 +131,8 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
   }
 
   .character-sheet-page {
-    width: min(100%, 90rem);
+    width: 100%;
     min-height: 24rem;
-    margin-inline: auto;
   }
 
   :global(body.character-sheet-menu-open) {
@@ -241,7 +241,7 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
     padding: 0;
   }
 
-  @media (width >= 64rem) and (width < 80rem) {
+  @media (width >= 64rem) {
     .character-sheet-layout {
       grid-template-columns: var(--character-sheet-menu-rail-width) minmax(0, 1fr);
     }
@@ -255,7 +255,7 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
     }
   }
 
-  @media (width < 48rem) {
+  @media (width < 64rem) {
     .character-sheet-layout {
       display: block;
     }
@@ -263,7 +263,25 @@ const description = "ネオン・アンダーレルムTRPGのキャラクター�
     .character-sheet-main {
       padding: var(--space-3) var(--space-5) var(--space-8);
     }
+  }
 
+  @media (width >= 64rem) and (width < 84rem) {
+    .character-sheet-main {
+      padding-inline: var(--space-5);
+    }
+  }
+
+  .character-sheet-page > h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (width < 48rem) {
     .character-sheet-menu-drawer:not([hidden]) {
       grid-template-columns: minmax(0, min(83vw, 20.5rem)) 1fr;
     }

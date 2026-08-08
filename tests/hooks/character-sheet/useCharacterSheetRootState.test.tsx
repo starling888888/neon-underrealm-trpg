@@ -2,10 +2,10 @@
 
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { CharacterImageRecord } from "../../../src/character-sheet/character-image";
-import { CharacterImageError } from "../../../src/character-sheet/character-image";
-import { characterSheetDefaultValues } from "../../../src/character-sheet/form-values";
-import useCharacterSheetRootState from "../../../src/character-sheet/useCharacterSheetRootState";
+import { characterSheetDefaultValues } from "../../../src/character-sheet/form/values";
+import useCharacterSheetRootState from "../../../src/character-sheet/hooks/useCharacterSheetRootState";
+import type { CharacterImageRecord } from "../../../src/character-sheet/schemas/character-image";
+import { CharacterImageError } from "../../../src/character-sheet/schemas/character-image";
 
 const storedImage: CharacterImageRecord = {
   base64: "UklGRiIAAABXRUJQVlA4IBYAAADQAQCdASoBAAEALmk0mk0iIiIiIgBoSywA",

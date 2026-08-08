@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -16,6 +16,13 @@ const errorSummary: CharacterSheetErrorSummary = {
     },
   ],
   hasErrors: true,
+};
+
+const sectionNavigation = {
+  items: [
+    { id: "profile" as const, label: "基本情報" },
+    { id: "build" as const, label: "流儀・生き様と能力値" },
+  ],
 };
 
 afterEach(() => cleanup());
@@ -42,6 +49,8 @@ describe("CharacterSheetActionPane", () => {
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
       />,
     );
 
@@ -76,6 +85,8 @@ describe("CharacterSheetActionPane", () => {
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
       />,
     );
 
@@ -106,6 +117,8 @@ describe("CharacterSheetActionPane", () => {
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
       />,
     );
 
@@ -133,6 +146,50 @@ describe("CharacterSheetActionPane", () => {
     ).toContain("iconButtonDanger");
   });
 
+  it("keeps the error count outside the scrollable error list", () => {
+    const errors = Array.from({ length: 16 }, (_, index) => ({
+      code: "experience" as const,
+      message: `エラー${index + 1}`,
+    }));
+
+    render(
+      <CharacterSheetActionPane
+        errorReviewButtonRef={createRef<HTMLButtonElement>()}
+        errorSummary={{ errors, hasErrors: true }}
+        isCcfoliaCopyDisabled={false}
+        isExportDisabled={false}
+        isImportDisabled={false}
+        isResetDisabled={false}
+        isMenuOpen
+        menuTriggerRef={createRef<HTMLButtonElement>()}
+        onCcfoliaCopy={vi.fn()}
+        onExport={vi.fn()}
+        onHelp={vi.fn()}
+        onImport={vi.fn()}
+        onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
+        onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
+      />,
+    );
+
+    const menu = screen.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    const errorCount = within(menu).getByText("エラーが16件あります。");
+    const errorList = within(menu).getAllByRole("list")[1];
+
+    expect(errorCount.parentElement).not.toBe(errorList);
+    expect(within(errorList).getAllByRole("listitem")).toHaveLength(16);
+    expect(
+      errorList.style.getPropertyValue(
+        "--character-sheet-error-list-max-block-size",
+      ),
+    ).toBe("12rem");
+    expect(errorList.style.overflowY).toBe("auto");
+  });
+
   it("includes the empty error state in the closed menu button name", () => {
     render(
       <CharacterSheetActionPane
@@ -151,6 +208,8 @@ describe("CharacterSheetActionPane", () => {
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
       />,
     );
 
@@ -179,6 +238,8 @@ describe("CharacterSheetActionPane", () => {
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
       />,
     );
 
@@ -222,6 +283,8 @@ describe("CharacterSheetActionPane", () => {
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
       />,
     );
 
@@ -232,5 +295,51 @@ describe("CharacterSheetActionPane", () => {
     }
 
     expect(onCcfoliaCopy).toHaveBeenCalledTimes(2);
+  });
+
+  it("reports a section jump without owning scroll state", async () => {
+    const user = userEvent.setup();
+    const onSectionJump = vi.fn();
+
+    render(
+      <CharacterSheetActionPane
+        errorReviewButtonRef={createRef<HTMLButtonElement>()}
+        errorSummary={{ errors: [], hasErrors: false }}
+        isCcfoliaCopyDisabled={false}
+        isExportDisabled={false}
+        isImportDisabled={false}
+        isMenuOpen
+        isResetDisabled={false}
+        menuTriggerRef={createRef<HTMLButtonElement>()}
+        onCcfoliaCopy={vi.fn()}
+        onExport={vi.fn()}
+        onHelp={vi.fn()}
+        onImport={vi.fn()}
+        onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
+        onReviewErrors={vi.fn()}
+        onSectionJump={onSectionJump}
+        sectionNavigation={sectionNavigation}
+      />,
+    );
+
+    await user.click(
+      within(
+        screen.getByRole("region", {
+          name: "キャラクターシートの操作メニュー",
+        }),
+      ).getByRole("button", { name: "流儀・生き様と能力値" }),
+    );
+
+    expect(onSectionJump).toHaveBeenCalledWith("build");
+    const navigation = within(
+      screen.getByRole("region", {
+        name: "キャラクターシートの操作メニュー",
+      }),
+    ).getByRole("navigation", { name: "セクションにジャンプ" });
+    expect(navigation.querySelectorAll("button[aria-current]")).toHaveLength(0);
+    expect(navigation.querySelectorAll("svg[aria-hidden='true']")).toHaveLength(
+      2,
+    );
   });
 });

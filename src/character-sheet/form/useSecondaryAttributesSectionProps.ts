@@ -1,18 +1,18 @@
 import { useCallback, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
-import type { SecondaryAttributesSectionProps } from "../components/SecondaryAttributesSection";
-import {
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
-  type SecondaryAttributeFieldName,
-} from "../form-values";
+import type { SecondaryAttributesSectionProps } from "../components/sections/SecondaryAttributesSection";
 import type { BuildDerivedValues } from "../logic/build";
 import {
   calculateSecondaryAttributes,
   type SecondaryAttributeDerivedValues,
 } from "../logic/secondary-attributes";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+  type SecondaryAttributeFieldName,
+} from "./values";
 
 export type SecondaryAttributesSectionPresenterState = {
   derivedSecondaryAttributes: SecondaryAttributeDerivedValues;

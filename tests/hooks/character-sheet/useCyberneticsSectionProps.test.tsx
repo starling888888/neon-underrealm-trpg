@@ -11,7 +11,7 @@ import {
   type BuildValues,
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
 import { getBuildSources } from "../../../src/character-sheet/master-data/build";
 import { getCybernetics } from "../../../src/character-sheet/master-data/cybernetics";

@@ -1,7 +1,7 @@
 import { type RefObject, useId } from "react";
 
 import { characterSheetDictionary } from "../../dictionary";
-import CharacterSheetButton from "../CharacterSheetButton";
+import CharacterSheetButton from "../_common/CharacterSheetButton";
 import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,

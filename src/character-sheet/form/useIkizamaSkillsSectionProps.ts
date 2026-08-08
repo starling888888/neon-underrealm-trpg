@@ -7,12 +7,7 @@ import {
 } from "react-hook-form";
 
 import { getIkizamaById } from "../../lib/data/ikizama";
-import type { IkizamaSkillsSectionProps } from "../components/IkizamaSkillsSection";
-import {
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
-  type SkillSelectionRowValues,
-} from "../form-values";
+import type { IkizamaSkillsSectionProps } from "../components/sections/IkizamaSkillsSection";
 import { calculateIkizamaSkillsValidation } from "../logic/ikizama-skills";
 import type { IkizamaSkillGroups } from "../master-data/ikizama-skills";
 import {
@@ -21,6 +16,11 @@ import {
 } from "../master-data/ikizama-skills";
 import { getMaximumSkillNameLength } from "../master-data/primary-skills";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+  type SkillSelectionRowValues,
+} from "./values";
 
 type IkizamaSkillsSectionOptions = {
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;

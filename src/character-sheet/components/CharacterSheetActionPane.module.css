@@ -1,71 +1,95 @@
 .root {
-  margin-block-end: var(--space-3);
+  min-width: 0;
 }
-
-.desktopHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
+.desktopRail {
+  display: none;
 }
-
-.heading {
-  margin: 0;
-  line-height: var(--line-height-tight);
-}
-
-.desktopActions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  margin-inline-start: auto;
-}
-
-.desktopErrorStatus {
-  box-sizing: border-box;
-  flex: 0 0 15.5rem;
-  min-height: 2rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--space-2);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-muted);
-  padding: var(--space-1) var(--space-2);
-}
-
-.desktopErrorStatus p {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  line-height: var(--line-height-tight);
-  white-space: nowrap;
-}
-
-.desktopErrorStatusDanger {
-  border-color: var(--color-danger);
-}
-
-.desktopErrorStatusDanger p {
-  color: var(--color-danger);
-  font-weight: 700;
-}
-
 .floatingActions,
 .menu {
   display: none;
 }
 
-@media (width < 80rem) {
-  .desktopActions {
-    display: none;
+@media (width >= 84rem) {
+  .root {
+    grid-column: 2;
+    inline-size: var(--character-sheet-menu-rail-width);
+    position: sticky;
+    top: calc(var(--site-header-height) + var(--space-3));
+    align-self: start;
+    justify-self: end;
+    padding-inline: var(--space-3) var(--space-2);
   }
-
+  .desktopRail {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .sectionNavigation p {
+    margin: 0 0 var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: 800;
+  }
+  .sectionNavigation ul {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sectionNavigation button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: var(--text-xs);
+    line-height: var(--line-height-tight);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+  .sectionNavigation button:hover {
+    text-decoration-thickness: 0.14em;
+  }
+  .sectionJumpIcon {
+    flex: 0 0 auto;
+    color: var(--color-text-muted);
+  }
+  .actionButtons {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .operations {
+    display: grid;
+    gap: var(--space-3);
+    border-top: var(--border-width) solid var(--color-border);
+    padding-top: var(--space-3);
+  }
+  .actionButtons :global(button) {
+    width: 100%;
+  }
   .desktopErrorStatus {
-    display: none;
+    display: grid;
+    gap: var(--space-2);
+    border-top: var(--border-width) solid var(--color-border);
+    padding-top: var(--space-3);
   }
+  .desktopErrorStatus p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    line-height: var(--line-height-tight);
+  }
+  .desktopErrorStatusDanger p {
+    color: var(--color-danger);
+    font-weight: 700;
+  }
+}
 
+@media (width < 84rem) {
   .floatingActions {
     position: fixed;
     z-index: 5;
@@ -74,7 +98,6 @@
     display: flex;
     gap: var(--space-2);
   }
-
   .iconButton {
     box-sizing: border-box;
     width: 2.5rem;
@@ -89,24 +112,20 @@
     cursor: pointer;
     padding: 0;
   }
-
   .iconButton:hover {
     border-color: var(--color-link-hover);
     background: var(--color-link-hover);
   }
-
   .iconButtonDanger,
   .iconButtonDanger:hover {
     border-color: var(--color-danger);
     background: var(--color-danger);
   }
-
   .helpMark {
     font-size: 1.125rem;
     font-weight: 800;
     line-height: 1;
   }
-
   .menu {
     position: fixed;
     z-index: 4;
@@ -121,41 +140,68 @@
     box-shadow: var(--shadow-soft);
     padding: var(--space-3);
   }
-
-  .menuActions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-2);
-  }
-
-  .menuActionButton {
-    width: 100%;
-  }
-
-  .errors {
-    border-top: var(--border-width) solid var(--color-border);
-    padding-block-start: var(--space-3);
-  }
-
+  .sectionNavigation p,
   .errors p {
     margin: 0;
   }
-
+  .sectionNavigation p {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: 800;
+  }
+  .sectionNavigation ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-1) var(--space-2);
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sectionNavigation button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: var(--text-xs);
+    line-height: var(--line-height-tight);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+  .sectionNavigation button:hover {
+    text-decoration-thickness: 0.14em;
+  }
+  .actionButtons {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .actionButtons :global(button) {
+    width: 100%;
+  }
+  .errors {
+    border-top: var(--border-width) solid var(--color-border);
+    padding-top: var(--space-3);
+  }
   .errors p {
-    margin-block-start: var(--space-1);
+    margin-top: var(--space-1);
     color: var(--color-text-muted);
     font-size: var(--text-xs);
   }
-
   .errors .errorCount {
     color: var(--color-danger);
     font-weight: 700;
   }
-
   .errorList {
     display: grid;
     gap: var(--space-1);
+    max-block-size: var(--character-sheet-error-list-max-block-size);
     margin: var(--space-2) 0 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding-inline-start: 1.25rem;
     color: var(--color-text);
     font-size: var(--text-xs);
@@ -167,7 +213,6 @@
     inset-inline-end: var(--space-3);
     inset-block-end: var(--space-3);
   }
-
   .menu {
     inset-inline-end: var(--space-3);
     inset-block-end: calc(var(--space-3) + 2.5rem + var(--space-2));

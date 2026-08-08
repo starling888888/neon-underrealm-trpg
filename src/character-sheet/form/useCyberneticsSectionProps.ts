@@ -4,11 +4,7 @@ import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 import type {
   CyberneticsPickerTarget,
   CyberneticsSectionProps,
-} from "../components/CyberneticsSection";
-import type {
-  CharacterSheetFormValues,
-  CyberneticFixedPartKey,
-} from "../form-values";
+} from "../components/sections/CyberneticsSection";
 import type { BuildDerivedValues } from "../logic/build";
 import { calculateCybernetics } from "../logic/cybernetics";
 import {
@@ -17,6 +13,10 @@ import {
 } from "../master-data/cybernetics";
 import { noncombatSkills } from "../master-data/noncombat-skills";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import type {
+  CharacterSheetFormValues,
+  CyberneticFixedPartKey,
+} from "./values";
 
 type Options = {
   onPickerRequest: (

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import WeaponsAndArmorSection, {
   type WeaponsAndArmorSectionProps,
-} from "../../../src/character-sheet/components/WeaponsAndArmorSection";
+} from "../../../src/character-sheet/components/sections/WeaponsAndArmorSection";
 import {
   getArmors,
   getWeaponCandidateGroups,

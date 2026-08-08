@@ -1,12 +1,7 @@
 import { type RefObject, useCallback, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 
-import type { SpecialItemsSectionProps } from "../components/SpecialItemsSection";
-import {
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
-  type SpecialItemCategoryId,
-} from "../form-values";
+import type { SpecialItemsSectionProps } from "../components/sections/SpecialItemsSection";
 import {
   calculateSpecialItemCredit,
   getMaximumNanomachineMentalCost,
@@ -22,6 +17,11 @@ import {
   getIkizamaName,
 } from "../master-data/special-items";
 import { getArmorById, getWeaponById } from "../master-data/weapons-and-armor";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+  type SpecialItemCategoryId,
+} from "./values";
 
 type Options = {
   onCategoryRemoved?: (category: SpecialItemCategoryId) => void;

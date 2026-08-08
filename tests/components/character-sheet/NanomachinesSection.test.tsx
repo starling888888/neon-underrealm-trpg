@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import NanomachinesSection, {
   type NanomachinesSectionProps,
-} from "../../../src/character-sheet/components/NanomachinesSection";
+} from "../../../src/character-sheet/components/sections/NanomachinesSection";
 import { calculateNanomachines } from "../../../src/character-sheet/logic/nanomachines";
 import { getNanomachines } from "../../../src/character-sheet/master-data/nanomachines";
 

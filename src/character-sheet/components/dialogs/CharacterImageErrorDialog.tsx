@@ -1,8 +1,7 @@
 import { type RefObject, useId } from "react";
-
-import type { CharacterImageErrorCode } from "../../character-image";
 import { characterSheetDictionary } from "../../dictionary";
-import CharacterSheetButton from "../CharacterSheetButton";
+import type { CharacterImageErrorCode } from "../../schemas/character-image";
+import CharacterSheetButton from "../_common/CharacterSheetButton";
 import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,

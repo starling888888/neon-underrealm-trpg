@@ -75,6 +75,13 @@ test.describe("character sheet page", () => {
     await page.goto("character-sheet/");
 
     const copy = async () => {
+      const actionMenuTrigger = page.getByRole("button", {
+        exact: true,
+        name: "操作メニューを開く、エラーはありません。",
+      });
+      if (await actionMenuTrigger.isVisible()) {
+        await actionMenuTrigger.click();
+      }
       await page
         .getByRole("button", { exact: true, name: "CCFOLIAコピー" })
         .click();
@@ -109,6 +116,21 @@ test.describe("character sheet page", () => {
     page,
   }) => {
     await page.goto("character-sheet/");
+    const actionMenuTrigger = page.getByRole("button", {
+      exact: true,
+      name: "操作メニューを開く、エラーはありません。",
+    });
+    const actionMenu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    const openResponsiveActionMenu = async () => {
+      if (
+        (await actionMenuTrigger.isVisible()) &&
+        !(await actionMenu.isVisible())
+      ) {
+        await actionMenuTrigger.click();
+      }
+    };
     await page.locator('input[accept="image/*"]').setInputFiles({
       buffer: Buffer.from(
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLh+wAAAABJRU5ErkJggg==",
@@ -121,6 +143,7 @@ test.describe("character sheet page", () => {
       page.getByRole("img", { name: "選択したキャラクター画像" }),
     ).toBeVisible();
 
+    await openResponsiveActionMenu();
     const downloadPromise = page.waitForEvent("download");
     await page
       .getByRole("button", { exact: true, name: "エクスポート" })
@@ -137,6 +160,7 @@ test.describe("character sheet page", () => {
     };
 
     const importFile = async (value: Record<string, unknown>) => {
+      await openResponsiveActionMenu();
       await page
         .getByRole("button", { exact: true, name: "インポート" })
         .click();
@@ -196,29 +220,176 @@ test.describe("character sheet page", () => {
     await expect(menu).toBeHidden();
   });
 
-  test("uses a menu rail only when the one-column sheet has enough width", async ({
+  test("switches navigation rails and controls at character sheet breakpoints", async ({
     page,
   }) => {
-    await page.setViewportSize(siteViewports.desktop);
+    await page.setViewportSize({ width: 1023, height: 1180 });
     await page.goto("character-sheet/");
-    await expect(page.locator(".character-sheet-menu-rail")).toBeHidden();
-    await page.setViewportSize({ width: 1024, height: 1180 });
-    await expect(page.locator(".character-sheet-menu-rail")).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: "キャラクターシート", exact: true }),
-    ).toHaveAttribute("aria-current", "page");
+
+    const siteMenuRail = page.locator(".character-sheet-menu-rail");
+    const sectionNavigation = page.getByRole("navigation", {
+      name: "セクションにジャンプ",
+    });
+    const actionMenuTrigger = page.getByRole("button", {
+      name: "操作メニューを開く、エラーはありません。",
+    });
+    const headerMenuTrigger = page.getByRole("button", {
+      name: "サイトメニューを開く",
+    });
+
+    for (const { width, hasDesktopActionRail, hasSiteMenuRail } of [
+      { width: 1023, hasDesktopActionRail: false, hasSiteMenuRail: false },
+      { width: 1024, hasDesktopActionRail: false, hasSiteMenuRail: true },
+      { width: 1343, hasDesktopActionRail: false, hasSiteMenuRail: true },
+      { width: 1344, hasDesktopActionRail: true, hasSiteMenuRail: true },
+    ]) {
+      await page.setViewportSize({ width, height: 1180 });
+
+      if (hasSiteMenuRail) {
+        await expect(siteMenuRail).toBeVisible();
+        await expect(headerMenuTrigger).toBeHidden();
+      } else {
+        await expect(siteMenuRail).toBeHidden();
+        await expect(headerMenuTrigger).toBeVisible();
+      }
+
+      if (hasDesktopActionRail) {
+        await expect(sectionNavigation).toBeVisible();
+        await expect(actionMenuTrigger).toBeHidden();
+      } else {
+        await expect(sectionNavigation).toBeHidden();
+        await expect(actionMenuTrigger).toBeVisible();
+      }
+
+      await expect
+        .poll(() =>
+          page.evaluate(
+            () => document.documentElement.scrollWidth - window.innerWidth,
+          ),
+        )
+        .toBe(0);
+    }
   });
 
-  test("uses a header menu on mobile and keeps subpath links", async ({
+  test("jumps to a first-level section from the action menu", async ({
     page,
   }) => {
     await page.setViewportSize(siteViewports.mobile);
     await page.goto("character-sheet/");
-    await page.locator("[data-character-sheet-menu-open]:visible").click();
-    await expect(
-      page.locator("#character-sheet-site-menu-drawer"),
-    ).toBeVisible();
+    const menu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    await page
+      .getByRole("button", {
+        name: "操作メニューを開く、エラーはありません。",
+      })
+      .click();
+    await menu.getByRole("button", { name: "武器・防具" }).click();
+
+    await expect(menu).toBeVisible();
+    await page.waitForFunction(() => window.scrollY > 50);
+    await expect(page.locator("#weapons-and-armor")).toBeInViewport();
+  });
+
+  test("keeps the desktop action rail at the right and centers the form column", async ({
+    page,
+  }) => {
+    await page.setViewportSize(siteViewports.desktop);
+    await page.goto("character-sheet/");
+    const actionPane = page.locator('[aria-label="キャラクターシートの操作"]');
+    const form = page.locator("[data-character-sheet-layout]");
+    const layout = form.locator("xpath=..");
+
+    await expect(actionPane).toBeVisible();
+    await expect
+      .poll(() => form.evaluate((element) => element.clientWidth))
+      .toBe(704);
+    await expect
+      .poll(() =>
+        actionPane.evaluate((element) => element.getBoundingClientRect().width),
+      )
+      .toBe(240);
+    await expect
+      .poll(async () => {
+        const [formBox, layoutBox, actionPaneBox] = await Promise.all([
+          form.boundingBox(),
+          layout.boundingBox(),
+          actionPane.boundingBox(),
+        ]);
+        if (formBox === null || layoutBox === null || actionPaneBox === null) {
+          return Number.NaN;
+        }
+        const formColumnWidth = layoutBox.width - actionPaneBox.width - 24;
+        return Math.max(
+          Math.abs(
+            formBox.x + formBox.width / 2 - (layoutBox.x + formColumnWidth / 2),
+          ),
+          Math.abs(
+            actionPaneBox.x +
+              actionPaneBox.width -
+              (layoutBox.x + layoutBox.width),
+          ),
+        );
+      })
+      .toBeLessThan(1);
+
+    const sectionTarget = page.locator("#skills");
+    await page
+      .getByRole("navigation", { name: "セクションにジャンプ" })
+      .getByRole("button", { exact: true, name: "スキル" })
+      .click();
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const header = document.querySelector("[data-site-header]");
+          const target = document.getElementById("skills");
+          if (header === null || target === null) return Number.NaN;
+          return Math.abs(
+            target.getBoundingClientRect().top -
+              header.getBoundingClientRect().height,
+          );
+        }),
+      )
+      .toBeLessThan(2);
+    await expect(sectionTarget).toBeInViewport();
+
+    await page.evaluate(() => window.scrollTo(0, 1600));
+    await expect
+      .poll(() =>
+        actionPane.evaluate((element) => element.getBoundingClientRect().top),
+      )
+      .toBeGreaterThan(0);
+
+    await page.setViewportSize(siteViewports.tablet);
+    await expect
+      .poll(() => form.evaluate((element) => element.clientWidth))
+      .toBe(704);
+  });
+
+  test("keeps header drawer and action menu Escape handling ordered on mobile", async ({
+    page,
+  }) => {
+    await page.setViewportSize(siteViewports.mobile);
+    await page.goto("character-sheet/");
+    const actionMenuTrigger = page.getByRole("button", {
+      name: "操作メニューを開く、エラーはありません。",
+    });
+    const actionMenu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    const headerMenuTrigger = page.locator(
+      "[data-character-sheet-menu-open]:visible",
+    );
+    const headerDrawer = page.locator("#character-sheet-site-menu-drawer");
+
+    await actionMenuTrigger.click();
+    await expect(actionMenu).toBeVisible();
+    await headerMenuTrigger.click();
+    await expect(headerDrawer).toBeVisible();
+
     await page.keyboard.press("Escape");
+    await expect(headerDrawer).toBeHidden();
+    await expect(actionMenu).toBeHidden();
     await expect(page.locator(".character-sheet-logo-link")).toHaveAttribute(
       "href",
       `${new URL(siteBaseUrl).pathname}`,

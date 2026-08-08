@@ -2,7 +2,7 @@ import { getIkizamaById } from "../../lib/data/ikizama";
 import {
   type SpecialItemCategoryId,
   specialItemCategoryIds,
-} from "../form-values";
+} from "../form/values";
 
 export function getIkizamaExclusiveItemCategory(
   ikizamaId: string | null,

@@ -6,12 +6,7 @@ import {
   useWatch,
 } from "react-hook-form";
 
-import type { CommonSkillsSectionProps } from "../components/CommonSkillsSection";
-import {
-  type CharacterSheetFormValues,
-  characterSheetDefaultValues,
-  type SkillSelectionRowValues,
-} from "../form-values";
+import type { CommonSkillsSectionProps } from "../components/sections/CommonSkillsSection";
 import {
   calculateCommonSkillsValidation,
   getUnlockedCommonSkillBonusLevels,
@@ -23,6 +18,11 @@ import {
 } from "../master-data/common-skills";
 import { getMaximumSkillNameLength } from "../master-data/primary-skills";
 import { normalizeIntegerInput } from "../schemas/character-sheet-form";
+import {
+  type CharacterSheetFormValues,
+  characterSheetDefaultValues,
+  type SkillSelectionRowValues,
+} from "./values";
 
 type CommonSkillsSectionOptions = {
   onPickerRequest: (rowId: string, trigger: HTMLButtonElement) => void;

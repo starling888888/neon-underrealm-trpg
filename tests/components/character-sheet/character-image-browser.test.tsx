@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { decodeCharacterImageRecord } from "../../../src/character-sheet/browser/character-image";
-import type { CharacterImageRecord } from "../../../src/character-sheet/character-image";
+import type { CharacterImageRecord } from "../../../src/character-sheet/schemas/character-image";
 
 const validRecord: CharacterImageRecord = {
   base64: "UklGRiIAAABXRUJQVlA4IBYAAADQAQCdASoBAAEALmk0mk0iIiIiIgBoSywA",

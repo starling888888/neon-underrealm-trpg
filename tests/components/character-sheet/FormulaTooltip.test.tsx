@@ -3,8 +3,8 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import FormulaTooltip from "../../../src/character-sheet/components/FormulaTooltip";
-import styles from "../../../src/character-sheet/components/FormulaTooltip.module.css";
+import FormulaTooltip from "../../../src/character-sheet/components/_common/FormulaTooltip";
+import styles from "../../../src/character-sheet/components/_common/FormulaTooltip.module.css";
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 
 function createRect({

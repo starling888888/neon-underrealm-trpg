@@ -5,12 +5,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import SecondaryAttributesSection, {
   type SecondaryAttributesSectionProps,
-} from "../../../src/character-sheet/components/SecondaryAttributesSection";
+} from "../../../src/character-sheet/components/sections/SecondaryAttributesSection";
 import { characterSheetDictionary } from "../../../src/character-sheet/dictionary";
 import {
   type BuildValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { calculateBuild as calculateBuildFromSources } from "../../../src/character-sheet/logic/build";
 import { calculateSecondaryAttributes } from "../../../src/character-sheet/logic/secondary-attributes";
 import { getBuildSources } from "../../../src/character-sheet/master-data/build";

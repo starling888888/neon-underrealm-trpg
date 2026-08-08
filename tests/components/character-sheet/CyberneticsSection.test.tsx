@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import CyberneticsSection, {
   type CyberneticsSectionProps,
-} from "../../../src/character-sheet/components/CyberneticsSection";
+} from "../../../src/character-sheet/components/sections/CyberneticsSection";
 import { calculateCybernetics } from "../../../src/character-sheet/logic/cybernetics";
 import { getCybernetics } from "../../../src/character-sheet/master-data/cybernetics";
 

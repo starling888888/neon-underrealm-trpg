@@ -11,7 +11,7 @@ import type { CharacterSheetFormPresenterProps } from "../../../src/character-sh
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
 const { actionPaneSpy, presenterSpy, useRootStateMock } = vi.hoisted(() => ({
@@ -20,9 +20,12 @@ const { actionPaneSpy, presenterSpy, useRootStateMock } = vi.hoisted(() => ({
   useRootStateMock: vi.fn(),
 }));
 
-vi.mock("../../../src/character-sheet/useCharacterSheetRootState", () => ({
-  default: useRootStateMock,
-}));
+vi.mock(
+  "../../../src/character-sheet/hooks/useCharacterSheetRootState",
+  () => ({
+    default: useRootStateMock,
+  }),
+);
 
 vi.mock(
   "../../../src/character-sheet/components/CharacterSheetFormPresenter",
@@ -133,12 +136,23 @@ afterEach(() => {
   useRootStateMock.mockReset();
 });
 
-describe("CharacterSheetContainer presenter props", () => {
-  it("keeps every presenter prop stable when its help dialog state changes", () => {
+describe("CharacterSheetContainer memo boundaries", () => {
+  it("keeps presenter and action pane props stable when its help dialog state changes", () => {
     render(<CharacterSheetContainer />);
     const before = presenterSpy.mock
       .lastCall?.[0] as CharacterSheetFormPresenterProps;
-    const beforeErrorSummary = actionPaneSpy.mock.lastCall?.[0]?.errorSummary;
+    const beforeActionPane = actionPaneSpy.mock.lastCall?.[0] as {
+      errorSummary: unknown;
+      onCcfoliaCopy: unknown;
+      onExport: unknown;
+      onHelp: unknown;
+      onImport: unknown;
+      onMenuToggle: unknown;
+      onReset: unknown;
+      onReviewErrors: unknown;
+      onSectionJump: unknown;
+      sectionNavigation: unknown;
+    };
 
     act(() => {
       screen.getAllByRole("button", { name: "ヘルプ" })[0]?.click();
@@ -146,25 +160,10 @@ describe("CharacterSheetContainer presenter props", () => {
 
     const after = presenterSpy.mock
       .lastCall?.[0] as CharacterSheetFormPresenterProps;
-    const afterErrorSummary = actionPaneSpy.mock.lastCall?.[0]?.errorSummary;
+    const afterActionPane = actionPaneSpy.mock
+      .lastCall?.[0] as typeof beforeActionPane;
 
-    expect(afterErrorSummary).toBe(beforeErrorSummary);
-    expect(after.bondsSection).toBe(before.bondsSection);
-    expect(after.buildSection).toBe(before.buildSection);
-    expect(after.checksSection).toBe(before.checksSection);
-    expect(after.commonSkillsSection).toBe(before.commonSkillsSection);
-    expect(after.cyberneticsSection).toBe(before.cyberneticsSection);
-    expect(after.drugsSection).toBe(before.drugsSection);
-    expect(after.ikizamaSkillsSection).toBe(before.ikizamaSkillsSection);
-    expect(after.nanomachinesSection).toBe(before.nanomachinesSection);
-    expect(after.omamoriSection).toBe(before.omamoriSection);
-    expect(after.otherRyugiSkillsSection).toBe(before.otherRyugiSkillsSection);
-    expect(after.primarySkillsSection).toBe(before.primarySkillsSection);
-    expect(after.profileSection).toBe(before.profileSection);
-    expect(after.secondaryAttributesSection).toBe(
-      before.secondaryAttributesSection,
-    );
-    expect(after.specialItemsSection).toBe(before.specialItemsSection);
-    expect(after.weaponsAndArmorSection).toBe(before.weaponsAndArmorSection);
+    expect(afterActionPane).toStrictEqual(beforeActionPane);
+    expect(after).toStrictEqual(before);
   });
 });

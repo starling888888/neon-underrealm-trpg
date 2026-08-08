@@ -131,6 +131,14 @@ source種別は以下を使う。
 - 観測した失敗: 完了条件と備考の実装確認では `npm run test`、`npm run check`、`npm run build` が検証済みになっていたが、末尾の `ローカル検証メモ` に同じコマンドが `not yet verified` として残り、検証済みなのか未検証なのかが矛盾する状態でPR化した。
 - 一次対応: review-to-issueで `レビュー指摘 1` に取り込み、レビュー対応時にローカル検証メモを実際の検証済み状態へ整理する方針へ入れた。
 
+#### Left superseded review checklist items unchecked
+
+- date: 2026-08-08
+- source: user
+- 発生箇所: `ex-10-character-sheet-layout`のレビュー指摘9・10への修正とPR再レビュー
+- 観測した失敗: Review 10で、長大error一覧のbrowser E2EをComponent testへ置き換え、target testとVRT確認を完了した。しかし、Review 9に残る同じ到達性・target testの2 checkboxを最終方針と実施結果へ更新しなかったため、remote PR reviewでチェック漏れとして再指摘された。
+- 一次対応: Review 9の方針をComponent testへ訂正し、実施済みの2 checkboxを完了へ更新した。以後、後続reviewで前のreview sectionの方針や検証経路を置き換える場合は、commit前に置換元sectionの未チェック項目を解消済み・未対応・人間判断のいずれかへ明示更新する。
+
 - date: 2026-07-09
 - source: review
 - 発生箇所: `phase-2-prep-contents-markdown-workflow` の `docs/issue/phase-2-prep-contents-markdown-workflow.md`
@@ -180,6 +188,16 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-15-sheet-other-ryugi-skills` の`BuildSection` Component test
 - 観測した失敗: 削除確認dialogのfocus復帰のため、その他流儀削除callbackへ操作元buttonを追加したが、既存testのcallback引数期待を更新しなかった。同じ失敗をfull testとcomponent testで2回確認した。
 - 一次対応: callback契約に合わせてtest expectationを更新し、`npm run test:component`で16 files・78 testsの通過を確認した。callbackへ操作元を追加する変更では、呼び出し側とtest doubleの引数契約を同時に確認する。
+
+### generated-data test discipline
+
+#### Coupled a release-notes test to a mutable data count
+
+- date: 2026-08-08
+- source: user
+- 発生箇所: `tests/node/release-notes.test.ts`のgenerated release notes取得test
+- 観測した失敗: release notesの追加で件数が2件から3件になっただけなのに、固定件数を期待するtestが失敗した。初回対応でもdata access layerの直接実装をなぞる比較testへ置き換えようとし、ユーザーから意味のないtestだと指摘された。
+- 一次対応: 固定件数と直接pass-throughの両方を確認するtestを削除した。変換結果の順序・改行はfixture test、committed JSONの形式はschema testで確認する。
 
 #### Repeated test failure from obsolete skill-level clamp expectations
 
@@ -449,6 +467,14 @@ source種別は以下を使う。
 - 観測した失敗: 仕様変更時に、plan、TODO、変換仕様、requirements、out-of-scope、architecture、designを横断して影響範囲を一括確認せず、差分中心のPRレビューを繰り返した。そのためworld design、requirements / out-of-scope、architectureの旧仕様が第1回から第3回に分けて発見され、レビュー品質が低く見える連鎖を生んだ。
 - 一次対応: 第3回レビューまでの有効な指摘をcurrent issueへ記録した。以後、仕様・データ契約・公開asset規約を変更するPRでは、初回レビュー前に関連語で全SSoTを探索し、更新対象と「確認済み・変更不要」の一覧をレビューmanifestへ残す恒久対応を検討する。
 
+#### Corrective PR omitted design-source alignment
+
+- date: 2026-08-08
+- source: user
+- 発生箇所: `ex-10-character-sheet-layout`のレビュー指摘9・10への修正とPR再レビュー
+- 観測した失敗: action menuの可変長error一覧について、実装、Component test、current issueだけを更新し、承認済みdesign正本への影響を修正前に横断確認しなかった。そのため、修正後のPRレビューで同じ表示契約の記録漏れが追加指摘となった。
+- 一次対応: レビュー指摘11へdesign正本の更新を記録した。以後、UI表示契約を修正する前に、関連するdesign正本を含むSSoTを検索し、更新対象または変更不要の判断を先に確認する。
+
 ### test environment configuration
 
 #### Configured Vitest without the React TSX transform
@@ -543,6 +569,32 @@ source種別は以下を使う。
 
 ### failure-log workflow consistency
 
+#### Repeated new hook-test failure while assuming requestAnimationFrame focus timing
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の新規 `useActionPane` hook test
+- 観測した失敗: reset confirm後のfocus復帰を直接確認する新規testで、DOM外のtriggerをDOMへ追加する修正、同期`requestAnimationFrame` stubの追加を順に行ったが、同じfocus assertionを3回連続で失敗させた。hookのstate遷移とtest環境におけるanimation frame / focusの実行契約を切り分ける前に、fixtureだけを段階的に修正していた。
+- 一次対応: focus callbackの呼び出しとjsdom上のactiveElementを同一視せず、既存`CharacterSheetDialog`のfocus契約とhookが返すreturn refの境界を確認する。hook testでは状態遷移とref保持を確認し、requestAnimationFrameを含む実focus復帰はdialog integration testへ置く。
+
+### browser-test scroll-state diagnosis
+
+#### Repeated active-section E2E failures before validating document-position semantics
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の `tests/e2e/character-sheet.spec.ts` に追加したsection navigationのactive state確認
+- 観測した失敗: IntersectionObserver callbackのentriesだけで現在sectionを決める実装を、scroll位置ベースの確認へ置き換える際、jump後の末尾sectionとHeader直下の境界を先にモデル化しなかった。同じE2E commandを3回連続で失敗させてから、section全体のdocument位置と末尾scroll位置を基準にする実装へ修正した。
+- 一次対応: active sectionはHeader直下の位置を越えた第一階層sectionから決め、末尾sectionへjumpした直後は最大scroll位置でも選択状態を維持する。追加するscroll連動testは、実装前に通常scroll・section jump・末尾sectionの3状態を契約として列挙する。
+
+#### Repeated broad character-sheet E2E runs while updating responsive action tests
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の `tests/e2e/character-sheet.spec.ts`
+- 観測した失敗: responsive action railの境界testを追加した後、既存のclipboardとJSON入出力testが`84rem`未満でもdesktop action buttonを直接操作する旧前提を持つことを1件ずつ発見した。さらに新規のheading件数、末尾近傍sectionのHeader位置、drawer close buttonのlocatorを広いE2E commandで同時に失敗させ、同一commandを3回連続で失敗させた。
+- 一次対応: action buttonを使う既存E2Eは可視のresponsive menuを開く共通前提へ揃える。section jumpは末尾到達でclampされないsectionを選び、headingは構造順だけを確認し、同名drawer buttonはfocus対象を明示する。以後、広いcharacter-sheet E2Eを再実行する前に、変更したresponsive前提に依存する既存操作を検索して単独確認する。
+
 #### Omitted archive movement rules from the failure-log audit skill
 
 - date: 2026-08-05
@@ -550,3 +602,31 @@ source種別は以下を使う。
 - 発生箇所: failure logのarchive導入と`.agents/skills/failure-log-audit/SKILL.md`の整合確認
 - 観測した失敗: `docs/agent-failure-log/archive.md`とactive logにarchiveの分類・移動を記録したが、監査skillにarchiveの個別ユーザー分類、保存内容、停止条件、報告項目を追加しなかった。また、archiveの説明を`user / review`由来に限定したまま、ユーザーが個別指定したagent self-report entryをarchiveした。
 - 一次対応: PR #191のレビュー指摘1としてcurrent issueへ取り込み、ユーザー承認後にarchiveを個別のユーザー分類だけで扱う契約へ文書とskillを整合する。
+
+### action-pane hook contract checks
+
+#### Repeated Astro type-check failures while extracting ActionPane state
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の`useActionPane`と`ActionPaneDialogs`へのrefactor
+- 観測した失敗: 3 hookを合成するfacadeのprops型とdialog state型を一度に移し、`onImport` callbackの引数、不要なobject property、error dialogのfocus refの型を3回の`npm run check:astro`で段階的に失敗させた。
+- 一次対応: facadeの外部callback型をActionPane propsと一致させ、dialog stateを明示型へ揃える。次回の同種refactorではhookのreturn typeと消費componentのpropsを先に確定してからContainerの配線を置き換える。
+
+#### Repeated Astro type-check failures while extracting picker hooks
+
+- date: 2026-08-08
+- source: self
+- 発生箇所: `ex-10-character-sheet-layout` の`usePickerStates`と`usePickers`へのrefactor
+- 観測した失敗: picker hookのtest fixtureをfull presenter型へcastし、`npm run check:astro`を3回連続で失敗させた。fixtureが欠くpicker外のprops、続いてpicker型に必要な`clearSelection`、最後にcandidate groupの形状を段階的に補っていた。
+- 一次対応: `usePickers`の入力を必要なpicker操作だけの構造型へ狭め、fixtureはmaster dataのgroup型に一致させる。次回はhookの最小入力型とtest fixtureを先に並べて型検査してから実装配線を進める。
+
+### command approval discipline
+
+#### Requested unnecessary escalation for an already approved Playwright command
+
+- date: 2026-08-08
+- source: user
+- 発生箇所: `ex-10-character-sheet-layout` のcharacter-sheet E2E再確認
+- 観測した失敗: `npx playwright test`は承認済みcommand prefixに一致するにもかかわらず、前回のport競合を理由として`require_escalated`を付け、不要な承認dialogを表示した。
+- 一次対応: この作業では既存の承認prefixに一致するcommandへ昇格指定を付けない。sandbox内で実行不能な明確な権限失敗だけを確認してから、必要な場合に限って昇格を求める。

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import DrugsSection, {
   type DrugsSectionProps,
-} from "../../../src/character-sheet/components/DrugsSection";
+} from "../../../src/character-sheet/components/sections/DrugsSection";
 import { getDrugs } from "../../../src/character-sheet/master-data/drugs";
 
 function createProps(): DrugsSectionProps {

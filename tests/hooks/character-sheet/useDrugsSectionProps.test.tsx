@@ -8,7 +8,7 @@ import useDrugsSectionProps from "../../../src/character-sheet/form/useDrugsSect
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
-} from "../../../src/character-sheet/form-values";
+} from "../../../src/character-sheet/form/values";
 import { getDrugs } from "../../../src/character-sheet/master-data/drugs";
 
 function useDrugsHarness() {

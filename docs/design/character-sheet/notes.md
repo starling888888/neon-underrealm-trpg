@@ -2,8 +2,8 @@
 
 ## モード
 
-- 要件の復元とデザイン準備
-- このノートは、承認済み要件から復元した画面内容、制約、将来の比較観点を記録する。最終レイアウトのドラフトでも、ページ実装の承認でもない。
+- 承認・実装済みlayout intentとVRT参照情報
+- このノートは、`/character-sheet/`の現在の画面内容、制約、比較観点を記録するdesign正本である。`ex-10-character-sheet-layout`のdesktop、tablet、mobileのlayoutは2026-08-08にユーザー承認を得て実装済みである。新しいlayoutまたはVRT baselineの変更は、別途のユーザー承認を必要とする。
 
 ## 対象とVRT参照情報
 
@@ -42,6 +42,7 @@
 - 同日、ユーザーは`@character-sheet`の全canonical baseline更新を明示承認した。`profile-image-selected`を含む対象stateは、修正後にdesktop / tablet / mobileで更新・通常比較する。
 - 2026-07-31、G31の方針として`canonical-snapshots/visual/**`をGit管理から全削除した。以後のcanonical baselineは同じpathへlocal-onlyで再生成し、Gitへ追加しない。
 - 2026-08-02、ユーザー明示承認により、抵抗の既定使用能力値を肉体へ変更した現行画面へ、`default`（full-page）と`combat-default`（判定section）をdesktop、tablet、mobileで更新した。6件のtarget限定通常比較が通り、actual screenshotで各viewportの抵抗が肉体であること、判定sectionにclipや横overflowがないことを確認した。canonical baselineはlocal-onlyであり、Gitへ追加しない。
+- 2026-08-08、ユーザー明示承認により、`ex-10-character-sheet-layout`の最終表示へ`@character-sheet`の全canonical baselineを更新した。mobile Header drawerを開いた`site-menu-open` stateを追加し、local canonical snapshotは224枚となった。`npm run visual:update -- --grep '@character-sheet'`および更新後の同target通常比較は、いずれも224件成功した。snapshotは`canonical-snapshots/visual/`のlocal-only artifactであり、Git管理へ追加しない。起点からのCSS比較では、profileを含むsection CSSは移動または`composes`参照の相対path修正だけであり、desktop操作レール・1列form・tablet以上の幅制約以外の意図しないstyle変更は確認されなかった。mobile section screenshotに残る局所的な文字rasterization差分は、ユーザー判断により許容する。
 - 同日のGate外レビュー修正として、font familyは既存の`--font-sans`継承を保つ。field label、直接入力、重要な算出値、一覧本文、mobileの密集一覧をそれぞれ専用文字tokenで統一する。`体力増加`〜`精神力係数`、`共通スキルボーナス`、副能力値の`最大体力`〜`結べる縁`、覚悟効果の`気絶からの回復`〜`受動判定`は、`--text-xs`、muted color、bold（750）へ揃える。共通スキルボーナスを除く読み取り専用の数値枠と、文字・数値・selectの直接入力は`--text-xs`と共通の最小高を使う。縁の`対象`・`関係`・`覚悟`header、section見出し、dialog固有の情報密度は変更しない。
 - スキル、武器・防具、各専用アイテムの一覧rowと列headerは、並べ替えcontrolsを収める`2.25rem`の共通最小高を使う。項目名・数値input・icon操作は同じrow高の中で配置する。
 
@@ -88,20 +89,18 @@
 ### 操作領域
 
 - 対象操作は、細かな説明を開く`?`、JSON出力、JSON入力、初期化、CCFOLIAコピーである。`?`は操作領域の左端に丸いボタンとして置き、説明モーダルを開く。
-- tabletとmobileでは、右下にメニューボタンを配置し、クリックすると各操作ボタンを表示する。
-- tabletとmobileの右下メニューボタンは、scroll中も操作できるsticky controlとする。
-- tabletとmobileでは、編集領域の末尾に右下のfloating操作と重ならない十分な下余白を設ける。最下部までscrollしたときも、最後の入力・追加・削除操作をfloating操作の下へ隠さない。
-- tabletでは、右下のメニューアイコンの上に、独立した青緑の丸い`?`ヘルプアイコンを置く。ヘルプアイコンを操作すると、メニュー内ではなく独立したヘルプダイアログを開く。
-- tabletでメニューを開くと、2行2列のJSON出力、JSON入力、初期化、CCFOLIAコピーbuttonを表示する。
-- tabletの開いたメニューでは、エラー欄に個別のエラーを直接表示する。エラー確認のために別のダイアログを開かない。
-- tabletの右下メニューアイコンは、エラーがあるときエラーカラーで表示する。
-- mobileの展開メニューはtabletと同じく2行2列の操作buttonと直接表示するエラー一覧を持つ。外側クリック時の扱いとキーボード操作は実装Gateでアクセシビリティ要件とともに定める。
+- desktopでは、form本文右の補助領域に操作を縦に配置する。操作領域の先頭には第一階層sectionへの`セクションにジャンプ` navigationを置き、その下に`?`、JSON出力、JSON入力、CCFOLIAコピー、初期化、エラー状態を縦に並べる。ページ見出し横の横並び操作menuは廃止する。
+- 狭幅レイアウトでは、右下にメニューボタンを配置し、クリックすると第一階層sectionへの`セクションにジャンプ` navigation、各操作button、エラー一覧の順に表示する。section navigationはbutton群の上に置き、子section・行・入力項目へのジャンプは置かない。
+- 狭幅レイアウトの右下メニューボタンは、scroll中も操作できるsticky controlとする。編集領域の末尾にはfloating操作と重ならない十分な下余白を設け、最下部までscrollしたときも最後の入力・追加・削除操作を隠さない。
+- 狭幅レイアウトでは、右下のメニューアイコンの上に、独立した青緑の丸い`?`ヘルプアイコンを置く。ヘルプアイコンを操作すると、menu内ではなく独立したヘルプdialogを開く。
+- 開いたmenuの操作buttonは縦に配置し、エラー欄に個別のエラーを直接表示する。可変長のerror listだけを最大`12rem`で縦scroll可能にし、section navigation、action button群、`エラーがN件あります。`はscroll領域外に置く。すべてのerrorには一覧をscrollして到達できる。エラー確認のために別のdialogを開かない。menu iconはエラーがあるときエラーカラーで表示する。外側click時の扱いとキーボード操作は実装taskでアクセシビリティ要件とともに定める。
 - 初期scopeでは、画面内に段階式の作成順ガイドや必須項目チェックリストを追加しない。最低限ヘルプへ書く内容と本文の統一は後続のdesign対話で決める。
 
 ### ページとナビゲーション
 
 - 公開routeは`/character-sheet/`とする。
 - ページtitleは「キャラクターシート」とする。
+- `h1`はReact Islandの外でAstro pageが表示する。Island内には同じtitleを置かない。
 - サイトナビゲーションでは「キャラクター成長」の下、「サポート」の上に配置する。
 
 ### 画像選択
@@ -114,16 +113,19 @@
 ### ページlayoutとサイトメニュー
 
 - このページにはPageToc / MobilePageTocを表示しない。
-- キャラクターシート固有のsection navigationは設けない。
-- character-sheetでは、既存ページのサイトメニュー表示をそのまま適用しない。`64rem`以上`80rem`未満では常設のサイトメニューrailを表示し、キャラクターシート領域はスキル以降のセクションを下へ移す配置とする。desktop、`48rem`以上`64rem`未満、mobileでは、ロゴの左に置くHeaderのサイトメニューボタンからdrawerを開く。
-- desktopとtabletのHeaderは、タイトルロゴを高さ3remのままとし、メニューボタンとロゴの間を`--space-3`にする。mobileでは既存の小さいタイトルロゴと左右のHeader操作を維持する。
-- キャラクターシートのmain領域は利用可能な横幅を使い、main自身の左右paddingは均等にする。desktopではsheet本文を最大`90rem`（1440px）に制限し、それを超える横幅では中央寄せにする。縦1列のsheet formの最小幅は`44rem`とし、`64rem`以上`80rem`未満では15remのサイトメニューrailの右側の残り幅をmainに使う。`48rem`以上`64rem`未満ではmobile用のレイアウトへ切り替えず、site menu railだけを隠す。
-- sheet本文の`h1`はbrowser既定marginを使わない。main上端から直接置き、下余白だけを`12px`にする。page固有のheading余白はAstro page側で扱い、React Islandへglobal heading styleを追加しない。
-- tabletとmobileの基本レイアウトでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
+- character-sheet固有のsection navigationは、desktopの右補助領域と狭幅操作menuだけに置く。どちらもformの第一階層sectionだけを対象にする。
+- character-sheetは通常のサイトlayoutへ寄せる。site menu railは、sheet formの最小幅と右補助領域を保ったまま表示できる広いdesktop幅だけで表示する。必要幅を下回るとsite menu railを隠し、Headerのサイトメニューボタンからdrawerを開く。固定の`64rem`から`80rem`だけをrail表示にする例外は廃止する。
+- desktopと狭幅layoutの境界は、sheet本文最小幅、右補助領域、site menu rail、mainの左右gutterの合計から定める。狭幅layoutを従来の`48rem`未満へ限定せず、tabletから適用する。Headerのロゴとmenu buttonの寸法は既存site layoutの対応する幅を維持する。
+- 2026-08-08のレビュー指摘により、site menu railは`64rem`以上で表示し、desktopのtext action railは`84rem`以上で表示する。`64rem`から`84rem`ではsite menu railとfloating action icon controlsを併用する。`64rem`未満ではsite menu railを隠し、Header drawerとfloating action icon controlsを用いる。
+- desktopのtext action railは、grid itemである操作領域自体を本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを維持する。
+- section navigationの見出しは`セクションにジャンプ`とし、muted boldで表示する。第一階層sectionの各buttonには下向きiconと下線を付け、ジャンプ操作であることを示す。現在位置またはクリック対象に応じたaccentは付けず、section frame自体の色も変えない。
+- character-sheetのmain領域とFooterのscroll構造は既存layoutを維持する。`48rem`以上のform本文は最大`44rem`で中央寄せし、`84rem`以上ではmain右端の`15rem` desktop action railを除いた領域で中央寄せする。desktopのtext action railだけをstickyにし、formは全viewportで1列に積む。従来のleft / right section columnへの振り分けは行わない。
+- sheet本文の`h1`はAstro page側でvisually hiddenにし、heading構造を保ちながらvisual layoutの余白を作らない。React Islandへglobal heading styleを追加しない。
+- 狭幅layoutでは、右下のfloatingなメニューアイコンをデフォルト表示にする。
 
 ### 編集画面の情報architecture
 
-- tabletは、基本情報（経験点・信用を含む）、流儀・生き様と能力値、副能力値、縁、判定、武器・防具、スキル、専用アイテムの順に縦積みする。
+- desktop、tablet、mobileは、基本情報（経験点・信用を含む）、流儀・生き様と能力値、副能力値、縁、判定、スキル、武器・防具、専用アイテムのDOM順で1列に積む。
 - 信用は経験点と近接して配置する。消費信用と合計信用超過のエラーはキャラクター情報側で確認できるようにする。
 - 信用の入力・派生値は、流儀・生き様の下へ置かず、基本情報内で取得経験点の隣または直下にまとめる。
 - 共通スキルレベル合計と合計レベル上限は、共通スキルの取得可否と経験点消費を確認するための値として、基本情報の経験点表示に置く。`共通スキルレベル合計／合計レベル上限`は、上限式を説明する`FormulaTooltip`のlabelとする。これは算出値の一般的なsummaryを増やさない原則の、要件で指定された例外である。
@@ -291,6 +293,6 @@
 
 - 必須状態を表す入力済みfixtureデータと、正確なVRTシナリオ
 
-## design承認の境界
+## 今後のdesign変更の境界
 
-このノートは、これから行うデザイン対話の出発点である。後続のdesktop、tablet、mobileに関するユーザー要望が実際のドラフトを定める。ドラフト承認後に限り、このノートを最終layout intentとVRT scenarioで更新し、その後に`ex-02`が求めるアーキテクチャと実装Gateの計画へ進む。
+現在のdesktop、tablet、mobileのlayout intentとVRT scenarioは、このノートの記録を正本とする。後続のユーザー要望で画面構成、操作導線、breakpoint、VRT対象を変更する場合は、実装前にdesign draftとユーザー承認を得て、このノートを更新する。

@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { useRef, useState } from "react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import CharacterSheetHelpDialog from "../../../src/character-sheet/components/dialogs/CharacterSheetHelpDialog";
+import CharacterSheetHelpDialog from "../../../src/character-sheet/components/dialogs/action-pane/CharacterSheetHelpDialog";
 
 beforeEach(() => {
   Object.defineProperties(HTMLDialogElement.prototype, {

@@ -1,0 +1,203 @@
+import { useId, useRef } from "react";
+
+import type { Skill } from "../../../../lib/types/skill";
+import {
+  formatDisplayText,
+  formatDisplayValue,
+} from "../../../../lib/utils/display-value";
+import { characterSheetDictionary } from "../../../dictionary";
+import CharacterSheetDialog, {
+  CharacterSheetDialogContent,
+  CharacterSheetDialogHeader,
+} from "../CharacterSheetDialog";
+import PickerTableHeader from "./PickerTableHeader";
+import styles from "./SkillPickerDialog.module.css";
+
+export type SkillCandidateGroup = {
+  heading?: string;
+  id: string;
+  skills: readonly Skill[];
+};
+
+export type SkillPickerDialogProps = {
+  groups: readonly SkillCandidateGroup[];
+  isOpen: boolean;
+  onRequestClose: () => void;
+  onSelect: (skillId: string) => void;
+  returnFocusRef: React.RefObject<HTMLElement | null>;
+  selectedSkillIds: readonly string[];
+  selectionGuide: string;
+  title: string;
+};
+
+function formatCompactValue(
+  value: string | null | undefined,
+  separator: string,
+) {
+  if (value === null || value === undefined || value.trim() === "") {
+    return formatDisplayValue(value);
+  }
+
+  return value
+    .split(separator)
+    .map((part, index) => (
+      <span key={part}>{index === 0 ? part : `${separator}${part}`}</span>
+    ));
+}
+
+function CandidateRow({
+  onSelect,
+  isSelected,
+  skill,
+}: {
+  onSelect: (skillId: string) => void;
+  isSelected: boolean;
+  skill: Skill;
+}) {
+  const copy = characterSheetDictionary.gameDomain.terms.skill;
+
+  return (
+    <div className={styles.candidate} data-disabled={isSelected || undefined}>
+      <div className={styles.firstLine}>
+        <button
+          className={styles.candidateName}
+          disabled={isSelected}
+          onClick={() => onSelect(skill.id)}
+          type="button"
+        >
+          {skill.name}
+        </button>
+        <span>
+          <span className={styles.visuallyHidden}>{copy.maximumLevel}：</span>
+          {skill.maxLevel}
+        </span>
+        <span className={styles.timing}>
+          <span className={styles.visuallyHidden}>{copy.timing}：</span>
+          {skill.timing}
+        </span>
+        <span>
+          <span className={styles.visuallyHidden}>{copy.cost}：</span>
+          {formatDisplayValue(skill.cost ?? null)}
+        </span>
+        <span>
+          <span className={styles.visuallyHidden}>
+            {copy.usageRestriction}：
+          </span>
+          {formatCompactValue(skill.usageRestriction, "&")}
+        </span>
+      </div>
+      <div className={styles.details}>
+        <span>
+          <strong>{copy.proficiency}：</strong>
+          {formatDisplayValue(skill.proficiency ?? null)}
+        </span>
+        <span>
+          <strong>{copy.acquisitionRestriction}：</strong>
+          {formatDisplayValue(skill.acquisitionRestriction ?? null)}
+        </span>
+      </div>
+      <p className={styles.effect}>
+        <strong>{copy.effect}：</strong>
+        {formatDisplayText(skill.effect)}
+      </p>
+    </div>
+  );
+}
+
+function CandidateTableHeader() {
+  const copy = characterSheetDictionary.gameDomain.terms.skill;
+
+  return (
+    <PickerTableHeader
+      cells={[
+        { content: copy.name },
+        { content: copy.maximumLevel },
+        { className: styles.timing, content: copy.timing },
+        { content: copy.cost },
+        { content: copy.usageRestriction },
+      ]}
+      className={styles.headerRow}
+      isDecorative
+    />
+  );
+}
+
+function CandidateGroup({
+  heading,
+  onSelect,
+  selectedSkillIds,
+  skills,
+}: {
+  heading?: string;
+  onSelect: (skillId: string) => void;
+  selectedSkillIds: ReadonlySet<string>;
+  skills: readonly Skill[];
+}) {
+  if (skills.length === 0) return null;
+
+  return (
+    <section className={styles.group}>
+      {heading === undefined ? null : <h3>{heading}</h3>}
+      <CandidateTableHeader />
+      {skills.map((skill) => (
+        <CandidateRow
+          isSelected={selectedSkillIds.has(skill.id)}
+          key={skill.id}
+          onSelect={onSelect}
+          skill={skill}
+        />
+      ))}
+    </section>
+  );
+}
+
+/** Controlled candidate picker shared by character-sheet skill categories. */
+export default function SkillPickerDialog({
+  groups,
+  isOpen,
+  onRequestClose,
+  onSelect,
+  returnFocusRef,
+  selectionGuide,
+  selectedSkillIds,
+  title,
+}: SkillPickerDialogProps) {
+  const titleId = useId();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const selectedSkillIdSet = new Set(selectedSkillIds);
+
+  return (
+    <CharacterSheetDialog
+      ariaLabelledBy={titleId}
+      className={styles.dialog}
+      initialFocusRef={closeButtonRef}
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      returnFocusRef={returnFocusRef}
+    >
+      <CharacterSheetDialogHeader
+        closeButtonRef={closeButtonRef}
+        headingId={titleId}
+        onRequestClose={onRequestClose}
+      >
+        {title}
+      </CharacterSheetDialogHeader>
+      <CharacterSheetDialogContent>
+        <div className={styles.content}>
+          <p className={styles.selectionGuide}>
+            <strong>{selectionGuide}</strong>
+          </p>
+          {groups.map((group) => (
+            <CandidateGroup
+              heading={group.heading}
+              key={group.id}
+              onSelect={onSelect}
+              selectedSkillIds={selectedSkillIdSet}
+              skills={group.skills}
+            />
+          ))}
+        </div>
+      </CharacterSheetDialogContent>
+    </CharacterSheetDialog>
+  );
+}
