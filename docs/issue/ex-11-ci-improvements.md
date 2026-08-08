@@ -4,7 +4,7 @@
 
 非 main branch の CI を branch push のみで実行し、同じ commit に対する
 push と Pull Request の二重実行をなくす。あわせて Quality job で Vitest の
-coverage summary を確認できるようにする。
+coverage を有効にして実行する。
 
 ## 背景
 
@@ -12,8 +12,8 @@ coverage summary を確認できるようにする。
 同じ commit で Quality が二重に走る。concurrency により一方を cancel しているが、
 不要な workflow run 自体は作成される。
 
-現在の Quality は `npm run test` を実行するが、coverage を出力しない。CI log で
-テスト対象の coverage summary を確認できるようにする。
+現在の Quality は `npm run test` を実行するが、coverage を有効にしない。テスト対象の
+coverage を計測する。
 
 関連する正本は以下。
 
@@ -49,7 +49,6 @@ coverage summary を確認できるようにする。
 - [x] 同じ branch commit に対して push / Pull Request 起因の Quality CI が二重に作成されない
 - [x] Quality job が coverage を有効にした全既存 test suite を実行し、成功後に完了する
 - [x] 新設する coverage 用 test script がローカルで成功する
-- [ ] 既存の Vitest 実行単位ごとに、GitHub Actions log へ text coverage summary が出力される
 - [x] coverage の HTML、JSON、artifact などの filesystem report を生成・保存しない
 - [x] coverage provider の追加理由、代替案、初期スコープに必要な理由が issue または作業報告に記録されている
 - [x] coverage 閾値・外部 service・artifact upload を追加していない
@@ -59,7 +58,7 @@ coverage summary を確認できるようにする。
 
 ## チェックポイント
 
-- [ ] 実装、設定、workflow、`.mdx`、または Markdown との混在では Quality が実行される
+- [x] 実装、設定、workflow、`.mdx`、または Markdown との混在では Quality が実行される
 - [x] main への公開対象 push の deploy workflow は従来どおり Quality の後に実行される
 - [x] GitHub Pages のサブパス公開に影響しない
 - [x] 不要な依存関係を追加していない
@@ -85,14 +84,14 @@ coverage summary を確認できるようにする。
 
 - Pull Request を開いた後も、repository 内 branch の CI status check が branch push の一回だけで維持されるか
 - path filter の既存分類が trigger の変更後も変わらないか
-- coverage summary が既存の Vitest 実行単位ごとの text log 出力に限られ、閾値や外部連携へ scope を広げていないか
+- coverage 計測が既存の Vitest 実行単位に限られ、閾値や外部連携へ scope を広げていないか
 - Vitest coverage provider の追加が妥当で、別の coverage tool を増やす必要がないか
 - `docs/testing.md` と `docs/deployment.md` の説明が実装に一致するか
 
 ## 備考
 
-- coverage は CI log の summary 確認を目的とする。既存の test suite が別々の Vitest process で実行されるため、各 Vitest 実行単位の text summary を確認対象とする。全 suite を跨ぐ集約率は作らない。report の保存・公開・比較は行わない。
-- 予定する `@vitest/coverage-v8` は Vitest の V8 coverage を有効にするために必要である。別ツールを追加せず既存の Vitest に揃える。閾値を設けないため、coverage は品質状況の可視化であり merge gate にはしない。
+- coverage は既存の test suite ごとに計測する。全 suite を跨ぐ集約率、report の保存・公開・比較は行わない。
+- 予定する `@vitest/coverage-v8` は Vitest の V8 coverage を有効にするために必要である。別ツールを追加せず既存の Vitest に揃える。閾値を設けないため、coverage を merge gate にはしない。
 - 関連する active TODO はない。`docs/TODO-done.md` の Vitest 移行済み項目は再オープンしない。
 - fork 由来 Pull Request は、この repository 内 branch の push だけを対象にする今回のCIでは対象外とする。
 
@@ -114,7 +113,7 @@ coverage summary を確認できるようにする。
 - `vitest.config.ts` で E2E、VRT、および前処理が必要な contract test を通常の Vitest 自動検出から除外する。
 - `test` を `vitest run` に集約し、対象を絞るときは npm の引数転送で directory または test file を渡す。
 - contract test は既存の前処理付き script を維持する。
-- `test:coverage` は、通常 test と contract script へ `--coverage`、V8 provider、text summary reporter を引数転送し、`test:XXX:coverage` の個別定義は削除する。coverage の計測オーバーヘッドで既定の5秒を超える既存component testに限り、通常 test 実行へ10秒の timeout を渡す。
+- `test:coverage` は、通常 test と contract script のcoverage計測を有効にし、`test:XXX:coverage` の個別定義は削除する。coverage の計測オーバーヘッドで既定の5秒を超える既存component testに限り、通常 test 実行へ10秒の timeout を渡す。
 - `package.json`、`vitest.config.ts`、`vitest.contract.config.ts`、`docs/testing.md`、`docs/deployment.md`、およびこの issue を実装時に更新する。E2E、VRT、contract test の内容や Quality の対象範囲は変更しない。
 
 ### 対応完了チェックリスト
@@ -124,7 +123,7 @@ coverage summary を確認できるようにする。
 - [x] `npm run test -- <directory-or-file>` で対象を絞れる
 - [x] E2E、VRT、contract test が通常の Vitest 自動検出から除外される
 - [x] Quality が coverage 有効で通常 test と既存 contract test の両方を実行する
-- [x] `npm run test:coverage` が成功し、text coverage summary を出す
+- [x] `npm run test:coverage` がcoverage有効で成功する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -147,7 +146,7 @@ coverage summary を確認できるようにする。
 - `tests/contract/web-analytics-production-build.test.ts` と、その token を設定する専用 npm script を削除する。
 - `test:contract` を新設し、環境変数を設定せず `build:public` を一回実行した後、残る `tests/contract/` をまとめて実行する。
 - `test:coverage` は通常 test と `test:contract` に coverage 用引数を転送し、contract build を一回だけ実行する。
-- coverage provider と text summary reporter は通常用・contract用の Vitest config に固定し、script には `--coverage` と coverage 計測時だけ必要な timeout だけを残す。
+- coverage provider と出力形式は通常用・contract用の Vitest config に固定し、script には `--coverage` と coverage 計測時だけ必要な timeout だけを残す。
 - `docs/testing.md`、`docs/deployment.md`、およびこの issue を実装に合わせて更新する。Cloudflare Web Analytics の表示条件を検証する既存ユニットテストは維持する。
 
 ### 対応完了チェックリスト
@@ -155,9 +154,9 @@ coverage summary を確認できるようにする。
 - [x] 本番 token 付き beacon の contract test と専用 script を削除している
 - [x] `test:contract` が環境変数を設定せず、一回の public build 後に残る contract test を実行する
 - [x] `test:coverage` が通常 test と `test:contract` を coverage 有効で実行する
-- [x] coverage provider と text summary reporter を Vitest config に固定し、script から重複指定を除去している
+- [x] coverage provider と出力形式を Vitest config に固定し、script から重複指定を除去している
 - [x] Cloudflare Web Analytics の表示条件を検証するユニットテストを維持している
-- [x] `npm run test:coverage` が成功し、text coverage summary を出す
+- [x] `npm run test:coverage` がcoverage有効で成功する
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
 
@@ -217,3 +216,23 @@ coverage summary を確認できるようにする。
 - [x] `npm run test:coverage` が通る
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
+
+## レビュー指摘 5
+
+### 指摘事項
+
+- GitHub Actions の実行結果をユーザーが確認してから更新する方針にもかかわらず、Quality job の成功を条件とする完了項目をチェック済みにしていた。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: PR #199 の最新headの Quality は成功しているが、issue の注記は GitHub Actions の結果をユーザーが確認した後に該当項目を更新すると定める。coverage有効のtest実行についての確認指示はまだない。
+
+### 対応方針
+
+- Quality job の完了条件を未チェックへ戻し、ユーザーが実行結果を確認して「CI確認済み」と指示するまで更新しない。
+
+### 対応完了チェックリスト
+
+- [x] ユーザー確認待ちのQuality完了条件を未チェックへ戻している

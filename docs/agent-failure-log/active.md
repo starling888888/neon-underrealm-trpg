@@ -171,6 +171,14 @@ source種別は以下を使う。
 
 ### completion-record accuracy
 
+#### Marked a user-confirmation CI condition complete before confirmation
+
+- date: 2026-08-08
+- source: review
+- 発生箇所: `ex-11-ci-improvements` の Quality CI 完了条件
+- 観測した失敗: GitHub Actions の実行結果をユーザーが確認して「CI確認済み」と指示するまで未チェックに保つ契約にもかかわらず、Quality job の成功を条件とする項目をチェック済みにした。
+- 一次対応: review-to-issueで当該項目を未チェックへ戻し、coverage有効のtest実行結果についてユーザー確認待ちを明記した。
+
 #### Registered a GitHub Issue completion record with a summary instead of the final local issue body
 
 - date: 2026-08-05
