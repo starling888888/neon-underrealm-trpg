@@ -1,6 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { toAbsoluteUrl, withBase } from "../../src/lib/utils/paths";
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 describe("withBase", () => {
   it.each([
@@ -12,6 +16,17 @@ describe("withBase", () => {
     ["https://example.com/rules/", "https://example.com/rules/"],
   ])("returns %s as %s", (path, expected) => {
     expect(withBase(path)).toBe(expected);
+  });
+
+  it("adds the GitHub Pages public base path", async () => {
+    vi.stubEnv("BASE_URL", "/neon-underrealm-trpg/");
+    vi.resetModules();
+
+    const { withBase: withPublicBase } = await import(
+      "../../src/lib/utils/paths"
+    );
+
+    expect(withPublicBase("/rules/")).toBe("/neon-underrealm-trpg/rules/");
   });
 });
 

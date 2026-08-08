@@ -59,9 +59,7 @@ coverage summary を確認できるようにする。
 
 ## チェックポイント
 
-- [ ] Markdown-only の変更では Markdown Check だけが実行される
 - [ ] 実装、設定、workflow、`.mdx`、または Markdown との混在では Quality が実行される
-- [ ] `.codex/**/*.toml` だけの変更では CI workflow を起動しない
 - [x] main への公開対象 push の deploy workflow は従来どおり Quality の後に実行される
 - [x] GitHub Pages のサブパス公開に影響しない
 - [x] 不要な依存関係を追加していない
@@ -96,7 +94,7 @@ coverage summary を確認できるようにする。
 - coverage は CI log の summary 確認を目的とする。既存の test suite が別々の Vitest process で実行されるため、各 Vitest 実行単位の text summary を確認対象とする。全 suite を跨ぐ集約率は作らない。report の保存・公開・比較は行わない。
 - 予定する `@vitest/coverage-v8` は Vitest の V8 coverage を有効にするために必要である。別ツールを追加せず既存の Vitest に揃える。閾値を設けないため、coverage は品質状況の可視化であり merge gate にはしない。
 - 関連する active TODO はない。`docs/TODO-done.md` の Vitest 移行済み項目は再オープンしない。
-- fork 由来 Pull Request では fork branch の push がこの repository の CI を起動しない。fork PR を CI 対象外とするかは、ユーザー確認後に実装契約へ確定する。
+- fork 由来 Pull Request は、この repository 内 branch の push だけを対象にする今回のCIでは対象外とする。
 
 ## レビュー指摘 1
 
@@ -187,5 +185,35 @@ coverage summary を確認できるようにする。
 - [x] browser API 境界の unit test を追加していない
 - [x] `npm run test -- tests/node/paths.test.ts` が通る
 - [x] `npm run test:coverage` が成功し、URL helper の branch coverage が向上している
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 4
+
+### 指摘事項
+
+- `tests/node/paths.test.ts` が Vitest の既定 `BASE_URL`（`/`）で評価されるため、GitHub Pages の公開 subpath `/neon-underrealm-trpg/` が欠落する回帰を検出できない。
+- `docs/testing.md` の `npm run test` の説明が、contract test を分離した実装と矛盾している。
+- issue の fork 由来 Pull Request の扱いが「ユーザー確認後に確定」と保留のままだが、実装と関連文書は push-only 方針の帰結として対象外で確定している。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `astro.config.mjs` は `base: "/neon-underrealm-trpg"` を設定する一方、追加したURL helper testの期待値はすべて `/` base である。`vitest.config.ts` は contract test を通常の `test` から除外するが、`docs/testing.md` のローカル検証は `npm run test` が build contract test を実行すると記載している。issue の備考だけが fork PR の可否を未確定としており、`ci.yml` と `docs/testing.md` / `docs/deployment.md` は fork PR を対象外と明記している。
+
+### 対応方針
+
+- test の module import 前に本番の `BASE_URL` を設定して読み込み直す、または base を注入できる小さな純粋関数へ切り出し、公開 subpath を付与する結果を unit test で検証する。
+- `docs/testing.md` に、`test` は通常の Vitest test、`test:contract` は public build 後の contract test、`test:coverage` はその両方を CI 相当で実行する command として明記する。新規 Vitest 用 directory の方針も、前処理が必要な contract test の例外を含めて整合させる。
+- fork 由来 Pull Request は repository 内 branch の push だけを対象にする今回の trigger 方針では CI 対象外であると issue に明記し、保留表現をなくす。
+
+### 対応完了チェックリスト
+
+- [x] GitHub Pages の公開 subpath を付与する `withBase` の結果を unit test で検証している
+- [x] `docs/testing.md` が `test`、`test:contract`、`test:coverage` の責務と実行範囲を正しく説明している
+- [x] fork 由来 Pull Request を今回の push-only CI の対象外とする方針が issue と関連文書で一致している
+- [x] 対象の unit test が通る
+- [x] `npm run test:coverage` が通る
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る

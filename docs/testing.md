@@ -6,7 +6,9 @@
 
 - `npm run check`: Astroの検査、Biome、Git管理Markdownの検査を実行する。
 - `npm run build`: 静的サイトをbuildし、ページ内目次のpostprocessを実行する。
-- `npm run test`: Vitestのlogic / schema / data test、script test、React Component / hook test、build contract test、production analytics contract testを実行する。
+- `npm run test`: Vitestの通常 test（logic / schema / data、script、React Component / hook）を実行する。前処理が必要なcontract test、E2E、VRTは実行しない。
+- `npm run test:contract`: public buildを一回実行した後、Vitestのbuild contract testを実行する。
+- `npm run test:coverage`: `test` と `test:contract` をcoverage有効で実行する。CIのQuality jobと同じテスト範囲を確認するときに使う。
 - `npm run test:e2e`: Pagefindを含むローカルfixtureをbuildして、公開routeのbrowser behaviorを確認する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。
@@ -15,7 +17,7 @@ Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md
 
 Vitestをすべてのunit / contract testの標準とする。UI、hook、pure logic、データ変換、script、build contractのいずれも、まずVitestで最小の責務を検証できるか判断する。
 
-テストの置き場所が既存のVitest対象（`tests/components`、`tests/hooks`、`tests/scripts`）に収まらない場合は、責務が分かるVitest用directoryを追加し、同じtaskで`npm run test`の実行対象に含める。テストを実行されないdirectoryへ置いてはならない。
+テストの置き場所が既存のVitest対象（`tests/components`、`tests/hooks`、`tests/scripts`）に収まらない場合は、責務が分かるVitest用directoryを追加し、同じtaskで`npm run test`の実行対象に含める。public buildを前提にするcontract testは`tests/contract/`へ置き、`npm run test:contract`の実行対象に含める。テストを実行されないdirectoryへ置いてはならない。
 
 | 対象                                                | 標準の検証                               | E2Eへ持ち込まない理由                                                                                                |
 | --------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
