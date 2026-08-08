@@ -33,13 +33,14 @@ coverage summary を確認できるようにする。
 - `package.json` に coverage 用 script を追加し、必要な Vitest coverage provider を追加する
 - `package-lock.json` を依存関係変更に追従させる
 - `docs/testing.md` と `docs/deployment.md` に CI trigger と coverage 実行内容を反映する
+- レビュー指摘 3 として、`src/lib/utils/paths.ts` の URL 分岐を unit test で担保する
 
 ## 初期スコープ外
 
 - coverage の最低値・差分閾値による CI fail を導入しない
 - Codecov など外部 coverage service、token、artifact upload、PR comment を追加しない
 - deploy workflow の Quality 実行順・Pages deploy・Public E2E を変更しない
-- E2E、VRT、テストケースの追加・削除や既存テストの意味変更を行わない
+- E2E、VRT、レビュー指摘 3 以外のテストケースの追加・削除や既存テストの意味変更を行わない
 - GitHub Actions 以外の CI 基盤を追加しない
 
 ## 完了条件
@@ -69,6 +70,8 @@ coverage summary を確認できるようにする。
 - [x] 関連する `docs/design/` と矛盾していない
 - [x] ユーザーの未コミット変更を破壊していない
 
+> 以下の未チェック項目は GitHub Actions の実行結果でのみ確認する。ユーザーが結果を確認した後、対象の確認内容を添えて「CI確認済み」と指示すれば、対応するチェックを更新する。
+
 ## 想定変更ファイル
 
 - `.github/workflows/ci.yml`
@@ -78,6 +81,7 @@ coverage summary を確認できるようにする。
 - `docs/testing.md`
 - `docs/deployment.md`
 - `docs/issue/ex-11-ci-improvements.md`
+- `tests/node/paths.test.ts`
 
 ## レビュー観点
 
@@ -156,5 +160,32 @@ coverage summary を確認できるようにする。
 - [x] coverage provider と text summary reporter を Vitest config に固定し、script から重複指定を除去している
 - [x] Cloudflare Web Analytics の表示条件を検証するユニットテストを維持している
 - [x] `npm run test:coverage` が成功し、text coverage summary を出す
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- coverage 調査で branch coverage が 50% だった `src/lib/utils/paths.ts` に、URL 分岐の unit test を追加する。
+- browser API が不在の場合など、利用者にとって価値が低い browser API 境界の unit test は追加しない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `withBase` は空文字、fragment、protocol-relative URL、外部 URL、内部 path を分岐し、`toAbsoluteUrl` は fragment とその他の URL を分岐する。`src/pages/`、layout、Astro component から広く使用される一方、`tests/` に専用 test はなく、coverage では branch 50% だった。browser API を使う character sheet の代表操作は既存 E2E / VRT で確認される。
+
+### 対応方針
+
+- `tests/node/paths.test.ts` を追加し、内部 path の base 付与、空文字・fragment・protocol-relative URL・外部 URL の透過、および `toAbsoluteUrl` の変換を検証する。
+- coverage 閾値を導入せず、browser API 不在時の分岐や E2E / VRT の対象は変更しない。
+
+### 対応完了チェックリスト
+
+- [x] `withBase` と `toAbsoluteUrl` の URL 分岐を unit test で検証している
+- [x] browser API 境界の unit test を追加していない
+- [x] `npm run test -- tests/node/paths.test.ts` が通る
+- [x] `npm run test:coverage` が成功し、URL helper の branch coverage が向上している
 - [x] `npm run check` が通る
 - [x] `npm run build` が通る
