@@ -152,10 +152,17 @@ fieldset.row {
 @media (width < 48rem) {
   .headers,
   .row {
-    grid-template-columns: minmax(3.75rem, 0.8fr) minmax(3.25rem, 0.65fr) minmax(
-        0,
-        1.9fr
-      );
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checkCountTooltip,
+  .checkExpression {
+    grid-column: 1 / -1;
+  }
+
+  .checkCountTooltip {
+    border-top: var(--border-width) solid var(--color-border);
+    padding-top: var(--space-1);
   }
 
   .checkCountHeader {

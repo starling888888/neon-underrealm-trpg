@@ -87,7 +87,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 2.75rem 4.25rem;
+  grid-template-columns: auto minmax(0, 1fr) 2.75rem 5rem;
   min-width: 0;
   align-items: center;
   gap: 0.25rem;
