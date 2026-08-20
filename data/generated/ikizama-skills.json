@@ -153,7 +153,7 @@
           "range": null,
           "usageRestriction": "lv/幕",
           "effect": "任意のマスに移動する。",
-          "sourceOrder": 10,
+          "sourceOrder": 9,
           "id": "skill-ikizama-burai-basic-ini-35d0064cb993"
         },
         {
@@ -168,7 +168,7 @@
           "range": null,
           "usageRestriction": "1/幕",
           "effect": "体力をlv×10d6点回復する。",
-          "sourceOrder": 11,
+          "sourceOrder": 10,
           "id": "skill-ikizama-burai-basic-cu-1ca6d464536b"
         },
         {
