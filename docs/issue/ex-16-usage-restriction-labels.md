@@ -2,64 +2,65 @@
 
 ## 目的
 
-スキルの使用制限を、データページで定義した日本語の略号 `巡`、`幕`、`話` で生成JSONへ統一出力する。
+Google Spreadsheetから同期した最新スキル入力の使用制限を、日本語の略号 `巡`、`幕`、`話` で検証し、表記を変更せず生成JSONへ出力する。
 
 ## 背景
 
-ユーザーの未コミット変更で、`src/pages/data/index.mdx` の使用制限表記は `N/R`、`N/Sn`、`N/Sc` から `N/巡`、`N/幕`、`N/話` へ更新されている。一方、共通・流儀・生き様スキルの生成JSONは旧略号を保持し、共通変換器も使用制限を入力値のまま出力する。
+`0750dc4 docs(data): localize usage restriction labels`で、`src/pages/data/index.mdx` の使用制限表記は `N/R`、`N/Sn`、`N/Sc` から `N/巡`、`N/幕`、`N/話` へ更新されている。古いローカル `.raw/data/` を入力として旧略号を置換する実装を開始したが、Google Spreadsheetを同期し直すと、最新の共通・流儀・生き様スキル入力はすでに `巡`、`幕`、`話` を使っていた。
 
 - 要件正本: `docs/requirements.md`
   - Excel変換仕様とJSON出力仕様は `docs/conversion/*` を正本とする。
 - 変換仕様正本: `docs/conversion/skills.md`
-- 関連する未コミット変更: `src/pages/data/index.mdx`
-  - このissueでは変更・整形・commitしない。使用制限の公開表記だけを変換要件の根拠として参照する。
+- 関連commit: `0750dc4 docs(data): localize usage restriction labels`
+  - `src/pages/data/index.mdx` の公開表記を変換要件の根拠として参照し、このissueでは変更しない。
 - `docs/TODO.md` と `docs/issue/milestone-02/plan.md` に、使用制限表記またはスキルJSONの再生成に直接対応する未対応項目はない。
 
 ## 対象範囲
 
-- `scripts/convert-skills/lib.ts` に、使用制限の区切り後の略号を次の対応で正規化する処理を追加する。
-  - `R` → `巡`
-  - `Sn` → `幕`
-  - `Sc` → `話`
-- 既存の使用制限の構文を維持する。
-  - 先頭の回数または `lv` は変更しない。
-  - 複数制限を結ぶ `&` と、`特殊`、空欄は変更しない。
-  - `R`、`Sn`、`Sc` 以外の使用制限本文は変更しない。
-- `docs/conversion/skills.md` に、入力で受け入れる旧略号と生成JSONへ出力する正規化後の表記を記録する。
-- 最小fixtureの変換テストで、単独・複数の使用制限が共通変換器から正規化されることを確認する。
-- ローカルの `.raw/data/common-skills.xlsx`、`.raw/data/ryugi-skills.xlsx`、`.raw/data/ikizama-skills.xlsx` を入力として、以下の生成JSONを変換コマンドで再生成する。
+- `npm run sync:google-sheets`で、Google Spreadsheetをリポジトリルートの `.raw/` へ同期する。
+- `scripts/convert-skills/lib.ts` で、`/`を含む使用制限を次の新表記だけで検証する。
+  - 回数: 正の整数、`lv`、または `LV`
+  - 区分: `巡`、`幕`、`話`
+  - 複数制限: `&`で連結する。
+- `特殊`や`タイミングMのスキル`のように`/`を含まない個別の使用制限と、空欄を維持する。
+- 旧略号の `R`、`Sn`、`Sc` を受け入れず、変換時に置換しない。
+- `docs/conversion/skills.md` に、入力と生成JSONで共通する新表記の検証規則を記録する。
+- 最小fixtureの変換テストで、新表記の単独・複数制限を受け入れ、旧略号を拒否することを確認する。
+- 同期後の `.raw/data/common-skills.xlsx`、`.raw/data/ryugi-skills.xlsx`、`.raw/data/ikizama-skills.xlsx` を入力として、以下の生成JSONを変換コマンドで再生成する。
   - `data/generated/common-skills.json`
   - `data/generated/ryugi-skills.json`
   - `data/generated/ikizama-skills.json`
 
 ## 初期スコープ外
 
-- `src/pages/data/index.mdx` のユーザー未コミット変更を変更、整形、stage、commitしない。
-- Excel本体、Google Drive、入力シートの表記を編集しない。
+- `src/pages/data/index.mdx` と関連commitを変更しない。
+- Google Drive、Excel本体、入力シートの表記を編集しない。同期はread-only exportとして `.raw/` を更新するだけとする。
 - スキルカード、データページのUI、キャラクターシート、使用回数のゲームルールを変更しない。
 - 使用制限以外のスキルデータを意味的に変更しない。
 - Web上でのExcel変換・データ編集、CI/CDでの変換実行、新規依存packageの追加は行わない。
 
 ## 完了条件
 
-- [ ] 共通スキル変換器が、入力の `R`、`Sn`、`Sc` を出力時にそれぞれ `巡`、`幕`、`話` へ正規化する。
-- [ ] `lv`、`&`、`特殊`、空欄、および対象外の使用制限本文が意図せず変更されない。
-- [ ] `docs/conversion/skills.md` が、入力の旧略号と生成JSONの正規化後表記を定義している。
-- [ ] 共通変換器を使う最小fixture testが、単独・複数の使用制限の正規化を確認している。
-- [ ] `data/generated/common-skills.json`、`data/generated/ryugi-skills.json`、`data/generated/ikizama-skills.json` がローカルExcel入力から変換コマンドで再生成され、各 `usageRestriction` に区切り後の旧略号 `/R`、`/Sn`、`/Sc` が残らない。
-- [ ] 関連TODOがないこと、または変更しない理由が記録されている。
-- [ ] `npm run test -- tests/node/common-skills.test.ts tests/node/ryugi-skills.test.ts tests/node/ikizama-skills.test.ts` が通る。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] `npm run sync:google-sheets`で、最新のGoogle Spreadsheetが `.raw/` へ同期されている。
+- [x] 共通スキル変換器が、`/`を含む使用制限で新表記の `巡`、`幕`、`話` だけを受け入れ、入力値を変更せず出力する。
+- [x] `lv`、`LV`、`&`、`特殊`、空欄、および`/`を含まない個別の使用制限本文が意図せず変更されない。
+- [x] 旧略号の `R`、`Sn`、`Sc` を含む使用制限が変換エラーになる。
+- [x] `docs/conversion/skills.md` が、入力と生成JSONに共通する新表記の検証規則を定義している。
+- [x] 共通変換器を使う最小fixture testが、新表記の単独・複数制限を受け入れ、旧略号を拒否することを確認している。
+- [x] `data/generated/common-skills.json`、`data/generated/ryugi-skills.json`、`data/generated/ikizama-skills.json` が同期後のローカルExcel入力から変換コマンドで再生成され、各 `usageRestriction` が新表記または`/`を含まない個別表記だけを使う。
+- [x] 関連TODOがないこと、または変更しない理由が記録されている。
+- [x] `npm run test -- tests/node/common-skills.test.ts tests/node/ryugi-skills.test.ts tests/node/ikizama-skills.test.ts` が通る。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] 既存ルートが壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] `docs/TODO.md`、`docs/conversion/skills.md`、ユーザーの未コミット変更と矛盾していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] 既存ルートが壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] `docs/TODO.md`、`docs/conversion/skills.md`、公開表記のcommitと矛盾していない。
+- [x] 公開表記のcommitと、同期後の `.raw/` 入力を破壊していない。
 
 ## 想定変更ファイル
 
@@ -70,17 +71,18 @@
 - `data/generated/common-skills.json`
 - `data/generated/ryugi-skills.json`
 - `data/generated/ikizama-skills.json`
+- `docs/agent-failure-log/active.md`
 
 ## レビュー観点
 
-- `R`、`Sn`、`Sc` の置換が使用制限の区切り後だけに限定され、自由記述の効果本文や他のスキルフィールドへ波及しないか。
+- `/`を含む使用制限だけを新表記で検証し、`特殊`と個別の使用制限本文を不必要に制限していないか。
 - 3つの生成JSONを手編集せず、同じ共通変換器とローカルExcel入力から再生成する契約になっているか。
-- ユーザーの未コミットのデータページ変更をこのissueの対象外として保護できているか。
-- 変換仕様が、入力互換性と公開JSONの表記を明確に区別できているか。
+- 同期済みの最新Google Spreadsheet入力を根拠にしており、古い `.raw/` の表記を仕様としていないか。
+- 変換仕様が、入力と生成JSONが同じ新表記であることを明確にできているか。
 
 ## 備考
 
 - 通常issueであり、Gate planは作成しない。
 - UI、CSS、layout、page、Componentを変更しないため、design target、`design-image-generation`、VRTは不要である。
-- 実装時に使用制限の正常化対象を旧略号以外へ広げる必要が判明した場合は、実装を止めてユーザー判断を求める。
+- 最新入力の同期前に変換・検証の根拠を判断しない。
 - Git commit / pushはこの準備では実行しない。

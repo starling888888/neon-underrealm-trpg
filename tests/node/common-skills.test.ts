@@ -142,6 +142,48 @@ describe("skill conversion", () => {
     });
   });
 
+  it("accepts current usage restriction notation and rejects legacy suffixes", async () => {
+    await using fixture = await createFixture();
+    await workbook(fixture.input, "skills", [
+      headers,
+      row("bonus", "巡", "Pv", "", "能動", "1/巡"),
+      row("basic", "幕と話", "Pv", "", "能動", "lv/幕&1/話"),
+      row("basic", "特殊", "Pv", "", "能動", "特殊"),
+      row("basic", "大文字", "Pv", "", "能動", "LV/巡"),
+      row("advanced", "条件", "Pv", "", "能動", "タイミングMのスキル"),
+    ]);
+
+    const result = await convertCommonSkills({
+      inputPath: fixture.input,
+      sheetName: "skills",
+      outputPath: fixture.output,
+    });
+
+    expect(result.data.bonus[0]?.usageRestriction).toBe("1/巡");
+    expect(result.data.basic.map((skill) => skill.usageRestriction)).toEqual([
+      "lv/幕&1/話",
+      "特殊",
+      "LV/巡",
+    ]);
+    expect(result.data.advanced[0]?.usageRestriction).toBe(
+      "タイミングMのスキル",
+    );
+
+    for (const legacyRestriction of ["1/R", "1/Sn", "1/Sc"]) {
+      await workbook(fixture.input, "skills", [
+        headers,
+        row("bonus", "旧表記", "Pv", "", "能動", legacyRestriction),
+      ]);
+      await expect(
+        convertCommonSkills({
+          inputPath: fixture.input,
+          sheetName: "skills",
+          outputPath: fixture.output,
+        }),
+      ).rejects.toThrow(/使用制限 is invalid at row 2, column J/);
+    }
+  });
+
   it("reports header and extra-cell locations", async () => {
     await using fixture = await createFixture();
     await workbook(fixture.input, "skills", [
@@ -258,6 +300,7 @@ function row(
   timing: string,
   cost = "",
   proficiency = "能動",
+  usageRestriction = "",
 ): string[] {
   return [
     category,
@@ -269,7 +312,7 @@ function row(
     "",
     "自身",
     "",
-    "",
+    usageRestriction,
     "効果",
   ];
 }
