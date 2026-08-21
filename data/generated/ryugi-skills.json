@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-08-21T22:25:42+09:00",
+  "updatedAt": "2026-08-22T00:14:26+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -879,7 +879,7 @@
         },
         {
           "category": "basic",
-          "name": "刃弾き",
+          "name": "死力",
           "maxLevel": 3,
           "timing": "D",
           "cost": "気1",
@@ -887,16 +887,16 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R",
-          "effect": "受けるダメージをlvd6点減少させる。",
+          "usageRestriction": "lv/R",
+          "effect": "効果値+2。このスキルを使用する際に、前の手番以降10点以上体力を失っているなら、更に効果値+1。",
           "sourceOrder": 14,
-          "id": "skill-ryugi-sutegoro-basic-d-9e0e01da138c"
+          "id": "skill-ryugi-sutegoro-basic-d-859b54cf75eb"
         }
       ],
       "advanced": [
         {
           "category": "advanced",
-          "name": "刃弾き強化",
+          "name": "死力強化",
           "maxLevel": 1,
           "timing": "Pv",
           "cost": null,
@@ -905,9 +905,9 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "刃弾きを1ラウンドに複数回使用できる。このラウンド中の偶数回目に使用する刃弾きのコストは0になる。",
+          "effect": "死力のコストを気合1点の代わりに体力10点で支払って良い。死力を使用する際に前の手番以降30点以上体力を失っているなら、更に効果値+2。",
           "sourceOrder": 15,
-          "id": "skill-ryugi-sutegoro-advanced-pv-2dfae05540b1"
+          "id": "skill-ryugi-sutegoro-advanced-pv-4330c712538d"
         },
         {
           "category": "advanced",
@@ -941,18 +941,18 @@
         },
         {
           "category": "advanced",
-          "name": "死力",
+          "name": "火事場の馬鹿力",
           "maxLevel": 3,
-          "timing": "D",
+          "timing": "INI",
           "cost": "気1",
           "proficiency": null,
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "lv/R",
-          "effect": "与えるダメージ+「最大体力-現在体力」÷10。",
+          "usageRestriction": "1/R&lv/Sn",
+          "effect": "次に行動するキャラクターの手番の間、血まみれの手足の攻撃力とガード値の係数が+2される。",
           "sourceOrder": 18,
-          "id": "skill-ryugi-sutegoro-advanced-d-859b54cf75eb"
+          "id": "skill-ryugi-sutegoro-advanced-ini-bc127dcd841a"
         },
         {
           "category": "advanced",
