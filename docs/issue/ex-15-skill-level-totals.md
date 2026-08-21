@@ -18,7 +18,7 @@
 
 - `docs/design/character-sheet/notes.md` に、3区分の合計表示について承認済みdesign intent、desktop / tablet / mobileの配置、表示文言、error表示、VRT比較点を追加する前段作業を実施する。
 - 承認済みdesign intentに従い、プライマリ流儀とその他流儀の各スキル区分で、既存の共通スキルと同じ追加操作領域に「取得合計レベル：N／流儀レベル：M」を表示する。生き様では「取得合計レベル：N／生き様レベル：M」を表示する。
-- プライマリ流儀summaryには「自動習得のプライマリボーナススキルのレベルは含みません。」、生き様summaryには「自動習得の生き様ボーナススキル1レベル分のレベルは含みません。」、共通スキルsummaryには「自動習得の「基本の一撃」のレベルはは含みません。」を示すtooltipを付ける。その他流儀summaryにはtooltipを追加しない。
+- プライマリ流儀summaryには「自動習得のプライマリボーナススキルのレベルは含みません。」、生き様summaryには「自動習得の生き様ボーナススキル1レベル分のレベルは含みません。」、共通スキルsummaryには「自動習得の「基本の一撃」のレベルは含みません。」を示すtooltipを付ける。その他流儀summaryにはtooltipを追加しない。
 - 表示値は既存検証と同じ算出値を用いる。
   - プライマリ流儀: 選択済み通常スキルの取得レベル合計／プライマリ流儀レベル。プライマリ流儀ボーナスは含めない。
   - 生き様: 選択済み通常スキルの取得レベル合計と、生き様ボーナスのLv2以上の超過分の合計／生き様レベル。ボーナスのLv1は含めない。
@@ -153,3 +153,26 @@
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る（該当する場合）
 - [x] `npm run build` が通る（該当する場合）
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- 共通スキルsummary tooltipの正しい文言は「自動習得の「基本の一撃」のレベルは含みません。」だが、current issueとdesign notesのG14には二重の「は」を含む旧文言が残っている。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `src/character-sheet/dictionary.ts`と`tests/components/character-sheet/CommonSkillsSection.test.tsx`は正しい単一の「は」を使用している。一方、`docs/issue/ex-15-skill-level-totals.md`と`docs/design/character-sheet/notes.md`の該当tooltip文言は二重の「は」のままである。
+
+### 対応方針
+
+- ユーザー確定済みの文言へ、current issueとdesign notesの該当箇所を訂正する。
+- Visual Reviewとcanonical VRT baselineの人間判断待ち項目は本指摘とは別に未完了のままとする。
+
+### 対応完了チェックリスト
+
+- [x] current issueとdesign notesの共通スキルtooltip文言を訂正する
+- [x] `npm run check` が通る（Markdownのみの変更のため実行不要）
+- [x] `npm run build` が通る（Markdownのみの変更のため実行不要）
