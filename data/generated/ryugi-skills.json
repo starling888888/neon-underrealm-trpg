@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-08-08T01:07:15+09:00",
+  "updatedAt": "2026-08-21T13:10:47+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -32,7 +32,7 @@
           "target": "特殊",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。この攻撃の対象は、範囲「消費気合」である。",
+          "effect": "攻撃を行う。この攻撃の対象は、範囲「消費気合-1」である。ダメージ+消費気合×4。",
           "sourceOrder": 2,
           "id": "skill-ryugi-kenkaya-basic-a-9d9ac8229787"
         },
@@ -45,9 +45,9 @@
           "proficiency": "喧嘩",
           "acquisitionRestriction": null,
           "target": "1体",
-          "range": "特殊",
+          "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。この攻撃の射程は「武器の射程+消費気合+lv」である。ダメージ+「対象との距離×2点」。一回の手番で複数回使用可能。",
+          "effect": "攻撃を行う。ダメージ+lv×「消費気合+この攻撃で獲得した気合の点数」。",
           "sourceOrder": 3,
           "id": "skill-ryugi-kenkaya-basic-a-1a6f546d4fe4"
         },
@@ -62,7 +62,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": "1/Sc",
-          "effect": "攻撃を行う。この手番中攻撃力+15。",
+          "effect": "攻撃を行う。気合獲得値+2。この手番中、攻撃力+「この攻撃で獲得した気合の点数」×3。",
           "sourceOrder": 4,
           "id": "skill-ryugi-kenkaya-basic-a-6a5f294695c5"
         },
@@ -107,7 +107,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": "1/Sc",
-          "effect": "攻撃を行う。未行動の味方キャラクターを1人指定し、そのキャラクターは即座に手番を行う。そのキャラクターは、次の手番中攻撃力+7。",
+          "effect": "攻撃を行う。気合獲得値+1。未行動の味方キャラクターを1人指定し、そのキャラクターは即座に手番を行う。そのキャラクターは、次の手番中、攻撃力+「この攻撃で獲得した気合の点数」。",
           "sourceOrder": 7,
           "id": "skill-ryugi-kenkaya-basic-a-e7ceac1f0a51"
         },
@@ -122,7 +122,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。攻撃力+「消費気合×6」。次の手番開始時まで防御力-5。",
+          "effect": "攻撃を行う。攻撃力+「消費気合×6」。次の手番開始時まで防御力-5。一回の手番に複数回使用可能。防御力の減少は累積する。",
           "sourceOrder": 8,
           "id": "skill-ryugi-kenkaya-basic-a-7130c0c89825"
         },
@@ -439,13 +439,13 @@
           "name": "吹き飛ばし",
           "maxLevel": 1,
           "timing": "○-☆",
-          "cost": "気3",
+          "cost": "気4",
           "proficiency": "発砲",
           "acquisitionRestriction": null,
           "target": "1体",
           "range": "武器",
           "usageRestriction": "1/Sc",
-          "effect": "攻撃を行う。次の味方の最初の攻撃の判定数はこの攻撃のコンボ増加値点増加する。",
+          "effect": "攻撃を行う。次の味方の最初の攻撃のダメージ+「この攻撃の効果値」×4。",
           "sourceOrder": 7,
           "id": "skill-ryugi-emono-basic-a-f1bc53ae13df"
         },
@@ -490,7 +490,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "カバーリングによって減少する行動回数が-1される。カバーリングを行った際、次に行う能動判定の判定数が+3される。この効果は重複しない。",
+          "effect": "カバーリングによって減少する行動回数が-1される。カバーリングを行った際、次に行う攻撃の判定数が+3される。この効果は重複しない。",
           "sourceOrder": 10,
           "id": "skill-ryugi-emono-basic-pv-d21f5f331eb9"
         },
@@ -535,7 +535,7 @@
           "target": "1体",
           "range": null,
           "usageRestriction": "1/R&lv/Sn",
-          "effect": "カバーリングを行う。このカバーリングでは行動回数の減少が1となり、他のマスにいるキャラクターのダメージを肩代わりできる。スキル使用後に元々の攻撃対象がいるマスに移動しても良い。",
+          "effect": "カバーリングを行う。このカバーリングでは行動回数の減少が1となり、他のマスにいるキャラクターのダメージを肩代わりできる。スキル使用後に元々の攻撃対象がいるマスに移動する。攻撃キャラクターの手番終了時に元いたマスに戻っても良い。",
           "sourceOrder": 13,
           "id": "skill-ryugi-emono-basic-d-e35652f7c22f"
         },
@@ -597,7 +597,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "lv1: あなたが受ける自身の攻撃スキル以外のスキル、アイテムの効果によるダメージ上昇は+3される。それがラウンド中複数回効果が発揮されうるものであれば、更に+5される。\nlv2: 手番中の最初の攻撃の判定数+1。\nlv3: あなたが受けるスキル、アイテムによる攻撃力上昇の効果は2倍になる。",
+          "effect": "lv1: あなたが受ける自身の攻撃スキル以外のスキルやアイテムの効果によるダメージ上昇の効果は+10される。ただし、一回の手番に付き一つ一つの効果ごとにこのスキルによるダメージ上昇の効果は一回しか発揮されない。\nlv2: 手番最初の攻撃の判定数+1、気合獲得値+1。\nlv3: あなたが受けるスキル、アイテムによる攻撃力上昇の効果は2倍になる。",
           "sourceOrder": 17,
           "id": "skill-ryugi-emono-advanced-pv-4346c4f86059"
         },
@@ -612,7 +612,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "次の手番開始時までダメージ軽減+8。敵対キャラクターを1体指定する。そのキャラクターは、可能な限り次の手番あなたを1回は攻撃しなければならない。攻撃できなかった場合、そのキャラクターは手番終了時に体力を10点失う。",
+          "effect": "次の手番開始時までダメージ軽減+8。敵対キャラクターを1体指定する。そのキャラクターは、可能な限り次の手番あなたを1回は攻撃しなければならない。攻撃対象があなたを攻撃できなかった場合、次のあなたの手番中あなたの攻撃力+10。",
           "sourceOrder": 18,
           "id": "skill-ryugi-emono-advanced-m-a025dfe3dc9a"
         },
@@ -627,7 +627,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": "1/R&lv/Sn",
-          "effect": "効果値+6。",
+          "effect": "効果値+6。このスキルのレベルが3lv以上の場合、気合を追加で2点消費することで、代わりに効果値を2倍にする。この効果はシーン1回しか使用できない。",
           "sourceOrder": 19,
           "id": "skill-ryugi-emono-advanced-d-e6e1b3783bf3"
         },
@@ -768,7 +768,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。この攻撃は前の攻撃の基準値と同じ基準値で攻撃できる。この攻撃の次の攻撃は基準値を1しか下げられない。1ラウンドに複数回使用可能。",
+          "effect": "攻撃を行う。この攻撃で気合を1点も獲得できなかった場合、気合を1点獲得する。1ラウンドに複数回使用可能。",
           "sourceOrder": 6,
           "id": "skill-ryugi-sutegoro-basic-a-30178e48fb1b"
         },
@@ -873,7 +873,7 @@
           "target": "1体",
           "range": null,
           "usageRestriction": "1/R&lv/Sn",
-          "effect": "カバーリングを行う。このカバーリングでは行動回数の減少が-1される。攻撃キャラクターの手番終了時まで、ダメージを受けるたびに気合を1点獲得し、次のあなたの手番中の攻撃力を+3点する。この効果は重複する。",
+          "effect": "カバーリングを行う。このカバーリングでは行動回数の減少が-1される。攻撃キャラクターの手番終了時まで、ダメージを受けるたびに気合を1点獲得し、次のあなたの手番終了時まで攻撃力+3。この効果は重複する。",
           "sourceOrder": 13,
           "id": "skill-ryugi-sutegoro-basic-d-ba2367ca54f6"
         },
@@ -935,7 +935,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "1lv取得するごとに以下の効果を一つ選択する。同じものは選択できない。\n・攻撃の判定数+1d\n・近接・射撃攻撃に対するリアクションの判定数+1d\n・血まみれの手足の上限が+1される。\n戦闘中同じ武器で攻撃、リアクションをし続ける選択した効果全てが発揮される。",
+          "effect": "1lv取得するごとに以下の効果を一つ選択する。同じものは選択できない。\n・攻撃の判定数+1d\n・近接・射撃攻撃に対するリアクションの判定数+1d\n・血まみれの手足の上限が+1される。\n戦闘中同じ武器で攻撃、リアクションをし続ける限り、選択した効果全てが発揮される。",
           "sourceOrder": 17,
           "id": "skill-ryugi-sutegoro-advanced-pv-e6167e11886b"
         },
@@ -1106,7 +1106,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。あなたの次の手番まで、ダメージを受けるキャラクターの位置によらず、対象の攻撃はカバーリングできる。カバーリングを行った場合、あなたの現在位置によらず、ダメージを受けるキャラクターのいるマスに移動する。対象があなたに与える攻撃のダメージはlv×3点減少する。",
+          "effect": "攻撃を行う。あなたの次の手番まで、ダメージを受けるキャラクターの位置によらず、対象の攻撃はカバーリングできる。カバーリングを行った場合、あなたの現在位置によらず、ダメージを受けるキャラクターのいるマスに移動する。対象があなたに与える攻撃のダメージはlv×4点減少する。",
           "sourceOrder": 6,
           "id": "skill-ryugi-kabe-basic-a-f4ad4c3dd222"
         },
@@ -1115,7 +1115,7 @@
           "name": "制圧する力場",
           "maxLevel": 1,
           "timing": "☆-○",
-          "cost": "気2",
+          "cost": "気3",
           "proficiency": "干渉",
           "acquisitionRestriction": null,
           "target": "1体",
@@ -1145,13 +1145,13 @@
           "name": "堅固",
           "maxLevel": 3,
           "timing": "R",
-          "cost": "気1",
+          "cost": "気0",
           "proficiency": "防御",
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": null,
-          "effect": "防御を行う。判定数+2。\nlv2: このスキルの基本コストが0になる。\nlv3: 気合を追加で1点消費することで更に判定数+2。",
+          "usageRestriction": "lv/R",
+          "effect": "防御を行う。判定数+2。気合を追加で1点消費することで更に判定数+2。この効果はラウンド1回しか使用できない。",
           "sourceOrder": 9,
           "id": "skill-ryugi-kabe-basic-r-79415d0ad597"
         },
@@ -1196,7 +1196,7 @@
           "target": "特殊",
           "range": null,
           "usageRestriction": "1/Sn",
-          "effect": "ラウンド終了時までlv体までのあなたが指定したキャラクターはあなたを攻撃しなければならず、範囲攻撃の中心対象にしなければならない。シーン1回使用可能。",
+          "effect": "ラウンド終了時までlv体までのあなたが指定したキャラクターはあなたを攻撃しなければならず、範囲攻撃の中心対象にしなければならない。あなた以外を攻撃した場合やあなた以外を中心対象にした場合は、攻撃されたキャラクター、中心対象になったキャラクターは次の手番終了時まで攻撃力+10される。シーン1回使用可能。",
           "sourceOrder": 12,
           "id": "skill-ryugi-kabe-basic-su-150ef67270cb"
         },
@@ -1303,7 +1303,7 @@
           "target": null,
           "range": null,
           "usageRestriction": "lv/Sn",
-          "effect": "あなたを含む複数体を対象とする攻撃の対象を自身のみにする。貴方以外が中心対象だった場合貴方が中心対象となる。",
+          "effect": "あなたを含む複数体を対象とする攻撃の対象を自身のみにする。貴方以外が中心対象だった場合貴方が中心対象となる。気合を追加で1点消費することで攻撃の種別によらず防御判定でリアクションを行い、ガード値と防御判定の結果を適用して良い。この効果はシーン1回しか使用できない。",
           "sourceOrder": 19,
           "id": "skill-ryugi-kabe-advanced-aa-dcaf288ae86c"
         },
@@ -1414,7 +1414,7 @@
           "target": "1体",
           "range": null,
           "usageRestriction": "lv/Sn",
-          "effect": "攻撃を行う。次の貴方の手番まで攻撃が命中した対象の防御力を対象が現在受けているBSの強度の合計×3、ダメージ軽減を対象が現在受けているBSの強度の合計だけ減少させる。",
+          "effect": "攻撃を行う。次の貴方の手番まで攻撃が命中した対象の防御力-「対象が現在受けているBSの強度の合計」×3、ダメージ軽減-「対象が現在受けているBSの強度の合計」。",
           "sourceOrder": 4,
           "id": "skill-ryugi-shabazou-basic-a-390b91644863"
         },
@@ -1459,7 +1459,7 @@
           "target": "1体",
           "range": null,
           "usageRestriction": "1/Sc",
-          "effect": "攻撃を行う。次の味方の最初の攻撃のダメージ+「この手番に与えたBSの強度の合計」×6。",
+          "effect": "攻撃を行う。次の味方の最初の攻撃のダメージ+「この手番に与えたBSの強度の合計」×5。",
           "sourceOrder": 7,
           "id": "skill-ryugi-shabazou-basic-a-96d6e9ed8cce"
         },
@@ -1534,7 +1534,7 @@
           "target": "特殊",
           "range": null,
           "usageRestriction": "1/R",
-          "effect": "BSを受けている任意のキャラクターを対象とする。そのキャラクターは次の手番であなたを攻撃しなければならない。攻撃できなかった場合、そのキャラクターは手番終了時に「受けているBSの強度の合計」×5点、体力を失う。",
+          "effect": "BSを受けている任意のキャラクターを対象とする。そのキャラクターは次の手番であなたを攻撃しなければならない。攻撃対象は、あなたを攻撃できなかった場合手番終了時に「受けているBSの強度の合計」×3点、体力を失う。",
           "sourceOrder": 12,
           "id": "skill-ryugi-shabazou-basic-ini-383032ce2312"
         },
@@ -1635,13 +1635,13 @@
           "name": "血毒活性",
           "maxLevel": 3,
           "timing": "D",
-          "cost": "気1",
+          "cost": "気SP",
           "proficiency": null,
           "acquisitionRestriction": null,
           "target": "特殊",
           "range": null,
           "usageRestriction": "1/R&lv/Sn",
-          "effect": "攻撃対象が受けている毒と出血の強度を2倍にする。（現在受けている毒、出血それぞれの強度に等しい毒、出血を与える。）",
+          "effect": "攻撃対象が受けている毒と出血の強度を2倍にする。（現在受けている毒、出血それぞれの強度に等しい毒、出血を与える。）このスキルのコストは「与える毒と出血の強度の合計」÷10である。",
           "sourceOrder": 19,
           "id": "skill-ryugi-shabazou-advanced-d-1e4466f101fc"
         },
@@ -1662,18 +1662,18 @@
         },
         {
           "category": "advanced",
-          "name": "覚悟の力：\n欺く理",
+          "name": "覚悟の力：\n致死の血毒",
           "maxLevel": 3,
-          "timing": "SU",
+          "timing": "SP",
           "cost": "覚悟",
           "proficiency": null,
           "acquisitionRestriction": "プライマリ限定",
-          "target": "自身",
+          "target": "1体",
           "range": null,
           "usageRestriction": "1/Sc",
-          "effect": "このラウンド中、スキルやアイテムの効果で基準値が変わった全ての判定は判定数が+5される。",
+          "effect": "毒や出血でキャラクターが体力を失うときに使用する。強度×5d6点体力を失う。",
           "sourceOrder": 21,
-          "id": "skill-ryugi-shabazou-advanced-su-a7e565113249"
+          "id": "skill-ryugi-shabazou-advanced-sp-d7993750f3c7"
         },
         {
           "category": "advanced",
@@ -1774,15 +1774,15 @@
         {
           "category": "basic",
           "name": "ダブルラリアット",
-          "maxLevel": 1,
+          "maxLevel": 3,
           "timing": "○-○",
           "cost": "気1",
           "proficiency": "格闘",
           "acquisitionRestriction": null,
           "target": "範囲0",
           "range": "武器",
-          "usageRestriction": null,
-          "effect": "攻撃を行う。この攻撃でコンボ対象の体力が0以下になった場合、他のキャラクターにコンボ対象を変更して良い。",
+          "usageRestriction": "lv/R",
+          "effect": "攻撃を行う。",
           "sourceOrder": 6,
           "id": "skill-ryugi-teppoudama-basic-a-cf6ee345820a"
         },
@@ -1804,7 +1804,7 @@
         {
           "category": "basic",
           "name": "コンビネーション",
-          "maxLevel": 3,
+          "maxLevel": 1,
           "timing": "○-○",
           "cost": "気1",
           "proficiency": "格闘",
@@ -1812,7 +1812,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。ダメージ+lv×lv。1ラウンドに複数回使用可能。",
+          "effect": "攻撃を行う。この攻撃は前の攻撃の基準値と同じ基準値で攻撃できる。この攻撃の次の攻撃は基準値を1しか下げられない。1ラウンドに複数回使用可能。",
           "sourceOrder": 8,
           "id": "skill-ryugi-teppoudama-basic-a-74297b7e9a60"
         },
@@ -1856,7 +1856,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/Sn",
+          "usageRestriction": "1/R&lv/Sn",
           "effect": "近接攻撃に対して、暗殺判定または格闘判定でリアクションを行う。「タイミング：Aa」の達成値上昇のスキルをこのスキルによるリアクション直後の「タイミング：Ra」として使用できる。「執念」を取得している場合、基準値+1。カウンターを行ったものとして扱う。",
           "sourceOrder": 11,
           "id": "skill-ryugi-teppoudama-basic-r-6bcae2d415bd"
@@ -1872,7 +1872,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "受けているBS一種類につき攻撃力+3。",
+          "effect": "受けているBS一種類につき攻撃力+4。",
           "sourceOrder": 12,
           "id": "skill-ryugi-teppoudama-basic-pv-e69cc31a29ad"
         },
@@ -1970,33 +1970,33 @@
         },
         {
           "category": "advanced",
-          "name": "雪だるま",
-          "maxLevel": 1,
-          "timing": "SP",
+          "name": "闘争本能",
+          "maxLevel": 3,
+          "timing": "SU",
           "cost": "気2",
           "proficiency": null,
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R",
-          "effect": "手番最後の攻撃の判定時に使用。コンボ増加値が直前の攻撃の判定数に加算される。（直前だけでなく、その前のコンボ増加値が加算される）。",
+          "usageRestriction": "lv/Sn",
+          "effect": "このラウンド中攻撃力+10。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-teppoudama-advanced-sp-80f450c05107"
+          "id": "skill-ryugi-teppoudama-advanced-su-15d78614c3c7"
         },
         {
           "category": "advanced",
-          "name": "加速する刃",
-          "maxLevel": 3,
+          "name": "雪だるま",
+          "maxLevel": 1,
           "timing": "SP",
           "cost": "気1",
-          "proficiency": "暗殺/格闘",
+          "proficiency": null,
           "acquisitionRestriction": null,
-          "target": "1体",
-          "range": "武器",
-          "usageRestriction": "lv/Sn",
-          "effect": "戦闘移動のかわりに攻撃を行う。この攻撃の基準値は5から8までで選択できる。",
+          "target": "自身",
+          "range": null,
+          "usageRestriction": "1/R",
+          "effect": "手番最後の攻撃の判定時に使用。コンボ増加値が直前の攻撃の判定数に加算される。（直前だけでなく、その前のコンボ増加値が加算される。）その判定の効果値点、体力を失う。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-teppoudama-advanced-sp-50ac41195faf"
+          "id": "skill-ryugi-teppoudama-advanced-sp-80f450c05107"
         },
         {
           "category": "advanced",
@@ -2060,7 +2060,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。次の対象の手番中、対象は可能な限りあなたを1回は攻撃しなければならない。",
+          "effect": "攻撃を行う。次の対象の手番中、対象はあなたを1回は攻撃しなければならない。あなたを攻撃できなかった場合、そのキャラクターの手番終了時に、あなたは隠密状態になる。",
           "sourceOrder": 2,
           "id": "skill-ryugi-yamiuchi-basic-a-3e0f6f064d63"
         },
@@ -2090,7 +2090,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": "1/Sc",
-          "effect": "攻撃を行う。次に行動する味方キャラクターは隠密状態になる。そのキャラクターは次の手番中攻撃力+5。",
+          "effect": "攻撃を行う。次に行動する味方キャラクターは隠密状態になる。そのキャラクターはあなたがこのスキル以外の、この手番中使用したスキルを同じレベルで習得しているものとして扱う。技能が指定されている場合無視しても良い。",
           "sourceOrder": 4,
           "id": "skill-ryugi-yamiuchi-basic-a-aef210e353c8"
         },
@@ -2105,7 +2105,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。次の対象の手番、対象はあなたの指定したキャラクターを1回は攻撃しなければならない。この効果は強度2のBSとして扱う。手番終了時に指定したキャラクターを攻撃できなかった場合は体力を10点失う。",
+          "effect": "攻撃を行う。次の対象の手番、対象はあなたの指定したキャラクターを1回は攻撃しなければならない。この効果は強度2のBSとして扱う。攻撃対象は指定したキャラクターを攻撃できなかった場合、手番終了時に体力を10点失う。",
           "sourceOrder": 5,
           "id": "skill-ryugi-yamiuchi-basic-a-cab589b19141"
         },
@@ -2180,7 +2180,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "任意のキャラクター1体に強度lvの激痛または転倒または放心を与える。",
+          "effect": "任意のキャラクター1体に強度lvの激痛または転倒または放心を与える。あなたが隠密状態ならば対象の体力を10点失わせる。",
           "sourceOrder": 10,
           "id": "skill-ryugi-yamiuchi-basic-m-d8141697629b"
         },
@@ -2195,7 +2195,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "次の攻撃の判定数+lv。隠密状態ならばこの手番中の攻撃の判定数+lv。",
+          "effect": "次の攻撃の判定数+lv。あなたが隠密状態ならばこの手番中の攻撃の判定数+lv。",
           "sourceOrder": 11,
           "id": "skill-ryugi-yamiuchi-basic-m-73aa1cf31e99"
         },
@@ -2287,9 +2287,24 @@
           "target": null,
           "range": null,
           "usageRestriction": null,
-          "effect": "あなたと同じマスにいる味方キャラクターのリアクションの判定数は+1される。",
+          "effect": "あなたと同じマスにいる味方キャラクターのリアクションの判定数は+1される。あなたが隠密状態なら攻撃の判定数も+1される。",
           "sourceOrder": 17,
           "id": "skill-ryugi-yamiuchi-advanced-pv-8559875a24fa"
+        },
+        {
+          "category": "advanced",
+          "name": "支度",
+          "maxLevel": 1,
+          "timing": "INI",
+          "cost": "気1",
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "1体",
+          "range": null,
+          "usageRestriction": "1/Sn",
+          "effect": "対象のキャラクターは隠密状態になる。",
+          "sourceOrder": 18,
+          "id": "skill-ryugi-yamiuchi-advanced-ini-089471f51771"
         },
         {
           "category": "advanced",
@@ -2301,32 +2316,17 @@
           "acquisitionRestriction": null,
           "target": null,
           "range": null,
-          "usageRestriction": "1/R",
-          "effect": "攻撃対象に強度lvの激痛か転倒か放心を与える。すでに激痛または転倒または放心を受けている場合、かわりにそれらのBSの合計強度×2点効果値が上昇する。",
-          "sourceOrder": 18,
-          "id": "skill-ryugi-yamiuchi-advanced-d-42dcacb98ecd"
-        },
-        {
-          "category": "advanced",
-          "name": "支度",
-          "maxLevel": 1,
-          "timing": "SP",
-          "cost": "気1",
-          "proficiency": null,
-          "acquisitionRestriction": null,
-          "target": null,
-          "range": null,
-          "usageRestriction": "1/R",
-          "effect": "「タイミング: M」のスキル使用時、または行動で隠密状態になったときに使用。\n同時に使用した「タイミング：M」のスキルの現在レベルと最大レベルは+1される。隠密状態になったなら、その手番中攻撃力が+6される。",
+          "usageRestriction": "1/R&lv/Sn",
+          "effect": "攻撃対象に合計強度が3になるように激痛か転倒か放心を与える。効果値+「対象が受けているそれらのBSの強度の合計」×2。対象がすでに一つでも激痛または転倒または放心を受けている場合、代わりに効果値+「対象が受けているそれらのBSの強度の合計」×3。",
           "sourceOrder": 19,
-          "id": "skill-ryugi-yamiuchi-advanced-sp-089471f51771"
+          "id": "skill-ryugi-yamiuchi-advanced-d-42dcacb98ecd"
         },
         {
           "category": "advanced",
           "name": "影から伸びる手",
           "maxLevel": 3,
           "timing": "SP",
-          "cost": null,
+          "cost": "気0",
           "proficiency": null,
           "acquisitionRestriction": null,
           "target": "自身",
@@ -2513,7 +2513,7 @@
           "maxLevel": 1,
           "timing": "R",
           "cost": "気1",
-          "proficiency": null,
+          "proficiency": "耐え/抵抗",
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
@@ -2631,6 +2631,21 @@
         },
         {
           "category": "advanced",
+          "name": "静心",
+          "maxLevel": 1,
+          "timing": "R",
+          "cost": "気0",
+          "proficiency": "受動",
+          "acquisitionRestriction": null,
+          "target": "自身",
+          "range": null,
+          "usageRestriction": "1/R",
+          "effect": "可能なリアクションを行う。気合獲得値+1する。（通常のリアクションでも気合獲得値は1となる。）リアクションに成功したならば次の手番中判定数+1。他の「タイミング:R」のスキルと同時に使用できる。",
+          "sourceOrder": 18,
+          "id": "skill-ryugi-kaeshi-advanced-r-69c3f8a8032e"
+        },
+        {
+          "category": "advanced",
           "name": "攻めの構え",
           "maxLevel": 3,
           "timing": "Pv",
@@ -2641,7 +2656,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "カウンターのダメージ+lv×7。",
-          "sourceOrder": 18,
+          "sourceOrder": 19,
           "id": "skill-ryugi-kaeshi-advanced-pv-1eb9013aad98"
         },
         {
@@ -2656,23 +2671,8 @@
           "range": null,
           "usageRestriction": "lv/Sn",
           "effect": "手番開始時に使用。この手番の行動回数+1。ただし増えた行動回数で攻撃はできない。",
-          "sourceOrder": 19,
-          "id": "skill-ryugi-kaeshi-advanced-sp-0e5bdb8151a7"
-        },
-        {
-          "category": "advanced",
-          "name": "静心",
-          "maxLevel": 1,
-          "timing": "SP",
-          "cost": "気0",
-          "proficiency": null,
-          "acquisitionRestriction": null,
-          "target": "自身",
-          "range": null,
-          "usageRestriction": "1/R",
-          "effect": "リアクション成功時に使用。気合を1点獲得し、次の攻撃の判定数が+1される。",
           "sourceOrder": 20,
-          "id": "skill-ryugi-kaeshi-advanced-sp-69c3f8a8032e"
+          "id": "skill-ryugi-kaeshi-advanced-sp-0e5bdb8151a7"
         },
         {
           "category": "advanced",
@@ -2766,7 +2766,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。ダメージ+lv×4。この攻撃は弾丸を消費しない。",
+          "effect": "攻撃を行う。ダメージ+lv×3。この攻撃は弾丸を消費しない。望むなら弾丸を2発消費しても良い。そうしたならダメージ軽減を無視する。",
           "sourceOrder": 4,
           "id": "skill-ryugi-gotoshi-basic-a-0896dad9a253"
         },
@@ -2796,7 +2796,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。ダメージ+lv×2。追加で気合を2点消費すると更にダメージ+lv×5。",
+          "effect": "攻撃を行う。ダメージ+lv×3。追加で気合を2点消費すると更にダメージ+10。",
           "sourceOrder": 6,
           "id": "skill-ryugi-gotoshi-basic-a-3997e7dc3d6d"
         },
@@ -2811,7 +2811,7 @@
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。次の攻撃はそのキャラクターのいるマスの範囲0となる。元の攻撃の対象が範囲Xの場合、対象が範囲X+1となる。",
+          "effect": "攻撃を行う。次の攻撃はそのキャラクターのいるマスの範囲を中心とした範囲1となる。元の攻撃の対象が範囲Xの場合、その攻撃のダメージ+10。",
           "sourceOrder": 7,
           "id": "skill-ryugi-gotoshi-basic-a-405fb51c0613"
         },
@@ -2819,14 +2819,14 @@
           "category": "basic",
           "name": "破壊",
           "maxLevel": 3,
-          "timing": "○-×",
+          "timing": "○-○",
           "cost": "気2",
           "proficiency": "干渉",
           "acquisitionRestriction": null,
           "target": "1体",
           "range": "武器",
           "usageRestriction": null,
-          "effect": "攻撃を行う。ラウンド終了時までそのキャラクターの判定達成値を-lvする。この効果は強度lvのバッドステータスとして扱う。",
+          "effect": "攻撃を行う。強度lvの激痛と転倒を与える。",
           "sourceOrder": 8,
           "id": "skill-ryugi-gotoshi-basic-a-60dbc6b08022"
         },
@@ -2863,32 +2863,17 @@
         {
           "category": "basic",
           "name": "不屈の精神",
-          "maxLevel": 3,
+          "maxLevel": 1,
           "timing": "R",
-          "cost": "気1",
-          "proficiency": "抵抗",
+          "cost": "気0",
+          "proficiency": "回避",
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "抵抗を行う。このスキルを使用した場合、近接、射撃攻撃に対しても抵抗でリアクションを行える。リアクションは回避を行ったものとして処理する。\nlv2: 抵抗の基準値を+1する。\nlv3: このスキルの基本コストが0になる。",
+          "effect": "回避を行う。この回避判定は肉体または精神の能力値で行って良い。気合を追加で1点支払うことで基準値を+1できる。",
           "sourceOrder": 11,
           "id": "skill-ryugi-gotoshi-basic-r-e72485d0d147"
-        },
-        {
-          "category": "basic",
-          "name": "助けの手",
-          "maxLevel": 1,
-          "timing": "R",
-          "cost": "気1",
-          "proficiency": null,
-          "acquisitionRestriction": null,
-          "target": "1体",
-          "range": "シーン",
-          "usageRestriction": "1/R",
-          "effect": "味方キャラクターが行うリアクションの判定数を+2する。",
-          "sourceOrder": 12,
-          "id": "skill-ryugi-gotoshi-basic-r-04c5c6e6bc30"
         },
         {
           "category": "basic",
@@ -2902,7 +2887,7 @@
           "range": "武器",
           "usageRestriction": "特殊",
           "effect": "発砲または干渉判定を行う。判定に対応する、装備している武器1つの射程内のキャラクター1人が受けるダメージを効果値点減少させる。キャラクターの手番1回につき1回使用可能。",
-          "sourceOrder": 13,
+          "sourceOrder": 12,
           "id": "skill-ryugi-gotoshi-basic-d-f045ef2b1c02"
         },
         {
@@ -2917,8 +2902,23 @@
           "range": "武器",
           "usageRestriction": "lv/R",
           "effect": "発砲または干渉判定を行う。判定に対応する、装備している武器1つの射程内のキャラクターが与えるダメージを効果値点上昇させる。",
-          "sourceOrder": 14,
+          "sourceOrder": 13,
           "id": "skill-ryugi-gotoshi-basic-d-c44a2c4cba5a"
+        },
+        {
+          "category": "basic",
+          "name": "助けの手",
+          "maxLevel": 3,
+          "timing": "SP",
+          "cost": "気1",
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "1体",
+          "range": "シーン",
+          "usageRestriction": "1/R&lv/Sn",
+          "effect": "自身を含む味方キャラクターの任意の判定時に使用する。その判定の判定数を+2する。",
+          "sourceOrder": 14,
+          "id": "skill-ryugi-gotoshi-basic-sp-04c5c6e6bc30"
         }
       ],
       "advanced": [
@@ -2940,7 +2940,7 @@
         {
           "category": "advanced",
           "name": "助けの手強化",
-          "maxLevel": 3,
+          "maxLevel": 1,
           "timing": "Pv",
           "cost": null,
           "proficiency": null,
@@ -2948,7 +2948,7 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "lv1: 助けの手のタイミングがSPとなり、任意の判定の判定数を+2できるようになる。\nlv2: 助けの手を1ラウンドに2回使用できるようになる。\nlv3: 助けの手をリアクションに使う場合は判定数を+3できるようになる。",
+          "effect": "1ラウンドに1回、もとの使用制限とは別に後押しを使用できる。ただしこの効果で上昇する判定数は+1になる。気合を追加で1点消費することで、助けの手の判定数を更に+1できる。",
           "sourceOrder": 16,
           "id": "skill-ryugi-gotoshi-advanced-pv-5c29d218b919"
         },
@@ -2963,22 +2963,22 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "タイミング「A-A」以外のスキルを使用するたび次の手番の攻撃の判定数が+1される。ただしlv点までしか累積しない。",
+          "effect": "タイミング「A-A」以外のスキルを使用するたび次の手番中の攻撃の判定数が+1される。ただしlv点までしか累積しない。",
           "sourceOrder": 17,
           "id": "skill-ryugi-gotoshi-advanced-pv-9f378d1df584"
         },
         {
           "category": "advanced",
           "name": "瞬間移動",
-          "maxLevel": 1,
+          "maxLevel": 3,
           "timing": "INI",
           "cost": "気2",
           "proficiency": null,
           "acquisitionRestriction": null,
           "target": "1体",
           "range": null,
-          "usageRestriction": "1/R",
-          "effect": "任意の味方キャラクター一人をそのキャラクターの現在位置から5マス以内のマスに移動させる。ラウンド1回使用可能。",
+          "usageRestriction": "1/R&lv/Sn",
+          "effect": "任意の味方キャラクターをそのキャラクターの現在位置から5マス以内のマスに移動させる。そのキャラクターは隠密状態となる。",
           "sourceOrder": 18,
           "id": "skill-ryugi-gotoshi-advanced-ini-83a25f83976a"
         },

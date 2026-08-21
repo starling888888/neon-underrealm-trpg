@@ -1,6 +1,6 @@
 {
   "dataName": "ikizama-skills",
-  "updatedAt": "2026-08-08T00:55:49+09:00",
+  "updatedAt": "2026-08-21T13:40:59+09:00",
   "data": {
     "burai": {
       "bonus": [
@@ -98,21 +98,6 @@
         },
         {
           "category": "basic",
-          "name": "器用万能",
-          "maxLevel": 2,
-          "timing": "Pv",
-          "cost": null,
-          "proficiency": null,
-          "acquisitionRestriction": null,
-          "target": "自身",
-          "range": null,
-          "usageRestriction": null,
-          "effect": "あなたは追加でlv個まで非戦闘技能を得意技能として指定できる。",
-          "sourceOrder": 7,
-          "id": "skill-ikizama-burai-basic-pv-87d58ae38aa1"
-        },
-        {
-          "category": "basic",
           "name": "神仏の加護",
           "maxLevel": 3,
           "timing": "Pv",
@@ -123,7 +108,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "あなたはアイテム「お守り」をlv個まで取得できる。（信用は消費する必要がある）。また、ど根性の現在lvと最大lvが+このスキルのlvされる。取得していない場合0lvで取得しているものとして扱う。",
-          "sourceOrder": 8,
+          "sourceOrder": 7,
           "id": "skill-ikizama-burai-basic-pv-570c394fe082"
         },
         {
@@ -138,8 +123,23 @@
           "range": null,
           "usageRestriction": null,
           "effect": "1lvごとに能力値を1つ選ぶ。選んだ能力値+1。同じ能力値は2回まで選択可能。",
-          "sourceOrder": 9,
+          "sourceOrder": 8,
           "id": "skill-ikizama-burai-basic-pv-1677b1e83e6c"
+        },
+        {
+          "category": "basic",
+          "name": "黒服",
+          "maxLevel": 1,
+          "timing": "Pv",
+          "cost": null,
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "自身",
+          "range": null,
+          "usageRestriction": null,
+          "effect": "カバーリングによって減少する行動回数が-1される。自身から2マスまで離れたキャラクターをカバーリングできる。ただし、攻撃の射程、種別によらず攻撃キャラクターの続く攻撃はあなたを対象にできる。",
+          "sourceOrder": 9,
+          "id": "skill-ikizama-burai-basic-pv-8520c1da4f98"
         },
         {
           "category": "basic",
@@ -170,6 +170,21 @@
           "effect": "体力をlv×10d6点回復する。",
           "sourceOrder": 11,
           "id": "skill-ikizama-burai-basic-cu-1ca6d464536b"
+        },
+        {
+          "category": "basic",
+          "name": "器用万能",
+          "maxLevel": 2,
+          "timing": "Pv",
+          "cost": null,
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "自身",
+          "range": null,
+          "usageRestriction": null,
+          "effect": "あなたは追加でlv個まで非戦闘技能を得意技能として指定できる。",
+          "sourceOrder": 12,
+          "id": "skill-ikizama-burai-basic-pv-87d58ae38aa1"
         }
       ],
       "advanced": [
@@ -185,7 +200,7 @@
           "range": null,
           "usageRestriction": "特殊",
           "effect": "任意のキャラクターのシーン制限、シナリオ制限のあるスキルの使用回数を1回回復する。このスキルはシーン制限のスキルに対して1シーンに1回、シナリオ制限のスキルに対して1シナリオに1回使用できる。",
-          "sourceOrder": 12,
+          "sourceOrder": 13,
           "id": "skill-ikizama-burai-advanced-ini-3c658481c228"
         },
         {
@@ -200,7 +215,7 @@
           "range": null,
           "usageRestriction": "1/R",
           "effect": "小銭を3点まで支払う。小銭1点に付きシーン終了時まで以下のいずれかの効果を得る。攻撃力+3。ガード値+2。防御力+3。ダメージ軽減+2。同じ効果を2回まで選んでも良い。複数回使用したとき、それぞれの効果は累積する。",
-          "sourceOrder": 13,
+          "sourceOrder": 14,
           "id": "skill-ikizama-burai-advanced-ini-7dcf9a05ea38"
         },
         {
@@ -215,7 +230,7 @@
           "range": null,
           "usageRestriction": "1/R",
           "effect": "達成値を上昇させる共通スキルの使用時や効果が発揮されたときに使用する。達成値をさらに+1する。この効果でちょうど判定が成功した場合は気合を1点得る。",
-          "sourceOrder": 14,
+          "sourceOrder": 15,
           "id": "skill-ikizama-burai-advanced-sp-77e829bb2f8e"
         },
         {
@@ -230,7 +245,7 @@
           "range": null,
           "usageRestriction": "特殊",
           "effect": "「タイミング：Pv」以外のスキルを選択した後、使用直前に使用。同じタイミングで使用できる任意のスキルを、そのタイミング中使用予定だったスキルのレベルで取得しているものとして扱い使用する。ラウンド1回使用可能。ただし、シーン制限、シナリオ制限のあるスキルは使用できない。\nlv2: シーン制限のあるスキルを使用できるようになる。この効果はシーン1回使用できる。\nlv3: シナリオ制限のあるスキルを使用できるようになる。この効果はシナリオ1回使用できる。",
-          "sourceOrder": 15,
+          "sourceOrder": 16,
           "id": "skill-ikizama-burai-advanced-sp-727398a7c72d"
         },
         {
@@ -245,7 +260,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "取得時に一つ自身のプライマリ流儀以外のプライマリボーナススキルを選ぶ。セットアップに精神力5点を支払うことでラウンド終了時まで選んだスキルの効果が発揮される。技能の制限は無視して良い。",
-          "sourceOrder": 16,
+          "sourceOrder": 17,
           "id": "skill-ikizama-burai-advanced-pv-fe4f049f25b7"
         },
         {
@@ -260,7 +275,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "取得時に自身のプライマリ流儀から一つスキルを選ぶ。そのスキルのタイミングが「Pv」 以外ならば消費気合は-1され（最低0）、スキルのタイミングによらず、最大lvと取得lvが+1される。",
-          "sourceOrder": 17,
+          "sourceOrder": 18,
           "id": "skill-ikizama-burai-advanced-pv-dba7c6660e3f"
         }
       ]
@@ -376,6 +391,21 @@
         },
         {
           "category": "basic",
+          "name": "鋼の城塞",
+          "maxLevel": 1,
+          "timing": "D",
+          "cost": "精5",
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "1体",
+          "range": null,
+          "usageRestriction": "1/R",
+          "effect": "サイバネを一つ破壊する。カバーリングを行う。このカバーリングで減少する行動回数は2-「破壊したサイバネの埋め込み点数」（最低0）である。破壊したサイバネの埋め込み点数が3以上ならば、次の攻撃の判定数が差分だけ上昇する。",
+          "sourceOrder": 8,
+          "id": "skill-ikizama-kejime-basic-d-16acc393541d"
+        },
+        {
+          "category": "basic",
           "name": "柔和なサイボーグ",
           "maxLevel": 2,
           "timing": "Pv",
@@ -386,7 +416,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "1lvごとに1つ非戦闘技能を選ぶ。その技能はサイバネ埋め込み点数によるペナルティを受けない。",
-          "sourceOrder": 8,
+          "sourceOrder": 9,
           "id": "skill-ikizama-kejime-basic-pv-de32a3368c75"
         }
       ],
@@ -403,7 +433,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "サイバネ埋め込み部位の「その他」がlv個増える。「その他」に埋め込むサイバネの埋め込み点数は-1される。",
-          "sourceOrder": 9,
+          "sourceOrder": 10,
           "id": "skill-ikizama-kejime-advanced-pv-85b747f79c94"
         },
         {
@@ -418,8 +448,23 @@
           "range": null,
           "usageRestriction": null,
           "effect": "サイバネの埋め込み点数上限+2。サイバネを埋め込んでいない部位1つにつきいずれかの効果を選ぶ。同じ効果は一度しか選べない。最大体力+15。攻撃力+3。防御力+3。行動値+4。移動力+2。",
-          "sourceOrder": 10,
+          "sourceOrder": 11,
           "id": "skill-ikizama-kejime-advanced-pv-e346f6f4768d"
+        },
+        {
+          "category": "advanced",
+          "name": "サイバネ技師との繋がり",
+          "maxLevel": 3,
+          "timing": "Pv",
+          "cost": null,
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "自身",
+          "range": null,
+          "usageRestriction": null,
+          "effect": "シナリオ開始時に、1レベルごとにサイバネを1つ選択する。同じサイバネを選択しても良い。サイバネ1つごとに以下のいずれかの効果を得る。同じサイバネに同じ効果を2回以上得ることはできない。\n量産：取得信用-1 。（最低1）埋め込み点数-1。（最低0）\n一体化：シーン中最初にスキルの効果でこのサイバネが破壊されるなら代わりに体力を10点失っても良い。サイバネが破壊されることで発揮される効果は発揮される。\n試作品：1シーンに1回、ラウンド終了時まで、同じ装備部位のサイバネ一つと同じ効果を持たせられる。この効果を使用したラウンドの終了時にこのサイバネは破壊される。\nこの効果で選択したサイバネはシナリオ中変更できない。",
+          "sourceOrder": 12,
+          "id": "skill-ikizama-kejime-advanced-pv-491006fe27cb"
         },
         {
           "category": "advanced",
@@ -433,7 +478,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "サイバネの埋め込み点数上限+2。あなたのサイバネによる判定数増加+2。（各判定数増加の合計から+2される。）サイバネ武器の攻撃力+8、ガード値+5。あなたは合計3つまでしかサイバネを埋め込めない。",
-          "sourceOrder": 11,
+          "sourceOrder": 13,
           "id": "skill-ikizama-kejime-advanced-pv-f3ab66ed9b54"
         },
         {
@@ -448,7 +493,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "サイバネの埋め込み点数上限+6。攻撃力+「埋め込んでいるサイバネの数」。防御力+「サイバネの埋め込み点数の合計」。サイバネを埋め込んでいる際の非戦闘技能による判定のペナルティが更に-2される。（5点以下でも判定数に-2のペナルティがかかる）",
-          "sourceOrder": 12,
+          "sourceOrder": 14,
           "id": "skill-ikizama-kejime-advanced-pv-a21a42ccccb9"
         }
       ]
@@ -528,9 +573,24 @@
           "target": "自身",
           "range": null,
           "usageRestriction": "1/R&lv/Sn",
-          "effect": "ナノマシン発動中にしか使用できない。全てのBSを解除する。解除したBS1つにつきラウンド終了時まですべての判定数+1。ラウンド1回、シーンlv回使用可能。",
+          "effect": "ナノマシン発動中にしか使用できない。全てのBSを解除する。解除したBS1つにつきラウンド終了時まですべての判定数+1。",
           "sourceOrder": 5,
           "id": "skill-ikizama-sumi-basic-ini-f820d83bac5d"
+        },
+        {
+          "category": "basic",
+          "name": "生ける盾",
+          "maxLevel": 1,
+          "timing": "D",
+          "cost": "精10",
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "1体",
+          "range": null,
+          "usageRestriction": "1/R",
+          "effect": "ナノマシン発動中にしか使用できない。カバーリングを行う。このカバーリングでは行動回数の減少が-1される。ナノマシン一つを選び解除する。その攻撃で受けるダメージ-「解除したナノマシンのもともとの消費精神力」。",
+          "sourceOrder": 6,
+          "id": "skill-ikizama-sumi-basic-d-e9a71b2b36e7"
         },
         {
           "category": "basic",
@@ -544,7 +604,7 @@
           "range": null,
           "usageRestriction": "1/Sn",
           "effect": "ナノマシン発動時に使用。ただちに1回手番を行い、行動済みにならない。ただしこの手番での行動回数はlv回であり、貴方のもともとの行動回数を超えることはできない。",
-          "sourceOrder": 6,
+          "sourceOrder": 7,
           "id": "skill-ikizama-sumi-basic-sp-c6906690f930"
         },
         {
@@ -559,7 +619,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "任意の判定時に使用。1つ発動中のナノマシンを選択する。そのナノマシンの埋め込み点数だけ判定数が上昇する。判定後、もしくはその判定が攻撃ならその掛け合い終了時にそのナノマシンの発動状態は解除される。",
-          "sourceOrder": 7,
+          "sourceOrder": 8,
           "id": "skill-ikizama-sumi-basic-sp-75c95804c767"
         },
         {
@@ -574,7 +634,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "lv1: 戦闘外でナノマシンを発動させた際の非戦闘技能へのペナルティが発生しない。lv2: 戦闘外でナノマシンを発動させた時のコストが0になり次の戦闘シーンの終了時まで解除されない。",
-          "sourceOrder": 8,
+          "sourceOrder": 9,
           "id": "skill-ikizama-sumi-basic-pv-cec874ba5ff4"
         }
       ],
@@ -591,7 +651,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "lv1:ナノマシンの発動精神力-5点。\nlv2: ナノマシン発動中にのみ効果を発揮するスキルのコスト-5点。\nlv3: ナノマシン発動中にのみ効果を発揮するスキルの現在lvと最大lvが+1される。（取得していない場合は0lvで取得しているものとして扱う。）\n発動精神力もスキルのコストも5点未満にはならない。",
-          "sourceOrder": 9,
+          "sourceOrder": 10,
           "id": "skill-ikizama-sumi-advanced-pv-bdca391f0e4e"
         },
         {
@@ -606,8 +666,23 @@
           "range": null,
           "usageRestriction": null,
           "effect": "ナノマシンを埋め込んでいない部位に対して以下の効果を得る。それが頭ならば最大精神力+15。それが胴体ならば最大体力+15。それが腕ならば防御力+3。それが足ならば行動値+4。2つ以上の部位にナノマシンが埋め込まれていないならば更に攻撃力+3、ダメージ軽減+3。",
-          "sourceOrder": 10,
+          "sourceOrder": 11,
           "id": "skill-ikizama-sumi-advanced-pv-93f6203fbe9c"
+        },
+        {
+          "category": "advanced",
+          "name": "卓越した彫師",
+          "maxLevel": 3,
+          "timing": "Pv",
+          "cost": null,
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "自身",
+          "range": null,
+          "usageRestriction": null,
+          "effect": "シナリオ開始時に、1レベルごとにナノマシンを1つ選択する。同じナノマシンを選択しても良い。ナノマシン1つごとに以下のいずれかの効果を得る。同じナノマシンに同じ効果を2回以上得ることはできない。\n独自の文様：取得信用-2 。（最低1）\n薄墨：発動精神力-5点、埋め込み点数-1点。\n蛍光墨：1ラウンドに1回イニシアチブにこのナノマシンを起動できる。\nこの効果で選択したナノマシンはシナリオ中変更できない。",
+          "sourceOrder": 12,
+          "id": "skill-ikizama-sumi-advanced-pv-61789e655fae"
         },
         {
           "category": "advanced",
@@ -621,7 +696,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "すべての能力値が+1され、あなたが選んだ能力値2つはさらに+1される。あなたは1つしかナノマシンを埋め込めない。",
-          "sourceOrder": 11,
+          "sourceOrder": 13,
           "id": "skill-ikizama-sumi-advanced-pv-d33691350b6e"
         },
         {
@@ -636,7 +711,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "ナノマシンの埋め込み点数上限+4。ナノマシン発動中攻撃力とダメージ軽減+「埋め込んでいるナノマシンの埋め込み点数の合計」。ナノマシン発動中、クリンナップに精神力が5点回復する。戦闘外でナノマシンを発動した際のペナルティが2倍になる。",
-          "sourceOrder": 12,
+          "sourceOrder": 14,
           "id": "skill-ikizama-sumi-advanced-pv-fb25e21f8dd9"
         }
       ]
@@ -722,6 +797,21 @@
         },
         {
           "category": "basic",
+          "name": "跳ね飛ばされる中毒者",
+          "maxLevel": 1,
+          "timing": "D",
+          "cost": "精5",
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "1体",
+          "range": null,
+          "usageRestriction": "1/Sn",
+          "effect": "カバーリングを行う。受けているバッドトリップの強度を+1する。あなたのバッドトリップの強度が「カバーリングで減少する行動回数」×3以上ならば、あなたは次の手番で行動回数が減少せず、即座に行動回数2回の手番を行う。行動済みでも手番を行え、手番を行っても行動済みにならない。",
+          "sourceOrder": 6,
+          "id": "skill-ikizama-yaku-basic-d-da666d366634"
+        },
+        {
+          "category": "basic",
           "name": "ふらつく中毒者",
           "maxLevel": 3,
           "timing": "SP",
@@ -732,7 +822,7 @@
           "range": null,
           "usageRestriction": "1/R&lv/Sn",
           "effect": "ドラッグ服薬時に使用。即座に移動を行う。この移動では敵と同じマスに入っても移動を終了する必要がなく、敵と同じマスにいても使用できる。",
-          "sourceOrder": 6,
+          "sourceOrder": 7,
           "id": "skill-ikizama-yaku-basic-sp-74f73ca70483"
         },
         {
@@ -747,7 +837,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "任意の判定時に使用。ドラッグを即座に使用する。すでに効果が発動しているドラッグでも効果を発揮するが、効果は判定終了時に消滅する。",
-          "sourceOrder": 7,
+          "sourceOrder": 8,
           "id": "skill-ikizama-yaku-basic-sp-7c29f5df60a2"
         },
         {
@@ -762,7 +852,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "戦闘外でドラッグを使用できるようになる。効果は一度判定を行うと失われ、判定後にバッドトリップによって体力と精神力を失う。lv2: 使用したドラッグでは体力と精神力が失われない。",
-          "sourceOrder": 8,
+          "sourceOrder": 9,
           "id": "skill-ikizama-yaku-basic-pv-f13eb240dbce"
         }
       ],
@@ -779,7 +869,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "バッドトリップの強度をlv×2だけ低いものとして体力と精神力減少のダイスを振る。ただし最低でも強度が1あるものとして扱う。あなたが振ったバッドトリップのダイスによって体力が0以下になるのであれば、一度だけすべてのダイスを振り直しても良い。",
-          "sourceOrder": 9,
+          "sourceOrder": 10,
           "id": "skill-ikizama-yaku-advanced-pv-57085e4d78ac"
         },
         {
@@ -794,8 +884,23 @@
           "range": null,
           "usageRestriction": null,
           "effect": "ラウンド終了時にすべてのバッドステータスの強度を-1する。（毒、バッドトリップのダメージを受ける前に-1する。）ドラッグを使用するたび、そのシーン中使用したことがないドラッグであれば、シーン終了時まで攻撃力が+2される。この効果は累積する。",
-          "sourceOrder": 10,
+          "sourceOrder": 11,
           "id": "skill-ikizama-yaku-advanced-pv-40dd97399f1f"
+        },
+        {
+          "category": "advanced",
+          "name": "裏流通の売人",
+          "maxLevel": 3,
+          "timing": "Pv",
+          "cost": null,
+          "proficiency": null,
+          "acquisitionRestriction": null,
+          "target": "自身",
+          "range": null,
+          "usageRestriction": null,
+          "effect": "シナリオ開始時に、1レベルごとに1種類ドラッグを選択する。ドラッグごとに以下の効果を一つ得る。\n粗悪品：BT強度が+1される代わり、1セット数量が+1される。1セット数量が1のドラッグは選べない。\n濫造品：BT強度が-1される代わり、1セット数量が-1される。1セット数量が1のドラッグは選べない。\n大量生産品：取得信用-1。（最低1）\nこの効果で選択したドラッグはシナリオ中変更できない。",
+          "sourceOrder": 12,
+          "id": "skill-ikizama-yaku-advanced-pv-e036b26e2834"
         },
         {
           "category": "advanced",
@@ -809,7 +914,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "攻撃力+受けているバッドトリップの強度×3。バッドトリップを受けるたび、合計強度が+1される。",
-          "sourceOrder": 11,
+          "sourceOrder": 13,
           "id": "skill-ikizama-yaku-advanced-pv-c48724ae8825"
         },
         {
@@ -824,7 +929,7 @@
           "range": null,
           "usageRestriction": null,
           "effect": "バッドトリップによって体力が失われなくなる。精神力が0以下になった場合、すべてのドラッグの効果が失われる。",
-          "sourceOrder": 12,
+          "sourceOrder": 14,
           "id": "skill-ikizama-yaku-advanced-pv-fe4180bfe25a"
         }
       ]

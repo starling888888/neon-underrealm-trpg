@@ -1,6 +1,6 @@
 {
   "dataName": "items",
-  "updatedAt": "2026-08-08T00:55:48+09:00",
+  "updatedAt": "2026-08-21T16:15:36+09:00",
   "data": {
     "weapons": {
       "normal": {
@@ -130,7 +130,7 @@
             "attack": null,
             "guard": null,
             "ammo": null,
-            "effect": "暗器。ダメージの代わりに出血2を与える。シナリオ3回使用可能。",
+            "effect": "暗器。ダメージの代わりに出血1を与える。シナリオ5回使用可能。",
             "sourceOrder": 9
           },
           {
@@ -144,7 +144,7 @@
             "attack": null,
             "guard": null,
             "ammo": null,
-            "effect": "暗器。ダメージの代わりに毒2を与える。シナリオ3回使用可能。",
+            "effect": "暗器。ダメージの代わりに毒1を与える。シナリオ5回使用可能。",
             "sourceOrder": 10
           },
           {
@@ -158,7 +158,7 @@
             "attack": null,
             "guard": null,
             "ammo": null,
-            "effect": "暗器。ダメージの代わりに次の味方キャラクターの手番終了時まで命中した対象のリアクション達成値を1下げる。この効果は累積せず、強度2のバッドステータスとして扱う。シナリオ5回使用可能。",
+            "effect": "暗器。ダメージの代わりに激痛1を与える。シナリオ5回使用可能。",
             "sourceOrder": 11
           },
           {
@@ -172,7 +172,7 @@
             "attack": null,
             "guard": null,
             "ammo": null,
-            "effect": "暗器。ダメージの代わりに命中した対象の次の手番終了時まで攻撃の達成値を1さげる。この効果は累積せず、強度2のバッドステータスとして扱う。シナリオ5回使用可能。",
+            "effect": "暗器。ダメージの代わりに転倒1を与える。シナリオ5回使用可能。",
             "sourceOrder": 12
           }
         ],
@@ -596,6 +596,20 @@
             "ammo": null,
             "effect": "サイバネ武器。",
             "sourceOrder": 41
+          },
+          {
+            "id": "item-weapon-cybernetics-kakutou-b016d03b3e10",
+            "group": "cybernetics",
+            "name": "スプリングサイ",
+            "credit": null,
+            "range": 0,
+            "kind": "近接",
+            "check": "格闘",
+            "attack": 14,
+            "guard": 4,
+            "ammo": null,
+            "effect": "サイバネ武器。この武器は素足として扱う。",
+            "sourceOrder": 43
           }
         ],
         "kakutou_kanshou": [
@@ -629,7 +643,7 @@
             "guard": 4,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 43
+            "sourceOrder": 44
           },
           {
             "id": "item-weapon-nanomachines-kenka-ac88455724ca",
@@ -643,7 +657,7 @@
             "guard": 8,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 44
+            "sourceOrder": 45
           },
           {
             "id": "item-weapon-nanomachines-kenka-7eee4320c880",
@@ -657,7 +671,7 @@
             "guard": 8,
             "ammo": null,
             "effect": "攻撃の基準値を3から8まで選択できる。ただし、他の基準値変更の効果を受けられない。",
-            "sourceOrder": 45
+            "sourceOrder": 46
           }
         ],
         "ansatsu": [
@@ -673,7 +687,7 @@
             "guard": null,
             "ammo": null,
             "effect": "暗器。シナリオ3回使用可能。発動するたびに使用回数が復活する。",
-            "sourceOrder": 46
+            "sourceOrder": 47
           },
           {
             "id": "item-weapon-nanomachines-ansatsu-2107912f1997",
@@ -687,7 +701,7 @@
             "guard": 3,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 47
+            "sourceOrder": 48
           },
           {
             "id": "item-weapon-nanomachines-ansatsu-68a2477920dd",
@@ -701,7 +715,7 @@
             "guard": 7,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 48
+            "sourceOrder": 49
           }
         ],
         "kakutou": [
@@ -717,7 +731,7 @@
             "guard": 9,
             "ammo": null,
             "effect": null,
-            "sourceOrder": 49
+            "sourceOrder": 50
           },
           {
             "id": "item-weapon-nanomachines-kakutou-3399837c6420",
@@ -731,7 +745,7 @@
             "guard": "特殊",
             "ammo": null,
             "effect": "この武器は素手として扱う。攻撃力とガード値はあなたの肉体に等しい。",
-            "sourceOrder": 50
+            "sourceOrder": 51
           }
         ],
         "happou": [
@@ -747,7 +761,7 @@
             "guard": 4,
             "ammo": 5,
             "effect": "装弾数5。",
-            "sourceOrder": 51
+            "sourceOrder": 52
           },
           {
             "id": "item-weapon-nanomachines-happou-46e456057dc4",
@@ -761,7 +775,7 @@
             "guard": 8,
             "ammo": 2,
             "effect": "弾丸1発消費のかわりに精神力3点を消費してもよい。",
-            "sourceOrder": 52
+            "sourceOrder": 53
           }
         ]
       }
@@ -926,6 +940,36 @@
         "restriction": "最低能力値が3以上",
         "effect": "生き様によらず点数が3点までのサイバネを一つ装備可能。埋め込み点数には加算しない。",
         "sourceOrder": 16
+      },
+      {
+        "id": "item-armor-ecc07130ae3d",
+        "name": "強化外骨格",
+        "credit": 13,
+        "defense": 10,
+        "damageReduction": 4,
+        "restriction": "2番目に高い能力が8以上",
+        "effect": "セットアップに精神力10点を支払うならばラウンド終了時まで任意の能力値+1。この効果が発揮されている間ナノマシンが発動しているものとして扱う。",
+        "sourceOrder": 17
+      },
+      {
+        "id": "item-armor-5188ba096c6e",
+        "name": "香り高きスーツ",
+        "credit": 14,
+        "defense": 7,
+        "damageReduction": 8,
+        "restriction": "最大体力と最大精神力が80以上",
+        "effect": "生き様によらず、シナリオ開始時に取得信用が3点以下のドラッグを無料で取得する。そのドラッグを使用するときには同時に使用するドラッグも含めてタイミングを消費しない。",
+        "sourceOrder": 18
+      },
+      {
+        "id": "item-armor-7ef8527ee605",
+        "name": "形見のジャケット",
+        "credit": 12,
+        "defense": 10,
+        "damageReduction": 5,
+        "restriction": "結べる縁が5つ以上",
+        "effect": "生き様によらず、ブライのスキル「神仏の加護」の現在レベルと最大レベルを+1する。習得していない場合は0レベルで取得しているものとして扱う。",
+        "sourceOrder": 19
       }
     ],
     "omamori": [
@@ -946,14 +990,14 @@
       {
         "id": "item-omamori-c5341347f6e3",
         "name": "全力のお守り",
-        "credit": 2,
+        "credit": 1,
         "effect": "手番最初の攻撃の判定数+1。ただし基準値が6以上なら転倒1を受ける。",
         "sourceOrder": 3
       },
       {
         "id": "item-omamori-215df0c868f5",
         "name": "強運のお守り",
-        "credit": 2,
+        "credit": 1,
         "effect": "1シナリオに1回、カウンターに失敗してもダメージを受けない。",
         "sourceOrder": 4
       },
@@ -975,13 +1019,13 @@
         "id": "item-omamori-a4f704951835",
         "name": "拳願のお守り",
         "credit": 2,
-        "effect": "気合いを1点以上所持しているなら素手素足の攻撃力+2、ガード値+2",
+        "effect": "素手素足の攻撃力+4、ガード値+2",
         "sourceOrder": 7
       },
       {
         "id": "item-omamori-02fc78ee4f84",
         "name": "庇護のお守り",
-        "credit": 2,
+        "credit": 1,
         "effect": "カバーリングを行った際、ダメージ軽減+3。",
         "sourceOrder": 8
       },
@@ -1002,36 +1046,36 @@
       {
         "id": "item-omamori-800d578cec93",
         "name": "金剛のお守り",
-        "credit": 3,
+        "credit": 2,
         "effect": "武器のガード値+4。",
         "sourceOrder": 11
       },
       {
         "id": "item-omamori-42646d737eac",
         "name": "夜叉のお守り",
-        "credit": 3,
+        "credit": 2,
         "effect": "１ラウンドに1回、暗殺武器の攻撃でダメージ軽減を半減してダメージ軽減適用を行っても良い。",
         "sourceOrder": 12
       },
       {
         "id": "item-omamori-ff6762a7514d",
         "name": "如来のお守り",
-        "credit": 3,
-        "effect": "あなたがダメージを受けるとき、弾丸を1発消費して4点受けるダメージを減らして良い。",
+        "credit": 2,
+        "effect": "あなたがダメージを受けるとき、弾丸を1発消費して4点受けるダメージを減らしても良い。",
         "sourceOrder": 13
       },
       {
         "id": "item-omamori-bb77b7820699",
         "name": "仁王のお守り",
-        "credit": 3,
-        "effect": "シナリオ1回、格闘判定で任意の攻撃にリアクションを行える。リアクションの判定数をあげる効果に加え、攻撃の判定数を上昇させる効果も適用される。成功した場合ダメージは0となる。",
+        "credit": 2,
+        "effect": "シーン1回、格闘判定で任意の攻撃にリアクションを行える。リアクションの判定数を上昇させる効果に加え、攻撃の判定数を上昇させる効果も適用される。成功した場合ダメージは0となる。",
         "sourceOrder": 14
       },
       {
         "id": "item-omamori-778e3d533dbf",
         "name": "阿修羅のお守り",
-        "credit": 2,
-        "effect": "シナリオ1回、干渉判定の判定数+3。",
+        "credit": 3,
+        "effect": "シナリオ1回、ダメージ軽減、耐え判定によるダメージ軽減、抵抗判定成功時のダメージ半減を全て無視して干渉攻撃のダメージを与える。",
         "sourceOrder": 15
       },
       {
@@ -1059,7 +1103,7 @@
         "id": "item-omamori-06d6b8adf3a3",
         "name": "長持ちのお守り",
         "credit": 3,
-        "effect": "シナリオ1回、ダメージ軽減や防御力を減少したり無視したりする効果を無効化する。",
+        "effect": "シーン1回、ダメージ軽減や防御力を減少したり無視したりする効果を無効化する。",
         "sourceOrder": 19
       },
       {
@@ -1075,6 +1119,34 @@
         "credit": 4,
         "effect": "シナリオ開始時に選択した技能の判定数+1。",
         "sourceOrder": 21
+      },
+      {
+        "id": "item-omamori-65c4a580a9b2",
+        "name": "壊れた時計",
+        "credit": 4,
+        "effect": "シナリオ1回、攻撃の達成値によらずカウンター以外の望むリアクションを成功させ、ダメージを0にする。攻撃キャラクターは判定を振り直す効果を使用できない。この効果は、あなたがすでに今生の縁を覚悟にしているときだけ使用できる。",
+        "sourceOrder": 22
+      },
+      {
+        "id": "item-omamori-efb6b657fe40",
+        "name": "古びた写真",
+        "credit": 3,
+        "effect": "シナリオ1回、覚悟を使用したときの判定数上昇や気絶からの回復量のダイスを2倍にする。",
+        "sourceOrder": 23
+      },
+      {
+        "id": "item-omamori-aac16d61edd6",
+        "name": "小さなオルゴール",
+        "credit": 2,
+        "effect": "シナリオ1回、カシラのスキル「大将の矜持」を取得しているかのように他人に覚悟を使用できる。この効果を使用した場合、全てのPCはシナリオ終了時に追加で2点経験点を得る。",
+        "sourceOrder": 24
+      },
+      {
+        "id": "item-omamori-6de648937e87",
+        "name": "走馬灯",
+        "credit": 0,
+        "effect": "カバーリングと同時に効果を使用しても良い。あなたが受けたダメージと同じだけ攻撃キャラクターの体力を失わせる。この効果を適用した攻撃のダメージであなたの体力が0以下になるならば、覚悟を使用して回復することはできず、そのまま死亡する。",
+        "sourceOrder": 25
       }
     ],
     "cybernetics": {
@@ -1112,7 +1184,7 @@
           "name": "イニシアチブブースト",
           "credit": 5,
           "implantPoints": 1,
-          "effect": "戦闘開始時に精神力を10点まで消費してその点数行動値を上下させられる。",
+          "effect": "セットアップに精神力を10点まで消費して、その点数だけ、シーン終了時まで行動値を上下させられる。",
           "sourceOrder": 4
         },
         {
@@ -1168,7 +1240,7 @@
           "name": "フィルムブレード",
           "credit": 5,
           "implantPoints": 3,
-          "effect": "サイバネ武器",
+          "effect": "サイバネ武器。",
           "sourceOrder": 10
         },
         {
@@ -1293,13 +1365,22 @@
           "sourceOrder": 23
         },
         {
+          "id": "item-cybernetics-leg-b016d03b3e10",
+          "part": "足",
+          "name": "スプリングサイ",
+          "credit": 5,
+          "implantPoints": 3,
+          "effect": "サイバネ武器。あなたが与える激痛、転倒、放心の強度は+1される。",
+          "sourceOrder": 24
+        },
+        {
           "id": "item-cybernetics-leg-3b15de7bff90",
           "part": "足",
           "name": "タイヤフット",
           "credit": 1,
           "implantPoints": 1,
           "effect": "移動力+1。",
-          "sourceOrder": 24
+          "sourceOrder": 25
         },
         {
           "id": "item-cybernetics-leg-2fcd423ff5d5",
@@ -1308,7 +1389,7 @@
           "credit": 2,
           "implantPoints": 2,
           "effect": "敏捷を用いる判定の判定数+1。",
-          "sourceOrder": 25
+          "sourceOrder": 26
         },
         {
           "id": "item-cybernetics-leg-e117499826cf",
@@ -1317,7 +1398,7 @@
           "credit": 3,
           "implantPoints": 1,
           "effect": "近接攻撃と防御、回避の判定数+1。この効果は移動をしたラウンドには発揮されない。サイバネの埋め込み点数が6点以上ならば転倒を受けない。",
-          "sourceOrder": 26
+          "sourceOrder": 27
         },
         {
           "id": "item-cybernetics-leg-d649ccf78cd7",
@@ -1326,7 +1407,7 @@
           "credit": 4,
           "implantPoints": 1,
           "effect": "戦闘中飛行状態になる。移動力+2。",
-          "sourceOrder": 27
+          "sourceOrder": 28
         }
       ],
       "any": [
@@ -1337,7 +1418,7 @@
           "credit": 4,
           "implantPoints": 1,
           "effect": "あなたが毒によって失う体力は半分になり、出血は一度体力を失ったら解除される。",
-          "sourceOrder": 28
+          "sourceOrder": 29
         },
         {
           "id": "item-cybernetics-any-033a21c90877",
@@ -1346,7 +1427,7 @@
           "credit": 2,
           "implantPoints": 1,
           "effect": "防御力+3。複数埋め込み可能。",
-          "sourceOrder": 29
+          "sourceOrder": 30
         },
         {
           "id": "item-cybernetics-any-bd53326cdf15",
@@ -1355,7 +1436,7 @@
           "credit": 3,
           "implantPoints": 1,
           "effect": "防御力+1。「過負荷攻撃」で破壊するとダメージ+10。（過負荷攻撃の制限は無視する）複数埋め込み可能。",
-          "sourceOrder": 30
+          "sourceOrder": 31
         },
         {
           "id": "item-cybernetics-any-aa7892f5069d",
@@ -1364,7 +1445,7 @@
           "credit": 6,
           "implantPoints": 2,
           "effect": "全判定数+1。",
-          "sourceOrder": 31
+          "sourceOrder": 32
         },
         {
           "id": "item-cybernetics-any-bd9db9f504ab",
@@ -1373,7 +1454,7 @@
           "credit": 3,
           "implantPoints": 1,
           "effect": "激痛が与えられるならば、次の手番終了時まで攻撃の効果値がその激痛の強度だけ上昇する。サイバネの埋め込み点数が6以上ならば激痛を受けない。（効果値上昇の効果は適用される）",
-          "sourceOrder": 32
+          "sourceOrder": 33
         }
       ]
     },
@@ -1557,6 +1638,15 @@
         "activationMentalCost": 20,
         "effect": "発動したラウンドは行動回数+1。",
         "sourceOrder": 20
+      },
+      {
+        "id": "item-nanomachine-20ce7b4fa431",
+        "name": "ヒバナ",
+        "credit": 2,
+        "implantPoints": 1,
+        "activationMentalCost": 5,
+        "effect": "このナノマシンの発動時にあなたが埋め込んでいる任意のナノマシンを発動させてもよい。同時に発動させたナノマシンの発動精神力は支払う必要がある。",
+        "sourceOrder": 21
       }
     ],
     "drugs": [
@@ -1739,6 +1829,16 @@
         "badTripIntensity": 0,
         "effect": "戦闘移動のかわりに使用。その手番の射撃攻撃は命中した対象にバッドトリップ1を与える。このドラッグは1つしか取得できない。",
         "sourceOrder": 18
+      },
+      {
+        "id": "item-drug-su-33070abea235",
+        "name": "ポイズンスプレー",
+        "credit": 5,
+        "timing": "SU",
+        "setQuantity": 1,
+        "badTripIntensity": 1,
+        "effect": "シーン終了まで素手素足による攻撃の効果値+「あなたが受けているBTの強度」。このドラッグは1つしか取得できない。",
+        "sourceOrder": 19
       }
     ]
   }

@@ -1,6 +1,6 @@
 {
   "dataName": "common-skills",
-  "updatedAt": "2026-08-04T22:17:46+09:00",
+  "updatedAt": "2026-08-21T16:15:36+09:00",
   "data": {
     "bonus": [
       {
@@ -301,7 +301,7 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "effect": "攻撃の達成値+3。",
+        "effect": "攻撃の達成値+3。すでに成功している判定には使用できない。",
         "sourceOrder": 20,
         "id": "skill-common-basic-ra-378595018986"
       },
@@ -451,7 +451,7 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "effect": "ただちに「タイミング：M」のスキルまたは行動を追加で2つ使用する。",
+        "effect": "ただちに「タイミング：M」のスキルまたは行動を追加で2つ使用する。同じスキル、行動は2回使用できない。",
         "sourceOrder": 30,
         "id": "skill-common-basic-m-e16dbadf047f"
       },
@@ -466,7 +466,7 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "effect": "ただちに「タイミング：SU」のスキルまたは行動を追加で2つ使用する。",
+        "effect": "ただちに「タイミング：SU」のスキルまたは行動を追加で2つ使用する。同じスキル、行動は2回使用できない。",
         "sourceOrder": 31,
         "id": "skill-common-basic-su-29204f696ac8"
       },
@@ -481,11 +481,147 @@
         "target": "自身",
         "range": null,
         "usageRestriction": "1/R&lv/Sn",
-        "effect": "ただちに「タイミング：D」のスキルまたは行動を追加で2つ使用する。",
+        "effect": "ただちに「タイミング：D」のスキルまたは行動を追加で2つ使用する。同じスキル、行動は2回使用できない。",
         "sourceOrder": 32,
         "id": "skill-common-basic-d-f5c506096925"
       }
     ],
-    "advanced": []
+    "advanced": [
+      {
+        "category": "advanced",
+        "name": "裏社会の繋がり",
+        "maxLevel": 1,
+        "timing": "Pv",
+        "cost": null,
+        "proficiency": null,
+        "acquisitionRestriction": "特殊",
+        "target": "自身",
+        "range": null,
+        "usageRestriction": null,
+        "effect": "結べる縁の数が+1される。このスキルは、最大レベルが3以上の共通スキルを1つ以上、最大レベルで取得していないと取得できない。",
+        "sourceOrder": 33,
+        "id": "skill-common-advanced-pv-17c7d909fda5"
+      },
+      {
+        "category": "advanced",
+        "name": "あったかもしれない未来",
+        "maxLevel": 3,
+        "timing": "SU",
+        "cost": "覚悟",
+        "proficiency": null,
+        "acquisitionRestriction": null,
+        "target": "自身",
+        "range": null,
+        "usageRestriction": "lv/Sc",
+        "effect": "ラウンド終了時まであなたが取得していない、あなたの生き様の「帰還不能地点：XX」スキルを習得しているものとして扱う。あなたがすでに覚悟を使用しているならば、覚悟の代わりに、コストとして気合3点と体力20点を支払っても良い。",
+        "sourceOrder": 34,
+        "id": "skill-common-advanced-su-090177978e82"
+      },
+      {
+        "category": "advanced",
+        "name": "血しぶきの刃",
+        "maxLevel": 5,
+        "timing": "D",
+        "cost": "体SP",
+        "proficiency": null,
+        "acquisitionRestriction": null,
+        "target": "自身",
+        "range": null,
+        "usageRestriction": "1/Sn",
+        "effect": "lv×10点までの体力を消費する。消費した体力5点につき効果値+1。",
+        "sourceOrder": 35,
+        "id": "skill-common-advanced-d-098c5cb200cd"
+      },
+      {
+        "category": "advanced",
+        "name": "食いしばり",
+        "maxLevel": 5,
+        "timing": "D",
+        "cost": "精SP",
+        "proficiency": null,
+        "acquisitionRestriction": null,
+        "target": "自身",
+        "range": null,
+        "usageRestriction": "1/Sn",
+        "effect": "lv×10点までの精神力を消費する。消費した精神力5点につき1d6点、受けるダメージを減少させる。",
+        "sourceOrder": 36,
+        "id": "skill-common-advanced-d-77de43641cc7"
+      },
+      {
+        "category": "advanced",
+        "name": "引き伸びた時間",
+        "maxLevel": 5,
+        "timing": "SP",
+        "cost": "精SP",
+        "proficiency": null,
+        "acquisitionRestriction": null,
+        "target": "自身",
+        "range": null,
+        "usageRestriction": "1/Sc",
+        "effect": "任意の判定と同時に使用する。lv×10点までの精神力を消費する。消費した精神力10点につき判定数+1。",
+        "sourceOrder": 37,
+        "id": "skill-common-advanced-sp-bcf08e9ed230"
+      },
+      {
+        "category": "advanced",
+        "name": "限界突破",
+        "maxLevel": 3,
+        "timing": "SP",
+        "cost": "気2",
+        "proficiency": null,
+        "acquisitionRestriction": null,
+        "target": "自身",
+        "range": null,
+        "usageRestriction": "1/R&lv/Sn",
+        "effect": "スキルのレベルによって効果が変わるスキルと同時に使用する。そのスキルの効果が発揮されている間、そのスキルの現在レベルと最大レベルは+1されているものとして扱う。気合を追加で2点消費することで、更に現在レベルと最大レベルが+1されているものとして扱う。",
+        "sourceOrder": 38,
+        "id": "skill-common-advanced-sp-0a9018869221"
+      },
+      {
+        "category": "advanced",
+        "name": "こなれた技捌き",
+        "maxLevel": 3,
+        "timing": "SP",
+        "cost": "気SP",
+        "proficiency": null,
+        "acquisitionRestriction": null,
+        "target": "自身",
+        "range": null,
+        "usageRestriction": "1/R",
+        "effect": "スキルのレベルによって使用制限が変わるスキルと同時に使用する。同時に使用したスキルのラウンド制限とシーン制限は消費されない。このスキルのコストは気合「4-lv」点である。",
+        "sourceOrder": 39,
+        "id": "skill-common-advanced-sp-3c70d1cbcc71"
+      },
+      {
+        "category": "advanced",
+        "name": "灰色の幻影",
+        "maxLevel": 3,
+        "timing": "SP",
+        "cost": "気3",
+        "proficiency": null,
+        "acquisitionRestriction": null,
+        "target": "自身",
+        "range": null,
+        "usageRestriction": "1/R&lv/Sc",
+        "effect": "判定が失敗した直後に使用する。同じ判定数と基準値でその判定を振り直す。気合3点の代わりに覚悟を支払っても良い。",
+        "sourceOrder": 40,
+        "id": "skill-common-advanced-sp-f1dcc26fedc3"
+      },
+      {
+        "category": "advanced",
+        "name": "一時の皆伝",
+        "maxLevel": 1,
+        "timing": "SP",
+        "cost": "覚悟",
+        "proficiency": null,
+        "acquisitionRestriction": null,
+        "target": "自身",
+        "range": null,
+        "usageRestriction": "1/Sc",
+        "effect": "手番開始時に使用する。手番終了時まで、任意の「タイミング：A-☆または☆-A」のスキルを取得しているものとして扱う。そのスキルの技能は変わらない。そのスキルのコストは気合0点となる。この効果で取得しているスキルによる攻撃ではクロスコンボは発生しない。",
+        "sourceOrder": 41,
+        "id": "skill-common-advanced-sp-74a693865d6a"
+      }
+    ]
   }
 }

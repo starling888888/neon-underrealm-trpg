@@ -30,3 +30,11 @@ export const commonSkills = getCommonSkillsByCategory();
 <CardContainer>
   {commonSkills.basic.map((skill) => <SkillCard {...skill} anchorId={skill.id} />)}
 </CardContainer>
+
+## 共通スキルレベル合計5以上から取得可能なスキル
+
+以下のスキルはすでに**共通スキルを合計5レベル以上**習得しているキャラクターのみが習得できます。
+
+<CardContainer>
+  {commonSkills.advanced.map((skill) => <SkillCard {...skill} anchorId={skill.id} />)}
+</CardContainer>

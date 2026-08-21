@@ -256,14 +256,19 @@
   "primarySkills": {
     "rows": [
       {
-        "level": 3,
-        "rowId": "primary-skill-1",
+        "level": 1,
+        "rowId": "6b45e4d6-4068-48c6-a046-582a1b8c8123",
         "skillId": "skill-ryugi-teppoudama-basic-a-74297b7e9a60"
       },
       {
         "level": 1,
         "rowId": "primary-skill-2",
         "skillId": "skill-ryugi-teppoudama-basic-r-6bcae2d415bd"
+      },
+      {
+        "level": 2,
+        "rowId": "fa0f5ba4-412e-430c-8b39-fff11a71edac",
+        "skillId": "skill-ryugi-teppoudama-basic-d-c1f21899eb50"
       }
     ]
   },
@@ -273,7 +278,7 @@
     "nickname": "",
     "pcName": "連撃の鉄拳",
     "playerName": "",
-    "setting": "サイバネで強化した体で怒涛のコンボを叩き込むキャラクターです。「過負荷攻撃」でブラストプレートを破壊して大ダメージをだし、高速修理で修復しましょう。相手の攻撃達成値が低いチャンスを狙って、「迎撃」でカウンターを叩き込みましょう。"
+    "setting": "サイバネで強化した体で怒涛のコンボを叩き込むキャラクターです。「過負荷攻撃」でブラストプレートを破壊して大ダメージをだし、「高速修理」で修復しましょう。相手の攻撃達成値が低いチャンスを狙って、「迎撃」でカウンターを叩き込みましょう。"
   },
   "secondaryAttributes": {
     "actionCountModifier": 1,
