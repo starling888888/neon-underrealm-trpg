@@ -1,6 +1,6 @@
 {
   "dataName": "ikizama-skills",
-  "updatedAt": "2026-08-21T21:33:52+09:00",
+  "updatedAt": "2026-08-22T02:55:20+09:00",
   "data": {
     "burai": {
       "bonus": [
@@ -14,7 +14,7 @@
           "acquisitionRestriction": "自動習得",
           "target": "自身",
           "range": null,
-          "usageRestriction": "lv/Sn",
+          "usageRestriction": "lv/幕",
           "effect": "気合を2点獲得する。",
           "sourceOrder": 1,
           "id": "skill-ikizama-burai-bonus-su-359f2342b1e4"
@@ -151,7 +151,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "lv/Sn",
+          "usageRestriction": "lv/幕",
           "effect": "任意のマスに移動する。",
           "sourceOrder": 10,
           "id": "skill-ikizama-burai-basic-ini-35d0064cb993"
@@ -166,7 +166,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/Sn",
+          "usageRestriction": "1/幕",
           "effect": "体力をlv×10d6点回復する。",
           "sourceOrder": 11,
           "id": "skill-ikizama-burai-basic-cu-1ca6d464536b"
@@ -213,7 +213,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R",
+          "usageRestriction": "1/巡",
           "effect": "小銭を3点まで支払う。小銭1点に付きシーン終了時まで以下のいずれかの効果を得る。攻撃力+3。ガード値+2。防御力+3。ダメージ軽減+2。同じ効果を2回まで選んでも良い。複数回使用したとき、それぞれの効果は累積する。",
           "sourceOrder": 14,
           "id": "skill-ikizama-burai-advanced-ini-7dcf9a05ea38"
@@ -228,7 +228,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R",
+          "usageRestriction": "1/巡",
           "effect": "達成値を上昇させる共通スキルの使用時や効果が発揮されたときに使用する。達成値をさらに+1する。この効果でちょうど判定が成功した場合は気合を1点得る。",
           "sourceOrder": 15,
           "id": "skill-ikizama-burai-advanced-sp-77e829bb2f8e"
@@ -354,7 +354,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R",
+          "usageRestriction": "1/巡",
           "effect": "壊れたサイバネ1つを修復する。",
           "sourceOrder": 5,
           "id": "skill-ikizama-kejime-basic-ini-ac4802af656a"
@@ -369,7 +369,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/Sn",
+          "usageRestriction": "1/幕",
           "effect": "移動を行う。敵対キャラクターのいるマスを通り抜けて良い。このラウンド中、すべての判定の判定数+lv。",
           "sourceOrder": 6,
           "id": "skill-ikizama-kejime-basic-su-a0a34078cf90"
@@ -399,7 +399,7 @@
           "acquisitionRestriction": null,
           "target": "1体",
           "range": null,
-          "usageRestriction": "1/R",
+          "usageRestriction": "1/巡",
           "effect": "サイバネを一つ破壊する。カバーリングを行う。このカバーリングで減少する行動回数は2-「破壊したサイバネの埋め込み点数」（最低0）である。次の攻撃の判定数+「破壊したサイバネの埋め込み点数-2」（最低0）。",
           "sourceOrder": 8,
           "id": "skill-ikizama-kejime-basic-d-16acc393541d"
@@ -510,7 +510,7 @@
           "acquisitionRestriction": "自動習得",
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R",
+          "usageRestriction": "1/巡",
           "effect": "ナノマシン発動中にしか使用できない。気合いをlv点まで獲得する。このスキルのコストは獲得した気合×5点である。",
           "sourceOrder": 1,
           "id": "skill-ikizama-sumi-bonus-ini-4cc330521451"
@@ -557,7 +557,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R",
+          "usageRestriction": "1/巡",
           "effect": "ナノマシン発動中にしか使用できない。体力をlv×4d6点回復する。",
           "sourceOrder": 4,
           "id": "skill-ikizama-sumi-basic-ini-58f5bf5d0e32"
@@ -572,7 +572,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R&lv/Sn",
+          "usageRestriction": "1/巡&lv/幕",
           "effect": "ナノマシン発動中にしか使用できない。全てのBSを解除する。解除したBS1つにつきラウンド終了時まですべての判定数+1。",
           "sourceOrder": 5,
           "id": "skill-ikizama-sumi-basic-ini-f820d83bac5d"
@@ -587,7 +587,7 @@
           "acquisitionRestriction": null,
           "target": "1体",
           "range": null,
-          "usageRestriction": "1/R",
+          "usageRestriction": "1/巡",
           "effect": "ナノマシン発動中にしか使用できない。カバーリングを行う。このカバーリングでは行動回数の減少が-1される。ナノマシン一つを選び解除する。その攻撃で受けるダメージ-「解除したナノマシンのもともとの消費精神力」。",
           "sourceOrder": 6,
           "id": "skill-ikizama-sumi-basic-d-e9a71b2b36e7"
@@ -602,7 +602,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/Sn",
+          "usageRestriction": "1/幕",
           "effect": "ナノマシン発動時に使用。ただちに1回手番を行い、行動済みにならない。ただしこの手番での行動回数はlv回であり、貴方のもともとの行動回数を超えることはできない。",
           "sourceOrder": 7,
           "id": "skill-ikizama-sumi-basic-sp-c6906690f930"
@@ -728,7 +728,7 @@
           "acquisitionRestriction": "自動習得",
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R&lv/Sn",
+          "usageRestriction": "1/巡&lv/幕",
           "effect": "気合を2点獲得する。受けているバッドトリップの強度を+1するなら、追加で気合を1点獲得する。",
           "sourceOrder": 1,
           "id": "skill-ikizama-yaku-bonus-ini-812485697d9d"
@@ -805,7 +805,7 @@
           "acquisitionRestriction": null,
           "target": "1体",
           "range": null,
-          "usageRestriction": "1/Sn",
+          "usageRestriction": "1/幕",
           "effect": "カバーリングを行う。受けているバッドトリップの強度を+1する。あなたのバッドトリップの強度が「カバーリングで減少する行動回数」×3以上ならば、あなたは次の手番で行動回数が減少せず、即座に行動回数2回の手番を行う。行動済みでも手番を行え、手番を行っても行動済みにならない。",
           "sourceOrder": 6,
           "id": "skill-ikizama-yaku-basic-d-da666d366634"
@@ -820,7 +820,7 @@
           "acquisitionRestriction": null,
           "target": "自身",
           "range": null,
-          "usageRestriction": "1/R&lv/Sn",
+          "usageRestriction": "1/巡&lv/幕",
           "effect": "ドラッグ服薬時に使用。即座に移動を行う。この移動では敵と同じマスに入っても移動を終了する必要がなく、敵と同じマスにいても使用できる。",
           "sourceOrder": 7,
           "id": "skill-ikizama-yaku-basic-sp-74f73ca70483"

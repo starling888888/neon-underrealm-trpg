@@ -483,6 +483,14 @@ source種別は以下を使う。
 - 観測した失敗: action menuの可変長error一覧について、実装、Component test、current issueだけを更新し、承認済みdesign正本への影響を修正前に横断確認しなかった。そのため、修正後のPRレビューで同じ表示契約の記録漏れが追加指摘となった。
 - 一次対応: レビュー指摘11へdesign正本の更新を記録した。以後、UI表示契約を修正する前に、関連するdesign正本を含むSSoTを検索し、更新対象または変更不要の判断を先に確認する。
 
+#### Implemented a converter against stale local spreadsheet exports
+
+- date: 2026-08-22
+- source: user
+- 発生箇所: `ex-16-usage-restriction-labels` の使用制限表記更新
+- 観測した失敗: `.raw/data/`をGoogle Spreadsheetから同期し直さず、古いローカルExcelが持つ`R`、`Sn`、`Sc`を入力契約と誤認した。その結果、最新入力が既に使う`巡`、`幕`、`話`へ置換する変換ロジックと誤った変換仕様を実装した。
+- 一次対応: `npm run sync:google-sheets`で最新Excelを再取得し、実入力値を確認した。置換ロジックを撤回し、新表記の構文だけを検証して入力値をそのまま出力する実装と仕様へ修正する。データ変換前には、入力が外部同期対象なら必ず同期時刻と実値を確認する。
+
 ### test environment configuration
 
 #### Configured Vitest without the React TSX transform

@@ -185,7 +185,7 @@ function collectRows(rows: Rows): RawSkill[] {
       ),
       target: optionalOneLine(values[7], "対象", rowNumber, 7),
       range: optionalOneLine(values[8], "射程", rowNumber, 8),
-      usageRestriction: optionalOneLine(values[9], "使用制限", rowNumber, 9),
+      usageRestriction: usageRestriction(values[9], rowNumber, 9),
       effect: requiredMultiline(values[10], "効果", rowNumber, 10),
       sourceOrder: rowIndex,
       rowNumber,
@@ -297,6 +297,25 @@ function optionalOneLine(
       `${label} must not contain line breaks at ${cellLocation(row, column)}.`,
     );
   return result;
+}
+
+function usageRestriction(
+  value: CellValue | null | undefined,
+  row: number,
+  column: number,
+): string | null {
+  const result = optionalOneLine(value, "使用制限", row, column);
+  if (result === null || !result.includes("/")) return result;
+  if (
+    result
+      .split("&")
+      .every((part) => /^(?:[1-9][0-9]*|lv|LV)\/(?:巡|幕|話)$/.test(part))
+  ) {
+    return result;
+  }
+  throw new Error(
+    `使用制限 is invalid at ${cellLocation(row, column)}: "${result}".`,
+  );
 }
 
 function requiredMultiline(
