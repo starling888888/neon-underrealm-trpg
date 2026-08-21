@@ -124,6 +124,7 @@ export default function useIkizamaSkillsSectionProps(
         build.ikizamaId === null
           ? null
           : (getIkizamaById(build.ikizamaId)?.name ?? null),
+      ikizamaLevel: build.ikizamaLevel,
       ikizamaSelected: build.ikizamaId !== null,
       maximumSkillNameLength,
       onAdd: () => append(createIkizamaSkillRow()),
@@ -157,12 +158,14 @@ export default function useIkizamaSkillsSectionProps(
         move(index, targetIndex);
       },
       rows,
+      selectedLevelTotal: validation.selectedLevelTotal,
       synchronizationKey: defaultValues?.ikizamaSkills,
     }),
     [
       append,
       bonusSkill,
       build.ikizamaId,
+      build.ikizamaLevel,
       getValues,
       ikizamaSkills.bonusLevel,
       move,

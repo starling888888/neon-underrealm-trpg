@@ -59,6 +59,10 @@ describe("character sheet other ryugi skills", () => {
     );
 
     expect(validation.invalidRyugiRowIds).toEqual(["other-a"]);
+    expect(validation.selectedLevelTotals).toEqual([
+      { ryugiRowId: "other-a", selectedLevelTotal: 2 },
+      { ryugiRowId: "other-b", selectedLevelTotal: 2 },
+    ]);
   });
 
   it("reports an other-ryugi skill above its maximum level", () => {

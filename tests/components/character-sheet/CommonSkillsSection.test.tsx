@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import CommonSkillsSection from "../../../src/character-sheet/components/sections/CommonSkillsSection";
@@ -37,8 +37,14 @@ describe("CommonSkillsSection", () => {
     );
 
     expect(screen.getAllByText("基本の一撃")).toHaveLength(2);
+    const summary = screen.getByRole("button", {
+      name: "取得合計レベル：0／合計レベル上限：1",
+    });
+    fireEvent.click(summary);
     expect(
-      screen.getByText("取得合計レベル：0／合計レベル上限：1"),
+      screen.getByRole("tooltip", {
+        name: "自動習得の「基本の一撃」のレベルはは含みません。",
+      }),
     ).not.toBeNull();
     expect(
       screen.getByRole("button", { name: "共通スキル未選択スキル1" }),

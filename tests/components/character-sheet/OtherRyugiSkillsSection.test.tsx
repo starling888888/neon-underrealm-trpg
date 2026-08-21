@@ -34,8 +34,10 @@ function createProps(): OtherRyugiSkillsSectionProps {
           { level: 1, rowId: "second", skill: second, skillId: second.id },
         ],
         ryugiName: "ケンカヤ",
+        ryugiLevel: 1,
         ryugiRowId: "other-1",
         ryugiSelected: true,
+        selectedLevelTotal: 2,
       },
     ],
   };
@@ -44,6 +46,12 @@ function createProps(): OtherRyugiSkillsSectionProps {
 afterEach(cleanup);
 
 describe("OtherRyugiSkillsSection", () => {
+  it("shows a separate total for each other ryugi", () => {
+    render(<OtherRyugiSkillsSection {...createProps()} />);
+
+    expect(screen.getByText("取得合計レベル：2／流儀レベル：1")).not.toBeNull();
+  });
+
   it("reuses the shared section for each other ryugi and keeps its level error local", () => {
     const props = createProps();
     const [firstRow, secondRow] = props.sections[0]?.rows ?? [];
@@ -89,6 +97,7 @@ describe("OtherRyugiSkillsSection", () => {
     );
 
     expect(screen.getByText("その他流儀を選択してください。")).not.toBeNull();
+    expect(screen.queryByText(/取得合計レベル/)).toBeNull();
     expect(screen.queryByRole("button", { name: /へ移動$/ })).toBeNull();
   });
 });

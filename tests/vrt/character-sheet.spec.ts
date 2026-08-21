@@ -354,6 +354,24 @@ async function selectPrimarySkill(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
+async function openPrimarySkillsSummaryTooltip(page: Page): Promise<void> {
+  await selectPrimarySkill(page);
+  await openTooltip(page, "取得合計レベル：1／流儀レベル：1");
+}
+
+async function preparePrimarySkillsTotalError(page: Page): Promise<void> {
+  await selectPrimarySkill(page);
+  await primarySkills
+    .resolve(page)
+    .getByRole("button", { exact: true, name: "未選択スキル2" })
+    .click();
+  const picker = page.getByRole("dialog", {
+    name: "プライマリ流儀スキルを選択",
+  });
+  await picker.getByRole("button", { exact: true, name: "一閃" }).click();
+  await expect(picker).toBeHidden();
+}
+
 async function selectLongIkizamaSkill(page: Page): Promise<void> {
   await page.getByLabel("生き様Lv", { exact: true }).fill("4");
   await selectOption(
@@ -369,6 +387,24 @@ async function selectLongIkizamaSkill(page: Page): Promise<void> {
     .getByRole("button", { name: /帰還不能地点/ })
     .first()
     .click();
+  await expect(picker).toBeHidden();
+}
+
+async function openIkizamaSkillsSummaryTooltip(page: Page): Promise<void> {
+  await selectLongIkizamaSkill(page);
+  await openTooltip(page, "取得合計レベル：1／生き様レベル：4");
+}
+
+async function prepareIkizamaSkillsTotalError(page: Page): Promise<void> {
+  await openIkizamaSkillPicker(page);
+  const picker = page.getByRole("dialog", { name: "生き様スキルを選択" });
+  await picker.getByRole("button", { exact: true, name: "超常発露" }).click();
+  await expect(picker).toBeHidden();
+  await ikizamaSkills
+    .resolve(page)
+    .getByRole("button", { exact: true, name: "未選択スキル2" })
+    .click();
+  await picker.getByRole("button", { exact: true, name: "装備の達人" }).click();
   await expect(picker).toBeHidden();
 }
 
@@ -421,6 +457,11 @@ async function selectCommonSkill(page: Page): Promise<void> {
   await expect(picker).toBeHidden();
 }
 
+async function openCommonSkillsSummaryTooltip(page: Page): Promise<void> {
+  await selectCommonSkill(page);
+  await openTooltip(page, "取得合計レベル：1／合計レベル上限：1");
+}
+
 async function addOtherRyugi(page: Page): Promise<void> {
   await page.getByRole("button", { name: "＋ その他流儀を追加" }).click();
   await selectOption(
@@ -430,6 +471,10 @@ async function addOtherRyugi(page: Page): Promise<void> {
   await page
     .getByRole("spinbutton", { name: "その他流儀1Lv", exact: true })
     .fill("1");
+}
+
+async function addUnselectedOtherRyugi(page: Page): Promise<void> {
+  await page.getByRole("button", { name: "＋ その他流儀を追加" }).click();
 }
 
 async function openOtherRyugiSkillPicker(page: Page): Promise<void> {
@@ -447,6 +492,20 @@ async function selectOtherRyugiSkill(page: Page): Promise<void> {
   await openOtherRyugiSkillPicker(page);
   const picker = page.getByRole("dialog", { name: "その他流儀スキルを選択" });
   await picker.getByRole("button", { exact: true, name: "旋風" }).click();
+  await expect(picker).toBeHidden();
+}
+
+async function prepareOtherRyugiSkillsTotalError(page: Page): Promise<void> {
+  await selectOtherRyugiSkill(page);
+  const section = otherRyugiSkills.resolve(page);
+  await section
+    .getByRole("button", { exact: true, name: "＋ スキルを追加" })
+    .click();
+  await section
+    .getByRole("button", { exact: true, name: "未選択スキル2" })
+    .click();
+  const picker = page.getByRole("dialog", { name: "その他流儀スキルを選択" });
+  await picker.getByRole("button", { exact: true, name: "一閃" }).click();
   await expect(picker).toBeHidden();
 }
 
@@ -815,6 +874,18 @@ registerCharacterSheetVrtScenarios([
     route: siteRoutes.characterSheet,
   },
   {
+    id: "primary-skills-tooltip",
+    kind: "full-page",
+    prepare: openPrimarySkillsSummaryTooltip,
+    route: siteRoutes.characterSheet,
+  },
+  {
+    id: "primary-skills-unavailable",
+    kind: "section",
+    locator: primarySkills,
+    route: siteRoutes.characterSheet,
+  },
+  {
     id: "primary-skills-error",
     kind: "section",
     locator: primarySkills,
@@ -826,10 +897,29 @@ registerCharacterSheetVrtScenarios([
     route: siteRoutes.characterSheet,
   },
   {
+    id: "primary-skills-total-error",
+    kind: "section",
+    locator: primarySkills,
+    prepare: preparePrimarySkillsTotalError,
+    route: siteRoutes.characterSheet,
+  },
+  {
     id: "ikizama-skills-input",
     kind: "section",
     locator: ikizamaSkills,
     prepare: selectLongIkizamaSkill,
+    route: siteRoutes.characterSheet,
+  },
+  {
+    id: "ikizama-skills-tooltip",
+    kind: "full-page",
+    prepare: openIkizamaSkillsSummaryTooltip,
+    route: siteRoutes.characterSheet,
+  },
+  {
+    id: "ikizama-skills-unavailable",
+    kind: "section",
+    locator: ikizamaSkills,
     route: siteRoutes.characterSheet,
   },
   {
@@ -846,6 +936,13 @@ registerCharacterSheetVrtScenarios([
     route: siteRoutes.characterSheet,
   },
   {
+    id: "ikizama-skills-total-error",
+    kind: "section",
+    locator: ikizamaSkills,
+    prepare: prepareIkizamaSkillsTotalError,
+    route: siteRoutes.characterSheet,
+  },
+  {
     id: "common-skills-default",
     kind: "section",
     locator: commonSkills,
@@ -856,6 +953,12 @@ registerCharacterSheetVrtScenarios([
     kind: "section",
     locator: commonSkills,
     prepare: selectCommonSkill,
+    route: siteRoutes.characterSheet,
+  },
+  {
+    id: "common-skills-tooltip",
+    kind: "full-page",
+    prepare: openCommonSkillsSummaryTooltip,
     route: siteRoutes.characterSheet,
   },
   {
@@ -876,6 +979,13 @@ registerCharacterSheetVrtScenarios([
     route: siteRoutes.characterSheet,
   },
   {
+    id: "other-ryugi-skills-unavailable",
+    kind: "section",
+    locator: otherRyugiSkills,
+    prepare: addUnselectedOtherRyugi,
+    route: siteRoutes.characterSheet,
+  },
+  {
     id: "other-ryugi-skills-error",
     kind: "section",
     locator: otherRyugiSkills,
@@ -887,6 +997,13 @@ registerCharacterSheetVrtScenarios([
         .getByLabel("旋風Lv", { exact: true })
         .fill("2");
     },
+    route: siteRoutes.characterSheet,
+  },
+  {
+    id: "other-ryugi-skills-total-error",
+    kind: "section",
+    locator: otherRyugiSkills,
+    prepare: prepareOtherRyugiSkillsTotalError,
     route: siteRoutes.characterSheet,
   },
   {

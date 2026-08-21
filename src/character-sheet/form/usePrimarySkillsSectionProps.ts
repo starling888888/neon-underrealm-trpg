@@ -135,13 +135,16 @@ export default function usePrimarySkillsSectionProps(
         build.primaryRyugiId === null
           ? null
           : (getRyugiById(build.primaryRyugiId)?.name ?? null),
+      primaryRyugiLevel: build.primaryRyugiLevel,
       primaryRyugiSelected: build.primaryRyugiId !== null,
       rows,
+      selectedLevelTotal: validation.selectedLevelTotal,
       synchronizationKey: defaultValues?.primarySkills,
     }),
     [
       append,
       build.primaryRyugiId,
+      build.primaryRyugiLevel,
       defaultValues?.primarySkills,
       getRows,
       groups.bonus,

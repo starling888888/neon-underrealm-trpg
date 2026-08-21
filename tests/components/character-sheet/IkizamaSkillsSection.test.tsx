@@ -24,6 +24,7 @@ function createProps(): IkizamaSkillsSectionProps {
     invalidDuplicateSkillRowIds: [],
     invalidMaximumLevelRowIds: [],
     ikizamaName: "ブライ",
+    ikizamaLevel: 3,
     ikizamaSelected: true,
     maximumSkillNameLength: 8,
     onAdd: vi.fn(),
@@ -32,12 +33,35 @@ function createProps(): IkizamaSkillsSectionProps {
     onPickerRequest: vi.fn(),
     onRemove: vi.fn(),
     rows: [{ level: 1, rowId: "only", skill, skillId: skill.id }],
+    selectedLevelTotal: 1,
   };
 }
 
 afterEach(cleanup);
 
 describe("IkizamaSkillsSection", () => {
+  it("shows the ikizama total and its tooltip", () => {
+    render(<IkizamaSkillsSection {...createProps()} />);
+
+    const summary = screen.getByRole("button", {
+      name: "取得合計レベル：1／生き様レベル：3",
+    });
+    fireEvent.click(summary);
+
+    expect(
+      screen.getByRole("tooltip", {
+        name: "自動習得の生き様ボーナススキル1レベル分のレベルは含みません。",
+      }),
+    ).not.toBeNull();
+  });
+
+  it("hides the total before an ikizama is selected", () => {
+    render(<IkizamaSkillsSection {...createProps()} ikizamaSelected={false} />);
+
+    expect(screen.getByText("生き様を選択してください。")).not.toBeNull();
+    expect(screen.queryByText(/取得合計レベル/)).toBeNull();
+  });
+
   it("allows removing the last normal row while retaining bonus and add controls", () => {
     const props = createProps();
     const normalRow = props.rows[0];

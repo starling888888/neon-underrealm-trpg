@@ -211,8 +211,13 @@ export default function useOtherRyugiSkillsSectionProps(
           ryugi.ryugiId === null
             ? null
             : (getRyugiById(ryugi.ryugiId)?.name ?? null),
+        ryugiLevel: ryugi.level,
         ryugiRowId: ryugi.rowId,
         ryugiSelected: ryugi.ryugiId !== null,
+        selectedLevelTotal:
+          validation.selectedLevelTotals.find(
+            (total) => total.ryugiRowId === ryugi.rowId,
+          )?.selectedLevelTotal ?? 0,
       })),
     [build.otherRyugi, rowsWithSkills, validation],
   );
