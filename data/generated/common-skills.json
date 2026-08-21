@@ -1,6 +1,6 @@
 {
   "dataName": "common-skills",
-  "updatedAt": "2026-08-21T21:10:41+09:00",
+  "updatedAt": "2026-08-21T22:25:41+09:00",
   "data": {
     "bonus": [
       {
@@ -286,7 +286,7 @@
         "target": "自身",
         "range": null,
         "usageRestriction": null,
-        "effect": "lv1: 基準値が4以下の攻撃の達成値+1。\nlv2: 基準値が5以下の攻撃の達成値が+1されるようになる。\nlv3: 基準値が4以下の攻撃の達成値が更に+1される。（合計+2）",
+        "effect": "lv1: 基準値が4以下の攻撃の達成値+1。\nlv2: 基準値が5の攻撃の達成値も+1されるようになる。\nlv3: 基準値が4以下の攻撃の達成値が更に+1される。（合計+2）",
         "sourceOrder": 19,
         "id": "skill-common-basic-pv-295f21fcb9ef"
       },
