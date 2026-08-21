@@ -30,7 +30,7 @@ afterEach(cleanup);
 describe("SkillPickerDialog", () => {
   it("keeps selected skills unavailable and reports a selectable common skill", async () => {
     const user = userEvent.setup();
-    const [selectedSkill, selectableSkill] = getCommonSkillCandidates();
+    const [selectedSkill, selectableSkill] = getCommonSkillCandidates(6);
     if (selectedSkill === undefined || selectableSkill === undefined) {
       throw new Error("skill picker test用のmaster dataがありません。");
     }

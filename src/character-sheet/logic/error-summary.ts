@@ -2,6 +2,7 @@ export type CharacterSheetErrorCode =
   | "attribute-growth"
   | "attribute-points"
   | "bonds-over-limit"
+  | "common-skill-advanced"
   | "common-skill-duplicate"
   | "common-skill-level"
   | "common-skill-maximum-level"
@@ -54,6 +55,8 @@ const errorMessages = {
   "attribute-points":
     "能力値ポイントの割り振りが生き様の指定と一致していません。",
   "bonds-over-limit": "結べる縁の上限を超えています。",
+  "common-skill-advanced":
+    "現在の共通スキル上限では取得できない上級スキルがあります。",
   "common-skill-duplicate": "共通スキルに重複した選択があります。",
   "common-skill-level": "共通スキルの取得合計レベルが上限を超えています。",
   "common-skill-maximum-level": "取得可能レベル外の値があります。",
@@ -104,6 +107,7 @@ const errorCodeOrder: readonly CharacterSheetErrorCode[] = [
   "ikizama-skill-maximum-level",
   "ikizama-skill-duplicate",
   "ikizama-skill-advanced",
+  "common-skill-advanced",
   "common-skill-level",
   "common-skill-maximum-level",
   "common-skill-duplicate",

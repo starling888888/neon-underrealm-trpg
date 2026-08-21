@@ -13,6 +13,7 @@ export type CommonSkillRowView = {
 export type CommonSkillsSectionProps = {
   basicAttack: Skill | null;
   hasCommonSkillLevelError: boolean;
+  invalidAdvancedSkillRowIds: readonly string[];
   invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   levelLimit: number;
@@ -31,6 +32,7 @@ export type CommonSkillsSectionProps = {
 function CommonSkillsSection({
   basicAttack,
   hasCommonSkillLevelError,
+  invalidAdvancedSkillRowIds,
   invalidDuplicateSkillRowIds,
   invalidMaximumLevelRowIds,
   levelLimit,
@@ -71,7 +73,9 @@ function CommonSkillsSection({
         row.skill?.name ??
         `${terms.commonSkills}${copy.unselectedRow}${index + 1}`,
       hasLevelError: invalidMaximumLevelRowIds.includes(row.rowId),
-      hasRowError: invalidDuplicateSkillRowIds.includes(row.rowId),
+      hasRowError:
+        invalidAdvancedSkillRowIds.includes(row.rowId) ||
+        invalidDuplicateSkillRowIds.includes(row.rowId),
       kind: "normal" as const,
       level: row.level,
       levelEditable: true,
@@ -93,7 +97,9 @@ function CommonSkillsSection({
       ariaLabel={terms.commonSkills}
       heading={terms.commonSkills}
       isAvailable
-      isInvalid={hasCommonSkillLevelError}
+      isInvalid={
+        hasCommonSkillLevelError || invalidAdvancedSkillRowIds.length > 0
+      }
       nameColumnWidthCh={maximumSkillNameLength}
       onAdd={onAdd}
       onLevelChange={onLevelChange}

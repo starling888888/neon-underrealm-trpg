@@ -108,6 +108,7 @@ export default function useCommonSkillsSectionProps(
     () => ({
       basicAttack: getBasicAttackSkill(),
       hasCommonSkillLevelError: validation.hasCommonSkillLevelError,
+      invalidAdvancedSkillRowIds: validation.invalidAdvancedSkillRowIds,
       invalidDuplicateSkillRowIds: validation.invalidDuplicateSkillRowIds,
       invalidMaximumLevelRowIds: validation.invalidMaximumLevelRowIds,
       levelLimit: validation.levelLimit,
@@ -154,12 +155,12 @@ export default function useCommonSkillsSectionProps(
   );
   const presenterState = useMemo(
     () => ({
-      candidates: getCommonSkillCandidates(),
+      candidates: getCommonSkillCandidates(validation.levelLimit),
       onSelect,
       sectionProps,
       unlockedBonusLevels,
     }),
-    [onSelect, sectionProps, unlockedBonusLevels],
+    [onSelect, sectionProps, unlockedBonusLevels, validation.levelLimit],
   );
 
   return presenterState;

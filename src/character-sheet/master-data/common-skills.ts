@@ -13,8 +13,12 @@ export function getBasicAttackSkill(): Skill | null {
   return getCommonSkillsByCategory().bonus[0] ?? null;
 }
 
-export function getCommonSkillCandidates(): readonly Skill[] {
-  return allCommonSkills().filter((skill) => skill.category !== "bonus");
+export function getCommonSkillCandidates(levelLimit: number): readonly Skill[] {
+  return allCommonSkills().filter(
+    (skill) =>
+      skill.category !== "bonus" &&
+      (skill.category !== "advanced" || levelLimit >= 6),
+  );
 }
 
 export function getCommonSkillById(skillId: string | null): Skill | null {

@@ -40,6 +40,7 @@ function addSkillRowFacts(
   code: Extract<
     CharacterSheetErrorFact["code"],
     | "common-skill-duplicate"
+    | "common-skill-advanced"
     | "common-skill-maximum-level"
     | "ikizama-skill-advanced"
     | "ikizama-skill-duplicate"
@@ -73,6 +74,7 @@ function addAdvancedSkillRowFacts(
   code: Extract<
     CharacterSheetErrorFact["code"],
     | "ikizama-skill-advanced"
+    | "common-skill-advanced"
     | "other-ryugi-skill-advanced"
     | "primary-skill-advanced"
   >,
@@ -260,6 +262,14 @@ function createCharacterSheetErrorSummary({
     commonSkills.sectionProps.invalidDuplicateSkillRowIds,
     commonSkills.sectionProps.rows,
     "共通スキル",
+  );
+  addAdvancedSkillRowFacts(
+    errorFacts,
+    "common-skill-advanced",
+    commonSkills.sectionProps.invalidAdvancedSkillRowIds,
+    commonSkills.sectionProps.rows,
+    "共通スキル",
+    `共通スキル上限 6以上が必要です（現在上限 ${commonSkills.sectionProps.levelLimit}）。`,
   );
 
   for (const section of otherRyugiSkills.sectionProps.sections) {
