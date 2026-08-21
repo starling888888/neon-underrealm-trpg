@@ -13,7 +13,7 @@ export function getBasicAttackSkill(): Skill | null {
   return getCommonSkillsByCategory().bonus[0] ?? null;
 }
 
-export function getCommonSkillCandidates(levelLimit = 6): readonly Skill[] {
+export function getCommonSkillCandidates(levelLimit: number): readonly Skill[] {
   return allCommonSkills().filter(
     (skill) =>
       skill.category !== "bonus" &&

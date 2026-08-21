@@ -209,7 +209,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
 
   it("connects common-skill selections, levels, the level limit, and experience", () => {
     const { result } = renderHook(() => usePresenterHarness());
-    const [skill] = getCommonSkillCandidates();
+    const [skill] = getCommonSkillCandidates(1);
     const firstRowId = result.current.form.getValues(
       "commonSkills.rows.0.rowId",
     );
@@ -294,6 +294,9 @@ describe("useCharacterSheetFormPresenterProps", () => {
       result.current.presenterProps.commonSkillsSection
         .invalidAdvancedSkillRowIds,
     ).toEqual([firstRowId]);
+    expect(
+      result.current.presenterProps.commonSkillPicker.candidates,
+    ).not.toContain(advancedSkill);
     expect(result.current.presenterProps.errorSummary.errors).toContainEqual(
       expect.objectContaining({
         code: "common-skill-advanced",
@@ -306,7 +309,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
 
   it("keeps invalid common-skill levels without reducing spent experience", () => {
     const { result } = renderHook(() => usePresenterHarness());
-    const [skill] = getCommonSkillCandidates();
+    const [skill] = getCommonSkillCandidates(1);
     const firstRowId = result.current.form.getValues(
       "commonSkills.rows.0.rowId",
     );
@@ -341,7 +344,7 @@ describe("useCharacterSheetFormPresenterProps", () => {
 
   it("retains common-skill row IDs and invalid levels across an external reset", () => {
     const { result } = renderHook(() => usePresenterHarness());
-    const [skill] = getCommonSkillCandidates();
+    const [skill] = getCommonSkillCandidates(1);
     const firstRowId = result.current.form.getValues(
       "commonSkills.rows.0.rowId",
     );

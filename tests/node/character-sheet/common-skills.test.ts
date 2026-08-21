@@ -12,7 +12,7 @@ import {
 describe("character sheet common skills", () => {
   it("keeps the basic attack automatic and preserves candidate source order", () => {
     const basicAttack = getBasicAttackSkill();
-    const candidates = getCommonSkillCandidates();
+    const candidates = getCommonSkillCandidates(6);
 
     expect(basicAttack?.name).toBe("基本の一撃");
     expect(candidates.some((skill) => skill.category === "bonus")).toBe(false);
@@ -24,7 +24,7 @@ describe("character sheet common skills", () => {
   });
 
   it("counts selected normal rows only and rounds the rank limit upward", () => {
-    const [skill] = getCommonSkillCandidates();
+    const [skill] = getCommonSkillCandidates(6);
     if (skill === undefined)
       throw new Error("共通スキル候補を取得できません。");
 
@@ -52,7 +52,7 @@ describe("character sheet common skills", () => {
   });
 
   it("reports selected rows below one or above their maximum level", () => {
-    const [skill] = getCommonSkillCandidates();
+    const [skill] = getCommonSkillCandidates(6);
     if (skill === undefined)
       throw new Error("共通スキル候補を取得できません。");
 
@@ -68,7 +68,7 @@ describe("character sheet common skills", () => {
   });
 
   it("does not let below-minimum levels reduce the common-skill total", () => {
-    const [skill] = getCommonSkillCandidates();
+    const [skill] = getCommonSkillCandidates(6);
     if (skill === undefined)
       throw new Error("共通スキル候補を取得できません。");
 
@@ -88,7 +88,7 @@ describe("character sheet common skills", () => {
   });
 
   it("identifies duplicate selected common skills", () => {
-    const [skill] = getCommonSkillCandidates();
+    const [skill] = getCommonSkillCandidates(6);
     if (skill === undefined)
       throw new Error("共通スキル候補を取得できません。");
 

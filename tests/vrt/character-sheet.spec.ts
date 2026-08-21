@@ -396,6 +396,15 @@ async function openCommonSkillPicker(page: Page): Promise<void> {
   ).toBeVisible();
 }
 
+async function openBasicCommonSkillPicker(page: Page): Promise<void> {
+  await openCommonSkillPicker(page);
+  await expect(
+    page
+      .getByRole("dialog", { name: "共通スキルを選択" })
+      .getByRole("button", { exact: true, name: "裏社会の繋がり" }),
+  ).toHaveCount(0);
+}
+
 async function openAdvancedCommonSkillPicker(page: Page): Promise<void> {
   await page.getByLabel("プライマリ流儀Lv", { exact: true }).fill("11");
   await openCommonSkillPicker(page);
@@ -1204,7 +1213,7 @@ registerCharacterSheetVrtScenarios([
     id: "common-skill-picker",
     kind: "dialog",
     locator: dialog("共通スキルを選択"),
-    prepare: openCommonSkillPicker,
+    prepare: openBasicCommonSkillPicker,
     route: siteRoutes.characterSheet,
   },
   {

@@ -95,10 +95,10 @@
 
 ### レビュー結果
 
-| 対象                  | 判定 | 差分                             | 対応     |
-| --------------------- | ---- | -------------------------------- | -------- |
-| 上限6未満の候補dialog | OK   | canonical baselineと一致         | 比較済み |
-| 上限6以上の候補dialog | OK   | canonical baselineを追加して一致 | 比較済み |
+| 対象                  | 判定 | 差分                                 | 対応     |
+| --------------------- | ---- | ------------------------------------ | -------- |
+| 上限6未満の候補dialog | OK   | local canonical baselineと一致       | 比較済み |
+| 上限6以上の候補dialog | OK   | local canonical baselineを更新し一致 | 比較済み |
 
 ### 実画面確認
 
@@ -109,7 +109,7 @@
 - `/character-sheet/` / 上限6以上のadvanced候補dialog / desktop, tablet, mobile:
   - locator screenshot: `dialog[aria-label="共通スキルを選択"]`、original pixel resolution
   - checked acceptance criteria: `裏社会の繋がり`を含むadvanced候補の表示、候補表の列、文言、dialog境界、折返し、clipping、overflow、操作control
-  - result: OK。canonical baselineを追加し、再比較で一致
+  - result: OK。local canonical baselineを更新し、再比較で一致
 
 ### 自己修正した項目
 
@@ -117,7 +117,7 @@
 
 ### 人間判断が必要な差分
 
-- なし。ユーザー承認後に`canonical-snapshots/visual/character-sheet/dialogs/common-skill-advanced-picker-{desktop,tablet,mobile}.png`を追加した。
+- なし。ユーザー承認後にlocal canonical baselineを更新した。
 
 ### 対応完了チェックリスト
 
@@ -130,3 +130,57 @@
 - [x] baseline更新が必要な差分を人間判断として記録した
 - [x] `npm run check` が通る（該当する場合）
 - [x] `npm run build` が通る（`npm run visual:build`で確認済み）
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `canonical-snapshots/visual/character-sheet/dialogs/common-skill-advanced-picker-{desktop,tablet,mobile}.png`をGit管理へ追加している。canonical VRT baselineはlocal-only artifactとしてGitで無視する必要がある。
+- 上限6未満の候補dialog VRTは先頭だけを撮影するため、advanced候補が末尾へ混入しても検出できない。hook testにも、上限低下後に候補一覧からadvancedが消える確認がない。`getCommonSkillCandidates`の既定値`6`は、引数を渡し忘れた場合に解禁状態へ倒れる。
+
+### 判定
+
+- source: local-pr-review, `.tmp/chatgpt-review.md`
+- classification: valid
+- local validation:
+  - `.agents/rules/data-management.md`と`docs/design/character-sheet/notes.md`はcanonical VRT baselineをlocal-only comparison inputとしてGitで無視することを定める。PRに3 PNGを含めた状態は規約と矛盾する。
+  - `.tmp/chatgpt-review.md`も同じ3 PNGのGit管理を修正必須と指摘しており、ローカルSSoTとの照合で有効と確認した。
+  - 現在の低上限VRTはdialog先頭だけを撮影し、advanced候補を明示的に不在確認しない。hook testは上限低下後の既存選択のエラーを確認するが、候補配列のadvanced不在を確認しない。候補取得関数の既定値は`6`である。
+
+### 対応方針
+
+- Git管理済みの3 PNGをPR差分から除外し、local-only baselineは残して比較に使う。Visual Review記録をGit追加ではなくlocal canonical baseline更新へ修正する。
+- `levelLimit`を必須引数にし、低上限時にadvanced候補が候補一覧に含まれないことをhook testで確認する。VRT準備では代表advanced候補がないことを明示的にassertする。
+
+### 対応完了チェックリスト
+
+- [x] 3枚のcanonical VRT baselineをGit管理から除外する
+- [x] Visual Review記録をlocal-only baselineの方針へ修正する
+- [x] 低上限時のadvanced候補不在をhook testで確認する
+- [x] 低上限VRTで代表advanced候補の不在をassertする
+- [x] `getCommonSkillCandidates`のlevelLimitを必須引数にする
+- [x] `npm test` が通る
+- [x] `npm run check` が通る
+- [x] `npm run visual:build` が通る
+- [x] 変更targetだけのVRT比較が通る
+
+## ビジュアルレビュー 2
+
+### VRT対象
+
+- route: `/character-sheet/`
+- state: 共通スキル候補dialog（上限6未満）、advanced候補を含む共通スキル候補dialog（上限6以上）
+- viewport: desktop, tablet, mobile
+
+### 結果
+
+| 対象                  | 判定 | 根拠                                                        |
+| --------------------- | ---- | ----------------------------------------------------------- |
+| 上限6未満の候補dialog | OK   | 代表advanced候補`裏社会の繋がり`の不在assertとlocal比較一致 |
+| 上限6以上の候補dialog | OK   | `裏社会の繋がり`の表示とlocal比較一致                       |
+
+### 実画面確認
+
+- 各state・viewportのactual screenshotを開き、dialog境界、表の列、文言、折返し、clipping、overflow、操作controlを確認した。
+- 上限6未満ではadvanced候補が表示されず、上限6以上では`裏社会の繋がり`が表示されることを確認した。
+- `npm run visual:capture -- --grep 'common-skill-(?:advanced-)?picker'`、`npm run visual:test -- --grep 'common-skill-(?:advanced-)?picker'`が各6件通過した。
