@@ -76,4 +76,16 @@ describe("character sheet error summary", () => {
       "プライマリ流儀スキル「ブレード」：流儀Lv 6以上が必要です（現在Lv 1）。",
     );
   });
+
+  it("translates a common-skill advanced condition with the current limit", () => {
+    expect(
+      translateCharacterSheetError({
+        code: "common-skill-advanced",
+        condition: "共通スキル上限 6以上が必要です（現在上限 5）。",
+        subject: "共通スキル「高位技能」",
+      }),
+    ).toBe(
+      "共通スキル「高位技能」：共通スキル上限 6以上が必要です（現在上限 5）。",
+    );
+  });
 });

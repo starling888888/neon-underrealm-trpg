@@ -12,6 +12,7 @@ export type CommonSkillsValidationRow = {
 
 export type CommonSkillsValidation = {
   hasCommonSkillLevelError: boolean;
+  invalidAdvancedSkillRowIds: readonly string[];
   invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   levelLimit: number;
@@ -47,6 +48,12 @@ export function calculateCommonSkillsValidation(
 
   return {
     hasCommonSkillLevelError: selectedLevelTotal > levelLimit,
+    invalidAdvancedSkillRowIds:
+      levelLimit < 6
+        ? selectedRows.flatMap((row) =>
+            row.skill?.category === "advanced" ? [row.rowId] : [],
+          )
+        : [],
     invalidDuplicateSkillRowIds: selectedRows.flatMap((row) =>
       row.skill !== null && (selectedSkillCounts.get(row.skill.id) ?? 0) > 1
         ? [row.rowId]

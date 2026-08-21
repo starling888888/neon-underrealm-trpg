@@ -102,4 +102,29 @@ describe("character sheet common skills", () => {
       "duplicate-b",
     ]);
   });
+
+  it("unlocks advanced candidates and validation at a level limit of six", () => {
+    const belowLimitCandidates = getCommonSkillCandidates(5);
+    const advancedSkill = getCommonSkillCandidates(6).find(
+      (skill) => skill.category === "advanced",
+    );
+    if (advancedSkill === undefined) {
+      throw new Error("共通スキルadvancedを取得できません。");
+    }
+
+    expect(
+      belowLimitCandidates.some((skill) => skill.category === "advanced"),
+    ).toBe(false);
+    expect(getCommonSkillCandidates(6)).toContain(advancedSkill);
+    expect(
+      calculateCommonSkillsValidation(10, [
+        { level: 1, rowId: "advanced", skill: advancedSkill },
+      ]).invalidAdvancedSkillRowIds,
+    ).toEqual(["advanced"]);
+    expect(
+      calculateCommonSkillsValidation(12, [
+        { level: 1, rowId: "advanced", skill: advancedSkill },
+      ]).invalidAdvancedSkillRowIds,
+    ).toEqual([]);
+  });
 });

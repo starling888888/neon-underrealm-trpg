@@ -255,6 +255,55 @@ describe("useCharacterSheetFormPresenterProps", () => {
     ).toBe(true);
   });
 
+  it("keeps an advanced common skill and reports it when the level limit falls", () => {
+    const { result } = renderHook(() => usePresenterHarness());
+    const advancedSkill = getCommonSkillCandidates(6).find(
+      (skill) => skill.category === "advanced",
+    );
+    const firstRowId = result.current.form.getValues(
+      "commonSkills.rows.0.rowId",
+    );
+    if (advancedSkill === undefined) {
+      throw new Error("共通スキルadvancedを取得できません。");
+    }
+
+    act(() => {
+      result.current.form.setValue("build.primaryRyugiLevel", 11);
+      result.current.presenterProps.commonSkillPicker.onSelect(
+        firstRowId,
+        advancedSkill.id,
+      );
+    });
+
+    expect(
+      result.current.presenterProps.commonSkillPicker.candidates,
+    ).toContain(advancedSkill);
+    expect(
+      result.current.presenterProps.commonSkillsSection
+        .invalidAdvancedSkillRowIds,
+    ).toEqual([]);
+
+    act(() => {
+      result.current.form.setValue("build.primaryRyugiLevel", 9);
+    });
+
+    expect(result.current.form.getValues("commonSkills.rows.0.skillId")).toBe(
+      advancedSkill.id,
+    );
+    expect(
+      result.current.presenterProps.commonSkillsSection
+        .invalidAdvancedSkillRowIds,
+    ).toEqual([firstRowId]);
+    expect(result.current.presenterProps.errorSummary.errors).toContainEqual(
+      expect.objectContaining({
+        code: "common-skill-advanced",
+        condition: "共通スキル上限 6以上が必要です（現在上限 5）。",
+        rowId: firstRowId,
+        subject: `共通スキル「${advancedSkill.name}」`,
+      }),
+    );
+  });
+
   it("keeps invalid common-skill levels without reducing spent experience", () => {
     const { result } = renderHook(() => usePresenterHarness());
     const [skill] = getCommonSkillCandidates();

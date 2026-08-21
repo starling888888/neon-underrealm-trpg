@@ -33,28 +33,28 @@
 
 ## 完了条件
 
-- [ ] 共通スキルレベル上限が6未満のとき、候補ダイアログに`advanced`を表示しない。
-- [ ] 共通スキルレベル上限が6以上のとき、候補ダイアログに`basic`と`advanced`を表示する。
-- [ ] 取得済み`advanced`の後に上限が6未満になったとき、選択値を保持し、該当行と共通スキル区分をエラー状態にする。
-- [ ] 取得済み`advanced`が条件を満たさなくなったとき、対象スキル名、共通スキルレベル上限6以上の要件、現在の上限をエラー一覧へ表示する。
-- [ ] `advanced`の解禁判定は、実際の共通スキル取得合計5レベルではなく、共通スキルレベル上限6以上に限定する。
-- [ ] 共通スキルの重複、最大Lv、合計レベル上限の既存検証を維持する。
-- [ ] 関連TODOを扱わない理由が記録されている。
-- [ ] 参照するdesign targetとVRT baselineの扱いが記録されている。
-- [ ] `docs/requirements/character-sheet.md`へ、今回の共通スキル`advanced`条件と簡略化の境界が記録されている。
-- [ ] `npm run check` が通る。
-- [ ] `npm run build` が通る。
+- [x] 共通スキルレベル上限が6未満のとき、候補ダイアログに`advanced`を表示しない。
+- [x] 共通スキルレベル上限が6以上のとき、候補ダイアログに`basic`と`advanced`を表示する。
+- [x] 取得済み`advanced`の後に上限が6未満になったとき、選択値を保持し、該当行と共通スキル区分をエラー状態にする。
+- [x] 取得済み`advanced`が条件を満たさなくなったとき、対象スキル名、共通スキルレベル上限6以上の要件、現在の上限をエラー一覧へ表示する。
+- [x] `advanced`の解禁判定は、実際の共通スキル取得合計5レベルではなく、共通スキルレベル上限6以上に限定する。
+- [x] 共通スキルの重複、最大Lv、合計レベル上限の既存検証を維持する。
+- [x] 関連TODOを扱わない理由が記録されている。
+- [x] 参照するdesign targetとVRT baselineの扱いが記録されている。
+- [x] `docs/requirements/character-sheet.md`へ、今回の共通スキル`advanced`条件と簡略化の境界が記録されている。
+- [x] `npm run check` が通る。
+- [x] `npm run build` が通る。
 
 ## チェックポイント
 
-- [ ] `/character-sheet/`の既存ルートとスキル選択操作が壊れていない。
-- [ ] GitHub Pagesのサブパス公開に影響しない。
-- [ ] 不要な依存関係を追加していない。
-- [ ] 初期スコープ外の機能を実装していない。
-- [ ] 関連する`docs/TODO.md`の候補行design検討と矛盾していない。
-- [ ] `docs/design/character-sheet/notes.md`の候補ダイアログとエラー表示の意図に矛盾していない。
-- [ ] `/character-sheet/`の`common-skill-picker`について、上限6未満の`advanced`非表示と上限6以上の表示をdesktop/tablet/mobileごとのactual screenshotで確認する。PR直前に対象VRTだけを実行し、baseline追加または更新は別途ユーザー承認を得る。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] `/character-sheet/`の既存ルートとスキル選択操作が壊れていない。
+- [x] GitHub Pagesのサブパス公開に影響しない。
+- [x] 不要な依存関係を追加していない。
+- [x] 初期スコープ外の機能を実装していない。
+- [x] 関連する`docs/TODO.md`の候補行design検討と矛盾していない。
+- [x] `docs/design/character-sheet/notes.md`の候補ダイアログとエラー表示の意図に矛盾していない。
+- [x] `/character-sheet/`の`common-skill-picker`について、上限6未満の`advanced`非表示と上限6以上の表示をdesktop/tablet/mobileごとのactual screenshotで確認する。PR直前に対象VRTだけを実行し、baseline追加または更新は別途ユーザー承認を得る。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -82,3 +82,51 @@
 
 - ブランチは`ex-13-common-skill-advanced-picker`。
 - 実装前に、このissue内容のユーザー承認が必要である。
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `tests/vrt/character-sheet.spec.ts`、`@vrt @character-sheet @dialog @common-skill-picker`、`@common-skill-advanced-picker`
+- route / states / viewports:
+  - `/character-sheet/`、共通スキル上限6未満の候補dialog、desktop / tablet / mobile
+  - `/character-sheet/`、共通スキル上限6以上でadvanced候補へscrollした候補dialog、desktop / tablet / mobile
+
+### レビュー結果
+
+| 対象                  | 判定 | 差分                             | 対応     |
+| --------------------- | ---- | -------------------------------- | -------- |
+| 上限6未満の候補dialog | OK   | canonical baselineと一致         | 比較済み |
+| 上限6以上の候補dialog | OK   | canonical baselineを追加して一致 | 比較済み |
+
+### 実画面確認
+
+- `/character-sheet/` / 上限6未満の候補dialog / desktop, tablet, mobile:
+  - locator screenshot: `dialog[aria-label="共通スキルを選択"]`、original pixel resolution
+  - checked acceptance criteria: basic候補だけの表示、候補表の列、文言、dialog境界、折返し、clipping、overflow、操作control
+  - result: OK
+- `/character-sheet/` / 上限6以上のadvanced候補dialog / desktop, tablet, mobile:
+  - locator screenshot: `dialog[aria-label="共通スキルを選択"]`、original pixel resolution
+  - checked acceptance criteria: `裏社会の繋がり`を含むadvanced候補の表示、候補表の列、文言、dialog境界、折返し、clipping、overflow、操作control
+  - result: OK。canonical baselineを追加し、再比較で一致
+
+### 自己修正した項目
+
+- [x] advanced候補が原寸locator screenshotに入るよう、上限6以上のVRT stateで最初のadvanced候補までdialog内容をscrollする準備処理を追加した。
+
+### 人間判断が必要な差分
+
+- なし。ユーザー承認後に`canonical-snapshots/visual/character-sheet/dialogs/common-skill-advanced-picker-{desktop,tablet,mobile}.png`を追加した。
+
+### 対応完了チェックリスト
+
+- [x] 変更targetだけをVRT比較した
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run check` が通る（該当する場合）
+- [x] `npm run build` が通る（`npm run visual:build`で確認済み）
