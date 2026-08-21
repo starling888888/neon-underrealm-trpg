@@ -17,6 +17,10 @@ export type OtherRyugiSkillsValidation = {
   invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   invalidRyugiRowIds: readonly string[];
+  selectedLevelTotals: readonly {
+    ryugiRowId: string;
+    selectedLevelTotal: number;
+  }[];
 };
 
 /** Calculates the per-other-ryugi selected-level total constraint. */
@@ -60,5 +64,9 @@ export function calculateOtherRyugiSkillsValidation(
     invalidRyugiRowIds: otherRyugi.flatMap((row) =>
       (selectedLevelTotals.get(row.rowId) ?? 0) > row.level ? [row.rowId] : [],
     ),
+    selectedLevelTotals: otherRyugi.map((row) => ({
+      ryugiRowId: row.rowId,
+      selectedLevelTotal: selectedLevelTotals.get(row.rowId) ?? 0,
+    })),
   };
 }

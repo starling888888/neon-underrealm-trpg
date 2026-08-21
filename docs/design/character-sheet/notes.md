@@ -68,11 +68,21 @@
 ### G14 common skill summary comparison
 
 - target: 基本情報の経験点表示と共通スキル区分の追加操作領域。
-- desktop / tablet: design画像の既存5枠配置に従い、基本情報の経験点行を`取得経験点・消費経験点・残経験点・格・共通スキル値`とする。既存の共通スキル上限枠を、`FormulaTooltip`のlabel `共通スキルレベル合計／共通スキル上限`（desktop / tabletでは2行、mobileでは1行）と値`N／M`へ置き換える。tooltipの文言は`合計レベル上限 = 格 ÷ 2（端数切り上げ）`とする。共通スキル区分では、行一覧の下で追加buttonと`取得合計レベル：N／合計レベル上限：M`を下揃えで横並びに置く。いずれも横overflowさせない。
+- desktop / tablet: design画像の既存5枠配置に従い、基本情報の経験点行を`取得経験点・消費経験点・残経験点・格・共通スキル値`とする。既存の共通スキル上限枠を、`FormulaTooltip`のlabel `共通スキルレベル合計／共通スキル上限`（desktop / tabletでは2行、mobileでは1行）と値`N／M`へ置き換える。tooltipの文言は`合計レベル上限 = 格 ÷ 2（端数切り上げ）`とする。共通スキル区分では、行一覧の下で追加buttonと`取得合計レベル：N／合計レベル上限：M`を下揃えで横並びに置く。summary自体も`FormulaTooltip`のtriggerとし、tooltipの文言は`自動習得の「基本の一撃」のレベルは含みません。`とする。いずれも横overflowさせない。
 - mobile: design画像に従い、基本情報では取得・消費・残経験点を1行、格を左1列、tooltip付きの共通スキル値`N／M`を右2列として次行に置く。共通スキル区分では追加buttonと合計表示を縦に積み、追加buttonを先に置く。
 - error: `N > M`では、基本情報の`N／M`枠と共通スキル区分だけをerror状態にする。流儀・生き様 / 能力値領域には共通スキル上限の表示・error feedbackを追加しない。個々の表示へ可視のエラー理由は追加しない。
 - common skill bonuses: 流儀・生き様 / 能力値領域の`Lv 2で獲得`、`Lv 5で獲得`、`Lv 9で獲得`は、共通スキル取得合計Lvが対応する閾値へ到達した枠だけ`--color-accent`の太い枠線で示す。背景色と文字色は既存表示を維持する。未到達枠は既存の`--color-example-soft`と`--color-example-border`を維持し、ボーナス本文を通常ウェイトで表示する。アンロック済み枠の本文ウェイトは既存表示を維持する。
 - comparison points: `N`が基本の一撃を含まないこと、未選択行を含まないこと、基本情報と区分表示が同じ`N`・`M`を示すこと、追加操作領域とsection外の横overflowがないこと。
+
+### ex-15 skill acquisition level total comparison
+
+- target: プライマリ流儀スキル、生き様スキル、その他流儀スキルの各区分にある追加操作領域と、共通スキル区分のsummary tooltip。
+- desktop / tablet: 既存の共通スキルと同じく、行一覧の下で追加buttonと読み取り専用summaryを下揃えで横並びに置く。プライマリ流儀とその他流儀は`取得合計レベル：N／流儀レベル：M`、生き様は`取得合計レベル：N／生き様レベル：M`とする。プライマリ流儀summaryは`FormulaTooltip`のtriggerとし、tooltipで`自動習得のプライマリボーナススキルのレベルは含みません。`を示す。生き様summaryも`FormulaTooltip`のtriggerとし、tooltipで`自動習得の生き様ボーナススキル1レベル分のレベルは含みません。`を示す。その他流儀summaryにはtooltipを追加しない。区分名と説明文を増やさず、summaryは既存の`actionDescription`と同じ情報密度に保つ。
+- mobile: 追加buttonを先に置き、その下に同じsummaryを置く。summaryとtooltip triggerの文言は省略せず、section内・section外のどちらにも横overflowを起こさない。
+- values: プライマリ流儀は選択済み通常スキルの取得レベル合計／プライマリ流儀Lvとし、プライマリ流儀ボーナスを含めない。生き様は選択済み通常スキルと生き様ボーナスのLv2以上の超過分の合計／生き様Lvとし、ボーナスLv1を含めない。その他流儀は流儀ごとに選択済み通常スキルの取得レベル合計／対応するその他流儀Lvとする。空行はすべて除外する。
+- unavailable: プライマリ流儀、生き様、その他流儀が未選択の場合は、既存の未選択メッセージだけを表示し、summaryを置かない。
+- error: `N > M`では既存の区分error状態を維持し、summaryの値だけもdanger colorで示す。最大Lv、重複、advanced条件など別の既存errorによってsummaryをerror表示にしない。可視のエラー理由は増やさない。
+- VRT: `tests/vrt/character-sheet.spec.ts`の`primary-skills-unavailable`、`primary-skills-input`、`primary-skills-error`、`primary-skills-total-error`、`ikizama-skills-unavailable`、`ikizama-skills-input`、`ikizama-skills-error`、`ikizama-skills-total-error`、`other-ryugi-skills-unavailable`、`other-ryugi-skills-input`、`other-ryugi-skills-error`、`other-ryugi-skills-total-error`をdesktop、tablet、mobileで対象にする。さらに`primary-skills-tooltip`、`ikizama-skills-tooltip`、`common-skills-tooltip`をdesktop、tablet、mobileで対象にし、tooltipの可視文言・位置・横overflowなしをactual screenshotで確認する。各stateのsummary値、未選択時のsummary非表示、区分合計超過時のerror色、追加操作領域の配置、横overflowなしをactual screenshotで確認する。canonical VRT baselineの更新には、対象snapshotを確認した後のユーザー明示承認が必要である。
 
 ### G6 character image comparison
 

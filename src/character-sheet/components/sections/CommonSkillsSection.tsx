@@ -1,6 +1,7 @@
 import { memo } from "react";
 import type { Skill } from "../../../lib/types/skill";
 import { characterSheetDictionary } from "../../dictionary";
+import FormulaTooltip from "../_common/FormulaTooltip";
 import SkillSection, { type SkillSectionRow } from "./SkillSection";
 
 export type CommonSkillRowView = {
@@ -91,7 +92,11 @@ function CommonSkillsSection({
 
   return (
     <SkillSection
-      actionDescription={`${copy.commonSkillTotal}：${selectedLevelTotal}／${copy.commonSkillLevelLimit}：${levelLimit}`}
+      actionDescription={
+        <FormulaTooltip formula={copy.commonSkillSummaryTooltip}>
+          {`${copy.commonSkillTotal}：${selectedLevelTotal}／${copy.commonSkillLevelLimit}：${levelLimit}`}
+        </FormulaTooltip>
+      }
       actionDescriptionInvalid={hasCommonSkillLevelError}
       addLabel={copy.add}
       ariaLabel={terms.commonSkills}

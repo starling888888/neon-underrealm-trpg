@@ -1,6 +1,7 @@
 import { memo } from "react";
 import type { Skill } from "../../../lib/types/skill";
 import { characterSheetDictionary } from "../../dictionary";
+import FormulaTooltip from "../_common/FormulaTooltip";
 import SkillSection, { type SkillSectionRow } from "./SkillSection";
 
 export type PrimarySkillRowView = {
@@ -23,8 +24,10 @@ export type PrimarySkillsSectionProps = {
   onRemove: (rowId: string) => void;
   onMove: (rowId: string, direction: "up" | "down") => void;
   primaryRyugiName: string | null;
+  primaryRyugiLevel: number;
   primaryRyugiSelected: boolean;
   rows: readonly PrimarySkillRowView[];
+  selectedLevelTotal: number;
   synchronizationKey?: unknown;
 };
 
@@ -42,8 +45,10 @@ function PrimarySkillsSection({
   onMove,
   onRemove,
   primaryRyugiName,
+  primaryRyugiLevel,
   primaryRyugiSelected,
   rows,
+  selectedLevelTotal,
   synchronizationKey,
 }: PrimarySkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
@@ -86,6 +91,12 @@ function PrimarySkillsSection({
   return (
     <div data-primary-skills-section>
       <SkillSection
+        actionDescription={
+          <FormulaTooltip formula={copy.primarySkillSummaryTooltip}>
+            {`${copy.commonSkillTotal}：${selectedLevelTotal}／${copy.ryugiLevel}：${primaryRyugiLevel}`}
+          </FormulaTooltip>
+        }
+        actionDescriptionInvalid={hasPrimarySkillLevelTotalError}
         addLabel={copy.add}
         ariaLabel={copy.label}
         heading={

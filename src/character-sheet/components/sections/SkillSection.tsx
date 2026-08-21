@@ -1,5 +1,11 @@
 import { ListPlus } from "lucide-react";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import type { Skill } from "../../../lib/types/skill";
 import {
@@ -34,7 +40,7 @@ export type SkillSectionRow = {
 };
 
 export type SkillSectionProps = {
-  actionDescription?: string;
+  actionDescription?: ReactNode;
   actionDescriptionInvalid?: boolean;
   addLabel: string;
   ariaLabel: string;

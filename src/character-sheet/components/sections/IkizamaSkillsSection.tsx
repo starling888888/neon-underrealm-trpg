@@ -1,6 +1,7 @@
 import { memo } from "react";
 import type { Skill } from "../../../lib/types/skill";
 import { characterSheetDictionary } from "../../dictionary";
+import FormulaTooltip from "../_common/FormulaTooltip";
 import SkillSection, { type SkillSectionRow } from "./SkillSection";
 
 export type IkizamaSkillRowView = {
@@ -18,6 +19,7 @@ export type IkizamaSkillsSectionProps = {
   invalidDuplicateSkillRowIds: readonly string[];
   invalidMaximumLevelRowIds: readonly string[];
   ikizamaName: string | null;
+  ikizamaLevel: number;
   ikizamaSelected: boolean;
   maximumSkillNameLength: number;
   onAdd: () => void;
@@ -26,6 +28,7 @@ export type IkizamaSkillsSectionProps = {
   onRemove: (rowId: string) => void;
   onMove: (rowId: string, direction: "up" | "down") => void;
   rows: readonly IkizamaSkillRowView[];
+  selectedLevelTotal: number;
   synchronizationKey?: unknown;
 };
 
@@ -34,6 +37,7 @@ function IkizamaSkillsSection({
   bonusLevel,
   bonusSkill,
   ikizamaName,
+  ikizamaLevel,
   ikizamaSelected,
   hasIkizamaSkillLevelTotalError,
   invalidAdvancedSkillRowIds,
@@ -46,6 +50,7 @@ function IkizamaSkillsSection({
   onPickerRequest,
   onRemove,
   rows,
+  selectedLevelTotal,
   synchronizationKey,
 }: IkizamaSkillsSectionProps) {
   const copy = characterSheetDictionary.characterSheet.skills;
@@ -94,6 +99,12 @@ function IkizamaSkillsSection({
   return (
     <div data-ikizama-skills-section>
       <SkillSection
+        actionDescription={
+          <FormulaTooltip formula={copy.ikizamaSkillSummaryTooltip}>
+            {`${copy.commonSkillTotal}：${selectedLevelTotal}／${copy.ikizamaLevel}：${ikizamaLevel}`}
+          </FormulaTooltip>
+        }
+        actionDescriptionInvalid={hasIkizamaSkillLevelTotalError}
         addLabel={copy.add}
         ariaLabel={copy.ikizamaLabel}
         heading={

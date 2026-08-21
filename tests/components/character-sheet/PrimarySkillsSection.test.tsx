@@ -24,6 +24,7 @@ function createProps(): PrimarySkillsSectionProps {
     onPickerRequest: vi.fn(),
     onRemove: vi.fn(),
     primaryRyugiName: "ケンカヤ",
+    primaryRyugiLevel: 3,
     primaryRyugiSelected: true,
     rows: [
       {
@@ -39,12 +40,28 @@ function createProps(): PrimarySkillsSectionProps {
         skillId: groups.basic[1]?.id ?? null,
       },
     ],
+    selectedLevelTotal: 2,
   };
 }
 
 afterEach(cleanup);
 
 describe("PrimarySkillsSection", () => {
+  it("shows the primary ryugi total and its tooltip", () => {
+    render(<PrimarySkillsSection {...createProps()} />);
+
+    const summary = screen.getByRole("button", {
+      name: "取得合計レベル：2／流儀レベル：3",
+    });
+    fireEvent.click(summary);
+
+    expect(
+      screen.getByRole("tooltip", {
+        name: "自動習得のプライマリボーナススキルのレベルは含みません。",
+      }),
+    ).not.toBeNull();
+  });
+
   it("keeps bonus fixed and lets a normal row open the picker", () => {
     const props = createProps();
     render(<PrimarySkillsSection {...props} />);
@@ -133,6 +150,7 @@ describe("PrimarySkillsSection", () => {
     expect(
       screen.getByText("プライマリ流儀を選択してください。"),
     ).not.toBeNull();
+    expect(screen.queryByText(/取得合計レベル/)).toBeNull();
     expect(screen.queryByRole("button", { name: /へ移動$/ })).toBeNull();
   });
 

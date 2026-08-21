@@ -17,8 +17,10 @@ export type OtherRyugiSkillsSectionView = {
   invalidMaximumLevelRowIds: readonly string[];
   rows: readonly OtherRyugiSkillRowView[];
   ryugiName: string | null;
+  ryugiLevel: number;
   ryugiRowId: string;
   ryugiSelected: boolean;
+  selectedLevelTotal: number;
 };
 
 export type OtherRyugiSkillsSectionProps = {
@@ -73,6 +75,8 @@ function OtherRyugiSkillsSection({
 
         return (
           <SkillSection
+            actionDescription={`${copy.commonSkillTotal}：${section.selectedLevelTotal}／${copy.ryugiLevel}：${section.ryugiLevel}`}
+            actionDescriptionInvalid={section.hasSkillLevelTotalError}
             addLabel={copy.add}
             ariaLabel={`${copy.otherRyugiLabel}${sectionIndex + 1}`}
             heading={

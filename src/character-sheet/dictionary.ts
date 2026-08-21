@@ -176,7 +176,15 @@ export const characterSheetDictionary = {
       commonSkillLevelLimit: "合計レベル上限",
       commonSkillLevelLimitFormula: "合計レベル上限 = 格 ÷ 2（端数切り上げ）",
       commonSkillSummaryLabel: "共通スキルレベル合計／共通スキル上限",
+      commonSkillSummaryTooltip:
+        "自動習得の「基本の一撃」のレベルは含みません。",
       commonSkillTotal: "取得合計レベル",
+      ikizamaLevel: "生き様レベル",
+      ikizamaSkillSummaryTooltip:
+        "自動習得の生き様ボーナススキル1レベル分のレベルは含みません。",
+      primarySkillSummaryTooltip:
+        "自動習得のプライマリボーナススキルのレベルは含みません。",
+      ryugiLevel: "流儀レベル",
       unselected: "スキルを選択",
       unselectedRow: "未選択スキル",
     },
