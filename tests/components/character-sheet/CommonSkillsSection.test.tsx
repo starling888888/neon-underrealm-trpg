@@ -43,7 +43,7 @@ describe("CommonSkillsSection", () => {
     fireEvent.click(summary);
     expect(
       screen.getByRole("tooltip", {
-        name: "自動習得の「基本の一撃」のレベルはは含みません。",
+        name: "自動習得の「基本の一撃」のレベルは含みません。",
       }),
     ).not.toBeNull();
     expect(
