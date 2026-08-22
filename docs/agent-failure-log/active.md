@@ -439,6 +439,14 @@ source種別は以下を使う。
 
 ### review scope fidelity
 
+#### Audited repository-operation rules instead of the requested game-rule change
+
+- date: 2026-08-22
+- source: user
+- 発生箇所: 毒ルール変更の整合性確認
+- 観測した失敗: ユーザーが求めたAstro、MDX、生成JSON内の毒ルール整合性ではなく、AGENTS.mdとagent workflow規約の整合性を調査して報告した。
+- 一次対応: ユーザー指摘後、対象を毒ルールのMDX、生成JSON、表示経路へ限定し、Spreadsheet同期・JSON再生成・format・check・build後に再照合した。以後、整合性確認では変更対象のdiffとユーザーが指定した層を最初に確定する。
+
 #### Review scope was over-broadened
 
 - date: 2026-07-22

@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-08-22T02:55:15+09:00",
+  "updatedAt": "2026-08-22T18:42:03+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -1671,7 +1671,7 @@
           "target": "1体",
           "range": null,
           "usageRestriction": "1/話",
-          "effect": "毒や出血でキャラクターが体力を失うときに使用する。強度×5d6点体力を失う。",
+          "effect": "毒や出血でキャラクターが体力を失うときに使用する。本来失う体力の代わりに、その強度×5d6点体力を失わせる。毒で体力を失うときに使用した場合、上昇する強度が1ではなく5になる。",
           "sourceOrder": 21,
           "id": "skill-ryugi-shabazou-advanced-sp-d7993750f3c7"
         },
