@@ -1,6 +1,6 @@
 {
   "dataName": "ikizama-skills",
-  "updatedAt": "2026-08-22T02:55:20+09:00",
+  "updatedAt": "2026-08-22T11:34:47+09:00",
   "data": {
     "burai": {
       "bonus": [
@@ -406,7 +406,7 @@
         },
         {
           "category": "basic",
-          "name": "柔和なサイボーグ",
+          "name": "市街活動サイボーグ",
           "maxLevel": 2,
           "timing": "Pv",
           "cost": null,
@@ -415,9 +415,9 @@
           "target": "自身",
           "range": null,
           "usageRestriction": null,
-          "effect": "1lvごとに1つ非戦闘技能を選ぶ。その技能はサイバネ埋め込み点数によるペナルティを受けない。",
+          "effect": "1lvごとに2つ非戦闘技能を選ぶ。それらの技能はサイバネ埋め込み点数によるペナルティを受けず、判定数+「シナリオ開始時にあなたの所持している小銭」。シナリオ中小銭を消費しても、判定数への修正は変わらない。",
           "sourceOrder": 9,
-          "id": "skill-ikizama-kejime-basic-pv-de32a3368c75"
+          "id": "skill-ikizama-kejime-basic-pv-bd0b33840388"
         }
       ],
       "advanced": [
