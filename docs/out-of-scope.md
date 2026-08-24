@@ -28,7 +28,7 @@
 
 本サイトは、初期段階ではルールとデータを公開・参照するための静的サイトであり、プレイログやキャンペーン状態を管理するアプリケーションではない。
 
-DB、ログイン、保存機能を必要とする実装は行わない。
+承認済みの `ex-16-character-sheet-cloud-persistence` Gate を除き、DB、ログイン、保存機能を必要とする実装は行わない。
 
 ---
 
@@ -54,7 +54,7 @@ DB、ログイン、保存機能を必要とする実装は行わない。
 
 ブラウザ上でキャラクターを作成・編集し、遊ぶために必要な情報を確認できるWebキャラクターシートは初期スコープ内とする。機能の正本は `docs/requirements/character-sheet.md` とする。
 
-ログイン、ユーザー端末に依存しないサーバー・DB・クラウドへのキャラクターデータ保存、URL共有、PDF出力、Google Sheets連携は初期スコープ外とする。
+`ex-16-character-sheet-cloud-persistence` G3 の Google browser-only credential flow を除き、ログイン、ユーザー端末に依存しないサーバー・DB・クラウドへのキャラクターデータ保存、URL共有、PDF出力、Google Sheets連携は初期スコープ外とする。G3 は Google ID token をブラウザのメモリ内だけに保持し、保存・同期・共有・backend の検証処理を追加しない。
 
 ただし、`ex-06-google-drive-xlsx-sync`で定義する、開発者が手動で実行するGoogle Spreadsheetから`.raw/`へのXLSX取得scriptは、公開サイトやキャラクターシートとは接続しないローカル開発用例外として許可する。
 
@@ -96,11 +96,11 @@ Web上で判定を行うダイスローラー、達成値・効果値・気合�
 
 ## 9. ログイン・認証機能
 
-ユーザー登録、ログイン、権限管理、管理者画面、編集者権限などの認証機能は初期スコープ外とする。
+`ex-16-character-sheet-cloud-persistence` G3 の Google browser-only credential flow を除き、ユーザー登録、ログイン、権限管理、管理者画面、編集者権限などの認証機能は初期スコープ外とする。
 
-本サイトは無料公開の静的サイトとして構築し、サーバーまたはアカウントに紐づく閲覧者ごとの状態を持たない。`ex-02-web-character-sheet`で定義する、作業継続用の端末内保存・復元はこれに含めない。
+本サイトは無料公開の静的サイトとして構築し、G3 では Google ID token をメモリ内に置く以外、サーバーまたはアカウントに紐づく閲覧者ごとの状態を持たない。`ex-02-web-character-sheet`で定義する、作業継続用の端末内保存・復元はこれに含めない。
 
-認証を必要とする機能は初期実装に含めない。
+G3 以外の認証を必要とする機能は初期実装に含めない。backend の token verifier と認証必須 API は G4 以降で扱う。
 
 ---
 
@@ -130,7 +130,7 @@ SQLite、PostgreSQL、MySQL、Firestore、Supabase等の導入は行わない。
 
 常駐サーバー、APIサーバー、SSR、サーバーアクション、バックエンド処理は初期スコープ外とする。
 
-ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱うCloudflare Workerだけは例外とする。Node.js常駐サーバーを公開環境へ追加せず、Cloudflare Workerの認証・character API・frontend接続は後続Gateまで実装しない。
+ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱うCloudflare Workerだけは例外とする。Node.js常駐サーバーを公開環境へ追加せず、G3 ではbackend実装を追加しない。認証必須 API・character API・frontend 接続は後続Gateまで実装しない。
 
 検索、データ表示、ページ生成は静的サイトとして成立する範囲で実装する。
 

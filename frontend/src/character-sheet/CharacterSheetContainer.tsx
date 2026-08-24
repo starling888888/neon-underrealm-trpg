@@ -1,5 +1,7 @@
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useCallback, useMemo } from "react";
 import styles from "./CharacterSheetContainer.module.css";
+import useGoogleAuthentication from "./auth/useGoogleAuthentication";
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
 import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
@@ -26,7 +28,22 @@ import { serializeCcfoliaCharacterClipboardData } from "./logic/ccfolia";
  * presenter; dialogs that need root-level coordination are added as direct
  * siblings of that presenter in later Gates.
  */
-export default function CharacterSheetContainer() {
+type CharacterSheetContainerProps = {
+  googleClientId: string;
+};
+
+export default function CharacterSheetContainer({
+  googleClientId,
+}: CharacterSheetContainerProps) {
+  return (
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <CharacterSheetContent />
+    </GoogleOAuthProvider>
+  );
+}
+
+function CharacterSheetContent() {
+  const authentication = useGoogleAuthentication();
   const rootState = useCharacterSheetRootState();
   const form = rootState.form;
   const formResetKey = rootState.formResetVersion;
@@ -132,6 +149,10 @@ export default function CharacterSheetContainer() {
     onImport: rootState.onJsonImportRequested,
     onResetConfirmed: rootState.onResetConfirmed,
   });
+  const actionPaneProps = useMemo(
+    () => ({ ...actionPane.actionPaneProps, authentication }),
+    [actionPane.actionPaneProps, authentication],
+  );
   const onJsonImportConfirmed = useCallback(() => {
     void rootState.onJsonImportConfirmed();
   }, [rootState.onJsonImportConfirmed]);
@@ -156,7 +177,7 @@ export default function CharacterSheetContainer() {
             {...formPresenterProps}
             key={formResetKey}
           />
-          <CharacterSheetActionPane {...actionPane.actionPaneProps} />
+          <CharacterSheetActionPane {...actionPaneProps} />
         </div>
         <input
           accept="application/json,.json"

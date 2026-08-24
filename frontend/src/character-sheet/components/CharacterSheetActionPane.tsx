@@ -1,12 +1,15 @@
 import { ArrowDown, Menu, X } from "lucide-react";
 import { type CSSProperties, memo, type RefObject } from "react";
+import type { GoogleAuthentication } from "../auth/types";
 import type { CharacterSheetSectionId } from "../constants/section-navigation";
 import { characterSheetDictionary } from "../dictionary";
 import type { CharacterSheetErrorSummary } from "../logic/error-summary";
 import CharacterSheetButton from "./_common/CharacterSheetButton";
 import styles from "./CharacterSheetActionPane.module.css";
+import CharacterSheetGoogleAuthentication from "./CharacterSheetGoogleAuthentication";
 
 type CharacterSheetActionPaneProps = {
+  authentication?: GoogleAuthentication;
   errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
   errorSummary: CharacterSheetErrorSummary;
   isCcfoliaCopyDisabled: boolean;
@@ -35,6 +38,7 @@ const errorListStyle = {
 } as CSSProperties;
 
 function CharacterSheetActionPane({
+  authentication,
   errorReviewButtonRef,
   errorSummary,
   isCcfoliaCopyDisabled,
@@ -60,6 +64,9 @@ function CharacterSheetActionPane({
   return (
     <aside aria-label={actions.regionLabel} className={styles.root}>
       <div className={styles.desktopRail}>
+        {authentication === undefined ? null : (
+          <CharacterSheetGoogleAuthentication authentication={authentication} />
+        )}
         <SectionNavigation
           {...sectionNavigation}
           onSectionJump={onSectionJump}
@@ -130,6 +137,11 @@ function CharacterSheetActionPane({
           className={styles.menu}
           id={menuId}
         >
+          {authentication === undefined ? null : (
+            <CharacterSheetGoogleAuthentication
+              authentication={authentication}
+            />
+          )}
           <SectionNavigation
             {...sectionNavigation}
             onSectionJump={onSectionJump}

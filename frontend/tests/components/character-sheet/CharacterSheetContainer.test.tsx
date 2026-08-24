@@ -9,7 +9,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useEffect, useRef } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -27,6 +27,13 @@ vi.mock(
   "../../../src/character-sheet/hooks/useCharacterSheetRootState",
   () => ({ default: useRootStateMock }),
 );
+
+vi.mock("@react-oauth/google", () => ({
+  GoogleLogin: () => null,
+  GoogleOAuthProvider: ({ children }: { children: ReactNode }) => children,
+  googleLogout: vi.fn(),
+  useGoogleOneTapLogin: vi.fn(),
+}));
 
 function useRootStateHarness() {
   const form = useForm<CharacterSheetFormValues>({
@@ -113,7 +120,7 @@ afterEach(() => {
 describe("CharacterSheetContainer", () => {
   it("connects the form's current character to the root CCFOLIA clipboard operation", async () => {
     const user = userEvent.setup();
-    render(<CharacterSheetContainer />);
+    render(<CharacterSheetContainer googleClientId="test-client-id" />);
 
     await waitFor(() =>
       expect((screen.getByLabelText("PC名") as HTMLInputElement).value).toBe(

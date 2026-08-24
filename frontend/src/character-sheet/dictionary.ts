@@ -17,6 +17,11 @@ export const characterSheetDictionary = {
     unavailableValue: "-",
   },
   characterSheet: {
+    authentication: {
+      error: "Googleログインに失敗しました。もう一度お試しください。",
+      logout: "ログアウト",
+      regionLabel: "Googleアカウントの認証",
+    },
     actions: {
       ccfoliaCopy: "CCFOLIAコピー",
       closeMenu: "操作メニューを閉じる",
