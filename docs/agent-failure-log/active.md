@@ -218,6 +218,14 @@ source種別は以下を使う。
 
 ### component-test contract synchronization
 
+#### Renamed a workflow without updating its build contract test
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` の`.github/workflows/deploy.yml`から`frontend-deploy.yml`への改名
+- 観測した失敗: workflow本体、path filter、文書は改名後のpathへ更新したが、`frontend/tests/contract/page-navigation-build.test.ts`が旧workflow pathを直接読むcontractを更新しなかった。ローカルでのfrontend coverage testが改名前に実行済みだったため、GitHub Actionsで初めてENOENTとして検出された。
+- 一次対応: 失敗job logとtestの旧path参照を照合し、frontendの公開ビルド契約ではない当該contract testを削除した。
+
 #### Repeated component-test failure after changing the removal callback contract
 
 - date: 2026-07-28
