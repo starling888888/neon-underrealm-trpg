@@ -72,7 +72,6 @@ describe("page navigation public build contract", () => {
     expect(component).toMatch(/isProduction: import\.meta\.env\.PROD/);
     expect(component).toMatch(/data-cf-beacon=\{beacon\.dataCfBeacon\}/);
   });
-
 });
 
 function getPageNavigationHrefs(route: string): string[] | undefined {
