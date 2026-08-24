@@ -66,7 +66,11 @@ Use this branch-scoped structure for reviewer output:
 ├── user-directed-changes.md
 ├── pr-review-N.md
 ├── document-review-N.md
-└── technical-review-N.md
+├── gate-technical-review-N.md
+├── frontend-technical-review-N.md
+├── package-review-N.md
+├── ai-ops-review-N.md
+└── backend-technical-review-N.md
 ```
 
 `issue-review-N.md` is an ephemeral self-review record. Do not copy resolved findings into an issue.

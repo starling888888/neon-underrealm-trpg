@@ -34,7 +34,7 @@ Review intake stops before implementation. Fixes require explicit user approval.
 
 Use when drafting or reviewing contents markdown locally for `.raw/contents/*.md`.
 
-For page body and visible display structure, this skill checks user instructions, the current task issue, requirements, out-of-scope, plan and TODO, design, local `src/pages/`, then optional `.raw/contents/` and `.raw/v1.0/` in that priority order. `AGENTS.md` and applicable skill and rule safety or workflow constraints remain above this order. It uses frontmatter for page metadata and HTML comments for agent-facing instructions and lower-priority source conflict records. It does not implement pages.
+For page body and visible display structure, this skill checks user instructions, the current task issue, requirements, out-of-scope, plan and TODO, design, local `frontend/src/pages/`, then optional `.raw/contents/` and `.raw/v1.0/` in that priority order. `AGENTS.md` and applicable skill and rule safety or workflow constraints remain above this order. It uses frontmatter for page metadata and HTML comments for agent-facing instructions and lower-priority source conflict records. It does not implement pages.
 
 ### `contents-review`
 
@@ -46,7 +46,7 @@ This skill runs the local beginner and expert contents reviewers. They receive n
 
 Use when ChatGPT drafts or reviews contents markdown from a remote repository snapshot.
 
-This skill checks user instructions, Git-managed `src/pages/`, the current task issue, requirements, plan, and out-of-scope in that priority order. It records remotely observed lower-priority source conflicts in agent-facing HTML comments, reports unavailable Git-managed sources and local `.raw/contents/` / `.raw/v1.0/` as unverified, and does not access `.raw/`, Google Drive, or local files.
+This skill checks user instructions, Git-managed `frontend/src/pages/`, the current task issue, requirements, plan, and out-of-scope in that priority order. It records remotely observed lower-priority source conflicts in agent-facing HTML comments, reports unavailable Git-managed sources and local `.raw/contents/` / `.raw/v1.0/` as unverified, and does not access `.raw/`, Google Drive, or local files.
 
 ### `pr-review-draft`
 

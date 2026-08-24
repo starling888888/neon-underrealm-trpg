@@ -29,7 +29,7 @@ This is the remote-only workflow.
 Use these sources in order:
 
 1. User instruction.
-2. `src/pages/` files.
+2. `frontend/src/pages/` files.
 3. Current task issue under `docs/issue/`.
 4. `docs/requirements.md` and relevant `docs/requirements/` files.
 5. `docs/issue/milestone-<NN>/plan.md`.
@@ -44,7 +44,7 @@ The result is a Markdown draft in chat. Do not claim that a local `.raw/contents
 ## Preconditions
 
 1. Identify the remote repository and ref when available.
-2. Read the `src/pages/` files relevant to the target route.
+2. Read the `frontend/src/pages/` files relevant to the target route.
 3. Read the current issue, requirements, plan, and out-of-scope source. Use them to identify a conflict with the user instruction or existing implementation, not as a replacement for either higher-priority source.
 4. Confirm the target slug, route, and title when the user did not provide them.
 5. Do not claim local working-tree, `.raw/`, Google Drive, or command validation results.

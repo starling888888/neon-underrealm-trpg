@@ -14,25 +14,29 @@ GitHub Actionsによる基本デプロイは `.github/workflows/deploy.yml` で�
 
 ## 現時点の確認手順
 
-ローカルで依存関係をインストールします。
+ローカルでCIと同じ依存関係を再現します。
 
 ```sh
-npm install
+npm ci
 ```
 
-公開前の基本確認として、以下を実行します。
+公開前の基本確認では、root Qualityと変更workspaceのtestを実行します。
 
 ```sh
-npm run lint
-npm run typecheck
-npm --workspace=@neon-underrealm/frontend run build
+npm run check
+npm --workspace=@neon-underrealm/frontend run test:coverage
+npm --workspace=@neon-underrealm/shared run test
+npm --workspace=backend run test
 ```
 
-ビルド済みサイトをローカルで確認する場合は、以下を実行します。
+frontend、shared package、backendのtestは、それぞれのdirectory、root依存設定、またはworkflowが変わったときにCIで起動する。公開対象を変更した場合は、frontendのpublic buildとPagefind indexも確認する。
 
 ```sh
-npm --workspace=@neon-underrealm/frontend run preview
+npm --workspace=@neon-underrealm/frontend run build:public
+npm --workspace=@neon-underrealm/frontend run build:search-index
 ```
+
+ビルド済みサイトをローカルで確認する場合は、`npm --workspace=@neon-underrealm/frontend run preview`を実行する。
 
 ## 検索indexのローカル生成
 
@@ -54,11 +58,12 @@ GitHub Pages公開はGitHub Actionsで実行します。
 workflowの基本処理は以下です。
 
 1. `npm ci` を実行する。
-2. rootの`npm run lint`と`npm run typecheck`を実行する。
-3. frontendの`build:public`を実行する。
-4. frontendの`build:search-index`を実行する。
-5. `frontend/dist/pagefind/`を含む`frontend/dist/`をGitHub Pages artifactとしてアップロードする。
-6. GitHub Pagesへデプロイする。
+2. root Qualityの`npm run check`を実行する。
+3. 変更pathに応じたfrontend、shared package、backendのworkspace testを実行する。各jobはroot Qualityの成功後に並列で起動する。
+4. frontendの`build:public`を実行する。
+5. frontendの`build:search-index`を実行する。
+6. `frontend/dist/pagefind/`を含む`frontend/dist/`をGitHub Pages artifactとしてアップロードする。
+7. GitHub Pagesへデプロイする。
 
 検索UIはGitHub Pagesのサブパス配下から`pagefind/`を参照するため、indexは公開用buildと同じ`frontend/dist/`へ生成する必要があります。
 

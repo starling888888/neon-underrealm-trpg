@@ -174,7 +174,7 @@ project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照す
 9. `docs/TODO.md`
 10. 関連する `docs/design/<design-target>/`
 11. その他のGit管理ドキュメント
-12. `src/pages/`配下のMDX / Astro実装
+12. `frontend/src/pages/`配下のMDX / Astro実装
 13. 対応する`.raw/contents/<slug>.md`の本文とHTMLコメント（手動の補助入力）
 
 contentsがGit管理の正本と矛盾する場合は、最新のユーザー指示がない限りGit管理の正本を採用する。ユーザー指示または本ファイルの安全・workflow規約と矛盾する場合は、実装せずユーザーに確認する。
@@ -220,10 +220,10 @@ contentsがGit管理の正本と矛盾する場合は、最新のユーザー指
 
 ```sh
 npm run check
-npm run build
+npm --workspace=<changed-workspace> run build
 ```
 
-ただし、変更ファイルが `.md` のみの場合は、実行コスト削減のため `npm run check` と `npm run build` を実行しない。`.mdx`、Astro、TypeScript、CSS、設定、package、生成データ、画像、workflow等を変更した場合は通常どおり必要な検証を行う。
+ただし、変更ファイルが `.md` のみの場合は、実行コスト削減のため `npm run check` とworkspace buildを実行しない。`.mdx`、Astro、TypeScript、CSS、設定、package、生成データ、画像、workflow等を変更した場合は、変更の影響があるworkspaceにbuild scriptがあれば通常どおり実行する。frontendに影響しない変更でfrontend buildを実行する必要はない。backend変更時はbackendにbuild scriptがあればbackend buildを実行する。build scriptを持たないworkspaceは、該当workspaceのtype checkまたはtestを使う。
 
 報告形式は `.agents/rules/work-report.md` を参照する。issueにGroup単位の報告形式がある場合は、それに従う。
 

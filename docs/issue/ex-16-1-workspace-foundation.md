@@ -108,3 +108,36 @@
 - Google Cloud projectとGIS用Web clientはユーザー作成の事前準備であり、G1では扱わない。
 - ユーザー指定により、親issueへmain merge直前のCI/CD起動条件の再確認を記録する。
 - ユーザー指定により、reviewer routingはfrontend、package、AI Opsへ分離する。backend reviewerの定義はG2で追加し、Gate PRは単一の軽量reviewerを維持する。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/deployment.md`の前半手順が、deploy workflowのroot Qualityと差分workspace testの必須前提を省略している。
+- contents authoring/review系のAI Ops規約に、移動前の`src/pages/`が残っている。
+- `AGENTS.md`とwork report規約が、削除済みのroot `npm run build`を通常の必須検証としている。
+- reviewer artifact treeが、role別report名ではなく削除済みの`technical-review-N.md`を示している。
+- Playwrightが生成する`frontend/test-results/`をroot Biomeが検査し、test実行後の`npm run check`が失敗する。
+
+### 判定
+
+- source: local-pr-review
+- classification: valid
+- local validation: `frontend/src/pages/`が実装正本である一方、contents系の複数規約が`src/pages/`を参照していること、root `package.json`に`build` scriptがないこと、deploy workflowがroot Qualityと差分workspace testをbuild前提とすること、data-managementのartifact treeがrole別report名と不整合であること、Playwright実行後の`.last-run.json`をBiomeが検査することを確認した。
+
+### 対応方針
+
+- deployment文書をdeploy workflowの実際のjob順と前提へ合わせる。
+- AI Ops規約・contents skill・work reportのpathとworkspace単位の検証commandを移動後の構成へ統一する。
+- reviewer artifact treeを`pr-review-draft`のrole別filenameへ合わせる。
+- root Biomeからfrontendのtest / Playwright outputを除外する。
+
+### 対応完了チェックリスト
+
+- [x] deployment手順をroot Quality、差分workspace test、frontend build、Pagefind、artifact、deployの順へ更新する。
+- [x] contents系の実装正本pathを`frontend/src/pages/`へ更新する。
+- [x] 作業後検証をrootの`npm run check`と、変更の影響があるworkspaceのbuild commandへ更新する。
+- [x] reviewer artifact treeをrole別report名へ更新する。
+- [x] root Biomeからfrontendのtest / Playwright outputを除外する。
+- [x] `npm run check`が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run build`が通る。

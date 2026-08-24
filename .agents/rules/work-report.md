@@ -27,7 +27,7 @@ Run when appropriate and available:
 
 ```sh
 npm run check
-npm run build
+npm --workspace=<changed-workspace> run build
 ```
 
 If a command is not run, say why.
@@ -42,7 +42,7 @@ npx biome check --write <changed-code-files>
 
 `npm run format` does not necessarily fix organize-imports feedback. If `npm run check` fails with Biome formatting or organize-imports feedback, run the targeted Biome fix on the affected files before rerunning `npm run check`.
 
-If `.md` files were created or edited, run the Markdown formatter before reporting, unless the current issue explicitly says not to. If Markdown-only changes were made, `npm run build` may be skipped when no `.mdx`, Astro, TypeScript, CSS, config, package, generated data, image, or workflow files changed.
+If `.md` files were created or edited, run the Markdown formatter before reporting, unless the current issue explicitly says not to. If Markdown-only changes were made, workspace build may be skipped when no `.mdx`, Astro, TypeScript, CSS, config, package, generated data, image, or workflow files changed. For other changes, identify the workspace affected by the change and run its build script when it defines one. Do not run the frontend build when frontend is unaffected; backend changes require the backend build when backend defines it.
 
 After work, count categories with 3 or more active entries in
 `docs/agent-failure-log/active.md`, excluding formatter- or linter-only entries, and
