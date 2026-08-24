@@ -20,12 +20,14 @@ frontendは静的GitHub Pagesとして公開し、Cloudflare Worker backendと�
 
 ```text
 HTTP request
-  -> Hono handler
+  -> authentication middleware
   -> input validation
   -> character sheet service
-       -> token verifier
        -> character sheet repository
   -> HTTP response
+
+authentication middleware
+  -> token verifier
 
 production composition
   -> Google ID Token verifier + Cloudflare repository
@@ -34,11 +36,14 @@ local/test composition
   -> test token verifier + Cloudflare repository + Wrangler local D1/R2 binding
 ```
 
-- Hono handlerはroute、HTTP request/response、shared input schemaの呼出し、error responseへの変換だけを扱う。
+- Hono handlerはroute、HTTP request/response、shared input schemaの呼出しだけを扱う。`app.onError`がApplicationErrorをHTTP responseへ変換する。
+- authentication middlewareはAuthorization headerとtoken verifierを扱う。tokenなしでは`actorUserId: null`をContextへ置き、有効tokenでは検証済みuser IDを置く。期限切れ・無効tokenはApplicationErrorにする。write/delete用middlewareはanonymous userを拒否する。
 - validationは独立moduleに置く。API envelopeとmetadataを検証するが、character JSON snapshotのゲームschemaや現在のマスタIDは検証しない。
-- serviceはdomain objectとrepositoryのpublic method形状、verifier interfaceだけに依存する。D1、R2、Cloudflare binding、Honoの型を参照しない。
+- serviceはdomain object、repositoryのpublic method形状、authentication middlewareから渡された`actorUserId`だけに依存する。D1、R2、Cloudflare binding、Hono、Authorization header、token verifier、HTTP statusを参照しない。
 - Cloudflare repositoryはD1 metadata操作とR2 snapshot操作を個別に扱い、private fieldにD1/R2 bindingを持つ。serviceが両操作を順序付けてcharacter sheetとして扱う。D1/R2の二重書込みをtransaction化せず、部分失敗はserviceへ通常の失敗として返す。
 - DIはcomposition rootだけで行う。handlerやserviceに`test`/`production`の条件分岐を置かない。
+
+`backend/src`は単数形のlayer directoryへ分ける。`domain/`、`service/`、`repository/`、`validation/`はそれぞれ`index.ts`だけをpublic import入口にする。`auth/`はtoken verifierとauthentication middlewareを置く。認証固有ではない`ApplicationError`、`app.ts`、production/localのcomposition rootはrootに置く。
 
 Clean Architectureの形式的な層追加、repository interfaceとinfrastructure directoryの分離、database adapter、use caseごとのdirectory分割は導入しない。Cloudflare以外のdatabaseへ移行する場合はrepository自体をrefactorする。この節の境界を満たす最小のmodule構成にする。
 
@@ -52,13 +57,13 @@ domain objectは少なくとも、次の情報を扱う。
 - 非公開のowner `userId`
 - `type`: `user`または`sample`
 - 表示用metadata（PC名、PL名、格、プライマリ流儀ID、生き様ID、作成・更新日時）
-- character JSON snapshotとBase64エンコード済み画像
+- Base64エンコード済み画像を含む、client restoreへそのまま渡せるcharacter JSON snapshot
 
 `userId`は認可専用の内部情報であり、request bodyと公開responseに含めない。`isOwner`は、optional authで検証できたuser IDとdomain objectのownerが一致するときだけresponseへ付与する。
 
 ### D1とR2
 
-D1はmetadata index、R2はsnapshot storeとして使う。D1 rowには`type VARCHAR(20)`を保存し、値は`user`または`sample`だけを許可する。D1には、`user`を更新日時降順、`sample`を作成日時昇順で一覧にするために必要なindexを置く。
+D1はmetadata index、R2はsnapshot storeとして使う。D1 rowには`type VARCHAR(20)`を保存し、値は`user`または`sample`だけを許可する。repositoryは全recordを`updated_at DESC`で取得し、serviceが`sample`だけを作成日時昇順へ並べ替える。
 
 R2 keyは`{userId}/{id}.json`とする。`type`を`sample`へ変更しても`userId`とR2 keyは変えない。
 
@@ -96,8 +101,8 @@ CREATE INDEX idx_character_sheets_sample_created_at
 - `owner_user_id`はGoogle `sub`から導く内部値であり、公開APIへ出さない。
 - `type`は作成request・更新requestで受け取らない。新規作成はdefaultの`user`、更新は既存値を維持する。管理者だけがD1へ直接変更できる。
 - `pl_name`、`primary_ryugi_id`、`ikizama_id`は未設定を許可する。`pc_name`と`rank`はDB保存前の入力制約により必須である。
-- `created_at`と`updated_at`はWorkerが`Date.now()`で設定する。公開DTOで日時文字列が必要な場合だけ、API response境界でISO 8601へ変換する。
-- 2つのindexはそれぞれ`WHERE type = 'user' ORDER BY updated_at DESC`と`WHERE type = 'sample' ORDER BY created_at ASC`の一覧queryを支える。
+- `created_at`と`updated_at`はWorkerが`Date.now()`で設定する。公開DTOも同じUnix epoch millisecondsの`number`を返し、serverでISO 8601へ変換しない。
+- 初回migrationのtype別indexは残す。G4の一覧queryはtype別queryを発行せず、record件数の実測が必要になるまで新しいindexやpaginationを追加しない。
 
 ### Migration lifecycle
 
@@ -114,7 +119,7 @@ CREATE INDEX idx_character_sheets_sample_created_at
 
 入力値のZod schemaは`packages/shared`で公開する。backendはrequest validationの正本として使い、clientは送信前の最低限のvalidationに利用できる。
 
-`POST /character-sheets`のbodyは次の形とする。`snapshot`はゲーム規則を検証しない任意のJSON object、`imageBase64`はbase64文字列または`null`である。body全体は8 MiBまでとする。
+`POST /character-sheets`のbodyは次の形とする。`snapshot`はゲーム規則を検証しない任意のJSON objectであり、既存JSON exportと同じ`imageBase64`（base64文字列または`null`）をその内部に含める。body全体は8 MiBまでとする。
 
 ```ts
 {
@@ -126,18 +131,30 @@ CREATE INDEX idx_character_sheets_sample_created_at
     primaryRyugiId?: string | null;
     ikizamaId?: string | null;
   };
-  snapshot: Record<string, unknown>;
-  imageBase64: string | null;
+  snapshot: Record<string, unknown> & {
+    imageBase64: string | null;
+  };
 }
 ```
 
-requestには`userId`と`type`を含めない。`POST`のidは任意であり、未指定なら作成、存在するidなら更新を表す。input validation failureは、個々のfieldの利用者向け説明を持たない汎用errorにする。
+requestには`userId`と`type`を含めない。`POST`のidは任意であり、未指定なら作成、存在するidなら更新を表す。`primaryRyugiId`と`ikizamaId`は、shared packageが公開する現行の固定master IDだけを受け入れる。input validation failureは、個々のfieldの利用者向け説明を持たない汎用errorにする。
 
 ### Output
 
 response DTO、error envelope、公開metadata、list response、domainの公開型は`packages/shared`のTypeScript型として公開する。output用のZod schemaは作らず、clientはresponseが共有型どおりであることを前提に型を絞り込む。clientでのruntime response parseも行わない。
 
-公開metadataには`id`、`type`、表示用metadata、timestamps、`isOwner`を含められるが、内部`userId`は含めない。
+inputとresponseは`id`、`metadata`、`snapshot`の構造を基本として揃える。公開metadataには`type`、表示用metadata、Unix epoch millisecondsのtimestamps、`isOwner`を含めるが、内部`userId`は含めない。list responseとPOST responseはsnapshotを持たないsummary、individual GET responseはsnapshotを含むdetailとする。
+
+```ts
+type CharacterSheetSummary = {
+  id: string;
+  metadata: CharacterSheetMetadata;
+};
+
+type CharacterSheetDetail = CharacterSheetSummary & {
+  snapshot: CharacterSheetSnapshot;
+};
+```
 
 ### Endpoints
 
@@ -148,21 +165,21 @@ response DTO、error envelope、公開metadata、list response、domainの公開
 | GET    | `/character-sheets/:id` | optional | snapshotを含む1件を取得する。                 |
 | DELETE | `/character-sheets/:id` | required | owner限定で1件を削除する。                    |
 
-list responseはserver-side paginationなしで、`user`と`sample`の配列を返す。`user`は`updatedAt DESC`、`sample`は`createdAt ASC`とする。検索、任意sort、pagination parameterは設けない。
+list responseはserver-side paginationなしで、`user`と`sample`の配列を返す。repositoryからの全件取得順で`user`を`updatedAt DESC`にし、serviceが`sample`を`createdAt ASC`へsortする。検索、任意sort、pagination parameterは設けない。
 
 ## 認証とerror contract
 
 ### Token verifier
 
-verifier interfaceはtokenを検証し、検証済みの`userId`または認証失敗の分類を返す。production implementationはGoogle ID Tokenのsignature、`iss`、`aud`、`exp`を検証する。
+verifier interfaceはtokenを検証し、検証済みの`userId`または認証失敗の分類を返す。production implementationはGoogle ID Tokenのsignature、`iss`、`aud`、`exp`を検証する。verifierはHTTP statusやresponseを扱わない。
 
-local API E2Eとtestはtest verifierを明示注入する。test verifierは決め打ちtokenを、有効、期限切れ、無効の結果へ対応付ける。production verifierを`if`文でskipしたり、環境変数で検証を無効化したりしない。production verifier自体はunit/contract testする。
+authentication middleware factoryへproduction/localのverifierをDIする。local API E2Eとtestはtest verifierを明示注入し、決め打ちtokenを有効、期限切れ、無効の結果へ対応付ける。production verifierを`if`文でskipしたり、環境変数で検証を無効化したりしない。production verifier自体はunit/contract testする。
 
-Authorization headerがない公開GETはanonymous readとして処理する。headerが存在する場合は検証し、期限切れまたは無効ならpublic GETでもerrorを返す。required auth endpointでheaderがない場合もerrorを返す。
+Authorization headerがない公開GETはauthentication middlewareがanonymous readとして処理する。headerが存在する場合はmiddlewareが検証し、期限切れまたは無効ならpublic GETでもApplicationErrorを返す。write/delete用middlewareはanonymous userを拒否し、handlerは検証済みの`actorUserId`だけをserviceへ渡す。
 
 ### Error response
 
-失敗responseは共有error envelopeに汎用`message`を持たせる。clientは期限切れtokenの`419`だけをstatusで判定し、その他の4xx/5xxは一律のエラー表示にする。validation field detail、token内容、internal error、`userId`は返さない。
+Service、repository、validation、token verifier、authentication middlewareはHTTP statusを持たない。意味コードだけを持つ`ApplicationError`を使い、`app.onError`だけが網羅的なcode-to-status対応と共有error envelopeを作る。clientは期限切れtokenの`419`だけをstatusで判定し、その他の4xx/5xxは一律のエラー表示にする。validation field detail、token内容、internal error、`userId`は返さない。
 
 | HTTP status | 用途                                                        |
 | ----------- | ----------------------------------------------------------- |
@@ -178,11 +195,11 @@ D1/R2の部分失敗は、保存成功を装わず500として返す。rollback�
 
 ## Repositoryとcomposition
 
-`CloudflareCharacterSheetRepository`がD1 query、R2 key、metadataのread/write/delete、snapshotのread/write/deleteを個別に担当する。constructorでWorker bindingsを受け、`DB`と`OBJECTS`をprivate fieldへ保持する。`saveCharacterSheet`や`deleteCharacterSheet`のようにD1/R2をまたぐrepository methodは作らない。serviceはこのclassのpublic method形状を型として受け、create/update/deleteの順序と部分失敗を扱う。testでは同じ形状のmock repositoryを直接渡せる。mockは各testで明示的に作り、spyによる差し替えを使わない。
+`CloudflareCharacterSheetRepository`がD1 query、R2 key、metadataのread/write/delete、snapshotのread/write/deleteを個別に担当する。constructorでWorker bindingsを受け、`DB`と`OBJECTS`をprivate fieldへ保持する。`saveCharacterSheet`や`deleteCharacterSheet`のようにD1/R2をまたぐrepository methodは作らない。`listMetadata()`は全recordを`updated_at DESC`で返す。serviceはrepository moduleのpublic method形状を型として受け、create/update/deleteの順序、一覧の分類・sample sort、部分失敗を扱う。testでは同じ形状のmock repositoryを直接渡せる。mockは各testで明示的に作り、spyによる差し替えを使わない。
 
 - production: WorkerのCloudflare D1/R2 bindingから`CloudflareCharacterSheetRepository`を生成する。
 - local: 同じclassをWrangler local WorkerのD1/R2 bindingから生成する。
-- service unit test: in-memory mock repositoryを直接注入する。databaseを差し替えるadapterは作らない。
+- service unit test: in-memory mock repositoryを直接注入し、actor user IDを直接渡す。databaseを差し替えるadapterは作らない。
 - local API E2E: Wrangler local Workerにtest verifierを注入し、同じCloudflare repository経由でlocal D1/R2 bindingへ接続する。
 
 local、test、productionで同じserviceとhandler contractを通す。storage SDK errorとCloudflare bindingはrepositoryまたはcomposition rootで閉じる。
@@ -190,11 +207,11 @@ local、test、productionで同じserviceとhandler contractを通す。storage 
 ## テストとCI
 
 - shared input schema、公開output type、error envelopeをcontract testする。
-- serviceではID発行、owner authorization、`type`の作成時`user`・更新時不変、listの分類とsort、未存在idの拒否、R2/D1部分失敗をtestする。
-- verifierではproductionのtoken検証契約とtest verifierの有効・期限切れ・無効tokenをtestする。
-- Cloudflare repositoryはmetadataとsnapshotの個別read/write/delete、および一覧用indexを使うqueryをtestする。serviceは複数repository操作の順序と部分失敗をtestする。
-- local API E2Eは4 endpoint、anonymous read、owner以外のwrite/delete拒否、期限切れtokenの`419`、sample分類を確認する。
-- backendの`tsc`はWorker sourceとworkspace boundaryを確認する。Node test runnerの型はWorkers runtime型とglobalが競合するため、unit testは`tsx --test`で実行する。testの型検査専用configは追加しない。
+- serviceではID発行、owner authorization、`type`の作成時`user`・更新時不変、listの分類・sample sort、未存在idの拒否、R2/D1部分失敗をtestする。
+- verifierではproductionのtoken検証契約とtest verifierの有効・期限切れ・無効tokenをtestする。authentication middlewareはtokenなし、無効、期限切れ、required authを確認する。
+- Cloudflare repositoryはmetadataとsnapshotの個別read/write/delete、および全件`updated_at DESC` queryをtestする。serviceは複数repository操作の順序と部分失敗をtestする。
+- local API E2Eは4 endpoint、anonymous read、owner以外のwrite/delete拒否、期限切れtokenの`419`、sample分類、snapshot内画像、numeric timestampを確認する。
+- backendの`tsc`はWorker sourceを確認する。Node test runnerの型はWorkers runtime型とglobalが競合するため、unit testは`tsx --test`で実行する。testの型検査専用configは追加しない。
 
 CIは既存のbackend integration jobでWrangler local Workerを起動し、local API E2Eを実行する。Cloudflare credentialやGoogle本番認証には依存しない。
 

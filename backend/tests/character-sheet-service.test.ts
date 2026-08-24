@@ -1,32 +1,26 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { CharacterSheetInput } from "@neon-underrealm/shared";
-import { ApiError } from "../src/api-error.js";
-import { CharacterSheetService } from "../src/character-sheet-service.js";
-import type {
-  CharacterSheetRecord,
-  CharacterSheetRepository,
-  CharacterSheetSnapshot,
-  TokenVerification,
-  TokenVerifier,
-} from "../src/character-sheets.js";
+import type { CharacterSheetRecord } from "../src/domain/index.js";
+import { ApplicationError } from "../src/application-error.js";
+import type { CharacterSheetRepository } from "../src/repository/index.js";
+import { CharacterSheetService } from "../src/service/index.js";
 
-const ownerToken = "owner-token";
-const otherToken = "other-token";
+const ownerUserId = "owner";
+const otherUserId = "other";
 
 const input = (
   overrides: Partial<CharacterSheetInput> = {},
 ): CharacterSheetInput => ({
-  imageBase64: null,
   metadata: { pcName: "テストPC", rank: 1 },
-  snapshot: { profile: { pcName: "テストPC" } },
+  snapshot: { imageBase64: null, profile: { pcName: "テストPC" } },
   ...overrides,
 });
 
 class InMemoryRepository implements CharacterSheetRepository {
   readonly metadata = new Map<string, CharacterSheetRecord>();
   readonly operations: string[] = [];
-  readonly snapshots = new Map<string, CharacterSheetSnapshot>();
+  readonly snapshots = new Map<string, CharacterSheetInput["snapshot"]>();
 
   async deleteMetadata(id: string): Promise<void> {
     this.operations.push(`delete-metadata:${id}`);
@@ -45,7 +39,7 @@ class InMemoryRepository implements CharacterSheetRepository {
   async getSnapshot(
     ownerUserId: string,
     id: string,
-  ): Promise<CharacterSheetSnapshot | null> {
+  ): Promise<CharacterSheetInput["snapshot"] | null> {
     return this.snapshots.get(this.key(ownerUserId, id)) ?? null;
   }
 
@@ -61,7 +55,7 @@ class InMemoryRepository implements CharacterSheetRepository {
   async putSnapshot(
     ownerUserId: string,
     id: string,
-    snapshot: CharacterSheetSnapshot,
+    snapshot: CharacterSheetInput["snapshot"],
   ): Promise<void> {
     this.operations.push(`put-snapshot:${id}`);
     this.snapshots.set(this.key(ownerUserId, id), snapshot);
@@ -92,18 +86,9 @@ class InMemoryRepository implements CharacterSheetRepository {
   }
 }
 
-class FixedTokenVerifier implements TokenVerifier {
-  async verify(token: string): Promise<TokenVerification> {
-    if (token === ownerToken) return { kind: "valid", userId: "owner" };
-    if (token === otherToken) return { kind: "valid", userId: "other" };
-    if (token === "expired-token") return { kind: "expired" };
-    return { kind: "invalid" };
-  }
-}
-
 const createService = (repository = new InMemoryRepository()) => ({
   repository,
-  service: new CharacterSheetService(repository, new FixedTokenVerifier(), {
+  service: new CharacterSheetService(repository, {
     createId: () => "11111111-1111-4111-8111-111111111111",
     now: () => 1_700_000_000_000,
   }),
@@ -112,11 +97,11 @@ const createService = (repository = new InMemoryRepository()) => ({
 test("create writes the snapshot before user metadata", async () => {
   const { repository, service } = createService();
 
-  const result = await service.save(input(), ownerToken);
+  const result = await service.save(input(), ownerUserId);
 
   assert.equal(result.id, "11111111-1111-4111-8111-111111111111");
-  assert.equal(result.isOwner, true);
-  assert.equal(result.type, "user");
+  assert.equal(result.metadata.isOwner, true);
+  assert.equal(result.metadata.type, "user");
   assert.deepEqual(repository.operations, [
     "put-snapshot:11111111-1111-4111-8111-111111111111",
     "insert-metadata:11111111-1111-4111-8111-111111111111",
@@ -139,9 +124,9 @@ test("update preserves a sample type and owner", async () => {
     updatedAt: 1,
   });
 
-  const result = await service.save(input({ id }), ownerToken);
+  const result = await service.save(input({ id }), ownerUserId);
 
-  assert.equal(result.type, "sample");
+  assert.equal(result.metadata.type, "sample");
   assert.equal(repository.metadata.get(id)?.ownerUserId, "owner");
   assert.deepEqual(repository.operations, [
     `put-snapshot:${id}`,
@@ -154,8 +139,9 @@ test("write rejects an unknown id and a non-owner", async () => {
   const id = "11111111-1111-4111-8111-111111111111";
 
   await assert.rejects(
-    () => service.save(input({ id }), ownerToken),
-    (error: unknown) => error instanceof ApiError && error.status === 404,
+    () => service.save(input({ id }), ownerUserId),
+    (error: unknown) =>
+      error instanceof ApplicationError && error.code === "not_found",
   );
 
   repository.metadata.set(id, {
@@ -172,12 +158,13 @@ test("write rejects an unknown id and a non-owner", async () => {
   });
 
   await assert.rejects(
-    () => service.save(input({ id }), otherToken),
-    (error: unknown) => error instanceof ApiError && error.status === 403,
+    () => service.save(input({ id }), otherUserId),
+    (error: unknown) =>
+      error instanceof ApplicationError && error.code === "forbidden",
   );
 });
 
-test("anonymous reads omit ownership and expired tokens are distinguishable", async () => {
+test("anonymous reads omit ownership and keep numeric timestamps", async () => {
   const { repository, service } = createService();
   const id = "11111111-1111-4111-8111-111111111111";
   repository.metadata.set(id, {
@@ -194,13 +181,66 @@ test("anonymous reads omit ownership and expired tokens are distinguishable", as
   });
   repository.snapshots.set("owner/11111111-1111-4111-8111-111111111111", {
     imageBase64: null,
-    snapshot: {},
   });
 
-  assert.equal((await service.get(id, undefined)).isOwner, false);
-  await assert.rejects(
-    () => service.get(id, "expired-token"),
-    (error: unknown) => error instanceof ApiError && error.status === 419,
+  const result = await service.get(id, null);
+  assert.equal(result.metadata.isOwner, false);
+  assert.equal(result.metadata.createdAt, 1);
+  assert.equal(result.metadata.updatedAt, 1);
+});
+
+test("list keeps user query order and sorts samples by creation time", async () => {
+  const { repository, service } = createService();
+  const records: CharacterSheetRecord[] = [
+    {
+      createdAt: 30,
+      id: "11111111-1111-4111-8111-111111111111",
+      ikizamaId: null,
+      ownerUserId,
+      pcName: "new sample",
+      plName: null,
+      primaryRyugiId: null,
+      rank: 1,
+      type: "sample",
+      updatedAt: 300,
+    },
+    {
+      createdAt: 10,
+      id: "22222222-2222-4222-8222-222222222222",
+      ikizamaId: null,
+      ownerUserId,
+      pcName: "user first",
+      plName: null,
+      primaryRyugiId: null,
+      rank: 1,
+      type: "user",
+      updatedAt: 200,
+    },
+    {
+      createdAt: 20,
+      id: "33333333-3333-4333-8333-333333333333",
+      ikizamaId: null,
+      ownerUserId,
+      pcName: "old sample",
+      plName: null,
+      primaryRyugiId: null,
+      rank: 1,
+      type: "sample",
+      updatedAt: 100,
+    },
+  ];
+
+  for (const record of records) repository.metadata.set(record.id, record);
+
+  const result = await service.list(null);
+
+  assert.deepEqual(
+    result.user.map((sheet) => sheet.metadata.pcName),
+    ["user first"],
+  );
+  assert.deepEqual(
+    result.sample.map((sheet) => sheet.metadata.pcName),
+    ["old sample", "new sample"],
   );
 });
 
@@ -220,7 +260,7 @@ test("delete removes metadata before its snapshot", async () => {
     updatedAt: 1,
   });
 
-  await service.delete(id, ownerToken);
+  await service.delete(id, ownerUserId);
 
   assert.deepEqual(repository.operations, [
     `delete-metadata:${id}`,
@@ -240,7 +280,7 @@ test("a D1 failure after an R2 write remains an error without cleanup", async ()
   const repository = new FailingMetadataRepository();
   const { service } = createService(repository);
 
-  await assert.rejects(() => service.save(input(), ownerToken));
+  await assert.rejects(() => service.save(input(), ownerUserId));
   assert.equal(repository.metadata.size, 0);
   assert.equal(repository.snapshots.size, 1);
 });

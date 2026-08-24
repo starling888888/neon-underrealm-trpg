@@ -1,8 +1,8 @@
 import { createApp } from "./app.js";
 import type { BackendBindings } from "./bindings.js";
-import { CloudflareCharacterSheetRepository } from "./cloudflare-character-sheet-repository.js";
-import { CharacterSheetService } from "./character-sheet-service.js";
-import { GoogleIdTokenVerifier } from "./token-verifiers.js";
+import { GoogleIdTokenVerifier } from "./auth/token-verifier.js";
+import { CloudflareCharacterSheetRepository } from "./repository/index.js";
+import { CharacterSheetService } from "./service/index.js";
 
 export type { BackendBindings } from "./bindings.js";
 
@@ -11,10 +11,12 @@ export default {
     const app = createApp({
       characterSheetService: new CharacterSheetService(
         new CloudflareCharacterSheetRepository(environment),
-        new GoogleIdTokenVerifier(environment.GOOGLE_OAUTH_CLIENT_ID),
       ),
       corsAllowOrigins: environment.CORS_ALLOW_ORIGIN.split(",").map((origin) =>
         origin.trim(),
+      ),
+      tokenVerifier: new GoogleIdTokenVerifier(
+        environment.GOOGLE_OAUTH_CLIENT_ID,
       ),
     });
 
