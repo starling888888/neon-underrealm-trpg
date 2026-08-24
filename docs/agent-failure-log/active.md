@@ -93,6 +93,26 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Deployment execution-boundary interpretation
+
+#### Misread local manual deploy permission as GitHub Actions manual-dispatch permission
+
+- date: 2026-08-24
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` のbackend deploy workflow確認
+- 観測した失敗: 親issueの「デバッグ用の手動deploy」をGitHub Actionsの`workflow_dispatch`まで許可する方針と誤読し、Gate branchからも実行できるworkflowを一度問題なしと報告した。ユーザーの指摘により、許可対象はユーザー承認後のlocal Terraform手動実行だけであり、GitHub Actionsの手動起動は不許可であると訂正した。
+- 一次対応: 親issue、README、deployment文書を正しいexecution boundaryへ更新し、current issueのmain限定deploy条件を未完了へ戻した。workflowの`workflow_dispatch`削除は明示指示待ちとした。
+
+### Terraform configuration discipline
+
+#### Introduced an unnecessary Terraform initialization wrapper
+
+- date: 2026-08-24
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` のTerraform remote state初期化設計
+- 観測した失敗: Terraform S3 backendが読む環境変数と`init`のbackend設定境界を十分に確認せず、`local.tfvars`を独自解析して`.env`とbackend configを生成する`terraform-init.mjs`を導入した。ユーザーの指摘後に公式仕様を調査し、ローカル専用wrapperとTerraform標準の環境変数・`TF_CLI_ARGS_init`だけで足りることを確認した。
+- 一次対応: 独自MJSとCIでの`.env`生成を撤去した。localでは`.env`を子processだけへ読む薄いshell wrapper、CIではRepository Variables / Secretsから直接渡すTerraform commandへ分離した。
+
 ### browser-test flake diagnosis
 
 #### Repeated flaky character-sheet section-frame browser test

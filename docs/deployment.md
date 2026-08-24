@@ -83,7 +83,7 @@ workflowは `main` へのpushで実行します。
 
 ## Cloudflare backend deploy
 
-`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更または手動実行時だけ起動する。Worker bundle生成後、Terraform remote stateを初期化してformat / validateを行い、Worker、D1、R2、bindingをTerraform applyで更新する。
+`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。GitHub Actionsの手動起動は使わない。Worker bundle生成後、Terraform remote stateを初期化してformat / validateを行い、Worker、D1、R2、binding、`workers.dev`公開設定をTerraform applyで更新する。デバッグ目的の手動deployは、ユーザー承認後のlocal Terraform実行だけを使う。
 
 workflowは以下のRepository Secretだけを使う。
 
@@ -91,7 +91,14 @@ workflowは以下のRepository Secretだけを使う。
 - `TF_STATE_R2_ACCESS_KEY_ID`
 - `TF_STATE_R2_SECRET_ACCESS_KEY`
 
-`TERRAFORM_TFVARS`はRepository Variableであり、account ID、resource名、state endpointなどの非秘密設定だけを持つ。workflowは値をlogへ出力しない。
+workflowは以下のRepository Variableを使う。
+
+- `TERRAFORM_TFVARS`（Terraform resource入力だけ）
+- `TF_STATE_R2_BUCKET_NAME`
+- `TF_STATE_KEY`
+- `TF_STATE_R2_ENDPOINT`
+
+CIは`.env`やlocal wrapperを作らず、これらをjob環境変数に設定して素のTerraform commandを実行する。workflowは値をlogへ出力しない。
 
 ## CIとPublic E2E
 

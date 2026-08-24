@@ -67,23 +67,25 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
 
 ## Cloudflare backendのローカル設定
 
-この節は `ex-16-2-backend-infrastructure` のTerraform stateとlocal backend開発を扱う。実値、state、credential fileはGit管理しない。token発行とstate bucket bootstrapは必要な権限を持つ人が手動で行い、Cloudflare resourceのplan / applyはmain限定のbackend deploy workflowだけが実行する。
+この節は `ex-16-2-backend-infrastructure` のTerraform stateとlocal backend開発を扱う。実値、state、credential fileはGit管理しない。token発行とstate bucket bootstrapは必要な権限を持つ人が手動で行う。Cloudflare resourceのplan / applyはmain限定のbackend deploy workflowで実行し、デバッグ目的のlocal Terraform手動実行はユーザー承認後にだけ行う。
 
-まず、Git管理するtemplateからローカル入力を作成する。`local.tfvars` は名前・ID・endpointなどの設定、`.env` はcredentialだけを持つ。`*.tfvars` と `.env` は `.gitignore` の対象である。
+まず、Git管理するtemplateからローカル入力を作成する。`local.tfvars` はTerraform resourceの名前・IDとWorkers account subdomainだけ、`.env` はTerraform remote stateの設定とcredentialを持つ。`*.tfvars` と `.env` は `.gitignore` の対象である。
 
 ```sh
 cp backend/terraform/local.tfvars.example backend/terraform/local.tfvars
 cp backend/.env.example backend/.env
 ```
 
-`local.tfvars` の `terraform_state_r2_bucket_name` はTerraform state専用であり、character snapshot用の `character_data_r2_bucket_name` と共有しない。state bucketは、そのbucket自身をstateとして使うTerraform構成から作成すると自己参照になるため、次のbootstrap手順だけはTerraform管理の例外として手動で行う。以後のWorker、D1、character data用R2 bucket、binding、deployはTerraformを唯一のresource管理authorityとする。
+既存の`.env`がある場合は、templateのkey名へ手動で移行する。R2 state credentialは`TF_STATE_R2_ACCESS_KEY_ID` / `TF_STATE_R2_SECRET_ACCESS_KEY`ではなく、Terraform S3 backendが読む`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`を使う。
 
-Terraformはbackend初期化時に`*.tfvars`を読まない。`local.tfvars` はplan / apply用の入力であり、stateのbucket・key・endpointは後続のbackend初期化commandが明示的に渡す。R2 access key、secret access key、Cloudflare API tokenを`.tfvars`やGit管理するbackend設定へ書かない。
+`.env` の `TF_STATE_R2_BUCKET_NAME` はTerraform state専用であり、`local.tfvars` の `character_data_r2_bucket_name` と共有しない。state bucketは、そのbucket自身をstateとして使うTerraform構成から作成すると自己参照になるため、次のbootstrap手順だけはTerraform管理の例外として手動で行う。以後のWorker、D1、character data用R2 bucket、binding、deployはTerraformを唯一のresource管理authorityとする。
+
+Terraformはbackend初期化時に`*.tfvars`を読まない。local wrapperは`.env`をその子processだけへ読み込み、`TF_CLI_ARGS_init`、`AWS_REGION`、`AWS_ENDPOINT_URL_S3`、AWS credentialをTerraformへ渡す。R2 access key、secret access key、Cloudflare API tokenを`.tfvars`やGit管理するbackend設定へ書かない。
 
 ### Terraform state用R2 bucketを作る
 
 1. Cloudflare Dashboardで **Storage & databases** → **R2** → **Overview** を開き、**Create bucket** を選ぶ。
-2. `local.tfvars` の `terraform_state_r2_bucket_name` と同じ、専用のbucket名を入力して作成する。R2 bucket名は小文字、数字、hyphenだけを使う。
+2. `.env` の `TF_STATE_R2_BUCKET_NAME` と同じ、専用のbucket名を入力して作成する。R2 bucket名は小文字、数字、hyphenだけを使う。
 3. このbucketをpublic bucketやcharacter data用bucketとして使わない。Terraform stateにはresource IDやsecret由来の値が含まれうるためである。
 
 Cloudflareの手順とR2のS3互換endpointは、[R2 S3 APIの公式手順](https://developers.cloudflare.com/r2/get-started/s3/)および[Terraform remote R2 backendの公式手順](https://developers.cloudflare.com/terraform/advanced-topics/remote-backend/)を参照する。
@@ -92,10 +94,10 @@ Cloudflareの手順とR2のS3互換endpointは、[R2 S3 APIの公式手順](http
 
 stateアクセスとCloudflare resource管理には、用途を分けた2種類のtokenを使う。同じtokenを兼用しない。
 
-| 用途                                   | Cloudflareでの作成方法・権限                                                                                                                                                               | ローカル設定                                                                                  | CI Repository Secret                                         |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Terraform stateのR2 S3アクセス         | R2 Overviewの **Manage API Tokens** から作成し、**Object Read & Write**、対象のstate bucketだけにscopeする。                                                                               | `TF_STATE_R2_ACCESS_KEY_ID` と `TF_STATE_R2_SECRET_ACCESS_KEY` を `backend/.env` に設定する。 | `TF_STATE_R2_ACCESS_KEY_ID`、`TF_STATE_R2_SECRET_ACCESS_KEY` |
-| TerraformによるCloudflare resource管理 | My Profile → **API Tokens** からcustom tokenを作成し、対象accountだけへscopeする。G2で必要なaccount permissionは **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write**。 | `CLOUDFLARE_API_TOKEN` を `backend/.env` に設定する。                                         | `CLOUDFLARE_API_TOKEN`                                       |
+| 用途                                   | Cloudflareでの作成方法・権限                                                                                                                                                               | ローカル設定                                                                  | CI Repository Secret                                         |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Terraform stateのR2 S3アクセス         | R2 Overviewの **Manage API Tokens** から作成し、**Object Read & Write**、対象のstate bucketだけにscopeする。                                                                               | `AWS_ACCESS_KEY_ID` と `AWS_SECRET_ACCESS_KEY` を `backend/.env` に設定する。 | `TF_STATE_R2_ACCESS_KEY_ID`、`TF_STATE_R2_SECRET_ACCESS_KEY` |
+| TerraformによるCloudflare resource管理 | My Profile → **API Tokens** からcustom tokenを作成し、対象accountだけへscopeする。G2で必要なaccount permissionは **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write**。 | `CLOUDFLARE_API_TOKEN` を `backend/.env` に設定する。                         | `CLOUDFLARE_API_TOKEN`                                       |
 
 R2 state tokenの作成後は、表示されるAccess Key IDとSecret Access Keyをただちに安全な場所へ保存して `backend/.env` に設定する。Secret Access Keyは後から再表示できない。R2 tokenは対象bucketだけへscopeし、bucket作成権限を持つAdmin権限を与えない。
 
@@ -103,7 +105,7 @@ Terraform provider tokenはR2 S3 tokenとは別にし、G2で必要なresource�
 
 Cloudflare API tokenの作成方法とscopeは[公式API token作成手順](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)、各permissionの意味は[公式permission一覧](https://developers.cloudflare.com/fundamentals/api/reference/permissions/)を参照する。Worker script resourceが要求する権限は[Cloudflare Terraform providerのresource documentation](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/workers_script)でも確認できる。
 
-CIでは上表のcredentialをGitHub ActionsのRepository Secretだけからdeploy jobへ渡す。account ID、bucket名、state key、R2 endpointはsecretではないため、Git管理する設定またはRepository Variableに置く。Gate branch、親 branch、PRではこれらのSecretを読むdeployを起動せず、backend deployは `main` に限定する。
+CIでは上表のcredentialをGitHub ActionsのRepository Secretだけからdeploy jobへ渡し、state bucket名、state key、R2 endpointはRepository Variableから渡す。resource入力だけを持つ`TERRAFORM_TFVARS`もRepository Variableである。Gate branch、親 branch、PRではこれらのSecretを読むdeployを起動せず、backend deployは `main` に限定する。
 
 ### local backendの起動と確認
 
@@ -128,15 +130,21 @@ docker compose -f backend/compose.yml down
 
 ### Terraformのlocal初期化
 
-Worker bundleを生成してから、`backend/.env`のstate credentialと`backend/terraform/local.tfvars`の非秘密設定を使ってremote stateを初期化する。`terraform:init`は`apply`を実行しない。
+Worker bundleを生成してから、local wrapper経由で`.env`のstate backend設定とcredentialをTerraformへ渡してremote stateを初期化する。wrapperは呼び出し元のshell環境を変更せず、`apply`を実行しない。
 
 ```sh
 npm --workspace=@neon-underrealm/backend run build
-npm --workspace=@neon-underrealm/backend run terraform:init
-npm --workspace=@neon-underrealm/backend run terraform:validate
+bash backend/bin/terraform-local.sh -chdir=backend/terraform init
+bash backend/bin/terraform-local.sh -chdir=backend/terraform validate
 ```
 
-GitHub ActionsではRepository Variable `TERRAFORM_TFVARS`から同じ`local.tfvars`を、Repository Secretから3つのcredentialを一時作成して、main限定の`.github/workflows/backend-deploy.yml`でTerraform applyを実行する。
+GitHub ActionsではRepository Variable `TERRAFORM_TFVARS`からresource入力だけを持つ`local.tfvars`を一時作成する。state backendはRepository Variable `TF_STATE_R2_BUCKET_NAME`、`TF_STATE_KEY`、`TF_STATE_R2_ENDPOINT`、credentialは3つのRepository Secretからjob環境変数へ直接渡し、main限定の`.github/workflows/backend-deploy.yml`で素のTerraform commandを実行する。
+
+`workers_dev_subdomain`にはCloudflare DashboardのWorkers & Pagesで設定したaccount subdomainを指定する。Terraformはbackend Workerの`workers.dev`公開を有効化し、apply後は次でpublic domainを確認できる。
+
+```sh
+terraform -chdir=backend/terraform output backend_worker_domain
+```
 
 ## 別端末からCodexセッションへ接続する
 
