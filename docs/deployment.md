@@ -10,7 +10,7 @@ Cloudflare backendのresource deployは、GitHub Pages deployから独立した 
 
 - 静的サイトとして公開する。
 - GitHub Pagesなどの静的ホスティングで公開できる構成を維持する。
-- DB、常駐サーバー、認証、CMS、APIサーバーを前提にしない。
+- 公開ルールサイトは静的なGitHub Pagesとして維持し、DB、常駐サーバー、認証、CMS、汎用APIサーバーを前提にしない。ただし、承認済みGateのcharacter snapshot用Cloudflare Worker、D1、R2 backendはfrontendから独立して運用する。
 - CI/CD上のビルドはExcel本体に依存しない。
 - 公開用ビルドは、Git管理されたMarkdown / MDX、生成済みJSON、サイトコード、設定ファイルだけで成立させる。
 - GitHub Pagesはmainへのfrontend関連変更だけで、Cloudflare backendはmainへのbackend関連変更だけでdeployする。rootのdependency / formatter / TypeScript設定と各deploy・test workflowの変更は、対応workspaceのbuildへ影響しうるため各deployの起動対象に含める。Cloudflare credentialはRepository Secret、Terraformの非秘密設定はRepository Variableから一時入力として渡し、Gate branch、親 branch、PRでは読まない。
@@ -98,7 +98,7 @@ workflowは以下のRepository Variableを使う。
 - `TF_STATE_KEY`
 - `TF_STATE_R2_ENDPOINT`
 
-CIは`.env`やlocal wrapperを作らず、これらをjob環境変数に設定して素のTerraform commandを実行する。workflowは値をlogへ出力しない。
+CIは`.env`やlocal wrapperを作らず、これらをjob環境変数に設定して素のTerraform commandを実行する。workflowは値をlogへ出力しない。Terraform S3 backendのlockfileを有効にし、applyは最大5分間lock取得を待機する。R2 state credentialには、`TF_STATE_KEY`のstate objectに加えて`${TF_STATE_KEY}.tflock`のread / write / delete権限が必要である。
 
 ## CIとPublic E2E
 

@@ -123,9 +123,37 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 
 - branch: `ex-16-2-backend-infrastructure`
 - local issue: `docs/issue/ex-16-2-backend-infrastructure.md`
-- 親 Gate plan の G2 は `planned` のままとし、本issueのユーザー承認後にだけ実装を開始する。
+- 親 Gate plan の G2 は、PR merge後のGate完了処理まで `planned` のままとする。
 - Cloudflare account ID、API token、Terraform state credential、object-storage credential の実値はこの issue、Git 管理 file、test fixture、CI log へ記載しない。
 - dependency: HonoはWorkerの最小HTTP entrypoint、WranglerとWorkers typeはCloudflare bundle / binding型、`@hono/node-server`・`@libsql/client`・AWS S3 clientはhost側のlocal libSQL / MinIO adapter、tsxはNodeのdiagnostic test / local processに使う。WorkerをDocker化せずにlocal DB / storageだけをComposeで起動するため必要であり、D1/R2本番resourceの管理には使わない。
 - alternative: Wranglerのlocal simulatorだけを使えばdependencyは少ないが、ComposeでD1互換DBとR2互換storageを独立起動するG2の確認を満たせない。直接Cloudflare resourceへ接続するlocal開発はcredentialと本番外部状態を必要とするため採用しない。
 - user-directed: `PUBLIC_API_BASE_PATH`はfrontendのGit管理templateとGitHub Pages build環境までを整備するための非秘密設定であり、frontend API clientの実装はG5以降へ残す。
 - user-directed: frontend / backend deploy workflowのpathとjob依存関係を分離する。共通root設定の変更は各workspace buildへ影響しうるため、対応deployの起動対象に残す。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/deployment.md`の公開方針に、承認済みCloudflare Worker / D1 / R2 backendの限定例外を明記せず、導入前の「DB、APIサーバーを前提にしない」記述が残る。
+- current issueの備考に、ユーザー承認後に実装を開始するという着手前の記述が残る。
+- S3-compatible R2 state backendで`use_lockfile`が未設定のため、ユーザー承認済みlocal Terraform applyとGitHub Actions applyをまたぐ同時更新を防げない。
+
+### 判定
+
+- source: local-pr-review（PR #213、`9f333b82bd4fc0433f7bba8fc17d44bb1b67c7a5...b3997eb683d820e447c33fdf7a65a1680e1a31ce`）
+- classification: valid
+- local validation: `docs/requirements/architecture.md`と`docs/out-of-scope.md`にはbackend限定例外がある一方、`docs/deployment.md`にはない。current issueは実装・確認済みである。`backend/terraform/main.tf`には`use_lockfile`がなく、workflow concurrencyはGitHub Actions jobだけを対象にする。
+
+### 対応方針
+
+- static frontendと承認済みCloudflare backendの独立運用をdeployment文書へ明記する。
+- issueの備考を実装済み・merge前の状態へ更新する。
+- Terraform S3 backendにlockfileを有効化し、state credentialの`.tflock` object権限とlocal / CI applyの実行手順を文書化する。credential権限の実動作確認はユーザー承認後に行う。
+
+### 対応完了チェックリスト
+
+- [x] deployment文書とcurrent issueの導入前記述を現行状態へ更新する。
+- [x] Terraform state lockを有効化し、local / CI双方のlockfile権限と実行境界を文書化する。
+- [x] Terraform format / validateとbackend buildを確認する。
+- [x] `npm run check`が通る。
+- [ ] ユーザー承認後にstate lockを含むTerraform planまたはapplyを実動作確認する。
