@@ -65,6 +65,37 @@ npm --workspace=@neon-underrealm/frontend run visual:install
 
 frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です。VRTはfrontendの`visual:test`で比較し、baseline更新は明示指示時だけfrontendの`visual:update`を使います。
 
+## Google Sign-In の Client ID 設定
+
+`ex-16-3-google-authentication` は Google Identity Services（GIS）の browser-only credential flow を使う。この方式で必要なのは Web OAuth client の **Client ID** だけであり、client secret、OAuth callback URL、redirect URI は使わない。Client ID は公開値であり、frontend build環境とbackendのID token audience検証に同じ値を渡す。ID tokenそのものは `.env`、GitHub Actions、browser persistenceへ保存しない。
+
+このリポジトリのGIS Web clientはGoogle Auth Platformで管理する。`gcloud iam oauth-clients` は別系統のGoogle Cloud IAM OAuth clientを管理するcommandであり、ここで使うGIS Web clientの取得・作成には使わない。
+
+1. `gcloud auth login`後、対象projectを確認する。
+
+   ```sh
+   gcloud config get-value project
+   ```
+
+2. 表示されたprojectを選んで、Google Cloud Consoleの **Google Auth Platform** → **Clients** を開く。既存のWeb application clientを開き、**Client ID**をコピーする。存在しない場合だけ、Google Auth PlatformのUIでWeb application clientを作成する。
+3. 同じclientのAuthorized JavaScript originsへ、ローカルの`http://localhost:4321`と公開frontendのoriginを登録する。browser-only credential flowではAuthorized redirect URIsを追加しない。
+4. templateをコピーして、同じClient IDを両方のローカル設定へ書く。client secretは書かない。
+
+   ```sh
+   cp frontend/.env.example frontend/.env
+   cp backend/.env.example backend/.env
+   ```
+
+   ```dotenv
+   # frontend/.env
+   PUBLIC_GOOGLE_OAUTH_CLIENT_ID=<Google Web OAuth client ID>
+
+   # backend/.env
+   GOOGLE_OAUTH_CLIENT_ID=<same Google Web OAuth client ID>
+   ```
+
+5. GitHub Actionsで使う同じ値はRepository Variable `GOOGLE_OAUTH_CLIENT_ID`へ設定する。Repository Secretには登録しない。deploy workflowはこのVariableをfrontend buildの`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`とbackend deploy jobの`GOOGLE_OAUTH_CLIENT_ID`として読むが、現時点ではTerraformからWorker bindingへ注入しない。そのbinding追加は別指示のtaskで行う。
+
 ## Cloudflare backendのローカル設定
 
 この節は `ex-16-2-backend-infrastructure` のTerraform stateとlocal backend開発を扱う。実値、state、credential fileはGit管理しない。token発行とstate bucket bootstrapは必要な権限を持つ人が手動で行う。Cloudflare resourceのplan / applyはmain限定のbackend deploy workflowで実行し、デバッグ目的のlocal Terraform手動実行はユーザー承認後にだけ行う。

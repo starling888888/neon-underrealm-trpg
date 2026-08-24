@@ -78,6 +78,7 @@ jobs:
         env:
           PUBLIC_API_BASE_PATH: ${{ vars.PUBLIC_API_BASE_PATH }}
           CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
+          PUBLIC_GOOGLE_OAUTH_CLIENT_ID: ${{ vars.GOOGLE_OAUTH_CLIENT_ID }}
         run: npm --workspace=@neon-underrealm/frontend run build:public
 
       - name: Build search index
