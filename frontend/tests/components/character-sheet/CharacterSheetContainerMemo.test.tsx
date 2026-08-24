@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { act, cleanup, render, screen } from "@testing-library/react";
-import { useMemo, useRef } from "react";
+import { type ReactNode, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -56,6 +56,12 @@ vi.mock(
     },
   }),
 );
+
+vi.mock("@react-oauth/google", () => ({
+  GoogleOAuthProvider: ({ children }: { children: ReactNode }) => children,
+  googleLogout: vi.fn(),
+  useGoogleOneTapLogin: vi.fn(),
+}));
 
 function useRootStateHarness() {
   const form = useForm<CharacterSheetFormValues>({
@@ -138,7 +144,7 @@ afterEach(() => {
 
 describe("CharacterSheetContainer memo boundaries", () => {
   it("keeps presenter and action pane props stable when its help dialog state changes", () => {
-    render(<CharacterSheetContainer />);
+    render(<CharacterSheetContainer googleClientId="test-client-id" />);
     const before = presenterSpy.mock
       .lastCall?.[0] as CharacterSheetFormPresenterProps;
     const beforeActionPane = actionPaneSpy.mock.lastCall?.[0] as {

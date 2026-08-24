@@ -1,12 +1,21 @@
 import { ArrowDown, Menu, X } from "lucide-react";
-import { type CSSProperties, memo, type RefObject } from "react";
+import {
+  type CSSProperties,
+  memo,
+  type RefObject,
+  useEffect,
+  useState,
+} from "react";
+import type { GoogleAuthentication } from "../auth/types";
 import type { CharacterSheetSectionId } from "../constants/section-navigation";
 import { characterSheetDictionary } from "../dictionary";
 import type { CharacterSheetErrorSummary } from "../logic/error-summary";
 import CharacterSheetButton from "./_common/CharacterSheetButton";
 import styles from "./CharacterSheetActionPane.module.css";
+import CharacterSheetGoogleAuthentication from "./CharacterSheetGoogleAuthentication";
 
 type CharacterSheetActionPaneProps = {
+  authentication?: GoogleAuthentication;
   errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
   errorSummary: CharacterSheetErrorSummary;
   isCcfoliaCopyDisabled: boolean;
@@ -29,12 +38,14 @@ type CharacterSheetActionPaneProps = {
 };
 
 const menuId = "character-sheet-actions-menu";
+const desktopMediaQuery = "(width >= 84rem)";
 const errorListStyle = {
   "--character-sheet-error-list-max-block-size": "12rem",
   overflowY: "auto",
 } as CSSProperties;
 
 function CharacterSheetActionPane({
+  authentication,
   errorReviewButtonRef,
   errorSummary,
   isCcfoliaCopyDisabled,
@@ -54,23 +65,61 @@ function CharacterSheetActionPane({
   sectionNavigation,
 }: CharacterSheetActionPaneProps) {
   const { actions } = characterSheetDictionary.characterSheet;
+  const isDesktop = useIsDesktop();
+  const authenticationControl = typeof isDesktop === "boolean" &&
+    authentication && (
+      <CharacterSheetGoogleAuthentication authentication={authentication} />
+    );
   const errorStatusText = errorSummary.hasErrors
     ? `エラーが${errorSummary.errors.length}件あります。`
     : actions.noErrors;
   return (
     <aside aria-label={actions.regionLabel} className={styles.root}>
-      <div className={styles.desktopRail}>
-        <SectionNavigation
-          {...sectionNavigation}
-          onSectionJump={onSectionJump}
-        />
-        <div className={styles.operations}>
-          <CharacterSheetButton
-            onClick={(event) => onHelp(event.currentTarget)}
-            size="medium"
-          >
-            {actions.help}
-          </CharacterSheetButton>
+      {isDesktop ? (
+        <div className={styles.desktopRail}>
+          {authenticationControl}
+          <SectionNavigation
+            {...sectionNavigation}
+            onSectionJump={onSectionJump}
+          />
+          <div className={styles.operations}>
+            <CharacterSheetButton
+              onClick={(event) => onHelp(event.currentTarget)}
+              size="medium"
+            >
+              {actions.help}
+            </CharacterSheetButton>
+            <ActionButtons
+              isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
+              isExportDisabled={isExportDisabled}
+              isImportDisabled={isImportDisabled}
+              isResetDisabled={isResetDisabled}
+              onCcfoliaCopy={onCcfoliaCopy}
+              onExport={onExport}
+              onImport={onImport}
+              onReset={onReset}
+            />
+          </div>
+          <DesktopErrorStatus
+            errorReviewButtonRef={errorReviewButtonRef}
+            errorSummary={errorSummary}
+            onReviewErrors={onReviewErrors}
+          />
+        </div>
+      ) : (
+        <section
+          aria-hidden={!isMenuOpen}
+          aria-label={actions.menuLabel}
+          className={
+            isMenuOpen ? `${styles.menu} ${styles.menuOpen}` : styles.menu
+          }
+          id={menuId}
+        >
+          {authenticationControl}
+          <SectionNavigation
+            {...sectionNavigation}
+            onSectionJump={onSectionJump}
+          />
           <ActionButtons
             isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
             isExportDisabled={isExportDisabled}
@@ -81,13 +130,9 @@ function CharacterSheetActionPane({
             onImport={onImport}
             onReset={onReset}
           />
-        </div>
-        <DesktopErrorStatus
-          errorReviewButtonRef={errorReviewButtonRef}
-          errorSummary={errorSummary}
-          onReviewErrors={onReviewErrors}
-        />
-      </div>
+          <ErrorSummary errorSummary={errorSummary} className={styles.errors} />
+        </section>
+      )}
 
       <div
         className={styles.floatingActions}
@@ -123,35 +168,31 @@ function CharacterSheetActionPane({
           )}
         </button>
       </div>
-
-      {isMenuOpen ? (
-        <section
-          aria-label={actions.menuLabel}
-          className={styles.menu}
-          id={menuId}
-        >
-          <SectionNavigation
-            {...sectionNavigation}
-            onSectionJump={onSectionJump}
-          />
-          <ActionButtons
-            isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
-            isExportDisabled={isExportDisabled}
-            isImportDisabled={isImportDisabled}
-            isResetDisabled={isResetDisabled}
-            onCcfoliaCopy={onCcfoliaCopy}
-            onExport={onExport}
-            onImport={onImport}
-            onReset={onReset}
-          />
-          <ErrorSummary errorSummary={errorSummary} className={styles.errors} />
-        </section>
-      ) : null}
     </aside>
   );
 }
 
 export default memo(CharacterSheetActionPane);
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState<boolean>();
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") {
+      setIsDesktop(false);
+      return;
+    }
+
+    const mediaQuery = window.matchMedia(desktopMediaQuery);
+    const update = () => setIsDesktop(mediaQuery.matches);
+
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
+  return isDesktop;
+}
 
 function SectionNavigation({
   items,

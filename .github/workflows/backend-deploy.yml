@@ -84,6 +84,7 @@ jobs:
       AWS_REGION: auto
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_STATE_R2_SECRET_ACCESS_KEY }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      GOOGLE_OAUTH_CLIENT_ID: ${{ vars.GOOGLE_OAUTH_CLIENT_ID }}
       TERRAFORM_TFVARS: ${{ vars.TERRAFORM_TFVARS }}
       TF_CLI_ARGS_init: >-
         -backend-config=bucket=${{ vars.TF_STATE_R2_BUCKET_NAME }}

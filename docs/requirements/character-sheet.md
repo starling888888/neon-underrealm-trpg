@@ -35,12 +35,12 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - CCFOLIAキャラクター駒データのコピー
 - desktop、tablet、mobileでの利用
 
-端末内の最新1キャラクターの保存・復元は初期scopeに含める。ユーザー端末に依存しないサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
+端末内の最新1キャラクターの保存・復元は初期scopeに含める。`ex-16-character-sheet-cloud-persistence` の承認済みGateでは、G3でGoogle Identity Servicesのbrowser-only credential flowによるfrontendログイン、G4でbackendのtoken verifierとクラウド保存API、G5で複数キャラクター管理とクラウド保存UIを段階的に扱う。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
 
 以下は初期スコープ外とする。
 
-- アカウント、認証、サーバー保存、複数端末同期、共同編集、共有URL
-- 複数キャラクターの管理、印刷レイアウト、PDF出力、CCFOLIAコマンドパレット
+- `ex-16-character-sheet-cloud-persistence` の承認済みGateを除くアカウント、認証、サーバー保存、複数端末同期、共同編集、共有URL
+- `ex-16-character-sheet-cloud-persistence` の承認済みG5を除く複数キャラクターの管理、印刷レイアウト、PDF出力、CCFOLIAコマンドパレット
 - ダイスローラー、戦闘シミュレーション、セッション中の状態管理
 - 取得制限や効果文を解析する汎用ルールエンジン
 
@@ -225,5 +225,5 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - desktopのaction railは本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを変更しない。
 - section navigationは第一階層sectionだけを対象にする。各navigation buttonは下向きiconと下線を持つが、現在のscroll位置またはクリック対象に応じたaccent表示は行わない。section frame自体、子section、行、入力項目の色は変えない。
 - キャラクターシートのrouteと入力内容はPagefind検索indexの対象外とする。
-- 静的ホスティングで完結し、サーバー側処理やDBを必要としない。
+- 静的ホスティングで完結する。`ex-16-character-sheet-cloud-persistence` の承認済み Gate だけは Cloudflare Worker を例外として許可し、G3 のログイン credential はfrontend内で取得してメモリ内だけに保持する。
 - 画像の端末内保存方式、保存先間の責務分離、ブラウザAPIの失敗時の共通方針はアーキテクチャで定義する。JSONの構造、CCFOLIA Clipboard JSONの具体的なオブジェクト形状、実行時schemaの具体形は、対応する実装Gateの着手直前にこの要件と整合する形で確定する。
