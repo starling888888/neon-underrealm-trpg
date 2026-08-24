@@ -2,7 +2,7 @@
 
 このドキュメントは、ネオン・アンダーレルムTRPG ルールサイトの公開方針と、GitHub Pages公開手順を整理するための初期版です。
 
-GitHub Actionsによる基本デプロイは `.github/workflows/deploy.yml` で管理します。
+GitHub Actionsによるfrontendデプロイは `.github/workflows/frontend-deploy.yml` で管理します。
 
 Cloudflare backendのresource deployは、GitHub Pages deployから独立した `.github/workflows/backend-deploy.yml` で管理します。
 
@@ -13,7 +13,7 @@ Cloudflare backendのresource deployは、GitHub Pages deployから独立した 
 - DB、常駐サーバー、認証、CMS、APIサーバーを前提にしない。
 - CI/CD上のビルドはExcel本体に依存しない。
 - 公開用ビルドは、Git管理されたMarkdown / MDX、生成済みJSON、サイトコード、設定ファイルだけで成立させる。
-- Cloudflare backendはmainへのbackend関連変更だけでdeployする。Cloudflare credentialはRepository Secret、Terraformの非秘密設定はRepository Variableから一時入力として渡し、Gate branch、親 branch、PRでは読まない。
+- GitHub Pagesはmainへのfrontend関連変更だけで、Cloudflare backendはmainへのbackend関連変更だけでdeployする。rootのdependency / formatter / TypeScript設定と各deploy・test workflowの変更は、対応workspaceのbuildへ影響しうるため各deployの起動対象に含める。Cloudflare credentialはRepository Secret、Terraformの非秘密設定はRepository Variableから一時入力として渡し、Gate branch、親 branch、PRでは読まない。
 
 ## 現時点の確認手順
 
@@ -62,7 +62,7 @@ workflowの基本処理は以下です。
 
 1. `npm ci` を実行する。
 2. root Qualityの`npm run check`を実行する。
-3. 変更pathに応じたfrontend、shared package、backendのworkspace testを実行する。各jobはroot Qualityの成功後に並列で起動する。
+3. frontend deployではfrontend test、backend deployではbackend testとbackend integration testを実行する。各jobはroot Qualityの成功後に起動する。
 4. frontendの`build:public`を実行する。
 5. frontendの`build:search-index`を実行する。
 6. `frontend/dist/pagefind/`を含む`frontend/dist/`をGitHub Pages artifactとしてアップロードする。
@@ -70,7 +70,7 @@ workflowの基本処理は以下です。
 
 検索UIはGitHub Pagesのサブパス配下から`pagefind/`を参照するため、indexは公開用buildと同じ`frontend/dist/`へ生成する必要があります。
 
-workflowは `main` へのpushで実行します。
+frontend deploy workflowは `main` へのfrontend関連pushで実行します。backend関連変更だけではGitHub Pages deployを実行しません。
 
 手動実行用に `workflow_dispatch` も設定しています。
 
@@ -83,7 +83,7 @@ workflowは `main` へのpushで実行します。
 
 ## Cloudflare backend deploy
 
-`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。GitHub Actionsの手動起動は使わない。Worker bundle生成後、Terraform remote stateを初期化してformat / validateを行い、Worker、D1、R2、binding、`workers.dev`公開設定をTerraform applyで更新する。デバッグ目的の手動deployは、ユーザー承認後のlocal Terraform実行だけを使う。
+`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。frontend関連変更だけではbackend deployを実行しない。GitHub Actionsの手動起動は使わない。root Quality、backend test、backend integration testの成功後に、Worker bundle生成、Terraform remote state初期化、format / validateを行い、Worker、D1、R2、binding、`workers.dev`公開設定をTerraform applyで更新する。デバッグ目的の手動deployは、ユーザー承認後のlocal Terraform実行だけを使う。
 
 workflowは以下のRepository Secretだけを使う。
 
@@ -115,7 +115,7 @@ CIは`.env`やlocal wrapperを作らず、これらをjob環境変数に設定�
 - root Qualityと並行して変更pathを分類し、frontend、shared package、backendのtestは、各directory、root依存設定、または`.github/workflows/**`が変わったときだけ、root Qualityの成功後に並列実行する。frontend testはshared packageだけの変更では起動しない。
 - `.codex/**/*.toml`だけの変更ではworkflowを起動しない。
 
-mainへのサイト公開対象のpushでは、deploy workflowもroot Qualityと同じ差分testを実行する。frontendのpublic buildは、root Qualityと起動対象のworkspace testがすべて成功または未起動であることを確認してから実行する。
+mainへのfrontend公開対象のpushでは、GitHub Pages deploy workflowがroot Qualityとfrontend testを実行する。frontendのpublic buildは、両方の成功後に実行する。backend関連変更だけではGitHub Pages deploy workflowを起動しない。
 
 deploy workflowはpublic build後にPagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`frontend/src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
 

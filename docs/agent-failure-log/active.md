@@ -102,6 +102,7 @@ source種別は以下を使う。
 - 発生箇所: `ex-16-2-backend-infrastructure` のbackend deploy workflow確認
 - 観測した失敗: 親issueの「デバッグ用の手動deploy」をGitHub Actionsの`workflow_dispatch`まで許可する方針と誤読し、Gate branchからも実行できるworkflowを一度問題なしと報告した。ユーザーの指摘により、許可対象はユーザー承認後のlocal Terraform手動実行だけであり、GitHub Actionsの手動起動は不許可であると訂正した。
 - 一次対応: 親issue、README、deployment文書を正しいexecution boundaryへ更新し、current issueのmain限定deploy条件を未完了へ戻した。workflowの`workflow_dispatch`削除は明示指示待ちとした。
+- 続報: ユーザーのworkflow修正指示後、backend deploy workflowから`workflow_dispatch`を削除した。実際のmain deploy実行による確認は未実施のため、current issueの該当完了条件は未チェックのままとする。
 
 ### Terraform configuration discipline
 

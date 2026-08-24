@@ -39,6 +39,8 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - Terraform outputで、Worker名とaccount-level `workers.dev` subdomainから構成したbackend Worker domainを確認できるようにする。`workers.dev`公開はTerraformの`cloudflare_workers_script_subdomain`だけで有効化し、Worker resource管理を重複させない。
 - ローカルの Cloudflare credential、Terraform variable、object-storage credential、state credential は Git 管理しない `.env` または `*.tfvars` に置く。キー名だけを示す `.env.example` と `*.tfvars.example` を必要に応じて Git 管理し、実値・state file・Compose volume・credential file を ignore 対象にする。
 - backend の CI / CD workflow を整備する。通常 CI は backend の format、lint、typecheck、unit / integration test を変更 path に応じて実行する。実際の Cloudflare deploy は `main` だけで起動し、必要な値を GitHub Actions の Repository Secret とRepository Variableから環境変数へ明示的に渡す。Gate branch、親 branch、PR では credential を必要とする deploy を実行しない。
+- ユーザー明示指示により、backend Worker URLを非秘密の`PUBLIC_API_BASE_PATH` Repository Variableとして登録し、GitHub Pages deployのfrontend build環境へ渡す。frontendのAPI呼出しやUI変更はこのGateへ含めない。
+- ユーザー明示指示により、frontend関連変更だけでGitHub Pages deployを、backend関連変更だけでCloudflare backend deployを起動するようworkflowを分離する。各deployは対応するworkspace testの成功後にだけ実行し、frontendのAPI呼出しやUI変更は含めない。
 - backend package、root workspace 設定、lockfile、workflow、ignore 設定、および開発・test・deployment・architecture・out-of-scope 文書を必要範囲で更新する。Hono と Cloudflare / Terraform 関連の新規 dependency は、公式性、継続保守、代替案、初期スコープに必要な理由をこの issue の完了記録へ残す。
 
 ## 初期スコープ外
@@ -62,6 +64,8 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - [x] backend の test / build / deploy の責務、ローカル Compose 起動・疎通確認、secret の設定先、Terraform の authority を関連文書へ記録し、architecture / out-of-scope の backend 導入前の記述を解消している。
 - [x] `docs/TODO.md` の永続スキルID互換性 TODO を回収せず、G4 以降で扱う記録を維持している。
 - [x] `npm run check`、backend workspace の build / test、Terraform format / validate、および Compose を使う backend integration 確認が通る。
+- [x] `PUBLIC_API_BASE_PATH`がRepository Variableとして登録され、GitHub Pages deployのfrontend buildへ渡される。
+- [ ] frontend / backend deployがそれぞれ対応する変更pathだけで起動し、対応testの成功後にだけ実行される。
 - [x] Terraform planで`backend_worker_domain` outputがbackend Workerの`workers.dev` domainを示す。
 - [x] Terraform applyでbackend Workerの`workers.dev`公開を有効化し、public domainへのhealth requestが成功する。
 
@@ -102,6 +106,7 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - `docs/development-structure.md`
 - `docs/testing.md`
 - `docs/deployment.md`
+- `frontend/.env.example`
 
 ## レビュー観点
 
@@ -120,4 +125,5 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - Cloudflare account ID、API token、Terraform state credential、object-storage credential の実値はこの issue、Git 管理 file、test fixture、CI log へ記載しない。
 - dependency: HonoはWorkerの最小HTTP entrypoint、WranglerとWorkers typeはCloudflare bundle / binding型、`@hono/node-server`・`@libsql/client`・AWS S3 clientはhost側のlocal libSQL / MinIO adapter、tsxはNodeのdiagnostic test / local processに使う。WorkerをDocker化せずにlocal DB / storageだけをComposeで起動するため必要であり、D1/R2本番resourceの管理には使わない。
 - alternative: Wranglerのlocal simulatorだけを使えばdependencyは少ないが、ComposeでD1互換DBとR2互換storageを独立起動するG2の確認を満たせない。直接Cloudflare resourceへ接続するlocal開発はcredentialと本番外部状態を必要とするため採用しない。
-- pending: `.github/workflows/backend-deploy.yml` に残る`workflow_dispatch`は、親issueのGitHub Actions手動起動不許可と矛盾する。ユーザーからworkflow修正の明示指示を受けるまで、このissueのmain限定deploy条件は未完了とする。
+- user-directed: `PUBLIC_API_BASE_PATH`はfrontendのGit管理templateとGitHub Pages build環境までを整備するための非秘密設定であり、frontend API clientの実装はG5以降へ残す。
+- user-directed: frontend / backend deploy workflowのpathとjob依存関係を分離する。共通root設定の変更は各workspace buildへ影響しうるため、対応deployの起動対象に残す。
