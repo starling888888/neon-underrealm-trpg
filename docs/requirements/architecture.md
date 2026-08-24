@@ -8,7 +8,9 @@
 
 本サイトは、GitHub Pages / GitLab Pages / Cloudflare Pages / Vercel / Netlify などの無料静的ホスティングサービスで公開できる構成にする。
 
-サーバーサイド処理、データベース、常駐プロセス、認証必須CMSを前提にしてはならない。
+公開ルールサイトは、サーバーサイド処理、データベース、常駐プロセス、認証必須CMSを前提にしてはならない。
+
+ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateでは、Cloudflare Worker、D1、R2をキャラクターシートの将来のクラウド永続化専用backendとして追加してよい。frontendの静的公開とbackendのresource管理・deployは独立させ、frontendはbackend内部moduleを直接importしない。
 
 Webキャラクターシートを含むブラウザ上のインタラクティブ機能は、静的ホスティングで完結し、サーバーサイド処理やデータベースを要求しない範囲で実装する。
 
@@ -304,6 +306,7 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - Webキャラクターシートだけは `frontend/src/character-sheet/` のReact Islandとして実装し、static site全体をSPAにはしない。端末内の永続化はlocalStorageとIndexedDBだけを使う。
 - 検索はPagefindの静的indexを公開用build成果物へ生成し、外部検索サービスを使わない。
 - Cloudflare Web Analyticsのmanual beaconは本番deploy buildだけでHTMLへ出力する。通常build、PR検証、Visual Testでは出力しない。
+- `backend/` はHonoをHTTP entrypointにするCloudflare Workerである。D1とR2の本番resource・binding・deployはTerraformを唯一の管理authorityとし、local開発では`backend/compose.yml`のlibSQLとMinIOへhost側Hono adapterから接続する。
 
 ## 3. 技術スタック
 
@@ -321,6 +324,8 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - GitHub Pages
 - Astro scoped CSS + CSS variables
 - Pagefind
+- Hono
+- Cloudflare Workers、D1、R2、Terraform
 
 - Zod
 - read-excel-file

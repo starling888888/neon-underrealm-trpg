@@ -1,0 +1,61 @@
+name: Deploy Cloudflare backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/backend-deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-backend
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TERRAFORM_TFVARS: ${{ vars.TERRAFORM_TFVARS }}
+      TF_STATE_R2_ACCESS_KEY_ID: ${{ secrets.TF_STATE_R2_ACCESS_KEY_ID }}
+      TF_STATE_R2_SECRET_ACCESS_KEY: ${{ secrets.TF_STATE_R2_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Materialize local-only Terraform inputs
+        run: |
+          umask 077
+          printf '%s' "$TERRAFORM_TFVARS" > backend/terraform/local.tfvars
+          printf 'CLOUDFLARE_API_TOKEN=%s\nTF_STATE_R2_ACCESS_KEY_ID=%s\nTF_STATE_R2_SECRET_ACCESS_KEY=%s\n' "$CLOUDFLARE_API_TOKEN" "$TF_STATE_R2_ACCESS_KEY_ID" "$TF_STATE_R2_SECRET_ACCESS_KEY" > backend/.env
+
+      - name: Build Worker bundle
+        run: npm --workspace=@neon-underrealm/backend run build
+
+      - name: Initialize Terraform state
+        run: npm --workspace=@neon-underrealm/backend run terraform:init
+
+      - name: Validate Terraform
+        run: npm --workspace=@neon-underrealm/backend run terraform:validate
+
+      - name: Apply backend infrastructure
+        run: terraform -chdir=backend/terraform apply -auto-approve -var-file=local.tfvars

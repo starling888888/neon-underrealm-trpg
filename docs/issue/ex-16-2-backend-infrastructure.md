@@ -51,30 +51,30 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 
 ## 完了条件
 
-- [ ] `backend/` が Cloudflare Worker と Hono の最小 HTTP entrypoint を持ち、D1 / R2 binding を型安全に参照できる。
-- [ ] `compose.yml` で D1 互換 DB、R2 互換 object storage、backend のローカル実行を起動でき、実 Cloudflare resource や credential を使わない。
-- [ ] Hono の診断用モック API に対する request で、D1 query と R2 object の write / read / cleanup が確認できる。
-- [ ] ローカル integration test または再現可能な確認 command が Compose 起動後の上記疎通を確認し、失敗時に DB / storage のどちらが失敗したか識別できる。
-- [ ] Terraform が Worker、D1、R2、bindings、backend deploy の resource 定義を一元管理し、format / validate と remote state bootstrap・実行手順が確認できる。
-- [ ] 実値を含む `.env`、`*.tfvars`、state、credential file、Compose volume は Git 管理されず、Git 管理する template に secret value を含めない。
-- [ ] Cloudflare / Terraform の credential は backend deploy workflow の `main` 実行時だけ Repository Secret から渡され、Gate branch、親 branch、PR の CI / deploy では使われない。
-- [ ] backend の test / build / deploy の責務、ローカル Compose 起動・疎通確認、secret の設定先、Terraform の authority を関連文書へ記録し、architecture / out-of-scope の backend 導入前の記述を解消している。
-- [ ] `docs/TODO.md` の永続スキルID互換性 TODO を回収せず、G4 以降で扱う記録を維持している。
-- [ ] `npm run check`、backend workspace の build / test、Terraform format / validate、および Compose を使う backend integration 確認が通る。
+- [x] `backend/` が Cloudflare Worker と Hono の最小 HTTP entrypoint を持ち、D1 / R2 binding を型安全に参照できる。
+- [x] `backend/compose.yml` で D1 互換 DB、R2 互換 object storage、host側backendのローカル実行を起動でき、実 Cloudflare resource や credential を使わない。
+- [x] Hono の診断用モック API に対する request で、D1 query と R2 object の write / read / cleanup が確認できる。
+- [x] ローカル integration test または再現可能な確認 command が Compose 起動後の上記疎通を確認し、失敗時に DB / storage のどちらが失敗したか識別できる。
+- [x] Terraform が Worker、D1、R2、bindings、backend deploy の resource 定義を一元管理し、format / validate と remote state bootstrap・実行手順が確認できる。
+- [x] 実値を含む `.env`、`*.tfvars`、state、credential file、Compose volume は Git 管理されず、Git 管理する template に secret value を含めない。
+- [x] Cloudflare / Terraform の credential は backend deploy workflow の `main` 実行時だけ Repository Secret から渡され、Gate branch、親 branch、PR の CI / deploy では使われない。
+- [x] backend の test / build / deploy の責務、ローカル Compose 起動・疎通確認、secret の設定先、Terraform の authority を関連文書へ記録し、architecture / out-of-scope の backend 導入前の記述を解消している。
+- [x] `docs/TODO.md` の永続スキルID互換性 TODO を回収せず、G4 以降で扱う記録を維持している。
+- [x] `npm run check`、backend workspace の build / test、Terraform format / validate、および Compose を使う backend integration 確認が通る。
 
 ## チェックポイント
 
-- [ ] Worker resource、D1、R2、binding、backend deploy の resource management authority を Terraform 以外へ重複させていない。
-- [ ] ローカルの Compose 環境が production Cloudflare account または本番データへ接続しない。
-- [ ] 診断用モック API が認証、character API contract、ユーザー入力の永続保存へ拡張されていない。
-- [ ] diagnostic R2 object に予測可能な限定 prefix を使い、確認後に cleanup する。
-- [ ] Repository Secret 名、用途、渡す workflow job を文書化し、log、test fixture、example file、error message に値を出力しない。
-- [ ] `terraform apply`、remote state bootstrap、Cloudflare resource 作成を CI / local script が暗黙実行しない。
-- [ ] backend deploy は `main` に限定され、Gate branch と親 branch から実行されない。
-- [ ] Gate branch を `main` へ直接 merge せず、`main` を base とする PR を作成しない。
-- [ ] frontend の GitHub Pages deploy、既存 frontend / shared workspace、既存 route とサブパス公開を壊していない。
-- [ ] 新規 dependency の必要性・代替案・初期スコープに必要な理由を記録している。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] Worker resource、D1、R2、binding、backend deploy の resource management authority を Terraform 以外へ重複させていない。
+- [x] ローカルの Compose 環境が production Cloudflare account または本番データへ接続しない。
+- [x] 診断用モック API が認証、character API contract、ユーザー入力の永続保存へ拡張されていない。
+- [x] diagnostic R2 object に予測可能な限定 prefix を使い、確認後に cleanup する。
+- [x] Repository Secret 名、用途、渡す workflow job を文書化し、log、test fixture、example file、error message に値を出力しない。
+- [x] `terraform apply`、remote state bootstrap、Cloudflare resource 作成を CI / local script が暗黙実行しない。
+- [x] backend deploy は `main` に限定され、Gate branch と親 branch から実行されない。
+- [x] Gate branch を `main` へ直接 merge せず、`main` を base とする PR を作成しない。
+- [x] frontend の GitHub Pages deploy、既存 frontend / shared workspace、既存 route とサブパス公開を壊していない。
+- [x] 新規 dependency の必要性・代替案・初期スコープに必要な理由を記録している。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 
@@ -112,3 +112,5 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - local issue: `docs/issue/ex-16-2-backend-infrastructure.md`
 - 親 Gate plan の G2 は `planned` のままとし、本issueのユーザー承認後にだけ実装を開始する。
 - Cloudflare account ID、API token、Terraform state credential、object-storage credential の実値はこの issue、Git 管理 file、test fixture、CI log へ記載しない。
+- dependency: HonoはWorkerの最小HTTP entrypoint、WranglerとWorkers typeはCloudflare bundle / binding型、`@hono/node-server`・`@libsql/client`・AWS S3 clientはhost側のlocal libSQL / MinIO adapter、tsxはNodeのdiagnostic test / local processに使う。WorkerをDocker化せずにlocal DB / storageだけをComposeで起動するため必要であり、D1/R2本番resourceの管理には使わない。
+- alternative: Wranglerのlocal simulatorだけを使えばdependencyは少ないが、ComposeでD1互換DBとR2互換storageを独立起動するG2の確認を満たせない。直接Cloudflare resourceへ接続するlocal開発はcredentialと本番外部状態を必要とするため採用しない。

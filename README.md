@@ -67,7 +67,7 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
 
 ## Cloudflare backendのローカル設定
 
-この節は `ex-16-2-backend-infrastructure` の Terraform state 用準備を扱う。実値、state、credential file はGit管理しない。Cloudflare resourceの作成・`terraform apply`・token発行は自動化せず、必要な権限を持つ人が手動で行う。
+この節は `ex-16-2-backend-infrastructure` のTerraform stateとlocal backend開発を扱う。実値、state、credential fileはGit管理しない。token発行とstate bucket bootstrapは必要な権限を持つ人が手動で行い、Cloudflare resourceのplan / applyはmain限定のbackend deploy workflowだけが実行する。
 
 まず、Git管理するtemplateからローカル入力を作成する。`local.tfvars` は名前・ID・endpointなどの設定、`.env` はcredentialだけを持つ。`*.tfvars` と `.env` は `.gitignore` の対象である。
 
@@ -104,6 +104,39 @@ Terraform provider tokenはR2 S3 tokenとは別にし、G2で必要なresource�
 Cloudflare API tokenの作成方法とscopeは[公式API token作成手順](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)、各permissionの意味は[公式permission一覧](https://developers.cloudflare.com/fundamentals/api/reference/permissions/)を参照する。Worker script resourceが要求する権限は[Cloudflare Terraform providerのresource documentation](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/workers_script)でも確認できる。
 
 CIでは上表のcredentialをGitHub ActionsのRepository Secretだけからdeploy jobへ渡す。account ID、bucket名、state key、R2 endpointはsecretではないため、Git管理する設定またはRepository Variableに置く。Gate branch、親 branch、PRではこれらのSecretを読むdeployを起動せず、backend deployは `main` に限定する。
+
+### local backendの起動と確認
+
+`backend/compose.yml` はD1互換のlibSQLとR2互換のMinIOだけを起動する。Honoのlocal processはDockerへ入れず、host側から両serviceへ接続する。Cloudflare accountやcredentialは使わない。
+
+```sh
+docker compose -f backend/compose.yml up --detach
+npm --workspace=@neon-underrealm/backend run dev:local
+```
+
+別terminalで次を実行すると、D1のqueryと`diagnostic-probes/`配下のR2 object write / read / cleanupを確認する。
+
+```sh
+npm --workspace=@neon-underrealm/backend run test:integration
+```
+
+終了時はhost側processを停止してから、local serviceを停止する。named volumeは削除しない。
+
+```sh
+docker compose -f backend/compose.yml down
+```
+
+### Terraformのlocal初期化
+
+Worker bundleを生成してから、`backend/.env`のstate credentialと`backend/terraform/local.tfvars`の非秘密設定を使ってremote stateを初期化する。`terraform:init`は`apply`を実行しない。
+
+```sh
+npm --workspace=@neon-underrealm/backend run build
+npm --workspace=@neon-underrealm/backend run terraform:init
+npm --workspace=@neon-underrealm/backend run terraform:validate
+```
+
+GitHub ActionsではRepository Variable `TERRAFORM_TFVARS`から同じ`local.tfvars`を、Repository Secretから3つのcredentialを一時作成して、main限定の`.github/workflows/backend-deploy.yml`でTerraform applyを実行する。
 
 ## 別端末からCodexセッションへ接続する
 
@@ -232,7 +265,7 @@ V1.5で処理順を明確化しました。
 - `frontend/tests/vrt/`: Playwright visual regression tests
 - `frontend/data/generated/`: Excelから変換した公開用JSONの配置先
 - `packages/shared/`: frontendと将来のbackendで共有する型・定数のpackage
-- `backend/`: 将来のCloudflare Worker用workspace。現時点ではdummyのpackage、source、testだけを置く
+- `backend/`: Cloudflare Worker、local service Compose、Terraform、backend testのworkspace
 - `.raw/`: Google Drive由来ファイルを同期するローカル作業入力。Git管理しない
 - `frontend/.env`: Google Spreadsheet同期のフォルダIDとservice account認証情報を置くローカル設定ファイル。Git管理しない
 - `.tmp/`: 一次レビュー用ファイルや一時メモの配置先。Git管理しない
@@ -342,6 +375,6 @@ Visual Reviewの失敗を隠す目的でbaselineを更新してはいけませ�
 
 ## 初期スコープ外
 
-GMガイド、シナリオ本文、キャラクター作成ウィザード、ダイスローラー、CMS、認証、DB、サーバーサイド処理、外部解析providerの追加などは初期スコープ外です。Cloudflare Web Analyticsのmanual beaconは本番deployだけで出力する現行の最小解析として含めます。Webキャラクターシートのログイン、サーバー保存、共有、PDF出力も初期スコープ外です。
+GMガイド、シナリオ本文、キャラクター作成ウィザード、ダイスローラー、CMS、認証、DB、サーバーサイド処理、外部解析providerの追加などは初期スコープ外です。Cloudflare Web Analyticsのmanual beaconと、承認済み`ex-16-character-sheet-cloud-persistence` GateのCloudflare backend基盤は例外です。Webキャラクターシートのログイン、サーバー保存、共有、PDF出力は後続Gateまで実装しません。
 
 詳細は [初期スコープ外](docs/out-of-scope.md) を参照してください。

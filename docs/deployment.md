@@ -4,6 +4,8 @@
 
 GitHub Actionsによる基本デプロイは `.github/workflows/deploy.yml` で管理します。
 
+Cloudflare backendのresource deployは、GitHub Pages deployから独立した `.github/workflows/backend-deploy.yml` で管理します。
+
 ## 公開方針
 
 - 静的サイトとして公開する。
@@ -11,6 +13,7 @@ GitHub Actionsによる基本デプロイは `.github/workflows/deploy.yml` で�
 - DB、常駐サーバー、認証、CMS、APIサーバーを前提にしない。
 - CI/CD上のビルドはExcel本体に依存しない。
 - 公開用ビルドは、Git管理されたMarkdown / MDX、生成済みJSON、サイトコード、設定ファイルだけで成立させる。
+- Cloudflare backendはmainへのbackend関連変更だけでdeployする。Cloudflare credentialはRepository Secret、Terraformの非秘密設定はRepository Variableから一時入力として渡し、Gate branch、親 branch、PRでは読まない。
 
 ## 現時点の確認手順
 
@@ -77,6 +80,18 @@ workflowは `main` へのpushで実行します。
 - `.agents/**`
 - `AGENTS.md`
 - `README.md`
+
+## Cloudflare backend deploy
+
+`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更または手動実行時だけ起動する。Worker bundle生成後、Terraform remote stateを初期化してformat / validateを行い、Worker、D1、R2、bindingをTerraform applyで更新する。
+
+workflowは以下のRepository Secretだけを使う。
+
+- `CLOUDFLARE_API_TOKEN`
+- `TF_STATE_R2_ACCESS_KEY_ID`
+- `TF_STATE_R2_SECRET_ACCESS_KEY`
+
+`TERRAFORM_TFVARS`はRepository Variableであり、account ID、resource名、state endpointなどの非秘密設定だけを持つ。workflowは値をlogへ出力しない。
 
 ## CIとPublic E2E
 
