@@ -39,6 +39,7 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - Terraform outputで、Worker名とaccount-level `workers.dev` subdomainから構成したbackend Worker domainを確認できるようにする。`workers.dev`公開はTerraformの`cloudflare_workers_script_subdomain`だけで有効化し、Worker resource管理を重複させない。
 - ローカルの Cloudflare credential、Terraform variable、object-storage credential、state credential は Git 管理しない `.env` または `*.tfvars` に置く。キー名だけを示す `.env.example` と `*.tfvars.example` を必要に応じて Git 管理し、実値・state file・Compose volume・credential file を ignore 対象にする。
 - backend の CI / CD workflow を整備する。通常 CI は backend の format、lint、typecheck、unit / integration test を変更 path に応じて実行する。実際の Cloudflare deploy は `main` だけで起動し、必要な値を GitHub Actions の Repository Secret とRepository Variableから環境変数へ明示的に渡す。Gate branch、親 branch、PR では credential を必要とする deploy を実行しない。
+- `backend/**`を含む通常PRで選択する、Cloudflare Workers、Hono、Terraform、D1、R2の専門性を持つread-only `backend_technical_reviewer`を`.codex/agents/`へ定義する。
 - ユーザー明示指示により、backend Worker URLを非秘密の`PUBLIC_API_BASE_PATH` Repository Variableとして登録し、GitHub Pages deployのfrontend build環境へ渡す。frontendのAPI呼出しやUI変更はこのGateへ含めない。
 - ユーザー明示指示により、frontend関連変更だけでGitHub Pages deployを、backend関連変更だけでCloudflare backend deployを起動するようworkflowを分離する。各deployは対応するworkspace testの成功後にだけ実行し、frontendのAPI呼出しやUI変更は含めない。
 - backend package、root workspace 設定、lockfile、workflow、ignore 設定、および開発・test・deployment・architecture・out-of-scope 文書を必要範囲で更新する。Hono と Cloudflare / Terraform 関連の新規 dependency は、公式性、継続保守、代替案、初期スコープに必要な理由をこの issue の完了記録へ残す。
@@ -65,6 +66,7 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - [x] `docs/TODO.md` の永続スキルID互換性 TODO を回収せず、G4 以降で扱う記録を維持している。
 - [x] `npm run check`、backend workspace の build / test、Terraform format / validate、および Compose を使う backend integration 確認が通る。
 - [x] `PUBLIC_API_BASE_PATH`がRepository Variableとして登録され、GitHub Pages deployのfrontend buildへ渡される。
+- [x] `backend/**`を含む通常PR向けの`backend_technical_reviewer`定義があり、backend / cloudの専門観点とreview対象外を明記している。
 - [ ] frontend / backend deployがそれぞれ対応する変更pathだけで起動し、対応testの成功後にだけ実行される。
 - [x] Terraform planで`backend_worker_domain` outputがbackend Workerの`workers.dev` domainを示す。
 - [x] Terraform applyでbackend Workerの`workers.dev`公開を有効化し、public domainへのhealth requestが成功する。
