@@ -20,6 +20,7 @@
 .codex/                  reviewer agent定義
 .raw/                    Git管理しないGoogle Spreadsheetローカル入力
 .tmp/                    Git管理しない一時作業ファイル
+backend/                 将来のCloudflare Worker用workspace（現時点ではdummy境界のみ）
 frontend/                静的サイトの実装workspace
 frontend/.env            Git管理しないGoogle Spreadsheet同期設定
 frontend/.env.example    Google Spreadsheet同期設定のキー名だけを示すtemplate
@@ -167,6 +168,8 @@ script名は、作業者が目的を判断しやすい名前にする。
 - `npm --workspace=@neon-underrealm/frontend run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
 - `npm --workspace=@neon-underrealm/frontend run visual:test`: Playwright標準VRT baselineを比較する
 - `npm --workspace=@neon-underrealm/frontend run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
+- `npm run check`: format検査、Markdown検査、backend/frontend/shared packageのlintと型検査を実行する
+- `npm --workspace=@neon-underrealm/backend run test`: backend workspaceのdummy境界を型検査する
 
 workspace固有のbuild、test、runtime出力は各workspaceの`.gitignore`で無視する。rootの`.gitignore`は`.raw/`、`.tmp/`、`**/.env`、Excelなどworkspace共通のローカル入力を扱う。
 

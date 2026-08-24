@@ -28,7 +28,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 - 現在のAstroサイトを`frontend/`へ移動し、`backend/`と`packages/shared/`を追加する。rootには`.agents/`、`.github/`、`.codex/`、`docs/`、`AGENTS.md`、workspace管理設定を残す。
 - frontendとbackendは互いの内部moduleをimportせず、API DTO、metadata型、validation schema、API error型はshared packageを経由して共有する。
-- frontendとbackendは、dependency install、format/lint、type check、unit/contract test、build、deployを独立して実行できる。path filterは変更先に応じたCIだけを起動し、shared packageの変更は双方を検証する。
+- frontendとbackendは、dependency install、format/lint、type check、unit/contract test、build、deployを独立して実行できる。CIはrootの共通checkを先行して実行し、workspaceのtestは各directory、root依存設定、workflowの変更時だけ並列実行する。shared packageの変更ではsharedを検証し、依存workspaceの型検査はroot checkで確認する。
 - frontendはGitHub Pages、backendはCloudflareへdeployする。Gateと親branchではbackendのGitHub Actions deployを行わず、必要なbackend deployはローカルTerraformから実行する。`main` merge後はbackendもCI/CDからdeployできるようにする。
 
 ### BackendとInfrastructure as Code
@@ -132,6 +132,8 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 - 追加UIがdesign intent、accessibility、responsive表示、Visual Reviewの契約を満たすか。
 
 ## 備考
+
+- mainへmergeする直前に、対象差分に対してroot check、frontend/shared/backendの各test、およびdeploy前提jobの起動条件を再確認する。
 
 ### Local validation summary
 

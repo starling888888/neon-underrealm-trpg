@@ -1,0 +1,35 @@
+name: Workspace Test
+
+on:
+  workflow_call:
+    inputs:
+      workspace:
+        description: npm workspace name or path
+        required: true
+        type: string
+      script:
+        description: npm script that runs the workspace test suite
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run workspace test
+        run: npm --workspace=${{ inputs.workspace }} run ${{ inputs.script }}

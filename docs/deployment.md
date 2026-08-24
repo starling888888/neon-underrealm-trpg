@@ -75,24 +75,22 @@ workflowは `main` へのpushで実行します。
 
 ## CIとPublic E2E
 
-`.github/workflows/quality.yml`は、再利用するQuality処理を定義する。Qualityでは、次を順に実行する。
+`.github/workflows/quality.yml`は、再利用するroot Quality処理を定義する。Qualityでは、次を順に実行する。
 
 1. `npm ci`
-2. rootの`npm run lint`と`npm run typecheck`
-3. frontendの`build`
-4. frontendの`test:coverage`
+2. rootの`npm run check`（format検査、Markdown検査、lint、type check）
 
-`npm run test:coverage`は通常の Vitest test と、環境変数を設定しない一回の public build 後に実行する contract test をcoverage有効で実行する。通常の Vitest 自動検出からはcontract、ローカルpreviewを起動するE2E、VRTを除外する。HTML、JSON、artifactなどのcoverage reportは保存しない。
+`.github/workflows/workspace-test.yml`はworkspaceごとのtestを実行する再利用workflowである。frontendは`test:coverage`を使い、shared packageとbackendは各workspaceの`test`を使う。frontendの`test:coverage`は通常のVitest testと、環境変数を設定しない一回のpublic build後に実行するcontract testをcoverage有効で実行する。通常のVitest自動検出からはcontract、ローカルpreviewを起動するE2E、VRTを除外する。HTML、JSON、artifactなどのcoverage reportは保存しない。
 
 `.github/workflows/ci.yml`は、main以外のrepository branchへのpushで変更pathを分類する。Pull Request eventでは起動しないため、同じcommitでpushとPull Requestのworkflowを二重に作成しない。fork由来Pull Requestは対象外とする。GitHub Pagesへのdeploy、Pages artifact upload、`pages: write`、`id-token: write`は含めない。
 
-- Markdown-onlyの変更では、`.github/workflows/markdown-check.yml`を呼び出し、`npm ci`と`npm run check:md`だけを実行する。
-- 実装、設定、workflow、`.mdx`を含む変更、またはMarkdownとそれらの混在では、`.github/workflows/quality.yml`を呼び出し、Qualityを実行する。
+- root Qualityは、Markdown-onlyを含むすべての対象pushで実行する。Markdown-only専用のworkflowは置かない。
+- root Qualityと並行して変更pathを分類し、frontend、shared package、backendのtestは、各directory、root依存設定、または`.github/workflows/**`が変わったときだけ、root Qualityの成功後に並列実行する。frontend testはshared packageだけの変更では起動しない。
 - `.codex/**/*.toml`だけの変更ではworkflowを起動しない。
 
-Qualityでは、`npm ci`、rootのlintと型検査、frontendのbuildと`test:coverage`を順に実行する。Markdown CheckはQualityを代替せず、Markdown-only変更だけを対象にする。
+mainへのサイト公開対象のpushでは、deploy workflowもroot Qualityと同じ差分testを実行する。frontendのpublic buildは、root Qualityと起動対象のworkspace testがすべて成功または未起動であることを確認してから実行する。
 
-mainへのサイト公開対象のpushでは、deploy workflowが同じQualityの成功後に公開用build、Pagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`frontend/src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
+deploy workflowはpublic build後にPagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`frontend/src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
 
 deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`frontend/playwright-report/`と`frontend/test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
 

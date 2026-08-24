@@ -29,6 +29,7 @@ npm install
 ```sh
 npm run format
 npm run format:md
+npm run check
 npm run lint
 npm run typecheck
 npm run check:md
@@ -44,10 +45,11 @@ npm --workspace=@neon-underrealm/frontend run visual:test
 npm --workspace=@neon-underrealm/frontend run visual:install
 ```
 
-- `npm run format`: frontendとshared packageのBiome、Git管理Markdownのformatterを実行する
+- `npm run format`: backend、frontend、shared packageのBiomeとGit管理Markdownのformatterを実行する
 - `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
-- `npm run lint`: frontendとshared packageのBiome lintを実行する
-- `npm run typecheck`: frontendとshared packageの型検査を実行する
+- `npm run check`: format検査、Markdown検査、backend、frontend、shared packageのlintと型検査を実行する
+- `npm run lint`: backend、frontend、shared packageのBiome lintを実行する
+- `npm run typecheck`: backend、frontend、shared packageの型検査を実行する
 - `npm run check:md`: Markdown `.md` のformat / 最小style ruleを確認する
 - `npm --workspace=@neon-underrealm/frontend run dev`: ローカル開発サーバーを起動する
 - `npm --workspace=@neon-underrealm/frontend run check`: Astro / TypeScript / Biome の確認を実行する
@@ -190,6 +192,7 @@ V1.5で処理順を明確化しました。
 - `frontend/tests/vrt/`: Playwright visual regression tests
 - `frontend/data/generated/`: Excelから変換した公開用JSONの配置先
 - `packages/shared/`: frontendと将来のbackendで共有する型・定数のpackage
+- `backend/`: 将来のCloudflare Worker用workspace。現時点ではdummyのpackage、source、testだけを置く
 - `.raw/`: Google Drive由来ファイルを同期するローカル作業入力。Git管理しない
 - `frontend/.env`: Google Spreadsheet同期のフォルダIDとservice account認証情報を置くローカル設定ファイル。Git管理しない
 - `.tmp/`: 一次レビュー用ファイルや一時メモの配置先。Git管理しない

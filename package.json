@@ -4,15 +4,18 @@
   "version": "0.9.0",
   "private": true,
   "workspaces": [
+    "backend",
     "frontend",
     "packages/*"
   ],
   "scripts": {
+    "check": "npm run format:check && npm run lint && npm run typecheck",
     "check:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint check && markdownlint-cli2",
-    "format": "npm run format --workspace=@neon-underrealm/frontend && npm run format --workspace=@neon-underrealm/shared && npm run format:md",
+    "format": "npm run format --workspace=@neon-underrealm/backend && npm run format --workspace=@neon-underrealm/frontend && npm run format --workspace=@neon-underrealm/shared && npm run format:md",
+    "format:check": "biome ci . --linter-enabled=false --assist-enabled=false && npm run check:md",
     "format:md": "DPRINT_CACHE_DIR=\"$PWD/.dprint-cache\" dprint fmt && markdownlint-cli2 --fix",
-    "lint": "npm run lint --workspace=@neon-underrealm/frontend && npm run lint --workspace=@neon-underrealm/shared",
-    "typecheck": "npm run typecheck --workspace=frontend && npm run typecheck --workspace=@neon-underrealm/shared"
+    "lint": "npm run lint --workspace=@neon-underrealm/backend && npm run lint --workspace=@neon-underrealm/frontend && npm run lint --workspace=@neon-underrealm/shared",
+    "typecheck": "npm run typecheck --workspace=backend && npm run typecheck --workspace=frontend && npm run typecheck --workspace=@neon-underrealm/shared"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.2",
