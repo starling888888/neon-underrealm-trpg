@@ -48,8 +48,32 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run local Worker integration test
-        run: npm --workspace=@neon-underrealm/backend run test:integration:local
+      - name: Reset local Worker state
+        run: npm --workspace=@neon-underrealm/backend run local:reset
+
+      - name: Apply local D1 migrations
+        run: npm --workspace=@neon-underrealm/backend run migrate:local
+
+      - name: Start local Worker
+        run: npm --workspace=@neon-underrealm/backend run dev:local > "$RUNNER_TEMP/backend.log" 2>&1 &
+
+      - name: Wait for local Worker
+        run: |
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error http://127.0.0.1:8787/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::The local Worker did not become reachable."
+          exit 1
+
+      - name: Run backend integration test
+        run: npm --workspace=@neon-underrealm/backend run test:integration
+
+      - name: Remove local Worker state
+        if: always()
+        run: npm --workspace=@neon-underrealm/backend run local:reset
 
   deploy:
     needs:
