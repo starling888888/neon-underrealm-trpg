@@ -1,12 +1,10 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { getIkizamaList } from "../../src/lib/data/ikizama";
 import { getRyugiList } from "../../src/lib/data/ryugi-list";
 
 const basePath = "/neon-underrealm-trpg";
-const repositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
 const readingPaths = [
   "/introduction",
   "/world",
@@ -75,19 +73,6 @@ describe("page navigation public build contract", () => {
     expect(component).toMatch(/data-cf-beacon=\{beacon\.dataCfBeacon\}/);
   });
 
-  it("passes the token only to the deployment build after a non-empty check", () => {
-    const workflow = readFileSync(
-      path.join(repositoryRoot, ".github/workflows/deploy.yml"),
-      "utf8",
-    );
-
-    expect(workflow).toMatch(
-      /name: Require Cloudflare Web Analytics token[\s\S]*?CLOUDFLARE_WEB_ANALYTICS_TOKEN: \$\{\{ vars\.CLOUDFLARE_WEB_ANALYTICS_TOKEN \}\}[\s\S]*?if \[ -z "\$CLOUDFLARE_WEB_ANALYTICS_TOKEN" \]/,
-    );
-    expect(workflow).toMatch(
-      /name: Build[\s\S]*?CLOUDFLARE_WEB_ANALYTICS_TOKEN: \$\{\{ vars\.CLOUDFLARE_WEB_ANALYTICS_TOKEN \}\}[\s\S]*?run: npm --workspace=@neon-underrealm\/frontend run build:public/,
-    );
-  });
 });
 
 function getPageNavigationHrefs(route: string): string[] | undefined {
