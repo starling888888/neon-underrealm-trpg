@@ -67,7 +67,7 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
 
 ## Google Sign-In の Client ID 設定
 
-`ex-16-3-google-authentication` は Google Identity Services（GIS）の browser-only credential flow を使う。この方式で必要なのは Web OAuth client の **Client ID** だけであり、client secret、OAuth callback URL、redirect URI は使わない。Client ID は公開値であり、frontend build環境とbackendのID token audience検証に同じ値を渡す。ID tokenそのものは `.env`、GitHub Actions、browser persistenceへ保存しない。
+`ex-16-3-google-authentication` は Google Identity Services（GIS）の browser-only credential flow を使う。この方式で必要なのは Web OAuth client の **Client ID** だけであり、client secret、OAuth callback URL、redirect URI は使わない。Client ID は公開値であり、frontend build環境へ渡す。G4で追加するbackendのID token audience検証にも同じ値を渡す。ID tokenそのものは `.env`、GitHub Actions、browser persistenceへ保存しない。
 
 このリポジトリのGIS Web clientはGoogle Auth Platformで管理する。`gcloud iam oauth-clients` は別系統のGoogle Cloud IAM OAuth clientを管理するcommandであり、ここで使うGIS Web clientの取得・作成には使わない。
 
@@ -94,7 +94,7 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
    GOOGLE_OAUTH_CLIENT_ID=<same Google Web OAuth client ID>
    ```
 
-5. GitHub Actionsで使う同じ値はRepository Variable `GOOGLE_OAUTH_CLIENT_ID`へ設定する。Repository Secretには登録しない。deploy workflowはこのVariableをfrontend buildの`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`とbackend deploy jobの`GOOGLE_OAUTH_CLIENT_ID`として読むが、現時点ではTerraformからWorker bindingへ注入しない。そのbinding追加は別指示のtaskで行う。
+5. GitHub Actionsで使う同じ値はRepository Variable `GOOGLE_OAUTH_CLIENT_ID`へ設定する。Repository Secretには登録しない。frontend deploy workflowはこのVariableが未設定ならbuild前に失敗し、frontend buildへ`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`として渡す。backend deploy jobも同じ値を`GOOGLE_OAUTH_CLIENT_ID`として読むが、現時点ではTerraformからWorker bindingへ注入しない。そのbinding追加は別指示のtaskで行う。
 
 ## Cloudflare backendのローカル設定
 

@@ -74,6 +74,15 @@ jobs:
             exit 1
           fi
 
+      - name: Require Google OAuth client ID
+        env:
+          PUBLIC_GOOGLE_OAUTH_CLIENT_ID: ${{ vars.GOOGLE_OAUTH_CLIENT_ID }}
+        run: |
+          if [ -z "$PUBLIC_GOOGLE_OAUTH_CLIENT_ID" ]; then
+            echo "::error::GOOGLE_OAUTH_CLIENT_ID repository variable must be set before deployment."
+            exit 1
+          fi
+
       - name: Build
         env:
           PUBLIC_API_BASE_PATH: ${{ vars.PUBLIC_API_BASE_PATH }}

@@ -1,0 +1,43 @@
+import { GoogleLogin } from "@react-oauth/google";
+import { memo } from "react";
+import { characterSheetDictionary } from "../dictionary";
+import type { GoogleAuthentication } from "../auth/types";
+import CharacterSheetButton from "./_common/CharacterSheetButton";
+import styles from "./CharacterSheetActionPane.module.css";
+
+function CharacterSheetGoogleAuthentication({
+  authentication,
+}: {
+  authentication: GoogleAuthentication;
+}) {
+  const { authentication: copy } = characterSheetDictionary.characterSheet;
+
+  return (
+    <section aria-label={copy.regionLabel} className={styles.authentication}>
+      {authentication.status === "error" ? (
+        <p className={styles.authenticationError} role="alert">
+          {copy.error}
+        </p>
+      ) : null}
+      {authentication.status === "signed-in" ? (
+        <CharacterSheetButton onClick={authentication.onLogout} size="medium">
+          {copy.logout}
+        </CharacterSheetButton>
+      ) : (
+        <GoogleLogin
+          containerProps={{ className: styles.googleLogin }}
+          onError={authentication.onLoginError}
+          onSuccess={authentication.onCredential}
+          text="signin_with"
+          theme="outline"
+          type="standard"
+          useOneTap={false}
+          width="208"
+          click_listener={authentication.onLoginStarted}
+        />
+      )}
+    </section>
+  );
+}
+
+export default memo(CharacterSheetGoogleAuthentication);
