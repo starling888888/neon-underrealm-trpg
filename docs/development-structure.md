@@ -18,22 +18,20 @@
 .github/                 GitHub ActionsとGitHubテンプレート
 .agents/                 agent専用SKILLと常設ルール
 .codex/                  reviewer agent定義
-.env                     Git管理しないGoogle Spreadsheet同期設定
 .raw/                    Git管理しないGoogle Spreadsheetローカル入力
 .tmp/                    Git管理しない一時作業ファイル
-data/generated/          Git管理する生成JSON
+frontend/                静的サイトの実装workspace
+frontend/.env            Git管理しないGoogle Spreadsheet同期設定
+frontend/.env.example    Google Spreadsheet同期設定のキー名だけを示すtemplate
+frontend/canonical-snapshots/ Visual Review用のGit管理しないbaseline
+frontend/data/generated/ Git管理する生成JSON
+frontend/public/         静的アセット
+frontend/scripts/        Node / TypeScriptの保守・変換プログラム
+frontend/tests/          Node、Vitest、E2E、VRT、contract test
+frontend/src/            Astro / Reactのサイト実装
+packages/shared/         frontendと将来のbackendで共有する型・定数
 docs/                    プロジェクト文書とtask tracking
 docs/design/             design正本
-public/                  静的アセット
-scripts/                 Node / TypeScriptの保守・変換プログラム
-tests/                   Node、Vitest、E2E、VRT、contract test
-src/character-sheet/     React IslandのWebキャラクターシート
-src/components/          Astro UI Component
-src/layouts/             Astro Layout
-src/lib/                 共通TypeScript helperとdata access
-src/pages/               Astro / MDX route
-src/scripts/             ブラウザ側TypeScript controller
-src/styles/              global CSS、tokens、prose styles
 ```
 
 ## Git管理しないファイル
@@ -44,24 +42,23 @@ Git管理しないファイルは `.gitignore` を正本とする。
 
 ```text
 node_modules/
-dist/
-.astro/
+frontend/dist/
+frontend/.astro/
+frontend/test-results/
+frontend/playwright-report/
 .raw/
-.env
 .tmp/
-test-results/
-playwright-report/
-canonical-snapshots/visual/
+frontend/canonical-snapshots/visual/
 *.xlsx
 *.xlsm
 ~$*.xlsx
 ```
 
-`data/generated/` 配下のJSONは、Excelから変換された静的サイト用データとしてGit管理する。
+`frontend/data/generated/` 配下のJSONは、Excelから変換された静的サイト用データとしてGit管理する。
 
-`.raw/`、`.env`、`.tmp/`、Visual Review出力、Excel本体をGit管理しない理由や運用詳細は `AGENTS.md` を参照する。
+`.raw/`、workspace-local `.env`、`.tmp/`、Visual Review出力、Excel本体をGit管理しない理由や運用詳細は `AGENTS.md` を参照する。
 
-`npm run sync:google-sheets`は、`.env`で指定したDriveフォルダ配下のGoogle Spreadsheetを、同じフォルダ構造のXLSXとして`.raw/`へ保存する。Google Docsは同期しない。`.raw/contents/`が必要な場合は手動で配置し、MDX / Astroをページ本文・可視構成のGit管理上の正本とする。
+`npm --workspace=@neon-underrealm/frontend run sync:google-sheets`は、`frontend/.env`で指定したDriveフォルダ配下のGoogle Spreadsheetを、同じフォルダ構造のXLSXとして`.raw/`へ保存する。Google Docsは同期しない。`.raw/contents/`が必要な場合は手動で配置し、MDX / Astroをページ本文・可視構成のGit管理上の正本とする。
 
 ## Docs
 
@@ -86,68 +83,68 @@ scriptが小さな単一ファイルを超えて大きくなる場合は、プ�
 推奨構造は以下とする。
 
 ```text
-scripts/<program>/main.ts
-scripts/<program>/lib.ts
-scripts/<program>/lib/
-scripts/_common/
+frontend/scripts/<program>/main.ts
+frontend/scripts/<program>/lib.ts
+frontend/scripts/<program>/lib/
+frontend/scripts/_common/
 ```
 
 `main.ts` はCLI entrypointとし、引数処理、process I/O、終了処理、高レベルの実行順を扱う。
 
 `lib.ts` および `lib/` は、テストしやすい実処理を持つ。
 
-`scripts/_common/` は、複数のscriptプログラムから実際に参照される処理だけを置く。
+`frontend/scripts/_common/` は、複数のscriptプログラムから実際に参照される処理だけを置く。
 
 将来使いそうという理由だけで `_common/` に移さない。
 
 ## Components
 
-`src/components/` は目的ごとに分ける。
+`frontend/src/components/` は目的ごとに分ける。
 
 想定する分類は以下とする。
 
 ```text
-src/components/layout/
-src/components/seo/
-src/components/data/
-src/components/_common/
-src/components/search/
-src/components/analytics/
-src/components/character-making/
-src/components/character-sheet/
+frontend/src/components/layout/
+frontend/src/components/seo/
+frontend/src/components/data/
+frontend/src/components/_common/
+frontend/src/components/search/
+frontend/src/components/analytics/
+frontend/src/components/character-making/
+frontend/src/components/character-sheet/
 ```
 
 新しいComponent分類は、安定した責務がある場合だけ作る。
 
-`src/components/_common/` は、特定の機能領域へ属さず複数領域から参照される小さな共通Componentだけを置く。
+`frontend/src/components/_common/` は、特定の機能領域へ属さず複数領域から参照される小さな共通Componentだけを置く。
 
 ページ固有本文を汎用Componentに混ぜない。
 
 ## Libraries
 
-`src/lib/` は責務ごとに分ける。
+`frontend/src/lib/` は責務ごとに分ける。
 
 想定する分類は以下とする。
 
 ```text
-src/lib/data/
-src/lib/schemas/
-src/lib/schemas/conversion/
-src/lib/site/
-src/lib/types/
-src/lib/utils/
-src/lib/search/
+frontend/src/lib/data/
+frontend/src/lib/schemas/
+frontend/src/lib/schemas/conversion/
+frontend/src/lib/site/
+frontend/src/lib/types/
+frontend/src/lib/utils/
+frontend/src/lib/search/
 ```
 
-データ駆動ページは、生成JSONへのアクセスを `src/lib/data/` 経由にする。
+データ駆動ページは、生成JSONへのアクセスを `frontend/src/lib/data/` 経由にする。
 
-Excel変換・生成JSON検証・ID生成に使うZod Schemaは `src/lib/schemas/conversion/` に置く。ブラウザでも安全に参照する型と定数は `src/lib/types/` に置き、通常表示処理は変換用Schemaを実行時importしない。
+Excel変換・生成JSON検証・ID生成に使うZod Schemaは `frontend/src/lib/schemas/conversion/` に置く。ブラウザでも安全に参照する型と定数は `frontend/src/lib/types/` に置き、通常表示処理は変換用Schemaを実行時importしない。
 
-サイトmetadata、menu定義、URL helperは、責務に応じて `src/lib/site/` または `src/lib/utils/` に置く。
+サイトmetadata、menu定義、URL helperは、責務に応じて `frontend/src/lib/site/` または `frontend/src/lib/utils/` に置く。
 
 ## Browser Scripts
 
-ブラウザ側controllerは `src/scripts/` に置く。
+ブラウザ側controllerは `frontend/src/scripts/` に置く。
 
 menu disclosure、mobile menu、page TOCなど、挙動単位で分ける。
 
@@ -155,21 +152,23 @@ menu disclosure、mobile menu、page TOCなど、挙動単位で分ける。
 
 ## Package Scripts
 
-実行可能なnpm scriptは `package.json` を正本とする。
+実行可能なnpm scriptは各workspaceの `package.json` を正本とする。rootの `package.json` には、全workspace共通のformat、lint、型検査だけを置く。
 
 script名は、作業者が目的を判断しやすい名前にする。
 
 初期実装で想定する基本操作は以下。
 
-- `npm run dev`: ローカル開発サーバーを起動する
-- `npm run build`: 静的サイトをビルドする
-- `npm run preview`: ビルド済みサイトを確認する
-- `npm run check`: Astro型検査とlint / format確認を実行する
-- `npm run test`: Node.jsテストを実行する
-- `npm run visual:capture`: 指定VRT targetの一時snapshotを`test-results/visual/`へ取得する。canonical baselineは更新しない
-- `npm run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
-- `npm run visual:test`: Playwright標準VRT baselineを比較する
-- `npm run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
+- `npm --workspace=@neon-underrealm/frontend run dev`: ローカル開発サーバーを起動する
+- `npm --workspace=@neon-underrealm/frontend run build`: 静的サイトをビルドする
+- `npm --workspace=@neon-underrealm/frontend run preview`: ビルド済みサイトを確認する
+- `npm --workspace=@neon-underrealm/frontend run check`: Astro型検査とlint確認を実行する
+- `npm --workspace=@neon-underrealm/frontend run test`: Node.jsテストを実行する
+- `npm --workspace=@neon-underrealm/frontend run visual:capture`: 指定VRT targetの一時snapshotを`frontend/test-results/visual/`へ取得する。canonical baselineは更新しない
+- `npm --workspace=@neon-underrealm/frontend run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
+- `npm --workspace=@neon-underrealm/frontend run visual:test`: Playwright標準VRT baselineを比較する
+- `npm --workspace=@neon-underrealm/frontend run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
+
+workspace固有のbuild、test、runtime出力は各workspaceの`.gitignore`で無視する。rootの`.gitignore`は`.raw/`、`.tmp/`、`**/.env`、Excelなどworkspace共通のローカル入力を扱う。
 
 Excel変換、検索index生成、データ検証などのscriptは、該当機能が実装されるtaskで追加する。
 

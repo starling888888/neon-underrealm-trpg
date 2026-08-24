@@ -4,8 +4,10 @@
     "includes": [
       "**",
       "!dist",
+      "!frontend/dist",
       "!node_modules",
       "!.astro",
+      "!frontend/.astro",
       "!.dprint-cache",
       "!.tmp",
       "!test-results",

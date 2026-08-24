@@ -22,11 +22,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check
-        run: npm run check
+      - name: Lint workspaces
+        run: npm run lint
 
-      - name: Build
-        run: npm run build
+      - name: Typecheck workspaces
+        run: npm run typecheck
 
-      - name: Test
-        run: npm run test:coverage
+      - name: Build frontend
+        run: npm --workspace=@neon-underrealm/frontend run build
+
+      - name: Test frontend
+        run: npm --workspace=@neon-underrealm/frontend run test:coverage

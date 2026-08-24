@@ -30,6 +30,7 @@
 - rootの`package.json`には、frontendと将来のbackendが共用する`format`、`lint`、`typecheck`だけをworkspace横断の共通入口として置く。個別workspaceのscriptを置き換えず、root scriptはworkspace scriptを組み合わせる。
 - `dev`、`build`、`preview`、`check`、`test`、`visual:*`、`convert:*`、`sync:google-sheets`は、frontendまたは後続backendの個別責務とする。CIはdirectory単位で必要なworkspaceのscriptだけを実行する。
 - `.raw/`は移動後もrepo root直下の`<repo-root>/.raw/`だけを入力rootとする。同期・変換scriptのcwd依存pathを更新し、frontendの`data/generated/`とbuild output `frontend/dist/`を明示的に扱う。`sync:google-sheets`、必要な変換、`build`、`build:public`がこのpath契約を維持することを検証する。
+- `frontend/.env`と`frontend/.env.example`、frontendのtest / Playwright output、canonical VRT baselineはfrontend内に置く。rootの`.gitignore`はworkspace共通のローカル入力を扱い、各workspaceのbuild・test・runtime outputは個別`.gitignore`で無視する。
 - rootとfrontendのnpm scripts、CI workflow、GitHub Pages deploy workflow、test設定の参照先を移動後の構成へ更新する。
 - path filterをfrontendとshared packageの変更へ対応させる。ただしbackend CI/CDの実装はG2で扱う。
 - `docs/development-structure.md`と、workspace構成に直接関係する`docs/requirements/architecture.md`、`docs/testing.md`、`docs/deployment.md`を実装後の構造と検証入口へ整合させる。
@@ -46,34 +47,36 @@
 
 ## 完了条件
 
-- [ ] root、`frontend/`、`packages/shared/`の責務と依存方向が明確である。
-- [ ] 既存Astro frontendが`frontend/`配下から静的buildされ、GitHub Pagesのsubpath公開を維持する。
-- [ ] `packages/shared/`をfrontendからworkspace dependencyとして参照できる最小のpackage境界がある。
-- [ ] frontendのformat/lint、type check、unit/contract test、buildを独立したscriptから実行できる。
-- [ ] rootの`npm run format`、`npm run lint`、`npm run typecheck`が、frontendと`packages/shared/`を対象として実行できる。
-- [ ] `dev`、build、preview、test、visual、変換、同期は、対応するworkspaceから個別に実行できる。
-- [ ] rootの`npm ci`だけでworkspace dependenciesを再現installでき、frontend配下にlockfileがない。
-- [ ] `.raw/`がrepo root直下に維持され、同期・変換・build後処理が`frontend/.raw/`やrootの旧`dist/`へ誤って依存していない。
-- [ ] CIがfrontendまたはshared packageの変更で必要なfrontend検証を実行する。
-- [ ] GitHub Pages deploy workflowが移動後のfrontendをbuild・deployする。
-- [ ] 関連する構造、architecture、testing、deployment文書が実装と整合する。
-- [ ] `npm run check`、`npm run build`、必要なfrontend testが通る。
-- [ ] 関連TODOを追加、完了、削除していないこと、または扱いを明記していること。
+- [x] root、`frontend/`、`packages/shared/`の責務と依存方向が明確である。
+- [x] 既存Astro frontendが`frontend/`配下から静的buildされ、GitHub Pagesのsubpath公開を維持する。
+- [x] `packages/shared/`をfrontendからworkspace dependencyとして参照できる最小のpackage境界がある。
+- [x] frontendのformat/lint、type check、unit/contract test、buildを独立したscriptから実行できる。
+- [x] rootの`npm run format`、`npm run lint`、`npm run typecheck`が、frontendと`packages/shared/`を対象として実行できる。
+- [x] `dev`、build、preview、test、visual、変換、同期は、対応するworkspaceから個別に実行できる。
+- [x] rootの`npm ci`だけでworkspace dependenciesを再現installでき、frontend配下にlockfileがない。
+- [x] `.raw/`がrepo root直下に維持され、同期・変換・build後処理が`frontend/.raw/`やrootの旧`dist/`へ誤って依存していない。
+- [x] `frontend/.env`と`frontend/.env.example`、frontendのtest / Playwright outputがfrontend内へ置かれ、rootとworkspaceの`.gitignore`責務が分かれている。
+- [x] frontend専用のcanonical VRT baselineが`frontend/canonical-snapshots/visual/`へ置かれ、frontendのPlaywright設定から参照される。
+- [x] CIがfrontendまたはshared packageの変更で必要なfrontend検証を実行する。
+- [x] GitHub Pages deploy workflowが移動後のfrontendをbuild・deployする。
+- [x] 関連する構造、architecture、testing、deployment文書が実装と整合する。
+- [x] `npm run lint`、`npm run typecheck`、frontendのbuildとtestが通る。
+- [x] 関連TODOを追加、完了、削除していないこと、または扱いを明記していること。
 
 ## チェックポイント
 
-- [ ] frontend移動と無関係な表示・操作・キャラクターシート仕様の変更を混在させていない。
-- [ ] frontendと将来のbackendが互いの内部moduleを直接importしない構造である。
-- [ ] shared packageを相対pathコピーや型の二重管理に使っていない。
-- [ ] rootのformat/lint/typecheck scriptがworkspaceごとの実装を重複せず、TypeScript workspaceの共通入口になっている。
-- [ ] directory単位のCIが、frontendまたは後続backendの個別scriptを適切に実行し、rootへ不必要な実行入口を増やしていない。
-- [ ] package managerを変更していない。新規packageが必要なら、理由、代替案、初期スコープ上の必要性をissueへ記録している。
-- [ ] 既存のroot script、CI、deploy workflow、test configurationに残った移動前pathがない。
-- [ ] workspace commandのcwdにかかわらず、同期・変換・build後処理の入力と出力pathが明示的に解決される。
-- [ ] `data/generated/`を手編集していない。
-- [ ] `.raw/`、`.tmp/`、secret、build成果物をGit管理へ追加していない。
-- [ ] 既存routeとGitHub Pages subpath公開が壊れていない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] frontend移動と無関係な表示・操作・キャラクターシート仕様の変更を混在させていない。
+- [x] frontendと将来のbackendが互いの内部moduleを直接importしない構造である。
+- [x] shared packageを相対pathコピーや型の二重管理に使っていない。
+- [x] rootのformat/lint/typecheck scriptがworkspaceごとの実装を重複せず、TypeScript workspaceの共通入口になっている。
+- [x] directory単位のCIが、frontendまたは後続backendの個別scriptを適切に実行し、rootへ不必要な実行入口を増やしていない。
+- [x] package managerを変更していない。新規packageが必要なら、理由、代替案、初期スコープ上の必要性をissueへ記録している。
+- [x] 既存のroot script、CI、deploy workflow、test configurationに残った移動前pathがない。
+- [x] workspace commandのcwdにかかわらず、同期・変換・build後処理の入力と出力pathが明示的に解決される。
+- [x] `data/generated/`を手編集していない。
+- [x] `.raw/`、`.tmp/`、secret、build成果物をGit管理へ追加していない。
+- [x] 既存routeとGitHub Pages subpath公開が壊れていない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ## 想定変更ファイル
 

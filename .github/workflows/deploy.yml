@@ -55,15 +55,15 @@ jobs:
       - name: Build
         env:
           CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
-        run: npm run build:public
+        run: npm --workspace=@neon-underrealm/frontend run build:public
 
       - name: Build search index
-        run: npm run build:search-index
+        run: npm --workspace=@neon-underrealm/frontend run build:search-index
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: dist
+          path: frontend/dist
 
   deploy:
     needs: build
@@ -117,7 +117,7 @@ jobs:
       - name: Run Public E2E
         env:
           E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
-        run: npx playwright test --config playwright.e2e.config.ts --grep-invert '@local-fixture' --workers=1
+        run: npm --workspace=@neon-underrealm/frontend run test:e2e:public
 
       - name: Upload Public E2E diagnostics
         if: failure()
@@ -125,7 +125,7 @@ jobs:
         with:
           name: public-e2e-diagnostics
           path: |
-            playwright-report/
-            test-results/
+            frontend/playwright-report/
+            frontend/test-results/
           if-no-files-found: warn
           retention-days: 7

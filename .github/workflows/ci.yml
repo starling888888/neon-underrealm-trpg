@@ -32,9 +32,13 @@ jobs:
             markdown:
               - '**/*.md'
             quality:
-              - '**'
-              - '!**/*.md'
-              - '!.codex/**/*.toml'
+              - 'frontend/**'
+              - 'packages/shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'biome.json'
+              - 'tsconfig.json'
+              - '.github/workflows/**'
 
   markdown:
     needs: changes
