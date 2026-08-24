@@ -50,7 +50,7 @@ This skill checks user instructions, Git-managed `src/pages/`, the current task 
 
 ### `pr-review-draft`
 
-Use when reviewing a remote GitHub PR with local document and technical reviewers, then handing validated findings to `review-to-issue`. Technical review is mandatory for every PR. Gate child issue PRs use `gate_technical_reviewer`; parent and non-Gate issue PRs use `technical_reviewer`.
+Use when reviewing a remote GitHub PR with local document and selected specialist reviewers, then handing validated findings to `review-to-issue`. Gate child issue PRs use only `gate_technical_reviewer`. Parent and non-Gate issue PRs use `document_reviewer` plus reviewers selected for frontend, package, AI Ops, and future backend changes.
 
 The remote PR is the review source. The workflow stores temporary reports under `.tmp/review/<branch-name>/` and stops after `review-to-issue`.
 

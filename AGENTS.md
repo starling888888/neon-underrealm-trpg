@@ -135,7 +135,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 
 ### Reviewer Subagents
 
-project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照する。
+project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照する。通常PRでは`document_reviewer`に加え、`frontend/**`とfrontend公開設定は`frontend_technical_reviewer`、package / TypeScript workspace設定は`package_reviewer`、`.agents/**`、`.codex/**`、`AGENTS.md`は`ai_ops_reviewer`を起動する。`backend/**`はG2で`backend_technical_reviewer`を作成した後にそのreviewerを起動する。Gate PRは`gate_technical_reviewer`だけを起動する。正確な選択条件は`pr-review-draft`を正本とする。
 
 ### Rules
 

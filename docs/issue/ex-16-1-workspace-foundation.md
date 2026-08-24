@@ -107,3 +107,4 @@
 - UI、CSS、layout、page、Componentの変更を対象にしないため、design-image-generation、VRT、Visual ReviewはこのGateの前提条件に含めない。
 - Google Cloud projectとGIS用Web clientはユーザー作成の事前準備であり、G1では扱わない。
 - ユーザー指定により、親issueへmain merge直前のCI/CD起動条件の再確認を記録する。
+- ユーザー指定により、reviewer routingはfrontend、package、AI Opsへ分離する。backend reviewerの定義はG2で追加し、Gate PRは単一の軽量reviewerを維持する。
