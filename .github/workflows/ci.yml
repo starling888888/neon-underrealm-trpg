@@ -74,6 +74,18 @@ jobs:
       workspace: '@neon-underrealm/shared'
       script: test
 
+  shared-consumer-change:
+    needs:
+      - root-quality
+      - changes
+    if: ${{ needs.changes.outputs.shared == 'true' && needs.changes.outputs.frontend != 'true' && needs.changes.outputs.backend != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject a shared-only change
+        run: |
+          echo "::error::A packages/shared change must include a frontend or backend consumer change."
+          exit 1
+
   backend-test:
     needs:
       - root-quality
