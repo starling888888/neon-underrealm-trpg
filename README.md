@@ -67,7 +67,7 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
 
 ## Google Sign-In の Client ID 設定
 
-`ex-16-3-google-authentication` は Google Identity Services（GIS）の browser-only credential flow を使う。この方式で必要なのは Web OAuth client の **Client ID** だけであり、client secret、OAuth callback URL、redirect URI は使わない。Client ID は公開値であり、frontend build環境へ渡す。G4で追加するbackendのID token audience検証にも同じ値を渡す。ID tokenそのものは `.env`、GitHub Actions、browser persistenceへ保存しない。
+`ex-16-3-google-authentication` は Google Identity Services（GIS）の browser-only credential flow を使う。この方式で必要なのは Web OAuth client の **Client ID** だけであり、client secret、OAuth callback URL、redirect URI は使わない。Client ID は公開値であり、frontend build環境へ渡す。G4で追加するbackendのID token audience検証にも、**同じenvironmentのfrontendと同じ値**を渡す。ID tokenそのものは `.env`、GitHub Actions、browser persistenceへ保存しない。
 
 このリポジトリのGIS Web clientはGoogle Auth Platformで管理する。`gcloud iam oauth-clients` は別系統のGoogle Cloud IAM OAuth clientを管理するcommandであり、ここで使うGIS Web clientの取得・作成には使わない。
 
@@ -77,9 +77,9 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
    gcloud config get-value project
    ```
 
-2. 表示されたprojectを選んで、Google Cloud Consoleの **Google Auth Platform** → **Clients** を開く。既存のWeb application clientを開き、**Client ID**をコピーする。存在しない場合だけ、Google Auth PlatformのUIでWeb application clientを作成する。
-3. 同じclientのAuthorized JavaScript originsへ、ローカルの`http://localhost:4321`と公開frontendのoriginを登録する。browser-only credential flowではAuthorized redirect URIsを追加しない。
-4. templateをコピーして、同じClient IDを両方のローカル設定へ書く。client secretは書かない。
+2. 表示されたprojectを選んで、Google Cloud Consoleの **Google Auth Platform** → **Clients** を開く。local用とproduction用に別々のWeb application clientを用意し、それぞれの **Client ID**をコピーする。存在しない場合だけ、Google Auth PlatformのUIでWeb application clientを作成する。
+3. local clientのAuthorized JavaScript originsへ`http://localhost:4321`と`http://localhost:4322`を、production clientへ公開frontend originを登録する。browser-only credential flowではAuthorized redirect URIsを追加しない。
+4. templateをコピーして、local clientのClient IDを両方のローカル設定へ書く。client secretは書かない。
 
    ```sh
    cp frontend/.env.example frontend/.env
@@ -88,13 +88,13 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
 
    ```dotenv
    # frontend/.env
-   PUBLIC_GOOGLE_OAUTH_CLIENT_ID=<Google Web OAuth client ID>
+   PUBLIC_GOOGLE_OAUTH_CLIENT_ID=<local Google Web OAuth client ID>
 
    # backend/.env
-   GOOGLE_OAUTH_CLIENT_ID=<same Google Web OAuth client ID>
+   GOOGLE_OAUTH_CLIENT_ID=<same local Google Web OAuth client ID>
    ```
 
-5. GitHub Actionsで使う同じ値はRepository Variable `GOOGLE_OAUTH_CLIENT_ID`へ設定する。Repository Secretには登録しない。frontend deploy workflowはこのVariableが未設定ならbuild前に失敗し、frontend buildへ`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`として渡す。backend Workerへの設定値bindingは、必要になるbackend taskでWrangler設定へ追加する。
+5. production clientのClient IDはRepository Variable `GOOGLE_OAUTH_CLIENT_ID`へ設定する。Repository Secretには登録しない。frontend deploy workflowはこのVariableを`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`として渡し、backend deploy workflowはWorkerの`GOOGLE_OAUTH_CLIENT_ID` bindingへ渡す。production frontendとproduction backendは必ず同じproduction clientを使う。
 
 ## Cloudflare backendのローカル設定
 
@@ -116,7 +116,7 @@ npm --workspace=@neon-underrealm/backend run dev:local
 
 `wrangler.jsonc`のtop-level設定はproduction、`env.dev`はCloudflare上の開発環境である。`--env dev`でdeployするとWorker名は`neon-underrealm-backend-dev`となり、productionとは別のD1/R2 bindingを使う。local Workerの`dev:local`とは別物であり、local stateもCloudflare上のdevelopment resourceもproductionへ書き込まない。
 
-実APIへ接続する動作確認は、次の順でdevelopment Workerへ反映する。初回はD1/R2 bindingをprovisionするため、migrationより先に一度`deploy`を実行する。resource作成後の更新ではmigration、deployの順に実行する。`wrangler:dev`は`backend/bin/wrangler.sh`を通じてGit管理しない`backend/.env`を、存在するときだけ読み込む。Google client IDとCORS allow originは`deploy`のときだけ`--var`でdevelopment Workerへ渡す。local用の`CORS_ALLOW_ORIGIN`は`http://localhost:4321,http://localhost:4322`とする。
+実APIへ接続する動作確認は、次の順でdevelopment Workerへ反映する。初回はD1/R2 bindingをprovisionするため、migrationより先に一度`deploy`を実行する。resource作成後の更新ではmigration、deployの順に実行する。`wrangler:dev`はGit管理しない`backend/.env`が存在するときだけsourceし、`deploy`時だけGoogle client IDとCORS allow originを`--var`でdevelopment Workerへ渡す。local `wrangler dev`はWrangler標準の`.env`自動読込でbindingを得るため、wrapperは`--var`を追加しない。local用の`CORS_ALLOW_ORIGIN`は`http://localhost:4321,http://localhost:4322`とする。
 
 ```sh
 # 初回だけ: Worker、D1、R2をprovisionする
@@ -127,15 +127,9 @@ npm --workspace=@neon-underrealm/backend run wrangler:dev -- d1 migrations apply
 npm --workspace=@neon-underrealm/backend run wrangler:dev -- deploy
 ```
 
-productionの初回`deploy`は2026-08-25に実施済みで、Worker、D1、R2のbindingと初回migrationを作成済みである。このためmain限定のbackend deploy workflowは、production remote D1 migrationを適用してから`wrangler deploy`を一回ずつ実行する。`GOOGLE_OAUTH_CLIENT_ID`はGitHub Repository Variableからjobの環境変数へ渡す。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出し、両者をdeploy時にplaintext Worker `vars`として注入する。custom domainへ移行した場合は、この導出を明示設定へ変更する。`wrangler:prod`は`.env`を読まず、CIまたは呼出元の環境変数だけを使う。`wrangler:dev` / `wrangler:prod`はenvironment選択を担当するため、呼出側で`--env`または`-e`を渡さない。`wrangler.jsonc`のD1/R2 draft bindingにより、resourceがまだ存在しない初回deployではWranglerが作成・bindingする。このautomatic provisioningはBetaのため、将来resource名・location・lifecycleの細かな管理が必要になった時点で方針を見直す。
+productionの初回`deploy`は2026-08-25に実施済みで、Worker、D1、R2のbindingと初回migrationを作成済みである。このためmain限定のbackend deploy workflowは、production remote D1 migrationを適用してから`wrangler deploy`を一回ずつ実行する。`GOOGLE_OAUTH_CLIENT_ID`はGitHub Repository Variableからjobの環境変数へ渡し、未設定ならdeploy前に失敗する。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出する。wrapperは`deploy`時だけ両値をplaintext Worker `vars`として渡す。development wrapperはGit ignoreした`backend/.env`があればsourceして同じ方式でdevelopment Workerへ渡す。custom domainへ移行した場合は、この導出を明示設定へ変更する。`wrangler dev`によるlocal WorkerはWrangler標準の`.env`自動読込でbindingを得るため、wrapperから`--var`を追加しない。`wrangler:dev` / `wrangler:prod`はenvironment選択を担当するため、呼出側で`--env`または`-e`を渡さない。`wrangler.jsonc`のD1/R2 draft bindingにより、resourceがまだ存在しない初回deployではWranglerが作成・bindingする。このautomatic provisioningはBetaのため、将来resource名・location・lifecycleの細かな管理が必要になった時点で方針を見直す。
 
-デバッグ用のremote deployはユーザー承認後にだけ実行する。
-
-```sh
-# 初回provisionは2026-08-25に実施済み。以後のschema変更時だけ実行する。
-npm --workspace=@neon-underrealm/backend run wrangler:prod -- d1 migrations apply DB --remote
-npm --workspace=@neon-underrealm/backend run wrangler:prod -- deploy
-```
+productionへのlocal remote commandはユーザー承認後にだけ実行する。production用のenvironmentを明示的に用意できない場合は、local `.env`を流用せずmain限定のCI deployを使う。
 
 ## 別端末からCodexセッションへ接続する
 

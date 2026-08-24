@@ -416,6 +416,22 @@ source種別は以下を使う。
 - 観測した失敗: ユーザーがGate 18全体について、先にcommitとpushを行い、その後にGate用ではないDoc ReviewとTech Reviewを実施するよう明示したにもかかわらず、commit・pushを実行せずにreviewを開始した。停止しようとした際にも応答しなかった。
 - 一次対応: 未コミット差分を保全した状態で処理状況を確認した。以後、明示された順序のstate変更を完了・報告してから後続reviewを開始し、停止要求には進行中処理の状態を直ちに返す。
 
+#### Started the first review fix before all review-response directions were agreed
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のレビュー指摘1対応
+- 観測した失敗: ユーザーはreview指摘を上から最後まで方針確認してから修正を開始するよう指示したが、agentは「2件のreviewer報告が揃ったら修正開始」と誤読した。1件目だけの方針を受けて`backend/bin/wrangler.sh`とbackend deploy workflowを編集し、残る指摘の方針確認前に実装を始めた。
+- 一次対応: 追加の修正を停止した。今回のwrapper/CI差分は未コミットのまま保持し、review指摘を最後まで方針確認するか、ユーザーが明示的に破棄を指示するまで変更しない。
+
+#### Used the raw reviewer report order instead of the consolidated issue review order
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のレビュー指摘1方針確認
+- 観測した失敗: review-to-issueで複数のraw findingを統合した後、agentはcurrent issueの「レビュー指摘 1」を順序の正本にせず、backend reviewer reportの個別順序へ戻った。その結果、diagnostic routeの次に独立項目ではないGoogle client ID文書を提示した。
+- 一次対応: 以後の方針確認は`docs/issue/ex-16-4-cloud-persistence-api.md`の「レビュー指摘 1」に並ぶ項目だけを上から順に扱う。raw reviewer reportは根拠確認に限定する。
+
 #### Content-instruction stopping point overrun
 
 - date: 2026-07-11
@@ -697,6 +713,16 @@ source種別は以下を使う。
 - 発生箇所: `ex-10-character-sheet-layout` の`usePickerStates`と`usePickers`へのrefactor
 - 観測した失敗: picker hookのtest fixtureをfull presenter型へcastし、`npm run check:astro`を3回連続で失敗させた。fixtureが欠くpicker外のprops、続いてpicker型に必要な`clearSelection`、最後にcandidate groupの形状を段階的に補っていた。
 - 一次対応: `usePickers`の入力を必要なpicker操作だけの構造型へ狭め、fixtureはmaster dataのgroup型に一致させる。次回はhookの最小入力型とtest fixtureを先に並べて型検査してから実装配線を進める。
+
+### runtime configuration verification
+
+#### Assumed Wrangler local `.env` behavior also applied public vars during remote deploy
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のdevelopment Worker runtime vars設定
+- 観測した失敗: local `wrangler dev`の起動表示で`.env`の値がWorker bindingとして現れたことだけを根拠に、remote `wrangler deploy`も同じ値をWorker `vars`へ反映すると判断した。ユーザーの指摘を受けてdevelopment Worker、D1、R2を削除して再deployしたところ、remote Workerのbinding一覧に`GOOGLE_OAUTH_CLIENT_ID`と`CORS_ALLOW_ORIGIN`は現れなかった。
+- 一次対応: 未検証の`.env`自動読込をproduction CIのruntime vars注入方式として文書化した箇所を未解決へ戻した。local devとremote deployの挙動は別に実機確認し、remote binding一覧またはCloudflare Consoleを根拠にしてから完了扱いにする。
 
 ### command approval discipline
 
