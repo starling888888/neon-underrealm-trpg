@@ -548,6 +548,14 @@ source種別は以下を使う。
 
 ### test formatting discipline
 
+#### Skipped formatter verification after removing a contract test
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` の`frontend/tests/contract/page-navigation-build.test.ts`
+- 観測した失敗: contract testを削除した後、Markdown formatterと`frontend`のlintだけを実行して、TypeScript formatterを確認しないままcommit・pushした。削除後に残った空行がCIのformatter checkで検出された。
+- 一次対応: 対象testをBiome formatterで修正した。TypeScript testを変更した作業では、commit前に対象fileのformatter checkを実行する。
+
 #### Repeated manual formatter mismatch in Component test
 
 - date: 2026-07-27
