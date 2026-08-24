@@ -51,7 +51,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 
 - Hono handler、validation、service、repositoryを必要最小限に分離する。Clean Architectureの形式化や不要な層は追加しない。
 - serviceはD1/R2固有のbindingや型を知らず、domain objectを扱う。repository interfaceはmetadataとsnapshotを一つのcharacter sheetとして操作し、DIで差し替えられるようにする。
-- production compositionではD1/R2 repositoryとGoogle ID Token verifierを注入する。local executionとtestではlibSQL/MinIO repository、および決め打ちtokenからuser ID・有効・期限切れ・無効を返すtest verifierを明示注入する。production verifierを条件分岐でskipしない。
+- production compositionではD1/R2 repositoryとGoogle ID Token verifierを注入する。local executionとtestではWranglerのlocal D1/R2 binding、および決め打ちtokenからuser ID・有効・期限切れ・無効を返すtest verifierを明示注入する。production verifierを条件分岐でskipしない。
 - production verifierはsignature、`iss`、`aud`、`exp`を検証する。test verifierを使うlocal E2Eとは別に、production verifier自体の検証をunit/contract testする。
 - D1 metadataと、`user`の更新日時降順および`sample`の作成日時昇順を支えるindex、R2 snapshotの非transaction方針、部分失敗時のerror、R2 key、request body上限を親issueの方針どおり実装する。
 
@@ -59,7 +59,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 
 - `docs/requirements/architecture.md`へ、API contractの責務、validation/service/repository/verifierの境界、DI composition、production/local adapter、error contractを記録する。
 - shared schema/type、service、repository、production verifier、owner authorization、`type`不変、一覧の分割と各sortをunit/contract testする。
-- libSQLとMinIOを使うlocal API server E2Eを追加し、4 endpoint、作成/更新/取得/削除、公開read、owner判定、期限切れtoken、sampleの分類を確認する。既存backend integration CIで実行できる構成を維持・更新する。
+- Wrangler local WorkerのD1/R2 bindingを使うlocal API E2Eを追加し、4 endpoint、作成/更新/取得/削除、公開read、owner判定、期限切れtoken、sampleの分類を確認する。既存backend integration CIで実行できる構成を維持・更新する。
 
 ## 初期スコープ外
 
@@ -80,7 +80,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [ ] `type`は作成時に`user`、更新時に不変であり、一覧は`user`を更新日時降順、`sample`を作成日時昇順で返す。
 - [ ] D1のindexが`user`の更新日時降順と`sample`の作成日時昇順の一覧を支えている。
 - [ ] internal `userId`をrequestまたは公開responseへ出さず、owner以外のwrite/deleteを拒否する。
-- [ ] local libSQL/MinIO API E2Eが4 endpointと認証・所有権・sample分類を確認し、backend CIで実行できる。
+- [ ] local D1/R2 binding API E2Eが4 endpointと認証・所有権・sample分類を確認し、backend CIで実行できる。
 - [ ] `npm run check`、shared/backendのtestとbuild、backend integration testが通る。
 - [ ] 関連TODOを回収せず、このissueで扱わない理由が記録されている。
 
@@ -101,7 +101,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - `backend/src/`
 - `backend/tests/`
 - `backend/package.json`
-- `backend/compose.yml`
+- `backend/wrangler.jsonc`
 - `packages/shared/src/`
 - `packages/shared/tests/`
 - `packages/shared/package.json`
@@ -118,10 +118,10 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - 期限切れtokenの`419`をclientが再ログイン判断でき、他のfailureを共通エラー表示へまとめられるか。
 - production/local/testのrepository・verifierのDI境界が明確で、productionの認証検証をtest用分岐で弱めていないか。
 - `sample`の分類とsort、`type`の更新不変、作成者のowner権限が一貫しているか。
-- D1/R2固有の詳細をserviceまたはshared contractへ漏らさず、local API E2Eが実際にlibSQL/MinIOと通信するか。
+- D1/R2固有の詳細をserviceまたはshared contractへ漏らさず、local API E2Eが実際のWrangler local bindingと通信するか。
 - TODOのschema version互換性とスキルID変更検出を、判断なしにこのGateへ含めていないか。
 
 ## 備考
 
 - APIのHTTP statusの詳細な対応は実装時に設計する。期限切れtokenだけは必ず`419`とする。
-- local libSQL/MinIO integrationは、既存の`backend/compose.yml`とbackend CIにすでに基盤があるため、外部serviceを追加せずに拡張する。
+- local WorkerはWranglerがD1/R2 bindingを提供するため、外部serviceやDocker volumeを追加せずに実行する。

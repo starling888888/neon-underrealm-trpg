@@ -2,5 +2,19 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "neon-underrealm-backend",
   "main": "src/index.ts",
-  "compatibility_date": "2026-08-24"
+  "compatibility_date": "2026-08-24",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "neon-underrealm-character-data",
+      "database_id": "00000000-0000-0000-0000-000000000001",
+      "preview_database_id": "neon-underrealm-character-data-local"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "OBJECTS",
+      "bucket_name": "neon-underrealm-character-objects"
+    }
+  ]
 }

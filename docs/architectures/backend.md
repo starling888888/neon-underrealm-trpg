@@ -4,7 +4,7 @@
 
 本書は、`ex-16-4-cloud-persistence-api`で実装するcharacter sheet cloud persistence backendの設計正本である。HTTP API、shared contract、validation、service、repository、token verifier、production/local/testのcomposition、error contract、テスト境界を定義する。
 
-frontendのクラウド保存UI、character sheetのrestore、Google login UIはG5の対象であり、本書では扱わない。ゲーム規則に対するcharacter JSONのserver-side validation、schema migration、検索、server-side pagination、共有URL、D1/R2の分散transactionも対象外とする。
+frontendのクラウド保存UI、character sheetのrestore、Google login UIはG5の対象であり、本書では扱わない。ゲーム規則に対するcharacter JSONのserver-side validation、character JSON schema version migration、検索、server-side pagination、共有URL、D1/R2の分散transactionも対象外とする。
 
 ## 正本と制約
 
@@ -31,12 +31,12 @@ production composition
   -> Google ID Token verifier + D1/R2 repository
 
 local/test composition
-  -> test token verifier + libSQL/MinIO repository
+  -> test token verifier + Wrangler local D1/R2 binding
 ```
 
 - Hono handlerはroute、HTTP request/response、shared input schemaの呼出し、error responseへの変換だけを扱う。
 - validationは独立moduleに置く。API envelopeとmetadataを検証するが、character JSON snapshotのゲームschemaや現在のマスタIDは検証しない。
-- serviceはdomain objectとrepository/verifier interfaceだけに依存する。D1、R2、Cloudflare binding、libSQL、MinIO、Honoの型を参照しない。
+- serviceはdomain objectとrepository/verifier interfaceだけに依存する。D1、R2、Cloudflare binding、Honoの型を参照しない。
 - repositoryはmetadataとsnapshotを一つのcharacter sheetとして扱う。D1/R2の二重書込みをtransaction化せず、部分失敗はserviceへ通常の失敗として返す。
 - DIはcomposition rootだけで行う。handlerやserviceに`test`/`production`の条件分岐を置かない。
 
@@ -99,6 +99,14 @@ CREATE INDEX idx_character_sheets_sample_created_at
 - `created_at`と`updated_at`はWorkerが`Date.now()`で設定する。公開DTOで日時文字列が必要な場合だけ、API response境界でISO 8601へ変換する。
 - 2つのindexはそれぞれ`WHERE type = 'user' ORDER BY updated_at DESC`と`WHERE type = 'sample' ORDER BY created_at ASC`の一覧queryを支える。
 
+### Migration lifecycle
+
+- executable SQLは`backend/migrations/`へ連番で追加する。適用済みmigrationを編集・削除せず、schema変更は次の連番migrationで行う。
+- local実行はWrangler / Miniflare / workerdのD1・R2 bindingを使う。local worker scriptは一時directoryを作り、そこへmigrationを適用してからWorkerを起動し、終了時にdirectoryを削除する。local integration testも同じ手順で実際のWorkerへHTTP requestを送る。
+- productionではTerraformがmigration file名とcontentのhashを追跡する。D1 resource作成後か、migration hashが変わったapplyで、Terraformの`local-exec`がWranglerを通じてremote D1へ未適用migrationを適用する。
+- Worker scriptはmigration resourceへ依存する。schema更新を含むdeployでは、migration成功後にWorkerを更新する。
+- Terraformがmigrationの実行契機を管理し、WranglerはD1の連番SQLと適用履歴の実行だけを担う。Worker resource、D1/R2 resource、migrationを別の手動deploy手順で重複管理しない。
+
 ## Shared API contract
 
 ### Input
@@ -155,9 +163,9 @@ D1/R2の部分失敗は、保存成功を装わず500として返す。rollback�
 repository interfaceは、公開一覧、id取得、作成、owner確認を伴う更新、owner確認を伴う削除に必要なdomain操作を表す。serviceがD1 queryやR2 object keyを組み立てず、production/local implementationがその詳細を担当する。
 
 - production: Cloudflare D1 bindingとR2 bindingを使うrepositoryを注入する。
-- local: `backend/compose.yml`のlibSQLとMinIOへ接続するrepositoryを注入する。
+- local: productionと同じCloudflare D1/R2 repositoryを、Wranglerが注入するlocal bindingで使う。
 - unit/contract test: in-memory repositoryまたは必要最小限のtest doubleを注入する。
-- local API E2E: libSQL/MinIO repositoryとtest verifierを注入したhost側Hono serverを使う。
+- local API E2E: Wrangler local Workerにtest verifierを注入し、local D1/R2 bindingへ接続する。
 
 local、test、productionで同じserviceとhandler contractを通す。adapter固有の変換、storage SDK error、Cloudflare bindingはrepositoryまたはcomposition rootで閉じる。
 
@@ -169,7 +177,7 @@ local、test、productionで同じserviceとhandler contractを通す。adapter�
 - repository adapterはmetadataとsnapshotのread/write/delete、および一覧用indexを使うqueryをtestする。
 - local API E2Eは4 endpoint、anonymous read、owner以外のwrite/delete拒否、期限切れtokenの`419`、sample分類を確認する。
 
-CIは既存のbackend integration jobで`backend/compose.yml`のlibSQLとMinIOを起動し、host側Hono serverに対するlocal API E2Eを実行する。Cloudflare credentialやGoogle本番認証には依存しない。
+CIは既存のbackend integration jobでWrangler local Workerを起動し、local API E2Eを実行する。Cloudflare credentialやGoogle本番認証には依存しない。
 
 ## 実装時の確認
 
