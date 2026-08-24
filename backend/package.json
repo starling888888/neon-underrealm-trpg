@@ -6,15 +6,16 @@
   "scripts": {
     "build": "wrangler deploy --dry-run --outdir dist",
     "dev:local": "wrangler dev --local --persist-to .wrangler/state --port 8787",
+    "deploy": "wrangler deploy",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "test": "npm run test:unit && npm run test:workspace-boundary",
     "local:reset": "rm -rf .wrangler/state",
     "migrate:local": "wrangler d1 migrations apply DB --local --persist-to .wrangler/state",
+    "migrate:remote": "wrangler d1 migrations apply DB --remote",
     "test:integration": "tsx tests/integration.ts",
     "test:unit": "tsx --test tests/**/*.test.ts",
     "test:workspace-boundary": "tsc --noEmit --project tsconfig.json",
-    "terraform:validate": "terraform -chdir=terraform fmt -check main.tf variables.tf && terraform -chdir=terraform validate",
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "devDependencies": {

@@ -14,7 +14,7 @@ frontendのクラウド保存UI、character sheetのrestore、Google login UIは
 - テストとCI: `docs/testing.md`
 - 初期スコープ外: `docs/out-of-scope.md`
 
-frontendは静的GitHub Pagesとして公開し、Cloudflare Worker backendとはHTTP APIだけで接続する。frontendはbackend内部moduleをimportしない。backendはHonoをHTTP entrypointとし、production resourceの管理とdeploy authorityはTerraformだけに置く。
+frontendは静的GitHub Pagesとして公開し、Cloudflare Worker backendとはHTTP APIだけで接続する。frontendはbackend内部moduleをimportしない。backendはHonoをHTTP entrypointとし、`wrangler.jsonc`をproduction resourceの管理とdeployの正本にする。
 
 ## 構成と依存方向
 
@@ -103,9 +103,8 @@ CREATE INDEX idx_character_sheets_sample_created_at
 
 - executable SQLは`backend/migrations/`へ連番で追加する。適用済みmigrationを編集・削除せず、schema変更は次の連番migrationで行う。
 - local実行はWrangler / Miniflare / workerdのD1・R2 bindingを使う。npm scriptはGit ignoreした`backend/.wrangler/state/`を明示的なlocal stateにし、`local:reset`、`migrate:local`、`dev:local`の順で実行する。local integration testも同じstateで実際のWorkerへHTTP requestを送る。作業後は`local:reset`を再実行してstateを残さない。
-- productionではTerraformがmigration file名とcontentのhashを追跡する。D1 resource作成後か、migration hashが変わったapplyで、Terraformの`local-exec`がWranglerを通じてremote D1へ未適用migrationを適用する。
-- Worker scriptはmigration resourceへ依存する。schema更新を含むdeployでは、migration成功後にWorkerを更新する。
-- Terraformがmigrationの実行契機を管理し、WranglerはD1の連番SQLと適用履歴の実行だけを担う。Worker resource、D1/R2 resource、migrationを別の手動deploy手順で重複管理しない。
+- productionでは`migrate:remote`がWranglerを通じてremote D1へ未適用migrationを適用し、その後`deploy`がWorkerを更新する。D1のmigration tableが適用済みSQLを管理する。
+- `wrangler.jsonc`のD1/R2 draft bindingを正本とし、resourceが未作成の初回deployではWranglerが作成・bindingする。resource名・location・lifecycleを明示管理する必要が出たときは、automatic provisioningのBeta採用を再評価する。
 
 ## Shared API contract
 
