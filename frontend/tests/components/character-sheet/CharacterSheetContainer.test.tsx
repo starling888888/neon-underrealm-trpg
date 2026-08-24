@@ -127,9 +127,12 @@ describe("CharacterSheetContainer", () => {
         "テストPC",
       ),
     );
-    const trigger = screen.getAllByRole("button", { name: "CCFOLIAコピー" })[0];
-    if (trigger === undefined)
-      throw new Error("CCFOLIAコピーbuttonがありません。");
+    await user.click(
+      screen.getByRole("button", {
+        name: "操作メニューを開く、エラーはありません。",
+      }),
+    );
+    const trigger = screen.getByRole("button", { name: "CCFOLIAコピー" });
     await user.click(trigger);
     await user.click(
       within(screen.getByRole("dialog", { name: "CCFOLIAコピー" })).getByRole(

@@ -35,12 +35,12 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - CCFOLIAキャラクター駒データのコピー
 - desktop、tablet、mobileでの利用
 
-端末内の最新1キャラクターの保存・復元は初期scopeに含める。`ex-16-character-sheet-cloud-persistence` の G3 では、Google Identity Services の browser-only credential flow によるfrontendログインだけを例外として扱う。backend の token verifier と、ユーザー端末に依存しないサーバー、DB、クラウドへの保存、同期、共有は G4 / G5 まで初期スコープ外である。
+端末内の最新1キャラクターの保存・復元は初期scopeに含める。`ex-16-character-sheet-cloud-persistence` の承認済みGateでは、G3でGoogle Identity Servicesのbrowser-only credential flowによるfrontendログイン、G4でbackendのtoken verifierとクラウド保存API、G5で複数キャラクター管理とクラウド保存UIを段階的に扱う。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
 
 以下は初期スコープ外とする。
 
-- G3 の Google browser-only credential flow を除くアカウント、認証、サーバー保存、複数端末同期、共同編集、共有URL
-- 複数キャラクターの管理、印刷レイアウト、PDF出力、CCFOLIAコマンドパレット
+- `ex-16-character-sheet-cloud-persistence` の承認済みGateを除くアカウント、認証、サーバー保存、複数端末同期、共同編集、共有URL
+- `ex-16-character-sheet-cloud-persistence` の承認済みG5を除く複数キャラクターの管理、印刷レイアウト、PDF出力、CCFOLIAコマンドパレット
 - ダイスローラー、戦闘シミュレーション、セッション中の状態管理
 - 取得制限や効果文を解析する汎用ルールエンジン
 

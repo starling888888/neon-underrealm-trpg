@@ -1,5 +1,11 @@
 import { ArrowDown, Menu, X } from "lucide-react";
-import { type CSSProperties, memo, type RefObject } from "react";
+import {
+  type CSSProperties,
+  memo,
+  type RefObject,
+  useEffect,
+  useState,
+} from "react";
 import type { GoogleAuthentication } from "../auth/types";
 import type { CharacterSheetSectionId } from "../constants/section-navigation";
 import { characterSheetDictionary } from "../dictionary";
@@ -32,6 +38,7 @@ type CharacterSheetActionPaneProps = {
 };
 
 const menuId = "character-sheet-actions-menu";
+const desktopMediaQuery = "(width >= 84rem)";
 const errorListStyle = {
   "--character-sheet-error-list-max-block-size": "12rem",
   overflowY: "auto",
@@ -58,43 +65,48 @@ function CharacterSheetActionPane({
   sectionNavigation,
 }: CharacterSheetActionPaneProps) {
   const { actions } = characterSheetDictionary.characterSheet;
+  const isDesktop = useIsDesktop();
+  const authenticationControl =
+    authentication === undefined ? null : (
+      <CharacterSheetGoogleAuthentication authentication={authentication} />
+    );
   const errorStatusText = errorSummary.hasErrors
     ? `エラーが${errorSummary.errors.length}件あります。`
     : actions.noErrors;
   return (
     <aside aria-label={actions.regionLabel} className={styles.root}>
-      <div className={styles.desktopRail}>
-        {authentication === undefined ? null : (
-          <CharacterSheetGoogleAuthentication authentication={authentication} />
-        )}
-        <SectionNavigation
-          {...sectionNavigation}
-          onSectionJump={onSectionJump}
-        />
-        <div className={styles.operations}>
-          <CharacterSheetButton
-            onClick={(event) => onHelp(event.currentTarget)}
-            size="medium"
-          >
-            {actions.help}
-          </CharacterSheetButton>
-          <ActionButtons
-            isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
-            isExportDisabled={isExportDisabled}
-            isImportDisabled={isImportDisabled}
-            isResetDisabled={isResetDisabled}
-            onCcfoliaCopy={onCcfoliaCopy}
-            onExport={onExport}
-            onImport={onImport}
-            onReset={onReset}
+      {isDesktop ? (
+        <div className={styles.desktopRail}>
+          {authenticationControl}
+          <SectionNavigation
+            {...sectionNavigation}
+            onSectionJump={onSectionJump}
+          />
+          <div className={styles.operations}>
+            <CharacterSheetButton
+              onClick={(event) => onHelp(event.currentTarget)}
+              size="medium"
+            >
+              {actions.help}
+            </CharacterSheetButton>
+            <ActionButtons
+              isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
+              isExportDisabled={isExportDisabled}
+              isImportDisabled={isImportDisabled}
+              isResetDisabled={isResetDisabled}
+              onCcfoliaCopy={onCcfoliaCopy}
+              onExport={onExport}
+              onImport={onImport}
+              onReset={onReset}
+            />
+          </div>
+          <DesktopErrorStatus
+            errorReviewButtonRef={errorReviewButtonRef}
+            errorSummary={errorSummary}
+            onReviewErrors={onReviewErrors}
           />
         </div>
-        <DesktopErrorStatus
-          errorReviewButtonRef={errorReviewButtonRef}
-          errorSummary={errorSummary}
-          onReviewErrors={onReviewErrors}
-        />
-      </div>
+      ) : null}
 
       <div
         className={styles.floatingActions}
@@ -131,17 +143,16 @@ function CharacterSheetActionPane({
         </button>
       </div>
 
-      {isMenuOpen ? (
+      {isDesktop ? null : (
         <section
           aria-label={actions.menuLabel}
-          className={styles.menu}
+          aria-hidden={!isMenuOpen}
+          className={
+            isMenuOpen ? `${styles.menu} ${styles.menuOpen}` : styles.menu
+          }
           id={menuId}
         >
-          {authentication === undefined ? null : (
-            <CharacterSheetGoogleAuthentication
-              authentication={authentication}
-            />
-          )}
+          {authenticationControl}
           <SectionNavigation
             {...sectionNavigation}
             onSectionJump={onSectionJump}
@@ -158,12 +169,29 @@ function CharacterSheetActionPane({
           />
           <ErrorSummary errorSummary={errorSummary} className={styles.errors} />
         </section>
-      ) : null}
+      )}
     </aside>
   );
 }
 
 export default memo(CharacterSheetActionPane);
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+
+    const mediaQuery = window.matchMedia(desktopMediaQuery);
+    const update = () => setIsDesktop(mediaQuery.matches);
+
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
+  return isDesktop;
+}
 
 function SectionNavigation({
   items,

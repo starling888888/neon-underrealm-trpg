@@ -9,7 +9,11 @@ import type { GoogleAuthentication } from "../../../src/character-sheet/auth/typ
 const { googleLoginSpy } = vi.hoisted(() => ({ googleLoginSpy: vi.fn() }));
 
 vi.mock("@react-oauth/google", () => ({
-  GoogleLogin: (props: { width: string }) => {
+  GoogleLogin: (props: {
+    auto_select: boolean;
+    useOneTap: boolean;
+    width?: string;
+  }) => {
     googleLoginSpy(props);
     return null;
   },
@@ -36,7 +40,9 @@ describe("CharacterSheetGoogleAuthentication", () => {
     );
 
     expect(googleLoginSpy.mock.lastCall?.[0]).toMatchObject({
+      auto_select: true,
       containerProps: { style: { width: "100%" } },
+      useOneTap: true,
     });
     expect(googleLoginSpy.mock.lastCall?.[0]?.width).toBeUndefined();
   });
