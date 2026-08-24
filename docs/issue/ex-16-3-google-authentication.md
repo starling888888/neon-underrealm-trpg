@@ -50,6 +50,7 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 - logout 時はアプリケーションのメモリ token を確実に破棄し、Google 側で可能な logout / auto-select 抑止を library または公式 API に委譲する。logout 後に local-first 編集内容を失わせない。
 - backend に Google ID token の検証境界を追加する。認証必須 API の実装は G4 に残し、G3 では JWT signature、`iss`、`aud`、`exp` を検証して Google `sub` だけを内部 user ID にできる middleware / helper と unit test を整える。
 - Google client ID は Git 管理しない設定として扱い、公開値であっても既存の frontend 環境設定方針に沿って注入する。設定不足時はログイン機能を無効化し、ビルドやローカル編集を壊さない。
+- ユーザー指示により、Google Auth PlatformからGIS Web clientのClient IDを取得する手順、frontend / backendの`.env.example` key、frontend buildとbackend deploy jobがRepository VariableからClient IDを読む設定を追加する。GitHub Variableの実作成とTerraformによるWorker bindingは別指示まで行わない。
 - `docs/requirements/character-sheet.md` と `docs/out-of-scope.md` を、G3 が扱う Google 認証と token verifier の範囲だけ実装と整合するように更新する。G4 / G5 のクラウド保存仕様は追加しない。
 - frontend / backend の unit test を追加し、Google 本番認証への E2E 依存は導入しない。
 
@@ -99,6 +100,10 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 - `backend/src/auth/`
 - `backend/src/**/*.{test,spec}.ts`
 - `frontend/.env.example` または既存の環境設定説明文書
+- `backend/.env.example`
+- `.github/workflows/frontend-deploy.yml`
+- `.github/workflows/backend-deploy.yml`
+- `README.md`
 - `docs/requirements/character-sheet.md`
 - `docs/out-of-scope.md`
 
@@ -116,3 +121,4 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 - design target: `docs/design/character-sheet/notes.md`。認証 UI の配置はユーザーの最新指示で定義済みのため、`design-image-generation` はこの Gate の前提条件にしない。
 - Visual Review と VRT は UI を変更する本 Gate の PR review 直前に、`/character-sheet/` の desktop / tablet / mobile と認証状態を対象として別途実施する。canonical baseline は更新しない。
 - `@react-oauth/google` と `jose` の最終 version は、実装開始前に browser-only credential flow、Google ID token verification、保守状況、security 上の懸念、workspace 互換性を確認して決定する。選定理由はこの issue に記録する。
+- user-directed configuration preparation: Client IDの取得・ローカル`.env`・CI環境変数の経路だけを整備する。GitHub Variableの実作成、Terraform input / Worker binding、認証source codeは別指示まで変更しない。
