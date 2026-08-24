@@ -20,7 +20,7 @@
 .codex/                  reviewer agent定義
 .raw/                    Git管理しないGoogle Spreadsheetローカル入力
 .tmp/                    Git管理しない一時作業ファイル
-backend/                 将来のCloudflare Worker用workspace（現時点ではdummy境界のみ）
+backend/                 Cloudflare Worker、local service Compose、Terraform用workspace
 frontend/                静的サイトの実装workspace
 frontend/.env            Git管理しないGoogle Spreadsheet同期設定
 frontend/.env.example    Google Spreadsheet同期設定のキー名だけを示すtemplate
