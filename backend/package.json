@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "npm run wrangler:prod -- deploy --dry-run --outdir dist",
-    "dev:local": "npm run wrangler:dev -- dev --local --persist-to .wrangler/state --port 8787",
+    "dev:local": "npm run wrangler:dev -- dev src/local-index.ts --local --persist-to .wrangler/state --port 8787",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "test": "npm run test:unit && npm run test:workspace-boundary",
@@ -25,6 +25,7 @@
     "wrangler": "^4.125.0"
   },
   "dependencies": {
-    "hono": "^4.13.4"
+    "hono": "^4.13.4",
+    "jose": "^6.2.10"
   }
 }

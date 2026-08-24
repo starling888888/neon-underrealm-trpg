@@ -28,19 +28,19 @@ HTTP request
   -> HTTP response
 
 production composition
-  -> Google ID Token verifier + D1/R2 repository
+  -> Google ID Token verifier + Cloudflare repository
 
 local/test composition
-  -> test token verifier + Wrangler local D1/R2 binding
+  -> test token verifier + Cloudflare repository + Wrangler local D1/R2 binding
 ```
 
 - Hono handlerはroute、HTTP request/response、shared input schemaの呼出し、error responseへの変換だけを扱う。
 - validationは独立moduleに置く。API envelopeとmetadataを検証するが、character JSON snapshotのゲームschemaや現在のマスタIDは検証しない。
-- serviceはdomain objectとrepository/verifier interfaceだけに依存する。D1、R2、Cloudflare binding、Honoの型を参照しない。
-- repositoryはmetadataとsnapshotを一つのcharacter sheetとして扱う。D1/R2の二重書込みをtransaction化せず、部分失敗はserviceへ通常の失敗として返す。
+- serviceはdomain objectとrepositoryのpublic method形状、verifier interfaceだけに依存する。D1、R2、Cloudflare binding、Honoの型を参照しない。
+- Cloudflare repositoryはD1 metadata操作とR2 snapshot操作を個別に扱い、private fieldにD1/R2 bindingを持つ。serviceが両操作を順序付けてcharacter sheetとして扱う。D1/R2の二重書込みをtransaction化せず、部分失敗はserviceへ通常の失敗として返す。
 - DIはcomposition rootだけで行う。handlerやserviceに`test`/`production`の条件分岐を置かない。
 
-Clean Architectureの形式的な層追加、use caseごとのdirectory分割、frameworkを隠すためだけのadapterは導入しない。この節の境界を満たす最小のmodule構成にする。
+Clean Architectureの形式的な層追加、repository interfaceとinfrastructure directoryの分離、database adapter、use caseごとのdirectory分割は導入しない。Cloudflare以外のdatabaseへ移行する場合はrepository自体をrefactorする。この節の境界を満たす最小のmodule構成にする。
 
 ## Domainと永続化
 
@@ -114,6 +114,23 @@ CREATE INDEX idx_character_sheets_sample_created_at
 
 入力値のZod schemaは`packages/shared`で公開する。backendはrequest validationの正本として使い、clientは送信前の最低限のvalidationに利用できる。
 
+`POST /character-sheets`のbodyは次の形とする。`snapshot`はゲーム規則を検証しない任意のJSON object、`imageBase64`はbase64文字列または`null`である。body全体は8 MiBまでとする。
+
+```ts
+{
+  id?: string;
+  metadata: {
+    pcName: string;
+    plName?: string | null;
+    rank: number;
+    primaryRyugiId?: string | null;
+    ikizamaId?: string | null;
+  };
+  snapshot: Record<string, unknown>;
+  imageBase64: string | null;
+}
+```
+
 requestには`userId`と`type`を含めない。`POST`のidは任意であり、未指定なら作成、存在するidなら更新を表す。input validation failureは、個々のfieldの利用者向け説明を持たない汎用errorにする。
 
 ### Output
@@ -161,22 +178,23 @@ D1/R2の部分失敗は、保存成功を装わず500として返す。rollback�
 
 ## Repositoryとcomposition
 
-repository interfaceは、公開一覧、id取得、作成、owner確認を伴う更新、owner確認を伴う削除に必要なdomain操作を表す。serviceがD1 queryやR2 object keyを組み立てず、production/local implementationがその詳細を担当する。
+`CloudflareCharacterSheetRepository`がD1 query、R2 key、metadataのread/write/delete、snapshotのread/write/deleteを個別に担当する。constructorでWorker bindingsを受け、`DB`と`OBJECTS`をprivate fieldへ保持する。`saveCharacterSheet`や`deleteCharacterSheet`のようにD1/R2をまたぐrepository methodは作らない。serviceはこのclassのpublic method形状を型として受け、create/update/deleteの順序と部分失敗を扱う。testでは同じ形状のmock repositoryを直接渡せる。mockは各testで明示的に作り、spyによる差し替えを使わない。
 
-- production: Cloudflare D1 bindingとR2 bindingを使うrepositoryを注入する。
-- local: productionと同じCloudflare D1/R2 repositoryを、Wranglerが注入するlocal bindingで使う。
-- unit/contract test: in-memory repositoryまたは必要最小限のtest doubleを注入する。
-- local API E2E: Wrangler local Workerにtest verifierを注入し、local D1/R2 bindingへ接続する。
+- production: WorkerのCloudflare D1/R2 bindingから`CloudflareCharacterSheetRepository`を生成する。
+- local: 同じclassをWrangler local WorkerのD1/R2 bindingから生成する。
+- service unit test: in-memory mock repositoryを直接注入する。databaseを差し替えるadapterは作らない。
+- local API E2E: Wrangler local Workerにtest verifierを注入し、同じCloudflare repository経由でlocal D1/R2 bindingへ接続する。
 
-local、test、productionで同じserviceとhandler contractを通す。adapter固有の変換、storage SDK error、Cloudflare bindingはrepositoryまたはcomposition rootで閉じる。
+local、test、productionで同じserviceとhandler contractを通す。storage SDK errorとCloudflare bindingはrepositoryまたはcomposition rootで閉じる。
 
 ## テストとCI
 
 - shared input schema、公開output type、error envelopeをcontract testする。
 - serviceではID発行、owner authorization、`type`の作成時`user`・更新時不変、listの分類とsort、未存在idの拒否、R2/D1部分失敗をtestする。
 - verifierではproductionのtoken検証契約とtest verifierの有効・期限切れ・無効tokenをtestする。
-- repository adapterはmetadataとsnapshotのread/write/delete、および一覧用indexを使うqueryをtestする。
+- Cloudflare repositoryはmetadataとsnapshotの個別read/write/delete、および一覧用indexを使うqueryをtestする。serviceは複数repository操作の順序と部分失敗をtestする。
 - local API E2Eは4 endpoint、anonymous read、owner以外のwrite/delete拒否、期限切れtokenの`419`、sample分類を確認する。
+- backendの`tsc`はWorker sourceとworkspace boundaryを確認する。Node test runnerの型はWorkers runtime型とglobalが競合するため、unit testは`tsx --test`で実行する。testの型検査専用configは追加しない。
 
 CIは既存のbackend integration jobでWrangler local Workerを起動し、local API E2Eを実行する。Cloudflare credentialやGoogle本番認証には依存しない。
 
