@@ -1,0 +1,13 @@
+# Copy this file to local.tfvars. Do not commit local.tfvars.
+# Credential values belong in ../.env, not in this file.
+
+cloudflare_account_id = "<cloudflare-account-id>"
+backend_worker_name  = "neon-underrealm-backend"
+
+# This bucket is for character snapshots managed by the application, not state.
+character_data_r2_bucket_name = "neon-underrealm-characters"
+
+# Create this bucket manually before initializing the Terraform remote backend.
+terraform_state_r2_bucket_name = "tfstate"
+terraform_state_key            = "backend.tfstate"
+terraform_state_r2_endpoint    = "https://<cloudflare-account-id>.r2.cloudflarestorage.com"
