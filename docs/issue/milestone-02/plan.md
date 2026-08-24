@@ -42,6 +42,7 @@ milestone-01の履歴は `docs/issue/milestone-01/plan.md`、現在のスコー�
 
 - クライアントnative JavaScriptで実装している対話処理を、必要性と静的サイト性を確認したうえでReact Islandへ段階的に移行する。
 - 移行対象ごとに、JavaScriptのまま維持する案と比較して判断する。
+- `ex-16-character-sheet-cloud-persistence`で、WebキャラクターシートのGoogle認証、Cloudflare永続保存、workspace化を段階的に実装する。
 
 ## 検討・保留
 

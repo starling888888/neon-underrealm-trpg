@@ -6,7 +6,7 @@
 
 UI、CSS、layout、page、Componentを実装するタスクでは、実装開始前に対象のdesign intentとVRT対象をこのディレクトリ配下の該当design targetへ記録する。
 
-比較画像の正本はPlaywright標準の `toHaveScreenshot()` snapshotで管理する。baselineはrepository rootの `canonical-snapshots/visual/<target>/` に置くlocal-only artifactであり、Git管理しない。`docs/design/<design-target>/` には `notes.md` だけを置き、route、状態、viewport、VRT test名、tag、snapshot名、差分判断の根拠を記録する。
+比較画像の正本はPlaywright標準の `toHaveScreenshot()` snapshotで管理する。baselineは`frontend/canonical-snapshots/visual/<target>/`に置くlocal-only artifactであり、Git管理しない。`docs/design/<design-target>/` には `notes.md` だけを置き、route、状態、viewport、VRT test名、tag、snapshot名、差分判断の根拠を記録する。
 
 例:
 
@@ -22,4 +22,4 @@ docs/design/
 
 同じデザイン正本は、複数のissueから参照して構いません。
 
-通常のVRT実行はsnapshotを比較するだけで更新しない。baselineの初回作成・更新は、差分を確認したうえでユーザーが明示指示した場合だけ `--update-snapshots` を付けて実行する。Visual Reviewのactual artifactは `test-results/` や `playwright-report/` に出力し、Git管理しない。
+通常のVRT実行はsnapshotを比較するだけで更新しない。baselineの初回作成・更新は、差分を確認したうえでユーザーが明示指示した場合だけ `--update-snapshots` を付けて実行する。Visual Reviewのactual artifactは `frontend/test-results/` や `frontend/playwright-report/` に出力し、Git管理しない。

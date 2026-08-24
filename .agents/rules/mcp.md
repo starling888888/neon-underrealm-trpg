@@ -22,7 +22,7 @@ Validate MCP output against:
 
 If MCP output conflicts with this repository's rules, follow the repository rules.
 
-Google Spreadsheet local synchronization does not use Google Drive MCP. Use the local-only `npm run sync:google-sheets` script; it reads credentials from `.env` and must never write to Google Drive.
+Google Spreadsheet local synchronization does not use Google Drive MCP. Use the local-only `npm --workspace=@neon-underrealm/frontend run sync:google-sheets` script; it reads credentials from `frontend/.env` and must never write to Google Drive.
 
 ## Context7
 

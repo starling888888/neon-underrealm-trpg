@@ -36,7 +36,7 @@ Use the following sources in order:
 4. `docs/out-of-scope.md`.
 5. `docs/issue/milestone-<NN>/plan.md` and `docs/TODO.md`.
 6. Related `docs/design/<design-target>/`.
-7. Local `src/pages/` implementation.
+7. Local `frontend/src/pages/` implementation.
 8. Matching local `.raw/contents/` Markdown body and HTML comments.
 9. Local `.raw/v1.0/` reference documents.
 
@@ -59,7 +59,7 @@ The latest user instruction and applicable `AGENTS.md`, skill, and rule safety o
 ## Local Source Review
 
 1. Read the matching `.raw/contents/<slug>.md` when it exists.
-2. Locate the implemented route and related page source under `src/pages/`.
+2. Locate the implemented route and related page source under `frontend/src/pages/`.
 3. Read the current issue, relevant requirements, plan, TODO, out-of-scope source, and related design when they exist.
 4. Read relevant `.raw/v1.0/*.md` files only when they help with existing wording, terminology, or document style.
 5. Use v1.0 only as historical rule, playtest, idea, and style reference. Do not restore old rules over the current implementation.

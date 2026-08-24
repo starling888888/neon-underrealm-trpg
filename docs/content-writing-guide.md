@@ -103,7 +103,7 @@ import InternalLink from "../components/_common/InternalLink.astro";
 
 Excel本体やページ作成前のMarkdown入力は、リポジトリルート直下の `.raw/` 配下でローカル管理します。
 
-Google Spreadsheetを使う場合は、`.env`で指定したDriveフォルダから`npm run sync:google-sheets`を手動実行し、同じフォルダ構造のXLSXを`.raw/`配下へ取得します。`.env`と`.raw/`はGit管理しません。Google Docsは同期せず、`.raw/contents/*.md`が必要な場合は手動で配置します。
+Google Spreadsheetを使う場合は、`frontend/.env`で指定したDriveフォルダから`npm --workspace=@neon-underrealm/frontend run sync:google-sheets`を手動実行し、同じフォルダ構造のXLSXを`.raw/`配下へ取得します。`frontend/.env`と`.raw/`はGit管理しません。Google Docsは同期せず、`.raw/contents/*.md`が必要な場合は手動で配置します。
 
 Git管理するのは、Excelから変換された `data/generated/` 配下のJSONです。生成済みJSONは原則として手編集しません。
 

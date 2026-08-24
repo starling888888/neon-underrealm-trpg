@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 jobs:
-  quality:
+  root-quality:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,11 +22,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check
+      - name: Run root quality checks
         run: npm run check
-
-      - name: Build
-        run: npm run build
-
-      - name: Test
-        run: npm run test:coverage

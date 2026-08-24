@@ -19,16 +19,16 @@ Resolve the repository root with:
 git rev-parse --show-toplevel
 ```
 
-`npm run sync:google-sheets` uses the `.env` root folder ID to recursively export Google Spreadsheets into `.raw/` as XLSX. It preserves the Drive folder hierarchy below the configured root and does not validate a fixed directory structure.
+`npm --workspace=@neon-underrealm/frontend run sync:google-sheets` uses the Drive root folder ID in `frontend/.env` to recursively export Google Spreadsheets into `.raw/` as XLSX. It preserves the Drive folder hierarchy below the configured root and does not validate a fixed directory structure.
 
 Google Docs and other Drive file types are not synchronized. `.raw/contents/` and `.raw/v1.0/` may be prepared manually when needed, but they are not Google Drive sync targets.
 
-Do not Git-manage `.raw/` or `.env`.
+Do not Git-manage `.raw/` or workspace-local `.env` files.
 
 Do not commit:
 
 - `.raw/`
-- `.env`
+- `**/.env`
 - `*.xlsx`
 - `*.xlsm`
 - `~$*.xlsx`
@@ -66,7 +66,11 @@ Use this branch-scoped structure for reviewer output:
 ├── user-directed-changes.md
 ├── pr-review-N.md
 ├── document-review-N.md
-└── technical-review-N.md
+├── gate-technical-review-N.md
+├── frontend-technical-review-N.md
+├── package-review-N.md
+├── ai-ops-review-N.md
+└── backend-technical-review-N.md
 ```
 
 `issue-review-N.md` is an ephemeral self-review record. Do not copy resolved findings into an issue.
@@ -94,20 +98,20 @@ Put design intent and VRT reference notes under:
 docs/design/<design-target>/
 ```
 
-Put actual Visual Review screenshots in Playwright output directories such as:
+Put actual Visual Review screenshots in the owning workspace's Playwright output directories, such as:
 
 ```text
-test-results/
-playwright-report/
+frontend/test-results/
+frontend/playwright-report/
 ```
 
 Do not commit Visual Review output directories.
 
-Keep canonical VRT baselines in Playwright standard snapshot directories under `canonical-snapshots/visual/`. They are local-only comparison inputs and must stay ignored by Git. `docs/design/<design-target>/` is notes-only. Do not copy actual screenshots into `docs/design/`; baseline creation and updates require the user's explicit instruction.
+Keep frontend canonical VRT baselines in Playwright standard snapshot directories under `frontend/canonical-snapshots/visual/`. They are local-only comparison inputs and must stay ignored by Git. `docs/design/<design-target>/` is notes-only. Do not copy actual screenshots into `docs/design/`; baseline creation and updates require the user's explicit instruction.
 
 For initial page, layout, UI, CSS, and component design work, record the intended route, states, viewports, constraints, and comparison points in `docs/design/<design-target>/notes.md`. When the user explicitly asks to create a design draft, put its standalone HTML/CSS prototype, capture script, and temporary capture under `.tmp/design/<design-target>/`. Do not store design images under `docs/design/`.
 
-Do not use a draft prototype as an application implementation or a canonical VRT baseline. Use the local application route only through the matching VRT target. `test-results/` and `playwright-report/` remain transient diagnostic output and are never a design source of truth.
+Do not use a draft prototype as an application implementation or a canonical VRT baseline. Use the local application route only through the matching VRT target. Workspace-local `test-results/` and `playwright-report/` remain transient diagnostic output and are never a design source of truth.
 
 ## Required Ignore Policy
 
@@ -115,11 +119,11 @@ Keep these ignore rules:
 
 ```gitignore
 .raw/
-.env
+**/.env
 .tmp/
-test-results/
-playwright-report/
-canonical-snapshots/visual/
+frontend/test-results/
+frontend/playwright-report/
+frontend/canonical-snapshots/visual/
 *.xlsx
 *.xlsm
 ~$*.xlsx

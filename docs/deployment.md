@@ -14,37 +14,42 @@ GitHub Actionsによる基本デプロイは `.github/workflows/deploy.yml` で�
 
 ## 現時点の確認手順
 
-ローカルで依存関係をインストールします。
+ローカルでCIと同じ依存関係を再現します。
 
 ```sh
-npm install
+npm ci
 ```
 
-公開前の基本確認として、以下を実行します。
+公開前の基本確認では、root Qualityと変更workspaceのtestを実行します。
 
 ```sh
 npm run check
-npm run build
+npm --workspace=@neon-underrealm/frontend run test:coverage
+npm --workspace=@neon-underrealm/shared run test
+npm --workspace=backend run test
 ```
 
-ビルド済みサイトをローカルで確認する場合は、以下を実行します。
+frontend、shared package、backendのtestは、それぞれのdirectory、root依存設定、またはworkflowが変わったときにCIで起動する。公開対象を変更した場合は、frontendのpublic buildとPagefind indexも確認する。
 
 ```sh
-npm run preview
+npm --workspace=@neon-underrealm/frontend run build:public
+npm --workspace=@neon-underrealm/frontend run build:search-index
 ```
+
+ビルド済みサイトをローカルで確認する場合は、`npm --workspace=@neon-underrealm/frontend run preview`を実行する。
 
 ## 検索indexのローカル生成
 
 Pagefind検索indexは、公開用build成果物に対してローカルで明示生成します。
 
 ```sh
-npm run build:public
-npm run build:search-index
+npm --workspace=@neon-underrealm/frontend run build:public
+npm --workspace=@neon-underrealm/frontend run build:search-index
 ```
 
-`build:search-index` はサイト自体をbuildせず、既にある `dist/` を入力にPagefindの静的検索bundleを `dist/pagefind/` へ生成します。生成物はGit管理しません。
+`build:search-index` はサイト自体をbuildせず、既にある `frontend/dist/` を入力にPagefindの静的検索bundleを `frontend/dist/pagefind/` へ生成します。生成物はGit管理しません。
 
-GitHub Actionsのdeploy workflowも、公開用build後に同じ順序で検索indexを生成します。`dist/pagefind/`を含む`dist/`全体をGitHub Pages artifactとして配布します。
+GitHub Actionsのdeploy workflowも、公開用build後に同じ順序で検索indexを生成します。`frontend/dist/pagefind/`を含む`frontend/dist/`全体をGitHub Pages artifactとして配布します。
 
 ## GitHub Pages公開手順
 
@@ -53,13 +58,14 @@ GitHub Pages公開はGitHub Actionsで実行します。
 workflowの基本処理は以下です。
 
 1. `npm ci` を実行する。
-2. `npm run check` を実行する。
-3. `npm run build:public` を実行する。
-4. `npm run build:search-index` を実行する。
-5. `dist/pagefind/`を含む`dist/`をGitHub Pages artifactとしてアップロードする。
-6. GitHub Pagesへデプロイする。
+2. root Qualityの`npm run check`を実行する。
+3. 変更pathに応じたfrontend、shared package、backendのworkspace testを実行する。各jobはroot Qualityの成功後に並列で起動する。
+4. frontendの`build:public`を実行する。
+5. frontendの`build:search-index`を実行する。
+6. `frontend/dist/pagefind/`を含む`frontend/dist/`をGitHub Pages artifactとしてアップロードする。
+7. GitHub Pagesへデプロイする。
 
-検索UIはGitHub Pagesのサブパス配下から`pagefind/`を参照するため、indexは公開用buildと同じ`dist/`へ生成する必要があります。
+検索UIはGitHub Pagesのサブパス配下から`pagefind/`を参照するため、indexは公開用buildと同じ`frontend/dist/`へ生成する必要があります。
 
 workflowは `main` へのpushで実行します。
 
@@ -74,30 +80,28 @@ workflowは `main` へのpushで実行します。
 
 ## CIとPublic E2E
 
-`.github/workflows/quality.yml`は、再利用するQuality処理を定義する。Qualityでは、次を順に実行する。
+`.github/workflows/quality.yml`は、再利用するroot Quality処理を定義する。Qualityでは、次を順に実行する。
 
 1. `npm ci`
-2. `npm run check`
-3. `npm run build`
-4. `npm run test:coverage`
+2. rootの`npm run check`（format検査、Markdown検査、lint、type check）
 
-`npm run test:coverage`は通常の Vitest test と、環境変数を設定しない一回の public build 後に実行する contract test をcoverage有効で実行する。通常の Vitest 自動検出からはcontract、ローカルpreviewを起動するE2E、VRTを除外する。HTML、JSON、artifactなどのcoverage reportは保存しない。
+`.github/workflows/workspace-test.yml`はworkspaceごとのtestを実行する再利用workflowである。frontendは`test:coverage`を使い、shared packageとbackendは各workspaceの`test`を使う。frontendの`test:coverage`は通常のVitest testと、環境変数を設定しない一回のpublic build後に実行するcontract testをcoverage有効で実行する。通常のVitest自動検出からはcontract、ローカルpreviewを起動するE2E、VRTを除外する。HTML、JSON、artifactなどのcoverage reportは保存しない。
 
 `.github/workflows/ci.yml`は、main以外のrepository branchへのpushで変更pathを分類する。Pull Request eventでは起動しないため、同じcommitでpushとPull Requestのworkflowを二重に作成しない。fork由来Pull Requestは対象外とする。GitHub Pagesへのdeploy、Pages artifact upload、`pages: write`、`id-token: write`は含めない。
 
-- Markdown-onlyの変更では、`.github/workflows/markdown-check.yml`を呼び出し、`npm ci`と`npm run check:md`だけを実行する。
-- 実装、設定、workflow、`.mdx`を含む変更、またはMarkdownとそれらの混在では、`.github/workflows/quality.yml`を呼び出し、Qualityを実行する。
+- root Qualityは、Markdown-onlyを含むすべての対象pushで実行する。Markdown-only専用のworkflowは置かない。
+- root Qualityと並行して変更pathを分類し、frontend、shared package、backendのtestは、各directory、root依存設定、または`.github/workflows/**`が変わったときだけ、root Qualityの成功後に並列実行する。frontend testはshared packageだけの変更では起動しない。
 - `.codex/**/*.toml`だけの変更ではworkflowを起動しない。
 
-Qualityでは、`npm ci`、`npm run check`、`npm run build`、`npm run test:coverage`を順に実行する。Markdown CheckはQualityを代替せず、Markdown-only変更だけを対象にする。
+mainへのサイト公開対象のpushでは、deploy workflowもroot Qualityと同じ差分testを実行する。frontendのpublic buildは、root Qualityと起動対象のworkspace testがすべて成功または未起動であることを確認してから実行する。
 
-mainへのサイト公開対象のpushでは、deploy workflowが同じQualityの成功後に公開用build、Pagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
+deploy workflowはpublic build後にPagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`frontend/src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
 
-deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`playwright-report/`と`test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
+deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`frontend/playwright-report/`と`frontend/test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
 
 ## VRT運用
 
-VRTのcanonical baselineは`canonical-snapshots/visual/`に置くGit管理外のローカル比較入力である。`test-results/`と`playwright-report/`もGit管理しない。
+VRTのcanonical baselineは`frontend/canonical-snapshots/visual/`に置くGit管理外のローカル比較入力である。`frontend/test-results/`と`frontend/playwright-report/`もGit管理しない。
 
 UI、CSS、layout、page、Componentを変更したときだけ、PRレビュー直前に変更targetへ限定してローカルVRTを実行する。baselineの作成・更新は、差分確認後のユーザー明示指示時だけ行う。
 
@@ -153,7 +157,7 @@ https://username.github.io/repository-name/
 - `site`: `https://starling888888.github.io`
 - `base`: `/neon-underrealm-trpg`
 
-Astro ComponentやLayoutで内部リンクや `public/` 配下の静的アセットを参照するときは、ルート `/` 固定の文字列を直接埋め込まず、`src/lib/utils/paths.ts` の `withBase()` を使います。
+Astro ComponentやLayoutで内部リンクや `frontend/public/` 配下の静的アセットを参照するときは、ルート `/` 固定の文字列を直接埋め込まず、`frontend/src/lib/utils/paths.ts` の `withBase()` を使います。
 
 ```astro
 ---
@@ -182,21 +186,21 @@ Markdown / MDX本文からAstro Componentを呼ぶ場合も、Component側で `w
 
 共通SEO/OGP Componentは実装済みです。
 
-共通OGP画像は `public/neon-underrealm-ogp.png` を使用し、GitHub Pagesのサブパス配下でも絶対URLとして解決できるようにします。
+共通OGP画像は `frontend/public/neon-underrealm-ogp.png` を使用し、GitHub Pagesのサブパス配下でも絶対URLとして解決できるようにします。
 
 個別ページごとのOGP情報は上書き可能ですが、個別OGP画像生成は初期スコープ外です。個別OGP画像がないページは共通OGP画像を使用します。
 
-ブラウザタブや `<title>` に表示される文言は、ページ固有 `title` がある場合は `ページ固有title | defaultSeo.title` とします。`defaultSeo.title` と `defaultSeo.siteName` はサイト共通のゲームタイトル定数 `gameTitle` を参照します。トップページ `/` は `defaultSeo.title` をそのまま使うため、`src/pages/index.astro` からLayoutへ `title` を渡しません。
+ブラウザタブや `<title>` に表示される文言は、ページ固有 `title` がある場合は `ページ固有title | defaultSeo.title` とします。`defaultSeo.title` と `defaultSeo.siteName` はサイト共通のゲームタイトル定数 `gameTitle` を参照します。トップページ `/` は `defaultSeo.title` をそのまま使うため、`frontend/src/pages/index.astro` からLayoutへ `title` を渡しません。
 
 ## Excelデータの扱い
 
 Excel本体は `.raw/` 配下でローカル管理し、Git管理しません。
 
-CI/CDではExcel変換を必須工程にしません。ビルドでは、Git管理済みの `data/generated/` 配下のJSONを参照する方針です。
+CI/CDではExcel変換を必須工程にしません。ビルドでは、Git管理済みの `frontend/data/generated/` 配下のJSONを参照する方針です。
 
 ## favicon
 
-公開サイトのfaviconは、ユーザー提供の `public/favicon.ico` を使用します。
+公開サイトのfaviconは、ユーザー提供の `frontend/public/favicon.ico` を使用します。
 
 実装側ではfaviconの生成、変換、再デザインを行いません。
 

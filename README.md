@@ -27,37 +27,43 @@ npm install
 ## 主要コマンド
 
 ```sh
-npm run dev
-npm run check
-npm run build
-npm run build:public
-npm test
 npm run format
 npm run format:md
+npm run check
+npm run lint
+npm run typecheck
 npm run check:md
-npm run preview
-npm run visual:capture
-npm run visual:build
-npm run visual:test
-npm run visual:install
+npm --workspace=@neon-underrealm/frontend run dev
+npm --workspace=@neon-underrealm/frontend run check
+npm --workspace=@neon-underrealm/frontend run build
+npm --workspace=@neon-underrealm/frontend run build:public
+npm --workspace=@neon-underrealm/frontend run test:coverage
+npm --workspace=@neon-underrealm/frontend run preview
+npm --workspace=@neon-underrealm/frontend run visual:capture
+npm --workspace=@neon-underrealm/frontend run visual:build
+npm --workspace=@neon-underrealm/frontend run visual:test
+npm --workspace=@neon-underrealm/frontend run visual:install
 ```
 
-- `npm run dev`: ローカル開発サーバーを起動する
-- `npm run check`: Astro / TypeScript / Biome の確認を実行する
-- `npm run build`: 静的サイトをビルドする
-- `npm run build:public`: GitHub Pages公開用にビルドし、`-local` 配下のローカル確認用routeを `dist/` から除外する
-- `npm test`: Node.js unit testに加え、GitHub Pages公開用buildと公開HTMLのcontract testを実行する。buildにより `dist/` を再生成し、`dist/-local/` を除外する。unit test結果は `test-results/` に、contract test結果は標準出力に出力する
-- `npm run format`: BiomeとMarkdown formatterを実行する
+- `npm run format`: backend、frontend、shared packageのBiomeとGit管理Markdownのformatterを実行する
 - `npm run format:md`: Git管理対象のMarkdown `.md` を整形する
+- `npm run check`: format検査、Markdown検査、backend、frontend、shared packageのlintと型検査を実行する
+- `npm run lint`: backend、frontend、shared packageのBiome lintを実行する
+- `npm run typecheck`: backend、frontend、shared packageの型検査を実行する
 - `npm run check:md`: Markdown `.md` のformat / 最小style ruleを確認する
-- `npm run preview`: ビルド済みサイトをローカルで確認する
-- `npm run visual:capture`: Visual Review / contents review向けに、指定VRT targetの一時snapshotを取得する。canonical baselineは更新しない
-- `npm run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
-- `npm run visual:test`: Playwright標準VRT baselineを比較する
-- `npm run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
-- `npm run visual:install`: Visual Review用のChromiumをインストールする
+- `npm --workspace=@neon-underrealm/frontend run dev`: ローカル開発サーバーを起動する
+- `npm --workspace=@neon-underrealm/frontend run check`: Astro / TypeScript / Biome の確認を実行する
+- `npm --workspace=@neon-underrealm/frontend run build`: 静的サイトをビルドする
+- `npm --workspace=@neon-underrealm/frontend run build:public`: GitHub Pages公開用にビルドし、`-local` 配下のローカル確認用routeを `frontend/dist/` から除外する
+- `npm --workspace=@neon-underrealm/frontend run test:coverage`: Node.js unit testに加え、GitHub Pages公開用buildと公開HTMLのcontract testを実行する。buildにより `frontend/dist/` を再生成し、`frontend/dist/-local/` を除外する。unit test結果は `frontend/test-results/` に、contract test結果は標準出力に出力する
+- `npm --workspace=@neon-underrealm/frontend run preview`: ビルド済みサイトをローカルで確認する
+- `npm --workspace=@neon-underrealm/frontend run visual:capture`: Visual Review / contents review向けに、指定VRT targetの一時snapshotを取得する。canonical baselineは更新しない
+- `npm --workspace=@neon-underrealm/frontend run visual:build`: `-local` fixtureとPagefind indexを含むVRT用buildを作成する
+- `npm --workspace=@neon-underrealm/frontend run visual:test`: Playwright標準VRT baselineを比較する
+- `npm --workspace=@neon-underrealm/frontend run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
+- `npm --workspace=@neon-underrealm/frontend run visual:install`: Visual Review用のChromiumをインストールする
 
-`npm test` はロジックと公開HTMLのcontract検証用です。VRTは `npm run visual:test` で比較し、baseline更新は明示指示時だけ `npm run visual:update` を使います。
+frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です。VRTはfrontendの`visual:test`で比較し、baseline更新は明示指示時だけfrontendの`visual:update`を使います。
 
 ## 別端末からCodexセッションへ接続する
 
@@ -110,7 +116,7 @@ Context7 を使わない場合、この環境変数の設定は不要です。
 
 ## Google Spreadsheetのローカル入力
 
-Google Spreadsheetをローカル作業入力へ取得する場合は、Google Cloudのservice accountを用意し、同期対象Driveフォルダをそのservice accountのメールアドレスへ閲覧共有します。Google Drive APIを有効化してから、リポジトリルートにGit管理しない`.env`を作成します。
+Google Spreadsheetをローカル作業入力へ取得する場合は、Google Cloudのservice accountを用意し、同期対象Driveフォルダをそのservice accountのメールアドレスへ閲覧共有します。Google Drive APIを有効化してから、`frontend/.env.example`を`frontend/.env`へコピーして設定します。
 
 service accountの作成とJSON鍵の取得は、Google公式の[service account作成手順](https://cloud.google.com/iam/docs/service-accounts-create)および[service account key作成手順](https://cloud.google.com/iam/docs/keys-create-delete)に従います。Google Drive APIは[Google公式の有効化手順](https://developers.google.com/workspace/drive/api/guides/enable-sdk)で有効にします。
 
@@ -120,19 +126,19 @@ GOOGLE_SERVICE_ACCOUNT_EMAIL=...@....iam.gserviceaccount.com
 GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n"
 ```
 
-`.env.example`にはキー名だけを示しています。秘密情報をコミットしてはいけません。
+`frontend/.env.example`にはキー名だけを示しています。秘密情報をコミットしてはいけません。
 
 `GOOGLE_DRIVE_ROOT_FOLDER_ID`には、対象フォルダをブラウザで開いたURLの`https://drive.google.com/drive/folders/<folder-id>`に含まれる`<folder-id>`だけを設定します。末尾にクエリ文字列がある場合も、その前までの文字列を使います。
 
 次のcommandは、指定フォルダ配下を再帰的にたどり、Google SpreadsheetだけをXLSXとして同じフォルダ構造のまま`.raw/`配下へ保存します。
 
 ```sh
-npm run sync:google-sheets
+npm --workspace=@neon-underrealm/frontend run sync:google-sheets
 ```
 
 個別のフォルダ列挙・export・書込みエラーはログ出力し、残りのSpreadsheet処理を継続します。個別エラーが1件でもあれば、すべての処理後に終了コード`1`で終了します。Google Docsその他のファイル、Google Driveへの書込み、差分・削除同期は行いません。
 
-`.raw/`と`.env`はローカル環境ごとの作業入力です。Git管理しません。`.raw/contents/`を使う場合は手動で配置し、公開ページ本文・可視構成のGit管理上の正本は`src/pages/`配下のMDX / Astroとします。
+`.raw/`と`frontend/.env`はローカル環境ごとの作業入力です。Git管理しません。`.raw/contents/`を使う場合は手動で配置し、公開ページ本文・可視構成のGit管理上の正本は`frontend/src/pages/`配下のMDX / Astroとします。
 
 ### contents指示書でのCallout指定例
 
@@ -174,19 +180,21 @@ V1.5で処理順を明確化しました。
 
 ## ディレクトリ概要
 
-- `src/`: Astroサイトのソースコード
-- `src/pages/-local/`: dev serverで確認するローカル確認ページの本文ソース
-- `public/`: 静的アセット
+- `frontend/src/`: Astroサイトのソースコード
+- `frontend/src/pages/-local/`: dev serverで確認するローカル確認ページの本文ソース
+- `frontend/public/`: 静的アセット
 - `docs/`: 要件、計画、運用ドキュメント
 - `docs/design/`: design intentとVRT参照情報のnotes
 - `docs/issue/`: タスクごとの作業定義
 - `docs/TODO.md`: 現在のissueでは対応しないが、将来対応すべきレビュー指摘・改善候補
 - `.agents/skills/`: 生成AIエージェント用の定型workflow
-- `tests/e2e/`: Playwright browser behavior E2E
-- `tests/vrt/`: Playwright visual regression tests
-- `data/generated/`: Excelから変換した公開用JSONの配置先
+- `frontend/tests/e2e/`: Playwright browser behavior E2E
+- `frontend/tests/vrt/`: Playwright visual regression tests
+- `frontend/data/generated/`: Excelから変換した公開用JSONの配置先
+- `packages/shared/`: frontendと将来のbackendで共有する型・定数のpackage
+- `backend/`: 将来のCloudflare Worker用workspace。現時点ではdummyのpackage、source、testだけを置く
 - `.raw/`: Google Drive由来ファイルを同期するローカル作業入力。Git管理しない
-- `.env`: Google Spreadsheet同期のフォルダIDとservice account認証情報を置くローカル設定ファイル。Git管理しない
+- `frontend/.env`: Google Spreadsheet同期のフォルダIDとservice account認証情報を置くローカル設定ファイル。Git管理しない
 - `.tmp/`: 一次レビュー用ファイルや一時メモの配置先。Git管理しない
 
 ## 主要ドキュメント
@@ -199,8 +207,8 @@ V1.5で処理順を明確化しました。
 - [TODO](docs/TODO.md)
 - [公開手順](docs/deployment.md)
 - [本文作成ガイド](docs/content-writing-guide.md)
-- [生成データ方針](data/generated/README.md)
-- [Visual Review Tests](tests/vrt/README.md)
+- [生成データ方針](frontend/data/generated/README.md)
+- [Visual Review Tests](frontend/tests/vrt/README.md)
 
 ## 生成AIエージェント運用
 
@@ -241,11 +249,11 @@ issueのPRがmergeされ、`post-merge-plan-update` workflowまで完了した�
 
 Excel本体やページ作成用Markdown入力は `.raw/` 配下でローカル管理し、Git管理しません。
 
-`.raw/contents/*.md` は、必要に応じて手動で配置するGit非管理の補助入力です。Google Docsから自動同期しません。frontmatter、Markdown本文、HTMLコメントは作業時の参考にできますが、公開ページ本文・可視構成のGit管理上の正本は`src/pages/`配下のMDX / Astroです。
+`.raw/contents/*.md` は、必要に応じて手動で配置するGit非管理の補助入力です。Google Docsから自動同期しません。frontmatter、Markdown本文、HTMLコメントは作業時の参考にできますが、公開ページ本文・可視構成のGit管理上の正本は`frontend/src/pages/`配下のMDX / Astroです。
 
-Google Spreadsheetからローカル入力を同期する場合、同期対象フォルダIDとservice account認証情報は`.env`に置きます。このファイルもGit管理しません。
+Google Spreadsheetからローカル入力を同期する場合、同期対象フォルダIDとservice account認証情報は`frontend/.env`に置きます。このファイルもGit管理しません。
 
-Git管理するのは、Excelから変換された `data/generated/` 配下のJSONです。生成JSONは原則として手編集せず、元のExcelを修正して変換し直します。
+Git管理するのは、Excelから変換された `frontend/data/generated/` 配下のJSONです。生成JSONは原則として手編集せず、元のExcelを修正して変換し直します。
 
 ## 一時ファイルの扱い
 
@@ -269,7 +277,7 @@ merge済みPRでTODO項目まで対応した場合は、`post-merge-plan-update`
 
 `docs/design/<design-target>/` はnotes-onlyです。各design targetの意図、対象route、状態、viewport、参照SSoT、out-of-scope、比較観点、VRT testとsnapshot名を`notes.md`へ記録します。
 
-視覚比較の正本は、Playwright標準の`toHaveScreenshot()` snapshotを`canonical-snapshots/visual/<target>/`で管理します。
+視覚比較の正本は、Playwright標準の`toHaveScreenshot()` snapshotを`frontend/canonical-snapshots/visual/<target>/`で管理します。
 
 design intentの作成・更新と、明示承認済みVRT baselineの更新は `design-image-generation` skill に従います。
 
@@ -286,7 +294,7 @@ Visual Reviewは、承認済みUI実装後に変更targetのVRTをbaselineと比
 
 通常のローカル開発では全件VRTを実行しません。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更targetへ限定して比較します。
 
-Playwrightの`test-results/` / `playwright-report/`に出力されるartifactは診断用であり、Git管理しません。
+Playwrightの`frontend/test-results/` / `frontend/playwright-report/`に出力されるartifactは診断用であり、Git管理しません。
 
 baseline更新が必要な場合は、`design-image-generation` skillで既存baselineとの差分と更新理由を記録し、明示承認後に該当targetだけを更新します。
 

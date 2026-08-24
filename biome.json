@@ -4,12 +4,14 @@
     "includes": [
       "**",
       "!dist",
+      "!frontend/dist",
       "!node_modules",
       "!.astro",
+      "!frontend/.astro",
       "!.dprint-cache",
       "!.tmp",
-      "!test-results",
-      "!playwright-report",
+      "!!frontend/test-results/**",
+      "!!frontend/playwright-report/**",
       "!**/*.astro"
     ]
   },

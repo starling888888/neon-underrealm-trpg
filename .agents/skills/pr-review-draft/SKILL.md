@@ -1,6 +1,6 @@
 ---
 name: pr-review-draft
-description: Use this skill when reviewing a remote GitHub pull request with local document and technical reviewer subagents, then handing validated findings to review-to-issue.
+description: Use this skill when reviewing a remote GitHub pull request with the selected local reviewers, then handing validated findings to review-to-issue.
 ---
 
 # PR Review Draft Skill
@@ -45,79 +45,44 @@ If no prior `pr-review-N.md` exists, review the full remote PR diff from the PR 
 
 If the remote PR head equals the latest reviewed head commit, stop. Do not duplicate a review.
 
-## Review Scope
+## Reviewer Selection
 
-For `pr-review-1.md`, review every commit from the PR base commit through the current remote PR head commit.
+Classify the matching issue before spawning reviewers.
 
-For later review cycles, review every commit after the latest `pr-review-N.md` reviewed head commit through the current remote PR head commit.
+For a Gate child issue, use only `gate_technical_reviewer` from `.codex/agents/gate-technical-reviewer.toml`. A Gate child issue maps to exactly one selected Gate in its parent Gate plan. Do not spawn `document_reviewer` or a specialized reviewer for the same Gate PR. The Gate reviewer reports only `blocker` and `important` findings.
 
-Historical review records may retain the file paths and line numbers from their reviewed snapshot. Do not raise a finding only because a completed change moved, removed, or changed that historical location in the current tree. Raise a finding only when the historical record represents the current state as unresolved or unmodified.
+For a parent issue or non-Gate issue, always use `document_reviewer` and add every specialized reviewer selected by the changed paths:
 
-The document reviewer checks:
+- `frontend_technical_reviewer` for `frontend/**` or frontend build, test, GitHub Pages, and deploy configuration.
+- `package_reviewer` for root or workspace `package.json`, `package-lock.json`, TypeScript configuration, workspace metadata, or `packages/**`.
+- `ai_ops_reviewer` for `AGENTS.md`, `.agents/**`, or `.codex/**`.
+- `backend_technical_reviewer` for `backend/**` after G2 creates `.codex/agents/backend-technical-reviewer.toml`.
 
-- current issue scope
-- documentation consistency
-- requirements, out-of-scope, plan, TODO, and design consistency
-- review trail and follow-up routing
+When a selected specialist definition does not exist, record the reviewer as unavailable and leave that review area unverified. Do not substitute a different specialist without explicit user instruction. A Gate child issue continues to use its single Gate reviewer while the backend specialist is unavailable.
 
-The technical reviewer checks:
-
-- bugs and behavior regressions
-- frontend behavior and GitHub Pages subpath risks
-- tests, validation, and maintainability
-- Codex workflow and agent-facing Markdown safety
-
-### Gate technical review
-
-Technical review is required for every PR. Select the technical review agent from the current issue.
-
-- Gate child issue: use `gate_technical_reviewer` from `.codex/agents/gate-technical-reviewer.toml`. A Gate child issue maps to exactly one selected Gate in its parent Gate plan.
-- Parent issue or non-Gate issue: use `technical_reviewer` from `.codex/agents/technical-reviewer.toml`.
-
-Do not omit technical review for a Gate PR. The Gate technical reviewer reports only `blocker` and `important` findings. Do not run the high-effort `technical_reviewer` again for the same Gate diff unless the user explicitly asks for an additional review.
-
-Both reviewers return Japanese Markdown. Each report must use:
-
-```md
-# Document Review / Technical Review
-
-## レビュー結論
-
-## 対象範囲・対象外
-
-## 指摘事項
-
-### [重大度] タイトル
-
-- 位置:
-- 根拠:
-- 影響:
-- 推奨対応:
-- routing hint: current-issue / todo / plan / ignore
-
-## 指摘なしとして確認した観点
-
-## 判断不能・ユーザー確認事項
-```
-
-For a Gate child issue, the selected Gate technical reviewer uses `# Gate Technical Review` and only the `blocker` / `important` severities defined in its agent definition. The document reviewer keeps the shared format above.
+The selected reviewers return Japanese Markdown. Use the headings defined in each reviewer TOML. Every report must include the conclusion, scope, findings, confirmed checks, and unknown or user-confirmation items. Every finding must include its location, evidence, impact, recommendation, and routing hint.
 
 ## Workflow
 
 1. Assign the next shared review number `N`.
-2. Select the technical review agent under Gate technical review. Spawn `document_reviewer` and the selected technical reviewer in parallel.
-3. Give both reviewers the remote PR information, reviewed commit range, current issue path, and required local SSoT paths. For a Gate child issue, also give the selected Gate and parent Gate plan path.
-4. Write their responses to:
-   - `.tmp/review/<branch-name>/document-review-N.md`
-   - `.tmp/review/<branch-name>/technical-review-N.md`
-5. Write `.tmp/review/<branch-name>/pr-review-N.md` with:
+2. Classify the issue as a Gate child issue or a parent/non-Gate issue.
+3. For a Gate child issue, spawn only `gate_technical_reviewer`. Provide the remote PR information, reviewed commit range, current issue path, selected Gate, parent Gate plan path, and required local SSoT paths.
+4. For a parent/non-Gate issue, select reviewers under Reviewer Selection. Spawn `document_reviewer` and every selected available specialist in parallel. Provide each reviewer the remote PR information, reviewed commit range, current issue path, relevant local SSoT paths, and its selected review scope.
+5. Write each response under `.tmp/review/<branch-name>/` with a role-specific filename:
+   - `gate-technical-review-N.md`
+   - `document-review-N.md`
+   - `frontend-technical-review-N.md`
+   - `package-review-N.md`
+   - `ai-ops-review-N.md`
+   - `backend-technical-review-N.md`
+6. Write `.tmp/review/<branch-name>/pr-review-N.md` with:
    - PR number, URL, base, head, and remote head commit
    - reviewed commit range
-   - local agent and skill definitions used, including the selected technical review agent
-   - linked document and technical report paths
+   - local agent and skill definitions used
+   - selected reviewer names, report paths, and unavailable reviewer areas
    - known unchecked remote data
-6. Run `review-to-issue` for both reports.
-7. Stop after `review-to-issue` updates the tracking documents and reports its result.
+7. Run `review-to-issue` for every produced reviewer report.
+8. Stop after `review-to-issue` updates the tracking documents and reports its result.
 
 When the user asks Codex to push an existing PR branch, run this skill after the push succeeds. Do not detect or review pushes performed outside Codex.
 
@@ -136,7 +101,7 @@ Report:
 
 - PR URL and reviewed commit range
 - created `.tmp/review/<branch-name>/` files
-- reviewer agents used
+- selected and unavailable reviewer agents
 - whether `review-to-issue` updated the issue, TODO, plan, or failure log
 - remaining unverified or user-confirmation items
 

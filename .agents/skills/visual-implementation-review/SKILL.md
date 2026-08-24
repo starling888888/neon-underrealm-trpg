@@ -53,7 +53,7 @@ the current issue review record, keep the issue active, and repeat actual
 snapshot inspection before reporting again.
 
 `docs/design/<design-target>/` is notes-only. The canonical visual baseline is
-the matching Playwright snapshot under `canonical-snapshots/visual/`. Do not
+the matching Playwright snapshot under `frontend/canonical-snapshots/visual/`. Do not
 copy a temporary `visual:capture` snapshot into a design document. Use
 `visual:capture` only to hand changed-target snapshots to human review.
 
@@ -69,7 +69,7 @@ Before doing anything, resolve the current implementation contract and verify:
 2. The user has approved implementation for that current issue.
 3. The change is inside issue scope and affects a VRT-covered UI target.
 4. The target's `docs/design/<design-target>/notes.md` and
-   `tests/vrt/<target>.spec.ts` exist.
+   `frontend/tests/vrt/<target>.spec.ts` exist.
 
 Stop and report a missing target, missing design note, or scope conflict. Do
 not create a VRT test or modify implementation from this skill unless the user
@@ -86,7 +86,7 @@ already approved that work in the current issue.
    as default state; do not silently omit it because the existing spec only
    has default scenarios. Record the complete state list before capture.
 4. Build the VRT fixture and use the existing 4321 preview server.
-5. Run `npm run visual:capture -- --grep` for each changed target.
+5. Run `npm --workspace=@neon-underrealm/frontend run visual:capture -- --grep` for each changed target.
 6. Capture and open every required original-pixel-resolution locator
    screenshot for the smallest owner section or Component. For each declared
    route, state, and viewport, inspect the locator screenshot against the
@@ -98,7 +98,7 @@ already approved that work in the current issue.
    row width (content, padding, and gaps), existing type scale, and minimum
    control height at the affected viewport before concluding that overflow is
    resolved.
-7. Run only the changed target with `npm run visual:test -- --grep`.
+7. Run only the changed target with `npm --workspace=@neon-underrealm/frontend run visual:test -- --grep`.
 8. Inspect Playwright's diff artifact when the target comparison fails.
 9. Fix only clear, local mismatches that are inside the approved issue scope.
 10. Repeat capture, actual snapshot inspection, and comparison after each
@@ -106,17 +106,18 @@ already approved that work in the current issue.
 11. Update `## ビジュアルレビュー N` in the resolved current issue with the
     target, tags, complete declared states and viewports, comparison result,
     actual-inspection record, fixes, and unresolved human judgments.
-12. Run `npm run check` and `npm run build` when source, style, test, or
-    configuration files changed.
+12. Run `npm run lint`, `npm run typecheck`, and
+    `npm --workspace=@neon-underrealm/frontend run build` when source, style,
+    test, or configuration files changed.
 13. Stop and report. Do not commit or push.
 
 Use the target tags from the matching VRT spec. For example:
 
 ```sh
-npm run visual:test -- --grep '@vrt.*@site-layout(?:\s|$)'
+npm --workspace=@neon-underrealm/frontend run visual:test -- --grep '@vrt.*@site-layout(?:\s|$)'
 ```
 
-Use the same tag with `npm run visual:capture` to produce temporary snapshots.
+Use the same tag with frontend's `visual:capture` to produce temporary snapshots.
 
 Do not run a full local VRT suite unless the user explicitly asks or the work is
 to investigate VRT infrastructure.
@@ -179,8 +180,8 @@ Use `## ビジュアルレビュー N`.
 - [ ] full-page screenshotを局所表示契約の確認根拠に使っていない
 - [ ] VRT差分を修正した、または修正不要と判断した
 - [ ] baseline更新が必要な差分を人間判断として記録した
-- [ ] `npm run check` が通る（該当する場合）
-- [ ] `npm run build` が通る（該当する場合）
+- [ ] `npm run lint` と `npm run typecheck` が通る（該当する場合）
+- [ ] frontendの`build`が通る（該当する場合）
 ```
 
 Leave unchecked any item that was not performed, and record why.

@@ -35,7 +35,7 @@ Keep these artifact roles separate:
 - `docs/design/<design-target>/notes.md` records approved design intent in text.
   It is the design documentation source of truth. Do not put PNG files there.
 - A Playwright `toHaveScreenshot()` snapshot under
-  `canonical-snapshots/visual/<target>/` is the canonical visual baseline for an
+  `frontend/canonical-snapshots/visual/<target>/` is the canonical visual baseline for an
   implemented UI. Create or update it only after the user explicitly approves
   the affected target.
 
@@ -81,8 +81,8 @@ draft.
    rely on the temporary image alone to carry an approved decision.
 
 Do not copy the draft capture into `docs/design/`, `test-results/`,
-`playwright-report/`, or a canonical VRT snapshot. Do not run
-`npm run visual:update` for a draft.
+`playwright-report/`, or a canonical VRT snapshot. Do not run frontend's
+`visual:update` for a draft.
 
 ## Design Notes Workflow
 
@@ -143,8 +143,8 @@ Use this workflow only after the user explicitly approves the target baseline.
 1. Confirm the affected target, tags, route, states, and snapshot names.
 2. Build the VRT fixture and use the existing `4321` preview server.
 3. Run the target-only VRT comparison and inspect the difference.
-4. Update only the approved target with `npm run visual:update` and its target
-   tag.
+4. Update only the approved target with
+   `npm --workspace=@neon-underrealm/frontend run visual:update` and its target tag.
 5. Run the same target-only comparison without `--update-snapshots`.
 6. Update `notes.md` when the route, state, viewport, test, or snapshot mapping
    changed.

@@ -53,7 +53,7 @@
 - VRTは高コストな比較である。Markdownのみの変更、または画面に影響しない開発中の反復確認では実行しない。UI、CSS、layout、page、Componentを変更した場合だけ、PRレビュー直前に変更した画面のtargetへ限定して実行する。ローカルで全件VRTを通常実行しない。全件VRTはGitHub Actionsの定期実行または公開直後の実行として別taskで整備する。
 - 初期スコープ外機能を実装しない。詳細は `docs/out-of-scope.md` を参照する。
 - 一時ファイル、raw data、generated data、design artifact、Visual Review成果物の扱いは `.agents/rules/data-management.md` を参照する。
-- Google Spreadsheetをローカル入力へ同期する場合は、`.env`の認証情報を使う`npm run sync:google-sheets`だけを用いる。Google Driveへ書き込んではならず、Google Docsの自動同期は行わない。
+- Google Spreadsheetをローカル入力へ同期する場合は、`frontend/.env`の認証情報を使う`npm --workspace=@neon-underrealm/frontend run sync:google-sheets`だけを用いる。Google Driveへ書き込んではならず、Google Docsの自動同期は行わない。
 - 新しいnpm packageを追加する場合は、追加理由、代替案、初期スコープに必要な理由をissueまたは作業報告に書く。
 - ユーザーから失敗、手順逸脱、判断ミスを指摘された場合、またはagent自身が通常のbuild、test、型検査で同一testまたは同一commandの失敗を1回の作業中に3回以上連続して観測した場合は `docs/agent-failure-log/active.md` に記録する。formatterまたはlinterの指摘は、同一作業中に修正して最終確認できれば通常の開発ループとして扱い、failure logへ記録・報告しない。
 - Chromiumのsandbox起動失敗はfailure logへ記録せず、必要な権限手順を経てsandbox外で同じbrowser testを再実行する。sandbox外でも失敗した場合は通常の検証失敗として扱う。
@@ -101,13 +101,13 @@ PRを作成してよいのは、ユーザーが明示的にPR作成を指示し�
 
 PR作成後に、ユーザーがCodexへ既存PR branchへのpushを指示した場合は、`.agents/skills/pr-review-draft/SKILL.md` を使い、前回PR review以降の差分をreviewする。Codex外で実行されたpushは自動検知しない。
 
-Google Spreadsheetをローカル作業入力へ同期する場合は、`.env`で指定したDriveフォルダIDを使い、`npm run sync:google-sheets`を手動で実行する。
+Google Spreadsheetをローカル作業入力へ同期する場合は、`frontend/.env`で指定したDriveフォルダIDを使い、`npm --workspace=@neon-underrealm/frontend run sync:google-sheets`を手動で実行する。
 
 同期先の `.raw/` は常にリポジトリルート直下の `<repo-root>/.raw/` を指す。OSルート直下の `/.raw/`、カレントディレクトリ基準の `./.raw/`、repo外の `.raw/`、Git管理対象の `raw/` と解釈してはならない。
 
 contents markdownを作成または解釈する場合は、`.agents/skills/contents-markdown-authoring/SKILL.md` と `.agents/rules/contents-markdown.md` を参照する。
 
-`.raw/contents/<slug>.md`は、必要に応じてユーザーが手動で置くGit非管理の補助入力である。ページ本文・可視構成のGit管理上の正本は`src/pages/`配下のMDX / Astroとし、contentsが矛盾しても自動的に既存実装やGit管理文書を上書きしない。
+`.raw/contents/<slug>.md`は、必要に応じてユーザーが手動で置くGit非管理の補助入力である。ページ本文・可視構成のGit管理上の正本は`frontend/src/pages/`配下のMDX / Astroとし、contentsが矛盾しても自動的に既存実装やGit管理文書を上書きしない。
 
 Google Spreadsheet同期は、指定Driveフォルダ配下のフォルダ構造をそのまま`.raw/`配下へ再帰的にコピーする。Google Docsその他のファイルは同期しない。同期はローカル開発用の手動scriptだけに閉じ、CI/CD、build、runtimeでは実行しない。
 
@@ -125,7 +125,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 - design intent / VRT参照情報の作成またはbaseline更新: `.agents/skills/design-image-generation/SKILL.md`
 - UI実装後のVisual Review: `.agents/skills/visual-implementation-review/SKILL.md`
 - `.tmp/*.md` のレビュー指摘取り込み: `.agents/skills/review-to-issue/SKILL.md`
-- Google Spreadsheetから `<repo-root>/.raw/` への同期: `npm run sync:google-sheets`
+- Google Spreadsheetから `<repo-root>/.raw/` への同期: `npm --workspace=@neon-underrealm/frontend run sync:google-sheets`
 - contents markdown草案作成または確認: `.agents/skills/contents-markdown-authoring/SKILL.md`
 - ChatGPTからのcontents markdown草案作成または確認: `.agents/skills/remote-contents-markdown-authoring/SKILL.md`
 - GitHub PR snapshotからのレビュー草案作成: `.agents/skills/pr-review-draft/SKILL.md`
@@ -135,7 +135,7 @@ SKILL一覧と使用条件は `.agents/skills/README.md` を参照する。
 
 ### Reviewer Subagents
 
-project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照する。
+project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照する。通常PRでは`document_reviewer`に加え、`frontend/**`とfrontend公開設定は`frontend_technical_reviewer`、package / TypeScript workspace設定は`package_reviewer`、`.agents/**`、`.codex/**`、`AGENTS.md`は`ai_ops_reviewer`を起動する。`backend/**`はG2で`backend_technical_reviewer`を作成した後にそのreviewerを起動する。Gate PRは`gate_technical_reviewer`だけを起動する。正確な選択条件は`pr-review-draft`を正本とする。
 
 ### Rules
 
@@ -174,7 +174,7 @@ project-scoped reviewer subagentの定義は `.codex/agents/*.toml` を参照す
 9. `docs/TODO.md`
 10. 関連する `docs/design/<design-target>/`
 11. その他のGit管理ドキュメント
-12. `src/pages/`配下のMDX / Astro実装
+12. `frontend/src/pages/`配下のMDX / Astro実装
 13. 対応する`.raw/contents/<slug>.md`の本文とHTMLコメント（手動の補助入力）
 
 contentsがGit管理の正本と矛盾する場合は、最新のユーザー指示がない限りGit管理の正本を採用する。ユーザー指示または本ファイルの安全・workflow規約と矛盾する場合は、実装せずユーザーに確認する。
@@ -220,10 +220,10 @@ contentsがGit管理の正本と矛盾する場合は、最新のユーザー指
 
 ```sh
 npm run check
-npm run build
+npm --workspace=<changed-workspace> run build
 ```
 
-ただし、変更ファイルが `.md` のみの場合は、実行コスト削減のため `npm run check` と `npm run build` を実行しない。`.mdx`、Astro、TypeScript、CSS、設定、package、生成データ、画像、workflow等を変更した場合は通常どおり必要な検証を行う。
+ただし、変更ファイルが `.md` のみの場合は、実行コスト削減のため `npm run check` とworkspace buildを実行しない。`.mdx`、Astro、TypeScript、CSS、設定、package、生成データ、画像、workflow等を変更した場合は、変更の影響があるworkspaceにbuild scriptがあれば通常どおり実行する。frontendに影響しない変更でfrontend buildを実行する必要はない。backend変更時はbackendにbuild scriptがあればbackend buildを実行する。build scriptを持たないworkspaceは、該当workspaceのtype checkまたはtestを使う。
 
 報告形式は `.agents/rules/work-report.md` を参照する。issueにGroup単位の報告形式がある場合は、それに従う。
 

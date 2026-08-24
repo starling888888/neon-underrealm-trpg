@@ -1,0 +1,5 @@
+.astro/
+canonical-snapshots/visual/
+dist/
+playwright-report/
+test-results/

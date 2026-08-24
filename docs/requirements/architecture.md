@@ -85,7 +85,7 @@ Excel本体やページ作成前のMarkdown入力は、リポジトリ直下の 
 
 `.raw/` はローカル作業用ディレクトリであり、Git管理しない。
 
-Google Spreadsheetをローカル作業入力として使う場合、Google Drive同期対象フォルダIDとservice account認証情報はリポジトリ直下の`.env`で管理できること。`.env`はローカル開発環境ごとの設定ファイルであり、Git管理しない。
+Google Spreadsheetをローカル作業入力として使う場合、Google Drive同期対象フォルダIDとservice account認証情報は`frontend/.env`で管理できること。`.env`はworkspaceごとのローカル開発環境設定ファイルであり、Git管理しない。
 
 想定するローカル作業領域は以下。
 
@@ -110,13 +110,13 @@ Google Spreadsheetをローカル作業入力として使う場合、Google Driv
 
 contents markdownは、frontmatterをページメタ情報、Markdown本文をページ内容、HTMLコメントをagent向け指示として扱う。
 
-`.raw/contents/SLUG.md` はコミットしない手動の補助入力である。対応ページの本文と可視構成のGit管理上の正本は`src/pages`配下の`.mdx`または`.astro`とし、contentsは最新のユーザー指示がない限りGit管理の要件、issue、design、実装を上書きしない。
+`.raw/contents/SLUG.md` はコミットしない手動の補助入力である。対応ページの本文と可視構成のGit管理上の正本は`frontend/src/pages`配下の`.mdx`または`.astro`とし、contentsは最新のユーザー指示がない限りGit管理の要件、issue、design、実装を上書きしない。
 
 Excel変換スクリプトは、必要に応じて `.raw/` 配下のExcelファイルを読み込めること。
 
 Gitで管理するのは、Excel本体や `.raw/contents/` の作業入力ではなく、以下とする。
 
-- `src/pages` 配下のMarkdown / MDX / Astroページ
+- `frontend/src/pages` 配下のMarkdown / MDX / Astroページ
 - サイトコード
 - 変換済みJSON
 - 変換仕様
@@ -162,7 +162,7 @@ Markdown / MDX本文、構造化データ、表示コンポーネントを分離
 
 ### AC-11. 生成JSONの手編集禁止
 
-`data/generated/` 配下のJSONは、Excelから生成されたデータとして扱う。
+`frontend/data/generated/` 配下のJSONは、Excelから生成されたデータとして扱う。
 
 原則として手編集してはならない。
 
@@ -260,15 +260,15 @@ Excelから変換したJSONに対して、最低限の検証を行えること�
 
 ### AC-16. データスキーマ定義
 
-生成済みJSONにはZod SchemaとTypeScript型を定義する。Zodを使う変換・生成JSON検証・ID生成は`src/lib/schemas/conversion/`へ、ブラウザでも安全に参照できる型と定数は`src/lib/types/`へ置く。
+生成済みJSONにはZod SchemaとTypeScript型を定義する。Zodを使う変換・生成JSON検証・ID生成は`frontend/src/lib/schemas/conversion/`へ、ブラウザでも安全に参照できる型と定数は`frontend/src/lib/types/`へ置く。
 
 Zod Schemaは、生成済みJSONのデータ契約を定義し、変換スクリプト実行時、データ変換テスト、必要に応じたCI検証で使う。
 
 通常表示処理および将来のクライアント側機能は、`schemas/conversion/`を実行時importしない。クライアント入力の検証が必要な場合は、生成済みデータのID存在確認など用途に必要な独立Schemaを定義する。
 
-`src/lib/types/`の公開型と`schemas/conversion/`のZod Schemaは別モジュールで管理するため、Node test内で各root JSON型と`z.output<typeof Schema>`の双方向代入可能性をコンパイル時に検証する。これはnullable、必須項目、配列階層、literal型の片側変更による乖離を検出するための契約テストであり、型専用importと空の型アサーションだけで構成する。実行時のJSON再検証、ブラウザbundle、公開型から変換Schemaへの依存は追加しない。
+`frontend/src/lib/types/`の公開型と`schemas/conversion/`のZod Schemaは別モジュールで管理するため、Node test内で各root JSON型と`z.output<typeof Schema>`の双方向代入可能性をコンパイル時に検証する。これはnullable、必須項目、配列階層、literal型の片側変更による乖離を検出するための契約テストであり、型専用importと空の型アサーションだけで構成する。実行時のJSON再検証、ブラウザbundle、公開型から変換Schemaへの依存は追加しない。
 
-サイトの通常表示処理では、Git管理された `data/generated/` 配下のJSONを信頼する。ページ表示やComponent描画のたびに、生成済みJSONをZodで再検証することを必須にしない。
+サイトの通常表示処理では、Git管理された `frontend/data/generated/` 配下のJSONを信頼する。ページ表示やComponent描画のたびに、生成済みJSONをZodで再検証することを必須にしない。
 
 Excel入力そのものの検証は、変換スクリプトの責務とする。ヘッダー、途中空行、日付の入力順、Excel列ごとの入力エラーなど、ユーザーがExcelを修正するための行番号付きエラーは、変換処理側で扱う。
 
@@ -298,10 +298,10 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 
 ## 現在の実装構成
 
-- 公開ページは `src/pages/` のAstro / MDX、共通レイアウトは `src/layouts/`、UI部品は `src/components/` に置く。
-- 生成JSONへのアクセスは `src/lib/data/`、site metadata・menu・path helperは `src/lib/site/` と `src/lib/utils/` に分ける。
-- 変換scriptは `scripts/`、ブラウザ上の小さなcontrollerは `src/scripts/` に置く。
-- Webキャラクターシートだけは `src/character-sheet/` のReact Islandとして実装し、static site全体をSPAにはしない。端末内の永続化はlocalStorageとIndexedDBだけを使う。
+- 公開ページは `frontend/src/pages/` のAstro / MDX、共通レイアウトは `frontend/src/layouts/`、UI部品は `frontend/src/components/` に置く。
+- 生成JSONへのアクセスは `frontend/src/lib/data/`、site metadata・menu・path helperは `frontend/src/lib/site/` と `frontend/src/lib/utils/` に分ける。
+- 変換scriptは `frontend/scripts/`、ブラウザ上の小さなcontrollerは `frontend/src/scripts/` に置く。
+- Webキャラクターシートだけは `frontend/src/character-sheet/` のReact Islandとして実装し、static site全体をSPAにはしない。端末内の永続化はlocalStorageとIndexedDBだけを使う。
 - 検索はPagefindの静的indexを公開用build成果物へ生成し、外部検索サービスを使わない。
 - Cloudflare Web Analyticsのmanual beaconは本番deploy buildだけでHTMLへ出力する。通常build、PR検証、Visual Testでは出力しない。
 
@@ -334,7 +334,7 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 
 Markdown / MDX本文、Excelから変換したJSON、Astro Componentを組み合わせて静的HTMLを生成する。
 
-検索にはPagefindを導入し、公開用ビルド後に静的HTMLから検索インデックスを生成する。CI/CDでは検索indexを`dist/`へ生成し、GitHub Pagesのdeploy成果物に含める。
+検索にはPagefindを導入し、公開用ビルド後に静的HTMLから検索インデックスを生成する。CI/CDでは検索indexを`frontend/dist/`へ生成し、GitHub Pagesのdeploy成果物に含める。
 
 Excel変換は、ローカル実行用のNode.js / TypeScriptスクリプトとして実装する。
 

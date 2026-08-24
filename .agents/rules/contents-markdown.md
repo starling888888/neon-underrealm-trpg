@@ -47,7 +47,7 @@ When `contents-markdown-authoring` creates or reviews a new local contents instr
 4. `docs/out-of-scope.md`.
 5. `docs/issue/milestone-<NN>/plan.md` and `docs/TODO.md`.
 6. Related `docs/design/<design-target>/`.
-7. Local `src/pages/` implementation.
+7. Local `frontend/src/pages/` implementation.
 8. Matching local `.raw/contents/` Markdown body and HTML comments.
 9. Local `.raw/v1.0/` historical reference.
 

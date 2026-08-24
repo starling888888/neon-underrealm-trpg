@@ -10,13 +10,17 @@ permissions:
   contents: read
 
 jobs:
+  root-quality:
+    uses: ./.github/workflows/quality.yml
+
   changes:
     runs-on: ubuntu-latest
     permissions:
       contents: read
     outputs:
-      markdown: ${{ steps.filter.outputs.markdown }}
-      quality: ${{ steps.filter.outputs.quality }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      shared: ${{ steps.filter.outputs.shared }}
+      backend: ${{ steps.filter.outputs.backend }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -27,21 +31,55 @@ jobs:
         id: filter
         uses: dorny/paths-filter@v4
         with:
-          predicate-quantifier: some-with-excludes
           filters: |
-            markdown:
-              - '**/*.md'
-            quality:
-              - '**'
-              - '!**/*.md'
-              - '!.codex/**/*.toml'
+            frontend:
+              - 'frontend/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'biome.json'
+              - 'tsconfig.json'
+              - '.github/workflows/**'
+            shared:
+              - 'packages/shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'biome.json'
+              - 'tsconfig.json'
+              - '.github/workflows/**'
+            backend:
+              - 'backend/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'biome.json'
+              - 'tsconfig.json'
+              - '.github/workflows/**'
 
-  markdown:
-    needs: changes
-    if: ${{ needs.changes.outputs.markdown == 'true' && needs.changes.outputs.quality != 'true' }}
-    uses: ./.github/workflows/markdown-check.yml
+  frontend-test:
+    needs:
+      - root-quality
+      - changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    uses: ./.github/workflows/workspace-test.yml
+    with:
+      workspace: '@neon-underrealm/frontend'
+      script: test:coverage
 
-  quality:
-    needs: changes
-    if: ${{ needs.changes.outputs.quality == 'true' }}
-    uses: ./.github/workflows/quality.yml
+  shared-test:
+    needs:
+      - root-quality
+      - changes
+    if: ${{ needs.changes.outputs.shared == 'true' }}
+    uses: ./.github/workflows/workspace-test.yml
+    with:
+      workspace: '@neon-underrealm/shared'
+      script: test
+
+  backend-test:
+    needs:
+      - root-quality
+      - changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    uses: ./.github/workflows/workspace-test.yml
+    with:
+      workspace: backend
+      script: test

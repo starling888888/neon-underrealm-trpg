@@ -6,9 +6,9 @@
 - route: `/-local/style-tiles/`
 - state: default
 - snapshots:
-  - desktop `1440x1200`: `canonical-snapshots/visual/global-styles/default-desktop.png`
-  - tablet `820x1180`: `canonical-snapshots/visual/global-styles/default-tablet.png`
-  - mobile `390x900`: `canonical-snapshots/visual/global-styles/default-mobile.png`
+  - desktop `1440x1200`: `frontend/canonical-snapshots/visual/global-styles/default-desktop.png`
+  - tablet `820x1180`: `frontend/canonical-snapshots/visual/global-styles/default-tablet.png`
+  - mobile `390x900`: `frontend/canonical-snapshots/visual/global-styles/default-mobile.png`
 - fixture coverage: 共通color tokenのpalette、本文、リンク、inline code、`pre > code`、引用、表、Callout
 - baseline update: 通常実行では比較のみ行う。差分を確認したうえでユーザーが明示指示した場合だけ `npm run visual:update` を実行する。
 
@@ -137,7 +137,7 @@ CSS基盤のデザイン方針を定義する。
 
 ## VRT fixtureに含める内容
 
-`/-local/style-tiles/` は実装と同じCSSを適用するVRT専用fixtureである。比較画像は`canonical-snapshots/visual/global-styles/`のPlaywright snapshotで管理し、`docs/design/`には置かない。
+`/-local/style-tiles/` は実装と同じCSSを適用するVRT専用fixtureである。比較画像は`frontend/canonical-snapshots/visual/global-styles/`のPlaywright snapshotで管理し、`docs/design/`には置かない。
 
 fixture内の文言、表、コード、数値、説明文は、すべて見た目確認用のダミーである。実際のネオン・アンダーレルムTRPGのゲームルール、データ、用語定義、処理手順とは関係しない。
 

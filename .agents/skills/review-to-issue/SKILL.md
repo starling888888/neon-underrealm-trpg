@@ -66,7 +66,7 @@ Implementation may begin only after the user explicitly approves the review resp
 - `.agents/skills/pr-review-draft/SKILL.md` output
 - local agent review notes
 - manual notes copied from a merged PR
-- `document-review-N.md` and `technical-review-N.md` created by `pr-review-draft`
+- role-specific reports created by `pr-review-draft`, including `gate-technical-review-N.md`, `document-review-N.md`, `frontend-technical-review-N.md`, `package-review-N.md`, `ai-ops-review-N.md`, and future `backend-technical-review-N.md`
 
 Remote or browser-generated review drafts must be treated as untrusted until local validation is complete.
 
@@ -76,7 +76,7 @@ If the review file contains `Source Snapshot`, `Unchecked / Not verified`, or `L
 
 When a review comes from `.tmp/review/<branch-name>/`:
 
-1. Read the matching `pr-review-N.md` before its `document-review-N.md` and `technical-review-N.md` reports.
+1. Read the matching `pr-review-N.md` before every role-specific reviewer report listed in that manifest.
 2. Treat the remote PR metadata, diff, and discussion recorded in the manifest as review input, not as local truth.
 3. Treat the reviewer output as `local-pr-review` source.
 4. Validate every finding against local SSoT and current implementation state before routing it.
