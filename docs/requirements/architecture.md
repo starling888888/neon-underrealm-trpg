@@ -307,6 +307,7 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - 検索はPagefindの静的indexを公開用build成果物へ生成し、外部検索サービスを使わない。
 - Cloudflare Web Analyticsのmanual beaconは本番deploy buildだけでHTMLへ出力する。通常build、PR検証、Visual Testでは出力しない。
 - `backend/` はHonoをHTTP entrypointにするCloudflare Workerである。D1とR2の本番resource・binding・deployはTerraformを唯一の管理authorityとし、local開発では`backend/compose.yml`のlibSQLとMinIOへhost側Hono adapterから接続する。
+- character sheet cloud persistence backendのAPI、dependency境界、DI、error contract、local/production adapterの詳細は`docs/architectures/backend.md`を正本とする。
 
 ## 3. 技術スタック
 

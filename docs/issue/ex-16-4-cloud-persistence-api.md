@@ -45,7 +45,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - read APIは公開し、optional authが有効なときだけ`isOwner`を計算する。write/deleteは検証済みtokenの`userId`とrecordの`userId`が一致するときだけ許可し、内部`userId`はrequestまたはresponseへ出さない。
 - `GET /character-sheets`は全件を取得し、`user`と`sample`に分けたresponseを返す。`user`は`updatedAt DESC`、`sample`は`createdAt ASC`とする。server-side pagination、検索、sort APIは追加しない。
 - `type`はD1の`VARCHAR(20)`に`user`または`sample`として保存する。管理者は自分の`userId`で作成したrecordをDBで直接`sample`へ変更できる。`userId`を変えないため、その管理者はsampleをUIから更新・削除できる。
-- application error codeとHTTP statusの対応を設計する。期限切れtokenだけは他の認証失敗から判別できる`TOKEN_EXPIRED`を返し、clientが再ログインを促せるようにする。任意の不正requestへフィールド単位の親切なvalidation messageは返さず、汎用errorにとどめる。
+- HTTP statusをerror contractとして設計する。期限切れtokenだけは`419`を返し、clientがstatusだけで再ログインを促せるようにする。その他の失敗はclientで共通エラー表示にまとめる。任意の不正requestへフィールド単位の親切なvalidation messageは返さず、汎用errorにとどめる。
 
 ### Backend implementation
 
@@ -76,7 +76,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [ ] 指定した4 endpointが共有contractどおりに動作し、id指定で未存在recordを新規作成しない。
 - [ ] D1 metadataとR2 snapshotがrepositoryの背後へ隠蔽され、production/local/test adapterをDIで差し替えられる。
 - [ ] Google ID Tokenのproduction verifierと、明示注入するtest verifierが分離され、productionで検証skipの条件分岐がない。
-- [ ] `TOKEN_EXPIRED`が他の認証失敗と区別でき、error contractがbackend architectureに記録されている。
+- [ ] 期限切れtokenが`419`で返り、clientがstatusだけで他の認証失敗から区別できる。error contractがbackend architectureに記録されている。
 - [ ] `type`は作成時に`user`、更新時に不変であり、一覧は`user`を更新日時降順、`sample`を作成日時昇順で返す。
 - [ ] D1のindexが`user`の更新日時降順と`sample`の作成日時昇順の一覧を支えている。
 - [ ] internal `userId`をrequestまたは公開responseへ出さず、owner以外のwrite/deleteを拒否する。
@@ -106,6 +106,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - `packages/shared/tests/`
 - `packages/shared/package.json`
 - `docs/requirements/architecture.md`
+- `docs/architectures/backend.md`
 - `docs/testing.md`
 - `.github/workflows/ci.yml`
 - `.github/workflows/backend-deploy.yml`
@@ -114,7 +115,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 ## レビュー観点
 
 - shared packageの入力schemaとoutput typeの責務が分かれ、runtime response validationを追加していないか。
-- `TOKEN_EXPIRED`をclientが再ログイン判断でき、他のtoken failureやauthorization failureと混同しないか。
+- 期限切れtokenの`419`をclientが再ログイン判断でき、他のfailureを共通エラー表示へまとめられるか。
 - production/local/testのrepository・verifierのDI境界が明確で、productionの認証検証をtest用分岐で弱めていないか。
 - `sample`の分類とsort、`type`の更新不変、作成者のowner権限が一貫しているか。
 - D1/R2固有の詳細をserviceまたはshared contractへ漏らさず、local API E2Eが実際にlibSQL/MinIOと通信するか。
@@ -122,5 +123,5 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 
 ## 備考
 
-- APIの詳細なHTTP statusとapplication error codeの対応は実装時に設計し、`TOKEN_EXPIRED`だけは必須の機械判定codeとして保持する。
+- APIのHTTP statusの詳細な対応は実装時に設計する。期限切れtokenだけは必ず`419`とする。
 - local libSQL/MinIO integrationは、既存の`backend/compose.yml`とbackend CIにすでに基盤があるため、外部serviceを追加せずに拡張する。
