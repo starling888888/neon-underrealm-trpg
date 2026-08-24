@@ -29,7 +29,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 - 現在のAstroサイトを`frontend/`へ移動し、`backend/`と`packages/shared/`を追加する。rootには`.agents/`、`.github/`、`.codex/`、`docs/`、`AGENTS.md`、workspace管理設定を残す。
 - frontendとbackendは互いの内部moduleをimportせず、API DTO、metadata型、validation schema、API error型はshared packageを経由して共有する。
 - frontendとbackendは、dependency install、format/lint、type check、unit/contract test、build、deployを独立して実行できる。CIはrootの共通checkを先行して実行し、workspaceのtestは各directory、root依存設定、workflowの変更時だけ並列実行する。shared packageの変更ではsharedを検証し、依存workspaceの型検査はroot checkで確認する。
-- frontendはGitHub Pages、backendはCloudflareへdeployする。Gateと親branchではbackendのGitHub Actions deployを行わず、必要なbackend deployはローカルTerraformから実行する。`main` merge後はbackendもCI/CDからdeployできるようにする。
+- frontendはGitHub Pages、backendはCloudflareへdeployする。Gateと親branchではbackendのGitHub Actions deployを行わない。デバッグで必要なbackend deployは、ユーザー承認後にローカルTerraformから手動で実行する。GitHub Actionsによるbackend deployは`main` merge後のpushだけに限定し、`workflow_dispatch`を含む手動起動を許可しない。
 
 ### BackendとInfrastructure as Code
 

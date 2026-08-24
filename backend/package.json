@@ -12,7 +12,6 @@
     "test:integration": "tsx tests/integration.ts",
     "test:unit": "tsx --test tests/**/*.test.ts",
     "test:workspace-boundary": "tsc --noEmit --project tsconfig.json",
-    "terraform:init": "node scripts/terraform-init.mjs",
     "terraform:validate": "terraform -chdir=terraform fmt -check main.tf variables.tf && terraform -chdir=terraform validate",
     "typecheck": "tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.local.json"
   },

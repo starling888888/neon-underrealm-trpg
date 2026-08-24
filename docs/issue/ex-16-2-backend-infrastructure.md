@@ -4,7 +4,7 @@
 
 Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え、ローカルでは Docker Compose 上の D1 / R2 互換サービスへ Hono の診断用モック API から接続できる状態にする。
 
-本番用の Cloudflare credential はローカルでは Git 管理しない `.env` または `*.tfvars` で扱い、CI では GitHub Actions の Repository Secret からだけ渡す。backend deploy は `main` に限定し、Gate branch と親 branch からは実行しない。
+本番用の Cloudflare credential はローカルでは Git 管理しない `.env` または `*.tfvars` で扱い、CI では GitHub Actions の Repository Secret とRepository Variableからjob環境変数へ渡す。backend deploy は `main` に限定し、Gate branch と親 branch からは実行しない。
 
 ## 背景
 
@@ -36,8 +36,9 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - `compose.yml` と local-only 設定を追加し、Docker Compose で D1 互換 DB と R2 互換 object storage、ならびにそれらを binding した backend のローカル実行を起動できるようにする。ローカル起動は実際の Cloudflare account、D1、R2 へ接続しない。
 - backend の local integration command または test を追加し、Compose 起動後に Hono モック API へ request して、D1 と R2 の双方の write / read が成功することを確認する。diagnostic R2 object は test 後に cleanup する。
 - Terraform を Cloudflare Worker、D1、R2、bindings、backend deploy に必要な resource の唯一の管理 authority として追加する。remote state の bootstrap、local / CI が同じ state backend を使うための手順、`terraform init`、`validate`、plan / apply の実行境界を文書化する。Wrangler 等との二重 resource 管理は導入しない。
+- Terraform outputで、Worker名とaccount-level `workers.dev` subdomainから構成したbackend Worker domainを確認できるようにする。`workers.dev`公開はTerraformの`cloudflare_workers_script_subdomain`だけで有効化し、Worker resource管理を重複させない。
 - ローカルの Cloudflare credential、Terraform variable、object-storage credential、state credential は Git 管理しない `.env` または `*.tfvars` に置く。キー名だけを示す `.env.example` と `*.tfvars.example` を必要に応じて Git 管理し、実値・state file・Compose volume・credential file を ignore 対象にする。
-- backend の CI / CD workflow を整備する。通常 CI は backend の format、lint、typecheck、unit / integration test を変更 path に応じて実行する。実際の Cloudflare deploy は `main` だけで起動し、必要な値を GitHub Actions の Repository Secret から環境変数へ明示的に渡す。Gate branch、親 branch、PR では credential を必要とする deploy を実行しない。
+- backend の CI / CD workflow を整備する。通常 CI は backend の format、lint、typecheck、unit / integration test を変更 path に応じて実行する。実際の Cloudflare deploy は `main` だけで起動し、必要な値を GitHub Actions の Repository Secret とRepository Variableから環境変数へ明示的に渡す。Gate branch、親 branch、PR では credential を必要とする deploy を実行しない。
 - backend package、root workspace 設定、lockfile、workflow、ignore 設定、および開発・test・deployment・architecture・out-of-scope 文書を必要範囲で更新する。Hono と Cloudflare / Terraform 関連の新規 dependency は、公式性、継続保守、代替案、初期スコープに必要な理由をこの issue の完了記録へ残す。
 
 ## 初期スコープ外
@@ -57,10 +58,12 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - [x] ローカル integration test または再現可能な確認 command が Compose 起動後の上記疎通を確認し、失敗時に DB / storage のどちらが失敗したか識別できる。
 - [x] Terraform が Worker、D1、R2、bindings、backend deploy の resource 定義を一元管理し、format / validate と remote state bootstrap・実行手順が確認できる。
 - [x] 実値を含む `.env`、`*.tfvars`、state、credential file、Compose volume は Git 管理されず、Git 管理する template に secret value を含めない。
-- [x] Cloudflare / Terraform の credential は backend deploy workflow の `main` 実行時だけ Repository Secret から渡され、Gate branch、親 branch、PR の CI / deploy では使われない。
+- [ ] Cloudflare / Terraform の credential は backend deploy workflow の `main` 実行時だけ Repository Secret から渡され、Gate branch、親 branch、PR の CI / deploy では使われない。
 - [x] backend の test / build / deploy の責務、ローカル Compose 起動・疎通確認、secret の設定先、Terraform の authority を関連文書へ記録し、architecture / out-of-scope の backend 導入前の記述を解消している。
 - [x] `docs/TODO.md` の永続スキルID互換性 TODO を回収せず、G4 以降で扱う記録を維持している。
 - [x] `npm run check`、backend workspace の build / test、Terraform format / validate、および Compose を使う backend integration 確認が通る。
+- [x] Terraform planで`backend_worker_domain` outputがbackend Workerの`workers.dev` domainを示す。
+- [x] Terraform applyでbackend Workerの`workers.dev`公開を有効化し、public domainへのhealth requestが成功する。
 
 ## チェックポイント
 
@@ -70,11 +73,13 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - [x] diagnostic R2 object に予測可能な限定 prefix を使い、確認後に cleanup する。
 - [x] Repository Secret 名、用途、渡す workflow job を文書化し、log、test fixture、example file、error message に値を出力しない。
 - [x] `terraform apply`、remote state bootstrap、Cloudflare resource 作成を CI / local script が暗黙実行しない。
-- [x] backend deploy は `main` に限定され、Gate branch と親 branch から実行されない。
+- [ ] backend deploy は `main` に限定され、Gate branch と親 branch から実行されない。
 - [x] Gate branch を `main` へ直接 merge せず、`main` を base とする PR を作成しない。
 - [x] frontend の GitHub Pages deploy、既存 frontend / shared workspace、既存 route とサブパス公開を壊していない。
 - [x] 新規 dependency の必要性・代替案・初期スコープに必要な理由を記録している。
 - [x] ユーザーの未コミット変更を破壊していない。
+- [x] domain outputは非秘密のTerraform inputだけで構成し、Workerの公開設定やresource management authorityを変更しない。
+- [x] `workers.dev`公開設定はTerraformだけで管理し、WranglerやCloudflare Dashboardとの二重管理を導入しない。
 
 ## 想定変更ファイル
 
@@ -87,6 +92,7 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - `backend/tests/**`
 - `backend/terraform/**`
 - `backend/.env.example`
+- `backend/bin/terraform-local.sh`
 - `backend/terraform/*.tfvars.example`
 - `backend/.gitignore`
 - `.github/workflows/**`
@@ -114,3 +120,4 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - Cloudflare account ID、API token、Terraform state credential、object-storage credential の実値はこの issue、Git 管理 file、test fixture、CI log へ記載しない。
 - dependency: HonoはWorkerの最小HTTP entrypoint、WranglerとWorkers typeはCloudflare bundle / binding型、`@hono/node-server`・`@libsql/client`・AWS S3 clientはhost側のlocal libSQL / MinIO adapter、tsxはNodeのdiagnostic test / local processに使う。WorkerをDocker化せずにlocal DB / storageだけをComposeで起動するため必要であり、D1/R2本番resourceの管理には使わない。
 - alternative: Wranglerのlocal simulatorだけを使えばdependencyは少ないが、ComposeでD1互換DBとR2互換storageを独立起動するG2の確認を満たせない。直接Cloudflare resourceへ接続するlocal開発はcredentialと本番外部状態を必要とするため採用しない。
+- pending: `.github/workflows/backend-deploy.yml` に残る`workflow_dispatch`は、親issueのGitHub Actions手動起動不許可と矛盾する。ユーザーからworkflow修正の明示指示を受けるまで、このissueのmain限定deploy条件は未完了とする。
