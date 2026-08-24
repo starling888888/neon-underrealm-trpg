@@ -136,6 +136,14 @@ source種別は以下を使う。
 
 ### completion evidence and archival authorization
 
+#### Left declaratively verified deploy conditions unchecked
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` のdeploy workflow完了条件確認
+- 観測した失敗: `main`限定、path filter、job依存関係、credentialのjob境界をworkflow定義で確認済みにもかかわらず、最終マージ後の実動作確認と混同して関連する3つの完了条件を未チェックのまま報告した。
+- 一次対応: workflow定義を根拠に構成条件を完了へ更新し、mainへの実行結果確認はCloudflare applyとGitHub Actions実行の別確認として区別する。
+
 #### Archived a Gate child issue without user confirmation
 
 - date: 2026-07-27
