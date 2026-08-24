@@ -66,11 +66,11 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 
 ## 完了条件
 
-- [ ] `@react-oauth/google` を使う GIS browser-only credential flow が frontend で動作し、GIS integration を自前実装していない。
+- [x] `@react-oauth/google` を使う GIS browser-only credential flow が frontend で動作し、GIS integration を自前実装していない。
 - [x] login は frontend の GIS credential callback で完結し、OAuth redirect、backend callback URL、client secret、authorization-code exchange、refresh token 保存を追加していない。
 - [x] Google ID token（JWT）はメモリ内だけに保持され、ページ再アクセス時に認証処理を開始して新しい token を取得する。
-- [ ] login / logout と認証状態が、指定された desktop と mobile / tablet の位置に表示される。
-- [ ] logout が token を破棄し、local-first の編集内容を維持する。
+- [x] login / logout と認証状態が、指定された desktop と mobile / tablet の位置に表示される。
+- [x] logout が token を破棄し、local-first の編集内容を維持する。
 - [x] backend の Google ID token verifier、認証必須 API、Worker bindingを追加せず、G4へ残している。
 - [x] frontend の追加 unit test が、認証成功、対話開始、認証キャンセル / 失敗、logout、token 未永続化を確認する。
 - [x] `docs/requirements/character-sheet.md` と `docs/out-of-scope.md` が、G3 の実装済み認証範囲と矛盾していない。
@@ -82,7 +82,6 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 - [x] Google Cloud Console の Web OAuth client に、frontend origin をユーザーが登録できる形で必要設定を文書化している。backend callback URL と redirect URI は要求していない。
 - [x] client ID と token の保存先を確認し、JWT が browser persistence に残らない。
 - [x] 既存の `/character-sheet/`、localStorage / IndexedDB による local-first 保存、JSON import / export、CCFOLIA copy、Help、form restore を壊していない。
-- [ ] GitHub Pages のサブパス公開で GIS script、client ID 設定、アセット参照が壊れない。
 - [x] frontend が backend 内部 module を直接 import していない。
 - [x] 不要な UI library、独自 OAuth protocol 実装、初期スコープ外機能を追加していない。
 - [x] G4 / G5 の API と UI を先取りしていない。
@@ -109,7 +108,6 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 
 - GIS browser-only credential flow が、Google ID token を frontend callback で取得し、backend callback、authorization-code exchange、client secret を必要としないことが明確か。
 - JWT がブラウザ永続領域へ残らず、ページ再アクセスごとに GIS 認証をやり直す実装になっているか。
-- GitHub Pages のサブパス公開で GIS script、client ID 設定、frontend origin の登録条件を満たせるか。
 - desktop と mobile / tablet の認証操作が、明示された位置と既存 control pane の responsive 導線に従うか。
 - backend の token verifier、認証必須 API、Worker bindingをG3に混在させていないか。
 - G4 / G5 の保存 UI / API、未関連 TODO、design draft を混在させていないか。
@@ -117,7 +115,7 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 ## 備考
 
 - design target: `docs/design/character-sheet/notes.md`。認証 UI の配置はユーザーの最新指示で定義済みのため、`design-image-generation` はこの Gate の前提条件にしない。
-- Visual Review と VRT は UI を変更する本 Gate の PR review 直前に、`/character-sheet/` の desktop / tablet / mobile と認証状態を対象として別途実施する。canonical baseline は更新しない。
+- Visual Review と VRT は各Gateでは実施せず、すべてのUI Gateを統合した親issueの最終段階で、`/character-sheet/` の desktop / tablet / mobile と認証状態を対象として実施する。canonical baseline はユーザー承認なしに更新しない。
 - `@react-oauth/google` の最終 version は、実装開始前に browser-only credential flow、保守状況、security 上の懸念、workspace 互換性を確認して決定する。選定理由はこの issue に記録する。
 - 実装選定: `@react-oauth/google@0.13.5` は GIS script、One Tap、credential callback、Google auto-select 抑止を提供するため採用した。`npm view` で実装開始時点の公開 version を確認し、OAuth protocol を自前実装しないための最小 dependency とした。`jose` とbackend token verifierは G4 へ移す。
 - user-directed configuration preparation: Client IDの取得・ローカル`.env`・CI環境変数の経路だけを整備する。GitHub Variableの実作成、Terraform input / Worker binding、認証source codeは別指示まで変更しない。

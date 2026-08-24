@@ -22,9 +22,6 @@
 .googleLogin {
   min-width: 0;
 }
-.googleLogin > div {
-  max-width: 100%;
-}
 
 @media (width >= 84rem) {
   .root {

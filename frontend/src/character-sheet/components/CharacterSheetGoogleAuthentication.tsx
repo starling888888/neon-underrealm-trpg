@@ -25,14 +25,16 @@ function CharacterSheetGoogleAuthentication({
         </CharacterSheetButton>
       ) : (
         <GoogleLogin
-          containerProps={{ className: styles.googleLogin }}
+          containerProps={{
+            className: styles.googleLogin,
+            style: { width: "100%" },
+          }}
           onError={authentication.onLoginError}
           onSuccess={authentication.onCredential}
           text="signin_with"
           theme="outline"
           type="standard"
           useOneTap={false}
-          width="208"
           click_listener={authentication.onLoginStarted}
         />
       )}

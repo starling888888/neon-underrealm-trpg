@@ -72,7 +72,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 - shared/backendはmetadata validation、DTO、token rejection、owner authorization、ID発行、一覧順、`userId`非公開、optional auth、R2 key、adapter、payload上限、error contractをunit/contract testする。
 - frontendは認証状態、remote state、所有状態再評価、dialog、pagination/filter、fallback/ellipsis、restore failure、read-only、保存/削除確認、remote ID、PC名必須、HelpをComponent/hook/logic testする。
 - E2Eは選択、自分の編集、他人のread-only、保存確認、削除確認の代表flowに絞り、Google本番認証へ直接依存しない。
-- UI GateのPR review直前に、追加状態を含む対象route・viewportだけでVisual Reviewを行う。canonical VRT baselineはユーザー承認なしに更新しない。
+- Visual ReviewはすべてのUI Gateを統合した親issueの最終段階で、追加状態を含む対象route・viewportだけを対象に一度実施する。各GateのPR reviewではVisual Reviewを実施しない。canonical VRT baselineはユーザー承認なしに更新しない。
 
 ## 初期スコープ外
 
