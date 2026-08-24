@@ -65,6 +65,46 @@ npm --workspace=@neon-underrealm/frontend run visual:install
 
 frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です。VRTはfrontendの`visual:test`で比較し、baseline更新は明示指示時だけfrontendの`visual:update`を使います。
 
+## Cloudflare backendのローカル設定
+
+この節は `ex-16-2-backend-infrastructure` の Terraform state 用準備を扱う。実値、state、credential file はGit管理しない。Cloudflare resourceの作成・`terraform apply`・token発行は自動化せず、必要な権限を持つ人が手動で行う。
+
+まず、Git管理するtemplateからローカル入力を作成する。`local.tfvars` は名前・ID・endpointなどの設定、`.env` はcredentialだけを持つ。`*.tfvars` と `.env` は `.gitignore` の対象である。
+
+```sh
+cp backend/terraform/local.tfvars.example backend/terraform/local.tfvars
+cp backend/.env.example backend/.env
+```
+
+`local.tfvars` の `terraform_state_r2_bucket_name` はTerraform state専用であり、character snapshot用の `character_data_r2_bucket_name` と共有しない。state bucketは、そのbucket自身をstateとして使うTerraform構成から作成すると自己参照になるため、次のbootstrap手順だけはTerraform管理の例外として手動で行う。以後のWorker、D1、character data用R2 bucket、binding、deployはTerraformを唯一のresource管理authorityとする。
+
+Terraformはbackend初期化時に`*.tfvars`を読まない。`local.tfvars` はplan / apply用の入力であり、stateのbucket・key・endpointは後続のbackend初期化commandが明示的に渡す。R2 access key、secret access key、Cloudflare API tokenを`.tfvars`やGit管理するbackend設定へ書かない。
+
+### Terraform state用R2 bucketを作る
+
+1. Cloudflare Dashboardで **Storage & databases** → **R2** → **Overview** を開き、**Create bucket** を選ぶ。
+2. `local.tfvars` の `terraform_state_r2_bucket_name` と同じ、専用のbucket名を入力して作成する。R2 bucket名は小文字、数字、hyphenだけを使う。
+3. このbucketをpublic bucketやcharacter data用bucketとして使わない。Terraform stateにはresource IDやsecret由来の値が含まれうるためである。
+
+Cloudflareの手順とR2のS3互換endpointは、[R2 S3 APIの公式手順](https://developers.cloudflare.com/r2/get-started/s3/)および[Terraform remote R2 backendの公式手順](https://developers.cloudflare.com/terraform/advanced-topics/remote-backend/)を参照する。
+
+### 必要なtokenと最小権限
+
+stateアクセスとCloudflare resource管理には、用途を分けた2種類のtokenを使う。同じtokenを兼用しない。
+
+| 用途                                   | Cloudflareでの作成方法・権限                                                                                                                                                               | ローカル設定                                                                                  | CI Repository Secret                                         |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Terraform stateのR2 S3アクセス         | R2 Overviewの **Manage API Tokens** から作成し、**Object Read & Write**、対象のstate bucketだけにscopeする。                                                                               | `TF_STATE_R2_ACCESS_KEY_ID` と `TF_STATE_R2_SECRET_ACCESS_KEY` を `backend/.env` に設定する。 | `TF_STATE_R2_ACCESS_KEY_ID`、`TF_STATE_R2_SECRET_ACCESS_KEY` |
+| TerraformによるCloudflare resource管理 | My Profile → **API Tokens** からcustom tokenを作成し、対象accountだけへscopeする。G2で必要なaccount permissionは **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write**。 | `CLOUDFLARE_API_TOKEN` を `backend/.env` に設定する。                                         | `CLOUDFLARE_API_TOKEN`                                       |
+
+R2 state tokenの作成後は、表示されるAccess Key IDとSecret Access Keyをただちに安全な場所へ保存して `backend/.env` に設定する。Secret Access Keyは後から再表示できない。R2 tokenは対象bucketだけへscopeし、bucket作成権限を持つAdmin権限を与えない。
+
+Terraform provider tokenはR2 S3 tokenとは別にし、G2で必要なresource操作だけを許可する。現時点ではAPI tokenの作成・管理をTerraformへ委譲しないため、**API Tokens: Write** は付与しない。Cloudflare Dashboardのpermission名が `Edit` と表示される場合は、同じ書込み権限を選ぶ。追加resourceを導入するときは、そのresourceのTerraform provider documentationで必要権限を確認してから、最小権限を追加する。
+
+Cloudflare API tokenの作成方法とscopeは[公式API token作成手順](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)、各permissionの意味は[公式permission一覧](https://developers.cloudflare.com/fundamentals/api/reference/permissions/)を参照する。Worker script resourceが要求する権限は[Cloudflare Terraform providerのresource documentation](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/workers_script)でも確認できる。
+
+CIでは上表のcredentialをGitHub ActionsのRepository Secretだけからdeploy jobへ渡す。account ID、bucket名、state key、R2 endpointはsecretではないため、Git管理する設定またはRepository Variableに置く。Gate branch、親 branch、PRではこれらのSecretを読むdeployを起動せず、backend deployは `main` に限定する。
+
 ## 別端末からCodexセッションへ接続する
 
 tmuxとSSHサーバーを導入済みの環境では、Codexをtmux内で起動しておくことで、スマホなどの別端末から実行中のセッションへ接続し、必要な承認操作を行えます。

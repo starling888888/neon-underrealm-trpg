@@ -90,6 +90,7 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - `backend/terraform/*.tfvars.example`
 - `backend/.gitignore`
 - `.github/workflows/**`
+- `README.md`
 - `docs/requirements/architecture.md`
 - `docs/out-of-scope.md`
 - `docs/development-structure.md`
