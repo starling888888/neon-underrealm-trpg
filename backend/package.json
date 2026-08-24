@@ -4,19 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "wrangler deploy --dry-run --outdir dist",
-    "dev:local": "wrangler dev --local --persist-to .wrangler/state --port 8787",
-    "deploy": "wrangler deploy",
+    "build": "npm run wrangler:prod -- deploy --dry-run --outdir dist",
+    "dev:local": "npm run wrangler:dev -- dev --local --persist-to .wrangler/state --port 8787",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "test": "npm run test:unit && npm run test:workspace-boundary",
-    "local:reset": "rm -rf .wrangler/state",
-    "migrate:local": "wrangler d1 migrations apply DB --local --persist-to .wrangler/state",
-    "migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "local:reset": "rm -rf .wrangler/state .wrangler/tmp",
+    "migrate:local": "npm run wrangler:dev -- d1 migrations apply DB --local --persist-to .wrangler/state",
     "test:integration": "tsx tests/integration.ts",
     "test:unit": "tsx --test tests/**/*.test.ts",
     "test:workspace-boundary": "tsc --noEmit --project tsconfig.json",
-    "typecheck": "tsc --noEmit --project tsconfig.json"
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "wrangler:dev": "./bin/wrangler.sh dev",
+    "wrangler:prod": "./bin/wrangler.sh prod"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260823.1",

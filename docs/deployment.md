@@ -83,7 +83,11 @@ frontend deploy workflowは `main` へのfrontend関連pushで実行します。
 
 ## Cloudflare backend deploy
 
-`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。frontend関連変更だけではbackend deployを実行しない。GitHub Actionsの手動起動は使わない。root Quality、backend test、backend integration testの成功後に、Wranglerでremote D1 migrationを適用してからWorkerをdeployする。`wrangler.jsonc`のD1/R2 draft bindingは、resourceがない初回deployでWranglerが作成・bindingする。デバッグ目的のremote deployは、ユーザー承認後のlocal Wrangler commandだけを使う。
+`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。frontend関連変更だけではbackend deployを実行しない。GitHub Actionsの手動起動は使わない。root Quality、backend test、backend integration testの成功後に、Wranglerでproduction remote D1 migrationを適用してからproduction Workerをdeployする。productionの初回deployは2026-08-25に実施済みである。`wrangler.jsonc`のD1/R2 draft bindingは、resourceがない初回deployでWranglerが作成・bindingするため、新しいenvironmentを作る最初の一回だけdeployをmigrationより先に実行する。
+
+`wrangler.jsonc`の`env.dev`は、local開発者がCloudflare上で実API接続を確認するためのdevelopment Workerである。`npm run wrangler:dev -- <Wrangler command>`は`backend/bin/wrangler.sh`を通じ、`neon-underrealm-backend-dev`およびその専用D1/R2だけを対象にし、production resourceやmain限定workflowを変更しない。scriptはGit管理しない`backend/.env`が存在するときだけ読み込む。`deploy`のときだけ`GOOGLE_OAUTH_CLIENT_ID`と`CORS_ALLOW_ORIGIN`をplaintext Worker `vars`として渡す。local CORS allow originは`http://localhost:4321,http://localhost:4322`とする。
+
+production deployはGitHub Repository Variableの`GOOGLE_OAUTH_CLIENT_ID`をjob環境変数へ渡す。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出し、両者を同じ`vars`として注入する。`npm run wrangler:prod -- <Wrangler command>`は`.env`を読まず、environment選択を担当するため呼出側の`--env`または`-e`を拒否する。GitHub Pagesのcustom domainへ移行した場合だけ、CORS originをRepository Variableなどの明示設定へ切り替える。`vars`はenvironment間で継承されないため、D1/R2 bindingと同様にdevelopmentとproductionの値を共用しない。いずれも公開値のためCloudflare secretには登録しない。productionへのlocal remote deployはユーザー承認後だけに実行する。
 
 workflowが読むRepository Secretは`CLOUDFLARE_API_TOKEN`だけである。Terraform remote state、R2 S3 credential、Terraform用Repository Variableは使わない。automatic provisioningはBetaのため、resourceの詳細なlifecycle管理が必要になった場合は方針を再評価する。
 

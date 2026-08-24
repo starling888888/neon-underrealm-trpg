@@ -57,7 +57,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 
 ### Documentation and tests
 
-- `docs/requirements/architecture.md`へ、API contractの責務、validation/service/repository/verifierの境界、DI composition、production/local adapter、error contractを記録する。
+- `docs/requirements/architecture.md`へ、API contractの責務、validation/service/repository/verifierの境界、DI composition、production/local adapter、error contractを記録する。`wrangler.jsonc`の`env.dev`によるCloudflare development Worker、productionとのD1/R2・設定値分離、初回deployがmigrationより先に必要なdevelopment migration/deploy手順も記録する。`backend/bin/wrangler.sh`がenvironment選択を集約し、developmentはGit ignoreした`backend/.env`が存在するときだけ読み、production CIはGitHub Repository VariableのGoogle client IDとrepository ownerから導出するCORS allow originを、公開`vars`として注入する。
 - shared schema/type、service、repository、production verifier、owner authorization、`type`不変、一覧の分割と各sortをunit/contract testする。
 - Wrangler local WorkerのD1/R2 bindingを使うlocal API E2Eを追加し、4 endpoint、作成/更新/取得/削除、公開read、owner判定、期限切れtoken、sampleの分類を確認する。既存backend integration CIで実行できる構成を維持・更新する。
 
@@ -81,6 +81,8 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [ ] D1のindexが`user`の更新日時降順と`sample`の作成日時昇順の一覧を支えている。
 - [ ] internal `userId`をrequestまたは公開responseへ出さず、owner以外のwrite/deleteを拒否する。
 - [ ] local D1/R2 binding API E2Eが4 endpointと認証・所有権・sample分類を確認し、backend CIで実行できる。
+- [x] Cloudflare上のdevelopment Workerはproduction Worker、D1、R2、設定値を共有せず、localからdevelopment migration/deployを実行できる。
+- [x] development migration/deployは`backend/.env`から、production deployはGitHub Repository VariableのGoogle client IDとrepository ownerから導出するCORS allow originを、公開Worker `vars`として注入する。
 - [ ] `npm run check`、shared/backendのtestとbuild、backend integration testが通る。
 - [ ] 関連TODOを回収せず、このissueで扱わない理由が記録されている。
 
@@ -95,6 +97,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [ ] credential、token、Wrangler local stateをGit管理しない。
 - [ ] G5 UI機能やscope外のAPIを混在させていない。
 - [ ] ユーザーの未コミット変更を破壊していない。
+- [ ] 実装完了と全完了条件の確認後に、Draft PRをReady for reviewへ変更し、確認結果に合わせてPR本文を更新する。
 
 ## 想定変更ファイル
 
