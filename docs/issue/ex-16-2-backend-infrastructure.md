@@ -61,13 +61,13 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - [x] ローカル integration test または再現可能な確認 command が Compose 起動後の上記疎通を確認し、失敗時に DB / storage のどちらが失敗したか識別できる。
 - [x] Terraform が Worker、D1、R2、bindings、backend deploy の resource 定義を一元管理し、format / validate と remote state bootstrap・実行手順が確認できる。
 - [x] 実値を含む `.env`、`*.tfvars`、state、credential file、Compose volume は Git 管理されず、Git 管理する template に secret value を含めない。
-- [ ] Cloudflare / Terraform の credential は backend deploy workflow の `main` 実行時だけ Repository Secret から渡され、Gate branch、親 branch、PR の CI / deploy では使われない。
+- [x] Cloudflare / Terraform の credential は backend deploy workflow の `main` 実行時だけ Repository Secret から渡され、Gate branch、親 branch、PR の CI / deploy では使われない。
 - [x] backend の test / build / deploy の責務、ローカル Compose 起動・疎通確認、secret の設定先、Terraform の authority を関連文書へ記録し、architecture / out-of-scope の backend 導入前の記述を解消している。
 - [x] `docs/TODO.md` の永続スキルID互換性 TODO を回収せず、G4 以降で扱う記録を維持している。
 - [x] `npm run check`、backend workspace の build / test、Terraform format / validate、および Compose を使う backend integration 確認が通る。
 - [x] `PUBLIC_API_BASE_PATH`がRepository Variableとして登録され、GitHub Pages deployのfrontend buildへ渡される。
 - [x] `backend/**`を含む通常PR向けの`backend_technical_reviewer`定義があり、backend / cloudの専門観点とreview対象外を明記している。
-- [ ] frontend / backend deployがそれぞれ対応する変更pathだけで起動し、対応testの成功後にだけ実行される。
+- [x] frontend / backend deployがそれぞれ対応する変更pathだけで起動し、対応testの成功後にだけ実行される。
 - [x] Terraform planで`backend_worker_domain` outputがbackend Workerの`workers.dev` domainを示す。
 - [x] Terraform applyでbackend Workerの`workers.dev`公開を有効化し、public domainへのhealth requestが成功する。
 
@@ -79,7 +79,7 @@ Cloudflare Workers、D1、R2 と Terraform を用いる backend 基盤を整え�
 - [x] diagnostic R2 object に予測可能な限定 prefix を使い、確認後に cleanup する。
 - [x] Repository Secret 名、用途、渡す workflow job を文書化し、log、test fixture、example file、error message に値を出力しない。
 - [x] `terraform apply`、remote state bootstrap、Cloudflare resource 作成を CI / local script が暗黙実行しない。
-- [ ] backend deploy は `main` に限定され、Gate branch と親 branch から実行されない。
+- [x] backend deploy は `main` に限定され、Gate branch と親 branch から実行されない。
 - [x] Gate branch を `main` へ直接 merge せず、`main` を base とする PR を作成しない。
 - [x] frontend の GitHub Pages deploy、既存 frontend / shared workspace、既存 route とサブパス公開を壊していない。
 - [x] 新規 dependency の必要性・代替案・初期スコープに必要な理由を記録している。
