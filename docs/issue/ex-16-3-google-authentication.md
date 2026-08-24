@@ -73,7 +73,7 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 - [x] logout が token を破棄し、local-first の編集内容を維持する。
 - [x] backend の Google ID token verifier、認証必須 API、Worker bindingを追加せず、G4へ残している。
 - [x] frontend の追加 unit test が、認証成功、対話開始、認証キャンセル / 失敗、logout、token 未永続化を確認する。
-- [x] `docs/requirements/character-sheet.md` と `docs/out-of-scope.md` が、G3 の実装済み認証範囲と矛盾していない。
+- [x] `docs/requirements/character-sheet.md` と `docs/out-of-scope.md` が、親issueで承認済みのG3 / G4 / G5 の段階的な対象範囲と矛盾していない。
 - [x] 関連 TODO を G3 で回収しない理由が記録されている。
 - [x] `npm run check` と `npm --workspace=@neon-underrealm/frontend run build` が通る。
 
@@ -119,3 +119,32 @@ GIS script の読込み、button / One Tap、credential callback は `@react-oau
 - `@react-oauth/google` の最終 version は、実装開始前に browser-only credential flow、保守状況、security 上の懸念、workspace 互換性を確認して決定する。選定理由はこの issue に記録する。
 - 実装選定: `@react-oauth/google@0.13.5` は GIS script、One Tap、credential callback、Google auto-select 抑止を提供するため採用した。`npm view` で実装開始時点の公開 version を確認し、OAuth protocol を自前実装しないための最小 dependency とした。`jose` とbackend token verifierは G4 へ移す。
 - user-directed configuration preparation: Client IDの取得・ローカル`.env`・CI環境変数の経路だけを整備する。GitHub Variableの実作成、Terraform input / Worker binding、認証source codeは別指示まで変更しない。
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- [中] `useGoogleOneTapLogin` と複数の `GoogleLogin` が同じページで GIS の `initialize()` を複数回呼び、One Tap設定がbuttonのmount順や操作メニュー開閉で上書きされうる。
+- [中] `GoogleOAuthProvider` のscript読込み失敗が認証stateへ接続されておらず、GIS scriptを読めない場合に既存の失敗表示が出ない。
+- [中] 要件・対象外文書がG3だけを例外とし、親issueで正式対象化したG4 / G5のbackend、クラウド保存、複数キャラクター管理を初期スコープ外のまま扱っている。
+
+### 判定
+
+- source: local-pr-review（PR #215）
+- classification: valid
+- local validation: `@react-oauth/google@0.13.5`の`GoogleLogin`と`useGoogleOneTapLogin`の両方が`google.accounts.id.initialize()`を呼ぶこと、desktop側の認証componentがCSS非表示でもmountされ、開いた操作メニューで追加のcomponentがmountされることを確認した。`GoogleOAuthProvider`は`onScriptLoadError`を受け取れるが、現実装では未指定であることを確認した。親issueの対象化方針と`docs/requirements/character-sheet.md`、`docs/out-of-scope.md`のG3限定例外も照合した。
+
+### 対応方針
+
+- GIS初期化をページ内で一系統に統合し、desktop / mobile / tabletの表示位置で同時に複数mountしないようにする。
+- GIS script読込み失敗時のalertは、利用者が再読み込み以外の回避手段を持たない低頻度の障害として、ユーザー判断によりG3では追加対応しない。
+- 親issueで承認済みのG3 / G4 / G5を要件・対象外文書へ段階的に記録する。G3でG4 / G5の機能を実装するものではない。
+
+### 対応完了チェックリスト
+
+- [x] GIS初期化が通常のviewportでページ内一度だけ行われ、操作メニューの開閉で上書きされない。viewportをまたぐresize時の再初期化はユーザー判断により許容する。
+- [x] GIS script読込み失敗時のalertはG3で追加対応しない。通常のcredential callback失敗時のalertは維持する。
+- [x] G3 / G4 / G5の段階的なscopeが要件・対象外文書と整合する。
+- [x] 追加・更新したunit testが通る。
+- [x] `npm run check` が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run build` が通る。

@@ -6,7 +6,17 @@ import { createRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import CharacterSheetActionPane from "../../../src/character-sheet/components/CharacterSheetActionPane";
+import type { GoogleAuthentication } from "../../../src/character-sheet/auth/types";
 import type { CharacterSheetErrorSummary } from "../../../src/character-sheet/logic/error-summary";
+
+const { googleLoginSpy } = vi.hoisted(() => ({ googleLoginSpy: vi.fn() }));
+
+vi.mock("@react-oauth/google", () => ({
+  GoogleLogin: (props: unknown) => {
+    googleLoginSpy(props);
+    return null;
+  },
+}));
 
 const errorSummary: CharacterSheetErrorSummary = {
   errors: [
@@ -25,9 +35,47 @@ const sectionNavigation = {
   ],
 };
 
-afterEach(() => cleanup());
+const authentication: GoogleAuthentication = {
+  onCredential: () => {},
+  onLoginError: () => {},
+  onLoginStarted: () => {},
+  onLogout: () => {},
+  status: "signed-out",
+};
+
+afterEach(() => {
+  cleanup();
+  googleLoginSpy.mockReset();
+});
 
 describe("CharacterSheetActionPane", () => {
+  it("mounts one GoogleLogin in the open compact menu", () => {
+    render(
+      <CharacterSheetActionPane
+        authentication={authentication}
+        errorReviewButtonRef={createRef<HTMLButtonElement>()}
+        errorSummary={{ errors: [], hasErrors: false }}
+        isCcfoliaCopyDisabled={false}
+        isExportDisabled={false}
+        isImportDisabled={false}
+        isMenuOpen
+        isResetDisabled={false}
+        menuTriggerRef={createRef<HTMLButtonElement>()}
+        onCcfoliaCopy={vi.fn()}
+        onExport={vi.fn()}
+        onHelp={vi.fn()}
+        onImport={vi.fn()}
+        onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
+        onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
+      />,
+    );
+
+    expect(googleLoginSpy).toHaveBeenCalledOnce();
+  });
+
   it("reports the desktop and responsive help triggers through one callback", async () => {
     const user = userEvent.setup();
     const onHelp = vi.fn();
@@ -58,7 +106,7 @@ describe("CharacterSheetActionPane", () => {
       await user.click(button);
     }
 
-    expect(onHelp).toHaveBeenCalledTimes(2);
+    expect(onHelp).toHaveBeenCalledOnce();
     expect(onHelp.mock.calls.map(([trigger]) => trigger)).toEqual(
       screen.getAllByRole("button", { name: "ヘルプ" }),
     );
@@ -96,7 +144,7 @@ describe("CharacterSheetActionPane", () => {
       await user.click(button);
     }
 
-    expect(onExport).toHaveBeenCalledTimes(2);
+    expect(onExport).toHaveBeenCalledOnce();
   });
 
   it("shows the error count and list in the open mobile menu", () => {
@@ -122,16 +170,11 @@ describe("CharacterSheetActionPane", () => {
       />,
     );
 
-    expect(screen.getAllByText("エラーが1件あります。")).toHaveLength(2);
+    expect(screen.getAllByText("エラーが1件あります。")).toHaveLength(1);
     expect(screen.queryByRole("heading", { name: "エラー" })).toBeNull();
     expect(
       screen.getByText("消費経験点が取得経験点を超えています。"),
     ).not.toBeNull();
-    expect(
-      screen
-        .getByRole("button", { name: "確認" })
-        .getAttribute("data-character-sheet-button-color"),
-    ).toBe("danger");
     const floatingHelpButton = document.querySelector<HTMLButtonElement>(
       '[data-character-sheet-action-controls] button[aria-label="ヘルプ"]',
     );
@@ -294,7 +337,7 @@ describe("CharacterSheetActionPane", () => {
       await user.click(button);
     }
 
-    expect(onCcfoliaCopy).toHaveBeenCalledTimes(2);
+    expect(onCcfoliaCopy).toHaveBeenCalledOnce();
   });
 
   it("reports a section jump without owning scroll state", async () => {

@@ -1,8 +1,4 @@
-import {
-  googleLogout,
-  useGoogleOneTapLogin,
-  type CredentialResponse,
-} from "@react-oauth/google";
+import { googleLogout, type CredentialResponse } from "@react-oauth/google";
 import { useCallback, useMemo, useState } from "react";
 import type { GoogleAuthentication, GoogleAuthenticationStatus } from "./types";
 
@@ -10,7 +6,8 @@ import type { GoogleAuthentication, GoogleAuthenticationStatus } from "./types";
  * Keeps the GIS ID token only in React memory.
  *
  * The token is intentionally not persisted. A fresh page mount requests a new
- * credential through One Tap when the browser's Google session permits it.
+ * credential through the single Action Pane GoogleLogin instance when the
+ * browser's Google session permits it.
  */
 export default function useGoogleAuthentication(): GoogleAuthentication {
   const [idToken, setIdToken] = useState<string | null>(null);
@@ -38,12 +35,6 @@ export default function useGoogleAuthentication(): GoogleAuthentication {
     setIdToken(null);
     setStatus("signed-out");
   }, []);
-
-  useGoogleOneTapLogin({
-    auto_select: true,
-    onError: onLoginError,
-    onSuccess: onCredential,
-  });
 
   // Keep the token in this hook for the future authenticated API boundary.
   // Referencing it prevents accidentally changing this state into a

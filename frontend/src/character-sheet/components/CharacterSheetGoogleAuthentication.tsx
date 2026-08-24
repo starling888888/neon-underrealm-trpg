@@ -19,12 +19,9 @@ function CharacterSheetGoogleAuthentication({
           {copy.error}
         </p>
       ) : null}
-      {authentication.status === "signed-in" ? (
-        <CharacterSheetButton onClick={authentication.onLogout} size="medium">
-          {copy.logout}
-        </CharacterSheetButton>
-      ) : (
+      <div hidden={authentication.status === "signed-in"}>
         <GoogleLogin
+          auto_select
           containerProps={{
             className: styles.googleLogin,
             style: { width: "100%" },
@@ -34,10 +31,15 @@ function CharacterSheetGoogleAuthentication({
           text="signin_with"
           theme="outline"
           type="standard"
-          useOneTap={false}
+          useOneTap
           click_listener={authentication.onLoginStarted}
         />
-      )}
+      </div>
+      {authentication.status === "signed-in" ? (
+        <CharacterSheetButton onClick={authentication.onLogout} size="medium">
+          {copy.logout}
+        </CharacterSheetButton>
+      ) : null}
     </section>
   );
 }
