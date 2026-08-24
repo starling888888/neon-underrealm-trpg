@@ -119,4 +119,4 @@ jobs:
         run: npm --workspace=@neon-underrealm/backend run terraform:validate
 
       - name: Apply backend infrastructure
-        run: terraform -chdir=backend/terraform apply -auto-approve -var-file=local.tfvars
+        run: terraform -chdir=backend/terraform apply -lock-timeout=5m -auto-approve -var-file=local.tfvars

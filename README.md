@@ -94,10 +94,10 @@ Cloudflareの手順とR2のS3互換endpointは、[R2 S3 APIの公式手順](http
 
 stateアクセスとCloudflare resource管理には、用途を分けた2種類のtokenを使う。同じtokenを兼用しない。
 
-| 用途                                   | Cloudflareでの作成方法・権限                                                                                                                                                               | ローカル設定                                                                  | CI Repository Secret                                         |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Terraform stateのR2 S3アクセス         | R2 Overviewの **Manage API Tokens** から作成し、**Object Read & Write**、対象のstate bucketだけにscopeする。                                                                               | `AWS_ACCESS_KEY_ID` と `AWS_SECRET_ACCESS_KEY` を `backend/.env` に設定する。 | `TF_STATE_R2_ACCESS_KEY_ID`、`TF_STATE_R2_SECRET_ACCESS_KEY` |
-| TerraformによるCloudflare resource管理 | My Profile → **API Tokens** からcustom tokenを作成し、対象accountだけへscopeする。G2で必要なaccount permissionは **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write**。 | `CLOUDFLARE_API_TOKEN` を `backend/.env` に設定する。                         | `CLOUDFLARE_API_TOKEN`                                       |
+| 用途                                   | Cloudflareでの作成方法・権限                                                                                                                                                                    | ローカル設定                                                                  | CI Repository Secret                                         |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Terraform stateのR2 S3アクセス         | R2 Overviewの **Manage API Tokens** から作成し、**Object Read & Write**、対象のstate bucketだけにscopeする。state objectと対応する`${TF_STATE_KEY}.tflock` objectの作成・読取・削除を許可する。 | `AWS_ACCESS_KEY_ID` と `AWS_SECRET_ACCESS_KEY` を `backend/.env` に設定する。 | `TF_STATE_R2_ACCESS_KEY_ID`、`TF_STATE_R2_SECRET_ACCESS_KEY` |
+| TerraformによるCloudflare resource管理 | My Profile → **API Tokens** からcustom tokenを作成し、対象accountだけへscopeする。G2で必要なaccount permissionは **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write**。      | `CLOUDFLARE_API_TOKEN` を `backend/.env` に設定する。                         | `CLOUDFLARE_API_TOKEN`                                       |
 
 R2 state tokenの作成後は、表示されるAccess Key IDとSecret Access Keyをただちに安全な場所へ保存して `backend/.env` に設定する。Secret Access Keyは後から再表示できない。R2 tokenは対象bucketだけへscopeし、bucket作成権限を持つAdmin権限を与えない。
 
@@ -130,15 +130,21 @@ docker compose -f backend/compose.yml down
 
 ### Terraformのlocal初期化
 
-Worker bundleを生成してから、local wrapper経由で`.env`のstate backend設定とcredentialをTerraformへ渡してremote stateを初期化する。wrapperは呼び出し元のshell環境を変更せず、`apply`を実行しない。
+Worker bundleを生成してから、local wrapper経由で`.env`のstate backend設定とcredentialをTerraformへ渡してremote stateを初期化する。wrapperは呼び出し元のshell環境を変更せず、`apply`を実行しない。S3 backendのlockfileを有効にしているため、backend設定変更後は`-reconfigure`付きで初期化する。
 
 ```sh
 npm --workspace=@neon-underrealm/backend run build
-bash backend/bin/terraform-local.sh -chdir=backend/terraform init
+bash backend/bin/terraform-local.sh -chdir=backend/terraform init -reconfigure
 bash backend/bin/terraform-local.sh -chdir=backend/terraform validate
 ```
 
-GitHub ActionsではRepository Variable `TERRAFORM_TFVARS`からresource入力だけを持つ`local.tfvars`を一時作成する。state backendはRepository Variable `TF_STATE_R2_BUCKET_NAME`、`TF_STATE_KEY`、`TF_STATE_R2_ENDPOINT`、credentialは3つのRepository Secretからjob環境変数へ直接渡し、main限定の`.github/workflows/backend-deploy.yml`で素のTerraform commandを実行する。
+local Terraformのplan / applyはユーザー承認後にだけ実行し、state lock取得の競合は最大5分間待機する。別のlocal操作またはGitHub Actions deployがlockを保持しているときは、その操作を完了させてから再実行する。
+
+```sh
+bash backend/bin/terraform-local.sh -chdir=backend/terraform plan -lock-timeout=5m -var-file=local.tfvars
+```
+
+GitHub ActionsではRepository Variable `TERRAFORM_TFVARS`からresource入力だけを持つ`local.tfvars`を一時作成する。state backendはRepository Variable `TF_STATE_R2_BUCKET_NAME`、`TF_STATE_KEY`、`TF_STATE_R2_ENDPOINT`、credentialは3つのRepository Secretからjob環境変数へ直接渡し、main限定の`.github/workflows/backend-deploy.yml`で同じlockfileと5分のlock待機を使う。state credentialはstate objectと`${TF_STATE_KEY}.tflock` objectのread / write / deleteを許可する。
 
 `workers_dev_subdomain`にはCloudflare DashboardのWorkers & Pagesで設定したaccount subdomainを指定する。Terraformはbackend Workerの`workers.dev`公開を有効化し、apply後は次でpublic domainを確認できる。
 
