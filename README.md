@@ -104,7 +104,7 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
 cp backend/.env.example backend/.env
 ```
 
-`CLOUDFLARE_API_TOKEN`には、対象accountの **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write** を持つtokenを設定する。ローカルD1/R2は`backend/.wrangler/state/`へ保存され、Git管理しない。
+`CLOUDFLARE_API_TOKEN`には、対象accountの **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write** を持つtokenを設定する。`CORS_ALLOW_ORIGIN`はdevelopment Workerが受け付けるoriginをcomma-separatedで指定する。ローカルD1/R2は`backend/.wrangler/state/`へ保存され、Git管理しない。
 
 ```sh
 npm --workspace=@neon-underrealm/backend run local:reset
@@ -114,13 +114,27 @@ npm --workspace=@neon-underrealm/backend run dev:local
 
 別terminalで`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。確認後は`local:reset`を再実行する。
 
-main限定のbackend deploy workflowは、remote D1 migrationを先に適用してから`wrangler deploy`を実行する。`backend/wrangler.jsonc`のD1/R2 draft bindingにより、resourceがまだ存在しない初回deployではWranglerが作成・bindingする。このautomatic provisioningはBetaのため、将来resource名・location・lifecycleの細かな管理が必要になった時点で方針を見直す。
+`wrangler.jsonc`のtop-level設定はproduction、`env.dev`はCloudflare上の開発環境である。`--env dev`でdeployするとWorker名は`neon-underrealm-backend-dev`となり、productionとは別のD1/R2 bindingを使う。local Workerの`dev:local`とは別物であり、local stateもCloudflare上のdevelopment resourceもproductionへ書き込まない。
+
+実APIへ接続する動作確認は、次の順でdevelopment Workerへ反映する。初回はD1/R2 bindingをprovisionするため、migrationより先に一度`deploy`を実行する。resource作成後の更新ではmigration、deployの順に実行する。`wrangler:dev`は`backend/bin/wrangler.sh`を通じてGit管理しない`backend/.env`を、存在するときだけ読み込む。Google client IDとCORS allow originは`deploy`のときだけ`--var`でdevelopment Workerへ渡す。local用の`CORS_ALLOW_ORIGIN`は`http://localhost:4321,http://localhost:4322`とする。
+
+```sh
+# 初回だけ: Worker、D1、R2をprovisionする
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- deploy
+
+# schema変更時: migration後にWorkerを更新する
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- d1 migrations apply DB --remote
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- deploy
+```
+
+productionの初回`deploy`は2026-08-25に実施済みで、Worker、D1、R2のbindingと初回migrationを作成済みである。このためmain限定のbackend deploy workflowは、production remote D1 migrationを適用してから`wrangler deploy`を一回ずつ実行する。`GOOGLE_OAUTH_CLIENT_ID`はGitHub Repository Variableからjobの環境変数へ渡す。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出し、両者をdeploy時にplaintext Worker `vars`として注入する。custom domainへ移行した場合は、この導出を明示設定へ変更する。`wrangler:prod`は`.env`を読まず、CIまたは呼出元の環境変数だけを使う。`wrangler:dev` / `wrangler:prod`はenvironment選択を担当するため、呼出側で`--env`または`-e`を渡さない。`wrangler.jsonc`のD1/R2 draft bindingにより、resourceがまだ存在しない初回deployではWranglerが作成・bindingする。このautomatic provisioningはBetaのため、将来resource名・location・lifecycleの細かな管理が必要になった時点で方針を見直す。
 
 デバッグ用のremote deployはユーザー承認後にだけ実行する。
 
 ```sh
-npm --workspace=@neon-underrealm/backend run migrate:remote
-npm --workspace=@neon-underrealm/backend run deploy
+# 初回provisionは2026-08-25に実施済み。以後のschema変更時だけ実行する。
+npm --workspace=@neon-underrealm/backend run wrangler:prod -- d1 migrations apply DB --remote
+npm --workspace=@neon-underrealm/backend run wrangler:prod -- deploy
 ```
 
 ## 別端末からCodexセッションへ接続する

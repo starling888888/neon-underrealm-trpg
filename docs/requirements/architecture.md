@@ -306,7 +306,7 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - Webキャラクターシートだけは `frontend/src/character-sheet/` のReact Islandとして実装し、static site全体をSPAにはしない。端末内の永続化はlocalStorageとIndexedDBだけを使う。
 - 検索はPagefindの静的indexを公開用build成果物へ生成し、外部検索サービスを使わない。
 - Cloudflare Web Analyticsのmanual beaconは本番deploy buildだけでHTMLへ出力する。通常build、PR検証、Visual Testでは出力しない。
-- `backend/` はHonoをHTTP entrypointにするCloudflare Workerである。`backend/wrangler.jsonc`をWorkerとD1/R2 bindingの正本とし、Wranglerが本番resourceのautomatic provisioning、remote migration、deployを担う。local開発とintegration testではWrangler / Miniflare / workerdのlocal D1/R2 bindingを使う。
+- `backend/` はHonoをHTTP entrypointにするCloudflare Workerである。`backend/wrangler.jsonc`をWorkerとD1/R2 bindingの正本とし、Wranglerがproduction resourceのautomatic provisioning、remote migration、deployを担う。resource未作成の初回だけdeployをmigrationより先に実行し、作成済みenvironmentではmigration、deployの順に実行する。productionの初回deployと初回migrationは2026-08-25に実施済みである。`backend/bin/wrangler.sh`が`dev` / `prod`のenvironment選択を集約する。`env.dev`はCloudflare上の実API接続確認用environmentであり、productionとは別のWorker、D1、R2、設定値を使う。development commandはGit ignoreした`backend/.env`が存在するときだけ読み、production CIはGitHub Repository VariableからGoogle client IDを、`${{ github.repository_owner }}`からCORS allow originを導出して公開Worker `vars`を注入する。これらは公開値でありsecretにしない。local開発とintegration testではWrangler / Miniflare / workerdのlocal D1/R2 bindingを使う。
 - character sheet cloud persistence backendのAPI、dependency境界、DI、error contract、local/production adapterの詳細は`docs/architectures/backend.md`を正本とする。
 
 ## 3. 技術スタック

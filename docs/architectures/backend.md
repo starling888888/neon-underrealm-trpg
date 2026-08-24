@@ -14,7 +14,7 @@ frontendのクラウド保存UI、character sheetのrestore、Google login UIは
 - テストとCI: `docs/testing.md`
 - 初期スコープ外: `docs/out-of-scope.md`
 
-frontendは静的GitHub Pagesとして公開し、Cloudflare Worker backendとはHTTP APIだけで接続する。frontendはbackend内部moduleをimportしない。backendはHonoをHTTP entrypointとし、`wrangler.jsonc`をproduction resourceの管理とdeployの正本にする。
+frontendは静的GitHub Pagesとして公開し、Cloudflare Worker backendとはHTTP APIだけで接続する。frontendはbackend内部moduleをimportしない。backendはHonoをHTTP entrypointとし、`wrangler.jsonc`をproduction resourceの管理とdeployの正本にする。`env.dev`はlocal開発者が実API接続を確認するためのCloudflare development environmentであり、production Workerとresourceを共有しない。
 
 ## 構成と依存方向
 
@@ -102,9 +102,11 @@ CREATE INDEX idx_character_sheets_sample_created_at
 ### Migration lifecycle
 
 - executable SQLは`backend/migrations/`へ連番で追加する。適用済みmigrationを編集・削除せず、schema変更は次の連番migrationで行う。
-- local実行はWrangler / Miniflare / workerdのD1・R2 bindingを使う。npm scriptはGit ignoreした`backend/.wrangler/state/`を明示的なlocal stateにし、`local:reset`、`migrate:local`、`dev:local`の順で実行する。local integration testも同じstateで実際のWorkerへHTTP requestを送る。作業後は`local:reset`を再実行してstateを残さない。
-- productionでは`migrate:remote`がWranglerを通じてremote D1へ未適用migrationを適用し、その後`deploy`がWorkerを更新する。D1のmigration tableが適用済みSQLを管理する。
-- `wrangler.jsonc`のD1/R2 draft bindingを正本とし、resourceが未作成の初回deployではWranglerが作成・bindingする。resource名・location・lifecycleを明示管理する必要が出たときは、automatic provisioningのBeta採用を再評価する。
+- local実行はWrangler / Miniflare / workerdのD1・R2 bindingを使う。`dev:local`と`migrate:local`は`wrangler:dev`を通じてGit ignoreした`backend/.wrangler/state/`を明示的なlocal stateにし、`local:reset`、`migrate:local`、`dev:local`の順で実行する。local integration testも同じstateで実際のWorkerへHTTP requestを送る。`local:reset`はstateとWranglerの一時bundleである`.wrangler/tmp/`を削除するため、作業後は必ず再実行してlocal artifactを残さない。
+- development cloud environmentの初回は`wrangler:dev -- deploy`でD1/R2をprovisionする。その後と以後のschema更新では、`wrangler:dev -- d1 migrations apply DB --remote`がdevelopment D1へ未適用migrationを適用し、`wrangler:dev -- deploy`がdevelopment Workerを更新する。Wranglerのenvironment名によりWorkerは`neon-underrealm-backend-dev`となる。`backend/bin/wrangler.sh`はGit ignoreした`backend/.env`が存在するときだけ読み、deploy時だけ公開設定の`GOOGLE_OAUTH_CLIENT_ID`と`CORS_ALLOW_ORIGIN`を`--var`で渡す。development CORS allow originは`http://localhost:4321,http://localhost:4322`である。
+- productionでは2026-08-25に初回`wrangler:prod -- deploy`でD1/R2をprovisionし、初回migrationを適用済みである。以後は`wrangler:prod -- d1 migrations apply DB --remote`がremote D1へ未適用migrationを適用し、その後`wrangler:prod -- deploy`がWorkerを更新する。scriptは`.env`を読まず、CIまたは呼出元の環境変数だけを使う。D1のmigration tableが適用済みSQLを管理する。
+- production deployはGitHub Repository VariableのGoogle client IDをjob環境変数から`--var`へ渡す。CORS allow originは`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出する。GitHub Pagesのcustom domainへ移行した場合だけ、明示設定へ切り替える。`vars`は公開Worker bindingであり、Google client IDとCORS allow originをCloudflare secretへ登録しない。
+- `wrangler.jsonc`のproductionと`env.dev`のD1/R2 draft bindingを正本とし、それぞれresourceが未作成の初回deployではWranglerが作成・bindingする。D1/R2 bindingと`vars`はenvironment間で継承されない。resource名・location・lifecycleを明示管理する必要が出たときは、automatic provisioningのBeta採用を再評価する。
 
 ## Shared API contract
 
