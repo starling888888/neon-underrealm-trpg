@@ -8,8 +8,11 @@ on:
       - "backend/**"
       - "package.json"
       - "package-lock.json"
+      - "biome.json"
+      - "tsconfig.json"
       - ".github/workflows/backend-deploy.yml"
-  workflow_dispatch:
+      - ".github/workflows/quality.yml"
+      - ".github/workflows/workspace-test.yml"
 
 permissions:
   contents: read
@@ -19,13 +22,72 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  root-quality:
+    uses: ./.github/workflows/quality.yml
+
+  backend-test:
+    needs: root-quality
+    uses: ./.github/workflows/workspace-test.yml
+    with:
+      workspace: backend
+      script: test
+
+  backend-integration:
+    needs: root-quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start local database and object storage
+        run: docker compose -f backend/compose.yml up --detach
+
+      - name: Start local backend
+        run: npm --workspace=@neon-underrealm/backend run dev:local > "$RUNNER_TEMP/backend.log" 2>&1 &
+
+      - name: Wait for local backend
+        run: |
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error http://127.0.0.1:8787/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::The local backend did not become reachable."
+          exit 1
+
+      - name: Run backend integration test
+        run: npm --workspace=@neon-underrealm/backend run test:integration
+
+      - name: Stop local services
+        if: always()
+        run: docker compose -f backend/compose.yml down
+
   deploy:
+    needs:
+      - root-quality
+      - backend-test
+      - backend-integration
     runs-on: ubuntu-latest
     env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.TF_STATE_R2_ACCESS_KEY_ID }}
+      AWS_ENDPOINT_URL_S3: ${{ vars.TF_STATE_R2_ENDPOINT }}
+      AWS_REGION: auto
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_STATE_R2_SECRET_ACCESS_KEY }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TERRAFORM_TFVARS: ${{ vars.TERRAFORM_TFVARS }}
-      TF_STATE_R2_ACCESS_KEY_ID: ${{ secrets.TF_STATE_R2_ACCESS_KEY_ID }}
-      TF_STATE_R2_SECRET_ACCESS_KEY: ${{ secrets.TF_STATE_R2_SECRET_ACCESS_KEY }}
+      TF_CLI_ARGS_init: >-
+        -backend-config=bucket=${{ vars.TF_STATE_R2_BUCKET_NAME }}
+        -backend-config=key=${{ vars.TF_STATE_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -42,17 +104,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Materialize local-only Terraform inputs
+      - name: Materialize Terraform resource inputs
         run: |
           umask 077
           printf '%s' "$TERRAFORM_TFVARS" > backend/terraform/local.tfvars
-          printf 'CLOUDFLARE_API_TOKEN=%s\nTF_STATE_R2_ACCESS_KEY_ID=%s\nTF_STATE_R2_SECRET_ACCESS_KEY=%s\n' "$CLOUDFLARE_API_TOKEN" "$TF_STATE_R2_ACCESS_KEY_ID" "$TF_STATE_R2_SECRET_ACCESS_KEY" > backend/.env
 
       - name: Build Worker bundle
         run: npm --workspace=@neon-underrealm/backend run build
 
       - name: Initialize Terraform state
-        run: npm --workspace=@neon-underrealm/backend run terraform:init
+        run: terraform -chdir=backend/terraform init
 
       - name: Validate Terraform
         run: npm --workspace=@neon-underrealm/backend run terraform:validate

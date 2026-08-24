@@ -72,6 +72,6 @@ character-sheetの現行構成では、`frontend/tests/node/character-sheet/`が
 - root Qualityと並行して変更pathを分類し、frontend、shared package、backendのtestは、各directory、root依存設定、または`.github/workflows/**`が変わったときだけ、root Qualityの成功後に並列実行する。frontend testはshared packageだけの変更では起動しない。
 - `.codex/**/*.toml`だけの変更ではCI workflowを起動しない。
 
-`.github/workflows/deploy.yml` はmainへの公開対象変更で、同じroot Qualityと必要な差分testの後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。deployのpath filterはCIとは別であり、`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更では起動しない。`.codex/**/*.toml`はdeployの除外対象ではない。
+`.github/workflows/frontend-deploy.yml` はmainへの公開対象変更で、同じroot Qualityと必要な差分testの後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。deployのpath filterはCIとは別であり、`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更では起動しない。`.codex/**/*.toml`はdeployの除外対象ではない。
 
 詳細な公開順序は `docs/deployment.md`、UI変更時のVisual Review手順は `.agents/skills/visual-implementation-review/SKILL.md` を参照する。
