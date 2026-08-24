@@ -66,8 +66,8 @@ function CharacterSheetActionPane({
 }: CharacterSheetActionPaneProps) {
   const { actions } = characterSheetDictionary.characterSheet;
   const isDesktop = useIsDesktop();
-  const authenticationControl =
-    authentication === undefined ? null : (
+  const authenticationControl = typeof isDesktop === "boolean" &&
+    authentication && (
       <CharacterSheetGoogleAuthentication authentication={authentication} />
     );
   const errorStatusText = errorSummary.hasErrors
@@ -106,7 +106,33 @@ function CharacterSheetActionPane({
             onReviewErrors={onReviewErrors}
           />
         </div>
-      ) : null}
+      ) : (
+        <section
+          aria-hidden={!isMenuOpen}
+          aria-label={actions.menuLabel}
+          className={
+            isMenuOpen ? `${styles.menu} ${styles.menuOpen}` : styles.menu
+          }
+          id={menuId}
+        >
+          {authenticationControl}
+          <SectionNavigation
+            {...sectionNavigation}
+            onSectionJump={onSectionJump}
+          />
+          <ActionButtons
+            isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
+            isExportDisabled={isExportDisabled}
+            isImportDisabled={isImportDisabled}
+            isResetDisabled={isResetDisabled}
+            onCcfoliaCopy={onCcfoliaCopy}
+            onExport={onExport}
+            onImport={onImport}
+            onReset={onReset}
+          />
+          <ErrorSummary errorSummary={errorSummary} className={styles.errors} />
+        </section>
+      )}
 
       <div
         className={styles.floatingActions}
@@ -142,34 +168,6 @@ function CharacterSheetActionPane({
           )}
         </button>
       </div>
-
-      {isDesktop ? null : (
-        <section
-          aria-label={actions.menuLabel}
-          aria-hidden={!isMenuOpen}
-          className={
-            isMenuOpen ? `${styles.menu} ${styles.menuOpen}` : styles.menu
-          }
-          id={menuId}
-        >
-          {authenticationControl}
-          <SectionNavigation
-            {...sectionNavigation}
-            onSectionJump={onSectionJump}
-          />
-          <ActionButtons
-            isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
-            isExportDisabled={isExportDisabled}
-            isImportDisabled={isImportDisabled}
-            isResetDisabled={isResetDisabled}
-            onCcfoliaCopy={onCcfoliaCopy}
-            onExport={onExport}
-            onImport={onImport}
-            onReset={onReset}
-          />
-          <ErrorSummary errorSummary={errorSummary} className={styles.errors} />
-        </section>
-      )}
     </aside>
   );
 }
@@ -177,10 +175,13 @@ function CharacterSheetActionPane({
 export default memo(CharacterSheetActionPane);
 
 function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState<boolean>();
 
   useEffect(() => {
-    if (typeof window.matchMedia !== "function") return;
+    if (typeof window.matchMedia !== "function") {
+      setIsDesktop(false);
+      return;
+    }
 
     const mediaQuery = window.matchMedia(desktopMediaQuery);
     const update = () => setIsDesktop(mediaQuery.matches);
