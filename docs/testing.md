@@ -13,7 +13,7 @@
 - `npm --workspace=@neon-underrealm/frontend run test:coverage`: `test` と `test:contract` をcoverage有効で実行する。CIのfrontend test jobと同じテスト範囲を確認するときに使う。
 - `npm --workspace=@neon-underrealm/frontend run test:e2e`: Pagefindを含むローカルfixtureをbuildして、公開routeのbrowser behaviorを確認する。
 - `npm --workspace=@neon-underrealm/shared run test`: shared packageの公開API境界を型検査する。
-- `npm --workspace=@neon-underrealm/backend run test`: backendのdiagnostic unit testとWorker境界の型検査を実行する。
+- `npm --workspace=@neon-underrealm/backend run test`: backendのservice / token verifier unit testとWorker境界の型検査を実行する。unit testはmock repositoryを直接注入し、spyによる差し替えを使わない。
 - local Workerは`backend/.wrangler/state/`をD1/R2の一時stateに使う。このpathとWranglerの一時bundleである`backend/.wrangler/tmp/`はGit ignoreする。開始前は`npm --workspace=@neon-underrealm/backend run local:reset`、続けて`npm --workspace=@neon-underrealm/backend run migrate:local`を実行する。`npm --workspace=@neon-underrealm/backend run dev:local`でWrangler local Workerを`8787`に起動し、別terminalで`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。`local:reset`は両pathを削除するため、確認後は必ず再実行する。CIも同じnpm scriptの順番を明示して実行する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。
@@ -64,7 +64,7 @@ character-sheetの現行構成では、`frontend/tests/node/character-sheet/`が
 
 ## CI/CD
 
-`.github/workflows/quality.yml` は `npm ci`とrootの`npm run check`（format検査、Markdown検査、lint、type check）を実行する再利用可能な先行jobとして定義する。`.github/workflows/workspace-test.yml` はworkspaceごとのtestを実行する。frontendは`test:coverage`、shared packageとbackendは各workspaceの`test`を使う。backend変更時はこれに加え、Wrangler local WorkerへD1 migrationを適用してからdiagnostic integration testを実行する。backendのCIはCloudflare credentialを読まない。`test` は通常のVitest自動検出を実行し、PlaywrightのE2E / VRTと前処理が必要なcontract testは除外する。`test:contract` は環境変数を設定せずに一回のpublic build後、contract testをまとめて実行する。coverage providerはVitest configに固定し、`test:coverage`は通常testと`test:contract`の計測を有効にする。HTML、JSON、artifactなどのcoverage reportは保存しない。
+`.github/workflows/quality.yml` は `npm ci`とrootの`npm run check`（format検査、Markdown検査、lint、type check）を実行する再利用可能な先行jobとして定義する。`.github/workflows/workspace-test.yml` はworkspaceごとのtestを実行する。frontendは`test:coverage`、shared packageとbackendは各workspaceの`test`を使う。backend変更時はこれに加え、Wrangler local WorkerへD1 migrationを適用してからcharacter sheet API integration testを実行する。backendのCIはCloudflare credentialを読まない。`test` は通常のVitest自動検出を実行し、PlaywrightのE2E / VRTと前処理が必要なcontract testは除外する。`test:contract` は環境変数を設定せずに一回のpublic build後、contract testをまとめて実行する。coverage providerはVitest configに固定し、`test:coverage`は通常testと`test:contract`の計測を有効にする。HTML、JSON、artifactなどのcoverage reportは保存しない。
 
 `.github/workflows/ci.yml` はmain以外のrepository branch pushで変更pathを分類し、deploy権限やGitHub Pages artifactを持たない。Pull Request eventでは起動しないため、同じcommitでpushとPull RequestのQuality CIが二重に実行されない。fork由来Pull Requestは対象外とする。
 
