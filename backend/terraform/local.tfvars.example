@@ -1,0 +1,9 @@
+# Copy this file to local.tfvars. Do not commit local.tfvars.
+# Credential values belong in ../.env, not in this file.
+
+cloudflare_account_id = "<cloudflare-account-id>"
+backend_worker_name  = "neon-underrealm-backend"
+workers_dev_subdomain = "<cloudflare-workers-dev-subdomain>"
+
+# This bucket is for character snapshots managed by the application, not state.
+character_data_r2_bucket_name = "neon-underrealm-characters"

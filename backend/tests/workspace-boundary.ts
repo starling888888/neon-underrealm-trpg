@@ -1,6 +1,5 @@
-import type { BackendWorkspaceBoundary } from "../src/index.js";
+import type { BackendBindings } from "../src/index.js";
 
-const backendWorkspaceBoundary: BackendWorkspaceBoundary =
-  "@neon-underrealm/backend";
+const backendWorkspaceBoundary = {} as BackendBindings;
 
 void backendWorkspaceBoundary;

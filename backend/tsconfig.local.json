@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
+    "lib": ["ES2024", "DOM"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "strict": true,
     "target": "ES2024",
-    "lib": ["ES2024"],
-    "types": ["@cloudflare/workers-types"]
+    "types": ["node"]
   },
   "include": [
     "src/app.ts",
-    "src/bindings.ts",
-    "src/cloudflare-diagnostics.ts",
     "src/diagnostics.ts",
-    "src/index.ts",
-    "tests/workspace-boundary.ts"
+    "src/local.ts",
+    "tests/diagnostics.test.ts",
+    "tests/integration.ts"
   ]
 }

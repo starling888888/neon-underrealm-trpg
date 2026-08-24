@@ -118,6 +118,8 @@ DiscordやXへの導線はフッターリンクとして扱う。
 
 DBを用いたデータ保存、検索、ユーザー管理、投稿管理は初期スコープ外とする。
 
+ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱う、将来のcharacter snapshot用Cloudflare D1 / R2基盤だけは例外とする。このGateではdiagnostic endpointとresource基盤に留め、公開API・ユーザー入力の永続保存・検索は実装しない。
+
 本サイトは静的サイトとして動作し、Markdown / MDX / Astroページ、変換済みJSON、静的アセットのみでビルド・公開できることを前提とする。
 
 SQLite、PostgreSQL、MySQL、Firestore、Supabase等の導入は行わない。
@@ -127,6 +129,8 @@ SQLite、PostgreSQL、MySQL、Firestore、Supabase等の導入は行わない。
 ## 12. サーバーサイド処理
 
 常駐サーバー、APIサーバー、SSR、サーバーアクション、バックエンド処理は初期スコープ外とする。
+
+ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱うCloudflare Workerだけは例外とする。Node.js常駐サーバーを公開環境へ追加せず、Cloudflare Workerの認証・character API・frontend接続は後続Gateまで実装しない。
 
 検索、データ表示、ページ生成は静的サイトとして成立する範囲で実装する。
 

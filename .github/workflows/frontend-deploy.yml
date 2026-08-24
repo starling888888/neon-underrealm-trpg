@@ -4,11 +4,15 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "docs/**"
-      - ".agents/**"
-      - "AGENTS.md"
-      - "README.md"
+    paths:
+      - "frontend/**"
+      - "package.json"
+      - "package-lock.json"
+      - "biome.json"
+      - "tsconfig.json"
+      - ".github/workflows/frontend-deploy.yml"
+      - ".github/workflows/quality.yml"
+      - ".github/workflows/workspace-test.yml"
   workflow_dispatch:
 
 permissions:
@@ -24,88 +28,17 @@ jobs:
   root-quality:
     uses: ./.github/workflows/quality.yml
 
-  changes:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      frontend: ${{ steps.filter.outputs.frontend }}
-      shared: ${{ steps.filter.outputs.shared }}
-      backend: ${{ steps.filter.outputs.backend }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Detect changed paths
-        id: filter
-        uses: dorny/paths-filter@v4
-        with:
-          filters: |
-            frontend:
-              - 'frontend/**'
-              - 'package.json'
-              - 'package-lock.json'
-              - 'biome.json'
-              - 'tsconfig.json'
-              - '.github/workflows/**'
-            shared:
-              - 'packages/shared/**'
-              - 'package.json'
-              - 'package-lock.json'
-              - 'biome.json'
-              - 'tsconfig.json'
-              - '.github/workflows/**'
-            backend:
-              - 'backend/**'
-              - 'package.json'
-              - 'package-lock.json'
-              - 'biome.json'
-              - 'tsconfig.json'
-              - '.github/workflows/**'
-
   frontend-test:
-    needs:
-      - root-quality
-      - changes
-    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    needs: root-quality
     uses: ./.github/workflows/workspace-test.yml
     with:
       workspace: '@neon-underrealm/frontend'
       script: test:coverage
 
-  shared-test:
-    needs:
-      - root-quality
-      - changes
-    if: ${{ needs.changes.outputs.shared == 'true' }}
-    uses: ./.github/workflows/workspace-test.yml
-    with:
-      workspace: '@neon-underrealm/shared'
-      script: test
-
-  backend-test:
-    needs:
-      - root-quality
-      - changes
-    if: ${{ needs.changes.outputs.backend == 'true' }}
-    uses: ./.github/workflows/workspace-test.yml
-    with:
-      workspace: backend
-      script: test
-
   build:
     needs:
       - root-quality
       - frontend-test
-      - shared-test
-      - backend-test
-    if: >-
-      ${{ always() && needs.root-quality.result == 'success'
-      && (needs.frontend-test.result == 'success' || needs.frontend-test.result == 'skipped')
-      && (needs.shared-test.result == 'success' || needs.shared-test.result == 'skipped')
-      && (needs.backend-test.result == 'success' || needs.backend-test.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -132,8 +65,18 @@ jobs:
             exit 1
           fi
 
+      - name: Require backend API base path
+        env:
+          PUBLIC_API_BASE_PATH: ${{ vars.PUBLIC_API_BASE_PATH }}
+        run: |
+          if [ -z "$PUBLIC_API_BASE_PATH" ]; then
+            echo "::error::PUBLIC_API_BASE_PATH repository variable must be set before deployment."
+            exit 1
+          fi
+
       - name: Build
         env:
+          PUBLIC_API_BASE_PATH: ${{ vars.PUBLIC_API_BASE_PATH }}
           CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
         run: npm --workspace=@neon-underrealm/frontend run build:public
 

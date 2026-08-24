@@ -93,6 +93,27 @@ source種別は以下を使う。
 
 ## 未反映
 
+### Deployment execution-boundary interpretation
+
+#### Misread local manual deploy permission as GitHub Actions manual-dispatch permission
+
+- date: 2026-08-24
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` のbackend deploy workflow確認
+- 観測した失敗: 親issueの「デバッグ用の手動deploy」をGitHub Actionsの`workflow_dispatch`まで許可する方針と誤読し、Gate branchからも実行できるworkflowを一度問題なしと報告した。ユーザーの指摘により、許可対象はユーザー承認後のlocal Terraform手動実行だけであり、GitHub Actionsの手動起動は不許可であると訂正した。
+- 一次対応: 親issue、README、deployment文書を正しいexecution boundaryへ更新し、current issueのmain限定deploy条件を未完了へ戻した。workflowの`workflow_dispatch`削除は明示指示待ちとした。
+- 続報: ユーザーのworkflow修正指示後、backend deploy workflowから`workflow_dispatch`を削除した。実際のmain deploy実行による確認は未実施のため、current issueの該当完了条件は未チェックのままとする。
+
+### Terraform configuration discipline
+
+#### Introduced an unnecessary Terraform initialization wrapper
+
+- date: 2026-08-24
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` のTerraform remote state初期化設計
+- 観測した失敗: Terraform S3 backendが読む環境変数と`init`のbackend設定境界を十分に確認せず、`local.tfvars`を独自解析して`.env`とbackend configを生成する`terraform-init.mjs`を導入した。ユーザーの指摘後に公式仕様を調査し、ローカル専用wrapperとTerraform標準の環境変数・`TF_CLI_ARGS_init`だけで足りることを確認した。
+- 一次対応: 独自MJSとCIでの`.env`生成を撤去した。localでは`.env`を子processだけへ読む薄いshell wrapper、CIではRepository Variables / Secretsから直接渡すTerraform commandへ分離した。
+
 ### browser-test flake diagnosis
 
 #### Repeated flaky character-sheet section-frame browser test
@@ -114,6 +135,14 @@ source種別は以下を使う。
 - 一次対応: Componentの`aria-label`組み立てを確認し、test locatorを実際の「刀詳細を開く」「チンピラ服詳細を開く」へ修正した。新規browser testでは、操作対象のaccessible nameを実装または先行E2Eで確認してから複数viewportへ展開する。
 
 ### completion evidence and archival authorization
+
+#### Left declaratively verified deploy conditions unchecked
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` のdeploy workflow完了条件確認
+- 観測した失敗: `main`限定、path filter、job依存関係、credentialのjob境界をworkflow定義で確認済みにもかかわらず、最終マージ後の実動作確認と混同して関連する3つの完了条件を未チェックのまま報告した。
+- 一次対応: workflow定義を根拠に構成条件を完了へ更新し、mainへの実行結果確認はCloudflare applyとGitHub Actions実行の別確認として区別する。
 
 #### Archived a Gate child issue without user confirmation
 
@@ -188,6 +217,14 @@ source種別は以下を使う。
 - 一次対応: 削除commit `0f218f0`の親commitからローカルissue原文を取得し、GitHub Issue #190の本文を原文へ復元した。以後、ローカルissueをGitHubへ記録してから削除する作業では、Issue本文と削除直前のファイル内容を照合してから完了を報告する。
 
 ### component-test contract synchronization
+
+#### Renamed a workflow without updating its build contract test
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` の`.github/workflows/deploy.yml`から`frontend-deploy.yml`への改名
+- 観測した失敗: workflow本体、path filter、文書は改名後のpathへ更新したが、`frontend/tests/contract/page-navigation-build.test.ts`が旧workflow pathを直接読むcontractを更新しなかった。ローカルでのfrontend coverage testが改名前に実行済みだったため、GitHub Actionsで初めてENOENTとして検出された。
+- 一次対応: 失敗job logとtestの旧path参照を照合し、frontendの公開ビルド契約ではない当該contract testを削除した。
 
 #### Repeated component-test failure after changing the removal callback contract
 
@@ -510,6 +547,14 @@ source種別は以下を使う。
 - 一次対応: React Vite pluginを明示dependencyとして追加し、Vitest configから接続する。Component / hook testを実行してから設定を確定する。
 
 ### test formatting discipline
+
+#### Skipped formatter verification after removing a contract test
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-2-backend-infrastructure` の`frontend/tests/contract/page-navigation-build.test.ts`
+- 観測した失敗: contract testを削除した後、Markdown formatterと`frontend`のlintだけを実行して、TypeScript formatterを確認しないままcommit・pushした。削除後に残った空行がCIのformatter checkで検出された。
+- 一次対応: 対象testをBiome formatterで修正した。TypeScript testを変更した作業では、commit前に対象fileのformatter checkを実行する。
 
 #### Repeated manual formatter mismatch in Component test
 
