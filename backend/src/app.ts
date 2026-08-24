@@ -1,25 +1,47 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import type { ApiErrorResponse } from "@neon-underrealm/shared";
-import { ApiError } from "./api-error.js";
-import type { CharacterSheetService } from "./character-sheet-service.js";
+import type {
+  ApiErrorResponse,
+  ApplicationErrorCode,
+} from "@neon-underrealm/shared";
 import {
-  parseBearerToken,
+  createAuthenticationMiddleware,
+  requireAuthentication,
+  type AuthenticationEnvironment,
+} from "./auth/authentication-middleware.js";
+import type { TokenVerifier } from "./domain/index.js";
+import { ApplicationError } from "./application-error.js";
+import type { CharacterSheetService } from "./service/index.js";
+import {
   parseCharacterSheetId,
   parseCharacterSheetInput,
-} from "./validation.js";
+} from "./validation/index.js";
 
 export type AppDependencies = {
   corsAllowOrigins: string[];
   characterSheetService: CharacterSheetService;
+  tokenVerifier: TokenVerifier;
 };
 
-const errorResponse = (error: ApiError): ApiErrorResponse => ({
+type ErrorStatus = 400 | 401 | 403 | 404 | 413 | 419 | 500;
+
+const errorStatusByCode = {
+  bad_request: 400,
+  expired_token: 419,
+  forbidden: 403,
+  invalid_token: 401,
+  not_found: 404,
+  payload_too_large: 413,
+  unauthorized: 401,
+  unexpected_error: 500,
+} satisfies Record<ApplicationErrorCode, ErrorStatus>;
+
+const errorResponse = (error: ApplicationError): ApiErrorResponse => ({
   error: { code: error.code },
 });
 
 export const createApp = (dependencies: AppDependencies) => {
-  const app = new Hono();
+  const app = new Hono<AuthenticationEnvironment>();
 
   app.use(
     "*",
@@ -32,22 +54,32 @@ export const createApp = (dependencies: AppDependencies) => {
 
   app.get("/health", (context) => context.json({ status: "ok" }));
 
+  app.use(
+    "/character-sheets",
+    createAuthenticationMiddleware(dependencies.tokenVerifier),
+  );
+  app.use(
+    "/character-sheets/*",
+    createAuthenticationMiddleware(dependencies.tokenVerifier),
+  );
+
   app.get("/character-sheets", async (context) =>
     context.json(
-      await dependencies.characterSheetService.list(
-        parseBearerToken(context.req.header("Authorization")),
-      ),
+      await dependencies.characterSheetService.list(context.get("actorUserId")),
     ),
   );
 
-  app.post("/character-sheets", async (context) => {
+  app.post("/character-sheets", requireAuthentication, async (context) => {
+    const actorUserId = context.get("actorUserId");
+
+    if (actorUserId === null) {
+      throw new ApplicationError("unauthorized");
+    }
+
     const input = await parseCharacterSheetInput(context.req.raw);
 
     return context.json(
-      await dependencies.characterSheetService.save(
-        input,
-        parseBearerToken(context.req.header("Authorization")),
-      ),
+      await dependencies.characterSheetService.save(input, actorUserId),
     );
   });
 
@@ -55,25 +87,35 @@ export const createApp = (dependencies: AppDependencies) => {
     context.json(
       await dependencies.characterSheetService.get(
         parseCharacterSheetId(context.req.param("id")),
-        parseBearerToken(context.req.header("Authorization")),
+        context.get("actorUserId"),
       ),
     ),
   );
 
-  app.delete("/character-sheets/:id", async (context) => {
-    await dependencies.characterSheetService.delete(
-      parseCharacterSheetId(context.req.param("id")),
-      parseBearerToken(context.req.header("Authorization")),
-    );
+  app.delete(
+    "/character-sheets/:id",
+    requireAuthentication,
+    async (context) => {
+      const actorUserId = context.get("actorUserId");
 
-    return context.body(null, 204);
-  });
+      if (actorUserId === null) {
+        throw new ApplicationError("unauthorized");
+      }
+
+      await dependencies.characterSheetService.delete(
+        parseCharacterSheetId(context.req.param("id")),
+        actorUserId,
+      );
+
+      return context.body(null, 204);
+    },
+  );
 
   app.onError((error, context) => {
-    if (error instanceof ApiError) {
+    if (error instanceof ApplicationError) {
       return new Response(JSON.stringify(errorResponse(error)), {
         headers: { "Content-Type": "application/json; charset=UTF-8" },
-        status: error.status,
+        status: errorStatusByCode[error.code],
       });
     }
 

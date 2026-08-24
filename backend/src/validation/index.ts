@@ -1,6 +1,6 @@
 import { characterSheetInputSchema } from "@neon-underrealm/shared";
 import type { CharacterSheetInput } from "@neon-underrealm/shared";
-import { ApiError } from "./api-error.js";
+import { ApplicationError } from "../application-error.js";
 
 export const maximumRequestBodyBytes = 8 * 1024 * 1024;
 
@@ -14,13 +14,13 @@ export async function parseCharacterSheetInput(
     Number.isFinite(Number(contentLength)) &&
     Number(contentLength) > maximumRequestBodyBytes
   ) {
-    throw new ApiError(413, "payload_too_large");
+    throw new ApplicationError("payload_too_large");
   }
 
   const text = await request.text();
 
   if (new TextEncoder().encode(text).byteLength > maximumRequestBodyBytes) {
-    throw new ApiError(413, "payload_too_large");
+    throw new ApplicationError("payload_too_large");
   }
 
   let value: unknown;
@@ -28,31 +28,19 @@ export async function parseCharacterSheetInput(
   try {
     value = JSON.parse(text);
   } catch {
-    throw new ApiError(400, "bad_request");
+    throw new ApplicationError("bad_request");
   }
 
   const result = characterSheetInputSchema.safeParse(value);
 
-  if (!result.success) throw new ApiError(400, "bad_request");
+  if (!result.success) throw new ApplicationError("bad_request");
 
   return result.data;
 }
 
-export function parseBearerToken(
-  authorization: string | undefined,
-): string | undefined {
-  if (authorization === undefined) return undefined;
-
-  const match = /^Bearer ([^\s]+)$/.exec(authorization);
-
-  if (match?.[1] === undefined) throw new ApiError(401, "invalid_token");
-
-  return match[1];
-}
-
 export function parseCharacterSheetId(id: string): string {
   if (!characterSheetInputSchema.shape.id.safeParse(id).success) {
-    throw new ApiError(400, "bad_request");
+    throw new ApplicationError("bad_request");
   }
 
   return id;

@@ -4,7 +4,7 @@ import {
   jwtVerify,
   type JWTVerifyGetKey,
 } from "jose";
-import type { TokenVerification, TokenVerifier } from "./character-sheets.js";
+import type { TokenVerification, TokenVerifier } from "../domain/index.js";
 
 const googleJwksUrl = new URL("https://www.googleapis.com/oauth2/v3/certs");
 const googleIssuer = ["accounts.google.com", "https://accounts.google.com"];

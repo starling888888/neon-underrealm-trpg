@@ -3,14 +3,11 @@ import type {
   CharacterSheetInput,
   CharacterSheetListResponse,
   CharacterSheetMetadata,
+  CharacterSheetSummary,
 } from "@neon-underrealm/shared";
-import { ApiError } from "./api-error.js";
-import type {
-  CharacterSheetRecord,
-  CharacterSheetRepository,
-  CharacterSheetSnapshot,
-  TokenVerifier,
-} from "./character-sheets.js";
+import type { CharacterSheetRecord } from "../domain/index.js";
+import { ApplicationError } from "../application-error.js";
+import type { CharacterSheetRepository } from "../repository/index.js";
 
 type ServiceOptions = {
   createId?: () => string;
@@ -21,8 +18,7 @@ const toMetadata = (
   record: CharacterSheetRecord,
   authenticatedUserId: string | null,
 ): CharacterSheetMetadata => ({
-  createdAt: new Date(record.createdAt).toISOString(),
-  id: record.id,
+  createdAt: record.createdAt,
   ikizamaId: record.ikizamaId,
   isOwner: authenticatedUserId === record.ownerUserId,
   pcName: record.pcName,
@@ -30,73 +26,75 @@ const toMetadata = (
   primaryRyugiId: record.primaryRyugiId,
   rank: record.rank,
   type: record.type,
-  updatedAt: new Date(record.updatedAt).toISOString(),
+  updatedAt: record.updatedAt,
 });
 
-const toSnapshot = (input: CharacterSheetInput): CharacterSheetSnapshot => ({
-  imageBase64: input.imageBase64,
-  snapshot: input.snapshot,
+const toSummary = (
+  record: CharacterSheetRecord,
+  actorUserId: string | null,
+): CharacterSheetSummary => ({
+  id: record.id,
+  metadata: toMetadata(record, actorUserId),
 });
 
 export class CharacterSheetService {
   readonly #createId: () => string;
   readonly #now: () => number;
   readonly #repository: CharacterSheetRepository;
-  readonly #tokenVerifier: TokenVerifier;
 
   constructor(
     repository: CharacterSheetRepository,
-    tokenVerifier: TokenVerifier,
     options: ServiceOptions = {},
   ) {
     this.#createId = options.createId ?? (() => crypto.randomUUID());
     this.#now = options.now ?? Date.now;
     this.#repository = repository;
-    this.#tokenVerifier = tokenVerifier;
   }
 
-  async delete(id: string, token: string | undefined): Promise<void> {
-    const userId = await this.#authenticateRequired(token);
-    const record = await this.#requireOwnedRecord(id, userId);
+  async delete(id: string, actorUserId: string): Promise<void> {
+    const record = await this.#requireOwnedRecord(id, actorUserId);
 
     // Metadata first prevents a deleted sheet from remaining publicly visible.
     await this.#repository.deleteMetadata(record.id);
     await this.#repository.deleteSnapshot(record.ownerUserId, record.id);
   }
 
-  async get(id: string, token: string | undefined): Promise<CharacterSheet> {
-    const userId = await this.#authenticate(token);
+  async get(id: string, actorUserId: string | null): Promise<CharacterSheet> {
     const record = await this.#repository.getMetadata(id);
 
-    if (record === null) throw new ApiError(404, "not_found");
+    if (record === null) throw new ApplicationError("not_found");
 
     const storedSnapshot = await this.#repository.getSnapshot(
       record.ownerUserId,
       record.id,
     );
 
-    if (storedSnapshot === null) throw new ApiError(500, "unexpected_error");
+    if (storedSnapshot === null) {
+      throw new ApplicationError("unexpected_error");
+    }
 
-    return { ...toMetadata(record, userId), ...storedSnapshot };
+    return { ...toSummary(record, actorUserId), snapshot: storedSnapshot };
   }
 
-  async list(token: string | undefined): Promise<CharacterSheetListResponse> {
-    const userId = await this.#authenticate(token);
+  async list(actorUserId: string | null): Promise<CharacterSheetListResponse> {
     const records = await this.#repository.listMetadata();
     const response: CharacterSheetListResponse = { sample: [], user: [] };
 
     for (const record of records) {
-      response[record.type].push(toMetadata(record, userId));
+      response[record.type].push(toSummary(record, actorUserId));
     }
+
+    response.sample.sort(
+      (left, right) => left.metadata.createdAt - right.metadata.createdAt,
+    );
 
     return response;
   }
 
   async save(
     input: CharacterSheetInput,
-    token: string | undefined,
-  ): Promise<CharacterSheetMetadata> {
-    const userId = await this.#authenticateRequired(token);
+    actorUserId: string,
+  ): Promise<CharacterSheetSummary> {
     const now = this.#now();
 
     if (input.id === undefined) {
@@ -106,7 +104,7 @@ export class CharacterSheetService {
         createdAt: now,
         id,
         ikizamaId: input.metadata.ikizamaId ?? null,
-        ownerUserId: userId,
+        ownerUserId: actorUserId,
         plName: input.metadata.plName ?? null,
         primaryRyugiId: input.metadata.primaryRyugiId ?? null,
         type: "user",
@@ -114,21 +112,21 @@ export class CharacterSheetService {
       };
 
       // R2 first can leave an orphan object if D1 fails; cleanup is out of scope.
-      await this.#repository.putSnapshot(userId, id, toSnapshot(input));
+      await this.#repository.putSnapshot(actorUserId, id, input.snapshot);
       await this.#repository.insertMetadata(record);
 
-      return toMetadata(record, userId);
+      return toSummary(record, actorUserId);
     }
 
-    const record = await this.#requireOwnedRecord(input.id, userId);
+    const record = await this.#requireOwnedRecord(input.id, actorUserId);
     await this.#repository.putSnapshot(
       record.ownerUserId,
       record.id,
-      toSnapshot(input),
+      input.snapshot,
     );
     await this.#repository.updateMetadata(record.id, input.metadata, now);
 
-    return toMetadata(
+    return toSummary(
       {
         ...record,
         ...input.metadata,
@@ -137,29 +135,8 @@ export class CharacterSheetService {
         primaryRyugiId: input.metadata.primaryRyugiId ?? null,
         updatedAt: now,
       },
-      userId,
+      actorUserId,
     );
-  }
-
-  async #authenticate(token: string | undefined): Promise<string | null> {
-    if (token === undefined) {
-      return null;
-    }
-
-    const result = await this.#tokenVerifier.verify(token);
-
-    if (result.kind === "expired") throw new ApiError(419, "expired_token");
-    if (result.kind === "invalid") throw new ApiError(401, "invalid_token");
-
-    return result.userId;
-  }
-
-  async #authenticateRequired(token: string | undefined): Promise<string> {
-    const userId = await this.#authenticate(token);
-
-    if (userId === null) throw new ApiError(401, "unauthorized");
-
-    return userId;
   }
 
   async #requireOwnedRecord(
@@ -168,8 +145,10 @@ export class CharacterSheetService {
   ): Promise<CharacterSheetRecord> {
     const record = await this.#repository.getMetadata(id);
 
-    if (record === null) throw new ApiError(404, "not_found");
-    if (record.ownerUserId !== userId) throw new ApiError(403, "forbidden");
+    if (record === null) throw new ApplicationError("not_found");
+    if (record.ownerUserId !== userId) {
+      throw new ApplicationError("forbidden");
+    }
 
     return record;
   }

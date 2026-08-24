@@ -13,7 +13,7 @@
 - `npm --workspace=@neon-underrealm/frontend run test:coverage`: `test` と `test:contract` をcoverage有効で実行する。CIのfrontend test jobと同じテスト範囲を確認するときに使う。
 - `npm --workspace=@neon-underrealm/frontend run test:e2e`: Pagefindを含むローカルfixtureをbuildして、公開routeのbrowser behaviorを確認する。
 - `npm --workspace=@neon-underrealm/shared run test`: shared packageの公開API境界を型検査する。
-- `npm --workspace=@neon-underrealm/backend run test`: backendのservice / token verifier unit testとWorker境界の型検査を実行する。unit testはmock repositoryを直接注入し、spyによる差し替えを使わない。
+- `npm --workspace=@neon-underrealm/backend run test`: backendのservice / token verifier unit testとWorker境界の型検査を実行する。service unit testはmock repositoryとactor user IDを直接渡し、spyによる差し替えを使わない。authentication middlewareのHTTP contractはlocal API integration testで確認する。
 - local Workerは`backend/.wrangler/state/`をD1/R2の一時stateに使う。このpathとWranglerの一時bundleである`backend/.wrangler/tmp/`はGit ignoreする。開始前は`npm --workspace=@neon-underrealm/backend run local:reset`、続けて`npm --workspace=@neon-underrealm/backend run migrate:local`を実行する。`npm --workspace=@neon-underrealm/backend run dev:local`でWrangler local Workerを`8787`に起動し、別terminalで`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。`local:reset`は両pathを削除するため、確認後は必ず再実行する。CIも同じnpm scriptの順番を明示して実行する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。

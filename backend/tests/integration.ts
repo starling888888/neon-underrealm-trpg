@@ -8,7 +8,6 @@ const executeFile = promisify(execFile);
 
 type CreatedSheet = {
   id: string;
-  type: "sample" | "user";
 };
 
 const ownerHeaders = {
@@ -31,9 +30,8 @@ async function request(path: string, options: RequestInit = {}) {
 async function createSheet(pcName: string): Promise<CreatedSheet> {
   const response = await request("/character-sheets", {
     body: JSON.stringify({
-      imageBase64: null,
-      metadata: { pcName, rank: 1 },
-      snapshot: { profile: { pcName } },
+      metadata: { pcName, plName: "", rank: 1 },
+      snapshot: { imageBase64: null, profile: { pcName } },
     }),
     headers: ownerHeaders,
     method: "POST",
@@ -80,18 +78,25 @@ const user = await createSheet("user sheet");
 const anonymousList = await request("/character-sheets");
 assert.equal(anonymousList.status, 200);
 const anonymousBody = (await anonymousList.json()) as {
-  sample: Array<{ id: string; isOwner: boolean; pcName: string }>;
-  user: Array<{ id: string; isOwner: boolean }>;
+  sample: Array<{
+    id: string;
+    metadata: { createdAt: number; isOwner: boolean; pcName: string };
+  }>;
+  user: Array<{
+    id: string;
+    metadata: { isOwner: boolean; updatedAt: number };
+  }>;
 };
 assert.deepEqual(
-  anonymousBody.sample.map((sheet) => sheet.pcName),
+  anonymousBody.sample.map((sheet) => sheet.metadata.pcName),
   ["first sample", "second sample"],
 );
 assert.deepEqual(
   anonymousBody.user.map((sheet) => sheet.id),
   [user.id],
 );
-assert.equal(anonymousBody.user[0]?.isOwner, false);
+assert.equal(anonymousBody.user[0]?.metadata.isOwner, false);
+assert.equal(typeof anonymousBody.user[0]?.metadata.updatedAt, "number");
 
 const ownedGet = await request(`/character-sheets/${user.id}`, {
   headers: { Authorization: "Bearer test-token-owner" },
@@ -99,36 +104,42 @@ const ownedGet = await request(`/character-sheets/${user.id}`, {
 assert.equal(ownedGet.status, 200);
 const ownedBody = (await ownedGet.json()) as {
   id: string;
-  imageBase64: string | null;
-  isOwner: boolean;
-  snapshot: { profile: { pcName: string } };
+  metadata: {
+    createdAt: number;
+    isOwner: boolean;
+    updatedAt: number;
+  };
+  snapshot: { imageBase64: string | null; profile: { pcName: string } };
 };
 assert.equal(ownedBody.id, user.id);
-assert.equal(ownedBody.isOwner, true);
-assert.equal(ownedBody.imageBase64, null);
+assert.equal(ownedBody.metadata.isOwner, true);
+assert.equal(typeof ownedBody.metadata.createdAt, "number");
+assert.equal(typeof ownedBody.metadata.updatedAt, "number");
+assert.equal(ownedBody.snapshot.imageBase64, null);
 assert.equal(ownedBody.snapshot.profile.pcName, "user sheet");
 assert.equal(JSON.stringify(ownedBody).includes("ownerUserId"), false);
 
 const update = await request("/character-sheets", {
   body: JSON.stringify({
     id: user.id,
-    imageBase64: "updated-image",
     metadata: { pcName: "updated user", rank: 2 },
-    snapshot: { profile: { pcName: "updated user" } },
+    snapshot: {
+      imageBase64: "updated-image",
+      profile: { pcName: "updated user" },
+    },
   }),
   headers: ownerHeaders,
   method: "POST",
 });
 assert.equal(update.status, 200);
-const updatedBody = (await update.json()) as { type: string };
-assert.equal(updatedBody.type, "user");
+const updatedBody = (await update.json()) as { metadata: { type: string } };
+assert.equal(updatedBody.metadata.type, "user");
 
 const nonOwnerUpdate = await request("/character-sheets", {
   body: JSON.stringify({
     id: user.id,
-    imageBase64: null,
     metadata: { pcName: "forbidden", rank: 1 },
-    snapshot: {},
+    snapshot: { imageBase64: null },
   }),
   headers: otherHeaders,
   method: "POST",
@@ -138,9 +149,8 @@ assert.equal(nonOwnerUpdate.status, 403);
 const missingUpdate = await request("/character-sheets", {
   body: JSON.stringify({
     id: "11111111-1111-4111-8111-111111111111",
-    imageBase64: null,
     metadata: { pcName: "missing", rank: 1 },
-    snapshot: {},
+    snapshot: { imageBase64: null },
   }),
   headers: ownerHeaders,
   method: "POST",
@@ -152,8 +162,30 @@ const expiredRead = await request("/character-sheets", {
 });
 assert.equal(expiredRead.status, 419);
 
+const invalidRead = await request("/character-sheets", {
+  headers: { Authorization: "Bearer not-a-test-token" },
+});
+assert.equal(invalidRead.status, 401);
+
+const anonymousWrite = await request("/character-sheets", {
+  body: JSON.stringify({
+    metadata: { pcName: "anonymous", rank: 1 },
+    snapshot: { imageBase64: null },
+  }),
+  headers: { "Content-Type": "application/json" },
+  method: "POST",
+});
+assert.equal(anonymousWrite.status, 401);
+
 const invalidBody = await request("/character-sheets", {
-  body: JSON.stringify({}),
+  body: JSON.stringify({
+    metadata: {
+      ikizamaId: "invalid",
+      pcName: "invalid master ID",
+      rank: 1,
+    },
+    snapshot: { imageBase64: null },
+  }),
   headers: ownerHeaders,
   method: "POST",
 });

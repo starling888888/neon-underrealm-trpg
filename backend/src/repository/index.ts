@@ -1,22 +1,41 @@
 import type {
   CharacterSheetMetadataInput,
+  CharacterSheetSnapshot,
   CharacterSheetType,
 } from "@neon-underrealm/shared";
-import type { BackendBindings } from "./bindings.js";
-import type {
-  CharacterSheetRecord,
-  CharacterSheetRepository,
-  CharacterSheetSnapshot,
-} from "./character-sheets.js";
+import type { BackendBindings } from "../bindings.js";
+import type { CharacterSheetRecord } from "../domain/index.js";
+
+export type CharacterSheetRepository = {
+  deleteMetadata(id: string): Promise<void>;
+  deleteSnapshot(ownerUserId: string, id: string): Promise<void>;
+  getMetadata(id: string): Promise<CharacterSheetRecord | null>;
+  getSnapshot(
+    ownerUserId: string,
+    id: string,
+  ): Promise<CharacterSheetSnapshot | null>;
+  insertMetadata(record: CharacterSheetRecord): Promise<void>;
+  listMetadata(): Promise<CharacterSheetRecord[]>;
+  putSnapshot(
+    ownerUserId: string,
+    id: string,
+    snapshot: CharacterSheetSnapshot,
+  ): Promise<void>;
+  updateMetadata(
+    id: string,
+    metadata: CharacterSheetMetadataInput,
+    updatedAt: number,
+  ): Promise<void>;
+};
 
 type CharacterSheetRow = {
   created_at: number;
   id: string;
-  ikizama_id: string | null;
+  ikizama_id: CharacterSheetMetadataInput["ikizamaId"];
   owner_user_id: string;
   pc_name: string;
   pl_name: string | null;
-  primary_ryugi_id: string | null;
+  primary_ryugi_id: CharacterSheetMetadataInput["primaryRyugiId"];
   rank: number;
   type: CharacterSheetType;
   updated_at: number;
@@ -107,28 +126,16 @@ export class CloudflareCharacterSheetRepository
   }
 
   async listMetadata(): Promise<CharacterSheetRecord[]> {
-    const [user, sample] = await Promise.all([
-      this.#database
-        .prepare(
-          `SELECT id, owner_user_id, type, pc_name, pl_name, rank,
-                  primary_ryugi_id, ikizama_id, created_at, updated_at
-             FROM character_sheets
-            WHERE type = 'user'
-            ORDER BY updated_at DESC`,
-        )
-        .all<CharacterSheetRow>(),
-      this.#database
-        .prepare(
-          `SELECT id, owner_user_id, type, pc_name, pl_name, rank,
-                  primary_ryugi_id, ikizama_id, created_at, updated_at
-             FROM character_sheets
-            WHERE type = 'sample'
-            ORDER BY created_at ASC`,
-        )
-        .all<CharacterSheetRow>(),
-    ]);
+    const result = await this.#database
+      .prepare(
+        `SELECT id, owner_user_id, type, pc_name, pl_name, rank,
+                primary_ryugi_id, ikizama_id, created_at, updated_at
+           FROM character_sheets
+          ORDER BY updated_at DESC`,
+      )
+      .all<CharacterSheetRow>();
 
-    return [...user.results, ...sample.results].map(toRecord);
+    return result.results.map(toRecord);
   }
 
   async putSnapshot(

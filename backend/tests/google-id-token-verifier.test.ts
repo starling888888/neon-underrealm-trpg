@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from "jose";
-import { GoogleIdTokenVerifier } from "../src/token-verifiers.js";
+import { GoogleIdTokenVerifier } from "../src/auth/token-verifier.js";
 
 const clientId = "test-client-id";
 
