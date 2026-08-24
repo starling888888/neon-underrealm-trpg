@@ -21,7 +21,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 - `docs/requirements/character-sheet.md`を、ローカル保存に加えてGoogle認証、クラウド保存、複数キャラクター選択を扱う要件へ更新する。
 - `docs/requirements/architecture.md`を、GitHub Pagesの静的frontendと独立したCloudflare backendを許容する構成へ更新する。
 - `docs/out-of-scope.md`から今回正式に対象化する認証、サーバー・DB・クラウド保存、複数キャラクター管理を除外し、対象外を再定義する。
-- `docs/development-structure.md`、`docs/testing.md`、必要に応じて`docs/deployment.md`を、workspace、backend、独立CI/CD、Terraformの責務へ整合させる。
+- `docs/development-structure.md`、`docs/testing.md`、必要に応じて`docs/deployment.md`を、workspace、backend、独立CI/CD、Wranglerの責務へ整合させる。
 - 現行要件が「画像はJSONへ含めない」とする点は、R2へ保存するクラウド用snapshotにはBase64エンコード済み画像を含める仕様へ更新する。ローカルのIndexedDB画像recordの責務は維持する。
 
 ### Workspaceと独立CI/CD
@@ -29,15 +29,15 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 - 現在のAstroサイトを`frontend/`へ移動し、`backend/`と`packages/shared/`を追加する。rootには`.agents/`、`.github/`、`.codex/`、`docs/`、`AGENTS.md`、workspace管理設定を残す。
 - frontendとbackendは互いの内部moduleをimportせず、API DTO、metadata型、validation schema、API error型はshared packageを経由して共有する。
 - frontendとbackendは、dependency install、format/lint、type check、unit/contract test、build、deployを独立して実行できる。CIはrootの共通checkを先行して実行し、workspaceのtestは各directory、root依存設定、workflowの変更時だけ並列実行する。shared packageの変更ではsharedを検証し、依存workspaceの型検査はroot checkで確認する。
-- frontendはGitHub Pages、backendはCloudflareへdeployする。Gateと親branchではbackendのGitHub Actions deployを行わない。デバッグで必要なbackend deployは、ユーザー承認後にローカルTerraformから手動で実行する。GitHub Actionsによるbackend deployは`main` merge後のpushだけに限定し、`workflow_dispatch`を含む手動起動を許可しない。
+- frontendはGitHub Pages、backendはCloudflareへdeployする。Gateと親branchではbackendのGitHub Actions deployを行わない。デバッグで必要なbackend deployは、ユーザー承認後にローカルWrangler commandで手動実行する。GitHub Actionsによるbackend deployは`main` merge後のpushだけに限定し、`workflow_dispatch`を含む手動起動を許可しない。
 
 ### BackendとInfrastructure as Code
 
 - backendはTypeScriptのCloudflare Workerとし、HTTP API、Google ID Token検証、D1、R2を扱う。
-- TerraformでWorker、D1、R2、Worker bindings、backend deployに必要なCloudflare resourceを管理する。resource deployのauthorityをTerraformとWrangler等へ二重化しない。
-- Terraform stateはローカルとCIが同じremote backendを参照できるようにし、state用resourceのbootstrapが必要なら手順を文書化する。
-- Cloudflare API token、Terraform state credential、Google設定値などのsecretはGit管理しない。
-- Google Cloud project、Google Auth Platformのbranding、GIS用Web OAuth client、Authorized JavaScript originsはユーザーがCloud Consoleで事前に作成・登録する。これらはTerraform管理対象に含めない。G3は発行済みclient IDを設定値として受け取る。
+- `wrangler.jsonc`でWorkerとD1/R2 bindingを管理し、Wranglerがremote migrationとbackend deployを実行する。resource deployのauthorityを複数toolへ二重化しない。
+- D1/R2 resourceがない初回deployではWrangler automatic provisioningを使う。このBeta機能の制約が初期スコープを超える場合は、明示的なresource管理方針を別taskで決める。
+- Cloudflare API token、Google設定値などのsecretはGit管理しない。
+- Google Cloud project、Google Auth Platformのbranding、GIS用Web OAuth client、Authorized JavaScript originsはユーザーがCloud Consoleで事前に作成・登録する。これらはWrangler管理対象に含めない。G3は発行済みclient IDを設定値として受け取る。
 - 主要な新規dependencyは、公式性、継続保守、利用実績、security上の懸念を実装時点で確認し、選定理由を該当child issueへ記録する。
 
 ### 認証、データ、API
@@ -89,7 +89,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 - [ ] Gate planに従う全child issueがユーザー承認を受け、完了記録の監査を通過している。
 - [ ] frontend、backend、shared packageがworkspaceとして分離され、frontend/backend間の直接内部importがない。
 - [ ] frontendとbackendのCI、test、build、deployが独立し、shared変更では双方の検証が動く。
-- [ ] TerraformでWorker、D1、R2、bindings、remote stateの運用が再現可能である。
+- [ ] WranglerでWorker、D1、R2、binding、remote migration、deployの運用が再現可能である。
 - [ ] Google ID Tokenをserver側で検証し、内部`userId`と所有権を安全に扱う。
 - [ ] D1 metadataとR2 snapshotが指定のkey・公開範囲・部分失敗方針に従う。
 - [ ] 公開GETとowner限定write/delete、CORS、error contract、payload上限がtestで確認されている。
@@ -103,7 +103,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 - [ ] frontend移動Gateに不要なfrontend挙動変更を混在させない。
 - [ ] package managerの変更や新規dependencyは必要性・代替案・初期スコープ上の理由をchild issueへ記録する。
-- [ ] client secret、Cloudflare credential、Terraform state credentialをGit管理しない。
+- [ ] client secret、Cloudflare credential、Wrangler local stateをGit管理しない。
 - [ ] `userId`をclient入力または公開responseで扱わない。
 - [ ] UI disabledをserver authorizationの代替にしない。
 - [ ] local保存とクラウド保存の責務を混同しない。
@@ -116,7 +116,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 - workspace rootのpackage/workflow/configuration
 - `frontend/`へ移動する既存Astro、React、public、data、scripts、tests、設定
-- `backend/`のWorker、auth、D1/R2 adapter、API、tests、Terraform
+- `backend/`のWorker、auth、D1/R2 adapter、API、tests、Wrangler設定
 - `packages/shared/`のAPI DTO、metadata、schema、error contract
 - `.github/workflows/`、`docs/requirements/`、`docs/out-of-scope.md`、`docs/development-structure.md`、`docs/testing.md`、`docs/deployment.md`
 - `docs/design/character-sheet/notes.md`（design-image-generationとユーザー承認後のみ）
@@ -146,4 +146,4 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 ### Historical remote snapshot
 
-このissueの初稿はremote `main` snapshotから作成された。上記のlocal validation summaryが、そのremote draftの未検証項目に優先する。Google CloudのOAuth Client/authorized origin、Cloudflare resource、Terraform remote state、実装時点のlibrary最新性は、対応Gateの着手時に別途確認が必要である。
+このissueの初稿はremote `main` snapshotから作成された。上記のlocal validation summaryが、そのremote draftの未検証項目に優先する。Google CloudのOAuth Client/authorized origin、Cloudflare resource、Wrangler automatic provisioning、実装時点のlibrary最新性は、対応Gateの着手時に別途確認が必要である。

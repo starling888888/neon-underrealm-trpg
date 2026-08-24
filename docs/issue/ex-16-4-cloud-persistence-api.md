@@ -92,7 +92,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [ ] `sample`へ変更したrecordの`userId`を維持し、作成者のowner権限を失わせていない。
 - [ ] local/test verifierがproduction compositionから選択されない。
 - [ ] 新規dependencyを追加する場合、選定理由、代替案、初期スコープに必要な理由をこのissueへ記録する。
-- [ ] credential、token、Terraform state、local service dataをGit管理しない。
+- [ ] credential、token、Wrangler local stateをGit管理しない。
 - [ ] G5 UI機能やscope外のAPIを混在させていない。
 - [ ] ユーザーの未コミット変更を破壊していない。
 

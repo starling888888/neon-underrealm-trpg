@@ -306,7 +306,7 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - Webキャラクターシートだけは `frontend/src/character-sheet/` のReact Islandとして実装し、static site全体をSPAにはしない。端末内の永続化はlocalStorageとIndexedDBだけを使う。
 - 検索はPagefindの静的indexを公開用build成果物へ生成し、外部検索サービスを使わない。
 - Cloudflare Web Analyticsのmanual beaconは本番deploy buildだけでHTMLへ出力する。通常build、PR検証、Visual Testでは出力しない。
-- `backend/` はHonoをHTTP entrypointにするCloudflare Workerである。D1とR2の本番resource・binding・deployはTerraformを唯一の管理authorityとし、local開発とintegration testではWrangler / Miniflare / workerdのlocal D1/R2 bindingを使う。
+- `backend/` はHonoをHTTP entrypointにするCloudflare Workerである。`backend/wrangler.jsonc`をWorkerとD1/R2 bindingの正本とし、Wranglerが本番resourceのautomatic provisioning、remote migration、deployを担う。local開発とintegration testではWrangler / Miniflare / workerdのlocal D1/R2 bindingを使う。
 - character sheet cloud persistence backendのAPI、dependency境界、DI、error contract、local/production adapterの詳細は`docs/architectures/backend.md`を正本とする。
 
 ## 3. 技術スタック
@@ -326,7 +326,7 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - Astro scoped CSS + CSS variables
 - Pagefind
 - Hono
-- Cloudflare Workers、D1、R2、Terraform
+- Cloudflare Workers、D1、R2、Wrangler
 
 - Zod
 - read-excel-file

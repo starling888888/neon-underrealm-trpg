@@ -114,6 +114,14 @@ source種別は以下を使う。
 - 観測した失敗: Terraform S3 backendが読む環境変数と`init`のbackend設定境界を十分に確認せず、`local.tfvars`を独自解析して`.env`とbackend configを生成する`terraform-init.mjs`を導入した。ユーザーの指摘後に公式仕様を調査し、ローカル専用wrapperとTerraform標準の環境変数・`TF_CLI_ARGS_init`だけで足りることを確認した。
 - 一次対応: 独自MJSとCIでの`.env`生成を撤去した。localでは`.env`を子processだけへ読む薄いshell wrapper、CIではRepository Variables / Secretsから直接渡すTerraform commandへ分離した。
 
+#### Kept unnecessary local runner scripts and Terraform after Wrangler was sufficient
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のlocal D1/R2とbackend deploy設計
+- 観測した失敗: Wranglerがlocal D1/R2 state、migration、Worker deployを扱えることを先に確認せず、state cleanup用shell script群とTerraform remote stateを追加・維持した。ユーザーから、npm scriptと明示的な手順書で十分であり、Terraform自体も不要ではないかと指摘された。
+- 一次対応: local手順をnpm scriptと`docs/testing.md`へ縮約し、Terraform-managed resourceをdestroyしたうえで、CI・local設定・親issue・architecture・deployment文書をWranglerのautomatic provisioning、remote migration、deployへ統一した。
+
 ### browser-test flake diagnosis
 
 #### Repeated flaky character-sheet section-frame browser test
