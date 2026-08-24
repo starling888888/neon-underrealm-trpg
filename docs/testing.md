@@ -14,7 +14,7 @@
 - `npm --workspace=@neon-underrealm/frontend run test:e2e`: Pagefindを含むローカルfixtureをbuildして、公開routeのbrowser behaviorを確認する。
 - `npm --workspace=@neon-underrealm/shared run test`: shared packageの公開API境界を型検査する。
 - `npm --workspace=@neon-underrealm/backend run test`: backendのdiagnostic unit testとWorker境界の型検査を実行する。
-- `npm --workspace=@neon-underrealm/backend run dev:local` は一時directoryへD1 migrationを適用し、Wrangler local Workerを`8787`で起動する。終了時にlocal D1/R2 stateも削除する。E2Eは`npm --workspace=@neon-underrealm/backend run test:integration:local`で同じ手順を完結させ、実Workerのlocal D1/R2 bindingを確認する。
+- local Workerは`backend/.wrangler/state/`をD1/R2の一時stateに使う。このpathはGit ignoreする。開始前は`npm --workspace=@neon-underrealm/backend run local:reset`、続けて`npm --workspace=@neon-underrealm/backend run migrate:local`を実行する。`npm --workspace=@neon-underrealm/backend run dev:local`でWrangler local Workerを`8787`に起動し、別terminalで`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。確認後は必ず`local:reset`を再実行する。CIも同じnpm scriptの順番を明示して実行する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。
 

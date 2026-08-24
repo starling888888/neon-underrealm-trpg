@@ -53,7 +53,8 @@ resource "terraform_data" "character_data_migrations" {
   ]
 
   provisioner "local-exec" {
-    command = "${path.module}/../bin/apply-d1-migrations.sh ${cloudflare_d1_database.character_data.name}"
+    command     = "../node_modules/.bin/wrangler d1 migrations apply ${cloudflare_d1_database.character_data.name} --remote"
+    working_dir = "${path.module}/.."
   }
 
   depends_on = [cloudflare_d1_database.character_data]
