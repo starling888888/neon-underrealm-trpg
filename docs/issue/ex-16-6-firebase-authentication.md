@@ -1327,6 +1327,8 @@ Google subをowner_user_idとして保存したproduction recordが存在する�
 
 # 完了条件
 
+**TODO:** creditがリセットされたらcodexでチェックし直してarchiveする。
+
 - [ ] Firebase公式Web SDKがfrontend dependencyとして追加されている。
 - [ ] `@react-oauth/google`が削除されている。
 - [ ] Firebase App / Authが一度だけ初期化される。
