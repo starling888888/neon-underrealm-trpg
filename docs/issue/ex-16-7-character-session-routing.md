@@ -957,6 +957,7 @@ remote characterのroute stateは外部API requestを伴い得るため、明示
 - JSON import成功時は、remote / localを問わず未保存draft persistenceを確定してからquery parameterなしURLへ遷移する。
 - 提供されたヘルプ修正文言を忠実にcomponent markupへ反映する。追加仕様に合わせ、DB保存・コピー保存・DB削除・初期化・JSON importのdialogとtoastも更新する。
 - form valuesのdefault state比較には、JSON互換値向けで小さく、用途に十分な`dequal/lite`を直接dependencyとして使用する。自前再帰比較は削除する。
+- コピー保存はremote character専用とし、query parameterなしの未保存characterでは無効化する。
 
 ### 対応完了チェックリスト
 

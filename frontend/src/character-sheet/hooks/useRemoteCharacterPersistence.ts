@@ -377,7 +377,12 @@ export default function useRemoteCharacterPersistence(
 
   const copySave = useCallback(
     (pcName: string, plName: string, isPublic: boolean) => {
-      if (!isAuthenticated || isRemoteOperationInProgress) return;
+      if (
+        !isAuthenticated ||
+        !isRemoteRoute ||
+        isRemoteOperationInProgress
+      )
+        return;
       setIsRemoteOperationInProgress(true);
       const values = form.getValues();
       void runApiRequest(
@@ -414,6 +419,7 @@ export default function useRemoteCharacterPersistence(
       form,
       isAuthenticated,
       isRemoteOperationInProgress,
+      isRemoteRoute,
       notify,
       onApiError,
       onNavigate,
@@ -540,6 +546,7 @@ export default function useRemoteCharacterPersistence(
       dialogProps,
       isCopySaveDisabled:
         !isAuthenticated ||
+        !isRemoteRoute ||
         isRootOperationInProgress ||
         isRemoteOperationInProgress,
       isDeleteDisabled:
@@ -567,6 +574,7 @@ export default function useRemoteCharacterPersistence(
       isRemoteCharacterLoading,
       isRemoteOperationInProgress,
       isRootOperationInProgress,
+      isRemoteRoute,
       openCharacterList,
       openCopySave,
       openDelete,

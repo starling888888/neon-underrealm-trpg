@@ -177,7 +177,9 @@ describe("useRemoteCharacterPersistence", () => {
     };
     const clearCharacterImageForCopy = vi.fn(async () => false);
     const { bindRemoteSummary, formRef, notify, onNavigate, result } =
-      renderPersistenceHarness(characterSheetApi, clearCharacterImageForCopy);
+      renderPersistenceHarness(characterSheetApi, clearCharacterImageForCopy, undefined, {
+        remoteCharacterId: "source-character",
+      });
 
     act(() =>
       result.current.dialogProps.copySave.onConfirm(
@@ -200,6 +202,24 @@ describe("useRemoteCharacterPersistence", () => {
     );
     expect(clearCharacterImageForCopy).toHaveBeenCalledOnce();
     expect(onNavigate).toHaveBeenCalledWith("created");
+  });
+
+  it("disables copy save and ignores confirmation for an unsaved character", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const { result } = renderPersistenceHarness(characterSheetApi);
+
+    expect(result.current.isCopySaveDisabled).toBe(true);
+    act(() =>
+      result.current.dialogProps.copySave.onConfirm("コピーPC", "コピーPL", false),
+    );
+
+    await Promise.resolve();
+    expect(characterSheetApi.save).not.toHaveBeenCalled();
   });
 
   it("moves an updated user summary to the front of the cache", async () => {
