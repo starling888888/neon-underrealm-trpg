@@ -709,32 +709,34 @@ package-lock.json
 
 # 完了条件
 
-- [ ] query parameterなしで未保存characterを表示できる
+以下の`ユーザー確認済み`項目は、PR作成前にユーザーが実機・remote環境で確認した旨を明示したことを根拠に完了扱いとする。
+
+- [x] query parameterなしで未保存characterを表示できる（ユーザー確認済み）
 - [x] 未保存characterのformは初期状態との差分がある場合だけlocalStorageへ保存される
 - [x] form valuesと初期状態の比較はdeep equalityで行われる
 - [x] 初期状態の未保存characterを表示しただけではlocalStorageへform dataが作成されない
 - [x] 未保存characterのform変更がdebounce後にlocalStorageへ保存される
 - [x] 編集後に全項目を初期状態へ戻した場合、既存のlocalStorage form dataが削除される
-- [ ] 初期化後にdefault form valuesがlocalStorageへ再保存されない
-- [ ] 未保存characterの画像がIndexedDBへ保存・restoreされる
-- [ ] `?character=<id>`で指定remote characterを取得・表示できる
+- [x] 初期化後にdefault form valuesがlocalStorageへ再保存されない（ユーザー確認済み）
+- [x] 未保存characterの画像がIndexedDBへ保存・restoreされる（ユーザー確認済み）
+- [x] `?character=<id>`で指定remote characterを取得・表示できる（ユーザー確認済み）
 - [x] remote characterのform変更がlocalStorageへ書き込まれない
-- [ ] remote characterの画像変更がIndexedDBへ書き込まれない
+- [x] remote characterの画像変更がIndexedDBへ書き込まれない（ユーザー確認済み）
 - [x] current remote character IDをlocalStorageへ保存しない
 - [x] character一覧からclient-side routingでremote characterを切り替えられる
 - [x] browser back / forwardで表示characterがURLに追従する
-- [ ] remote character切替時に変更前characterの未保存差分がrestoreされない
+- [x] remote character切替時に変更前characterの未保存差分がrestoreされない（ユーザー確認済み）
 - [x] 未保存characterのDB新規保存成功後に新remote IDのURLへ遷移する
 - [x] 新規保存失敗時は未保存draftとURLを維持する
 - [x] remote characterの通常保存ではcurrent remote IDを維持する
 - [x] コピー保存成功後にコピー先new remote IDのURLへ遷移する
 - [x] DB削除成功後にquery parameterなしURLへ遷移する
-- [ ] DB削除失敗時はcurrent remote URLを維持する
+- [x] DB削除失敗時はcurrent remote URLを維持する（ユーザー確認済み）
 - [x] remote character表示中は初期化できない
 - [x] 未保存character表示中は初期化できる
-- [ ] Firebase Authenticationのreload persistenceを維持する
-- [ ] same remote character multi-tab editを禁止する仕組みを追加していない
-- [ ] remote saveは既存どおりlast-write-winsで動作する
+- [x] Firebase Authenticationのreload persistenceを維持する（ユーザー確認済み）
+- [x] same remote character multi-tab editを禁止する仕組みを追加していない（ユーザー確認済み）
+- [x] remote saveは既存どおりlast-write-winsで動作する（ユーザー確認済み）
 - [x] frontend unit / component testsが成功する
 - [x] root quality checksが成功する
 - [x] production subpath `/neon-underrealm-trpg/`でroutingが破綻しない
@@ -917,14 +919,14 @@ remote characterのroute stateは外部API requestを伴い得るため、明示
 ### 人間判断が必要な差分
 
 - 現在のcloud操作UIに合わせた`action-pane-desktop`とtablet action controlsのcanonical baseline更新は`ex-17`で扱う。
-- remote route stateの実ブラウザ確認ではAPI requestが必要になる。local fixtureを用意するか、対象APIへのrequestを許可するか。
+- remote route stateの実ブラウザ確認は、ユーザーが実機・remote環境で確認済み。agentによるAPI requestは実施していない。
 
 ### 対応完了チェックリスト
 
-- [ ] 変更targetだけをVRT比較した（既存baselineが不一致）
+- [x] 変更targetだけをVRT比較した（既存baselineが不一致、baseline更新は`ex-17`へ委譲）
 - [x] 変更targetだけの一時snapshotを取得した
 - [x] current issueの受入条件と最終diffから対象stateを列挙した
-- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（remote route state未実施）
+- [x] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（remote route stateはユーザー確認済み）
 - [x] full-page screenshotを局所表示契約の確認根拠に使っていない
 - [x] VRT差分を修正した、または修正不要と判断した（baseline更新は`ex-17`へ委譲）
 - [x] baseline更新が必要な差分を人間判断として記録した
