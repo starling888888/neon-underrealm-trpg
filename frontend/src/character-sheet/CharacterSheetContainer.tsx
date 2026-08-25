@@ -1,7 +1,6 @@
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useCallback, useEffect, useMemo } from "react";
 import styles from "./CharacterSheetContainer.module.css";
-import useGoogleAuthentication from "./auth/useGoogleAuthentication";
+import useFirebaseAuthentication from "./auth/useFirebaseAuthentication";
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
 import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
@@ -34,22 +33,8 @@ const imageErrorMessages = {
 } as const;
 
 /** React Island root and orchestration boundary for the character sheet. */
-type CharacterSheetContainerProps = {
-  googleClientId: string;
-};
-
-export default function CharacterSheetContainer({
-  googleClientId,
-}: CharacterSheetContainerProps) {
-  return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <CharacterSheetContent />
-    </GoogleOAuthProvider>
-  );
-}
-
-function CharacterSheetContent() {
-  const authentication = useGoogleAuthentication();
+export default function CharacterSheetContainer() {
+  const authentication = useFirebaseAuthentication();
   const rootState = useCharacterSheetRootState();
   const toast = useCharacterSheetToast();
   const form = rootState.form;

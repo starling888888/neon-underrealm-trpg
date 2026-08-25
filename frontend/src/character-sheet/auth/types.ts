@@ -1,16 +1,14 @@
-import type { CredentialResponse } from "@react-oauth/google";
-
-export type GoogleAuthenticationStatus =
+export type AuthenticationStatus =
+  | "initializing"
   | "signed-out"
   | "signing-in"
   | "signed-in"
   | "error";
 
-export type GoogleAuthentication = {
-  idToken?: string | null;
-  onCredential: (credentialResponse: CredentialResponse) => void;
-  onLoginError: () => void;
-  onLoginStarted: () => void;
-  onLogout: () => void;
-  status: GoogleAuthenticationStatus;
+export type Authentication = {
+  getIdToken: (forceRefresh?: boolean) => Promise<string | null>;
+  onLogin: () => Promise<void>;
+  onLogout: () => Promise<void>;
+  sessionKey: string | null;
+  status: AuthenticationStatus;
 };

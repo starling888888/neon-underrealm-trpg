@@ -11,7 +11,7 @@ import {
   createCharacterSheetApiClient,
   type CharacterSheetApiClient,
 } from "../api/character-sheets";
-import type { GoogleAuthentication } from "../auth/types";
+import type { Authentication } from "../auth/types";
 import { characterSheetDictionary } from "../dictionary";
 import type { CharacterSheetFormValues } from "../form/values";
 import type { CharacterImageRecord } from "../schemas/character-image";
@@ -29,7 +29,7 @@ type RemoteCharacterOperations = {
 };
 
 type UseRemoteCharacterPersistenceArgs = RemoteCharacterOperations & {
-  authentication: GoogleAuthentication;
+  authentication: Authentication;
   characterImage: CharacterImageRecord | null;
   form: UseFormReturn<CharacterSheetFormValues>;
   isRootOperationInProgress: boolean;
@@ -71,8 +71,19 @@ export type RemoteCharacterPersistenceDialogProps = {
   };
 };
 
+class AuthenticationSessionExpiredError extends Error {}
+class AuthenticationTokenUnavailableError extends Error {}
+
 const { authentication: authenticationCopy, persistence } =
   characterSheetDictionary.characterSheet;
+
+const createRemoteRefreshKey = (sessionKey: string, id: string) =>
+  `${sessionKey}\u0000${id}`;
+
+function requireIdToken(idToken: string | null): string {
+  if (idToken === null) throw new AuthenticationTokenUnavailableError();
+  return idToken;
+}
 
 /** Coordinates remote API state without making the island Container a feature store. */
 export default function useRemoteCharacterPersistence(
@@ -97,9 +108,8 @@ export default function useRemoteCharacterPersistence(
   const characterSheetApi = apiRef.current;
   const [characterListCache, setCharacterListCache] =
     useState<CharacterSheetListResponse | null>(null);
-  const [characterListCacheToken, setCharacterListCacheToken] = useState<
-    string | null
-  >(null);
+  const [characterListCacheSessionKey, setCharacterListCacheSessionKey] =
+    useState<string | null>(null);
   const [isCharacterListLoading, setIsCharacterListLoading] = useState(false);
   const [isCharacterListOpen, setIsCharacterListOpen] = useState(false);
   const [isSaveOpen, setIsSaveOpen] = useState(false);
@@ -107,22 +117,77 @@ export default function useRemoteCharacterPersistence(
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isRemoteOperationInProgress, setIsRemoteOperationInProgress] =
     useState(false);
-  const previousIdToken = useRef<string | null | undefined>(undefined);
-  const idToken = authentication.idToken ?? null;
+  const previousSessionKey = useRef<string | null | undefined>(undefined);
+  const remoteRefreshKeyRef = useRef<string | null>(null);
+  const characterListRequestVersionRef = useRef(0);
+  const sessionKey = authentication.sessionKey;
+  const isAuthenticated = sessionKey !== null;
   const isEditable =
-    remoteCharacter === null || (idToken !== null && remoteCharacter.isOwner);
+    remoteCharacter === null || (isAuthenticated && remoteCharacter.isOwner);
+
+  const runApiRequest = useCallback(
+    async <T>(
+      request: (idToken: string | null) => Promise<T>,
+      requiresAuthentication: boolean,
+    ): Promise<T> => {
+      const requestSessionKey = authentication.sessionKey;
+      if (requiresAuthentication && requestSessionKey === null) {
+        throw new AuthenticationTokenUnavailableError();
+      }
+
+      let idToken: string | null = null;
+      if (requestSessionKey !== null) {
+        idToken = await authentication.getIdToken();
+        if (idToken === null) {
+          throw new AuthenticationTokenUnavailableError();
+        }
+      }
+
+      try {
+        return await request(idToken);
+      } catch (error) {
+        if (
+          !(error instanceof CharacterSheetApiError) ||
+          !error.isExpiredToken ||
+          requestSessionKey === null
+        ) {
+          throw error;
+        }
+
+        const refreshedToken = await authentication.getIdToken(true);
+        if (refreshedToken === null) {
+          await authentication.onLogout().catch(() => undefined);
+          throw new AuthenticationSessionExpiredError();
+        }
+
+        try {
+          return await request(refreshedToken);
+        } catch (retryError) {
+          if (
+            retryError instanceof CharacterSheetApiError &&
+            retryError.isExpiredToken
+          ) {
+            await authentication.onLogout().catch(() => undefined);
+            throw new AuthenticationSessionExpiredError();
+          }
+          throw retryError;
+        }
+      }
+    },
+    [authentication],
+  );
 
   const onApiError = useCallback(
     (error: unknown, fallback: string) => {
-      if (error instanceof CharacterSheetApiError && error.isExpiredToken) {
-        authentication.onLogout();
+      if (error instanceof AuthenticationSessionExpiredError) {
         notify("error", authenticationCopy.sessionExpired);
         return;
       }
       notify("error", fallback);
     },
-    [authentication, notify],
+    [notify],
   );
+
   const updateCachedSummary = useCallback((summary: CharacterSheetSummary) => {
     setCharacterListCache((current) => {
       if (current === null) return current;
@@ -144,58 +209,114 @@ export default function useRemoteCharacterPersistence(
   }, []);
 
   useEffect(() => {
-    const previous = previousIdToken.current;
-    previousIdToken.current = idToken;
-    if (previous === undefined || previous === idToken) return;
+    if (authentication.status === "initializing") return;
+    const previous = previousSessionKey.current;
+    previousSessionKey.current = sessionKey;
+    if (previous === undefined || previous === sessionKey) return;
+
     setCharacterListCache(null);
-    setCharacterListCacheToken(null);
-    if (remoteCharacter === null) return;
-    if (idToken === null) {
+    setCharacterListCacheSessionKey(null);
+    characterListRequestVersionRef.current += 1;
+    remoteRefreshKeyRef.current = null;
+
+    if (remoteCharacter !== null && sessionKey === null) {
       updateRemoteCharacterMetadata({
         id: remoteCharacter.id,
         metadata: { isOwner: false, isPublic: remoteCharacter.isPublic },
       });
+    }
+  }, [
+    authentication.status,
+    remoteCharacter,
+    sessionKey,
+    updateRemoteCharacterMetadata,
+  ]);
+
+  useEffect(() => {
+    if (
+      authentication.status !== "signed-in" ||
+      sessionKey === null ||
+      remoteCharacter === null
+    ) {
       return;
     }
-    void characterSheetApi
-      .get(remoteCharacter.id, idToken)
+
+    const refreshKey = createRemoteRefreshKey(sessionKey, remoteCharacter.id);
+    if (remoteRefreshKeyRef.current === refreshKey) return;
+    remoteRefreshKeyRef.current = refreshKey;
+
+    void runApiRequest(
+      (idToken) => characterSheetApi.get(remoteCharacter.id, idToken),
+      false,
+    )
       .then((character) => restoreRemoteCharacter(character))
       .catch(() => undefined);
   }, [
+    authentication.status,
     characterSheetApi,
-    idToken,
     remoteCharacter,
     restoreRemoteCharacter,
-    updateRemoteCharacterMetadata,
+    runApiRequest,
+    sessionKey,
   ]);
 
   const openCharacterList = useCallback(() => {
     setIsCharacterListOpen(true);
-    if (characterListCache !== null && characterListCacheToken === idToken) {
+  }, []);
+
+  useEffect(() => {
+    if (
+      !isCharacterListOpen ||
+      authentication.status === "initializing" ||
+      (characterListCache !== null &&
+        characterListCacheSessionKey === sessionKey)
+    ) {
       return;
     }
+
     setIsCharacterListLoading(true);
-    void characterSheetApi
-      .list(idToken)
+    const requestVersion = ++characterListRequestVersionRef.current;
+    const requestSessionKey = sessionKey;
+    void runApiRequest((idToken) => characterSheetApi.list(idToken), false)
       .then((response) => {
+        if (requestVersion !== characterListRequestVersionRef.current) return;
         setCharacterListCache(response);
-        setCharacterListCacheToken(idToken);
+        setCharacterListCacheSessionKey(requestSessionKey);
       })
-      .catch((error) => onApiError(error, persistence.listLoadError))
-      .finally(() => setIsCharacterListLoading(false));
+      .catch((error) => {
+        if (requestVersion === characterListRequestVersionRef.current) {
+          onApiError(error, persistence.listLoadError);
+        }
+      })
+      .finally(() => {
+        if (requestVersion === characterListRequestVersionRef.current) {
+          setIsCharacterListLoading(false);
+        }
+      });
   }, [
+    authentication.status,
     characterListCache,
-    characterListCacheToken,
+    characterListCacheSessionKey,
     characterSheetApi,
-    idToken,
+    isCharacterListOpen,
     onApiError,
+    runApiRequest,
+    sessionKey,
   ]);
+
   const selectCharacter = useCallback(
     (id: string) => {
       setIsCharacterListLoading(true);
-      void characterSheetApi
-        .get(id, idToken)
-        .then((character) => restoreRemoteCharacter(character))
+      void runApiRequest((idToken) => characterSheetApi.get(id, idToken), false)
+        .then(async (character) => {
+          if (sessionKey !== null) {
+            remoteRefreshKeyRef.current = createRemoteRefreshKey(
+              sessionKey,
+              id,
+            );
+          }
+          return restoreRemoteCharacter(character);
+        })
         .then((restored) => {
           if (restored) {
             setIsCharacterListOpen(false);
@@ -206,25 +327,42 @@ export default function useRemoteCharacterPersistence(
         .catch((error) => onApiError(error, persistence.loadError))
         .finally(() => setIsCharacterListLoading(false));
     },
-    [characterSheetApi, idToken, notify, onApiError, restoreRemoteCharacter],
+    [
+      characterSheetApi,
+      notify,
+      onApiError,
+      restoreRemoteCharacter,
+      runApiRequest,
+      sessionKey,
+    ],
   );
+
   const save = useCallback(
     (pcName: string, isPublic: boolean) => {
-      if (idToken === null || isRemoteOperationInProgress) return;
+      if (!isAuthenticated || isRemoteOperationInProgress) return;
       setIsRemoteOperationInProgress(true);
-      void characterSheetApi
-        .save(
-          createCharacterSheetInput({
-            id: remoteCharacter?.id,
-            image: characterImage,
-            isPublic,
-            pcName,
-            plName: form.getValues().profile.playerName,
-            values: form.getValues(),
-          }),
-          idToken,
-        )
+      void runApiRequest(
+        (idToken) =>
+          characterSheetApi.save(
+            createCharacterSheetInput({
+              id: remoteCharacter?.id,
+              image: characterImage,
+              isPublic,
+              pcName,
+              plName: form.getValues().profile.playerName,
+              values: form.getValues(),
+            }),
+            requireIdToken(idToken),
+          ),
+        true,
+      )
         .then((summary) => {
+          if (sessionKey !== null) {
+            remoteRefreshKeyRef.current = createRemoteRefreshKey(
+              sessionKey,
+              summary.id,
+            );
+          }
           form.setValue("profile.pcName", pcName);
           bindRemoteSummary(summary);
           updateCachedSummary(summary);
@@ -239,31 +377,43 @@ export default function useRemoteCharacterPersistence(
       characterImage,
       characterSheetApi,
       form,
-      idToken,
+      isAuthenticated,
       isRemoteOperationInProgress,
       notify,
       onApiError,
       remoteCharacter?.id,
+      runApiRequest,
+      sessionKey,
       updateCachedSummary,
     ],
   );
+
   const copySave = useCallback(
     (pcName: string, plName: string, isPublic: boolean) => {
-      if (idToken === null || isRemoteOperationInProgress) return;
+      if (!isAuthenticated || isRemoteOperationInProgress) return;
       setIsRemoteOperationInProgress(true);
       const values = form.getValues();
-      void characterSheetApi
-        .save(
-          createCharacterSheetInput({
-            image: null,
-            isPublic,
-            pcName,
-            plName,
-            values,
-          }),
-          idToken,
-        )
+      void runApiRequest(
+        (idToken) =>
+          characterSheetApi.save(
+            createCharacterSheetInput({
+              image: null,
+              isPublic,
+              pcName,
+              plName,
+              values,
+            }),
+            requireIdToken(idToken),
+          ),
+        true,
+      )
         .then(async (summary) => {
+          if (sessionKey !== null) {
+            remoteRefreshKeyRef.current = createRemoteRefreshKey(
+              sessionKey,
+              summary.id,
+            );
+          }
           form.setValue("profile.pcName", pcName);
           form.setValue("profile.playerName", plName);
           bindRemoteSummary(summary);
@@ -280,25 +430,33 @@ export default function useRemoteCharacterPersistence(
       characterSheetApi,
       clearCharacterImageForCopy,
       form,
-      idToken,
+      isAuthenticated,
       isRemoteOperationInProgress,
       notify,
       onApiError,
+      runApiRequest,
+      sessionKey,
       updateCachedSummary,
     ],
   );
+
   const remove = useCallback(() => {
     if (
-      idToken === null ||
+      !isAuthenticated ||
       remoteCharacter === null ||
       !remoteCharacter.isOwner ||
       isRemoteOperationInProgress
-    )
+    ) {
       return;
+    }
     setIsRemoteOperationInProgress(true);
-    void characterSheetApi
-      .delete(remoteCharacter.id, idToken)
+    void runApiRequest(
+      (idToken) =>
+        characterSheetApi.delete(remoteCharacter.id, requireIdToken(idToken)),
+      true,
+    )
       .then(() => {
+        remoteRefreshKeyRef.current = null;
         clearRemoteCharacter();
         setCharacterListCache((current) =>
           current === null
@@ -320,12 +478,14 @@ export default function useRemoteCharacterPersistence(
   }, [
     characterSheetApi,
     clearRemoteCharacter,
-    idToken,
+    isAuthenticated,
     isRemoteOperationInProgress,
     notify,
     onApiError,
     remoteCharacter,
+    runApiRequest,
   ]);
+
   const openSave = useCallback(() => setIsSaveOpen(true), []);
   const closeSave = useCallback(() => setIsSaveOpen(false), []);
   const openCopySave = useCallback(() => setIsCopySaveOpen(true), []);
@@ -339,7 +499,10 @@ export default function useRemoteCharacterPersistence(
   const dialogProps = useMemo<RemoteCharacterPersistenceDialogProps>(
     () => ({
       characterList: {
-        cache: characterListCacheToken === idToken ? characterListCache : null,
+        cache:
+          characterListCacheSessionKey === sessionKey
+            ? characterListCache
+            : null,
         isLoading: isCharacterListLoading,
         isOpen: isCharacterListOpen,
         onRequestClose: closeCharacterList,
@@ -368,14 +531,13 @@ export default function useRemoteCharacterPersistence(
     }),
     [
       characterListCache,
-      characterListCacheToken,
+      characterListCacheSessionKey,
       closeCharacterList,
       closeCopySave,
       closeDelete,
       closeSave,
       copySave,
       form,
-      idToken,
       isCharacterListLoading,
       isCharacterListOpen,
       isCopySaveOpen,
@@ -386,6 +548,7 @@ export default function useRemoteCharacterPersistence(
       remove,
       save,
       selectCharacter,
+      sessionKey,
     ],
   );
 
@@ -393,18 +556,18 @@ export default function useRemoteCharacterPersistence(
     () => ({
       dialogProps,
       isCopySaveDisabled:
-        idToken === null ||
+        !isAuthenticated ||
         isRootOperationInProgress ||
         isRemoteOperationInProgress,
       isDeleteDisabled:
-        idToken === null ||
+        !isAuthenticated ||
         remoteCharacter === null ||
         !remoteCharacter.isOwner ||
         isRootOperationInProgress ||
         isRemoteOperationInProgress,
       isEditable,
       isSaveDisabled:
-        idToken === null ||
+        !isAuthenticated ||
         !isEditable ||
         isRootOperationInProgress ||
         isRemoteOperationInProgress,
@@ -415,7 +578,7 @@ export default function useRemoteCharacterPersistence(
     }),
     [
       dialogProps,
-      idToken,
+      isAuthenticated,
       isEditable,
       isRemoteOperationInProgress,
       isRootOperationInProgress,

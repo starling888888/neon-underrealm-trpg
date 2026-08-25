@@ -21,11 +21,14 @@ export const characterSheetDictionary = {
   },
   characterSheet: {
     authentication: {
-      error: "Googleログインに失敗しました。もう一度お試しください。",
+      error: "Googleアカウントの認証に失敗しました。もう一度お試しください。",
+      initializing: "ログイン状態を確認しています。",
+      login: "Googleでログイン",
       logout: "ログアウト",
       regionLabel: "Googleアカウントの認証",
       sessionExpired:
-        "Googleログインの有効期限が切れました。もう一度ログインしてください。",
+        "ログインの有効期限が切れました。もう一度ログインしてください。",
+      signingIn: "ログイン中…",
     },
     actions: {
       ccfoliaCopy: "CCFOLIAコピー",
