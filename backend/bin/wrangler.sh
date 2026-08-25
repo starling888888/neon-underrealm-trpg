@@ -44,7 +44,7 @@ done
 
 if [ "$1" = "deploy" ]; then
   set -- "$@" \
-    --var "GOOGLE_OAUTH_CLIENT_ID:${GOOGLE_OAUTH_CLIENT_ID-}" \
+    --var "FIREBASE_PROJECT_ID:${FIREBASE_PROJECT_ID-}" \
     --var "CORS_ALLOW_ORIGIN:${CORS_ALLOW_ORIGIN-}"
 fi
 
