@@ -82,19 +82,19 @@ jobs:
           PUBLIC_FIREBASE_APP_ID: ${{ vars.FIREBASE_APP_ID }}
         run: |
           if [ -z "$PUBLIC_FIREBASE_API_KEY" ]; then
-            echo "::error::PUBLIC_FIREBASE_API_KEY repository variable must be set before deployment."
+            echo "::error::FIREBASE_API_KEY repository variable must be set before deployment."
             exit 1
           fi
           if [ -z "$PUBLIC_FIREBASE_AUTH_DOMAIN" ]; then
-            echo "::error::PUBLIC_FIREBASE_AUTH_DOMAIN repository variable must be set before deployment."
+            echo "::error::FIREBASE_AUTH_DOMAIN repository variable must be set before deployment."
             exit 1
           fi
           if [ -z "$PUBLIC_FIREBASE_PROJECT_ID" ]; then
-            echo "::error::PPUBLIC_FIREBASE_PROJECT_ID repository variable must be set before deployment."
+            echo "::error::FIREBASE_PROJECT_ID repository variable must be set before deployment."
             exit 1
           fi
           if [ -z "$PUBLIC_FIREBASE_APP_ID" ]; then
-            echo "::error::PUBLIC_FIREBASE_APP_ID repository variable must be set before deployment."
+            echo "::error::FIREBASE_APP_ID repository variable must be set before deployment."
             exit 1
           fi
 
