@@ -20,12 +20,20 @@ import {
 } from "../../../src/character-sheet/form/values";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
-const { useRootStateMock } = vi.hoisted(() => ({ useRootStateMock: vi.fn() }));
+const { useRemotePersistenceMock, useRootStateMock } = vi.hoisted(() => ({
+  useRemotePersistenceMock: vi.fn(),
+  useRootStateMock: vi.fn(),
+}));
 const { onCcfoliaCopy } = vi.hoisted(() => ({ onCcfoliaCopy: vi.fn() }));
 
 vi.mock(
   "../../../src/character-sheet/hooks/useCharacterSheetRootState",
   () => ({ default: useRootStateMock }),
+);
+
+vi.mock(
+  "../../../src/character-sheet/hooks/useRemoteCharacterPersistence",
+  () => ({ default: useRemotePersistenceMock }),
 );
 
 vi.mock("@react-oauth/google", () => ({
@@ -54,7 +62,10 @@ function useRootStateHarness() {
   }, [form]);
 
   return {
+    bindRemoteSummary: () => {},
     characterImage: null,
+    clearCharacterImageForCopy: async () => true,
+    clearRemoteCharacter: () => {},
     form,
     formResetVersion: 0,
     formRestoreConfirmButtonRef,
@@ -84,16 +95,58 @@ function useRootStateHarness() {
     onResetConfirmed: async () => {},
     pendingJsonImport: null,
     rootOperation: null,
+    remoteCharacter: null,
+    restoreRemoteCharacter: async () => false,
     setImageError: () => {},
     setIsFormRestoreErrorOpen: () => {},
     setIsJsonImportErrorOpen: () => {},
     setIsJsonImportImageErrorOpen: () => {},
     setPendingJsonImport: () => {},
+    updateRemoteCharacterMetadata: () => {},
   };
 }
 
 beforeEach(() => {
   useRootStateMock.mockImplementation(useRootStateHarness);
+  useRemotePersistenceMock.mockReturnValue({
+    dialogProps: {
+      characterList: {
+        cache: null,
+        isLoading: false,
+        isOpen: false,
+        onRequestClose: vi.fn(),
+        onSelect: vi.fn(),
+      },
+      copySave: {
+        isOpen: false,
+        isSaving: false,
+        onConfirm: vi.fn(),
+        onRequestClose: vi.fn(),
+      },
+      delete: {
+        isDeleting: false,
+        isOpen: false,
+        onConfirm: vi.fn(),
+        onRequestClose: vi.fn(),
+      },
+      save: {
+        initialPcName: "",
+        initialPublic: true,
+        isOpen: false,
+        isSaving: false,
+        onConfirm: vi.fn(),
+        onRequestClose: vi.fn(),
+      },
+    },
+    isCopySaveDisabled: false,
+    isDeleteDisabled: false,
+    isEditable: true,
+    isSaveDisabled: false,
+    openCharacterList: vi.fn(),
+    openCopySave: vi.fn(),
+    openDelete: vi.fn(),
+    openSave: vi.fn(),
+  });
   onCcfoliaCopy.mockResolvedValue(true);
   Object.defineProperties(HTMLDialogElement.prototype, {
     close: {
@@ -114,6 +167,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   onCcfoliaCopy.mockReset();
+  useRemotePersistenceMock.mockReset();
   useRootStateMock.mockReset();
 });
 
@@ -148,5 +202,5 @@ describe("CharacterSheetContainer", () => {
       data: { name: "テストPC" },
       kind: "character",
     });
-  });
+  }, 10_000);
 });

@@ -125,13 +125,19 @@ export function CharacterSheetDialogHeader({
 }
 
 export type CharacterSheetDialogContentProps = {
+  className?: string;
   children: ReactNode;
 };
 
 export function CharacterSheetDialogContent({
+  className,
   children,
 }: CharacterSheetDialogContentProps) {
-  return <div className={styles.content}>{children}</div>;
+  return (
+    <div className={className ? `${styles.content} ${className}` : styles.content}>
+      {children}
+    </div>
+  );
 }
 
 export type CharacterSheetDialogActionsProps = {

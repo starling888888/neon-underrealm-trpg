@@ -1,62 +1,59 @@
 import { useId, useRef } from "react";
-
-import { characterSheetDictionary } from "../../../dictionary";
-import CharacterSheetButton from "../../_common/CharacterSheetButton";
+import { characterSheetDictionary } from "../../dictionary";
+import CharacterSheetButton from "../_common/CharacterSheetButton";
 import CharacterSheetDialog, {
   CharacterSheetDialogActions,
   CharacterSheetDialogContent,
-} from "../CharacterSheetDialog";
-import styles from "./CharacterSheetResetConfirmDialog.module.css";
+} from "./CharacterSheetDialog";
 
 type Props = {
+  isDeleting: boolean;
   isOpen: boolean;
   onConfirm: () => void;
   onRequestClose: () => void;
-  returnFocusRef: React.RefObject<HTMLButtonElement | null>;
 };
 
-/** Confirms discarding the entire character-sheet form and image. */
-export default function CharacterSheetResetConfirmDialog({
+export default function CharacterSheetDeleteDialog({
+  isDeleting,
   isOpen,
   onConfirm,
   onRequestClose,
-  returnFocusRef,
 }: Props) {
   const descriptionId = useId();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
   const { general, characterSheet } = characterSheetDictionary;
+  const { delete: deleteCopy } = characterSheet.remotePersistence;
 
   return (
     <CharacterSheetDialog
       ariaDescribedBy={descriptionId}
-      ariaLabel={characterSheet.reset.confirmLabel}
+      ariaLabel={deleteCopy.label}
       initialFocusRef={cancelButtonRef}
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      returnFocusRef={returnFocusRef}
     >
       <CharacterSheetDialogContent>
-        <p className={styles.message} id={descriptionId}>
-          {characterSheet.reset.confirm}
-        </p>
+        <p id={descriptionId}>{deleteCopy.description}</p>
+        <p>{deleteCopy.localCharacterNotice}</p>
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
         <CharacterSheetButton
           color="muted"
+          disabled={isDeleting}
           onClick={onRequestClose}
           ref={cancelButtonRef}
           size="medium"
-          variant="outline"
         >
           {general.cancel}
         </CharacterSheetButton>
         <CharacterSheetButton
           color="danger"
+          disabled={isDeleting}
           onClick={onConfirm}
           size="medium"
           variant="outline"
         >
-          {characterSheet.actions.reset}
+          {general.delete}
         </CharacterSheetButton>
       </CharacterSheetDialogActions>
     </CharacterSheetDialog>

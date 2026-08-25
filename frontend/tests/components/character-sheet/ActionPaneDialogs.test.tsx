@@ -32,11 +32,8 @@ function createState(
 ): ActionPaneDialogsState {
   return {
     actions: {
-      ccfoliaCopyNotice: null,
-      ccfoliaCopyNoticeConfirmButtonRef: createRef<HTMLButtonElement>(),
       ccfoliaCopyTriggerRef: createRef<HTMLButtonElement>(),
       closeCcfoliaCopyConfirm: vi.fn(),
-      closeCcfoliaCopyNotice: vi.fn(),
       closeHelp: vi.fn(),
       closeResetConfirm: vi.fn(),
       confirmCcfoliaCopy: vi.fn(async () => {}),
@@ -71,36 +68,6 @@ const props = {
 };
 
 describe("ActionPaneDialogs", () => {
-  it("maps CCFOLIA copy notices to the matching accessible label and message", () => {
-    const { rerender } = render(
-      <ActionPaneDialogs
-        {...props}
-        state={createState({ ccfoliaCopyNotice: "success" })}
-      />,
-    );
-
-    expect(
-      screen.getByRole("dialog", { name: "CCFOLIAコピー完了" }),
-    ).not.toBeNull();
-    expect(screen.getByText("クリップボードにコピーしました。")).not.toBeNull();
-
-    rerender(
-      <ActionPaneDialogs
-        {...props}
-        state={createState({ ccfoliaCopyNotice: "failure" })}
-      />,
-    );
-
-    expect(
-      screen.getByRole("dialog", { name: "CCFOLIAコピー失敗" }),
-    ).not.toBeNull();
-    expect(
-      screen.getByText("クリップボードへのコピーに失敗しました。", {
-        exact: false,
-      }),
-    ).not.toBeNull();
-  });
-
   it("delegates CCFOLIA confirmation through the action-pane state", async () => {
     const user = userEvent.setup();
     const confirmCcfoliaCopy = vi.fn(async () => {});

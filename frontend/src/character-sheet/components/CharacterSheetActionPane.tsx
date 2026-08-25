@@ -19,14 +19,19 @@ type CharacterSheetActionPaneProps = {
   errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
   errorSummary: CharacterSheetErrorSummary;
   isCcfoliaCopyDisabled: boolean;
-  isExportDisabled: boolean;
+  isCopySaveDisabled?: boolean;
+  isDeleteDisabled?: boolean;
   isImportDisabled: boolean;
   isResetDisabled: boolean;
+  isSaveDisabled?: boolean;
   isMenuOpen: boolean;
   menuTriggerRef: RefObject<HTMLButtonElement | null>;
-  onExport: () => void;
   onHelp: (trigger: HTMLButtonElement) => void;
   onCcfoliaCopy: (trigger: HTMLButtonElement) => void;
+  onCharacterList?: () => void;
+  onCopySave?: () => void;
+  onDelete?: () => void;
+  onSave?: () => void;
   onImport: (trigger: HTMLButtonElement) => void;
   onMenuToggle: () => void;
   onReset: (trigger: HTMLButtonElement) => void;
@@ -49,14 +54,19 @@ function CharacterSheetActionPane({
   errorReviewButtonRef,
   errorSummary,
   isCcfoliaCopyDisabled,
-  isExportDisabled,
+  isCopySaveDisabled = false,
+  isDeleteDisabled = false,
   isImportDisabled,
   isResetDisabled,
+  isSaveDisabled = false,
   isMenuOpen,
   menuTriggerRef,
-  onExport,
   onHelp,
   onCcfoliaCopy,
+  onCharacterList = () => {},
+  onCopySave = () => {},
+  onDelete = () => {},
+  onSave = () => {},
   onImport,
   onMenuToggle,
   onReset,
@@ -66,10 +76,9 @@ function CharacterSheetActionPane({
 }: CharacterSheetActionPaneProps) {
   const { actions } = characterSheetDictionary.characterSheet;
   const isDesktop = useIsDesktop();
-  const authenticationControl = typeof isDesktop === "boolean" &&
-    authentication && (
-      <CharacterSheetGoogleAuthentication authentication={authentication} />
-    );
+  const authenticationControl = isDesktop !== undefined && authentication && (
+    <CharacterSheetGoogleAuthentication authentication={authentication} />
+  );
   const errorStatusText = errorSummary.hasErrors
     ? `エラーが${errorSummary.errors.length}件あります。`
     : actions.noErrors;
@@ -78,6 +87,11 @@ function CharacterSheetActionPane({
       {isDesktop ? (
         <div className={styles.desktopRail}>
           {authenticationControl}
+          <div className={styles.characterList}>
+            <CharacterSheetButton onClick={onCharacterList} size="medium">
+              {actions.characterList}
+            </CharacterSheetButton>
+          </div>
           <SectionNavigation
             {...sectionNavigation}
             onSectionJump={onSectionJump}
@@ -91,12 +105,16 @@ function CharacterSheetActionPane({
             </CharacterSheetButton>
             <ActionButtons
               isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
-              isExportDisabled={isExportDisabled}
+              isCopySaveDisabled={isCopySaveDisabled}
+              isDeleteDisabled={isDeleteDisabled}
               isImportDisabled={isImportDisabled}
               isResetDisabled={isResetDisabled}
+              isSaveDisabled={isSaveDisabled}
               onCcfoliaCopy={onCcfoliaCopy}
-              onExport={onExport}
+              onCopySave={onCopySave}
+              onDelete={onDelete}
               onImport={onImport}
+              onSave={onSave}
               onReset={onReset}
             />
           </div>
@@ -116,18 +134,27 @@ function CharacterSheetActionPane({
           id={menuId}
         >
           {authenticationControl}
+          <div className={styles.characterList}>
+            <CharacterSheetButton onClick={onCharacterList} size="medium">
+              {actions.characterList}
+            </CharacterSheetButton>
+          </div>
           <SectionNavigation
             {...sectionNavigation}
             onSectionJump={onSectionJump}
           />
           <ActionButtons
             isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
-            isExportDisabled={isExportDisabled}
+            isCopySaveDisabled={isCopySaveDisabled}
+            isDeleteDisabled={isDeleteDisabled}
             isImportDisabled={isImportDisabled}
             isResetDisabled={isResetDisabled}
+            isSaveDisabled={isSaveDisabled}
             onCcfoliaCopy={onCcfoliaCopy}
-            onExport={onExport}
+            onCopySave={onCopySave}
+            onDelete={onDelete}
             onImport={onImport}
+            onSave={onSave}
             onReset={onReset}
           />
           <ErrorSummary errorSummary={errorSummary} className={styles.errors} />
@@ -200,9 +227,11 @@ function SectionNavigation({
 }: CharacterSheetActionPaneProps["sectionNavigation"] & {
   onSectionJump: CharacterSheetActionPaneProps["onSectionJump"];
 }) {
+  const { sectionJump } = characterSheetDictionary.characterSheet.actions;
+
   return (
-    <nav aria-label="セクションにジャンプ" className={styles.sectionNavigation}>
-      <p>セクションにジャンプ</p>
+    <nav aria-label={sectionJump} className={styles.sectionNavigation}>
+      <p>{sectionJump}</p>
       <ul>
         {items.map(({ id, label }) => (
           <li key={id}>
@@ -224,55 +253,86 @@ function SectionNavigation({
 
 function ActionButtons({
   isCcfoliaCopyDisabled,
-  isExportDisabled,
+  isCopySaveDisabled,
+  isDeleteDisabled,
   isImportDisabled,
   isResetDisabled,
+  isSaveDisabled,
   onCcfoliaCopy,
-  onExport,
+  onCopySave,
+  onDelete,
   onImport,
+  onSave,
   onReset,
 }: Pick<
   CharacterSheetActionPaneProps,
   | "isCcfoliaCopyDisabled"
-  | "isExportDisabled"
+  | "isCopySaveDisabled"
+  | "isDeleteDisabled"
   | "isImportDisabled"
   | "isResetDisabled"
+  | "isSaveDisabled"
   | "onCcfoliaCopy"
-  | "onExport"
+  | "onCopySave"
+  | "onDelete"
   | "onImport"
+  | "onSave"
   | "onReset"
 >) {
   const { actions } = characterSheetDictionary.characterSheet;
   return (
     <div className={styles.actionButtons}>
       <CharacterSheetButton
-        disabled={isExportDisabled}
-        onClick={onExport}
+        className={styles.save}
+        disabled={isSaveDisabled}
+        onClick={onSave}
         size="medium"
       >
-        {actions.export}
+        {actions.dbSave}
       </CharacterSheetButton>
       <CharacterSheetButton
-        disabled={isImportDisabled}
-        onClick={(event) => onImport(event.currentTarget)}
+        className={styles.copySave}
+        disabled={isCopySaveDisabled}
+        onClick={onCopySave}
+        size="medium"
+        color="warning"
+      >
+        {actions.copySave}
+      </CharacterSheetButton>
+      <CharacterSheetButton
+        className={styles.delete}
+        color="danger"
+        disabled={isDeleteDisabled}
+        onClick={onDelete}
         size="medium"
       >
-        {actions.import}
+        {actions.dbDelete}
       </CharacterSheetButton>
       <CharacterSheetButton
-        disabled={isCcfoliaCopyDisabled}
-        onClick={(event) => onCcfoliaCopy(event.currentTarget)}
-        size="medium"
-      >
-        {actions.ccfoliaCopy}
-      </CharacterSheetButton>
-      <CharacterSheetButton
+        className={styles.reset}
         color="danger"
         disabled={isResetDisabled}
         onClick={(event) => onReset(event.currentTarget)}
         size="medium"
       >
         {actions.reset}
+      </CharacterSheetButton>
+      <CharacterSheetButton
+        className={styles.import}
+        disabled={isImportDisabled}
+        onClick={(event) => onImport(event.currentTarget)}
+        size="medium"
+      >
+        <span>{actions.import}</span>
+        <small>{actions.importRemovalNotice}</small>
+      </CharacterSheetButton>
+      <CharacterSheetButton
+        className={styles.ccfoliaCopy}
+        disabled={isCcfoliaCopyDisabled}
+        onClick={(event) => onCcfoliaCopy(event.currentTarget)}
+        size="medium"
+      >
+        {actions.ccfoliaCopy}
       </CharacterSheetButton>
     </div>
   );
@@ -291,7 +351,7 @@ function ErrorSummary({
       {errorSummary.hasErrors ? (
         <>
           <p className={styles.errorCount}>
-            エラーが{errorSummary.errors.length}件あります。
+            {getErrorCountMessage(errorSummary.errors.length)}
           </p>
           <ul className={styles.errorList} style={errorListStyle}>
             {errorSummary.errors.map((error, index) => (
@@ -330,7 +390,7 @@ function DesktopErrorStatus({
     >
       <p>
         {errorSummary.hasErrors
-          ? `エラーが${errorSummary.errors.length}件あります。`
+          ? getErrorCountMessage(errorSummary.errors.length)
           : actions.noErrors}
       </p>
       <CharacterSheetButton
@@ -342,5 +402,12 @@ function DesktopErrorStatus({
         {actions.reviewErrors}
       </CharacterSheetButton>
     </div>
+  );
+}
+
+function getErrorCountMessage(count: number): string {
+  return characterSheetDictionary.characterSheet.actions.errorCount.replace(
+    "{count}",
+    String(count),
   );
 }

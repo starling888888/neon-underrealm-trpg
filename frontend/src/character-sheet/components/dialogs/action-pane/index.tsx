@@ -4,7 +4,6 @@ import { characterSheetDictionary } from "../../../dictionary";
 import type { ActionPaneDialogsState } from "../../../hooks/useActionPane";
 import type { CharacterSheetErrorSummary } from "../../../logic/error-summary";
 import CharacterSheetCcfoliaCopyConfirmDialog from "./CharacterSheetCcfoliaCopyConfirmDialog";
-import CharacterSheetCcfoliaCopyNoticeDialog from "./CharacterSheetCcfoliaCopyNoticeDialog";
 import CharacterSheetErrorDialog from "./CharacterSheetErrorDialog";
 import CharacterSheetHelpDialog from "./CharacterSheetHelpDialog";
 import CharacterSheetJsonImportConfirmDialog from "./CharacterSheetJsonImportConfirmDialog";
@@ -39,7 +38,6 @@ function ActionPaneDialogs({
   state,
 }: ActionPaneDialogsProps) {
   const { actions, errors } = state;
-  const { ccfolia } = characterSheetDictionary.characterSheet;
   const onCcfoliaCopyConfirmed = useCallback(() => {
     void actions.confirmCcfoliaCopy();
   }, [actions.confirmCcfoliaCopy]);
@@ -61,22 +59,6 @@ function ActionPaneDialogs({
         isOpen={actions.isCcfoliaCopyConfirmOpen}
         onConfirm={onCcfoliaCopyConfirmed}
         onRequestClose={actions.closeCcfoliaCopyConfirm}
-        returnFocusRef={actions.ccfoliaCopyTriggerRef}
-      />
-      <CharacterSheetCcfoliaCopyNoticeDialog
-        confirmButtonRef={actions.ccfoliaCopyNoticeConfirmButtonRef}
-        dialogLabel={
-          actions.ccfoliaCopyNotice === "success"
-            ? ccfolia.successLabel
-            : ccfolia.failureLabel
-        }
-        isOpen={actions.ccfoliaCopyNotice !== null}
-        message={
-          actions.ccfoliaCopyNotice === "success"
-            ? ccfolia.success
-            : ccfolia.failure
-        }
-        onRequestClose={actions.closeCcfoliaCopyNotice}
         returnFocusRef={actions.ccfoliaCopyTriggerRef}
       />
       <CharacterSheetResetConfirmDialog

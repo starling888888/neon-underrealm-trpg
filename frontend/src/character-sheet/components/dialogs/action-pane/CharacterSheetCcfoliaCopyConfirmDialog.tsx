@@ -47,7 +47,7 @@ export default function CharacterSheetCcfoliaCopyConfirmDialog({
         >
           {characterSheetDictionary.general.cancel}
         </CharacterSheetButton>
-        <CharacterSheetButton onClick={onConfirm} size="medium" variant="solid">
+        <CharacterSheetButton onClick={onConfirm} size="medium">
           {ccfolia.copy}
         </CharacterSheetButton>
       </CharacterSheetDialogActions>

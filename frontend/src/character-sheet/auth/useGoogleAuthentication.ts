@@ -36,19 +36,15 @@ export default function useGoogleAuthentication(): GoogleAuthentication {
     setStatus("signed-out");
   }, []);
 
-  // Keep the token in this hook for the future authenticated API boundary.
-  // Referencing it prevents accidentally changing this state into a
-  // persistence-only status flag before G4 consumes the authorization header.
-  void idToken;
-
   return useMemo(
     () => ({
+      idToken,
       onCredential,
       onLoginError,
       onLoginStarted,
       onLogout,
       status,
     }),
-    [onCredential, onLoginError, onLoginStarted, onLogout, status],
+    [idToken, onCredential, onLoginError, onLoginStarted, onLogout, status],
   );
 }

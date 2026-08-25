@@ -15,21 +15,25 @@ import type { CharacterSheetErrorSummary } from "../logic/error-summary";
 type UseActionPaneArgs = {
   errorSummary: CharacterSheetErrorSummary;
   isCcfoliaCopyDisabled: boolean;
-  isExportDisabled: boolean;
+  isCopySaveDisabled?: boolean;
+  isDeleteDisabled?: boolean;
   isImportDisabled: boolean;
   isResetErrorOpen: boolean;
   isRootOperationInProgress: boolean;
   isResetDisabled: boolean;
+  isSaveDisabled?: boolean;
   onCcfoliaCopyConfirmed: () => Promise<boolean>;
-  onExport: () => void;
+  onCcfoliaCopyResult?: (copied: boolean) => void;
+  onCharacterList?: () => void;
+  onCopySave?: () => void;
+  onDelete?: () => void;
+  onSave?: () => void;
   onImport: (trigger: HTMLButtonElement) => void;
   onResetConfirmed: () => Promise<void>;
 };
 
 export type ActionPaneDialogsState = {
   actions: {
-    ccfoliaCopyNotice: "success" | "failure" | null;
-    ccfoliaCopyNoticeConfirmButtonRef: RefObject<HTMLButtonElement | null>;
     ccfoliaCopyTriggerRef: RefObject<HTMLButtonElement | null>;
     closeCcfoliaCopyConfirm: () => void;
     closeHelp: () => void;
@@ -41,7 +45,6 @@ export type ActionPaneDialogsState = {
     isHelpOpen: boolean;
     isResetConfirmOpen: boolean;
     resetTriggerRef: RefObject<HTMLButtonElement | null>;
-    closeCcfoliaCopyNotice: () => void;
   };
   errors: {
     closeErrorSummary: () => void;
@@ -56,13 +59,19 @@ const sectionNavigation = { items: characterSheetSectionNavigationItems };
 export default function useActionPane({
   errorSummary,
   isCcfoliaCopyDisabled,
-  isExportDisabled,
+  isCopySaveDisabled = false,
+  isDeleteDisabled = false,
   isImportDisabled,
   isResetErrorOpen,
   isRootOperationInProgress,
   isResetDisabled,
+  isSaveDisabled = false,
   onCcfoliaCopyConfirmed,
-  onExport,
+  onCcfoliaCopyResult = () => {},
+  onCharacterList = () => {},
+  onCopySave = () => {},
+  onDelete = () => {},
+  onSave = () => {},
   onImport,
   onResetConfirmed,
 }: UseActionPaneArgs) {
@@ -71,6 +80,7 @@ export default function useActionPane({
     isResetErrorOpen,
     isRootOperationInProgress,
     onCcfoliaCopyConfirmed,
+    onCcfoliaCopyResult,
     onResetConfirmed,
   });
   const errors = useActionPaneErrors();
@@ -79,13 +89,18 @@ export default function useActionPane({
       errorReviewButtonRef: errors.errorSummaryTriggerRef,
       errorSummary,
       isCcfoliaCopyDisabled,
-      isExportDisabled,
+      isCopySaveDisabled,
+      isDeleteDisabled,
       isImportDisabled,
       isMenuOpen: actions.isMenuOpen,
       isResetDisabled,
+      isSaveDisabled,
       menuTriggerRef: actions.actionMenuTriggerRef,
       onCcfoliaCopy: actions.openCcfoliaCopyConfirm,
-      onExport,
+      onCharacterList,
+      onCopySave,
+      onDelete,
+      onSave,
       onHelp: actions.openHelp,
       onImport,
       onMenuToggle: actions.toggleMenu,
@@ -105,10 +120,15 @@ export default function useActionPane({
       errors.errorSummaryTriggerRef,
       errors.openErrorSummary,
       isCcfoliaCopyDisabled,
-      isExportDisabled,
+      isCopySaveDisabled,
+      isDeleteDisabled,
       isImportDisabled,
       isResetDisabled,
-      onExport,
+      isSaveDisabled,
+      onCharacterList,
+      onCopySave,
+      onDelete,
+      onSave,
       onImport,
       sectionJump.onSectionJump,
     ],
@@ -143,28 +163,26 @@ function useActionPaneActions({
   isResetErrorOpen,
   isRootOperationInProgress,
   onCcfoliaCopyConfirmed,
+  onCcfoliaCopyResult,
   onResetConfirmed,
 }: Pick<
   UseActionPaneArgs,
   | "isResetErrorOpen"
   | "isRootOperationInProgress"
   | "onCcfoliaCopyConfirmed"
+  | "onCcfoliaCopyResult"
   | "onResetConfirmed"
 >) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isCcfoliaCopyConfirmOpen, setIsCcfoliaCopyConfirmOpen] =
     useState(false);
-  const [ccfoliaCopyNotice, setCcfoliaCopyNotice] = useState<
-    "success" | "failure" | null
-  >(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [shouldRestoreResetFocus, setShouldRestoreResetFocus] = useState(false);
   const actionMenuTriggerRef = useRef<HTMLButtonElement>(null);
   const helpTriggerRef = useRef<HTMLButtonElement>(null);
   const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const ccfoliaCopyTriggerRef = useRef<HTMLButtonElement>(null);
-  const ccfoliaCopyNoticeConfirmButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (
@@ -231,11 +249,8 @@ function useActionPaneActions({
   const confirmCcfoliaCopy = useCallback(async () => {
     closeCcfoliaCopyConfirm();
     const copied = await onCcfoliaCopyConfirmed();
-    setCcfoliaCopyNotice(copied ? "success" : "failure");
-  }, [closeCcfoliaCopyConfirm, onCcfoliaCopyConfirmed]);
-  const closeCcfoliaCopyNotice = useCallback(() => {
-    setCcfoliaCopyNotice(null);
-  }, []);
+    onCcfoliaCopyResult?.(copied);
+  }, [closeCcfoliaCopyConfirm, onCcfoliaCopyConfirmed, onCcfoliaCopyResult]);
   const closeHelp = useCallback(() => {
     setIsHelpOpen(false);
   }, []);
@@ -246,11 +261,8 @@ function useActionPaneActions({
   return useMemo(
     () => ({
       actionMenuTriggerRef,
-      ccfoliaCopyNotice,
-      ccfoliaCopyNoticeConfirmButtonRef,
       ccfoliaCopyTriggerRef,
       closeCcfoliaCopyConfirm,
-      closeCcfoliaCopyNotice,
       closeHelp,
       closeResetConfirm,
       confirmCcfoliaCopy,
@@ -267,9 +279,7 @@ function useActionPaneActions({
       toggleMenu,
     }),
     [
-      ccfoliaCopyNotice,
       closeCcfoliaCopyConfirm,
-      closeCcfoliaCopyNotice,
       closeHelp,
       closeResetConfirm,
       confirmCcfoliaCopy,

@@ -28,6 +28,11 @@ import {
   readCharacterSheetForm,
   writeCharacterSheetForm,
 } from "../persistence/character-sheet-form";
+import {
+  deleteRemoteCharacterId,
+  readRemoteCharacterId,
+  writeRemoteCharacterId,
+} from "../persistence/remote-character";
 import type {
   CharacterImageErrorCode,
   CharacterImageRecord,
@@ -37,7 +42,9 @@ import {
   type CharacterSheetJsonImport,
   parseCharacterSheetJsonImport,
   parseCharacterSheetRestoreJson,
+  parseCharacterSheetRestoreValue,
 } from "../schemas/character-sheet-persistence";
+import type { CharacterSheet } from "@neon-underrealm/shared";
 
 export type CharacterImageErrorState = {
   code: CharacterImageErrorCode | "restore";
@@ -75,6 +82,12 @@ const defaultOperations: CharacterSheetRootOperations = {
 
 type RootOperation = {
   label: string;
+};
+
+export type RemoteCharacterState = {
+  id: string;
+  isOwner: boolean;
+  isPublic: boolean;
 };
 
 function toImageErrorState(error: unknown): CharacterImageErrorState {
@@ -117,6 +130,8 @@ export default function useCharacterSheetRootState(
   const [isJsonImportImageErrorOpen, setIsJsonImportImageErrorOpen] =
     useState(false);
   const [formResetVersion, setFormResetVersion] = useState(0);
+  const [remoteCharacter, setRemoteCharacter] =
+    useState<RemoteCharacterState | null>(null);
   const formRestoreConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const formRestoreReturnFocusRef = useRef<HTMLInputElement>(null);
   const imageReturnFocusRef = useRef<HTMLButtonElement>(null);
@@ -142,6 +157,13 @@ export default function useCharacterSheetRootState(
     setShouldRestoreJsonImportFocus(false);
     jsonImportReturnFocusRef.current?.focus();
   }, [rootOperation, shouldRestoreJsonImportFocus]);
+
+  useEffect(() => {
+    const id = readRemoteCharacterId(window.localStorage);
+    if (id !== null) {
+      setRemoteCharacter({ id, isOwner: false, isPublic: true });
+    }
+  }, []);
 
   useEffect(() => {
     let isCurrent = true;
@@ -320,6 +342,8 @@ export default function useCharacterSheetRootState(
           hasCommittedImageRef.current = true;
           setCharacterImage(null);
           resetForm(structuredClone(characterSheetDefaultValues));
+          deleteRemoteCharacterId(window.localStorage);
+          setRemoteCharacter(null);
         },
       );
     } catch (error) {
@@ -429,6 +453,8 @@ export default function useCharacterSheetRootState(
             await operations.deleteCharacterImage();
             hasCommittedImageRef.current = true;
             setCharacterImage(null);
+            deleteRemoteCharacterId(window.localStorage);
+            setRemoteCharacter(null);
           } catch (error) {
             shouldRestoreFocus = false;
             setIsImageErrorFromJsonImport(true);
@@ -459,6 +485,8 @@ export default function useCharacterSheetRootState(
           await operations.writeCharacterImage(image);
           hasCommittedImageRef.current = true;
           setCharacterImage(image);
+          deleteRemoteCharacterId(window.localStorage);
+          setRemoteCharacter(null);
         } catch (error) {
           shouldRestoreFocus = false;
           setIsImageErrorFromJsonImport(true);
@@ -471,8 +499,116 @@ export default function useCharacterSheetRootState(
     }
   }, [operations, pendingJsonImport, resetForm, runRootOperation]);
 
+  const bindRemoteCharacter = useCallback(
+    ({ id, metadata }: CharacterSheet) => {
+      const next = {
+        id,
+        isOwner: metadata.isOwner,
+        isPublic: metadata.isPublic,
+      };
+      writeRemoteCharacterId(window.localStorage, id);
+      setRemoteCharacter(next);
+    },
+    [],
+  );
+
+  const bindRemoteSummary = useCallback(
+    (summary: Pick<CharacterSheet, "id" | "metadata">) => {
+      writeRemoteCharacterId(window.localStorage, summary.id);
+      setRemoteCharacter({
+        id: summary.id,
+        isOwner: summary.metadata.isOwner,
+        isPublic: summary.metadata.isPublic,
+      });
+    },
+    [],
+  );
+
+  const clearRemoteCharacter = useCallback(() => {
+    deleteRemoteCharacterId(window.localStorage);
+    setRemoteCharacter(null);
+  }, []);
+
+  const clearCharacterImageForCopy = useCallback(async (): Promise<boolean> => {
+    try {
+      await runRootOperation(
+        characterSheetDictionary.characterSheet.image.clearing,
+        async () => {
+          await operations.deleteCharacterImage();
+          hasCommittedImageRef.current = true;
+          setCharacterImage(null);
+        },
+      );
+      return true;
+    } catch (error) {
+      setImageError(toImageErrorState(error));
+      return false;
+    }
+  }, [operations, runRootOperation]);
+
+  const updateRemoteCharacterMetadata = useCallback(
+    ({
+      id,
+      metadata,
+    }: {
+      id: string;
+      metadata: Pick<CharacterSheet["metadata"], "isOwner" | "isPublic">;
+    }) => {
+      if (remoteCharacter?.id !== id) return;
+      setRemoteCharacter({
+        id,
+        isOwner: metadata.isOwner,
+        isPublic: metadata.isPublic,
+      });
+    },
+    [remoteCharacter?.id],
+  );
+
+  const restoreRemoteCharacter = useCallback(
+    async (character: CharacterSheet): Promise<boolean> => {
+      const values = parseCharacterSheetRestoreValue(character.snapshot);
+      if (values === null) return false;
+
+      let image: CharacterImageRecord | null = null;
+      if (character.snapshot.imageBase64String !== null) {
+        try {
+          image = await operations.decodeImportedCharacterImage(
+            character.snapshot.imageBase64String,
+          );
+        } catch {
+          return false;
+        }
+      }
+
+      try {
+        await runRootOperation(
+          characterSheetDictionary.characterSheet.persistence.restoring,
+          async () => {
+            if (image === null) {
+              await operations.deleteCharacterImage();
+            } else {
+              await operations.writeCharacterImage(image);
+            }
+            hasCommittedImageRef.current = true;
+            setCharacterImage(image);
+            resetForm(values);
+          },
+        );
+        bindRemoteCharacter(character);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [bindRemoteCharacter, operations, resetForm, runRootOperation],
+  );
+
   return {
     characterImage,
+    bindRemoteCharacter,
+    bindRemoteSummary,
+    clearCharacterImageForCopy,
+    clearRemoteCharacter,
     form,
     formResetVersion,
     imageError,
@@ -507,5 +643,8 @@ export default function useCharacterSheetRootState(
     setIsJsonImportImageErrorOpen,
     setPendingJsonImport,
     rootOperation,
+    remoteCharacter,
+    restoreRemoteCharacter,
+    updateRemoteCharacterMetadata,
   };
 }
