@@ -97,8 +97,8 @@
 
 ### 操作領域
 
-- 対象操作は、細かな説明を開く`?`、JSON出力、JSON入力、初期化、CCFOLIAコピーである。`?`は操作領域の左端に丸いボタンとして置き、説明モーダルを開く。
-- desktopでは、form本文右の補助領域に操作を縦に配置する。操作領域の先頭には第一階層sectionへの`セクションにジャンプ` navigationを置き、その下に`?`、JSON出力、JSON入力、CCFOLIAコピー、初期化、エラー状態を縦に並べる。ページ見出し横の横並び操作menuは廃止する。
+- 対象操作は、キャラクター一覧、DB保存、コピー保存、DB削除、細かな説明を開く`?`、JSON入力、初期化、CCFOLIAコピーである。`?`は操作領域の左端に丸いbuttonとして置き、独立したHelp dialogを開く。JSON出力buttonは置かない。
+- desktopでは、form本文右の補助領域に操作を縦に配置する。操作領域の先頭には第一階層sectionへの`セクションにジャンプ` navigationを置き、その下にキャラクター一覧、DB保存、コピー保存、DB削除、`?`、JSON入力、CCFOLIAコピー、初期化、エラー状態をG5 issueの指定順で並べる。ページ見出し横の横並び操作menuは廃止する。
 - 狭幅レイアウトでは、右下にメニューボタンを配置し、クリックすると第一階層sectionへの`セクションにジャンプ` navigation、各操作button、エラー一覧の順に表示する。section navigationはbutton群の上に置き、子section・行・入力項目へのジャンプは置かない。
 - 狭幅レイアウトの右下メニューボタンは、scroll中も操作できるsticky controlとする。編集領域の末尾にはfloating操作と重ならない十分な下余白を設け、最下部までscrollしたときも最後の入力・追加・削除操作を隠さない。
 - 狭幅レイアウトでは、右下のメニューアイコンの上に、独立した青緑の丸い`?`ヘルプアイコンを置く。ヘルプアイコンを操作すると、menu内ではなく独立したヘルプdialogを開く。
@@ -145,7 +145,7 @@
 - キャラクター設定は基本情報のプロフィール入力群の下に、`設定`と展開アイコンだけを初期表示する。操作すると自由入力欄を表示する。
 - 数値入力欄は右揃えとし、必要以上に横へ広げず、値に見合う短い幅にする。空いた横幅は、算出値、ラベル、マスタ由来の読み取り専用情報へ配分する。
 - 全ての折りたたみ領域は初期状態で開く。複数セクションを同時に開ける。
-- 折りたたみの開閉状態はブラウザ内保存、JSON export、JSON importの対象に含めない。
+- 折りたたみの開閉状態はブラウザ内保存、character snapshot、JSON importの対象に含めない。
 - 算出値を別領域へ再掲するsummaryは設けない。要件で定める算出値は、それぞれの該当領域で表示する。
 - 計算式の文字列は、該当する自動算出値または最終値のlabelを操作すると開くtooltipで表示する。通常表示に固定の算出式文字列は置かない。
 - formula tooltipはsectionまたはviewportの上端に近いtriggerで下方向へ開き、上下左右とも読める範囲に表示する。副能力値だけの局所配置にはしない。すべてのtooltip triggerは対象文字列の直後に、薄いアクセントカラーの小さな丸い`?`indicatorを表示する。indicatorはtriggerの操作領域へ含め、支援技術へ重複して読ませない。
@@ -189,10 +189,9 @@
 
 ### ダイアログ
 
-- 警告、破壊的操作の確認、CCFOLIAコピー完了、画像選択の失敗はダイアログで表示する。
+- 警告と破壊的操作の確認はダイアログで表示する。判断や入力を必要としない成功・失敗の結果通知はToastで表示する。
 - ブラウザ組み込みの`alert`は使わない。
-- CCFOLIAコピー成功の通知ダイアログ本文は「クリップボードにコピーしました。」とする。
-- 初期化確認ダイアログはvisible titleを置かず、本文を「入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？」とする。本文の改行コードは空白に折り畳まず可視の改行として表示する。actionはmuted outlineの`キャンセル`とdanger solidの`初期化`とし、初期focusは`キャンセル`へ置く。
+- 初期化確認ダイアログはvisible titleを置かず、本文を「入力済みのデータと画像を初期状態に戻します。\nDBに保存されたキャラクターは削除されません。\n本当によろしいですか？」とする。本文の改行コードは空白に折り畳まず可視の改行として表示する。actionはmuted outlineの`キャンセル`とdanger solidの`初期化`とし、初期focusは`キャンセル`へ置く。
 - desktopのエラー確認ダイアログは、errorがある時だけ太めのdangerカラーの枠線、errorがない時は通常のstrong borderと白い背景に黒い文字で表示する。visible titleは置かず、アクセシブル名を`エラー`とする。本文は空状態`エラーはありません。`またはdangerカラーの`エラーがN件あります。`と、通常本文カラーの順序なしerror一覧から始める。`閉じる`buttonはmuted outlineとする。
 - ヘルプダイアログは青緑のアクセントカラーの枠線、薄いグレーの背景、青緑の丸い`?`アイコンと「ヘルプ」のタイトル行を使う。最大高さを定め、本文だけを独立してscrollできるようにする。
 - それ以外のダイアログのbutton配置、dismiss操作、focus処理、Clipboard API失敗時の扱いは、後続のdesign対話で決める。
@@ -208,11 +207,20 @@
 - semantics: dialogは可視見出しへの`aria-labelledby`、または`aria-label`のいずれかでaccessible nameを必須にする。短く構造を持たない主文だけは`aria-describedby`で関連付け、複数段落、リスト、表を含む本文には指定しない。`title`と`description`を全用途で必須のstring propsにはしない。標準headerの可視見出しはページの`h1`に続く`h2`とする。開閉状態・選択対象はContainerが持ち、RHF、保存、JSONへ含めない。
 - viewports and comparison points: desktop（`1440x1200`）、tablet（`820x1180`）、mobile（`390x900`）で、button、dialogの幅、actionの到達性、visible focus、Escape、操作元へのfocus復帰、ページ全体の横overflowなしを確認する。G5のVRTはcanonical baselineを更新せず、PRレビュー直前の`@character-sheet` targetだけを比較する。
 
+### G5 cloud persistence UI
+
+- 最優先入力: このG5 blockと親issueの「キャラクターシートのクラウド操作」。既存notesと競合する場合はこのG5 blockを優先する。
+- 見出し行にはGoogle login / logoutと`キャラクター一覧`を置く。一覧はdialogで表示し、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名、PL名、改行表示する流儀／生き様、格、更新日、radio選択、ログイン時の`自分のキャラクターのみ` filter、client-side 10件paginationを扱う。PC名は一覧幅の30%、PL名は20%を取り、更新日は省略しない。長いPC名・PL名と流儀／生き様はellipsisとしてよく、横scrollを発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日だけは最小限の列幅にしてclipを避ける。dialogは固定高にし、header、説明・filter、paginationを固定したまま行領域だけを縦scrollさせる。page、radio、filterの切替時は行領域を先頭へ戻す。未設定値は`-`とする。
+- desktop Action Paneとtablet / mobile control paneには、キャラクター一覧、DB保存、コピー保存、DB削除、Help、JSONインポート、CCFOLIAコピー、初期化をG5 issueの指定順で置く。JSONエクスポートbuttonは表示しない。インポートは2行目のdanger色の削除予告を表示し、tablet / mobileでは横幅いっぱいにする。
+- DB保存、コピー保存、DB削除は確認または入力dialogを使う。DB保存の新規`全員に公開する`checkboxは既定ON、コピー保存は既定OFFとする。Toastは結果通知だけを担い、success / error、5秒、自動消去、新着順stack、manual closeなしとする。
+- non-ownerまたは未認証のremote characterでは、character dataを変更する操作だけをread-onlyにする。キャラクター一覧、初期化、インポート、CCFOLIAコピー、Help、login / logoutは操作可能に保つ。
+- Help本文は`.raw/character-sheet-help.md`のユーザー編集後内容をcomponent markupへ反映する。本文の文言はdesign作業で独自に改稿しない。
+
 ## 参照正本と制約
 
 - `docs/requirements/character-sheet.md`は、キャラクターシートの入力、表示、算出、検証、保存、出力要件の正本である。
 - ゲーム用語、数値ルール、マスタ値は、要件が示す`src/pages/`と`data/generated/`を正本とする。
-- `docs/out-of-scope.md`は、直接編集式のキャラクターシートとブラウザ内の最新1件保存を許可する。作成質問票、サーバーまたはクラウド保存、複数端末同期、汎用的な効果文解析、ダイスロール、セッション状態管理は含めない。
+- `docs/out-of-scope.md`は、直接編集式のキャラクターシートとブラウザ内の最新1件保存を許可する。`ex-16-character-sheet-cloud-persistence`の承認済みGateだけはクラウド保存とキャラクター一覧を例外として扱う。作成質問票、複数端末同期、汎用的な効果文解析、ダイスロール、セッション状態管理は含めない。
 - 共通スキルボーナスの専用構造化データと文字列解析は追加しない。UIは共通スキルボーナスや自由文のスキル効果が自動算出されるかのように表示してはならない。
 - 既存サイトの視覚的方向性を文脈として維持する。すなわち、明るいルール本文面、暗いHeaderとFooter、控えめな青緑アクセント、読みやすい本文、実務的な情報密度である。HeaderとFooterの意匠は再設計しない。サイトメニューとToCの表示方式は、このページに限り「ページlayoutとサイトメニュー」の要件を優先する。
 - `.tmp/character-sheet-design-draft.jpg`はdesktopの過去の配置参考である。要件の正本ではなく、初期scopeのdesktop、tablet、mobileのレイアウトを定めず、必須入力も網羅していない。
@@ -284,7 +292,7 @@
 - ブラウザ内の最新1キャラクター自動保存・復元。復元完了前に保存済みデータを上書きしない状態を伝える。
 - 構造・型・現在のマスタIDとの照合に失敗して自動復元できない場合は、title / headerなしの既存dialogで本文「自動復元に失敗しました。」と`確認`buttonだけを表示する。確認後は初期フォーム値を編集できる。localStorage APIの読取り・書込み例外は`console.error`だけで握りつぶし、dialogを表示しない。
 - VRTは`@persistence-restore-error`と`@cybernetics-part-error`で、復元失敗dialogおよび復元後の固定サイバネ部位errorをdesktop / tablet / mobileの局所snapshotとして比較する。
-- JSON export、現在状態の置換確認を伴うJSON import、編集内容を維持する失敗フィードバック、確認を伴う全消去
+- 現在状態の置換確認を伴うJSON import、編集内容を維持する失敗フィードバック、確認を伴う全消去
 - CCFOLIAキャラクターデータのcopy操作、およびClipboard APIの成功・失敗フィードバック
 - スキルとアイテム効果は現在のマスタデータを参照するため、ルール更新に伴い表示が変わりうることを説明するhelp
 

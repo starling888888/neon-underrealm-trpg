@@ -43,6 +43,7 @@
     "@hookform/resolvers": "^5.4.0",
     "@neon-underrealm/shared": "0.0.0",
     "astro": "^7.0.6",
+    "firebase": "^12.18.0",
     "idb-keyval": "^6.3.0",
     "lucide-react": "^1.27.0",
     "parse5": "^8.0.1",

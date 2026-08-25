@@ -2,15 +2,18 @@
 
 このドキュメントは、ネオン・アンダーレルムTRPG ルールサイトの公開方針と、GitHub Pages公開手順を整理するための初期版です。
 
-GitHub Actionsによる基本デプロイは `.github/workflows/deploy.yml` で管理します。
+GitHub Actionsによるfrontendデプロイは `.github/workflows/frontend-deploy.yml` で管理します。
+
+Cloudflare backendのresource deployは、GitHub Pages deployから独立した `.github/workflows/backend-deploy.yml` で管理します。
 
 ## 公開方針
 
 - 静的サイトとして公開する。
 - GitHub Pagesなどの静的ホスティングで公開できる構成を維持する。
-- DB、常駐サーバー、認証、CMS、APIサーバーを前提にしない。
+- 公開ルールサイトは静的なGitHub Pagesとして維持し、DB、常駐サーバー、認証、CMS、汎用APIサーバーを前提にしない。ただし、承認済みGateのcharacter snapshot用Cloudflare Worker、D1、R2 backendはfrontendから独立して運用する。
 - CI/CD上のビルドはExcel本体に依存しない。
 - 公開用ビルドは、Git管理されたMarkdown / MDX、生成済みJSON、サイトコード、設定ファイルだけで成立させる。
+- GitHub Pagesはmainへのfrontend関連変更だけで、Cloudflare backendはmainへのbackend関連変更だけでdeployする。rootのdependency / formatter / TypeScript設定と各deploy・test workflowの変更は、対応workspaceのbuildへ影響しうるため各deployの起動対象に含める。Cloudflare API tokenはRepository Secretからdeploy jobだけへ渡し、Gate branch、親 branch、PRでは読まない。
 
 ## 現時点の確認手順
 
@@ -59,7 +62,7 @@ workflowの基本処理は以下です。
 
 1. `npm ci` を実行する。
 2. root Qualityの`npm run check`を実行する。
-3. 変更pathに応じたfrontend、shared package、backendのworkspace testを実行する。各jobはroot Qualityの成功後に並列で起動する。
+3. frontend deployではfrontend test、backend deployではbackend testとbackend integration testを実行する。各jobはroot Qualityの成功後に起動する。
 4. frontendの`build:public`を実行する。
 5. frontendの`build:search-index`を実行する。
 6. `frontend/dist/pagefind/`を含む`frontend/dist/`をGitHub Pages artifactとしてアップロードする。
@@ -67,7 +70,7 @@ workflowの基本処理は以下です。
 
 検索UIはGitHub Pagesのサブパス配下から`pagefind/`を参照するため、indexは公開用buildと同じ`frontend/dist/`へ生成する必要があります。
 
-workflowは `main` へのpushで実行します。
+frontend deploy workflowは `main` へのfrontend関連pushで実行します。backend関連変更だけではGitHub Pages deployを実行しません。
 
 手動実行用に `workflow_dispatch` も設定しています。
 
@@ -77,6 +80,16 @@ workflowは `main` へのpushで実行します。
 - `.agents/**`
 - `AGENTS.md`
 - `README.md`
+
+## Cloudflare backend deploy
+
+`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。frontend関連変更だけではbackend deployを実行しない。GitHub Actionsの手動起動は使わない。root Quality、backend test、backend integration testの成功後に、Wranglerでproduction remote D1 migrationを適用してからproduction Workerをdeployする。CIは作成済みのproduction resourceを更新するだけで、initial bootstrapは行わない。`wrangler.jsonc`のD1/R2 draft bindingは、resourceがない初回deployでWranglerが作成・bindingするため、新しいenvironmentを作る最初の一回だけ、明示的に承認された手順でdeploy、migration、deployの順に実行する。作成済みenvironmentではCIがmigration、deployの順に一回ずつ実行する。
+
+`wrangler.jsonc`の`env.dev`は、local開発者がCloudflare上で実API接続を確認するためのdevelopment Workerである。`npm run wrangler:dev -- <Wrangler command>`は`backend/bin/wrangler.sh`を通じ、`neon-underrealm-backend-dev`およびその専用D1/R2だけを対象にし、production resourceやmain限定workflowを変更しない。wrapperはdevelopmentのGit管理しない`backend/.env`を存在時だけsourceし、`deploy`時だけ公開runtime varsを渡す。local `wrangler dev`はWrangler標準の`.env`自動読込でbindingを得るため、wrapperは`--var`を追加しない。local CORS allow originは`http://localhost:4321,http://localhost:4322`とする。
+
+production deployはGitHub Repository Variableのproduction用`GOOGLE_OAUTH_CLIENT_ID`をjob環境変数へ渡す。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出する。CIはGoogle client IDが未設定ならdeploy前に失敗し、wrapperが`deploy`時に両値をWorker `vars`として渡す。`npm run wrangler:prod -- <Wrangler command>`はenvironment選択を担当するため呼出側の`--env`または`-e`を拒否する。GitHub Pagesのcustom domainへ移行した場合だけ、CORS originをRepository Variableなどの明示設定へ切り替える。`vars`はenvironment間で継承されないため、D1/R2 bindingと同様にdevelopmentとproductionの値を共用しない。いずれも公開値のためCloudflare secretには登録しない。productionへのlocal remote deployはユーザー承認後だけに実行する。
+
+workflowが読むRepository Secretは`CLOUDFLARE_API_TOKEN`だけである。Terraform remote state、R2 S3 credential、Terraform用Repository Variableは使わない。automatic provisioningはBetaのため、resourceの詳細なlifecycle管理が必要になった場合は方針を再評価する。
 
 ## CIとPublic E2E
 
@@ -93,7 +106,7 @@ workflowは `main` へのpushで実行します。
 - root Qualityと並行して変更pathを分類し、frontend、shared package、backendのtestは、各directory、root依存設定、または`.github/workflows/**`が変わったときだけ、root Qualityの成功後に並列実行する。frontend testはshared packageだけの変更では起動しない。
 - `.codex/**/*.toml`だけの変更ではworkflowを起動しない。
 
-mainへのサイト公開対象のpushでは、deploy workflowもroot Qualityと同じ差分testを実行する。frontendのpublic buildは、root Qualityと起動対象のworkspace testがすべて成功または未起動であることを確認してから実行する。
+mainへのfrontend公開対象のpushでは、GitHub Pages deploy workflowがroot Qualityとfrontend testを実行する。frontendのpublic buildは、両方の成功後に実行する。backend関連変更だけではGitHub Pages deploy workflowを起動しない。
 
 deploy workflowはpublic build後にPagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`frontend/src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
 

@@ -8,9 +8,11 @@
 
 本サイトは、GitHub Pages / GitLab Pages / Cloudflare Pages / Vercel / Netlify などの無料静的ホスティングサービスで公開できる構成にする。
 
-サーバーサイド処理、データベース、常駐プロセス、認証必須CMSを前提にしてはならない。
+公開ルールサイトは、サーバーサイド処理、データベース、常駐プロセス、認証必須CMSを前提にしてはならない。
 
-Webキャラクターシートを含むブラウザ上のインタラクティブ機能は、静的ホスティングで完結し、サーバーサイド処理やデータベースを要求しない範囲で実装する。
+ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateでは、Cloudflare Worker、D1、R2をキャラクターシートのクラウド永続化専用backendとして追加してよい。frontendの静的公開とbackendのresource管理・deployは独立させ、frontendはbackend内部moduleを直接importしない。G5では、公開設定をfrontend filteringではなくbackendのread authorizationで強制する。
+
+Webキャラクターシートを含むブラウザ上のインタラクティブ機能は、`ex-16-character-sheet-cloud-persistence` の承認済みGateを除き、静的ホスティングで完結し、サーバーサイド処理やデータベースを要求しない範囲で実装する。
 
 ### AC-02. ソースコード連携で自動公開できること
 
@@ -304,6 +306,8 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - Webキャラクターシートだけは `frontend/src/character-sheet/` のReact Islandとして実装し、static site全体をSPAにはしない。端末内の永続化はlocalStorageとIndexedDBだけを使う。
 - 検索はPagefindの静的indexを公開用build成果物へ生成し、外部検索サービスを使わない。
 - Cloudflare Web Analyticsのmanual beaconは本番deploy buildだけでHTMLへ出力する。通常build、PR検証、Visual Testでは出力しない。
+- `backend/` はHonoをHTTP entrypointにするCloudflare Workerである。`backend/wrangler.jsonc`をWorkerとD1/R2 bindingの正本とし、Wranglerがproduction resourceのautomatic provisioning、remote migration、deployを担う。resource未作成の初回だけdeployをmigrationより先に実行し、作成済みenvironmentではmigration、deployの順に実行する。`backend/bin/wrangler.sh`が`dev` / `prod`のenvironment選択を集約する。`env.dev`はCloudflare上の実API接続確認用environmentであり、productionとは別のWorker、D1、R2、設定値を使う。development commandはGit ignoreした`backend/.env`が存在するときだけ読み、production CIはGitHub Repository VariableからGoogle client IDを、`${{ github.repository_owner }}`からCORS allow originを導出して公開Worker `vars`を注入する。これらは公開値でありsecretにしない。local開発とintegration testではWrangler / Miniflare / workerdのlocal D1/R2 bindingを使う。
+- character sheet cloud persistence backendのAPI、authentication middleware/validation/service/repositoryのdependency境界、mock repositoryを使うservice test、ApplicationErrorからHTTP statusへのerror contract、local/productionのCloudflare repository・token verifier生成の詳細は`docs/architectures/backend.md`を正本とする。
 
 ## 3. 技術スタック
 
@@ -321,6 +325,8 @@ Zod Schemaでは、生成済みJSONとして満たすべき基本的な型、必
 - GitHub Pages
 - Astro scoped CSS + CSS variables
 - Pagefind
+- Hono
+- Cloudflare Workers、D1、R2、Wrangler
 
 - Zod
 - read-excel-file

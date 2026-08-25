@@ -1,0 +1,112 @@
+name: Deploy Cloudflare backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - "package.json"
+      - "package-lock.json"
+      - "biome.json"
+      - "tsconfig.json"
+      - ".github/workflows/backend-deploy.yml"
+      - ".github/workflows/quality.yml"
+      - ".github/workflows/workspace-test.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-backend
+  cancel-in-progress: false
+
+jobs:
+  root-quality:
+    uses: ./.github/workflows/quality.yml
+
+  backend-test:
+    needs: root-quality
+    uses: ./.github/workflows/workspace-test.yml
+    with:
+      workspace: backend
+      script: test
+
+  backend-integration:
+    needs: root-quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Reset integration Worker state
+        run: npm --workspace=@neon-underrealm/backend run integration:reset
+
+      - name: Apply integration D1 migrations
+        run: npm --workspace=@neon-underrealm/backend run migrate:integration
+
+      - name: Start local integration Worker
+        run: npm --workspace=@neon-underrealm/backend run dev:integration > "$RUNNER_TEMP/backend.log" 2>&1 &
+
+      - name: Wait for local Worker
+        run: |
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error http://127.0.0.1:8787/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::The local Worker did not become reachable."
+          exit 1
+
+      - name: Run backend integration test
+        run: npm --workspace=@neon-underrealm/backend run test:integration
+
+      - name: Remove integration Worker state
+        if: always()
+        run: npm --workspace=@neon-underrealm/backend run integration:reset
+
+  deploy:
+    needs:
+      - root-quality
+      - backend-test
+      - backend-integration
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CORS_ALLOW_ORIGIN: ${{ format('https://{0}.github.io', github.repository_owner) }}
+      FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Require backend runtime variables
+        run: |
+          if [ -z "$FIREBASE_PROJECT_ID" ]; then
+            echo "::error::FIREBASE_PROJECT_ID repository variable must be set before deployment."
+            exit 1
+          fi
+
+      - name: Apply remote D1 migrations
+        run: npm --workspace=@neon-underrealm/backend run wrangler:prod -- d1 migrations apply DB --remote
+
+      - name: Deploy backend Worker
+        run: npm --workspace=@neon-underrealm/backend run wrangler:prod -- deploy

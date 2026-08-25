@@ -2,4 +2,6 @@ coverage/
 dist/
 *.tsbuildinfo
 .dev.vars
-.wrangler/
+.wrangler/state/
+.wrangler/integration-state/
+.wrangler/tmp/

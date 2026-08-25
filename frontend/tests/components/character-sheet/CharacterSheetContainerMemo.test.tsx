@@ -14,10 +14,18 @@ import {
 } from "../../../src/character-sheet/form/values";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
-const { actionPaneSpy, presenterSpy, useRootStateMock } = vi.hoisted(() => ({
+const {
+  actionPaneSpy,
+  presenterSpy,
+  useRemotePersistenceMock,
+  useRootStateMock,
+  useFirebaseAuthenticationMock,
+} = vi.hoisted(() => ({
   actionPaneSpy: vi.fn(),
   presenterSpy: vi.fn(),
+  useRemotePersistenceMock: vi.fn(),
   useRootStateMock: vi.fn(),
+  useFirebaseAuthenticationMock: vi.fn(),
 }));
 
 vi.mock(
@@ -25,6 +33,11 @@ vi.mock(
   () => ({
     default: useRootStateMock,
   }),
+);
+
+vi.mock(
+  "../../../src/character-sheet/hooks/useRemoteCharacterPersistence",
+  () => ({ default: useRemotePersistenceMock }),
 );
 
 vi.mock(
@@ -57,6 +70,10 @@ vi.mock(
   }),
 );
 
+vi.mock("../../../src/character-sheet/auth/useFirebaseAuthentication", () => ({
+  default: useFirebaseAuthenticationMock,
+}));
+
 function useRootStateHarness() {
   const form = useForm<CharacterSheetFormValues>({
     defaultValues: characterSheetDefaultValues,
@@ -73,7 +90,10 @@ function useRootStateHarness() {
 
   return useMemo(
     () => ({
+      bindRemoteSummary: () => {},
       characterImage: null,
+      clearCharacterImageForCopy: async () => true,
+      clearRemoteCharacter: () => {},
       form,
       formResetVersion: 0,
       formRestoreConfirmButtonRef,
@@ -103,18 +123,67 @@ function useRootStateHarness() {
       onResetConfirmed: async () => {},
       pendingJsonImport: null,
       rootOperation: null,
+      remoteCharacter: null,
+      restoreRemoteCharacter: async () => false,
       setImageError: () => {},
       setIsFormRestoreErrorOpen: () => {},
       setIsJsonImportErrorOpen: () => {},
       setIsJsonImportImageErrorOpen: () => {},
       setPendingJsonImport: () => {},
+      updateRemoteCharacterMetadata: () => {},
     }),
     [form],
   );
 }
 
 beforeEach(() => {
+  useFirebaseAuthenticationMock.mockReturnValue({
+    getIdToken: async () => null,
+    onLogin: async () => {},
+    onLogout: async () => {},
+    sessionKey: null,
+    status: "signed-out",
+  });
   useRootStateMock.mockImplementation(useRootStateHarness);
+  useRemotePersistenceMock.mockReturnValue({
+    dialogProps: {
+      characterList: {
+        cache: null,
+        isLoading: false,
+        isOpen: false,
+        onRequestClose: vi.fn(),
+        onSelect: vi.fn(),
+      },
+      copySave: {
+        isOpen: false,
+        isSaving: false,
+        onConfirm: vi.fn(),
+        onRequestClose: vi.fn(),
+      },
+      delete: {
+        isDeleting: false,
+        isOpen: false,
+        onConfirm: vi.fn(),
+        onRequestClose: vi.fn(),
+      },
+      save: {
+        initialPcName: "",
+        initialPublic: true,
+        isOpen: false,
+        isSaving: false,
+        onConfirm: vi.fn(),
+        onRequestClose: vi.fn(),
+      },
+    },
+    isCopySaveDisabled: false,
+    isDeleteDisabled: false,
+    isEditable: true,
+    isSaveDisabled: false,
+    openCharacterList: vi.fn(),
+    openCopySave: vi.fn(),
+    openDelete: vi.fn(),
+    openSave: vi.fn(),
+  });
   Object.defineProperty(HTMLDialogElement.prototype, "close", {
     configurable: true,
     value() {
@@ -133,7 +202,9 @@ afterEach(() => {
   cleanup();
   actionPaneSpy.mockReset();
   presenterSpy.mockReset();
+  useRemotePersistenceMock.mockReset();
   useRootStateMock.mockReset();
+  useFirebaseAuthenticationMock.mockReset();
 });
 
 describe("CharacterSheetContainer memo boundaries", () => {

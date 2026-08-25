@@ -120,14 +120,6 @@ export const siteMenuItems: SiteMenuItem[] = [
     label: "更新履歴",
     href: "/release-notes",
   },
-  {
-    label: "プライバシーポリシー",
-    href: "/privacy-policy",
-  },
-  {
-    label: "利用規約",
-    href: "/terms",
-  },
 ];
 
 export const siteMenuLinks = flattenSiteMenuItems(siteMenuItems);

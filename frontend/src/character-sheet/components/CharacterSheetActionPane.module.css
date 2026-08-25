@@ -9,6 +9,30 @@
   display: none;
 }
 
+.googleLoginButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.googleLoginIcon {
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.authentication {
+  display: grid;
+  gap: var(--space-2);
+}
+.authenticationError {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+}
 @media (width >= 84rem) {
   .root {
     grid-column: 2;
@@ -22,6 +46,16 @@
   .desktopRail {
     display: grid;
     gap: var(--space-3);
+  }
+  .authentication :global(button) {
+    width: 100%;
+  }
+  .characterList {
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding-bottom: var(--space-3);
+  }
+  .characterList :global(button) {
+    width: 100%;
   }
   .sectionNavigation p {
     margin: 0 0 var(--space-2);
@@ -70,6 +104,13 @@
   }
   .actionButtons :global(button) {
     width: 100%;
+  }
+  .import small {
+    display: block;
+    margin-top: 0.125rem;
+    color: var(--color-danger);
+    font-size: 0.625rem;
+    font-weight: 700;
   }
   .desktopErrorStatus {
     display: grid;
@@ -139,6 +180,22 @@
     background: var(--color-surface);
     box-shadow: var(--shadow-soft);
     padding: var(--space-3);
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .menuOpen {
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .authentication :global(button) {
+    width: 100%;
+  }
+  .characterList {
+    border-bottom: var(--border-width) solid var(--color-border);
+    padding-bottom: var(--space-3);
+  }
+  .characterList :global(button) {
+    width: 100%;
   }
   .sectionNavigation p,
   .errors p {
@@ -177,10 +234,22 @@
   }
   .actionButtons {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-2);
   }
   .actionButtons :global(button) {
     width: 100%;
+  }
+  .import,
+  .ccfoliaCopy {
+    grid-column: 1 / -1;
+  }
+  .import small {
+    display: block;
+    margin-top: 0.125rem;
+    color: var(--color-danger);
+    font-size: 0.625rem;
+    font-weight: 700;
   }
   .errors {
     border-top: var(--border-width) solid var(--color-border);

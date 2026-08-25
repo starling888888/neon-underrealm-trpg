@@ -65,6 +65,448 @@ npm --workspace=@neon-underrealm/frontend run visual:install
 
 frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です。VRTはfrontendの`visual:test`で比較し、baseline更新は明示指示時だけfrontendの`visual:update`を使います。
 
+## Firebase Authentication の設定
+
+`ex-16-6-firebase-authentication`では、WebキャラクターシートのGoogleログインをFirebase Authenticationへ移行する。
+
+Firebase AuthenticationのGoogle providerを利用し、ブラウザ上の認証状態の永続化とFirebase ID Tokenの更新はFirebase SDKへ委譲する。
+
+Firebase Web Appの設定値はfrontendへ公開される設定値であり、Firebase service accountや秘密鍵とは異なる。このプロジェクトではFirebase Authentication用のservice account JSONや秘密鍵を作成・配置しない。
+
+Firebase Authenticationの設定には、ユーザーによる以下の作業が必要になる。
+
+1. Firebase projectの準備
+2. Firebase Web Appの登録
+3. Google providerの有効化
+4. Authorized domainsの登録
+5. Firebase Web App設定値の取得
+6. `frontend/.env`への設定
+7. `backend/.env`へのFirebase project IDの設定
+8. GitHub Actions Repository Variablesへのproduction設定値の登録
+
+### Firebase projectを準備する
+
+Firebase Consoleを開く。
+
+既存のGoogle Cloud projectをこのサイトのGoogle認証に利用している場合は、可能であれば同じGoogle Cloud projectへFirebaseを追加する。
+
+新しい認証用projectを別途作成する必要はない。
+
+Firebase Consoleで **プロジェクトを追加** を選択し、既存Google Cloud projectを利用できる場合は対象projectを選択する。
+
+Google AnalyticsはFirebase Authenticationには必須ではない。
+
+### Firebase Web Appを登録する
+
+Firebase Consoleで対象projectを開き、
+
+**Project Overview → Web (`</>`)**
+
+からWeb Appを登録する。
+
+アプリ名は任意でよい。
+
+例:
+
+```txt
+neon-underrealm-web
+```
+
+Firebase Hostingはこのリポジトリでは利用しないため、有効化する必要はない。
+
+Web App登録後、Firebase SDK configurationとして次のような値が表示される。
+
+```js
+const firebaseConfig = {
+  apiKey: "AIza...",
+  authDomain: "example.firebaseapp.com",
+  projectId: "example",
+  storageBucket: "example.firebasestorage.app",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef..."
+};
+```
+
+後から確認する場合は、
+
+**Project settings → General → Your apps → 対象Web App → SDK setup and configuration → Config**
+
+を開く。
+
+このプロジェクトのFirebase Authenticationで必要なのは次の4値とする。
+
+```txt
+apiKey
+authDomain
+projectId
+appId
+```
+
+`storageBucket`と`messagingSenderId`はFirebase Authenticationの今回の利用範囲では設定しない。
+
+### Google providerを有効化する
+
+Firebase Consoleで、
+
+**Authentication → Sign-in method**
+
+を開く。
+
+`Google` providerを選択し、有効化する。
+
+初回設定でsupport emailの指定を求められた場合は、このFirebase projectを管理するGoogle Accountを指定する。
+
+このプロジェクトでは初期状態でGoogle providerだけを利用する。
+
+以下は有効化しない。
+
+- Email / Password
+- Anonymous
+- Phone
+- GitHub
+- Apple
+- Microsoft
+- その他のIdentity Provider
+
+### Authorized domainsを登録する
+
+Firebase Consoleで、
+
+**Authentication → Settings → Authorized domains**
+
+を開く。
+
+production用として次を登録する。
+
+```txt
+starling888888.github.io
+```
+
+local development用として次を登録する。
+
+```txt
+localhost
+```
+
+Authorized domainsにはscheme、port、pathを含めない。
+
+次の形式にはしない。
+
+```txt
+https://starling888888.github.io/neon-underrealm-trpg/
+http://localhost:4321
+http://localhost:4322
+```
+
+登録値はdomainだけとする。
+
+```txt
+starling888888.github.io
+localhost
+```
+
+### Firebase設定値を取得する
+
+Firebase Web Appのconfigurationから次の対応で値を控える。
+
+| Firebase config | frontend `.env`               | GitHub Repository Variable |
+| --------------- | ----------------------------- | -------------------------- |
+| `apiKey`        | `PUBLIC_FIREBASE_API_KEY`     | `FIREBASE_API_KEY`         |
+| `authDomain`    | `PUBLIC_FIREBASE_AUTH_DOMAIN` | `FIREBASE_AUTH_DOMAIN`     |
+| `projectId`     | `PUBLIC_FIREBASE_PROJECT_ID`  | `FIREBASE_PROJECT_ID`      |
+| `appId`         | `PUBLIC_FIREBASE_APP_ID`      | `FIREBASE_APP_ID`          |
+
+これらはFirebase Web Appへ配布されるpublic configurationであり、Firebase service account credentialではない。
+
+この4値をGitHub Repository Secretsへ登録しない。
+
+### frontend/.envを設定する
+
+`frontend/.env.example`をコピーする。
+
+```sh
+cp frontend/.env.example frontend/.env
+```
+
+Firebase Web Appから取得した値を設定する。
+
+```dotenv
+PUBLIC_API_BASE_PATH=<development backend API URL>
+
+PUBLIC_FIREBASE_API_KEY=<firebaseConfig.apiKey>
+PUBLIC_FIREBASE_AUTH_DOMAIN=<firebaseConfig.authDomain>
+PUBLIC_FIREBASE_PROJECT_ID=<firebaseConfig.projectId>
+PUBLIC_FIREBASE_APP_ID=<firebaseConfig.appId>
+
+GOOGLE_DRIVE_ROOT_FOLDER_ID=
+GOOGLE_SERVICE_ACCOUNT_EMAIL=
+GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY=
+```
+
+例えばFirebase Consoleに次の値が表示された場合、
+
+```js
+const firebaseConfig = {
+  apiKey: "AIzaSyExample",
+  authDomain: "neon-underrealm.firebaseapp.com",
+  projectId: "neon-underrealm",
+  appId: "1:123456789:web:abcdef"
+};
+```
+
+`frontend/.env`には次のように設定する。
+
+```dotenv
+PUBLIC_FIREBASE_API_KEY=AIzaSyExample
+PUBLIC_FIREBASE_AUTH_DOMAIN=neon-underrealm.firebaseapp.com
+PUBLIC_FIREBASE_PROJECT_ID=neon-underrealm
+PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
+```
+
+`PUBLIC_FIREBASE_AUTH_DOMAIN`にはFirebase Consoleから取得した`authDomain`をそのまま設定する。
+
+GitHub Pagesのdomainへ置き換えない。
+
+```dotenv
+# 正しい
+PUBLIC_FIREBASE_AUTH_DOMAIN=neon-underrealm.firebaseapp.com
+
+# 誤り
+PUBLIC_FIREBASE_AUTH_DOMAIN=starling888888.github.io
+```
+
+`frontend/.env`はGit管理しない。
+
+### backend/.envを設定する
+
+`backend/.env.example`をコピーする。
+
+```sh
+cp backend/.env.example backend/.env
+```
+
+Firebase Authenticationについてbackendが必要とする設定値はFirebase project IDだけとする。
+
+```dotenv
+CLOUDFLARE_API_TOKEN=<Cloudflare API token>
+
+CORS_ALLOW_ORIGIN=http://localhost:4321,http://localhost:4322
+
+FIREBASE_PROJECT_ID=<firebaseConfig.projectId>
+```
+
+frontendの、
+
+```dotenv
+PUBLIC_FIREBASE_PROJECT_ID
+```
+
+とbackendの、
+
+```dotenv
+FIREBASE_PROJECT_ID
+```
+
+には同じFirebase project IDを設定する。
+
+Firebaseの`apiKey`、`authDomain`、`appId`はbackendへ設定しない。
+
+Firebase service account JSONやprivate keyもbackendへ配置しない。
+
+`backend/.env`はGit管理しない。
+
+### GitHub Actions Repository Variablesを設定する
+
+GitHub repositoryの、
+
+**Settings → Secrets and variables → Actions → Variables**
+
+を開く。
+
+`New repository variable`から次の4つを追加する。
+
+```txt
+FIREBASE_API_KEY
+FIREBASE_AUTH_DOMAIN
+FIREBASE_PROJECT_ID
+FIREBASE_APP_ID
+```
+
+値はFirebase ConsoleのWeb App configurationと対応させる。
+
+例:
+
+```txt
+FIREBASE_API_KEY
+= AIzaSyExample
+```
+
+```txt
+FIREBASE_AUTH_DOMAIN
+= neon-underrealm.firebaseapp.com
+```
+
+```txt
+FIREBASE_PROJECT_ID
+= neon-underrealm
+```
+
+```txt
+FIREBASE_APP_ID
+= 1:123456789:web:abcdef
+```
+
+production frontendとbackendでは必ず同じFirebase projectの設定値を使用する。
+
+frontend deployではこのRepository Variablesから、
+
+```txt
+PUBLIC_FIREBASE_API_KEY
+PUBLIC_FIREBASE_AUTH_DOMAIN
+PUBLIC_FIREBASE_PROJECT_ID
+PUBLIC_FIREBASE_APP_ID
+```
+
+へ値を渡す。
+
+backend deployでは同じ`FIREBASE_PROJECT_ID`をWorkerのruntime configurationへ渡す。
+
+### GitHub Actions Secrets
+
+Firebase Authenticationのために新しいGitHub Repository Secretは追加しない。
+
+Firebase関連値はすべてRepository Variablesへ登録する。
+
+Firebase用として以下を作成しない。
+
+```txt
+FIREBASE_PRIVATE_KEY
+FIREBASE_SERVICE_ACCOUNT
+FIREBASE_SERVICE_ACCOUNT_JSON
+GOOGLE_CLIENT_SECRET
+GOOGLE_REFRESH_TOKEN
+```
+
+既存のCloudflare deploy用Secretはそのまま維持する。
+
+```txt
+CLOUDFLARE_API_TOKEN
+```
+
+Firebase Authentication移行とは関係なく、Google Spreadsheet同期で利用しているservice account情報も既存のローカル設定として維持する。
+
+### 旧Google OAuth Client ID設定の削除
+
+G6のFirebase Authentication移行が完了し、frontend / backendのdeploy workflowがFirebase設定へ切り替わるまでは、既存のGoogle OAuth設定値を削除しない。
+
+現在のdeployが旧設定値を参照している間に削除するとdeployが失敗するためである。
+
+Firebase Authentication移行完了後、旧Repository Variableが不要になったことを確認してから、
+
+```txt
+GOOGLE_OAUTH_CLIENT_ID
+```
+
+をGitHub Actions Repository Variablesから削除する。
+
+local環境でもG6移行完了後に不要となった、
+
+```txt
+PUBLIC_GOOGLE_OAUTH_CLIENT_ID
+GOOGLE_OAUTH_CLIENT_ID
+```
+
+を`frontend/.env`、`backend/.env`から削除する。
+
+Google Cloud Console上に存在する旧OAuth Web clientそのものの削除はG6の必須作業とはしない。
+
+### Firebase Authentication設定チェックリスト
+
+G6実装開始前に、ユーザー側の設定として次を確認する。
+
+- [x] Firebase projectを準備した。
+- [x] Firebase Web Appを登録した。
+- [x] Web Appの`apiKey`を取得した。
+- [x] Web Appの`authDomain`を取得した。
+- [x] Web Appの`projectId`を取得した。
+- [x] Web Appの`appId`を取得した。
+- [x] Firebase AuthenticationでGoogle providerを有効化した。
+- [x] Authorized domainsへ`starling888888.github.io`を登録した。
+- [x] Authorized domainsへ`localhost`を登録した。
+- [x] `frontend/.env`へ4つの`PUBLIC_FIREBASE_*`設定を追加した。
+- [x] `backend/.env`へ`FIREBASE_PROJECT_ID`を追加した。
+- [x] GitHub Actions Repository Variablesへ`FIREBASE_API_KEY`を追加した。
+- [x] GitHub Actions Repository Variablesへ`FIREBASE_AUTH_DOMAIN`を追加した。
+- [x] GitHub Actions Repository Variablesへ`FIREBASE_PROJECT_ID`を追加した。
+- [x] GitHub Actions Repository Variablesへ`FIREBASE_APP_ID`を追加した。
+- [x] Firebase用のservice account JSONやGitHub Secretを作成していない。
+- [x] G6移行完了前の`GOOGLE_OAUTH_CLIENT_ID`をまだ削除していない。
+
+## Cloudflare backendのローカル設定
+
+この節はWranglerによるlocal backend開発とCloudflare deployを扱う。実値、local state、credential fileはGit管理しない。Cloudflare API tokenを`backend/.env`へ設定する。
+
+```sh
+cp backend/.env.example backend/.env
+```
+
+`CLOUDFLARE_API_TOKEN`には、対象accountの **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write** を持つtokenを設定する。`CORS_ALLOW_ORIGIN`はdevelopment Workerが受け付けるoriginをcomma-separatedで指定する。`FIREBASE_PROJECT_ID`にはfrontendと同じFirebase project IDを指定する。ローカルD1/R2は`backend/.wrangler/state/`へ保存され、Git管理しない。
+
+```sh
+npm --workspace=@neon-underrealm/backend run local:reset
+npm --workspace=@neon-underrealm/backend run migrate:local
+npm --workspace=@neon-underrealm/backend run dev:local
+```
+
+別terminalで`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。確認後は`local:reset`を再実行する。
+
+`wrangler.jsonc`のtop-level設定はproduction、`env.dev`はCloudflare上の開発環境である。`--env dev`でdeployするとWorker名は`neon-underrealm-backend-dev`となり、productionとは別のD1/R2 bindingを使う。local Workerの`dev:local`とは別物であり、local stateもCloudflare上のdevelopment resourceもproductionへ書き込まない。
+
+実APIへ接続する動作確認は、次の順でdevelopment Workerへ反映する。初回はD1/R2 bindingをprovisionするため、migrationより先に一度`deploy`を実行する。resource作成後の更新ではmigration、deployの順に実行する。
+
+`wrangler:dev`はGit管理しない`backend/.env`が存在するときだけsourceし、`deploy`時だけFirebase project IDとCORS allow originを`--var`でdevelopment Workerへ渡す。local `wrangler dev`はWrangler標準の`.env`自動読込でbindingを得るため、wrapperは`--var`を追加しない。
+
+local用の`CORS_ALLOW_ORIGIN`は次とする。
+
+```txt
+http://localhost:4321,http://localhost:4322
+```
+
+```sh
+# 初回だけ: Worker、D1、R2をprovisionする
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- deploy
+
+# schema変更時: migration後にWorkerを更新する
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- d1 migrations apply DB --remote
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- deploy
+```
+
+resource未作成のenvironmentでは、最初に`deploy`でWorker、D1、R2のbindingを作成し、次にremote migrationを適用して、最後にもう一度`deploy`する。
+
+作成済みenvironmentではmigration、deployの順に一回ずつ実行する。
+
+`FIREBASE_PROJECT_ID`はGitHub Repository Variableからjobの環境変数へ渡し、未設定ならdeploy前に失敗する。
+
+`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から、
+
+```txt
+https://<owner>.github.io
+```
+
+を導出する。
+
+wrapperは`deploy`時だけ両値をplaintext Worker `vars`として渡す。development wrapperはGit ignoreした`backend/.env`があればsourceして同じ方式でdevelopment Workerへ渡す。
+
+custom domainへ移行した場合は、このCORS origin導出を明示設定へ変更する。
+
+`wrangler dev`によるlocal WorkerはWrangler標準の`.env`自動読込でbindingを得るため、wrapperから`--var`を追加しない。
+
+`wrangler:dev` / `wrangler:prod`はenvironment選択を担当するため、呼出側で`--env`または`-e`を渡さない。
+
+`wrangler.jsonc`のD1/R2 draft bindingにより、resourceがまだ存在しない初回deployではWranglerが作成・bindingする。このautomatic provisioningはBetaのため、将来resource名・location・lifecycleの細かな管理が必要になった時点で方針を見直す。
+
+productionへのlocal remote commandはユーザー承認後にだけ実行する。production用のenvironmentを明示的に用意できない場合は、local `.env`を流用せずmain限定のCI deployを使う。
+
 ## 別端末からCodexセッションへ接続する
 
 tmuxとSSHサーバーを導入済みの環境では、Codexをtmux内で起動しておくことで、スマホなどの別端末から実行中のセッションへ接続し、必要な承認操作を行えます。
@@ -192,9 +634,10 @@ V1.5で処理順を明確化しました。
 - `frontend/tests/vrt/`: Playwright visual regression tests
 - `frontend/data/generated/`: Excelから変換した公開用JSONの配置先
 - `packages/shared/`: frontendと将来のbackendで共有する型・定数のpackage
-- `backend/`: 将来のCloudflare Worker用workspace。現時点ではdummyのpackage、source、testだけを置く
+- `backend/`: Cloudflare Worker、Wrangler local state、backend testのworkspace
 - `.raw/`: Google Drive由来ファイルを同期するローカル作業入力。Git管理しない
-- `frontend/.env`: Google Spreadsheet同期のフォルダIDとservice account認証情報を置くローカル設定ファイル。Git管理しない
+- `frontend/.env`: Firebase Web Appのpublic config、backend API path、Google Spreadsheet同期設定を置くローカル設定ファイル。Git管理しない
+- `backend/.env`: Cloudflare development設定とFirebase project IDを置くローカル設定ファイル。Git管理しない
 - `.tmp/`: 一次レビュー用ファイルや一時メモの配置先。Git管理しない
 
 ## 主要ドキュメント
@@ -302,6 +745,6 @@ Visual Reviewの失敗を隠す目的でbaselineを更新してはいけませ�
 
 ## 初期スコープ外
 
-GMガイド、シナリオ本文、キャラクター作成ウィザード、ダイスローラー、CMS、認証、DB、サーバーサイド処理、外部解析providerの追加などは初期スコープ外です。Cloudflare Web Analyticsのmanual beaconは本番deployだけで出力する現行の最小解析として含めます。Webキャラクターシートのログイン、サーバー保存、共有、PDF出力も初期スコープ外です。
+GMガイド、シナリオ本文、キャラクター作成ウィザード、ダイスローラー、CMS、認証、DB、サーバーサイド処理、外部解析providerの追加などは初期スコープ外です。Cloudflare Web Analyticsのmanual beaconと、承認済み`ex-16-character-sheet-cloud-persistence` GateのCloudflare backend基盤は例外です。Webキャラクターシートのログイン、サーバー保存、共有、PDF出力は後続Gateまで実装しません。
 
 詳細は [初期スコープ外](docs/out-of-scope.md) を参照してください。

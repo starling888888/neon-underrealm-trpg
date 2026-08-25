@@ -54,7 +54,7 @@ export default function CharacterSheetResetConfirmDialog({
           color="danger"
           onClick={onConfirm}
           size="medium"
-          variant="solid"
+          variant="outline"
         >
           {characterSheet.actions.reset}
         </CharacterSheetButton>

@@ -1,0 +1,147 @@
+.dialog {
+  width: min(44rem, calc(100vw - (var(--page-gutter) * 2)));
+  height: min(36rem, calc(100dvh - (var(--space-8) * 2)));
+}
+
+.content {
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+.filters {
+  display: flex;
+  align-items: start;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: var(--text-sm);
+}
+
+.userFilterGroup {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.ownerFilter {
+  padding-left: calc(0.9rem + var(--space-2));
+}
+
+.filters label {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.notice {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--line-height-tight);
+}
+
+.filters input {
+  width: 0.9rem;
+  height: 0.9rem;
+  accent-color: var(--color-link);
+  margin: 0;
+}
+
+.tableWrap {
+  min-width: 0;
+}
+
+.listRegion {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+
+.table th,
+.table td {
+  overflow: hidden;
+  border-bottom: var(--border-width) solid var(--color-border);
+  padding: var(--space-2);
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pcNameColumn {
+  width: 32%;
+}
+
+.plNameColumn {
+  width: 24%;
+}
+
+.ryugiAndIkizamaColumn {
+  width: 36%;
+}
+
+.rankColumn {
+  width: 8%;
+}
+
+.table th {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+
+.table button {
+  width: 100%;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: var(--color-link);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ryugiAndIkizama {
+  white-space: nowrap;
+}
+
+.ryugiAndIkizama > span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+@media (width < 48rem) {
+  .pcNameColumn {
+    width: 65%;
+  }
+
+  .plNameColumn {
+    width: 35%;
+  }
+
+  .ryugiAndIkizamaColumn,
+  .rankColumn,
+  .desktopOnly {
+    display: none;
+  }
+}

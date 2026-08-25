@@ -14,30 +14,91 @@ export const characterSheetDictionary = {
     close: "閉じる",
     delete: "削除",
     closeFormulaTooltip: "計算式の説明を閉じる",
+    next: "次へ",
+    previous: "前へ",
+    save: "保存",
     unavailableValue: "-",
   },
   characterSheet: {
+    authentication: {
+      error: "Googleアカウントの認証に失敗しました。もう一度お試しください。",
+      initializing: "ログイン状態を確認しています。",
+      login: "Googleでログイン",
+      logout: "ログアウト",
+      regionLabel: "Googleアカウントの認証",
+      sessionExpired:
+        "ログインの有効期限が切れました。もう一度ログインしてください。",
+      signingIn: "ログイン中…",
+    },
     actions: {
       ccfoliaCopy: "CCFOLIAコピー",
+      characterList: "キャラクター一覧",
       closeMenu: "操作メニューを閉じる",
+      copySave: "コピー保存",
+      dbDelete: "DB削除",
+      dbSave: "DB保存",
+      errorCount: "エラーが{count}件あります。",
       errorStatusLabel: "エラー状況",
       errorsHeading: "エラー",
       export: "エクスポート",
       help: "ヘルプ",
       import: "インポート",
+      importRemovalNotice: "DB保存に移行するため9/1に削除されます。",
       menuLabel: "キャラクターシートの操作メニュー",
       noErrors: "エラーはありません。",
       openMenu: "操作メニューを開く",
       regionLabel: "キャラクターシートの操作",
       reviewErrors: "確認",
       reset: "初期化",
+      sectionJump: "セクションにジャンプ",
       title: "キャラクターシート",
+    },
+    characterList: {
+      empty: "該当するキャラクターはありません。",
+      heading: "キャラクター一覧",
+      loading: "キャラクター一覧を読み込んでいます。",
+      notice:
+        "あなたが登録したキャラクターのみ編集できます。未ログイン時は全てのキャラクターが編集できません。",
+      ownersOnly: "自分で登録したキャラクターのみ",
+      paginationLabel: "キャラクター一覧のページ",
+      registered: "登録キャラクター",
+      sample: "サンプルキャラクター",
+      table: {
+        pcName: "PC名",
+        plName: "PL名",
+        rank: "格",
+        ikizama: "生き様",
+        ryugi: "流儀",
+        updatedAt: "更新日",
+      },
+    },
+    remotePersistence: {
+      copySave: {
+        description:
+          "現在表示されているキャラクターのコピーを保存します。PC名は必須です。PL名は必要に応じて入力してください。",
+        imageNotice:
+          "コピー保存では画像は保存されません。保存後に設定してDB保存を行ってください。",
+        label: "コピー保存",
+      },
+      delete: {
+        description: "DBに保存されたキャラクターを削除します。よろしいですか？",
+        label: "DB削除",
+        localCharacterNotice:
+          "現在表示中のブラウザに保存されたキャラクターは初期化されません。",
+      },
+      save: {
+        description: "DBに保存するためにはPC名が必須です。",
+        label: "DB保存",
+      },
+      visibility: "全員に公開する",
     },
     ccfolia: {
       confirm:
         "CCFOLIAのコマ作成データをクリップボードにコピーします。CCFOLIAの盤面で貼り付けを行うとコマが作成されます。",
       confirmLabel: "CCFOLIAコピー",
       copy: "コピー",
+      copyError: "CCFOLIA用データをコピーできませんでした。",
+      copySuccess: "CCFOLIA用データをコピーしました。",
       failure:
         "クリップボードへのコピーに失敗しました。\nブラウザの権限設定を確認してください。",
       failureLabel: "CCFOLIAコピー失敗",
@@ -47,7 +108,7 @@ export const characterSheetDictionary = {
     },
     reset: {
       confirm:
-        "入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？",
+        "入力済みのデータと画像を初期状態に戻します。\nDBに保存されたキャラクターは削除されません。\n本当によろしいですか？",
       confirmLabel: "入力内容を初期化",
       loading: "初期化中…",
     },
@@ -131,12 +192,22 @@ export const characterSheetDictionary = {
       errorLabel: "JSON入力の失敗",
       imageError: "入力データの画像に誤りがあり表示できませんでした。",
       imageErrorLabel: "入力データの画像の誤り",
+      imageOmitted: "画像を読み込めませんでした。画像を除いて読み込みました。",
       loading: "JSONを読み込んでいます",
     },
     persistence: {
+      copySaveError: "コピー保存に失敗しました。",
+      copySaveSuccess: "コピーをDBに保存しました。",
+      deleteError: "DB削除に失敗しました。",
+      deleteSuccess: "DBから削除しました。",
+      listLoadError: "キャラクター一覧を読み込めませんでした。",
+      loadError: "キャラクターを読み込めませんでした。",
+      remoteRestoreError: "キャラクターを復元できませんでした。",
       restoreError: "自動復元に失敗しました。",
       restoreErrorDialogLabel: "自動復元の失敗",
       restoring: "保存済みの入力を復元しています",
+      saveError: "DB保存に失敗しました。",
+      saveSuccess: "DBに保存しました。",
     },
     profile: {
       age: "年齢",

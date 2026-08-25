@@ -1,0 +1,182 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - "package.json"
+      - "package-lock.json"
+      - "biome.json"
+      - "tsconfig.json"
+      - ".github/workflows/frontend-deploy.yml"
+      - ".github/workflows/quality.yml"
+      - ".github/workflows/workspace-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  root-quality:
+    uses: ./.github/workflows/quality.yml
+
+  frontend-test:
+    needs: root-quality
+    uses: ./.github/workflows/workspace-test.yml
+    with:
+      workspace: '@neon-underrealm/frontend'
+      script: test:coverage
+
+  build:
+    needs:
+      - root-quality
+      - frontend-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Require Cloudflare Web Analytics token
+        env:
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_WEB_ANALYTICS_TOKEN" ]; then
+            echo "::error::CLOUDFLARE_WEB_ANALYTICS_TOKEN repository variable must be set before deployment."
+            exit 1
+          fi
+
+      - name: Require backend API base path
+        env:
+          PUBLIC_API_BASE_PATH: ${{ vars.PUBLIC_API_BASE_PATH }}
+        run: |
+          if [ -z "$PUBLIC_API_BASE_PATH" ]; then
+            echo "::error::PUBLIC_API_BASE_PATH repository variable must be set before deployment."
+            exit 1
+          fi
+
+      - name: Require Firebase Authenticate Variables
+        env:
+          PUBLIC_FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
+          PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.FIREBASE_AUTH_DOMAIN }}
+          PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+          PUBLIC_FIREBASE_APP_ID: ${{ vars.FIREBASE_APP_ID }}
+        run: |
+          if [ -z "$PUBLIC_FIREBASE_API_KEY" ]; then
+            echo "::error::FIREBASE_API_KEY repository variable must be set before deployment."
+            exit 1
+          fi
+          if [ -z "$PUBLIC_FIREBASE_AUTH_DOMAIN" ]; then
+            echo "::error::FIREBASE_AUTH_DOMAIN repository variable must be set before deployment."
+            exit 1
+          fi
+          if [ -z "$PUBLIC_FIREBASE_PROJECT_ID" ]; then
+            echo "::error::FIREBASE_PROJECT_ID repository variable must be set before deployment."
+            exit 1
+          fi
+          if [ -z "$PUBLIC_FIREBASE_APP_ID" ]; then
+            echo "::error::FIREBASE_APP_ID repository variable must be set before deployment."
+            exit 1
+          fi
+
+      - name: Build
+        env:
+          PUBLIC_API_BASE_PATH: ${{ vars.PUBLIC_API_BASE_PATH }}
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
+          PUBLIC_FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
+          PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.FIREBASE_AUTH_DOMAIN }}
+          PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+          PUBLIC_FIREBASE_APP_ID: ${{ vars.FIREBASE_APP_ID }}
+        run: npm --workspace=@neon-underrealm/frontend run build:public
+
+      - name: Build search index
+        run: npm --workspace=@neon-underrealm/frontend run build:search-index
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+  public-e2e:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Wait for deployed site
+        env:
+          E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: |
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error --location --output /dev/null "$E2E_BASE_URL"; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 12 ]; then
+              echo "::error::The deployed GitHub Pages site did not become reachable."
+              exit 1
+            fi
+            sleep 5
+          done
+
+      - name: Run Public E2E
+        env:
+          E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: npm --workspace=@neon-underrealm/frontend run test:e2e:public
+
+      - name: Upload Public E2E diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-e2e-diagnostics
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          if-no-files-found: warn
+          retention-days: 7

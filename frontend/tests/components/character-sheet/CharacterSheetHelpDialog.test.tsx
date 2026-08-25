@@ -61,7 +61,8 @@ describe("CharacterSheetHelpDialog", () => {
       }),
     ).not.toBeNull();
     expect(dialog.textContent).toContain("入力の進め方");
-    expect(dialog.textContent).toContain("保存・引き継ぎ");
+    expect(dialog.textContent).toContain("Googleログインとキャラクター一覧");
+    expect(dialog.textContent).toContain("コピー保存");
     expect(dialog.textContent).toContain("▸");
     expect(dialog.querySelector("footer")).toBeNull();
     expect(document.activeElement).toBe(

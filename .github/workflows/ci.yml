@@ -74,6 +74,18 @@ jobs:
       workspace: '@neon-underrealm/shared'
       script: test
 
+  shared-consumer-change:
+    needs:
+      - root-quality
+      - changes
+    if: ${{ needs.changes.outputs.shared == 'true' && (needs.changes.outputs.frontend != 'true' || needs.changes.outputs.backend != 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require both shared consumers to change
+        run: |
+          echo "::error::A packages/shared change must include both frontend and backend consumer changes."
+          exit 1
+
   backend-test:
     needs:
       - root-quality
@@ -83,3 +95,52 @@ jobs:
     with:
       workspace: backend
       script: test
+
+  backend-integration:
+    needs:
+      - root-quality
+      - changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Reset integration Worker state
+        run: npm --workspace=@neon-underrealm/backend run integration:reset
+
+      - name: Apply integration D1 migrations
+        run: npm --workspace=@neon-underrealm/backend run migrate:integration
+
+      - name: Write local Worker variables
+        run: echo "CORS_ALLOW_ORIGIN=http://localhost:4321" > backend/.env
+
+      - name: Start local integration Worker
+        run: npm --workspace=@neon-underrealm/backend run dev:integration > "$RUNNER_TEMP/backend.log" 2>&1 &
+
+      - name: Wait for local Worker
+        run: |
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error http://127.0.0.1:8787/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::The local Worker did not become reachable."
+          exit 1
+
+      - name: Run backend integration test
+        run: npm --workspace=@neon-underrealm/backend run test:integration
+
+      - name: Remove integration Worker state
+        if: always()
+        run: npm --workspace=@neon-underrealm/backend run integration:reset

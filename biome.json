@@ -4,6 +4,8 @@
     "includes": [
       "**",
       "!dist",
+      "!backend/dist",
+      "!backend/.wrangler",
       "!frontend/dist",
       "!node_modules",
       "!.astro",
@@ -12,7 +14,8 @@
       "!.tmp",
       "!!frontend/test-results/**",
       "!!frontend/playwright-report/**",
-      "!**/*.astro"
+      "!**/*.astro",
+      "!**/*.svg"
     ]
   },
   "formatter": {
