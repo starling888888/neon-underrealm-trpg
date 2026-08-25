@@ -414,6 +414,14 @@ source種別は以下を使う。
 
 ### implementation scope discipline
 
+#### Ignored the major current-issue contract and requested UI review before implementation completion
+
+- date: 2026-08-25
+- source: review
+- 発生箇所: `ex-16-5-cloud-persistence-ui` のG5 frontend実装とユーザレビュー開始
+- 観測した失敗: current issueがDB保存、コピー保存、DB削除、Toast、JSON export UI削除、import移行導線、Help workflow、read-only visual stateまでを明示していたにもかかわらず、agentは不完全なcharacter一覧の土台だけを実装した段階でdev serverを起動し、ユーザレビューを開始した。さらに一覧自体もbutton配置、選択UI、table表示、表示名、最終更新日、pagination、dialog actionの契約を満たしていなかった。
+- 一次対応: review-to-issueで有効なユーザレビュー指摘をcurrent issueの`レビュー指摘 1`へ記録し、指摘対応の明示承認までsource codeの修正を停止する。以後、ユーザレビューの開始前にcurrent issueの未完了実装契約と検証項目を照合する。
+
 #### Put a local fixture policy into a shared layout
 
 - date: 2026-08-04
@@ -741,6 +749,14 @@ source種別は以下を使う。
 - 一次対応: backend testをVitestへ移し、`tests/unit/`を通常config、`tests/integration/`をintegration専用configへ分離する。`tsconfig.json`はsrc・tests・Vitest configを型検査し、Worker build用の`tsconfig.build.json`だけがtestsを除外する。WorkersとNode/Vitestの外部宣言競合は`skipLibCheck`で解消する。
 
 ### runtime configuration verification
+
+#### Omitted local frontend Google OAuth client ID while integrating cloud persistence UI
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-5-cloud-persistence-ui` のlocal frontend runtime configuration
+- 観測した失敗: `frontend/.env`が43 bytesの`PUBLIC_API_BASE_PATH`だけの内容になり、`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`とGoogle Drive service account設定が消失していたままcharacter sheetのGoogle Loginを動作確認対象にした。そのためGISはclient IDなしのrequestとして`400 invalid_request`（`flowName=GeneralOAuthFlow`）を返し、認証後の一覧取得も確認不能になった。
+- 一次対応: VS Code local historyの当該`frontend/.env` snapshot（2026-08-25 01:19、2,021 bytes）を発見し、内容を表示せず復元した。snapshotに存在しないが43-byteファイルにだけ残っていた`PUBLIC_API_BASE_PATH`を併合した。`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`、Google Drive service account設定、API base pathの存在と、frontend/backend OAuth audienceの一致を非secret key inventoryとhash比較で確認した。今後、ignoredな`.env`の値を診断根拠にする前には、key inventoryとfile sizeを確認し、変更・復元時はバックアップ元と一致検証を報告する。
 
 #### Assumed Wrangler local `.env` behavior also applied public vars during remote deploy
 

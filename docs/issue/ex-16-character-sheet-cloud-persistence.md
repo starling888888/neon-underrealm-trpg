@@ -58,7 +58,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 - 見出し行にGoogle login/logoutと`キャラクター一覧`を追加する。Google sessionが利用可能なときは、公式のOne Tap、Automatic Sign-in、FedCM等で不要な再ログインを避ける。logout時はapplication認証状態を破棄し、公式APIで直後の意図しない再ログインを抑止する。
 - 現在のcharacterを「新規/ローカル」「自分のremote」「他人または未認証のremote」として区別し、認証変更時に所有状態を再評価する。永続化済みのclient側`isOwner`だけをauthorization判断に使わない。
-- `キャラクター一覧` dialogはPC名、PL名、プライマリ流儀、生き様、格、最終更新日を表示する。取得済み一覧をclient-sideで10件ずつページ分割し、ログイン時だけ`自分のキャラクターのみ` filterを使えるようにする。未設定値は`-`、長いPC名・PL名はellipsisで扱う。
+- `キャラクター一覧` dialogはPC名、PL名、改行表示する流儀／生き様、格、更新日を表示する。desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名は一覧幅の30%、PL名は20%を取り、長いPC名・PL名と流儀／生き様はellipsisで扱ってよいが、更新日は省略せず横scrollを発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日だけは最小限の列幅にしてclipを避ける。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、page、radio、filterの変更時は先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを使えるようにする。未設定値は`-`とする。
 - 一覧から取得したcharacterは既存restore処理を通して同じ`/character-sheet/`へ反映する。個別閲覧pageは追加しない。
 - 他人または未認証のremote characterはread-onlyとする。input、picker、画像操作、行操作、DB保存、DB削除は無効化するが、初期化、JSONインポート、CCFOLIAコピー、Help、login/logout、キャラクター一覧は利用可能にする。server側のwrite authorizationはUI disabledと独立して必須とする。
 - JSONエクスポートのユーザー向けUIをAction Pane / control paneから除き、JSONインポートは9/1の削除予告を表示して移行期間中維持する。同じ操作領域へ`DB保存`、`コピー保存`、`DB削除`を置く。既存serialize/restore内部logicはクラウド保存で再利用できる場合に利用する。

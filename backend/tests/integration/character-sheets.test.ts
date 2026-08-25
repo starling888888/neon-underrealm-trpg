@@ -82,7 +82,7 @@ beforeAll(async () => {
     configPath: "wrangler.jsonc",
     environment: "dev",
     envFiles: [],
-    persist: { path: ".wrangler/state/v3" },
+    persist: { path: ".wrangler/integration-state/v3" },
     remoteBindings: false,
   });
   repository = new CloudflareCharacterSheetRepository(platform.env);

@@ -211,7 +211,7 @@
 ### G5 cloud persistence UI
 
 - 最優先入力: `docs/issue/ex-16-5-cloud-persistence-ui.md`のユーザー確定仕様。親issueまたは既存notesと競合する場合はこの仕様を優先する。
-- 見出し行にはGoogle login / logoutと`キャラクター一覧`を置く。一覧はdialogで表示し、PC名、PL名、プライマリ流儀、生き様、格、最終更新日、radio選択、ログイン時の`自分のキャラクターのみ` filter、client-side 10件paginationを扱う。未設定値は`-`、長いPC名・PL名はellipsisとする。
+- 見出し行にはGoogle login / logoutと`キャラクター一覧`を置く。一覧はdialogで表示し、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名、PL名、改行表示する流儀／生き様、格、更新日、radio選択、ログイン時の`自分のキャラクターのみ` filter、client-side 10件paginationを扱う。PC名は一覧幅の30%、PL名は20%を取り、更新日は省略しない。長いPC名・PL名と流儀／生き様はellipsisとしてよく、横scrollを発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日だけは最小限の列幅にしてclipを避ける。dialogは固定高にし、header、説明・filter、paginationを固定したまま行領域だけを縦scrollさせる。page、radio、filterの切替時は行領域を先頭へ戻す。未設定値は`-`とする。
 - desktop Action Paneとtablet / mobile control paneには、キャラクター一覧、DB保存、コピー保存、DB削除、Help、JSONインポート、CCFOLIAコピー、初期化をG5 issueの指定順で置く。JSONエクスポートbuttonは表示しない。インポートは2行目のdanger色の削除予告を表示し、tablet / mobileでは横幅いっぱいにする。
 - DB保存、コピー保存、DB削除は確認または入力dialogを使う。DB保存の新規`全員に公開する`checkboxは既定ON、コピー保存は既定OFFとする。Toastは結果通知だけを担い、success / error、5秒、自動消去、新着順stack、manual closeなしとする。
 - non-ownerまたは未認証のremote characterでは、character dataを変更する操作だけをread-onlyにする。キャラクター一覧、初期化、インポート、CCFOLIAコピー、Help、login / logoutは操作可能に保つ。

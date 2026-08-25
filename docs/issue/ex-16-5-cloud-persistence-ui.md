@@ -501,15 +501,15 @@ frontendでprivate characterをfilterしてvisibilityを保証する実装には
 
 - PC名
 - PL名
-- プライマリ流儀
-- 生き様
+- 流儀／生き様
 - 格
-- 最終更新日時
+- 更新日
 
 表示契約:
 
 - 未設定値は`-`
-- 長いPC名 / PL名はellipsis
+- PC名・PL名は一覧幅の各25%を取り、長い値はellipsis
+- 一覧に横scrollを発生させない
 - 1page 10件
 - paginationはclient-side
 - server-side paginationなし
@@ -1389,7 +1389,11 @@ fake timer等を使い、
 
 ---
 
-## 46. representative browser / E2E
+## 46. representative browser confirmation
+
+このGateではpublic E2Eを追加・実行しない。E2Eから実DBへcharacter登録が発生することを避けるためである。
+
+ローカルbackendとlocal D1/R2を使用する手動browser確認では、次の代表flowを確認対象とする。
 
 Google本番認証へ直接依存せず、少なくとも代表flowとして以下を確認する。
 
@@ -1471,12 +1475,12 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 # 完了条件
 
 - [ ] D1 metadata、shared API contract、frontend metadataへ`isPublic`が追加されている。
-- [ ] 既存D1 recordがmigration後publicとして扱われる。
-- [ ] 未ログイン一覧ではpublic characterだけを返す。
-- [ ] ログイン一覧ではpublic characterと自分所有のprivate characterだけを返す。
-- [ ] 他人のprivate characterをindividual GETすると`404`になり、存在しないIDと区別できない。
-- [ ] write / delete authorizationが公開フラグに関係なくowner限定のまま維持されている。
-- [ ] sampleにも同じ公開フラグcontractを適用している。
+- [x] 既存D1 recordがmigration後publicとして扱われる。
+- [x] 未ログイン一覧ではpublic characterだけを返す。
+- [x] ログイン一覧ではpublic characterと自分所有のprivate characterだけを返す。
+- [x] 他人のprivate characterをindividual GETすると`404`になり、存在しないIDと区別できない。
+- [x] write / delete authorizationが公開フラグに関係なくowner限定のまま維持されている。
+- [x] sampleにも同じ公開フラグcontractを適用している。
 - [ ] G4の4 endpointを利用するfrontend API clientが追加され、Google ID TokenをmemoryからAuthorization headerへ渡せる。
 - [ ] Google ID Tokenをbrowser persistenceへ保存していない。
 - [ ] local / owner remote / non-owner remote / unauthenticated remoteの状態が区別され、remote ID bindingがlocal-first stateと統合されている。
@@ -1502,7 +1506,7 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 - [ ] 結果通知だけを目的とする既存success / error dialogがToastへ移行されている。
 - [ ] 現行Help文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映している。
 - [ ] active SSoTが今回の最新G5仕様へ更新され、親issue / G4由来の旧公開・UI判断を残していない。
-- [ ] shared/backend/frontendのunit / component / hook / integration testと代表browser / E2E testが追加・更新されている。
+- [ ] shared/backend/frontendのunit / component / hook / integration testと代表browser確認が追加・更新されている。public E2Eは追加・実行していない。
 - [ ] backend integration testを含む必要なCIが通る。
 - [ ] `npm run check`、shared/backend/frontend test、必要なbuildが通る。
 - [ ] schema migration / 永続skill ID TODOをこのGateへ混在させていない。
@@ -1512,13 +1516,13 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 
 # チェックポイント
 
-- [ ] G5 implementation開始前にcurrent parent branchとG4 API / shared contractを再確認している。
+- [x] G5 implementation開始前にcurrent parent branchとG4 API / shared contractを再確認している。
 - [ ] G3 tokenを利用するためだけにGoogle認証flowを再実装していない。
 - [ ] frontendがbackend内部moduleをimportしていない。
-- [ ] private visibilityをfrontend filteringだけで保証していない。
-- [ ] private non-ownerのindividual GETが`403`ではなく`404`になっている。
-- [ ] client側`isOwner`をserver authorizationの代替にしていない。
-- [ ] `isPublic`をownership判定へ流用していない。
+- [x] private visibilityをfrontend filteringだけで保証していない。
+- [x] private non-ownerのindividual GETが`403`ではなく`404`になっている。
+- [x] client側`isOwner`をserver authorizationの代替にしていない。
+- [x] `isPublic`をownership判定へ流用していない。
 - [ ] read-only実装でAction Pane / control pane全体を一律操作不能にしていない。
 - [ ] DB保存、コピー保存、DB削除の二重送信を防いでいる。
 - [ ] network failure時にremote bindingやcacheを成功扱いで変更していない。
@@ -1536,6 +1540,126 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 - [ ] 不要なstate management library、Toast library、UI libraryを追加していない。
 - [ ] G5初期スコープ外機能を追加していない。
 - [ ] ユーザーの未コミット変更を破壊していない。
+
+---
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `キャラクター一覧`buttonは、desktop / tablet / mobileともGoogleログイン / ログアウトの直下、`セクションにジャンプ`の直上へ置く。現実装の操作button群内配置は契約違反である。
+- 一覧dialogの選択UIには`一覧種別`という表示文言を置かない。`登録キャラクター`と`自分で登録したキャラクターのみ`を同じグループとして配置し、`サンプルキャラクター`を別のradio選択肢とする。radioは横並び、checkboxはその下に置く。
+- sample選択中はowner checkboxをdisabledにし、owner filterをsample一覧へ適用しない。radio / checkboxは既存controlと同じaccent colorを使い、説明文・controlの文字と寸法は一覧tableを優先できる小さい密度にする。
+- 一覧はcard型ではなくtableで表示し、PC名、PL名、プライマリ流儀、生き様、格、最終更新日のheaderを持つ。流儀・生き様はIDでなく表示名を使い、未設定値は`-`とする。長いPC名 / PL名はellipsisとする。
+- 最終更新日は時刻を含めず日付として表示する。current issueの`最終更新日時`は、最新ユーザー指示とdesign notesの`最終更新日`へ整合させる。
+- tableはclient-sideで1 page 10件としてpaginationし、10件超の表示・page移動・filterまたはradio変更時の先頭page復帰を確認可能にする。
+- character一覧dialogにfooter actionは置かない。閉じる導線は右上のclose buttonとEscapeだけとする。
+- current issueが求めるDB保存、コピー保存、DB削除、Toast、JSON export UI削除、import移行導線、Help workflowなどを未実装のまま、部分実装だけでユーザレビューを開始した。
+- read-onlyの入力欄は操作不能であることが明確に分かるdisabled視覚表現を持つ必要がある。現実装は`fieldset disabled`だけで、input fieldがdisabledに見えない。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: current issueのAction Pane配置、一覧dialog、表示契約、pagination、read-only契約と、現実装の`CharacterSheetActionPane.tsx`、`CharacterSheetCharacterListDialog.tsx`、`CharacterSheetContainer.tsx`を照合した。全項目はcurrent issue内の未完了scopeに属する。最終更新日の表記だけはcurrent issueとdesign notesが競合しているため、最新ユーザー指示を優先する。
+
+### 対応方針
+
+- まずG5の未実装機能をcurrent issueの順序で実装し、一覧dialogは上記のtable・選択UI・pagination・read-only visual contractへ作り直す。
+- UIユーザレビューは、current issueの実装と必要なlocal validationを完了した後に再開する。
+- public E2Eは追加・実行せず、node / component / hook testとlocal backendを使う手動browser確認で検証する。
+
+### 対応完了チェックリスト
+
+- [ ] Action Pane / control pane、一覧dialog、read-only visual stateをレビュー指摘どおりに修正する。
+- [ ] DB保存、コピー保存、DB削除、Toast、JSON export UI削除、import移行導線、Help workflowをcurrent issueどおりに実装する。
+- [x] `npm --workspace=@neon-underrealm/frontend run check` が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run build` が通る。
+- [ ] public E2Eを追加・実行せず、local backendで手動browser確認する。
+
+---
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- Action Paneでは、`キャラクター一覧`と`セクションにジャンプ`の間だけに区切り線を置く。Googleログイン / ログアウトと`キャラクター一覧`の間には置かない。
+- `DB保存`、`コピー保存`、`DB削除`、`JSONインポート`、`CCFOLIAコピー`、`初期化`は既存`CharacterSheetButton`の`outline`表示へ統一する。
+- 一覧tableは、流儀と生き様をheader・本文とも`流儀\n／生き様`として表示する。日付headerは`更新日`とし、PC名・PL名は各50%幅、text overflowはellipsisで表示する。横scrollは発生させない。
+- `登録キャラクター`と`サンプルキャラクター`は上揃えにしてradio行を揃え、`あなたが登録した…`の補足文は小さくする。
+- non-owner / unauthenticated remoteのread-only表示はform全体のopacityや一律のdisabled視覚表現を使わず、編集不可のinput、select、textareaだけがdisabledと分かる状態にする。
+- DB保存、コピー保存、DB削除dialogのtitleは置かない。キャンセルbuttonは既存`CharacterSheetButton`の`muted` colorを使い、buttonのsize・variant・配置を初期化とCCFOLIAコピーのdialogに揃える。
+- Help本文以外の今回追加した表示文言は既存`characterSheetDictionary`を優先し、未定義の文言だけを同じdictionaryへ追加する。componentへのベタ書きは残さない。
+- 追加・変更した実装を既存character sheetの流儀と照合し、propsの渡し方、命名、責務分割、component・CSS・dictionary・testの使い方、`memo` / `useMemo` / callbackの必要性を自己レビューする。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `docs/requirements/character-sheet.md`のAction Pane、一覧、read-only、dialog契約と、`CharacterSheetActionPane.tsx`、`CharacterSheetCharacterListDialog.tsx`、DB操作dialog、`CharacterSheetButton.tsx`、`dictionary.ts`を照合した。区切り線、outline、一覧table、dialog、dictionary、read-only、component設計はすべてcurrent issueの未完了scopeに属する。`更新日`は既存requirementsの`最終更新日`と異なるが、最新のユーザー指示を優先する。
+
+### 対応方針
+
+- 既存`CharacterSheetButton`の`variant`、`color`、`size`を再利用し、Action PaneとDB操作dialogの見た目を揃える。
+- 一覧tableはfixed layoutと列幅・ellipsisを使い、指定された改行headerと小さい補足文・揃ったfilter controlsを実装する。
+- read-onlyはform全体の視覚的な減衰を外し、native disabled controlだけを対象にする。
+- 文言をdictionaryへ集約したうえで、追加実装とContainerを既存character sheetのcomponent、CSS、dictionary、testの流儀と比較して整理する。
+
+### 対応完了チェックリスト
+
+- [x] Action Paneの区切り線と操作buttonのoutline表示をレビュー指摘どおりに修正する。
+- [x] 一覧tableの列、改行header、50%幅、ellipsis、overflowなし、filter controlsと補足文をレビュー指摘どおりに修正する。
+- [x] read-only時のform全体disabled視覚表現をなくし、編集不可controlだけをdisabled表示にする。
+- [x] DB保存、コピー保存、DB削除dialogを既存dialog button contractへ揃える。
+- [x] Help以外の追加UI copyを`characterSheetDictionary`へ集約する。
+- [x] 変更実装を既存character sheetの命名、責務分割、component、CSS、dictionary、test、props / memo化の流儀と照合して自己レビューする。
+- [x] frontend component / hook testを更新する。
+- [x] `npm --workspace=@neon-underrealm/frontend run check` が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run build` が通る。
+- [ ] desktop / tablet / mobileで対象dialogと一覧をlocal browser確認する。
+
+---
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- `キャラクター一覧`dialogは高さを固定し、header、説明・filter、paginationを常時表示する。表示件数が収まらない場合は、headerより下かつpaginationより上にある一覧行だけを縦scrollさせる。登録characterとsample characterの切替、または一覧scrollによってdialog・操作領域の高さを変えない。
+- 一覧のページ切替時は、一覧行のscroll位置を先頭へ戻す。
+- 一覧tableの列幅はPC名30%、PL名20%を基準にする。流儀／生き様の値は必要なら小さくしてよい。更新日はellipsisで切り詰めずに読める幅を確保し、横scrollは発生させない。
+- 一覧dialogはdesktop / tabletで既存データ選択dialogと同じ最大幅まで広げる。mobileでは更新日だけを最小限まで小さくし、clipさせない。
+- mobileではPC名、PL名、格も更新日と同じ小さい本文文字サイズにする。
+- local Workerの通常開発entryは本番と同じ正規Google token verifierを使う`src/index.ts`へ統一し、同じ内容を複製した`local-index.ts`を残さない。mock verifierはintegration専用entryだけに閉じる。
+- Cloud persistence追加後に肥大化した`CharacterSheetContainer`は、既存の`useActionPane`、`useCharacterChangeWarning`、dialog groupの流儀へ戻す。remote API・一覧cache・保存操作・dialog stateを専用hookとdialog groupへ分離し、Containerは既存hookの接続と配置だけを担う。local-first form / imageと密結合のremote metadata・restore処理は`useCharacterSheetRootState`に残す。
+
+### 判定
+
+- source: human
+- classification: valid
+- local validation: `CharacterSheetCharacterListDialog.tsx`とCSSは現在、dialog content全体が可変高で、一覧行だけを独立scrollする領域もpage遷移時のscroll復帰も持たない。列幅はPC名・PL名とも25%であり、更新日を省略しない保証がない。`backend/src/local-index.ts`は`src/index.ts`と同じ`GoogleIdTokenVerifier`を持つ重複entryで、`dev:local`だけがそれを指定している。`CharacterSheetContainer.tsx`は今回のremote persistence状態と操作を直接所有して592行となっており、既存hookとdialog groupによる責務分割から外れている。すべてG5の一覧、local review環境、frontend統合の未完了scopeに属する。
+
+### 対応方針
+
+- 一覧dialogのcontentを固定高のlayoutへ組み替え、table body相当の一覧領域だけをscroll containerにする。ページ、radio、owner filterの変更時には一覧scroll refを先頭へ戻す。
+- tableの固定layoutを維持したまま、PC名30%・PL名20%と更新日の非省略表示を満たす列幅へ配分し、流儀／生き様の値だけを局所的に小さくする。
+- 一覧dialogは既存pickerの最大幅をdesktop / tabletへ再利用し、mobileだけ更新日列と文字サイズを局所的に縮める。
+- mobileのPC名、PL名、格も更新日と同じ本文文字サイズへ揃える。
+- `dev:local`を`src/index.ts`へ向け、`local-index.ts`を削除する。`integration-index.ts`とintegration用stateは維持する。
+- `useRemoteCharacterPersistence`とremote persistence dialog groupを新設し、一覧・DB保存・コピー保存・DB削除に関する非同期処理、UI state、props組み立てを移す。Toastも専用hookへ分離し、Containerは各hookの連結と描画配置に限定する。
+- 一覧dialogと新しいhook / dialog groupのcomponent testを更新し、frontendのcheck・test・buildを実行する。表示契約の肯定確認はdesktop / tablet / mobileのactual画面を確認するまで完了扱いにしない。
+
+### 対応完了チェックリスト
+
+- [x] 一覧dialogを固定高にし、一覧行だけのscrollとページ遷移時のscroll先頭復帰を実装する。
+- [x] 一覧tableをPC名30%・PL名20%、更新日を省略しない列幅へ調整する。
+- [x] desktop / tabletの一覧dialog幅を既存データ選択dialogへ揃え、mobile更新日をclipなく表示する。
+- [x] 通常local Worker entryを`src/index.ts`へ統一し、重複した`local-index.ts`を削除する。
+- [x] remote persistenceとToastの状態・操作・dialog propsを専用hook / dialog groupへ分離し、Containerを既存流儀へ戻す。
+- [x] 一覧dialogと分離したhook / dialog groupのtestを更新する。
+- [x] `npm --workspace=@neon-underrealm/frontend run check` が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run test` が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run build` が通る。
+- [ ] desktop / tablet / mobileで一覧dialogの固定操作領域、scroll、ページ遷移をlocal browser確認する。
 
 ---
 
