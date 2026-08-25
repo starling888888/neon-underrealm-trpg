@@ -16,5 +16,8 @@ export default function useCharacterSheetToast() {
     setMessages((current) => current.filter((toast) => toast.id !== id));
   }, []);
 
-  return useMemo(() => ({ expire, messages, notify }), [expire, messages, notify]);
+  return useMemo(
+    () => ({ expire, messages, notify }),
+    [expire, messages, notify],
+  );
 }

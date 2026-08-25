@@ -1474,72 +1474,72 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 
 # 完了条件
 
-- [ ] D1 metadata、shared API contract、frontend metadataへ`isPublic`が追加されている。
+- [x] D1 metadata、shared API contract、frontend metadataへ`isPublic`が追加されている。
 - [x] 既存D1 recordがmigration後publicとして扱われる。
 - [x] 未ログイン一覧ではpublic characterだけを返す。
 - [x] ログイン一覧ではpublic characterと自分所有のprivate characterだけを返す。
 - [x] 他人のprivate characterをindividual GETすると`404`になり、存在しないIDと区別できない。
 - [x] write / delete authorizationが公開フラグに関係なくowner限定のまま維持されている。
 - [x] sampleにも同じ公開フラグcontractを適用している。
-- [ ] G4の4 endpointを利用するfrontend API clientが追加され、Google ID TokenをmemoryからAuthorization headerへ渡せる。
-- [ ] Google ID Tokenをbrowser persistenceへ保存していない。
-- [ ] local / owner remote / non-owner remote / unauthenticated remoteの状態が区別され、remote ID bindingがlocal-first stateと統合されている。
-- [ ] login / logout時のownership再評価と一覧cache invalidationが仕様どおり動作する。
-- [ ] `キャラクター一覧`buttonがdesktop / tablet / mobileの指定位置へ追加されている。
-- [ ] character一覧dialogが指定説明文、radio、owner filter、表示契約、10件paginationを満たす。
-- [ ] 一覧cacheが初回open時だけ取得され、同authentication stateで再openしてもfetchしない。
-- [ ] character選択がindividual GETと既存restore処理を使い、remote ID / ownership / `isPublic` / imageを正しく反映する。
-- [ ] non-owner / unauthenticated remoteのcharacter編集操作がread-onlyになり、許可された非編集操作は利用できる。
-- [ ] desktop Action Paneとtablet / mobile control paneのbutton順・layoutが指定どおりである。
-- [ ] DB保存button、dialog、PC名必須、新規保存時public default ON、既存保存時current `isPublic` default、remote ID bindingが仕様どおり動作する。
-- [ ] `DB保存したキャラクターは誰でも閲覧可能になります。`という旧注意文を表示していない。
-- [ ] コピー保存button、warning dialog、PC名 / PL名入力、public default OFF、画像除外、新規ID、成功後のowner character切替が仕様どおり動作する。
-- [ ] DB削除button、確認dialog、成功後のlocal data維持とremote binding解除が仕様どおり動作する。
-- [ ] 初期化がownershipに関係なく利用でき、DB recordを削除・更新せずremote bindingだけ解除する。
-- [ ] JSONエクスポートbuttonがユーザー向けAction Pane / control paneから削除されている。
-- [ ] JSONインポートを維持し、button内2行目へdanger色の小さい文字で`DB保存に移行するため9/1に削除されます。`と表示している。
-- [ ] tablet / mobileのインポートbuttonが横幅いっぱいになっている。
-- [ ] importに日付判定による自動削除ロジックを追加していない。
-- [ ] import成功後はremote bindingを解除している。
-- [ ] CCFOLIAコピーとHelpがownershipに関係なく利用できる。
-- [ ] 新規共通Toastがsuccess / error、5秒、自動消去、manual closeなし、新着上stackを満たす。
-- [ ] 結果通知だけを目的とする既存success / error dialogがToastへ移行されている。
+- [x] G4の4 endpointを利用するfrontend API clientが追加され、Google ID TokenをmemoryからAuthorization headerへ渡せる。
+- [x] Google ID Tokenをbrowser persistenceへ保存していない。
+- [x] local / owner remote / non-owner remote / unauthenticated remoteの状態が区別され、remote ID bindingがlocal-first stateと統合されている。
+- [x] login / logout時のownership再評価と一覧cache invalidationが仕様どおり動作する。
+- [x] `キャラクター一覧`buttonがdesktop / tablet / mobileの指定位置へ追加されている。
+- [x] character一覧dialogが指定説明文、radio、owner filter、表示契約、10件paginationを満たす。
+- [x] 一覧cacheが初回open時だけ取得され、同authentication stateで再openしてもfetchしない。
+- [x] character選択がindividual GETと既存restore処理を使い、remote ID / ownership / `isPublic` / imageを正しく反映する。
+- [x] non-owner / unauthenticated remoteのcharacter編集操作がread-onlyになり、許可された非編集操作は利用できる。
+- [x] desktop Action Paneとtablet / mobile control paneのbutton順・layoutが指定どおりである。
+- [x] DB保存button、dialog、PC名必須、新規保存時public default ON、既存保存時current `isPublic` default、remote ID bindingが仕様どおり動作する。
+- [x] `DB保存したキャラクターは誰でも閲覧可能になります。`という旧注意文を表示していない。
+- [x] コピー保存button、warning dialog、PC名 / PL名入力、public default OFF、画像除外、新規ID、成功後のowner character切替が仕様どおり動作する。
+- [x] DB削除button、確認dialog、成功後のlocal data維持とremote binding解除が仕様どおり動作する。
+- [x] 初期化がownershipに関係なく利用でき、DB recordを削除・更新せずremote bindingだけ解除する。
+- [x] JSONエクスポートbuttonがユーザー向けAction Pane / control paneから削除されている。
+- [x] JSONインポートを維持し、button内2行目へdanger色の小さい文字で`DB保存に移行するため9/1に削除されます。`と表示している。
+- [x] tablet / mobileのインポートbuttonが横幅いっぱいになっている。
+- [x] importに日付判定による自動削除ロジックを追加していない。
+- [x] import成功後はremote bindingを解除している。
+- [x] CCFOLIAコピーとHelpがownershipに関係なく利用できる。
+- [x] 新規共通Toastがsuccess / error、5秒、自動消去、manual closeなし、新着上stackを満たす。
+- [x] 結果通知だけを目的とする既存success / error dialogがToastへ移行されている。
 - [x] 現行Help文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映している。
-- [ ] active SSoTが今回の最新G5仕様へ更新され、親issue / G4由来の旧公開・UI判断を残していない。
-- [ ] shared/backend/frontendのunit / component / hook / integration testと代表browser確認が追加・更新されている。public E2Eは追加・実行していない。
+- [x] active SSoTが今回の最新G5仕様へ更新され、親issue / G4由来の旧公開・UI判断を残していない。
+- [x] shared/backend/frontendのunit / component / hook / integration testと代表browser確認が追加・更新されている。public E2Eは追加・実行していない。
 - [ ] backend integration testを含む必要なCIが通る。
-- [ ] `npm run check`、shared/backend/frontend test、必要なbuildが通る。
-- [ ] schema migration / 永続skill ID TODOをこのGateへ混在させていない。
-- [ ] canonical VRT baselineをユーザー承認なしに更新していない。
+- [x] `npm run check`、shared/backend/frontend test、必要なbuildが通る。
+- [x] schema migration / 永続skill ID TODOをこのGateへ混在させていない。
+- [x] canonical VRT baselineをユーザー承認なしに更新していない。
 
 ---
 
 # チェックポイント
 
 - [x] G5 implementation開始前にcurrent parent branchとG4 API / shared contractを再確認している。
-- [ ] G3 tokenを利用するためだけにGoogle認証flowを再実装していない。
-- [ ] frontendがbackend内部moduleをimportしていない。
+- [x] G3 tokenを利用するためだけにGoogle認証flowを再実装していない。
+- [x] frontendがbackend内部moduleをimportしていない。
 - [x] private visibilityをfrontend filteringだけで保証していない。
 - [x] private non-ownerのindividual GETが`403`ではなく`404`になっている。
 - [x] client側`isOwner`をserver authorizationの代替にしていない。
 - [x] `isPublic`をownership判定へ流用していない。
-- [ ] read-only実装でAction Pane / control pane全体を一律操作不能にしていない。
-- [ ] DB保存、コピー保存、DB削除の二重送信を防いでいる。
-- [ ] network failure時にremote bindingやcacheを成功扱いで変更していない。
-- [ ] localStorage / IndexedDBの既存local-first保存を壊していない。
-- [ ] remote snapshotの画像restoreとcopy時の画像除外を混同していない。
-- [ ] JSON import data contractへremote ID、`isOwner`、`isPublic`、Google token等のcloud内部状態を混入していない。
-- [ ] export UI削除のためにDB保存等で共有するserialize logicを破壊していない。
-- [ ] 一覧dialog openごとにAPI requestを発生させていない。
-- [ ] save/deleteを理由に未取得一覧cacheを強制取得していない。
-- [ ] resetがremote DB recordへwrite/deleteしていない。
-- [ ] Toastへ確認・入力責務を移していない。
+- [x] read-only実装でAction Pane / control pane全体を一律操作不能にしていない。
+- [x] DB保存、コピー保存、DB削除の二重送信を防いでいる。
+- [x] network failure時にremote bindingやcacheを成功扱いで変更していない。
+- [x] localStorage / IndexedDBの既存local-first保存を壊していない。
+- [x] remote snapshotの画像restoreとcopy時の画像除外を混同していない。
+- [x] JSON import data contractへremote ID、`isOwner`、`isPublic`、Google token等のcloud内部状態を混入していない。
+- [x] export UI削除のためにDB保存等で共有するserialize logicを破壊していない。
+- [x] 一覧dialog openごとにAPI requestを発生させていない。
+- [x] save/deleteを理由に未取得一覧cacheを強制取得していない。
+- [x] resetがremote DB recordへwrite/deleteしていない。
+- [x] Toastへ確認・入力責務を移していない。
 - [x] Help本文をユーザー編集前にエージェント判断で改稿していない。
-- [ ] desktop / tablet / mobileでhorizontal overflow、操作不能、dialog overflowを発生させていない。
-- [ ] import削除予定をruntime日時判定で実装していない。
-- [ ] 不要なstate management library、Toast library、UI libraryを追加していない。
-- [ ] G5初期スコープ外機能を追加していない。
-- [ ] ユーザーの未コミット変更を破壊していない。
+- [x] desktop / tablet / mobileでhorizontal overflow、操作不能、dialog overflowを発生させていない。
+- [x] import削除予定をruntime日時判定で実装していない。
+- [x] 不要なstate management library、Toast library、UI libraryを追加していない。
+- [x] G5初期スコープ外機能を追加していない。
+- [x] ユーザーの未コミット変更を破壊していない。
 
 ---
 
@@ -1571,11 +1571,11 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 
 ### 対応完了チェックリスト
 
-- [ ] Action Pane / control pane、一覧dialog、read-only visual stateをレビュー指摘どおりに修正する。
-- [ ] DB保存、コピー保存、DB削除、Toast、JSON export UI削除、import移行導線、Help workflowをcurrent issueどおりに実装する。
+- [x] Action Pane / control pane、一覧dialog、read-only visual stateをレビュー指摘どおりに修正する。
+- [x] DB保存、コピー保存、DB削除、Toast、JSON export UI削除、import移行導線、Help workflowをcurrent issueどおりに実装する。
 - [x] `npm --workspace=@neon-underrealm/frontend run check` が通る。
 - [x] `npm --workspace=@neon-underrealm/frontend run build` が通る。
-- [ ] public E2Eを追加・実行せず、local backendで手動browser確認する。
+- [x] public E2Eを追加・実行せず、local backendで手動browser確認する。
 
 ---
 
@@ -1616,7 +1616,7 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 - [x] frontend component / hook testを更新する。
 - [x] `npm --workspace=@neon-underrealm/frontend run check` が通る。
 - [x] `npm --workspace=@neon-underrealm/frontend run build` が通る。
-- [ ] desktop / tablet / mobileで対象dialogと一覧をlocal browser確認する。
+- [x] desktop / tablet / mobileで対象dialogと一覧をlocal browser確認する。
 
 ---
 
@@ -1659,7 +1659,7 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 - [x] `npm --workspace=@neon-underrealm/frontend run check` が通る。
 - [x] `npm --workspace=@neon-underrealm/frontend run test` が通る。
 - [x] `npm --workspace=@neon-underrealm/frontend run build` が通る。
-- [ ] desktop / tablet / mobileで一覧dialogの固定操作領域、scroll、ページ遷移をlocal browser確認する。
+- [x] desktop / tablet / mobileで一覧dialogの固定操作領域、scroll、ページ遷移をlocal browser確認する。
 
 ---
 
