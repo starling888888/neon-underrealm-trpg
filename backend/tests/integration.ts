@@ -31,7 +31,7 @@ async function createSheet(pcName: string): Promise<CreatedSheet> {
   const response = await request("/character-sheets", {
     body: JSON.stringify({
       metadata: { pcName, plName: "", rank: 1 },
-      snapshot: { imageBase64: null, profile: { pcName } },
+      snapshot: { imageBase64String: null, profile: { pcName } },
     }),
     headers: ownerHeaders,
     method: "POST",
@@ -109,13 +109,13 @@ const ownedBody = (await ownedGet.json()) as {
     isOwner: boolean;
     updatedAt: number;
   };
-  snapshot: { imageBase64: string | null; profile: { pcName: string } };
+  snapshot: { imageBase64String: string | null; profile: { pcName: string } };
 };
 assert.equal(ownedBody.id, user.id);
 assert.equal(ownedBody.metadata.isOwner, true);
 assert.equal(typeof ownedBody.metadata.createdAt, "number");
 assert.equal(typeof ownedBody.metadata.updatedAt, "number");
-assert.equal(ownedBody.snapshot.imageBase64, null);
+assert.equal(ownedBody.snapshot.imageBase64String, null);
 assert.equal(ownedBody.snapshot.profile.pcName, "user sheet");
 assert.equal(JSON.stringify(ownedBody).includes("ownerUserId"), false);
 
@@ -124,7 +124,7 @@ const update = await request("/character-sheets", {
     id: user.id,
     metadata: { pcName: "updated user", rank: 2 },
     snapshot: {
-      imageBase64: "updated-image",
+      imageBase64String: "updated-image",
       profile: { pcName: "updated user" },
     },
   }),
@@ -139,7 +139,7 @@ const nonOwnerUpdate = await request("/character-sheets", {
   body: JSON.stringify({
     id: user.id,
     metadata: { pcName: "forbidden", rank: 1 },
-    snapshot: { imageBase64: null },
+    snapshot: { imageBase64String: null },
   }),
   headers: otherHeaders,
   method: "POST",
@@ -150,7 +150,7 @@ const missingUpdate = await request("/character-sheets", {
   body: JSON.stringify({
     id: "11111111-1111-4111-8111-111111111111",
     metadata: { pcName: "missing", rank: 1 },
-    snapshot: { imageBase64: null },
+    snapshot: { imageBase64String: null },
   }),
   headers: ownerHeaders,
   method: "POST",
@@ -170,7 +170,7 @@ assert.equal(invalidRead.status, 401);
 const anonymousWrite = await request("/character-sheets", {
   body: JSON.stringify({
     metadata: { pcName: "anonymous", rank: 1 },
-    snapshot: { imageBase64: null },
+    snapshot: { imageBase64String: null },
   }),
   headers: { "Content-Type": "application/json" },
   method: "POST",
@@ -184,7 +184,7 @@ const invalidBody = await request("/character-sheets", {
       pcName: "invalid master ID",
       rank: 1,
     },
-    snapshot: { imageBase64: null },
+    snapshot: { imageBase64String: null },
   }),
   headers: ownerHeaders,
   method: "POST",

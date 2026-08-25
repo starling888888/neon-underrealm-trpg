@@ -27,7 +27,7 @@ export const characterSheetMetadataInputSchema = z.object({
 
 export const characterSheetSnapshotInputSchema = z
   .object({
-    imageBase64: z
+    imageBase64String: z
       .string()
       .max(8 * 1024 * 1024)
       .nullable(),

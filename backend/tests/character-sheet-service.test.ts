@@ -13,7 +13,7 @@ const input = (
   overrides: Partial<CharacterSheetInput> = {},
 ): CharacterSheetInput => ({
   metadata: { pcName: "テストPC", rank: 1 },
-  snapshot: { imageBase64: null, profile: { pcName: "テストPC" } },
+  snapshot: { imageBase64String: null, profile: { pcName: "テストPC" } },
   ...overrides,
 });
 
@@ -180,7 +180,7 @@ test("anonymous reads omit ownership and keep numeric timestamps", async () => {
     updatedAt: 1,
   });
   repository.snapshots.set("owner/11111111-1111-4111-8111-111111111111", {
-    imageBase64: null,
+    imageBase64String: null,
   });
 
   const result = await service.get(id, null);
