@@ -10,7 +10,7 @@ const otherUserId = "other";
 const input = (
   overrides: Partial<CharacterSheetInput> = {},
 ): CharacterSheetInput => ({
-  metadata: { pcName: "テストPC", rank: 1 },
+  metadata: { isPublic: true, pcName: "テストPC", rank: 1 },
   snapshot: { imageBase64String: null, profile: { pcName: "テストPC" } },
   ...overrides,
 });
@@ -113,6 +113,7 @@ test("update preserves a sample type and owner", async () => {
     createdAt: 1,
     id,
     ikizamaId: null,
+    isPublic: true,
     ownerUserId: "owner",
     pcName: "before",
     plName: null,
@@ -122,10 +123,18 @@ test("update preserves a sample type and owner", async () => {
     updatedAt: 1,
   });
 
-  const result = await service.save(input({ id }), ownerUserId);
+  const result = await service.save(
+    input({
+      id,
+      metadata: { isPublic: false, pcName: "after", rank: 2 },
+    }),
+    ownerUserId,
+  );
 
   expect(result.metadata.type).toBe("sample");
+  expect(result.metadata.isPublic).toBe(false);
   expect(repository.metadata.get(id)?.ownerUserId).toBe("owner");
+  expect(repository.metadata.get(id)?.isPublic).toBe(false);
   expect(repository.operations).toEqual([
     `put-snapshot:${id}`,
     `update-metadata:${id}`,
@@ -144,6 +153,7 @@ test("write rejects an unknown id and a non-owner", async () => {
     createdAt: 1,
     id,
     ikizamaId: null,
+    isPublic: true,
     ownerUserId: "owner",
     pcName: "owner sheet",
     plName: null,
@@ -165,6 +175,7 @@ test("anonymous reads omit ownership and keep numeric timestamps", async () => {
     createdAt: 1,
     id,
     ikizamaId: null,
+    isPublic: true,
     ownerUserId: "owner",
     pcName: "owner sheet",
     plName: null,
@@ -183,6 +194,83 @@ test("anonymous reads omit ownership and keep numeric timestamps", async () => {
   expect(result.metadata.updatedAt).toBe(1);
 });
 
+test("private sheets are visible only to their owner", async () => {
+  const { repository, service } = createService();
+  const privateId = "11111111-1111-4111-8111-111111111111";
+  const privateRecord: CharacterSheetRecord = {
+    createdAt: 1,
+    id: privateId,
+    ikizamaId: null,
+    isPublic: false,
+    ownerUserId,
+    pcName: "private sheet",
+    plName: null,
+    primaryRyugiId: null,
+    rank: 1,
+    type: "user",
+    updatedAt: 1,
+  };
+  const publicRecord: CharacterSheetRecord = {
+    ...privateRecord,
+    id: "22222222-2222-4222-8222-222222222222",
+    isPublic: true,
+    pcName: "public sheet",
+  };
+
+  repository.metadata.set(privateRecord.id, privateRecord);
+  repository.metadata.set(publicRecord.id, publicRecord);
+  repository.snapshots.set(`${ownerUserId}/${privateRecord.id}`, {
+    imageBase64String: null,
+  });
+  repository.snapshots.set(`${ownerUserId}/${publicRecord.id}`, {
+    imageBase64String: null,
+  });
+
+  await expect(service.get(privateId, null)).rejects.toMatchObject({
+    code: "not_found",
+  });
+  await expect(service.get(privateId, otherUserId)).rejects.toMatchObject({
+    code: "not_found",
+  });
+  await expect(service.get(privateId, ownerUserId)).resolves.toMatchObject({
+    id: privateId,
+    metadata: { isOwner: true, isPublic: false },
+  });
+  await expect(service.list(null)).resolves.toMatchObject({
+    user: [{ id: publicRecord.id }],
+  });
+  await expect(service.list(otherUserId)).resolves.toMatchObject({
+    user: [{ id: publicRecord.id }],
+  });
+  await expect(service.list(ownerUserId)).resolves.toMatchObject({
+    user: [{ id: privateRecord.id }, { id: publicRecord.id }],
+  });
+});
+
+test("private samples follow the same visibility contract", async () => {
+  const { repository, service } = createService();
+  const record: CharacterSheetRecord = {
+    createdAt: 1,
+    id: "11111111-1111-4111-8111-111111111111",
+    ikizamaId: null,
+    isPublic: false,
+    ownerUserId,
+    pcName: "private sample",
+    plName: null,
+    primaryRyugiId: null,
+    rank: 1,
+    type: "sample",
+    updatedAt: 1,
+  };
+
+  repository.metadata.set(record.id, record);
+
+  await expect(service.list(null)).resolves.toEqual({ sample: [], user: [] });
+  await expect(service.list(ownerUserId)).resolves.toMatchObject({
+    sample: [{ id: record.id, metadata: { isPublic: false } }],
+  });
+});
+
 test("list keeps user query order and sorts samples by creation time", async () => {
   const { repository, service } = createService();
   const records: CharacterSheetRecord[] = [
@@ -190,6 +278,7 @@ test("list keeps user query order and sorts samples by creation time", async () 
       createdAt: 30,
       id: "11111111-1111-4111-8111-111111111111",
       ikizamaId: null,
+      isPublic: true,
       ownerUserId,
       pcName: "new sample",
       plName: null,
@@ -202,6 +291,7 @@ test("list keeps user query order and sorts samples by creation time", async () 
       createdAt: 10,
       id: "22222222-2222-4222-8222-222222222222",
       ikizamaId: null,
+      isPublic: true,
       ownerUserId,
       pcName: "user first",
       plName: null,
@@ -214,6 +304,7 @@ test("list keeps user query order and sorts samples by creation time", async () 
       createdAt: 20,
       id: "33333333-3333-4333-8333-333333333333",
       ikizamaId: null,
+      isPublic: true,
       ownerUserId,
       pcName: "old sample",
       plName: null,
@@ -244,6 +335,7 @@ test("delete removes metadata before its snapshot", async () => {
     createdAt: 1,
     id,
     ikizamaId: null,
+    isPublic: true,
     ownerUserId: "owner",
     pcName: "owner sheet",
     plName: null,
