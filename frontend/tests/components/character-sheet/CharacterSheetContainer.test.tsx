@@ -9,7 +9,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -20,9 +20,14 @@ import {
 } from "../../../src/character-sheet/form/values";
 import { characterSheetFormSchema } from "../../../src/character-sheet/schemas/character-sheet-form";
 
-const { useRemotePersistenceMock, useRootStateMock } = vi.hoisted(() => ({
+const {
+  useRemotePersistenceMock,
+  useRootStateMock,
+  useFirebaseAuthenticationMock,
+} = vi.hoisted(() => ({
   useRemotePersistenceMock: vi.fn(),
   useRootStateMock: vi.fn(),
+  useFirebaseAuthenticationMock: vi.fn(),
 }));
 const { onCcfoliaCopy } = vi.hoisted(() => ({ onCcfoliaCopy: vi.fn() }));
 
@@ -40,12 +45,8 @@ vi.mock(
   "../../../src/character-sheet/hooks/useRemoteCharacterPersistence",
   () => ({ default: useRemotePersistenceMock }),
 );
-
-vi.mock("@react-oauth/google", () => ({
-  GoogleLogin: () => null,
-  GoogleOAuthProvider: ({ children }: { children: ReactNode }) => children,
-  googleLogout: vi.fn(),
-  useGoogleOneTapLogin: vi.fn(),
+vi.mock("../../../src/character-sheet/auth/useFirebaseAuthentication", () => ({
+  default: useFirebaseAuthenticationMock,
 }));
 
 function useRootStateHarness() {
@@ -118,6 +119,13 @@ function useRootStateHarness() {
 beforeEach(() => {
   rootStateInitial = { imageError: null, isFormRestoreErrorOpen: false };
   useRootStateMock.mockImplementation(useRootStateHarness);
+  useFirebaseAuthenticationMock.mockReturnValue({
+    getIdToken: async () => null,
+    onLogin: async () => {},
+    onLogout: async () => {},
+    sessionKey: null,
+    status: "signed-out",
+  });
   useRemotePersistenceMock.mockReturnValue({
     dialogProps: {
       characterList: {
@@ -179,12 +187,13 @@ afterEach(() => {
   onCcfoliaCopy.mockReset();
   useRemotePersistenceMock.mockReset();
   useRootStateMock.mockReset();
+  useFirebaseAuthenticationMock.mockReset();
 });
 
 describe("CharacterSheetContainer", () => {
   it("connects the form's current character to the root CCFOLIA clipboard operation", async () => {
     const user = userEvent.setup();
-    render(<CharacterSheetContainer googleClientId="test-client-id" />);
+    render(<CharacterSheetContainer />);
 
     await waitFor(() =>
       expect((screen.getByLabelText("PC名") as HTMLInputElement).value).toBe(
@@ -219,7 +228,7 @@ describe("CharacterSheetContainer", () => {
       imageError: { code: "storage" },
       isFormRestoreErrorOpen: true,
     };
-    render(<CharacterSheetContainer googleClientId="test-client-id" />);
+    render(<CharacterSheetContainer />);
 
     await waitFor(() => {
       expect(

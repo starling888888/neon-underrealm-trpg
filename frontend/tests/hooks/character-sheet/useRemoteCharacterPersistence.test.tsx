@@ -8,7 +8,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { describe, expect, it, vi } from "vitest";
 import type { CharacterSheetApiClient } from "../../../src/character-sheet/api/character-sheets";
-import type { GoogleAuthentication } from "../../../src/character-sheet/auth/types";
+import type { Authentication } from "../../../src/character-sheet/auth/types";
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
@@ -38,7 +38,15 @@ function summary(
 
 function renderPersistenceHarness(
   characterSheetApi: CharacterSheetApiClient,
-  clearCharacterImageForCopy: () => Promise<boolean> = async () => true,
+  clearCharacterImageForCopy: () => Promise<boolean> | undefined = async () =>
+    true,
+  authentication: Authentication = {
+    getIdToken: vi.fn(async () => "token"),
+    onLogin: vi.fn(),
+    onLogout: vi.fn(),
+    sessionKey: "uid-a",
+    status: "signed-in",
+  },
 ) {
   const bindRemoteSummary = vi.fn();
   const notify = vi.fn();
@@ -52,17 +60,11 @@ function renderPersistenceHarness(
     formRef.current = form;
     return useRemoteCharacterPersistence(
       {
-        authentication: {
-          idToken: "token",
-          onCredential: vi.fn(),
-          onLoginError: vi.fn(),
-          onLoginStarted: vi.fn(),
-          onLogout: vi.fn(),
-          status: "signed-in",
-        },
+        authentication,
         bindRemoteSummary,
         characterImage: null,
-        clearCharacterImageForCopy,
+        clearCharacterImageForCopy:
+          clearCharacterImageForCopy ?? (async () => true),
         clearRemoteCharacter: vi.fn(),
         form,
         isRootOperationInProgress: false,
@@ -86,12 +88,11 @@ describe("useRemoteCharacterPersistence", () => {
       list: vi.fn(async () => emptyList),
       save: vi.fn(),
     };
-    const authentication: GoogleAuthentication = {
-      idToken: "token",
-      onCredential: vi.fn(),
-      onLoginError: vi.fn(),
-      onLoginStarted: vi.fn(),
+    const authentication: Authentication = {
+      getIdToken: vi.fn(async () => "token"),
+      onLogin: vi.fn(),
       onLogout: vi.fn(),
+      sessionKey: "uid-a",
       status: "signed-in",
     };
     const { result } = renderHook(() => {
@@ -217,5 +218,78 @@ describe("useRemoteCharacterPersistence", () => {
         ),
       ).toEqual(["c", "a", "b"]),
     );
+  });
+
+  it("loads the public list while signed out", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const authentication: Authentication = {
+      getIdToken: vi.fn(async () => null),
+      onLogin: vi.fn(),
+      onLogout: vi.fn(),
+      sessionKey: null,
+      status: "signed-out",
+    };
+    const { result } = renderPersistenceHarness(
+      characterSheetApi,
+      undefined,
+      authentication,
+    );
+    act(() => result.current.openCharacterList());
+    await waitFor(() =>
+      expect(characterSheetApi.list).toHaveBeenCalledWith(null),
+    );
+  });
+
+  it("does not load a list while authentication is initializing", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const authentication: Authentication = {
+      getIdToken: vi.fn(async () => null),
+      onLogin: vi.fn(),
+      onLogout: vi.fn(),
+      sessionKey: null,
+      status: "initializing",
+    };
+    const { result } = renderPersistenceHarness(
+      characterSheetApi,
+      undefined,
+      authentication,
+    );
+    act(() => result.current.openCharacterList());
+    await Promise.resolve();
+    expect(characterSheetApi.list).not.toHaveBeenCalled();
+  });
+
+  it("does not request a token when none is available", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const authentication: Authentication = {
+      getIdToken: vi.fn(async () => null),
+      onLogin: vi.fn(),
+      onLogout: vi.fn(),
+      sessionKey: "uid-a",
+      status: "signed-in",
+    };
+    const { result } = renderPersistenceHarness(
+      characterSheetApi,
+      undefined,
+      authentication,
+    );
+    act(() => result.current.dialogProps.save.onConfirm("保存", true));
+    await Promise.resolve();
+    expect(characterSheetApi.save).not.toHaveBeenCalled();
   });
 });

@@ -219,7 +219,7 @@ export default function useRemoteCharacterPersistence(
     characterListRequestVersionRef.current += 1;
     remoteRefreshKeyRef.current = null;
 
-    if (remoteCharacter !== null && sessionKey === null) {
+    if (remoteCharacter !== null) {
       updateRemoteCharacterMetadata({
         id: remoteCharacter.id,
         metadata: { isOwner: false, isPublic: remoteCharacter.isPublic },
