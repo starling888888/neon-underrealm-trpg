@@ -1,7 +1,10 @@
 import { generateKeyPair, SignJWT } from "jose";
 import { afterEach, expect, test, vi } from "vitest";
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 test("Firebase verifier fetches Secure Token X509 keys through global fetch", async () => {
   vi.resetModules();
@@ -28,6 +31,7 @@ test("Firebase verifier fetches Secure Token X509 keys through global fetch", as
   expect(fetchMock.mock.calls[0]?.[0]?.toString()).toContain(
     "securetoken@system.gserviceaccount.com",
   );
+  expect(fetchMock.mock.contexts[0]).toBe(globalThis);
 });
 
 test("Firebase verifier rejects a token without kid without fetching", async () => {

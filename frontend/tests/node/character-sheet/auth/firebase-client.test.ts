@@ -39,7 +39,7 @@ beforeEach(() => {
 describe("getFirebaseAuth", () => {
   it("initializes once and shares concurrent promise", async () => {
     const { getFirebaseAuth } = await import(
-      "../../../../../src/character-sheet/auth/firebase-client"
+      "../../../../src/character-sheet/auth/firebase-client"
     );
     const [a, b] = await Promise.all([getFirebaseAuth(), getFirebaseAuth()]);
     expect(a).toBe(b);
@@ -49,24 +49,31 @@ describe("getFirebaseAuth", () => {
   it("reuses an existing Firebase app", async () => {
     getAppsMock.mockReturnValue([{}]);
     const { getFirebaseAuth } = await import(
-      "../../../../../src/character-sheet/auth/firebase-client"
+      "../../../../src/character-sheet/auth/firebase-client"
     );
     await getFirebaseAuth();
     expect(getAppMock).toHaveBeenCalledOnce();
     expect(initializeAppMock).not.toHaveBeenCalled();
   });
-  it("rejects missing configuration and retries after persistence failure", async () => {
+  it("rejects missing configuration", async () => {
     vi.stubEnv("PUBLIC_FIREBASE_PROJECT_ID", "");
-    const module = await import(
-      "../../../../../src/character-sheet/auth/firebase-client"
+
+    const { getFirebaseAuth } = await import(
+      "../../../../src/character-sheet/auth/firebase-client"
     );
-    await expect(module.getFirebaseAuth()).rejects.toThrow(
-      "PUBLIC_FIREBASE_PROJECT_ID",
-    );
-    vi.stubEnv("PUBLIC_FIREBASE_PROJECT_ID", "project");
+
+    await expect(getFirebaseAuth()).rejects.toThrow("projectId");
+  });
+  it("retries after persistence initialization failure", async () => {
     setPersistenceMock.mockRejectedValueOnce(new Error("storage"));
-    await expect(module.getFirebaseAuth()).rejects.toThrow("storage");
-    await expect(module.getFirebaseAuth()).resolves.toBeDefined();
+
+    const { getFirebaseAuth } = await import(
+      "../../../../src/character-sheet/auth/firebase-client"
+    );
+
+    await expect(getFirebaseAuth()).rejects.toThrow("storage");
+    await expect(getFirebaseAuth()).resolves.toBeDefined();
+
     expect(initializeAppMock).toHaveBeenCalledTimes(2);
   });
 });
