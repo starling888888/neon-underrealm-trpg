@@ -70,7 +70,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 ### Design、test、review
 
 - 既存の`docs/design/character-sheet/notes.md`を既存画面のdesign正本として扱う。
-- G5のUI design intentは`docs/issue/ex-16-5-cloud-persistence-ui.md`のユーザー確定仕様を最優先とする。G5の実装時に`docs/design/character-sheet/notes.md`へ同じ意図と対象stateを記録する。canonical VRT baselineはユーザー承認なしに更新しない。
+- G5のUI design intentは同項「キャラクターシートのクラウド操作」と`docs/design/character-sheet/notes.md`のG5 cloud persistence UIを最優先とする。canonical VRT baselineはユーザー承認なしに更新しない。
 - shared/backendはmetadata validation、DTO、token rejection、owner authorization、ID発行、一覧順、`userId`非公開、optional auth、R2 key、adapter、payload上限、error contractをunit/contract testする。
 - frontendは認証状態、remote state、所有状態再評価、dialog、pagination/filter、fallback/ellipsis、restore failure、read-only、保存/削除確認、remote ID、PC名必須、HelpをComponent/hook/logic testする。
 - E2Eは選択、自分の編集、他人のread-only、保存確認、削除確認の代表flowに絞り、Google本番認証へ直接依存しない。

@@ -189,10 +189,9 @@
 
 ### ダイアログ
 
-- 警告、破壊的操作の確認、CCFOLIAコピー完了、画像選択の失敗はダイアログで表示する。
+- 警告と破壊的操作の確認はダイアログで表示する。判断や入力を必要としない成功・失敗の結果通知はToastで表示する。
 - ブラウザ組み込みの`alert`は使わない。
-- CCFOLIAコピー成功の通知ダイアログ本文は「クリップボードにコピーしました。」とする。
-- 初期化確認ダイアログはvisible titleを置かず、本文を「入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？」とする。本文の改行コードは空白に折り畳まず可視の改行として表示する。actionはmuted outlineの`キャンセル`とdanger solidの`初期化`とし、初期focusは`キャンセル`へ置く。
+- 初期化確認ダイアログはvisible titleを置かず、本文を「入力済みのデータと画像を初期状態に戻します。\nDBに保存されたキャラクターは削除されません。\n本当によろしいですか？」とする。本文の改行コードは空白に折り畳まず可視の改行として表示する。actionはmuted outlineの`キャンセル`とdanger solidの`初期化`とし、初期focusは`キャンセル`へ置く。
 - desktopのエラー確認ダイアログは、errorがある時だけ太めのdangerカラーの枠線、errorがない時は通常のstrong borderと白い背景に黒い文字で表示する。visible titleは置かず、アクセシブル名を`エラー`とする。本文は空状態`エラーはありません。`またはdangerカラーの`エラーがN件あります。`と、通常本文カラーの順序なしerror一覧から始める。`閉じる`buttonはmuted outlineとする。
 - ヘルプダイアログは青緑のアクセントカラーの枠線、薄いグレーの背景、青緑の丸い`?`アイコンと「ヘルプ」のタイトル行を使う。最大高さを定め、本文だけを独立してscrollできるようにする。
 - それ以外のダイアログのbutton配置、dismiss操作、focus処理、Clipboard API失敗時の扱いは、後続のdesign対話で決める。
@@ -210,7 +209,7 @@
 
 ### G5 cloud persistence UI
 
-- 最優先入力: `docs/issue/ex-16-5-cloud-persistence-ui.md`のユーザー確定仕様。親issueまたは既存notesと競合する場合はこの仕様を優先する。
+- 最優先入力: このG5 blockと親issueの「キャラクターシートのクラウド操作」。既存notesと競合する場合はこのG5 blockを優先する。
 - 見出し行にはGoogle login / logoutと`キャラクター一覧`を置く。一覧はdialogで表示し、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名、PL名、改行表示する流儀／生き様、格、更新日、radio選択、ログイン時の`自分のキャラクターのみ` filter、client-side 10件paginationを扱う。PC名は一覧幅の30%、PL名は20%を取り、更新日は省略しない。長いPC名・PL名と流儀／生き様はellipsisとしてよく、横scrollを発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日だけは最小限の列幅にしてclipを避ける。dialogは固定高にし、header、説明・filter、paginationを固定したまま行領域だけを縦scrollさせる。page、radio、filterの切替時は行領域を先頭へ戻す。未設定値は`-`とする。
 - desktop Action Paneとtablet / mobile control paneには、キャラクター一覧、DB保存、コピー保存、DB削除、Help、JSONインポート、CCFOLIAコピー、初期化をG5 issueの指定順で置く。JSONエクスポートbuttonは表示しない。インポートは2行目のdanger色の削除予告を表示し、tablet / mobileでは横幅いっぱいにする。
 - DB保存、コピー保存、DB削除は確認または入力dialogを使う。DB保存の新規`全員に公開する`checkboxは既定ON、コピー保存は既定OFFとする。Toastは結果通知だけを担い、success / error、5秒、自動消去、新着順stack、manual closeなしとする。
