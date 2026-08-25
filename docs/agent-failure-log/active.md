@@ -714,6 +714,16 @@ source種別は以下を使う。
 - 観測した失敗: picker hookのtest fixtureをfull presenter型へcastし、`npm run check:astro`を3回連続で失敗させた。fixtureが欠くpicker外のprops、続いてpicker型に必要な`clearSelection`、最後にcandidate groupの形状を段階的に補っていた。
 - 一次対応: `usePickers`の入力を必要なpicker操作だけの構造型へ狭め、fixtureはmaster dataのgroup型に一致させる。次回はhookの最小入力型とtest fixtureを先に並べて型検査してから実装配線を進める。
 
+### test runner standard compliance
+
+#### Used the Node test runner despite the Vitest standard
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のbackend unit testとlocal API integration test
+- 観測した失敗: `docs/testing.md`がすべてのunit / contract testの標準をVitestと定義しているにもかかわらず、backend testを`tsx --test`と直接実行scriptで追加した。さらに`tests/`を`tsconfig.json`から除外したため、test sourceの静的型検査もされなかった。
+- 一次対応: backend testをVitestへ移し、`tests/unit/`を通常config、`tests/integration/`をintegration専用configへ分離する。`tsconfig.json`はsrc・tests・Vitest configを型検査し、Worker build用の`tsconfig.build.json`だけがtestsを除外する。WorkersとNode/Vitestの外部宣言競合は`skipLibCheck`で解消する。
+
 ### runtime configuration verification
 
 #### Assumed Wrangler local `.env` behavior also applied public vars during remote deploy

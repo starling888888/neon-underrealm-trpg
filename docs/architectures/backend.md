@@ -210,8 +210,9 @@ local、test、productionで同じserviceとhandler contractを通す。storage 
 - serviceではID発行、owner authorization、`type`の作成時`user`・更新時不変、listの分類・sample sort、未存在idの拒否、R2/D1部分失敗をtestする。
 - verifierではproductionのtoken検証契約とtest verifierの有効・期限切れ・無効tokenをtestする。authentication middlewareはtokenなし、無効、期限切れ、required authを確認する。
 - Cloudflare repositoryはmetadataとsnapshotの個別read/write/delete、および全件`updated_at DESC` queryをtestする。serviceは複数repository操作の順序と部分失敗をtestする。
-- local API E2Eは4 endpoint、anonymous read、owner以外のwrite/delete拒否、期限切れtokenの`419`、sample分類、snapshot内画像、numeric timestampを確認する。
-- backendの`tsc`はWorker sourceを確認する。Node test runnerの型はWorkers runtime型とglobalが競合するため、unit testは`tsx --test`で実行する。testの型検査専用configは追加しない。
+- local API E2Eは4 endpoint、anonymous read、owner以外のwrite/delete拒否、期限切れtokenの`419`、sample分類、snapshot内画像、numeric timestampを確認する。testはendpointごとのcaseへ分ける。評価対象でない既存stateは、`getPlatformProxy`で同じlocal stateを開いた`CloudflareCharacterSheetRepository`から用意し、各caseの`afterEach`でD1 metadataとR2 snapshotを削除する。Node組み込みの`assert`とWrangler CLI子processを使わない。
+- `backend/tests/unit/`は通常Vitest config、`backend/tests/integration/`はintegration専用Vitest configで実行する。通常testはintegrationを除外し、integration configはintegration directoryだけを対象にする。
+- `tsconfig.json`はWorker source、unit/integration test、Vitest configを全件型検査する。`tsconfig.build.json`は`tsconfig.json`をextendsしてtestsとVitest configを除外し、Worker sourceだけを型検査する。Cloudflare WorkersとNode/Vitestの外部Web Platform宣言は競合するため`skipLibCheck`を使うが、project sourceとtestは型検査する。
 
 CIは既存のbackend integration jobでWrangler local Workerを起動し、local API E2Eを実行する。Cloudflare credentialやGoogle本番認証には依存しない。
 

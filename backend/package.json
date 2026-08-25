@@ -4,23 +4,26 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run wrangler:prod -- deploy --dry-run --outdir dist",
+    "build": "npm run typecheck:build && npm run wrangler:prod -- deploy --dry-run --outdir dist",
     "dev:local": "npm run wrangler:dev -- dev src/local-index.ts --local --persist-to .wrangler/state --port 8787",
     "format": "biome format --write .",
     "lint": "biome lint .",
-    "test": "npm run test:unit",
+    "test": "vitest run",
+    "test:unit": "vitest run",
     "local:reset": "rm -rf .wrangler/state .wrangler/tmp",
     "migrate:local": "npm run wrangler:dev -- d1 migrations apply DB --local --persist-to .wrangler/state",
-    "test:integration": "tsx tests/integration.ts",
-    "test:unit": "tsx --test tests/**/*.test.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "typecheck": "tsc --noEmit --project tsconfig.json",
+    "typecheck:build": "tsc --noEmit --project tsconfig.build.json",
     "wrangler:dev": "./bin/wrangler.sh dev",
     "wrangler:prod": "./bin/wrangler.sh prod"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260823.1",
+    "@types/node": "^26.3.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
+    "vitest": "^4.1.10",
     "wrangler": "^4.125.0"
   },
   "dependencies": {
