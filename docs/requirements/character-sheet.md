@@ -35,7 +35,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - CCFOLIAキャラクター駒データのコピー
 - desktop、tablet、mobileでの利用
 
-端末内の最新1キャラクターの保存・復元は初期scopeに含める。`ex-16-character-sheet-cloud-persistence` の承認済みGateでは、G3でGoogle Identity Servicesのbrowser-only credential flowによるfrontendログイン、G4でbackendのtoken verifierとクラウド保存API、G5で複数キャラクター管理とクラウド保存UIを段階的に扱う。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
+端末内の最新1キャラクターの保存・復元は初期scopeに含める。`ex-16-character-sheet-cloud-persistence` の承認済みまたは計画済みGateでは、G3でGoogle Identity Servicesのbrowser-only credential flowによるfrontendログイン、G4でbackendのtoken verifierとクラウド保存API、G5で複数キャラクター管理とクラウド保存UIを段階的に扱う。G6ではFirebase Authenticationへ認証境界を置換し、SDK管理のbrowser persistence、token refresh、Firebase ID Token検証を導入する。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
 
 以下は初期スコープ外とする。
 
@@ -200,7 +200,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 
 ## 保存、復元、出力
 
-- 端末内には最新1キャラクターだけを作業用として保存・復元する。`ex-16-character-sheet-cloud-persistence` のG5では、Google ID tokenをbrowser persistenceへ保存せず、G4の4 endpointを使ってクラウド保存と`キャラクター一覧`を提供する。
+- 端末内には最新1キャラクターだけを作業用として保存・復元する。`ex-16-character-sheet-cloud-persistence` のG5では、Google ID tokenをbrowser persistenceへ保存せず、G4の4 endpointを使ってクラウド保存と`キャラクター一覧`を提供する。G6ではFirebase AuthenticationのSDK管理下で認証状態を永続化し、API requestには取得時点で有効なFirebase ID Tokenだけを渡す。ID Tokenをアプリケーション独自のbrowser persistenceへ保存しない。
 - D1 metadata、shared API contract、frontend metadataは`isPublic`を持つ。既存D1 recordはmigration後にpublicとして扱う。未ログインの一覧はpublic characterだけ、ログイン済みの一覧はpublic characterと自分が所有するprivate characterだけを返す。private characterをowner以外または未認証で個別取得した場合は、存在しないIDと区別しない`404`とする。
 - 現在のcharacterはlocal / owner remote / non-owner remote / unauthenticated remoteを区別し、login / logout時に所有状態を再評価する。remote IDと`isOwner`をJSON import dataやbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
 - `キャラクター一覧`はPC名、PL名、改行表示する流儀／生き様、格、更新日を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名は一覧幅の30%、PL名は20%を取る。長いPC名・PL名と流儀／生き様はellipsisで表示してよいが、更新日は切り詰めず、横scrollは発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日は最小限の列幅でclipさせない。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは既存restore処理を通して同じ`/character-sheet/`へ反映し、個別閲覧pageは追加しない。
@@ -235,5 +235,5 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - desktopのaction railは本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを変更しない。
 - section navigationは第一階層sectionだけを対象にする。各navigation buttonは下向きiconと下線を持つが、現在のscroll位置またはクリック対象に応じたaccent表示は行わない。section frame自体、子section、行、入力項目の色は変えない。
 - キャラクターシートのrouteと入力内容はPagefind検索indexの対象外とする。
-- 静的ホスティングで完結する。`ex-16-character-sheet-cloud-persistence` の承認済み Gate だけは Cloudflare Worker を例外として許可し、G3 のログイン credential はfrontend内で取得してメモリ内だけに保持する。
+- 静的ホスティングで完結する。`ex-16-character-sheet-cloud-persistence` の承認済み Gate だけは Cloudflare Worker を例外として許可する。G3のログインcredentialはfrontend内でメモリ保持する初期実装とし、G6ではFirebase Authentication SDKが管理する認証状態永続化へ置換する。
 - 画像の端末内保存方式、保存先間の責務分離、ブラウザAPIの失敗時の共通方針はアーキテクチャで定義する。JSONの構造、CCFOLIA Clipboard JSONの具体的なオブジェクト形状、実行時schemaの具体形は、対応する実装Gateの着手直前にこの要件と整合する形で確定する。

@@ -172,7 +172,7 @@ list responseはserver-side paginationなしで、`user`と`sample`の配列を�
 
 ### Token verifier
 
-verifier interfaceはtokenを検証し、検証済みの`userId`または認証失敗の分類を返す。production implementationはGoogle ID Tokenのsignature、`iss`、`aud`、`exp`を検証する。verifierはHTTP statusやresponseを扱わない。
+verifier interfaceはtokenを検証し、検証済みの`userId`または認証失敗の分類を返す。G4のproduction implementationはGoogle ID Tokenのsignature、`iss`、`aud`、`exp`を検証する。G6でFirebase Authenticationへ移行した後は、Firebase ID Tokenのsignature、`iss`、`aud`、`exp`とFirebase `uid`を検証するimplementationへ置換する。verifierはHTTP statusやresponseを扱わない。
 
 authentication middleware factoryへproduction/localのverifierをDIする。local API E2Eとtestはtest verifierを明示注入し、決め打ちtokenを有効、期限切れ、無効の結果へ対応付ける。production verifierを`if`文でskipしたり、環境変数で検証を無効化したりしない。production verifier自体はunit/contract testする。
 

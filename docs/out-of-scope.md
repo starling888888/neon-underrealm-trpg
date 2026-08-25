@@ -54,7 +54,7 @@
 
 ブラウザ上でキャラクターを作成・編集し、遊ぶために必要な情報を確認できるWebキャラクターシートは初期スコープ内とする。機能の正本は `docs/requirements/character-sheet.md` とする。
 
-`ex-16-character-sheet-cloud-persistence` の承認済みGateを除き、ログイン、ユーザー端末に依存しないサーバー・DB・クラウドへのキャラクターデータ保存、URL共有、PDF出力、Google Sheets連携は初期スコープ外とする。G3はGoogle ID tokenをブラウザのメモリ内だけに保持し、G4はbackendの検証とクラウド保存API、G5は複数キャラクター管理とクラウド保存UIを扱う。各Gateで扱わない後続段階の機能を先取りしない。
+`ex-16-character-sheet-cloud-persistence` の承認済みGateを除き、ログイン、ユーザー端末に依存しないサーバー・DB・クラウドへのキャラクターデータ保存、URL共有、PDF出力、Google Sheets連携は初期スコープ外とする。G3はGoogle ID tokenをブラウザのメモリ内だけに保持する初期実装、G4はbackendの検証とクラウド保存API、G5は複数キャラクター管理とクラウド保存UI、G6はFirebase Authenticationへの認証境界置換を扱う。各Gateで扱わない後続段階の機能を先取りしない。
 
 ただし、`ex-06-google-drive-xlsx-sync`で定義する、開発者が手動で実行するGoogle Spreadsheetから`.raw/`へのXLSX取得scriptは、公開サイトやキャラクターシートとは接続しないローカル開発用例外として許可する。
 
@@ -96,11 +96,11 @@ Web上で判定を行うダイスローラー、達成値・効果値・気合�
 
 ## 9. ログイン・認証機能
 
-`ex-16-character-sheet-cloud-persistence` の承認済みG3 / G4を除き、ユーザー登録、ログイン、権限管理、管理者画面、編集者権限などの認証機能は初期スコープ外とする。
+`ex-16-character-sheet-cloud-persistence` の承認済みG3 / G4および計画済みG6を除き、ユーザー登録、ログイン、権限管理、管理者画面、編集者権限などの認証機能は初期スコープ外とする。
 
-本サイトは無料公開の静的サイトとして構築し、G3ではGoogle ID tokenをメモリ内に置く以外、サーバーまたはアカウントに紐づく閲覧者ごとの状態を持たない。G4以降の認証済みAPIとcharacter保存は、親issueの承認済みGateだけで扱う。`ex-02-web-character-sheet`で定義する、作業継続用の端末内保存・復元はこれに含めない。
+本サイトは無料公開の静的サイトとして構築し、G3ではGoogle ID tokenをメモリ内に置く初期実装とする。G6ではFirebase Authentication SDKが認証状態を管理し、G4以降の認証済みAPIとcharacter保存は親issueの承認済みGateだけで扱う。`ex-02-web-character-sheet`で定義する、作業継続用の端末内保存・復元はこれに含めない。
 
-親issueの承認済みG3 / G4以外の認証を必要とする機能は初期実装に含めない。backendのtoken verifierと認証必須APIはG4で扱う。
+親issueの承認済みG3 / G4および計画済みG6以外の認証を必要とする機能は初期実装に含めない。backendのtoken verifierと認証必須APIはG4で扱い、G6でFirebase ID Token verifierへ置換する。
 
 ---
 
