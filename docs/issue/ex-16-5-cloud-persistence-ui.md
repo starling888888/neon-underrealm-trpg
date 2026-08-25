@@ -1504,7 +1504,7 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 - [ ] CCFOLIAコピーとHelpがownershipに関係なく利用できる。
 - [ ] 新規共通Toastがsuccess / error、5秒、自動消去、manual closeなし、新着上stackを満たす。
 - [ ] 結果通知だけを目的とする既存success / error dialogがToastへ移行されている。
-- [ ] 現行Help文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映している。
+- [x] 現行Help文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映している。
 - [ ] active SSoTが今回の最新G5仕様へ更新され、親issue / G4由来の旧公開・UI判断を残していない。
 - [ ] shared/backend/frontendのunit / component / hook / integration testと代表browser確認が追加・更新されている。public E2Eは追加・実行していない。
 - [ ] backend integration testを含む必要なCIが通る。
@@ -1534,7 +1534,7 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 - [ ] save/deleteを理由に未取得一覧cacheを強制取得していない。
 - [ ] resetがremote DB recordへwrite/deleteしていない。
 - [ ] Toastへ確認・入力責務を移していない。
-- [ ] Help本文をユーザー編集前にエージェント判断で改稿していない。
+- [x] Help本文をユーザー編集前にエージェント判断で改稿していない。
 - [ ] desktop / tablet / mobileでhorizontal overflow、操作不能、dialog overflowを発生させていない。
 - [ ] import削除予定をruntime日時判定で実装していない。
 - [ ] 不要なstate management library、Toast library、UI libraryを追加していない。
