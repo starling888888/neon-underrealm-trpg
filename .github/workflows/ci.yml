@@ -78,12 +78,12 @@ jobs:
     needs:
       - root-quality
       - changes
-    if: ${{ needs.changes.outputs.shared == 'true' && needs.changes.outputs.frontend != 'true' && needs.changes.outputs.backend != 'true' }}
+    if: ${{ needs.changes.outputs.shared == 'true' && (needs.changes.outputs.frontend != 'true' || needs.changes.outputs.backend != 'true') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Reject a shared-only change
+      - name: Require both shared consumers to change
         run: |
-          echo "::error::A packages/shared change must include a frontend or backend consumer change."
+          echo "::error::A packages/shared change must include both frontend and backend consumer changes."
           exit 1
 
   backend-test:
@@ -122,6 +122,8 @@ jobs:
         run: npm --workspace=@neon-underrealm/backend run migrate:local
 
       - name: Start local Worker
+        env:
+          CORS_ALLOW_ORIGIN: http://localhost:4321
         run: npm --workspace=@neon-underrealm/backend run dev:local > "$RUNNER_TEMP/backend.log" 2>&1 &
 
       - name: Wait for local Worker

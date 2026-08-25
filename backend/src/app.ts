@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
 import type {
   ApiErrorResponse,
@@ -24,6 +25,8 @@ export type AppDependencies = {
 };
 
 type ErrorStatus = 400 | 401 | 403 | 404 | 413 | 419 | 500;
+
+const maximumRequestBodyBytes = 8 * 1024 * 1024;
 
 const errorStatusByCode = {
   bad_request: 400,
@@ -69,19 +72,29 @@ export const createApp = (dependencies: AppDependencies) => {
     ),
   );
 
-  app.post("/character-sheets", requireAuthentication, async (context) => {
-    const actorUserId = context.get("actorUserId");
+  app.post(
+    "/character-sheets",
+    requireAuthentication,
+    bodyLimit({
+      maxSize: maximumRequestBodyBytes,
+      onError: () => {
+        throw new ApplicationError("payload_too_large");
+      },
+    }),
+    async (context) => {
+      const actorUserId = context.get("actorUserId");
 
-    if (actorUserId === null) {
-      throw new ApplicationError("unauthorized");
-    }
+      if (actorUserId === null) {
+        throw new ApplicationError("unauthorized");
+      }
 
-    const input = await parseCharacterSheetInput(context.req.raw);
+      const input = await parseCharacterSheetInput(context.req.raw);
 
-    return context.json(
-      await dependencies.characterSheetService.save(input, actorUserId),
-    );
-  });
+      return context.json(
+        await dependencies.characterSheetService.save(input, actorUserId),
+      );
+    },
+  );
 
   app.get("/character-sheets/:id", async (context) =>
     context.json(

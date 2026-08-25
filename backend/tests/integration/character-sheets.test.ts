@@ -18,6 +18,8 @@ const ownerHeaders = {
   "Content-Type": "application/json",
 };
 
+const maximumRequestBodyBytes = 8 * 1024 * 1024;
+
 const otherHeaders = {
   Authorization: "Bearer test-token-other",
   "Content-Type": "application/json",
@@ -38,6 +40,13 @@ async function request(path: string, options: RequestInit = {}) {
 function createId(): string {
   const suffix = String(nextId++).padStart(12, "0");
   return `11111111-1111-4111-8111-${suffix}`;
+}
+
+function oversizedRequestBody(): string {
+  return `${JSON.stringify({
+    metadata: { pcName: "too large", rank: 1 },
+    snapshot: { imageBase64String: null },
+  })}${" ".repeat(maximumRequestBodyBytes)}`;
 }
 
 async function seedSheet(
@@ -241,6 +250,43 @@ describe("POST /character-sheets", () => {
     });
 
     expect(response.status).toBe(400);
+  });
+
+  test("rejects an oversized request with Content-Length", async () => {
+    const body = oversizedRequestBody();
+    const response = await request("/character-sheets", {
+      body,
+      headers: {
+        ...ownerHeaders,
+        "Content-Length": String(Buffer.byteLength(body)),
+      },
+      method: "POST",
+    });
+
+    expect(response.status).toBe(413);
+    await expect(response.json()).resolves.toEqual({
+      error: { code: "payload_too_large" },
+    });
+  });
+
+  test("rejects an oversized chunked request", async () => {
+    const body = oversizedRequestBody();
+    const response = await request("/character-sheets", {
+      body: new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode(body));
+          controller.close();
+        },
+      }),
+      duplex: "half",
+      headers: ownerHeaders,
+      method: "POST",
+    } as RequestInit);
+
+    expect(response.status).toBe(413);
+    await expect(response.json()).resolves.toEqual({
+      error: { code: "payload_too_large" },
+    });
   });
 });
 
