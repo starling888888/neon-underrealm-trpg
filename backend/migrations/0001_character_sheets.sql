@@ -1,7 +1,7 @@
 CREATE TABLE character_sheets (
   id TEXT PRIMARY KEY NOT NULL,
   owner_user_id TEXT NOT NULL,
-  type VARCHAR(20) NOT NULL DEFAULT 'user'
+  type TEXT NOT NULL DEFAULT 'user'
     CHECK (type IN ('user', 'sample')),
   pc_name TEXT NOT NULL,
   pl_name TEXT,

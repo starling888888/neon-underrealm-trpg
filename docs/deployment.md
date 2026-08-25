@@ -83,7 +83,7 @@ frontend deploy workflowは `main` へのfrontend関連pushで実行します。
 
 ## Cloudflare backend deploy
 
-`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。frontend関連変更だけではbackend deployを実行しない。GitHub Actionsの手動起動は使わない。root Quality、backend test、backend integration testの成功後に、Wranglerでproduction remote D1 migrationを適用してからproduction Workerをdeployする。productionの初回deployは2026-08-25に実施済みである。`wrangler.jsonc`のD1/R2 draft bindingは、resourceがない初回deployでWranglerが作成・bindingするため、新しいenvironmentを作る最初の一回だけdeployをmigrationより先に実行する。
+`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。frontend関連変更だけではbackend deployを実行しない。GitHub Actionsの手動起動は使わない。root Quality、backend test、backend integration testの成功後に、Wranglerでproduction remote D1 migrationを適用してからproduction Workerをdeployする。CIは作成済みのproduction resourceを更新するだけで、initial bootstrapは行わない。`wrangler.jsonc`のD1/R2 draft bindingは、resourceがない初回deployでWranglerが作成・bindingするため、新しいenvironmentを作る最初の一回だけ、明示的に承認された手順でdeploy、migration、deployの順に実行する。作成済みenvironmentではCIがmigration、deployの順に一回ずつ実行する。
 
 `wrangler.jsonc`の`env.dev`は、local開発者がCloudflare上で実API接続を確認するためのdevelopment Workerである。`npm run wrangler:dev -- <Wrangler command>`は`backend/bin/wrangler.sh`を通じ、`neon-underrealm-backend-dev`およびその専用D1/R2だけを対象にし、production resourceやmain限定workflowを変更しない。wrapperはdevelopmentのGit管理しない`backend/.env`を存在時だけsourceし、`deploy`時だけ公開runtime varsを渡す。local `wrangler dev`はWrangler標準の`.env`自動読込でbindingを得るため、wrapperは`--var`を追加しない。local CORS allow originは`http://localhost:4321,http://localhost:4322`とする。
 

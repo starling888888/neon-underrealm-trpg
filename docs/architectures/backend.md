@@ -63,7 +63,7 @@ domain objectは少なくとも、次の情報を扱う。
 
 ### D1とR2
 
-D1はmetadata index、R2はsnapshot storeとして使う。D1 rowには`type VARCHAR(20)`を保存し、値は`user`または`sample`だけを許可する。repositoryは全recordを`updated_at DESC`で取得し、serviceが`sample`だけを作成日時昇順へ並べ替える。
+D1はmetadata index、R2はsnapshot storeとして使う。D1 rowには`type TEXT`を保存し、値は`user`または`sample`だけを許可する。repositoryは全recordを`updated_at DESC`で取得し、serviceが`sample`だけを作成日時昇順へ並べ替える。
 
 R2 keyは`{userId}/{id}.json`とする。`type`を`sample`へ変更しても`userId`とR2 keyは変えない。
 
@@ -79,7 +79,7 @@ G4の初回migrationは、以下のschemaを作る。時刻はUTCのUnix epoch m
 CREATE TABLE character_sheets (
   id TEXT PRIMARY KEY NOT NULL,
   owner_user_id TEXT NOT NULL,
-  type VARCHAR(20) NOT NULL DEFAULT 'user'
+  type TEXT NOT NULL DEFAULT 'user'
     CHECK (type IN ('user', 'sample')),
   pc_name TEXT NOT NULL,
   pl_name TEXT,
@@ -109,7 +109,7 @@ CREATE INDEX idx_character_sheets_sample_created_at
 - executable SQLは`backend/migrations/`へ連番で追加する。適用済みmigrationを編集・削除せず、schema変更は次の連番migrationで行う。
 - local実行はWrangler / Miniflare / workerdのD1・R2 bindingを使う。`dev:local`と`migrate:local`は`wrangler:dev`を通じてGit ignoreした`backend/.wrangler/state/`を明示的なlocal stateにし、`local:reset`、`migrate:local`、`dev:local`の順で実行する。local integration testも同じstateで実際のWorkerへHTTP requestを送る。`local:reset`はstateとWranglerの一時bundleである`.wrangler/tmp/`を削除するため、作業後は必ず再実行してlocal artifactを残さない。
 - development cloud environmentの初回は`wrangler:dev -- deploy`でD1/R2をprovisionする。その後と以後のschema更新では、`wrangler:dev -- d1 migrations apply DB --remote`がdevelopment D1へ未適用migrationを適用し、`wrangler:dev -- deploy`がdevelopment Workerを更新する。Wranglerのenvironment名によりWorkerは`neon-underrealm-backend-dev`となる。`backend/bin/wrangler.sh`はdevelopmentの`backend/.env`を存在時だけsourceし、`deploy`時だけ`GOOGLE_OAUTH_CLIENT_ID`と`CORS_ALLOW_ORIGIN`を公開Worker `vars`へ渡す。local `wrangler dev`はWrangler標準の`.env`自動読込で同じ値をbindingとして得るため、wrapperは`--var`を追加しない。development CORS allow originは`http://localhost:4321,http://localhost:4322`である。
-- productionでは2026-08-25に初回`wrangler:prod -- deploy`でD1/R2をprovisionし、初回migrationを適用済みである。以後は`wrangler:prod -- d1 migrations apply DB --remote`がremote D1へ未適用migrationを適用し、その後`wrangler:prod -- deploy`がWorkerを更新する。D1のmigration tableが適用済みSQLを管理する。
+- resource未作成のenvironmentでは、最初に`wrangler:<environment> -- deploy`でD1/R2をprovisionし、次に`wrangler:<environment> -- d1 migrations apply DB --remote`で初回migrationを適用し、最後にもう一度`wrangler:<environment> -- deploy`でWorkerを更新する。作成済みenvironmentではmigration、deployの順に実行する。production CIは作成済みresourceの更新だけを担い、initial bootstrapは明示的に承認された手順で済ませてからCIを使う。D1のmigration tableが適用済みSQLを管理する。
 - production deployはGitHub Repository Variableのproduction Google client IDと、`${{ github.repository_owner }}`から導出するCORS allow originをjob環境変数から`--var`へ渡す。GitHub Pagesのcustom domainへ移行した場合だけ、CORS originを明示設定へ切り替える。CIはGoogle client IDが未設定ならdeploy前に失敗する。Google client IDとCORS allow originをCloudflare secretへ登録しない。
 - `wrangler.jsonc`のproductionと`env.dev`のD1/R2 draft bindingを正本とし、それぞれresourceが未作成の初回deployではWranglerが作成・bindingする。D1/R2 bindingと`vars`はenvironment間で継承されない。resource名・location・lifecycleを明示管理する必要が出たときは、automatic provisioningのBeta採用を再評価する。
 
