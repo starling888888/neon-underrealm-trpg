@@ -6,16 +6,16 @@ import {
   useEffect,
   useState,
 } from "react";
-import type { GoogleAuthentication } from "../auth/types";
+import type { Authentication } from "../auth/types";
 import type { CharacterSheetSectionId } from "../constants/section-navigation";
 import { characterSheetDictionary } from "../dictionary";
 import type { CharacterSheetErrorSummary } from "../logic/error-summary";
 import CharacterSheetButton from "./_common/CharacterSheetButton";
 import styles from "./CharacterSheetActionPane.module.css";
-import CharacterSheetGoogleAuthentication from "./CharacterSheetGoogleAuthentication";
+import CharacterSheetAuthentication from "./CharacterSheetAuthentication";
 
 type CharacterSheetActionPaneProps = {
-  authentication?: GoogleAuthentication;
+  authentication?: Authentication;
   errorReviewButtonRef: RefObject<HTMLButtonElement | null>;
   errorSummary: CharacterSheetErrorSummary;
   isCcfoliaCopyDisabled: boolean;
@@ -77,7 +77,7 @@ function CharacterSheetActionPane({
   const { actions } = characterSheetDictionary.characterSheet;
   const isDesktop = useIsDesktop();
   const authenticationControl = isDesktop !== undefined && authentication && (
-    <CharacterSheetGoogleAuthentication authentication={authentication} />
+    <CharacterSheetAuthentication authentication={authentication} />
   );
   const errorStatusText = errorSummary.hasErrors
     ? `エラーが${errorSummary.errors.length}件あります。`

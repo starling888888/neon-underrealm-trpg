@@ -19,10 +19,6 @@
   font-weight: 700;
   line-height: var(--line-height-tight);
 }
-.googleLogin {
-  min-width: 0;
-}
-
 @media (width >= 84rem) {
   .root {
     grid-column: 2;

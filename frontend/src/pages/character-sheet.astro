@@ -12,7 +12,6 @@ import { withBase } from "../lib/utils/paths";
 
 const title = "キャラクターシート";
 const description = "ネオン・アンダーレルムTRPGのキャラクターシートです。";
-const googleClientId = import.meta.env.PUBLIC_GOOGLE_OAUTH_CLIENT_ID;
 ---
 
 <!doctype html>
@@ -73,10 +72,7 @@ const googleClientId = import.meta.env.PUBLIC_GOOGLE_OAUTH_CLIENT_ID;
         <main class="character-sheet-main" data-page-content>
           <article class="character-sheet-page" data-character-sheet-page>
             <h1 class="visually-hidden">キャラクターシート</h1>
-            <CharacterSheetContainer
-              client:load
-              googleClientId={googleClientId}
-            />
+            <CharacterSheetContainer client:load />
           </article>
         </main>
       </div>
