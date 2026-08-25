@@ -103,7 +103,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [x] credential、token、Wrangler local stateをGit管理しない。
 - [x] G5 UI機能やscope外のAPIを混在させていない。
 - [x] ユーザーの未コミット変更を破壊していない。
-- [ ] 実装完了と全完了条件の確認後に、Draft PRをReady for reviewへ変更し、確認結果に合わせてPR本文を更新する。
+- [x] 実装完了と全完了条件の確認後に、Draft PRをReady for reviewへ変更し、確認結果に合わせてPR本文を更新する。
 
 ## Development environment API確認
 
@@ -156,7 +156,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [x] productionの`/diagnostics/probe`をG4 APIへ置換し、外部からR2を書き込めない。
 - [x] shared packageだけの変更をCIで拒否し、consumerの変更時に対応するworkspace testを実行する。
 - [x] migrationの後方互換性をG4で扱わず、backendの`tsc`はWorker sourceを確認する。Node test runnerの型はWorkers runtime型と競合するため、unit testは`tsx --test`で実行し、test専用typecheck configは追加しない。
-- [ ] Gate reviewを親branchまたは前回review commit以後の差分に限定し、PR本文を実装完了時に更新する。
+- [x] Gate reviewを親branchまたは前回review commit以後の差分に限定し、PR本文を実装完了時に更新する。
 - [x] `npm run check`が通る。
 - [x] backendのbuild、test、local integration testが通る。
 
