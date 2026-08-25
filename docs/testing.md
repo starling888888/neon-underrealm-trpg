@@ -16,7 +16,7 @@
 - `npm --workspace=@neon-underrealm/backend run test`: `backend/tests/unit/`だけをVitestで実行する。service unit testはmock repositoryとactor user IDを直接渡し、spyによる差し替えを使わない。`backend/tests/integration/`は通常testから除外する。
 - `npm --workspace=@neon-underrealm/backend run test:integration`: integration専用Vitest configにより`backend/tests/integration/`だけを実行する。endpointごとのHTTP contractをlocal API integration testで確認する。既存状態が必要なcaseは、Wranglerの`getPlatformProxy`で同じlocal stateを開いた`CloudflareCharacterSheetRepository`からfixtureを登録し、各caseの`afterEach`でmetadataとsnapshotを削除する。Node組み込みの`assert`やWrangler CLIの子processは使わない。
 - backendの`tsconfig.json`はsrc、unit/integration test、Vitest configをまとめて型検査する。`tsconfig.build.json`はそれをextendsし、testsとVitest configを除外してWorker buildだけを型検査する。Cloudflare WorkersとNode/Vitestの外部Web Platform宣言は競合するため、全体tsconfigは`skipLibCheck`で外部宣言だけを除外する。project sourceとtestの型検査は省略しない。
-- local Workerは`backend/.wrangler/state/`をD1/R2の一時stateに使う。このpathとWranglerの一時bundleである`backend/.wrangler/tmp/`はGit ignoreする。開始前は`npm --workspace=@neon-underrealm/backend run local:reset`、続けて`npm --workspace=@neon-underrealm/backend run migrate:local`を実行する。`npm --workspace=@neon-underrealm/backend run dev:local`でWrangler local Workerを`8787`に起動し、別terminalで`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。`local:reset`は両pathを削除するため、確認後は必ず再実行する。CIも同じnpm scriptの順番を明示して実行する。
+- local Workerは`backend/.wrangler/state/`をD1/R2の開発用stateに使い、`npm --workspace=@neon-underrealm/backend run dev:local`は`backend/.env`のGoogle OAuth client IDを使う正規のID token検証器で`8787`に起動する。integration Workerは`.wrangler/integration-state/`の専用stateを使い、`npm --workspace=@neon-underrealm/backend run dev:integration`でtest token専用の検証器を起動する。どちらのstateとWranglerの一時bundleである`backend/.wrangler/tmp/`もGit ignoreする。integration testの前は`npm --workspace=@neon-underrealm/backend run integration:reset`、続けて`npm --workspace=@neon-underrealm/backend run migrate:integration`を実行し、別terminalで`npm --workspace=@neon-underrealm/backend run dev:integration`と`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。`integration:reset`はintegration専用stateだけを削除する。CIも同じnpm scriptの順番を明示して実行する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。
 
@@ -45,7 +45,9 @@ Webキャラクターシートは、複雑な対話機能の基準例とする�
 3. Componentへ表示、アクセシブルな操作名、入力、callback、dialogやerror stateを置き、Vitestで確認する。
 4. Playwright E2Eは、公開routeからの代表フローと実ブラウザに依存する境界だけを確認する。全てのvalidation分岐、計算規則、状態遷移をE2Eで網羅しない。
 
-character-sheetの現行構成では、`frontend/tests/node/character-sheet/`がlogic、schema、master-data、serializableなpersistence、browser adapterの契約を、`frontend/tests/hooks/character-sheet/`が復元、保存、画像・JSON・clipboardの状態管理を、`frontend/tests/components/character-sheet/`が表示と操作部品を、`frontend/tests/e2e/character-sheet.spec.ts`がexport/import、responsive action pane、dialog、clipboard、file inputなどの代表的な実ブラウザ操作を確認している。unit testはすべてVitestで実行する。
+character-sheetの現行構成では、`frontend/tests/node/character-sheet/`がlogic、schema、master-data、serializableなpersistence、browser adapterの契約を、`frontend/tests/hooks/character-sheet/`が復元、保存、画像・JSON・clipboardの状態管理を、`frontend/tests/components/character-sheet/`が表示と操作部品を、`frontend/tests/e2e/character-sheet.spec.ts`がJSON import、responsive action pane、dialog、clipboard、file inputなどの代表的な実ブラウザ操作を確認している。unit testはすべてVitestで実行する。
+
+`ex-16-5-cloud-persistence-ui`では、shared / backendで`isPublic` migration、anonymous public list、owner private list、private non-ownerの一覧非表示とindividual `404`、owner限定write/deleteを確認する。frontendではtokenをmemoryだけに渡すAPI client、remote binding、login/logout時のownership再評価、一覧cache、read-only操作境界、DB保存・コピー保存・DB削除・初期化・importの状態遷移、Toastをunit / hook / component testで確認する。代表browser / E2Eは一覧選択、public non-ownerのread-onlyとコピー保存、local DB保存、private owner上書き、DB削除、logout/login、import binding解除を確認し、Google本番認証へ直接依存しない。
 
 ## テスト実装とレビューの判断基準
 

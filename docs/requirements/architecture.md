@@ -10,9 +10,9 @@
 
 公開ルールサイトは、サーバーサイド処理、データベース、常駐プロセス、認証必須CMSを前提にしてはならない。
 
-ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateでは、Cloudflare Worker、D1、R2をキャラクターシートの将来のクラウド永続化専用backendとして追加してよい。frontendの静的公開とbackendのresource管理・deployは独立させ、frontendはbackend内部moduleを直接importしない。
+ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateでは、Cloudflare Worker、D1、R2をキャラクターシートのクラウド永続化専用backendとして追加してよい。frontendの静的公開とbackendのresource管理・deployは独立させ、frontendはbackend内部moduleを直接importしない。G5では、公開設定をfrontend filteringではなくbackendのread authorizationで強制する。
 
-Webキャラクターシートを含むブラウザ上のインタラクティブ機能は、静的ホスティングで完結し、サーバーサイド処理やデータベースを要求しない範囲で実装する。
+Webキャラクターシートを含むブラウザ上のインタラクティブ機能は、`ex-16-character-sheet-cloud-persistence` の承認済みGateを除き、静的ホスティングで完結し、サーバーサイド処理やデータベースを要求しない範囲で実装する。
 
 ### AC-02. ソースコード連携で自動公開できること
 

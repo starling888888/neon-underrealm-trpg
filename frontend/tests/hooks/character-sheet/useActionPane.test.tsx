@@ -21,7 +21,7 @@ function renderActionPane({
   isRootOperationInProgress?: boolean;
 } = {}) {
   const onCcfoliaCopyConfirmed = vi.fn(async () => true);
-  const onExport = vi.fn();
+  const onCcfoliaCopyResult = vi.fn();
   const onImport = vi.fn();
   const onResetConfirmed = vi.fn(async () => {});
   const hook = renderHook(
@@ -29,13 +29,12 @@ function renderActionPane({
       useActionPane({
         errorSummary: emptyErrorSummary,
         isCcfoliaCopyDisabled: false,
-        isExportDisabled: false,
         isImportDisabled: false,
         isResetErrorOpen,
         isRootOperationInProgress,
         isResetDisabled: false,
         onCcfoliaCopyConfirmed,
-        onExport,
+        onCcfoliaCopyResult,
         onImport,
         onResetConfirmed,
       }),
@@ -45,7 +44,7 @@ function renderActionPane({
   return {
     ...hook,
     onCcfoliaCopyConfirmed,
-    onExport,
+    onCcfoliaCopyResult,
     onImport,
     onResetConfirmed,
   };
@@ -60,7 +59,6 @@ function renderDeferredResetActionPane() {
       }),
   );
   const onCcfoliaCopyConfirmed = vi.fn(async () => true);
-  const onExport = vi.fn();
   const onImport = vi.fn();
   const hook = renderHook(() => {
     const [isRootOperationInProgress, setIsRootOperationInProgress] =
@@ -77,13 +75,11 @@ function renderDeferredResetActionPane() {
     return useActionPane({
       errorSummary: emptyErrorSummary,
       isCcfoliaCopyDisabled: false,
-      isExportDisabled: false,
       isImportDisabled: false,
       isResetErrorOpen: false,
       isRootOperationInProgress,
       isResetDisabled: false,
       onCcfoliaCopyConfirmed,
-      onExport,
       onImport,
       onResetConfirmed,
     });
@@ -201,7 +197,8 @@ describe("useActionPane", () => {
   });
 
   it("reports CCFOLIA copy success and failure after closing its confirmation", async () => {
-    const { result, onCcfoliaCopyConfirmed } = renderActionPane();
+    const { result, onCcfoliaCopyConfirmed, onCcfoliaCopyResult } =
+      renderActionPane();
     const trigger = document.createElement("button");
 
     act(() => result.current.actionPaneProps.onCcfoliaCopy(trigger));
@@ -212,14 +209,14 @@ describe("useActionPane", () => {
     });
     expect(onCcfoliaCopyConfirmed).toHaveBeenCalledOnce();
     expect(result.current.dialogs.actions.isCcfoliaCopyConfirmOpen).toBe(false);
-    expect(result.current.dialogs.actions.ccfoliaCopyNotice).toBe("success");
+    expect(onCcfoliaCopyResult).toHaveBeenLastCalledWith(true);
 
     onCcfoliaCopyConfirmed.mockResolvedValueOnce(false);
     act(() => result.current.actionPaneProps.onCcfoliaCopy(trigger));
     await act(async () => {
       await result.current.dialogs.actions.confirmCcfoliaCopy();
     });
-    expect(result.current.dialogs.actions.ccfoliaCopyNotice).toBe("failure");
+    expect(onCcfoliaCopyResult).toHaveBeenLastCalledWith(false);
   });
 
   it("scrolls a first-level section beneath the site header without owning active-section state", () => {

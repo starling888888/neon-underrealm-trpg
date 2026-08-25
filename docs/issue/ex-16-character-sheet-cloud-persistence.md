@@ -2,7 +2,7 @@
 
 ## 目的
 
-WebキャラクターシートへGoogle認証、Cloudflare上のキャラクター永続保存、およびキャラクター選択を追加する。
+WebキャラクターシートへGoogle認証、Cloudflare上のキャラクター永続保存、およびキャラクター一覧を追加する。
 
 既存のAstro + React frontendとGitHub Pages公開は維持し、Cloudflare Workers、D1、R2による独立backendを追加する。frontend、backend、shared packageをworkspaceとして分離し、各層を独立して検証・deployできるようにする。
 
@@ -10,7 +10,7 @@ WebキャラクターシートへGoogle認証、Cloudflare上のキャラクタ�
 
 現行のキャラクターシートはlocalStorageとIndexedDBへ最新1件を保存するlocal-first構成であり、認証、クラウド保存、複数キャラクター管理、backendは初期スコープ外である。
 
-このissueでは、上記のうちGoogle認証、クラウド保存、複数キャラクター選択、backendを正式な実装対象へ変更する。ローカル保存は廃止せず、ログイン不要で編集を継続できる作業用保存として維持する。
+このissueでは、上記のうちGoogle認証、クラウド保存、複数キャラクター一覧、backendを正式な実装対象へ変更する。ローカル保存は廃止せず、ログイン不要で編集を継続できる作業用保存として維持する。
 
 Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-character-sheet-cloud-persistence/plan.md` を正本とする。各Gateは着手時に独立したchild issueを作成・承認してから実装する。
 
@@ -18,7 +18,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 ### 要件・運用文書の正本化
 
-- `docs/requirements/character-sheet.md`を、ローカル保存に加えてGoogle認証、クラウド保存、複数キャラクター選択を扱う要件へ更新する。
+- `docs/requirements/character-sheet.md`を、ローカル保存に加えてGoogle認証、クラウド保存、複数キャラクター一覧を扱う要件へ更新する。
 - `docs/requirements/architecture.md`を、GitHub Pagesの静的frontendと独立したCloudflare backendを許容する構成へ更新する。
 - `docs/out-of-scope.md`から今回正式に対象化する認証、サーバー・DB・クラウド保存、複数キャラクター管理を除外し、対象外を再定義する。
 - `docs/development-structure.md`、`docs/testing.md`、必要に応じて`docs/deployment.md`を、workspace、backend、独立CI/CD、Wranglerの責務へ整合させる。
@@ -43,33 +43,34 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 ### 認証、データ、API
 
-- frontendはGoogle Identity ServicesでID Tokenを取得する。client secret、独自OAuth callback、refresh tokenの保存・独自refresh処理は追加しない。
-- 認証必須APIではJWT signature、`iss`、`aud`、`exp`を検証し、検証済みGoogle `sub`だけを内部`userId`として使う。`userId`をclient入力から受け取らず、公開responseへ返さない。email、display name、profile imageは保存しない。
-- D1にはcharacter ID、内部`userId`、`TEXT`の`type`（`user`または`sample`）、PC名、PL名、格、プライマリ流儀ID、生き様ID、作成・更新日時をmetadataとして保存し、`user`の更新日時降順と`sample`の作成日時昇順に必要なindexを持たせる。APIの作成・更新requestは`type`を受け取らず、新規作成時は`user`、更新時は既存値を維持する。管理者は自分の`userId`で作成したrecordの`type`だけをDBで`sample`へ変更できる。
+- G3/G4の初期実装はGoogle Identity ServicesのGoogle ID Tokenを使う。G6でFirebase AuthenticationのGoogle providerへ置換し、Firebase SDKの認証状態永続化とtoken refreshを利用する。Google ID Tokenをアプリケーションsessionとして扱わず、独自OAuth callback、Google refresh tokenの保存・独自refresh処理、cross-site session cookieは追加しない。
+- 認証必須APIではJWT signature、`iss`、`aud`、`exp`を検証し、検証済みFirebase `uid`だけを内部`userId`として使う。G6完了後、production verifierはGoogle ID TokenではなくFirebase ID Tokenを検証する。`userId`をclient入力から受け取らず、公開responseへ返さない。email、display name、profile imageは保存しない。
+- D1にはcharacter ID、内部`userId`、`TEXT`の`type`（`user`または`sample`）、`isPublic`、PC名、PL名、格、プライマリ流儀ID、生き様ID、作成・更新日時をmetadataとして保存する。既存recordはmigration後にpublicとして扱う。APIの作成・更新requestは`type`を受け取らず、新規作成時は`user`、更新時は既存値を維持する。管理者は自分の`userId`で作成したrecordの`type`だけをDBで`sample`へ変更できる。
 - R2 object keyは`{userId}/{id}.json`とし、character snapshotとBase64エンコード済み画像を保存する。character IDはserverがopaqueなglobal unique IDとして発行する。
 - D1とR2の分散transaction、rollback、compensating transaction、孤児R2 objectの自動cleanupは実装しない。部分失敗は通常のAPI errorとして返す。
-- APIは一覧取得、個別取得、個別upsert、個別deleteに限定する。GETは公開し、一覧はserver-side paginationなしで全件取得後に`user`と`sample`へ分けて返す。`user`は`updatedAt DESC`、`sample`は`createdAt ASC`とする。write/deleteは`userId`が一致するowner本人だけを許可するため、`sample`へ変更したrecordも作成者はUIから更新・削除できる。
-- 一覧は`id`、表示用metadata、timestamps、`isOwner`を返せるが、内部`userId`は返さない。認証なしでは`isOwner`をfalseとし、不正なAuthorization headerの扱いはshared API contractで統一する。
+- APIは一覧取得、個別取得、個別upsert、個別deleteに限定する。GETは`isPublic === true`、または認証済みactorがownerの場合だけ返す。非ownerのprivate recordは一覧に含めず、個別GETも存在しないrecordと同じ`404`を返す。`user`は`updatedAt DESC`、`sample`は`createdAt ASC`とする。write/deleteは公開設定に関係なく`userId`が一致するowner本人だけを許可する。
+- 一覧は`id`、表示用metadata、`isPublic`、timestamps、`isOwner`を返せるが、内部`userId`は返さない。認証なしでは`isOwner`をfalseとし、不正なAuthorization headerの扱いはshared API contractで統一する。
 - backendはAPI envelopeとmetadataをvalidationするが、character JSON本体のゲームschemaをvalidationしない。取得時のschema検証、現在のマスタID照合、warning/error表示は既存frontend restore処理を再利用する。
 - frontendとbackendが別originになるため、productionでは公式frontend origin、developmentでは必要なlocalhost originだけを許可するCORS contractを定義する。
 - application固有のrequest body上限は、画像上限、変換後画像サイズ、正常fixtureを根拠にbackend API Gateで決定し、testへ固定する。
 
 ### キャラクターシートのクラウド操作
 
-- 見出し行にGoogle login/logoutと`キャラクター選択`を追加する。Google sessionが利用可能なときは、公式のOne Tap、Automatic Sign-in、FedCM等で不要な再ログインを避ける。logout時はapplication認証状態を破棄し、公式APIで直後の意図しない再ログインを抑止する。
+- 見出し行にGoogle login/logoutと`キャラクター一覧`を追加する。Google sessionが利用可能なときは、公式のOne Tap、Automatic Sign-in、FedCM等で不要な再ログインを避ける。logout時はapplication認証状態を破棄し、公式APIで直後の意図しない再ログインを抑止する。
 - 現在のcharacterを「新規/ローカル」「自分のremote」「他人または未認証のremote」として区別し、認証変更時に所有状態を再評価する。永続化済みのclient側`isOwner`だけをauthorization判断に使わない。
-- `キャラクター選択` dialogはPC名、PL名、プライマリ流儀、生き様、格、最終更新日を表示する。取得済み一覧をclient-sideで10件ずつページ分割し、ログイン時だけ`自分のキャラクターのみ` filterを使えるようにする。未設定値は`-`、長いPC名・PL名はellipsisで扱う。
+- `キャラクター一覧` dialogはPC名、PL名、改行表示する流儀／生き様、格、更新日を表示する。desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名は一覧幅の30%、PL名は20%を取り、長いPC名・PL名と流儀／生き様はellipsisで扱ってよいが、更新日は省略せず横scrollを発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日だけは最小限の列幅にしてclipを避ける。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、page、radio、filterの変更時は先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを使えるようにする。未設定値は`-`とする。
 - 一覧から取得したcharacterは既存restore処理を通して同じ`/character-sheet/`へ反映する。個別閲覧pageは追加しない。
-- 他人または未認証のremote characterはread-onlyとする。input、picker、画像操作、行操作、DB保存、DB削除、reset、CCFOLIA copy、Helpを含むシート内部操作を無効化し、login/logoutとキャラクター選択は使用可能にする。server側のwrite authorizationはUI disabledと独立して必須とする。
-- 既存のJSON import/export操作をユーザー向けAction Paneから除き、同じ操作領域へ`DB保存`と`DB削除`を置く。既存serialize/restore内部logicはクラウド保存で再利用できる場合に利用する。
-- `DB保存`はPC名とログインを必須とし、初回はserver発行IDへ紐付け、ownerのremote characterは上書きする。保存前にデータと画像がserverへ保存されることを説明する確認dialogを表示する。
+- 他人または未認証のremote characterはread-onlyとする。input、picker、画像操作、行操作、DB保存、DB削除は無効化するが、初期化、JSONインポート、CCFOLIAコピー、Help、login/logout、キャラクター一覧は利用可能にする。server側のwrite authorizationはUI disabledと独立して必須とする。
+- JSONエクスポートのユーザー向けUIをAction Pane / control paneから除き、JSONインポートは9/1の削除予告を表示して移行期間中維持する。同じ操作領域へ`DB保存`、`コピー保存`、`DB削除`を置く。既存serialize/restore内部logicはクラウド保存で再利用できる場合に利用する。
+- `DB保存`はPC名とログインを必須とし、初回はserver発行IDへ紐付け、ownerのremote characterは上書きする。新規保存の`全員に公開する`は既定ON、既存remoteの上書きでは現在の`isPublic`を既定にする。保存前にデータと画像がserverへ保存されることを説明する確認dialogを表示する。
+- `コピー保存`はログイン済みならowner以外のpublic remote characterにも許可する。新しいIDへ保存し、`全員に公開する`の既定はOFF、コピー元画像は保存しない。
 - `DB削除`はownerだけに許可し、確認dialogを表示する。成功後はフォームを消去せずremote IDの紐付けだけを解除する。resetはremote characterを暗黙に削除または空データで上書きしない。
-- Helpは認証、DB保存/削除、選択、権限、ローカル保存とDB保存の違いを説明し、旧JSON import/exportの利用者向け説明を除く。
+- Helpは認証、DB保存/削除、一覧、権限、ローカル保存とDB保存の違いを説明する。本文はユーザーが編集する`.raw/character-sheet-help.md`を正としてcomponent markupへ反映する。
 
 ### Design、test、review
 
 - 既存の`docs/design/character-sheet/notes.md`を既存画面のdesign正本として扱う。
-- login/logout、キャラクター選択dialog、pagination、owner filter、read-only、DB保存/削除確認dialogのdesign intentとVRT stateは未定義である。G3とG5の各UI Gateは、実装前に`design-image-generation`で`docs/design/character-sheet/`のnotesを更新し、ユーザー承認を得る。design専用Gateは設けない。
+- G5のUI design intentは`docs/issue/ex-16-5-cloud-persistence-ui.md`のユーザー確定仕様を最優先とする。G5の実装時に`docs/design/character-sheet/notes.md`へ同じ意図と対象stateを記録する。canonical VRT baselineはユーザー承認なしに更新しない。
 - shared/backendはmetadata validation、DTO、token rejection、owner authorization、ID発行、一覧順、`userId`非公開、optional auth、R2 key、adapter、payload上限、error contractをunit/contract testする。
 - frontendは認証状態、remote state、所有状態再評価、dialog、pagination/filter、fallback/ellipsis、restore failure、read-only、保存/削除確認、remote ID、PC名必須、HelpをComponent/hook/logic testする。
 - E2Eは選択、自分の編集、他人のread-only、保存確認、削除確認の代表flowに絞り、Google本番認証へ直接依存しない。
@@ -94,7 +95,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 - [ ] Google ID Tokenをserver側で検証し、内部`userId`と所有権を安全に扱う。
 - [ ] D1 metadataとR2 snapshotが指定のkey・公開範囲・部分失敗方針に従う。
 - [ ] 公開GETとowner限定write/delete、CORS、error contract、payload上限がtestで確認されている。
-- [ ] login/logout、キャラクター選択、read-only、DB保存/削除、Helpが指定どおり動作する。
+- [ ] login/logout、キャラクター一覧、read-only、DB保存/コピー保存/削除、Helpが指定どおり動作する。
 - [ ] ローカル保存が維持され、remote IDと所有状態を安全に再評価できる。
 - [ ] 関連するrequirements、out-of-scope、構造、testing、deployment文書が実装と整合する。
 - [ ] 関連TODOの扱いを明示し、判断なしに完了または削除していない。

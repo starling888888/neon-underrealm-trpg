@@ -7,6 +7,7 @@ export type GoogleAuthenticationStatus =
   | "error";
 
 export type GoogleAuthentication = {
+  idToken?: string | null;
   onCredential: (credentialResponse: CredentialResponse) => void;
   onLoginError: () => void;
   onLoginStarted: () => void;

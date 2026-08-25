@@ -1,5 +1,5 @@
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import styles from "./CharacterSheetContainer.module.css";
 import useGoogleAuthentication from "./auth/useGoogleAuthentication";
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
@@ -7,9 +7,9 @@ import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
 } from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
+import CharacterSheetToast from "./components/CharacterSheetToast";
 import ActionPaneDialogs from "./components/dialogs/action-pane";
-import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
-import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
+import CharacterSheetRemotePersistenceDialogs from "./components/dialogs/CharacterSheetRemotePersistenceDialogs";
 import CharacterChangeWarningDialogs from "./components/dialogs/character-change-warning";
 import PickerDialogs from "./components/dialogs/pickers";
 import { characterSheetDictionary } from "./dictionary";
@@ -17,17 +17,23 @@ import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPre
 import useActionPane from "./hooks/useActionPane";
 import useCharacterChangeWarning from "./hooks/useCharacterChangeWarning";
 import useCharacterSheetRootState from "./hooks/useCharacterSheetRootState";
+import useCharacterSheetToast from "./hooks/useCharacterSheetToast";
 import usePickerStates from "./hooks/usePickerStates";
 import usePickers from "./hooks/usePickers";
+import useRemoteCharacterPersistence from "./hooks/useRemoteCharacterPersistence";
 import { serializeCcfoliaCharacterClipboardData } from "./logic/ccfolia";
 
-/**
- * React Island root and orchestration boundary for the character sheet.
- *
- * It owns form state and cross-cutting UI state. Form layout belongs to the
- * presenter; dialogs that need root-level coordination are added as direct
- * siblings of that presenter in later Gates.
- */
+const { ccfolia, image, jsonImport, persistence } =
+  characterSheetDictionary.characterSheet;
+const imageErrorMessages = {
+  decode: image.errors.decode,
+  "file-too-large": image.errors.fileTooLarge,
+  "invalid-type": image.errors.invalidType,
+  restore: image.errors.restore,
+  storage: image.errors.storage,
+} as const;
+
+/** React Island root and orchestration boundary for the character sheet. */
 type CharacterSheetContainerProps = {
   googleClientId: string;
 };
@@ -45,8 +51,47 @@ export default function CharacterSheetContainer({
 function CharacterSheetContent() {
   const authentication = useGoogleAuthentication();
   const rootState = useCharacterSheetRootState();
+  const toast = useCharacterSheetToast();
   const form = rootState.form;
   const formResetKey = rootState.formResetVersion;
+  const remotePersistence = useRemoteCharacterPersistence({
+    authentication,
+    bindRemoteSummary: rootState.bindRemoteSummary,
+    characterImage: rootState.characterImage,
+    clearCharacterImageForCopy: rootState.clearCharacterImageForCopy,
+    clearRemoteCharacter: rootState.clearRemoteCharacter,
+    form,
+    isRootOperationInProgress: rootState.isRootOperationInProgress,
+    notify: toast.notify,
+    remoteCharacter: rootState.remoteCharacter,
+    restoreRemoteCharacter: rootState.restoreRemoteCharacter,
+    updateRemoteCharacterMetadata: rootState.updateRemoteCharacterMetadata,
+  });
+
+  useEffect(() => {
+    if (!rootState.isJsonImportErrorOpen) return;
+    rootState.setIsJsonImportErrorOpen(false);
+    toast.notify("error", jsonImport.error);
+  }, [rootState, toast]);
+
+  useEffect(() => {
+    if (!rootState.isJsonImportImageErrorOpen) return;
+    rootState.setIsJsonImportImageErrorOpen(false);
+    toast.notify("error", jsonImport.imageOmitted);
+  }, [rootState, toast]);
+
+  useEffect(() => {
+    if (rootState.imageError === null) return;
+    rootState.setImageError(null);
+    toast.notify("error", imageErrorMessages[rootState.imageError.code]);
+  }, [rootState, toast]);
+
+  useEffect(() => {
+    if (!rootState.isFormRestoreErrorOpen) return;
+    rootState.setIsFormRestoreErrorOpen(false);
+    toast.notify("error", persistence.restoreError);
+  }, [rootState, toast]);
+
   const pickerStates = usePickerStates();
   const characterChangeWarning = useCharacterChangeWarning({ form });
   const imageState = useMemo(
@@ -132,10 +177,20 @@ function CharacterSheetContent() {
     presenterProps.secondaryAttributesSection,
     rootState.onCcfoliaCopy,
   ]);
+  const onCcfoliaCopyResult = useCallback(
+    (copied: boolean) => {
+      toast.notify(
+        copied ? "success" : "error",
+        copied ? ccfolia.copySuccess : ccfolia.copyError,
+      );
+    },
+    [toast],
+  );
   const actionPane = useActionPane({
     errorSummary: presenterProps.errorSummary,
     isCcfoliaCopyDisabled: rootState.isRootOperationInProgress,
-    isExportDisabled: rootState.isCharacterImageRestoring,
+    isCopySaveDisabled: remotePersistence.isCopySaveDisabled,
+    isDeleteDisabled: remotePersistence.isDeleteDisabled,
     isImportDisabled:
       rootState.isCharacterImageRestoring ||
       rootState.isRootOperationInProgress,
@@ -144,10 +199,15 @@ function CharacterSheetContent() {
     isResetDisabled:
       rootState.isCharacterImageRestoring ||
       rootState.isRootOperationInProgress,
+    isSaveDisabled: remotePersistence.isSaveDisabled,
     onCcfoliaCopyConfirmed,
-    onExport: rootState.onJsonExport,
+    onCcfoliaCopyResult,
+    onCharacterList: remotePersistence.openCharacterList,
+    onCopySave: remotePersistence.openCopySave,
+    onDelete: remotePersistence.openDelete,
     onImport: rootState.onJsonImportRequested,
     onResetConfirmed: rootState.onResetConfirmed,
+    onSave: remotePersistence.openSave,
   });
   const actionPaneProps = useMemo(
     () => ({ ...actionPane.actionPaneProps, authentication }),
@@ -173,10 +233,15 @@ function CharacterSheetContent() {
         inert={rootState.isRootOperationInProgress || undefined}
       >
         <div className={styles.layout}>
-          <CharacterSheetFormPresenter
-            {...formPresenterProps}
-            key={formResetKey}
-          />
+          <fieldset
+            className={styles.formFields}
+            disabled={!remotePersistence.isEditable}
+          >
+            <CharacterSheetFormPresenter
+              {...formPresenterProps}
+              key={formResetKey}
+            />
+          </fieldset>
           <CharacterSheetActionPane {...actionPaneProps} />
         </div>
         <input
@@ -191,24 +256,6 @@ function CharacterSheetContent() {
           }}
           ref={rootState.jsonImportInputRef}
           type="file"
-        />
-        <CharacterImageErrorDialog
-          closeButtonRef={rootState.imageErrorCloseButtonRef}
-          errorCode={rootState.imageError?.code ?? null}
-          onRequestClose={() => rootState.setImageError(null)}
-          returnFocusRef={
-            rootState.isImageErrorFromJsonImport
-              ? rootState.jsonImportReturnFocusRef
-              : rootState.isImageErrorFromReset
-                ? actionPane.dialogs.actions.resetTriggerRef
-                : rootState.imageReturnFocusRef
-          }
-        />
-        <CharacterSheetRestoreErrorDialog
-          confirmButtonRef={rootState.formRestoreConfirmButtonRef}
-          isOpen={rootState.isFormRestoreErrorOpen}
-          onRequestClose={() => rootState.setIsFormRestoreErrorOpen(false)}
-          returnFocusRef={rootState.formRestoreReturnFocusRef}
         />
         <ActionPaneDialogs
           errorSummary={presenterProps.errorSummary}
@@ -229,15 +276,16 @@ function CharacterSheetContent() {
         <CharacterChangeWarningDialogs
           {...characterChangeWarning.dialogsProps}
         />
+        <CharacterSheetRemotePersistenceDialogs
+          {...remotePersistence.dialogProps}
+        />
       </div>
+      <CharacterSheetToast messages={toast.messages} onExpire={toast.expire} />
       <CharacterSheetLoadingOverlay
         isOpen={
           rootState.isRootOperationInProgress || rootState.isFormRestoring
         }
-        label={
-          rootState.rootOperation?.label ??
-          characterSheetDictionary.characterSheet.persistence.restoring
-        }
+        label={rootState.rootOperation?.label ?? persistence.restoring}
       />
     </>
   );

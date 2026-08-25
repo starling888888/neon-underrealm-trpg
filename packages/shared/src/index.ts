@@ -19,6 +19,7 @@ export const ikizamaIds = ["burai", "kejime", "sumi", "yaku"] as const;
 
 export const characterSheetMetadataInputSchema = z.object({
   ikizamaId: z.enum(ikizamaIds).nullable().optional(),
+  isPublic: z.boolean(),
   pcName: z.string().trim().min(1).max(200),
   plName: z.string().trim().max(200).nullable().optional(),
   primaryRyugiId: z.enum(primaryRyugiIds).nullable().optional(),

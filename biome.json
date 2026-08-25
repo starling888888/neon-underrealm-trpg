@@ -5,6 +5,7 @@
       "**",
       "!dist",
       "!backend/dist",
+      "!backend/.wrangler",
       "!frontend/dist",
       "!node_modules",
       "!.astro",

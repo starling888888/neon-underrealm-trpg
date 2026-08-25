@@ -1,0 +1,29 @@
+.stack {
+  position: fixed;
+  z-index: 10;
+  top: calc(var(--site-header-height) + var(--space-3));
+  right: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  width: min(24rem, calc(100vw - (var(--space-3) * 2)));
+  pointer-events: none;
+}
+
+.stack p {
+  margin: 0;
+  border: var(--border-width) solid currentColor;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-soft);
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.success {
+  background: var(--color-example-soft);
+  color: var(--color-link);
+}
+.error {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}

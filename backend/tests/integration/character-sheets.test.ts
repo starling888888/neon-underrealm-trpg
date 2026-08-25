@@ -30,10 +30,14 @@ let repository: CloudflareCharacterSheetRepository;
 let seededRecords: CharacterSheetRecord[] = [];
 let nextId = 1;
 
-async function request(path: string, options: RequestInit = {}) {
+async function request(
+  path: string,
+  options: RequestInit = {},
+  timeoutMs = 10_000,
+) {
   return fetch(`${backendUrl}${path}`, {
     ...options,
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(timeoutMs),
   });
 }
 
@@ -44,7 +48,7 @@ function createId(): string {
 
 function oversizedRequestBody(): string {
   return `${JSON.stringify({
-    metadata: { pcName: "too large", rank: 1 },
+    metadata: { isPublic: true, pcName: "too large", rank: 1 },
     snapshot: { imageBase64String: null },
   })}${" ".repeat(maximumRequestBodyBytes)}`;
 }
@@ -60,6 +64,7 @@ async function seedSheet(
     createdAt: now,
     id: createId(),
     ikizamaId: null,
+    isPublic: true,
     ownerUserId: "test-owner",
     pcName: "seeded sheet",
     plName: null,
@@ -81,7 +86,7 @@ beforeAll(async () => {
     configPath: "wrangler.jsonc",
     environment: "dev",
     envFiles: [],
-    persist: { path: ".wrangler/state/v3" },
+    persist: { path: ".wrangler/integration-state/v3" },
     remoteBindings: false,
   });
   repository = new CloudflareCharacterSheetRepository(platform.env);
@@ -127,6 +132,88 @@ describe("GET /character-sheets", () => {
     expect(body.user[0]?.metadata.updatedAt).toEqual(expect.any(Number));
   });
 
+  test("migration defaults pre-existing records to public", async () => {
+    const record: CharacterSheetRecord = {
+      createdAt: 1,
+      id: createId(),
+      ikizamaId: null,
+      isPublic: true,
+      ownerUserId: "test-owner",
+      pcName: "pre-existing sheet",
+      plName: null,
+      primaryRyugiId: null,
+      rank: 1,
+      type: "user",
+      updatedAt: 1,
+    };
+
+    await platform.env.DB.prepare(
+      `INSERT INTO character_sheets (
+        id, owner_user_id, type, pc_name, pl_name, rank,
+        primary_ryugi_id, ikizama_id, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    )
+      .bind(
+        record.id,
+        record.ownerUserId,
+        record.type,
+        record.pcName,
+        record.plName,
+        record.rank,
+        record.primaryRyugiId,
+        record.ikizamaId,
+        record.createdAt,
+        record.updatedAt,
+      )
+      .run();
+    await repository.putSnapshot(record.ownerUserId, record.id, {
+      imageBase64String: null,
+    });
+    seededRecords.push(record);
+
+    const response = await request("/character-sheets");
+
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as CharacterSheetListResponse;
+    expect(body.user).toMatchObject([
+      { id: record.id, metadata: { isPublic: true } },
+    ]);
+  });
+
+  test("filters private records by the authenticated owner", async () => {
+    const publicRecord = await seedSheet({ pcName: "public sheet" });
+    const ownerPrivate = await seedSheet({
+      isPublic: false,
+      pcName: "owner private sheet",
+    });
+    const otherPrivate = await seedSheet({
+      isPublic: false,
+      ownerUserId: "test-other",
+      pcName: "other private sheet",
+    });
+
+    const anonymous = await request("/character-sheets");
+    const owner = await request("/character-sheets", { headers: ownerHeaders });
+    const other = await request("/character-sheets", { headers: otherHeaders });
+
+    const anonymousBody =
+      (await anonymous.json()) as CharacterSheetListResponse;
+    const ownerBody = (await owner.json()) as CharacterSheetListResponse;
+    const otherBody = (await other.json()) as CharacterSheetListResponse;
+
+    expect(anonymousBody.user.map((sheet) => sheet.id)).toEqual([
+      publicRecord.id,
+    ]);
+    expect(ownerBody.user.map((sheet) => sheet.id)).toEqual(
+      expect.arrayContaining([ownerPrivate.id, publicRecord.id]),
+    );
+    expect(otherBody.user.map((sheet) => sheet.id)).toEqual(
+      expect.arrayContaining([otherPrivate.id, publicRecord.id]),
+    );
+    expect(ownerBody.user).toHaveLength(2);
+    expect(otherBody.user).toHaveLength(2);
+  });
+
   test("distinguishes expired and invalid tokens", async () => {
     const expired = await request("/character-sheets", {
       headers: { Authorization: "Bearer test-token-expired" },
@@ -144,7 +231,12 @@ describe("POST /character-sheets", () => {
   test("creates a user sheet", async () => {
     const response = await request("/character-sheets", {
       body: JSON.stringify({
-        metadata: { pcName: "created sheet", plName: "", rank: 1 },
+        metadata: {
+          isPublic: false,
+          pcName: "created sheet",
+          plName: "",
+          rank: 1,
+        },
         snapshot: {
           imageBase64String: null,
           profile: { pcName: "created sheet" },
@@ -158,11 +250,13 @@ describe("POST /character-sheets", () => {
     const body = (await response.json()) as CharacterSheetSummary;
     expect(body.metadata.type).toBe("user");
     expect(body.metadata.isOwner).toBe(true);
+    expect(body.metadata.isPublic).toBe(false);
     expect(body.metadata.pcName).toBe("created sheet");
     seededRecords.push({
       createdAt: body.metadata.createdAt,
       id: body.id,
       ikizamaId: body.metadata.ikizamaId ?? null,
+      isPublic: body.metadata.isPublic,
       ownerUserId: "test-owner",
       pcName: body.metadata.pcName,
       plName: body.metadata.plName ?? null,
@@ -179,7 +273,7 @@ describe("POST /character-sheets", () => {
     const response = await request("/character-sheets", {
       body: JSON.stringify({
         id: sheet.id,
-        metadata: { pcName: "updated sheet", rank: 2 },
+        metadata: { isPublic: false, pcName: "updated sheet", rank: 2 },
         snapshot: { imageBase64String: "updated-image" },
       }),
       headers: ownerHeaders,
@@ -189,6 +283,7 @@ describe("POST /character-sheets", () => {
     expect(response.status).toBe(200);
     const body = (await response.json()) as CharacterSheetSummary;
     expect(body.metadata.type).toBe("sample");
+    expect(body.metadata.isPublic).toBe(false);
     expect(body.metadata.pcName).toBe("updated sheet");
   });
 
@@ -198,7 +293,7 @@ describe("POST /character-sheets", () => {
     const response = await request("/character-sheets", {
       body: JSON.stringify({
         id: sheet.id,
-        metadata: { pcName: "forbidden", rank: 1 },
+        metadata: { isPublic: false, pcName: "forbidden", rank: 1 },
         snapshot: { imageBase64String: null },
       }),
       headers: otherHeaders,
@@ -212,7 +307,7 @@ describe("POST /character-sheets", () => {
     const response = await request("/character-sheets", {
       body: JSON.stringify({
         id: "11111111-1111-4111-8111-999999999999",
-        metadata: { pcName: "missing", rank: 1 },
+        metadata: { isPublic: true, pcName: "missing", rank: 1 },
         snapshot: { imageBase64String: null },
       }),
       headers: ownerHeaders,
@@ -225,7 +320,7 @@ describe("POST /character-sheets", () => {
   test("rejects an anonymous write", async () => {
     const response = await request("/character-sheets", {
       body: JSON.stringify({
-        metadata: { pcName: "anonymous", rank: 1 },
+        metadata: { isPublic: true, pcName: "anonymous", rank: 1 },
         snapshot: { imageBase64String: null },
       }),
       headers: { "Content-Type": "application/json" },
@@ -271,17 +366,21 @@ describe("POST /character-sheets", () => {
 
   test("rejects an oversized chunked request", async () => {
     const body = oversizedRequestBody();
-    const response = await request("/character-sheets", {
-      body: new ReadableStream({
-        start(controller) {
-          controller.enqueue(new TextEncoder().encode(body));
-          controller.close();
-        },
-      }),
-      duplex: "half",
-      headers: ownerHeaders,
-      method: "POST",
-    } as RequestInit);
+    const response = await request(
+      "/character-sheets",
+      {
+        body: new ReadableStream({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode(body));
+            controller.close();
+          },
+        }),
+        duplex: "half",
+        headers: ownerHeaders,
+        method: "POST",
+      } as RequestInit,
+      25_000,
+    );
 
     expect(response.status).toBe(413);
     await expect(response.json()).resolves.toEqual({
@@ -313,6 +412,26 @@ describe("GET /character-sheets/:id", () => {
     expect(body.snapshot.imageBase64String).toBeNull();
     expect(body.snapshot.profile).toEqual({ pcName: "owned sheet" });
     expect(JSON.stringify(body)).not.toContain("ownerUserId");
+  });
+
+  test("returns 404 for private records outside the owner", async () => {
+    const privateSheet = await seedSheet({ isPublic: false });
+
+    const anonymous = await request(`/character-sheets/${privateSheet.id}`);
+    const nonOwner = await request(`/character-sheets/${privateSheet.id}`, {
+      headers: otherHeaders,
+    });
+    const owner = await request(`/character-sheets/${privateSheet.id}`, {
+      headers: ownerHeaders,
+    });
+
+    expect(anonymous.status).toBe(404);
+    expect(nonOwner.status).toBe(404);
+    expect(owner.status).toBe(200);
+    await expect(owner.json()).resolves.toMatchObject({
+      id: privateSheet.id,
+      metadata: { isOwner: true, isPublic: false },
+    });
   });
 });
 
