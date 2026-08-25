@@ -121,9 +121,10 @@ jobs:
       - name: Apply local D1 migrations
         run: npm --workspace=@neon-underrealm/backend run migrate:local
 
+      - name: Write local Worker variables
+        run: echo "CORS_ALLOW_ORIGIN=http://localhost:4321" > backend/.env
+
       - name: Start local Worker
-        env:
-          CORS_ALLOW_ORIGIN: http://localhost:4321
         run: npm --workspace=@neon-underrealm/backend run dev:local > "$RUNNER_TEMP/backend.log" 2>&1 &
 
       - name: Wait for local Worker

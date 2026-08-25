@@ -184,6 +184,14 @@ source種別は以下を使う。
 - 観測した失敗: local Workerでintegration testが通ったことだけを根拠に、「backend CIで実行できる」完了条件をチェックした。CI環境にはbackend/.envがなく、local Workerが必須のCORS_ALLOW_ORIGIN bindingを得られずhealth checkで500になるため、実際にはintegration testへ到達できなかった。
 - 一次対応: 完了条件を未確認へ戻し、レビュー指摘3でCI runtime variable注入とGitHub Actions実行確認を修正契約に追加した。
 
+#### Treated a CI process environment variable as a Wrangler local binding
+
+- date: 2026-08-25
+- source: user-report
+- 発生箇所: ex-16-4-cloud-persistence-api のbackend integration CI修正
+- 観測した失敗: GitHub Actionsのstep `env`へCORS_ALLOW_ORIGINを設定すれば、`wrangler dev`でWorker bindingとして利用できると誤認した。実際にはprocess環境変数はWranglerのlocal Worker bindingへ自動注入されず、deploy時だけ`--var`を付与するwrapperもdevでは補完しないため、`environment.CORS_ALLOW_ORIGIN`は未定義のままとなる。
+- 一次対応: CIでgitignore対象の`backend/.env`を生成し、既存wrapperがsourceした値をWrangler標準の`.env`読込へ渡す構成に訂正する。
+
 - date: 2026-07-09
 - source: review
 - 発生箇所: `phase-2-prep-contents-markdown-workflow` の `docs/issue/phase-2-prep-contents-markdown-workflow.md`
