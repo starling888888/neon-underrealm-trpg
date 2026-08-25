@@ -301,8 +301,12 @@ export default function useRemoteCharacterPersistence(
           current === null
             ? current
             : {
-                sample: current.sample.filter(({ id }) => id !== remoteCharacter.id),
-                user: current.user.filter(({ id }) => id !== remoteCharacter.id),
+                sample: current.sample.filter(
+                  ({ id }) => id !== remoteCharacter.id,
+                ),
+                user: current.user.filter(
+                  ({ id }) => id !== remoteCharacter.id,
+                ),
               },
         );
         setIsDeleteOpen(false);

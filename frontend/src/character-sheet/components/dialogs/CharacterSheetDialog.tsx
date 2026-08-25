@@ -134,7 +134,9 @@ export function CharacterSheetDialogContent({
   children,
 }: CharacterSheetDialogContentProps) {
   return (
-    <div className={className ? `${styles.content} ${className}` : styles.content}>
+    <div
+      className={className ? `${styles.content} ${className}` : styles.content}
+    >
       {children}
     </div>
   );
