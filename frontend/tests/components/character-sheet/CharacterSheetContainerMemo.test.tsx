@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { act, cleanup, render, screen } from "@testing-library/react";
-import { type ReactNode, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -19,11 +19,13 @@ const {
   presenterSpy,
   useRemotePersistenceMock,
   useRootStateMock,
+  useFirebaseAuthenticationMock,
 } = vi.hoisted(() => ({
   actionPaneSpy: vi.fn(),
   presenterSpy: vi.fn(),
   useRemotePersistenceMock: vi.fn(),
   useRootStateMock: vi.fn(),
+  useFirebaseAuthenticationMock: vi.fn(),
 }));
 
 vi.mock(
@@ -68,10 +70,8 @@ vi.mock(
   }),
 );
 
-vi.mock("@react-oauth/google", () => ({
-  GoogleOAuthProvider: ({ children }: { children: ReactNode }) => children,
-  googleLogout: vi.fn(),
-  useGoogleOneTapLogin: vi.fn(),
+vi.mock("../../../src/character-sheet/auth/useFirebaseAuthentication", () => ({
+  default: useFirebaseAuthenticationMock,
 }));
 
 function useRootStateHarness() {
@@ -137,6 +137,13 @@ function useRootStateHarness() {
 }
 
 beforeEach(() => {
+  useFirebaseAuthenticationMock.mockReturnValue({
+    getIdToken: async () => null,
+    onLogin: async () => {},
+    onLogout: async () => {},
+    sessionKey: null,
+    status: "signed-out",
+  });
   useRootStateMock.mockImplementation(useRootStateHarness);
   useRemotePersistenceMock.mockReturnValue({
     dialogProps: {
@@ -197,11 +204,12 @@ afterEach(() => {
   presenterSpy.mockReset();
   useRemotePersistenceMock.mockReset();
   useRootStateMock.mockReset();
+  useFirebaseAuthenticationMock.mockReset();
 });
 
 describe("CharacterSheetContainer memo boundaries", () => {
   it("keeps presenter and action pane props stable when its help dialog state changes", () => {
-    render(<CharacterSheetContainer googleClientId="test-client-id" />);
+    render(<CharacterSheetContainer />);
     const before = presenterSpy.mock
       .lastCall?.[0] as CharacterSheetFormPresenterProps;
     const beforeActionPane = actionPaneSpy.mock.lastCall?.[0] as {

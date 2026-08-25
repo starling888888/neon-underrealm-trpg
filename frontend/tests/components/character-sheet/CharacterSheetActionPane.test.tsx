@@ -4,18 +4,9 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { GoogleAuthentication } from "../../../src/character-sheet/auth/types";
+import type { Authentication } from "../../../src/character-sheet/auth/types";
 import CharacterSheetActionPane from "../../../src/character-sheet/components/CharacterSheetActionPane";
 import type { CharacterSheetErrorSummary } from "../../../src/character-sheet/logic/error-summary";
-
-const { googleLoginSpy } = vi.hoisted(() => ({ googleLoginSpy: vi.fn() }));
-
-vi.mock("@react-oauth/google", () => ({
-  GoogleLogin: (props: unknown) => {
-    googleLoginSpy(props);
-    return null;
-  },
-}));
 
 const errorSummary: CharacterSheetErrorSummary = {
   errors: [
@@ -34,21 +25,20 @@ const sectionNavigation = {
   ],
 };
 
-const authentication: GoogleAuthentication = {
-  onCredential: () => {},
-  onLoginError: () => {},
-  onLoginStarted: () => {},
-  onLogout: () => {},
+const authentication: Authentication = {
+  getIdToken: async () => null,
+  onLogin: async () => {},
+  onLogout: async () => {},
+  sessionKey: null,
   status: "signed-out",
 };
 
 afterEach(() => {
   cleanup();
-  googleLoginSpy.mockReset();
 });
 
 describe("CharacterSheetActionPane", () => {
-  it("mounts one GoogleLogin in the open compact menu", () => {
+  it("mounts the authentication action in the open compact menu", () => {
     render(
       <CharacterSheetActionPane
         authentication={authentication}
@@ -70,7 +60,9 @@ describe("CharacterSheetActionPane", () => {
       />,
     );
 
-    expect(googleLoginSpy).toHaveBeenCalledOnce();
+    expect(
+      screen.getByRole("button", { name: "Googleでログイン" }),
+    ).toBeTruthy();
   });
 
   it("reports the desktop and responsive help triggers through one callback", async () => {
