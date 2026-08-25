@@ -45,7 +45,9 @@ Webキャラクターシートは、複雑な対話機能の基準例とする�
 3. Componentへ表示、アクセシブルな操作名、入力、callback、dialogやerror stateを置き、Vitestで確認する。
 4. Playwright E2Eは、公開routeからの代表フローと実ブラウザに依存する境界だけを確認する。全てのvalidation分岐、計算規則、状態遷移をE2Eで網羅しない。
 
-character-sheetの現行構成では、`frontend/tests/node/character-sheet/`がlogic、schema、master-data、serializableなpersistence、browser adapterの契約を、`frontend/tests/hooks/character-sheet/`が復元、保存、画像・JSON・clipboardの状態管理を、`frontend/tests/components/character-sheet/`が表示と操作部品を、`frontend/tests/e2e/character-sheet.spec.ts`がexport/import、responsive action pane、dialog、clipboard、file inputなどの代表的な実ブラウザ操作を確認している。unit testはすべてVitestで実行する。
+character-sheetの現行構成では、`frontend/tests/node/character-sheet/`がlogic、schema、master-data、serializableなpersistence、browser adapterの契約を、`frontend/tests/hooks/character-sheet/`が復元、保存、画像・JSON・clipboardの状態管理を、`frontend/tests/components/character-sheet/`が表示と操作部品を、`frontend/tests/e2e/character-sheet.spec.ts`がJSON import、responsive action pane、dialog、clipboard、file inputなどの代表的な実ブラウザ操作を確認している。unit testはすべてVitestで実行する。
+
+`ex-16-5-cloud-persistence-ui`では、shared / backendで`isPublic` migration、anonymous public list、owner private list、private non-ownerの一覧非表示とindividual `404`、owner限定write/deleteを確認する。frontendではtokenをmemoryだけに渡すAPI client、remote binding、login/logout時のownership再評価、一覧cache、read-only操作境界、DB保存・コピー保存・DB削除・初期化・importの状態遷移、Toastをunit / hook / component testで確認する。代表browser / E2Eは一覧選択、public non-ownerのread-onlyとコピー保存、local DB保存、private owner上書き、DB削除、logout/login、import binding解除を確認し、Google本番認証へ直接依存しない。
 
 ## テスト実装とレビューの判断基準
 

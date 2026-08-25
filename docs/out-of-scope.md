@@ -118,7 +118,7 @@ DiscordやXへの導線はフッターリンクとして扱う。
 
 DBを用いたデータ保存、検索、ユーザー管理、投稿管理は初期スコープ外とする。
 
-ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱う、将来のcharacter snapshot用Cloudflare D1 / R2基盤だけは例外とする。このGateではdiagnostic endpointとresource基盤に留め、公開API・ユーザー入力の永続保存・検索は実装しない。
+ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱うCloudflare D1 / R2基盤、character API、認証済みのクラウド保存UI、複数キャラクター一覧は例外とする。G5は、公開characterの閲覧、owner private characterの閲覧・保存、public characterのコピー保存までを扱うが、検索、server-side pagination、共有URL、共同編集は含めない。
 
 本サイトは静的サイトとして動作し、Markdown / MDX / Astroページ、変換済みJSON、静的アセットのみでビルド・公開できることを前提とする。
 
@@ -130,7 +130,7 @@ SQLite、PostgreSQL、MySQL、Firestore、Supabase等の導入は行わない。
 
 常駐サーバー、APIサーバー、SSR、サーバーアクション、バックエンド処理は初期スコープ外とする。
 
-ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱うCloudflare Workerだけは例外とする。Node.js常駐サーバーを公開環境へ追加せず、G3 ではbackend実装を追加しない。認証必須 API・character API・frontend 接続は後続Gateまで実装しない。
+ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱うCloudflare Workerだけは例外とする。Node.js常駐サーバーを公開環境へ追加せず、G3ではbackend実装を追加しない。G4のcharacter APIとG5のfrontend接続は、この親issueの範囲でのみ扱う。
 
 検索、データ表示、ページ生成は静的サイトとして成立する範囲で実装する。
 
