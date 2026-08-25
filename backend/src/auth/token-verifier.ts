@@ -55,7 +55,7 @@ class FirebasePublicKeyResolver {
   #refreshPromise: Promise<void> | null = null;
 
   constructor(fetcher: typeof fetch = fetch) {
-    this.#fetch = fetcher;
+    this.#fetch = fetcher.bind(globalThis);
   }
 
   readonly getKey: JWTVerifyGetKey = async (protectedHeader) => {
