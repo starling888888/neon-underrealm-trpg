@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { CharacterSheet } from "@neon-underrealm/shared";
+import { dequal } from "dequal/lite";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { writeTextToClipboard } from "../browser/ccfolia-clipboard";
@@ -15,7 +16,6 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "../form/values";
-import { deepEqual } from "../logic/deep-equal";
 import {
   createCharacterSheetJsonFilename,
   serializeCharacterSheetJsonExport,
@@ -248,7 +248,7 @@ export default function useCharacterSheetRootState(
       hasPendingWrite = false;
       if (timeout !== undefined) clearTimeout(timeout);
       try {
-        if (deepEqual(latestValues, characterSheetDefaultValues)) {
+        if (dequal(latestValues, characterSheetDefaultValues)) {
           operations.deleteCharacterSheetForm(window.localStorage);
         } else {
           operations.writeCharacterSheetForm(window.localStorage, latestValues);
