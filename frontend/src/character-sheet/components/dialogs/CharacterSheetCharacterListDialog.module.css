@@ -75,26 +75,26 @@
 }
 
 .pcNameColumn {
-  width: 30%;
+  width: 32%;
 }
 
 .plNameColumn {
-  width: 20%;
+  width: 24%;
 }
 
 .ryugiAndIkizamaColumn {
-  width: 22%;
+  width: 36%;
 }
 
 .rankColumn {
   width: 8%;
 }
 
-.updatedAtColumn {
-  width: 20%;
-}
-
 .table th {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  background: var(--color-surface);
   color: var(--color-text-muted);
 }
 
@@ -113,19 +113,14 @@
 }
 
 .ryugiAndIkizama {
-  white-space: normal;
+  white-space: nowrap;
 }
 
 .ryugiAndIkizama > span {
   display: block;
   overflow: hidden;
-  font-size: 0.75em;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.table td:last-child {
-  text-overflow: clip;
 }
 
 .pagination {
@@ -136,17 +131,17 @@
 }
 
 @media (width < 48rem) {
-  .ryugiAndIkizamaColumn {
-    width: 24%;
+  .pcNameColumn {
+    width: 65%;
   }
 
-  .updatedAtColumn {
-    width: 18%;
+  .plNameColumn {
+    width: 35%;
   }
 
-  .table th:last-child,
-  .table td:not(.ryugiAndIkizama) {
-    font-size: 0.625rem;
-    letter-spacing: -0.05em;
+  .ryugiAndIkizamaColumn,
+  .rankColumn,
+  .desktopOnly {
+    display: none;
   }
 }

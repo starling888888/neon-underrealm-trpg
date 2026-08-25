@@ -60,7 +60,6 @@ describe("CharacterSheetCharacterListDialog", () => {
       />,
     );
 
-    expect(screen.getByRole("columnheader", { name: "更新日" })).not.toBeNull();
     expect(
       screen.getByRole("columnheader", { name: "流儀／生き様" }),
     ).not.toBeNull();

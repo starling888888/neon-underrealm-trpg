@@ -180,18 +180,15 @@ function CharacterListTable({
           <col className={styles.plNameColumn} />
           <col className={styles.ryugiAndIkizamaColumn} />
           <col className={styles.rankColumn} />
-          <col className={styles.updatedAtColumn} />
         </colgroup>
         <thead>
           <tr>
             <th>{table.pcName}</th>
             <th>{table.plName}</th>
-            <th>
-              {table.ryugi}
-              <br />／{table.ikizama}
+            <th className={styles.desktopOnly}>
+              {table.ryugi}／{table.ikizama}
             </th>
-            <th>{table.rank}</th>
-            <th>{table.updatedAt}</th>
+            <th className={styles.desktopOnly}>{table.rank}</th>
           </tr>
         </thead>
         <tbody>
@@ -209,30 +206,25 @@ function CharacterListTable({
               <td title={metadata.plName ?? undefined}>
                 {metadata.plName || general.unavailableValue}
               </td>
-              <td className={styles.ryugiAndIkizama}>
+              <td className={`${styles.ryugiAndIkizama} ${styles.desktopOnly}`}>
                 <span>
                   {metadata.primaryRyugiId
                     ? (ryugiNames.get(metadata.primaryRyugiId) ??
                       general.unavailableValue)
                     : general.unavailableValue}
-                  <br />／
+                  ／
                   {metadata.ikizamaId
                     ? (ikizamaNames.get(metadata.ikizamaId) ??
                       general.unavailableValue)
                     : general.unavailableValue}
                 </span>
               </td>
-              <td>{metadata.rank}</td>
-              <td>
-                {new Intl.DateTimeFormat("ja-JP", {
-                  dateStyle: "medium",
-                }).format(metadata.updatedAt)}
-              </td>
+              <td className={styles.desktopOnly}>{metadata.rank}</td>
             </tr>
           ))}
           {entries.length === 0 ? (
             <tr>
-              <td colSpan={5}>{characterList.empty}</td>
+              <td colSpan={4}>{characterList.empty}</td>
             </tr>
           ) : null}
         </tbody>
