@@ -147,6 +147,7 @@ jobs:
 
   deploy:
     needs: build
+    if: ${{ always() && needs.build.result == 'success' }}
     runs-on: ubuntu-latest
     outputs:
       page_url: ${{ steps.deployment.outputs.page_url }}
@@ -160,6 +161,7 @@ jobs:
 
   public-e2e:
     needs: deploy
+    if: ${{ always() && needs.deploy.result == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
