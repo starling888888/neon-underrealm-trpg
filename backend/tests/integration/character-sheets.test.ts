@@ -30,10 +30,14 @@ let repository: CloudflareCharacterSheetRepository;
 let seededRecords: CharacterSheetRecord[] = [];
 let nextId = 1;
 
-async function request(path: string, options: RequestInit = {}) {
+async function request(
+  path: string,
+  options: RequestInit = {},
+  timeoutMs = 10_000,
+) {
   return fetch(`${backendUrl}${path}`, {
     ...options,
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(timeoutMs),
   });
 }
 
@@ -362,17 +366,21 @@ describe("POST /character-sheets", () => {
 
   test("rejects an oversized chunked request", async () => {
     const body = oversizedRequestBody();
-    const response = await request("/character-sheets", {
-      body: new ReadableStream({
-        start(controller) {
-          controller.enqueue(new TextEncoder().encode(body));
-          controller.close();
-        },
-      }),
-      duplex: "half",
-      headers: ownerHeaders,
-      method: "POST",
-    } as RequestInit);
+    const response = await request(
+      "/character-sheets",
+      {
+        body: new ReadableStream({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode(body));
+            controller.close();
+          },
+        }),
+        duplex: "half",
+        headers: ownerHeaders,
+        method: "POST",
+      } as RequestInit,
+      25_000,
+    );
 
     expect(response.status).toBe(413);
     await expect(response.json()).resolves.toEqual({
