@@ -1662,6 +1662,45 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 
 ---
 
+## レビュー指摘 4
+
+### 指摘事項
+
+- コピー保存でAPI保存が成功した後に画像のlocal削除が失敗すると、remote recordは作成済みなのに失敗として扱われる。remote IDをbindしないまま再試行できるため、重複recordが作られる。
+- DB保存dialogで入力したPC名をAPI request前にformへ反映しているため、API失敗時も現在characterのPC名が変更されたままになる。
+- 新しいToastが追加されるたびに既存Toastの自動消去timerも作り直され、各Toastが表示開始から独立して5秒で消える契約を満たしていない。
+- 保存成功時のuser一覧cache更新が既存行をその位置で置換するだけで、`updatedAt DESC`の並び順を維持しない。
+- 初期化確認dialogに、DB recordを削除しないことを示す`DBに保存されたキャラクターは削除されません。`がない。
+- 画像処理失敗と自動復元失敗が、結果通知専用dialogのまま残っており、Toastへ移行するG5契約を満たしていない。
+
+### 判定
+
+- source: browser-draft
+- classification: valid
+- local validation: `.tmp/chatgpt-review.md`のPR snapshotを入力として、current issue、親Gate plan、現行frontend実装を照合した。`useRemoteCharacterPersistence.ts`はcopy API成功後の`clearCharacterImageForCopy()`失敗を同じcatchでコピー保存失敗として処理し、DB保存ではrequest前にPC名をformへ設定している。前者はコピー保存成功後のremote ID bind・cache更新・画像解除、後者はAPI失敗時にcurrent character dataを成功扱いで変更しない契約に反する。issueのDB保存dialogにある先行form更新の記述は、このfailure contractと矛盾するため、後者を優先して整合させる。`CharacterSheetToast.tsx`は`messages`全体を依存配列にtimerを再生成し、`updateCachedSummary()`はuser cacheの既存summaryを元の位置で置換している。`dictionary.ts`の初期化確認文言と`CharacterSheetResetConfirmDialog.tsx`には指定文言がなく、`CharacterSheetContainer.tsx`には結果通知専用の画像エラー・自動復元エラーdialogがmountされたままである。全6件はG5 persistence lifecycle、一覧cache、Toast、初期化のcurrent issue scopeに属する。
+
+### 対応方針
+
+- コピー保存はAPI成功をcommit済みとしてremote ID、owner state、cache、dialogを成功状態へ移し、画像local cleanup失敗はコピー保存失敗と混同しない。画像解除の失敗は、利用者に結果が分かるerror Toastとして別途通知する。
+- DB保存requestはdialog入力をsnapshot / metadata生成へ渡し、formのPC名反映はAPI成功後に行う。これによりAPI失敗時のcurrent character dataを維持する。
+- Toast IDごとにmount時から独立した5秒timerを持たせる。
+- user summaryの更新時は該当IDを除外して最新summaryを先頭へ置き、sample一覧は`createdAt ASC`を維持する。
+- 初期化確認文言をユーザー確定仕様へ揃え、画像処理・自動復元の結果通知をToastへ移行する。確認または入力が必要なdialogは維持する。
+
+### 対応完了チェックリスト
+
+- [x] コピー保存のpartial successでremote recordとcurrent stateが不整合にならず、画像local cleanup失敗時も重複recordを作らない。
+- [x] DB保存API失敗時にdialogで入力したPC名をcurrent formへ反映しない。
+- [x] 各Toastが表示開始から独立して5秒後に自動消去される。
+- [x] user一覧cacheが保存後も`updatedAt DESC`を維持し、sample一覧の`createdAt ASC`を崩さない。
+- [x] 初期化確認dialogに`DBに保存されたキャラクターは削除されません。`を表示する。
+- [x] 画像処理失敗と自動復元失敗を結果通知専用dialogではなくToastで表示する。
+- [x] frontend component / hook testを更新する。
+- [x] `npm --workspace=@neon-underrealm/frontend run check` が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run build` が通る。
+
+---
+
 # 想定変更ファイル
 
 - `packages/shared/src/`

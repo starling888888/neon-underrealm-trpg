@@ -126,16 +126,20 @@ export default function useRemoteCharacterPersistence(
   const updateCachedSummary = useCallback((summary: CharacterSheetSummary) => {
     setCharacterListCache((current) => {
       if (current === null) return current;
-      const update = (entries: CharacterSheetSummary[]) => {
-        const index = entries.findIndex(({ id }) => id === summary.id);
-        if (index < 0) return [summary, ...entries];
-        return entries.map((entry) =>
-          entry.id === summary.id ? summary : entry,
+      if (summary.metadata.type === "sample") {
+        const sample = [
+          ...current.sample.filter(({ id }) => id !== summary.id),
+          summary,
+        ].sort(
+          (left, right) => left.metadata.createdAt - right.metadata.createdAt,
         );
+        return { ...current, sample };
+      }
+
+      return {
+        ...current,
+        user: [summary, ...current.user.filter(({ id }) => id !== summary.id)],
       };
-      return summary.metadata.type === "sample"
-        ? { ...current, sample: update(current.sample) }
-        : { ...current, user: update(current.user) };
     });
   }, []);
 
@@ -207,7 +211,6 @@ export default function useRemoteCharacterPersistence(
   const save = useCallback(
     (pcName: string, isPublic: boolean) => {
       if (idToken === null || isRemoteOperationInProgress) return;
-      form.setValue("profile.pcName", pcName);
       setIsRemoteOperationInProgress(true);
       void characterSheetApi
         .save(
@@ -222,6 +225,7 @@ export default function useRemoteCharacterPersistence(
           idToken,
         )
         .then((summary) => {
+          form.setValue("profile.pcName", pcName);
           bindRemoteSummary(summary);
           updateCachedSummary(summary);
           setIsSaveOpen(false);
@@ -260,14 +264,13 @@ export default function useRemoteCharacterPersistence(
           idToken,
         )
         .then(async (summary) => {
-          const imageCleared = await clearCharacterImageForCopy();
-          if (!imageCleared) throw new Error("image-clear-failed");
           form.setValue("profile.pcName", pcName);
           form.setValue("profile.playerName", plName);
           bindRemoteSummary(summary);
           updateCachedSummary(summary);
           setIsCopySaveOpen(false);
           notify("success", persistence.copySaveSuccess);
+          await clearCharacterImageForCopy();
         })
         .catch((error) => onApiError(error, persistence.copySaveError))
         .finally(() => setIsRemoteOperationInProgress(false));

@@ -105,7 +105,7 @@ export const characterSheetDictionary = {
     },
     reset: {
       confirm:
-        "入力済みのデータと画像を初期状態に戻します。\n本当によろしいですか？",
+        "入力済みのデータと画像を初期状態に戻します。\nDBに保存されたキャラクターは削除されません。\n本当によろしいですか？",
       confirmLabel: "入力内容を初期化",
       loading: "初期化中…",
     },
