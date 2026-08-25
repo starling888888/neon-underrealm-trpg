@@ -86,7 +86,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [x] `type`は作成時に`user`、更新時に不変であり、一覧は全件を`updatedAt DESC`で取得後にserviceが`user`と`sample`へ分け、sampleだけを`createdAt ASC`で返す。
 - [x] D1 metadata queryは全件の`updatedAt DESC`取得を扱い、sampleの表示順はserviceが決定する。
 - [x] internal `userId`をrequestまたは公開responseへ出さず、owner以外のwrite/deleteを拒否する。
-- [x] local D1/R2 binding API E2Eが4 endpointとauthentication middleware・所有権・sample分類・numeric timestamp・response構造を確認し、backend CIで実行できる。
+- [ ] local D1/R2 binding API E2Eが4 endpointとauthentication middleware・所有権・sample分類・numeric timestamp・response構造を確認し、backend CIで実行できる。
 - [x] Cloudflare上のdevelopment Workerはproduction Worker、D1、R2、設定値を共有せず、localからdevelopment migration/deployを実行できる。
 - [x] development `deploy`は`backend/.env`から、production deployはGitHub Repository VariableのGoogle client IDとrepository ownerから導出するCORS allow originを、公開Worker `vars`として注入する。local `wrangler dev`はWranglerの`.env`自動読込でbindingを得るため、wrapperによる追加対応を必要としない。
 - [x] `npm run check`、shared/backendのtestとbuild、backend integration testが通る。
@@ -146,7 +146,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - `wrangler dev`はWrangler標準の`.env`自動読込で公開varsをWorker bindingとして得るため、wrapperでの追加対応は不要とする。remote `deploy`は`.env`自動読込だけではWorker varsを登録しないため、development wrapperが`backend/.env`を存在時だけsourceし、`deploy`時だけ`--var`で注入する。production CIはproduction用のGoogle client IDが未設定なら失敗させ、job環境変数から同じ`--var`注入を行う。CORS originはrepository ownerから常に導出する。
 - local frontend/backendとproduction frontend/backendのGoogle client IDを環境単位で分離して文書化する。
 - G4 API実装とともにproductionのdiagnostic write routeを除去し、local API E2Eへ置き換える。
-- shared packageだけを変更するPRは、frontendまたはbackend consumerの変更漏れとしてCIで失敗させる。consumerを変更した場合は、そのworkspaceの既存testを実行する。
+- shared packageを変更するPRは、frontendとbackend両方のconsumer変更を必須とする。両consumerを変更した場合は、それぞれのworkspaceの既存testを実行する。
 - migrationの後方・前方互換性は、このserviceの運用特性上、G4では扱わない。backendの`tsc`はWorker sourceを対象にし、Node test runnerの型はWorkers runtime型と競合するためunit testは`tsx --test`で実行する。test専用のtypecheck configは追加しない。
 - Gate reviewの初回差分は親branch、途中・再reviewの差分は前回review commit以後を対象にする。mainとの差分を前提にPR本文へG1〜G3の累積差分を列挙しない。実装完了時にはReady for reviewへの変更と最終本文更新を行う。
 
@@ -154,7 +154,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 
 - [x] local `wrangler dev`は既存のWrangler標準読込に委ね、remote deployは`--var`で公開varsを注入する。production deployはGoogle client ID未設定時に失敗し、localとproductionのGoogle client IDが混在しない。
 - [x] productionの`/diagnostics/probe`をG4 APIへ置換し、外部からR2を書き込めない。
-- [x] shared packageだけの変更をCIで拒否し、consumerの変更時に対応するworkspace testを実行する。
+- [x] shared packageの変更時にfrontendとbackend両方のconsumer変更を必須とし、それぞれのworkspace testを実行する。
 - [x] migrationの後方互換性をG4で扱わず、backendの`tsc`はWorker sourceを確認する。Node test runnerの型はWorkers runtime型と競合するため、unit testは`tsx --test`で実行し、test専用typecheck configは追加しない。
 - [x] Gate reviewを親branchまたは前回review commit以後の差分に限定し、PR本文を実装完了時に更新する。
 - [x] `npm run check`が通る。
@@ -226,3 +226,33 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - APIのHTTP statusの詳細な対応は実装時に設計する。期限切れtokenだけは必ず`419`とする。
 - local WorkerはWranglerがD1/R2 bindingを提供するため、外部serviceやDocker volumeを追加せずに実行する。
 - 新規dependencyとして、sharedの入力schemaには`zod`を追加する。frontendで既に採用済みであり、独自validation実装ではfrontend/backend間のschema重複を避けられないためである。Google ID Token verifierにはWorkers互換の`jose`をbackendへ追加する。JWKS取得、署名、issuer、audience、expirationを独自実装せずに検証するためである。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- backend integration CIはgitignoreしたbackend/.envを持たないが、local Worker compositionがCORS_ALLOW_ORIGINを必須としている。workflowが同variableを渡さないため、health checkが500となりintegration testへ進めない。
+- request bodyのContent-Lengthがない場合、現在のvalidationはbody全体をtextとして読み込み、さらにTextEncoderで複製してから8 MiB超過を判定する。chunked requestでは上限到達時に読込を止められない。
+
+### 判定
+
+- source: browser-draft (.tmp/chatgpt-review.md)
+- classification: valid
+- local validation: .github/workflows/ci.ymlのbackend-integrationはlocal Worker起動時にCORS_ALLOW_ORIGINを与えず、backend/src/local-index.tsは同bindingへ無条件にsplit()を呼ぶ。backend/src/validation/index.tsはContent-Lengthなしのbodyを全量request.text()した後にbyte数を検査する。導入済みHonoにはstreamを読みながらmaxSizeを判定するbodyLimit middlewareがある。
+- shared consumer guardについては、ユーザーがリモート相談の結果としてfrontend/backend両方のconsumer変更を必須にする方針を明示した。この指示を優先して取り込む。
+
+### 対応方針
+
+- backend-integration workflowでlocal Workerに開発用CORS originを明示注入し、CIに.envを要求しない。health check成功後にintegration testを実行できることをGitHub Actionsで確認する。
+- character sheet POSTにHonoのstreaming body limitを適用し、既存のApplicationError error envelopeと413 mappingを維持する。validationはsize上限の二重読込を行わずJSON parseとshared schema validationだけを担う。
+- Content-Lengthあり・なしの8 MiB超過requestをtestし、いずれも413となることを確認する。
+- shared packageの変更時にfrontendとbackend両方のconsumer変更を必須とし、それぞれのworkspace testを実行する。
+
+### 対応完了チェックリスト
+
+- [ ] backend integration CIのlocal Workerへ必要なCORS runtime variableを明示注入し、health checkとintegration testを通す。
+- [x] streaming body limitで8 MiB超過を受信途中に拒否し、error envelopeと413を維持する。
+- [x] Content-Lengthあり・なしの超過bodyをtestする。
+- [x] shared package変更時にfrontendとbackend両方のconsumer変更をCIで必須にする。
+- [x] npm run checkが通る。
+- [ ] backend build、local integration test、GitHub Actionsのbackend integrationが通る。

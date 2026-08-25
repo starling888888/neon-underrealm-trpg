@@ -176,6 +176,14 @@ source種別は以下を使う。
 - 観測した失敗: Review 10で、長大error一覧のbrowser E2EをComponent testへ置き換え、target testとVRT確認を完了した。しかし、Review 9に残る同じ到達性・target testの2 checkboxを最終方針と実施結果へ更新しなかったため、remote PR reviewでチェック漏れとして再指摘された。
 - 一次対応: Review 9の方針をComponent testへ訂正し、実施済みの2 checkboxを完了へ更新した。以後、後続reviewで前のreview sectionの方針や検証経路を置き換える場合は、commit前に置換元sectionの未チェック項目を解消済み・未対応・人間判断のいずれかへ明示更新する。
 
+#### Marked backend integration CI as executable without CI evidence
+
+- date: 2026-08-25
+- source: review
+- 発生箇所: ex-16-4-cloud-persistence-api のlocal API E2E完了条件
+- 観測した失敗: local Workerでintegration testが通ったことだけを根拠に、「backend CIで実行できる」完了条件をチェックした。CI環境にはbackend/.envがなく、local Workerが必須のCORS_ALLOW_ORIGIN bindingを得られずhealth checkで500になるため、実際にはintegration testへ到達できなかった。
+- 一次対応: 完了条件を未確認へ戻し、レビュー指摘3でCI runtime variable注入とGitHub Actions実行確認を修正契約に追加した。
+
 - date: 2026-07-09
 - source: review
 - 発生箇所: `phase-2-prep-contents-markdown-workflow` の `docs/issue/phase-2-prep-contents-markdown-workflow.md`
