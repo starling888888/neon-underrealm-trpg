@@ -748,6 +748,14 @@ source種別は以下を使う。
 - 観測した失敗: `docs/testing.md`がすべてのunit / contract testの標準をVitestと定義しているにもかかわらず、backend testを`tsx --test`と直接実行scriptで追加した。さらに`tests/`を`tsconfig.json`から除外したため、test sourceの静的型検査もされなかった。
 - 一次対応: backend testをVitestへ移し、`tests/unit/`を通常config、`tests/integration/`をintegration専用configへ分離する。`tsconfig.json`はsrc・tests・Vitest configを型検査し、Worker build用の`tsconfig.build.json`だけがtestsを除外する。WorkersとNode/Vitestの外部宣言競合は`skipLibCheck`で解消する。
 
+#### Fixed a CI-unsafe timeout in the chunked payload integration test
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-5-cloud-persistence-ui` のbackend API integration test
+- 観測した失敗: local Miniflareでは通過した8 MiB超のchunked request testに10秒のclient abortを固定し、GitHub Actionsのlocal Workerではupload/backpressureが10秒を超えて`payload_too_large`の応答前に`TimeoutError`となった。local通過だけを根拠にCI確認前に完了扱いへ進めた。
+- 一次対応: chunked requestだけのabortを25秒、integration Vitestのtest timeoutを30秒へ広げ、8 MiBのproduction request limitと413 contractは変えずにlocal integrationを再実行した。以後、streaming payloadを使うintegration testはCI相当のtransport時間とtest timeoutを別に設定し、remote CI成功までCI完了をチェックしない。
+
 ### runtime configuration verification
 
 #### Omitted local frontend Google OAuth client ID while integrating cloud persistence UI

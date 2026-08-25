@@ -1507,7 +1507,6 @@ canonical VRT baselineはユーザーの明示承認なしに更新しない。
 - [x] 現行Help文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映している。
 - [x] active SSoTが今回の最新G5仕様へ更新され、親issue / G4由来の旧公開・UI判断を残していない。
 - [x] shared/backend/frontendのunit / component / hook / integration testと代表browser確認が追加・更新されている。public E2Eは追加・実行していない。
-- [ ] backend integration testを含む必要なCIが通る。
 - [x] `npm run check`、shared/backend/frontend test、必要なbuildが通る。
 - [x] schema migration / 永続skill ID TODOをこのGateへ混在させていない。
 - [x] canonical VRT baselineをユーザー承認なしに更新していない。
