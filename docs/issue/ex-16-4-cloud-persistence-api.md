@@ -44,7 +44,7 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - `POST /character-sheets`は、id未指定ではserver発行IDによる作成、存在するid指定ではowner本人によるupsertとする。id指定で対象recordが未存在の場合は新規作成せずnot-found errorで拒否する。character `type`をrequestで受け取らず、作成時は`user`、更新時は既存値を維持する。画像のBase64値は別fieldにせず、既存JSON exportと同じ復元用`snapshot`に含める。
 - read APIは公開し、optional authが有効なときだけ`isOwner`を計算する。write/deleteは検証済みtokenの`userId`とrecordの`userId`が一致するときだけ許可し、内部`userId`はrequestまたはresponseへ出さない。
 - `GET /character-sheets`はD1から`updatedAt DESC`で全件を一度だけ取得し、serviceで`user`と`sample`に分けたresponseを返す。`sample`だけをserviceで`createdAt ASC`に並べ替え、`user`は取得順を維持する。server-side pagination、検索、sort APIは追加しない。
-- `type`はD1の`VARCHAR(20)`に`user`または`sample`として保存する。管理者は自分の`userId`で作成したrecordをDBで直接`sample`へ変更できる。`userId`を変えないため、その管理者はsampleをUIから更新・削除できる。
+- `type`はD1の`TEXT`に`user`または`sample`として保存する。管理者は自分の`userId`で作成したrecordをDBで直接`sample`へ変更できる。`userId`を変えないため、その管理者はsampleをUIから更新・削除できる。
 - `primaryRyugiId`と`ikizamaId`は、現行の固定master IDだけを許可するshared Zod schemaで検証する。公開DTOの`createdAt`と`updatedAt`はD1のUnix epoch millisecondsを`number`のまま返し、serverでISO文字列へ変換しない。
 - inputとresponseは、`id`、`metadata`、`snapshot`を基本構造として揃える。listとPOST responseは`id`とserver側metadataを返すsnapshotなしsummary、individual GET responseだけがsnapshotを含むdetailとする。
 - HTTP statusをerror contractとして設計する。期限切れtokenだけは`419`を返し、clientがstatusだけで再ログインを促せるようにする。その他の失敗はclientで共通エラー表示にまとめる。任意の不正requestへフィールド単位の親切なvalidation messageは返さず、汎用errorにとどめる。

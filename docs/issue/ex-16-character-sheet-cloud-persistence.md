@@ -45,7 +45,7 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 - frontendはGoogle Identity ServicesでID Tokenを取得する。client secret、独自OAuth callback、refresh tokenの保存・独自refresh処理は追加しない。
 - 認証必須APIではJWT signature、`iss`、`aud`、`exp`を検証し、検証済みGoogle `sub`だけを内部`userId`として使う。`userId`をclient入力から受け取らず、公開responseへ返さない。email、display name、profile imageは保存しない。
-- D1にはcharacter ID、内部`userId`、`VARCHAR(20)`の`type`（`user`または`sample`）、PC名、PL名、格、プライマリ流儀ID、生き様ID、作成・更新日時をmetadataとして保存し、`user`の更新日時降順と`sample`の作成日時昇順に必要なindexを持たせる。APIの作成・更新requestは`type`を受け取らず、新規作成時は`user`、更新時は既存値を維持する。管理者は自分の`userId`で作成したrecordの`type`だけをDBで`sample`へ変更できる。
+- D1にはcharacter ID、内部`userId`、`TEXT`の`type`（`user`または`sample`）、PC名、PL名、格、プライマリ流儀ID、生き様ID、作成・更新日時をmetadataとして保存し、`user`の更新日時降順と`sample`の作成日時昇順に必要なindexを持たせる。APIの作成・更新requestは`type`を受け取らず、新規作成時は`user`、更新時は既存値を維持する。管理者は自分の`userId`で作成したrecordの`type`だけをDBで`sample`へ変更できる。
 - R2 object keyは`{userId}/{id}.json`とし、character snapshotとBase64エンコード済み画像を保存する。character IDはserverがopaqueなglobal unique IDとして発行する。
 - D1とR2の分散transaction、rollback、compensating transaction、孤児R2 objectの自動cleanupは実装しない。部分失敗は通常のAPI errorとして返す。
 - APIは一覧取得、個別取得、個別upsert、個別deleteに限定する。GETは公開し、一覧はserver-side paginationなしで全件取得後に`user`と`sample`へ分けて返す。`user`は`updatedAt DESC`、`sample`は`createdAt ASC`とする。write/deleteは`userId`が一致するowner本人だけを許可するため、`sample`へ変更したrecordも作成者はUIから更新・削除できる。
