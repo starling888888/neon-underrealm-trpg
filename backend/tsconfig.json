@@ -2,10 +2,16 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "skipLibCheck": true,
     "strict": true,
     "target": "ES2024",
     "lib": ["ES2024"],
-    "types": ["@cloudflare/workers-types"]
+    "types": ["@cloudflare/workers-types", "node"]
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "vitest.config.ts",
+    "vitest.integration.config.ts"
+  ]
 }

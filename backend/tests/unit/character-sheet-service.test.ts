@@ -1,10 +1,8 @@
-import assert from "node:assert/strict";
-import test from "node:test";
 import type { CharacterSheetInput } from "@neon-underrealm/shared";
-import type { CharacterSheetRecord } from "../src/domain/index.js";
-import { ApplicationError } from "../src/application-error.js";
-import type { CharacterSheetRepository } from "../src/repository/index.js";
-import { CharacterSheetService } from "../src/service/index.js";
+import { expect, test } from "vitest";
+import type { CharacterSheetRecord } from "../../src/domain/index.js";
+import type { CharacterSheetRepository } from "../../src/repository/index.js";
+import { CharacterSheetService } from "../../src/service/index.js";
 
 const ownerUserId = "owner";
 const otherUserId = "other";
@@ -99,10 +97,10 @@ test("create writes the snapshot before user metadata", async () => {
 
   const result = await service.save(input(), ownerUserId);
 
-  assert.equal(result.id, "11111111-1111-4111-8111-111111111111");
-  assert.equal(result.metadata.isOwner, true);
-  assert.equal(result.metadata.type, "user");
-  assert.deepEqual(repository.operations, [
+  expect(result.id).toBe("11111111-1111-4111-8111-111111111111");
+  expect(result.metadata.isOwner).toBe(true);
+  expect(result.metadata.type).toBe("user");
+  expect(repository.operations).toEqual([
     "put-snapshot:11111111-1111-4111-8111-111111111111",
     "insert-metadata:11111111-1111-4111-8111-111111111111",
   ]);
@@ -126,9 +124,9 @@ test("update preserves a sample type and owner", async () => {
 
   const result = await service.save(input({ id }), ownerUserId);
 
-  assert.equal(result.metadata.type, "sample");
-  assert.equal(repository.metadata.get(id)?.ownerUserId, "owner");
-  assert.deepEqual(repository.operations, [
+  expect(result.metadata.type).toBe("sample");
+  expect(repository.metadata.get(id)?.ownerUserId).toBe("owner");
+  expect(repository.operations).toEqual([
     `put-snapshot:${id}`,
     `update-metadata:${id}`,
   ]);
@@ -138,11 +136,9 @@ test("write rejects an unknown id and a non-owner", async () => {
   const { repository, service } = createService();
   const id = "11111111-1111-4111-8111-111111111111";
 
-  await assert.rejects(
-    () => service.save(input({ id }), ownerUserId),
-    (error: unknown) =>
-      error instanceof ApplicationError && error.code === "not_found",
-  );
+  await expect(service.save(input({ id }), ownerUserId)).rejects.toMatchObject({
+    code: "not_found",
+  });
 
   repository.metadata.set(id, {
     createdAt: 1,
@@ -157,11 +153,9 @@ test("write rejects an unknown id and a non-owner", async () => {
     updatedAt: 1,
   });
 
-  await assert.rejects(
-    () => service.save(input({ id }), otherUserId),
-    (error: unknown) =>
-      error instanceof ApplicationError && error.code === "forbidden",
-  );
+  await expect(service.save(input({ id }), otherUserId)).rejects.toMatchObject({
+    code: "forbidden",
+  });
 });
 
 test("anonymous reads omit ownership and keep numeric timestamps", async () => {
@@ -184,9 +178,9 @@ test("anonymous reads omit ownership and keep numeric timestamps", async () => {
   });
 
   const result = await service.get(id, null);
-  assert.equal(result.metadata.isOwner, false);
-  assert.equal(result.metadata.createdAt, 1);
-  assert.equal(result.metadata.updatedAt, 1);
+  expect(result.metadata.isOwner).toBe(false);
+  expect(result.metadata.createdAt).toBe(1);
+  expect(result.metadata.updatedAt).toBe(1);
 });
 
 test("list keeps user query order and sorts samples by creation time", async () => {
@@ -234,14 +228,13 @@ test("list keeps user query order and sorts samples by creation time", async () 
 
   const result = await service.list(null);
 
-  assert.deepEqual(
-    result.user.map((sheet) => sheet.metadata.pcName),
-    ["user first"],
-  );
-  assert.deepEqual(
-    result.sample.map((sheet) => sheet.metadata.pcName),
-    ["old sample", "new sample"],
-  );
+  expect(result.user.map((sheet) => sheet.metadata.pcName)).toEqual([
+    "user first",
+  ]);
+  expect(result.sample.map((sheet) => sheet.metadata.pcName)).toEqual([
+    "old sample",
+    "new sample",
+  ]);
 });
 
 test("delete removes metadata before its snapshot", async () => {
@@ -262,7 +255,7 @@ test("delete removes metadata before its snapshot", async () => {
 
   await service.delete(id, ownerUserId);
 
-  assert.deepEqual(repository.operations, [
+  expect(repository.operations).toEqual([
     `delete-metadata:${id}`,
     `delete-snapshot:${id}`,
   ]);
@@ -280,7 +273,9 @@ test("a D1 failure after an R2 write remains an error without cleanup", async ()
   const repository = new FailingMetadataRepository();
   const { service } = createService(repository);
 
-  await assert.rejects(() => service.save(input(), ownerUserId));
-  assert.equal(repository.metadata.size, 0);
-  assert.equal(repository.snapshots.size, 1);
+  await expect(service.save(input(), ownerUserId)).rejects.toThrow(
+    "D1 unavailable",
+  );
+  expect(repository.metadata.size).toBe(0);
+  expect(repository.snapshots.size).toBe(1);
 });

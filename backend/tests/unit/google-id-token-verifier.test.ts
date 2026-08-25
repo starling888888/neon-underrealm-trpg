@@ -1,7 +1,6 @@
-import assert from "node:assert/strict";
-import test from "node:test";
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from "jose";
-import { GoogleIdTokenVerifier } from "../src/auth/token-verifier.js";
+import { expect, test } from "vitest";
+import { GoogleIdTokenVerifier } from "../../src/auth/token-verifier.js";
 
 const clientId = "test-client-id";
 
@@ -31,7 +30,7 @@ test("Google verifier accepts a signed token with Google issuer and audience", a
   const { privateKey, verifier } = await createVerifier();
   const token = await signToken(privateKey, { expirationTime: "5m" });
 
-  assert.deepEqual(await verifier.verify(token), {
+  expect(await verifier.verify(token)).toEqual({
     kind: "valid",
     userId: "google-user",
   });
@@ -49,9 +48,9 @@ test("Google verifier distinguishes expired from invalid tokens", async () => {
     expirationTime: "5m",
   });
 
-  assert.deepEqual(await verifier.verify(expired), { kind: "expired" });
-  assert.deepEqual(await verifier.verify(wrongAudience), { kind: "invalid" });
-  assert.deepEqual(await verifier.verify(untrustedSignature), {
+  expect(await verifier.verify(expired)).toEqual({ kind: "expired" });
+  expect(await verifier.verify(wrongAudience)).toEqual({ kind: "invalid" });
+  expect(await verifier.verify(untrustedSignature)).toEqual({
     kind: "invalid",
   });
 });

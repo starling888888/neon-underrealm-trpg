@@ -116,6 +116,14 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - 同recordのcharacter nameをmetadataとsnapshot内の両方で変更してupsertし、個別GETで両値と`sample` typeの維持を確認した。
 - `DELETE /character-sheets/:id`: individual delete後の個別GETが`404`になることを確認した。最後に残り9件を削除し、list responseが`{ "sample": [], "user": [] }`となることを確認した。
 
+## ユーザー指示: backend test architecture
+
+- backend test runnerは`docs/testing.md`の標準どおりVitestへ統一する。`backend/tests/unit/`を通常Vitest configの対象、`backend/tests/integration/`をintegration専用Vitest configの対象にする。通常`test`はintegrationを除外し、`test:integration`はintegration directoryだけを実行する。
+- `tsconfig.json`はWorker source、unit/integration test、Vitest configを全件型検査する。`tsconfig.build.json`はそれをextendsしてtestsを除外するWorker build用configとする。Cloudflare WorkersとNode/Vitestの外部宣言競合には`skipLibCheck`を使い、project source/testの型検査を省略しない。
+- 過去のreview対応で採用した`tsx --test`とtest専用型検査を追加しない判断は、このユーザー指示で置換する。
+- 新規dependencyの`vitest`はfrontendと同じunit test runnerをbackendで明示利用するため、`@types/node`はbackendのNode/Vitest test型を明示的に解決するために追加する。Node test runnerの継続は`docs/testing.md`のVitest標準と矛盾し、test実行対象のunit/integration分離も表現できないため採用しない。
+- test assertionはVitestの`expect`へ統一し、Node組み込みの`assert`は使わない。integration testはendpointごとのcaseへ分け、評価対象endpoint以外で必要な既存stateを、`getPlatformProxy`で同じlocal stateを開いた`CloudflareCharacterSheetRepository`から登録する。各caseは`afterEach`で登録したD1 metadataとR2 snapshotを削除する。Wrangler CLIを`execFile`で起動してstateを書き換えない。
+
 ## レビュー指摘 1
 
 ### 指摘事項

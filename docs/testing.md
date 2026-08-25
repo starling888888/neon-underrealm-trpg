@@ -13,7 +13,9 @@
 - `npm --workspace=@neon-underrealm/frontend run test:coverage`: `test` と `test:contract` をcoverage有効で実行する。CIのfrontend test jobと同じテスト範囲を確認するときに使う。
 - `npm --workspace=@neon-underrealm/frontend run test:e2e`: Pagefindを含むローカルfixtureをbuildして、公開routeのbrowser behaviorを確認する。
 - `npm --workspace=@neon-underrealm/shared run test`: shared packageの公開API境界を型検査する。
-- `npm --workspace=@neon-underrealm/backend run test`: backendのservice / token verifier unit testとWorker境界の型検査を実行する。service unit testはmock repositoryとactor user IDを直接渡し、spyによる差し替えを使わない。authentication middlewareのHTTP contractはlocal API integration testで確認する。
+- `npm --workspace=@neon-underrealm/backend run test`: `backend/tests/unit/`だけをVitestで実行する。service unit testはmock repositoryとactor user IDを直接渡し、spyによる差し替えを使わない。`backend/tests/integration/`は通常testから除外する。
+- `npm --workspace=@neon-underrealm/backend run test:integration`: integration専用Vitest configにより`backend/tests/integration/`だけを実行する。endpointごとのHTTP contractをlocal API integration testで確認する。既存状態が必要なcaseは、Wranglerの`getPlatformProxy`で同じlocal stateを開いた`CloudflareCharacterSheetRepository`からfixtureを登録し、各caseの`afterEach`でmetadataとsnapshotを削除する。Node組み込みの`assert`やWrangler CLIの子processは使わない。
+- backendの`tsconfig.json`はsrc、unit/integration test、Vitest configをまとめて型検査する。`tsconfig.build.json`はそれをextendsし、testsとVitest configを除外してWorker buildだけを型検査する。Cloudflare WorkersとNode/Vitestの外部Web Platform宣言は競合するため、全体tsconfigは`skipLibCheck`で外部宣言だけを除外する。project sourceとtestの型検査は省略しない。
 - local Workerは`backend/.wrangler/state/`をD1/R2の一時stateに使う。このpathとWranglerの一時bundleである`backend/.wrangler/tmp/`はGit ignoreする。開始前は`npm --workspace=@neon-underrealm/backend run local:reset`、続けて`npm --workspace=@neon-underrealm/backend run migrate:local`を実行する。`npm --workspace=@neon-underrealm/backend run dev:local`でWrangler local Workerを`8787`に起動し、別terminalで`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。`local:reset`は両pathを削除するため、確認後は必ず再実行する。CIも同じnpm scriptの順番を明示して実行する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。
@@ -22,7 +24,7 @@ Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md
 
 Vitestをすべてのunit / contract testの標準とする。UI、hook、pure logic、データ変換、script、build contractのいずれも、まずVitestで最小の責務を検証できるか判断する。
 
-テストの置き場所が既存のVitest対象（`frontend/tests/components`、`frontend/tests/hooks`、`frontend/tests/scripts`）に収まらない場合は、責務が分かるVitest用directoryを追加し、同じtaskでfrontendの`test`実行対象に含める。public buildを前提にするcontract testは`frontend/tests/contract/`へ置き、frontendの`test:contract`実行対象に含める。テストを実行されないdirectoryへ置いてはならない。
+テストの置き場所が既存のVitest対象（frontendの`tests/components`、`tests/hooks`、`tests/scripts`、backendの`tests/unit`）に収まらない場合は、責務が分かるVitest用directoryを追加し、同じtaskで通常testまたは専用configの実行対象に含める。backend integration testは`backend/tests/integration/`へ置き、integration専用configだけで実行する。public buildを前提にするfrontend contract testは`frontend/tests/contract/`へ置き、frontendの`test:contract`実行対象に含める。テストを実行されないdirectoryへ置いてはならない。
 
 | 対象                                                | 標準の検証                               | E2Eへ持ち込まない理由                                                                                                |
 | --------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
