@@ -63,6 +63,102 @@ TODO項目は、可能な限り対象milestoneの `docs/issue/milestone-<NN>/pla
   - plan: なし。Footerからの常設導線が必要になるまで計画化しない。
   - handling plan: 2026-08-04のユーザー判断により当面保留する。初期実装ではFooterをコピーライト、GitHub、X、Discordに絞る。クレジット本文はトップページや将来の専用ページで扱い、Footer導線は必要性が明確になってから追加する。
 
+## ex-17: ex-16 Cloud Persistence残課題回収
+
+ex-16-character-sheet-cloud-persistence を一度production deploy可能な状態でcloseするため、明確なBlocker以外の残課題を本Issueへ移管する。
+
+### Character persistence / authentication
+
+- [ ] JSON import時のremote binding解除を失敗経路まで含めて保証する
+  - JSON importではformの復元後、画像decode失敗またはIndexedDBへの画像write失敗が発生すると、旧remote character IDが残る経路がある。
+  - import後のform内容と旧remote bindingが混在し、後続のDB保存で旧recordを意図せず上書きする可能性がある。
+  - import開始時または復元状態確定時に、画像処理の成否に依存せずremote bindingを解除する設計へ整理する。
+
+- [ ] authentication state変更後のremote ownership再取得を再試行可能にする
+  - login / logout / user変更時には一旦`isOwner=false`へdemoteしている。
+  - signed-in後のremote GETではrefresh keyを先に確定し、取得失敗を握り潰しているため、一時的なnetwork/API障害でも同session中に自動再試行されない。
+  - owner characterがread-onlyのまま残らないよう、失敗時のretry条件、refresh key確定タイミング、ユーザー向けエラー通知を整理する。
+
+- [ ] Firebase public key取得障害とinvalid tokenを区別する
+  - Firebase公開鍵取得、key import等のinfrastructure failureがtoken validation failureと同じ認証エラーへ収束し得る。
+  - 不正tokenは401系、Firebase側またはnetwork側の一時障害は5xx系として扱えるよう、verifierのerror classificationを整理する。
+
+### Sample characters / production data
+
+- [ ] production環境へサンプルキャラクター10件を投入する運用を確立する
+  - 旧static JSON sampleは廃止済みで、現在はDBの`type=sample` characterを一覧から選択する。
+  - 管理者所有のcharacterを作成し、D1上で`type=sample`へ変更する現在のcontractを前提に、production sampleの初期投入方法を確定する。
+  - 必要ならseed script、管理用手順、更新方法を追加する。
+  - 通常公開するsampleは`isPublic=true`とする。
+  - sampleの表示順`createdAt ASC`が期待どおりになることを確認する。
+
+### Character list UI
+
+- [ ] character一覧のpageをcache件数変更時にclampする
+  - 現在のpageより後ろのdataが削除・filter変更・cache更新等で消えた場合、`pageCount`だけが縮み、存在しないpageを指せる可能性がある。
+  - `page <= pageCount - 1`を保証する。
+
+- [ ] character一覧の流儀・生き様表示順を最新UI仕様へ統一する
+  - 現実装は`流儀／生き様`。
+  - 最新決定の`生き様／流儀`へheaderと各rowを統一する。
+  - desktopでは折り返さず表示する。
+  - mobileではPC名・PL名のみ表示する現在方針を維持する。
+
+### API contract / payload
+
+- [ ] backend request body上限とshared schema上限を同一contractとして整理する
+  - backendではHTTP request body全体に8MiB上限がある。
+  - shared schemaではBase64画像単体に近いサイズまで許容できるため、schema上validでもJSON envelopeを含めるとbackendで413になる領域が存在する。
+  - 正常な最大画像サイズ、Base64 overhead、snapshot metadataを考慮し、client/shared/backendで一貫した上限を決定する。
+  - boundary testを追加する。
+
+### Production deployment / operations
+
+- [ ] production deploy後のFirebase/API smoke test手順を確立する
+  - production Firebase AuthenticationでGoogle loginできること。
+  - Firebase ID Token付きAPI requestが成功すること。
+  - 新規DB保存が成功すること。
+  - character一覧へ反映されること。
+  - individual GETとrestoreが成功すること。
+  - owner characterの上書き保存が成功すること。
+  - private/public visibilityが正しいこと。
+  - DB削除が成功すること。
+  - D1/R2のproduction bindingが意図したresourceを参照していること。
+  - frontendからbackendへのCORSが正常であること。
+  - 必要に応じて手動smoke / Public E2E / automated smokeの責務を整理する。
+
+### Documentation consistency
+
+- [ ] ex-16で変更した仕様をactive documentation全体へ反映する
+  - `docs/requirements/character-sheet.md`
+  - `docs/requirements/architecture.md`
+  - `docs/development-structure.md`
+  - `docs/testing.md`
+  - `docs/deployment.md`
+  - `docs/out-of-scope.md`
+  - `docs/design/character-sheet/notes.md`
+  - その他ex-16の変更に依存する文書
+  - Google Identity Services時代の記述をFirebase Authenticationへ更新する。
+  - `GOOGLE_OAUTH_CLIENT_ID`等の旧設定説明をFirebase用設定へ更新する。
+  - 旧deploy workflowの説明を現在の`frontend-deploy.yml` / `backend-deploy.yml`へ統一する。
+  - character一覧の旧column / responsive仕様を最新仕様へ更新する。
+  - static sample JSON前提の説明をDB sample前提へ更新する。
+  - production / development Cloudflare bootstrap・migration・deploy手順を現実装へ合わせる。
+  - document間でSSoTが競合していないことを確認する。
+
+### Issue / Gate archive
+
+- [ ] ex-16関連Issue / Gate documentを最終状態へarchiveする
+  - `docs/issue/ex-16-character-sheet-cloud-persistence.md`
+  - `docs/issue/ex-16-character-sheet-cloud-persistence/plan.md`
+  - G1〜G6 child issue document
+  - GitHub Issue #212 / #214 / #216 / #218 / #220 およびG6
+  - Gate状態を実際の完了状態へ更新する。
+  - G6の`planned`等、現在実装と一致しない状態を解消する。
+  - 最終HEAD / merge / deploy後の状態を反映する。
+  - obsoleteな途中レビュー・暫定方針がactive requirementとして読めない状態に整理する。
+  - archive方針に従って完了済みissueを整理する。
+
 <!--
 例:
 
