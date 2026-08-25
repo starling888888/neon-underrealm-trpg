@@ -43,8 +43,8 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 ### 認証、データ、API
 
-- frontendはGoogle Identity ServicesでID Tokenを取得する。client secret、独自OAuth callback、refresh tokenの保存・独自refresh処理は追加しない。
-- 認証必須APIではJWT signature、`iss`、`aud`、`exp`を検証し、検証済みGoogle `sub`だけを内部`userId`として使う。`userId`をclient入力から受け取らず、公開responseへ返さない。email、display name、profile imageは保存しない。
+- G3/G4の初期実装はGoogle Identity ServicesのGoogle ID Tokenを使う。G6でFirebase AuthenticationのGoogle providerへ置換し、Firebase SDKの認証状態永続化とtoken refreshを利用する。Google ID Tokenをアプリケーションsessionとして扱わず、独自OAuth callback、Google refresh tokenの保存・独自refresh処理、cross-site session cookieは追加しない。
+- 認証必須APIではJWT signature、`iss`、`aud`、`exp`を検証し、検証済みFirebase `uid`だけを内部`userId`として使う。G6完了後、production verifierはGoogle ID TokenではなくFirebase ID Tokenを検証する。`userId`をclient入力から受け取らず、公開responseへ返さない。email、display name、profile imageは保存しない。
 - D1にはcharacter ID、内部`userId`、`TEXT`の`type`（`user`または`sample`）、`isPublic`、PC名、PL名、格、プライマリ流儀ID、生き様ID、作成・更新日時をmetadataとして保存する。既存recordはmigration後にpublicとして扱う。APIの作成・更新requestは`type`を受け取らず、新規作成時は`user`、更新時は既存値を維持する。管理者は自分の`userId`で作成したrecordの`type`だけをDBで`sample`へ変更できる。
 - R2 object keyは`{userId}/{id}.json`とし、character snapshotとBase64エンコード済み画像を保存する。character IDはserverがopaqueなglobal unique IDとして発行する。
 - D1とR2の分散transaction、rollback、compensating transaction、孤児R2 objectの自動cleanupは実装しない。部分失敗は通常のAPI errorとして返す。
