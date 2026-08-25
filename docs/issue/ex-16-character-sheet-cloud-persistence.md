@@ -88,6 +88,8 @@ Gateの一覧と依存関係は親issue本文ではなく、`docs/issue/ex-16-ch
 
 ## 完了条件
 
+**TODO:** creditが復活したらcodexでチェックしてアーカイブする。
+
 - [ ] Gate planに従う全child issueがユーザー承認を受け、完了記録の監査を通過している。
 - [ ] frontend、backend、shared packageがworkspaceとして分離され、frontend/backend間の直接内部importがない。
 - [ ] frontendとbackendのCI、test、build、deployが独立し、shared変更では双方の検証が動く。
