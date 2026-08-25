@@ -48,13 +48,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Start local database and object storage
-        run: docker compose -f backend/compose.yml up --detach
+      - name: Reset local Worker state
+        run: npm --workspace=@neon-underrealm/backend run local:reset
 
-      - name: Start local backend
+      - name: Apply local D1 migrations
+        run: npm --workspace=@neon-underrealm/backend run migrate:local
+
+      - name: Start local Worker
         run: npm --workspace=@neon-underrealm/backend run dev:local > "$RUNNER_TEMP/backend.log" 2>&1 &
 
-      - name: Wait for local backend
+      - name: Wait for local Worker
         run: |
           for attempt in {1..12}; do
             if curl --fail --silent --show-error http://127.0.0.1:8787/health; then
@@ -62,15 +65,15 @@ jobs:
             fi
             sleep 1
           done
-          echo "::error::The local backend did not become reachable."
+          echo "::error::The local Worker did not become reachable."
           exit 1
 
       - name: Run backend integration test
         run: npm --workspace=@neon-underrealm/backend run test:integration
 
-      - name: Stop local services
+      - name: Remove local Worker state
         if: always()
-        run: docker compose -f backend/compose.yml down
+        run: npm --workspace=@neon-underrealm/backend run local:reset
 
   deploy:
     needs:
@@ -79,16 +82,9 @@ jobs:
       - backend-integration
     runs-on: ubuntu-latest
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.TF_STATE_R2_ACCESS_KEY_ID }}
-      AWS_ENDPOINT_URL_S3: ${{ vars.TF_STATE_R2_ENDPOINT }}
-      AWS_REGION: auto
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_STATE_R2_SECRET_ACCESS_KEY }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CORS_ALLOW_ORIGIN: ${{ format('https://{0}.github.io', github.repository_owner) }}
       GOOGLE_OAUTH_CLIENT_ID: ${{ vars.GOOGLE_OAUTH_CLIENT_ID }}
-      TERRAFORM_TFVARS: ${{ vars.TERRAFORM_TFVARS }}
-      TF_CLI_ARGS_init: >-
-        -backend-config=bucket=${{ vars.TF_STATE_R2_BUCKET_NAME }}
-        -backend-config=key=${{ vars.TF_STATE_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -99,25 +95,18 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
-
       - name: Install dependencies
         run: npm ci
 
-      - name: Materialize Terraform resource inputs
+      - name: Require backend runtime variables
         run: |
-          umask 077
-          printf '%s' "$TERRAFORM_TFVARS" > backend/terraform/local.tfvars
+          if [ -z "$GOOGLE_OAUTH_CLIENT_ID" ]; then
+            echo "::error::GOOGLE_OAUTH_CLIENT_ID repository variable must be set before deployment."
+            exit 1
+          fi
 
-      - name: Build Worker bundle
-        run: npm --workspace=@neon-underrealm/backend run build
+      - name: Apply remote D1 migrations
+        run: npm --workspace=@neon-underrealm/backend run wrangler:prod -- d1 migrations apply DB --remote
 
-      - name: Initialize Terraform state
-        run: terraform -chdir=backend/terraform init
-
-      - name: Validate Terraform
-        run: npm --workspace=@neon-underrealm/backend run terraform:validate
-
-      - name: Apply backend infrastructure
-        run: terraform -chdir=backend/terraform apply -lock-timeout=5m -auto-approve -var-file=local.tfvars
+      - name: Deploy backend Worker
+        run: npm --workspace=@neon-underrealm/backend run wrangler:prod -- deploy

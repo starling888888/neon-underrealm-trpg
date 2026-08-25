@@ -13,7 +13,7 @@ Cloudflare backendのresource deployは、GitHub Pages deployから独立した 
 - 公開ルールサイトは静的なGitHub Pagesとして維持し、DB、常駐サーバー、認証、CMS、汎用APIサーバーを前提にしない。ただし、承認済みGateのcharacter snapshot用Cloudflare Worker、D1、R2 backendはfrontendから独立して運用する。
 - CI/CD上のビルドはExcel本体に依存しない。
 - 公開用ビルドは、Git管理されたMarkdown / MDX、生成済みJSON、サイトコード、設定ファイルだけで成立させる。
-- GitHub Pagesはmainへのfrontend関連変更だけで、Cloudflare backendはmainへのbackend関連変更だけでdeployする。rootのdependency / formatter / TypeScript設定と各deploy・test workflowの変更は、対応workspaceのbuildへ影響しうるため各deployの起動対象に含める。Cloudflare credentialはRepository Secret、Terraformの非秘密設定はRepository Variableから一時入力として渡し、Gate branch、親 branch、PRでは読まない。
+- GitHub Pagesはmainへのfrontend関連変更だけで、Cloudflare backendはmainへのbackend関連変更だけでdeployする。rootのdependency / formatter / TypeScript設定と各deploy・test workflowの変更は、対応workspaceのbuildへ影響しうるため各deployの起動対象に含める。Cloudflare API tokenはRepository Secretからdeploy jobだけへ渡し、Gate branch、親 branch、PRでは読まない。
 
 ## 現時点の確認手順
 
@@ -83,22 +83,13 @@ frontend deploy workflowは `main` へのfrontend関連pushで実行します。
 
 ## Cloudflare backend deploy
 
-`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。frontend関連変更だけではbackend deployを実行しない。GitHub Actionsの手動起動は使わない。root Quality、backend test、backend integration testの成功後に、Worker bundle生成、Terraform remote state初期化、format / validateを行い、Worker、D1、R2、binding、`workers.dev`公開設定をTerraform applyで更新する。デバッグ目的の手動deployは、ユーザー承認後のlocal Terraform実行だけを使う。
+`.github/workflows/backend-deploy.yml`は、`main`へのbackend関連変更時だけ起動する。frontend関連変更だけではbackend deployを実行しない。GitHub Actionsの手動起動は使わない。root Quality、backend test、backend integration testの成功後に、Wranglerでproduction remote D1 migrationを適用してからproduction Workerをdeployする。CIは作成済みのproduction resourceを更新するだけで、initial bootstrapは行わない。`wrangler.jsonc`のD1/R2 draft bindingは、resourceがない初回deployでWranglerが作成・bindingするため、新しいenvironmentを作る最初の一回だけ、明示的に承認された手順でdeploy、migration、deployの順に実行する。作成済みenvironmentではCIがmigration、deployの順に一回ずつ実行する。
 
-workflowは以下のRepository Secretだけを使う。
+`wrangler.jsonc`の`env.dev`は、local開発者がCloudflare上で実API接続を確認するためのdevelopment Workerである。`npm run wrangler:dev -- <Wrangler command>`は`backend/bin/wrangler.sh`を通じ、`neon-underrealm-backend-dev`およびその専用D1/R2だけを対象にし、production resourceやmain限定workflowを変更しない。wrapperはdevelopmentのGit管理しない`backend/.env`を存在時だけsourceし、`deploy`時だけ公開runtime varsを渡す。local `wrangler dev`はWrangler標準の`.env`自動読込でbindingを得るため、wrapperは`--var`を追加しない。local CORS allow originは`http://localhost:4321,http://localhost:4322`とする。
 
-- `CLOUDFLARE_API_TOKEN`
-- `TF_STATE_R2_ACCESS_KEY_ID`
-- `TF_STATE_R2_SECRET_ACCESS_KEY`
+production deployはGitHub Repository Variableのproduction用`GOOGLE_OAUTH_CLIENT_ID`をjob環境変数へ渡す。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出する。CIはGoogle client IDが未設定ならdeploy前に失敗し、wrapperが`deploy`時に両値をWorker `vars`として渡す。`npm run wrangler:prod -- <Wrangler command>`はenvironment選択を担当するため呼出側の`--env`または`-e`を拒否する。GitHub Pagesのcustom domainへ移行した場合だけ、CORS originをRepository Variableなどの明示設定へ切り替える。`vars`はenvironment間で継承されないため、D1/R2 bindingと同様にdevelopmentとproductionの値を共用しない。いずれも公開値のためCloudflare secretには登録しない。productionへのlocal remote deployはユーザー承認後だけに実行する。
 
-workflowは以下のRepository Variableを使う。
-
-- `TERRAFORM_TFVARS`（Terraform resource入力だけ）
-- `TF_STATE_R2_BUCKET_NAME`
-- `TF_STATE_KEY`
-- `TF_STATE_R2_ENDPOINT`
-
-CIは`.env`やlocal wrapperを作らず、これらをjob環境変数に設定して素のTerraform commandを実行する。workflowは値をlogへ出力しない。Terraform S3 backendのlockfileを有効にし、applyは最大5分間lock取得を待機する。R2 state credentialには、`TF_STATE_KEY`のstate objectに加えて`${TF_STATE_KEY}.tflock`のread / write / delete権限が必要である。
+workflowが読むRepository Secretは`CLOUDFLARE_API_TOKEN`だけである。Terraform remote state、R2 S3 credential、Terraform用Repository Variableは使わない。automatic provisioningはBetaのため、resourceの詳細なlifecycle管理が必要になった場合は方針を再評価する。
 
 ## CIとPublic E2E
 

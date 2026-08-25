@@ -114,6 +114,14 @@ source種別は以下を使う。
 - 観測した失敗: Terraform S3 backendが読む環境変数と`init`のbackend設定境界を十分に確認せず、`local.tfvars`を独自解析して`.env`とbackend configを生成する`terraform-init.mjs`を導入した。ユーザーの指摘後に公式仕様を調査し、ローカル専用wrapperとTerraform標準の環境変数・`TF_CLI_ARGS_init`だけで足りることを確認した。
 - 一次対応: 独自MJSとCIでの`.env`生成を撤去した。localでは`.env`を子processだけへ読む薄いshell wrapper、CIではRepository Variables / Secretsから直接渡すTerraform commandへ分離した。
 
+#### Kept unnecessary local runner scripts and Terraform after Wrangler was sufficient
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のlocal D1/R2とbackend deploy設計
+- 観測した失敗: Wranglerがlocal D1/R2 state、migration、Worker deployを扱えることを先に確認せず、state cleanup用shell script群とTerraform remote stateを追加・維持した。ユーザーから、npm scriptと明示的な手順書で十分であり、Terraform自体も不要ではないかと指摘された。
+- 一次対応: local手順をnpm scriptと`docs/testing.md`へ縮約し、Terraform-managed resourceをdestroyしたうえで、CI・local設定・親issue・architecture・deployment文書をWranglerのautomatic provisioning、remote migration、deployへ統一した。
+
 ### browser-test flake diagnosis
 
 #### Repeated flaky character-sheet section-frame browser test
@@ -167,6 +175,22 @@ source種別は以下を使う。
 - 発生箇所: `ex-10-character-sheet-layout`のレビュー指摘9・10への修正とPR再レビュー
 - 観測した失敗: Review 10で、長大error一覧のbrowser E2EをComponent testへ置き換え、target testとVRT確認を完了した。しかし、Review 9に残る同じ到達性・target testの2 checkboxを最終方針と実施結果へ更新しなかったため、remote PR reviewでチェック漏れとして再指摘された。
 - 一次対応: Review 9の方針をComponent testへ訂正し、実施済みの2 checkboxを完了へ更新した。以後、後続reviewで前のreview sectionの方針や検証経路を置き換える場合は、commit前に置換元sectionの未チェック項目を解消済み・未対応・人間判断のいずれかへ明示更新する。
+
+#### Marked backend integration CI as executable without CI evidence
+
+- date: 2026-08-25
+- source: review
+- 発生箇所: ex-16-4-cloud-persistence-api のlocal API E2E完了条件
+- 観測した失敗: local Workerでintegration testが通ったことだけを根拠に、「backend CIで実行できる」完了条件をチェックした。CI環境にはbackend/.envがなく、local Workerが必須のCORS_ALLOW_ORIGIN bindingを得られずhealth checkで500になるため、実際にはintegration testへ到達できなかった。
+- 一次対応: 完了条件を未確認へ戻し、レビュー指摘3でCI runtime variable注入とGitHub Actions実行確認を修正契約に追加した。
+
+#### Treated a CI process environment variable as a Wrangler local binding
+
+- date: 2026-08-25
+- source: user-report
+- 発生箇所: ex-16-4-cloud-persistence-api のbackend integration CI修正
+- 観測した失敗: GitHub Actionsのstep `env`へCORS_ALLOW_ORIGINを設定すれば、`wrangler dev`でWorker bindingとして利用できると誤認した。実際にはprocess環境変数はWranglerのlocal Worker bindingへ自動注入されず、deploy時だけ`--var`を付与するwrapperもdevでは補完しないため、`environment.CORS_ALLOW_ORIGIN`は未定義のままとなる。
+- 一次対応: CIでgitignore対象の`backend/.env`を生成し、既存wrapperがsourceした値をWrangler標準の`.env`読込へ渡す構成に訂正する。
 
 - date: 2026-07-09
 - source: review
@@ -407,6 +431,22 @@ source種別は以下を使う。
 - 発生箇所: `ex-02-18-sheet-omamori` のcanonical VRT baseline更新後のhandoff
 - 観測した失敗: ユーザーがGate 18全体について、先にcommitとpushを行い、その後にGate用ではないDoc ReviewとTech Reviewを実施するよう明示したにもかかわらず、commit・pushを実行せずにreviewを開始した。停止しようとした際にも応答しなかった。
 - 一次対応: 未コミット差分を保全した状態で処理状況を確認した。以後、明示された順序のstate変更を完了・報告してから後続reviewを開始し、停止要求には進行中処理の状態を直ちに返す。
+
+#### Started the first review fix before all review-response directions were agreed
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のレビュー指摘1対応
+- 観測した失敗: ユーザーはreview指摘を上から最後まで方針確認してから修正を開始するよう指示したが、agentは「2件のreviewer報告が揃ったら修正開始」と誤読した。1件目だけの方針を受けて`backend/bin/wrangler.sh`とbackend deploy workflowを編集し、残る指摘の方針確認前に実装を始めた。
+- 一次対応: 追加の修正を停止した。今回のwrapper/CI差分は未コミットのまま保持し、review指摘を最後まで方針確認するか、ユーザーが明示的に破棄を指示するまで変更しない。
+
+#### Used the raw reviewer report order instead of the consolidated issue review order
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のレビュー指摘1方針確認
+- 観測した失敗: review-to-issueで複数のraw findingを統合した後、agentはcurrent issueの「レビュー指摘 1」を順序の正本にせず、backend reviewer reportの個別順序へ戻った。その結果、diagnostic routeの次に独立項目ではないGoogle client ID文書を提示した。
+- 一次対応: 以後の方針確認は`docs/issue/ex-16-4-cloud-persistence-api.md`の「レビュー指摘 1」に並ぶ項目だけを上から順に扱う。raw reviewer reportは根拠確認に限定する。
 
 #### Content-instruction stopping point overrun
 
@@ -690,7 +730,43 @@ source種別は以下を使う。
 - 観測した失敗: picker hookのtest fixtureをfull presenter型へcastし、`npm run check:astro`を3回連続で失敗させた。fixtureが欠くpicker外のprops、続いてpicker型に必要な`clearSelection`、最後にcandidate groupの形状を段階的に補っていた。
 - 一次対応: `usePickers`の入力を必要なpicker操作だけの構造型へ狭め、fixtureはmaster dataのgroup型に一致させる。次回はhookの最小入力型とtest fixtureを先に並べて型検査してから実装配線を進める。
 
+### test runner standard compliance
+
+#### Used the Node test runner despite the Vitest standard
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のbackend unit testとlocal API integration test
+- 観測した失敗: `docs/testing.md`がすべてのunit / contract testの標準をVitestと定義しているにもかかわらず、backend testを`tsx --test`と直接実行scriptで追加した。さらに`tests/`を`tsconfig.json`から除外したため、test sourceの静的型検査もされなかった。
+- 一次対応: backend testをVitestへ移し、`tests/unit/`を通常config、`tests/integration/`をintegration専用configへ分離する。`tsconfig.json`はsrc・tests・Vitest configを型検査し、Worker build用の`tsconfig.build.json`だけがtestsを除外する。WorkersとNode/Vitestの外部宣言競合は`skipLibCheck`で解消する。
+
+### runtime configuration verification
+
+#### Assumed Wrangler local `.env` behavior also applied public vars during remote deploy
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のdevelopment Worker runtime vars設定
+- 観測した失敗: local `wrangler dev`の起動表示で`.env`の値がWorker bindingとして現れたことだけを根拠に、remote `wrangler deploy`も同じ値をWorker `vars`へ反映すると判断した。ユーザーの指摘を受けてdevelopment Worker、D1、R2を削除して再deployしたところ、remote Workerのbinding一覧に`GOOGLE_OAUTH_CLIENT_ID`と`CORS_ALLOW_ORIGIN`は現れなかった。
+- 一次対応: 未検証の`.env`自動読込をproduction CIのruntime vars注入方式として文書化した箇所を未解決へ戻した。local devとremote deployの挙動は別に実機確認し、remote binding一覧またはCloudflare Consoleを根拠にしてから完了扱いにする。
+
 ### command approval discipline
+
+#### Created and deleted a Repository Variable without explicit authorization
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のproduction CORS configuration
+- 観測した失敗: production CORS originのworkflow設定を実装する際、ユーザーが値を示したことをGitHub Repository Variableの作成許可と誤認し、`CORS_ALLOW_ORIGIN`を作成した。さらにrepository ownerから導出する方針へ変更する際も、明示的な外部設定削除許可を確認せずに同Variableを削除した。Repository VariableはGit管理外の永続的な外部状態であり、local workflow変更の通常工程として扱ってはならなかった。
+- 一次対応: Variableの作成・削除を失敗として記録した。今後はworkflowが読むRepository Variableを追加・削除する必要がある場合、localの設定・文書だけを先に変更し、GitHub上の設定変更は「Repository Variableを作成/削除してよいか」の明示許可を得てから実行する。
+
+#### Used a local Google client ID in a production Worker deployment
+
+- date: 2026-08-25
+- source: user
+- 発生箇所: `ex-16-4-cloud-persistence-api` のproduction初回Cloudflare deploy
+- 観測した失敗: production用のGoogle client IDがGitHub Repository VariableからCIで注入される設計にもかかわらず、初回resource provisionを急ぎ、local `backend/.env`のGoogle client IDを呼出元environmentへ読み込んでproduction Workerへ渡した。CORS originだけをproduction値へ上書きしたため、local用とproduction用で異なるGoogle client IDを混在させた。
+- 一次対応: ユーザーがCloudflare Consoleでproduction値へ修正した。今後、production初回provisionを含むlocal Wrangler deployは、production設定値が明示的に提供され、environmentごとの値を確認できる場合だけ実行する。確認できない場合はCIでのdeployを待ち、local `.env`の値をproduction設定へ流用しない。
 
 #### Requested unnecessary escalation for an already approved Playwright command
 

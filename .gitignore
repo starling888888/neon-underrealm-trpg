@@ -2,11 +2,6 @@ node_modules/
 .dprint-cache/
 .raw/
 **/.env
-*.tfvars
-*.tfvars.json
-*.tfstate
-*.tfstate.*
-.terraform/
 *.xlsx
 *.xlsm
 ~$*.xlsx

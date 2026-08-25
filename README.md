@@ -67,7 +67,7 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
 
 ## Google Sign-In の Client ID 設定
 
-`ex-16-3-google-authentication` は Google Identity Services（GIS）の browser-only credential flow を使う。この方式で必要なのは Web OAuth client の **Client ID** だけであり、client secret、OAuth callback URL、redirect URI は使わない。Client ID は公開値であり、frontend build環境へ渡す。G4で追加するbackendのID token audience検証にも同じ値を渡す。ID tokenそのものは `.env`、GitHub Actions、browser persistenceへ保存しない。
+`ex-16-3-google-authentication` は Google Identity Services（GIS）の browser-only credential flow を使う。この方式で必要なのは Web OAuth client の **Client ID** だけであり、client secret、OAuth callback URL、redirect URI は使わない。Client ID は公開値であり、frontend build環境へ渡す。G4で追加するbackendのID token audience検証にも、**同じenvironmentのfrontendと同じ値**を渡す。ID tokenそのものは `.env`、GitHub Actions、browser persistenceへ保存しない。
 
 このリポジトリのGIS Web clientはGoogle Auth Platformで管理する。`gcloud iam oauth-clients` は別系統のGoogle Cloud IAM OAuth clientを管理するcommandであり、ここで使うGIS Web clientの取得・作成には使わない。
 
@@ -77,9 +77,9 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
    gcloud config get-value project
    ```
 
-2. 表示されたprojectを選んで、Google Cloud Consoleの **Google Auth Platform** → **Clients** を開く。既存のWeb application clientを開き、**Client ID**をコピーする。存在しない場合だけ、Google Auth PlatformのUIでWeb application clientを作成する。
-3. 同じclientのAuthorized JavaScript originsへ、ローカルの`http://localhost:4321`と公開frontendのoriginを登録する。browser-only credential flowではAuthorized redirect URIsを追加しない。
-4. templateをコピーして、同じClient IDを両方のローカル設定へ書く。client secretは書かない。
+2. 表示されたprojectを選んで、Google Cloud Consoleの **Google Auth Platform** → **Clients** を開く。local用とproduction用に別々のWeb application clientを用意し、それぞれの **Client ID**をコピーする。存在しない場合だけ、Google Auth PlatformのUIでWeb application clientを作成する。
+3. local clientのAuthorized JavaScript originsへ`http://localhost:4321`と`http://localhost:4322`を、production clientへ公開frontend originを登録する。browser-only credential flowではAuthorized redirect URIsを追加しない。
+4. templateをコピーして、local clientのClient IDを両方のローカル設定へ書く。client secretは書かない。
 
    ```sh
    cp frontend/.env.example frontend/.env
@@ -88,100 +88,48 @@ frontendの`test:coverage`はロジックと公開HTMLのcontract検証用です
 
    ```dotenv
    # frontend/.env
-   PUBLIC_GOOGLE_OAUTH_CLIENT_ID=<Google Web OAuth client ID>
+   PUBLIC_GOOGLE_OAUTH_CLIENT_ID=<local Google Web OAuth client ID>
 
    # backend/.env
-   GOOGLE_OAUTH_CLIENT_ID=<same Google Web OAuth client ID>
+   GOOGLE_OAUTH_CLIENT_ID=<same local Google Web OAuth client ID>
    ```
 
-5. GitHub Actionsで使う同じ値はRepository Variable `GOOGLE_OAUTH_CLIENT_ID`へ設定する。Repository Secretには登録しない。frontend deploy workflowはこのVariableが未設定ならbuild前に失敗し、frontend buildへ`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`として渡す。backend deploy jobも同じ値を`GOOGLE_OAUTH_CLIENT_ID`として読むが、現時点ではTerraformからWorker bindingへ注入しない。そのbinding追加は別指示のtaskで行う。
+5. production clientのClient IDはRepository Variable `GOOGLE_OAUTH_CLIENT_ID`へ設定する。Repository Secretには登録しない。frontend deploy workflowはこのVariableを`PUBLIC_GOOGLE_OAUTH_CLIENT_ID`として渡し、backend deploy workflowはWorkerの`GOOGLE_OAUTH_CLIENT_ID` bindingへ渡す。production frontendとproduction backendは必ず同じproduction clientを使う。
 
 ## Cloudflare backendのローカル設定
 
-この節は `ex-16-2-backend-infrastructure` のTerraform stateとlocal backend開発を扱う。実値、state、credential fileはGit管理しない。token発行とstate bucket bootstrapは必要な権限を持つ人が手動で行う。Cloudflare resourceのplan / applyはmain限定のbackend deploy workflowで実行し、デバッグ目的のlocal Terraform手動実行はユーザー承認後にだけ行う。
-
-まず、Git管理するtemplateからローカル入力を作成する。`local.tfvars` はTerraform resourceの名前・IDとWorkers account subdomainだけ、`.env` はTerraform remote stateの設定とcredentialを持つ。`*.tfvars` と `.env` は `.gitignore` の対象である。
+この節はWranglerによるlocal backend開発とCloudflare deployを扱う。実値、local state、credential fileはGit管理しない。Cloudflare API tokenを`backend/.env`へ設定する。
 
 ```sh
-cp backend/terraform/local.tfvars.example backend/terraform/local.tfvars
 cp backend/.env.example backend/.env
 ```
 
-既存の`.env`がある場合は、templateのkey名へ手動で移行する。R2 state credentialは`TF_STATE_R2_ACCESS_KEY_ID` / `TF_STATE_R2_SECRET_ACCESS_KEY`ではなく、Terraform S3 backendが読む`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`を使う。
-
-`.env` の `TF_STATE_R2_BUCKET_NAME` はTerraform state専用であり、`local.tfvars` の `character_data_r2_bucket_name` と共有しない。state bucketは、そのbucket自身をstateとして使うTerraform構成から作成すると自己参照になるため、次のbootstrap手順だけはTerraform管理の例外として手動で行う。以後のWorker、D1、character data用R2 bucket、binding、deployはTerraformを唯一のresource管理authorityとする。
-
-Terraformはbackend初期化時に`*.tfvars`を読まない。local wrapperは`.env`をその子processだけへ読み込み、`TF_CLI_ARGS_init`、`AWS_REGION`、`AWS_ENDPOINT_URL_S3`、AWS credentialをTerraformへ渡す。R2 access key、secret access key、Cloudflare API tokenを`.tfvars`やGit管理するbackend設定へ書かない。
-
-### Terraform state用R2 bucketを作る
-
-1. Cloudflare Dashboardで **Storage & databases** → **R2** → **Overview** を開き、**Create bucket** を選ぶ。
-2. `.env` の `TF_STATE_R2_BUCKET_NAME` と同じ、専用のbucket名を入力して作成する。R2 bucket名は小文字、数字、hyphenだけを使う。
-3. このbucketをpublic bucketやcharacter data用bucketとして使わない。Terraform stateにはresource IDやsecret由来の値が含まれうるためである。
-
-Cloudflareの手順とR2のS3互換endpointは、[R2 S3 APIの公式手順](https://developers.cloudflare.com/r2/get-started/s3/)および[Terraform remote R2 backendの公式手順](https://developers.cloudflare.com/terraform/advanced-topics/remote-backend/)を参照する。
-
-### 必要なtokenと最小権限
-
-stateアクセスとCloudflare resource管理には、用途を分けた2種類のtokenを使う。同じtokenを兼用しない。
-
-| 用途                                   | Cloudflareでの作成方法・権限                                                                                                                                                                    | ローカル設定                                                                  | CI Repository Secret                                         |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Terraform stateのR2 S3アクセス         | R2 Overviewの **Manage API Tokens** から作成し、**Object Read & Write**、対象のstate bucketだけにscopeする。state objectと対応する`${TF_STATE_KEY}.tflock` objectの作成・読取・削除を許可する。 | `AWS_ACCESS_KEY_ID` と `AWS_SECRET_ACCESS_KEY` を `backend/.env` に設定する。 | `TF_STATE_R2_ACCESS_KEY_ID`、`TF_STATE_R2_SECRET_ACCESS_KEY` |
-| TerraformによるCloudflare resource管理 | My Profile → **API Tokens** からcustom tokenを作成し、対象accountだけへscopeする。G2で必要なaccount permissionは **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write**。      | `CLOUDFLARE_API_TOKEN` を `backend/.env` に設定する。                         | `CLOUDFLARE_API_TOKEN`                                       |
-
-R2 state tokenの作成後は、表示されるAccess Key IDとSecret Access Keyをただちに安全な場所へ保存して `backend/.env` に設定する。Secret Access Keyは後から再表示できない。R2 tokenは対象bucketだけへscopeし、bucket作成権限を持つAdmin権限を与えない。
-
-Terraform provider tokenはR2 S3 tokenとは別にし、G2で必要なresource操作だけを許可する。現時点ではAPI tokenの作成・管理をTerraformへ委譲しないため、**API Tokens: Write** は付与しない。Cloudflare Dashboardのpermission名が `Edit` と表示される場合は、同じ書込み権限を選ぶ。追加resourceを導入するときは、そのresourceのTerraform provider documentationで必要権限を確認してから、最小権限を追加する。
-
-Cloudflare API tokenの作成方法とscopeは[公式API token作成手順](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)、各permissionの意味は[公式permission一覧](https://developers.cloudflare.com/fundamentals/api/reference/permissions/)を参照する。Worker script resourceが要求する権限は[Cloudflare Terraform providerのresource documentation](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/workers_script)でも確認できる。
-
-CIでは上表のcredentialをGitHub ActionsのRepository Secretだけからdeploy jobへ渡し、state bucket名、state key、R2 endpointはRepository Variableから渡す。resource入力だけを持つ`TERRAFORM_TFVARS`もRepository Variableである。Gate branch、親 branch、PRではこれらのSecretを読むdeployを起動せず、backend deployは `main` に限定する。
-
-### local backendの起動と確認
-
-`backend/compose.yml` はD1互換のlibSQLとR2互換のMinIOだけを起動する。Honoのlocal processはDockerへ入れず、host側から両serviceへ接続する。Cloudflare accountやcredentialは使わない。
+`CLOUDFLARE_API_TOKEN`には、対象accountの **Workers Scripts: Write**、**D1: Edit**、**Workers R2 Storage: Write** を持つtokenを設定する。`CORS_ALLOW_ORIGIN`はdevelopment Workerが受け付けるoriginをcomma-separatedで指定する。ローカルD1/R2は`backend/.wrangler/state/`へ保存され、Git管理しない。
 
 ```sh
-docker compose -f backend/compose.yml up --detach
+npm --workspace=@neon-underrealm/backend run local:reset
+npm --workspace=@neon-underrealm/backend run migrate:local
 npm --workspace=@neon-underrealm/backend run dev:local
 ```
 
-別terminalで次を実行すると、D1のqueryと`diagnostic-probes/`配下のR2 object write / read / cleanupを確認する。
+別terminalで`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。確認後は`local:reset`を再実行する。
+
+`wrangler.jsonc`のtop-level設定はproduction、`env.dev`はCloudflare上の開発環境である。`--env dev`でdeployするとWorker名は`neon-underrealm-backend-dev`となり、productionとは別のD1/R2 bindingを使う。local Workerの`dev:local`とは別物であり、local stateもCloudflare上のdevelopment resourceもproductionへ書き込まない。
+
+実APIへ接続する動作確認は、次の順でdevelopment Workerへ反映する。初回はD1/R2 bindingをprovisionするため、migrationより先に一度`deploy`を実行する。resource作成後の更新ではmigration、deployの順に実行する。`wrangler:dev`はGit管理しない`backend/.env`が存在するときだけsourceし、`deploy`時だけGoogle client IDとCORS allow originを`--var`でdevelopment Workerへ渡す。local `wrangler dev`はWrangler標準の`.env`自動読込でbindingを得るため、wrapperは`--var`を追加しない。local用の`CORS_ALLOW_ORIGIN`は`http://localhost:4321,http://localhost:4322`とする。
 
 ```sh
-npm --workspace=@neon-underrealm/backend run test:integration
+# 初回だけ: Worker、D1、R2をprovisionする
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- deploy
+
+# schema変更時: migration後にWorkerを更新する
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- d1 migrations apply DB --remote
+npm --workspace=@neon-underrealm/backend run wrangler:dev -- deploy
 ```
 
-終了時はhost側processを停止してから、local serviceを停止する。named volumeは削除しない。
+resource未作成のenvironmentでは、最初に`deploy`でWorker、D1、R2のbindingを作成し、次にremote migrationを適用して、最後にもう一度`deploy`する。作成済みenvironmentではmigration、deployの順に一回ずつ実行する。`GOOGLE_OAUTH_CLIENT_ID`はGitHub Repository Variableからjobの環境変数へ渡し、未設定ならdeploy前に失敗する。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出する。wrapperは`deploy`時だけ両値をplaintext Worker `vars`として渡す。development wrapperはGit ignoreした`backend/.env`があればsourceして同じ方式でdevelopment Workerへ渡す。custom domainへ移行した場合は、この導出を明示設定へ変更する。`wrangler dev`によるlocal WorkerはWrangler標準の`.env`自動読込でbindingを得るため、wrapperから`--var`を追加しない。`wrangler:dev` / `wrangler:prod`はenvironment選択を担当するため、呼出側で`--env`または`-e`を渡さない。`wrangler.jsonc`のD1/R2 draft bindingにより、resourceがまだ存在しない初回deployではWranglerが作成・bindingする。このautomatic provisioningはBetaのため、将来resource名・location・lifecycleの細かな管理が必要になった時点で方針を見直す。
 
-```sh
-docker compose -f backend/compose.yml down
-```
-
-### Terraformのlocal初期化
-
-Worker bundleを生成してから、local wrapper経由で`.env`のstate backend設定とcredentialをTerraformへ渡してremote stateを初期化する。wrapperは呼び出し元のshell環境を変更せず、`apply`を実行しない。S3 backendのlockfileを有効にしているため、backend設定変更後は`-reconfigure`付きで初期化する。
-
-```sh
-npm --workspace=@neon-underrealm/backend run build
-bash backend/bin/terraform-local.sh -chdir=backend/terraform init -reconfigure
-bash backend/bin/terraform-local.sh -chdir=backend/terraform validate
-```
-
-local Terraformのplan / applyはユーザー承認後にだけ実行し、state lock取得の競合は最大5分間待機する。別のlocal操作またはGitHub Actions deployがlockを保持しているときは、その操作を完了させてから再実行する。
-
-```sh
-bash backend/bin/terraform-local.sh -chdir=backend/terraform plan -lock-timeout=5m -var-file=local.tfvars
-```
-
-GitHub ActionsではRepository Variable `TERRAFORM_TFVARS`からresource入力だけを持つ`local.tfvars`を一時作成する。state backendはRepository Variable `TF_STATE_R2_BUCKET_NAME`、`TF_STATE_KEY`、`TF_STATE_R2_ENDPOINT`、credentialは3つのRepository Secretからjob環境変数へ直接渡し、main限定の`.github/workflows/backend-deploy.yml`で同じlockfileと5分のlock待機を使う。state credentialはstate objectと`${TF_STATE_KEY}.tflock` objectのread / write / deleteを許可する。
-
-`workers_dev_subdomain`にはCloudflare DashboardのWorkers & Pagesで設定したaccount subdomainを指定する。Terraformはbackend Workerの`workers.dev`公開を有効化し、apply後は次でpublic domainを確認できる。
-
-```sh
-terraform -chdir=backend/terraform output backend_worker_domain
-```
+productionへのlocal remote commandはユーザー承認後にだけ実行する。production用のenvironmentを明示的に用意できない場合は、local `.env`を流用せずmain限定のCI deployを使う。
 
 ## 別端末からCodexセッションへ接続する
 
@@ -310,7 +258,7 @@ V1.5で処理順を明確化しました。
 - `frontend/tests/vrt/`: Playwright visual regression tests
 - `frontend/data/generated/`: Excelから変換した公開用JSONの配置先
 - `packages/shared/`: frontendと将来のbackendで共有する型・定数のpackage
-- `backend/`: Cloudflare Worker、local service Compose、Terraform、backend testのworkspace
+- `backend/`: Cloudflare Worker、Wrangler local state、backend testのworkspace
 - `.raw/`: Google Drive由来ファイルを同期するローカル作業入力。Git管理しない
 - `frontend/.env`: Google Spreadsheet同期のフォルダIDとservice account認証情報を置くローカル設定ファイル。Git管理しない
 - `.tmp/`: 一次レビュー用ファイルや一時メモの配置先。Git管理しない

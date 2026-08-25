@@ -4,27 +4,29 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "wrangler deploy --dry-run --outdir dist",
-    "dev:local": "tsx watch src/local.ts",
+    "build": "npm run typecheck:build && npm run wrangler:prod -- deploy --dry-run --outdir dist",
+    "dev:local": "npm run wrangler:dev -- dev src/local-index.ts --local --persist-to .wrangler/state --port 8787",
     "format": "biome format --write .",
     "lint": "biome lint .",
-    "test": "npm run test:unit && npm run test:workspace-boundary",
-    "test:integration": "tsx tests/integration.ts",
-    "test:unit": "tsx --test tests/**/*.test.ts",
-    "test:workspace-boundary": "tsc --noEmit --project tsconfig.json",
-    "terraform:validate": "terraform -chdir=terraform fmt -check main.tf variables.tf && terraform -chdir=terraform validate",
-    "typecheck": "tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.local.json"
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "local:reset": "rm -rf .wrangler/state .wrangler/tmp",
+    "migrate:local": "npm run wrangler:dev -- d1 migrations apply DB --local --persist-to .wrangler/state",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "typecheck:build": "tsc --noEmit --project tsconfig.build.json",
+    "wrangler:dev": "./bin/wrangler.sh dev",
+    "wrangler:prod": "./bin/wrangler.sh prod"
   },
   "devDependencies": {
-    "@aws-sdk/client-s3": "^3.982.0",
     "@cloudflare/workers-types": "^5.20260823.1",
-    "@hono/node-server": "^1.19.13",
-    "@libsql/client": "^0.15.15",
-    "tsx": "^4.21.0",
+    "@types/node": "^26.3.0",
     "typescript": "^6.0.3",
+    "vitest": "^4.1.10",
     "wrangler": "^4.125.0"
   },
   "dependencies": {
-    "hono": "^4.13.4"
+    "hono": "^4.13.4",
+    "jose": "^6.2.10"
   }
 }
