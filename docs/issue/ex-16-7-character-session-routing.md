@@ -710,36 +710,36 @@ package-lock.json
 # 完了条件
 
 - [ ] query parameterなしで未保存characterを表示できる
-- [ ] 未保存characterのformは初期状態との差分がある場合だけlocalStorageへ保存される
-- [ ] form valuesと初期状態の比較はdeep equalityで行われる
-- [ ] 初期状態の未保存characterを表示しただけではlocalStorageへform dataが作成されない
-- [ ] 未保存characterのform変更がdebounce後にlocalStorageへ保存される
-- [ ] 編集後に全項目を初期状態へ戻した場合、既存のlocalStorage form dataが削除される
+- [x] 未保存characterのformは初期状態との差分がある場合だけlocalStorageへ保存される
+- [x] form valuesと初期状態の比較はdeep equalityで行われる
+- [x] 初期状態の未保存characterを表示しただけではlocalStorageへform dataが作成されない
+- [x] 未保存characterのform変更がdebounce後にlocalStorageへ保存される
+- [x] 編集後に全項目を初期状態へ戻した場合、既存のlocalStorage form dataが削除される
 - [ ] 初期化後にdefault form valuesがlocalStorageへ再保存されない
 - [ ] 未保存characterの画像がIndexedDBへ保存・restoreされる
 - [ ] `?character=<id>`で指定remote characterを取得・表示できる
-- [ ] remote characterのform変更がlocalStorageへ書き込まれない
+- [x] remote characterのform変更がlocalStorageへ書き込まれない
 - [ ] remote characterの画像変更がIndexedDBへ書き込まれない
-- [ ] current remote character IDをlocalStorageへ保存しない
-- [ ] character一覧からclient-side routingでremote characterを切り替えられる
-- [ ] browser back / forwardで表示characterがURLに追従する
+- [x] current remote character IDをlocalStorageへ保存しない
+- [x] character一覧からclient-side routingでremote characterを切り替えられる
+- [x] browser back / forwardで表示characterがURLに追従する
 - [ ] remote character切替時に変更前characterの未保存差分がrestoreされない
-- [ ] 未保存characterのDB新規保存成功後に新remote IDのURLへ遷移する
-- [ ] 新規保存失敗時は未保存draftとURLを維持する
-- [ ] remote characterの通常保存ではcurrent remote IDを維持する
-- [ ] コピー保存成功後にコピー先new remote IDのURLへ遷移する
-- [ ] DB削除成功後にquery parameterなしURLへ遷移する
+- [x] 未保存characterのDB新規保存成功後に新remote IDのURLへ遷移する
+- [x] 新規保存失敗時は未保存draftとURLを維持する
+- [x] remote characterの通常保存ではcurrent remote IDを維持する
+- [x] コピー保存成功後にコピー先new remote IDのURLへ遷移する
+- [x] DB削除成功後にquery parameterなしURLへ遷移する
 - [ ] DB削除失敗時はcurrent remote URLを維持する
-- [ ] remote character表示中は初期化できない
-- [ ] 未保存character表示中は初期化できる
+- [x] remote character表示中は初期化できない
+- [x] 未保存character表示中は初期化できる
 - [ ] Firebase Authenticationのreload persistenceを維持する
 - [ ] same remote character multi-tab editを禁止する仕組みを追加していない
 - [ ] remote saveは既存どおりlast-write-winsで動作する
-- [ ] frontend unit / component testsが成功する
-- [ ] root quality checksが成功する
-- [ ] production subpath `/neon-underrealm-trpg/`でroutingが破綻しない
-- [ ] full page reloadを前提としないcharacter切替になっている
-- [ ] ex-17へ委譲したdocumentation / archive作業をG7へ持ち込んでいない
+- [x] frontend unit / component testsが成功する
+- [x] root quality checksが成功する
+- [x] production subpath `/neon-underrealm-trpg/`でroutingが破綻しない
+- [x] full page reloadを前提としないcharacter切替になっている
+- [x] ex-17へ委譲したdocumentation / archive作業をG7へ持ち込んでいない
 
 ---
 
@@ -873,6 +873,98 @@ document全面整合、Gate plan整理、archive、ex-16 cleanupは`ex-17`へ残
 - Astro base pathを無視したrouting実装になっていないか
 - router導入によってcharacter-sheet以外を不要にSPA化していないか
 - ex-17対象のdocumentation cleanupをこのissueへ拡大していないか
+
+---
+
+## ビジュアルレビュー 1
+
+### VRT対象
+
+- design target: `docs/design/character-sheet/notes.md`
+- VRT test / tags: `tests/vrt/character-sheet.spec.ts`の`@character-sheet`、`action-pane-desktop`、`action-controls`、`action-controls-error`
+- route / states / viewports:
+  - `/character-sheet/` / default / desktop
+  - `/character-sheet/` / default / tablet, mobile
+  - `/character-sheet/` / error controls / tablet, mobile
+
+remote characterのroute stateは外部API requestを伴い得るため、明示許可なしには実ブラウザcaptureを実行していない。
+
+### レビュー結果
+
+| 対象                           | 判定        | 差分                                                                                                       | 対応                       |
+| ------------------------------ | ----------- | ---------------------------------------------------------------------------------------------------------- | -------------------------- |
+| `action-pane-desktop`          | ex-17へ委譲 | canonical baselineはDB保存等のcloud操作を持たない旧表示（高さ601px）、actualは既存cloud操作を含む高さ814px | G7ではbaselineを更新しない |
+| `action-controls` tablet       | ex-17へ委譲 | 106 pixelの差分                                                                                            | G7ではbaselineを更新しない |
+| `action-controls-error` tablet | ex-17へ委譲 | 60 pixelの差分                                                                                             | G7ではbaselineを更新しない |
+| `action-controls` mobile       | OK          | なし                                                                                                       | 変更なし                   |
+| `action-controls-error` mobile | OK          | なし                                                                                                       | 変更なし                   |
+
+### 実画面確認
+
+- `/character-sheet/` / default / desktop:
+  - locator screenshot: `[aria-label="キャラクターシートの操作"]`、original pixel resolution
+  - checked acceptance criteria: action pane内のbutton配置、文字折返し、clip、overflow
+  - result: actualは表示範囲内で操作群を表示した。canonical baselineとの差分は上記の旧cloud操作なし表示。
+- `/character-sheet/` / default / tablet, mobile、およびerror controls / tablet, mobile:
+  - locator screenshot: `[data-character-sheet-action-controls]`、original pixel resolution
+  - checked acceptance criteria: floating controlsの配置、clip、overflow、button bounds
+  - result: actualではclip / overflowを確認しなかった。tabletのcanonical比較差分は上記のとおり人間判断待ち。
+
+### 自己修正した項目
+
+- [ ] なし。baseline更新は行わない。
+
+### 人間判断が必要な差分
+
+- 現在のcloud操作UIに合わせた`action-pane-desktop`とtablet action controlsのcanonical baseline更新は`ex-17`で扱う。
+- remote route stateの実ブラウザ確認ではAPI requestが必要になる。local fixtureを用意するか、対象APIへのrequestを許可するか。
+
+### 対応完了チェックリスト
+
+- [ ] 変更targetだけをVRT比較した（既存baselineが不一致）
+- [x] 変更targetだけの一時snapshotを取得した
+- [x] current issueの受入条件と最終diffから対象stateを列挙した
+- [ ] 宣言したすべてのroute / state / viewportで、局所表示契約ごとの原寸locator screenshotを開いて確認した（remote route state未実施）
+- [x] full-page screenshotを局所表示契約の確認根拠に使っていない
+- [x] VRT差分を修正した、または修正不要と判断した（baseline更新は`ex-17`へ委譲）
+- [x] baseline更新が必要な差分を人間判断として記録した
+- [x] `npm run lint` と `npm run typecheck` が通る
+- [x] frontendの`build`が通る
+
+---
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `character` query parameterがあるremote routeでは、Firebase Authentication初期化完了とremote GET完了まで、default formやlocal draftをcurrent characterとして表示しない。
+- remote routeでJSON importに成功した場合、import内容を唯一の未保存draftとしてbrowser persistenceへ保存し、query parameterなしURLへclient-side遷移する。
+- ヘルプ本文を`.tmp/ex-16-7-additional.md`の指定文言へ更新し、旧来の「DBとの紐付け」およびremote dataをlocal editとして維持する説明を除去する。
+
+### 判定
+
+- source: human (`.tmp/ex-16-7-additional.md`)
+- classification: valid
+- local validation:
+  - remote GETはFirebase Authenticationの`initializing`完了後に開始し、request versionとroute ID照合でstale responseを抑止する現在実装であり、追加仕様と一致する。
+  - remote GET開始から完了までの専用loading stateはなく、default formが一時的に表示されうる。
+  - remote routeでのJSON importはURL遷移と未保存draft persistenceを行わず、追加仕様と不一致である。
+  - `CharacterSheetHelpDialog.tsx`は、DB削除後もlocal editを継続する旨、JSON importの「紐付け解除」、remote characterへの初期化を説明しており、指定文言と不一致である。
+
+### 対応方針
+
+- remote route state専用のloading条件を追加し、GET完了までformを編集可能なcurrent characterとして扱わない。
+- JSON import成功時は、remote / localを問わず未保存draft persistenceを確定してからquery parameterなしURLへ遷移する。
+- 提供されたヘルプ修正文言を忠実にcomponent markupへ反映する。追加仕様に合わせ、DB保存・コピー保存・DB削除・初期化・JSON importのdialogとtoastも更新する。
+
+### 対応完了チェックリスト
+
+- [x] remote routeのloading stateを実装・テストする
+- [x] remote routeのJSON import transitionと未保存draft persistenceを実装・テストする
+- [x] 指定されたヘルプ修正文言を反映する
+- [x] 追加仕様に矛盾するdialog / toast文言を更新する
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
 
 ---
 

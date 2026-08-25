@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
-import styles from "./CharacterSheetContainer.module.css";
 import useFirebaseAuthentication from "./auth/useFirebaseAuthentication";
+import styles from "./CharacterSheetContainer.module.css";
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
 import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
@@ -16,6 +16,7 @@ import useCharacterSheetFormPresenterProps from "./form/useCharacterSheetFormPre
 import useActionPane from "./hooks/useActionPane";
 import useCharacterChangeWarning from "./hooks/useCharacterChangeWarning";
 import useCharacterSheetRootState from "./hooks/useCharacterSheetRootState";
+import useCharacterSheetRoute from "./hooks/useCharacterSheetRoute";
 import useCharacterSheetToast from "./hooks/useCharacterSheetToast";
 import usePickerStates from "./hooks/usePickerStates";
 import usePickers from "./hooks/usePickers";
@@ -35,7 +36,8 @@ const imageErrorMessages = {
 /** React Island root and orchestration boundary for the character sheet. */
 export default function CharacterSheetContainer() {
   const authentication = useFirebaseAuthentication();
-  const rootState = useCharacterSheetRootState();
+  const route = useCharacterSheetRoute();
+  const rootState = useCharacterSheetRootState(route.remoteCharacterId);
   const toast = useCharacterSheetToast();
   const form = rootState.form;
   const formResetKey = rootState.formResetVersion;
@@ -44,10 +46,13 @@ export default function CharacterSheetContainer() {
     bindRemoteSummary: rootState.bindRemoteSummary,
     characterImage: rootState.characterImage,
     clearCharacterImageForCopy: rootState.clearCharacterImageForCopy,
+    clearLocalDraftForRemote: rootState.clearLocalDraftForRemote,
     clearRemoteCharacter: rootState.clearRemoteCharacter,
     form,
     isRootOperationInProgress: rootState.isRootOperationInProgress,
     notify: toast.notify,
+    onNavigate: route.navigate,
+    remoteCharacterId: route.remoteCharacterId,
     remoteCharacter: rootState.remoteCharacter,
     restoreRemoteCharacter: rootState.restoreRemoteCharacter,
     updateRemoteCharacterMetadata: rootState.updateRemoteCharacterMetadata,
@@ -182,6 +187,7 @@ export default function CharacterSheetContainer() {
     isResetErrorOpen: rootState.isImageErrorFromReset,
     isRootOperationInProgress: rootState.isRootOperationInProgress,
     isResetDisabled:
+      route.remoteCharacterId !== null ||
       rootState.isCharacterImageRestoring ||
       rootState.isRootOperationInProgress,
     isSaveDisabled: remotePersistence.isSaveDisabled,
@@ -199,8 +205,10 @@ export default function CharacterSheetContainer() {
     [actionPane.actionPaneProps, authentication],
   );
   const onJsonImportConfirmed = useCallback(() => {
-    void rootState.onJsonImportConfirmed();
-  }, [rootState.onJsonImportConfirmed]);
+    void rootState.onJsonImportConfirmed().then((shouldNavigateToLocal) => {
+      if (shouldNavigateToLocal) route.navigate(null);
+    });
+  }, [rootState.onJsonImportConfirmed, route.navigate]);
   const onJsonImportErrorClose = useCallback(() => {
     rootState.setIsJsonImportErrorOpen(false);
   }, [rootState.setIsJsonImportErrorOpen]);
@@ -214,8 +222,15 @@ export default function CharacterSheetContainer() {
   return (
     <>
       <div
-        aria-busy={rootState.isRootOperationInProgress}
-        inert={rootState.isRootOperationInProgress || undefined}
+        aria-busy={
+          rootState.isRootOperationInProgress ||
+          remotePersistence.isRemoteCharacterLoading
+        }
+        inert={
+          rootState.isRootOperationInProgress ||
+          remotePersistence.isRemoteCharacterLoading ||
+          undefined
+        }
       >
         <div className={styles.layout}>
           <fieldset
@@ -268,9 +283,16 @@ export default function CharacterSheetContainer() {
       <CharacterSheetToast messages={toast.messages} onExpire={toast.expire} />
       <CharacterSheetLoadingOverlay
         isOpen={
-          rootState.isRootOperationInProgress || rootState.isFormRestoring
+          rootState.isRootOperationInProgress ||
+          rootState.isFormRestoring ||
+          remotePersistence.isRemoteCharacterLoading
         }
-        label={rootState.rootOperation?.label ?? persistence.restoring}
+        label={
+          rootState.rootOperation?.label ??
+          (remotePersistence.isRemoteCharacterLoading
+            ? persistence.remoteLoading
+            : persistence.restoring)
+        }
       />
     </>
   );

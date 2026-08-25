@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { CharacterSheet } from "@neon-underrealm/shared";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { writeTextToClipboard } from "../browser/ccfolia-clipboard";
@@ -14,6 +15,7 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "../form/values";
+import { deepEqual } from "../logic/deep-equal";
 import {
   createCharacterSheetJsonFilename,
   serializeCharacterSheetJsonExport,
@@ -28,11 +30,6 @@ import {
   readCharacterSheetForm,
   writeCharacterSheetForm,
 } from "../persistence/character-sheet-form";
-import {
-  deleteRemoteCharacterId,
-  readRemoteCharacterId,
-  writeRemoteCharacterId,
-} from "../persistence/remote-character";
 import type {
   CharacterImageErrorCode,
   CharacterImageRecord,
@@ -44,7 +41,6 @@ import {
   parseCharacterSheetRestoreJson,
   parseCharacterSheetRestoreValue,
 } from "../schemas/character-sheet-persistence";
-import type { CharacterSheet } from "@neon-underrealm/shared";
 
 export type CharacterImageErrorState = {
   code: CharacterImageErrorCode | "restore";
@@ -100,10 +96,28 @@ function toImageErrorState(error: unknown): CharacterImageErrorState {
 
 /** Owns form state and cross-cutting character-sheet UI state. */
 export default function useCharacterSheetRootState(
+  remoteCharacterIdOrDependencies:
+    | string
+    | null
+    | CharacterSheetRootDependencies = null,
   dependencies: CharacterSheetRootDependencies = {},
 ) {
-  const operationsRef = useRef({ ...defaultOperations, ...dependencies });
+  const remoteCharacterId =
+    typeof remoteCharacterIdOrDependencies === "string"
+      ? remoteCharacterIdOrDependencies
+      : null;
+  const resolvedDependencies =
+    typeof remoteCharacterIdOrDependencies === "object" &&
+    remoteCharacterIdOrDependencies !== null
+      ? remoteCharacterIdOrDependencies
+      : dependencies;
+  const operationsRef = useRef({
+    ...defaultOperations,
+    ...resolvedDependencies,
+  });
   const operations = operationsRef.current;
+  const isLocalCharacter = remoteCharacterId === null;
+  const remoteCharacterIdRef = useRef(remoteCharacterId);
   const form = useForm<CharacterSheetFormValues>({
     defaultValues: characterSheetDefaultValues,
     mode: "onChange",
@@ -159,14 +173,22 @@ export default function useCharacterSheetRootState(
   }, [rootOperation, shouldRestoreJsonImportFocus]);
 
   useEffect(() => {
-    const id = readRemoteCharacterId(window.localStorage);
-    if (id !== null) {
-      setRemoteCharacter({ id, isOwner: false, isPublic: true });
+    remoteCharacterIdRef.current = remoteCharacterId;
+    setRemoteCharacter(null);
+    if (!isLocalCharacter) {
+      setCharacterImage(null);
+      setIsCharacterImageRestoring(false);
+      setIsFormRestoring(false);
     }
-  }, []);
+  }, [isLocalCharacter, remoteCharacterId]);
 
   useEffect(() => {
+    if (!isLocalCharacter) return;
+
     let isCurrent = true;
+    hasCommittedImageRef.current = false;
+    setIsCharacterImageRestoring(true);
+    setCharacterImage(null);
 
     void operations
       .readCharacterImage()
@@ -190,9 +212,12 @@ export default function useCharacterSheetRootState(
     return () => {
       isCurrent = false;
     };
-  }, [operations]);
+  }, [isLocalCharacter, operations]);
 
   useEffect(() => {
+    if (!isLocalCharacter) return;
+
+    setIsFormRestoring(true);
     try {
       const text = operations.readCharacterSheetForm(window.localStorage);
       if (text !== null) {
@@ -202,16 +227,18 @@ export default function useCharacterSheetRootState(
         } else {
           resetForm(values);
         }
+      } else {
+        resetForm(structuredClone(characterSheetDefaultValues));
       }
     } catch (error) {
       console.error(error);
     } finally {
       setIsFormRestoring(false);
     }
-  }, [operations, resetForm]);
+  }, [isLocalCharacter, operations, resetForm]);
 
   useEffect(() => {
-    if (isFormRestoring) return;
+    if (!isLocalCharacter || isFormRestoring) return;
 
     let timeout: ReturnType<typeof setTimeout> | undefined;
     let latestValues = form.getValues();
@@ -221,7 +248,11 @@ export default function useCharacterSheetRootState(
       hasPendingWrite = false;
       if (timeout !== undefined) clearTimeout(timeout);
       try {
-        operations.writeCharacterSheetForm(window.localStorage, latestValues);
+        if (deepEqual(latestValues, characterSheetDefaultValues)) {
+          operations.deleteCharacterSheetForm(window.localStorage);
+        } else {
+          operations.writeCharacterSheetForm(window.localStorage, latestValues);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -244,7 +275,7 @@ export default function useCharacterSheetRootState(
       flush();
       subscription();
     };
-  }, [form, isFormRestoring, operations]);
+  }, [form, isFormRestoring, isLocalCharacter, operations]);
 
   const onCharacterImageOperationStarted = useCallback(
     (trigger: HTMLButtonElement): void => {
@@ -276,7 +307,7 @@ export default function useCharacterSheetRootState(
           async () => {
             const record = await operations.convertCharacterImage(file);
 
-            await operations.writeCharacterImage(record);
+            if (isLocalCharacter) await operations.writeCharacterImage(record);
             hasCommittedImageRef.current = true;
             setCharacterImage(record);
           },
@@ -287,7 +318,7 @@ export default function useCharacterSheetRootState(
         setImageError(toImageErrorState(error));
       }
     },
-    [operations, runRootOperation],
+    [isLocalCharacter, operations, runRootOperation],
   );
 
   const onCharacterImageCleared = useCallback(async (): Promise<void> => {
@@ -297,7 +328,7 @@ export default function useCharacterSheetRootState(
       await runRootOperation(
         characterSheetDictionary.characterSheet.image.clearing,
         async () => {
-          await operations.deleteCharacterImage();
+          if (isLocalCharacter) await operations.deleteCharacterImage();
           hasCommittedImageRef.current = true;
           setCharacterImage(null);
         },
@@ -307,10 +338,15 @@ export default function useCharacterSheetRootState(
       setIsImageErrorFromReset(false);
       setImageError(toImageErrorState(error));
     }
-  }, [operations, runRootOperation]);
+  }, [isLocalCharacter, operations, runRootOperation]);
 
   const onResetConfirmed = useCallback(async (): Promise<void> => {
-    if (isCharacterImageRestoring || rootOperation !== null) return;
+    if (
+      !isLocalCharacter ||
+      isCharacterImageRestoring ||
+      rootOperation !== null
+    )
+      return;
 
     setIsImageErrorFromJsonImport(false);
     setIsImageErrorFromReset(false);
@@ -342,8 +378,6 @@ export default function useCharacterSheetRootState(
           hasCommittedImageRef.current = true;
           setCharacterImage(null);
           resetForm(structuredClone(characterSheetDefaultValues));
-          deleteRemoteCharacterId(window.localStorage);
-          setRemoteCharacter(null);
         },
       );
     } catch (error) {
@@ -354,6 +388,7 @@ export default function useCharacterSheetRootState(
   }, [
     form,
     isCharacterImageRestoring,
+    isLocalCharacter,
     operations,
     resetForm,
     rootOperation,
@@ -434,70 +469,83 @@ export default function useCharacterSheetRootState(
     [operations, rootOperation, runRootOperation],
   );
 
-  const onJsonImportConfirmed = useCallback(async (): Promise<void> => {
+  const onJsonImportConfirmed = useCallback(async (): Promise<boolean> => {
     const imported = pendingJsonImport;
-    if (imported === null) return;
+    if (imported === null) return false;
 
     setPendingJsonImport(null);
     let shouldRestoreFocus = true;
-    await runRootOperation(
-      characterSheetDictionary.characterSheet.jsonImport.loading,
-      async () => {
-        resetForm(imported.values);
+    try {
+      await runRootOperation(
+        characterSheetDictionary.characterSheet.jsonImport.loading,
+        async () => {
+          // JSON imports always become the one local, unsaved character. This
+          // write must finish before the Container removes a remote route.
+          operations.writeCharacterSheetForm(window.localStorage, imported.values);
+          resetForm(imported.values);
 
-        if (
-          imported.imageBase64String === null ||
-          imported.imageBase64String === undefined
-        ) {
+          if (
+            imported.imageBase64String === null ||
+            imported.imageBase64String === undefined
+          ) {
+            try {
+              await operations.deleteCharacterImage();
+              hasCommittedImageRef.current = true;
+              setCharacterImage(null);
+            } catch (error) {
+              shouldRestoreFocus = false;
+              setIsImageErrorFromJsonImport(true);
+              setImageError(toImageErrorState(error));
+            }
+            return;
+          }
+
+          let image: CharacterImageRecord;
           try {
-            await operations.deleteCharacterImage();
+            image = await operations.decodeImportedCharacterImage(
+              String(imported.imageBase64String),
+            );
+          } catch {
+            shouldRestoreFocus = false;
+            try {
+              await operations.deleteCharacterImage();
+              hasCommittedImageRef.current = true;
+              setCharacterImage(null);
+            } catch {
+              // The malformed-image notice remains the actionable user feedback.
+            }
+            setIsJsonImportImageErrorOpen(true);
+            return;
+          }
+
+          try {
+            await operations.writeCharacterImage(image);
             hasCommittedImageRef.current = true;
-            setCharacterImage(null);
-            deleteRemoteCharacterId(window.localStorage);
-            setRemoteCharacter(null);
+            setCharacterImage(image);
           } catch (error) {
             shouldRestoreFocus = false;
             setIsImageErrorFromJsonImport(true);
             setImageError(toImageErrorState(error));
           }
-          return;
-        }
-
-        let image: CharacterImageRecord;
-        try {
-          image = await operations.decodeImportedCharacterImage(
-            String(imported.imageBase64String),
-          );
-        } catch {
-          shouldRestoreFocus = false;
-          try {
-            await operations.deleteCharacterImage();
-            hasCommittedImageRef.current = true;
-            setCharacterImage(null);
-          } catch {
-            // The malformed-image notice remains the actionable user feedback.
-          }
-          setIsJsonImportImageErrorOpen(true);
-          return;
-        }
-
-        try {
-          await operations.writeCharacterImage(image);
-          hasCommittedImageRef.current = true;
-          setCharacterImage(image);
-          deleteRemoteCharacterId(window.localStorage);
-          setRemoteCharacter(null);
-        } catch (error) {
-          shouldRestoreFocus = false;
-          setIsImageErrorFromJsonImport(true);
-          setImageError(toImageErrorState(error));
-        }
-      },
-    );
+        },
+      );
+    } catch (error) {
+      shouldRestoreFocus = false;
+      setIsImageErrorFromJsonImport(true);
+      setImageError(toImageErrorState(error));
+      return false;
+    }
     if (shouldRestoreFocus) {
       setShouldRestoreJsonImportFocus(true);
     }
-  }, [operations, pendingJsonImport, resetForm, runRootOperation]);
+    return !isLocalCharacter;
+  }, [
+    isLocalCharacter,
+    operations,
+    pendingJsonImport,
+    resetForm,
+    runRootOperation,
+  ]);
 
   const bindRemoteCharacter = useCallback(
     ({ id, metadata }: CharacterSheet) => {
@@ -506,7 +554,6 @@ export default function useCharacterSheetRootState(
         isOwner: metadata.isOwner,
         isPublic: metadata.isPublic,
       };
-      writeRemoteCharacterId(window.localStorage, id);
       setRemoteCharacter(next);
     },
     [],
@@ -514,7 +561,6 @@ export default function useCharacterSheetRootState(
 
   const bindRemoteSummary = useCallback(
     (summary: Pick<CharacterSheet, "id" | "metadata">) => {
-      writeRemoteCharacterId(window.localStorage, summary.id);
       setRemoteCharacter({
         id: summary.id,
         isOwner: summary.metadata.isOwner,
@@ -525,7 +571,6 @@ export default function useCharacterSheetRootState(
   );
 
   const clearRemoteCharacter = useCallback(() => {
-    deleteRemoteCharacterId(window.localStorage);
     setRemoteCharacter(null);
   }, []);
 
@@ -534,7 +579,6 @@ export default function useCharacterSheetRootState(
       await runRootOperation(
         characterSheetDictionary.characterSheet.image.clearing,
         async () => {
-          await operations.deleteCharacterImage();
           hasCommittedImageRef.current = true;
           setCharacterImage(null);
         },
@@ -544,7 +588,12 @@ export default function useCharacterSheetRootState(
       setImageError(toImageErrorState(error));
       return false;
     }
-  }, [operations, runRootOperation]);
+  }, [runRootOperation]);
+
+  const clearLocalDraftForRemote = useCallback(async (): Promise<void> => {
+    operations.deleteCharacterSheetForm(window.localStorage);
+    await operations.deleteCharacterImage();
+  }, [operations]);
 
   const updateRemoteCharacterMetadata = useCallback(
     ({
@@ -566,6 +615,7 @@ export default function useCharacterSheetRootState(
 
   const restoreRemoteCharacter = useCallback(
     async (character: CharacterSheet): Promise<boolean> => {
+      if (character.id !== remoteCharacterIdRef.current) return false;
       const values = parseCharacterSheetRestoreValue(character.snapshot);
       if (values === null) return false;
 
@@ -580,20 +630,21 @@ export default function useCharacterSheetRootState(
         }
       }
 
+      if (character.id !== remoteCharacterIdRef.current) return false;
+
       try {
+        let restored = false;
         await runRootOperation(
           characterSheetDictionary.characterSheet.persistence.restoring,
           async () => {
-            if (image === null) {
-              await operations.deleteCharacterImage();
-            } else {
-              await operations.writeCharacterImage(image);
-            }
+            if (character.id !== remoteCharacterIdRef.current) return;
             hasCommittedImageRef.current = true;
             setCharacterImage(image);
             resetForm(values);
+            restored = true;
           },
         );
+        if (!restored) return false;
         bindRemoteCharacter(character);
         return true;
       } catch {
@@ -607,6 +658,7 @@ export default function useCharacterSheetRootState(
     characterImage,
     bindRemoteCharacter,
     bindRemoteSummary,
+    clearLocalDraftForRemote,
     clearCharacterImageForCopy,
     clearRemoteCharacter,
     form,

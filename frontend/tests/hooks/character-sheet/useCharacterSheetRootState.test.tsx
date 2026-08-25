@@ -181,6 +181,40 @@ describe("useCharacterSheetRootState", () => {
     expect(result.current.characterImage).toBeNull();
   });
 
+  it("persists a remote-route JSON import as the local unsaved character", async () => {
+    const values = structuredClone(characterSheetDefaultValues);
+    values.profile.pcName = "未保存として読み込むPC";
+    const writeCharacterSheetForm = vi.fn();
+    const deleteCharacterImage = vi.fn(async () => {});
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState("remote-character", {
+        deleteCharacterImage,
+        readCharacterSheetJsonFile: vi.fn(async () =>
+          JSON.stringify({ ...values, imageBase64String: null }),
+        ),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await act(async () => {
+      await result.current.onJsonImportFileSelected(createJsonFile());
+    });
+    let shouldNavigateToLocal = false;
+    await act(async () => {
+      shouldNavigateToLocal = await result.current.onJsonImportConfirmed();
+    });
+
+    expect(shouldNavigateToLocal).toBe(true);
+    expect(writeCharacterSheetForm).toHaveBeenCalledWith(
+      window.localStorage,
+      values,
+    );
+    expect(deleteCharacterImage).toHaveBeenCalledOnce();
+    expect(result.current.form.getValues("profile.pcName")).toBe(
+      "未保存として読み込むPC",
+    );
+  });
+
   it("restores form data and removes the previous image for a malformed import image", async () => {
     const values = structuredClone(characterSheetDefaultValues);
     values.profile.pcName = "画像エラーでも復元するPC";
@@ -533,6 +567,78 @@ describe("useCharacterSheetRootState", () => {
       }),
     );
     vi.useRealTimers();
+  });
+
+  it("removes the saved form when all values return to the default state", async () => {
+    const deleteCharacterSheetForm = vi.fn();
+    const writeCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        deleteCharacterSheetForm,
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+    vi.useFakeTimers();
+    act(() => {
+      result.current.form.setValue("profile.pcName", "下書きPC");
+      vi.advanceTimersByTime(200);
+      result.current.form.reset(structuredClone(characterSheetDefaultValues));
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(writeCharacterSheetForm).toHaveBeenCalledOnce();
+    expect(deleteCharacterSheetForm).toHaveBeenCalledWith(window.localStorage);
+    vi.useRealTimers();
+  });
+
+  it("does not restore or persist browser data while displaying a remote character", async () => {
+    const readCharacterImage = vi.fn(async () => null);
+    const readCharacterSheetForm = vi.fn(() => null);
+    const writeCharacterImage = vi.fn();
+    const writeCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState("remote-a", {
+        readCharacterImage,
+        readCharacterSheetForm,
+        writeCharacterImage,
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+    vi.useFakeTimers();
+    act(() => {
+      result.current.form.setValue("profile.pcName", "remote edit");
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(readCharacterImage).not.toHaveBeenCalled();
+    expect(readCharacterSheetForm).not.toHaveBeenCalled();
+    expect(writeCharacterImage).not.toHaveBeenCalled();
+    expect(writeCharacterSheetForm).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it("does not reset a remote character session", async () => {
+    const deleteCharacterImage = vi.fn(async () => {});
+    const deleteCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState("remote-a", {
+        deleteCharacterImage,
+        deleteCharacterSheetForm,
+      }),
+    );
+
+    await act(async () => {
+      await result.current.onResetConfirmed();
+    });
+
+    expect(deleteCharacterImage).not.toHaveBeenCalled();
+    expect(deleteCharacterSheetForm).not.toHaveBeenCalled();
   });
 
   it("logs a write exception while retaining the current edit state", async () => {

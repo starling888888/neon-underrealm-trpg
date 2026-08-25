@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import type {
+  CharacterSheet,
   CharacterSheetListResponse,
   CharacterSheetSummary,
 } from "@neon-underrealm/shared";
@@ -13,9 +14,16 @@ import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "../../../src/character-sheet/form/values";
+import type { RemoteCharacterState } from "../../../src/character-sheet/hooks/useCharacterSheetRootState";
 import useRemoteCharacterPersistence from "../../../src/character-sheet/hooks/useRemoteCharacterPersistence";
 
 const emptyList: CharacterSheetListResponse = { sample: [], user: [] };
+
+type HarnessOptions = {
+  remoteCharacter?: RemoteCharacterState | null;
+  remoteCharacterId?: string | null;
+  restoreRemoteCharacter?: (character: CharacterSheet) => Promise<boolean>;
+};
 
 function summary(
   id: string,
@@ -46,9 +54,18 @@ function renderPersistenceHarness(
     sessionKey: "uid-a",
     status: "signed-in",
   },
+  {
+    remoteCharacter = null,
+    remoteCharacterId = null,
+    restoreRemoteCharacter,
+  }: HarnessOptions = {},
 ) {
   const bindRemoteSummary = vi.fn();
+  const clearLocalDraftForRemote = vi.fn(async () => {});
   const notify = vi.fn();
+  const clearRemoteCharacter = vi.fn();
+  const onNavigate = vi.fn();
+  const restore = vi.fn(restoreRemoteCharacter ?? (async () => true));
   const formRef: { current: UseFormReturn<CharacterSheetFormValues> | null } = {
     current: null,
   };
@@ -63,19 +80,31 @@ function renderPersistenceHarness(
         bindRemoteSummary,
         characterImage: null,
         clearCharacterImageForCopy,
-        clearRemoteCharacter: vi.fn(),
+        clearLocalDraftForRemote,
+        clearRemoteCharacter,
         form,
         isRootOperationInProgress: false,
         notify,
-        remoteCharacter: null,
-        restoreRemoteCharacter: vi.fn(async () => true),
+        onNavigate,
+        remoteCharacter,
+        remoteCharacterId,
+        restoreRemoteCharacter: restore,
         updateRemoteCharacterMetadata: vi.fn(),
       },
       { characterSheetApi },
     );
   });
 
-  return { ...rendered, bindRemoteSummary, formRef, notify };
+  return {
+    ...rendered,
+    bindRemoteSummary,
+    clearLocalDraftForRemote,
+    clearRemoteCharacter,
+    formRef,
+    notify,
+    onNavigate,
+    restore,
+  };
 }
 
 describe("useRemoteCharacterPersistence", () => {
@@ -147,7 +176,7 @@ describe("useRemoteCharacterPersistence", () => {
       save: vi.fn(async () => created),
     };
     const clearCharacterImageForCopy = vi.fn(async () => false);
-    const { bindRemoteSummary, formRef, notify, result } =
+    const { bindRemoteSummary, formRef, notify, onNavigate, result } =
       renderPersistenceHarness(characterSheetApi, clearCharacterImageForCopy);
 
     act(() =>
@@ -167,9 +196,10 @@ describe("useRemoteCharacterPersistence", () => {
     });
     expect(notify).toHaveBeenCalledWith(
       "success",
-      "コピーをDBに保存しました。",
+      "コピーをDBに保存し、新しく作成したキャラクターへ表示を切り替えました。",
     );
     expect(clearCharacterImageForCopy).toHaveBeenCalledOnce();
+    expect(onNavigate).toHaveBeenCalledWith("created");
   });
 
   it("moves an updated user summary to the front of the cache", async () => {
@@ -183,7 +213,8 @@ describe("useRemoteCharacterPersistence", () => {
       })),
       save: vi.fn(async () => updated),
     };
-    const { result } = renderPersistenceHarness(characterSheetApi);
+    const { clearLocalDraftForRemote, onNavigate, result } =
+      renderPersistenceHarness(characterSheetApi);
 
     act(() => result.current.openCharacterList());
     await waitFor(() =>
@@ -200,6 +231,8 @@ describe("useRemoteCharacterPersistence", () => {
         ),
       ).toEqual(["c", "a", "b"]),
     );
+    expect(clearLocalDraftForRemote).toHaveBeenCalledOnce();
+    expect(onNavigate).toHaveBeenCalledWith("c");
   });
 
   it("loads the public list while signed out", async () => {
@@ -245,10 +278,13 @@ describe("useRemoteCharacterPersistence", () => {
       characterSheetApi,
       undefined,
       authentication,
+      { remoteCharacterId: "private-character" },
     );
     act(() => result.current.openCharacterList());
     await Promise.resolve();
     expect(characterSheetApi.list).not.toHaveBeenCalled();
+    expect(characterSheetApi.get).not.toHaveBeenCalled();
+    expect(result.current.isRemoteCharacterLoading).toBe(true);
   });
 
   it("does not request a token when none is available", async () => {
@@ -273,5 +309,118 @@ describe("useRemoteCharacterPersistence", () => {
     act(() => result.current.dialogProps.save.onConfirm("保存", true));
     await Promise.resolve();
     expect(characterSheetApi.save).not.toHaveBeenCalled();
+  });
+
+  it("loads the character named by the URL while signed out", async () => {
+    const character = {} as CharacterSheet;
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(async () => character),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const authentication: Authentication = {
+      getIdToken: vi.fn(async () => null),
+      onLogin: vi.fn(),
+      onLogout: vi.fn(),
+      sessionKey: null,
+      status: "signed-out",
+    };
+    const { restore } = renderPersistenceHarness(
+      characterSheetApi,
+      undefined,
+      authentication,
+      { remoteCharacterId: "public-character" },
+    );
+
+    await waitFor(() =>
+      expect(characterSheetApi.get).toHaveBeenCalledWith(
+        "public-character",
+        null,
+      ),
+    );
+    expect(restore).toHaveBeenCalledWith(character);
+  });
+
+  it("changes the URL identity from character-list selection without fetching first", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const { onNavigate, result } = renderPersistenceHarness(characterSheetApi);
+
+    act(() => result.current.dialogProps.characterList.onSelect("next"));
+
+    expect(onNavigate).toHaveBeenCalledWith("next");
+    expect(characterSheetApi.get).not.toHaveBeenCalled();
+  });
+
+  it("keeps the current URL when a save request fails", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(async () => {
+        throw new Error("save failed");
+      }),
+    };
+    const { onNavigate, result } = renderPersistenceHarness(characterSheetApi);
+
+    act(() => result.current.dialogProps.save.onConfirm("保存", true));
+
+    await waitFor(() => expect(characterSheetApi.save).toHaveBeenCalledOnce());
+    expect(onNavigate).not.toHaveBeenCalled();
+  });
+
+  it("keeps a remote character URL on normal save without clearing the local draft", async () => {
+    const existing = summary("existing", 3);
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(async () => ({}) as CharacterSheet),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(async () => existing),
+    };
+    const { clearLocalDraftForRemote, onNavigate, result } =
+      renderPersistenceHarness(characterSheetApi, undefined, undefined, {
+        remoteCharacter: {
+          id: "existing",
+          isOwner: true,
+          isPublic: true,
+        },
+        remoteCharacterId: "existing",
+      });
+
+    act(() => result.current.dialogProps.save.onConfirm("更新", true));
+
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("existing"));
+    expect(clearLocalDraftForRemote).not.toHaveBeenCalled();
+  });
+
+  it("returns to the unsaved URL after deleting the active remote character", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(async () => {}),
+      get: vi.fn(async () => ({}) as CharacterSheet),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const { clearRemoteCharacter, onNavigate, result } =
+      renderPersistenceHarness(characterSheetApi, undefined, undefined, {
+        remoteCharacter: {
+          id: "existing",
+          isOwner: true,
+          isPublic: true,
+        },
+        remoteCharacterId: "existing",
+      });
+
+    act(() => result.current.dialogProps.delete.onConfirm());
+
+    await waitFor(() =>
+      expect(characterSheetApi.delete).toHaveBeenCalledOnce(),
+    );
+    expect(clearRemoteCharacter).toHaveBeenCalledOnce();
+    expect(onNavigate).toHaveBeenCalledWith(null);
   });
 });
