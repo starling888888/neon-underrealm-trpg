@@ -21,6 +21,8 @@ function CharacterSheetAuthentication({
       ) : null}
       {!isAuthenticated ? (
         <CharacterSheetButton
+          className={styles.googleLoginButton}
+          color="muted"
           disabled={
             authentication.status === "initializing" ||
             authentication.status === "signing-in"
@@ -28,14 +30,26 @@ function CharacterSheetAuthentication({
           onClick={() => void authentication.onLogin()}
           size="medium"
         >
-          {authentication.status === "initializing"
-            ? copy.initializing
-            : authentication.status === "signing-in"
-              ? copy.signingIn
-              : copy.login}
+          <img
+            alt=""
+            aria-hidden="true"
+            className={styles.googleLoginIcon}
+            src={`${import.meta.env.BASE_URL}google-login-icon.svg`}
+          />
+          <span>
+            {authentication.status === "initializing"
+              ? copy.initializing
+              : authentication.status === "signing-in"
+                ? copy.signingIn
+                : copy.login}
+          </span>
         </CharacterSheetButton>
       ) : (
-        <CharacterSheetButton onClick={authentication.onLogout} size="medium">
+        <CharacterSheetButton
+          onClick={authentication.onLogout}
+          size="medium"
+          color="muted"
+        >
           {copy.logout}
         </CharacterSheetButton>
       )}

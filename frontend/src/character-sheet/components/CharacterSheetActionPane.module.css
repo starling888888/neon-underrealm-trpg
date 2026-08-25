@@ -8,6 +8,20 @@
 .menu {
   display: none;
 }
+
+.googleLoginButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.googleLoginIcon {
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
 .authentication {
   display: grid;
   gap: var(--space-2);
