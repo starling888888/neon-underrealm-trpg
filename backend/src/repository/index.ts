@@ -32,6 +32,7 @@ type CharacterSheetRow = {
   created_at: number;
   id: string;
   ikizama_id: CharacterSheetMetadataInput["ikizamaId"];
+  is_public: number;
   owner_user_id: string;
   pc_name: string;
   pl_name: string | null;
@@ -45,6 +46,7 @@ const toRecord = (row: CharacterSheetRow): CharacterSheetRecord => ({
   createdAt: row.created_at,
   id: row.id,
   ikizamaId: row.ikizama_id,
+  isPublic: row.is_public === 1,
   ownerUserId: row.owner_user_id,
   pcName: row.pc_name,
   plName: row.pl_name,
@@ -80,7 +82,7 @@ export class CloudflareCharacterSheetRepository
   async getMetadata(id: string): Promise<CharacterSheetRecord | null> {
     const row = await this.#database
       .prepare(
-        `SELECT id, owner_user_id, type, pc_name, pl_name, rank,
+        `SELECT id, owner_user_id, type, is_public, pc_name, pl_name, rank,
                 primary_ryugi_id, ikizama_id, created_at, updated_at
            FROM character_sheets
           WHERE id = ?`,
@@ -106,14 +108,15 @@ export class CloudflareCharacterSheetRepository
     await this.#database
       .prepare(
         `INSERT INTO character_sheets (
-          id, owner_user_id, type, pc_name, pl_name, rank,
+          id, owner_user_id, type, is_public, pc_name, pl_name, rank,
           primary_ryugi_id, ikizama_id, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .bind(
         record.id,
         record.ownerUserId,
         record.type,
+        record.isPublic ? 1 : 0,
         record.pcName,
         record.plName,
         record.rank,
@@ -128,7 +131,7 @@ export class CloudflareCharacterSheetRepository
   async listMetadata(): Promise<CharacterSheetRecord[]> {
     const result = await this.#database
       .prepare(
-        `SELECT id, owner_user_id, type, pc_name, pl_name, rank,
+        `SELECT id, owner_user_id, type, is_public, pc_name, pl_name, rank,
                 primary_ryugi_id, ikizama_id, created_at, updated_at
            FROM character_sheets
           ORDER BY updated_at DESC`,
@@ -158,13 +161,14 @@ export class CloudflareCharacterSheetRepository
     await this.#database
       .prepare(
         `UPDATE character_sheets
-            SET pc_name = ?, pl_name = ?, rank = ?, primary_ryugi_id = ?,
-                ikizama_id = ?, updated_at = ?
+            SET pc_name = ?, pl_name = ?, is_public = ?, rank = ?,
+                primary_ryugi_id = ?, ikizama_id = ?, updated_at = ?
           WHERE id = ?`,
       )
       .bind(
         metadata.pcName,
         metadata.plName ?? null,
+        metadata.isPublic ? 1 : 0,
         metadata.rank,
         metadata.primaryRyugiId ?? null,
         metadata.ikizamaId ?? null,

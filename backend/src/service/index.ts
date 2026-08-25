@@ -21,6 +21,7 @@ const toMetadata = (
   createdAt: record.createdAt,
   ikizamaId: record.ikizamaId,
   isOwner: authenticatedUserId === record.ownerUserId,
+  isPublic: record.isPublic,
   pcName: record.pcName,
   plName: record.plName,
   primaryRyugiId: record.primaryRyugiId,
@@ -62,7 +63,9 @@ export class CharacterSheetService {
   async get(id: string, actorUserId: string | null): Promise<CharacterSheet> {
     const record = await this.#repository.getMetadata(id);
 
-    if (record === null) throw new ApplicationError("not_found");
+    if (record === null || !this.#canRead(record, actorUserId)) {
+      throw new ApplicationError("not_found");
+    }
 
     const storedSnapshot = await this.#repository.getSnapshot(
       record.ownerUserId,
@@ -81,6 +84,7 @@ export class CharacterSheetService {
     const response: CharacterSheetListResponse = { sample: [], user: [] };
 
     for (const record of records) {
+      if (!this.#canRead(record, actorUserId)) continue;
       response[record.type].push(toSummary(record, actorUserId));
     }
 
@@ -151,5 +155,9 @@ export class CharacterSheetService {
     }
 
     return record;
+  }
+
+  #canRead(record: CharacterSheetRecord, actorUserId: string | null): boolean {
+    return record.isPublic || record.ownerUserId === actorUserId;
   }
 }
