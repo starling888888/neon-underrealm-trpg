@@ -34,7 +34,7 @@ function CharacterSheetAuthentication({
             alt=""
             aria-hidden="true"
             className={styles.googleLoginIcon}
-            src={`${import.meta.env.BASE_URL}google-login-icon.svg`}
+            src={`${import.meta.env.BASE_URL}/google-login-icon.svg`}
           />
           <span>
             {authentication.status === "initializing"
