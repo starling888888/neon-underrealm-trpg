@@ -69,7 +69,7 @@ src/
 - `logic/`: React、RHF、DOM、Storage、IndexedDBに依存しない派生値算出、選択可能性判定、構造化検証、ViewModel組み立てを置く。
 - `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかは実装Gateで決める。
 - `schemas/`: 現在のform入力を検証・正規化するschemaと、IndexedDB record・JSON入力を検証するschemaを置く。ブラウザから渡る生の入力値の正規化とドメイン上の入力制約はここへ置き、ComponentやHTML constraintだけへ委ねない。schema失敗時は、現在の編集stateへの部分反映を行わない。具体的な形、JSON形式、CCFOLIA出力形式は各実装Gateで定める。
-- `persistence/`: serializableな下書きのlocalStorage adapterと、画像recordのIndexedDB adapterを置く。G6の画像adapterは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへWebPのMIME typeとbase64エンコード文字列を保存・読取り・個別削除する。React stateやJSXを持たない。G29の全クリア時は、このadapterを使って画像recordも削除する。
+- `persistence/`: serializableな下書きのlocalStorage adapterと、画像recordのIndexedDB adapterを置く。画像adapterは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへWebPのMIME typeとbase64エンコード文字列を保存・読取り・個別削除する。React stateやJSXを持たない。G29の全クリア時は、このadapterを使って画像recordも削除する。
 - `browser/`: Clipboard、ファイルdownload、画像decode・WebP変換などのブラウザAPIを置く。呼出し側から差し替え可能な小さなadapterとし、ゲームルールとRHFへ依存しない。
 - `utils/`: ID生成、数値変換など、ゲームルール・React・ブラウザAPIを含まない補助処理だけを置く。feature固有の判断は`logic/`、ブラウザAPIは`browser/`へ置き、将来の再利用だけを理由に作らない。
 
@@ -128,7 +128,7 @@ native number inputがfocus中に保持する`-`など、数値として未確�
 | 候補選択・確認・通知dialogの開閉と選択対象    | `CharacterSheetContainer`           | 保存しない   |
 | section・行の効果表示など局所的な表示状態     | 対応するPresenter Component         | 保存しない   |
 
-画像のbase64文字列と画像recordの参照は、RHF、localStorage、URL query、ログ、Git管理ファイルへ混ぜない。Root横断の操作ロックはroot-state custom hookに置き、操作ごとの表示文言とcallbackをPresenter hook経由で明示的に渡す。汎用loading overlayは表示文言をPropsで受け、画像、保存、入出力などのRoot操作で再利用する。Contextは先行導入しない。`logic/`はroot stateやContextへ依存しない。G6では変換・書込み成功後にだけ表示用recordを切り替え、個別クリアはIndexedDB削除成功後にだけ未選択へ切り替える。変換、IndexedDB書込み、個別削除の失敗時は既存画像を保持する。JSON入出力での画像表現はG26/G27で定め、全クリア時の画像record削除はG29で扱う。
+画像のbase64文字列と画像recordの参照は、RHF、localStorage、URL query、ログ、Git管理ファイルへ混ぜない。Root横断の操作ロックはroot-state custom hookに置き、操作ごとの表示文言とcallbackをPresenter hook経由で明示的に渡す。汎用loading overlayは表示文言をPropsで受け、画像、保存、入出力などのRoot操作で再利用する。Contextは先行導入しない。`logic/`はroot stateやContextへ依存しない。変換・書込み成功後にだけ表示用recordを切り替え、個別クリアはIndexedDB削除成功後にだけ未選択へ切り替える。変換、IndexedDB書込み、個別削除の失敗時は既存画像を保持する。JSON入出力での画像表現はG26/G27で定め、全クリア時の画像record削除はG29で扱う。
 
 ### 自動保存と復元
 
