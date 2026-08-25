@@ -7,6 +7,28 @@ export type CharacterSheetToastMessage = {
   message: string;
 };
 
+function CharacterSheetToastItem({
+  message,
+  onExpire,
+}: {
+  message: CharacterSheetToastMessage;
+  onExpire: (id: number) => void;
+}) {
+  useEffect(() => {
+    const timer = window.setTimeout(() => onExpire(message.id), 5000);
+    return () => window.clearTimeout(timer);
+  }, [message.id, onExpire]);
+
+  return (
+    <p
+      className={message.kind === "error" ? styles.error : styles.success}
+      role="status"
+    >
+      {message.message}
+    </p>
+  );
+}
+
 export default function CharacterSheetToast({
   messages,
   onExpire,
@@ -14,26 +36,14 @@ export default function CharacterSheetToast({
   messages: CharacterSheetToastMessage[];
   onExpire: (id: number) => void;
 }) {
-  useEffect(() => {
-    const timers = messages.map(({ id }) =>
-      window.setTimeout(() => onExpire(id), 5000),
-    );
-    return () => {
-      timers.forEach((timer) => {
-        window.clearTimeout(timer);
-      });
-    };
-  }, [messages, onExpire]);
   return (
     <div aria-live="polite" className={styles.stack}>
       {messages.map((toast) => (
-        <p
-          className={toast.kind === "error" ? styles.error : styles.success}
+        <CharacterSheetToastItem
           key={toast.id}
-          role="status"
-        >
-          {toast.message}
-        </p>
+          message={toast}
+          onExpire={onExpire}
+        />
       ))}
     </div>
   );

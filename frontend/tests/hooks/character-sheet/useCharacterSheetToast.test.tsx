@@ -1,8 +1,14 @@
 // @vitest-environment jsdom
 
-import { act, renderHook } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { act, cleanup, render, renderHook } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import CharacterSheetToast from "../../../src/character-sheet/components/CharacterSheetToast";
 import useCharacterSheetToast from "../../../src/character-sheet/hooks/useCharacterSheetToast";
+
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 describe("useCharacterSheetToast", () => {
   it("stacks newer notifications first and expires one notification by ID", () => {
@@ -22,5 +28,33 @@ describe("useCharacterSheetToast", () => {
     expect(result.current.messages).toEqual([
       { id: 0, kind: "success", message: "saved" },
     ]);
+  });
+
+  it("expires each notification five seconds after that notification appears", () => {
+    vi.useFakeTimers();
+    const onExpire = vi.fn();
+    const { rerender } = render(
+      <CharacterSheetToast
+        messages={[{ id: 0, kind: "success", message: "first" }]}
+        onExpire={onExpire}
+      />,
+    );
+
+    act(() => vi.advanceTimersByTime(4000));
+    rerender(
+      <CharacterSheetToast
+        messages={[
+          { id: 1, kind: "error", message: "second" },
+          { id: 0, kind: "success", message: "first" },
+        ]}
+        onExpire={onExpire}
+      />,
+    );
+
+    act(() => vi.advanceTimersByTime(1000));
+    expect(onExpire).toHaveBeenCalledExactlyOnceWith(0);
+
+    act(() => vi.advanceTimersByTime(4000));
+    expect(onExpire).toHaveBeenLastCalledWith(1);
   });
 });

@@ -9,9 +9,7 @@ import CharacterSheetFormPresenter, {
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
 import CharacterSheetToast from "./components/CharacterSheetToast";
 import ActionPaneDialogs from "./components/dialogs/action-pane";
-import CharacterImageErrorDialog from "./components/dialogs/CharacterImageErrorDialog";
 import CharacterSheetRemotePersistenceDialogs from "./components/dialogs/CharacterSheetRemotePersistenceDialogs";
-import CharacterSheetRestoreErrorDialog from "./components/dialogs/CharacterSheetRestoreErrorDialog";
 import CharacterChangeWarningDialogs from "./components/dialogs/character-change-warning";
 import PickerDialogs from "./components/dialogs/pickers";
 import { characterSheetDictionary } from "./dictionary";
@@ -25,8 +23,15 @@ import usePickers from "./hooks/usePickers";
 import useRemoteCharacterPersistence from "./hooks/useRemoteCharacterPersistence";
 import { serializeCcfoliaCharacterClipboardData } from "./logic/ccfolia";
 
-const { ccfolia, jsonImport, persistence } =
+const { ccfolia, image, jsonImport, persistence } =
   characterSheetDictionary.characterSheet;
+const imageErrorMessages = {
+  decode: image.errors.decode,
+  "file-too-large": image.errors.fileTooLarge,
+  "invalid-type": image.errors.invalidType,
+  restore: image.errors.restore,
+  storage: image.errors.storage,
+} as const;
 
 /** React Island root and orchestration boundary for the character sheet. */
 type CharacterSheetContainerProps = {
@@ -73,6 +78,18 @@ function CharacterSheetContent() {
     if (!rootState.isJsonImportImageErrorOpen) return;
     rootState.setIsJsonImportImageErrorOpen(false);
     toast.notify("error", jsonImport.imageOmitted);
+  }, [rootState, toast]);
+
+  useEffect(() => {
+    if (rootState.imageError === null) return;
+    rootState.setImageError(null);
+    toast.notify("error", imageErrorMessages[rootState.imageError.code]);
+  }, [rootState, toast]);
+
+  useEffect(() => {
+    if (!rootState.isFormRestoreErrorOpen) return;
+    rootState.setIsFormRestoreErrorOpen(false);
+    toast.notify("error", persistence.restoreError);
   }, [rootState, toast]);
 
   const pickerStates = usePickerStates();
@@ -239,24 +256,6 @@ function CharacterSheetContent() {
           }}
           ref={rootState.jsonImportInputRef}
           type="file"
-        />
-        <CharacterImageErrorDialog
-          closeButtonRef={rootState.imageErrorCloseButtonRef}
-          errorCode={rootState.imageError?.code ?? null}
-          onRequestClose={() => rootState.setImageError(null)}
-          returnFocusRef={
-            rootState.isImageErrorFromJsonImport
-              ? rootState.jsonImportReturnFocusRef
-              : rootState.isImageErrorFromReset
-                ? actionPane.dialogs.actions.resetTriggerRef
-                : rootState.imageReturnFocusRef
-          }
-        />
-        <CharacterSheetRestoreErrorDialog
-          confirmButtonRef={rootState.formRestoreConfirmButtonRef}
-          isOpen={rootState.isFormRestoreErrorOpen}
-          onRequestClose={() => rootState.setIsFormRestoreErrorOpen(false)}
-          returnFocusRef={rootState.formRestoreReturnFocusRef}
         />
         <ActionPaneDialogs
           errorSummary={presenterProps.errorSummary}

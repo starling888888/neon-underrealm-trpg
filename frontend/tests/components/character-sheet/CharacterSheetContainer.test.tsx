@@ -9,7 +9,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { type ReactNode, useEffect, useRef } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -25,6 +25,11 @@ const { useRemotePersistenceMock, useRootStateMock } = vi.hoisted(() => ({
   useRootStateMock: vi.fn(),
 }));
 const { onCcfoliaCopy } = vi.hoisted(() => ({ onCcfoliaCopy: vi.fn() }));
+
+let rootStateInitial = {
+  imageError: null as { code: "storage" } | null,
+  isFormRestoreErrorOpen: false,
+};
 
 vi.mock(
   "../../../src/character-sheet/hooks/useCharacterSheetRootState",
@@ -56,6 +61,10 @@ function useRootStateHarness() {
   const jsonImportErrorConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const jsonImportInputRef = useRef<HTMLInputElement>(null);
   const jsonImportReturnFocusRef = useRef<HTMLButtonElement>(null);
+  const [imageError, setImageError] = useState(rootStateInitial.imageError);
+  const [isFormRestoreErrorOpen, setIsFormRestoreErrorOpen] = useState(
+    rootStateInitial.isFormRestoreErrorOpen,
+  );
 
   useEffect(() => {
     form.setValue("profile.pcName", "テストPC");
@@ -70,11 +79,11 @@ function useRootStateHarness() {
     formResetVersion: 0,
     formRestoreConfirmButtonRef,
     formRestoreReturnFocusRef,
-    imageError: null,
+    imageError,
     imageErrorCloseButtonRef,
     imageReturnFocusRef,
     isCharacterImageRestoring: false,
-    isFormRestoreErrorOpen: false,
+    isFormRestoreErrorOpen,
     isFormRestoring: false,
     isImageErrorFromJsonImport: false,
     isImageErrorFromReset: false,
@@ -97,8 +106,8 @@ function useRootStateHarness() {
     rootOperation: null,
     remoteCharacter: null,
     restoreRemoteCharacter: async () => false,
-    setImageError: () => {},
-    setIsFormRestoreErrorOpen: () => {},
+    setImageError,
+    setIsFormRestoreErrorOpen,
     setIsJsonImportErrorOpen: () => {},
     setIsJsonImportImageErrorOpen: () => {},
     setPendingJsonImport: () => {},
@@ -107,6 +116,7 @@ function useRootStateHarness() {
 }
 
 beforeEach(() => {
+  rootStateInitial = { imageError: null, isFormRestoreErrorOpen: false };
   useRootStateMock.mockImplementation(useRootStateHarness);
   useRemotePersistenceMock.mockReturnValue({
     dialogProps: {
@@ -203,4 +213,25 @@ describe("CharacterSheetContainer", () => {
       kind: "character",
     });
   }, 10_000);
+
+  it("reports image and automatic-restore failures through Toast", async () => {
+    rootStateInitial = {
+      imageError: { code: "storage" },
+      isFormRestoreErrorOpen: true,
+    };
+    render(<CharacterSheetContainer googleClientId="test-client-id" />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          "画像を保存できませんでした。もう一度お試しください。",
+        ),
+      ).toBeTruthy();
+      expect(screen.getByText("自動復元に失敗しました。")).toBeTruthy();
+    });
+    expect(
+      screen.queryByRole("dialog", { name: "画像を処理できませんでした" }),
+    ).toBeNull();
+    expect(screen.queryByRole("dialog", { name: "自動復元の失敗" })).toBeNull();
+  });
 });
