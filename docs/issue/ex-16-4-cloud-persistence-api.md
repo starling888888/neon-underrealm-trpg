@@ -72,6 +72,10 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - D1/R2分散transaction、rollback、compensating transaction、orphan object自動cleanup
 - output Zod schema、clientでのruntime response parse、入力のフィールド別エラーmessage
 
+## ユーザー指示による関連外変更
+
+- 無料枠の不要な消費を防ぐため、developmentを含む実環境のAPI requestとremote操作をユーザーの明示許可制にする常設ルールを`AGENTS.md`へ追加した。local binding、Miniflare、workerdを使うtestは対象外である。この変更はG4のAPI機能契約を変更しない。
+
 ## 完了条件
 
 - [x] shared packageにinput Zod schemaとoutput TypeScript DTO/error typeが追加され、output Zod schemaを追加していない。fixed master ID、snapshot内の画像、numeric timestamp、input/responseの構造統一を共有contractへ反映する。
