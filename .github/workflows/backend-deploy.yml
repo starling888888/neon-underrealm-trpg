@@ -54,6 +54,9 @@ jobs:
       - name: Apply integration D1 migrations
         run: npm --workspace=@neon-underrealm/backend run migrate:integration
 
+      - name: Write local Worker variables
+        run: echo "CORS_ALLOW_ORIGIN=http://localhost:4321" > backend/.env
+
       - name: Start local integration Worker
         run: npm --workspace=@neon-underrealm/backend run dev:integration > "$RUNNER_TEMP/backend.log" 2>&1 &
 
