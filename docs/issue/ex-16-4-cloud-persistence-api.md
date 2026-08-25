@@ -101,6 +101,17 @@ Cloudflare Worker backendへ、共有API contract、character sheetのD1/R2永�
 - [x] ユーザーの未コミット変更を破壊していない。
 - [ ] 実装完了と全完了条件の確認後に、Draft PRをReady for reviewへ変更し、確認結果に合わせてPR本文を更新する。
 
+## Development environment API確認
+
+2026-08-25にCloudflare development WorkerへGoogle ID Tokenで実リクエストを送り、`frontend/public/sample-character/`の10件を使って次を確認した。tokenと一時scriptは処理後に削除し、最終的にdevelopment environmentの全recordをAPI経由で削除して一覧が空であることを確認した。
+
+- `POST /character-sheets`: 10件を登録した。2件目から10件目は各requestの間を1秒空けた。管理者がD1で一部の`type`を`sample`へ変更した後も、`POST` upsertでownerと`sample` typeが維持されることを確認した。
+- `GET /character-sheets`: `user`は`updatedAt DESC`、`sample`は`createdAt ASC`で分類・返却されることを確認した。
+- `GET /character-sheets/:id`: metadataと既存JSON export形式のsnapshotを取得し、`imageBase64String`を含むことを確認した。
+- 生成したWebP（5,178,064 bytes、約5 MB）をBase64化してsample snapshotの`imageBase64String`へ入れ、6,908,574 bytesの`POST` upsertが8 MiB request上限内で成功することを確認した。
+- 同recordのcharacter nameをmetadataとsnapshot内の両方で変更してupsertし、個別GETで両値と`sample` typeの維持を確認した。
+- `DELETE /character-sheets/:id`: individual delete後の個別GETが`404`になることを確認した。最後に残り9件を削除し、list responseが`{ "sample": [], "user": [] }`となることを確認した。
+
 ## レビュー指摘 1
 
 ### 指摘事項

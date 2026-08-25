@@ -119,7 +119,7 @@ CREATE INDEX idx_character_sheets_sample_created_at
 
 入力値のZod schemaは`packages/shared`で公開する。backendはrequest validationの正本として使い、clientは送信前の最低限のvalidationに利用できる。
 
-`POST /character-sheets`のbodyは次の形とする。`snapshot`はゲーム規則を検証しない任意のJSON objectであり、既存JSON exportと同じ`imageBase64`（base64文字列または`null`）をその内部に含める。body全体は8 MiBまでとする。
+`POST /character-sheets`のbodyは次の形とする。`snapshot`はゲーム規則を検証しない任意のJSON objectであり、既存JSON exportと同じ`imageBase64String`（base64文字列または`null`）をその内部に含める。body全体は8 MiBまでとする。
 
 ```ts
 {
@@ -132,7 +132,7 @@ CREATE INDEX idx_character_sheets_sample_created_at
     ikizamaId?: string | null;
   };
   snapshot: Record<string, unknown> & {
-    imageBase64: string | null;
+    imageBase64String: string | null;
   };
 }
 ```
