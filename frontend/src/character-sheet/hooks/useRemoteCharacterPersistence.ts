@@ -360,9 +360,16 @@ export default function useRemoteCharacterPersistence(
       )
         .then(async (summary) => {
           form.setValue("profile.pcName", pcName);
+          if (!isRemoteRoute) {
+            try {
+              await clearLocalDraftForRemote();
+            } catch {
+              notify("error", persistence.localDraftCleanupError);
+              return;
+            }
+          }
           bindRemoteSummary(summary);
           updateCachedSummary(summary);
-          if (!isRemoteRoute) await clearLocalDraftForRemote();
           onNavigate(summary.id);
           setIsSaveOpen(false);
           notify("success", persistence.saveSuccess);

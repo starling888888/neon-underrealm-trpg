@@ -194,8 +194,9 @@ export default function useCharacterSheetRootState(
       setCharacterImage(null);
       setIsCharacterImageRestoring(false);
       setIsFormRestoring(false);
+      resetForm(structuredClone(characterSheetDefaultValues));
     }
-  }, [isLocalCharacter, remoteCharacterId]);
+  }, [isLocalCharacter, remoteCharacterId, resetForm]);
 
   useEffect(() => {
     if (!isLocalCharacter) return;
@@ -605,8 +606,13 @@ export default function useCharacterSheetRootState(
 
   const clearLocalDraftForRemote = useCallback(async (): Promise<void> => {
     isLocalDraftPersistenceSuspendedRef.current = true;
-    operations.deleteCharacterSheetForm(window.localStorage);
-    await operations.deleteCharacterImage();
+    try {
+      operations.deleteCharacterSheetForm(window.localStorage);
+      await operations.deleteCharacterImage();
+    } catch (error) {
+      isLocalDraftPersistenceSuspendedRef.current = false;
+      throw error;
+    }
   }, [operations]);
 
   const updateRemoteCharacterMetadata = useCallback(

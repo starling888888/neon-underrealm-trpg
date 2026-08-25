@@ -205,6 +205,8 @@ export const characterSheetDictionary = {
       deleteSuccess:
         "DBから削除し、DBに保存されていないキャラクターシートへ表示を切り替えました。",
       listLoadError: "キャラクター一覧を読み込めませんでした。",
+      localDraftCleanupError:
+        "DBには保存しましたが、ブラウザに保存された未保存データを削除できませんでした。現在の入力内容を確認してください。",
       loadError: "キャラクターを読み込めませんでした。",
       remoteLoading: "キャラクターを読み込んでいます",
       remoteRestoreError: "キャラクターを復元できませんでした。",

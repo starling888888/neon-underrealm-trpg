@@ -20,6 +20,7 @@ import useRemoteCharacterPersistence from "../../../src/character-sheet/hooks/us
 const emptyList: CharacterSheetListResponse = { sample: [], user: [] };
 
 type HarnessOptions = {
+  clearLocalDraftForRemote?: () => Promise<void>;
   remoteCharacter?: RemoteCharacterState | null;
   remoteCharacterId?: string | null;
   restoreRemoteCharacter?: (character: CharacterSheet) => Promise<boolean>;
@@ -55,13 +56,15 @@ function renderPersistenceHarness(
     status: "signed-in",
   },
   {
+    clearLocalDraftForRemote: clearLocalDraftForRemoteOption,
     remoteCharacter = null,
     remoteCharacterId = null,
     restoreRemoteCharacter,
   }: HarnessOptions = {},
 ) {
   const bindRemoteSummary = vi.fn();
-  const clearLocalDraftForRemote = vi.fn(async () => {});
+  const clearLocalDraftForRemote =
+    clearLocalDraftForRemoteOption ?? vi.fn(async () => {});
   const notify = vi.fn();
   const clearRemoteCharacter = vi.fn();
   const onNavigate = vi.fn();
@@ -164,6 +167,35 @@ describe("useRemoteCharacterPersistence", () => {
         }),
       }),
       "token",
+    );
+  });
+
+  it("keeps a new save local when browser draft cleanup fails after API success", async () => {
+    const created = summary("created", 3);
+    const cleanupError = new Error("cleanup failed");
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(async () => {}),
+      get: vi.fn(),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(async () => created),
+    };
+    const clearLocalDraftForRemote = vi.fn(async () => {
+      throw cleanupError;
+    });
+    const { bindRemoteSummary, notify, onNavigate, result } =
+      renderPersistenceHarness(characterSheetApi, undefined, undefined, {
+        clearLocalDraftForRemote,
+      });
+
+    act(() => result.current.dialogProps.save.onConfirm("新規PC", true));
+
+    await waitFor(() => expect(characterSheetApi.save).toHaveBeenCalledOnce());
+    expect(clearLocalDraftForRemote).toHaveBeenCalledOnce();
+    expect(bindRemoteSummary).not.toHaveBeenCalled();
+    expect(onNavigate).not.toHaveBeenCalled();
+    expect(notify).toHaveBeenCalledWith(
+      "error",
+      "DBには保存しましたが、ブラウザに保存された未保存データを削除できませんでした。現在の入力内容を確認してください。",
     );
   });
 

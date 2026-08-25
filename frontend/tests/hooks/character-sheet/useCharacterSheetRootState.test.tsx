@@ -682,6 +682,54 @@ describe("useCharacterSheetRootState", () => {
     vi.useRealTimers();
   });
 
+  it("clears the previous remote form before loading a new remote identity", async () => {
+    const { result, rerender } = renderHook(
+      ({ remoteCharacterId }: { remoteCharacterId: string }) =>
+        useCharacterSheetRootState(remoteCharacterId),
+      { initialProps: { remoteCharacterId: "remote-a" } },
+    );
+
+    act(() => {
+      result.current.form.setValue("profile.pcName", "Remote A");
+    });
+    rerender({ remoteCharacterId: "remote-b" });
+
+    expect(result.current.form.getValues()).toEqual(
+      characterSheetDefaultValues,
+    );
+  });
+
+  it("restores autosave after local draft cleanup fails", async () => {
+    const error = new Error("image cleanup failed");
+    const writeCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState({
+        deleteCharacterImage: vi.fn(async () => {
+          throw error;
+        }),
+        readCharacterImage: vi.fn(async () => null),
+        readCharacterSheetForm: vi.fn(() => null),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+    await expect(result.current.clearLocalDraftForRemote()).rejects.toThrow(
+      error,
+    );
+    act(() => {
+      result.current.form.setValue("profile.pcName", "cleanup後のPC");
+      window.dispatchEvent(new Event("pagehide"));
+    });
+
+    expect(writeCharacterSheetForm).toHaveBeenCalledWith(
+      window.localStorage,
+      expect.objectContaining({
+        profile: expect.objectContaining({ pcName: "cleanup後のPC" }),
+      }),
+    );
+  });
+
   it("does not reset a remote character session", async () => {
     const deleteCharacterImage = vi.fn(async () => {});
     const deleteCharacterSheetForm = vi.fn();

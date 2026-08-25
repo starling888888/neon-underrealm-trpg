@@ -178,7 +178,9 @@ export default function CharacterSheetContainer() {
   );
   const actionPane = useActionPane({
     errorSummary: presenterProps.errorSummary,
-    isCcfoliaCopyDisabled: rootState.isRootOperationInProgress,
+    isCcfoliaCopyDisabled:
+      rootState.isRootOperationInProgress ||
+      remotePersistence.isRemoteCharacterLoadFailed,
     isCopySaveDisabled: remotePersistence.isCopySaveDisabled,
     isDeleteDisabled: remotePersistence.isDeleteDisabled,
     isImportDisabled:

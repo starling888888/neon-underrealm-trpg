@@ -1010,6 +1010,39 @@ remote characterのroute stateは外部API requestを伴い得るため、明示
 
 ---
 
+## レビュー指摘 3
+
+### 指摘事項
+
+- remote GET失敗後、route identityとは異なる直前characterのformが画面に残り、data-dependent actionへ利用されうる。
+- local draft cleanupが失敗した場合、autosave suspensionが解除されず、remote保存成功後のURL・React state・local persistenceが混線する。
+
+### 判定
+
+- source: browser-draft (`.tmp/chatgpt-review.md`、PR #223の再レビュー)
+- classification: valid
+- local validation:
+  - 現HEAD（`b298f62`）のremote route identity変更処理は`remoteCharacter`とimageをclearするが、formをneutral stateへresetしていない。GET failure後はloadingを終了するため、直前formが表示されうる。
+  - `isRemoteCharacterLoadFailed`はcopy saveのdisabled判定に使われず、remote failure後のdata-dependent action制御が不十分である。
+  - `clearLocalDraftForRemote()`はsuspensionを先に有効化し、form削除またはimage削除が失敗した場合にsuspensionを解除しない。remote API成功後にこのcleanupが失敗すると、URL遷移前のstateが残る。
+- failure-log: 通常の実装不備であり、workflow逸脱または確認結果の誤表明には当たらないため記録しない。
+
+### 対応方針
+
+- remote route identity変更時は、取得前のformをcurrent characterとして扱わないneutral stateを用意し、GET failure後も直前characterの内容を操作へ渡さない。
+- remote failure状態では、remote dataを必要とするcopy save等を無効化する。
+- local draft cleanupは失敗時にautosave suspensionを復旧し、remote保存成功後にcleanup失敗が発生してもidentity stateが混線しない境界を定める。必要に応じてremote保存成功とbrowser cleanup failureの通知を分離する。
+
+### 対応完了チェックリスト
+
+- [x] remote GET失敗後に直前characterのform・data-dependent actionが残らないことをテストする
+- [x] local draft cleanup失敗時にautosave suspensionが復旧することをテストする
+- [x] remote保存成功後のcleanup failureでURLとReact stateが混線しないことをテストする
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+---
+
 # Local validation
 
 - local branch: `ex-16-7-character-session-routing`（local `main`の`4b37cd5`から作成）
