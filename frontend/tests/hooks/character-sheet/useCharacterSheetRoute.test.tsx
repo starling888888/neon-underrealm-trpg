@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { act, renderHook } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import useCharacterSheetRoute from "../../../src/character-sheet/hooks/useCharacterSheetRoute";
 
 const initialPath = "/neon-underrealm-trpg/character-sheet/";
@@ -35,6 +35,17 @@ describe("useCharacterSheetRoute", () => {
       "/neon-underrealm-trpg/character-sheet/",
     );
     expect(window.location.search).toBe("");
+  });
+
+  it("does not add a history entry when the character identity is unchanged", () => {
+    window.history.replaceState(null, "", `${initialPath}?character=remote-a`);
+    const pushState = vi.spyOn(window.history, "pushState");
+    const { result } = renderHook(() => useCharacterSheetRoute());
+
+    act(() => result.current.navigate("remote-a"));
+
+    expect(pushState).not.toHaveBeenCalled();
+    expect(result.current.remoteCharacterId).toBe("remote-a");
   });
 
   it("follows browser history navigation", () => {

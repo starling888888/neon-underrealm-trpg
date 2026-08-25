@@ -972,6 +972,44 @@ remote characterのroute stateは外部API requestを伴い得るため、明示
 
 ---
 
+## レビュー指摘 2
+
+### 指摘事項
+
+- 未保存characterを新規DB保存した直後、local autosave effectのcleanupがform valuesを再度localStorageへ保存し、削除済みのlocal draftを復活させうる。
+- remote characterのGETまたはrestoreに失敗した場合、`remoteCharacter === null`をloading判定に使っているため、loading overlayが終了しない。
+- remote characterの上書き保存でも同じ`character` query parameterへ`pushState`し、同一URLのhistory entryを積み重ねる。
+- remote routeからdefault valuesだけのJSONをimportした場合もformを直接localStorageへ書き込み、default stateの保存を残しうる。
+
+### 判定
+
+- source: browser-draft (`.tmp/chatgpt-review.md`、PR #223の`4b37cd5d... → 9911ca0f...` snapshot)
+- classification: valid
+- local validation:
+  - 現在HEAD（`8cee6e4`）でも新規保存は`form.setValue`、local draft削除、remote URL遷移の順であり、local autosave cleanupの`flush()`を抑止していない。snapshotより後のformatter commitはこの挙動に影響しない。
+  - remote loadingは現在も`isRemoteRoute && remoteCharacter === null`であり、GET / restore failureでは`remoteCharacter`を設定しないため、loading stateが解除されない。
+  - route hookの`navigate()`は同一IDでも常に`history.pushState()`を実行する。remote上書き保存も`onNavigate(summary.id)`を呼ぶ。
+  - JSON importは現在も`writeCharacterSheetForm()`を直接呼び、autosaveで用いる`dequal`によるdefault stateの削除分岐を通らない。
+- failure-log: 通常の実装不備であり、workflow逸脱または確認結果の誤表明には当たらないため記録しない。
+
+### 対応方針
+
+- remote化のためlocal draftを削除する間はautosaveのcleanup / pagehide flushを抑止し、新規保存後にlocal draftが再作成されないようにする。
+- remote GET lifecycleをloading成功・失敗から独立して保持し、失敗時は無限loadingを避ける表示と操作状態を定める。
+- 同一character IDへの遷移ではhistory entryを追加しない。
+- autosaveとJSON importで共有するlocal form persistence関数を導入し、default valuesは常にlocalStorage keyを削除する。
+
+### 対応完了チェックリスト
+
+- [x] 新規DB保存後にlocal draftが復活しないことをテストする
+- [x] remote GET / restore failureで無限loadingにならないことをテストする
+- [x] 同一remote IDの通常保存でhistory entryを追加しないことをテストする
+- [x] default JSON importがlocalStorage keyを残さないことをテストする
+- [x] `npm run check` が通る
+- [x] `npm run build` が通る
+
+---
+
 # Local validation
 
 - local branch: `ex-16-7-character-session-routing`（local `main`の`4b37cd5`から作成）

@@ -24,6 +24,8 @@ export default function useCharacterSheetRoute() {
   }, []);
 
   const navigate = useCallback((id: string | null) => {
+    if (readRemoteCharacterId(window.location) === id) return;
+
     const nextUrl = new URL(window.location.href);
     if (id === null) {
       nextUrl.searchParams.delete(characterParameter);

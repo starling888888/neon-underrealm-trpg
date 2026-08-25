@@ -154,6 +154,7 @@ export default function useCharacterSheetRootState(
   const jsonImportReturnFocusRef = useRef<HTMLButtonElement>(null);
   const jsonImportErrorConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const hasCommittedImageRef = useRef(false);
+  const isLocalDraftPersistenceSuspendedRef = useRef(false);
   const isJsonImportReadingRef = useRef(false);
   const [shouldRestoreJsonImportFocus, setShouldRestoreJsonImportFocus] =
     useState(false);
@@ -163,6 +164,17 @@ export default function useCharacterSheetRootState(
       setFormResetVersion((version) => version + 1);
     },
     [form],
+  );
+
+  const persistLocalDraftForm = useCallback(
+    (values: CharacterSheetFormValues) => {
+      if (dequal(values, characterSheetDefaultValues)) {
+        operations.deleteCharacterSheetForm(window.localStorage);
+      } else {
+        operations.writeCharacterSheetForm(window.localStorage, values);
+      }
+    },
+    [operations],
   );
 
   useEffect(() => {
@@ -175,6 +187,9 @@ export default function useCharacterSheetRootState(
   useEffect(() => {
     remoteCharacterIdRef.current = remoteCharacterId;
     setRemoteCharacter(null);
+    if (isLocalCharacter) {
+      isLocalDraftPersistenceSuspendedRef.current = false;
+    }
     if (!isLocalCharacter) {
       setCharacterImage(null);
       setIsCharacterImageRestoring(false);
@@ -244,15 +259,12 @@ export default function useCharacterSheetRootState(
     let latestValues = form.getValues();
     let hasPendingWrite = false;
     const flush = () => {
-      if (!hasPendingWrite) return;
+      if (!hasPendingWrite || isLocalDraftPersistenceSuspendedRef.current)
+        return;
       hasPendingWrite = false;
       if (timeout !== undefined) clearTimeout(timeout);
       try {
-        if (dequal(latestValues, characterSheetDefaultValues)) {
-          operations.deleteCharacterSheetForm(window.localStorage);
-        } else {
-          operations.writeCharacterSheetForm(window.localStorage, latestValues);
-        }
+        persistLocalDraftForm(latestValues);
       } catch (error) {
         console.error(error);
       }
@@ -275,7 +287,7 @@ export default function useCharacterSheetRootState(
       flush();
       subscription();
     };
-  }, [form, isFormRestoring, isLocalCharacter, operations]);
+  }, [form, isFormRestoring, isLocalCharacter, persistLocalDraftForm]);
 
   const onCharacterImageOperationStarted = useCallback(
     (trigger: HTMLButtonElement): void => {
@@ -481,10 +493,7 @@ export default function useCharacterSheetRootState(
         async () => {
           // JSON imports always become the one local, unsaved character. This
           // write must finish before the Container removes a remote route.
-          operations.writeCharacterSheetForm(
-            window.localStorage,
-            imported.values,
-          );
+          persistLocalDraftForm(imported.values);
           resetForm(imported.values);
 
           if (
@@ -546,6 +555,7 @@ export default function useCharacterSheetRootState(
     isLocalCharacter,
     operations,
     pendingJsonImport,
+    persistLocalDraftForm,
     resetForm,
     runRootOperation,
   ]);
@@ -594,6 +604,7 @@ export default function useCharacterSheetRootState(
   }, [runRootOperation]);
 
   const clearLocalDraftForRemote = useCallback(async (): Promise<void> => {
+    isLocalDraftPersistenceSuspendedRef.current = true;
     operations.deleteCharacterSheetForm(window.localStorage);
     await operations.deleteCharacterImage();
   }, [operations]);

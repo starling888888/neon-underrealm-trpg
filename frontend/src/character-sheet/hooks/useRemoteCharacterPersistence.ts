@@ -120,13 +120,23 @@ export default function useRemoteCharacterPersistence(
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isRemoteOperationInProgress, setIsRemoteOperationInProgress] =
     useState(false);
+  const [failedRemoteCharacterId, setFailedRemoteCharacterId] = useState<
+    string | null
+  >(null);
   const previousSessionKey = useRef<string | null | undefined>(undefined);
   const characterListRequestVersionRef = useRef(0);
   const remoteRequestVersionRef = useRef(0);
   const sessionKey = authentication.sessionKey;
   const isAuthenticated = sessionKey !== null;
   const isRemoteRoute = remoteCharacterId !== null;
-  const isRemoteCharacterLoading = isRemoteRoute && remoteCharacter === null;
+  const isRemoteCharacterLoading =
+    isRemoteRoute &&
+    remoteCharacter?.id !== remoteCharacterId &&
+    failedRemoteCharacterId !== remoteCharacterId;
+  const isRemoteCharacterLoadFailed =
+    isRemoteRoute &&
+    remoteCharacter === null &&
+    failedRemoteCharacterId === remoteCharacterId;
   const isEditable =
     !isRemoteRoute ||
     (remoteCharacter !== null && isAuthenticated && remoteCharacter.isOwner);
@@ -252,10 +262,14 @@ export default function useRemoteCharacterPersistence(
       .then(async (character) => {
         if (requestVersion !== remoteRequestVersionRef.current) return;
         const restored = await restoreRemoteCharacter(character);
-        if (!restored) notify("error", persistence.remoteRestoreError);
+        if (!restored) {
+          setFailedRemoteCharacterId(remoteCharacterId);
+          notify("error", persistence.remoteRestoreError);
+        }
       })
       .catch((error) => {
         if (requestVersion === remoteRequestVersionRef.current) {
+          setFailedRemoteCharacterId(remoteCharacterId);
           onApiError(error, persistence.loadError);
         }
       });
@@ -542,6 +556,7 @@ export default function useRemoteCharacterPersistence(
       isCopySaveDisabled:
         !isAuthenticated ||
         !isRemoteRoute ||
+        remoteCharacter === null ||
         isRootOperationInProgress ||
         isRemoteOperationInProgress,
       isDeleteDisabled:
@@ -551,6 +566,7 @@ export default function useRemoteCharacterPersistence(
         isRootOperationInProgress ||
         isRemoteOperationInProgress,
       isEditable,
+      isRemoteCharacterLoadFailed,
       isRemoteCharacterLoading,
       isSaveDisabled:
         !isAuthenticated ||
@@ -566,6 +582,7 @@ export default function useRemoteCharacterPersistence(
       dialogProps,
       isAuthenticated,
       isEditable,
+      isRemoteCharacterLoadFailed,
       isRemoteCharacterLoading,
       isRemoteOperationInProgress,
       isRootOperationInProgress,

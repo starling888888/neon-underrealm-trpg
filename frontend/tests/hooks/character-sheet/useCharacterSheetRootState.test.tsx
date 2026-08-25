@@ -215,6 +215,35 @@ describe("useCharacterSheetRootState", () => {
     );
   });
 
+  it("does not persist default values imported from a remote character", async () => {
+    const deleteCharacterImage = vi.fn(async () => {});
+    const deleteCharacterSheetForm = vi.fn();
+    const writeCharacterSheetForm = vi.fn();
+    const { result } = renderHook(() =>
+      useCharacterSheetRootState("remote-character", {
+        deleteCharacterImage,
+        deleteCharacterSheetForm,
+        readCharacterSheetJsonFile: vi.fn(async () =>
+          JSON.stringify({
+            ...characterSheetDefaultValues,
+            imageBase64String: null,
+          }),
+        ),
+        writeCharacterSheetForm,
+      }),
+    );
+
+    await act(async () => {
+      await result.current.onJsonImportFileSelected(createJsonFile());
+    });
+    await act(async () => {
+      await result.current.onJsonImportConfirmed();
+    });
+
+    expect(deleteCharacterSheetForm).toHaveBeenCalledWith(window.localStorage);
+    expect(writeCharacterSheetForm).not.toHaveBeenCalled();
+  });
+
   it("restores form data and removes the previous image for a malformed import image", async () => {
     const values = structuredClone(characterSheetDefaultValues);
     values.profile.pcName = "画像エラーでも復元するPC";
@@ -541,6 +570,36 @@ describe("useCharacterSheetRootState", () => {
         profile: expect.objectContaining({ pcName: "ページ離脱前のPC" }),
       }),
     );
+  });
+
+  it("does not resurrect a local draft while moving to a remote character", async () => {
+    const deleteCharacterImage = vi.fn(async () => {});
+    const deleteCharacterSheetForm = vi.fn();
+    const writeCharacterSheetForm = vi.fn();
+    const { result, rerender } = renderHook(
+      ({ remoteCharacterId }: { remoteCharacterId: string | null }) =>
+        useCharacterSheetRootState(remoteCharacterId, {
+          deleteCharacterImage,
+          deleteCharacterSheetForm,
+          readCharacterImage: vi.fn(async () => null),
+          readCharacterSheetForm: vi.fn(() => null),
+          writeCharacterSheetForm,
+        }),
+      { initialProps: { remoteCharacterId: null as string | null } },
+    );
+
+    await waitFor(() => expect(result.current.isFormRestoring).toBe(false));
+    act(() => {
+      result.current.form.setValue("profile.pcName", "保存済みになるPC");
+    });
+    await act(async () => {
+      await result.current.clearLocalDraftForRemote();
+    });
+    rerender({ remoteCharacterId: "remote-a" });
+
+    expect(deleteCharacterSheetForm).toHaveBeenCalledWith(window.localStorage);
+    expect(deleteCharacterImage).toHaveBeenCalledOnce();
+    expect(writeCharacterSheetForm).not.toHaveBeenCalled();
   });
 
   it("writes a changed form after the debounce delay", async () => {

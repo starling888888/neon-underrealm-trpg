@@ -371,6 +371,36 @@ describe("useRemoteCharacterPersistence", () => {
     expect(restore).toHaveBeenCalledWith(character);
   });
 
+  it("ends remote loading and keeps the sheet read-only when loading fails", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(async () => {
+        throw new Error("not found");
+      }),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const { notify, result } = renderPersistenceHarness(
+      characterSheetApi,
+      undefined,
+      undefined,
+      { remoteCharacterId: "missing-character" },
+    );
+
+    await waitFor(() => expect(characterSheetApi.get).toHaveBeenCalledOnce());
+    await waitFor(() =>
+      expect(result.current.isRemoteCharacterLoading).toBe(false),
+    );
+
+    expect(result.current.isRemoteCharacterLoadFailed).toBe(true);
+    expect(result.current.isEditable).toBe(false);
+    expect(result.current.isCopySaveDisabled).toBe(true);
+    expect(notify).toHaveBeenCalledWith(
+      "error",
+      "キャラクターを読み込めませんでした。",
+    );
+  });
+
   it("changes the URL identity from character-list selection without fetching first", async () => {
     const characterSheetApi: CharacterSheetApiClient = {
       delete: vi.fn(),
