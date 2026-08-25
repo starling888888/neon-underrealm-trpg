@@ -11,5 +11,5 @@
 | G1   | done    | なし       | ex-16-1-workspace-foundation — GitHub Issue #212   |                                                              |
 | G2   | done    | G1         | ex-16-2-backend-infrastructure — GitHub Issue #214 |                                                              |
 | G3   | done    | G1, G2     | ex-16-3-google-authentication — GitHub Issue #216  |                                                              |
-| G4   | planned | G1, G2, G3 | `docs/issue/ex-16-4-cloud-persistence-api.md`      | Shared API contract、D1/R2 API、metadata、所有権を実装する。 |
+| G4   | done    | G1, G2, G3 | ex-16-4-cloud-persistence-api — GitHub Issue #218  |                                                              |
 | G5   | planned | G1, G3, G4 | `docs/issue/ex-16-5-cloud-persistence-ui.md`       | design前提を満たし、選択、read-only、DB保存/削除を統合する。 |
