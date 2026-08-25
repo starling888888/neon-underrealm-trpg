@@ -2,7 +2,7 @@
 
 ## 目的と適用範囲
 
-本書は、`ex-16-4-cloud-persistence-api`で実装するcharacter sheet cloud persistence backendの設計正本である。HTTP API、shared contract、validation、service、repository、token verifier、production/local/testのcomposition、error contract、テスト境界を定義する。
+本書は、`ex-16-4-cloud-persistence-api`で実装したcharacter sheet cloud persistence backendと、`ex-16-5-cloud-persistence-ui`で更新する公開設定contractの設計正本である。HTTP API、shared contract、validation、service、repository、token verifier、production/local/testのcomposition、error contract、テスト境界を定義する。
 
 frontendのクラウド保存UI、character sheetのrestore、Google login UIはG5の対象であり、本書では扱わない。ゲーム規則に対するcharacter JSONのserver-side validation、character JSON schema version migration、検索、server-side pagination、共有URL、D1/R2の分散transactionも対象外とする。
 
@@ -56,14 +56,14 @@ domain objectは少なくとも、次の情報を扱う。
 - opaqueでserver発行のcharacter sheet ID
 - 非公開のowner `userId`
 - `type`: `user`または`sample`
-- 表示用metadata（PC名、PL名、格、プライマリ流儀ID、生き様ID、作成・更新日時）
+- 表示用metadata（`isPublic`、PC名、PL名、格、プライマリ流儀ID、生き様ID、作成・更新日時）
 - Base64エンコード済み画像を含む、client restoreへそのまま渡せるcharacter JSON snapshot
 
 `userId`は認可専用の内部情報であり、request bodyと公開responseに含めない。`isOwner`は、optional authで検証できたuser IDとdomain objectのownerが一致するときだけresponseへ付与する。
 
 ### D1とR2
 
-D1はmetadata index、R2はsnapshot storeとして使う。D1 rowには`type TEXT`を保存し、値は`user`または`sample`だけを許可する。repositoryは全recordを`updated_at DESC`で取得し、serviceが`sample`だけを作成日時昇順へ並べ替える。
+D1はmetadata index、R2はsnapshot storeとして使う。D1 rowには`type TEXT`と`is_public`を保存し、`type`は`user`または`sample`だけを許可する。`is_public`はboolean相当のNOT NULL値とし、G5 migrationで既存recordをpublicとして扱う。repositoryは全recordを`updated_at DESC`で取得し、serviceがvisibility filterと`sample`の作成日時昇順を適用する。
 
 R2 keyは`{userId}/{id}.json`とする。`type`を`sample`へ変更しても`userId`とR2 keyは変えない。
 
@@ -127,6 +127,7 @@ CREATE INDEX idx_character_sheets_sample_created_at
   metadata: {
     pcName: string;
     plName?: string | null;
+    isPublic: boolean;
     rank: number;
     primaryRyugiId?: string | null;
     ikizamaId?: string | null;
@@ -143,7 +144,7 @@ requestには`userId`と`type`を含めない。`POST`のidは任意であり、
 
 response DTO、error envelope、公開metadata、list response、domainの公開型は`packages/shared`のTypeScript型として公開する。output用のZod schemaは作らず、clientはresponseが共有型どおりであることを前提に型を絞り込む。clientでのruntime response parseも行わない。
 
-inputとresponseは`id`、`metadata`、`snapshot`の構造を基本として揃える。公開metadataには`type`、表示用metadata、Unix epoch millisecondsのtimestamps、`isOwner`を含めるが、内部`userId`は含めない。list responseとPOST responseはsnapshotを持たないsummary、individual GET responseはsnapshotを含むdetailとする。
+inputとresponseは`id`、`metadata`、`snapshot`の構造を基本として揃える。公開metadataには`type`、`isPublic`、表示用metadata、Unix epoch millisecondsのtimestamps、`isOwner`を含めるが、内部`userId`は含めない。list responseとPOST responseはsnapshotを持たないsummary、individual GET responseはsnapshotを含むdetailとする。
 
 ```ts
 type CharacterSheetSummary = {
@@ -158,14 +159,14 @@ type CharacterSheetDetail = CharacterSheetSummary & {
 
 ### Endpoints
 
-| Method | Path                    | Auth     | 動作                                          |
-| ------ | ----------------------- | -------- | --------------------------------------------- |
-| GET    | `/character-sheets`     | optional | 全件を取得し、`user`と`sample`へ分けて返す。  |
-| POST   | `/character-sheets`     | required | idなしで作成、存在するidでowner限定更新する。 |
-| GET    | `/character-sheets/:id` | optional | snapshotを含む1件を取得する。                 |
-| DELETE | `/character-sheets/:id` | required | owner限定で1件を削除する。                    |
+| Method | Path                    | Auth     | 動作                                                            |
+| ------ | ----------------------- | -------- | --------------------------------------------------------------- |
+| GET    | `/character-sheets`     | optional | public、またはactor所有のrecordを`user`と`sample`へ分けて返す。 |
+| POST   | `/character-sheets`     | required | idなしで作成、存在するidでowner限定更新する。                   |
+| GET    | `/character-sheets/:id` | optional | public、またはactor所有のsnapshotを含む1件を取得する。          |
+| DELETE | `/character-sheets/:id` | required | owner限定で1件を削除する。                                      |
 
-list responseはserver-side paginationなしで、`user`と`sample`の配列を返す。repositoryからの全件取得順で`user`を`updatedAt DESC`にし、serviceが`sample`を`createdAt ASC`へsortする。検索、任意sort、pagination parameterは設けない。
+list responseはserver-side paginationなしで、`user`と`sample`の配列を返す。anonymous actorにはpublic recordだけ、認証済みactorにはpublic recordとactor所有recordを返す。private recordを非ownerまたはanonymous actorがindividual GETした場合は存在しないrecordと同じ`404`にする。repositoryからの全件取得順で`user`を`updatedAt DESC`にし、serviceが`sample`を`createdAt ASC`へsortする。検索、任意sort、pagination parameterは設けない。
 
 ## 認証とerror contract
 
@@ -181,15 +182,15 @@ Authorization headerがない公開GETはauthentication middlewareがanonymous r
 
 Service、repository、validation、token verifier、authentication middlewareはHTTP statusを持たない。意味コードだけを持つ`ApplicationError`を使い、`app.onError`だけが網羅的なcode-to-status対応と共有error envelopeを作る。clientは期限切れtokenの`419`だけをstatusで判定し、その他の4xx/5xxは一律のエラー表示にする。validation field detail、token内容、internal error、`userId`は返さない。
 
-| HTTP status | 用途                                                        |
-| ----------- | ----------------------------------------------------------- |
-| 400         | request schemaまたはmetadataが不正。                        |
-| 401         | required endpointにtokenがない、またはtokenが検証不能。     |
-| 403         | 認証済みだがownerではない。                                 |
-| 404         | 指定idのrecordが存在しない。                                |
-| 413         | application固有のbody上限を超過。                           |
-| 419         | tokenの有効期限切れ。clientはstatusだけで再ログインを促す。 |
-| 500         | 想定外のbackend failure。                                   |
+| HTTP status | 用途                                                             |
+| ----------- | ---------------------------------------------------------------- |
+| 400         | request schemaまたはmetadataが不正。                             |
+| 401         | required endpointにtokenがない、またはtokenが検証不能。          |
+| 403         | 認証済みだがownerではない。                                      |
+| 404         | 指定idのrecordが存在しない、またはprivate recordを閲覧できない。 |
+| 413         | application固有のbody上限を超過。                                |
+| 419         | tokenの有効期限切れ。clientはstatusだけで再ログインを促す。      |
+| 500         | 想定外のbackend failure。                                        |
 
 D1/R2の部分失敗は、保存成功を装わず500として返す。rollback、compensating transaction、孤児objectの自動cleanupは実装しない。
 
@@ -207,10 +208,10 @@ local、test、productionで同じserviceとhandler contractを通す。storage 
 ## テストとCI
 
 - shared input schema、公開output type、error envelopeをcontract testする。
-- serviceではID発行、owner authorization、`type`の作成時`user`・更新時不変、listの分類・sample sort、未存在idの拒否、R2/D1部分失敗をtestする。
+- serviceではID発行、owner authorization、`type`の作成時`user`・更新時不変、`isPublic`による一覧・個別取得visibility、private non-ownerの`404`、listの分類・sample sort、未存在idの拒否、R2/D1部分失敗をtestする。
 - verifierではproductionのtoken検証契約とtest verifierの有効・期限切れ・無効tokenをtestする。authentication middlewareはtokenなし、無効、期限切れ、required authを確認する。
 - Cloudflare repositoryはmetadataとsnapshotの個別read/write/delete、および全件`updated_at DESC` queryをtestする。serviceは複数repository操作の順序と部分失敗をtestする。
-- local API E2Eは4 endpoint、anonymous read、owner以外のwrite/delete拒否、期限切れtokenの`419`、sample分類、snapshot内画像、numeric timestampを確認する。testはendpointごとのcaseへ分ける。評価対象でない既存stateは、`getPlatformProxy`で同じlocal stateを開いた`CloudflareCharacterSheetRepository`から用意し、各caseの`afterEach`でD1 metadataとR2 snapshotを削除する。Node組み込みの`assert`とWrangler CLI子processを使わない。
+- local API E2Eは4 endpoint、anonymousのpublic read、owner private read、private non-ownerの一覧非表示とindividual `404`、owner以外のwrite/delete拒否、期限切れtokenの`419`、sample分類、snapshot内画像、numeric timestampを確認する。testはendpointごとのcaseへ分ける。評価対象でない既存stateは、`getPlatformProxy`で同じlocal stateを開いた`CloudflareCharacterSheetRepository`から用意し、各caseの`afterEach`でD1 metadataとR2 snapshotを削除する。Node組み込みの`assert`とWrangler CLI子processを使わない。
 - `backend/tests/unit/`は通常Vitest config、`backend/tests/integration/`はintegration専用Vitest configで実行する。通常testはintegrationを除外し、integration configはintegration directoryだけを対象にする。
 - `tsconfig.json`はWorker source、unit/integration test、Vitest configを全件型検査する。`tsconfig.build.json`は`tsconfig.json`をextendsしてtestsとVitest configを除外し、Worker sourceだけを型検査する。Cloudflare WorkersとNode/Vitestの外部Web Platform宣言は競合するため`skipLibCheck`を使うが、project sourceとtestは型検査する。
 
