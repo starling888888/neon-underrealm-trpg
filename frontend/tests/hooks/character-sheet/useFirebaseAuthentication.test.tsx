@@ -1,10 +1,13 @@
 // @vitest-environment jsdom
+import type { User } from "firebase/auth";
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import useFirebaseAuthentication from "../../../src/character-sheet/auth/useFirebaseAuthentication";
 
+type FirebaseUserStub = Pick<User, "uid" | "getIdToken">;
+
 const { auth, getAuthMock, observer } = vi.hoisted(() => ({
-  auth: { currentUser: null as any },
+  auth: { currentUser: null as FirebaseUserStub | null },
   getAuthMock: vi.fn(),
   observer: vi.fn(),
 }));

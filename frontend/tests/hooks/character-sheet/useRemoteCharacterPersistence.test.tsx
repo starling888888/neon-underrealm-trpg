@@ -38,8 +38,7 @@ function summary(
 
 function renderPersistenceHarness(
   characterSheetApi: CharacterSheetApiClient,
-  clearCharacterImageForCopy: () => Promise<boolean> | undefined = async () =>
-    true,
+  clearCharacterImageForCopy: () => Promise<boolean> = async () => true,
   authentication: Authentication = {
     getIdToken: vi.fn(async () => "token"),
     onLogin: vi.fn(),
@@ -63,8 +62,7 @@ function renderPersistenceHarness(
         authentication,
         bindRemoteSummary,
         characterImage: null,
-        clearCharacterImageForCopy:
-          clearCharacterImageForCopy ?? (async () => true),
+        clearCharacterImageForCopy,
         clearRemoteCharacter: vi.fn(),
         form,
         isRootOperationInProgress: false,
@@ -95,27 +93,11 @@ describe("useRemoteCharacterPersistence", () => {
       sessionKey: "uid-a",
       status: "signed-in",
     };
-    const { result } = renderHook(() => {
-      const form = useForm<CharacterSheetFormValues>({
-        defaultValues: characterSheetDefaultValues,
-      });
-      return useRemoteCharacterPersistence(
-        {
-          authentication,
-          bindRemoteSummary: vi.fn(),
-          characterImage: null,
-          clearCharacterImageForCopy: vi.fn(async () => true),
-          clearRemoteCharacter: vi.fn(),
-          form,
-          isRootOperationInProgress: false,
-          notify: vi.fn(),
-          remoteCharacter: null,
-          restoreRemoteCharacter: vi.fn(async () => true),
-          updateRemoteCharacterMetadata: vi.fn(),
-        },
-        { characterSheetApi },
-      );
-    });
+    const { result } = renderPersistenceHarness(
+      characterSheetApi,
+      undefined,
+      authentication,
+    );
 
     act(() => result.current.openCharacterList());
     await waitFor(() => expect(characterSheetApi.list).toHaveBeenCalledOnce());
