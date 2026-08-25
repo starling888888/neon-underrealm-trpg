@@ -199,7 +199,8 @@ export const characterSheetDictionary = {
     },
     persistence: {
       copySaveError: "コピー保存に失敗しました。",
-      copySaveSuccess: "コピーをDBに保存し、新しく作成したキャラクターへ表示を切り替えました。",
+      copySaveSuccess:
+        "コピーをDBに保存し、新しく作成したキャラクターへ表示を切り替えました。",
       deleteError: "DB削除に失敗しました。",
       deleteSuccess:
         "DBから削除し、DBに保存されていないキャラクターシートへ表示を切り替えました。",

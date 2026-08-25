@@ -177,9 +177,14 @@ describe("useRemoteCharacterPersistence", () => {
     };
     const clearCharacterImageForCopy = vi.fn(async () => false);
     const { bindRemoteSummary, formRef, notify, onNavigate, result } =
-      renderPersistenceHarness(characterSheetApi, clearCharacterImageForCopy, undefined, {
-        remoteCharacterId: "source-character",
-      });
+      renderPersistenceHarness(
+        characterSheetApi,
+        clearCharacterImageForCopy,
+        undefined,
+        {
+          remoteCharacterId: "source-character",
+        },
+      );
 
     act(() =>
       result.current.dialogProps.copySave.onConfirm(
@@ -215,7 +220,11 @@ describe("useRemoteCharacterPersistence", () => {
 
     expect(result.current.isCopySaveDisabled).toBe(true);
     act(() =>
-      result.current.dialogProps.copySave.onConfirm("コピーPC", "コピーPL", false),
+      result.current.dialogProps.copySave.onConfirm(
+        "コピーPC",
+        "コピーPL",
+        false,
+      ),
     );
 
     await Promise.resolve();

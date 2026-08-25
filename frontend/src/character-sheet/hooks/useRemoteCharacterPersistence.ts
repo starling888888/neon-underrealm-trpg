@@ -126,8 +126,7 @@ export default function useRemoteCharacterPersistence(
   const sessionKey = authentication.sessionKey;
   const isAuthenticated = sessionKey !== null;
   const isRemoteRoute = remoteCharacterId !== null;
-  const isRemoteCharacterLoading =
-    isRemoteRoute && remoteCharacter === null;
+  const isRemoteCharacterLoading = isRemoteRoute && remoteCharacter === null;
   const isEditable =
     !isRemoteRoute ||
     (remoteCharacter !== null && isAuthenticated && remoteCharacter.isOwner);
@@ -377,11 +376,7 @@ export default function useRemoteCharacterPersistence(
 
   const copySave = useCallback(
     (pcName: string, plName: string, isPublic: boolean) => {
-      if (
-        !isAuthenticated ||
-        !isRemoteRoute ||
-        isRemoteOperationInProgress
-      )
+      if (!isAuthenticated || !isRemoteRoute || isRemoteOperationInProgress)
         return;
       setIsRemoteOperationInProgress(true);
       const values = form.getValues();

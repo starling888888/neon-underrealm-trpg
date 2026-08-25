@@ -481,7 +481,10 @@ export default function useCharacterSheetRootState(
         async () => {
           // JSON imports always become the one local, unsaved character. This
           // write must finish before the Container removes a remote route.
-          operations.writeCharacterSheetForm(window.localStorage, imported.values);
+          operations.writeCharacterSheetForm(
+            window.localStorage,
+            imported.values,
+          );
           resetForm(imported.values);
 
           if (
