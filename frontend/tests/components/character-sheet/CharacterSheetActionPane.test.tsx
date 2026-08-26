@@ -45,13 +45,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isCcfoliaCopyDisabled={false}
-        isImportDisabled={false}
         isMenuOpen
         isResetDisabled={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onCcfoliaCopy={vi.fn()}
         onHelp={vi.fn()}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
@@ -74,13 +72,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isCcfoliaCopyDisabled={false}
-        isImportDisabled={false}
         isMenuOpen={false}
         isResetDisabled={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onCcfoliaCopy={vi.fn()}
         onHelp={onHelp}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
@@ -105,13 +101,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isCcfoliaCopyDisabled={false}
-        isImportDisabled={false}
         isResetDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onHelp={vi.fn()}
         onCcfoliaCopy={vi.fn()}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
@@ -126,7 +120,6 @@ describe("CharacterSheetActionPane", () => {
       "コピー保存",
       "DB削除",
       "初期化",
-      /^インポート/,
       "CCFOLIAコピー",
     ]) {
       expect(
@@ -143,13 +136,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={errorSummary}
         isCcfoliaCopyDisabled={false}
-        isImportDisabled={false}
         isResetDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onHelp={vi.fn()}
         onCcfoliaCopy={vi.fn()}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
@@ -188,13 +179,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors, hasErrors: true }}
         isCcfoliaCopyDisabled={false}
-        isImportDisabled={false}
         isResetDisabled={false}
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onCcfoliaCopy={vi.fn()}
         onHelp={vi.fn()}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
@@ -225,13 +214,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isCcfoliaCopyDisabled={false}
-        isImportDisabled={false}
         isResetDisabled={false}
         isMenuOpen={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onHelp={vi.fn()}
         onCcfoliaCopy={vi.fn()}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
@@ -247,19 +234,17 @@ describe("CharacterSheetActionPane", () => {
     ).not.toBeNull();
   });
 
-  it("disables import and CCFOLIA copy while an image is restoring", () => {
+  it("disables CCFOLIA copy while an image is restoring", () => {
     render(
       <CharacterSheetActionPane
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isCcfoliaCopyDisabled
-        isImportDisabled
         isResetDisabled
         isMenuOpen
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onHelp={vi.fn()}
         onCcfoliaCopy={vi.fn()}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
@@ -267,12 +252,6 @@ describe("CharacterSheetActionPane", () => {
         sectionNavigation={sectionNavigation}
       />,
     );
-
-    for (const button of screen.getAllByRole("button", {
-      name: /^インポート/,
-    })) {
-      expect((button as HTMLButtonElement).disabled).toBe(true);
-    }
 
     for (const button of screen.getAllByRole("button", {
       name: "CCFOLIAコピー",
@@ -290,13 +269,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isCcfoliaCopyDisabled={false}
-        isImportDisabled={false}
         isMenuOpen
         isResetDisabled={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onCcfoliaCopy={onCcfoliaCopy}
         onHelp={vi.fn()}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}
@@ -323,13 +300,11 @@ describe("CharacterSheetActionPane", () => {
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
         errorSummary={{ errors: [], hasErrors: false }}
         isCcfoliaCopyDisabled={false}
-        isImportDisabled={false}
         isMenuOpen
         isResetDisabled={false}
         menuTriggerRef={createRef<HTMLButtonElement>()}
         onCcfoliaCopy={vi.fn()}
         onHelp={vi.fn()}
-        onImport={vi.fn()}
         onMenuToggle={vi.fn()}
         onReset={vi.fn()}
         onReviewErrors={vi.fn()}

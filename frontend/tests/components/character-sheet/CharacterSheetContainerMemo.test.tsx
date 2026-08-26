@@ -84,9 +84,6 @@ function useRootStateHarness() {
   const imageReturnFocusRef = useRef<HTMLButtonElement>(null);
   const formRestoreConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const formRestoreReturnFocusRef = useRef<HTMLInputElement>(null);
-  const jsonImportErrorConfirmButtonRef = useRef<HTMLButtonElement>(null);
-  const jsonImportInputRef = useRef<HTMLInputElement>(null);
-  const jsonImportReturnFocusRef = useRef<HTMLButtonElement>(null);
 
   return useMemo(
     () => ({
@@ -104,32 +101,19 @@ function useRootStateHarness() {
       isCharacterImageRestoring: false,
       isFormRestoreErrorOpen: false,
       isFormRestoring: false,
-      isImageErrorFromJsonImport: false,
       isImageErrorFromReset: false,
-      isJsonImportErrorOpen: false,
-      isJsonImportImageErrorOpen: false,
       isRootOperationInProgress: false,
-      jsonImportErrorConfirmButtonRef,
-      jsonImportInputRef,
-      jsonImportReturnFocusRef,
       onCcfoliaCopy: async () => true,
       onCharacterImageCleared: async () => {},
       onCharacterImageOperationStarted: () => {},
       onCharacterImageSelected: async () => {},
       onJsonExport: () => {},
-      onJsonImportConfirmed: async () => {},
-      onJsonImportFileSelected: async () => {},
-      onJsonImportRequested: () => {},
       onResetConfirmed: async () => {},
-      pendingJsonImport: null,
       rootOperation: null,
       remoteCharacter: null,
       restoreRemoteCharacter: async () => false,
       setImageError: () => {},
       setIsFormRestoreErrorOpen: () => {},
-      setIsJsonImportErrorOpen: () => {},
-      setIsJsonImportImageErrorOpen: () => {},
-      setPendingJsonImport: () => {},
       updateRemoteCharacterMetadata: () => {},
     }),
     [form],
@@ -217,7 +201,6 @@ describe("CharacterSheetContainer memo boundaries", () => {
       onCcfoliaCopy: unknown;
       onExport: unknown;
       onHelp: unknown;
-      onImport: unknown;
       onMenuToggle: unknown;
       onReset: unknown;
       onReviewErrors: unknown;

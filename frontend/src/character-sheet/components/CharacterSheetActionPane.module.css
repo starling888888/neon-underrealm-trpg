@@ -105,13 +105,6 @@
   .actionButtons :global(button) {
     width: 100%;
   }
-  .import small {
-    display: block;
-    margin-top: 0.125rem;
-    color: var(--color-danger);
-    font-size: 0.625rem;
-    font-weight: 700;
-  }
   .desktopErrorStatus {
     display: grid;
     gap: var(--space-2);
@@ -240,16 +233,8 @@
   .actionButtons :global(button) {
     width: 100%;
   }
-  .import,
   .ccfoliaCopy {
     grid-column: 1 / -1;
-  }
-  .import small {
-    display: block;
-    margin-top: 0.125rem;
-    color: var(--color-danger);
-    font-size: 0.625rem;
-    font-weight: 700;
   }
   .errors {
     border-top: var(--border-width) solid var(--color-border);

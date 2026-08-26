@@ -1,5 +1,3 @@
-import { readFile } from "node:fs/promises";
-
 import { expect, type Locator, type Page } from "@playwright/test";
 import { siteRoutes } from "../support/site";
 import {
@@ -10,66 +8,6 @@ import {
 async function openTooltip(page: Page, name: string): Promise<void> {
   await page.getByRole("button", { exact: true, name }).hover();
   await expect(page.getByRole("tooltip")).toBeVisible();
-}
-
-async function openJsonImport(
-  page: Page,
-  imageBase64String: unknown,
-): Promise<void> {
-  const menuTrigger = page.getByRole("button", { name: /操作メニューを開く/ });
-  if (await menuTrigger.isVisible()) {
-    await menuTrigger.click();
-  }
-
-  const downloadPromise = page.waitForEvent("download");
-  await page.getByRole("button", { exact: true, name: "エクスポート" }).click();
-  const download = await downloadPromise;
-  const downloadPath = await download.path();
-  if (downloadPath === null)
-    throw new Error("Expected exported character sheet.");
-  const storedForm = await readFile(downloadPath, "utf8");
-  const imported = {
-    ...(JSON.parse(storedForm) as Record<string, unknown>),
-    imageBase64String,
-  };
-
-  await page.getByRole("button", { exact: true, name: "インポート" }).click();
-  await page.locator('input[accept="application/json,.json"]').setInputFiles({
-    buffer: Buffer.from(JSON.stringify(imported)),
-    mimeType: "application/json",
-    name: "character.json",
-  });
-  await expect(
-    page.getByRole("dialog", { name: "JSON入力の確認" }),
-  ).toBeVisible();
-}
-
-async function openJsonImportImageError(page: Page): Promise<void> {
-  await openJsonImport(page, 42);
-  await page
-    .getByRole("dialog", { name: "JSON入力の確認" })
-    .getByRole("button", { exact: true, name: "インポート" })
-    .click();
-  await expect(
-    page.getByRole("dialog", { name: "入力データの画像の誤り" }),
-  ).toBeVisible();
-}
-
-async function openJsonImportError(page: Page): Promise<void> {
-  const menuTrigger = page.getByRole("button", { name: /操作メニューを開く/ });
-  if (await menuTrigger.isVisible()) {
-    await menuTrigger.click();
-  }
-
-  await page.getByRole("button", { exact: true, name: "インポート" }).click();
-  await page.locator('input[accept="application/json,.json"]').setInputFiles({
-    buffer: Buffer.from("{"),
-    mimeType: "application/json",
-    name: "broken.json",
-  });
-  await expect(
-    page.getByRole("dialog", { name: "JSON入力の失敗" }),
-  ).toBeVisible();
 }
 
 async function openResetConfirm(page: Page): Promise<void> {
@@ -736,27 +674,6 @@ registerCharacterSheetVrtScenarios([
     kind: "dialog",
     locator: dialog("ヘルプ"),
     prepare: (page) => scrollHelpDialog(page, "end"),
-    route: siteRoutes.characterSheet,
-  },
-  {
-    id: "json-import-confirm",
-    kind: "dialog",
-    locator: dialog("JSON入力の確認"),
-    prepare: (page) => openJsonImport(page, null),
-    route: siteRoutes.characterSheet,
-  },
-  {
-    id: "json-import-image-error",
-    kind: "dialog",
-    locator: dialog("入力データの画像の誤り"),
-    prepare: openJsonImportImageError,
-    route: siteRoutes.characterSheet,
-  },
-  {
-    id: "json-import-error",
-    kind: "dialog",
-    locator: dialog("JSON入力の失敗"),
-    prepare: openJsonImportError,
     route: siteRoutes.characterSheet,
   },
   {

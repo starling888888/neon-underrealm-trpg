@@ -1,42 +1,18 @@
-import { memo, type RefObject, useCallback } from "react";
+import { memo, useCallback } from "react";
 
-import { characterSheetDictionary } from "../../../dictionary";
 import type { ActionPaneDialogsState } from "../../../hooks/useActionPane";
 import type { CharacterSheetErrorSummary } from "../../../logic/error-summary";
 import CharacterSheetCcfoliaCopyConfirmDialog from "./CharacterSheetCcfoliaCopyConfirmDialog";
 import CharacterSheetErrorDialog from "./CharacterSheetErrorDialog";
 import CharacterSheetHelpDialog from "./CharacterSheetHelpDialog";
-import CharacterSheetJsonImportConfirmDialog from "./CharacterSheetJsonImportConfirmDialog";
-import CharacterSheetJsonImportErrorDialog from "./CharacterSheetJsonImportErrorDialog";
 import CharacterSheetResetConfirmDialog from "./CharacterSheetResetConfirmDialog";
 
 type ActionPaneDialogsProps = {
   errorSummary: CharacterSheetErrorSummary;
-  isJsonImportErrorOpen: boolean;
-  isJsonImportImageErrorOpen: boolean;
-  isJsonImportPending: boolean;
-  jsonImportErrorConfirmButtonRef: RefObject<HTMLButtonElement | null>;
-  jsonImportReturnFocusRef: RefObject<HTMLButtonElement | null>;
-  onJsonImportConfirmed: () => void;
-  onJsonImportErrorClose: () => void;
-  onJsonImportImageErrorClose: () => void;
-  onJsonImportPendingClose: () => void;
   state: ActionPaneDialogsState;
 };
 
-function ActionPaneDialogs({
-  errorSummary,
-  isJsonImportErrorOpen,
-  isJsonImportImageErrorOpen,
-  isJsonImportPending,
-  jsonImportErrorConfirmButtonRef,
-  jsonImportReturnFocusRef,
-  onJsonImportConfirmed,
-  onJsonImportErrorClose,
-  onJsonImportImageErrorClose,
-  onJsonImportPendingClose,
-  state,
-}: ActionPaneDialogsProps) {
+function ActionPaneDialogs({ errorSummary, state }: ActionPaneDialogsProps) {
   const { actions, errors } = state;
   const onCcfoliaCopyConfirmed = useCallback(() => {
     void actions.confirmCcfoliaCopy();
@@ -44,12 +20,6 @@ function ActionPaneDialogs({
 
   return (
     <>
-      <CharacterSheetJsonImportConfirmDialog
-        isOpen={isJsonImportPending}
-        onConfirm={onJsonImportConfirmed}
-        onRequestClose={onJsonImportPendingClose}
-        returnFocusRef={jsonImportReturnFocusRef}
-      />
       <CharacterSheetHelpDialog
         isOpen={actions.isHelpOpen}
         onRequestClose={actions.closeHelp}
@@ -66,26 +36,6 @@ function ActionPaneDialogs({
         onConfirm={actions.confirmReset}
         onRequestClose={actions.closeResetConfirm}
         returnFocusRef={actions.resetTriggerRef}
-      />
-      <CharacterSheetJsonImportErrorDialog
-        confirmButtonRef={jsonImportErrorConfirmButtonRef}
-        dialogLabel={
-          characterSheetDictionary.characterSheet.jsonImport.errorLabel
-        }
-        isOpen={isJsonImportErrorOpen}
-        message={characterSheetDictionary.characterSheet.jsonImport.error}
-        onRequestClose={onJsonImportErrorClose}
-        returnFocusRef={jsonImportReturnFocusRef}
-      />
-      <CharacterSheetJsonImportErrorDialog
-        confirmButtonRef={jsonImportErrorConfirmButtonRef}
-        dialogLabel={
-          characterSheetDictionary.characterSheet.jsonImport.imageErrorLabel
-        }
-        isOpen={isJsonImportImageErrorOpen}
-        message={characterSheetDictionary.characterSheet.jsonImport.imageError}
-        onRequestClose={onJsonImportImageErrorClose}
-        returnFocusRef={jsonImportReturnFocusRef}
       />
       <CharacterSheetErrorDialog
         closeButtonRef={errors.errorSummaryCloseButtonRef}

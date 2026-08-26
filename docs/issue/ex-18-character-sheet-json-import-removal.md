@@ -201,6 +201,7 @@ active documentationからも、JSONインポートを現在機能として扱�
 ```txt
 docs/requirements/character-sheet.md
 docs/architectures/character-sheet.md
+docs/architectures/character-sheet-server-snapshot-sample.json
 docs/testing.md
 docs/design/character-sheet/notes.md
 docs/TODO.md
@@ -470,21 +471,21 @@ docs/TODO.md
 
 - [ ] desktopのAction PaneにJSONインポートbuttonが存在しない。
 - [ ] tablet / mobileの操作UIにJSONインポートbuttonが存在しない。
-- [ ] JSON file inputが存在しない。
-- [ ] import確認dialogが存在しない。
-- [ ] import専用callback / state / ref / operationが残っていない。
-- [ ] import成功時のidなしlocal draft遷移codeが、他用途がなければ削除されている。
-- [ ] import専用画像処理が、他用途がなければ削除されている。
-- [ ] importだけを検証するtestが削除または現行contractへ整理されている。
-- [ ] DB保存、コピー保存、CCFOLIA等が使用する共用serialize / schema logicを誤って削除していない。
+- [x] JSON file inputが存在しない。
+- [x] import確認dialogが存在しない。
+- [x] import専用callback / state / ref / operationが残っていない。
+- [x] import成功時のidなしlocal draft遷移codeが、他用途がなければ削除されている。
+- [x] import専用画像処理が、他用途がなければ削除されている。
+- [x] importだけを検証するtestが削除または現行contractへ整理されている。
+- [x] DB保存、コピー保存、CCFOLIA等が使用する共用serialize / schema logicを誤って削除していない。
 
 ### 文言
 
-- [ ] active UIに`JSONインポート`操作が残っていない。
-- [ ] `9/1に削除`等の移行予告が残っていない。
-- [ ] import confirmation / success / failure / loading文言が残っていない。
-- [ ] HelpからJSONインポート節を削除している。
-- [ ] active documentationがJSONインポートを現在機能として説明していない。
+- [x] active UIに`JSONインポート`操作が残っていない。
+- [x] `9/1に削除`等の移行予告が残っていない。
+- [x] import confirmation / success / failure / loading文言が残っていない。
+- [x] HelpからJSONインポート節を削除している。
+- [x] active documentationがJSONインポートを現在機能として説明していない。
 - [ ] historical / audit recordをactive仕様化するために改変していない。
 
 ### User Copy Review
@@ -517,11 +518,11 @@ docs/TODO.md
 
 ### Quality
 
-- [ ] import関連のdead import / dead codeが残っていない。
-- [ ] repository-wide searchでactive import UI/copyの残存を確認している。
-- [ ] `npm run check`が成功している。
+- [x] import関連のdead import / dead codeが残っていない。
+- [x] repository-wide searchでactive import UI/copyの残存を確認している。
+- [x] `npm run check`が成功している。
 - [ ] frontendの必要なunit / component / hook / E2E testが成功している。
-- [ ] public buildが成功している。
+- [x] public buildが成功している。
 - [ ] full VRTが成功している。
 
 ### Date Gate

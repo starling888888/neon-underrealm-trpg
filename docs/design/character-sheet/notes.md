@@ -22,7 +22,7 @@
   - 必須の初期値を持つ直接編集の初期状態
   - 可変のスキル、縁、アイテム行を含む入力済み状態
   - エラーと警告が見える状態
-  - JSON importと全消去の破壊的操作に対する確認状態
+  - 全消去の破壊的操作に対する確認状態
   - CCFOLIAコピー成功の通知ダイアログ状態
   - 画像選択の失敗ダイアログ状態
 - local canonical snapshotの更新は、以後もユーザーの明示承認を必要とする。親Gate planに従い、G31までGit管理へ追加・変更しない。
@@ -32,7 +32,6 @@
 - 2026-07-29、ユーザー承認によりG22の未コミット差分を再確認し、`g22-credit-overage`と`g22-sumi-maximum-health`の各desktop / tablet / mobileを更新し、未選択で手動追加したwarningカテゴリの`g22-special-items-unselected-added`を同3 viewportで新規作成した。合計9枚のtarget限定比較は更新後にすべて通過し、local canonical snapshotは172枚となった。個別tooltip screenshotは作成せず、G31までGit管理へ追加・変更しない。
 - 2026-07-30、ユーザー明示承認によりG23の操作ペインと共通button変更を含む`@character-sheet` targetを更新した。full-page 6枚、buttonを含むsection、dialogを含む既存targetに、desktop操作ペイン1枚、tablet / mobileのfloating controls各1枚、開いた操作menu各1枚を追加し、local canonical snapshotは180枚となった。更新後のtarget通常比較は180件すべて通過した。G31までGit管理へ追加・変更しない。
 - 2026-07-30、ユーザー明示承認によりG25の変更targetだけを更新した。既存の`bonds-default`、`bonds-input`、`bonds-error`各desktop / tablet / mobileと、errorなしのtablet / mobile action menuを更新し、代表的な2 errorのdesktop status、tablet / mobile floating control・menu、desktop error dialog、errorなしのdesktop error dialogを追加した。21件のtarget限定通常比較が通り、local canonical snapshotは193枚となった。このG25の明示承認以外では、G31までsnapshotを追加・変更しない。
-- 2026-07-30、ユーザー明示承認によりG27のJSON input dialog 3 stateを追加した。`json-import-confirm`、`json-import-error`、`json-import-image-error`をdesktop / tablet / mobileのdialog locator screenshotで確認し、target限定通常比較9件が通った。local canonical snapshotは202枚となった。このG27の明示承認以外では、G31までsnapshotを追加・変更しない。
 - 2026-07-30、ユーザー明示承認によりG29の`reset-confirm` dialogをdesktop、tablet、mobileの`@character-sheet` targetへ追加した。titleなし、本文の可視改行、muted outlineの`キャンセル`、danger solidの`初期化`をdialog locatorで比較し、3枚のcanonical snapshotを更新した。target通常比較は3件すべて通過し、local canonical snapshotは205枚となった。ユーザーがbaseline更新とcommitを明示指示したため、この3枚だけをGit管理へ追加する。G31まで、それ以外のsnapshotを追加・変更しない。
 - 2026-07-30、ユーザー明示承認によりG28の`ccfolia-copy-confirm`、`ccfolia-copy-success`、`ccfolia-copy-failure` dialogをdesktop、tablet、mobileの`@character-sheet` targetへ追加した。確認dialogは指定本文、muted outlineの`キャンセル`、default solidの`コピー`を、通知dialogは指定本文とdefault solidの`確認`をdialog locatorで比較する。9枚のcanonical snapshotを追加し、更新後のtarget通常比較は9件すべて通過した。local canonical snapshotは214枚となった。ユーザーがbaseline更新とcommitを明示指示したため、この9枚だけをGit管理へ追加する。G31まで、それ以外のsnapshotを追加・変更しない。
 - 2026-07-30、ユーザー明示承認によりG30のHelp dialogを更新した。`help-dialog`、`help-dialog-middle`、`help-dialog-end`の各desktop / tablet / mobileをdialog locator screenshotで比較する。先頭・中間・最下部でheading `ヘルプ`と右上の閉じる操作が表示され、本文だけがscrollする状態をbaselineとする。9件のtarget限定通常比較が通り、local canonical snapshotは223枚となった。この9枚はG31までGit管理へ追加・変更しない。
@@ -97,8 +96,8 @@
 
 ### 操作領域
 
-- 対象操作は、キャラクター一覧、DB保存、コピー保存、DB削除、細かな説明を開く`?`、JSON入力、初期化、CCFOLIAコピーである。`?`は操作領域の左端に丸いbuttonとして置き、独立したHelp dialogを開く。JSON出力buttonは置かない。
-- desktopでは、form本文右の補助領域に操作を縦に配置する。操作領域の先頭には第一階層sectionへの`セクションにジャンプ` navigationを置き、その下にキャラクター一覧、DB保存、コピー保存、DB削除、`?`、JSON入力、CCFOLIAコピー、初期化、エラー状態をG5 issueの指定順で並べる。ページ見出し横の横並び操作menuは廃止する。
+- 対象操作は、キャラクター一覧、DB保存、コピー保存、DB削除、細かな説明を開く`?`、初期化、CCFOLIAコピーである。`?`は操作領域の左端に丸いbuttonとして置き、独立したHelp dialogを開く。JSON出力buttonは置かない。
+- desktopでは、form本文右の補助領域に操作を縦に配置する。操作領域の先頭には第一階層sectionへの`セクションにジャンプ` navigationを置き、その下にキャラクター一覧、DB保存、コピー保存、DB削除、`?`、CCFOLIAコピー、初期化、エラー状態をG5 issueの指定順で並べる。ページ見出し横の横並び操作menuは廃止する。
 - 狭幅レイアウトでは、右下にメニューボタンを配置し、クリックすると第一階層sectionへの`セクションにジャンプ` navigation、各操作button、エラー一覧の順に表示する。section navigationはbutton群の上に置き、子section・行・入力項目へのジャンプは置かない。
 - 狭幅レイアウトの右下メニューボタンは、scroll中も操作できるsticky controlとする。編集領域の末尾にはfloating操作と重ならない十分な下余白を設け、最下部までscrollしたときも最後の入力・追加・削除操作を隠さない。
 - 狭幅レイアウトでは、右下のメニューアイコンの上に、独立した青緑の丸い`?`ヘルプアイコンを置く。ヘルプアイコンを操作すると、menu内ではなく独立したヘルプdialogを開く。
@@ -145,7 +144,7 @@
 - キャラクター設定は基本情報のプロフィール入力群の下に、`設定`と展開アイコンだけを初期表示する。操作すると自由入力欄を表示する。
 - 数値入力欄は右揃えとし、必要以上に横へ広げず、値に見合う短い幅にする。空いた横幅は、算出値、ラベル、マスタ由来の読み取り専用情報へ配分する。
 - 全ての折りたたみ領域は初期状態で開く。複数セクションを同時に開ける。
-- 折りたたみの開閉状態はブラウザ内保存、character snapshot、JSON importの対象に含めない。
+- 折りたたみの開閉状態はブラウザ内保存、character snapshotの対象に含めない。
 - 算出値を別領域へ再掲するsummaryは設けない。要件で定める算出値は、それぞれの該当領域で表示する。
 - 計算式の文字列は、該当する自動算出値または最終値のlabelを操作すると開くtooltipで表示する。通常表示に固定の算出式文字列は置かない。
 - formula tooltipはsectionまたはviewportの上端に近いtriggerで下方向へ開き、上下左右とも読める範囲に表示する。副能力値だけの局所配置にはしない。すべてのtooltip triggerは対象文字列の直後に、薄いアクセントカラーの小さな丸い`?`indicatorを表示する。indicatorはtriggerの操作領域へ含め、支援技術へ重複して読ませない。
@@ -211,9 +210,9 @@
 
 - 最優先入力: このG5 blockと親issueの「キャラクターシートのクラウド操作」。既存notesと競合する場合はこのG5 blockを優先する。
 - 見出し行にはGoogle login / logoutと`キャラクター一覧`を置く。一覧はdialogで表示し、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名、PL名、改行表示する流儀／生き様、格、更新日、radio選択、ログイン時の`自分のキャラクターのみ` filter、client-side 10件paginationを扱う。PC名は一覧幅の30%、PL名は20%を取り、更新日は省略しない。長いPC名・PL名と流儀／生き様はellipsisとしてよく、横scrollを発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日だけは最小限の列幅にしてclipを避ける。dialogは固定高にし、header、説明・filter、paginationを固定したまま行領域だけを縦scrollさせる。page、radio、filterの切替時は行領域を先頭へ戻す。未設定値は`-`とする。
-- desktop Action Paneとtablet / mobile control paneには、キャラクター一覧、DB保存、コピー保存、DB削除、Help、JSONインポート、CCFOLIAコピー、初期化をG5 issueの指定順で置く。JSONエクスポートbuttonは表示しない。インポートは2行目のdanger色の削除予告を表示し、tablet / mobileでは横幅いっぱいにする。
+- desktop Action Paneとtablet / mobile control paneには、キャラクター一覧、DB保存、コピー保存、DB削除、Help、CCFOLIAコピー、初期化をG5 issueの指定順で置く。JSONエクスポートbuttonは表示しない。
 - DB保存、コピー保存、DB削除は確認または入力dialogを使う。DB保存の新規`全員に公開する`checkboxは既定ON、コピー保存は既定OFFとする。Toastは結果通知だけを担い、success / error、5秒、自動消去、新着順stack、manual closeなしとする。
-- non-ownerまたは未認証のremote characterでは、character dataを変更する操作だけをread-onlyにする。キャラクター一覧、初期化、インポート、CCFOLIAコピー、Help、login / logoutは操作可能に保つ。
+- non-ownerまたは未認証のremote characterでは、character dataを変更する操作だけをread-onlyにする。キャラクター一覧、初期化、CCFOLIAコピー、Help、login / logoutは操作可能に保つ。
 - Help本文は`.raw/character-sheet-help.md`のユーザー編集後内容をcomponent markupへ反映する。本文の文言はdesign作業で独自に改稿しない。
 
 ## 参照正本と制約
@@ -292,7 +291,7 @@
 - ブラウザ内の最新1キャラクター自動保存・復元。復元完了前に保存済みデータを上書きしない状態を伝える。
 - 構造・型・現在のマスタIDとの照合に失敗して自動復元できない場合は、title / headerなしの既存dialogで本文「自動復元に失敗しました。」と`確認`buttonだけを表示する。確認後は初期フォーム値を編集できる。localStorage APIの読取り・書込み例外は`console.error`だけで握りつぶし、dialogを表示しない。
 - VRTは`@persistence-restore-error`と`@cybernetics-part-error`で、復元失敗dialogおよび復元後の固定サイバネ部位errorをdesktop / tablet / mobileの局所snapshotとして比較する。
-- 現在状態の置換確認を伴うJSON import、編集内容を維持する失敗フィードバック、確認を伴う全消去
+- 編集内容を維持する失敗フィードバック、確認を伴う全消去
 - CCFOLIAキャラクターデータのcopy操作、およびClipboard APIの成功・失敗フィードバック
 - スキルとアイテム効果は現在のマスタデータを参照するため、ルール更新に伴い表示が変わりうることを説明するhelp
 

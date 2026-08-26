@@ -21,7 +21,6 @@ type CharacterSheetActionPaneProps = {
   isCcfoliaCopyDisabled: boolean;
   isCopySaveDisabled?: boolean;
   isDeleteDisabled?: boolean;
-  isImportDisabled: boolean;
   isResetDisabled: boolean;
   isSaveDisabled?: boolean;
   isMenuOpen: boolean;
@@ -32,7 +31,6 @@ type CharacterSheetActionPaneProps = {
   onCopySave?: () => void;
   onDelete?: () => void;
   onSave?: () => void;
-  onImport: (trigger: HTMLButtonElement) => void;
   onMenuToggle: () => void;
   onReset: (trigger: HTMLButtonElement) => void;
   onReviewErrors: () => void;
@@ -56,7 +54,6 @@ function CharacterSheetActionPane({
   isCcfoliaCopyDisabled,
   isCopySaveDisabled = false,
   isDeleteDisabled = false,
-  isImportDisabled,
   isResetDisabled,
   isSaveDisabled = false,
   isMenuOpen,
@@ -67,7 +64,6 @@ function CharacterSheetActionPane({
   onCopySave = () => {},
   onDelete = () => {},
   onSave = () => {},
-  onImport,
   onMenuToggle,
   onReset,
   onReviewErrors,
@@ -107,13 +103,11 @@ function CharacterSheetActionPane({
               isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
               isCopySaveDisabled={isCopySaveDisabled}
               isDeleteDisabled={isDeleteDisabled}
-              isImportDisabled={isImportDisabled}
               isResetDisabled={isResetDisabled}
               isSaveDisabled={isSaveDisabled}
               onCcfoliaCopy={onCcfoliaCopy}
               onCopySave={onCopySave}
               onDelete={onDelete}
-              onImport={onImport}
               onSave={onSave}
               onReset={onReset}
             />
@@ -147,13 +141,11 @@ function CharacterSheetActionPane({
             isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
             isCopySaveDisabled={isCopySaveDisabled}
             isDeleteDisabled={isDeleteDisabled}
-            isImportDisabled={isImportDisabled}
             isResetDisabled={isResetDisabled}
             isSaveDisabled={isSaveDisabled}
             onCcfoliaCopy={onCcfoliaCopy}
             onCopySave={onCopySave}
             onDelete={onDelete}
-            onImport={onImport}
             onSave={onSave}
             onReset={onReset}
           />
@@ -255,13 +247,11 @@ function ActionButtons({
   isCcfoliaCopyDisabled,
   isCopySaveDisabled,
   isDeleteDisabled,
-  isImportDisabled,
   isResetDisabled,
   isSaveDisabled,
   onCcfoliaCopy,
   onCopySave,
   onDelete,
-  onImport,
   onSave,
   onReset,
 }: Pick<
@@ -269,13 +259,11 @@ function ActionButtons({
   | "isCcfoliaCopyDisabled"
   | "isCopySaveDisabled"
   | "isDeleteDisabled"
-  | "isImportDisabled"
   | "isResetDisabled"
   | "isSaveDisabled"
   | "onCcfoliaCopy"
   | "onCopySave"
   | "onDelete"
-  | "onImport"
   | "onSave"
   | "onReset"
 >) {
@@ -316,15 +304,6 @@ function ActionButtons({
         size="medium"
       >
         {actions.reset}
-      </CharacterSheetButton>
-      <CharacterSheetButton
-        className={styles.import}
-        disabled={isImportDisabled}
-        onClick={(event) => onImport(event.currentTarget)}
-        size="medium"
-      >
-        <span>{actions.import}</span>
-        <small>{actions.importRemovalNotice}</small>
       </CharacterSheetButton>
       <CharacterSheetButton
         className={styles.ccfoliaCopy}

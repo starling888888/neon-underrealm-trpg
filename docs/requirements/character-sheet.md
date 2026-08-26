@@ -31,7 +31,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - PC基本ビルド、能力値、副能力値、経験点、信用、縁
 - スキル、攻撃・リアクション・非戦闘判定、アイテム
 - エラー・警告表示
-- JSONインポート、idなしlocal draftの端末内保存・復元、全消去、クラウド保存とキャラクター一覧
+- idなしlocal draftの端末内保存・復元、全消去、クラウド保存とキャラクター一覧
 - CCFOLIAキャラクター駒データのコピー
 - desktop、tablet、mobileでの利用
 
@@ -48,7 +48,7 @@ idなしlocal draft 1件の端末内保存・復元と、Firebase Authentication
 
 数値入力は右揃えの整数とする。レベル、経験点、信用、能力値関連の空欄は計算上`0`として扱う。プライマリ流儀と生き様のレベルは`1`以上、その他流儀と取得経験点・取得信用は`0`以上、通常スキルと生き様bonusの取得レベルは選択中マスタの最大Lv以下かつ`1`以上とし、手動修正値には負数を許可する。これらの下限・最大Lvを外れる値は保持して局所エラーとし、入力を拒否・clamp・自動補正しない。取得信用、融通した信用、融通された信用は`0`以上の整数だけを受け付け、空欄になる操作では`0`へ戻す。小銭修正は負数を許可する整数とし、空欄になる操作では`0`へ戻す。
 
-不整合を検出しても、入力拒否、値の自動補正、入力済みデータの自動削除、保存・出力・端末内保存の禁止を行わない。該当入力・行へエラーまたは警告を表示し、区分合計超過、経験点不足、または個別要件が区分状態を定める重複など区分全体に関わる不整合だけは該当セクションもエラー状態にする。通常スキルと生き様bonusの最大Lv違反およびLv`1`未満は、該当入力・行だけをエラー状態にする。ただし、JSON入力または端末内復元で現在のマスタにないIDを検出した場合は、該当する選択値または可変行を復元対象から除外する。
+不整合を検出しても、入力拒否、値の自動補正、入力済みデータの自動削除、保存・出力・端末内保存の禁止を行わない。該当入力・行へエラーまたは警告を表示し、区分合計超過、経験点不足、または個別要件が区分状態を定める重複など区分全体に関わる不整合だけは該当セクションもエラー状態にする。通常スキルと生き様bonusの最大Lv違反およびLv`1`未満は、該当入力・行だけをエラー状態にする。ただし、端末内復元で現在のマスタにないIDを検出した場合は、該当する選択値または可変行を復元対象から除外する。
 
 ## プロフィールと設定
 
@@ -203,27 +203,24 @@ idなしlocal draft 1件の端末内保存・復元と、Firebase Authentication
 - URLに`?character=<id>`がないidなしlocal draftだけを、端末内の作業用characterとして保存・復元する。`?character=<id>`があるremote characterはそのidをroute上のidentityとし、フォームと画像はremote responseを表示する間だけmemoryに置く。クラウド保存と`キャラクター一覧`では、Firebase AuthenticationのSDK管理下で認証状態を永続化し、API requestには取得時点で有効なFirebase ID Tokenだけを渡す。ID Tokenをアプリケーション独自のbrowser persistenceへ保存しない。
 - Firebase Authenticationの初回状態確定では現在のpageを維持する。確定後にuidがlogin、logout、user切替で変化した場合は、remote ownershipの専用再取得stateを持たず、page全体を再読み込みして初期ロード経路で再評価する。
 - D1 metadata、shared API contract、frontend metadataは`isPublic`を持つ。既存D1 recordはmigration後にpublicとして扱う。未ログインの一覧はpublic characterだけ、ログイン済みの一覧はpublic characterと自分が所有するprivate characterだけを返す。private characterをowner以外または未認証で個別取得した場合は、存在しないIDと区別しない`404`とする。
-- 現在のcharacterはidなしlocal / owner remote / non-owner remote / unauthenticated remoteを区別する。remote routeではFirebase Authenticationの初期化完了後にURLのidでGETし、route変更・認証状態変更で古くなったrequestのresponseは反映しない。login / logout / user切替後はpage全体を再読み込みして初期ロード経路で所有状態を再評価する。remote IDと`isOwner`をJSON import dataやbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
+- 現在のcharacterはidなしlocal / owner remote / non-owner remote / unauthenticated remoteを区別する。remote routeではFirebase Authenticationの初期化完了後にURLのidでGETし、route変更・認証状態変更で古くなったrequestのresponseは反映しない。login / logout / user切替後はpage全体を再読み込みして初期ロード経路で所有状態を再評価する。remote IDと`isOwner`をbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
 - `キャラクター一覧`はPC名、PL名、流儀／生き様、格を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。流儀／生き様は折り返さず、長いPC名・PL名・流儀／生き様はellipsisで表示してよい。横scrollは発生させない。mobileではPC名とPL名だけを表示する。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。cache件数の縮小で現在pageが存在しなくなった場合は、表示pageとstateを最終有効pageへclampして同じくscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは`?character=<id>`へ遷移してremote GETとrestoreを開始し、個別閲覧pageは追加しない。
-- non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、DB保存、DB削除、初期化をread-onlyまたはdisabledにする。一方で、`キャラクター一覧`、JSONインポート、CCFOLIAコピー、Help、login / logoutは利用可能とする。JSONインポートは入力値と画像をidなしlocal draftとして保存してからquery parameterを外す。remote DB recordを削除・更新しない。
+- non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、DB保存、DB削除、初期化をread-onlyまたはdisabledにする。一方で、`キャラクター一覧`、CCFOLIAコピー、Help、login / logoutは利用可能とする。
 - `DB保存`はログインとPC名を必須とし、idなしlocal draftの初回保存ではserver発行IDの`?character=<id>`へ遷移する前にlocal draftを削除する。owner remoteでは同じidを上書きし、remote値はbrowser persistenceへ保存しない。保存確認dialogではデータと画像をserverへ保存することを説明する。新規保存の`全員に公開する`は既定ON、既存remoteの上書きでは現在の`isPublic`を既定とする。
 - DB保存request全体は8 MiBまで、snapshotの`imageBase64String`は4 MiBまでとする。frontendは送信直前にUTF-8 byte長でrequest全体を検査し、shared schemaとbackend body limitも同じ上限を使う。
 - `コピー保存`はログイン済みならpublic non-owner remoteにも利用可能とする。PC名とPL名を入力して新しいIDへ保存し、`全員に公開する`の既定はOFF、コピー元の画像は引き継がない。成功後は新しいowner characterの`?character=<id>`へ切り替える。
 - `DB削除`はログイン済みowner remoteだけに許可し、確認後にDB recordを削除する。成功後はquery parameterを外してidなしlocal draftへ遷移し、削除したremote characterのform・画像をlocal draftとして保持しない。
 - JSONエクスポートのユーザー向けbuttonはAction Pane / control paneから削除する。共用serialize logicはDB保存、コピー保存、CCFOLIA、testなどから必要な範囲で維持する。
-- JSONインポートは移行期間として維持する。buttonの2行目にdanger色の小さい文字で`DB保存に移行するため9/1に削除されます。`と表示し、tablet / mobileでは横幅いっぱいにする。日付による自動削除は実装せず、9/1の実削除は別の明示的なcode changeで扱う。
 - 結果通知だけを目的とするsuccess / error dialogは、success / error、5秒後の自動消去、新着順stack、manual closeなしの共通Toastへ置き換える。確認・入力・Helpのdialog責務はToastへ移さない。
 - API通信不能、APIの5xx、未知の非同期例外、React未捕捉例外は、結果通知の例外としてfatal error dialogへ集約する。dialogのaccessible nameと見出しは`予期しないエラーが発生しました`、本文は`ページを再読み込みしてください。未保存の変更は失われます。`、唯一の操作は`再読み込み`とする。初期focusは同buttonへ置き、Escape、dialog外click、閉じるbuttonではdismissできない。401 / 403 / 404、入力検証、画像形式不正、ユーザー操作のcancelは既存の個別通知またはdialogを維持する。419はtoken refreshを1回試行し、再度419ならlogoutとsession-expired通知を行い、fatal error dialogへ送らない。
 - Help本文は、現行componentの文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映する。エージェントは本文を独自に改稿しない。
-- JSON入出力の具体的な構造、画像表現、空欄と明示的な`0`の扱い、スキーマバージョンの扱いは、対応する承認済みissueの着手前に定める。スキルLvの下限・最大Lv超過はJSON入力・端末内復元で除外または自動補正せず、構造・型を受理した値をRHFへ反映して局所エラーとする。派生値は読み込み後に再計算する。
 - idなしlocal draftだけを自動保存・復元する。画像以外のフォーム値は非default値だけをlocalStorageへ保存し、default値へ戻った場合は保存済みフォームを削除する。local draftの画像はIndexedDBの独立したrecordとして初期化時に読み、recordがない場合は未選択状態とする。remote characterではlocalStorage / IndexedDBを読まず書かず、remote responseをmemoryだけで表示する。画像recordの読取り・復元の失敗は、フォーム値のlocalStorage復元を停止・失敗させない。復元が完了するまで空データで保存済みデータを上書きしない。
 - 全消去はidなしlocal draftでだけ利用可能とし、確認後に入力、画像、可変行、エラー・警告、端末内保存を初期化する。
 - JSONとして解析できない、必須構造または型が不正である場合は読み込みを失敗として扱い、現在の編集内容と端末内保存を変更しない。現在のマスタにないIDを含む単一選択値は空欄化し、可変行は除外する。除外後にfield arrayの最小行数を下回る場合は、必要な空欄行だけを追加する。固定rowのidentityまたは関連行参照を保てない場合は、現在の編集内容と端末内保存を変更せずエラーを表示する。
 - CCFOLIAのClipboard API用JSONを生成してコピーする。具体的なオブジェクト形状、出力項目、既定順、空欄・未算出値の表現は、対応する承認済みissueの着手前に定める。
 - ヘルプは、スキルとアイテムの効果表示が現在のマスタデータを参照するため、ルール更新時に表示内容が変わりうることを説明する。
-- JSONインポートはファイル選択後、現在の編集内容と端末内保存を置換することを確認してから実行する。キャンセル時は何も変更しない。不正なJSONの失敗時は「JSONを読み込めませんでした。ファイルの形式を確認してください。」の趣旨を通知する。
 - CCFOLIAコピーの出力対象とセッション中状態の扱いは、対応する承認済みissueの着手前に定める。
-- JSONインポート、全消去、DB保存、コピー保存、DB削除、対応スキルを持つその他流儀の削除は確認または入力dialogを表示する。警告、CCFOLIAコピーの成功または失敗、画像選択・保存・復元、DB操作の結果通知はToastで通知する。ブラウザ組み込みの`alert`は使用しない。
+- 全消去、DB保存、コピー保存、DB削除、対応スキルを持つその他流儀の削除は確認または入力dialogを表示する。警告、CCFOLIAコピーの成功または失敗、画像選択・保存・復元、DB操作の結果通知はToastで通知する。ブラウザ組み込みの`alert`は使用しない。
 - 狭幅レイアウトでは、右下のstickyな操作メニューの上に、細かな説明を開く丸い`?`ボタンを置く。操作時はブラウザ組み込みの`alert`ではなく説明ダイアログを表示する。
 
 ## 非機能要件
@@ -231,7 +228,7 @@ idなしlocal draft 1件の端末内保存・復元と、Firebase Authentication
 - 画面の具体的な構成、レスポンシブレイアウト、入力部品、ダイアログ、通知、エラー表示、アクセシビリティはdesignで定義する。
 - ページタイトルの`h1`はReact Islandの外でAstro pageが出力する。heading構造を保つためvisually hiddenにし、Island内の操作領域はページタイトルを重複表示しない。
 - formのsectionはdesktopを含めてDOM順どおりの1列に積む。複数columnへsectionを振り分けるlayoutは用いない。`48rem`以上ではform本文を最大`44rem`にして中央寄せし、desktopではmain右端に通常のPageTocと同じ`15rem`幅の補助領域を置く。form本文は、この補助領域を除いた領域内で中央寄せする。
-- desktopの補助領域には、formの第一階層sectionへ移動するページ内リンクだけを置く。子section、行、入力項目へのリンクは置かない。補助領域のsection navigationの下には、キャラクター一覧、DB保存、コピー保存、DB削除、ヘルプ、JSON入力、CCFOLIAコピー、初期化、エラー状態を縦に配置する。既存のページ見出し横の横並び操作menuは用いない。
+- desktopの補助領域には、formの第一階層sectionへ移動するページ内リンクだけを置く。子section、行、入力項目へのリンクは置かない。補助領域のsection navigationの下には、キャラクター一覧、DB保存、コピー保存、DB削除、ヘルプ、CCFOLIAコピー、初期化、エラー状態を縦に配置する。既存のページ見出し横の横並び操作menuは用いない。
 - 狭幅レイアウトの操作menuは、action button群の上に第一階層sectionだけのページ内ジャンプを置く。section linkを選ぶと、固定Headerを避けて対象sectionへsmooth scrollする。section navigationの各buttonは下向きiconと下線でジャンプ操作だと分かるようにし、現在位置またはクリック対象のaccent表示は行わない。子section、行、入力項目へのジャンプや強調は含めない。
 - character-sheetのsite menu railは`64rem`以上で表示する。`64rem`未満ではrailを隠し、Headerのサイトメニューボタンからdrawerを開く。desktopのtext action railは`84rem`以上だけで表示し、`84rem`未満でもtablet / mobile用のfloating action icon controlsを維持する。
 - `/character-sheet/`を静的公開routeとして提供する。ページ固有のサイトメニュー表示、section navigation、レイアウトはdesignで定義する。

@@ -22,20 +22,17 @@ function renderActionPane({
 } = {}) {
   const onCcfoliaCopyConfirmed = vi.fn(async () => true);
   const onCcfoliaCopyResult = vi.fn();
-  const onImport = vi.fn();
   const onResetConfirmed = vi.fn(async () => {});
   const hook = renderHook(
     ({ isResetErrorOpen, isRootOperationInProgress }) =>
       useActionPane({
         errorSummary: emptyErrorSummary,
         isCcfoliaCopyDisabled: false,
-        isImportDisabled: false,
         isResetErrorOpen,
         isRootOperationInProgress,
         isResetDisabled: false,
         onCcfoliaCopyConfirmed,
         onCcfoliaCopyResult,
-        onImport,
         onResetConfirmed,
       }),
     { initialProps: { isResetErrorOpen, isRootOperationInProgress } },
@@ -45,7 +42,6 @@ function renderActionPane({
     ...hook,
     onCcfoliaCopyConfirmed,
     onCcfoliaCopyResult,
-    onImport,
     onResetConfirmed,
   };
 }
@@ -59,7 +55,6 @@ function renderDeferredResetActionPane() {
       }),
   );
   const onCcfoliaCopyConfirmed = vi.fn(async () => true);
-  const onImport = vi.fn();
   const hook = renderHook(() => {
     const [isRootOperationInProgress, setIsRootOperationInProgress] =
       useState(false);
@@ -75,12 +70,10 @@ function renderDeferredResetActionPane() {
     return useActionPane({
       errorSummary: emptyErrorSummary,
       isCcfoliaCopyDisabled: false,
-      isImportDisabled: false,
       isResetErrorOpen: false,
       isRootOperationInProgress,
       isResetDisabled: false,
       onCcfoliaCopyConfirmed,
-      onImport,
       onResetConfirmed,
     });
   });

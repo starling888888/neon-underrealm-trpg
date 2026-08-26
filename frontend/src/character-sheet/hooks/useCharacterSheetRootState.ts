@@ -10,7 +10,6 @@ import {
   decodeImportedCharacterImage,
 } from "../browser/character-image";
 import { downloadJsonFile } from "../browser/json-download";
-import { readCharacterSheetJsonFile } from "../browser/json-import";
 import { characterSheetDictionary } from "../dictionary";
 import {
   type CharacterSheetFormValues,
@@ -36,8 +35,6 @@ import type {
 } from "../schemas/character-image";
 import { characterSheetFormSchema } from "../schemas/character-sheet-form";
 import {
-  type CharacterSheetJsonImport,
-  parseCharacterSheetJsonImport,
   parseCharacterSheetRestoreJson,
   parseCharacterSheetRestoreValue,
 } from "../schemas/character-sheet-persistence";
@@ -53,7 +50,6 @@ type CharacterSheetRootOperations = {
   deleteCharacterImage: typeof deleteCharacterImage;
   deleteCharacterSheetForm: typeof deleteCharacterSheetForm;
   downloadJsonFile: typeof downloadJsonFile;
-  readCharacterSheetJsonFile: typeof readCharacterSheetJsonFile;
   readCharacterImage: typeof readCharacterImage;
   writeCharacterImage: typeof writeCharacterImage;
   readCharacterSheetForm: typeof readCharacterSheetForm;
@@ -69,7 +65,6 @@ const defaultOperations: CharacterSheetRootOperations = {
   deleteCharacterImage,
   deleteCharacterSheetForm,
   downloadJsonFile,
-  readCharacterSheetJsonFile,
   readCharacterImage,
   writeCharacterImage,
   readCharacterSheetForm,
@@ -131,18 +126,11 @@ export default function useCharacterSheetRootState(
   const [imageError, setImageError] = useState<CharacterImageErrorState | null>(
     null,
   );
-  const [isImageErrorFromJsonImport, setIsImageErrorFromJsonImport] =
-    useState(false);
   const [isImageErrorFromReset, setIsImageErrorFromReset] = useState(false);
   const [isFormRestoring, setIsFormRestoring] = useState(true);
   const [isCharacterImageRestoring, setIsCharacterImageRestoring] =
     useState(true);
   const [isFormRestoreErrorOpen, setIsFormRestoreErrorOpen] = useState(false);
-  const [pendingJsonImport, setPendingJsonImport] =
-    useState<CharacterSheetJsonImport | null>(null);
-  const [isJsonImportErrorOpen, setIsJsonImportErrorOpen] = useState(false);
-  const [isJsonImportImageErrorOpen, setIsJsonImportImageErrorOpen] =
-    useState(false);
   const [formResetVersion, setFormResetVersion] = useState(0);
   const [remoteCharacter, setRemoteCharacter] =
     useState<RemoteCharacterState | null>(null);
@@ -150,14 +138,8 @@ export default function useCharacterSheetRootState(
   const formRestoreReturnFocusRef = useRef<HTMLInputElement>(null);
   const imageReturnFocusRef = useRef<HTMLButtonElement>(null);
   const imageErrorCloseButtonRef = useRef<HTMLButtonElement>(null);
-  const jsonImportInputRef = useRef<HTMLInputElement>(null);
-  const jsonImportReturnFocusRef = useRef<HTMLButtonElement>(null);
-  const jsonImportErrorConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const hasCommittedImageRef = useRef(false);
   const isLocalDraftPersistenceSuspendedRef = useRef(false);
-  const isJsonImportReadingRef = useRef(false);
-  const [shouldRestoreJsonImportFocus, setShouldRestoreJsonImportFocus] =
-    useState(false);
   const resetForm = useCallback(
     (values: CharacterSheetFormValues) => {
       form.reset(values);
@@ -176,13 +158,6 @@ export default function useCharacterSheetRootState(
     },
     [operations],
   );
-
-  useEffect(() => {
-    if (!shouldRestoreJsonImportFocus || rootOperation !== null) return;
-
-    setShouldRestoreJsonImportFocus(false);
-    jsonImportReturnFocusRef.current?.focus();
-  }, [rootOperation, shouldRestoreJsonImportFocus]);
 
   useEffect(() => {
     remoteCharacterIdRef.current = remoteCharacterId;
@@ -215,7 +190,6 @@ export default function useCharacterSheetRootState(
       })
       .catch(() => {
         if (isCurrent && !hasCommittedImageRef.current) {
-          setIsImageErrorFromJsonImport(false);
           setImageError({ code: "restore" });
         }
       })
@@ -312,7 +286,6 @@ export default function useCharacterSheetRootState(
 
   const onCharacterImageSelected = useCallback(
     async (file: File): Promise<void> => {
-      setIsImageErrorFromJsonImport(false);
       setIsImageErrorFromReset(false);
       try {
         await runRootOperation(
@@ -326,7 +299,6 @@ export default function useCharacterSheetRootState(
           },
         );
       } catch (error) {
-        setIsImageErrorFromJsonImport(false);
         setIsImageErrorFromReset(false);
         setImageError(toImageErrorState(error));
       }
@@ -335,7 +307,6 @@ export default function useCharacterSheetRootState(
   );
 
   const onCharacterImageCleared = useCallback(async (): Promise<void> => {
-    setIsImageErrorFromJsonImport(false);
     setIsImageErrorFromReset(false);
     try {
       await runRootOperation(
@@ -347,7 +318,6 @@ export default function useCharacterSheetRootState(
         },
       );
     } catch (error) {
-      setIsImageErrorFromJsonImport(false);
       setIsImageErrorFromReset(false);
       setImageError(toImageErrorState(error));
     }
@@ -361,7 +331,6 @@ export default function useCharacterSheetRootState(
     )
       return;
 
-    setIsImageErrorFromJsonImport(false);
     setIsImageErrorFromReset(false);
     try {
       await runRootOperation(
@@ -394,7 +363,6 @@ export default function useCharacterSheetRootState(
         },
       );
     } catch (error) {
-      setIsImageErrorFromJsonImport(false);
       setIsImageErrorFromReset(true);
       setImageError(toImageErrorState(error));
     }
@@ -435,131 +403,6 @@ export default function useCharacterSheetRootState(
     },
     [operations, rootOperation, runRootOperation],
   );
-
-  const onJsonImportRequested = useCallback(
-    (trigger: HTMLButtonElement): void => {
-      if (
-        isCharacterImageRestoring ||
-        rootOperation !== null ||
-        isJsonImportReadingRef.current
-      )
-        return;
-
-      jsonImportReturnFocusRef.current = trigger;
-      jsonImportInputRef.current?.click();
-    },
-    [isCharacterImageRestoring, rootOperation],
-  );
-
-  const onJsonImportFileSelected = useCallback(
-    async (file: File): Promise<void> => {
-      if (rootOperation !== null || isJsonImportReadingRef.current) return;
-
-      isJsonImportReadingRef.current = true;
-      setPendingJsonImport(null);
-      setIsJsonImportErrorOpen(false);
-      try {
-        await runRootOperation(
-          characterSheetDictionary.characterSheet.jsonImport.loading,
-          async () => {
-            const parsed = parseCharacterSheetJsonImport(
-              await operations.readCharacterSheetJsonFile(file),
-            );
-            if (parsed === null) {
-              setIsJsonImportErrorOpen(true);
-              return;
-            }
-
-            setPendingJsonImport(parsed);
-          },
-        );
-      } catch {
-        setIsJsonImportErrorOpen(true);
-      } finally {
-        isJsonImportReadingRef.current = false;
-      }
-    },
-    [operations, rootOperation, runRootOperation],
-  );
-
-  const onJsonImportConfirmed = useCallback(async (): Promise<boolean> => {
-    const imported = pendingJsonImport;
-    if (imported === null) return false;
-
-    setPendingJsonImport(null);
-    let shouldRestoreFocus = true;
-    try {
-      await runRootOperation(
-        characterSheetDictionary.characterSheet.jsonImport.loading,
-        async () => {
-          // JSON imports always become the one local, unsaved character. This
-          // write must finish before the Container removes a remote route.
-          persistLocalDraftForm(imported.values);
-          resetForm(imported.values);
-
-          if (
-            imported.imageBase64String === null ||
-            imported.imageBase64String === undefined
-          ) {
-            try {
-              await operations.deleteCharacterImage();
-              hasCommittedImageRef.current = true;
-              setCharacterImage(null);
-            } catch (error) {
-              shouldRestoreFocus = false;
-              setIsImageErrorFromJsonImport(true);
-              setImageError(toImageErrorState(error));
-            }
-            return;
-          }
-
-          let image: CharacterImageRecord;
-          try {
-            image = await operations.decodeImportedCharacterImage(
-              String(imported.imageBase64String),
-            );
-          } catch {
-            shouldRestoreFocus = false;
-            try {
-              await operations.deleteCharacterImage();
-              hasCommittedImageRef.current = true;
-              setCharacterImage(null);
-            } catch {
-              // The malformed-image notice remains the actionable user feedback.
-            }
-            setIsJsonImportImageErrorOpen(true);
-            return;
-          }
-
-          try {
-            await operations.writeCharacterImage(image);
-            hasCommittedImageRef.current = true;
-            setCharacterImage(image);
-          } catch (error) {
-            shouldRestoreFocus = false;
-            setIsImageErrorFromJsonImport(true);
-            setImageError(toImageErrorState(error));
-          }
-        },
-      );
-    } catch (error) {
-      shouldRestoreFocus = false;
-      setIsImageErrorFromJsonImport(true);
-      setImageError(toImageErrorState(error));
-      return false;
-    }
-    if (shouldRestoreFocus) {
-      setShouldRestoreJsonImportFocus(true);
-    }
-    return !isLocalCharacter;
-  }, [
-    isLocalCharacter,
-    operations,
-    pendingJsonImport,
-    persistLocalDraftForm,
-    resetForm,
-    runRootOperation,
-  ]);
 
   const bindRemoteCharacter = useCallback(
     ({ id, metadata }: CharacterSheet) => {
@@ -684,11 +527,8 @@ export default function useCharacterSheetRootState(
     form,
     formResetVersion,
     imageError,
-    isImageErrorFromJsonImport,
     isImageErrorFromReset,
     imageErrorCloseButtonRef,
-    isJsonImportErrorOpen,
-    isJsonImportImageErrorOpen,
     imageReturnFocusRef,
     formRestoreConfirmButtonRef,
     formRestoreReturnFocusRef,
@@ -701,19 +541,9 @@ export default function useCharacterSheetRootState(
     onCharacterImageOperationStarted,
     onCcfoliaCopy,
     onJsonExport,
-    onJsonImportConfirmed,
-    onJsonImportFileSelected,
-    onJsonImportRequested,
     onResetConfirmed,
-    jsonImportErrorConfirmButtonRef,
-    jsonImportInputRef,
-    jsonImportReturnFocusRef,
-    pendingJsonImport,
     setImageError,
     setIsFormRestoreErrorOpen,
-    setIsJsonImportErrorOpen,
-    setIsJsonImportImageErrorOpen,
-    setPendingJsonImport,
     rootOperation,
     remoteCharacter,
     restoreRemoteCharacter,

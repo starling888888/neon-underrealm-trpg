@@ -47,8 +47,6 @@ export const characterSheetDictionary = {
       errorsHeading: "エラー",
       export: "エクスポート",
       help: "ヘルプ",
-      import: "インポート",
-      importRemovalNotice: "DB保存に移行するため9/1に削除されます。",
       menuLabel: "キャラクターシートの操作メニュー",
       noErrors: "エラーはありません。",
       openMenu: "操作メニューを開く",
@@ -190,17 +188,6 @@ export const characterSheetDictionary = {
       preview: "選択したキャラクター画像",
       replaceFile: "画像を差し替え",
       replaceFileOrDrop: "画像を差し替えまたはドロップ",
-    },
-    jsonImport: {
-      confirm:
-        "JSONを読み込むと、現在の入力内容とブラウザに保存された未保存のキャラクターが読み込んだ内容へ置き換わります。\nDB上のキャラクターを表示している場合も、そのキャラクター自体は変更されず、読み込んだ内容を未保存のキャラクターとして表示します。よろしいですか？",
-      confirmLabel: "JSON入力の確認",
-      error: "JSONを読み込めませんでした。ファイルの形式を確認してください。",
-      errorLabel: "JSON入力の失敗",
-      imageError: "入力データの画像に誤りがあり表示できませんでした。",
-      imageErrorLabel: "入力データの画像の誤り",
-      imageOmitted: "画像を読み込めませんでした。画像を除いて読み込みました。",
-      loading: "JSONを読み込んでいます",
     },
     persistence: {
       copySaveError: "コピー保存に失敗しました。",

@@ -238,29 +238,6 @@ export default function CharacterSheetHelpDialog({
         </section>
 
         <section className={styles.section}>
-          <h3>インポート</h3>
-          <p>
-            「<strong>インポート</strong>
-            」では、旧形式で保存したキャラクターシートのJSONファイルを読み込めます。
-          </p>
-          <p>
-            インポートした内容は、DBに保存されていないキャラクターとして読み込まれます。
-          </p>
-          <p>
-            すでにブラウザへ保存されている未保存のキャラクターがある場合、その入力内容と画像はインポートした内容へ置き換わります。
-          </p>
-          <p>
-            DB上のキャラクターを表示している状態でインポートしても、そのDB上のキャラクター自体は変更されません。インポート後は、読み込んだ内容を未保存のキャラクターとして表示します。
-          </p>
-          <p>
-            <strong>
-              DB保存への移行に伴い、インポート機能は9/1に削除予定です。
-            </strong>
-            必要な旧データがある場合は、それまでにインポートしてDB保存してください。
-          </p>
-        </section>
-
-        <section className={styles.section}>
           <h3>CCFOLIAコピー</h3>
           <p>
             CCFOLIAでコマを作成する場合は、入力を終えてから「

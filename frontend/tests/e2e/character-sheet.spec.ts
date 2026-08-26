@@ -1,19 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { characterSheetDefaultValues } from "../../src/character-sheet/form/values";
 import { siteBaseUrl, siteViewports } from "../support/site";
-
-const importedCharacterImageBase64 =
-  "UklGRiIAAABXRUJQVlA4IBYAAADQAQCdASoBAAEALmk0mk0iIiIiIgBoSywA";
-
-function createCharacterSheetJsonImport() {
-  const values = structuredClone(characterSheetDefaultValues);
-  values.profile.pcName = "JSON入力PC";
-
-  return {
-    ...values,
-    imageBase64String: importedCharacterImageBase64,
-  };
-}
 
 test.describe("character sheet page", () => {
   test("opens the CCFOLIA confirmation dialog from every action pane", async ({
@@ -40,50 +26,6 @@ test.describe("character sheet page", () => {
       await page.keyboard.press("Escape");
       await expect(dialog).toBeHidden();
     }
-  });
-
-  test("imports JSON with an image through the file input", async ({
-    page,
-  }) => {
-    await page.goto("character-sheet/");
-    const actionMenuTrigger = page.getByRole("button", {
-      exact: true,
-      name: "操作メニューを開く、エラーはありません。",
-    });
-    const actionMenu = page.getByRole("region", {
-      name: "キャラクターシートの操作メニュー",
-    });
-    const openResponsiveActionMenu = async () => {
-      if (
-        (await actionMenuTrigger.isVisible()) &&
-        !(await actionMenu.isVisible())
-      ) {
-        await actionMenuTrigger.click();
-      }
-    };
-    const importFile = async (value: object) => {
-      await openResponsiveActionMenu();
-      await page.getByRole("button", { name: /^インポート/ }).click();
-      await page
-        .locator('input[accept="application/json,.json"]')
-        .setInputFiles({
-          buffer: Buffer.from(JSON.stringify(value)),
-          mimeType: "application/json",
-          name: "character.json",
-        });
-      await page
-        .getByRole("dialog", { name: "JSON入力の確認" })
-        .getByRole("button", { exact: true, name: "インポート" })
-        .click();
-    };
-
-    await importFile(createCharacterSheetJsonImport());
-    await expect(page.getByLabel("PC名", { exact: true })).toHaveValue(
-      "JSON入力PC",
-    );
-    await expect(
-      page.getByRole("img", { name: "選択したキャラクター画像" }),
-    ).toBeVisible();
   });
 
   test("dismisses an open dialog before the responsive action menu", async ({

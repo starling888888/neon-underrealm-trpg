@@ -17,7 +17,6 @@ type UseActionPaneArgs = {
   isCcfoliaCopyDisabled: boolean;
   isCopySaveDisabled?: boolean;
   isDeleteDisabled?: boolean;
-  isImportDisabled: boolean;
   isResetErrorOpen: boolean;
   isRootOperationInProgress: boolean;
   isResetDisabled: boolean;
@@ -28,7 +27,6 @@ type UseActionPaneArgs = {
   onCopySave?: () => void;
   onDelete?: () => void;
   onSave?: () => void;
-  onImport: (trigger: HTMLButtonElement) => void;
   onResetConfirmed: () => Promise<void>;
 };
 
@@ -61,7 +59,6 @@ export default function useActionPane({
   isCcfoliaCopyDisabled,
   isCopySaveDisabled = false,
   isDeleteDisabled = false,
-  isImportDisabled,
   isResetErrorOpen,
   isRootOperationInProgress,
   isResetDisabled,
@@ -72,7 +69,6 @@ export default function useActionPane({
   onCopySave = () => {},
   onDelete = () => {},
   onSave = () => {},
-  onImport,
   onResetConfirmed,
 }: UseActionPaneArgs) {
   const sectionJump = useSectionJump();
@@ -91,7 +87,6 @@ export default function useActionPane({
       isCcfoliaCopyDisabled,
       isCopySaveDisabled,
       isDeleteDisabled,
-      isImportDisabled,
       isMenuOpen: actions.isMenuOpen,
       isResetDisabled,
       isSaveDisabled,
@@ -102,7 +97,6 @@ export default function useActionPane({
       onDelete,
       onSave,
       onHelp: actions.openHelp,
-      onImport,
       onMenuToggle: actions.toggleMenu,
       onReset: actions.openResetConfirm,
       onReviewErrors: errors.openErrorSummary,
@@ -122,14 +116,12 @@ export default function useActionPane({
       isCcfoliaCopyDisabled,
       isCopySaveDisabled,
       isDeleteDisabled,
-      isImportDisabled,
       isResetDisabled,
       isSaveDisabled,
       onCharacterList,
       onCopySave,
       onDelete,
       onSave,
-      onImport,
       sectionJump.onSectionJump,
     ],
   );

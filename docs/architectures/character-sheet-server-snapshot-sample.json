@@ -283,7 +283,7 @@
     "nickname": "",
     "pcName": "サンプルキャラ",
     "playerName": "椋鳥",
-    "setting": "入出力のJSON形式です。"
+    "setting": "サーバーストレージに保存するsnapshotのサンプルです。"
   },
   "secondaryAttributes": {
     "actionCountModifier": 0,

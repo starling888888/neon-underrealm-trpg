@@ -56,15 +56,6 @@ function createState(
 
 const props = {
   errorSummary: { errors: [], hasErrors: false },
-  isJsonImportErrorOpen: false,
-  isJsonImportImageErrorOpen: false,
-  isJsonImportPending: false,
-  jsonImportErrorConfirmButtonRef: createRef<HTMLButtonElement>(),
-  jsonImportReturnFocusRef: createRef<HTMLButtonElement>(),
-  onJsonImportConfirmed: vi.fn(),
-  onJsonImportErrorClose: vi.fn(),
-  onJsonImportImageErrorClose: vi.fn(),
-  onJsonImportPendingClose: vi.fn(),
 };
 
 describe("ActionPaneDialogs", () => {
