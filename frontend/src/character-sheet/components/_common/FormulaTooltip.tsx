@@ -1,4 +1,5 @@
 import {
+  type KeyboardEvent,
   type ReactNode,
   useId,
   useLayoutEffect,
@@ -41,7 +42,7 @@ export default function FormulaTooltip({
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState<TooltipPosition | null>(null);
   const tooltipId = useId();
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
@@ -93,18 +94,45 @@ export default function FormulaTooltip({
     };
   }, [isOpen]);
 
+  const handleTriggerKeyDown = (event: KeyboardEvent<HTMLSpanElement>) => {
+    if (event.key === "Escape") {
+      setIsOpen(false);
+      return;
+    }
+
+    if (event.key !== "Enter" && event.key !== " ") return;
+
+    event.preventDefault();
+    setIsOpen((open) => !open);
+  };
+
+  const handleDismissKeyDown = (event: KeyboardEvent<HTMLSpanElement>) => {
+    if (event.key !== "Escape" && event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+    setIsOpen(false);
+  };
+
   return (
     <span className={`${styles.root} ${className ?? ""}`}>
       {isOpen ? (
-        <button
-          aria-label={characterSheetDictionary.general.closeFormulaTooltip}
-          className={styles.dismissLayer}
-          onClick={() => setIsOpen(false)}
-          tabIndex={-1}
-          type="button"
-        />
+        <>
+          {/* biome-ignore lint/a11y/useSemanticElements: Native button inherits disabled from the read-only fieldset, but this display-only dismiss control must remain interactive. */}
+          <span
+            aria-label={characterSheetDictionary.general.closeFormulaTooltip}
+            className={styles.dismissLayer}
+            onClick={() => setIsOpen(false)}
+            onKeyDown={handleDismissKeyDown}
+            role="button"
+            tabIndex={-1}
+          />
+        </>
       ) : null}
-      <button
+
+      {/* biome-ignore lint/a11y/useSemanticElements: Native button inherits disabled from the read-only fieldset, but this display-only tooltip trigger must remain interactive. */}
+      <span
         aria-label={ariaLabel}
         aria-controls={tooltipId}
         aria-describedby={isOpen ? tooltipId : undefined}
@@ -123,12 +151,9 @@ export default function FormulaTooltip({
           }
         }}
         ref={triggerRef}
-        onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            setIsOpen(false);
-          }
-        }}
-        type="button"
+        onKeyDown={handleTriggerKeyDown}
+        role="button"
+        tabIndex={0}
       >
         <span className={styles.triggerContent}>
           {children}
@@ -136,7 +161,8 @@ export default function FormulaTooltip({
             ?
           </span>
         </span>
-      </button>
+      </span>
+
       {isOpen ? (
         <span
           className={`${styles.content} ${multiline ? styles.multiline : ""}`}
