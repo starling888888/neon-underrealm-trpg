@@ -7,9 +7,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { createCharacterSheetInput } from "../api/character-sheet-input";
 import {
+  type CharacterSheetApiClient,
   CharacterSheetApiError,
   createCharacterSheetApiClient,
-  type CharacterSheetApiClient,
 } from "../api/character-sheets";
 import type { Authentication } from "../auth/types";
 import { characterSheetDictionary } from "../dictionary";
@@ -20,6 +20,7 @@ import type { RemoteCharacterState } from "./useCharacterSheetRootState";
 type RemoteCharacterOperations = {
   bindRemoteSummary: (summary: Pick<CharacterSheet, "id" | "metadata">) => void;
   clearCharacterImageForCopy: () => Promise<boolean>;
+  clearLocalDraftForRemote: () => Promise<void>;
   clearRemoteCharacter: () => void;
   restoreRemoteCharacter: (character: CharacterSheet) => Promise<boolean>;
   updateRemoteCharacterMetadata: (value: {
@@ -34,7 +35,9 @@ type UseRemoteCharacterPersistenceArgs = RemoteCharacterOperations & {
   form: UseFormReturn<CharacterSheetFormValues>;
   isRootOperationInProgress: boolean;
   notify: (kind: "error" | "success", message: string) => void;
+  onNavigate: (id: string | null) => void;
   remoteCharacter: RemoteCharacterState | null;
+  remoteCharacterId: string | null;
 };
 
 type RemoteCharacterPersistenceDependencies = {
@@ -77,9 +80,6 @@ class AuthenticationTokenUnavailableError extends Error {}
 const { authentication: authenticationCopy, persistence } =
   characterSheetDictionary.characterSheet;
 
-const createRemoteRefreshKey = (sessionKey: string, id: string) =>
-  `${sessionKey}\u0000${id}`;
-
 function requireIdToken(idToken: string | null): string {
   if (idToken === null) throw new AuthenticationTokenUnavailableError();
   return idToken;
@@ -92,11 +92,14 @@ export default function useRemoteCharacterPersistence(
     bindRemoteSummary,
     characterImage,
     clearCharacterImageForCopy,
+    clearLocalDraftForRemote,
     clearRemoteCharacter,
     form,
     isRootOperationInProgress,
     notify,
+    onNavigate,
     remoteCharacter,
+    remoteCharacterId,
     restoreRemoteCharacter,
     updateRemoteCharacterMetadata,
   }: UseRemoteCharacterPersistenceArgs,
@@ -117,13 +120,26 @@ export default function useRemoteCharacterPersistence(
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isRemoteOperationInProgress, setIsRemoteOperationInProgress] =
     useState(false);
+  const [failedRemoteCharacterId, setFailedRemoteCharacterId] = useState<
+    string | null
+  >(null);
   const previousSessionKey = useRef<string | null | undefined>(undefined);
-  const remoteRefreshKeyRef = useRef<string | null>(null);
   const characterListRequestVersionRef = useRef(0);
+  const remoteRequestVersionRef = useRef(0);
   const sessionKey = authentication.sessionKey;
   const isAuthenticated = sessionKey !== null;
+  const isRemoteRoute = remoteCharacterId !== null;
+  const isRemoteCharacterLoading =
+    isRemoteRoute &&
+    remoteCharacter?.id !== remoteCharacterId &&
+    failedRemoteCharacterId !== remoteCharacterId;
+  const isRemoteCharacterLoadFailed =
+    isRemoteRoute &&
+    remoteCharacter === null &&
+    failedRemoteCharacterId === remoteCharacterId;
   const isEditable =
-    remoteCharacter === null || (isAuthenticated && remoteCharacter.isOwner);
+    !isRemoteRoute ||
+    (remoteCharacter !== null && isAuthenticated && remoteCharacter.isOwner);
 
   const runApiRequest = useCallback(
     async <T>(
@@ -217,8 +233,6 @@ export default function useRemoteCharacterPersistence(
     setCharacterListCache(null);
     setCharacterListCacheSessionKey(null);
     characterListRequestVersionRef.current += 1;
-    remoteRefreshKeyRef.current = null;
-
     if (remoteCharacter !== null) {
       updateRemoteCharacterMetadata({
         id: remoteCharacter.id,
@@ -234,30 +248,43 @@ export default function useRemoteCharacterPersistence(
 
   useEffect(() => {
     if (
-      authentication.status !== "signed-in" ||
-      sessionKey === null ||
-      remoteCharacter === null
+      authentication.status === "initializing" ||
+      remoteCharacterId === null
     ) {
       return;
     }
 
-    const refreshKey = createRemoteRefreshKey(sessionKey, remoteCharacter.id);
-    if (remoteRefreshKeyRef.current === refreshKey) return;
-    remoteRefreshKeyRef.current = refreshKey;
-
+    const requestVersion = ++remoteRequestVersionRef.current;
     void runApiRequest(
-      (idToken) => characterSheetApi.get(remoteCharacter.id, idToken),
+      (idToken) => characterSheetApi.get(remoteCharacterId, idToken),
       false,
     )
-      .then((character) => restoreRemoteCharacter(character))
-      .catch(() => undefined);
+      .then(async (character) => {
+        if (requestVersion !== remoteRequestVersionRef.current) return;
+        const restored = await restoreRemoteCharacter(character);
+        if (!restored) {
+          setFailedRemoteCharacterId(remoteCharacterId);
+          notify("error", persistence.remoteRestoreError);
+        }
+      })
+      .catch((error) => {
+        if (requestVersion === remoteRequestVersionRef.current) {
+          setFailedRemoteCharacterId(remoteCharacterId);
+          onApiError(error, persistence.loadError);
+        }
+      });
+
+    return () => {
+      remoteRequestVersionRef.current += 1;
+    };
   }, [
     authentication.status,
     characterSheetApi,
-    remoteCharacter,
+    notify,
+    onApiError,
+    remoteCharacterId,
     restoreRemoteCharacter,
     runApiRequest,
-    sessionKey,
   ]);
 
   const openCharacterList = useCallback(() => {
@@ -306,35 +333,10 @@ export default function useRemoteCharacterPersistence(
 
   const selectCharacter = useCallback(
     (id: string) => {
-      setIsCharacterListLoading(true);
-      void runApiRequest((idToken) => characterSheetApi.get(id, idToken), false)
-        .then(async (character) => {
-          if (sessionKey !== null) {
-            remoteRefreshKeyRef.current = createRemoteRefreshKey(
-              sessionKey,
-              id,
-            );
-          }
-          return restoreRemoteCharacter(character);
-        })
-        .then((restored) => {
-          if (restored) {
-            setIsCharacterListOpen(false);
-          } else {
-            notify("error", persistence.remoteRestoreError);
-          }
-        })
-        .catch((error) => onApiError(error, persistence.loadError))
-        .finally(() => setIsCharacterListLoading(false));
+      setIsCharacterListOpen(false);
+      onNavigate(id);
     },
-    [
-      characterSheetApi,
-      notify,
-      onApiError,
-      restoreRemoteCharacter,
-      runApiRequest,
-      sessionKey,
-    ],
+    [onNavigate],
   );
 
   const save = useCallback(
@@ -356,16 +358,19 @@ export default function useRemoteCharacterPersistence(
           ),
         true,
       )
-        .then((summary) => {
-          if (sessionKey !== null) {
-            remoteRefreshKeyRef.current = createRemoteRefreshKey(
-              sessionKey,
-              summary.id,
-            );
-          }
+        .then(async (summary) => {
           form.setValue("profile.pcName", pcName);
+          if (!isRemoteRoute) {
+            try {
+              await clearLocalDraftForRemote();
+            } catch {
+              notify("error", persistence.localDraftCleanupError);
+              return;
+            }
+          }
           bindRemoteSummary(summary);
           updateCachedSummary(summary);
+          onNavigate(summary.id);
           setIsSaveOpen(false);
           notify("success", persistence.saveSuccess);
         })
@@ -376,21 +381,24 @@ export default function useRemoteCharacterPersistence(
       bindRemoteSummary,
       characterImage,
       characterSheetApi,
+      clearLocalDraftForRemote,
       form,
       isAuthenticated,
       isRemoteOperationInProgress,
       notify,
       onApiError,
+      onNavigate,
       remoteCharacter?.id,
       runApiRequest,
-      sessionKey,
+      isRemoteRoute,
       updateCachedSummary,
     ],
   );
 
   const copySave = useCallback(
     (pcName: string, plName: string, isPublic: boolean) => {
-      if (!isAuthenticated || isRemoteOperationInProgress) return;
+      if (!isAuthenticated || !isRemoteRoute || isRemoteOperationInProgress)
+        return;
       setIsRemoteOperationInProgress(true);
       const values = form.getValues();
       void runApiRequest(
@@ -408,16 +416,11 @@ export default function useRemoteCharacterPersistence(
         true,
       )
         .then(async (summary) => {
-          if (sessionKey !== null) {
-            remoteRefreshKeyRef.current = createRemoteRefreshKey(
-              sessionKey,
-              summary.id,
-            );
-          }
           form.setValue("profile.pcName", pcName);
           form.setValue("profile.playerName", plName);
           bindRemoteSummary(summary);
           updateCachedSummary(summary);
+          onNavigate(summary.id);
           setIsCopySaveOpen(false);
           notify("success", persistence.copySaveSuccess);
           await clearCharacterImageForCopy();
@@ -432,10 +435,11 @@ export default function useRemoteCharacterPersistence(
       form,
       isAuthenticated,
       isRemoteOperationInProgress,
+      isRemoteRoute,
       notify,
       onApiError,
+      onNavigate,
       runApiRequest,
-      sessionKey,
       updateCachedSummary,
     ],
   );
@@ -456,7 +460,6 @@ export default function useRemoteCharacterPersistence(
       true,
     )
       .then(() => {
-        remoteRefreshKeyRef.current = null;
         clearRemoteCharacter();
         setCharacterListCache((current) =>
           current === null
@@ -470,6 +473,7 @@ export default function useRemoteCharacterPersistence(
                 ),
               },
         );
+        onNavigate(null);
         setIsDeleteOpen(false);
         notify("success", persistence.deleteSuccess);
       })
@@ -482,6 +486,7 @@ export default function useRemoteCharacterPersistence(
     isRemoteOperationInProgress,
     notify,
     onApiError,
+    onNavigate,
     remoteCharacter,
     runApiRequest,
   ]);
@@ -557,6 +562,8 @@ export default function useRemoteCharacterPersistence(
       dialogProps,
       isCopySaveDisabled:
         !isAuthenticated ||
+        !isRemoteRoute ||
+        remoteCharacter === null ||
         isRootOperationInProgress ||
         isRemoteOperationInProgress,
       isDeleteDisabled:
@@ -566,6 +573,8 @@ export default function useRemoteCharacterPersistence(
         isRootOperationInProgress ||
         isRemoteOperationInProgress,
       isEditable,
+      isRemoteCharacterLoadFailed,
+      isRemoteCharacterLoading,
       isSaveDisabled:
         !isAuthenticated ||
         !isEditable ||
@@ -580,8 +589,11 @@ export default function useRemoteCharacterPersistence(
       dialogProps,
       isAuthenticated,
       isEditable,
+      isRemoteCharacterLoadFailed,
+      isRemoteCharacterLoading,
       isRemoteOperationInProgress,
       isRootOperationInProgress,
+      isRemoteRoute,
       openCharacterList,
       openCopySave,
       openDelete,

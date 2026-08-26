@@ -75,19 +75,21 @@ export const characterSheetDictionary = {
     remotePersistence: {
       copySave: {
         description:
-          "現在表示されているキャラクターのコピーを保存します。PC名は必須です。PL名は必要に応じて入力してください。",
+          "現在表示しているキャラクターを元に、新しいキャラクターとしてDBへ保存します。PC名は必須です。PL名は必要に応じて入力してください。",
         imageNotice:
           "コピー保存では画像は保存されません。保存後に設定してDB保存を行ってください。",
         label: "コピー保存",
       },
       delete: {
-        description: "DBに保存されたキャラクターを削除します。よろしいですか？",
+        description:
+          "現在表示している自分のDB保存済みキャラクターを削除します。削除後はDBに保存されていないキャラクターシートへ表示を切り替えます。よろしいですか？",
         label: "DB削除",
         localCharacterNotice:
-          "現在表示中のブラウザに保存されたキャラクターは初期化されません。",
+          "ブラウザに未保存のキャラクターが保存されている場合はその内容を表示します。保存されていない場合は、初期状態のキャラクターシートを表示します。",
       },
       save: {
-        description: "DBに保存するためにはPC名が必須です。",
+        description:
+          "DBに保存します。PC名は必須です。未保存のキャラクターは新しいキャラクターとして登録し、自分のDB保存済みキャラクターは現在の内容で上書きします。",
         label: "DB保存",
       },
       visibility: "全員に公開する",
@@ -108,7 +110,7 @@ export const characterSheetDictionary = {
     },
     reset: {
       confirm:
-        "入力済みのデータと画像を初期状態に戻します。\nDBに保存されたキャラクターは削除されません。\n本当によろしいですか？",
+        "DBにまだ保存していないキャラクターの入力内容と画像を初期状態に戻します。\nブラウザに自動保存されている入力内容と画像も削除されます。\nこの操作は元に戻せません。本当によろしいですか？",
       confirmLabel: "入力内容を初期化",
       loading: "初期化中…",
     },
@@ -186,7 +188,7 @@ export const characterSheetDictionary = {
     },
     jsonImport: {
       confirm:
-        "JSONを読み込むと、現在の入力内容と保存済みデータが置き換わります。よろしいですか？",
+        "JSONを読み込むと、現在の入力内容とブラウザに保存された未保存のキャラクターが読み込んだ内容へ置き換わります。\nDB上のキャラクターを表示している場合も、そのキャラクター自体は変更されず、読み込んだ内容を未保存のキャラクターとして表示します。よろしいですか？",
       confirmLabel: "JSON入力の確認",
       error: "JSONを読み込めませんでした。ファイルの形式を確認してください。",
       errorLabel: "JSON入力の失敗",
@@ -197,17 +199,22 @@ export const characterSheetDictionary = {
     },
     persistence: {
       copySaveError: "コピー保存に失敗しました。",
-      copySaveSuccess: "コピーをDBに保存しました。",
+      copySaveSuccess:
+        "コピーをDBに保存し、新しく作成したキャラクターへ表示を切り替えました。",
       deleteError: "DB削除に失敗しました。",
-      deleteSuccess: "DBから削除しました。",
+      deleteSuccess:
+        "DBから削除し、DBに保存されていないキャラクターシートへ表示を切り替えました。",
       listLoadError: "キャラクター一覧を読み込めませんでした。",
+      localDraftCleanupError:
+        "DBには保存しましたが、ブラウザに保存された未保存データを削除できませんでした。現在の入力内容を確認してください。",
       loadError: "キャラクターを読み込めませんでした。",
+      remoteLoading: "キャラクターを読み込んでいます",
       remoteRestoreError: "キャラクターを復元できませんでした。",
       restoreError: "自動復元に失敗しました。",
       restoreErrorDialogLabel: "自動復元の失敗",
       restoring: "保存済みの入力を復元しています",
       saveError: "DB保存に失敗しました。",
-      saveSuccess: "DBに保存しました。",
+      saveSuccess: "DBに保存し、保存したキャラクターへ表示を切り替えました。",
     },
     profile: {
       age: "年齢",
