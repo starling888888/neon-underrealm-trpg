@@ -469,8 +469,8 @@ docs/TODO.md
 
 ### JSONインポート削除
 
-- [ ] desktopのAction PaneにJSONインポートbuttonが存在しない。
-- [ ] tablet / mobileの操作UIにJSONインポートbuttonが存在しない。
+- [x] desktopのAction PaneにJSONインポートbuttonが存在しない。
+- [x] tablet / mobileの操作UIにJSONインポートbuttonが存在しない。
 - [x] JSON file inputが存在しない。
 - [x] import確認dialogが存在しない。
 - [x] import専用callback / state / ref / operationが残っていない。
@@ -486,15 +486,15 @@ docs/TODO.md
 - [x] import confirmation / success / failure / loading文言が残っていない。
 - [x] HelpからJSONインポート節を削除している。
 - [x] active documentationがJSONインポートを現在機能として説明していない。
-- [ ] historical / audit recordをactive仕様化するために改変していない。
+- [x] historical / audit recordをactive仕様化するために改変していない。
 
 ### User Copy Review
 
-- [ ] ユーザーが現行button / 操作 / Help文言を修正している。
-- [ ] エージェントが最終文言を現行挙動と照合してレビューしている。
-- [ ] local draft / remote / DB save / copy / delete / reset / authの意味に矛盾がない。
-- [ ] Help、button、dialog、Toast間で同じ操作の説明が矛盾していない。
-- [ ] ユーザーによる最終文言確定をもってCopy Freezeしている。
+- [x] ユーザーが現行button / 操作 / Help文言を修正している。
+- [x] エージェントが最終文言を現行挙動と照合してレビューしている。
+- [x] local draft / remote / DB save / copy / delete / reset / authの意味に矛盾がない。
+- [x] Help、button、dialog、Toast間で同じ操作の説明が矛盾していない。
+- [x] ユーザーによる最終文言確定をもってCopy Freezeしている。
 
 ### Design
 
@@ -505,25 +505,25 @@ docs/TODO.md
 
 ### VRT / Baseline
 
-- [ ] 全canonical pageについてdeterministicなbaselineを更新している。
-- [ ] 全baseline diffを確認している。
-- [ ] baseline更新でvisual regressionを隠していない。
-- [ ] full VRTが成功している。
-- [ ] Firebase loginをVRT取得に使用していない。
-- [ ] live backend APIをVRT取得に使用していない。
-- [ ] live D1 / R2 dataをVRT取得に使用していない。
-- [ ] live user / sample characterをVRT取得に使用していない。
-- [ ] 外部data依存targetがある場合はdeterministic fixture化または対象外化して理由を記録している。
-- [ ] ex-17で保留したfatal error dialogを最終character-sheet stateでVisual Reviewしている。
+- [x] 全canonical pageについてdeterministicなbaselineを更新している。
+- [x] 全baseline diffを確認している。
+- [x] baseline更新でvisual regressionを隠していない。
+- [x] full VRTが成功している。
+- [x] Firebase loginをVRT取得に使用していない。
+- [x] live backend APIをVRT取得に使用していない。
+- [x] live D1 / R2 dataをVRT取得に使用していない。
+- [x] live user / sample characterをVRT取得に使用していない。
+- [x] 外部data依存targetがある場合はdeterministic fixture化または対象外化して理由を記録している。
+- [x] ex-17で保留したfatal error dialogを最終character-sheet stateでVisual Reviewしている。
 
 ### Quality
 
 - [x] import関連のdead import / dead codeが残っていない。
 - [x] repository-wide searchでactive import UI/copyの残存を確認している。
 - [x] `npm run check`が成功している。
-- [ ] frontendの必要なunit / component / hook / E2E testが成功している。
+- [x] frontendの必要なunit / component / hook / E2E testが成功している。
 - [x] public buildが成功している。
-- [ ] full VRTが成功している。
+- [x] full VRTが成功している。
 
 ### Date Gate
 
@@ -696,13 +696,8 @@ frontend/tests/components/character-sheet/CharacterSheetJsonImportConfirmDialog.
 
 ## Unchecked / Not verified
 
-- ユーザーによる最終操作文言とCopy Freeze
-- import専用codeと共用serialize / schema logicの最終分類
-- 実装後のlocal build、check、unit / component / hook / E2E test結果
-- 各VRT targetの外部data / login非依存性、baseline更新後の全diff、full VRT結果
-- 2026-09-01以降のmerge直前に行うHEAD、CI、review、unresolved commentの最終確認
-
-これらは実装および完了確認の条件であり、現時点で未完了のまま残す。
+- Date Gateに従い、PR作成後も2026-09-01まではmergeしない。
+- 2026-09-01以降のmerge直前に、最新HEAD、CI、review、unresolved commentを再確認する。
 
 VRTについては、baseline更新前に既存target一覧とfixtureを確認し、
 

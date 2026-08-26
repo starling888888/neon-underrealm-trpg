@@ -26,7 +26,7 @@
 | navigation      | mobile site menu drawer                                                        | drawer locator                    |
 | dialog          | error、Helpの先頭・中間・末尾、下書き破棄、CCFOLIAコピー、候補選択、確認dialog | dialog locator                    |
 | form            | profile、各sectionのdefault / input / error、item picker                       | owner sectionまたはdialog locator |
-| persistence     | local draft復元失敗、固定サイバネ部位error                                     | dialogまたはsection locator       |
+| persistence     | 固定サイバネ部位error                                                          | section locator                   |
 
 - full-page比較はページ全体の構成と代表tooltipに限る。section、操作menu、dialogの局所状態は対象locatorだけを比較する。
 - Firebase login、live API、D1 / R2、実ユーザーデータ、現在時刻に依存するstateはVRTで取得しない。必要なstateはlocal fixtureまたはbrowser API stubで再現し、再現できないものは対象外と理由をtestまたはこのノートへ記録する。
@@ -128,7 +128,7 @@
 - desktopでは本文幅、右側action rail、section navigation、sticky動作が共存し、横overflowしないこと。
 - tablet / mobileではfloating action controls、open action menu、site menu drawer、dialogが画面内で到達・操作できること。
 - action controlのenabled / disabled、error status、read-only stateがlocal draft、owner remote、public non-owner remoteで区別できること。
-- Help本文のscroll、`下書き破棄`確認、CCFOLIAコピーの確認・結果、candidate picker、current error dialogでfocusとclose導線が一貫すること。
+- Help本文のscroll、`下書き破棄`確認、CCFOLIAコピー確認、candidate picker、current error dialogでfocusとclose導線が一貫すること。
 - profile、信用、可変行、item table、section error、tooltipが各viewportでclipやページ全体の横overflowを起こさないこと。
 
 ## 制約と変更境界

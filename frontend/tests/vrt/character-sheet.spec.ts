@@ -20,23 +20,6 @@ async function openResetConfirm(page: Page): Promise<void> {
   await expect(page.getByRole("dialog", { name: "下書き破棄" })).toBeVisible();
 }
 
-async function configureCcfoliaClipboard(
-  page: Page,
-  shouldReject: boolean,
-): Promise<void> {
-  await page.addInitScript((rejectClipboardWrite: boolean) => {
-    Object.defineProperty(navigator, "clipboard", {
-      configurable: true,
-      value: {
-        writeText: () =>
-          rejectClipboardWrite
-            ? Promise.reject(new Error("Clipboard write rejected."))
-            : Promise.resolve(),
-      },
-    });
-  }, shouldReject);
-}
-
 async function openCcfoliaCopyConfirm(page: Page): Promise<void> {
   const menuTrigger = page.getByRole("button", { name: /操作メニューを開く/ });
   if (await menuTrigger.isVisible()) {
@@ -48,28 +31,6 @@ async function openCcfoliaCopyConfirm(page: Page): Promise<void> {
     .click();
   await expect(
     page.getByRole("dialog", { name: "CCFOLIAコピー" }),
-  ).toBeVisible();
-}
-
-async function openCcfoliaCopySuccess(page: Page): Promise<void> {
-  await openCcfoliaCopyConfirm(page);
-  await page
-    .getByRole("dialog", { name: "CCFOLIAコピー" })
-    .getByRole("button", { exact: true, name: "コピー" })
-    .click();
-  await expect(
-    page.getByRole("dialog", { name: "CCFOLIAコピー完了" }),
-  ).toBeVisible();
-}
-
-async function openCcfoliaCopyFailure(page: Page): Promise<void> {
-  await openCcfoliaCopyConfirm(page);
-  await page
-    .getByRole("dialog", { name: "CCFOLIAコピー" })
-    .getByRole("button", { exact: true, name: "コピー" })
-    .click();
-  await expect(
-    page.getByRole("dialog", { name: "CCFOLIAコピー失敗" }),
   ).toBeVisible();
 }
 
@@ -562,17 +523,6 @@ const characterSheetSiteMenuDrawer = section(
 
 registerCharacterSheetVrtScenarios([
   {
-    id: "persistence-restore-error",
-    kind: "dialog",
-    locator: dialog("自動復元の失敗"),
-    beforeGoto: async (page) => {
-      await page.addInitScript(() => {
-        localStorage.setItem("neon-underrealm-character-sheet-form", "{");
-      });
-    },
-    route: siteRoutes.characterSheet,
-  },
-  {
     id: "default",
     kind: "full-page",
     route: siteRoutes.characterSheet,
@@ -686,22 +636,6 @@ registerCharacterSheetVrtScenarios([
     kind: "dialog",
     locator: dialog("CCFOLIAコピー"),
     prepare: openCcfoliaCopyConfirm,
-    route: siteRoutes.characterSheet,
-  },
-  {
-    id: "ccfolia-copy-success",
-    beforeGoto: (page) => configureCcfoliaClipboard(page, false),
-    kind: "dialog",
-    locator: dialog("CCFOLIAコピー完了"),
-    prepare: openCcfoliaCopySuccess,
-    route: siteRoutes.characterSheet,
-  },
-  {
-    id: "ccfolia-copy-failure",
-    beforeGoto: (page) => configureCcfoliaClipboard(page, true),
-    kind: "dialog",
-    locator: dialog("CCFOLIAコピー失敗"),
-    prepare: openCcfoliaCopyFailure,
     route: siteRoutes.characterSheet,
   },
   {

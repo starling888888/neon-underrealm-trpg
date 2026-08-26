@@ -38,6 +38,14 @@ export function registerCharacterSheetVrtScenarios(
         await scenario.beforeGoto?.(page);
         await page.goto(scenario.route);
         await expect(page.locator("body")).toBeVisible();
+        await expect(
+          page.locator(
+            'astro-island[component-url*="CharacterSheetContainer"]',
+          ),
+        ).not.toHaveAttribute("ssr", "");
+        // Astro clears `ssr` after React schedules hydration with
+        // startTransition(), before React event handlers are ready.
+        await page.waitForTimeout(100);
         await scenario.prepare?.(page);
 
         if (scenario.kind === "full-page") {
