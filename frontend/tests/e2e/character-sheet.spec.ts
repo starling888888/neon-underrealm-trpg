@@ -63,9 +63,7 @@ test.describe("character sheet page", () => {
     };
     const importFile = async (value: object) => {
       await openResponsiveActionMenu();
-      await page
-        .getByRole("button", { name: /^インポート/ })
-        .click();
+      await page.getByRole("button", { name: /^インポート/ }).click();
       await page
         .locator('input[accept="application/json,.json"]')
         .setInputFiles({
