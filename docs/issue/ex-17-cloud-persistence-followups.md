@@ -122,6 +122,31 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - active documentationからex-16の途中経過を除去しつつ、archive規約と監査記録を守れているか。
 - Groupごとのcommitが独立してreview・revert可能か。
 
+## レビュー指摘 1
+
+### 指摘事項
+
+- Public E2EのPagefind marker pollingは全attemptで同じ`pagefind/deployment.json` URLを取得している。このURLに旧artifactのcacheが残ると、新deployが正常でも最大60秒間同じ旧markerを取得し続けてworkflowが失敗する。
+
+### 判定
+
+- source: human remote review
+- classification: valid
+- local validation: `.github/workflows/frontend-deploy.yml`はmarker URLをloop外で一度だけ組み立て、query parameterなしで12回取得している。markerはstatic GitHub Pages artifactであり、workflow側でcache headerを制御していないため、旧世代のcache経路を避けられない。
+
+### 対応方針
+
+- 各pollで`pagefind/deployment.json?commit=<expected SHA>&attempt=<attempt>`を組み立て、marker request自体をattemptごとに異なるcache keyにする。
+- markerのJSON比較とtimeout時に期待SHA・取得markerだけを出す既存contractは維持する。
+- CI workflow自体をfrontend testから検証しない。workflow設定の直接確認を実装レビュー時の根拠とする。
+
+### 対応完了チェックリスト
+
+- [x] marker polling URLをexpected SHAとattemptでcache-bustする。
+- [x] frontend testへCI workflow contractを追加していない。
+- [x] `npm run check` が通る。
+- [x] frontend public buildとPagefind index buildが通る。
+
 ## 備考
 
 - このissueはGate分割を使わない通常issueである。

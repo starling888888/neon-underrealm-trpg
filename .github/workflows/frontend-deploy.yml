@@ -170,10 +170,10 @@ jobs:
           E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
           EXPECTED_PAGEFIND_DEPLOYMENT_SHA: ${{ github.sha }}
         run: |
-          marker_url="${E2E_BASE_URL%/}/pagefind/deployment.json"
           expected_marker="{\"commit\":\"$EXPECTED_PAGEFIND_DEPLOYMENT_SHA\"}"
           observed_marker=""
           for attempt in {1..12}; do
+            marker_url="${E2E_BASE_URL%/}/pagefind/deployment.json?commit=${EXPECTED_PAGEFIND_DEPLOYMENT_SHA}&attempt=${attempt}"
             observed_marker="$(curl --fail --silent --location "$marker_url" 2>/dev/null || true)"
             if [ "$observed_marker" = "$expected_marker" ]; then
               exit 0
