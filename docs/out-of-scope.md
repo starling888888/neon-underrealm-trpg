@@ -28,7 +28,7 @@
 
 本サイトは、初期段階ではルールとデータを公開・参照するための静的サイトであり、プレイログやキャンペーン状態を管理するアプリケーションではない。
 
-承認済みの `ex-16-character-sheet-cloud-persistence` Gate を除き、DB、ログイン、保存機能を必要とする実装は行わない。
+character sheet cloud persistenceを除き、DB、ログイン、保存機能を必要とする実装は行わない。
 
 ---
 
@@ -54,7 +54,7 @@
 
 ブラウザ上でキャラクターを作成・編集し、遊ぶために必要な情報を確認できるWebキャラクターシートは初期スコープ内とする。機能の正本は `docs/requirements/character-sheet.md` とする。
 
-`ex-16-character-sheet-cloud-persistence` の承認済みGateを除き、ログイン、ユーザー端末に依存しないサーバー・DB・クラウドへのキャラクターデータ保存、URL共有、PDF出力、Google Sheets連携は初期スコープ外とする。G3はGoogle ID tokenをブラウザのメモリ内だけに保持する初期実装、G4はbackendの検証とクラウド保存API、G5は複数キャラクター管理とクラウド保存UI、G6はFirebase Authenticationへの認証境界置換を扱う。各Gateで扱わない後続段階の機能を先取りしない。
+Firebase Authenticationを使うcharacter sheet cloud persistenceを除き、ログイン、ユーザー端末に依存しないサーバー・DB・クラウドへのキャラクターデータ保存、URL共有、PDF出力、Google Sheets連携は初期スコープ外とする。cloud persistenceの範囲外となる後続機能を先取りしない。
 
 ただし、`ex-06-google-drive-xlsx-sync`で定義する、開発者が手動で実行するGoogle Spreadsheetから`.raw/`へのXLSX取得scriptは、公開サイトやキャラクターシートとは接続しないローカル開発用例外として許可する。
 
@@ -96,11 +96,11 @@ Web上で判定を行うダイスローラー、達成値・効果値・気合�
 
 ## 9. ログイン・認証機能
 
-`ex-16-character-sheet-cloud-persistence` の承認済みG3 / G4および計画済みG6を除き、ユーザー登録、ログイン、権限管理、管理者画面、編集者権限などの認証機能は初期スコープ外とする。
+character sheet cloud persistenceのFirebase Authenticationを除き、ユーザー登録、ログイン、権限管理、管理者画面、編集者権限などの認証機能は初期スコープ外とする。
 
-本サイトは無料公開の静的サイトとして構築し、G3ではGoogle ID tokenをメモリ内に置く初期実装とする。G6ではFirebase Authentication SDKが認証状態を管理し、G4以降の認証済みAPIとcharacter保存は親issueの承認済みGateだけで扱う。`ex-02-web-character-sheet`で定義する、作業継続用の端末内保存・復元はこれに含めない。
+本サイトは無料公開の静的サイトとして構築する。Firebase Authentication SDKがcharacter sheetの認証状態を管理し、Firebase ID Tokenを検証する認証済みAPIとcharacter保存だけを許可する。作業継続用の端末内保存・復元はこれに含めない。
 
-親issueの承認済みG3 / G4および計画済みG6以外の認証を必要とする機能は初期実装に含めない。backendのtoken verifierと認証必須APIはG4で扱い、G6でFirebase ID Token verifierへ置換する。
+character sheet cloud persistence以外で認証を必要とする機能は初期実装に含めない。
 
 ---
 
@@ -118,7 +118,7 @@ DiscordやXへの導線はフッターリンクとして扱う。
 
 DBを用いたデータ保存、検索、ユーザー管理、投稿管理は初期スコープ外とする。
 
-ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱うCloudflare D1 / R2基盤、character API、認証済みのクラウド保存UI、複数キャラクター一覧は例外とする。G5は、公開characterの閲覧、owner private characterの閲覧・保存、public characterのコピー保存までを扱うが、検索、server-side pagination、共有URL、共同編集は含めない。
+ただし、character sheet cloud persistenceのCloudflare D1 / R2基盤、character API、認証済みのクラウド保存UI、複数キャラクター一覧は例外とする。公開characterの閲覧、owner private characterの閲覧・保存、public characterのコピー保存を扱うが、検索、server-side pagination、共有URL、共同編集は含めない。
 
 本サイトは静的サイトとして動作し、Markdown / MDX / Astroページ、変換済みJSON、静的アセットのみでビルド・公開できることを前提とする。
 
@@ -130,7 +130,7 @@ SQLite、PostgreSQL、MySQL、Firestore、Supabase等の導入は行わない。
 
 常駐サーバー、APIサーバー、SSR、サーバーアクション、バックエンド処理は初期スコープ外とする。
 
-ただし `ex-16-character-sheet-cloud-persistence` の承認済みGateで扱うCloudflare Workerだけは例外とする。Node.js常駐サーバーを公開環境へ追加せず、G3ではbackend実装を追加しない。G4のcharacter APIとG5のfrontend接続は、この親issueの範囲でのみ扱う。
+ただし、character sheet cloud persistenceのCloudflare Workerだけは例外とする。Node.js常駐サーバーを公開環境へ追加せず、character APIとfrontend接続はこのcloud persistenceの範囲だけで扱う。
 
 検索、データ表示、ページ生成は静的サイトとして成立する範囲で実装する。
 

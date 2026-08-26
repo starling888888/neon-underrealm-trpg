@@ -35,12 +35,12 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - CCFOLIAキャラクター駒データのコピー
 - desktop、tablet、mobileでの利用
 
-端末内の最新1キャラクターの保存・復元は初期scopeに含める。`ex-16-character-sheet-cloud-persistence` の承認済みまたは計画済みGateでは、G3でGoogle Identity Servicesのbrowser-only credential flowによるfrontendログイン、G4でbackendのtoken verifierとクラウド保存API、G5で複数キャラクター管理とクラウド保存UIを段階的に扱う。G6ではFirebase Authenticationへ認証境界を置換し、SDK管理のbrowser persistence、token refresh、Firebase ID Token検証を導入する。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
+端末内の最新1キャラクターの保存・復元と、Firebase Authenticationを使うクラウド保存・キャラクター一覧は初期scopeに含める。Firebase SDKがbrowserの認証状態永続化とtoken refreshを管理し、Cloudflare backendがFirebase ID Tokenを検証する。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
 
 以下は初期スコープ外とする。
 
-- `ex-16-character-sheet-cloud-persistence` の承認済みGateを除くアカウント、認証、サーバー保存、複数端末同期、共同編集、共有URL
-- `ex-16-character-sheet-cloud-persistence` の承認済みG5を除く複数キャラクターの管理、印刷レイアウト、PDF出力、CCFOLIAコマンドパレット
+- Firebase Authenticationとcharacter sheet cloud persistence以外のアカウント、認証、サーバー保存、複数端末同期、共同編集、共有URL
+- 印刷レイアウト、PDF出力、CCFOLIAコマンドパレット
 - ダイスローラー、戦闘シミュレーション、セッション中の状態管理
 - 取得制限や効果文を解析する汎用ルールエンジン
 
@@ -57,7 +57,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - キャラクター設定は複数行のプレーンテキストとして保持する。改行を保持し、MarkdownやHTMLとして解釈しない。
 - キャラクター設定は、基本情報のプロフィール入力群の直下にある開閉操作から表示する。初期状態では入力欄を隠す。
 - キャラクター画像は`image/*`を受け付け、入力容量は5 MiB（5,242,880 bytes）までとする。ブラウザでデコードできた画像だけを長辺約500pxまで縮小し、拡大せず、WebP品質`0.8`で1回だけ変換する。透明背景の検出やJPEGとの容量比較は行わない。変換後の画像は表示と端末内の画像recordに加え、クラウド保存用snapshotではBase64エンコード文字列として扱う。
-- 画像選択は画像表示領域へのdrag and dropと、その直下のファイル選択ボタンの両方で行えるようにする。選択済み画像には、その導線に続けて個別の`画像をクリア`操作を表示する。クリアはIndexedDBの現在画像recordだけを削除し、削除成功後に未選択状態へ切り替える。選択確認のためだけのアプリ内ダイアログやプレビューは設けない。形式、容量、decode、変換、IndexedDB書込み、個別削除に失敗した場合は、入力欄のエラー一覧へ積まずG5の失敗ダイアログを表示し、既存の画像を上書き・削除しない。browser native `alert`は使用しない。
+- 画像選択は画像表示領域へのdrag and dropと、その直下のファイル選択ボタンの両方で行えるようにする。選択済み画像には、その導線に続けて個別の`画像をクリア`操作を表示する。クリアはIndexedDBの現在画像recordだけを削除し、削除成功後に未選択状態へ切り替える。選択確認のためだけのアプリ内ダイアログやプレビューは設けない。形式、容量、decode、変換、IndexedDB書込み、個別削除に失敗した場合は、入力欄のエラー一覧へ積まず既存の失敗dialogを表示し、既存の画像を上書き・削除しない。browser native `alert`は使用しない。
 - 画像の変換・保存中は、キャラクターシートIsland全体を操作不可にする汎用loading overlayを表示する。indicatorは`prefers-reduced-motion`で回転を停止する。
 - キャラクターシートはコンストラクションまたはフルスクラッチを選択する画面にはしない。既存のキャラクターメイキング解説への導線を表示する。
 
@@ -200,7 +200,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 
 ## 保存、復元、出力
 
-- 端末内には最新1キャラクターだけを作業用として保存・復元する。`ex-16-character-sheet-cloud-persistence` のG5では、Google ID tokenをbrowser persistenceへ保存せず、G4の4 endpointを使ってクラウド保存と`キャラクター一覧`を提供する。G6ではFirebase AuthenticationのSDK管理下で認証状態を永続化し、API requestには取得時点で有効なFirebase ID Tokenだけを渡す。ID Tokenをアプリケーション独自のbrowser persistenceへ保存しない。
+- 端末内には最新1キャラクターだけを作業用として保存・復元する。クラウド保存と`キャラクター一覧`では、Firebase AuthenticationのSDK管理下で認証状態を永続化し、API requestには取得時点で有効なFirebase ID Tokenだけを渡す。ID Tokenをアプリケーション独自のbrowser persistenceへ保存しない。
 - Firebase Authenticationの初回状態確定では現在のpageを維持する。確定後にuidがlogin、logout、user切替で変化した場合は、remote ownershipの専用再取得stateを持たず、page全体を再読み込みして初期ロード経路で再評価する。
 - D1 metadata、shared API contract、frontend metadataは`isPublic`を持つ。既存D1 recordはmigration後にpublicとして扱う。未ログインの一覧はpublic characterだけ、ログイン済みの一覧はpublic characterと自分が所有するprivate characterだけを返す。private characterをowner以外または未認証で個別取得した場合は、存在しないIDと区別しない`404`とする。
 - 現在のcharacterはlocal / owner remote / non-owner remote / unauthenticated remoteを区別し、login / logout時に所有状態を再評価する。remote IDと`isOwner`をJSON import dataやbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
@@ -238,5 +238,5 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - desktopのaction railは本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを変更しない。
 - section navigationは第一階層sectionだけを対象にする。各navigation buttonは下向きiconと下線を持つが、現在のscroll位置またはクリック対象に応じたaccent表示は行わない。section frame自体、子section、行、入力項目の色は変えない。
 - キャラクターシートのrouteと入力内容はPagefind検索indexの対象外とする。
-- 静的ホスティングで完結する。`ex-16-character-sheet-cloud-persistence` の承認済み Gate だけは Cloudflare Worker を例外として許可する。G3のログインcredentialはfrontend内でメモリ保持する初期実装とし、G6ではFirebase Authentication SDKが管理する認証状態永続化へ置換する。
+- 静的ホスティングで完結する。キャラクターシートのクラウド保存だけはCloudflare Workerを使う例外とし、Firebase Authentication SDKが認証状態の永続化を管理する。
 - 画像の端末内保存方式、保存先間の責務分離、ブラウザAPIの失敗時の共通方針はアーキテクチャで定義する。JSONの構造、CCFOLIA Clipboard JSONの具体的なオブジェクト形状、実行時schemaの具体形は、対応する実装Gateの着手直前にこの要件と整合する形で確定する。

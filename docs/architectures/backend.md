@@ -2,14 +2,12 @@
 
 ## 目的と適用範囲
 
-本書は、`ex-16-4-cloud-persistence-api`で実装したcharacter sheet cloud persistence backendと、`ex-16-5-cloud-persistence-ui`で更新する公開設定contractの設計正本である。HTTP API、shared contract、validation、service、repository、token verifier、production/local/testのcomposition、error contract、テスト境界を定義する。
+本書はcharacter sheet cloud persistence backendの設計正本である。HTTP API、shared contract、validation、service、repository、token verifier、production/local/testのcomposition、error contract、テスト境界を定義する。
 
-frontendのクラウド保存UI、character sheetのrestore、Google login UIはG5の対象であり、本書では扱わない。ゲーム規則に対するcharacter JSONのserver-side validation、character JSON schema version migration、検索、server-side pagination、共有URL、D1/R2の分散transactionも対象外とする。
+frontendのクラウド保存UIとcharacter sheetのrestoreは本書では扱わない。ゲーム規則に対するcharacter JSONのserver-side validation、character JSON schema version migration、検索、server-side pagination、共有URL、D1/R2の分散transactionも対象外とする。
 
 ## 正本と制約
 
-- 実装契約: `docs/issue/ex-16-4-cloud-persistence-api.md`
-- 親要件: `docs/issue/ex-16-character-sheet-cloud-persistence.md`
 - プロジェクトのアーキテクチャ要件: `docs/requirements/architecture.md`
 - テストとCI: `docs/testing.md`
 - 初期スコープ外: `docs/out-of-scope.md`
@@ -30,7 +28,7 @@ authentication middleware
   -> token verifier
 
 production composition
-  -> Google ID Token verifier + Cloudflare repository
+  -> Firebase ID Token verifier + Cloudflare repository
 
 local/test composition
   -> test token verifier + Cloudflare repository + Wrangler local D1/R2 binding
@@ -63,7 +61,7 @@ domain objectは少なくとも、次の情報を扱う。
 
 ### D1とR2
 
-D1はmetadata index、R2はsnapshot storeとして使う。D1 rowには`type TEXT`と`is_public`を保存し、`type`は`user`または`sample`だけを許可する。`is_public`はboolean相当のNOT NULL値とし、G5 migrationで既存recordをpublicとして扱う。repositoryは全recordを`updated_at DESC`で取得し、serviceがvisibility filterと`sample`の作成日時昇順を適用する。
+D1はmetadata index、R2はsnapshot storeとして使う。D1 rowには`type TEXT`と`is_public`を保存し、`type`は`user`または`sample`だけを許可する。`is_public`はboolean相当のNOT NULL値とし、migrationで既存recordをpublicとして扱う。repositoryは全recordを`updated_at DESC`で取得し、serviceがvisibility filterと`sample`の作成日時昇順を適用する。
 
 R2 keyは`{userId}/{id}.json`とする。`type`を`sample`へ変更しても`userId`とR2 keyは変えない。
 
@@ -73,7 +71,7 @@ new recordはid未指定の`POST /character-sheets`だけで作成し、service�
 
 ### D1 schema
 
-G4の初回migrationは、以下のschemaを作る。時刻はUTCのUnix epoch millisecondsを`INTEGER`で保存する。
+初回migrationは、以下のschemaを作る。時刻はUTCのUnix epoch millisecondsを`INTEGER`で保存する。
 
 ```sql
 CREATE TABLE character_sheets (
@@ -98,19 +96,19 @@ CREATE INDEX idx_character_sheets_sample_created_at
 ```
 
 - `id`はserverが発行するopaqueなglobal unique IDである。
-- `owner_user_id`はGoogle `sub`から導く内部値であり、公開APIへ出さない。
+- `owner_user_id`はFirebase `uid`から導く内部値であり、公開APIへ出さない。
 - `type`は作成request・更新requestで受け取らない。新規作成はdefaultの`user`、更新は既存値を維持する。管理者だけがD1へ直接変更できる。
 - `pl_name`、`primary_ryugi_id`、`ikizama_id`は未設定を許可する。`pc_name`と`rank`はDB保存前の入力制約により必須である。
 - `created_at`と`updated_at`はWorkerが`Date.now()`で設定する。公開DTOも同じUnix epoch millisecondsの`number`を返し、serverでISO 8601へ変換しない。
-- 初回migrationのtype別indexは残す。G4の一覧queryはtype別queryを発行せず、record件数の実測が必要になるまで新しいindexやpaginationを追加しない。
+- 初回migrationのtype別indexは残す。一覧queryはtype別queryを発行せず、record件数の実測が必要になるまで新しいindexやpaginationを追加しない。
 
 ### Migration lifecycle
 
 - executable SQLは`backend/migrations/`へ連番で追加する。適用済みmigrationを編集・削除せず、schema変更は次の連番migrationで行う。
-- local実行はWrangler / Miniflare / workerdのD1・R2 bindingを使う。`dev:local`と`migrate:local`は`wrangler:dev`を通じてGit ignoreした`backend/.wrangler/state/`を明示的な開発用stateにし、Google ID tokenの正規検証器を使う。local integration testは`dev:integration`、`migrate:integration`、`integration:reset`で管理する`.wrangler/integration-state/`へ分離し、test token専用の検証器で実際のWorkerへHTTP requestを送る。`integration:reset`はintegration専用stateだけを削除する。
-- development cloud environmentの初回は`wrangler:dev -- deploy`でD1/R2をprovisionする。その後と以後のschema更新では、`wrangler:dev -- d1 migrations apply DB --remote`がdevelopment D1へ未適用migrationを適用し、`wrangler:dev -- deploy`がdevelopment Workerを更新する。Wranglerのenvironment名によりWorkerは`neon-underrealm-backend-dev`となる。`backend/bin/wrangler.sh`はdevelopmentの`backend/.env`を存在時だけsourceし、`deploy`時だけ`GOOGLE_OAUTH_CLIENT_ID`と`CORS_ALLOW_ORIGIN`を公開Worker `vars`へ渡す。local `wrangler dev`はWrangler標準の`.env`自動読込で同じ値をbindingとして得るため、wrapperは`--var`を追加しない。development CORS allow originは`http://localhost:4321,http://localhost:4322`である。
+- local実行はWrangler / Miniflare / workerdのD1・R2 bindingを使う。`dev:local`と`migrate:local`は`wrangler:dev`を通じてGit ignoreした`backend/.wrangler/state/`を明示的な開発用stateにし、Firebase ID Tokenの正規検証器を使う。local integration testは`dev:integration`、`migrate:integration`、`integration:reset`で管理する`.wrangler/integration-state/`へ分離し、test token専用の検証器で実際のWorkerへHTTP requestを送る。`integration:reset`はintegration専用stateだけを削除する。
+- development cloud environmentの初回は`wrangler:dev -- deploy`でD1/R2をprovisionする。その後と以後のschema更新では、`wrangler:dev -- d1 migrations apply DB --remote`がdevelopment D1へ未適用migrationを適用し、`wrangler:dev -- deploy`がdevelopment Workerを更新する。Wranglerのenvironment名によりWorkerは`neon-underrealm-backend-dev`となる。`backend/bin/wrangler.sh`はdevelopmentの`backend/.env`を存在時だけsourceし、`deploy`時だけ`FIREBASE_PROJECT_ID`と`CORS_ALLOW_ORIGIN`を公開Worker `vars`へ渡す。local `wrangler dev`はWrangler標準の`.env`自動読込で同じ値をbindingとして得るため、wrapperは`--var`を追加しない。development CORS allow originは`http://localhost:4321,http://localhost:4322`である。
 - resource未作成のenvironmentでは、最初に`wrangler:<environment> -- deploy`でD1/R2をprovisionし、次に`wrangler:<environment> -- d1 migrations apply DB --remote`で初回migrationを適用し、最後にもう一度`wrangler:<environment> -- deploy`でWorkerを更新する。作成済みenvironmentではmigration、deployの順に実行する。production CIは作成済みresourceの更新だけを担い、initial bootstrapは明示的に承認された手順で済ませてからCIを使う。D1のmigration tableが適用済みSQLを管理する。
-- production deployはGitHub Repository Variableのproduction Google client IDと、`${{ github.repository_owner }}`から導出するCORS allow originをjob環境変数から`--var`へ渡す。GitHub Pagesのcustom domainへ移行した場合だけ、CORS originを明示設定へ切り替える。CIはGoogle client IDが未設定ならdeploy前に失敗する。Google client IDとCORS allow originをCloudflare secretへ登録しない。
+- production deployはGitHub Repository Variableの`FIREBASE_PROJECT_ID`と、`${{ github.repository_owner }}`から導出するCORS allow originをjob環境変数から`--var`へ渡す。GitHub Pagesのcustom domainへ移行した場合だけ、CORS originを明示設定へ切り替える。CIはFirebase project IDが未設定ならdeploy前に失敗する。Firebase project IDとCORS allow originをCloudflare secretへ登録しない。
 - `wrangler.jsonc`のproductionと`env.dev`のD1/R2 draft bindingを正本とし、それぞれresourceが未作成の初回deployではWranglerが作成・bindingする。D1/R2 bindingと`vars`はenvironment間で継承されない。resource名・location・lifecycleを明示管理する必要が出たときは、automatic provisioningのBeta採用を再評価する。
 
 ## Shared API contract
@@ -172,7 +170,7 @@ list responseはserver-side paginationなしで、`user`と`sample`の配列を�
 
 ### Token verifier
 
-verifier interfaceはtokenを検証し、検証済みの`userId`または認証失敗の分類を返す。G4のproduction implementationはGoogle ID Tokenのsignature、`iss`、`aud`、`exp`を検証する。G6でFirebase Authenticationへ移行した後は、Firebase ID Tokenのsignature、`iss`、`aud`、`exp`とFirebase `uid`を検証するimplementationへ置換する。Firebase公開鍵endpointの取得不能、response不正、証明書import失敗は`unavailable`、token自身の形式・署名・claim不正は`invalid`、分類できないverifier例外は`unexpected`とする。verifierはHTTP statusやresponseを扱わない。
+verifier interfaceはtokenを検証し、検証済みの`userId`または認証失敗の分類を返す。production implementationはFirebase ID Tokenのsignature、`iss`、`aud`、`exp`とFirebase `uid`を検証する。Firebase公開鍵endpointの取得不能、response不正、証明書import失敗は`unavailable`、token自身の形式・署名・claim不正は`invalid`、分類できないverifier例外は`unexpected`とする。verifierはHTTP statusやresponseを扱わない。
 
 authentication middleware factoryへproduction/localのverifierをDIする。local API E2Eとtestはtest verifierを明示注入し、決め打ちtokenを有効、期限切れ、無効の結果へ対応付ける。production verifierを`if`文でskipしたり、環境変数で検証を無効化したりしない。production verifier自体はunit/contract testする。
 

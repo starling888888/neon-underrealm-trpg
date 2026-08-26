@@ -86,7 +86,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - [x] Group 2の一覧page clampと8MiB / 4MiB payload contractを実装し、正常境界、1 byte超過、chunked 413をtestで確認している。skip中のchunked testを残していない。
 - [ ] Group 3で今回のPagefind deployment markerを検知してからPublic E2Eを実行する。
 - [ ] Group 4でsample 10件の投入・対象ID記録・未ログイン一覧での順序／公開状態／個別復元確認、手動production smoke、Public E2Eの責務を文書化し、リポジトリ全体の現行文書をFirebase Authenticationと現行実装に整合させている。
-- [ ] Group 4でroot / frontend / backendのREADME責務を分離し、frontend / backend README単独変更では対応するproduction deployを起動しない。
+- [x] Group 4でroot / frontend / backendのREADME責務を分離し、frontend / backend README単独変更では対応するproduction deployを起動しない。
 - [ ] UI変更について、既存design targetとの整合、対象route・state・viewportのactual screenshot確認、変更targetに限定したVRTをPR review直前に実施している。canonical VRT baselineを更新していない。
 - [ ] production deploy後、管理者アカウントで手動smokeを実施し、一時データを削除して記録している。
 - [ ] Group 5のarchiveをGitHub Issue記録とcurrent local evidenceに基づき完了している。
