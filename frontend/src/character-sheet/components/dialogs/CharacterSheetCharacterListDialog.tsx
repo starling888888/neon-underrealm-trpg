@@ -2,7 +2,14 @@ import type {
   CharacterSheetListResponse,
   CharacterSheetSummary,
 } from "@neon-underrealm/shared";
-import { type RefObject, useCallback, useMemo, useRef, useState } from "react";
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { characterSheetDictionary } from "../../dictionary";
 import {
   getCharacterSheetIkizamaOptions,
@@ -54,10 +61,19 @@ export default function CharacterSheetCharacterListDialog({
       : values;
   }, [cache, kind, ownersOnly]);
   const pageCount = Math.max(1, Math.ceil(entries.length / pageSize));
-  const pageEntries = entries.slice(page * pageSize, (page + 1) * pageSize);
+  const clampedPage = Math.min(page, pageCount - 1);
   const scrollListToTop = useCallback(() => {
     if (listRegionRef.current !== null) listRegionRef.current.scrollTop = 0;
   }, []);
+  useEffect(() => {
+    if (page === clampedPage) return;
+    setPage(clampedPage);
+    scrollListToTop();
+  }, [clampedPage, page, scrollListToTop]);
+  const pageEntries = entries.slice(
+    clampedPage * pageSize,
+    (clampedPage + 1) * pageSize,
+  );
 
   return (
     <CharacterSheetDialog
@@ -135,21 +151,21 @@ export default function CharacterSheetCharacterListDialog({
           className={styles.pagination}
         >
           <CharacterSheetButton
-            disabled={page === 0}
+            disabled={clampedPage === 0}
             onClick={() => {
-              setPage((value) => value - 1);
+              setPage((value) => Math.max(0, value - 1));
               scrollListToTop();
             }}
           >
             {general.previous}
           </CharacterSheetButton>
           <span>
-            {page + 1} / {pageCount}
+            {clampedPage + 1} / {pageCount}
           </span>
           <CharacterSheetButton
-            disabled={page + 1 === pageCount}
+            disabled={clampedPage + 1 === pageCount}
             onClick={() => {
-              setPage((value) => value + 1);
+              setPage((value) => Math.min(value + 1, pageCount - 1));
               scrollListToTop();
             }}
           >

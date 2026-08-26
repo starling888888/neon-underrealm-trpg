@@ -2,6 +2,7 @@ import type {
   ApiErrorResponse,
   ApplicationErrorCode,
 } from "@neon-underrealm/shared";
+import { characterSheetMaximumRequestBytes } from "@neon-underrealm/shared";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
@@ -21,12 +22,11 @@ import {
 export type AppDependencies = {
   corsAllowOrigins: string[];
   characterSheetService: CharacterSheetService;
+  maximumRequestBodyBytes?: number;
   tokenVerifier: TokenVerifier;
 };
 
 type ErrorStatus = 400 | 401 | 403 | 404 | 413 | 419 | 500 | 503;
-
-const maximumRequestBodyBytes = 8 * 1024 * 1024;
 
 const errorStatusByCode = {
   authentication_unavailable: 503,
@@ -46,6 +46,8 @@ const errorResponse = (error: ApplicationError): ApiErrorResponse => ({
 
 export const createApp = (dependencies: AppDependencies) => {
   const app = new Hono<AuthenticationEnvironment>();
+  const maximumRequestBodyBytes =
+    dependencies.maximumRequestBodyBytes ?? characterSheetMaximumRequestBytes;
 
   app.use(
     "*",

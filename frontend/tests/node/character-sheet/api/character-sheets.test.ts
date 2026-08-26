@@ -1,3 +1,4 @@
+import { characterSheetMaximumRequestBytes } from "@neon-underrealm/shared";
 import { expect, test, vi } from "vitest";
 import {
   CharacterSheetApiError,
@@ -65,4 +66,21 @@ test("classifies 5xx API failures as reload-recovery errors", () => {
   expect(new CharacterSheetApiError(500).isUnexpected).toBe(true);
   expect(new CharacterSheetApiError(503).isUnexpected).toBe(true);
   expect(new CharacterSheetApiError(404).isUnexpected).toBe(false);
+});
+
+test("rejects an oversized save before sending it to the backend", async () => {
+  const fetchImplementation = vi.fn<typeof fetch>();
+  const client = createCharacterSheetApiClient(basePath, fetchImplementation);
+  const input = {
+    metadata: { isPublic: true, pcName: "large", rank: 1 },
+    snapshot: {
+      imageBase64String: null,
+      padding: "A".repeat(characterSheetMaximumRequestBytes),
+    },
+  };
+
+  await expect(client.save(input, "token")).rejects.toMatchObject({
+    status: 413,
+  });
+  expect(fetchImplementation).not.toHaveBeenCalled();
 });

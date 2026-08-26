@@ -5,6 +5,7 @@ import type {
   CharacterSheetListResponse,
   CharacterSheetSummary,
 } from "@neon-underrealm/shared";
+import { characterSheetMaximumRequestBytes } from "@neon-underrealm/shared";
 
 type Fetch = typeof fetch;
 
@@ -25,6 +26,12 @@ export class CharacterSheetApiError extends Error {
   }
 }
 
+export class CharacterSheetPayloadTooLargeError extends CharacterSheetApiError {
+  constructor() {
+    super(413);
+  }
+}
+
 export type CharacterSheetApiClient = {
   delete(id: string, idToken: string): Promise<void>;
   get(id: string, idToken: string | null): Promise<CharacterSheet>;
@@ -39,6 +46,16 @@ export function createCharacterSheetApiClient(
   basePath: string = import.meta.env.PUBLIC_API_BASE_PATH,
   fetchImplementation: Fetch = fetch,
 ): CharacterSheetApiClient {
+  const serializeSaveInput = (input: CharacterSheetInput): string => {
+    const body = JSON.stringify(input);
+    if (
+      new TextEncoder().encode(body).byteLength >
+      characterSheetMaximumRequestBytes
+    ) {
+      throw new CharacterSheetPayloadTooLargeError();
+    }
+    return body;
+  };
   const request = async <T>(
     path: string,
     options: RequestInit,
@@ -84,11 +101,11 @@ export function createCharacterSheetApiClient(
         idToken,
       );
     },
-    save(input, idToken) {
+    async save(input, idToken) {
       return request<CharacterSheetSummary>(
         "/character-sheets",
         {
-          body: JSON.stringify(input),
+          body: serializeSaveInput(input),
           headers: { "Content-Type": "application/json" },
           method: "POST",
         },

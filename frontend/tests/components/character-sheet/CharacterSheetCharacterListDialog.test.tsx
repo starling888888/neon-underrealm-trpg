@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import type { CharacterSheetSummary } from "@neon-underrealm/shared";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import CharacterSheetCharacterListDialog from "../../../src/character-sheet/components/dialogs/CharacterSheetCharacterListDialog";
@@ -112,5 +112,46 @@ describe("CharacterSheetCharacterListDialog", () => {
       ).disabled,
     ).toBe(true);
     expect(screen.getByRole("button", { name: "PC1" })).not.toBeNull();
+  });
+
+  it("clamps an invalid page after the cached list shrinks", async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(
+      <CharacterSheetCharacterListDialog
+        cache={{
+          sample: [],
+          user: Array.from({ length: 11 }, (_, index) => summary(index + 1)),
+        }}
+        isLoading={false}
+        isOpen
+        onRequestClose={vi.fn()}
+        onSelect={vi.fn()}
+      />,
+    );
+    const listRows = document.querySelector<HTMLElement>(
+      "[data-character-sheet-character-list-rows]",
+    );
+    if (listRows !== null) listRows.scrollTop = 120;
+    await user.click(screen.getByRole("button", { name: "次へ" }));
+    expect(screen.getByRole("button", { name: "PC11" })).not.toBeNull();
+
+    rerender(
+      <CharacterSheetCharacterListDialog
+        cache={{
+          sample: [],
+          user: Array.from({ length: 10 }, (_, index) => summary(index + 1)),
+        }}
+        isLoading={false}
+        isOpen
+        onRequestClose={vi.fn()}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("1 / 1")).toBeTruthy();
+      expect(screen.getByRole("button", { name: "PC1" })).toBeTruthy();
+    });
+    expect(listRows?.scrollTop).toBe(0);
   });
 });

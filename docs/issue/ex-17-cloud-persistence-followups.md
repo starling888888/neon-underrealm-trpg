@@ -31,7 +31,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 ### Group 2: 一覧・payload contract
 
 - character一覧がcache縮小後に無効なpageを指さないよう、`page <= pageCount - 1`を保証する。
-- HTTP request全体の上限を10MiB、`imageBase64String`の上限を4MiBに統一する。
+- HTTP request全体の上限は既存どおり8MiB、`imageBase64String`の上限を4MiBに統一する。
 - shared packageの上限定数をfrontend送信直前のUTF-8 byte長検査、shared schema、backend body limitで共用する。
 - Content-Lengthありとchunked requestの413を検証し、skip中のchunked integration testをtest専用の小さいbody limitで安定化する。
 
@@ -78,7 +78,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 ## 完了条件
 
 - [ ] Group 1の認証状態変更、想定外エラーdialog、Firebase verifier status分類を実装し、unit / component / backend testで確認している。fatal error dialogは`/character-sheet/`の対象stateをdesktop、tablet、mobileのactual screenshotで確認し、既存target限定VRTをPR review直前に実施している。
-- [ ] Group 2の一覧page clampと10MiB / 4MiB payload contractを実装し、正常境界、1 byte超過、chunked 413をtestで確認している。skip中のchunked testを残していない。
+- [x] Group 2の一覧page clampと8MiB / 4MiB payload contractを実装し、正常境界、1 byte超過、chunked 413をtestで確認している。skip中のchunked testを残していない。
 - [ ] Group 3で今回のPagefind deployment markerを検知してからPublic E2Eを実行する。
 - [ ] Group 4でsample 10件の投入・対象ID記録・未ログイン一覧での順序／公開状態／個別復元確認、手動production smoke、Public E2Eの責務を文書化し、リポジトリ全体の現行文書をFirebase Authenticationと現行実装に整合させている。
 - [ ] UI変更について、既存design targetとの整合、対象route・state・viewportのactual screenshot確認、変更targetに限定したVRTをPR review直前に実施している。canonical VRT baselineを更新していない。
@@ -89,7 +89,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 
 ## チェックポイント
 
-- [ ] frontend、backend、shared package間でpayloadとAPI error contractが矛盾していない。
+- [x] frontend、backend、shared package間でpayloadとAPI error contractが矛盾していない。
 - [ ] 401 / 403 / 404などの既知エラーで未保存編集を不必要に破棄しない。
 - [ ] `userId`をclient入力または公開responseへ追加しない。
 - [ ] GitHub Pagesのsubpath公開とCloudflare backend CORSを壊さない。

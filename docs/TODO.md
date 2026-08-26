@@ -123,9 +123,9 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
   - shared schemaではBase64画像単体に近いサイズまで許容できるため、schema上validでもJSON envelopeを含めるとbackendで413になる領域が存在する。
   - 正常な最大画像サイズ、Base64 overhead、snapshot metadataを考慮し、client/shared/backendで一貫した上限を決定する。
   - boundary testを追加する。
-  - handling plan: HTTP request全体の上限を10MiB、`imageBase64String`の上限を4MiBとする。500px・WebP quality 0.8へ変換後の通常画像に余裕を持たせ、snapshotとmetadataに約6MiBを確保する。
+  - handling plan: HTTP request全体の上限は既存どおり8MiB、`imageBase64String`の上限は4MiBとする。500px・WebP quality 0.8へ変換後の通常画像に余裕を持たせ、snapshotとmetadataに約4MiBを確保する。
   - implementation: shared packageへ上限定数を置き、frontendは送信直前のUTF-8 byte長、shared schemaは画像文字列長、backendはbody全体を同じcontractで検査する。
-  - test: 最大想定画像を含む正常payloadと1 byte超過を確認する。skip中のchunked oversized request integration testは、`createApp`へtest専用の小さいbody limitを注入し、productionの10MiB上限を変えずに16KiB超程度のstreamで413を安定して確認する。
+  - test: 最大想定画像を含む正常payloadと1 byte超過を確認する。skip中のchunked oversized request integration testは、`createApp`へtest専用の小さいbody limitを注入し、productionの8MiB上限を変えずに16KiB超程度のstreamで413を安定して確認する。
 
 ### Production deployment / operations
 
