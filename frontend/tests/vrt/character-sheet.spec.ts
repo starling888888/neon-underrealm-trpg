@@ -16,10 +16,8 @@ async function openResetConfirm(page: Page): Promise<void> {
     await menuTrigger.click();
   }
 
-  await page.getByRole("button", { exact: true, name: "初期化" }).click();
-  await expect(
-    page.getByRole("dialog", { name: "入力内容を初期化" }),
-  ).toBeVisible();
+  await page.getByRole("button", { exact: true, name: "下書き破棄" }).click();
+  await expect(page.getByRole("dialog", { name: "下書き破棄" })).toBeVisible();
 }
 
 async function configureCcfoliaClipboard(
@@ -679,7 +677,7 @@ registerCharacterSheetVrtScenarios([
   {
     id: "reset-confirm",
     kind: "dialog",
-    locator: dialog("入力内容を初期化"),
+    locator: dialog("下書き破棄"),
     prepare: openResetConfirm,
     route: siteRoutes.characterSheet,
   },

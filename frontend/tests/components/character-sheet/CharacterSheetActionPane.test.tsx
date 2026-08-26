@@ -116,10 +116,10 @@ describe("CharacterSheetActionPane", () => {
 
     expect(screen.queryByRole("button", { name: "エクスポート" })).toBeNull();
     for (const name of [
-      "DB保存",
-      "コピー保存",
-      "DB削除",
-      "初期化",
+      "保存",
+      "複製",
+      "削除",
+      "下書き破棄",
       "CCFOLIAコピー",
     ]) {
       expect(

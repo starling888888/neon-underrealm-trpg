@@ -89,7 +89,6 @@ function useRootStateHarness() {
     onCharacterImageCleared: async () => {},
     onCharacterImageOperationStarted: () => {},
     onCharacterImageSelected: async () => {},
-    onJsonExport: () => {},
     onResetConfirmed: async () => {},
     rootOperation: null,
     remoteCharacter: null,
@@ -217,10 +216,10 @@ describe("CharacterSheetContainer", () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          "画像を保存できませんでした。もう一度お試しください。",
+          "下書きの画像を保存できませんでした。もう一度お試しください。",
         ),
       ).toBeTruthy();
-      expect(screen.getByText("自動復元に失敗しました。")).toBeTruthy();
+      expect(screen.getByText("下書きを復元できませんでした。")).toBeTruthy();
     });
     expect(
       screen.queryByRole("dialog", { name: "画像を処理できませんでした" }),

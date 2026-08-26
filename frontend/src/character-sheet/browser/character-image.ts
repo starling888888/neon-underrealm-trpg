@@ -5,7 +5,7 @@ import {
   characterImageMimeType,
 } from "../schemas/character-image";
 
-export const characterImageMaximumBytes = 4 * 1024 * 1024;
+export const characterImageMaximumInputBytes = 5 * 1024 * 1024;
 export const characterImageMaximumSide = 500;
 export const characterImageWebpQuality = 0.8;
 
@@ -18,12 +18,12 @@ export function validateCharacterImageFile(file: ImageFile): void {
     throw new CharacterImageError("invalid-type");
   }
 
-  if (file.size > characterImageMaximumBytes) {
+  if (file.size > characterImageMaximumInputBytes) {
     throw new CharacterImageError("file-too-large");
   }
 }
 
-/** Checks that an exported image string is base64-encoded WebP data. */
+/** Checks that a persisted image string is base64-encoded WebP data. */
 export function isWebpBase64(base64: string): boolean {
   if (
     !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(
@@ -76,8 +76,8 @@ export function decodeCharacterImageRecord(
   });
 }
 
-/** Validates an imported image independently from imported form values. */
-export async function decodeImportedCharacterImage(
+/** Validates and decodes a persisted WebP base64 image. */
+export async function decodePersistedCharacterImage(
   base64: string,
 ): Promise<CharacterImageRecord> {
   if (!isWebpBase64(base64)) {

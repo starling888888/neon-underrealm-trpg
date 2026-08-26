@@ -7,18 +7,13 @@ import { writeTextToClipboard } from "../browser/ccfolia-clipboard";
 import {
   CharacterImageError,
   convertCharacterImage,
-  decodeImportedCharacterImage,
+  decodePersistedCharacterImage,
 } from "../browser/character-image";
-import { downloadJsonFile } from "../browser/json-download";
 import { characterSheetDictionary } from "../dictionary";
 import {
   type CharacterSheetFormValues,
   characterSheetDefaultValues,
 } from "../form/values";
-import {
-  createCharacterSheetJsonFilename,
-  serializeCharacterSheetJsonExport,
-} from "../logic/json-export";
 import {
   deleteCharacterImage,
   readCharacterImage,
@@ -46,10 +41,9 @@ export type CharacterImageErrorState = {
 type CharacterSheetRootOperations = {
   convertCharacterImage: typeof convertCharacterImage;
   writeTextToClipboard: typeof writeTextToClipboard;
-  decodeImportedCharacterImage: typeof decodeImportedCharacterImage;
+  decodePersistedCharacterImage: typeof decodePersistedCharacterImage;
   deleteCharacterImage: typeof deleteCharacterImage;
   deleteCharacterSheetForm: typeof deleteCharacterSheetForm;
-  downloadJsonFile: typeof downloadJsonFile;
   readCharacterImage: typeof readCharacterImage;
   writeCharacterImage: typeof writeCharacterImage;
   readCharacterSheetForm: typeof readCharacterSheetForm;
@@ -61,10 +55,9 @@ type CharacterSheetRootDependencies = Partial<CharacterSheetRootOperations>;
 const defaultOperations: CharacterSheetRootOperations = {
   convertCharacterImage,
   writeTextToClipboard,
-  decodeImportedCharacterImage,
+  decodePersistedCharacterImage,
   deleteCharacterImage,
   deleteCharacterSheetForm,
-  downloadJsonFile,
   readCharacterImage,
   writeCharacterImage,
   readCharacterSheetForm,
@@ -376,17 +369,6 @@ export default function useCharacterSheetRootState(
     runRootOperation,
   ]);
 
-  const onJsonExport = useCallback((): void => {
-    if (isCharacterImageRestoring) return;
-
-    const values = form.getValues();
-
-    operations.downloadJsonFile(
-      serializeCharacterSheetJsonExport(values, characterImage),
-      createCharacterSheetJsonFilename(values, new Date()),
-    );
-  }, [characterImage, form, isCharacterImageRestoring, operations]);
-
   const onCcfoliaCopy = useCallback(
     async (json: string): Promise<boolean> => {
       if (rootOperation !== null) return false;
@@ -485,7 +467,7 @@ export default function useCharacterSheetRootState(
       let image: CharacterImageRecord | null = null;
       if (character.snapshot.imageBase64String !== null) {
         try {
-          image = await operations.decodeImportedCharacterImage(
+          image = await operations.decodePersistedCharacterImage(
             character.snapshot.imageBase64String,
           );
         } catch {
@@ -540,7 +522,6 @@ export default function useCharacterSheetRootState(
     onCharacterImageCleared,
     onCharacterImageOperationStarted,
     onCcfoliaCopy,
-    onJsonExport,
     onResetConfirmed,
     setImageError,
     setIsFormRestoreErrorOpen,

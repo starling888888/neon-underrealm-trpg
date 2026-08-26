@@ -712,3 +712,69 @@ VRTについては、baseline更新前に既存target一覧とfixtureを確認�
 を分類してから全baseline更新へ進む。
 
 このremote draftは、上記local validationにより正式な実装契約として確定した。
+
+---
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/requirements/character-sheet.md`に、廃止した外部JSON読み込みを前提とする記述が残っている。
+- remote snapshot復元に使う`decodeImportedCharacterImage`が、廃止したimport機能を示す名称とコメントのまま残っている。
+- 画像入力上限が4 MiBへ変更されているため、UIが示す5 MBと一致しない。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`、HEAD `268f0a7` の記録）
+- classification: valid
+- local validation: requirementsの「JSONとして解析できない」段落は、現在の外部JSON inputには対応しない。local draftとremote snapshotのschema正規化契約はarchitectureに残るため、active requirementからこの段落を削除する。
+- local validation: `decodeImportedCharacterImage`はremote snapshotの`imageBase64String`を復元する現行経路で使用されるため削除対象ではない。保存済み画像を表す名称とコメントへ変更する。
+- local validation: ユーザー確定仕様により、入力画像は5 MiB（`5 * 1024 * 1024` bytes）までとする。現在の4 MiBは誤って入力validationとrequirementsへ適用されている。サーバー保存snapshotの`imageBase64String`は4 MiB、request全体は8 MiBのまま維持する。shared schemaはすでに`imageBase64String`の文字列長へ4 MiBを適用している。
+- local validation: `onJsonExport`、`json-export.ts`、`json-download.ts`、関連testは現行UIから未使用である。ユーザーによるフォローアップ指示により、削除はレビュー指摘2でcurrent issueの対応対象へ取り込む。
+
+### 対応方針
+
+- requirementから、廃止した外部JSON inputを前提とする復元記述を削除する。
+- `decodeImportedCharacterImage`とそのoperation名、利用箇所、testを、保存済み画像の復元を示す名称へ揃える。
+- 入力画像の5 MiB上限を、入力validation、requirement、testで復元する。変換後`imageBase64String`の4 MiBとrequest全体の8 MiBはserver storageの検証上限として維持する。
+
+### 対応完了チェックリスト
+
+- [x] requirementから外部JSON inputを示す記述を削除する。
+- [x] remote snapshot画像復元のidentifierとコメントからimport由来の名称を除く。
+- [x] 入力画像5 MiB、snapshotの`imageBase64String` 4 MiB、request全体8 MiBの責務を分離する。
+- [x] `npm run check`が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run build`が通る。
+
+---
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- ユーザーが確定した`保存`、`複製`、`削除`、`下書き破棄`の操作文言に、Action Pane、remote persistence dialog、Help、VRTのtest locatorが追随していない。
+- ユーザー向け導線がないJSON export pipelineが実装、test、architectureに残っている。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`、HEAD `6c7d905` の記録）
+- classification: valid
+- local validation: dictionaryとHelpは、ユーザー編集後の操作文言とHelp構成を使用している。一方で`CharacterSheetActionPane.test.tsx`、`CharacterSheetRemotePersistenceDialogs.test.tsx`、`CharacterSheetHelpDialog.test.tsx`、`tests/vrt/character-sheet.spec.ts`には旧文言のexact locatorまたはassertionが残る。複製dialogのdialog labelは`複製`、primary actionはユーザー確定どおり`保存`とする。
+- local validation: `onJsonExport`、`json-export.ts`、`json-download.ts`、関連testは現行UIから参照されない。DB snapshot生成、CCFOLIAコピー、remote snapshot復元に必要な処理とは別であることをusage searchで確認した。
+- local validation: Review Follow-up 1（旧requirement）、2（画像入力5 MiB）、8（`decodeImportedCharacterImage`のrename）は、更新済みのレビュー指摘1で扱う。
+
+### 対応方針
+
+- ユーザーが確定したcopyへtestだけを追随させ、Help本文や操作名をエージェント判断で改稿しない。
+- VRTのユーザー向けlocatorは`下書き破棄`へ更新する。内部scenario IDのrenameは必須としない。
+- export専用のhook callback、browser adapter、serializer、dictionary key、testを削除し、`browser/`とarchitectureのfile download責務を必要な範囲で整理する。
+
+### 対応完了チェックリスト
+
+- [x] Action Pane testを`保存`、`複製`、`削除`、`下書き破棄`へ追随する。
+- [x] remote persistence dialog testを、`保存`、`複製`、`削除`と複製dialogのprimary action `保存`へ追随する。
+- [x] Help testを、現在の主要conceptと見出しを確認する形へ更新する。
+- [x] VRTの下書き破棄dialog locatorを現在のcopyへ更新する。
+- [x] JSON export専用pipelineと関連testを削除し、DB snapshot・CCFOLIA・remote snapshot復元を維持する。
+- [x] export削除後のarchitectureを現行責務へ更新する。
+- [x] 変更したtarget test、`npm run check`、frontend buildが通る。

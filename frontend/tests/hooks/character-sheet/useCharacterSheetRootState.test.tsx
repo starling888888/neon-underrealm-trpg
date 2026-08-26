@@ -67,43 +67,6 @@ describe("useCharacterSheetRootState", () => {
     expect(writeCharacterSheetForm).not.toHaveBeenCalled();
   });
 
-  it("waits for initial image restoration before exporting JSON", async () => {
-    let resolveRead:
-      | ((record: CharacterImageRecord | null) => void)
-      | undefined;
-    const downloadJsonFile = vi.fn();
-    const { result } = renderHook(() =>
-      useCharacterSheetRootState({
-        downloadJsonFile,
-        readCharacterImage: vi.fn(
-          () =>
-            new Promise<CharacterImageRecord | null>((resolve) => {
-              resolveRead = resolve;
-            }),
-        ),
-        readCharacterSheetForm: vi.fn(() => null),
-      }),
-    );
-
-    expect(result.current.isCharacterImageRestoring).toBe(true);
-    act(() => {
-      result.current.onJsonExport();
-    });
-    expect(downloadJsonFile).not.toHaveBeenCalled();
-
-    await act(async () => {
-      resolveRead?.(storedImage);
-    });
-
-    expect(result.current.isCharacterImageRestoring).toBe(false);
-    act(() => {
-      result.current.onJsonExport();
-    });
-
-    const exportedJson = downloadJsonFile.mock.calls[0]?.[0] as string;
-    expect(JSON.parse(exportedJson).imageBase64String).toBe(storedImage.base64);
-  });
-
   it("copies CCFOLIA JSON through the replaceable Clipboard adapter and reports failures", async () => {
     const writeTextToClipboard = vi.fn(async () => {});
     const { result } = renderHook(() =>

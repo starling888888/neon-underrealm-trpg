@@ -224,6 +224,14 @@ source種別は以下を使う。
 
 ### completion-record accuracy
 
+#### Marked active documentation clean before checking generic restore wording
+
+- date: 2026-08-26
+- source: review
+- 発生箇所: `ex-18-character-sheet-json-import-removal` のactive documentation完了条件
+- 観測した失敗: JSONインポート固有語のrepository-wide検索と個別diffを根拠に、active documentationからJSONインポートの説明を除去済みとして完了チェックを入れた。しかし`docs/requirements/character-sheet.md`には、外部JSON読み込みを前提にした一般的な復元要件が残っており、現行のlocal draft / remote snapshot契約へ未整理だった。
+- 一次対応: 完了条件を未チェックへ戻し、レビュー指摘1へ保存済みlocal draft / remote snapshotの復元契約として書き換える方針を記録した。レビュー対応の明示承認まではsource codeとactive requirementを変更しない。
+
 #### Marked a user-confirmation CI condition complete before confirmation
 
 - date: 2026-08-08
@@ -559,6 +567,14 @@ source種別は以下を使う。
 - 一次対応: G17のレビュー指摘4へ、current issueがdesign draftより優先することと、式表示・mobile改行・算出値背景の修正要件を記録した。以後の修正では、実装対象のcurrent issueにある画面契約を先に読み、draftは競合しない参考情報だけに限定する。
 
 ### SSoT coverage discipline
+
+#### Changed the image-input limit by conflating it with the snapshot limit
+
+- date: 2026-08-26
+- source: user
+- 発生箇所: `ex-18-character-sheet-json-import-removal` のreview-to-issueにおける画像容量指摘の検証
+- 観測した失敗: 入力画像の5 MiB上限と、500pxへの縮小・WebP変換後にサーバー保存snapshotへ入る`imageBase64String`の4 MiB上限を混同した。requirementsとfrontend input validationを4 MiBとして扱う既存変更を正しい仕様と誤判定し、review sectionでも5 MiBへの修正を不採用と記録した。
+- 一次対応: ユーザー確定仕様を根拠にreview sectionを訂正し、入力5 MiB、snapshot文字列4 MiB、request全体8 MiBとして分離した修正契約へ更新した。レビュー対応の明示承認まではsource codeを変更しない。
 
 #### Marked repository-wide documentation consistency complete before validating the character session model
 

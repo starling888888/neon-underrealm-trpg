@@ -107,7 +107,6 @@ function useRootStateHarness() {
       onCharacterImageCleared: async () => {},
       onCharacterImageOperationStarted: () => {},
       onCharacterImageSelected: async () => {},
-      onJsonExport: () => {},
       onResetConfirmed: async () => {},
       rootOperation: null,
       remoteCharacter: null,

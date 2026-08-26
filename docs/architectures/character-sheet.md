@@ -74,7 +74,7 @@ frontend/src/
 - `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`frontend/src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかはcurrent implementationに合わせて判断する。
 - `schemas/`: 現在のform入力を検証・正規化するschemaと、IndexedDB record・保存済みformを検証するschemaを置く。ブラウザから渡る生の入力値の正規化とドメイン上の入力制約はここへ置き、ComponentやHTML constraintだけへ委ねない。schema失敗時は、現在の編集stateへの部分反映を行わない。具体的な形とCCFOLIA出力形式は承認済みissueで定める。
 - `persistence/`: idなしlocal draftのserializableな下書き用localStorage adapterと、画像record用IndexedDB adapterを置く。画像adapterは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへWebPのMIME typeとbase64エンコード文字列を保存・読取り・個別削除する。React stateやJSXを持たない。idなしlocal draftの全クリア時は、このadapterを使って画像recordも削除する。
-- `browser/`: Clipboard、ファイルdownload、画像decode・WebP変換などのブラウザAPIを置く。呼出し側から差し替え可能な小さなadapterとし、ゲームルールとRHFへ依存しない。
+- `browser/`: Clipboard、画像decode・WebP変換などのブラウザAPIを置く。呼出し側から差し替え可能な小さなadapterとし、ゲームルールとRHFへ依存しない。
 - `utils/`: ID生成、数値変換など、ゲームルール・React・ブラウザAPIを含まない補助処理だけを置く。feature固有の判断は`logic/`、ブラウザAPIは`browser/`へ置き、将来の再利用だけを理由に作らない。
 
 入力欄単位の機械的なComponent分割、汎用パス文字列による状態更新、全機能分の先行抽象化は行わない。
@@ -107,7 +107,7 @@ shared表示Componentは、次の表示契約だけをPropsで受け取る。
 
 ### Container / Presenterの責務
 
-`CharacterSheetContainer`はFat Coordinatorになってよいが、Fat Domain Logicにはしない。処理の入口と実行順はContainerから追跡できるようにし、算出式、サーバー保存payloadのJSON化、schema検証、Storage / IndexedDB / Clipboard / download / 画像APIの直接操作は対応する境界へ分離する。
+`CharacterSheetContainer`はFat Coordinatorになってよいが、Fat Domain Logicにはしない。処理の入口と実行順はContainerから追跡できるようにし、算出式、サーバー保存payloadのJSON化、schema検証、Storage / IndexedDB / Clipboard / 画像APIの直接操作は対応する境界へ分離する。
 
 Containerは、表示に必要な値と操作をsection単位のViewModel / ActionsとしてPresenterまたはroot-level表示Componentへ渡す。大量のフラットprops、Presenterからのマスタ検索、Presenterによる値の補正・業務ルール判断を置かない。型の具体形は、対応する実装taskで定める。
 
@@ -249,7 +249,7 @@ VRTは領域、responsive layout、overlayの見た目を確認する。計算�
 - `logic/`: 派生値、取得条件、重複、上限、警告・エラー識別子、CCFOLIA用の構造化出力を純粋関数として検証する。
 - `schemas/`: 現在のform入力、local draft、remote snapshotの正規化と受理、破損した保存データ・必須構造欠落・不正型の拒否、失敗時に現在の編集stateを変更しないことを検証する。将来のschema versionは、互換要件が確定したtaskだけでfixtureを追加する。
 - `master-data/`: IDからの候補・表示情報の取得と、存在しないIDの扱いを検証する。生成JSONの内容や並び順の正しさは既存のデータ変換テストへ置き、キャラクターシートのVRTへ複製しない。
-- `persistence/`と`browser/`: Storage、IndexedDB、画像、Clipboard、downloadを直接テスト環境へ要求しない。小さなadapterまたはtest doubleへ差し替え、復元前保存の抑止、書込み失敗、既存画像の保持、browser API失敗を検証する。
+- `persistence/`と`browser/`: Storage、IndexedDB、画像、Clipboardを直接テスト環境へ要求しない。小さなadapterまたはtest doubleへ差し替え、復元前保存の抑止、書込み失敗、既存画像の保持、browser API失敗を検証する。
 - Containerの結線: 初期stateからのViewModel、主要な操作からRHF更新・派生値・dialog・副作用adapterへの接続を、hook testまたは必要最小限の統合testで確認する。全機能の組合せを網羅しない。
 - Presenter / 表示Component: propsに応じた表示、read-only / disabled、エラー・警告、可変行、渡されたcallbackの通知を確認する。計算式とマスタ検索は検証しない。
 
@@ -316,11 +316,11 @@ VRTは領域、responsive layout、overlayの見た目を確認する。計算�
 
 - UIキット、デザインシステム、Headless UI、CSS framework
 - ルールエンジン、数式解析、自由文効果解析
-- サーバー保存payloadのJSON化、CCFOLIA出力、画像変換、Clipboard、downloadのためだけのライブラリ
+- サーバー保存payloadのJSON化、CCFOLIA出力、画像変換、Clipboardのためだけのライブラリ
 - RHFと並行して編集値を保持するstate managementライブラリ
 - RHFからlocalStorageへの同期を抽象化する追加ライブラリ
 
-UIは全てフルスクラッチとし、画像変換、Clipboard、downloadはbrowser標準APIを`browser/`のadapterへ閉じ込める。
+UIは全てフルスクラッチとし、画像変換とClipboardはbrowser標準APIを`browser/`のadapterへ閉じ込める。
 
 ## ユーザー判断が必要な項目
 
