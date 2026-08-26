@@ -69,11 +69,10 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
 
 ### Character persistence / authentication
 
-- [ ] JSON import時のremote binding解除を失敗経路まで含めて保証する
-  - JSON importではformの復元後、画像decode失敗またはIndexedDBへの画像write失敗が発生すると、旧remote character IDが残る経路がある。
-  - import後のform内容と旧remote bindingが混在し、後続のDB保存で旧recordを意図せず上書きする可能性がある。
-  - import開始時または復元状態確定時に、画像処理の成否に依存せずremote bindingを解除する設計へ整理する。
-  - handling plan: ex-17では対応しない。JSON import機能を削除するtaskで、削除後の導線とremote bindingの整合性を確認する。
+- [ ] JSON import導線削除後にidなしlocal draft遷移を担う不要処理が残らないことを確認する
+  - 現行JSON importは入力値と画像をidなしlocal draftとして扱い、remote routeでは成功後にURL queryを外す。
+  - JSON import導線の削除後は、この遷移と画像処理にだけ必要だったstate・callback・URL identity処理が残らないことを確認する。
+  - handling plan: ex-17では対応しない。ex-18でJSON import buttonと導線を削除し、削除後のlocal draft / URL identity contractを実装・test・design noteで整合させる。
 
 - [x] authentication state変更後のremote ownershipを初期ロード経路で再評価する
   - login / logout / user変更時には一旦`isOwner=false`へdemoteしている。
@@ -192,7 +191,7 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
 JSONインポートbuttonを削除し、DB保存への移行を完了する。ex-17では扱わない。
 
 - [ ] JSONインポートbuttonを削除する
-  - JSON import機能とremote bindingの整合性は、この削除に合わせて確認する。
+  - JSON import導線の削除後に、不要となるidなしlocal draft遷移とURL identity関連処理が残っていないことを確認する。
 
 - [ ] JSONインポートbutton削除後にキャラクターシートのdesign note、ex-17 Group 1のVisual Review、target VRT、canonical VRT baselineを最新化する
   - `docs/design/character-sheet/notes.md`からJSONインポートの導線・削除予告を除き、削除後のAction Pane / control paneを正本化する。

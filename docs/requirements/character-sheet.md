@@ -31,11 +31,11 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - PC基本ビルド、能力値、副能力値、経験点、信用、縁
 - スキル、攻撃・リアクション・非戦闘判定、アイテム
 - エラー・警告表示
-- JSONインポート、端末内保存・復元、全消去、クラウド保存とキャラクター一覧
+- JSONインポート、idなしlocal draftの端末内保存・復元、全消去、クラウド保存とキャラクター一覧
 - CCFOLIAキャラクター駒データのコピー
 - desktop、tablet、mobileでの利用
 
-端末内の最新1キャラクターの保存・復元と、Firebase Authenticationを使うクラウド保存・キャラクター一覧は初期scopeに含める。Firebase SDKがbrowserの認証状態永続化とtoken refreshを管理し、Cloudflare backendがFirebase ID Tokenを検証する。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
+idなしlocal draft 1件の端末内保存・復元と、Firebase Authenticationを使うクラウド保存・キャラクター一覧は初期scopeに含める。Firebase SDKがbrowserの認証状態永続化とtoken refreshを管理し、Cloudflare backendがFirebase ID Tokenを検証する。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
 
 以下は初期スコープ外とする。
 
@@ -56,8 +56,8 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - 年齢と性別は固定選択肢に限定しない。
 - キャラクター設定は複数行のプレーンテキストとして保持する。改行を保持し、MarkdownやHTMLとして解釈しない。
 - キャラクター設定は、基本情報のプロフィール入力群の直下にある開閉操作から表示する。初期状態では入力欄を隠す。
-- キャラクター画像は`image/*`を受け付け、入力容量は4 MiB（4,194,304 bytes）までとする。ブラウザでデコードできた画像だけを長辺約500pxまで縮小し、拡大せず、WebP品質`0.8`で1回だけ変換する。透明背景の検出やJPEGとの容量比較は行わない。変換後の画像は表示と端末内の画像recordに加え、クラウド保存用snapshotではBase64エンコード文字列として扱う。
-- 画像選択は画像表示領域へのdrag and dropと、その直下のファイル選択ボタンの両方で行えるようにする。選択済み画像には、その導線に続けて個別の`画像をクリア`操作を表示する。クリアはIndexedDBの現在画像recordだけを削除し、削除成功後に未選択状態へ切り替える。選択確認のためだけのアプリ内ダイアログやプレビューは設けない。形式、容量、decode、変換、IndexedDB書込み、個別削除に失敗した場合は、入力欄のエラー一覧へ積まず既存の失敗dialogを表示し、既存の画像を上書き・削除しない。browser native `alert`は使用しない。
+- キャラクター画像は`image/*`を受け付け、入力容量は4 MiB（4,194,304 bytes）までとする。ブラウザでデコードできた画像だけを長辺約500pxまで縮小し、拡大せず、WebP品質`0.8`で1回だけ変換する。透明背景の検出やJPEGとの容量比較は行わない。変換後の画像は現在のcharacter表示へ反映する。idなしlocal draftでは端末内の画像recordへ保存し、remote characterではbrowser persistenceへ保存せずmemoryだけで保持してDB保存用snapshotへ含める。
+- 画像選択は画像表示領域へのdrag and dropと、その直下のファイル選択buttonの両方で行えるようにする。選択済み画像には、その導線に続けて個別の`画像をクリア`操作を表示する。idなしlocal draftのクリアはIndexedDBの現在画像recordを削除してから未選択状態へ切り替える。remote characterのクリアはbrowser persistenceを変更せず、memory上の画像だけを未選択状態にする。選択確認のためだけのアプリ内dialogやpreviewは設けない。形式、容量、decode、変換、idなしlocal draftでのIndexedDB書込み・個別削除に失敗した場合は、入力欄のエラー一覧へ積まず既存の失敗dialogを表示し、既存の画像を上書き・削除しない。browser native `alert`は使用しない。
 - 画像の変換・保存中は、キャラクターシートIsland全体を操作不可にする汎用loading overlayを表示する。indicatorは`prefers-reduced-motion`で回転を停止する。
 - キャラクターシートはコンストラクションまたはフルスクラッチを選択する画面にはしない。既存のキャラクターメイキング解説への導線を表示する。
 
@@ -204,7 +204,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - Firebase Authenticationの初回状態確定では現在のpageを維持する。確定後にuidがlogin、logout、user切替で変化した場合は、remote ownershipの専用再取得stateを持たず、page全体を再読み込みして初期ロード経路で再評価する。
 - D1 metadata、shared API contract、frontend metadataは`isPublic`を持つ。既存D1 recordはmigration後にpublicとして扱う。未ログインの一覧はpublic characterだけ、ログイン済みの一覧はpublic characterと自分が所有するprivate characterだけを返す。private characterをowner以外または未認証で個別取得した場合は、存在しないIDと区別しない`404`とする。
 - 現在のcharacterはidなしlocal / owner remote / non-owner remote / unauthenticated remoteを区別する。remote routeではFirebase Authenticationの初期化完了後にURLのidでGETし、route変更・認証状態変更で古くなったrequestのresponseは反映しない。login / logout / user切替後はpage全体を再読み込みして初期ロード経路で所有状態を再評価する。remote IDと`isOwner`をJSON import dataやbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
-- `キャラクター一覧`はPC名、PL名、改行表示する流儀／生き様、格、更新日を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名は一覧幅の30%、PL名は20%を取る。長いPC名・PL名と流儀／生き様はellipsisで表示してよいが、更新日は切り詰めず、横scrollは発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日は最小限の列幅でclipさせない。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。cache件数の縮小で現在pageが存在しなくなった場合は、表示pageとstateを最終有効pageへclampして同じくscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは`?character=<id>`へ遷移してremote GETとrestoreを開始し、個別閲覧pageは追加しない。
+- `キャラクター一覧`はPC名、PL名、流儀／生き様、格を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。流儀／生き様は折り返さず、長いPC名・PL名・流儀／生き様はellipsisで表示してよい。横scrollは発生させない。mobileではPC名とPL名だけを表示する。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。cache件数の縮小で現在pageが存在しなくなった場合は、表示pageとstateを最終有効pageへclampして同じくscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは`?character=<id>`へ遷移してremote GETとrestoreを開始し、個別閲覧pageは追加しない。
 - non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、DB保存、DB削除、初期化をread-onlyまたはdisabledにする。一方で、`キャラクター一覧`、JSONインポート、CCFOLIAコピー、Help、login / logoutは利用可能とする。JSONインポートは入力値と画像をidなしlocal draftとして保存してからquery parameterを外す。remote DB recordを削除・更新しない。
 - `DB保存`はログインとPC名を必須とし、idなしlocal draftの初回保存ではserver発行IDの`?character=<id>`へ遷移する前にlocal draftを削除する。owner remoteでは同じidを上書きし、remote値はbrowser persistenceへ保存しない。保存確認dialogではデータと画像をserverへ保存することを説明する。新規保存の`全員に公開する`は既定ON、既存remoteの上書きでは現在の`isPublic`を既定とする。
 - DB保存request全体は8 MiBまで、snapshotの`imageBase64String`は4 MiBまでとする。frontendは送信直前にUTF-8 byte長でrequest全体を検査し、shared schemaとbackend body limitも同じ上限を使う。

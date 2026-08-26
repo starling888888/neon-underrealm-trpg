@@ -74,7 +74,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 
 ## 初期スコープ外
 
-- JSONインポートbuttonの削除、import機能の削除後のremote binding整合、character-sheetのdesign noteとcanonical VRT baseline更新（`docs/TODO.md`のex-18で扱う）。
+- JSONインポートbuttonの削除、import導線削除後のidなしlocal draft遷移とURL identity関連処理の最終整理、character-sheetのdesign noteとcanonical VRT baseline更新（`docs/TODO.md`のex-18で扱う）。
 - seed script、管理画面、管理用API、production用test account、実Firebase認証を使うautomated smoke。
 - 新しい認証provider、Firebase Admin SDK、service account credential、独自token persistence。
 - 未承認のproduction Cloudflare / D1 / R2操作、remote migration、remote delete。
@@ -193,6 +193,35 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - [x] Group 5のmanual smoke / archive記述に矛盾がない。
 - [x] Group 4の未完了documentation整合チェックを、更新後の対象文書との照合で完了に戻す。
 - [x] `npm run check:md` が通る。
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- [I1] `docs/requirements/character-sheet.md`のキャラクター一覧が、PC名・PL名・流儀／生き様・格・更新日を表示し、mobileでも格と更新日を表示するcontractになっている。現行実装はdesktop / tabletでPC名・PL名・流儀／生き様・格の4列、mobileでPC名・PL名の2列だけであり、列幅もrequirementsの30% / 20%とは異なる。
+- [I2] 同要件のプロフィール画像節が、変換後の画像と画像クリアを常にIndexedDBへ保存・削除するとしている。remote characterの画像はmemoryだけで扱い、browser persistenceを変更しない現行contractと矛盾する。
+- [I3] `docs/TODO.md`のex-18とこのissueの初期スコープ外が、廃止済みの`remote binding`をJSONインポート削除後の整合対象としている。現在のidentityはURL queryであり、JSONインポートはidなしlocal draftへ遷移する。
+
+### 判定
+
+- source: browser-draft
+- source snapshot: PR #225の前回HEADから`1679d67`までの再レビュー。CI statusはbrowser draftの補足であり、ローカル検証の根拠には使わない。
+- I1: valid。`CharacterSheetCharacterListDialog.tsx`は4列だけを描画し、`CharacterSheetCharacterListDialog.module.css`はdesktop / tabletで32% / 24% / 36% / 8%、mobileでPC名・PL名以外を非表示にする。`docs/TODO.md`の現行一覧仕様とも一致する。
+- I2: valid。`useCharacterSheetRootState.ts`は画像のwrite / deleteを`isLocalCharacter`のときだけIndexedDB adapterへ委譲し、remote characterでは表示中のmemory stateだけを更新する。
+- I3: valid。`useCharacterSheetRoute.ts`は`?character=<id>`をremote identityとして扱い、JSONインポート成功後は`CharacterSheetContainer.tsx`がidなしrouteへ遷移する。`remote binding`は後続taskの実装契約として不正確である。
+
+### 対応方針
+
+- character-sheet要件の一覧仕様を、desktop / tabletの4列とmobileの2列、流儀／生き様の非折返しという現行表示contractへ更新し、列幅の固定値と更新日列の記述を除く。
+- プロフィール画像の要件をidなしlocal draftとremote characterへ分け、IndexedDBの保存・削除をlocal draftだけに限定する。
+- ex-18とこのissueの初期スコープ外を、JSONインポート導線削除後のidなしlocal draft遷移・URL identity関連処理の不要残存確認へ置き換える。design noteとcanonical VRT baselineは既存どおりex-18に残す。
+
+### 対応完了チェックリスト
+
+- [x] character一覧とプロフィール画像のrequirementsが現行実装・`docs/TODO.md`と一致している。
+- [x] ex-18とcurrent issueのimport削除handoffに`remote binding`を残していない。
+- [x] Group 4の未完了documentation整合チェックを、更新後の対象文書との照合で完了に戻す。
+- [x] `dprint check --incremental=false` と`markdownlint-cli2`が通る。
 
 ## 備考
 

@@ -568,6 +568,14 @@ source種別は以下を使う。
 - 観測した失敗: リポジトリ全体の現行文書をFirebase Authenticationとcloud persistence contractへ統一したと完了チェックしたが、character-sheetのrequirement、architecture、testingに残るlocal / remote persistence境界とURL遷移の旧記述、および関連するworkspace構成文書を照合できていなかった。
 - 一次対応: ChatGPTレビューの指摘をローカル実装と照合してレビュー指摘2へ記録し、Group 4の該当完了チェックを未完了へ戻した。修正はユーザー承認後に行う。
 
+#### Repeatedly marked documentation consistency complete without checking every task-owned requirement section
+
+- date: 2026-08-26
+- source: review
+- 発生箇所: `ex-17-cloud-persistence-followups` Group 4をレビュー指摘2対応後に再完了とした確認
+- 観測した失敗: local / remote persistenceの保存・復元節を修正した後、同じ要件文書のプロフィール画像節とキャラクター一覧節、ex-18へのhandoff文言を照合せず、リポジトリ全体の文書整合を再び完了として扱った。
+- 一次対応: 再レビューで確認した残件をレビュー指摘3へ記録し、Group 4の該当完了チェックを未完了へ戻した。修正はユーザー承認後に行う。
+
 #### Repeated PR reviews discovered one documentation dependency at a time
 
 - date: 2026-07-22
