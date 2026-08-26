@@ -39,9 +39,9 @@ export const characterSheetDictionary = {
       ccfoliaCopy: "CCFOLIAコピー",
       characterList: "キャラクター一覧",
       closeMenu: "操作メニューを閉じる",
-      copySave: "コピー保存",
-      dbDelete: "DB削除",
-      dbSave: "DB保存",
+      copySave: "複製",
+      dbDelete: "削除",
+      dbSave: "保存",
       errorCount: "エラーが{count}件あります。",
       errorStatusLabel: "エラー状況",
       errorsHeading: "エラー",
@@ -52,7 +52,7 @@ export const characterSheetDictionary = {
       openMenu: "操作メニューを開く",
       regionLabel: "キャラクターシートの操作",
       reviewErrors: "確認",
-      reset: "初期化",
+      reset: "下書き破棄",
       sectionJump: "セクションにジャンプ",
       title: "キャラクターシート",
     },
@@ -78,22 +78,20 @@ export const characterSheetDictionary = {
     remotePersistence: {
       copySave: {
         description:
-          "現在表示しているキャラクターを元に、新しいキャラクターとしてDBへ保存します。PC名は必須です。PL名は必要に応じて入力してください。",
+          "現在表示しているキャラクターを元に、新しいキャラクターとして保存します。PC名は必須です。PL名は必要に応じて入力してください。",
         imageNotice:
-          "コピー保存では画像は保存されません。保存後に設定してDB保存を行ってください。",
-        label: "コピー保存",
+          "複製では画像は保存されません。保存後に設定して再保存してください。",
+        label: "複製",
       },
       delete: {
         description:
-          "現在表示している自分のDB保存済みキャラクターを削除します。削除後はDBに保存されていないキャラクターシートへ表示を切り替えます。よろしいですか？",
-        label: "DB削除",
-        localCharacterNotice:
-          "ブラウザに未保存のキャラクターが保存されている場合はその内容を表示します。保存されていない場合は、初期状態のキャラクターシートを表示します。",
+          "現在表示している保存済みキャラクターを削除します。よろしいですか？",
+        label: "削除",
       },
       save: {
         description:
-          "DBに保存します。PC名は必須です。未保存のキャラクターは新しいキャラクターとして登録し、自分のDB保存済みキャラクターは現在の内容で上書きします。",
-        label: "DB保存",
+          "保存します。PC名は必須です。下書きキャラクターは新しいキャラクターとして登録し、保存済みキャラクターは現在の内容で上書きします。",
+        label: "保存",
       },
       visibility: "全員に公開する",
     },
@@ -113,9 +111,9 @@ export const characterSheetDictionary = {
     },
     reset: {
       confirm:
-        "DBにまだ保存していないキャラクターの入力内容と画像を初期状態に戻します。\nブラウザに自動保存されている入力内容と画像も削除されます。\nこの操作は元に戻せません。本当によろしいですか？",
-      confirmLabel: "入力内容を初期化",
-      loading: "初期化中…",
+        "ブラウザの下書きを破棄して初期状態に戻します。本当によろしいですか？",
+      confirmLabel: "下書き破棄",
+      loading: "破棄中…",
     },
     namePickerTooltip: "名称欄をクリックすると{kind}選択ダイアログが開きます。",
     build: {
@@ -190,23 +188,22 @@ export const characterSheetDictionary = {
       replaceFileOrDrop: "画像を差し替えまたはドロップ",
     },
     persistence: {
-      copySaveError: "コピー保存に失敗しました。",
+      copySaveError: "複製に失敗しました。",
       copySaveSuccess:
-        "コピーをDBに保存し、新しく作成したキャラクターへ表示を切り替えました。",
-      deleteError: "DB削除に失敗しました。",
-      deleteSuccess:
-        "DBから削除し、DBに保存されていないキャラクターシートへ表示を切り替えました。",
+        "コピーを保存し、複製したキャラクターへ表示を切り替えました。",
+      deleteError: "削除に失敗しました。",
+      deleteSuccess: "削除しました。",
       listLoadError: "キャラクター一覧を読み込めませんでした。",
       localDraftCleanupError:
-        "DBには保存しましたが、ブラウザに保存された未保存データを削除できませんでした。現在の入力内容を確認してください。",
+        "保存しましたが、ブラウザに保存された下書きデータを削除できませんでした。現在の入力内容を確認してください。",
       loadError: "キャラクターを読み込めませんでした。",
       remoteLoading: "キャラクターを読み込んでいます",
       remoteRestoreError: "キャラクターを復元できませんでした。",
       restoreError: "自動復元に失敗しました。",
       restoreErrorDialogLabel: "自動復元の失敗",
       restoring: "保存済みの入力を復元しています",
-      saveError: "DB保存に失敗しました。",
-      saveSuccess: "DBに保存し、保存したキャラクターへ表示を切り替えました。",
+      saveError: "保存に失敗しました。",
+      saveSuccess: "保存しました。",
     },
     profile: {
       age: "年齢",
