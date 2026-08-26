@@ -165,6 +165,27 @@ jobs:
             sleep 5
           done
 
+      - name: Wait for Pagefind deployment marker
+        env:
+          E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
+          EXPECTED_PAGEFIND_DEPLOYMENT_SHA: ${{ github.sha }}
+        run: |
+          marker_url="${E2E_BASE_URL%/}/pagefind/deployment.json"
+          expected_marker="{\"commit\":\"$EXPECTED_PAGEFIND_DEPLOYMENT_SHA\"}"
+          observed_marker=""
+          for attempt in {1..12}; do
+            observed_marker="$(curl --fail --silent --location "$marker_url" 2>/dev/null || true)"
+            if [ "$observed_marker" = "$expected_marker" ]; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 12 ]; then
+              echo "Expected Pagefind deployment SHA: $EXPECTED_PAGEFIND_DEPLOYMENT_SHA"
+              echo "Observed Pagefind deployment marker: ${observed_marker:-<unavailable>}"
+              exit 1
+            fi
+            sleep 5
+          done
+
       - name: Run Public E2E
         env:
           E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}

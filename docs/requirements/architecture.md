@@ -28,7 +28,7 @@ Gitリポジトリへの push または merge を契機として、CI/CDで自�
 → Pages等へ公開
 ```
 
-GitHub Pagesへの公開では、公開用build後にPagefind検索indexを生成し、検索indexを含む成果物をCI/CDからdeployする。
+GitHub Pagesへの公開では、公開用build後にPagefind検索indexを生成し、検索indexと同じGit commit SHAを記録する`pagefind/deployment.json`を含む成果物をCI/CDからdeployする。検索runtimeは同じSHAをquery parameterに付けて`pagefind.js`をdynamic importし、CDN上の前世代scriptを再利用しない。
 
 ### AC-03. サブパス公開に対応すること
 

@@ -64,7 +64,7 @@ character-sheetの現行構成では、`frontend/tests/node/character-sheet/`が
 
 - E2E: 実ブラウザでしか確認できない公開route、menu、検索、キャラクターシートの代表操作を確認する。
 - VRT: design notesのroute、state、viewportに対応する見た目の回帰を比較する。canonical baselineはローカル専用で、ユーザー承認なしに更新しない。
-- Public E2E: deploy成功後のGitHub Pages URLに対して、`@local-fixture`を除くE2Eを実行する。失敗時のdiagnostic outputは`frontend/test-results/`と`frontend/playwright-report/`へ出力し、既存公開をrollbackしない。
+- Public E2E: deploy成功後のGitHub Pages URLに対して、`@local-fixture`を除くE2Eを実行する。実行前に`pagefind/deployment.json`が今回のGit commit SHAを返すまで有限回pollし、timeout時は期待SHAと取得markerだけをlogへ出す。失敗時のdiagnostic outputは`frontend/test-results/`と`frontend/playwright-report/`へ出力し、既存公開をrollbackしない。
 
 ## CI/CD
 

@@ -50,7 +50,7 @@ npm --workspace=@neon-underrealm/frontend run build:public
 npm --workspace=@neon-underrealm/frontend run build:search-index
 ```
 
-`build:search-index` はサイト自体をbuildせず、既にある `frontend/dist/` を入力にPagefindの静的検索bundleを `frontend/dist/pagefind/` へ生成します。生成物はGit管理しません。
+`build:search-index` はサイト自体をbuildせず、既にある `frontend/dist/` を入力にPagefindの静的検索bundleを `frontend/dist/pagefind/` へ生成します。同じGit commit SHAを`frontend/dist/pagefind/deployment.json`へ記録するため、公開検索runtimeとPublic E2Eがartifact世代を照合できます。生成物はGit管理しません。
 
 GitHub Actionsのdeploy workflowも、公開用build後に同じ順序で検索indexを生成します。`frontend/dist/pagefind/`を含む`frontend/dist/`全体をGitHub Pages artifactとして配布します。
 
@@ -110,7 +110,7 @@ mainへのfrontend公開対象のpushでは、GitHub Pages deploy workflowがroo
 
 deploy workflowはpublic build後にPagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`frontend/src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
 
-deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`frontend/playwright-report/`と`frontend/test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
+deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。到達後、`pagefind/deployment.json`が今回のGit commit SHAと一致するまで有限回待機してから実行する。markerのtimeout時は期待SHAと取得markerだけをlogへ出す。ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`frontend/playwright-report/`と`frontend/test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
 
 ## VRT運用
 

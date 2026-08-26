@@ -22,6 +22,8 @@ PC版ではヘッダー内に検索入力欄、または検索ボタンを配置
 
 検索インデックス生成の第一候補はPagefindとする。
 
+公開artifactには検索indexと同じGit commit SHAを持つ`pagefind/deployment.json`を含める。Public E2Eはdeploy先のこのmarkerが今回のSHAになるまで有限回待機してから検索を含むsuiteを実行する。
+
 Pagefind等の静的検索ライブラリを用い、サーバーサイド検索、DB、外部検索サービスに依存しないこと。
 
 検索対象は以下とする。
