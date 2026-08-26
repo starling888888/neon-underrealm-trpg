@@ -372,6 +372,9 @@ function ProfileSection({
 }: ProfileSectionProps) {
   const [isSettingExpanded, setIsSettingExpanded] = useState(false);
   const settingContentId = "character-sheet-setting-content";
+  const toggleSettingExpanded = () => {
+    setIsSettingExpanded((expanded) => !expanded);
+  };
   const { characterSheet, gameDomain } = characterSheetDictionary;
   const { credit: creditTerms } = gameDomain.terms;
 
@@ -421,16 +424,23 @@ function ProfileSection({
             </div>
           </div>
           <div className={styles.setting}>
-            <button
+            {/* biome-ignore lint/a11y/useSemanticElements: Native button is disabled by the ancestor fieldset, but this display-only control must remain interactive in read-only mode. */}
+            <span
               aria-controls={settingContentId}
               aria-expanded={isSettingExpanded}
               className={styles.settingToggle}
-              onClick={() => setIsSettingExpanded((expanded) => !expanded)}
-              type="button"
+              onClick={toggleSettingExpanded}
+              onKeyDown={(event) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
+                event.preventDefault();
+                toggleSettingExpanded();
+              }}
+              role="button"
+              tabIndex={0}
             >
               <span>{characterSheet.profile.setting}</span>
               <span aria-hidden="true" className={styles.chevron} />
-            </button>
+            </span>
             <div hidden={!isSettingExpanded} id={settingContentId}>
               <textarea
                 aria-label={characterSheet.profile.setting}

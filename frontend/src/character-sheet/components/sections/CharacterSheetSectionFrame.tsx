@@ -38,6 +38,10 @@ export default function CharacterSheetSectionFrame({
   const headingId = `${id}-heading`;
   const contentId = `${id}-content`;
 
+  const toggleExpanded = () => {
+    setIsExpanded((expanded) => !expanded);
+  };
+
   return (
     <section
       aria-labelledby={headingId}
@@ -46,17 +50,26 @@ export default function CharacterSheetSectionFrame({
     >
       <Heading className={styles.heading}>
         {expandable ? (
-          <button
-            aria-controls={contentId}
-            aria-expanded={isExpanded}
-            className={styles.toggle}
-            id={headingId}
-            onClick={() => setIsExpanded((expanded) => !expanded)}
-            type="button"
-          >
-            <span>{title}</span>
-            <span aria-hidden="true" className={styles.chevron} />
-          </button>
+          <>
+            {/* biome-ignore lint/a11y/useSemanticElements: Native button is disabled by the ancestor fieldset, but this display-only control must remain interactive in read-only mode. */}
+            <span
+              aria-controls={contentId}
+              aria-expanded={isExpanded}
+              className={styles.toggle}
+              id={headingId}
+              onClick={toggleExpanded}
+              onKeyDown={(event) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
+                event.preventDefault();
+                toggleExpanded();
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              <span>{title}</span>
+              <span aria-hidden="true" className={styles.chevron} />
+            </span>
+          </>
         ) : (
           <span className={styles.staticTitle} id={headingId}>
             {title}
