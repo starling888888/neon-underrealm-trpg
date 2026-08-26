@@ -46,6 +46,11 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - 既存の手動sample投入運用を`docs/deployment.md`へ記録する。管理者アカウントで10件をDB保存し、対象IDを記録してから、承認済みproduction D1操作で各recordを`type='sample'`かつ`isPublic=true`へ更新する。未ログイン一覧で10件のcreatedAt順、公開状態、個別復元を確認する。seed script、管理機能、test accountは追加しない。
 - production deploy後の手動smoke手順を`docs/deployment.md`へ記録する。Firebase login、新規一時characterのDB保存、一覧、個別復元、owner上書き、visibility、削除、CORS、D1/R2 bindingを確認し、一時データを削除する。
 - Git管理されたリポジトリ全体の現行仕様・運用・design文書から、中間Gate、Google Identity Services、旧設定名、旧deploy、旧sample、旧一覧仕様を除去し、Firebase Authenticationと現行実装へ統一する。
+- root `README.md`を共通の概要、root command、リポジトリ共通の作業規約・文書入口だけへ縮約し、workspace固有のセットアップと運用手順を分離する。
+  - `frontend/README.md`に、frontend command、Google Spreadsheetのローカル入力、contents指示書、Firebase / Google Cloudのpublic設定とGitHub Pages公開時の設定を置く。設定手順は現行の完了済みcheckboxを移さず、必要な値・配置先・責務を同じ粒度で簡潔に示す。
+  - `backend/README.md`に、backend command、Cloudflare Worker / D1 / R2のlocal・development・production運用とbackendが必要とするFirebase project IDを置く。
+  - 複数workspaceに共通するセットアップ、root command、repository構造、agent運用、データ・一時ファイル・TODO・design / out-of-scopeの入口はroot `README.md`に残す。
+- `frontend/README.md`だけの変更でGitHub Pages production deployを、`backend/README.md`だけの変更でCloudflare production deployを起動しないよう、各deploy workflowのpath filterを更新する。root `README.md`は従来どおり両deployの対象外とする。
 - agent failure logなどの監査記録は改変しない。
 
 ### Group 5: ex-16 archive準備と実施（merge後）
@@ -62,7 +67,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 1. Group 1: 認証・想定外エラーの回復、関連test、認証・error contractのrequirements / architecture。
 2. Group 2: 一覧page clamp、payload contract、backend / shared / frontendの関連test、payload / 一覧仕様のrequirements / architecture。
 3. Group 3: Pagefind deployment marker、検索runtime、Public E2E workflow、Pagefind世代検知のtesting / deployment / architecture。
-4. Group 4: production運用とリポジトリ全体の現行文書整合。
+4. Group 4: production運用、workspace READMEへの責務分割、deploy除外設定とリポジトリ全体の現行文書整合。
 5. Group 5: production smokeの人間確認後に、mainで`post-merge-plan-update`として行うex-16 archive。
 
 各Groupの完了条件をローカルで検証した時点で作業を止め、対象差分を提示してユーザーへ`git add`と`git commit`の指示を求める。ユーザーの明示指示なしにcommitしない。Groupをまたぐ差分を同一commitへ混在させない。
@@ -81,6 +86,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - [x] Group 2の一覧page clampと8MiB / 4MiB payload contractを実装し、正常境界、1 byte超過、chunked 413をtestで確認している。skip中のchunked testを残していない。
 - [ ] Group 3で今回のPagefind deployment markerを検知してからPublic E2Eを実行する。
 - [ ] Group 4でsample 10件の投入・対象ID記録・未ログイン一覧での順序／公開状態／個別復元確認、手動production smoke、Public E2Eの責務を文書化し、リポジトリ全体の現行文書をFirebase Authenticationと現行実装に整合させている。
+- [ ] Group 4でroot / frontend / backendのREADME責務を分離し、frontend / backend README単独変更では対応するproduction deployを起動しない。
 - [ ] UI変更について、既存design targetとの整合、対象route・state・viewportのactual screenshot確認、変更targetに限定したVRTをPR review直前に実施している。canonical VRT baselineを更新していない。
 - [ ] production deploy後、管理者アカウントで手動smokeを実施し、一時データを削除して記録している。
 - [ ] Group 5のarchiveをGitHub Issue記録とcurrent local evidenceに基づき完了している。
@@ -111,6 +117,10 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - `backend/tests/`
 - `packages/shared/src/index.ts`
 - `.github/workflows/frontend-deploy.yml`
+- `.github/workflows/backend-deploy.yml`
+- `README.md`
+- `frontend/README.md`
+- `backend/README.md`
 - `docs/`
 - `docs/TODO.md`
 
