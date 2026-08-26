@@ -4,13 +4,19 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getFirebaseAuth } from "./firebase-client";
 import type { Authentication, AuthenticationStatus } from "./types";
 
-export default function useFirebaseAuthentication(): Authentication {
+const reloadPage = () => window.location.reload();
+
+export default function useFirebaseAuthentication(
+  reload: () => void = reloadPage,
+): Authentication {
   const [status, setStatus] = useState<AuthenticationStatus>("initializing");
   const [sessionKey, setSessionKey] = useState<string | null>(null);
+  const hasSettledInitialState = useRef(false);
+  const previousSessionKey = useRef<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -21,7 +27,18 @@ export default function useFirebaseAuthentication(): Authentication {
         if (!active) return;
         unsubscribe = onAuthStateChanged(auth, (user) => {
           if (!active) return;
-          setSessionKey(user?.uid ?? null);
+          const nextSessionKey = user?.uid ?? null;
+          if (
+            hasSettledInitialState.current &&
+            previousSessionKey.current !== nextSessionKey
+          ) {
+            reload();
+            return;
+          }
+
+          hasSettledInitialState.current = true;
+          previousSessionKey.current = nextSessionKey;
+          setSessionKey(nextSessionKey);
           setStatus(user === null ? "signed-out" : "signed-in");
         });
       })
@@ -35,7 +52,7 @@ export default function useFirebaseAuthentication(): Authentication {
       active = false;
       unsubscribe?.();
     };
-  }, []);
+  }, [reload]);
 
   const onLogin = useCallback(async () => {
     setStatus("signing-in");

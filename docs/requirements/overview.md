@@ -68,10 +68,10 @@ milestone-01の履歴とクローズtaskは `docs/issue/milestone-01/plan.md` �
 - 戦闘シミュレーター
 - 戦闘処理支援ツール
 - CMS
-- ログイン・認証
+- Firebase Authenticationとcharacter sheet cloud persistence以外のログイン・認証
 - 投稿・コメント機能
-- DB
-- サーバーサイド処理
+- character sheet cloud persistence以外のDB
+- character sheet cloud persistence backend以外のサーバーサイド処理
 - 外部検索サービス連携
 - PDF自動生成
 - PWA対応

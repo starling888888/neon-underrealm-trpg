@@ -25,7 +25,7 @@ test("Firebase verifier fetches Secure Token X509 keys through global fetch", as
     .setExpirationTime("5m")
     .sign(privateKey);
   expect(await new FirebaseIdTokenVerifier("project").verify(token)).toEqual({
-    kind: "invalid",
+    kind: "unavailable",
   });
   expect(fetchMock).toHaveBeenCalledOnce();
   expect(fetchMock.mock.calls[0]?.[0]?.toString()).toContain(

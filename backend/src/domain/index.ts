@@ -14,6 +14,8 @@ export type CharacterSheetRecord = CharacterSheetMetadataInput & {
 export type TokenVerification =
   | { kind: "expired" }
   | { kind: "invalid" }
+  | { kind: "unavailable" }
+  | { kind: "unexpected" }
   | { kind: "valid"; userId: string };
 
 export type TokenVerifier = {

@@ -1,6 +1,6 @@
 import type { MiddlewareHandler } from "hono";
-import type { TokenVerifier } from "../domain/index.js";
 import { ApplicationError } from "../application-error.js";
+import type { TokenVerifier } from "../domain/index.js";
 
 export type AuthenticationEnvironment = {
   Variables: {
@@ -41,6 +41,14 @@ export const createAuthenticationMiddleware =
 
     if (result.kind === "invalid") {
       throw new ApplicationError("invalid_token");
+    }
+
+    if (result.kind === "unavailable") {
+      throw new ApplicationError("authentication_unavailable");
+    }
+
+    if (result.kind === "unexpected") {
+      throw new ApplicationError("unexpected_error");
     }
 
     context.set("actorUserId", result.userId);

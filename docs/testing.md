@@ -16,7 +16,7 @@
 - `npm --workspace=@neon-underrealm/backend run test`: `backend/tests/unit/`だけをVitestで実行する。service unit testはmock repositoryとactor user IDを直接渡し、spyによる差し替えを使わない。`backend/tests/integration/`は通常testから除外する。
 - `npm --workspace=@neon-underrealm/backend run test:integration`: integration専用Vitest configにより`backend/tests/integration/`だけを実行する。endpointごとのHTTP contractをlocal API integration testで確認する。既存状態が必要なcaseは、Wranglerの`getPlatformProxy`で同じlocal stateを開いた`CloudflareCharacterSheetRepository`からfixtureを登録し、各caseの`afterEach`でmetadataとsnapshotを削除する。Node組み込みの`assert`やWrangler CLIの子processは使わない。
 - backendの`tsconfig.json`はsrc、unit/integration test、Vitest configをまとめて型検査する。`tsconfig.build.json`はそれをextendsし、testsとVitest configを除外してWorker buildだけを型検査する。Cloudflare WorkersとNode/Vitestの外部Web Platform宣言は競合するため、全体tsconfigは`skipLibCheck`で外部宣言だけを除外する。project sourceとtestの型検査は省略しない。
-- local Workerは`backend/.wrangler/state/`をD1/R2の開発用stateに使い、`npm --workspace=@neon-underrealm/backend run dev:local`は`backend/.env`のGoogle OAuth client IDを使う正規のID token検証器で`8787`に起動する。integration Workerは`.wrangler/integration-state/`の専用stateを使い、`npm --workspace=@neon-underrealm/backend run dev:integration`でtest token専用の検証器を起動する。どちらのstateとWranglerの一時bundleである`backend/.wrangler/tmp/`もGit ignoreする。integration testの前は`npm --workspace=@neon-underrealm/backend run integration:reset`、続けて`npm --workspace=@neon-underrealm/backend run migrate:integration`を実行し、別terminalで`npm --workspace=@neon-underrealm/backend run dev:integration`と`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。`integration:reset`はintegration専用stateだけを削除する。CIも同じnpm scriptの順番を明示して実行する。
+- local Workerは`backend/.wrangler/state/`をD1/R2の開発用stateに使い、`npm --workspace=@neon-underrealm/backend run dev:local`は`backend/.env`の`FIREBASE_PROJECT_ID`を使うFirebase ID Tokenの正規検証器で`8787`に起動する。integration Workerは`.wrangler/integration-state/`の専用stateを使い、`npm --workspace=@neon-underrealm/backend run dev:integration`でtest token専用の検証器を起動する。どちらのstateとWranglerの一時bundleである`backend/.wrangler/tmp/`もGit ignoreする。integration testの前は`npm --workspace=@neon-underrealm/backend run integration:reset`、続けて`npm --workspace=@neon-underrealm/backend run migrate:integration`を実行し、別terminalで`npm --workspace=@neon-underrealm/backend run dev:integration`と`npm --workspace=@neon-underrealm/backend run test:integration`を実行する。`integration:reset`はintegration専用stateだけを削除する。CIも同じnpm scriptの順番を明示して実行する。
 
 Markdownだけを変更したtaskは、`npm run format:md` と `npm run check:md` を実行し、通常はbuildと全testを省略する。UI、CSS、layout、page、Componentを変更したtaskは、PR review直前に変更targetだけをVRTで比較する。
 
@@ -47,7 +47,7 @@ Webキャラクターシートは、複雑な対話機能の基準例とする�
 
 character-sheetの現行構成では、`frontend/tests/node/character-sheet/`がlogic、schema、master-data、serializableなpersistence、browser adapterの契約を、`frontend/tests/hooks/character-sheet/`が復元、保存、画像・JSON・clipboardの状態管理を、`frontend/tests/components/character-sheet/`が表示と操作部品を、`frontend/tests/e2e/character-sheet.spec.ts`がJSON import、responsive action pane、dialog、clipboard、file inputなどの代表的な実ブラウザ操作を確認している。unit testはすべてVitestで実行する。
 
-`ex-16-5-cloud-persistence-ui`では、shared / backendで`isPublic` migration、anonymous public list、owner private list、private non-ownerの一覧非表示とindividual `404`、owner限定write/deleteを確認する。frontendではtokenをmemoryだけに渡すAPI client、remote binding、login/logout時のownership再評価、一覧cache、read-only操作境界、DB保存・コピー保存・DB削除・初期化・importの状態遷移、Toastをunit / hook / component testで確認する。代表browser / E2Eは一覧選択、public non-ownerのread-onlyとコピー保存、local DB保存、private owner上書き、DB削除、logout/login、import binding解除を確認し、Google本番認証へ直接依存しない。
+character sheet cloud persistenceでは、shared / backendで`isPublic` migration、anonymous public list、owner private list、private non-ownerの一覧非表示とindividual `404`、owner限定write/deleteを確認する。frontendではFirebase ID Tokenを取得時点だけAPI clientへ渡し、`?character=<id>`をremote identityとするroute、idなしlocal draftとremote characterのbrowser persistence境界、default local draftのform非保存、auth初期化後のremote GET、route / 認証変化で古くなったrequest responseの抑止、一覧cache、read-only操作境界、DB保存・コピー保存・DB削除・JSONインポートのURL遷移、Toastをunit / hook / component testで確認する。代表browser / E2Eは一覧選択、public non-ownerのread-onlyとコピー保存、local DB保存、private owner上書き、DB削除、logout/login、JSONインポート後のidなしlocal draft遷移を確認し、実Firebase認証へ直接依存しない。
 
 ## テスト実装とレビューの判断基準
 
@@ -64,7 +64,7 @@ character-sheetの現行構成では、`frontend/tests/node/character-sheet/`が
 
 - E2E: 実ブラウザでしか確認できない公開route、menu、検索、キャラクターシートの代表操作を確認する。
 - VRT: design notesのroute、state、viewportに対応する見た目の回帰を比較する。canonical baselineはローカル専用で、ユーザー承認なしに更新しない。
-- Public E2E: deploy成功後のGitHub Pages URLに対して、`@local-fixture`を除くE2Eを実行する。失敗時のdiagnostic outputは`frontend/test-results/`と`frontend/playwright-report/`へ出力し、既存公開をrollbackしない。
+- Public E2E: deploy成功後のGitHub Pages URLに対して、`@local-fixture`を除くE2Eを実行する。実行前に`pagefind/deployment.json`が今回のGit commit SHAを返すまで有限回pollし、timeout時は期待SHAと取得markerだけをlogへ出す。失敗時のdiagnostic outputは`frontend/test-results/`と`frontend/playwright-report/`へ出力し、既存公開をrollbackしない。
 
 ## CI/CD
 
@@ -76,6 +76,6 @@ character-sheetの現行構成では、`frontend/tests/node/character-sheet/`が
 - root Qualityと並行して変更pathを分類し、frontend、shared package、backendのtestは、各directory、root依存設定、または`.github/workflows/**`が変わったときだけ、root Qualityの成功後に並列実行する。frontend testはshared packageだけの変更では起動しない。
 - `.codex/**/*.toml`だけの変更ではCI workflowを起動しない。
 
-`.github/workflows/frontend-deploy.yml` はmainへの公開対象変更で、同じroot Qualityと必要な差分testの後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。deployのpath filterはCIとは別であり、`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更では起動しない。`.codex/**/*.toml`はdeployの除外対象ではない。
+`.github/workflows/frontend-deploy.yml` はmainへの公開対象変更で、同じroot Qualityと必要な差分testの後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。deployのpath filterはCIとは別であり、`docs/**`、`.agents/**`、`AGENTS.md`、root `README.md`、`frontend/README.md`だけの変更では起動しない。`.codex/**/*.toml`はdeployの除外対象ではない。`backend-deploy.yml`も同様にroot `README.md`と`backend/README.md`だけの変更では起動しない。
 
 詳細な公開順序は `docs/deployment.md`、UI変更時のVisual Review手順は `.agents/skills/visual-implementation-review/SKILL.md` を参照する。

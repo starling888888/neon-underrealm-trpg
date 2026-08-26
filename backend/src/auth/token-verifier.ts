@@ -1,4 +1,4 @@
-import { errors, importX509, jwtVerify, type JWTVerifyGetKey } from "jose";
+import { errors, importX509, type JWTVerifyGetKey, jwtVerify } from "jose";
 import type { TokenVerification, TokenVerifier } from "../domain/index.js";
 
 const firebasePublicKeysUrl = new URL(
@@ -9,6 +9,9 @@ const defaultPublicKeyCacheDurationMilliseconds = 5 * 60 * 1000;
 const unknownKeyRefreshCooldownMilliseconds = 60 * 1000;
 
 type FirebasePublicKeyResponse = Record<string, string>;
+
+class FirebasePublicKeyUnavailableError extends Error {}
+class FirebaseTokenInvalidError extends Error {}
 
 const parseCacheDurationMilliseconds = (
   cacheControl: string | null,
@@ -64,7 +67,7 @@ class FirebasePublicKeyResolver {
       typeof protectedHeader.kid !== "string" ||
       protectedHeader.kid.length === 0
     ) {
-      throw new Error("Invalid Firebase ID token header.");
+      throw new FirebaseTokenInvalidError("Invalid Firebase ID token header.");
     }
 
     const kid = protectedHeader.kid;
@@ -95,7 +98,9 @@ class FirebasePublicKeyResolver {
     }
 
     if (key === undefined) {
-      throw new Error("Firebase ID token signing key was not found.");
+      throw new FirebaseTokenInvalidError(
+        "Firebase ID token signing key was not found.",
+      );
     }
 
     return key;
@@ -117,39 +122,50 @@ class FirebasePublicKeyResolver {
   }
 
   async #loadKeys(): Promise<void> {
-    const response = await this.#fetch(firebasePublicKeysUrl);
+    try {
+      const response = await this.#fetch(firebasePublicKeysUrl);
 
-    if (!response.ok) {
-      throw new Error(
-        `Failed to load Firebase public keys: ${response.status}.`,
+      if (!response.ok) {
+        throw new FirebasePublicKeyUnavailableError(
+          `Failed to load Firebase public keys: ${response.status}.`,
+        );
+      }
+
+      const certificates: unknown = await response.json();
+
+      if (
+        !isFirebasePublicKeyResponse(certificates) ||
+        Object.keys(certificates).length === 0
+      ) {
+        throw new FirebasePublicKeyUnavailableError(
+          "Firebase public key response is invalid.",
+        );
+      }
+
+      const importedKeys = new Map<string, CryptoKey>();
+
+      await Promise.all(
+        Object.entries(certificates).map(async ([kid, certificate]) => {
+          if (kid.length === 0 || certificate.length === 0) {
+            throw new FirebasePublicKeyUnavailableError(
+              "Firebase public key response is invalid.",
+            );
+          }
+
+          importedKeys.set(kid, await importX509(certificate, "RS256"));
+        }),
+      );
+
+      this.#keys = importedKeys;
+      this.#expiresAt =
+        Date.now() +
+        parseCacheDurationMilliseconds(response.headers.get("cache-control"));
+    } catch (error) {
+      if (error instanceof FirebasePublicKeyUnavailableError) throw error;
+      throw new FirebasePublicKeyUnavailableError(
+        "Firebase public keys could not be loaded.",
       );
     }
-
-    const certificates: unknown = await response.json();
-
-    if (
-      !isFirebasePublicKeyResponse(certificates) ||
-      Object.keys(certificates).length === 0
-    ) {
-      throw new Error("Firebase public key response is invalid.");
-    }
-
-    const importedKeys = new Map<string, CryptoKey>();
-
-    await Promise.all(
-      Object.entries(certificates).map(async ([kid, certificate]) => {
-        if (kid.length === 0 || certificate.length === 0) {
-          throw new Error("Firebase public key response is invalid.");
-        }
-
-        importedKeys.set(kid, await importX509(certificate, "RS256"));
-      }),
-    );
-
-    this.#keys = importedKeys;
-    this.#expiresAt =
-      Date.now() +
-      parseCacheDurationMilliseconds(response.headers.get("cache-control"));
   }
 }
 
@@ -219,9 +235,17 @@ export class FirebaseIdTokenVerifier implements TokenVerifier {
         userId: payload.sub,
       };
     } catch (error) {
-      return error instanceof errors.JWTExpired
-        ? { kind: "expired" }
-        : { kind: "invalid" };
+      if (error instanceof errors.JWTExpired) return { kind: "expired" };
+      if (error instanceof FirebasePublicKeyUnavailableError) {
+        return { kind: "unavailable" };
+      }
+      if (
+        error instanceof FirebaseTokenInvalidError ||
+        error instanceof errors.JOSEError
+      ) {
+        return { kind: "invalid" };
+      }
+      return { kind: "unexpected" };
     }
   }
 }
@@ -235,6 +259,10 @@ export class TestTokenVerifier implements TokenVerifier {
         return { kind: "valid", userId: "test-other" };
       case "test-token-expired":
         return { kind: "expired" };
+      case "test-token-authentication-unavailable":
+        return { kind: "unavailable" };
+      case "test-token-verifier-unexpected":
+        return { kind: "unexpected" };
       default:
         return { kind: "invalid" };
     }

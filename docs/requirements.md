@@ -28,7 +28,7 @@
 9. `docs/issue/milestone-01/plan.md`
 10. `docs/TODO.md`
 11. 関連する `docs/design/<design-target>/`
-12. その他のGit管理ドキュメントと`src/pages/`配下のMDX / Astro実装
+12. その他のGit管理ドキュメントと`frontend/src/pages/`配下のMDX / Astro実装
 13. 対応する `.raw/contents/<slug>.md` のMarkdown本文とHTMLコメント（手動の補助入力）
 
 contentsとGit管理の正本が矛盾する場合は、最新のユーザー指示がない限りGit管理の正本を採用する。ユーザーの最新指示または安全・workflow規約と矛盾する場合は、推測で実装せずユーザーに確認する。

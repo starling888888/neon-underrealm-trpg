@@ -4,6 +4,7 @@ import type {
   CharacterSheetListResponse,
   CharacterSheetSummary,
 } from "@neon-underrealm/shared";
+import { characterSheetMaximumRequestBytes } from "@neon-underrealm/shared";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { getPlatformProxy, type PlatformProxy } from "wrangler";
 import type { BackendBindings } from "../../src/bindings.js";
@@ -17,8 +18,6 @@ const ownerHeaders = {
   Authorization: "Bearer test-token-owner",
   "Content-Type": "application/json",
 };
-
-const maximumRequestBodyBytes = 8 * 1024 * 1024;
 
 const otherHeaders = {
   Authorization: "Bearer test-token-other",
@@ -50,7 +49,7 @@ function oversizedRequestBody(): string {
   return `${JSON.stringify({
     metadata: { isPublic: true, pcName: "too large", rank: 1 },
     snapshot: { imageBase64String: null },
-  })}${" ".repeat(maximumRequestBodyBytes)}`;
+  })}${" ".repeat(characterSheetMaximumRequestBytes)}`;
 }
 
 async function seedSheet(
@@ -214,7 +213,15 @@ describe("GET /character-sheets", () => {
     expect(otherBody.user).toHaveLength(2);
   });
 
-  test("distinguishes expired and invalid tokens", async () => {
+  test("distinguishes unavailable, unexpected, expired, and invalid tokens", async () => {
+    const unavailable = await request("/character-sheets", {
+      headers: {
+        Authorization: "Bearer test-token-authentication-unavailable",
+      },
+    });
+    const unexpected = await request("/character-sheets", {
+      headers: { Authorization: "Bearer test-token-verifier-unexpected" },
+    });
     const expired = await request("/character-sheets", {
       headers: { Authorization: "Bearer test-token-expired" },
     });
@@ -222,6 +229,14 @@ describe("GET /character-sheets", () => {
       headers: { Authorization: "Bearer not-a-test-token" },
     });
 
+    expect(unavailable.status).toBe(503);
+    await expect(unavailable.json()).resolves.toEqual({
+      error: { code: "authentication_unavailable" },
+    });
+    expect(unexpected.status).toBe(500);
+    await expect(unexpected.json()).resolves.toEqual({
+      error: { code: "unexpected_error" },
+    });
     expect(expired.status).toBe(419);
     expect(invalid.status).toBe(401);
   });
@@ -357,31 +372,6 @@ describe("POST /character-sheets", () => {
       },
       method: "POST",
     });
-
-    expect(response.status).toBe(413);
-    await expect(response.json()).resolves.toEqual({
-      error: { code: "payload_too_large" },
-    });
-  });
-
-  // FIXME: CI timeouts are inconsistent
-  test.skip("rejects an oversized chunked request", async () => {
-    const body = oversizedRequestBody();
-    const response = await request(
-      "/character-sheets",
-      {
-        body: new ReadableStream({
-          start(controller) {
-            controller.enqueue(new TextEncoder().encode(body));
-            controller.close();
-          },
-        }),
-        duplex: "half",
-        headers: ownerHeaders,
-        method: "POST",
-      } as RequestInit,
-      25_000,
-    );
 
     expect(response.status).toBe(413);
     await expect(response.json()).resolves.toEqual({

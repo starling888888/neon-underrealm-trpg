@@ -560,6 +560,22 @@ source種別は以下を使う。
 
 ### SSoT coverage discipline
 
+#### Marked repository-wide documentation consistency complete before validating the character session model
+
+- date: 2026-08-26
+- source: review
+- 発生箇所: `ex-17-cloud-persistence-followups` Group 4の文書整合完了確認
+- 観測した失敗: リポジトリ全体の現行文書をFirebase Authenticationとcloud persistence contractへ統一したと完了チェックしたが、character-sheetのrequirement、architecture、testingに残るlocal / remote persistence境界とURL遷移の旧記述、および関連するworkspace構成文書を照合できていなかった。
+- 一次対応: ChatGPTレビューの指摘をローカル実装と照合してレビュー指摘2へ記録し、Group 4の該当完了チェックを未完了へ戻した。修正はユーザー承認後に行う。
+
+#### Repeatedly marked documentation consistency complete without checking every task-owned requirement section
+
+- date: 2026-08-26
+- source: review
+- 発生箇所: `ex-17-cloud-persistence-followups` Group 4をレビュー指摘2対応後に再完了とした確認
+- 観測した失敗: local / remote persistenceの保存・復元節を修正した後、同じ要件文書のプロフィール画像節とキャラクター一覧節、ex-18へのhandoff文言を照合せず、リポジトリ全体の文書整合を再び完了として扱った。
+- 一次対応: 再レビューで確認した残件をレビュー指摘3へ記録し、Group 4の該当完了チェックを未完了へ戻した。修正はユーザー承認後に行う。
+
 #### Repeated PR reviews discovered one documentation dependency at a time
 
 - date: 2026-07-22
@@ -799,6 +815,16 @@ source種別は以下を使う。
 - 発生箇所: `ex-16-4-cloud-persistence-api` のproduction初回Cloudflare deploy
 - 観測した失敗: production用のGoogle client IDがGitHub Repository VariableからCIで注入される設計にもかかわらず、初回resource provisionを急ぎ、local `backend/.env`のGoogle client IDを呼出元environmentへ読み込んでproduction Workerへ渡した。CORS originだけをproduction値へ上書きしたため、local用とproduction用で異なるGoogle client IDを混在させた。
 - 一次対応: ユーザーがCloudflare Consoleでproduction値へ修正した。今後、production初回provisionを含むlocal Wrangler deployは、production設定値が明示的に提供され、environmentごとの値を確認できる場合だけ実行する。確認できない場合はCIでのdeployを待ち、local `.env`の値をproduction設定へ流用しない。
+
+### test assertion compatibility
+
+#### Repeated a focused component test with unavailable matcher extensions
+
+- date: 2026-08-26
+- source: self
+- 発生箇所: `ex-17-cloud-persistence-followups` の`CharacterSheetFatalErrorDialog` component test
+- 観測した失敗: focused frontend Vitest commandを3回連続で失敗させた。最初の2回は設定されていないjest-dom matcherの`toHaveFocus`と`fireEvent.cancel`を使い、3回目も同じく未導入の`toHaveAttribute`を使った。test environmentの既存assertion拡張を確認せず、標準DOM assertionへ置き換える修正を段階的に行った。
+- 一次対応: focusは`document.activeElement`、属性は`element.hasAttribute()`、cancelは`fireEvent(element, new Event("cancel", { cancelable: true }))`で確認する。以後、新規component testでは既存test setupに導入済みのmatcherを先に検索し、未確認のmatcherは標準Vitest / DOM APIで書く。
 
 #### Requested unnecessary escalation for an already approved Playwright command
 

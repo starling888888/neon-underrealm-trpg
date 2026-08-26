@@ -9,6 +9,8 @@ type SearchElements = {
   resultsList: HTMLOListElement;
 };
 
+declare const __PAGEFIND_DEPLOYMENT_COMMIT_SHA__: string;
+
 type PagefindAnchor = {
   element: string;
   id: string;
@@ -69,6 +71,7 @@ const mobileMediaQuery = "(width < 48rem)";
 const searchHighlightParam = "highlight";
 const oneCharacterSearchPattern = /^[ぁ-ゖゝゞァ-ヺヽヾーA-Za-z]$/u;
 const searchExcerptLength = 30;
+const pagefindDeploymentCommitSha = __PAGEFIND_DEPLOYMENT_COMMIT_SHA__;
 let pagefindPromise: Promise<PagefindApi> | undefined;
 let pagefindLoadAttempt = 0;
 let searchRequestId = 0;
@@ -145,7 +148,7 @@ async function loadPagefind(): Promise<PagefindApi> {
     const loadingPromise = (async () => {
       const bundlePath = getPagefindPath();
       const pagefind = (await import(
-        /* @vite-ignore */ `${bundlePath}pagefind.js?attempt=${pagefindLoadAttempt++}`
+        /* @vite-ignore */ `${bundlePath}pagefind.js?commit=${pagefindDeploymentCommitSha}&attempt=${pagefindLoadAttempt++}`
       )) as PagefindApi;
 
       await pagefind.options({

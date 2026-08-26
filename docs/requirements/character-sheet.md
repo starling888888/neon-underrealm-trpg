@@ -10,16 +10,16 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 
 ゲーム上の数値、制約、用語は次を正本とする。
 
-- `src/pages/character-making.mdx`
-- `src/pages/rules/battle.mdx`
-- `src/pages/advancement.mdx`
-- `src/pages/data/`配下のゲーム仕様ページ
-- `data/generated/ryugi-list.json`
-- `data/generated/ryugi-skills.json`
-- `data/generated/ikizama.json`
-- `data/generated/ikizama-skills.json`
-- `data/generated/common-skills.json`
-- `data/generated/items.json`
+- `frontend/src/pages/character-making.mdx`
+- `frontend/src/pages/rules/battle.mdx`
+- `frontend/src/pages/advancement.mdx`
+- `frontend/src/pages/data/`配下のゲーム仕様ページ
+- `frontend/data/generated/ryugi-list.json`
+- `frontend/data/generated/ryugi-skills.json`
+- `frontend/data/generated/ikizama.json`
+- `frontend/data/generated/ikizama-skills.json`
+- `frontend/data/generated/common-skills.json`
+- `frontend/data/generated/items.json`
 
 マスタデータの選択値は名称ではなくIDを正本として保存する。JSONの定義順とユーザーが追加した可変行の順序は維持し、自動ソートしない。
 
@@ -31,16 +31,16 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - PC基本ビルド、能力値、副能力値、経験点、信用、縁
 - スキル、攻撃・リアクション・非戦闘判定、アイテム
 - エラー・警告表示
-- JSONインポート、端末内保存・復元、全消去、クラウド保存とキャラクター一覧
+- JSONインポート、idなしlocal draftの端末内保存・復元、全消去、クラウド保存とキャラクター一覧
 - CCFOLIAキャラクター駒データのコピー
 - desktop、tablet、mobileでの利用
 
-端末内の最新1キャラクターの保存・復元は初期scopeに含める。`ex-16-character-sheet-cloud-persistence` の承認済みまたは計画済みGateでは、G3でGoogle Identity Servicesのbrowser-only credential flowによるfrontendログイン、G4でbackendのtoken verifierとクラウド保存API、G5で複数キャラクター管理とクラウド保存UIを段階的に扱う。G6ではFirebase Authenticationへ認証境界を置換し、SDK管理のbrowser persistence、token refresh、Firebase ID Token検証を導入する。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
+idなしlocal draft 1件の端末内保存・復元と、Firebase Authenticationを使うクラウド保存・キャラクター一覧は初期scopeに含める。Firebase SDKがbrowserの認証状態永続化とtoken refreshを管理し、Cloudflare backendがFirebase ID Tokenを検証する。それ以外のサーバー、DB、クラウドへの保存、同期、共有は初期スコープ外である。
 
 以下は初期スコープ外とする。
 
-- `ex-16-character-sheet-cloud-persistence` の承認済みGateを除くアカウント、認証、サーバー保存、複数端末同期、共同編集、共有URL
-- `ex-16-character-sheet-cloud-persistence` の承認済みG5を除く複数キャラクターの管理、印刷レイアウト、PDF出力、CCFOLIAコマンドパレット
+- Firebase Authenticationとcharacter sheet cloud persistence以外のアカウント、認証、サーバー保存、複数端末同期、共同編集、共有URL
+- 印刷レイアウト、PDF出力、CCFOLIAコマンドパレット
 - ダイスローラー、戦闘シミュレーション、セッション中の状態管理
 - 取得制限や効果文を解析する汎用ルールエンジン
 
@@ -56,8 +56,8 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - 年齢と性別は固定選択肢に限定しない。
 - キャラクター設定は複数行のプレーンテキストとして保持する。改行を保持し、MarkdownやHTMLとして解釈しない。
 - キャラクター設定は、基本情報のプロフィール入力群の直下にある開閉操作から表示する。初期状態では入力欄を隠す。
-- キャラクター画像は`image/*`を受け付け、入力容量は5 MiB（5,242,880 bytes）までとする。ブラウザでデコードできた画像だけを長辺約500pxまで縮小し、拡大せず、WebP品質`0.8`で1回だけ変換する。透明背景の検出やJPEGとの容量比較は行わない。変換後の画像は表示と端末内の画像recordに加え、クラウド保存用snapshotではBase64エンコード文字列として扱う。
-- 画像選択は画像表示領域へのdrag and dropと、その直下のファイル選択ボタンの両方で行えるようにする。選択済み画像には、その導線に続けて個別の`画像をクリア`操作を表示する。クリアはIndexedDBの現在画像recordだけを削除し、削除成功後に未選択状態へ切り替える。選択確認のためだけのアプリ内ダイアログやプレビューは設けない。形式、容量、decode、変換、IndexedDB書込み、個別削除に失敗した場合は、入力欄のエラー一覧へ積まずG5の失敗ダイアログを表示し、既存の画像を上書き・削除しない。browser native `alert`は使用しない。
+- キャラクター画像は`image/*`を受け付け、入力容量は4 MiB（4,194,304 bytes）までとする。ブラウザでデコードできた画像だけを長辺約500pxまで縮小し、拡大せず、WebP品質`0.8`で1回だけ変換する。透明背景の検出やJPEGとの容量比較は行わない。変換後の画像は現在のcharacter表示へ反映する。idなしlocal draftでは端末内の画像recordへ保存し、remote characterではbrowser persistenceへ保存せずmemoryだけで保持してDB保存用snapshotへ含める。
+- 画像選択は画像表示領域へのdrag and dropと、その直下のファイル選択buttonの両方で行えるようにする。選択済み画像には、その導線に続けて個別の`画像をクリア`操作を表示する。idなしlocal draftのクリアはIndexedDBの現在画像recordを削除してから未選択状態へ切り替える。remote characterのクリアはbrowser persistenceを変更せず、memory上の画像だけを未選択状態にする。選択確認のためだけのアプリ内dialogやpreviewは設けない。形式、容量、decode、変換、idなしlocal draftでのIndexedDB書込み・個別削除に失敗した場合は、入力欄のエラー一覧へ積まず既存の失敗dialogを表示し、既存の画像を上書き・削除しない。browser native `alert`は使用しない。
 - 画像の変換・保存中は、キャラクターシートIsland全体を操作不可にする汎用loading overlayを表示する。indicatorは`prefers-reduced-motion`で回転を停止する。
 - キャラクターシートはコンストラクションまたはフルスクラッチを選択する画面にはしない。既存のキャラクターメイキング解説への導線を表示する。
 
@@ -146,7 +146,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - 通常スキルの可変枠、選択時の初期レベル、選択解除・変更時の扱い、レベル上限、流儀・生き様・共通スキルのレベル上限、重複、`advanced`条件を検証する。プライマリ流儀スキルの同じ通常スキルを複数行で選択した場合は各重複行をエラー状態にし、候補dialogでは既に選択済みのスキルをdisabledにして選択できないようにする。
 - 共通スキル上限は格の半分を端数切り上げた値とする。
 - 前提スキル、個別取得制限、排他、能力値・格・アイテム条件など、文章で表現された条件は自動検証しない。文章は表示する。
-- 流儀の共通スキルボーナスは、既存の`data/generated/ryugi-list.json`にある表示用文字列をそのまま参照する。専用の構造化データと文字列解析は追加しない。プライマリ流儀、生き様、能力値の領域の下で、共通スキルボーナスの直前に、選択中プライマリ流儀の体力増加値・精神力増加値と、選択中生き様の現在レベルで適用される体力係数・精神力係数を表示する。続けて共通スキルの合計レベルと、レベル2・5・9ごとのボーナス内容をすべて表示する。合計レベルが到達条件以上のボーナス行は色を変えて獲得済みと分かるようにする。
+- 流儀の共通スキルボーナスは、既存の`frontend/data/generated/ryugi-list.json`にある表示用文字列をそのまま参照する。専用の構造化データと文字列解析は追加しない。プライマリ流儀、生き様、能力値の領域の下で、共通スキルボーナスの直前に、選択中プライマリ流儀の体力増加値・精神力増加値と、選択中生き様の現在レベルで適用される体力係数・精神力係数を表示する。続けて共通スキルの合計レベルと、レベル2・5・9ごとのボーナス内容をすべて表示する。合計レベルが到達条件以上のボーナス行は色を変えて獲得済みと分かるようにする。
 - 共通スキルボーナスは、行動回数、縁最大数、判定数、攻撃力を含むいかなる派生値にも自動加算しない。ユーザーは表示されたボーナス内容を参照し、既存の各手動修正欄へ反映する。個別スキルの自由文効果も自動算出しない。自動算出に使うのは基礎式と明示的な手動修正欄だけとする。
 - 通常スキルの初期入力枠は、プライマリ流儀が4、生き様が2、共通スキルが2、その他流儀が流儀ごとに1とする。プライマリ流儀、共通スキル、その他流儀は最低1枠を維持し、生き様は0行まで削除できる。ボーナススキル以外の行は追加・削除できる。空枠はレベル合計に含めない。
 - スキル選択時は取得レベルを`1`に設定し、選択解除または別スキルへの変更時は空欄または`1`へ設定し直す。取得レベル`0`は許可しない。
@@ -200,26 +200,29 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 
 ## 保存、復元、出力
 
-- 端末内には最新1キャラクターだけを作業用として保存・復元する。`ex-16-character-sheet-cloud-persistence` のG5では、Google ID tokenをbrowser persistenceへ保存せず、G4の4 endpointを使ってクラウド保存と`キャラクター一覧`を提供する。G6ではFirebase AuthenticationのSDK管理下で認証状態を永続化し、API requestには取得時点で有効なFirebase ID Tokenだけを渡す。ID Tokenをアプリケーション独自のbrowser persistenceへ保存しない。
+- URLに`?character=<id>`がないidなしlocal draftだけを、端末内の作業用characterとして保存・復元する。`?character=<id>`があるremote characterはそのidをroute上のidentityとし、フォームと画像はremote responseを表示する間だけmemoryに置く。クラウド保存と`キャラクター一覧`では、Firebase AuthenticationのSDK管理下で認証状態を永続化し、API requestには取得時点で有効なFirebase ID Tokenだけを渡す。ID Tokenをアプリケーション独自のbrowser persistenceへ保存しない。
+- Firebase Authenticationの初回状態確定では現在のpageを維持する。確定後にuidがlogin、logout、user切替で変化した場合は、remote ownershipの専用再取得stateを持たず、page全体を再読み込みして初期ロード経路で再評価する。
 - D1 metadata、shared API contract、frontend metadataは`isPublic`を持つ。既存D1 recordはmigration後にpublicとして扱う。未ログインの一覧はpublic characterだけ、ログイン済みの一覧はpublic characterと自分が所有するprivate characterだけを返す。private characterをowner以外または未認証で個別取得した場合は、存在しないIDと区別しない`404`とする。
-- 現在のcharacterはlocal / owner remote / non-owner remote / unauthenticated remoteを区別し、login / logout時に所有状態を再評価する。remote IDと`isOwner`をJSON import dataやbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
-- `キャラクター一覧`はPC名、PL名、改行表示する流儀／生き様、格、更新日を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名は一覧幅の30%、PL名は20%を取る。長いPC名・PL名と流儀／生き様はellipsisで表示してよいが、更新日は切り詰めず、横scrollは発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日は最小限の列幅でclipさせない。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは既存restore処理を通して同じ`/character-sheet/`へ反映し、個別閲覧pageは追加しない。
-- non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、DB保存、DB削除をread-onlyにする。一方で、`キャラクター一覧`、初期化、JSONインポート、CCFOLIAコピー、Help、login / logoutは利用可能とする。初期化とインポートはremote ID bindingを解除するだけで、remote DB recordを削除・更新しない。
-- `DB保存`はログインとPC名を必須とし、初回はserver発行IDへ紐付け、owner remoteは上書きする。保存確認dialogではデータと画像をserverへ保存することを説明する。新規保存の`全員に公開する`は既定ON、既存remoteの上書きでは現在の`isPublic`を既定とする。
-- `コピー保存`はログイン済みならpublic non-owner remoteにも利用可能とする。PC名とPL名を入力して新しいIDへ保存し、`全員に公開する`の既定はOFF、コピー元の画像は引き継がない。成功後は新しいowner characterへ切り替える。
-- `DB削除`はログイン済みowner remoteだけに許可し、確認後にDB recordを削除する。現在のform・画像は維持し、remote ID bindingだけを解除する。
+- 現在のcharacterはidなしlocal / owner remote / non-owner remote / unauthenticated remoteを区別する。remote routeではFirebase Authenticationの初期化完了後にURLのidでGETし、route変更・認証状態変更で古くなったrequestのresponseは反映しない。login / logout / user切替後はpage全体を再読み込みして初期ロード経路で所有状態を再評価する。remote IDと`isOwner`をJSON import dataやbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
+- `キャラクター一覧`はPC名、PL名、流儀／生き様、格を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。流儀／生き様は折り返さず、長いPC名・PL名・流儀／生き様はellipsisで表示してよい。横scrollは発生させない。mobileではPC名とPL名だけを表示する。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。cache件数の縮小で現在pageが存在しなくなった場合は、表示pageとstateを最終有効pageへclampして同じくscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは`?character=<id>`へ遷移してremote GETとrestoreを開始し、個別閲覧pageは追加しない。
+- non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、DB保存、DB削除、初期化をread-onlyまたはdisabledにする。一方で、`キャラクター一覧`、JSONインポート、CCFOLIAコピー、Help、login / logoutは利用可能とする。JSONインポートは入力値と画像をidなしlocal draftとして保存してからquery parameterを外す。remote DB recordを削除・更新しない。
+- `DB保存`はログインとPC名を必須とし、idなしlocal draftの初回保存ではserver発行IDの`?character=<id>`へ遷移する前にlocal draftを削除する。owner remoteでは同じidを上書きし、remote値はbrowser persistenceへ保存しない。保存確認dialogではデータと画像をserverへ保存することを説明する。新規保存の`全員に公開する`は既定ON、既存remoteの上書きでは現在の`isPublic`を既定とする。
+- DB保存request全体は8 MiBまで、snapshotの`imageBase64String`は4 MiBまでとする。frontendは送信直前にUTF-8 byte長でrequest全体を検査し、shared schemaとbackend body limitも同じ上限を使う。
+- `コピー保存`はログイン済みならpublic non-owner remoteにも利用可能とする。PC名とPL名を入力して新しいIDへ保存し、`全員に公開する`の既定はOFF、コピー元の画像は引き継がない。成功後は新しいowner characterの`?character=<id>`へ切り替える。
+- `DB削除`はログイン済みowner remoteだけに許可し、確認後にDB recordを削除する。成功後はquery parameterを外してidなしlocal draftへ遷移し、削除したremote characterのform・画像をlocal draftとして保持しない。
 - JSONエクスポートのユーザー向けbuttonはAction Pane / control paneから削除する。共用serialize logicはDB保存、コピー保存、CCFOLIA、testなどから必要な範囲で維持する。
 - JSONインポートは移行期間として維持する。buttonの2行目にdanger色の小さい文字で`DB保存に移行するため9/1に削除されます。`と表示し、tablet / mobileでは横幅いっぱいにする。日付による自動削除は実装せず、9/1の実削除は別の明示的なcode changeで扱う。
 - 結果通知だけを目的とするsuccess / error dialogは、success / error、5秒後の自動消去、新着順stack、manual closeなしの共通Toastへ置き換える。確認・入力・Helpのdialog責務はToastへ移さない。
+- API通信不能、APIの5xx、未知の非同期例外、React未捕捉例外は、結果通知の例外としてfatal error dialogへ集約する。dialogのaccessible nameと見出しは`予期しないエラーが発生しました`、本文は`ページを再読み込みしてください。未保存の変更は失われます。`、唯一の操作は`再読み込み`とする。初期focusは同buttonへ置き、Escape、dialog外click、閉じるbuttonではdismissできない。401 / 403 / 404、入力検証、画像形式不正、ユーザー操作のcancelは既存の個別通知またはdialogを維持する。419はtoken refreshを1回試行し、再度419ならlogoutとsession-expired通知を行い、fatal error dialogへ送らない。
 - Help本文は、現行componentの文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映する。エージェントは本文を独自に改稿しない。
-- JSON入出力の具体的な構造、画像表現、空欄と明示的な`0`の扱い、スキーマバージョンの扱いは、対応する実装Gateの着手前に定める。スキルLvの下限・最大Lv超過はJSON入力・端末内復元で除外または自動補正せず、構造・型を受理した値をRHFへ反映して局所エラーとする。派生値は読み込み後に再計算する。
-- 端末内には最新1キャラクターだけを自動保存・復元する。画像以外のフォーム値はlocalStorageへ保存し、画像はIndexedDBの独立したrecordとして初期化時に読み、recordがない場合は未選択状態とする。画像recordの読取り・復元の失敗は、フォーム値のlocalStorage復元を停止・失敗させない。復元が完了するまで空データで保存済みデータを上書きしない。
-- 全消去は確認後に入力、画像、可変行、エラー・警告、端末内保存を初期化する。
+- JSON入出力の具体的な構造、画像表現、空欄と明示的な`0`の扱い、スキーマバージョンの扱いは、対応する承認済みissueの着手前に定める。スキルLvの下限・最大Lv超過はJSON入力・端末内復元で除外または自動補正せず、構造・型を受理した値をRHFへ反映して局所エラーとする。派生値は読み込み後に再計算する。
+- idなしlocal draftだけを自動保存・復元する。画像以外のフォーム値は非default値だけをlocalStorageへ保存し、default値へ戻った場合は保存済みフォームを削除する。local draftの画像はIndexedDBの独立したrecordとして初期化時に読み、recordがない場合は未選択状態とする。remote characterではlocalStorage / IndexedDBを読まず書かず、remote responseをmemoryだけで表示する。画像recordの読取り・復元の失敗は、フォーム値のlocalStorage復元を停止・失敗させない。復元が完了するまで空データで保存済みデータを上書きしない。
+- 全消去はidなしlocal draftでだけ利用可能とし、確認後に入力、画像、可変行、エラー・警告、端末内保存を初期化する。
 - JSONとして解析できない、必須構造または型が不正である場合は読み込みを失敗として扱い、現在の編集内容と端末内保存を変更しない。現在のマスタにないIDを含む単一選択値は空欄化し、可変行は除外する。除外後にfield arrayの最小行数を下回る場合は、必要な空欄行だけを追加する。固定rowのidentityまたは関連行参照を保てない場合は、現在の編集内容と端末内保存を変更せずエラーを表示する。
-- CCFOLIAのClipboard API用JSONを生成してコピーする。具体的なオブジェクト形状、出力項目、既定順、空欄・未算出値の表現は、対応する実装Gateの着手前に定める。
+- CCFOLIAのClipboard API用JSONを生成してコピーする。具体的なオブジェクト形状、出力項目、既定順、空欄・未算出値の表現は、対応する承認済みissueの着手前に定める。
 - ヘルプは、スキルとアイテムの効果表示が現在のマスタデータを参照するため、ルール更新時に表示内容が変わりうることを説明する。
 - JSONインポートはファイル選択後、現在の編集内容と端末内保存を置換することを確認してから実行する。キャンセル時は何も変更しない。不正なJSONの失敗時は「JSONを読み込めませんでした。ファイルの形式を確認してください。」の趣旨を通知する。
-- CCFOLIAコピーの出力対象とセッション中状態の扱いは、対応する実装Gateの着手前に定める。
+- CCFOLIAコピーの出力対象とセッション中状態の扱いは、対応する承認済みissueの着手前に定める。
 - JSONインポート、全消去、DB保存、コピー保存、DB削除、対応スキルを持つその他流儀の削除は確認または入力dialogを表示する。警告、CCFOLIAコピーの成功または失敗、画像選択・保存・復元、DB操作の結果通知はToastで通知する。ブラウザ組み込みの`alert`は使用しない。
 - 狭幅レイアウトでは、右下のstickyな操作メニューの上に、細かな説明を開く丸い`?`ボタンを置く。操作時はブラウザ組み込みの`alert`ではなく説明ダイアログを表示する。
 
@@ -235,5 +238,5 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - desktopのaction railは本文scrollから独立してsticky表示にする。Header、Footer、site menu rail、mainのscroll領域は既存layoutを変更しない。
 - section navigationは第一階層sectionだけを対象にする。各navigation buttonは下向きiconと下線を持つが、現在のscroll位置またはクリック対象に応じたaccent表示は行わない。section frame自体、子section、行、入力項目の色は変えない。
 - キャラクターシートのrouteと入力内容はPagefind検索indexの対象外とする。
-- 静的ホスティングで完結する。`ex-16-character-sheet-cloud-persistence` の承認済み Gate だけは Cloudflare Worker を例外として許可する。G3のログインcredentialはfrontend内でメモリ保持する初期実装とし、G6ではFirebase Authentication SDKが管理する認証状態永続化へ置換する。
-- 画像の端末内保存方式、保存先間の責務分離、ブラウザAPIの失敗時の共通方針はアーキテクチャで定義する。JSONの構造、CCFOLIA Clipboard JSONの具体的なオブジェクト形状、実行時schemaの具体形は、対応する実装Gateの着手直前にこの要件と整合する形で確定する。
+- 静的ホスティングで完結する。キャラクターシートのクラウド保存だけはCloudflare Workerを使う例外とし、Firebase Authentication SDKが認証状態の永続化を管理する。
+- 画像の端末内保存方式、保存先間の責務分離、ブラウザAPIの失敗時の共通方針はアーキテクチャで定義する。JSONの構造、CCFOLIA Clipboard JSONの具体的なオブジェクト形状、実行時schemaの具体形は、対応する承認済みissueの着手直前にこの要件と整合する形で確定する。

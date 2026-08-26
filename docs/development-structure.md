@@ -22,15 +22,15 @@
 .tmp/                    Git管理しない一時作業ファイル
 backend/                 Cloudflare Worker、Wrangler local state、backend test用workspace
 frontend/                静的サイトの実装workspace
-frontend/.env            Git管理しないGoogle Spreadsheet同期設定
-frontend/.env.example    Google Spreadsheet同期設定のキー名だけを示すtemplate
+frontend/.env            Git管理しないfrontend local設定（public API、Firebase、Google Spreadsheet同期）
+frontend/.env.example    frontend local設定のキー名だけを示すtemplate
 frontend/canonical-snapshots/ Visual Review用のGit管理しないbaseline
 frontend/data/generated/ Git管理する生成JSON
 frontend/public/         静的アセット
 frontend/scripts/        Node / TypeScriptの保守・変換プログラム
 frontend/tests/          Node、Vitest、E2E、VRT、contract test
 frontend/src/            Astro / Reactのサイト実装
-packages/shared/         frontendと将来のbackendで共有する型・定数
+packages/shared/         frontendとbackendで共有する型・定数
 docs/                    プロジェクト文書とtask tracking
 docs/design/             design正本
 ```
@@ -169,11 +169,11 @@ script名は、作業者が目的を判断しやすい名前にする。
 - `npm --workspace=@neon-underrealm/frontend run visual:test`: Playwright標準VRT baselineを比較する
 - `npm --workspace=@neon-underrealm/frontend run visual:update`: ユーザー明示指示時にだけVRT baselineを作成・更新する
 - `npm run check`: format検査、Markdown検査、backend/frontend/shared packageのlintと型検査を実行する
-- `npm --workspace=@neon-underrealm/backend run test`: backend workspaceのdummy境界を型検査する
+- `npm --workspace=@neon-underrealm/backend run test`: backend workspaceのunit testをVitestで実行する
 
 workspace固有のbuild、test、runtime出力は各workspaceの`.gitignore`で無視する。rootの`.gitignore`は`.raw/`、`.tmp/`、`**/.env`、Excelなどworkspace共通のローカル入力を扱う。
 
-Excel変換、検索index生成、データ検証などのscriptは、該当機能が実装されるtaskで追加する。
+Excel変換、検索index生成、data validation、Google Spreadsheet同期などの既存scriptは、各workspaceの`package.json`に定義する。新しいscriptは、該当機能を実装するtaskで追加し、その責務と入出力を近接するscriptまたは文書へ記録する。
 
 package scriptを追加または変更する場合は、対象issueの範囲内で理由を記録する。
 

@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "frontend/**"
+      - "!frontend/README.md"
       - "package.json"
       - "package-lock.json"
       - "biome.json"
@@ -160,6 +161,27 @@ jobs:
             fi
             if [ "$attempt" -eq 12 ]; then
               echo "::error::The deployed GitHub Pages site did not become reachable."
+              exit 1
+            fi
+            sleep 5
+          done
+
+      - name: Wait for Pagefind deployment marker
+        env:
+          E2E_BASE_URL: ${{ needs.deploy.outputs.page_url }}
+          EXPECTED_PAGEFIND_DEPLOYMENT_SHA: ${{ github.sha }}
+        run: |
+          expected_marker="{\"commit\":\"$EXPECTED_PAGEFIND_DEPLOYMENT_SHA\"}"
+          observed_marker=""
+          for attempt in {1..12}; do
+            marker_url="${E2E_BASE_URL%/}/pagefind/deployment.json?commit=${EXPECTED_PAGEFIND_DEPLOYMENT_SHA}&attempt=${attempt}"
+            observed_marker="$(curl --fail --silent --location "$marker_url" 2>/dev/null || true)"
+            if [ "$observed_marker" = "$expected_marker" ]; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 12 ]; then
+              echo "Expected Pagefind deployment SHA: $EXPECTED_PAGEFIND_DEPLOYMENT_SHA"
+              echo "Observed Pagefind deployment marker: ${observed_marker:-<unavailable>}"
               exit 1
             fi
             sleep 5

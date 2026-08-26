@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+export const characterSheetMaximumRequestBytes = 8 * 1024 * 1024;
+export const characterSheetMaximumImageBase64Bytes = 4 * 1024 * 1024;
+
 export const characterSheetTypeSchema = z.enum(["sample", "user"]);
 
 export const primaryRyugiIds = [
@@ -30,7 +33,7 @@ export const characterSheetSnapshotInputSchema = z
   .object({
     imageBase64String: z
       .string()
-      .max(8 * 1024 * 1024)
+      .max(characterSheetMaximumImageBase64Bytes)
       .nullable(),
   })
   .catchall(z.unknown());
@@ -73,6 +76,7 @@ export type CharacterSheetListResponse = {
 };
 
 export type ApplicationErrorCode =
+  | "authentication_unavailable"
   | "bad_request"
   | "expired_token"
   | "forbidden"

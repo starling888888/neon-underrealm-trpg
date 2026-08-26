@@ -197,6 +197,17 @@ test("Firebase verifier rejects a token without auth_time", async () => {
   });
 });
 
+test("Firebase verifier reports an unexpected key-set failure separately", async () => {
+  const { privateKey } = await generateKeyPair("RS256");
+  const verifier = new FirebaseIdTokenVerifier(projectId, async () => {
+    throw new Error("unexpected key-set failure");
+  });
+
+  expect(await verifier.verify(await signToken(privateKey))).toEqual({
+    kind: "unexpected",
+  });
+});
+
 test("Firebase verifier requires a non-empty project ID", () => {
   expect(() => new FirebaseIdTokenVerifier("")).toThrow(
     "FIREBASE_PROJECT_ID must not be empty.",

@@ -10,10 +10,10 @@ Cloudflare backendのresource deployは、GitHub Pages deployから独立した 
 
 - 静的サイトとして公開する。
 - GitHub Pagesなどの静的ホスティングで公開できる構成を維持する。
-- 公開ルールサイトは静的なGitHub Pagesとして維持し、DB、常駐サーバー、認証、CMS、汎用APIサーバーを前提にしない。ただし、承認済みGateのcharacter snapshot用Cloudflare Worker、D1、R2 backendはfrontendから独立して運用する。
+- 公開ルールサイトは静的なGitHub Pagesとして維持し、DB、常駐サーバー、認証、CMS、汎用APIサーバーを前提にしない。ただし、character snapshot用Cloudflare Worker、D1、R2 backendはfrontendから独立して運用する。
 - CI/CD上のビルドはExcel本体に依存しない。
 - 公開用ビルドは、Git管理されたMarkdown / MDX、生成済みJSON、サイトコード、設定ファイルだけで成立させる。
-- GitHub Pagesはmainへのfrontend関連変更だけで、Cloudflare backendはmainへのbackend関連変更だけでdeployする。rootのdependency / formatter / TypeScript設定と各deploy・test workflowの変更は、対応workspaceのbuildへ影響しうるため各deployの起動対象に含める。Cloudflare API tokenはRepository Secretからdeploy jobだけへ渡し、Gate branch、親 branch、PRでは読まない。
+- GitHub Pagesはmainへのfrontend関連変更だけで、Cloudflare backendはmainへのbackend関連変更だけでdeployする。rootのdependency / formatter / TypeScript設定と各deploy・test workflowの変更は、対応workspaceのbuildへ影響しうるため各deployの起動対象に含める。Cloudflare API tokenはRepository Secretからdeploy jobだけへ渡し、task branchやPRでは読まない。
 
 ## 現時点の確認手順
 
@@ -50,7 +50,7 @@ npm --workspace=@neon-underrealm/frontend run build:public
 npm --workspace=@neon-underrealm/frontend run build:search-index
 ```
 
-`build:search-index` はサイト自体をbuildせず、既にある `frontend/dist/` を入力にPagefindの静的検索bundleを `frontend/dist/pagefind/` へ生成します。生成物はGit管理しません。
+`build:search-index` はサイト自体をbuildせず、既にある `frontend/dist/` を入力にPagefindの静的検索bundleを `frontend/dist/pagefind/` へ生成します。同じGit commit SHAを`frontend/dist/pagefind/deployment.json`へ記録するため、公開検索runtimeとPublic E2Eがartifact世代を照合できます。生成物はGit管理しません。
 
 GitHub Actionsのdeploy workflowも、公開用build後に同じ順序で検索indexを生成します。`frontend/dist/pagefind/`を含む`frontend/dist/`全体をGitHub Pages artifactとして配布します。
 
@@ -74,12 +74,14 @@ frontend deploy workflowは `main` へのfrontend関連pushで実行します。
 
 手動実行用に `workflow_dispatch` も設定しています。
 
-ドキュメント更新、AGENTS / SKILL更新、README更新のみではデプロイが走らないよう、以下を `paths-ignore` に含めます。
+ドキュメント更新、AGENTS / SKILL更新、README更新のみではデプロイが走らないよう、deploy workflowの`paths`へ除外patternを置く。
 
 - `docs/**`
 - `.agents/**`
 - `AGENTS.md`
 - `README.md`
+- `frontend/README.md`（GitHub Pages deploy）
+- `backend/README.md`（Cloudflare backend deploy）
 
 ## Cloudflare backend deploy
 
@@ -87,9 +89,33 @@ frontend deploy workflowは `main` へのfrontend関連pushで実行します。
 
 `wrangler.jsonc`の`env.dev`は、local開発者がCloudflare上で実API接続を確認するためのdevelopment Workerである。`npm run wrangler:dev -- <Wrangler command>`は`backend/bin/wrangler.sh`を通じ、`neon-underrealm-backend-dev`およびその専用D1/R2だけを対象にし、production resourceやmain限定workflowを変更しない。wrapperはdevelopmentのGit管理しない`backend/.env`を存在時だけsourceし、`deploy`時だけ公開runtime varsを渡す。local `wrangler dev`はWrangler標準の`.env`自動読込でbindingを得るため、wrapperは`--var`を追加しない。local CORS allow originは`http://localhost:4321,http://localhost:4322`とする。
 
-production deployはGitHub Repository Variableのproduction用`GOOGLE_OAUTH_CLIENT_ID`をjob環境変数へ渡す。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出する。CIはGoogle client IDが未設定ならdeploy前に失敗し、wrapperが`deploy`時に両値をWorker `vars`として渡す。`npm run wrangler:prod -- <Wrangler command>`はenvironment選択を担当するため呼出側の`--env`または`-e`を拒否する。GitHub Pagesのcustom domainへ移行した場合だけ、CORS originをRepository Variableなどの明示設定へ切り替える。`vars`はenvironment間で継承されないため、D1/R2 bindingと同様にdevelopmentとproductionの値を共用しない。いずれも公開値のためCloudflare secretには登録しない。productionへのlocal remote deployはユーザー承認後だけに実行する。
+production deployはGitHub Repository Variableの`FIREBASE_PROJECT_ID`をjob環境変数へ渡す。`CORS_ALLOW_ORIGIN`は`${{ github.repository_owner }}`から`https://<owner>.github.io`を導出する。CIはFirebase project IDが未設定ならdeploy前に失敗し、wrapperが`deploy`時に両値をWorker `vars`として渡す。`npm run wrangler:prod -- <Wrangler command>`はenvironment選択を担当するため呼出側の`--env`または`-e`を拒否する。GitHub Pagesのcustom domainへ移行した場合だけ、CORS originをRepository Variableなどの明示設定へ切り替える。`vars`はenvironment間で継承されないため、D1/R2 bindingと同様にdevelopmentとproductionの値を共用しない。いずれも公開値のためCloudflare secretには登録しない。productionへのlocal remote deployはユーザー承認後だけに実行する。
 
 workflowが読むRepository Secretは`CLOUDFLARE_API_TOKEN`だけである。Terraform remote state、R2 S3 credential、Terraform用Repository Variableは使わない。automatic provisioningはBetaのため、resourceの詳細なlifecycle管理が必要になった場合は方針を再評価する。
+
+## Production sample characters
+
+sample characterはseed script、管理画面、管理用API、production用test accountを追加せず、管理者アカウントによる通常操作と承認済みのproduction D1操作で管理する。
+
+1. 管理者アカウントで10件のcharacterを作成してDB保存する。
+2. 一覧に表示したい順で各characterの`createdAt`とcharacter IDを記録する。
+3. production D1操作の承認後、記録した10件だけを`type='sample'`かつ`isPublic=true`へ更新する。
+4. 未ログイン状態で、sampleが`createdAt ASC`の順に10件表示されること、公開状態であること、各sampleを個別に復元できることを確認する。
+
+この手順はproductionへの書込みを含むため、各実行前にユーザーの明示承認を得る。sample化後もowner `userId`とR2 keyは変えず、同じ管理者だけが通常UIから更新・削除できる。
+
+## Production smoke
+
+frontendまたはbackendのproduction deploy後は、管理者アカウントで次を手動確認する。実Firebase loginやproduction APIを使うautomated smokeは追加しない。
+
+1. Firebase Authenticationでloginする。
+2. 一時characterを作成し、DB保存、一覧表示、個別復元を確認する。
+3. ownerとして同じcharacterを上書き保存し、private / public visibilityを確認する。
+4. browser NetworkでfrontendからbackendへのCORS成功を確認する。
+5. Cloudflare Dashboardでproduction D1 / R2 bindingが意図したresourceを参照していることを確認する。
+6. 一時characterをDBから削除する。
+
+実行時はdeploy日時、確認者、結果をcurrent issueのcheckpointへ残す。
 
 ## CIとPublic E2E
 
@@ -108,9 +134,9 @@ workflowが読むRepository Secretは`CLOUDFLARE_API_TOKEN`だけである。Ter
 
 mainへのfrontend公開対象のpushでは、GitHub Pages deploy workflowがroot Qualityとfrontend testを実行する。frontendのpublic buildは、両方の成功後に実行する。backend関連変更だけではGitHub Pages deploy workflowを起動しない。
 
-deploy workflowはpublic build後にPagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、`README.md`だけの変更ではdeploy workflowを起動しない。`frontend/src/pages/**/*.mdx`や`.github/**`の変更は除外しない。
+deploy workflowはpublic build後にPagefind index生成、artifact upload、GitHub Pages deployを実行する。`docs/**`、`.agents/**`、`AGENTS.md`、root `README.md`、`frontend/README.md`だけの変更ではGitHub Pages deployを起動しない。`frontend/src/pages/**/*.mdx`や`.github/**`の変更は除外しない。Cloudflare backend deployも同様にroot `README.md`と`backend/README.md`だけの変更では起動しない。
 
-deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。有限回の到達確認後に実行し、ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`frontend/playwright-report/`と`frontend/test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
+deploy成功後は、GitHub Pages environment URLを`E2E_BASE_URL`として既存のE2E suiteをPublic E2Eとして実行する。`@local-fixture` tagのtestだけを除外し、公開routeを扱う既存testはすべて実行する。`E2E_BASE_URL`があるときはPlaywright configのlocal preview `webServer`を定義しない。到達確認のHTTP response bodyはGitHub Actions logへ出力しない。到達後、`pagefind/deployment.json`が今回のGit commit SHAと一致するまで有限回待機してから実行する。markerのtimeout時は期待SHAと取得markerだけをlogへ出す。ローカルpreview、`-local` fixture、VRT testは使わない。failure時だけHTML report、test result、screenshot、traceを生成し、`frontend/playwright-report/`と`frontend/test-results/public-e2e/`を7日間artifactとして保存する。Public E2Eの失敗はdeployをrollbackしない。
 
 ## VRT運用
 
