@@ -1,6 +1,6 @@
 {
   "dataName": "ryugi-skills",
-  "updatedAt": "2026-08-22T18:42:03+09:00",
+  "updatedAt": "2026-08-26T23:13:20+09:00",
   "data": {
     "kenkaya": {
       "bonus": [
@@ -3267,10 +3267,10 @@
           "timing": "Pv",
           "cost": null,
           "proficiency": null,
-          "acquisitionRestriction": null,
+          "acquisitionRestriction": "タイミングMのスキル",
           "target": "自身",
           "range": null,
-          "usageRestriction": "タイミングMのスキル",
+          "usageRestriction": null,
           "effect": "1ラウンドに1回タイミング:Mのスキルをイニシアチブに使用できる。",
           "sourceOrder": 15,
           "id": "skill-ryugi-kashira-advanced-pv-3a22d2fd4e24"
@@ -3282,10 +3282,10 @@
           "timing": "M",
           "cost": "気0",
           "proficiency": null,
-          "acquisitionRestriction": null,
+          "acquisitionRestriction": "タイミングMのスキル",
           "target": "自身",
           "range": null,
-          "usageRestriction": "タイミングMのスキル",
+          "usageRestriction": null,
           "effect": "この手番で次に使用するタイミングMのスキルは2体を対象にできる。気合を追加で1点支払うごとに対象を1体増やしてよい。",
           "sourceOrder": 16,
           "id": "skill-ryugi-kashira-advanced-m-03bfa47d915c"
