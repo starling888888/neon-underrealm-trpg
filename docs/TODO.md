@@ -73,15 +73,24 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
   - JSON importではformの復元後、画像decode失敗またはIndexedDBへの画像write失敗が発生すると、旧remote character IDが残る経路がある。
   - import後のform内容と旧remote bindingが混在し、後続のDB保存で旧recordを意図せず上書きする可能性がある。
   - import開始時または復元状態確定時に、画像処理の成否に依存せずremote bindingを解除する設計へ整理する。
+  - handling plan: ex-17では対応しない。JSON import機能を削除するtaskで、削除後の導線とremote bindingの整合性を確認する。
 
 - [ ] authentication state変更後のremote ownership再取得を再試行可能にする
   - login / logout / user変更時には一旦`isOwner=false`へdemoteしている。
   - signed-in後のremote GETではrefresh keyを先に確定し、取得失敗を握り潰しているため、一時的なnetwork/API障害でも同session中に自動再試行されない。
   - owner characterがread-onlyのまま残らないよう、失敗時のretry条件、refresh key確定タイミング、ユーザー向けエラー通知を整理する。
+  - handling plan: 初回のFirebase認証状態確定後、uidの変更（login、logout、user切替）ごとにページ全体を再読み込みする。ownership再取得専用のretry stateは追加しない。
+
+- [ ] キャラクターシートの想定外エラーを再読み込みダイアログで扱う
+  - API通信不能・5xx、想定外の例外、Reactの未捕捉例外では、閉じられない共通ダイアログに再読み込み操作を表示する。
+  - 入力検証、画像形式不正、401 / 403 / 404、ユーザー操作のキャンセルなど、原因と次の操作が明確な既知エラーは既存の個別通知またはdialogで扱い、再読み込み対象にしない。
+  - reloadで未保存編集を失うため、想定外エラーへ分類する境界をtestで固定する。
 
 - [ ] Firebase public key取得障害とinvalid tokenを区別する
   - Firebase公開鍵取得、key import等のinfrastructure failureがtoken validation failureと同じ認証エラーへ収束し得る。
   - 不正tokenは401系、Firebase側またはnetwork側の一時障害は5xx系として扱えるよう、verifierのerror classificationを整理する。
+  - handling plan: 不正tokenは401、期限切れtokenは419、Firebase公開鍵の取得不能・response不正・証明書import失敗は`authentication_unavailable`として503、その他の予期しないverifier例外は500とする。frontendは503 / 500を共通の再読み込みdialogへ渡す。
+  - test: Firebase公開鍵endpointの503がAPIの503となることと、不正tokenが401となることを分離して固定する。
 
 ### Sample characters / production data
 
@@ -91,18 +100,21 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
   - 必要ならseed script、管理用手順、更新方法を追加する。
   - 通常公開するsampleは`isPublic=true`とする。
   - sampleの表示順`createdAt ASC`が期待どおりになることを確認する。
+  - handling plan: seed scriptや管理機能は追加しない。管理者アカウントで画面から10件を作成・DB保存し、表示したい順に`createdAt`を確定してから、承認済みのproduction D1操作で対象recordを`type='sample'`かつ`isPublic=true`へ更新する。
+  - documentation: `docs/deployment.md`に、対象IDを記録すること、未ログイン一覧で10件の順序・公開状態・個別復元を確認することを含む更新手順として明記する。
 
 ### Character list UI
 
 - [ ] character一覧のpageをcache件数変更時にclampする
   - 現在のpageより後ろのdataが削除・filter変更・cache更新等で消えた場合、`pageCount`だけが縮み、存在しないpageを指せる可能性がある。
   - `page <= pageCount - 1`を保証する。
+  - handling plan: cache件数の縮小で生じる表示バグとして修正する。表示用pageを`min(page, pageCount - 1)`で導出し、stateも同じ値へ同期して一覧scrollを先頭へ戻す。filter変更時に1ページ目へ戻す既存挙動は維持する。
+  - test: 2ページ目を表示中にcacheを11件から10件へ縮小し、1ページ目へclampされて有効なrowが表示されることを固定する。
 
-- [ ] character一覧の流儀・生き様表示順を最新UI仕様へ統一する
-  - 現実装は`流儀／生き様`。
-  - 最新決定の`生き様／流儀`へheaderと各rowを統一する。
-  - desktopでは折り返さず表示する。
-  - mobileではPC名・PL名のみ表示する現在方針を維持する。
+- [ ] character一覧の流儀・生き様表示仕様をactive documentationへ統一する
+  - 現行実装の`流儀／生き様`が正であり、headerと各rowの順序を変更しない。
+  - desktopでは折り返さず表示し、mobileではPC名・PL名のみ表示する現在方針を維持する。
+  - `生き様／流儀`を最新仕様とする記述だけを訂正し、実装またはtestを変更しない。
 
 ### API contract / payload
 
@@ -111,6 +123,9 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
   - shared schemaではBase64画像単体に近いサイズまで許容できるため、schema上validでもJSON envelopeを含めるとbackendで413になる領域が存在する。
   - 正常な最大画像サイズ、Base64 overhead、snapshot metadataを考慮し、client/shared/backendで一貫した上限を決定する。
   - boundary testを追加する。
+  - handling plan: HTTP request全体の上限を10MiB、`imageBase64String`の上限を4MiBとする。500px・WebP quality 0.8へ変換後の通常画像に余裕を持たせ、snapshotとmetadataに約6MiBを確保する。
+  - implementation: shared packageへ上限定数を置き、frontendは送信直前のUTF-8 byte長、shared schemaは画像文字列長、backendはbody全体を同じcontractで検査する。
+  - test: 最大想定画像を含む正常payloadと1 byte超過を確認する。skip中のchunked oversized request integration testは、`createApp`へtest専用の小さいbody limitを注入し、productionの10MiB上限を変えずに16KiB超程度のstreamで413を安定して確認する。
 
 ### Production deployment / operations
 
@@ -126,6 +141,15 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
   - D1/R2のproduction bindingが意図したresourceを参照していること。
   - frontendからbackendへのCORSが正常であること。
   - 必要に応じて手動smoke / Public E2E / automated smokeの責務を整理する。
+  - handling plan: 実Firebase loginとproduction APIを使うautomated smokeは追加しない。backend integration testと既存Public E2Eは自動で維持し、production deploy後は管理者アカウントによる手動smokeで確認する。
+  - documentation: `docs/deployment.md`に、Google login、新規一時characterのDB保存、一覧反映、個別復元、owner上書き、private/public visibility、DB削除、browser NetworkでのCORS成功、Cloudflare DashboardでのD1/R2 production binding確認を順に記載する。一時データは必ず削除し、deploy日時・確認者・結果は実行時のissue checkpointへ残す。
+
+### Public E2E
+
+- [ ] deploy世代のPagefind indexを検知してからPublic E2Eを実行する
+  - 現行workflowはGitHub Pagesの到達だけを待つため、CDN上の古いPagefind indexを取得して検索E2Eが失敗することがある。
+  - handling plan: build時に`frontend/dist/pagefind/deployment.json`へGit commit SHAを出力し、検索用JavaScriptの`pagefind.js` dynamic importにも同じSHAをquery parameterとして渡す。
+  - test: Public E2E jobは`pagefind/deployment.json`が今回のSHAを返すまで有限回pollしてから既存suiteを実行する。timeout時は期待SHAと取得したmarkerだけをlogへ出す。
 
 ### Documentation consistency
 
@@ -145,6 +169,8 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
   - static sample JSON前提の説明をDB sample前提へ更新する。
   - production / development Cloudflare bootstrap・migration・deploy手順を現実装へ合わせる。
   - document間でSSoTが競合していないことを確認する。
+  - handling plan: 列挙ファイルに限らず、Git管理されているリポジトリ全体の現行仕様・運用・design文書を検索対象にする。中間Gate、Google Identity Services、旧設定名、旧deploy、旧sample、旧一覧仕様など、現行仕様ではない履歴を残さずFirebase Authenticationと現在の運用へ統一する。
+  - boundary: `docs/issue/ex-16-character-sheet-cloud-persistence.md`、親Gate plan、G1〜G6 child issueは履歴文書として次のarchive taskでGitHub closed Issueへ記録してローカルから削除する。agent failure logなどの監査記録は改変せず、現行仕様の正本として参照しない。
 
 ### Issue / Gate archive
 
@@ -156,8 +182,22 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
   - Gate状態を実際の完了状態へ更新する。
   - G6の`planned`等、現在実装と一致しない状態を解消する。
   - 最終HEAD / merge / deploy後の状態を反映する。
+  - handling plan: ex-17の実装、production smoke、documentation consistencyを完了してから最後に実施する。G6と親ex-16の完了条件をcurrent local evidenceで監査し、満たした項目だけを完了にする。
+  - archive: G6とparent ex-16の同名GitHub Issueを作成または照合し、最終契約・完了記録を残してcloseする。Gate planのG6は`done`とGitHub Issue番号だけへ縮約し、local child / parent issueは削除する。完了したGate planは`docs/issue/milestone-02/plans/`へ移し、Gate詳細は残さない。
   - obsoleteな途中レビュー・暫定方針がactive requirementとして読めない状態に整理する。
   - archive方針に従って完了済みissueを整理する。
+
+## ex-18: キャラクターシートJSONインポート導線削除
+
+JSONインポートbuttonを削除し、DB保存への移行を完了する。ex-17では扱わない。
+
+- [ ] JSONインポートbuttonを削除する
+  - JSON import機能とremote bindingの整合性は、この削除に合わせて確認する。
+
+- [ ] JSONインポートbutton削除後にキャラクターシートのdesign noteとcanonical VRT baselineを最新化する
+  - `docs/design/character-sheet/notes.md`からJSONインポートの導線・削除予告を除き、削除後のAction Pane / control paneを正本化する。
+  - 削除後のdesign intentをユーザーが承認してから、`design-image-generation`によりapproved designを反映したcanonical VRT baselineを更新する。actual screenshotをdesign正本やbaselineへ直接コピーしない。
+  - ex-17ではキャラクターシートのdesign noteまたはbaselineを更新しない。
 
 <!--
 例:
