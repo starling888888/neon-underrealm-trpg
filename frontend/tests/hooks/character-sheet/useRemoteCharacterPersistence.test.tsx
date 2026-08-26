@@ -8,7 +8,10 @@ import type {
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { describe, expect, it, vi } from "vitest";
-import type { CharacterSheetApiClient } from "../../../src/character-sheet/api/character-sheets";
+import {
+  type CharacterSheetApiClient,
+  CharacterSheetApiError,
+} from "../../../src/character-sheet/api/character-sheets";
 import type { Authentication } from "../../../src/character-sheet/auth/types";
 import {
   type CharacterSheetFormValues,
@@ -66,6 +69,7 @@ function renderPersistenceHarness(
   const clearLocalDraftForRemote =
     clearLocalDraftForRemoteOption ?? vi.fn(async () => {});
   const notify = vi.fn();
+  const onUnexpectedError = vi.fn();
   const clearRemoteCharacter = vi.fn();
   const onNavigate = vi.fn();
   const restore = vi.fn(restoreRemoteCharacter ?? (async () => true));
@@ -89,10 +93,10 @@ function renderPersistenceHarness(
         isRootOperationInProgress: false,
         notify,
         onNavigate,
+        onUnexpectedError,
         remoteCharacter,
         remoteCharacterId,
         restoreRemoteCharacter: restore,
-        updateRemoteCharacterMetadata: vi.fn(),
       },
       { characterSheetApi },
     );
@@ -105,6 +109,7 @@ function renderPersistenceHarness(
     clearRemoteCharacter,
     formRef,
     notify,
+    onUnexpectedError,
     onNavigate,
     restore,
   };
@@ -412,7 +417,7 @@ describe("useRemoteCharacterPersistence", () => {
       list: vi.fn(async () => emptyList),
       save: vi.fn(),
     };
-    const { notify, result } = renderPersistenceHarness(
+    const { notify, onUnexpectedError, result } = renderPersistenceHarness(
       characterSheetApi,
       undefined,
       undefined,
@@ -427,10 +432,34 @@ describe("useRemoteCharacterPersistence", () => {
     expect(result.current.isRemoteCharacterLoadFailed).toBe(true);
     expect(result.current.isEditable).toBe(false);
     expect(result.current.isCopySaveDisabled).toBe(true);
+    expect(onUnexpectedError).toHaveBeenCalledOnce();
+    expect(notify).not.toHaveBeenCalled();
+  });
+
+  it("keeps a known 404 remote-load failure in the existing notification path", async () => {
+    const characterSheetApi: CharacterSheetApiClient = {
+      delete: vi.fn(),
+      get: vi.fn(async () => {
+        throw new CharacterSheetApiError(404);
+      }),
+      list: vi.fn(async () => emptyList),
+      save: vi.fn(),
+    };
+    const { notify, onUnexpectedError, result } = renderPersistenceHarness(
+      characterSheetApi,
+      undefined,
+      undefined,
+      { remoteCharacterId: "missing-character" },
+    );
+
+    await waitFor(() => expect(characterSheetApi.get).toHaveBeenCalledOnce());
+
+    expect(result.current.isRemoteCharacterLoadFailed).toBe(true);
     expect(notify).toHaveBeenCalledWith(
       "error",
       "キャラクターを読み込めませんでした。",
     );
+    expect(onUnexpectedError).not.toHaveBeenCalled();
   });
 
   it("changes the URL identity from character-list selection without fetching first", async () => {

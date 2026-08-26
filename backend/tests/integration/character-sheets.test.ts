@@ -214,7 +214,15 @@ describe("GET /character-sheets", () => {
     expect(otherBody.user).toHaveLength(2);
   });
 
-  test("distinguishes expired and invalid tokens", async () => {
+  test("distinguishes unavailable, unexpected, expired, and invalid tokens", async () => {
+    const unavailable = await request("/character-sheets", {
+      headers: {
+        Authorization: "Bearer test-token-authentication-unavailable",
+      },
+    });
+    const unexpected = await request("/character-sheets", {
+      headers: { Authorization: "Bearer test-token-verifier-unexpected" },
+    });
     const expired = await request("/character-sheets", {
       headers: { Authorization: "Bearer test-token-expired" },
     });
@@ -222,6 +230,14 @@ describe("GET /character-sheets", () => {
       headers: { Authorization: "Bearer not-a-test-token" },
     });
 
+    expect(unavailable.status).toBe(503);
+    await expect(unavailable.json()).resolves.toEqual({
+      error: { code: "authentication_unavailable" },
+    });
+    expect(unexpected.status).toBe(500);
+    await expect(unexpected.json()).resolves.toEqual({
+      error: { code: "unexpected_error" },
+    });
     expect(expired.status).toBe(419);
     expect(invalid.status).toBe(401);
   });

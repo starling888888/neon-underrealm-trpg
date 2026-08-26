@@ -19,6 +19,10 @@ export class CharacterSheetApiError extends Error {
   get isExpiredToken(): boolean {
     return this.status === 419;
   }
+
+  get isUnexpected(): boolean {
+    return this.status >= 500;
+  }
 }
 
 export type CharacterSheetApiClient = {

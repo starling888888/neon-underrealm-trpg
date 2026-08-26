@@ -1,17 +1,17 @@
-import { Hono } from "hono";
-import { bodyLimit } from "hono/body-limit";
-import { cors } from "hono/cors";
 import type {
   ApiErrorResponse,
   ApplicationErrorCode,
 } from "@neon-underrealm/shared";
+import { Hono } from "hono";
+import { bodyLimit } from "hono/body-limit";
+import { cors } from "hono/cors";
+import { ApplicationError } from "./application-error.js";
 import {
+  type AuthenticationEnvironment,
   createAuthenticationMiddleware,
   requireAuthentication,
-  type AuthenticationEnvironment,
 } from "./auth/authentication-middleware.js";
 import type { TokenVerifier } from "./domain/index.js";
-import { ApplicationError } from "./application-error.js";
 import type { CharacterSheetService } from "./service/index.js";
 import {
   parseCharacterSheetId,
@@ -24,11 +24,12 @@ export type AppDependencies = {
   tokenVerifier: TokenVerifier;
 };
 
-type ErrorStatus = 400 | 401 | 403 | 404 | 413 | 419 | 500;
+type ErrorStatus = 400 | 401 | 403 | 404 | 413 | 419 | 500 | 503;
 
 const maximumRequestBodyBytes = 8 * 1024 * 1024;
 
 const errorStatusByCode = {
+  authentication_unavailable: 503,
   bad_request: 400,
   expired_token: 419,
   forbidden: 403,

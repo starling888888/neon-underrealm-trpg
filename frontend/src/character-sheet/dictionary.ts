@@ -30,6 +30,11 @@ export const characterSheetDictionary = {
         "ログインの有効期限が切れました。もう一度ログインしてください。",
       signingIn: "ログイン中…",
     },
+    fatalError: {
+      description: "ページを再読み込みしてください。未保存の変更は失われます。",
+      heading: "予期しないエラーが発生しました",
+      reload: "再読み込み",
+    },
     actions: {
       ccfoliaCopy: "CCFOLIAコピー",
       characterList: "キャラクター一覧",

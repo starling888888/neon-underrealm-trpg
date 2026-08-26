@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
-import type { User } from "firebase/auth";
+
 import { act, renderHook } from "@testing-library/react";
+import type { User } from "firebase/auth";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import useFirebaseAuthentication from "../../../src/character-sheet/auth/useFirebaseAuthentication";
 
@@ -53,6 +54,31 @@ describe("useFirebaseAuthentication", () => {
       status: "signed-in",
       sessionKey: "uid-a",
     });
+  });
+  it("reloads after the settled Firebase uid changes", async () => {
+    const reload = vi.fn();
+    renderHook(() => useFirebaseAuthentication(reload));
+
+    await act(async () => {
+      await Promise.resolve();
+      observer(null);
+    });
+    expect(reload).not.toHaveBeenCalled();
+
+    act(() => observer({ uid: "uid-a" }));
+    expect(reload).toHaveBeenCalledOnce();
+  });
+  it("does not reload when Firebase repeats the settled uid", async () => {
+    const reload = vi.fn();
+    renderHook(() => useFirebaseAuthentication(reload));
+
+    await act(async () => {
+      await Promise.resolve();
+      observer({ uid: "uid-a" });
+    });
+    act(() => observer({ uid: "uid-a" }));
+
+    expect(reload).not.toHaveBeenCalled();
   });
   it("reports initialization failures", async () => {
     getAuthMock.mockRejectedValueOnce(new Error("config"));

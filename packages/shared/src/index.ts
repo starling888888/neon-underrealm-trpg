@@ -73,6 +73,7 @@ export type CharacterSheetListResponse = {
 };
 
 export type ApplicationErrorCode =
+  | "authentication_unavailable"
   | "bad_request"
   | "expired_token"
   | "forbidden"

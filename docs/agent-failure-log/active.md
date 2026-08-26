@@ -800,6 +800,16 @@ source種別は以下を使う。
 - 観測した失敗: production用のGoogle client IDがGitHub Repository VariableからCIで注入される設計にもかかわらず、初回resource provisionを急ぎ、local `backend/.env`のGoogle client IDを呼出元environmentへ読み込んでproduction Workerへ渡した。CORS originだけをproduction値へ上書きしたため、local用とproduction用で異なるGoogle client IDを混在させた。
 - 一次対応: ユーザーがCloudflare Consoleでproduction値へ修正した。今後、production初回provisionを含むlocal Wrangler deployは、production設定値が明示的に提供され、environmentごとの値を確認できる場合だけ実行する。確認できない場合はCIでのdeployを待ち、local `.env`の値をproduction設定へ流用しない。
 
+### test assertion compatibility
+
+#### Repeated a focused component test with unavailable matcher extensions
+
+- date: 2026-08-26
+- source: self
+- 発生箇所: `ex-17-cloud-persistence-followups` の`CharacterSheetFatalErrorDialog` component test
+- 観測した失敗: focused frontend Vitest commandを3回連続で失敗させた。最初の2回は設定されていないjest-dom matcherの`toHaveFocus`と`fireEvent.cancel`を使い、3回目も同じく未導入の`toHaveAttribute`を使った。test environmentの既存assertion拡張を確認せず、標準DOM assertionへ置き換える修正を段階的に行った。
+- 一次対応: focusは`document.activeElement`、属性は`element.hasAttribute()`、cancelは`fireEvent(element, new Event("cancel", { cancelable: true }))`で確認する。以後、新規component testでは既存test setupに導入済みのmatcherを先に検索し、未確認のmatcherは標準Vitest / DOM APIで書く。
+
 #### Requested unnecessary escalation for an already approved Playwright command
 
 - date: 2026-08-08

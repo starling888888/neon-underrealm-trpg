@@ -1,5 +1,8 @@
 import { expect, test, vi } from "vitest";
-import { createCharacterSheetApiClient } from "../../../../src/character-sheet/api/character-sheets";
+import {
+  CharacterSheetApiError,
+  createCharacterSheetApiClient,
+} from "../../../../src/character-sheet/api/character-sheets";
 
 const basePath = "https://api.example.test";
 
@@ -56,4 +59,10 @@ test("exposes expired-token failures without accepting a failed response", async
     isExpiredToken: true,
     status: 419,
   });
+});
+
+test("classifies 5xx API failures as reload-recovery errors", () => {
+  expect(new CharacterSheetApiError(500).isUnexpected).toBe(true);
+  expect(new CharacterSheetApiError(503).isUnexpected).toBe(true);
+  expect(new CharacterSheetApiError(404).isUnexpected).toBe(false);
 });

@@ -1,13 +1,15 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useFirebaseAuthentication from "./auth/useFirebaseAuthentication";
 import styles from "./CharacterSheetContainer.module.css";
 import CharacterSheetActionPane from "./components/CharacterSheetActionPane";
+import CharacterSheetFatalErrorBoundary from "./components/CharacterSheetFatalErrorBoundary";
 import CharacterSheetFormPresenter, {
   type CharacterSheetFormPresenterProps,
 } from "./components/CharacterSheetFormPresenter";
 import CharacterSheetLoadingOverlay from "./components/CharacterSheetLoadingOverlay";
 import CharacterSheetToast from "./components/CharacterSheetToast";
 import ActionPaneDialogs from "./components/dialogs/action-pane";
+import CharacterSheetFatalErrorDialog from "./components/dialogs/CharacterSheetFatalErrorDialog";
 import CharacterSheetRemotePersistenceDialogs from "./components/dialogs/CharacterSheetRemotePersistenceDialogs";
 import CharacterChangeWarningDialogs from "./components/dialogs/character-change-warning";
 import PickerDialogs from "./components/dialogs/pickers";
@@ -35,6 +37,34 @@ const imageErrorMessages = {
 
 /** React Island root and orchestration boundary for the character sheet. */
 export default function CharacterSheetContainer() {
+  const [hasUnexpectedError, setHasUnexpectedError] = useState(false);
+  const onUnexpectedError = useCallback(() => setHasUnexpectedError(true), []);
+
+  useEffect(() => {
+    const reportUnexpectedError = () => onUnexpectedError();
+    window.addEventListener("error", reportUnexpectedError);
+    window.addEventListener("unhandledrejection", reportUnexpectedError);
+
+    return () => {
+      window.removeEventListener("error", reportUnexpectedError);
+      window.removeEventListener("unhandledrejection", reportUnexpectedError);
+    };
+  }, [onUnexpectedError]);
+
+  if (hasUnexpectedError) return <CharacterSheetFatalErrorDialog />;
+
+  return (
+    <CharacterSheetFatalErrorBoundary>
+      <CharacterSheetContainerContents onUnexpectedError={onUnexpectedError} />
+    </CharacterSheetFatalErrorBoundary>
+  );
+}
+
+function CharacterSheetContainerContents({
+  onUnexpectedError,
+}: {
+  onUnexpectedError: () => void;
+}) {
   const authentication = useFirebaseAuthentication();
   const route = useCharacterSheetRoute();
   const rootState = useCharacterSheetRootState(route.remoteCharacterId);
@@ -52,10 +82,10 @@ export default function CharacterSheetContainer() {
     isRootOperationInProgress: rootState.isRootOperationInProgress,
     notify: toast.notify,
     onNavigate: route.navigate,
+    onUnexpectedError,
     remoteCharacterId: route.remoteCharacterId,
     remoteCharacter: rootState.remoteCharacter,
     restoreRemoteCharacter: rootState.restoreRemoteCharacter,
-    updateRemoteCharacterMetadata: rootState.updateRemoteCharacterMetadata,
   });
 
   useEffect(() => {

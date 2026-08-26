@@ -201,6 +201,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 ## 保存、復元、出力
 
 - 端末内には最新1キャラクターだけを作業用として保存・復元する。`ex-16-character-sheet-cloud-persistence` のG5では、Google ID tokenをbrowser persistenceへ保存せず、G4の4 endpointを使ってクラウド保存と`キャラクター一覧`を提供する。G6ではFirebase AuthenticationのSDK管理下で認証状態を永続化し、API requestには取得時点で有効なFirebase ID Tokenだけを渡す。ID Tokenをアプリケーション独自のbrowser persistenceへ保存しない。
+- Firebase Authenticationの初回状態確定では現在のpageを維持する。確定後にuidがlogin、logout、user切替で変化した場合は、remote ownershipの専用再取得stateを持たず、page全体を再読み込みして初期ロード経路で再評価する。
 - D1 metadata、shared API contract、frontend metadataは`isPublic`を持つ。既存D1 recordはmigration後にpublicとして扱う。未ログインの一覧はpublic characterだけ、ログイン済みの一覧はpublic characterと自分が所有するprivate characterだけを返す。private characterをowner以外または未認証で個別取得した場合は、存在しないIDと区別しない`404`とする。
 - 現在のcharacterはlocal / owner remote / non-owner remote / unauthenticated remoteを区別し、login / logout時に所有状態を再評価する。remote IDと`isOwner`をJSON import dataやbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
 - `キャラクター一覧`はPC名、PL名、改行表示する流儀／生き様、格、更新日を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。PC名は一覧幅の30%、PL名は20%を取る。長いPC名・PL名と流儀／生き様はellipsisで表示してよいが、更新日は切り詰めず、横scrollは発生させない。mobileではPC名、PL名、格、更新日を最小限の文字サイズにし、更新日は最小限の列幅でclipさせない。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは既存restore処理を通して同じ`/character-sheet/`へ反映し、個別閲覧pageは追加しない。
@@ -211,6 +212,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - JSONエクスポートのユーザー向けbuttonはAction Pane / control paneから削除する。共用serialize logicはDB保存、コピー保存、CCFOLIA、testなどから必要な範囲で維持する。
 - JSONインポートは移行期間として維持する。buttonの2行目にdanger色の小さい文字で`DB保存に移行するため9/1に削除されます。`と表示し、tablet / mobileでは横幅いっぱいにする。日付による自動削除は実装せず、9/1の実削除は別の明示的なcode changeで扱う。
 - 結果通知だけを目的とするsuccess / error dialogは、success / error、5秒後の自動消去、新着順stack、manual closeなしの共通Toastへ置き換える。確認・入力・Helpのdialog責務はToastへ移さない。
+- API通信不能、APIの5xx、未知の非同期例外、React未捕捉例外は、結果通知の例外としてfatal error dialogへ集約する。dialogのaccessible nameと見出しは`予期しないエラーが発生しました`、本文は`ページを再読み込みしてください。未保存の変更は失われます。`、唯一の操作は`再読み込み`とする。初期focusは同buttonへ置き、Escape、dialog外click、閉じるbuttonではdismissできない。401 / 403 / 404、入力検証、画像形式不正、ユーザー操作のcancelは既存の個別通知またはdialogを維持する。419はtoken refreshを1回試行し、再度419ならlogoutとsession-expired通知を行い、fatal error dialogへ送らない。
 - Help本文は、現行componentの文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映する。エージェントは本文を独自に改稿しない。
 - JSON入出力の具体的な構造、画像表現、空欄と明示的な`0`の扱い、スキーマバージョンの扱いは、対応する実装Gateの着手前に定める。スキルLvの下限・最大Lv超過はJSON入力・端末内復元で除外または自動補正せず、構造・型を受理した値をRHFへ反映して局所エラーとする。派生値は読み込み後に再計算する。
 - 端末内には最新1キャラクターだけを自動保存・復元する。画像以外のフォーム値はlocalStorageへ保存し、画像はIndexedDBの独立したrecordとして初期化時に読み、recordがない場合は未選択状態とする。画像recordの読取り・復元の失敗は、フォーム値のlocalStorage復元を停止・失敗させない。復元が完了するまで空データで保存済みデータを上書きしない。

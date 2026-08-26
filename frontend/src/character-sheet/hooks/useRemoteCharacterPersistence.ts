@@ -23,10 +23,6 @@ type RemoteCharacterOperations = {
   clearLocalDraftForRemote: () => Promise<void>;
   clearRemoteCharacter: () => void;
   restoreRemoteCharacter: (character: CharacterSheet) => Promise<boolean>;
-  updateRemoteCharacterMetadata: (value: {
-    id: string;
-    metadata: Pick<CharacterSheet["metadata"], "isOwner" | "isPublic">;
-  }) => void;
 };
 
 type UseRemoteCharacterPersistenceArgs = RemoteCharacterOperations & {
@@ -36,6 +32,7 @@ type UseRemoteCharacterPersistenceArgs = RemoteCharacterOperations & {
   isRootOperationInProgress: boolean;
   notify: (kind: "error" | "success", message: string) => void;
   onNavigate: (id: string | null) => void;
+  onUnexpectedError: () => void;
   remoteCharacter: RemoteCharacterState | null;
   remoteCharacterId: string | null;
 };
@@ -98,10 +95,10 @@ export default function useRemoteCharacterPersistence(
     isRootOperationInProgress,
     notify,
     onNavigate,
+    onUnexpectedError,
     remoteCharacter,
     remoteCharacterId,
     restoreRemoteCharacter,
-    updateRemoteCharacterMetadata,
   }: UseRemoteCharacterPersistenceArgs,
   dependencies: Partial<RemoteCharacterPersistenceDependencies> = {},
 ) {
@@ -123,7 +120,6 @@ export default function useRemoteCharacterPersistence(
   const [failedRemoteCharacterId, setFailedRemoteCharacterId] = useState<
     string | null
   >(null);
-  const previousSessionKey = useRef<string | null | undefined>(undefined);
   const characterListRequestVersionRef = useRef(0);
   const remoteRequestVersionRef = useRef(0);
   const sessionKey = authentication.sessionKey;
@@ -199,9 +195,20 @@ export default function useRemoteCharacterPersistence(
         notify("error", authenticationCopy.sessionExpired);
         return;
       }
+
+      if (error instanceof CharacterSheetApiError && error.isUnexpected) {
+        onUnexpectedError();
+        return;
+      }
+
+      if (!(error instanceof CharacterSheetApiError)) {
+        onUnexpectedError();
+        return;
+      }
+
       notify("error", fallback);
     },
-    [notify],
+    [notify, onUnexpectedError],
   );
 
   const updateCachedSummary = useCallback((summary: CharacterSheetSummary) => {
@@ -223,28 +230,6 @@ export default function useRemoteCharacterPersistence(
       };
     });
   }, []);
-
-  useEffect(() => {
-    if (authentication.status === "initializing") return;
-    const previous = previousSessionKey.current;
-    previousSessionKey.current = sessionKey;
-    if (previous === undefined || previous === sessionKey) return;
-
-    setCharacterListCache(null);
-    setCharacterListCacheSessionKey(null);
-    characterListRequestVersionRef.current += 1;
-    if (remoteCharacter !== null) {
-      updateRemoteCharacterMetadata({
-        id: remoteCharacter.id,
-        metadata: { isOwner: false, isPublic: remoteCharacter.isPublic },
-      });
-    }
-  }, [
-    authentication.status,
-    remoteCharacter,
-    sessionKey,
-    updateRemoteCharacterMetadata,
-  ]);
 
   useEffect(() => {
     if (

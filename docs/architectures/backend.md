@@ -37,7 +37,7 @@ local/test composition
 ```
 
 - Hono handlerはroute、HTTP request/response、shared input schemaの呼出しだけを扱う。`app.onError`がApplicationErrorをHTTP responseへ変換する。
-- authentication middlewareはAuthorization headerとtoken verifierを扱う。tokenなしでは`actorUserId: null`をContextへ置き、有効tokenでは検証済みuser IDを置く。期限切れ・無効tokenはApplicationErrorにする。write/delete用middlewareはanonymous userを拒否する。
+- authentication middlewareはAuthorization headerとtoken verifierを扱う。tokenなしでは`actorUserId: null`をContextへ置き、有効tokenでは検証済みuser IDを置く。期限切れ・無効token、Firebase公開鍵基盤の利用不能、その他のverifier例外をそれぞれApplicationErrorへ分類する。write/delete用middlewareはanonymous userを拒否する。
 - validationは独立moduleに置く。API envelopeとmetadataを検証するが、character JSON snapshotのゲームschemaや現在のマスタIDは検証しない。
 - serviceはdomain object、repositoryのpublic method形状、authentication middlewareから渡された`actorUserId`だけに依存する。D1、R2、Cloudflare binding、Hono、Authorization header、token verifier、HTTP statusを参照しない。
 - Cloudflare repositoryはD1 metadata操作とR2 snapshot操作を個別に扱い、private fieldにD1/R2 bindingを持つ。serviceが両操作を順序付けてcharacter sheetとして扱う。D1/R2の二重書込みをtransaction化せず、部分失敗はserviceへ通常の失敗として返す。
@@ -172,7 +172,7 @@ list responseはserver-side paginationなしで、`user`と`sample`の配列を�
 
 ### Token verifier
 
-verifier interfaceはtokenを検証し、検証済みの`userId`または認証失敗の分類を返す。G4のproduction implementationはGoogle ID Tokenのsignature、`iss`、`aud`、`exp`を検証する。G6でFirebase Authenticationへ移行した後は、Firebase ID Tokenのsignature、`iss`、`aud`、`exp`とFirebase `uid`を検証するimplementationへ置換する。verifierはHTTP statusやresponseを扱わない。
+verifier interfaceはtokenを検証し、検証済みの`userId`または認証失敗の分類を返す。G4のproduction implementationはGoogle ID Tokenのsignature、`iss`、`aud`、`exp`を検証する。G6でFirebase Authenticationへ移行した後は、Firebase ID Tokenのsignature、`iss`、`aud`、`exp`とFirebase `uid`を検証するimplementationへ置換する。Firebase公開鍵endpointの取得不能、response不正、証明書import失敗は`unavailable`、token自身の形式・署名・claim不正は`invalid`、分類できないverifier例外は`unexpected`とする。verifierはHTTP statusやresponseを扱わない。
 
 authentication middleware factoryへproduction/localのverifierをDIする。local API E2Eとtestはtest verifierを明示注入し、決め打ちtokenを有効、期限切れ、無効の結果へ対応付ける。production verifierを`if`文でskipしたり、環境変数で検証を無効化したりしない。production verifier自体はunit/contract testする。
 
@@ -180,7 +180,7 @@ Authorization headerがない公開GETはauthentication middlewareがanonymous r
 
 ### Error response
 
-Service、repository、validation、token verifier、authentication middlewareはHTTP statusを持たない。意味コードだけを持つ`ApplicationError`を使い、`app.onError`だけが網羅的なcode-to-status対応と共有error envelopeを作る。clientは期限切れtokenの`419`だけをstatusで判定し、その他の4xx/5xxは一律のエラー表示にする。validation field detail、token内容、internal error、`userId`は返さない。
+Service、repository、validation、token verifier、authentication middlewareはHTTP statusを持たない。意味コードだけを持つ`ApplicationError`を使い、`app.onError`だけが網羅的なcode-to-status対応と共有error envelopeを作る。clientは期限切れtokenの`419`だけをstatusで判定してtoken refresh後のlogout通知へ進め、401 / 403 / 404は既存の個別表示、通信不能・5xxはreload recovery UIへ渡す。validation field detail、token内容、internal error、`userId`は返さない。
 
 | HTTP status | 用途                                                             |
 | ----------- | ---------------------------------------------------------------- |
@@ -191,6 +191,7 @@ Service、repository、validation、token verifier、authentication middleware�
 | 413         | application固有のbody上限を超過。                                |
 | 419         | tokenの有効期限切れ。clientはstatusだけで再ログインを促す。      |
 | 500         | 想定外のbackend failure。                                        |
+| 503         | Firebase公開鍵基盤が一時的に利用できない。                       |
 
 D1/R2の部分失敗は、保存成功を装わず500として返す。rollback、compensating transaction、孤児objectの自動cleanupは実装しない。
 
