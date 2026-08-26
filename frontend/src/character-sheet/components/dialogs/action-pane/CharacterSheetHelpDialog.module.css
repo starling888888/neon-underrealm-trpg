@@ -13,6 +13,13 @@
   line-height: var(--line-height-tight);
 }
 
+.section h4 {
+  margin: 0;
+  font-size: 0.925rem;
+  line-height: var(--line-height-tight);
+  color: var(--color-text-muted);
+}
+
 .section p,
 .section ol {
   margin: 0;

@@ -34,7 +34,6 @@ export default function CharacterSheetDeleteDialog({
     >
       <CharacterSheetDialogContent>
         <p id={descriptionId}>{deleteCopy.description}</p>
-        <p>{deleteCopy.localCharacterNotice}</p>
       </CharacterSheetDialogContent>
       <CharacterSheetDialogActions>
         <CharacterSheetButton
