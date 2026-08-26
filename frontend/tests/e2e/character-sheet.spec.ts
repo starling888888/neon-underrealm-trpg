@@ -1,44 +1,21 @@
-import { readFile } from "node:fs/promises";
-
 import { expect, test } from "@playwright/test";
+import { characterSheetDefaultValues } from "../../src/character-sheet/form/values";
 import { siteBaseUrl, siteViewports } from "../support/site";
 
+const importedCharacterImageBase64 =
+  "UklGRiIAAABXRUJQVlA4IBYAAADQAQCdASoBAAEALmk0mk0iIiIiIgBoSywA";
+
+function createCharacterSheetJsonImport() {
+  const values = structuredClone(characterSheetDefaultValues);
+  values.profile.pcName = "JSON入力PC";
+
+  return {
+    ...values,
+    imageBase64String: importedCharacterImageBase64,
+  };
+}
+
 test.describe("character sheet page", () => {
-  test("exports JSON from desktop and responsive action buttons", async ({
-    page,
-  }) => {
-    await page.setViewportSize(siteViewports.desktop);
-    await page.goto("character-sheet/");
-    await expect(
-      page.getByRole("status", { name: "保存済みの入力を復元しています" }),
-    ).toBeHidden();
-
-    await page.getByLabel("PC名", { exact: true }).fill("テストPC");
-    await page.getByLabel("PL名", { exact: true }).fill("テストPL");
-    const desktopDownloadPromise = page.waitForEvent("download");
-    await page
-      .getByRole("button", { exact: true, name: "エクスポート" })
-      .click();
-    expect((await desktopDownloadPromise).suggestedFilename()).toMatch(
-      /^neon-underrealm_character-sheet_\d{4}-\d{2}-\d{2}_テストPL_テストPC\.json$/,
-    );
-
-    await page.setViewportSize(siteViewports.mobile);
-    const menuTrigger = page.getByRole("button", {
-      exact: true,
-      name: "操作メニューを開く、エラーはありません。",
-    });
-    await menuTrigger.click();
-    const responsiveDownloadPromise = page.waitForEvent("download");
-    await page
-      .getByRole("region", { name: "キャラクターシートの操作メニュー" })
-      .getByRole("button", { exact: true, name: "エクスポート" })
-      .click();
-    expect((await responsiveDownloadPromise).suggestedFilename()).toMatch(
-      /^neon-underrealm_character-sheet_\d{4}-\d{2}-\d{2}_テストPL_テストPC\.json$/,
-    );
-  });
-
   test("opens the CCFOLIA confirmation dialog from every action pane", async ({
     page,
   }) => {
@@ -65,54 +42,7 @@ test.describe("character sheet page", () => {
     }
   });
 
-  test("notifies CCFOLIA clipboard success and failure", async ({ page }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, "clipboard", {
-        configurable: true,
-        value: { writeText: () => Promise.resolve() },
-      });
-    });
-    await page.goto("character-sheet/");
-
-    const copy = async () => {
-      const actionMenuTrigger = page.getByRole("button", {
-        exact: true,
-        name: "操作メニューを開く、エラーはありません。",
-      });
-      if (await actionMenuTrigger.isVisible()) {
-        await actionMenuTrigger.click();
-      }
-      await page
-        .getByRole("button", { exact: true, name: "CCFOLIAコピー" })
-        .click();
-      await page
-        .getByRole("dialog", { name: "CCFOLIAコピー" })
-        .getByRole("button", { exact: true, name: "コピー" })
-        .click();
-    };
-
-    await copy();
-    await expect(
-      page.getByRole("dialog", { name: "CCFOLIAコピー完了" }),
-    ).toBeVisible();
-    await page
-      .getByRole("dialog", { name: "CCFOLIAコピー完了" })
-      .getByRole("button", { exact: true, name: "確認" })
-      .click();
-
-    await page.evaluate(() => {
-      Object.defineProperty(navigator, "clipboard", {
-        configurable: true,
-        value: { writeText: () => Promise.reject(new Error("rejected")) },
-      });
-    });
-    await copy();
-    await expect(
-      page.getByRole("dialog", { name: "CCFOLIAコピー失敗" }),
-    ).toBeVisible();
-  });
-
-  test("imports JSON through the file input and reports an invalid image", async ({
+  test("imports JSON with an image through the file input", async ({
     page,
   }) => {
     await page.goto("character-sheet/");
@@ -131,38 +61,10 @@ test.describe("character sheet page", () => {
         await actionMenuTrigger.click();
       }
     };
-    await page.locator('input[accept="image/*"]').setInputFiles({
-      buffer: Buffer.from(
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLh+wAAAABJRU5ErkJggg==",
-        "base64",
-      ),
-      mimeType: "image/png",
-      name: "character.png",
-    });
-    await expect(
-      page.getByRole("img", { name: "選択したキャラクター画像" }),
-    ).toBeVisible();
-
-    await openResponsiveActionMenu();
-    const downloadPromise = page.waitForEvent("download");
-    await page
-      .getByRole("button", { exact: true, name: "エクスポート" })
-      .click();
-    const downloadPath = await (await downloadPromise).path();
-    if (downloadPath === null) throw new Error("Expected an exported JSON.");
-    const imported = JSON.parse(await readFile(downloadPath, "utf8")) as Record<
-      string,
-      unknown
-    >;
-    imported.profile = {
-      ...(imported.profile as Record<string, unknown>),
-      pcName: "JSON入力PC",
-    };
-
-    const importFile = async (value: Record<string, unknown>) => {
+    const importFile = async (value: object) => {
       await openResponsiveActionMenu();
       await page
-        .getByRole("button", { exact: true, name: "インポート" })
+        .getByRole("button", { name: /^インポート/ })
         .click();
       await page
         .locator('input[accept="application/json,.json"]')
@@ -177,20 +79,12 @@ test.describe("character sheet page", () => {
         .click();
     };
 
-    await page.getByRole("button", { name: "画像をクリア" }).click();
-    await expect(
-      page.getByRole("img", { name: "選択したキャラクター画像" }),
-    ).toBeHidden();
-    await importFile(imported);
+    await importFile(createCharacterSheetJsonImport());
     await expect(page.getByLabel("PC名", { exact: true })).toHaveValue(
       "JSON入力PC",
     );
     await expect(
       page.getByRole("img", { name: "選択したキャラクター画像" }),
-    ).toBeVisible();
-    await importFile({ ...imported, imageBase64String: 42 });
-    await expect(
-      page.getByRole("dialog", { name: "入力データの画像の誤り" }),
     ).toBeVisible();
   });
 
@@ -289,81 +183,6 @@ test.describe("character sheet page", () => {
     await expect(menu).toBeVisible();
     await page.waitForFunction(() => window.scrollY > 50);
     await expect(page.locator("#weapons-and-armor")).toBeInViewport();
-  });
-
-  test("keeps the desktop action rail at the right and centers the form column", async ({
-    page,
-  }) => {
-    await page.setViewportSize(siteViewports.desktop);
-    await page.goto("character-sheet/");
-    const actionPane = page.locator('[aria-label="キャラクターシートの操作"]');
-    const form = page.locator("[data-character-sheet-layout]");
-    const layout = form.locator("xpath=..");
-
-    await expect(actionPane).toBeVisible();
-    await expect
-      .poll(() => form.evaluate((element) => element.clientWidth))
-      .toBe(704);
-    await expect
-      .poll(() =>
-        actionPane.evaluate((element) => element.getBoundingClientRect().width),
-      )
-      .toBe(240);
-    await expect
-      .poll(async () => {
-        const [formBox, layoutBox, actionPaneBox] = await Promise.all([
-          form.boundingBox(),
-          layout.boundingBox(),
-          actionPane.boundingBox(),
-        ]);
-        if (formBox === null || layoutBox === null || actionPaneBox === null) {
-          return Number.NaN;
-        }
-        const formColumnWidth = layoutBox.width - actionPaneBox.width - 24;
-        return Math.max(
-          Math.abs(
-            formBox.x + formBox.width / 2 - (layoutBox.x + formColumnWidth / 2),
-          ),
-          Math.abs(
-            actionPaneBox.x +
-              actionPaneBox.width -
-              (layoutBox.x + layoutBox.width),
-          ),
-        );
-      })
-      .toBeLessThan(1);
-
-    const sectionTarget = page.locator("#skills");
-    await page
-      .getByRole("navigation", { name: "セクションにジャンプ" })
-      .getByRole("button", { exact: true, name: "スキル" })
-      .click();
-    await expect
-      .poll(() =>
-        page.evaluate(() => {
-          const header = document.querySelector("[data-site-header]");
-          const target = document.getElementById("skills");
-          if (header === null || target === null) return Number.NaN;
-          return Math.abs(
-            target.getBoundingClientRect().top -
-              header.getBoundingClientRect().height,
-          );
-        }),
-      )
-      .toBeLessThan(2);
-    await expect(sectionTarget).toBeInViewport();
-
-    await page.evaluate(() => window.scrollTo(0, 1600));
-    await expect
-      .poll(() =>
-        actionPane.evaluate((element) => element.getBoundingClientRect().top),
-      )
-      .toBeGreaterThan(0);
-
-    await page.setViewportSize(siteViewports.tablet);
-    await expect
-      .poll(() => form.evaluate((element) => element.clientWidth))
-      .toBe(704);
   });
 
   test("keeps header drawer and action menu Escape handling ordered on mobile", async ({

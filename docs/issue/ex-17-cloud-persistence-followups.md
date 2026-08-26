@@ -53,6 +53,15 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - `frontend/README.md`だけの変更でGitHub Pages production deployを、`backend/README.md`だけの変更でCloudflare production deployを起動しないよう、各deploy workflowのpath filterを更新する。root `README.md`は従来どおり両deployの対象外とする。
 - agent failure logなどの監査記録は改変しない。
 
+### Group 4追加: character-sheet local E2E回帰の解消
+
+- local E2Eの現行baselineとして、JSONエクスポートbuttonを期待するテスト、CCFOLIAコピー結果dialogを期待するテスト、画像付きJSONインポートをエクスポート結果に依存させるテスト、desktop form columnを旧704pxで固定するテストの4件が失敗することを確認した。
+- 廃止済みJSONエクスポートbuttonを前提とする導線をE2Eから除去し、JSONインポートはexport UIを経由しない有効なfixtureで検証する。画像付きfixtureは実ブラウザで復元可能なWebPを使い、画像型不正のerror contractは既存のunit / hook testで維持する。
+- CCFOLIAコピーの成功・失敗は自動消滅するToast通知であり、時間経過に依存するE2Eを追加しない。廃止済みの結果dialogを期待するテストは削除し、確認dialog自体の操作は既存coverageを維持する。
+- `docs/testing.md`へ、時間経過に依存する通知のE2Eを行わない方針を明記する。
+- desktop / tabletのform幅・位置を固定値で検証するE2Eは削除する。画面幅・視覚レイアウトはE2Eの責務ではなく、character-sheetのdesign noteとcanonical VRT baselineの最終整理とともにex-18で扱う。
+- `npm --workspace=@neon-underrealm/frontend run test:e2e`をlocalで実行し、上記の回帰を含めて成功することを確認する。productionへのrequestは行わない。
+
 ### Group 5: ex-16 / ex-16-6 archive準備と実施（merge後）
 
 - ex-17をmainへmerge後、post-merge-plan-updateでG6、`ex-16-6-firebase-authentication`、parent ex-16の完了条件をcurrent local evidenceで一緒に監査する。ex-16-6はparent ex-16の認証Gateであり、別taskへ分けず同じarchive単位にする。
@@ -68,7 +77,8 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 2. Group 2: 一覧page clamp、payload contract、backend / shared / frontendの関連test、payload / 一覧仕様のrequirements / architecture。
 3. Group 3: Pagefind deployment marker、検索runtime、Public E2E workflow、Pagefind世代検知のtesting / deployment / architecture。
 4. Group 4: production運用、workspace READMEへの責務分割、deploy除外設定とリポジトリ全体の現行文書整合。
-5. Group 5: mainで`post-merge-plan-update`として行うex-16 / ex-16-6 archive。productionの手動smokeはユーザーが実施し、このarchiveの前提にはしない。
+5. Group 4追加: character-sheet local E2Eの現行UI / import / layout contractへの整合。
+6. Group 5: mainで`post-merge-plan-update`として行うex-16 / ex-16-6 archive。productionの手動smokeはユーザーが実施し、このarchiveの前提にはしない。
 
 各Groupの完了条件をローカルで検証した時点で作業を止め、対象差分を提示してユーザーへ`git add`と`git commit`の指示を求める。ユーザーの明示指示なしにcommitしない。Groupをまたぐ差分を同一commitへ混在させない。
 
@@ -88,6 +98,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - [x] Group 4でsample 10件の投入・対象ID記録・未ログイン一覧での順序／公開状態／個別復元確認とPublic E2Eの責務を文書化し、リポジトリ全体の現行文書をFirebase Authenticationと現行実装に整合させている。sample 10件の投入はユーザー確認済みであり、手動smokeはユーザーが実施するためこのissueのチェック対象外とする。
 - [x] Group 4でroot / frontend / backendのREADME責務を分離し、frontend / backend README単独変更では対応するproduction deployを起動しない。
 - [x] Group 4でcharacter-sheetのdesign note以外の現行文書を横断し、旧Google OAuth / Identity、ex-16の中間Gate、旧payload上限、旧deploy・一覧・sample記述を現在のFirebase AuthenticationとCloud persistence contractへ統一している。
+- [x] Group 4追加で、character-sheet local E2Eから旧export UI、時間依存Toast、固定layout値の期待を除去し、現行JSON import contractへ整合させて、`npm --workspace=@neon-underrealm/frontend run test:e2e`が通っている。
 - [x] UI変更について、既存design targetとの整合、対象route・state・viewportのactual screenshot確認、変更targetに限定したVRTをex-18へ移管している。canonical VRT baselineは更新していない。
 - [ ] Group 5のarchiveをGitHub Issue記録とcurrent local evidenceに基づき完了している。merge後のpost-merge-plan-updateでex-16-6とparent ex-16を一緒に扱う。
 - [x] 関連TODOを完了・移管・保持のいずれかとして記録している。
