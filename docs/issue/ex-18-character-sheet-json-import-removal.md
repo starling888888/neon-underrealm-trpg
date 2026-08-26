@@ -778,3 +778,30 @@ VRTについては、baseline更新前に既存target一覧とfixtureを確認�
 - [x] JSON export専用pipelineと関連testを削除し、DB snapshot・CCFOLIA・remote snapshot復元を維持する。
 - [x] export削除後のarchitectureを現行責務へ更新する。
 - [x] 変更したtarget test、`npm run check`、frontend buildが通る。
+
+---
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- activeなrequirements / testing文書で、ユーザー向け操作名に旧称の`DB保存`、`コピー保存`、`DB削除`、`初期化`、`全消去`が残っている。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`、HEAD `eb105e8` の記録）
+- classification: valid
+- local validation: `docs/requirements/character-sheet.md`のremote persistence、idなしdraft、action railの記述に、旧操作名が残っている。`docs/testing.md`のURL遷移test対象にも`DB保存`、`コピー保存`、`DB削除`が残っている。
+- local validation: 現在のdictionaryのユーザー向け操作文言は`保存`、`複製`、`削除`、`下書き破棄`である。DBは保存先・requestなどの技術的説明にだけ使用する。
+- local validation: `docs/TODO.md`のex-18追跡は最終ドキュメント整理時に扱うため、このレビュー取り込みでは変更しない。
+
+### 対応方針
+
+- requirementsとtesting文書のユーザー向け操作名を、`保存`、`複製`、`削除`、`下書き破棄`へ揃える。
+- DBを保存先または通信の技術的説明として使う記述は維持し、ユーザー向け操作名との混同をなくす。実装とユーザー確定copyは変更しない。
+
+### 対応完了チェックリスト
+
+- [x] requirementsのremote persistence、idなしdraft、action railを現在の操作名へ揃える。
+- [x] testing文書のURL遷移test対象を現在の操作名へ揃える。
+- [x] 対象Markdownのformat / lintと`git diff --check`が通る。

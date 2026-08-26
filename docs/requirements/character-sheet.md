@@ -31,7 +31,7 @@ Webキャラクターシートは、ネオン・アンダーレルムTRPGのPC�
 - PC基本ビルド、能力値、副能力値、経験点、信用、縁
 - スキル、攻撃・リアクション・非戦闘判定、アイテム
 - エラー・警告表示
-- idなしlocal draftの端末内保存・復元、全消去、クラウド保存とキャラクター一覧
+- idなしlocal draftの端末内保存・復元、下書き破棄、クラウド保存とキャラクター一覧
 - CCFOLIAキャラクター駒データのコピー
 - desktop、tablet、mobileでの利用
 
@@ -56,7 +56,7 @@ idなしlocal draft 1件の端末内保存・復元と、Firebase Authentication
 - 年齢と性別は固定選択肢に限定しない。
 - キャラクター設定は複数行のプレーンテキストとして保持する。改行を保持し、MarkdownやHTMLとして解釈しない。
 - キャラクター設定は、基本情報のプロフィール入力群の直下にある開閉操作から表示する。初期状態では入力欄を隠す。
-- キャラクター画像は`image/*`を受け付け、入力容量は5 MiB（5,242,880 bytes）までとする。ブラウザでデコードできた画像だけを長辺約500pxまで縮小し、拡大せず、WebP品質`0.8`で1回だけ変換する。変換後の`imageBase64String`は4 MiBまでとし、DB保存request全体は8 MiBまでとする。透明背景の検出やJPEGとの容量比較は行わない。変換後の画像は現在のcharacter表示へ反映する。idなしlocal draftでは端末内の画像recordへ保存し、remote characterではbrowser persistenceへ保存せずmemoryだけで保持してDB保存用snapshotへ含める。
+- キャラクター画像は`image/*`を受け付け、入力容量は5 MiB（5,242,880 bytes）までとする。ブラウザでデコードできた画像だけを長辺約500pxまで縮小し、拡大せず、WebP品質`0.8`で1回だけ変換する。変換後の`imageBase64String`は4 MiBまでとし、DBへ保存するrequest全体は8 MiBまでとする。透明背景の検出やJPEGとの容量比較は行わない。変換後の画像は現在のcharacter表示へ反映する。idなしlocal draftでは端末内の画像recordへ保存し、remote characterではbrowser persistenceへ保存せずmemoryだけで保持してDBへ保存するsnapshotへ含める。
 - 画像選択は画像表示領域へのdrag and dropと、その直下のファイル選択buttonの両方で行えるようにする。選択済み画像には、その導線に続けて個別の`画像をクリア`操作を表示する。idなしlocal draftのクリアはIndexedDBの現在画像recordを削除してから未選択状態へ切り替える。remote characterのクリアはbrowser persistenceを変更せず、memory上の画像だけを未選択状態にする。選択確認のためだけのアプリ内dialogやpreviewは設けない。形式、容量、decode、変換、idなしlocal draftでのIndexedDB書込み・個別削除に失敗した場合は、入力欄のエラー一覧へ積まず既存の失敗dialogを表示し、既存の画像を上書き・削除しない。browser native `alert`は使用しない。
 - 画像の変換・保存中は、キャラクターシートIsland全体を操作不可にする汎用loading overlayを表示する。indicatorは`prefers-reduced-motion`で回転を停止する。
 - キャラクターシートはコンストラクションまたはフルスクラッチを選択する画面にはしない。既存のキャラクターメイキング解説への導線を表示する。
@@ -205,20 +205,20 @@ idなしlocal draft 1件の端末内保存・復元と、Firebase Authentication
 - D1 metadata、shared API contract、frontend metadataは`isPublic`を持つ。既存D1 recordはmigration後にpublicとして扱う。未ログインの一覧はpublic characterだけ、ログイン済みの一覧はpublic characterと自分が所有するprivate characterだけを返す。private characterをowner以外または未認証で個別取得した場合は、存在しないIDと区別しない`404`とする。
 - 現在のcharacterはidなしlocal / owner remote / non-owner remote / unauthenticated remoteを区別する。remote routeではFirebase Authenticationの初期化完了後にURLのidでGETし、route変更・認証状態変更で古くなったrequestのresponseは反映しない。login / logout / user切替後はpage全体を再読み込みして初期ロード経路で所有状態を再評価する。remote IDと`isOwner`をbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
 - `キャラクター一覧`はPC名、PL名、流儀／生き様、格を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。流儀／生き様は折り返さず、長いPC名・PL名・流儀／生き様はellipsisで表示してよい。横scrollは発生させない。mobileではPC名とPL名だけを表示する。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。cache件数の縮小で現在pageが存在しなくなった場合は、表示pageとstateを最終有効pageへclampして同じくscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは`?character=<id>`へ遷移してremote GETとrestoreを開始し、個別閲覧pageは追加しない。
-- non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、DB保存、DB削除、初期化をread-onlyまたはdisabledにする。一方で、`キャラクター一覧`、CCFOLIAコピー、Help、login / logoutは利用可能とする。
-- `DB保存`はログインとPC名を必須とし、idなしlocal draftの初回保存ではserver発行IDの`?character=<id>`へ遷移する前にlocal draftを削除する。owner remoteでは同じidを上書きし、remote値はbrowser persistenceへ保存しない。保存確認dialogではデータと画像をserverへ保存することを説明する。新規保存の`全員に公開する`は既定ON、既存remoteの上書きでは現在の`isPublic`を既定とする。
-- DB保存request全体は8 MiBまで、snapshotの`imageBase64String`は4 MiBまでとする。frontendは送信直前にUTF-8 byte長でrequest全体を検査し、shared schemaとbackend body limitも同じ上限を使う。
-- `コピー保存`はログイン済みならpublic non-owner remoteにも利用可能とする。PC名とPL名を入力して新しいIDへ保存し、`全員に公開する`の既定はOFF、コピー元の画像は引き継がない。成功後は新しいowner characterの`?character=<id>`へ切り替える。
-- `DB削除`はログイン済みowner remoteだけに許可し、確認後にDB recordを削除する。成功後はquery parameterを外してidなしlocal draftへ遷移し、削除したremote characterのform・画像をlocal draftとして保持しない。
+- non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、保存、削除、下書き破棄をread-onlyまたはdisabledにする。一方で、`キャラクター一覧`、CCFOLIAコピー、Help、login / logoutは利用可能とする。
+- `保存`はログインとPC名を必須とし、idなしlocal draftの初回保存ではserver発行IDの`?character=<id>`へ遷移する前にlocal draftを削除する。owner remoteでは同じidを上書きし、remote値はbrowser persistenceへ保存しない。保存確認dialogではデータと画像をserverへ保存することを説明する。新規保存の`全員に公開する`は既定ON、既存remoteの上書きでは現在の`isPublic`を既定とする。
+- DBへ保存するrequest全体は8 MiBまで、snapshotの`imageBase64String`は4 MiBまでとする。frontendは送信直前にUTF-8 byte長でrequest全体を検査し、shared schemaとbackend body limitも同じ上限を使う。
+- `複製`はログイン済みならpublic non-owner remoteにも利用可能とする。PC名とPL名を入力して新しいIDへ保存し、`全員に公開する`の既定はOFF、コピー元の画像は引き継がない。成功後は新しいowner characterの`?character=<id>`へ切り替える。
+- `削除`はログイン済みowner remoteだけに許可し、確認後にDB recordを削除する。成功後はquery parameterを外してidなしlocal draftへ遷移し、削除したremote characterのform・画像をlocal draftとして保持しない。
 - 結果通知だけを目的とするsuccess / error dialogは、success / error、5秒後の自動消去、新着順stack、manual closeなしの共通Toastへ置き換える。確認・入力・Helpのdialog責務はToastへ移さない。
 - API通信不能、APIの5xx、未知の非同期例外、React未捕捉例外は、結果通知の例外としてfatal error dialogへ集約する。dialogのaccessible nameと見出しは`予期しないエラーが発生しました`、本文は`ページを再読み込みしてください。未保存の変更は失われます。`、唯一の操作は`再読み込み`とする。初期focusは同buttonへ置き、Escape、dialog外click、閉じるbuttonではdismissできない。401 / 403 / 404、入力検証、画像形式不正、ユーザー操作のcancelは既存の個別通知またはdialogを維持する。419はtoken refreshを1回試行し、再度419ならlogoutとsession-expired通知を行い、fatal error dialogへ送らない。
 - Help本文は、現行componentの文言を`.raw/character-sheet-help.md`へ忠実に抽出し、ユーザー編集後の内容をcomponent markupへ反映する。エージェントは本文を独自に改稿しない。
 - idなしlocal draftだけを自動保存・復元する。画像以外のフォーム値は非default値だけをlocalStorageへ保存し、default値へ戻った場合は保存済みフォームを削除する。local draftの画像はIndexedDBの独立したrecordとして初期化時に読み、recordがない場合は未選択状態とする。remote characterではlocalStorage / IndexedDBを読まず書かず、remote responseをmemoryだけで表示する。画像recordの読取り・復元の失敗は、フォーム値のlocalStorage復元を停止・失敗させない。復元が完了するまで空データで保存済みデータを上書きしない。
-- 全消去はidなしlocal draftでだけ利用可能とし、確認後に入力、画像、可変行、エラー・警告、端末内保存を初期化する。
+- `下書き破棄`はidなしlocal draftでだけ利用可能とし、確認後に入力、画像、可変行、エラー・警告、端末内保存を初期化する。
 - CCFOLIAのClipboard API用JSONを生成してコピーする。具体的なオブジェクト形状、出力項目、既定順、空欄・未算出値の表現は、対応する承認済みissueの着手前に定める。
 - ヘルプは、スキルとアイテムの効果表示が現在のマスタデータを参照するため、ルール更新時に表示内容が変わりうることを説明する。
 - CCFOLIAコピーの出力対象とセッション中状態の扱いは、対応する承認済みissueの着手前に定める。
-- 全消去、DB保存、コピー保存、DB削除、対応スキルを持つその他流儀の削除は確認または入力dialogを表示する。警告、CCFOLIAコピーの成功または失敗、画像選択・保存・復元、DB操作の結果通知はToastで通知する。ブラウザ組み込みの`alert`は使用しない。
+- 下書き破棄、保存、複製、削除、対応スキルを持つその他流儀の削除は確認または入力dialogを表示する。警告、CCFOLIAコピーの成功または失敗、画像選択・保存・復元、DB操作の結果通知はToastで通知する。ブラウザ組み込みの`alert`は使用しない。
 - 狭幅レイアウトでは、右下のstickyな操作メニューの上に、細かな説明を開く丸い`?`ボタンを置く。操作時はブラウザ組み込みの`alert`ではなく説明ダイアログを表示する。
 
 ## 非機能要件
@@ -226,7 +226,7 @@ idなしlocal draft 1件の端末内保存・復元と、Firebase Authentication
 - 画面の具体的な構成、レスポンシブレイアウト、入力部品、ダイアログ、通知、エラー表示、アクセシビリティはdesignで定義する。
 - ページタイトルの`h1`はReact Islandの外でAstro pageが出力する。heading構造を保つためvisually hiddenにし、Island内の操作領域はページタイトルを重複表示しない。
 - formのsectionはdesktopを含めてDOM順どおりの1列に積む。複数columnへsectionを振り分けるlayoutは用いない。`48rem`以上ではform本文を最大`44rem`にして中央寄せし、desktopではmain右端に通常のPageTocと同じ`15rem`幅の補助領域を置く。form本文は、この補助領域を除いた領域内で中央寄せする。
-- desktopの補助領域には、formの第一階層sectionへ移動するページ内リンクだけを置く。子section、行、入力項目へのリンクは置かない。補助領域のsection navigationの下には、キャラクター一覧、DB保存、コピー保存、DB削除、ヘルプ、CCFOLIAコピー、初期化、エラー状態を縦に配置する。既存のページ見出し横の横並び操作menuは用いない。
+- desktopの補助領域には、formの第一階層sectionへ移動するページ内リンクだけを置く。子section、行、入力項目へのリンクは置かない。補助領域のsection navigationの下には、キャラクター一覧、保存、複製、削除、ヘルプ、CCFOLIAコピー、下書き破棄、エラー状態を縦に配置する。既存のページ見出し横の横並び操作menuは用いない。
 - 狭幅レイアウトの操作menuは、action button群の上に第一階層sectionだけのページ内ジャンプを置く。section linkを選ぶと、固定Headerを避けて対象sectionへsmooth scrollする。section navigationの各buttonは下向きiconと下線でジャンプ操作だと分かるようにし、現在位置またはクリック対象のaccent表示は行わない。子section、行、入力項目へのジャンプや強調は含めない。
 - character-sheetのsite menu railは`64rem`以上で表示する。`64rem`未満ではrailを隠し、Headerのサイトメニューボタンからdrawerを開く。desktopのtext action railは`84rem`以上だけで表示し、`84rem`未満でもtablet / mobile用のfloating action icon controlsを維持する。
 - `/character-sheet/`を静的公開routeとして提供する。ページ固有のサイトメニュー表示、section navigation、レイアウトはdesignで定義する。
