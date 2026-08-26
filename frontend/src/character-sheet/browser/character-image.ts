@@ -5,7 +5,7 @@ import {
   characterImageMimeType,
 } from "../schemas/character-image";
 
-export const characterImageMaximumBytes = 5_242_880;
+export const characterImageMaximumBytes = 4 * 1024 * 1024;
 export const characterImageMaximumSide = 500;
 export const characterImageWebpQuality = 0.8;
 

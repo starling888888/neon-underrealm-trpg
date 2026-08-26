@@ -75,18 +75,18 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
   - import開始時または復元状態確定時に、画像処理の成否に依存せずremote bindingを解除する設計へ整理する。
   - handling plan: ex-17では対応しない。JSON import機能を削除するtaskで、削除後の導線とremote bindingの整合性を確認する。
 
-- [ ] authentication state変更後のremote ownership再取得を再試行可能にする
+- [x] authentication state変更後のremote ownershipを初期ロード経路で再評価する
   - login / logout / user変更時には一旦`isOwner=false`へdemoteしている。
   - signed-in後のremote GETではrefresh keyを先に確定し、取得失敗を握り潰しているため、一時的なnetwork/API障害でも同session中に自動再試行されない。
   - owner characterがread-onlyのまま残らないよう、失敗時のretry条件、refresh key確定タイミング、ユーザー向けエラー通知を整理する。
   - handling plan: 初回のFirebase認証状態確定後、uidの変更（login、logout、user切替）ごとにページ全体を再読み込みする。ownership再取得専用のretry stateは追加しない。
 
-- [ ] キャラクターシートの想定外エラーを再読み込みダイアログで扱う
+- [x] キャラクターシートの想定外エラーを再読み込みダイアログで扱う
   - API通信不能・5xx、想定外の例外、Reactの未捕捉例外では、閉じられない共通ダイアログに再読み込み操作を表示する。
   - 入力検証、画像形式不正、401 / 403 / 404、ユーザー操作のキャンセルなど、原因と次の操作が明確な既知エラーは既存の個別通知またはdialogで扱い、再読み込み対象にしない。
   - reloadで未保存編集を失うため、想定外エラーへ分類する境界をtestで固定する。
 
-- [ ] Firebase public key取得障害とinvalid tokenを区別する
+- [x] Firebase public key取得障害とinvalid tokenを区別する
   - Firebase公開鍵取得、key import等のinfrastructure failureがtoken validation failureと同じ認証エラーへ収束し得る。
   - 不正tokenは401系、Firebase側またはnetwork側の一時障害は5xx系として扱えるよう、verifierのerror classificationを整理する。
   - handling plan: 不正tokenは401、期限切れtokenは419、Firebase公開鍵の取得不能・response不正・証明書import失敗は`authentication_unavailable`として503、その他の予期しないverifier例外は500とする。frontendは503 / 500を共通の再読み込みdialogへ渡す。
@@ -94,7 +94,7 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
 
 ### Sample characters / production data
 
-- [ ] production環境へサンプルキャラクター10件を投入する運用を確立する
+- [x] production環境へサンプルキャラクター10件を投入する運用を文書化する
   - 旧static JSON sampleは廃止済みで、現在はDBの`type=sample` characterを一覧から選択する。
   - 管理者所有のcharacterを作成し、D1上で`type=sample`へ変更する現在のcontractを前提に、production sampleの初期投入方法を確定する。
   - 必要ならseed script、管理用手順、更新方法を追加する。
@@ -105,20 +105,20 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
 
 ### Character list UI
 
-- [ ] character一覧のpageをcache件数変更時にclampする
+- [x] character一覧のpageをcache件数変更時にclampする
   - 現在のpageより後ろのdataが削除・filter変更・cache更新等で消えた場合、`pageCount`だけが縮み、存在しないpageを指せる可能性がある。
   - `page <= pageCount - 1`を保証する。
   - handling plan: cache件数の縮小で生じる表示バグとして修正する。表示用pageを`min(page, pageCount - 1)`で導出し、stateも同じ値へ同期して一覧scrollを先頭へ戻す。filter変更時に1ページ目へ戻す既存挙動は維持する。
   - test: 2ページ目を表示中にcacheを11件から10件へ縮小し、1ページ目へclampされて有効なrowが表示されることを固定する。
 
-- [ ] character一覧の流儀・生き様表示仕様をactive documentationへ統一する
+- [x] character一覧の流儀・生き様表示仕様をactive documentationへ統一する
   - 現行実装の`流儀／生き様`が正であり、headerと各rowの順序を変更しない。
   - desktopでは折り返さず表示し、mobileではPC名・PL名のみ表示する現在方針を維持する。
   - `生き様／流儀`を最新仕様とする記述だけを訂正し、実装またはtestを変更しない。
 
 ### API contract / payload
 
-- [ ] backend request body上限とshared schema上限を同一contractとして整理する
+- [x] backend request body上限とshared schema上限を同一contractとして整理する
   - backendではHTTP request body全体に8MiB上限がある。
   - shared schemaではBase64画像単体に近いサイズまで許容できるため、schema上validでもJSON envelopeを含めるとbackendで413になる領域が存在する。
   - 正常な最大画像サイズ、Base64 overhead、snapshot metadataを考慮し、client/shared/backendで一貫した上限を決定する。
@@ -129,7 +129,7 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
 
 ### Production deployment / operations
 
-- [ ] production deploy後のFirebase/API smoke test手順を確立する
+- [x] production deploy後のFirebase/API smoke test手順を文書化する
   - production Firebase AuthenticationでGoogle loginできること。
   - Firebase ID Token付きAPI requestが成功すること。
   - 新規DB保存が成功すること。
@@ -146,30 +146,29 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
 
 ### Public E2E
 
-- [ ] deploy世代のPagefind indexを検知してからPublic E2Eを実行する
+- [x] deploy世代のPagefind indexを検知してからPublic E2Eを実行する
   - 現行workflowはGitHub Pagesの到達だけを待つため、CDN上の古いPagefind indexを取得して検索E2Eが失敗することがある。
   - handling plan: build時に`frontend/dist/pagefind/deployment.json`へGit commit SHAを出力し、検索用JavaScriptの`pagefind.js` dynamic importにも同じSHAをquery parameterとして渡す。
   - test: Public E2E jobは`pagefind/deployment.json`が今回のSHAを返すまで有限回pollしてから既存suiteを実行する。timeout時は期待SHAと取得したmarkerだけをlogへ出す。
 
 ### Documentation consistency
 
-- [ ] ex-16で変更した仕様をactive documentation全体へ反映する
+- [x] ex-16で変更した仕様をactive documentation全体へ反映する
   - `docs/requirements/character-sheet.md`
   - `docs/requirements/architecture.md`
   - `docs/development-structure.md`
   - `docs/testing.md`
   - `docs/deployment.md`
   - `docs/out-of-scope.md`
-  - `docs/design/character-sheet/notes.md`
   - その他ex-16の変更に依存する文書
-  - Google Identity Services時代の記述をFirebase Authenticationへ更新する。
-  - `GOOGLE_OAUTH_CLIENT_ID`等の旧設定説明をFirebase用設定へ更新する。
+  - 旧identity provider時代の記述をFirebase Authenticationへ更新する。
+  - 旧OAuth設定名の説明をFirebase用設定へ更新する。
   - 旧deploy workflowの説明を現在の`frontend-deploy.yml` / `backend-deploy.yml`へ統一する。
   - character一覧の旧column / responsive仕様を最新仕様へ更新する。
   - static sample JSON前提の説明をDB sample前提へ更新する。
   - production / development Cloudflare bootstrap・migration・deploy手順を現実装へ合わせる。
   - document間でSSoTが競合していないことを確認する。
-  - handling plan: 列挙ファイルに限らず、Git管理されているリポジトリ全体の現行仕様・運用・design文書を検索対象にする。中間Gate、Google Identity Services、旧設定名、旧deploy、旧sample、旧一覧仕様など、現行仕様ではない履歴を残さずFirebase Authenticationと現在の運用へ統一する。
+  - handling result: 列挙ファイルに限らず、Git管理されているリポジトリ全体の現行仕様・運用文書を検索対象にして、旧identity provider、旧設定名、旧deploy、旧sample、旧一覧仕様をFirebase Authenticationと現在の運用へ統一した。`docs/design/character-sheet/notes.md`だけはJSONインポートbutton削除と同じex-18で最終整理する。
   - boundary: `docs/issue/ex-16-character-sheet-cloud-persistence.md`、親Gate plan、G1〜G6 child issueは履歴文書として次のarchive taskでGitHub closed Issueへ記録してローカルから削除する。agent failure logなどの監査記録は改変せず、現行仕様の正本として参照しない。
 
 ### Issue / Gate archive

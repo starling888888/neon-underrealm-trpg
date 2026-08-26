@@ -214,7 +214,7 @@ local、test、productionで同じserviceとhandler contractを通す。storage 
 - `backend/tests/unit/`は通常Vitest config、`backend/tests/integration/`はintegration専用Vitest configで実行する。通常testはintegrationを除外し、integration configはintegration directoryだけを対象にする。
 - `tsconfig.json`はWorker source、unit/integration test、Vitest configを全件型検査する。`tsconfig.build.json`は`tsconfig.json`をextendsしてtestsとVitest configを除外し、Worker sourceだけを型検査する。Cloudflare WorkersとNode/Vitestの外部Web Platform宣言は競合するため`skipLibCheck`を使うが、project sourceとtestは型検査する。
 
-CIは既存のbackend integration jobでWrangler local Workerを起動し、local API E2Eを実行する。Cloudflare credentialやGoogle本番認証には依存しない。
+CIは既存のbackend integration jobでWrangler local Workerを起動し、local API E2Eを実行する。Cloudflare credentialやFirebase本番認証には依存しない。
 
 ## 実装時の確認
 
@@ -223,4 +223,4 @@ CIは既存のbackend integration jobでWrangler local Workerを起動し、loca
 - production compositionでtest verifierやlocal repositoryを選択できないようにする。
 - 期限切れtokenを必ず`419`で返し、clientがbodyを読まずに再ログイン処理を選べる。
 - `type`の更新をAPIで受け付けず、sample化後もowner `userId`を変えない。
-- frontend UI、schema migration、管理機能をこのGateへ持ち込まない。
+- frontend UI、schema migration、管理機能をbackendの実装範囲へ持ち込まない。
