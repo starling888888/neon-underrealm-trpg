@@ -23,6 +23,12 @@
 
 ## 完了済み
 
+- [x] ex-17: ex-16 Cloud Persistence残課題回収
+  - completed: 2026-08-26 via PR #225 / PR #226 / `ex-17-cloud-persistence-followups`
+  - source: `docs/TODO.md` のex-17 section、GitHub Issue #227
+  - classification: ex-16 follow-up
+  - handling result: Group 1〜4の仕様・実装・文書整合、Group 5のIssue / Gate archiveを完了した。main SHA `779b970f98a2e84c40dcb4095edb8f70f6e492b8` のGitHub Pages deployでPublic E2E job #98155364461がsuccessした。JSON import導線の削除後に確認するlocal draft / URL identity処理と、character sheetのdesign note / Visual Review / VRT更新だけはex-18へ移管した。
+
 - [x] Astro Component contract testの基盤を導入する
   - completed: 2026-08-04 via PR #189 / `milestone-02-phase-01-todo-resolution`
   - source: `28-2-common-skills-page` の技術レビューにおけるユーザー指示
