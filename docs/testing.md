@@ -79,3 +79,7 @@ character sheet cloud persistenceでは、shared / backendで`isPublic` migratio
 `.github/workflows/frontend-deploy.yml` はmainへの公開対象変更で、同じroot Qualityと必要な差分testの後にpublic build、Pagefind index、GitHub Pages deploy、Public E2Eを実行する。deployのpath filterはCIとは別であり、`docs/**`、`.agents/**`、`AGENTS.md`、root `README.md`、`frontend/README.md`だけの変更では起動しない。`.codex/**/*.toml`はdeployの除外対象ではない。`backend-deploy.yml`も同様にroot `README.md`と`backend/README.md`だけの変更では起動しない。
 
 詳細な公開順序は `docs/deployment.md`、UI変更時のVisual Review手順は `.agents/skills/visual-implementation-review/SKILL.md` を参照する。
+
+## 時間経過に依存する通知
+
+自動で消えるToastなど、時間経過だけで状態が変わる通知のE2Eは実施しない。通知の内容や表示契約を変更する場合は、unit / component testまたは人間による表示確認で扱う。E2Eは、利用者が操作して安定して観測できる画面遷移、入力、確認dialog、永続化の契約を対象にする。
