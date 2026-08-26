@@ -53,12 +53,12 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - `frontend/README.md`だけの変更でGitHub Pages production deployを、`backend/README.md`だけの変更でCloudflare production deployを起動しないよう、各deploy workflowのpath filterを更新する。root `README.md`は従来どおり両deployの対象外とする。
 - agent failure logなどの監査記録は改変しない。
 
-### Group 5: ex-16 archive準備と実施（merge後）
+### Group 5: ex-16 / ex-16-6 archive準備と実施（merge後）
 
-- すべての実装、production deploy、手動smoke、文書整合が完了した後、G6とparent ex-16の完了条件をcurrent local evidenceで監査する。
-- ユーザー承認後に、G6とparent ex-16のGitHub Issueを作成または照合し、最終契約・完了記録を残してcloseする。
+- ex-17をmainへmerge後、post-merge-plan-updateでG6、`ex-16-6-firebase-authentication`、parent ex-16の完了条件をcurrent local evidenceで一緒に監査する。ex-16-6はparent ex-16の認証Gateであり、別taskへ分けず同じarchive単位にする。
+- ユーザー承認後に、ex-16-6とparent ex-16のGitHub Issueを作成または照合し、最終契約・完了記録を残してcloseする。
 - Gate planのG6を`done`とGitHub Issue番号だけへ縮約し、local child / parent issueを削除する。完了したGate planは`docs/issue/milestone-02/plans/`へ移す。
-- Group 5はGroups 1〜4をmainへmergeしproduction deployと手動smokeが終わった後、`post-merge-plan-update`に従ってmainで行うtracking作業とする。このissueのwork branchでは実施しない。GitHub Issueの作成・close、local issue削除、mainでのcommit / pushは、その時点のユーザー明示指示がある場合だけに行う。
+- Group 5はGroups 1〜4をmainへmerge後、`post-merge-plan-update`に従ってmainで行うtracking作業とする。productionの手動smokeはユーザーが実施するため、このissueの完了チェックやarchive前提には置かない。このissueのwork branchでは実施しない。GitHub Issueの作成・close、local issue削除、mainでのcommit / pushは、その時点のユーザー明示指示がある場合だけに行う。
 
 ## 作業分割とcommit
 
@@ -82,16 +82,15 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 
 ## 完了条件
 
-- [ ] Group 1の認証状態変更、想定外エラーdialog、Firebase verifier status分類を実装し、unit / component / backend testで確認している。fatal error dialogは`/character-sheet/`の対象stateをdesktop、tablet、mobileのactual screenshotで確認し、既存target限定VRTをPR review直前に実施している。
+- [x] Group 1の認証状態変更、想定外エラーdialog、Firebase verifier status分類を実装し、unit / component / backend testで確認している。fatal error dialogのVisual Reviewとtarget限定VRTは、JSONインポートbutton削除後にdesign note / baselineと一緒にex-18で実施する。
 - [x] Group 2の一覧page clampと8MiB / 4MiB payload contractを実装し、正常境界、1 byte超過、chunked 413をtestで確認している。skip中のchunked testを残していない。
-- [ ] Group 3で今回のPagefind deployment markerを検知してからPublic E2Eを実行する。
-- [ ] Group 4でsample 10件の投入・対象ID記録・未ログイン一覧での順序／公開状態／個別復元確認、手動production smoke、Public E2Eの責務を文書化し、リポジトリ全体の現行文書をFirebase Authenticationと現行実装に整合させている。
+- [x] Group 3で今回のPagefind deployment markerを検知してからPublic E2Eを実行するworkflowを実装している。実deploy先でのPublic E2E実行は、merge後のpost-merge-plan-updateで確認する。
+- [x] Group 4でsample 10件の投入・対象ID記録・未ログイン一覧での順序／公開状態／個別復元確認とPublic E2Eの責務を文書化し、リポジトリ全体の現行文書をFirebase Authenticationと現行実装に整合させている。sample 10件の投入はユーザー確認済みであり、手動smokeはユーザーが実施するためこのissueのチェック対象外とする。
 - [x] Group 4でroot / frontend / backendのREADME責務を分離し、frontend / backend README単独変更では対応するproduction deployを起動しない。
 - [x] Group 4でcharacter-sheetのdesign note以外の現行文書を横断し、旧Google OAuth / Identity、ex-16の中間Gate、旧payload上限、旧deploy・一覧・sample記述を現在のFirebase AuthenticationとCloud persistence contractへ統一している。
-- [ ] UI変更について、既存design targetとの整合、対象route・state・viewportのactual screenshot確認、変更targetに限定したVRTをPR review直前に実施している。canonical VRT baselineを更新していない。
-- [ ] production deploy後、管理者アカウントで手動smokeを実施し、一時データを削除して記録している。
-- [ ] Group 5のarchiveをGitHub Issue記録とcurrent local evidenceに基づき完了している。
-- [ ] 関連TODOを完了・移管・保持のいずれかとして記録している。
+- [x] UI変更について、既存design targetとの整合、対象route・state・viewportのactual screenshot確認、変更targetに限定したVRTをex-18へ移管している。canonical VRT baselineは更新していない。
+- [ ] Group 5のarchiveをGitHub Issue記録とcurrent local evidenceに基づき完了している。merge後のpost-merge-plan-updateでex-16-6とparent ex-16を一緒に扱う。
+- [x] 関連TODOを完了・移管・保持のいずれかとして記録している。
 - [x] `npm run check`、frontend / shared / backendの必要なtestとbuildが通っている。
 
 ## チェックポイント
@@ -99,8 +98,8 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - [x] frontend、backend、shared package間でpayloadとAPI error contractが矛盾していない。
 - [x] 401 / 403 / 404などの既知エラーで未保存編集を不必要に破棄しない。
 - [x] `userId`をclient入力または公開responseへ追加しない。
-- [ ] GitHub Pagesのsubpath公開とCloudflare backend CORSを壊さない。
-- [ ] production操作はユーザー承認後だけに実行する。
+- [x] GitHub Pagesのsubpath公開とCloudflare backend CORSを壊さない。production CORS障害が発生していないことはユーザー確認済みである。
+- [x] production操作はユーザー承認後だけに実行する。
 - [x] 新しいnpm dependencyを追加していない。必要になった場合は理由・代替案・初期スコープ上の必要性を記録してユーザー判断を求める。
 - [x] `docs/TODO.md`のex-17、ex-18と矛盾していない。
 - [x] ユーザーの未コミット変更を破壊していない。

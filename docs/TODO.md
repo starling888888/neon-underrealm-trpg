@@ -173,16 +173,17 @@ ex-16-character-sheet-cloud-persistence を一度production deploy可能な状�
 
 ### Issue / Gate archive
 
-- [ ] ex-16関連Issue / Gate documentを最終状態へarchiveする
+- [ ] ex-16とex-16-6の関連Issue / Gate documentを最終状態へarchiveする
   - `docs/issue/ex-16-character-sheet-cloud-persistence.md`
   - `docs/issue/ex-16-character-sheet-cloud-persistence/plan.md`
+  - `docs/issue/ex-16-6-firebase-authentication.md`
   - G1〜G6 child issue document
   - GitHub Issue #212 / #214 / #216 / #218 / #220 およびG6
   - Gate状態を実際の完了状態へ更新する。
   - G6の`planned`等、現在実装と一致しない状態を解消する。
   - 最終HEAD / merge / deploy後の状態を反映する。
-  - handling plan: ex-17の実装、production smoke、documentation consistencyを完了してから最後に実施する。G6と親ex-16の完了条件をcurrent local evidenceで監査し、満たした項目だけを完了にする。
-  - archive: G6とparent ex-16の同名GitHub Issueを作成または照合し、最終契約・完了記録を残してcloseする。Gate planのG6は`done`とGitHub Issue番号だけへ縮約し、local child / parent issueは削除する。完了したGate planは`docs/issue/milestone-02/plans/`へ移し、Gate詳細は残さない。
+  - handling plan: ex-17をmainへmergeし、post-merge-plan-updateで実施する。ex-16-6はparent ex-16の認証Gateとして、同じcurrent local evidenceで監査・archiveする。productionの手動smokeはユーザーが実施するため、archiveの前提チェックには含めない。
+  - archive: ex-16-6とparent ex-16の同名GitHub Issueを作成または照合し、最終契約・完了記録を残してcloseする。Gate planのG6は`done`とGitHub Issue番号だけへ縮約し、local child / parent issueは削除する。完了したGate planは`docs/issue/milestone-02/plans/`へ移し、Gate詳細は残さない。
   - obsoleteな途中レビュー・暫定方針がactive requirementとして読めない状態に整理する。
   - archive方針に従って完了済みissueを整理する。
 
@@ -193,10 +194,11 @@ JSONインポートbuttonを削除し、DB保存への移行を完了する。ex
 - [ ] JSONインポートbuttonを削除する
   - JSON import機能とremote bindingの整合性は、この削除に合わせて確認する。
 
-- [ ] JSONインポートbutton削除後にキャラクターシートのdesign noteとcanonical VRT baselineを最新化する
+- [ ] JSONインポートbutton削除後にキャラクターシートのdesign note、ex-17 Group 1のVisual Review、target VRT、canonical VRT baselineを最新化する
   - `docs/design/character-sheet/notes.md`からJSONインポートの導線・削除予告を除き、削除後のAction Pane / control paneを正本化する。
   - 削除後のdesign intentをユーザーが承認してから、`design-image-generation`によりapproved designを反映したcanonical VRT baselineを更新する。actual screenshotをdesign正本やbaselineへ直接コピーしない。
-  - ex-17ではキャラクターシートのdesign noteまたはbaselineを更新しない。
+  - ex-17 Group 1のfatal error dialogは、JSONインポートbutton削除後の画面を対象にdesktop、tablet、mobileのactual screenshotでVisual Reviewし、target限定VRTを実行する。design noteとbaselineを同じtaskで最終整理して、二重の比較・更新を避ける。
+  - ex-17ではキャラクターシートのdesign note、Visual Review、target VRT、baselineを更新しない。
 
 <!--
 例:
