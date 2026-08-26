@@ -132,16 +132,23 @@ function NanomachinesRow({
         <span className={styles.cell}>
           {formatDisplayValue(row.nanomachine?.activationMentalCost ?? null)}
         </span>
-        <button
+        {/* biome-ignore lint/a11y/useSemanticElements: Native button inherits disabled from the read-only fieldset, but this display-only disclosure must remain interactive. */}
+        <span
           aria-controls={detailsId}
           aria-expanded={expanded}
           aria-label={`${rowLabel}${expanded ? copy.closeDetails : copy.openDetails}`}
           className={styles.detailsToggle}
           onClick={() => setExpanded((value) => !value)}
-          type="button"
+          onKeyDown={(event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            setExpanded((value) => !value);
+          }}
+          role="button"
+          tabIndex={0}
         >
           <span aria-hidden="true">{expanded ? "▾" : "▸"}</span>
-        </button>
+        </span>
         <ClearButton
           ariaLabel={`${rowLabel}を${copy.clear}`}
           onClick={() => onClear(row.part)}

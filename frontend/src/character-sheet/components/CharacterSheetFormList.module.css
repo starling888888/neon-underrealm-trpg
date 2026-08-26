@@ -104,12 +104,17 @@
 }
 
 .detailsToggle {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  padding: 0.125rem 0.25rem;
   border: 0;
   background: var(--color-surface-muted);
   color: var(--color-link);
   cursor: pointer;
   font: inherit;
   font-size: var(--text-xs);
+  text-align: center;
 }
 
 .detailsToggle:hover {

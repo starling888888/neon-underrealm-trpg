@@ -71,16 +71,25 @@ function DetailsToggle({
 }) {
   const copy = characterSheetDictionary.characterSheet.weaponsAndArmor;
   return (
-    <button
-      aria-controls={id}
-      aria-expanded={expanded}
-      aria-label={`${label}${expanded ? copy.closeDetails : copy.openDetails}`}
-      className={styles.detailsToggle}
-      onClick={onClick}
-      type="button"
-    >
-      <span aria-hidden="true">{expanded ? "▾" : "▸"}</span>
-    </button>
+    <>
+      {/* biome-ignore lint/a11y/useSemanticElements: Native button inherits disabled from the read-only fieldset, but this display-only disclosure must remain interactive. */}
+      <span
+        aria-controls={id}
+        aria-expanded={expanded}
+        aria-label={`${label}${expanded ? copy.closeDetails : copy.openDetails}`}
+        className={styles.detailsToggle}
+        onClick={onClick}
+        onKeyDown={(event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          onClick();
+        }}
+        role="button"
+        tabIndex={0}
+      >
+        <span aria-hidden="true">{expanded ? "▾" : "▸"}</span>
+      </span>
+    </>
   );
 }
 

@@ -81,6 +81,10 @@ export default function NoncombatChecksSection({
     characterSheetDictionary.gameDomain.terms.attributeNames;
   const contentId = "noncombat-checks-content";
 
+  const toggleExpanded = () => {
+    setIsExpanded((expanded) => !expanded);
+  };
+
   return (
     <section
       aria-labelledby="noncombat-checks-heading"
@@ -95,16 +99,23 @@ export default function NoncombatChecksSection({
         >
           <span>{terms.checks.noncombat}</span>
         </FormulaTooltip>
-        <button
+        {/* biome-ignore lint/a11y/useSemanticElements: Native button is disabled by the ancestor fieldset, but this display-only control must remain interactive in read-only mode. */}
+        <span
           aria-label={`${terms.checks.noncombat}を開閉`}
           aria-controls={contentId}
           aria-expanded={isExpanded}
           className={styles.toggle}
-          onClick={() => setIsExpanded((value) => !value)}
-          type="button"
+          onClick={toggleExpanded}
+          onKeyDown={(event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            toggleExpanded();
+          }}
+          role="button"
+          tabIndex={0}
         >
           <span aria-hidden="true" className={styles.chevron} />
-        </button>
+        </span>
       </h3>
       <section className={styles.content} id={contentId}>
         {isExpanded ? (

@@ -153,16 +153,25 @@ function DetailsToggle({
   const copy = characterSheetDictionary.gameDomain.terms.skill;
 
   return (
-    <button
-      aria-controls={detailsId}
-      aria-expanded={isExpanded}
-      aria-label={`${name}${isExpanded ? copy.closeDetails : copy.openDetails}`}
-      className={styles.detailsToggle}
-      onClick={onClick}
-      type="button"
-    >
-      <span aria-hidden="true">{isExpanded ? "▾" : "▸"}</span>
-    </button>
+    <>
+      {/* biome-ignore lint/a11y/useSemanticElements: Native button inherits disabled from the read-only fieldset, but this display-only disclosure must remain interactive. */}
+      <span
+        aria-controls={detailsId}
+        aria-expanded={isExpanded}
+        aria-label={`${name}${isExpanded ? copy.closeDetails : copy.openDetails}`}
+        className={styles.detailsToggle}
+        onClick={onClick}
+        onKeyDown={(event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          onClick();
+        }}
+        role="button"
+        tabIndex={0}
+      >
+        <span aria-hidden="true">{isExpanded ? "▾" : "▸"}</span>
+      </span>
+    </>
   );
 }
 
@@ -350,6 +359,10 @@ export default function SkillSection({
     "--primary-skill-name-width": `${nameColumnWidthCh}ch`,
   } as CSSProperties;
 
+  const toggleExpanded = () => {
+    setIsExpanded((expanded) => !expanded);
+  };
+
   return (
     <section
       aria-invalid={hasError || undefined}
@@ -362,16 +375,23 @@ export default function SkillSection({
       style={nameWidthStyle}
     >
       <h3>
-        <button
+        {/* biome-ignore lint/a11y/useSemanticElements: Native button inherits disabled from the read-only fieldset, but this display-only disclosure must remain interactive. */}
+        <span
           aria-controls={sectionId}
           aria-expanded={isExpanded}
           className={styles.toggle}
-          onClick={() => setIsExpanded((expanded) => !expanded)}
-          type="button"
+          onClick={toggleExpanded}
+          onKeyDown={(event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            toggleExpanded();
+          }}
+          role="button"
+          tabIndex={0}
         >
           <span>{heading}</span>
           <span aria-hidden="true" className={styles.chevron} />
-        </button>
+        </span>
       </h3>
       <div className={styles.content} hidden={!isExpanded} id={sectionId}>
         {isAvailable ? (
