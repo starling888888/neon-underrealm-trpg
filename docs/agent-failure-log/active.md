@@ -568,6 +568,14 @@ source種別は以下を使う。
 
 ### SSoT coverage discipline
 
+#### Reduced the character-sheet design source below its current UI contract
+
+- date: 2026-08-27
+- source: user
+- 発生箇所: `ex-18-character-sheet-json-import-removal` の`docs/design/character-sheet/notes.md`更新
+- 観測した失敗: 過去Gateの実行記録を除く指示を、design正本のUI契約まで要約・削除してよいものと誤解した。profile / image / creditの配置、section frame、mobile情報密度、error表示、候補選択、dialog表現など、requirementsだけでは実装を固定しない画面仕様を失わせた。
+- 一次対応: 旧noteとrequirements・現行実装を照合し、過去の判断と実行記録だけを除外する。現行のUI構造、viewport別layout、操作状態、dialog、VRT比較観点はdesign noteへ詳細な契約として復元する。
+
 #### Changed the image-input limit by conflating it with the snapshot limit
 
 - date: 2026-08-26

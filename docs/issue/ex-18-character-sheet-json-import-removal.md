@@ -498,10 +498,10 @@ docs/TODO.md
 
 ### Design
 
-- [ ] JSONインポート削除後の最終UIを基準に`docs/design/character-sheet/notes.md`を更新している。
-- [ ] final Action Pane / Help / fatal error dialogをdesign noteへ反映している。
-- [ ] local draft / remoteの操作差を現行contractに合わせている。
-- [ ] VRT対象stateと外部依存による対象外stateをdesign note上でも区別している。
+- [x] JSONインポート削除後の最終UIを基準に`docs/design/character-sheet/notes.md`を更新している。
+- [x] final Action Pane / Help / fatal error dialogをdesign noteへ反映している。
+- [x] local draft / remoteの操作差を現行contractに合わせている。
+- [x] VRT対象stateと外部依存による対象外stateをdesign note上でも区別している。
 
 ### VRT / Baseline
 
