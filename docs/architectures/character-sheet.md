@@ -28,7 +28,7 @@
 
 ### AstroとReact Island
 
-`src/pages/character-sheet.astro`は、専用Header、静的な周辺コンテンツ、ページ固有layout、React Islandの配置を直接担う。再利用しないContainer、Layout、または単なるimport用Componentには分割しない。キャラクターシート本体は`client:load`のReact Islandとし、サイト全体をSPA化しない。
+`frontend/src/pages/character-sheet.astro`は、専用Header、静的な周辺コンテンツ、ページ固有layout、React Islandの配置を直接担う。再利用しないContainer、Layout、または単なるimport用Componentには分割しない。キャラクターシート本体は`client:load`のReact Islandとし、サイト全体をSPA化しない。
 
 キャラクターシート固有のresponsive表示、Header drawer、menu初期化はページ側へ閉じ込める。共通`AppContainer`、共通Header、共通layoutへキャラクターシート用の条件分岐を追加しない。
 
@@ -36,10 +36,10 @@ React Islandの責務は、入力、画面内の開閉、確認・通知dialog�
 
 ### Feature境界
 
-キャラクターシート固有の実装は、`src/character-sheet/`配下へ閉じ込める。
+キャラクターシート固有の実装は、`frontend/src/character-sheet/`配下へ閉じ込める。
 
 ```text
-src/
+frontend/src/
 ├── components/
 │   └── character-sheet/
 │       └── CharacterSheetHeader.astro
@@ -71,9 +71,9 @@ src/
 - `api/`: Cloudflare backendとのcharacter sheet API contract、payload byte length検査、HTTP statusからfrontend errorへの変換を置く。request body全体は8 MiB、`imageBase64String`は4 MiBを超えない。
 - `auth/`: Firebase SDKの初期化、認証状態、ID Token取得を置く。SDKが認証状態の永続化とtoken refreshを管理し、アプリケーション独自のtoken storageは置かない。初回状態確定後のuid変更時は、page全体を再読み込みしてremote ownershipを初期ロード経路で再評価する。
 - `logic/`: React、RHF、DOM、Storage、IndexedDBに依存しない派生値算出、選択可能性判定、構造化検証、ViewModel組み立てを置く。
-- `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかはcurrent implementationに合わせて判断する。
+- `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`frontend/src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかはcurrent implementationに合わせて判断する。
 - `schemas/`: 現在のform入力を検証・正規化するschemaと、IndexedDB record・JSON入力を検証するschemaを置く。ブラウザから渡る生の入力値の正規化とドメイン上の入力制約はここへ置き、ComponentやHTML constraintだけへ委ねない。schema失敗時は、現在の編集stateへの部分反映を行わない。具体的な形、JSON形式、CCFOLIA出力形式は承認済みissueで定める。
-- `persistence/`: serializableな下書きのlocalStorage adapterと、画像recordのIndexedDB adapterを置く。画像adapterは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへWebPのMIME typeとbase64エンコード文字列を保存・読取り・個別削除する。React stateやJSXを持たない。全クリア時は、このadapterを使って画像recordも削除する。
+- `persistence/`: idなしlocal draftのserializableな下書き用localStorage adapterと、画像record用IndexedDB adapterを置く。画像adapterは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへWebPのMIME typeとbase64エンコード文字列を保存・読取り・個別削除する。React stateやJSXを持たない。idなしlocal draftの全クリア時は、このadapterを使って画像recordも削除する。
 - `browser/`: Clipboard、ファイルdownload、画像decode・WebP変換などのブラウザAPIを置く。呼出し側から差し替え可能な小さなadapterとし、ゲームルールとRHFへ依存しない。
 - `utils/`: ID生成、数値変換など、ゲームルール・React・ブラウザAPIを含まない補助処理だけを置く。feature固有の判断は`logic/`、ブラウザAPIは`browser/`へ置き、将来の再利用だけを理由に作らない。
 
@@ -121,26 +121,27 @@ RHFを、このIsland内でユーザーが直接編集する値の唯一の保�
 
 native number inputがfocus中に保持する`-`など、数値として未確定なブラウザ固有の途中入力はRHF valueではない。Componentはその途中値をローカルstateへ複製せずDOMに一時保持させ、確定可能な値だけをRHF adapterへ通知する。blur時はschemaで正規化済みのnumberをinputへ戻す。スキルLvの下限・最大Lv超過はschemaが構造・整数値として受理し、logicが局所errorとして判定する。reset・復元・JSON入力は、受理済み値をRHFの`reset`または`useFieldArray`操作で反映し、uncontrolled inputを同期する。外部更新で値をclamp・削除しない。
 
-| 種別                                             | 置き場所                            | 永続化先     |
-| ------------------------------------------------ | ----------------------------------- | ------------ |
-| ユーザーが直接編集するキャラクター値             | RHF                                 | localStorage |
-| 可変行の順序、選択マスタID、明示的な空欄・`0`    | RHF                                 | localStorage |
-| 選択済み画像の表示用record                       | root-state custom hook              | IndexedDB    |
-| WebP画像のMIME typeとbase64エンコード文字列      | IndexedDBの画像用record             | IndexedDB    |
-| Firebase認証状態とID Token取得                   | `auth/`                             | Firebase SDK |
-| remote character、一覧cache、remote dialog state | remote persistence hook             | backend API  |
-| マスタデータ                                     | `master-data/`                      | 保存しない   |
-| 派生値、ViewModel、エラー・警告結果              | `logic/`と`CharacterSheetContainer` | 保存しない   |
-| 候補選択・確認・通知dialogの開閉と選択対象       | `CharacterSheetContainer`           | 保存しない   |
-| section・行の効果表示など局所的な表示状態        | 対応するPresenter Component         | 保存しない   |
+| 種別                                                 | 置き場所                            | 永続化先                                                      |
+| ---------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------- |
+| remote character identity                            | route hook                          | URL queryの`?character=<id>`                                  |
+| idなしlocal draftの編集値、可変行、選択ID、空欄・`0` | RHF                                 | 非default値だけlocalStorage                                   |
+| remote characterの編集値と画像                       | RHFとroot-state custom hook         | remote responseを表示中だけmemory。保存時だけbackend snapshot |
+| idなしlocal draftの画像表示用record                  | root-state custom hook              | IndexedDB                                                     |
+| idなしlocal draftのWebP MIME typeとbase64文字列      | IndexedDBの画像用record             | IndexedDB                                                     |
+| Firebase認証状態とID Token取得                       | `auth/`                             | Firebase SDK                                                  |
+| remote character、一覧cache、remote dialog state     | remote persistence hook             | backend API / memory                                          |
+| マスタデータ                                         | `master-data/`                      | 保存しない                                                    |
+| 派生値、ViewModel、エラー・警告結果                  | `logic/`と`CharacterSheetContainer` | 保存しない                                                    |
+| 候補選択・確認・通知dialogの開閉と選択対象           | `CharacterSheetContainer`           | 保存しない                                                    |
+| section・行の効果表示など局所的な表示状態            | 対応するPresenter Component         | 保存しない                                                    |
 
-画像のbase64文字列と画像recordの参照は、RHF、localStorage、URL query、ログ、Git管理ファイルへ混ぜない。Root横断の操作ロックはroot-state custom hookに置き、操作ごとの表示文言とcallbackをPresenter hook経由で明示的に渡す。汎用loading overlayは表示文言をPropsで受け、画像、保存、入出力などのRoot操作で再利用する。Contextは先行導入しない。`logic/`はroot stateやContextへ依存しない。変換・書込み成功後にだけ表示用recordを切り替え、個別クリアはIndexedDB削除成功後にだけ未選択へ切り替える。変換、IndexedDB書込み、個別削除の失敗時は既存画像を保持する。JSON importは現行の画像表現を維持するが、導線の削除とその後の整合はex-18で扱う。
+画像のbase64文字列と画像recordの参照は、RHF、localStorage、URL query、ログ、Git管理ファイルへ混ぜない。remote routeではlocalStorage / IndexedDBを読まず書かず、remote responseの画像をmemoryだけで扱う。Root横断の操作ロックはroot-state custom hookに置き、操作ごとの表示文言とcallbackをPresenter hook経由で明示的に渡す。汎用loading overlayは表示文言をPropsで受け、画像、保存、入出力などのRoot操作で再利用する。Contextは先行導入しない。`logic/`はroot stateやContextへ依存しない。idなしlocal draftでは、変換・書込み成功後にだけ表示用recordを切り替え、個別クリアはIndexedDB削除成功後にだけ未選択へ切り替える。変換、IndexedDB書込み、個別削除の失敗時は既存画像を保持する。JSON importは現行の画像表現を維持するが、導線の削除とその後の整合はex-18で扱う。
 
 ### 自動保存と復元
 
-フォームのserializableな最新1件だけをlocalStorageへ保存する。RHFの`subscribe`で値を監視し、短時間の連続入力をまとめて保存する。保存用にフォーム全体を`useWatch`して入力ごとに再描画させない。同期処理のためだけの追加ライブラリは導入しない。
+idなしlocal draftのserializableな最新1件だけをlocalStorageへ保存する。RHFの`subscribe`で値を監視し、短時間の連続入力をまとめて保存する。default値は保存せず、既存local form recordがあれば削除する。保存用にフォーム全体を`useWatch`して入力ごとに再描画させない。remote routeではこのsubscribe、localStorage、IndexedDBの復元を開始しない。同期処理のためだけの追加ライブラリは導入しない。
 
-AstroのSSRとhydrationにおける表示差分を避けるため、初回復元はマウント後に行う。localStorageから読み出した値は、現在の入力値を対象にした構造・型検証とread-onlyな`master-data/` lookupを通った場合だけRHFの`reset`で一括反映する。現在のマスタIDに対応しない単一選択値は空欄化し、可変行は復元対象から除外する。除外後にfield arrayの最小行数を下回る場合は、必要な空欄行だけを追加する。固定rowのidentityまたは関連行参照を保てない場合は、復元せずエラーを表示する。固定サイバネslotの部位不一致など、現在のマスタに存在するが局所errorとして編集可能な値は保持する。復元完了まで自動保存を開始せず、初期値で既存下書きを上書きしない。ページ離脱時には、保留中の保存があれば直近値を保存する。画像recordはフォーム値とは独立して読む。正常なrecordだけを表示へ復元し、recordがない場合は未選択状態にする。画像recordの読取り・復元失敗はlocalStorageのフォーム値復元を停止・失敗させない。
+AstroのSSRとhydrationにおける表示差分を避けるため、idなしlocal draftの初回復元はマウント後に行う。localStorageから読み出した値は、現在の入力値を対象にした構造・型検証とread-onlyな`master-data/` lookupを通った場合だけRHFの`reset`で一括反映する。現在のマスタIDに対応しない単一選択値は空欄化し、可変行は復元対象から除外する。除外後にfield arrayの最小行数を下回る場合は、必要な空欄行だけを追加する。固定rowのidentityまたは関連行参照を保てない場合は、復元せずエラーを表示する。固定サイバネslotの部位不一致など、現在のマスタに存在するが局所errorとして編集可能な値は保持する。復元完了まで自動保存を開始せず、初期値で既存下書きを上書きしない。ページ離脱時には、保留中の保存があれば直近値を保存する。画像recordはフォーム値とは独立して読む。正常なrecordだけを表示へ復元し、recordがない場合は未選択状態にする。画像recordの読取り・復元失敗はlocalStorageのフォーム値復元を停止・失敗させない。remote routeでは、URL queryのidentity、Firebase Authenticationの初期化、remote GET、snapshotの構造検証とRHF resetの順で復元し、routeまたは認証状態が変わる前のrequest responseを反映しない。
 
 復元状態は少なくとも未開始、復元中、利用可能、復元失敗を区別する。保存データが読み込めない場合、現在の編集stateへ部分反映しない。ユーザー指示により、localStorageの利用不可、容量超過、書込み失敗は`console.error`だけで握りつぶし、編集を止めずユーザー向け通知を表示しない。画像recordの読み込み、画像変換、IndexedDB書込み、個別削除の失敗では、既存の画像を上書き・削除せず、失敗をダイアログで通知する。
 
@@ -303,7 +304,7 @@ VRTは領域、responsive layout、overlayの見た目を確認する。計算�
 | React Component / Hook単体test  | Vitest、jsdom、React Testing Library、user-event | Props、局所UI state、RHF adapter hookをE2Eへ置かず検証する            | 採用 |
 | React TSX変換                   | `@vitejs/plugin-react`                           | Astroとは別にVitestへReact JSX transformを接続する                    | 採用 |
 
-`localStorage`はブラウザ標準APIを使い、画像を除くserializableな最新1件の下書きを保存する。`idb-keyval`はstructured-clone可能な値を保存できるため、WebP画像recordの保存要件に適する。RHFの編集値同期は`subscribe`、`reset`、小さな自前hookで完結させる。
+`localStorage`はブラウザ標準APIを使い、idなしlocal draftの画像を除くserializableな最新1件を保存する。`idb-keyval`はstructured-clone可能な値を保存できるため、同じlocal draftのWebP画像recordの保存要件に適する。remote characterはどちらにも保存しない。RHFの編集値同期は`subscribe`、`reset`、小さな自前hookで完結させる。
 
 ### 比較した候補
 
@@ -331,16 +332,16 @@ UIは全てフルスクラッチとし、画像変換、Clipboard、downloadはb
 
 ## ユーザー判断が必要な項目
 
-| 項目               | 決定                                                                    | 判断の内容                                                                                                     |
-| ------------------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| 基盤依存           | `@astrojs/react`、`react`、`react-dom`、`react-hook-form`、`idb-keyval` | React IslandとRHFを導入する。`localStorage`はブラウザ標準APIを使う。                                           |
-| 編集値の保持先     | RHFを唯一の編集stateとする                                              | Zustandなどの別storeへ編集値を複製しない。UIの一時状態だけはComponent内のReact stateで扱う。                   |
-| 下書きの端末内保存 | 画像以外はlocalStorageへ最新1件を自動保存する                           | RHFの`subscribe`、`reset`、デバウンスを使う自前hookで同期する。保存同期ライブラリは導入しない。                |
-| 画像の端末内保存   | 編集stateとは別のIndexedDB画像recordへWebPのMIME typeとbase64を保存する | JSON化する下書きと画像recordを混在させず、変換・画像recordの失敗では既存画像を上書き・削除しない。             |
-| 永続化の詳細       | 画像recordのkey名前空間を固定する                                       | databaseは`neon-underrealm-character-sheet`、storeは`character-images`、keyは`current-character-image`とする。 |
-| 実行時schema       | `zod`は既存依存を使う                                                   | 現在の入力値用とIndexedDB record・JSON入力用の2系統を作る。具体的なschemaは各承認済みissueで定める。           |
-| WebP圧縮品質       | `0.8`                                                                   | 4 MiB入力・長辺約500px・非拡大・WebP変換を1回だけ行う。                                                        |
-| scoped CSS         | CSS Modules（`*.module.css`）、追加依存なし                             | 既存Astro scoped CSSと共存させ、React ComponentのスタイルをComponent単位へ限定する。                           |
-| 型定義依存         | devDependenciesへ先行して明記しない                                     | React関連以外を含む必要な型定義を、実装時の実際の依存と型検査から判断する。                                    |
+| 項目               | 決定                                                                    | 判断の内容                                                                                                             |
+| ------------------ | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 基盤依存           | `@astrojs/react`、`react`、`react-dom`、`react-hook-form`、`idb-keyval` | React IslandとRHFを導入する。`localStorage`はブラウザ標準APIを使う。                                                   |
+| 編集値の保持先     | RHFを唯一の編集stateとする                                              | Zustandなどの別storeへ編集値を複製しない。UIの一時状態だけはComponent内のReact stateで扱う。                           |
+| 下書きの端末内保存 | idなしlocal draftだけをlocalStorageへ自動保存する                       | RHFの`subscribe`、`reset`、デバウンスを使う自前hookで同期する。default値は保存しない。保存同期ライブラリは導入しない。 |
+| 画像の端末内保存   | idなしlocal draftだけを編集stateとは別のIndexedDB画像recordへ保存する   | JSON化する下書きと画像recordを混在させず、remote characterへはbrowser persistenceを使わない。                          |
+| 永続化の詳細       | 画像recordのkey名前空間を固定する                                       | databaseは`neon-underrealm-character-sheet`、storeは`character-images`、keyは`current-character-image`とする。         |
+| 実行時schema       | `zod`は既存依存を使う                                                   | 現在の入力値用とIndexedDB record・JSON入力用の2系統を作る。具体的なschemaは各承認済みissueで定める。                   |
+| WebP圧縮品質       | `0.8`                                                                   | 4 MiB入力・長辺約500px・非拡大・WebP変換を1回だけ行う。                                                                |
+| scoped CSS         | CSS Modules（`*.module.css`）、追加依存なし                             | 既存Astro scoped CSSと共存させ、React ComponentのスタイルをComponent単位へ限定する。                                   |
+| 型定義依存         | devDependenciesへ先行して明記しない                                     | React関連以外を含む必要な型定義を、実装時の実際の依存と型検査から判断する。                                            |
 
 キャラクターシートJSON入出力の現行フォーマットは[character-sheet-export-import-sample.json](character-sheet-export-import-sample.json)を参照する。CCFOLIA出力テキスト形式、実行時schemaの詳細、JSON schema versionと互換性・移行は、いずれもユーザー判断を含む各承認済みissueで定める。JSON import導線はex-18で削除する。

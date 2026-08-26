@@ -27,11 +27,11 @@ HTTP request
 authentication middleware
   -> token verifier
 
-production composition
+production / local composition
   -> Firebase ID Token verifier + Cloudflare repository
 
-local/test composition
-  -> test token verifier + Cloudflare repository + Wrangler local D1/R2 binding
+integration composition
+  -> test token verifier + Cloudflare repository + Wrangler integration D1/R2 binding
 ```
 
 - Hono handlerはroute、HTTP request/response、shared input schemaの呼出しだけを扱う。`app.onError`がApplicationErrorをHTTP responseへ変換する。

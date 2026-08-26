@@ -560,6 +560,14 @@ source種別は以下を使う。
 
 ### SSoT coverage discipline
 
+#### Marked repository-wide documentation consistency complete before validating the character session model
+
+- date: 2026-08-26
+- source: review
+- 発生箇所: `ex-17-cloud-persistence-followups` Group 4の文書整合完了確認
+- 観測した失敗: リポジトリ全体の現行文書をFirebase Authenticationとcloud persistence contractへ統一したと完了チェックしたが、character-sheetのrequirement、architecture、testingに残るlocal / remote persistence境界とURL遷移の旧記述、および関連するworkspace構成文書を照合できていなかった。
+- 一次対応: ChatGPTレビューの指摘をローカル実装と照合してレビュー指摘2へ記録し、Group 4の該当完了チェックを未完了へ戻した。修正はユーザー承認後に行う。
+
 #### Repeated PR reviews discovered one documentation dependency at a time
 
 - date: 2026-07-22

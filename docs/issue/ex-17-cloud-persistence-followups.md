@@ -68,7 +68,7 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 2. Group 2: 一覧page clamp、payload contract、backend / shared / frontendの関連test、payload / 一覧仕様のrequirements / architecture。
 3. Group 3: Pagefind deployment marker、検索runtime、Public E2E workflow、Pagefind世代検知のtesting / deployment / architecture。
 4. Group 4: production運用、workspace READMEへの責務分割、deploy除外設定とリポジトリ全体の現行文書整合。
-5. Group 5: production smokeの人間確認後に、mainで`post-merge-plan-update`として行うex-16 archive。
+5. Group 5: mainで`post-merge-plan-update`として行うex-16 / ex-16-6 archive。productionの手動smokeはユーザーが実施し、このarchiveの前提にはしない。
 
 各Groupの完了条件をローカルで検証した時点で作業を止め、対象差分を提示してユーザーへ`git add`と`git commit`の指示を求める。ユーザーの明示指示なしにcommitしない。Groupをまたぐ差分を同一commitへ混在させない。
 
@@ -158,7 +158,43 @@ UI変更は既存の`docs/design/character-sheet/notes.md`と既存dialog設計�
 - [x] `npm run check` が通る。
 - [x] frontend public buildとPagefind index buildが通る。
 
+## レビュー指摘 2
+
+### 指摘事項
+
+- [I1] `docs/requirements/character-sheet.md`が、query parameterで識別するremote characterとidなしlocal draftの保存・復元境界を区別していない。remote characterに対してreset / importで「bindingを外す」、delete後に同じ編集stateをlocal draftとして保持するという旧contractも残っている。
+- [I2] `docs/architectures/character-sheet.md`の状態表と自動保存・復元節が、全characterのフォームをlocalStorage、画像をIndexedDBへ保存すると読める。remote characterがmemoryだけで扱われる現在実装と一致しない。
+- [I3] `docs/testing.md`が`remote binding`と`import binding解除`をcloud persistenceのtest対象としている。query parameterをidentityとするcurrent contract、local / remote persistence境界、auth後GET、stale request、save / copy / delete / importのURL遷移を網羅していない。
+- [I4] `docs/development-structure.md`がfrontend `.env`をGoogle Spreadsheet専用、`packages/shared`を将来backend用、backend testをdummy boundary test、scriptsを未導入として説明しており、現在のworkspace構成とscriptsに一致しない。
+- [I5] Group 5の作業分割と備考が、production手動smokeの人間確認をarchiveの前提と読める。Group 5の本文と完了条件にある「ユーザーが行うため前提に置かない」という決定と矛盾する。
+- [I6] `docs/requirements/overview.md`の初期scope外記述、`docs/architectures/backend.md`のlocal / integration verifier構成、`docs/requirements.md`とcharacter-sheet要件のworkspace path表記にも、現行実装と不整合な記述が残る。
+
+### 判定
+
+- source: browser-draft
+- I1: valid。`useCharacterSheetRoute.ts`は`?character=<id>`をremote identityとして扱い、`useCharacterSheetRootState.ts`はidなしlocal draftだけをlocalStorage / IndexedDBへ復元・保存する。`CharacterSheetContainer.tsx`はremote characterのresetを無効化し、`useRemoteCharacterPersistence.ts`のdelete成功時はqueryを外してidなしrouteへ遷移する。
+- I2: valid。I1と同じroot-stateのlocal-only persistence条件に対し、architectureの状態表と自動保存節は保存対象を区別していない。
+- I3: valid。現行testの責務はremote bindingではなくquery parameterを起点としたlocal / remote状態遷移であり、旧import binding解除を記録したままである。
+- I4: valid。frontendはFirebase / public API設定も使用し、`packages/shared`はfrontendとbackendの双方で使用される。backendはVitestを実行し、変換・検索index・data validation scriptsも存在する。
+- I5: valid。Group 5本文・完了条件と作業分割・備考の間でarchive前提が矛盾している。
+- I6: valid。cloud persistenceを除外しない初期scope外の明記、production / local Firebase verifierとintegration TestTokenVerifierの分離、`frontend/`を起点とするpath表記が必要である。
+
+### 対応方針
+
+- character-sheet requirement / architecture / testingを、idなしlocal draftと`?character=<id>` remote characterの状態・保存・復元・操作遷移の現行contractへ統一する。default local draftはフォームを保存せず、画像のみ独立して扱う条件も明記する。
+- overview、backend architecture、development structure、requirementsのpath表記を現行workspace・認証・test・script構成へ揃える。
+- Group 5のarchive前提を「mainでのpost-merge-plan-update」とし、production手動smokeはユーザー実施でarchive前提にしない記述へ統一する。
+- design noteとcanonical VRT baselineは、既存どおりex-18の範囲に残す。
+
+### 対応完了チェックリスト
+
+- [x] character-sheet requirement / architecture / testingがlocal draftとremote characterの現行persistence・URL遷移contractを説明している。
+- [x] overview、backend architecture、development structure、requirements pathが現行workspace構成と一致している。
+- [x] Group 5のmanual smoke / archive記述に矛盾がない。
+- [x] Group 4の未完了documentation整合チェックを、更新後の対象文書との照合で完了に戻す。
+- [x] `npm run check:md` が通る。
+
 ## 備考
 
 - このissueはGate分割を使わない通常issueである。
-- production smokeとarchiveは、deployと人間確認が揃うまで未完了のまま維持する。
+- archiveはmerge後のpost-merge-plan-updateまで未完了のまま維持する。production手動smokeはユーザー実施であり、archive前提にはしない。
