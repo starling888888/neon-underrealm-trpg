@@ -859,6 +859,7 @@ source種別は以下を使う。
 - 発生箇所: `ex-18-character-sheet-json-import-removal` の `frontend/tests/e2e/character-sheet.spec.ts`
 - 観測した失敗: mobile Action PaneのCCFOLIAコピー配置を変更した後、breakpoint testの横overflowを、overflowの発生viewportやDOM要素を特定しないまま同じbroad E2E commandで3回連続して失敗させた。新規local-draft E2Eは通過していたが、既存breakpoint testの`scrollWidth - innerWidth`が4pxとなった。
 - 一次対応: 以後は新規E2Eを単独確認したうえで、browser上のoverflow要素と発生viewportを特定してからbroad E2Eを再実行する。原因が変更箇所と無関係なら、current issueでは完了扱いにせず既存失敗として明示する。
+- 続報: 1024pxのsite menu railとmain paddingで外側fieldsetが744pxになる一方、内側formが`min-inline-size: 48rem`で768pxを強制していた。formの最小幅を`0`へ直し、character-sheet E2E 7件で横overflow解消を確認した。
 
 #### Requested unnecessary escalation for an already approved Playwright command
 

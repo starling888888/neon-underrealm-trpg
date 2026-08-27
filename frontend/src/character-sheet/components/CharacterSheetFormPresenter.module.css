@@ -15,7 +15,7 @@
   --character-sheet-line-height-table: 1.25;
 
   margin: 0;
-  min-inline-size: var(--character-sheet-single-column-min-width);
+  min-inline-size: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--sheet-section-gap);
