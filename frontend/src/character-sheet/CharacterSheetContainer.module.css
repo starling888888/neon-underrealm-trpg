@@ -2,12 +2,15 @@
   min-width: 0;
 }
 
-.layout > form {
+.layout > .formFields {
   min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
 }
 
 @media (width >= 48rem) {
-  .layout > form {
+  .layout > .formFields {
     width: min(100%, var(--character-sheet-single-column-min-width));
     margin-inline: auto;
   }
@@ -30,16 +33,10 @@
     content: "";
     pointer-events: none;
   }
-  .layout > form {
+  .layout > .formFields {
     grid-column: 1;
     justify-self: center;
   }
-}
-.formFields {
-  min-width: 0;
-  border: 0;
-  margin: 0;
-  padding: 0;
 }
 
 .formFields:disabled :is(input, select, textarea) {
