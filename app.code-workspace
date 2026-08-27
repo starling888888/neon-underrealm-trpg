@@ -1,0 +1,54 @@
+{
+  "folders": [
+    {
+      "path": "./frontend",
+      "name": "frontend"
+    },
+    {
+      "path": "./backend",
+      "name": "backend"
+    },
+    {
+      "path": "./packages/shared",
+      "name": "shared"
+    },
+    {
+      "path": ".",
+      "name": "root"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "[css]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[javascriptreact]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "dprint.dprint"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "astro-build.astro-vscode",
+      "biomejs.biome",
+      "dprint.dprint"
+    ]
+  }
+}
