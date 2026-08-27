@@ -98,6 +98,9 @@
 
 .detailsToggle {
   composes: detailsToggle from "../CharacterSheetFormList.module.css";
+}
+
+.section .detailsToggle {
   display: none;
 }
 
@@ -166,7 +169,7 @@
     height: 0.75rem;
   }
 
-  .detailsToggle {
+  .section .detailsToggle {
     display: grid;
   }
 
