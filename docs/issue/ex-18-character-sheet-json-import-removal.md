@@ -521,7 +521,7 @@ docs/TODO.md
 - [x] tablet / mobileで`削除`または`下書き破棄`の右列に`CCFOLIAコピー`を置き、CCFOLIAコピーを全幅にしない。
 - [x] Action Pane component testでlocal draftとremote characterの表示差を確認している。
 - [x] local E2Eでmobileのlocal draft操作menuに`下書き破棄`と`CCFOLIAコピー`が並ぶことを確認している。remote表示をE2Eで確認するのは、外部接続なしのdeterministic fixtureが既存または同Issue内に必要な範囲で用意できる場合だけとする。
-- [ ] この変更に伴うcanonical baselineはユーザーが更新する。エージェントは更新していない。
+- [x] この変更に伴うcanonical baselineはユーザーが更新した。エージェントは更新していない。
 
 ### VRT / Baseline
 
