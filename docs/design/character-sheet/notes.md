@@ -15,7 +15,7 @@
   - tablet: `820x1180`
   - mobile: `390x900`
   - ultrawide: `1920x1200`。本文の最大幅と中央寄せを確認するactual capture専用であり、canonical baselineは作成しない。
-- canonical snapshotは`frontend/canonical-snapshots/visual/`にlocal-onlyで保持する。baselineの追加・更新には対象stateを指定したユーザーの明示承認が必要である。
+- canonical snapshotは`frontend/canonical-snapshots/visual/`にlocal-onlyで保持する。baselineの追加・更新には対象stateを指定したユーザーの明示承認が必要である。ex-18の今回のAction Pane変更に伴うbaseline更新はユーザーが担当し、実装作業ではbaselineを更新しない。
 
 ### VRT対象
 
@@ -53,11 +53,12 @@
 ## 操作領域と保存状態
 
 - ユーザー向け操作名は`保存`、`複製`、`削除`、`下書き破棄`とする。`DB保存`、`コピー保存`、`DB削除`、`初期化`、JSON import / exportの操作は表示しない。
-- desktop railは認証、`キャラクター一覧`、section navigation、`ヘルプ`、保存操作群、error statusを縦に配置する。保存操作群は`保存`、`複製`、`削除`、`下書き破棄`、`CCFOLIAコピー`で構成する。
+- desktop railは認証、`キャラクター一覧`、section navigation、`ヘルプ`、保存操作群、error statusを縦に配置する。保存操作群は`保存`、`複製`、`CCFOLIAコピー`と、表示中stateに応じた`削除`または`下書き破棄`で構成する。
 - tablet / mobileは、`?`のHelp buttonと操作menu buttonを常時到達可能にする。menuを開くとdesktopと同じ操作群、section navigation、error summaryを表示する。
 - 狭幅の操作menu buttonは右下のsticky controlとし、menuを開くとsection navigation、action button群、error summaryをこの順で表示する。form末尾にはfloating controlと重ならない下余白を設け、最後の入力・追加・削除操作を隠さない。
-- idなしlocal draftではフォームと画像を端末内の作業状態として扱う。`下書き破棄`はこの状態だけで使え、確認後に入力・画像・可変行・端末内保存を初期状態へ戻す。
-- remote characterではフォームと画像をbrowser persistenceへ混在させない。ownerは`保存`と`削除`を、ログイン済みのpublic non-ownerは`複製`を利用できる。non-ownerまたは未認証のremote characterは、編集とデータ変更操作をread-onlyまたはdisabledにする。
+- idなしlocal draftではフォームと画像を端末内の作業状態として扱う。このstateでは`下書き破棄`だけを表示し、確認後に入力・画像・可変行・端末内保存を初期状態へ戻す。`削除`は表示しない。
+- remote characterではフォームと画像をbrowser persistenceへ混在させない。このstateでは`削除`だけを表示し、`下書き破棄`は表示しない。ownerは`保存`と`削除`を、ログイン済みのpublic non-ownerは`複製`を利用できる。non-ownerまたは未認証のremote characterは、編集とデータ変更操作をread-onlyまたはdisabledにする。
+- tablet / mobileのaction button群は2列とする。`削除`または`下書き破棄`を左列、`CCFOLIAコピー`を同じ行の右列に置き、CCFOLIAコピーを全幅へ広げない。
 - 保存・複製・削除の成功または失敗はToastで通知する。確認や入力を必要とする操作、Help、errorの詳細はToastへ移さない。
 
 ## DialogとHelp
@@ -127,7 +128,7 @@
 
 - desktopでは本文幅、右側action rail、section navigation、sticky動作が共存し、横overflowしないこと。
 - tablet / mobileではfloating action controls、open action menu、site menu drawer、dialogが画面内で到達・操作できること。
-- action controlのenabled / disabled、error status、read-only stateがlocal draft、owner remote、public non-owner remoteで区別できること。
+- action controlのenabled / disabled、error status、read-only stateがlocal draft、owner remote、public non-owner remoteで区別できること。local draftでは削除がなく下書き破棄があり、remote characterでは下書き破棄がなく削除があることを確認する。
 - Help本文のscroll、`下書き破棄`確認、CCFOLIAコピー確認、candidate picker、current error dialogでfocusとclose導線が一貫すること。
 - profile、信用、可変行、item table、section error、tooltipが各viewportでclipやページ全体の横overflowを起こさないこと。
 

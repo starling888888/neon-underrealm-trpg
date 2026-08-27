@@ -205,7 +205,7 @@ idなしlocal draft 1件の端末内保存・復元と、Firebase Authentication
 - D1 metadata、shared API contract、frontend metadataは`isPublic`を持つ。既存D1 recordはmigration後にpublicとして扱う。未ログインの一覧はpublic characterだけ、ログイン済みの一覧はpublic characterと自分が所有するprivate characterだけを返す。private characterをowner以外または未認証で個別取得した場合は、存在しないIDと区別しない`404`とする。
 - 現在のcharacterはidなしlocal / owner remote / non-owner remote / unauthenticated remoteを区別する。remote routeではFirebase Authenticationの初期化完了後にURLのidでGETし、route変更・認証状態変更で古くなったrequestのresponseは反映しない。login / logout / user切替後はpage全体を再読み込みして初期ロード経路で所有状態を再評価する。remote IDと`isOwner`をbrowser persistenceへ混在させず、server側のwrite / delete authorizationはclient stateと独立してowner限定とする。
 - `キャラクター一覧`はPC名、PL名、流儀／生き様、格を表示するdialogとし、desktop / tabletでは既存データ選択dialogと同じ最大幅を使う。流儀／生き様は折り返さず、長いPC名・PL名・流儀／生き様はellipsisで表示してよい。横scrollは発生させない。mobileではPC名とPL名だけを表示する。dialogは固定高とし、header、説明・filter、paginationを常時表示する。取得済み一覧をclient-sideで10件ずつページ分割し、行領域だけを縦scrollさせ、ページ・radio・filterの変更時はそのscroll位置を先頭へ戻す。cache件数の縮小で現在pageが存在しなくなった場合は、表示pageとstateを最終有効pageへclampして同じくscroll位置を先頭へ戻す。ログイン時だけ`自分のキャラクターのみ` filterを利用できる。選択したcharacterは`?character=<id>`へ遷移してremote GETとrestoreを開始し、個別閲覧pageは追加しない。
-- non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、保存、削除、下書き破棄をread-onlyまたはdisabledにする。一方で、`キャラクター一覧`、CCFOLIAコピー、Help、login / logoutは利用可能とする。
+- remote characterでは`削除`buttonを表示し、idなしlocal draftでは`下書き破棄`buttonを表示する。両buttonを同時に表示しない。non-ownerまたは未認証のremote characterでは、form編集、画像編集、picker / 行操作、保存、削除をread-onlyまたはdisabledにする。一方で、`キャラクター一覧`、CCFOLIAコピー、Help、login / logoutは利用可能とする。
 - `保存`はログインとPC名を必須とし、idなしlocal draftの初回保存ではserver発行IDの`?character=<id>`へ遷移する前にlocal draftを削除する。owner remoteでは同じidを上書きし、remote値はbrowser persistenceへ保存しない。保存確認dialogではデータと画像をserverへ保存することを説明する。新規保存の`全員に公開する`は既定ON、既存remoteの上書きでは現在の`isPublic`を既定とする。
 - DBへ保存するrequest全体は8 MiBまで、snapshotの`imageBase64String`は4 MiBまでとする。frontendは送信直前にUTF-8 byte長でrequest全体を検査し、shared schemaとbackend body limitも同じ上限を使う。
 - `複製`はログイン済みならpublic non-owner remoteにも利用可能とする。PC名とPL名を入力して新しいIDへ保存し、`全員に公開する`の既定はOFF、コピー元の画像は引き継がない。成功後は新しいowner characterの`?character=<id>`へ切り替える。
@@ -226,7 +226,7 @@ idなしlocal draft 1件の端末内保存・復元と、Firebase Authentication
 - 画面の具体的な構成、レスポンシブレイアウト、入力部品、ダイアログ、通知、エラー表示、アクセシビリティはdesignで定義する。
 - ページタイトルの`h1`はReact Islandの外でAstro pageが出力する。heading構造を保つためvisually hiddenにし、Island内の操作領域はページタイトルを重複表示しない。
 - formのsectionはdesktopを含めてDOM順どおりの1列に積む。複数columnへsectionを振り分けるlayoutは用いない。`48rem`以上ではform本文を最大`44rem`にして中央寄せし、desktopではmain右端に通常のPageTocと同じ`15rem`幅の補助領域を置く。form本文は、この補助領域を除いた領域内で中央寄せする。
-- desktopの補助領域には、formの第一階層sectionへ移動するページ内リンクだけを置く。子section、行、入力項目へのリンクは置かない。補助領域のsection navigationの下には、キャラクター一覧、保存、複製、削除、ヘルプ、CCFOLIAコピー、下書き破棄、エラー状態を縦に配置する。既存のページ見出し横の横並び操作menuは用いない。
+- desktopの補助領域には、formの第一階層sectionへ移動するページ内リンクだけを置く。子section、行、入力項目へのリンクは置かない。補助領域のsection navigationの下には、キャラクター一覧、保存、複製、remote character時の削除またはidなしlocal draft時の下書き破棄、ヘルプ、CCFOLIAコピー、エラー状態を縦に配置する。既存のページ見出し横の横並び操作menuは用いない。tablet / mobileの2列action button群では、削除または下書き破棄の右列にCCFOLIAコピーを置く。
 - 狭幅レイアウトの操作menuは、action button群の上に第一階層sectionだけのページ内ジャンプを置く。section linkを選ぶと、固定Headerを避けて対象sectionへsmooth scrollする。section navigationの各buttonは下向きiconと下線でジャンプ操作だと分かるようにし、現在位置またはクリック対象のaccent表示は行わない。子section、行、入力項目へのジャンプや強調は含めない。
 - character-sheetのsite menu railは`64rem`以上で表示する。`64rem`未満ではrailを隠し、Headerのサイトメニューボタンからdrawerを開く。desktopのtext action railは`84rem`以上だけで表示し、`84rem`未満でもtablet / mobile用のfloating action icon controlsを維持する。
 - `/character-sheet/`を静的公開routeとして提供する。ページ固有のサイトメニュー表示、section navigation、レイアウトはdesignで定義する。

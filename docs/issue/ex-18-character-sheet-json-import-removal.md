@@ -32,6 +32,11 @@
 「全ページbaseline更新」は、**各ページについてローカルで決定的に再現できるcanonical stateを更新する**ことを意味する。
 外部データまたはログイン状態を必要とするstateまでbaseline化することは意味しない。
 
+8. **Action Paneの`削除`と`下書き破棄`を表示stateで切り替える。**
+   - remote characterでは`削除`を表示し、idなしlocal draftでは`下書き破棄`を表示する。両buttonを同時に表示しない。
+   - tablet / mobileでは、`削除`または`下書き破棄`の右列へ`CCFOLIAコピー`を置く。CCFOLIAコピーを全幅にしない。
+   - 今回のUI変更に伴うcanonical baseline更新はユーザーが実施する。エージェントはbaselineを更新しない。
+
 ---
 
 ## 目的
@@ -409,6 +414,9 @@ login
 - full VRT実行
 - 外部data / login非依存のVRT contract整理
 - ex-17から移管されたfatal error dialogの最終Visual Review
+- remote character / idなしlocal draftによる`削除`と`下書き破棄`の排他的表示
+- tablet / mobileの`削除`または`下書き破棄`行の右列へのCCFOLIAコピー配置
+- Action Pane表示stateを確認するcomponent testと、必要なlocal E2Eの更新
 
 ---
 
@@ -428,6 +436,7 @@ login
 - VRTのための実loginやlive backend環境構築
 - VRTのためだけのproduction test hook
 - ユーザーの文言修正より先に行うエージェント主導の全面copy rewrite
+- 今回のAction Pane変更に伴うcanonical VRT baseline更新（ユーザーが担当）
 
 ---
 
@@ -438,6 +447,7 @@ remote snapshot上で少なくとも以下が候補となる。
 ```txt
 frontend/src/character-sheet/CharacterSheetContainer.tsx
 frontend/src/character-sheet/components/CharacterSheetActionPane.tsx
+frontend/src/character-sheet/components/CharacterSheetActionPane.module.css
 frontend/src/character-sheet/components/dialogs/action-pane/
 frontend/src/character-sheet/components/dialogs/action-pane/CharacterSheetJsonImportConfirmDialog.tsx
 frontend/src/character-sheet/components/dialogs/action-pane/CharacterSheetHelpDialog.tsx
@@ -502,6 +512,16 @@ docs/TODO.md
 - [x] final Action Pane / Help / fatal error dialogをdesign noteへ反映している。
 - [x] local draft / remoteの操作差を現行contractに合わせている。
 - [x] VRT対象stateと外部依存による対象外stateをdesign note上でも区別している。
+
+### Action Paneの表示stateとmobile配置
+
+- [ ] remote characterでは`削除`を表示し、`下書き破棄`を表示しない。
+- [ ] idなしlocal draftでは`下書き破棄`を表示し、`削除`を表示しない。
+- [ ] non-ownerまたは未認証のremote characterでは、表示中の`削除`を既存のread-only / disabled contractに従わせる。
+- [ ] tablet / mobileで`削除`または`下書き破棄`の右列に`CCFOLIAコピー`を置き、CCFOLIAコピーを全幅にしない。
+- [ ] Action Pane component testでlocal draftとremote characterの表示差を確認している。
+- [ ] local E2Eでmobileのlocal draft操作menuに`下書き破棄`と`CCFOLIAコピー`が並ぶことを確認している。remote表示をE2Eで確認するのは、外部接続なしのdeterministic fixtureが既存または同Issue内に必要な範囲で用意できる場合だけとする。
+- [ ] この変更に伴うcanonical baselineはユーザーが更新する。エージェントは更新していない。
 
 ### VRT / Baseline
 
