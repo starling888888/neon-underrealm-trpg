@@ -7,6 +7,9 @@ test.describe("character sheet page", () => {
   }) => {
     await page.goto("character-sheet/");
     const dialog = page.getByRole("dialog", { name: "CCFOLIAコピー" });
+    const actionPane = page.getByRole("complementary", {
+      name: "キャラクターシートの操作",
+    });
 
     for (const viewport of [
       siteViewports.desktop,
@@ -14,6 +17,8 @@ test.describe("character sheet page", () => {
       siteViewports.mobile,
     ]) {
       await page.setViewportSize(viewport);
+      await expect(actionPane).toBeAttached();
+
       const menuTrigger = page.getByRole("button", {
         exact: true,
         name: "操作メニューを開く、エラーはありません。",
