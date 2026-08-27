@@ -161,6 +161,7 @@
     line-height: 1;
   }
   .menu {
+    box-sizing: border-box;
     position: fixed;
     z-index: 4;
     inset-inline-end: var(--space-4);
@@ -231,10 +232,8 @@
     gap: var(--space-2);
   }
   .actionButtons :global(button) {
+    min-width: 0;
     width: 100%;
-  }
-  .ccfoliaCopy {
-    grid-column: 1 / -1;
   }
   .errors {
     border-top: var(--border-width) solid var(--color-border);

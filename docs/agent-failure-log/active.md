@@ -850,6 +850,16 @@ source種別は以下を使う。
 - 観測した失敗: focused frontend Vitest commandを3回連続で失敗させた。最初の2回は設定されていないjest-dom matcherの`toHaveFocus`と`fireEvent.cancel`を使い、3回目も同じく未導入の`toHaveAttribute`を使った。test environmentの既存assertion拡張を確認せず、標準DOM assertionへ置き換える修正を段階的に行った。
 - 一次対応: focusは`document.activeElement`、属性は`element.hasAttribute()`、cancelは`fireEvent(element, new Event("cancel", { cancelable: true }))`で確認する。以後、新規component testでは既存test setupに導入済みのmatcherを先に検索し、未確認のmatcherは標準Vitest / DOM APIで書く。
 
+### browser-test layout diagnosis
+
+#### Repeated a broad character-sheet E2E before isolating a 4px overflow
+
+- date: 2026-08-27
+- source: self
+- 発生箇所: `ex-18-character-sheet-json-import-removal` の `frontend/tests/e2e/character-sheet.spec.ts`
+- 観測した失敗: mobile Action PaneのCCFOLIAコピー配置を変更した後、breakpoint testの横overflowを、overflowの発生viewportやDOM要素を特定しないまま同じbroad E2E commandで3回連続して失敗させた。新規local-draft E2Eは通過していたが、既存breakpoint testの`scrollWidth - innerWidth`が4pxとなった。
+- 一次対応: 以後は新規E2Eを単独確認したうえで、browser上のoverflow要素と発生viewportを特定してからbroad E2Eを再実行する。原因が変更箇所と無関係なら、current issueでは完了扱いにせず既存失敗として明示する。
+
 #### Requested unnecessary escalation for an already approved Playwright command
 
 - date: 2026-08-08

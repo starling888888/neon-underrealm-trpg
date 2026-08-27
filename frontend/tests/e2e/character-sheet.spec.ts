@@ -33,6 +33,47 @@ test.describe("character sheet page", () => {
     }
   });
 
+  test("places CCFOLIA copy beside discard in the mobile local-draft menu", async ({
+    page,
+  }) => {
+    await page.setViewportSize(siteViewports.mobile);
+    await page.goto("character-sheet/");
+    await page
+      .getByRole("button", {
+        exact: true,
+        name: "操作メニューを開く、エラーはありません。",
+      })
+      .click();
+
+    const menu = page.getByRole("region", {
+      name: "キャラクターシートの操作メニュー",
+    });
+    const discard = menu.getByRole("button", {
+      exact: true,
+      name: "下書き破棄",
+    });
+    const ccfoliaCopy = menu.getByRole("button", {
+      exact: true,
+      name: "CCFOLIAコピー",
+    });
+
+    await expect(discard).toBeVisible();
+    await expect(ccfoliaCopy).toBeVisible();
+    await expect(
+      menu.getByRole("button", { exact: true, name: "削除" }),
+    ).toHaveCount(0);
+
+    const [discardBox, ccfoliaCopyBox] = await Promise.all([
+      discard.boundingBox(),
+      ccfoliaCopy.boundingBox(),
+    ]);
+    if (discardBox === null || ccfoliaCopyBox === null) {
+      throw new Error("mobile action buttonの位置を取得できません。");
+    }
+    expect(Math.abs(discardBox.y - ccfoliaCopyBox.y)).toBeLessThan(1);
+    expect(ccfoliaCopyBox.x).toBeGreaterThan(discardBox.x);
+  });
+
   test("dismisses an open dialog before the responsive action menu", async ({
     page,
   }) => {

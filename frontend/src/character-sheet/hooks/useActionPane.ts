@@ -17,6 +17,7 @@ type UseActionPaneArgs = {
   isCcfoliaCopyDisabled: boolean;
   isCopySaveDisabled?: boolean;
   isDeleteDisabled?: boolean;
+  isRemoteCharacter?: boolean;
   isResetErrorOpen: boolean;
   isRootOperationInProgress: boolean;
   isResetDisabled: boolean;
@@ -59,6 +60,7 @@ export default function useActionPane({
   isCcfoliaCopyDisabled,
   isCopySaveDisabled = false,
   isDeleteDisabled = false,
+  isRemoteCharacter = false,
   isResetErrorOpen,
   isRootOperationInProgress,
   isResetDisabled,
@@ -87,6 +89,7 @@ export default function useActionPane({
       isCcfoliaCopyDisabled,
       isCopySaveDisabled,
       isDeleteDisabled,
+      isRemoteCharacter,
       isMenuOpen: actions.isMenuOpen,
       isResetDisabled,
       isSaveDisabled,
@@ -116,6 +119,7 @@ export default function useActionPane({
       isCcfoliaCopyDisabled,
       isCopySaveDisabled,
       isDeleteDisabled,
+      isRemoteCharacter,
       isResetDisabled,
       isSaveDisabled,
       onCharacterList,

@@ -515,12 +515,12 @@ docs/TODO.md
 
 ### Action Paneの表示stateとmobile配置
 
-- [ ] remote characterでは`削除`を表示し、`下書き破棄`を表示しない。
-- [ ] idなしlocal draftでは`下書き破棄`を表示し、`削除`を表示しない。
-- [ ] non-ownerまたは未認証のremote characterでは、表示中の`削除`を既存のread-only / disabled contractに従わせる。
-- [ ] tablet / mobileで`削除`または`下書き破棄`の右列に`CCFOLIAコピー`を置き、CCFOLIAコピーを全幅にしない。
-- [ ] Action Pane component testでlocal draftとremote characterの表示差を確認している。
-- [ ] local E2Eでmobileのlocal draft操作menuに`下書き破棄`と`CCFOLIAコピー`が並ぶことを確認している。remote表示をE2Eで確認するのは、外部接続なしのdeterministic fixtureが既存または同Issue内に必要な範囲で用意できる場合だけとする。
+- [x] remote characterでは`削除`を表示し、`下書き破棄`を表示しない。
+- [x] idなしlocal draftでは`下書き破棄`を表示し、`削除`を表示しない。
+- [x] non-ownerまたは未認証のremote characterでは、表示中の`削除`を既存のread-only / disabled contractに従わせる。
+- [x] tablet / mobileで`削除`または`下書き破棄`の右列に`CCFOLIAコピー`を置き、CCFOLIAコピーを全幅にしない。
+- [x] Action Pane component testでlocal draftとremote characterの表示差を確認している。
+- [x] local E2Eでmobileのlocal draft操作menuに`下書き破棄`と`CCFOLIAコピー`が並ぶことを確認している。remote表示をE2Eで確認するのは、外部接続なしのdeterministic fixtureが既存または同Issue内に必要な範囲で用意できる場合だけとする。
 - [ ] この変更に伴うcanonical baselineはユーザーが更新する。エージェントは更新していない。
 
 ### VRT / Baseline

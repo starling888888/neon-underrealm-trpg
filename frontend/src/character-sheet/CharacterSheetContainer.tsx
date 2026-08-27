@@ -195,6 +195,7 @@ function CharacterSheetContainerContents({
   );
   const actionPane = useActionPane({
     errorSummary: presenterProps.errorSummary,
+    isRemoteCharacter: route.remoteCharacterId !== null,
     isCcfoliaCopyDisabled:
       rootState.isRootOperationInProgress ||
       remotePersistence.isRemoteCharacterLoadFailed,

@@ -95,7 +95,7 @@ describe("CharacterSheetActionPane", () => {
     );
   });
 
-  it("does not render an export control", () => {
+  it("shows discard instead of delete for a local draft", () => {
     render(
       <CharacterSheetActionPane
         errorReviewButtonRef={createRef<HTMLButtonElement>()}
@@ -115,19 +115,43 @@ describe("CharacterSheetActionPane", () => {
     );
 
     expect(screen.queryByRole("button", { name: "エクスポート" })).toBeNull();
-    for (const name of [
-      "保存",
-      "複製",
-      "削除",
-      "下書き破棄",
-      "CCFOLIAコピー",
-    ]) {
+    for (const name of ["保存", "複製", "下書き破棄", "CCFOLIAコピー"]) {
       expect(
         screen
           .getByRole("button", { name })
           .getAttribute("data-character-sheet-button-variant"),
       ).toBe("outline");
     }
+    expect(screen.queryByRole("button", { name: "削除" })).toBeNull();
+  });
+
+  it("shows delete instead of discard for a remote character", () => {
+    render(
+      <CharacterSheetActionPane
+        errorReviewButtonRef={createRef<HTMLButtonElement>()}
+        errorSummary={{ errors: [], hasErrors: false }}
+        isCcfoliaCopyDisabled={false}
+        isDeleteDisabled
+        isMenuOpen
+        isRemoteCharacter
+        isResetDisabled={false}
+        menuTriggerRef={createRef<HTMLButtonElement>()}
+        onCcfoliaCopy={vi.fn()}
+        onDelete={vi.fn()}
+        onHelp={vi.fn()}
+        onMenuToggle={vi.fn()}
+        onReset={vi.fn()}
+        onReviewErrors={vi.fn()}
+        onSectionJump={vi.fn()}
+        sectionNavigation={sectionNavigation}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "削除" })).toHaveProperty(
+      "disabled",
+      true,
+    );
+    expect(screen.queryByRole("button", { name: "下書き破棄" })).toBeNull();
   });
 
   it("shows the error count and list in the open mobile menu", () => {
