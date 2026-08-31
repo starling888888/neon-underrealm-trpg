@@ -1,0 +1,822 @@
+# ex-18-character-sheet-json-import-removal
+
+## 最優先のユーザー確定仕様
+
+本Issueでは、以下を確定仕様として扱う。
+
+1. **このIssueのPRは2026-09-01になるまでmergeしない。**
+   - 実装、レビュー、CI、Visual Reviewがそれ以前に完了しても、PRのまま維持する。
+   - 2026-09-01以降に最終状態を確認してからmerge可能とする。
+
+2. **キャラクターシートのJSONインポートbuttonと、その機能のためだけに存在する関連codeを削除する。**
+
+3. **JSONインポートに関するユーザー向け文言、削除予告、Help本文を削除する。**
+
+4. **ユーザーが、現行のbutton文言・操作文言・Helpを含むキャラクターシートのユーザー向け操作文言を一通り修正し直す。**
+   - エージェントは、その修正文言を現行仕様・実装挙動と照合してレビューする。
+   - ユーザーの文言修正前に、エージェント側で全操作文言を独自に書き換えない。
+
+5. **ユーザー修正文言のレビューと確定後、全ページのcanonical VRT baselineを最新化する。**
+
+6. **キャラクターシートが最終形になった状態で、`docs/design/character-sheet/notes.md`を更新する。**
+
+7. **外部データまたはログイン状態に依存するVRTは取得しない。**
+   - Firebase Authenticationへの実login
+   - Cloudflare backend / production API
+   - production D1 / R2
+   - live character / sample character
+   - その他の外部network data
+
+   をVRT fixtureまたはbaseline取得条件にしてはならない。
+
+「全ページbaseline更新」は、**各ページについてローカルで決定的に再現できるcanonical stateを更新する**ことを意味する。
+外部データまたはログイン状態を必要とするstateまでbaseline化することは意味しない。
+
+8. **Action Paneの`削除`と`下書き破棄`を表示stateで切り替える。**
+   - remote characterでは`削除`を表示し、idなしlocal draftでは`下書き破棄`を表示する。両buttonを同時に表示しない。
+   - tablet / mobileでは、`削除`または`下書き破棄`の右列へ`CCFOLIAコピー`を置く。CCFOLIAコピーを全幅にしない。
+   - 今回のUI変更に伴うcanonical baseline更新はユーザーが実施する。エージェントはbaselineを更新しない。
+
+---
+
+## 目的
+
+JSONインポートによる旧データ移行期間を終了し、WebキャラクターシートをDB保存を前提とした最終UIへ整理する。
+
+同時に、
+
+- Action Pane / Helpの操作体系
+- ユーザー向け文言
+- character-sheet design note
+- canonical VRT baseline
+
+を最終状態へ揃え、移行期間中のUI・文言・設計記録をactive implementationから除去する。
+
+ex-17で意図的に保留したcharacter-sheetのdesign note、Visual Review、canonical baseline整理も本Issueで完了する。
+
+---
+
+## 背景
+
+現行キャラクターシートでは、旧データ移行のためJSONインポートだけを一時的に残している。
+
+現在のcontractでは、JSONインポート成功後のデータはidなしlocal draftとして扱われ、remote character表示中に実行した場合もremote DB record自体は変更せず、query parameterを外してlocal draftへ遷移する。
+
+一方、JSONエクスポートのユーザー向け導線は既に削除済みであり、JSONインポートbuttonには、
+
+```txt
+DB保存に移行するため9/1に削除されます。
+```
+
+という移行期間用表示が残っている。
+
+ex-17では、以下を意図的にex-18へ移管している。
+
+- JSONインポートbuttonと導線の削除
+- import専用のlocal draft / URL identity処理の整理
+- character-sheet design noteの最終更新
+- ex-17で追加したfatal error dialogを含む最終Visual Review
+- canonical VRT baselineの更新
+
+---
+
+## 依存関係
+
+### ex-17
+
+本Issueの実装は、`ex-17-cloud-persistence-followups`の変更を前提とする。
+
+実装branchは、ex-17のPRがmergeされた後の最新`main`から開始する。
+
+想定branch:
+
+```txt
+ex-18-character-sheet-json-import-removal
+```
+
+remote draft作成時点ではPR #225はまだopenであるため、branch作成時に最新`main`へex-17が取り込まれていることをローカルで確認する。
+
+---
+
+## Merge Date Gate
+
+このIssueには通常の実装完了条件とは独立した日付Gateを設ける。
+
+```txt
+merge可能日: 2026-09-01以降
+```
+
+### Contract
+
+- 2026-08-31以前はmergeしない。
+- 実装完了後はPRをopen状態で維持する。
+- review approved、CI success、VRT successであっても日付Gateを越えない。
+- 2026-09-01以降、merge直前にHEADとCI、未解決レビュー、日付Gateを再確認する。
+- 日付を理由にcodeやbaselineへ時間依存処理を追加しない。
+- JSONインポートbuttonを日付判定で自動的に消す実装にはしない。本Issueのcode changeで明示的に削除する。
+
+---
+
+## JSONインポート機能の削除
+
+### UI
+
+Action Pane / control paneからJSONインポートbuttonを削除する。
+
+同時に、import専用の以下を削除する。
+
+- file input
+- file選択処理
+- import確認dialog
+- import専用loading / operation state
+- import専用callback
+- import結果通知
+- import専用focus復帰処理
+- import専用のAction Pane wiring
+
+desktop、tablet、mobileのすべてで導線を残さない。
+
+### State / routing
+
+JSONインポートのためだけに存在する、
+
+```text
+JSON file
+→ deserialize / validate
+→ idなしlocal draftへ反映
+→ remote routeならquery parameterを除去
+```
+
+という遷移を削除する。
+
+削除後に、
+
+- import専用のlocal draft書込み
+- import後だけ使う画像復元処理
+- import成功時だけ使うURL navigation
+- import専用state / ref / callback
+- import専用dialog state
+
+がdead codeとして残っていないことを確認する。
+
+### 共用logicの扱い
+
+JSON import/export由来のmoduleであっても、現在の別機能が利用しているlogicを名前だけを理由に削除してはならない。
+
+特に、
+
+- DB保存
+- コピー保存
+- CCFOLIAコピー
+- remote snapshot restore
+- local draft restore
+- test fixture / schema validation
+
+から現在利用されているserialize、schema、normalization等は、その利用関係を確認して維持する。
+
+削除対象は**JSONインポート機能だけに必要なcode**とする。
+
+---
+
+## JSONインポート関連文言の削除
+
+active UIから、JSONインポートを現在利用可能な機能として扱う文言を削除する。
+
+対象には少なくとも以下を含む。
+
+- `JSONインポート`
+- import button label
+- import確認文
+- import成功 / 失敗文
+- import loading文
+- import migration説明
+- `9/1に削除`の予告表示
+- Help内のインポート節
+- Help内からimportへ言及する補足
+- import後のlocal draft / DB characterの扱いを説明するユーザー向け文言
+
+JSONインポート削除後に不要となるdictionary entryも削除する。
+
+### 文書
+
+active documentationからも、JSONインポートを現在機能として扱う記述を削除または最終状態へ更新する。
+
+主な対象:
+
+```txt
+docs/requirements/character-sheet.md
+docs/architectures/character-sheet.md
+docs/architectures/character-sheet-server-snapshot-sample.json
+docs/testing.md
+docs/design/character-sheet/notes.md
+docs/TODO.md
+```
+
+実際の対象はrepository-wide searchで確認する。
+
+ただし、
+
+- closed / archive済みIssue
+- review履歴
+- agent failure log
+- 過去のmigration経緯を示す監査記録
+
+は履歴としてJSONインポートへ言及していてもよい。
+active contractから消すためだけに過去記録を書き換えない。
+
+---
+
+## ユーザーによる操作文言の全面見直し
+
+JSONインポート削除後、ユーザーがキャラクターシートに残る現在の操作文言を修正する。
+
+対象はJSONインポート周辺だけに限定しない。
+
+少なくとも以下をレビュー対象とする。
+
+- Action Pane button
+- mobile / tablet control
+- DB保存
+- コピー保存
+- DB削除
+- キャラクター一覧
+- 初期化
+- CCFOLIAコピー
+- login / logout
+- Help
+- 各確認dialog
+- loading文
+- Toast
+- fatal error dialog
+- 操作に付随する補足文
+
+### レビュー方針
+
+ユーザーが修正文言を提示するまでは、エージェントが全体文言を独自判断で全面改稿しない。
+
+ユーザー修正後、次の観点でレビューする。
+
+- 実際の操作結果と文言が一致するか
+- idなしlocal draftとremote characterを混同していないか
+- remote characterをbrowserへ自動保存すると誤解させないか
+- DB保存 / コピー保存 / DB削除の対象が明確か
+- destructive operationの結果が明確か
+- 初期化がidなしlocal draft専用であることと矛盾しないか
+- character一覧からの切替でremoteの未保存差分が破棄されるcontractと矛盾しないか
+- login / logoutとownershipの扱いを誤認させないか
+- import / remote binding等の廃止済み概念が残っていないか
+- 同じ操作についてHelp、button、dialog、Toastで説明が矛盾していないか
+- desktop / tablet / mobileで意味が変わっていないか
+
+### Copy Freeze
+
+以下が完了するまでdesign noteとcanonical baselineを最終確定しない。
+
+1. ユーザーが操作文言を修正
+2. エージェントが仕様・実装との整合性をレビュー
+3. 必要な修正を反映
+4. ユーザーが最終文言を確定
+
+これを本IssueのCopy Freezeとする。
+
+---
+
+## Character Sheet Design Note
+
+Copy Freezeと最終UI確定後、
+
+```txt
+docs/design/character-sheet/notes.md
+```
+
+を更新する。
+
+### 更新内容
+
+少なくとも以下を最終状態へ揃える。
+
+- Action Paneの操作一覧
+- JSONインポート導線の削除
+- Helpの最終構成
+- button / operation copyの最終状態
+- fatal error dialog
+- desktop / tablet / mobileの操作体系
+- idなしlocal draft / remote characterで利用可能な操作差
+- canonical VRTで扱うroute / state / viewport
+- VRTで扱わない外部依存state
+- ex-17 / ex-18以前の移行期間用記述の除去
+
+design noteは、実装途中ではなく**本Issueの最終形**を正本化する。
+
+---
+
+## 全ページCanonical Baseline更新
+
+本Issueでは、通常の「変更targetだけbaseline更新」という運用に対する明示的な例外として、**全ページのcanonical VRT baselineを更新する**。
+
+ユーザーの本Issue要件を、全baseline更新に対する明示承認として扱う。
+
+### 対象
+
+既存canonical VRT suiteに登録されている各ページについて、最終実装からbaselineを再生成する。
+
+「全ページ」は、
+
+> repositoryでcanonical VRT対象として管理している各pageの、ローカルで決定的に再現可能なcanonical state
+
+を意味する。
+
+### 更新順序
+
+1. JSONインポートUI・関連codeを削除する。
+2. import関連文言を削除する。
+3. ユーザーが操作文言を修正する。
+4. 文言レビューを完了しCopy Freezeする。
+5. 最終UIとdesign intentを確認する。
+6. character-sheet design noteを最終状態へ更新する。
+7. 全ページcanonical baselineを再生成する。
+8. 全diffを確認する。
+9. 意図しないvisual regressionがあれば実装を修正する。
+10. 必要に応じてbaselineを再生成する。
+11. full VRTを再実行して一致を確認する。
+
+baselineを更新してtest failureを隠す運用にはしない。
+
+---
+
+## VRTの外部依存禁止
+
+canonical VRTはlocalで再現可能かつdeterministicでなければならない。
+
+### VRT取得で使用してはならないもの
+
+- Firebaseへの実login
+- Firebaseの永続login state
+- Google Account
+- production / development Cloudflare Worker
+- external HTTP API
+- production D1
+- production R2
+- DBへ保存されたlive user character
+- DBへ保存されたlive sample character
+- 外部サービスから取得する可変data
+- production environmentの状態
+
+### Character Sheet VRT
+
+character-sheetのVRTも同じ原則に従う。
+
+VRTのために、
+
+```text
+login
+→ backend API
+→ remote character取得
+→ screenshot
+```
+
+という経路を使用してはならない。
+
+必要な画面stateがある場合は、既存のlocal fixture機構または同等のdeterministicなlocal stateだけを使う。
+
+ただし、VRTのためだけにproduction codeへtest-only stateや外部依存のmock分岐を追加してはならない。
+
+### 外部依存targetが既存suiteに存在した場合
+
+既存canonical VRT targetが外部dataまたはlogin stateなしでは再現できない場合は、
+
+1. deterministic local fixtureへ置換できるか確認する。
+2. 置換が設計上不適切なら、その外部依存stateをcanonical VRT対象から除外する。
+3. 除外理由をVRT READMEまたはdesign noteへ記録する。
+
+外部環境へ接続してbaselineを取得することで解決してはならない。
+
+---
+
+## 対象範囲
+
+- JSONインポートbutton削除
+- JSONインポート確認UI削除
+- JSON file input削除
+- import専用state / callback / routing削除
+- import専用local draft / image処理の整理
+- import専用testの削除または更新
+- JSONインポート関連ユーザー文言の削除
+- HelpからJSONインポート説明を削除
+- `9/1`移行予告文の削除
+- import関連dictionary cleanup
+- active requirements / architecture / testing / TODOの最終整理
+- ユーザーによる全操作文言見直し
+- 修正文言の仕様レビュー
+- character-sheet design noteの最終更新
+- 全ページcanonical baseline更新
+- 全ページVRT diff review
+- full VRT実行
+- 外部data / login非依存のVRT contract整理
+- ex-17から移管されたfatal error dialogの最終Visual Review
+- remote character / idなしlocal draftによる`削除`と`下書き破棄`の排他的表示
+- tablet / mobileの`削除`または`下書き破棄`行の右列へのCCFOLIAコピー配置
+- Action Pane表示stateを確認するcomponent testと、必要なlocal E2Eの更新
+
+---
+
+## 対象外
+
+- 新しいimport形式
+- JSON importの代替機能
+- JSON schema version migrationの新規実装
+- cloud persistence APIの機能追加
+- Firebase Authentication方式の変更
+- D1 / R2 schema変更
+- 新しいcharacter共有方式
+- optimistic locking / concurrent edit制御
+- キャラクターシートのゲームルール変更
+- 新しい入力項目
+- production sample dataの変更
+- VRTのための実loginやlive backend環境構築
+- VRTのためだけのproduction test hook
+- ユーザーの文言修正より先に行うエージェント主導の全面copy rewrite
+- 今回のAction Pane変更に伴うcanonical VRT baseline更新（ユーザーが担当）
+
+---
+
+## 想定変更箇所
+
+remote snapshot上で少なくとも以下が候補となる。
+
+```txt
+frontend/src/character-sheet/CharacterSheetContainer.tsx
+frontend/src/character-sheet/components/CharacterSheetActionPane.tsx
+frontend/src/character-sheet/components/CharacterSheetActionPane.module.css
+frontend/src/character-sheet/components/dialogs/action-pane/
+frontend/src/character-sheet/components/dialogs/action-pane/CharacterSheetJsonImportConfirmDialog.tsx
+frontend/src/character-sheet/components/dialogs/action-pane/CharacterSheetHelpDialog.tsx
+frontend/src/character-sheet/hooks/useCharacterSheetRootState.ts
+frontend/src/character-sheet/dictionary.ts
+
+frontend/tests/components/character-sheet/
+frontend/tests/hooks/character-sheet/
+frontend/tests/node/character-sheet/
+frontend/tests/e2e/
+frontend/tests/vrt/
+
+frontend/canonical-snapshots/visual/
+
+docs/requirements/character-sheet.md
+docs/architectures/character-sheet.md
+docs/testing.md
+docs/design/character-sheet/notes.md
+docs/TODO.md
+```
+
+具体的な変更対象はlocal repositoryでusage searchして確定する。
+
+既存moduleをファイル名だけで削除せず、現在の参照関係を確認する。
+
+---
+
+## 完了条件
+
+### JSONインポート削除
+
+- [x] desktopのAction PaneにJSONインポートbuttonが存在しない。
+- [x] tablet / mobileの操作UIにJSONインポートbuttonが存在しない。
+- [x] JSON file inputが存在しない。
+- [x] import確認dialogが存在しない。
+- [x] import専用callback / state / ref / operationが残っていない。
+- [x] import成功時のidなしlocal draft遷移codeが、他用途がなければ削除されている。
+- [x] import専用画像処理が、他用途がなければ削除されている。
+- [x] importだけを検証するtestが削除または現行contractへ整理されている。
+- [x] DB保存、コピー保存、CCFOLIA等が使用する共用serialize / schema logicを誤って削除していない。
+
+### 文言
+
+- [x] active UIに`JSONインポート`操作が残っていない。
+- [x] `9/1に削除`等の移行予告が残っていない。
+- [x] import confirmation / success / failure / loading文言が残っていない。
+- [x] HelpからJSONインポート節を削除している。
+- [x] active documentationがJSONインポートを現在機能として説明していない。
+- [x] historical / audit recordをactive仕様化するために改変していない。
+
+### User Copy Review
+
+- [x] ユーザーが現行button / 操作 / Help文言を修正している。
+- [x] エージェントが最終文言を現行挙動と照合してレビューしている。
+- [x] local draft / remote / DB save / copy / delete / reset / authの意味に矛盾がない。
+- [x] Help、button、dialog、Toast間で同じ操作の説明が矛盾していない。
+- [x] ユーザーによる最終文言確定をもってCopy Freezeしている。
+
+### Design
+
+- [x] JSONインポート削除後の最終UIを基準に`docs/design/character-sheet/notes.md`を更新している。
+- [x] final Action Pane / Help / fatal error dialogをdesign noteへ反映している。
+- [x] local draft / remoteの操作差を現行contractに合わせている。
+- [x] VRT対象stateと外部依存による対象外stateをdesign note上でも区別している。
+
+### Action Paneの表示stateとmobile配置
+
+- [x] remote characterでは`削除`を表示し、`下書き破棄`を表示しない。
+- [x] idなしlocal draftでは`下書き破棄`を表示し、`削除`を表示しない。
+- [x] non-ownerまたは未認証のremote characterでは、表示中の`削除`を既存のread-only / disabled contractに従わせる。
+- [x] tablet / mobileで`削除`または`下書き破棄`の右列に`CCFOLIAコピー`を置き、CCFOLIAコピーを全幅にしない。
+- [x] Action Pane component testでlocal draftとremote characterの表示差を確認している。
+- [x] local E2Eでmobileのlocal draft操作menuに`下書き破棄`と`CCFOLIAコピー`が並ぶことを確認している。remote表示をE2Eで確認するのは、外部接続なしのdeterministic fixtureが既存または同Issue内に必要な範囲で用意できる場合だけとする。
+- [x] この変更に伴うcanonical baselineはユーザーが更新した。エージェントは更新していない。
+
+### VRT / Baseline
+
+- [x] 全canonical pageについてdeterministicなbaselineを更新している。
+- [x] 全baseline diffを確認している。
+- [x] baseline更新でvisual regressionを隠していない。
+- [x] full VRTが成功している。
+- [x] Firebase loginをVRT取得に使用していない。
+- [x] live backend APIをVRT取得に使用していない。
+- [x] live D1 / R2 dataをVRT取得に使用していない。
+- [x] live user / sample characterをVRT取得に使用していない。
+- [x] 外部data依存targetがある場合はdeterministic fixture化または対象外化して理由を記録している。
+- [x] ex-17で保留したfatal error dialogを最終character-sheet stateでVisual Reviewしている。
+
+### Quality
+
+- [x] import関連のdead import / dead codeが残っていない。
+- [x] repository-wide searchでactive import UI/copyの残存を確認している。
+- [x] `npm run check`が成功している。
+- [x] frontendの必要なunit / component / hook / E2E testが成功している。
+- [x] public buildが成功している。
+- [x] full VRTが成功している。
+
+### Date Gate
+
+- [ ] PRを2026-09-01になるまでopen状態で維持している。
+- [ ] 2026-08-31以前にmergeしていない。
+- [ ] 2026-09-01以降、merge直前の最新HEADでCI / review / VRT / unresolved commentを再確認している。
+
+---
+
+## チェックポイント
+
+### Import code removal
+
+repository-wideで少なくとも次を検索する。
+
+```sh
+rg -n \
+  'JSONインポート|jsonImport|JsonImport|9/1に削除|9/1' \
+  frontend docs
+```
+
+検索結果は機械的に全削除せず、
+
+- active implementation
+- active requirement / design
+- historical issue
+- audit / failure log
+
+へ分類する。
+
+### State ownership
+
+import削除後も次を維持する。
+
+```text
+/character-sheet
+→ idなしlocal draft
+→ non-default formだけlocalStorage
+→ local imageだけIndexedDB
+
+/character-sheet?character=<id>
+→ remote character
+→ form / imageはmemory-only
+```
+
+import code削除がlocal draft autosave、remote restore、save/copy/delete route transitionへ影響していないことを確認する。
+
+### Copy review
+
+最終copyについて、操作単位で、
+
+```text
+button
+→ confirmation / input dialog
+→ actual operation
+→ success / failure feedback
+→ Help description
+```
+
+を横断して意味が一致することを確認する。
+
+### VRT determinism
+
+baseline update前に各targetについて、
+
+- localだけで再現可能か
+- current timeに依存しないか
+- network responseに依存しないか
+- login stateに依存しないか
+- production dataに依存しないか
+
+を確認する。
+
+外部依存を見つけた場合、外部接続して取得してはならない。
+
+### Full baseline review
+
+全baselineを更新すること自体を完了条件にせず、旧baselineとの差分を確認する。
+
+特に、
+
+- global Header / Footer
+- typography
+- responsive layout
+- character-sheet Action Pane
+- Help
+- dialog
+- button text wrapping
+- mobile control layout
+
+について、文言変更による意図しないlayout regressionを確認する。
+
+---
+
+## レビュー観点
+
+- JSONインポートのユーザー導線が完全に消えているか。
+- hidden file inputやcallbackだけが残っていないか。
+- import専用route transitionがdead codeになっていないか。
+- 共用serialize / schemaまで過剰削除していないか。
+- active Help / dictionary / requirementsにimport migration文言が残っていないか。
+- ユーザー修正文言をエージェントが独自に意味変更していないか。
+- 最終copyと実操作が一致するか。
+- local draftとremote characterを文言上混同していないか。
+- design noteが途中状態ではなく最終UIを記録しているか。
+- full baseline更新がユーザー承認済みの本Issue範囲として行われているか。
+- baseline updateで失敗を隠していないか。
+- VRTがFirebase、live API、D1/R2、外部dataへ依存していないか。
+- 全ページbaseline要件を理由に外部依存stateを無理にsnapshot化していないか。
+- 2026-09-01以前にPRをmergeしようとしていないか。
+
+---
+
+## Source Snapshot
+
+以下はremote draft作成時の履歴である。local validationはこのsnapshotではなく、下記のlocal validation記録を実装契約の現在根拠とする。
+
+```txt
+repository: starling888888/neon-underrealm-trpg
+reference PR: #225 ex-17-cloud-persistence-followups
+snapshot ref: 6fd1317881693312e80391d98bb4a9a65e6184c0
+snapshot date: 2026-08-26
+```
+
+参照した主な正本:
+
+```txt
+Google Drive: AGENT
+
+AGENTS.md
+.agents/skills/issue-first-development/SKILL.md
+.agents/skills/design-image-generation/SKILL.md
+.agents/skills/visual-implementation-review/SKILL.md
+
+docs/TODO.md
+docs/issue/ex-17-cloud-persistence-followups.md
+docs/issue/milestone-02/plan.md
+docs/requirements/character-sheet.md
+docs/architectures/character-sheet.md
+docs/design/character-sheet/notes.md
+docs/testing.md
+
+frontend/tests/vrt/README.md
+```
+
+remote snapshot上では少なくとも次のimport専用fileが存在する。
+
+```txt
+frontend/src/character-sheet/components/dialogs/action-pane/CharacterSheetJsonImportConfirmDialog.tsx
+frontend/tests/components/character-sheet/CharacterSheetJsonImportConfirmDialog.test.tsx
+```
+
+実際の依存関係と全削除対象は、実装時のusage searchで確定する。
+
+ユーザーの本Issueに対する最新指示は、上記文書と競合する場合に優先する。
+
+---
+
+## Local Validation
+
+2026-08-26にlocal repositoryで次を確認した。
+
+- worktreeにはこのissue fileだけが未追跡であり、既存のGit管理ファイルに未commit変更はない。
+- current branchは`ex-18-character-sheet-json-import-removal`であり、issue file名と一致する。
+- branchのbaseであるlocal `main`と`origin/main`はいずれも`27050d4`である。ex-17はMerge PR #225および#226により取り込み済みである。
+- `docs/TODO.md`の`ex-18`項目、`docs/requirements/character-sheet.md`、`docs/testing.md`、`docs/design/character-sheet/notes.md`は、JSONインポートと9/1削除予告を現行仕様として記録しており、本Issueの削除・最終整理の対象と一致する。
+- `docs/design/character-sheet/notes.md`と`frontend/tests/vrt/README.md`が存在する。現行notesには削除対象のAction Pane・Help・responsive操作体系があり、本Issueで最終状態へ更新する対象として十分に特定できる。
+- local usage searchで、`CharacterSheetContainer.tsx`、`useCharacterSheetRootState.ts`、Action Pane dialogs、`dictionary.ts`、Help、component / hook / E2E / VRT tests、schema persistenceにJSONインポート関連の参照を確認した。想定変更箇所はlocal sourceと一致する。
+- `frontend/canonical-snapshots/visual/`にはcanonical VRT baselineがあり、全baseline更新は本Issueの明示承認済み例外として扱う。
+
+## Unchecked / Not verified
+
+- Date Gateに従い、PR作成後も2026-09-01まではmergeしない。
+- 2026-09-01以降のmerge直前に、最新HEAD、CI、review、unresolved commentを再確認する。
+
+VRTについては、baseline更新前に既存target一覧とfixtureを確認し、
+
+- deterministic local state
+- external / login dependent state
+
+を分類してから全baseline更新へ進む。
+
+このremote draftは、上記local validationにより正式な実装契約として確定した。
+
+---
+
+## レビュー指摘 1
+
+### 指摘事項
+
+- `docs/requirements/character-sheet.md`に、廃止した外部JSON読み込みを前提とする記述が残っている。
+- remote snapshot復元に使う`decodeImportedCharacterImage`が、廃止したimport機能を示す名称とコメントのまま残っている。
+- 画像入力上限が4 MiBへ変更されているため、UIが示す5 MBと一致しない。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`、HEAD `268f0a7` の記録）
+- classification: valid
+- local validation: requirementsの「JSONとして解析できない」段落は、現在の外部JSON inputには対応しない。local draftとremote snapshotのschema正規化契約はarchitectureに残るため、active requirementからこの段落を削除する。
+- local validation: `decodeImportedCharacterImage`はremote snapshotの`imageBase64String`を復元する現行経路で使用されるため削除対象ではない。保存済み画像を表す名称とコメントへ変更する。
+- local validation: ユーザー確定仕様により、入力画像は5 MiB（`5 * 1024 * 1024` bytes）までとする。現在の4 MiBは誤って入力validationとrequirementsへ適用されている。サーバー保存snapshotの`imageBase64String`は4 MiB、request全体は8 MiBのまま維持する。shared schemaはすでに`imageBase64String`の文字列長へ4 MiBを適用している。
+- local validation: `onJsonExport`、`json-export.ts`、`json-download.ts`、関連testは現行UIから未使用である。ユーザーによるフォローアップ指示により、削除はレビュー指摘2でcurrent issueの対応対象へ取り込む。
+
+### 対応方針
+
+- requirementから、廃止した外部JSON inputを前提とする復元記述を削除する。
+- `decodeImportedCharacterImage`とそのoperation名、利用箇所、testを、保存済み画像の復元を示す名称へ揃える。
+- 入力画像の5 MiB上限を、入力validation、requirement、testで復元する。変換後`imageBase64String`の4 MiBとrequest全体の8 MiBはserver storageの検証上限として維持する。
+
+### 対応完了チェックリスト
+
+- [x] requirementから外部JSON inputを示す記述を削除する。
+- [x] remote snapshot画像復元のidentifierとコメントからimport由来の名称を除く。
+- [x] 入力画像5 MiB、snapshotの`imageBase64String` 4 MiB、request全体8 MiBの責務を分離する。
+- [x] `npm run check`が通る。
+- [x] `npm --workspace=@neon-underrealm/frontend run build`が通る。
+
+---
+
+## レビュー指摘 2
+
+### 指摘事項
+
+- ユーザーが確定した`保存`、`複製`、`削除`、`下書き破棄`の操作文言に、Action Pane、remote persistence dialog、Help、VRTのtest locatorが追随していない。
+- ユーザー向け導線がないJSON export pipelineが実装、test、architectureに残っている。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`、HEAD `6c7d905` の記録）
+- classification: valid
+- local validation: dictionaryとHelpは、ユーザー編集後の操作文言とHelp構成を使用している。一方で`CharacterSheetActionPane.test.tsx`、`CharacterSheetRemotePersistenceDialogs.test.tsx`、`CharacterSheetHelpDialog.test.tsx`、`tests/vrt/character-sheet.spec.ts`には旧文言のexact locatorまたはassertionが残る。複製dialogのdialog labelは`複製`、primary actionはユーザー確定どおり`保存`とする。
+- local validation: `onJsonExport`、`json-export.ts`、`json-download.ts`、関連testは現行UIから参照されない。DB snapshot生成、CCFOLIAコピー、remote snapshot復元に必要な処理とは別であることをusage searchで確認した。
+- local validation: Review Follow-up 1（旧requirement）、2（画像入力5 MiB）、8（`decodeImportedCharacterImage`のrename）は、更新済みのレビュー指摘1で扱う。
+
+### 対応方針
+
+- ユーザーが確定したcopyへtestだけを追随させ、Help本文や操作名をエージェント判断で改稿しない。
+- VRTのユーザー向けlocatorは`下書き破棄`へ更新する。内部scenario IDのrenameは必須としない。
+- export専用のhook callback、browser adapter、serializer、dictionary key、testを削除し、`browser/`とarchitectureのfile download責務を必要な範囲で整理する。
+
+### 対応完了チェックリスト
+
+- [x] Action Pane testを`保存`、`複製`、`削除`、`下書き破棄`へ追随する。
+- [x] remote persistence dialog testを、`保存`、`複製`、`削除`と複製dialogのprimary action `保存`へ追随する。
+- [x] Help testを、現在の主要conceptと見出しを確認する形へ更新する。
+- [x] VRTの下書き破棄dialog locatorを現在のcopyへ更新する。
+- [x] JSON export専用pipelineと関連testを削除し、DB snapshot・CCFOLIA・remote snapshot復元を維持する。
+- [x] export削除後のarchitectureを現行責務へ更新する。
+- [x] 変更したtarget test、`npm run check`、frontend buildが通る。
+
+---
+
+## レビュー指摘 3
+
+### 指摘事項
+
+- activeなrequirements / testing文書で、ユーザー向け操作名に旧称の`DB保存`、`コピー保存`、`DB削除`、`初期化`、`全消去`が残っている。
+
+### 判定
+
+- source: browser-draft（`.tmp/chatgpt-review.md`、HEAD `eb105e8` の記録）
+- classification: valid
+- local validation: `docs/requirements/character-sheet.md`のremote persistence、idなしdraft、action railの記述に、旧操作名が残っている。`docs/testing.md`のURL遷移test対象にも`DB保存`、`コピー保存`、`DB削除`が残っている。
+- local validation: 現在のdictionaryのユーザー向け操作文言は`保存`、`複製`、`削除`、`下書き破棄`である。DBは保存先・requestなどの技術的説明にだけ使用する。
+- local validation: `docs/TODO.md`のex-18追跡は最終ドキュメント整理時に扱うため、このレビュー取り込みでは変更しない。
+
+### 対応方針
+
+- requirementsとtesting文書のユーザー向け操作名を、`保存`、`複製`、`削除`、`下書き破棄`へ揃える。
+- DBを保存先または通信の技術的説明として使う記述は維持し、ユーザー向け操作名との混同をなくす。実装とユーザー確定copyは変更しない。
+
+### 対応完了チェックリスト
+
+- [x] requirementsのremote persistence、idなしdraft、action railを現在の操作名へ揃える。
+- [x] testing文書のURL遷移test対象を現在の操作名へ揃える。
+- [x] 対象Markdownのformat / lintと`git diff --check`が通る。

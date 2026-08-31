@@ -25,8 +25,7 @@ import usePickers from "./hooks/usePickers";
 import useRemoteCharacterPersistence from "./hooks/useRemoteCharacterPersistence";
 import { serializeCcfoliaCharacterClipboardData } from "./logic/ccfolia";
 
-const { ccfolia, image, jsonImport, persistence } =
-  characterSheetDictionary.characterSheet;
+const { ccfolia, image, persistence } = characterSheetDictionary.characterSheet;
 const imageErrorMessages = {
   decode: image.errors.decode,
   "file-too-large": image.errors.fileTooLarge,
@@ -87,18 +86,6 @@ function CharacterSheetContainerContents({
     remoteCharacter: rootState.remoteCharacter,
     restoreRemoteCharacter: rootState.restoreRemoteCharacter,
   });
-
-  useEffect(() => {
-    if (!rootState.isJsonImportErrorOpen) return;
-    rootState.setIsJsonImportErrorOpen(false);
-    toast.notify("error", jsonImport.error);
-  }, [rootState, toast]);
-
-  useEffect(() => {
-    if (!rootState.isJsonImportImageErrorOpen) return;
-    rootState.setIsJsonImportImageErrorOpen(false);
-    toast.notify("error", jsonImport.imageOmitted);
-  }, [rootState, toast]);
 
   useEffect(() => {
     if (rootState.imageError === null) return;
@@ -208,14 +195,12 @@ function CharacterSheetContainerContents({
   );
   const actionPane = useActionPane({
     errorSummary: presenterProps.errorSummary,
+    isRemoteCharacter: route.remoteCharacterId !== null,
     isCcfoliaCopyDisabled:
       rootState.isRootOperationInProgress ||
       remotePersistence.isRemoteCharacterLoadFailed,
     isCopySaveDisabled: remotePersistence.isCopySaveDisabled,
     isDeleteDisabled: remotePersistence.isDeleteDisabled,
-    isImportDisabled:
-      rootState.isCharacterImageRestoring ||
-      rootState.isRootOperationInProgress,
     isResetErrorOpen: rootState.isImageErrorFromReset,
     isRootOperationInProgress: rootState.isRootOperationInProgress,
     isResetDisabled:
@@ -228,7 +213,6 @@ function CharacterSheetContainerContents({
     onCharacterList: remotePersistence.openCharacterList,
     onCopySave: remotePersistence.openCopySave,
     onDelete: remotePersistence.openDelete,
-    onImport: rootState.onJsonImportRequested,
     onResetConfirmed: rootState.onResetConfirmed,
     onSave: remotePersistence.openSave,
   });
@@ -236,21 +220,6 @@ function CharacterSheetContainerContents({
     () => ({ ...actionPane.actionPaneProps, authentication }),
     [actionPane.actionPaneProps, authentication],
   );
-  const onJsonImportConfirmed = useCallback(() => {
-    void rootState.onJsonImportConfirmed().then((shouldNavigateToLocal) => {
-      if (shouldNavigateToLocal) route.navigate(null);
-    });
-  }, [rootState.onJsonImportConfirmed, route.navigate]);
-  const onJsonImportErrorClose = useCallback(() => {
-    rootState.setIsJsonImportErrorOpen(false);
-  }, [rootState.setIsJsonImportErrorOpen]);
-  const onJsonImportImageErrorClose = useCallback(() => {
-    rootState.setIsJsonImportImageErrorOpen(false);
-  }, [rootState.setIsJsonImportImageErrorOpen]);
-  const onJsonImportPendingClose = useCallback(() => {
-    rootState.setPendingJsonImport(null);
-  }, [rootState.setPendingJsonImport]);
-
   return (
     <>
       <div
@@ -276,32 +245,8 @@ function CharacterSheetContainerContents({
           </fieldset>
           <CharacterSheetActionPane {...actionPaneProps} />
         </div>
-        <input
-          accept="application/json,.json"
-          hidden
-          onChange={(event) => {
-            const file = event.currentTarget.files?.[0];
-            event.currentTarget.value = "";
-            if (file !== undefined) {
-              void rootState.onJsonImportFileSelected(file);
-            }
-          }}
-          ref={rootState.jsonImportInputRef}
-          type="file"
-        />
         <ActionPaneDialogs
           errorSummary={presenterProps.errorSummary}
-          isJsonImportErrorOpen={rootState.isJsonImportErrorOpen}
-          isJsonImportImageErrorOpen={rootState.isJsonImportImageErrorOpen}
-          isJsonImportPending={rootState.pendingJsonImport !== null}
-          jsonImportErrorConfirmButtonRef={
-            rootState.jsonImportErrorConfirmButtonRef
-          }
-          jsonImportReturnFocusRef={rootState.jsonImportReturnFocusRef}
-          onJsonImportConfirmed={onJsonImportConfirmed}
-          onJsonImportErrorClose={onJsonImportErrorClose}
-          onJsonImportImageErrorClose={onJsonImportImageErrorClose}
-          onJsonImportPendingClose={onJsonImportPendingClose}
           state={actionPane.dialogs}
         />
         <PickerDialogs {...pickers.dialogsProps} />

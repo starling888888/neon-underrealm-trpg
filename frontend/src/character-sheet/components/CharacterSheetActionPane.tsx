@@ -21,7 +21,7 @@ type CharacterSheetActionPaneProps = {
   isCcfoliaCopyDisabled: boolean;
   isCopySaveDisabled?: boolean;
   isDeleteDisabled?: boolean;
-  isImportDisabled: boolean;
+  isRemoteCharacter?: boolean;
   isResetDisabled: boolean;
   isSaveDisabled?: boolean;
   isMenuOpen: boolean;
@@ -32,7 +32,6 @@ type CharacterSheetActionPaneProps = {
   onCopySave?: () => void;
   onDelete?: () => void;
   onSave?: () => void;
-  onImport: (trigger: HTMLButtonElement) => void;
   onMenuToggle: () => void;
   onReset: (trigger: HTMLButtonElement) => void;
   onReviewErrors: () => void;
@@ -56,7 +55,7 @@ function CharacterSheetActionPane({
   isCcfoliaCopyDisabled,
   isCopySaveDisabled = false,
   isDeleteDisabled = false,
-  isImportDisabled,
+  isRemoteCharacter = false,
   isResetDisabled,
   isSaveDisabled = false,
   isMenuOpen,
@@ -67,7 +66,6 @@ function CharacterSheetActionPane({
   onCopySave = () => {},
   onDelete = () => {},
   onSave = () => {},
-  onImport,
   onMenuToggle,
   onReset,
   onReviewErrors,
@@ -107,13 +105,12 @@ function CharacterSheetActionPane({
               isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
               isCopySaveDisabled={isCopySaveDisabled}
               isDeleteDisabled={isDeleteDisabled}
-              isImportDisabled={isImportDisabled}
+              isRemoteCharacter={isRemoteCharacter}
               isResetDisabled={isResetDisabled}
               isSaveDisabled={isSaveDisabled}
               onCcfoliaCopy={onCcfoliaCopy}
               onCopySave={onCopySave}
               onDelete={onDelete}
-              onImport={onImport}
               onSave={onSave}
               onReset={onReset}
             />
@@ -147,13 +144,12 @@ function CharacterSheetActionPane({
             isCcfoliaCopyDisabled={isCcfoliaCopyDisabled}
             isCopySaveDisabled={isCopySaveDisabled}
             isDeleteDisabled={isDeleteDisabled}
-            isImportDisabled={isImportDisabled}
+            isRemoteCharacter={isRemoteCharacter}
             isResetDisabled={isResetDisabled}
             isSaveDisabled={isSaveDisabled}
             onCcfoliaCopy={onCcfoliaCopy}
             onCopySave={onCopySave}
             onDelete={onDelete}
-            onImport={onImport}
             onSave={onSave}
             onReset={onReset}
           />
@@ -255,13 +251,12 @@ function ActionButtons({
   isCcfoliaCopyDisabled,
   isCopySaveDisabled,
   isDeleteDisabled,
-  isImportDisabled,
+  isRemoteCharacter,
   isResetDisabled,
   isSaveDisabled,
   onCcfoliaCopy,
   onCopySave,
   onDelete,
-  onImport,
   onSave,
   onReset,
 }: Pick<
@@ -269,13 +264,12 @@ function ActionButtons({
   | "isCcfoliaCopyDisabled"
   | "isCopySaveDisabled"
   | "isDeleteDisabled"
-  | "isImportDisabled"
+  | "isRemoteCharacter"
   | "isResetDisabled"
   | "isSaveDisabled"
   | "onCcfoliaCopy"
   | "onCopySave"
   | "onDelete"
-  | "onImport"
   | "onSave"
   | "onReset"
 >) {
@@ -299,33 +293,27 @@ function ActionButtons({
       >
         {actions.copySave}
       </CharacterSheetButton>
-      <CharacterSheetButton
-        className={styles.delete}
-        color="danger"
-        disabled={isDeleteDisabled}
-        onClick={onDelete}
-        size="medium"
-      >
-        {actions.dbDelete}
-      </CharacterSheetButton>
-      <CharacterSheetButton
-        className={styles.reset}
-        color="danger"
-        disabled={isResetDisabled}
-        onClick={(event) => onReset(event.currentTarget)}
-        size="medium"
-      >
-        {actions.reset}
-      </CharacterSheetButton>
-      <CharacterSheetButton
-        className={styles.import}
-        disabled={isImportDisabled}
-        onClick={(event) => onImport(event.currentTarget)}
-        size="medium"
-      >
-        <span>{actions.import}</span>
-        <small>{actions.importRemovalNotice}</small>
-      </CharacterSheetButton>
+      {isRemoteCharacter ? (
+        <CharacterSheetButton
+          className={styles.delete}
+          color="danger"
+          disabled={isDeleteDisabled}
+          onClick={onDelete}
+          size="medium"
+        >
+          {actions.dbDelete}
+        </CharacterSheetButton>
+      ) : (
+        <CharacterSheetButton
+          className={styles.reset}
+          color="danger"
+          disabled={isResetDisabled}
+          onClick={(event) => onReset(event.currentTarget)}
+          size="medium"
+        >
+          {actions.reset}
+        </CharacterSheetButton>
+      )}
       <CharacterSheetButton
         className={styles.ccfoliaCopy}
         disabled={isCcfoliaCopyDisabled}

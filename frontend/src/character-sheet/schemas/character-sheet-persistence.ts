@@ -15,7 +15,7 @@ import { getArmorById, getWeaponById } from "../master-data/weapons-and-armor";
 import { characterSheetRestoreInputSchema } from "./character-sheet-form";
 
 /**
- * Validates the JSON-import boundary without applying visible game-rule errors
+ * Validates restorable form data without applying visible game-rule errors
  * from the live RHF resolver. Unknown master-data IDs become unselected.
  */
 export const characterSheetRestoreSchema =
@@ -186,43 +186,12 @@ export function parseCharacterSheetRestoreValue(
   return parsed.success ? parsed.data : null;
 }
 
-/** Shared boundary for localStorage and the future JSON import Gate. */
+/** Shared boundary for localStorage and remote character restoration. */
 export function parseCharacterSheetRestoreJson(
   text: string,
 ): CharacterSheetFormValues | null {
   try {
     return parseCharacterSheetRestoreValue(JSON.parse(text));
-  } catch {
-    return null;
-  }
-}
-
-export type CharacterSheetJsonImport = {
-  imageBase64String: unknown;
-  values: CharacterSheetFormValues;
-};
-
-/** Parses the current JSON export shape without accepting image data as form data. */
-export function parseCharacterSheetJsonImport(
-  text: string,
-): CharacterSheetJsonImport | null {
-  try {
-    const parsed: unknown = JSON.parse(text);
-    if (
-      typeof parsed !== "object" ||
-      parsed === null ||
-      Array.isArray(parsed)
-    ) {
-      return null;
-    }
-
-    const { imageBase64String, ...formValue } = parsed as Record<
-      string,
-      unknown
-    >;
-    const values = parseCharacterSheetRestoreValue(formValue);
-
-    return values === null ? null : { imageBase64String, values };
   } catch {
     return null;
   }

@@ -224,6 +224,14 @@ source種別は以下を使う。
 
 ### completion-record accuracy
 
+#### Marked active documentation clean before checking generic restore wording
+
+- date: 2026-08-26
+- source: review
+- 発生箇所: `ex-18-character-sheet-json-import-removal` のactive documentation完了条件
+- 観測した失敗: JSONインポート固有語のrepository-wide検索と個別diffを根拠に、active documentationからJSONインポートの説明を除去済みとして完了チェックを入れた。しかし`docs/requirements/character-sheet.md`には、外部JSON読み込みを前提にした一般的な復元要件が残っており、現行のlocal draft / remote snapshot契約へ未整理だった。
+- 一次対応: 完了条件を未チェックへ戻し、レビュー指摘1へ保存済みlocal draft / remote snapshotの復元契約として書き換える方針を記録した。レビュー対応の明示承認まではsource codeとactive requirementを変更しない。
+
 #### Marked a user-confirmation CI condition complete before confirmation
 
 - date: 2026-08-08
@@ -560,6 +568,22 @@ source種別は以下を使う。
 
 ### SSoT coverage discipline
 
+#### Reduced the character-sheet design source below its current UI contract
+
+- date: 2026-08-27
+- source: user
+- 発生箇所: `ex-18-character-sheet-json-import-removal` の`docs/design/character-sheet/notes.md`更新
+- 観測した失敗: 過去Gateの実行記録を除く指示を、design正本のUI契約まで要約・削除してよいものと誤解した。profile / image / creditの配置、section frame、mobile情報密度、error表示、候補選択、dialog表現など、requirementsだけでは実装を固定しない画面仕様を失わせた。
+- 一次対応: 旧noteとrequirements・現行実装を照合し、過去の判断と実行記録だけを除外する。現行のUI構造、viewport別layout、操作状態、dialog、VRT比較観点はdesign noteへ詳細な契約として復元する。
+
+#### Changed the image-input limit by conflating it with the snapshot limit
+
+- date: 2026-08-26
+- source: user
+- 発生箇所: `ex-18-character-sheet-json-import-removal` のreview-to-issueにおける画像容量指摘の検証
+- 観測した失敗: 入力画像の5 MiB上限と、500pxへの縮小・WebP変換後にサーバー保存snapshotへ入る`imageBase64String`の4 MiB上限を混同した。requirementsとfrontend input validationを4 MiBとして扱う既存変更を正しい仕様と誤判定し、review sectionでも5 MiBへの修正を不採用と記録した。
+- 一次対応: ユーザー確定仕様を根拠にreview sectionを訂正し、入力5 MiB、snapshot文字列4 MiB、request全体8 MiBとして分離した修正契約へ更新した。レビュー対応の明示承認まではsource codeを変更しない。
+
 #### Marked repository-wide documentation consistency complete before validating the character session model
 
 - date: 2026-08-26
@@ -825,6 +849,17 @@ source種別は以下を使う。
 - 発生箇所: `ex-17-cloud-persistence-followups` の`CharacterSheetFatalErrorDialog` component test
 - 観測した失敗: focused frontend Vitest commandを3回連続で失敗させた。最初の2回は設定されていないjest-dom matcherの`toHaveFocus`と`fireEvent.cancel`を使い、3回目も同じく未導入の`toHaveAttribute`を使った。test environmentの既存assertion拡張を確認せず、標準DOM assertionへ置き換える修正を段階的に行った。
 - 一次対応: focusは`document.activeElement`、属性は`element.hasAttribute()`、cancelは`fireEvent(element, new Event("cancel", { cancelable: true }))`で確認する。以後、新規component testでは既存test setupに導入済みのmatcherを先に検索し、未確認のmatcherは標準Vitest / DOM APIで書く。
+
+### browser-test layout diagnosis
+
+#### Repeated a broad character-sheet E2E before isolating a 4px overflow
+
+- date: 2026-08-27
+- source: self
+- 発生箇所: `ex-18-character-sheet-json-import-removal` の `frontend/tests/e2e/character-sheet.spec.ts`
+- 観測した失敗: mobile Action PaneのCCFOLIAコピー配置を変更した後、breakpoint testの横overflowを、overflowの発生viewportやDOM要素を特定しないまま同じbroad E2E commandで3回連続して失敗させた。新規local-draft E2Eは通過していたが、既存breakpoint testの`scrollWidth - innerWidth`が4pxとなった。
+- 一次対応: 以後は新規E2Eを単独確認したうえで、browser上のoverflow要素と発生viewportを特定してからbroad E2Eを再実行する。原因が変更箇所と無関係なら、current issueでは完了扱いにせず既存失敗として明示する。
+- 続報: 1024pxのsite menu railとmain paddingで外側fieldsetが744pxになる一方、内側formが`min-inline-size: 48rem`で768pxを強制していた。formの最小幅を`0`へ直し、character-sheet E2E 7件で横overflow解消を確認した。
 
 #### Requested unnecessary escalation for an already approved Playwright command
 

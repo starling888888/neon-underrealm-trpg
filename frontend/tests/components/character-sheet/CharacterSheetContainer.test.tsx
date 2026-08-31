@@ -59,9 +59,6 @@ function useRootStateHarness() {
   const imageReturnFocusRef = useRef<HTMLButtonElement>(null);
   const formRestoreConfirmButtonRef = useRef<HTMLButtonElement>(null);
   const formRestoreReturnFocusRef = useRef<HTMLInputElement>(null);
-  const jsonImportErrorConfirmButtonRef = useRef<HTMLButtonElement>(null);
-  const jsonImportInputRef = useRef<HTMLInputElement>(null);
-  const jsonImportReturnFocusRef = useRef<HTMLButtonElement>(null);
   const [imageError, setImageError] = useState(rootStateInitial.imageError);
   const [isFormRestoreErrorOpen, setIsFormRestoreErrorOpen] = useState(
     rootStateInitial.isFormRestoreErrorOpen,
@@ -86,32 +83,18 @@ function useRootStateHarness() {
     isCharacterImageRestoring: false,
     isFormRestoreErrorOpen,
     isFormRestoring: false,
-    isImageErrorFromJsonImport: false,
     isImageErrorFromReset: false,
-    isJsonImportErrorOpen: false,
-    isJsonImportImageErrorOpen: false,
     isRootOperationInProgress: false,
-    jsonImportErrorConfirmButtonRef,
-    jsonImportInputRef,
-    jsonImportReturnFocusRef,
     onCcfoliaCopy,
     onCharacterImageCleared: async () => {},
     onCharacterImageOperationStarted: () => {},
     onCharacterImageSelected: async () => {},
-    onJsonExport: () => {},
-    onJsonImportConfirmed: async () => {},
-    onJsonImportFileSelected: async () => {},
-    onJsonImportRequested: () => {},
     onResetConfirmed: async () => {},
-    pendingJsonImport: null,
     rootOperation: null,
     remoteCharacter: null,
     restoreRemoteCharacter: async () => false,
     setImageError,
     setIsFormRestoreErrorOpen,
-    setIsJsonImportErrorOpen: () => {},
-    setIsJsonImportImageErrorOpen: () => {},
-    setPendingJsonImport: () => {},
     updateRemoteCharacterMetadata: () => {},
   };
 }
@@ -233,10 +216,10 @@ describe("CharacterSheetContainer", () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          "画像を保存できませんでした。もう一度お試しください。",
+          "下書きの画像を保存できませんでした。もう一度お試しください。",
         ),
       ).toBeTruthy();
-      expect(screen.getByText("自動復元に失敗しました。")).toBeTruthy();
+      expect(screen.getByText("下書きを復元できませんでした。")).toBeTruthy();
     });
     expect(
       screen.queryByRole("dialog", { name: "画像を処理できませんでした" }),

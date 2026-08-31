@@ -200,7 +200,7 @@ describe("useRemoteCharacterPersistence", () => {
     expect(onNavigate).not.toHaveBeenCalled();
     expect(notify).toHaveBeenCalledWith(
       "error",
-      "DBには保存しましたが、ブラウザに保存された未保存データを削除できませんでした。現在の入力内容を確認してください。",
+      "保存しましたが、ブラウザに保存された下書きデータを削除できませんでした。現在の入力内容を確認してください。",
     );
   });
 
@@ -240,7 +240,7 @@ describe("useRemoteCharacterPersistence", () => {
     });
     expect(notify).toHaveBeenCalledWith(
       "success",
-      "コピーをDBに保存し、新しく作成したキャラクターへ表示を切り替えました。",
+      "コピーを保存し、複製したキャラクターへ表示を切り替えました。",
     );
     expect(clearCharacterImageForCopy).toHaveBeenCalledOnce();
     expect(onNavigate).toHaveBeenCalledWith("created");

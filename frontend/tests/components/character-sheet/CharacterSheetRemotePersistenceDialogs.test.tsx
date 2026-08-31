@@ -60,9 +60,9 @@ describe("remote persistence dialogs", () => {
       />,
     );
 
-    expect(screen.getByRole("dialog", { name: "DB保存" })).not.toBeNull();
-    expect(screen.queryByRole("dialog", { name: "コピー保存" })).toBeNull();
-    expect(screen.queryByRole("dialog", { name: "DB削除" })).toBeNull();
+    expect(screen.getByRole("dialog", { name: "保存" })).not.toBeNull();
+    expect(screen.queryByRole("dialog", { name: "複製" })).toBeNull();
+    expect(screen.queryByRole("dialog", { name: "削除" })).toBeNull();
   });
 
   it.each([
@@ -77,7 +77,7 @@ describe("remote persistence dialogs", () => {
           onRequestClose={vi.fn()}
         />
       ),
-      label: "DB保存",
+      label: "保存",
       primaryAction: "保存",
     },
     {
@@ -89,7 +89,7 @@ describe("remote persistence dialogs", () => {
           onRequestClose={vi.fn()}
         />
       ),
-      label: "コピー保存",
+      label: "複製",
       primaryAction: "保存",
     },
     {
@@ -101,7 +101,7 @@ describe("remote persistence dialogs", () => {
           onRequestClose={vi.fn()}
         />
       ),
-      label: "DB削除",
+      label: "削除",
       primaryAction: "削除",
     },
   ])("uses the shared dialog button contract for $label", ({

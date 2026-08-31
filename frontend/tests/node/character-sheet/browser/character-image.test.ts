@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 
 import {
   CharacterImageError,
-  characterImageMaximumBytes,
+  characterImageMaximumInputBytes,
   isWebpBase64,
   validateCharacterImageFile,
 } from "../../../../src/character-sheet/browser/character-image";
@@ -10,7 +10,7 @@ import {
 test("accepts an image file at the configured size limit", () => {
   expect(() => {
     validateCharacterImageFile({
-      size: characterImageMaximumBytes,
+      size: characterImageMaximumInputBytes,
       type: "image/png",
     });
   }).not.toThrow();
@@ -24,7 +24,7 @@ test("rejects a non-image file and an image above the size limit", () => {
   expectCharacterImageError(
     () =>
       validateCharacterImageFile({
-        size: characterImageMaximumBytes + 1,
+        size: characterImageMaximumInputBytes + 1,
         type: "image/png",
       }),
     "file-too-large",

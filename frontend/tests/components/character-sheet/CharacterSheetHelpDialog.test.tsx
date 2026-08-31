@@ -60,9 +60,12 @@ describe("CharacterSheetHelpDialog", () => {
         name: "キャラクターシートについて",
       }),
     ).not.toBeNull();
-    expect(dialog.textContent).toContain("入力の進め方");
-    expect(dialog.textContent).toContain("Googleログインとキャラクター一覧");
-    expect(dialog.textContent).toContain("コピー保存");
+    expect(dialog.textContent).toContain("キャラクターの保存、編集、削除");
+    expect(dialog.textContent).toContain("下書き機能");
+    expect(dialog.textContent).toContain("下書き破棄");
+    expect(dialog.textContent).toContain("キャラクター一覧");
+    expect(dialog.textContent).toContain("複製");
+    expect(dialog.textContent).toContain("削除");
     expect(dialog.textContent).toContain("▸");
     expect(dialog.querySelector("footer")).toBeNull();
     expect(document.activeElement).toBe(

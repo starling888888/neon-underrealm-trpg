@@ -2,9 +2,9 @@
 
 ## 目的と範囲
 
-`/character-sheet/`を、既存のAstro静的サイトへ限定的なReact Islandとして追加する。キャラクター入力、派生値算出、検証、端末内の最新1件保存・復元、画像、JSON入出力、CCFOLIAコピーを扱う。Cloudflare backendとの通信は、Firebase Authenticationで認証するクラウド保存とキャラクター一覧だけに限定する。
+`/character-sheet/`を、既存のAstro静的サイトへ限定的なReact Islandとして追加する。キャラクター入力、派生値算出、検証、端末内の最新1件保存・復元、画像、サーバー保存用snapshot、CCFOLIAコピーを扱う。Cloudflare backendとの通信は、Firebase Authenticationで認証するクラウド保存とキャラクター一覧だけに限定する。
 
-本書はコンポーネント境界、状態境界、データ参照、ブラウザ永続化、クラウド保存、テスト境界、依存ライブラリを正本化する。作業順、個別issueの完了条件、CCFOLIA出力文字列形式、実行時schemaの具体形は扱わない。キャラクターシートJSON入出力の現行フォーマットは、本書の「JSON入出力フォーマット」とそのサンプルを参照する。
+本書はコンポーネント境界、状態境界、データ参照、ブラウザ永続化、クラウド保存、テスト境界、依存ライブラリを正本化する。作業順、個別issueの完了条件、CCFOLIA出力文字列形式、実行時schemaの具体形は扱わない。キャラクターシートのサーバー保存用snapshotの現行フォーマットは、`docs/architectures/character-sheet-server-snapshot-sample.json`を参照する。これはサーバーストレージに保存する形式のサンプルであり、ユーザー向けJSON入出力の形式ではない。
 
 ## 参照正本と制約
 
@@ -72,9 +72,9 @@ frontend/src/
 - `auth/`: Firebase SDKの初期化、認証状態、ID Token取得を置く。SDKが認証状態の永続化とtoken refreshを管理し、アプリケーション独自のtoken storageは置かない。初回状態確定後のuid変更時は、page全体を再読み込みしてremote ownershipを初期ロード経路で再評価する。
 - `logic/`: React、RHF、DOM、Storage、IndexedDBに依存しない派生値算出、選択可能性判定、構造化検証、ViewModel組み立てを置く。
 - `master-data/`: 読み取り専用のゲームデータから、IDによる選択肢と表示用情報を引く境界とする。既存`frontend/src/lib/data/`のaccessorを再利用するか、専用adapterを設けるかはcurrent implementationに合わせて判断する。
-- `schemas/`: 現在のform入力を検証・正規化するschemaと、IndexedDB record・JSON入力を検証するschemaを置く。ブラウザから渡る生の入力値の正規化とドメイン上の入力制約はここへ置き、ComponentやHTML constraintだけへ委ねない。schema失敗時は、現在の編集stateへの部分反映を行わない。具体的な形、JSON形式、CCFOLIA出力形式は承認済みissueで定める。
+- `schemas/`: 現在のform入力を検証・正規化するschemaと、IndexedDB record・保存済みformを検証するschemaを置く。ブラウザから渡る生の入力値の正規化とドメイン上の入力制約はここへ置き、ComponentやHTML constraintだけへ委ねない。schema失敗時は、現在の編集stateへの部分反映を行わない。具体的な形とCCFOLIA出力形式は承認済みissueで定める。
 - `persistence/`: idなしlocal draftのserializableな下書き用localStorage adapterと、画像record用IndexedDB adapterを置く。画像adapterは`neon-underrealm-character-sheet` database、`character-images` store、`current-character-image` keyへWebPのMIME typeとbase64エンコード文字列を保存・読取り・個別削除する。React stateやJSXを持たない。idなしlocal draftの全クリア時は、このadapterを使って画像recordも削除する。
-- `browser/`: Clipboard、ファイルdownload、画像decode・WebP変換などのブラウザAPIを置く。呼出し側から差し替え可能な小さなadapterとし、ゲームルールとRHFへ依存しない。
+- `browser/`: Clipboard、画像decode・WebP変換などのブラウザAPIを置く。呼出し側から差し替え可能な小さなadapterとし、ゲームルールとRHFへ依存しない。
 - `utils/`: ID生成、数値変換など、ゲームルール・React・ブラウザAPIを含まない補助処理だけを置く。feature固有の判断は`logic/`、ブラウザAPIは`browser/`へ置き、将来の再利用だけを理由に作らない。
 
 入力欄単位の機械的なComponent分割、汎用パス文字列による状態更新、全機能分の先行抽象化は行わない。
@@ -107,7 +107,7 @@ shared表示Componentは、次の表示契約だけをPropsで受け取る。
 
 ### Container / Presenterの責務
 
-`CharacterSheetContainer`はFat Coordinatorになってよいが、Fat Domain Logicにはしない。処理の入口と実行順はContainerから追跡できるようにし、算出式、JSONの具体的な組み立て、schema検証、Storage / IndexedDB / Clipboard / download / 画像APIの直接操作は対応する境界へ分離する。
+`CharacterSheetContainer`はFat Coordinatorになってよいが、Fat Domain Logicにはしない。処理の入口と実行順はContainerから追跡できるようにし、算出式、サーバー保存payloadのJSON化、schema検証、Storage / IndexedDB / Clipboard / 画像APIの直接操作は対応する境界へ分離する。
 
 Containerは、表示に必要な値と操作をsection単位のViewModel / ActionsとしてPresenterまたはroot-level表示Componentへ渡す。大量のフラットprops、Presenterからのマスタ検索、Presenterによる値の補正・業務ルール判断を置かない。型の具体形は、対応する実装taskで定める。
 
@@ -119,7 +119,7 @@ Presenterとその配下の表示Componentは、渡されたpropsの表示、配
 
 RHFを、このIsland内でユーザーが直接編集する値の唯一の保持先とする。可変行は`useFieldArray`で扱い、流儀の変更、スキル行の追加、能力値修正、縁のクリア、アイテム選択の変更をRHFの操作として行う。RHFの値を別のstate storeへ複製しない。
 
-native number inputがfocus中に保持する`-`など、数値として未確定なブラウザ固有の途中入力はRHF valueではない。Componentはその途中値をローカルstateへ複製せずDOMに一時保持させ、確定可能な値だけをRHF adapterへ通知する。blur時はschemaで正規化済みのnumberをinputへ戻す。スキルLvの下限・最大Lv超過はschemaが構造・整数値として受理し、logicが局所errorとして判定する。reset・復元・JSON入力は、受理済み値をRHFの`reset`または`useFieldArray`操作で反映し、uncontrolled inputを同期する。外部更新で値をclamp・削除しない。
+native number inputがfocus中に保持する`-`など、数値として未確定なブラウザ固有の途中入力はRHF valueではない。Componentはその途中値をローカルstateへ複製せずDOMに一時保持させ、確定可能な値だけをRHF adapterへ通知する。blur時はschemaで正規化済みのnumberをinputへ戻す。スキルLvの下限・最大Lv超過はschemaが構造・整数値として受理し、logicが局所errorとして判定する。reset・復元は、受理済み値をRHFの`reset`または`useFieldArray`操作で反映し、uncontrolled inputを同期する。外部更新で値をclamp・削除しない。
 
 | 種別                                                 | 置き場所                            | 永続化先                                                      |
 | ---------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------- |
@@ -135,7 +135,7 @@ native number inputがfocus中に保持する`-`など、数値として未確�
 | 候補選択・確認・通知dialogの開閉と選択対象           | `CharacterSheetContainer`           | 保存しない                                                    |
 | section・行の効果表示など局所的な表示状態            | 対応するPresenter Component         | 保存しない                                                    |
 
-画像のbase64文字列と画像recordの参照は、RHF、localStorage、URL query、ログ、Git管理ファイルへ混ぜない。remote routeではlocalStorage / IndexedDBを読まず書かず、remote responseの画像をmemoryだけで扱う。Root横断の操作ロックはroot-state custom hookに置き、操作ごとの表示文言とcallbackをPresenter hook経由で明示的に渡す。汎用loading overlayは表示文言をPropsで受け、画像、保存、入出力などのRoot操作で再利用する。Contextは先行導入しない。`logic/`はroot stateやContextへ依存しない。idなしlocal draftでは、変換・書込み成功後にだけ表示用recordを切り替え、個別クリアはIndexedDB削除成功後にだけ未選択へ切り替える。変換、IndexedDB書込み、個別削除の失敗時は既存画像を保持する。JSON importは現行の画像表現を維持するが、導線の削除とその後の整合はex-18で扱う。
+画像のbase64文字列と画像recordの参照は、RHF、localStorage、URL query、ログ、Git管理ファイルへ混ぜない。remote routeではlocalStorage / IndexedDBを読まず書かず、remote responseの画像をmemoryだけで扱う。Root横断の操作ロックはroot-state custom hookに置き、操作ごとの表示文言とcallbackをPresenter hook経由で明示的に渡す。汎用loading overlayは表示文言をPropsで受け、画像、保存、出力などのRoot操作で再利用する。Contextは先行導入しない。`logic/`はroot stateやContextへ依存しない。idなしlocal draftでは、変換・書込み成功後にだけ表示用recordを切り替え、個別クリアはIndexedDB削除成功後にだけ未選択へ切り替える。変換、IndexedDB書込み、個別削除の失敗時は既存画像を保持する。
 
 ### 自動保存と復元
 
@@ -149,17 +149,9 @@ AstroのSSRとhydrationにおける表示差分を避けるため、idなしloca
 
 マスタデータは読み取り専用であり、storeへ複製・永続化しない。キャラクター入力は名称ではなくマスタIDを保持し、表示、候補絞り込み、派生値、検証は、入力stateと読み取り専用マスタデータを明示的に渡して解決する。
 
-派生値算出と検証は純粋関数に分離する。副作用を持つ処理は、Containerから`persistence/`または`browser/`を経由して実行する。これにより、JSON形式、CCFOLIA出力、schemaの詳細が後続taskで増えても、画面Componentや算出logicへ混入させない。
+派生値算出と検証は純粋関数に分離する。副作用を持つ処理は、Containerから`persistence/`または`browser/`を経由して実行する。これにより、サーバー保存payload、CCFOLIA出力、schemaの詳細が後続taskで増えても、画面Componentや算出logicへ混入させない。
 
 `logic/`は同じ入力へ同じ結果を返し、UI配置や文言の最終表現を決めない。エラー条件・識別子と表示文言は必要に応じて分離する。`master-data/`の検索結果を入力として受け、未知のマスタIDを黙って補正・保存しない。
-
-### JSON入出力フォーマット
-
-キャラクターシートのエクスポート・インポートで共有する現行フォーマットのサンプルは、[character-sheet-export-import-sample.json](character-sheet-export-import-sample.json)とする。このファイルはフォーム全体を含む参照用データであり、実際のキャラクター画像は含めない。
-
-- トップレベルは`CharacterSheetFormValues`の値と`imageBase64String`で構成する。画像未選択時は`imageBase64String: null`とし、選択済み時は画像recordのbase64文字列だけを含める。
-- JSON出力は改行と2スペースのインデントを使う。派生値、error・warning、UI state、master data、画像recordの永続化メタデータは含めない。
-- 現行のJSON importは、このサンプルを入出力の構造参照としてschemaを実装・更新する。schema version、旧形式との互換性、移行方針は対応する承認済みissueで定める。JSON import導線の削除はex-18の範囲である。
 
 ### スタイル境界
 
@@ -255,9 +247,9 @@ VRTは領域、responsive layout、overlayの見た目を確認する。計算�
 ### 責務ごとの検証
 
 - `logic/`: 派生値、取得条件、重複、上限、警告・エラー識別子、CCFOLIA用の構造化出力を純粋関数として検証する。
-- `schemas/`: 現在のform入力の正規化、正常な保存・importデータの受理、破損JSON・必須構造欠落・不正型の拒否、失敗時に現在の編集stateを変更しないことを検証する。将来のschema versionは、互換要件が確定したtaskだけでfixtureを追加する。
+- `schemas/`: 現在のform入力、local draft、remote snapshotの正規化と受理、破損した保存データ・必須構造欠落・不正型の拒否、失敗時に現在の編集stateを変更しないことを検証する。将来のschema versionは、互換要件が確定したtaskだけでfixtureを追加する。
 - `master-data/`: IDからの候補・表示情報の取得と、存在しないIDの扱いを検証する。生成JSONの内容や並び順の正しさは既存のデータ変換テストへ置き、キャラクターシートのVRTへ複製しない。
-- `persistence/`と`browser/`: Storage、IndexedDB、画像、Clipboard、downloadを直接テスト環境へ要求しない。小さなadapterまたはtest doubleへ差し替え、復元前保存の抑止、書込み失敗、既存画像の保持、browser API失敗を検証する。
+- `persistence/`と`browser/`: Storage、IndexedDB、画像、Clipboardを直接テスト環境へ要求しない。小さなadapterまたはtest doubleへ差し替え、復元前保存の抑止、書込み失敗、既存画像の保持、browser API失敗を検証する。
 - Containerの結線: 初期stateからのViewModel、主要な操作からRHF更新・派生値・dialog・副作用adapterへの接続を、hook testまたは必要最小限の統合testで確認する。全機能の組合せを網羅しない。
 - Presenter / 表示Component: propsに応じた表示、read-only / disabled、エラー・警告、可変行、渡されたcallbackの通知を確認する。計算式とマスタ検索は検証しない。
 
@@ -324,11 +316,11 @@ VRTは領域、responsive layout、overlayの見た目を確認する。計算�
 
 - UIキット、デザインシステム、Headless UI、CSS framework
 - ルールエンジン、数式解析、自由文効果解析
-- JSON入出力、CCFOLIA出力、画像変換、Clipboard、downloadのためだけのライブラリ
+- サーバー保存payloadのJSON化、CCFOLIA出力、画像変換、Clipboardのためだけのライブラリ
 - RHFと並行して編集値を保持するstate managementライブラリ
 - RHFからlocalStorageへの同期を抽象化する追加ライブラリ
 
-UIは全てフルスクラッチとし、画像変換、Clipboard、downloadはbrowser標準APIを`browser/`のadapterへ閉じ込める。
+UIは全てフルスクラッチとし、画像変換とClipboardはbrowser標準APIを`browser/`のadapterへ閉じ込める。
 
 ## ユーザー判断が必要な項目
 
@@ -337,11 +329,11 @@ UIは全てフルスクラッチとし、画像変換、Clipboard、downloadはb
 | 基盤依存           | `@astrojs/react`、`react`、`react-dom`、`react-hook-form`、`idb-keyval` | React IslandとRHFを導入する。`localStorage`はブラウザ標準APIを使う。                                                   |
 | 編集値の保持先     | RHFを唯一の編集stateとする                                              | Zustandなどの別storeへ編集値を複製しない。UIの一時状態だけはComponent内のReact stateで扱う。                           |
 | 下書きの端末内保存 | idなしlocal draftだけをlocalStorageへ自動保存する                       | RHFの`subscribe`、`reset`、デバウンスを使う自前hookで同期する。default値は保存しない。保存同期ライブラリは導入しない。 |
-| 画像の端末内保存   | idなしlocal draftだけを編集stateとは別のIndexedDB画像recordへ保存する   | JSON化する下書きと画像recordを混在させず、remote characterへはbrowser persistenceを使わない。                          |
+| 画像の端末内保存   | idなしlocal draftだけを編集stateとは別のIndexedDB画像recordへ保存する   | local draftのform値と画像recordを混在させず、remote characterへはbrowser persistenceを使わない。                       |
 | 永続化の詳細       | 画像recordのkey名前空間を固定する                                       | databaseは`neon-underrealm-character-sheet`、storeは`character-images`、keyは`current-character-image`とする。         |
-| 実行時schema       | `zod`は既存依存を使う                                                   | 現在の入力値用とIndexedDB record・JSON入力用の2系統を作る。具体的なschemaは各承認済みissueで定める。                   |
+| 実行時schema       | `zod`は既存依存を使う                                                   | 現在の入力値用とIndexedDB record・保存済みform用の2系統を作る。具体的なschemaは各承認済みissueで定める。               |
 | WebP圧縮品質       | `0.8`                                                                   | 4 MiB入力・長辺約500px・非拡大・WebP変換を1回だけ行う。                                                                |
 | scoped CSS         | CSS Modules（`*.module.css`）、追加依存なし                             | 既存Astro scoped CSSと共存させ、React ComponentのスタイルをComponent単位へ限定する。                                   |
 | 型定義依存         | devDependenciesへ先行して明記しない                                     | React関連以外を含む必要な型定義を、実装時の実際の依存と型検査から判断する。                                            |
 
-キャラクターシートJSON入出力の現行フォーマットは[character-sheet-export-import-sample.json](character-sheet-export-import-sample.json)を参照する。CCFOLIA出力テキスト形式、実行時schemaの詳細、JSON schema versionと互換性・移行は、いずれもユーザー判断を含む各承認済みissueで定める。JSON import導線はex-18で削除する。
+CCFOLIA出力テキスト形式と実行時schemaの詳細は、いずれもユーザー判断を含む各承認済みissueで定める。
